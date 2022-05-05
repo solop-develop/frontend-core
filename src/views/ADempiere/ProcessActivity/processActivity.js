@@ -149,14 +149,26 @@ export default defineComponent({
           }
         }, () => {})
       } else if (activity.command === 'zoomIn') {
+        const parameters = root.isEmptyValue(activity.parametersList) ? activity.parameters : activity.parametersList
         zoomIn({
           uuid: activity.uuid,
           query: {
             ...root.$route.query,
-            ...activity.parametersList
+            ...parameters
           }
         })
+        setProcessParameters(activity.uuid, parameters)
       }
+    }
+
+    function setProcessParameters(containerUuid, parameters) {
+      Object.keys(parameters).forEach(element => {
+        root.$store.commit('updateValueOfField', {
+          containerUuid,
+          columnName: element,
+          value: parameters[element]
+        })
+      })
     }
 
     const checkStatus = ({ isError, isProcessing, output, isReport }) => {
@@ -234,7 +246,8 @@ export default defineComponent({
       checkStatus,
       generateTitle,
       findTranslation,
-      translateDate
+      translateDate,
+      setProcessParameters
     }
   }
 })
