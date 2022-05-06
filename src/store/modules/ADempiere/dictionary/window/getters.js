@@ -125,5 +125,9 @@ export default {
     }
 
     return fieldsEmpty
+  },
+
+  getProcessWindowsSelect: (state) => {
+    return state.selectProcessUuid
   }
 }

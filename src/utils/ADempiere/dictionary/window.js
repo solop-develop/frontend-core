@@ -163,6 +163,7 @@ export const runProcessOfWindow = {
   icon: 'el-icon-setting',
   actionName: 'runProcessOfWindow',
   runProcessOfWindow: ({ parentUuid, containerUuid, uuid }) => {
+    store.commit('setSelectProcessWindows', uuid)
     store.commit('setShowedModalDialog', {
       containerUuid: uuid,
       uuid,

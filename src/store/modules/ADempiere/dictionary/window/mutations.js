@@ -79,5 +79,13 @@ export default {
     const { attributeName, attributeValue } = payload
 
     payload.field[attributeName] = attributeValue
+  },
+  /**
+   * @param {*} state
+   * @param {string} parentUuid
+   * @param {object} tab
+   */
+  setSelectProcessWindows(state, uuid) {
+    state.selectProcessUuid = uuid
   }
 }

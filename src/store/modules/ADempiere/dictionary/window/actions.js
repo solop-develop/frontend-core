@@ -78,7 +78,7 @@ export default {
     if (!isEmptyValue(tabDefinition.processes)) {
       tabDefinition.processes.forEach(process => {
         // const { uuid, name, description } = process
-        console.log({ process })
+
         dispatch('setModalDialog', {
           containerUuid: process.uuid,
           title: process.name,

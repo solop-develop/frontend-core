@@ -424,13 +424,11 @@ export default defineComponent({
     })
 
     const processWindowsUuid = computed(() => {
-      if (isEmptyValue(windowMetadata.value.currentTabUuid)) {
+      const storeWindows = store.getters.getProcessWindowsSelect
+      if (isEmptyValue(storeWindows)) {
         return ''
       }
-      const epale = store.getters.getStoredActionsMenu({
-        containerUuid: windowMetadata.value.currentTabUuid
-      }).find(word => word.name === 'View Copy From')
-      return epale.uuid
+      return storeWindows
     })
     function generateWindow() {
       const { containerManager: containerManagerByProcess } = mixinProcess(processWindowsUuid)
