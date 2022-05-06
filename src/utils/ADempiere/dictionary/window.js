@@ -162,13 +162,17 @@ export const runProcessOfWindow = {
   svg: false,
   icon: 'el-icon-setting',
   actionName: 'runProcessOfWindow',
-  uuid: null,
   runProcessOfWindow: ({ parentUuid, containerUuid, uuid }) => {
-    store.dispatch('startProcessOfWindow', {
-      parentUuid,
-      containerUuid,
-      uuid
+    store.commit('setShowedModalDialog', {
+      containerUuid: uuid,
+      uuid,
+      isShowed: true
     })
+    // store.dispatch('startProcessOfWindow', {
+    //   parentUuid,
+    //   containerUuid,
+    //   uuid
+    // })
   }
 }
 

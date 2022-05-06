@@ -48,6 +48,12 @@
       :all-tabs-list="allTabsList"
       :is-parent-tabs="false"
     />
+    <modal-dialog
+      v-if="!isEmptyValue(processUuid)"
+      :container-manager="containerManagerProcess"
+      :parent-uuid="currentTabUuid"
+      :container-uuid="processUuid"
+    />
   </div>
 </template>
 
@@ -62,6 +68,7 @@ import ActionMenu from '@theme/components/ADempiere/ActionMenu/index.vue'
 import TabManager from '@theme/components/ADempiere/TabManager/index.vue'
 import Embedded from '@theme/components/ADempiere/Dialog/embedded'
 import RecordAccess from '@theme/components/ADempiere/RecordAccess'
+import ModalDialog from '@theme/components/ADempiere/ModalDialog/index.vue'
 
 // utils and helpers methods
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
@@ -74,6 +81,7 @@ export default defineComponent({
     ActionMenu,
     RecordAccess,
     Embedded,
+    ModalDialog,
     TabManager
   },
 
@@ -83,6 +91,14 @@ export default defineComponent({
       required: true
     },
     windowManager: {
+      type: Object,
+      required: true
+    },
+    processUuid: {
+      type: String,
+      required: true
+    },
+    containerManagerProcess: {
       type: Object,
       required: true
     }

@@ -65,7 +65,7 @@ export default {
     })
   },
 
-  setTabActionsMenu({ commit, getters }, {
+  setTabActionsMenu({ commit, dispatch, getters }, {
     parentUuid,
     containerUuid
   }) {
@@ -77,13 +77,25 @@ export default {
 
     if (!isEmptyValue(tabDefinition.processes)) {
       tabDefinition.processes.forEach(process => {
-        const { uuid, name, description } = process
-
+        // const { uuid, name, description } = process
+        console.log({ process })
+        dispatch('setModalDialog', {
+          containerUuid: process.uuid,
+          title: process.name,
+          doneMethod: () => {
+            dispatch('startProcessOfWindows', {
+              parentUuid: containerUuid,
+              containerUuid: process.uuid
+            })
+          },
+          ...process,
+          // TODO: Change to string and import dynamic in component
+          componentPath: () => import('@theme/components/ADempiere/PanelDefinition/index.vue'),
+          isShowed: false
+        })
         actionsList.push({
           ...runProcessOfWindow,
-          uuid,
-          name,
-          description
+          ...process
         })
       })
     }

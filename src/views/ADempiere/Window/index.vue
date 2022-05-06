@@ -24,6 +24,8 @@
           :is="renderWindowComponent"
           :window-manager="containerManagerWindow"
           :window-metadata="windowMetadata"
+          :process-uuid="processWindowsUuid"
+          :container-manager-process="containerManagerProcess"
         />
       </el-aside>
     </el-container>
@@ -47,12 +49,12 @@ import { READ_ONLY_FORM_COLUMNS } from '@/utils/ADempiere/constants/systemColumn
 import {
   ACTIVE, CLIENT, PROCESSING, PROCESSED, UUID
 } from '@/utils/ADempiere/constants/systemColumns'
-
+import mixinProcess from '@/views/ADempiere/Process/mixinProcess.js'
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertWindow } from '@/utils/ADempiere/apiConverts/dictionary.js'
 import {
-  generateWindow,
+  // generateWindow,
   // panel
   isDisplayedField,
   isMandatoryField,
@@ -87,6 +89,7 @@ export default defineComponent({
   },
 
   setup(props, { root }) {
+    const containerManagerProcess = ref({})
     let containerManagerWindow = {
       getPanel({ parentUuid, containerUuid }) {
         return store.getters.getStoredTab(parentUuid, containerUuid)
@@ -410,6 +413,7 @@ export default defineComponent({
         .then(windowResponse => {
           // add apps properties
           setLoadWindow(windowResponse)
+          generateWindow()
         })
     }
 
@@ -419,6 +423,19 @@ export default defineComponent({
       return windowComponent
     })
 
+    const processWindowsUuid = computed(() => {
+      if (isEmptyValue(windowMetadata.value.currentTabUuid)) {
+        return ''
+      }
+      const epale = store.getters.getStoredActionsMenu({
+        containerUuid: windowMetadata.value.currentTabUuid
+      }).find(word => word.name === 'View Copy From')
+      return epale.uuid
+    })
+    function generateWindow() {
+      const { containerManager: containerManagerByProcess } = mixinProcess(processWindowsUuid)
+      containerManagerProcess.value = containerManagerByProcess
+    }
     // load metadata and generate window
     getWindow()
 
@@ -426,7 +443,9 @@ export default defineComponent({
       windowUuid,
       containerManagerWindow,
       windowMetadata,
+      containerManagerProcess,
       // computed
+      processWindowsUuid,
       renderWindowComponent,
       isLoaded
     }
