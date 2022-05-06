@@ -17,6 +17,7 @@
 import { defineComponent, computed, onMounted, ref } from '@vue/composition-api'
 import LoadingView from '@theme/components/ADempiere/LoadingView'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
+import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
 
 export default defineComponent({
   name: 'ProcessActivity',
@@ -162,12 +163,13 @@ export default defineComponent({
     }
 
     function setProcessParameters(containerUuid, parameters) {
-      Object.keys(parameters).forEach(element => {
-        root.$store.commit('updateValueOfField', {
-          containerUuid,
-          columnName: element,
-          value: parameters[element]
-        })
+      const attributes = convertObjectToKeyValue({
+        object: parameters
+      })
+      root.$store.dispatch('updateValuesOfContainer', {
+        containerUuid,
+        isOverWriteParent: true,
+        attributes
       })
     }
 
