@@ -17,6 +17,7 @@
 import { defineComponent, computed, onMounted, ref } from '@vue/composition-api'
 import LoadingView from '@theme/components/ADempiere/LoadingView'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
+import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
 
 export default defineComponent({
   name: 'ProcessActivity',
@@ -149,14 +150,27 @@ export default defineComponent({
           }
         }, () => {})
       } else if (activity.command === 'zoomIn') {
+        const parameters = root.isEmptyValue(activity.parametersList) ? activity.parameters : activity.parametersList
         zoomIn({
           uuid: activity.uuid,
           query: {
             ...root.$route.query,
-            ...activity.parametersList
+            ...parameters
           }
         })
+        setProcessParameters(activity.uuid, parameters)
       }
+    }
+
+    function setProcessParameters(containerUuid, parameters) {
+      const attributes = convertObjectToKeyValue({
+        object: parameters
+      })
+      root.$store.dispatch('updateValuesOfContainer', {
+        containerUuid,
+        isOverWriteParent: true,
+        attributes
+      })
     }
 
     const checkStatus = ({ isError, isProcessing, output, isReport }) => {
@@ -234,7 +248,8 @@ export default defineComponent({
       checkStatus,
       generateTitle,
       findTranslation,
-      translateDate
+      translateDate,
+      setProcessParameters
     }
   }
 })
