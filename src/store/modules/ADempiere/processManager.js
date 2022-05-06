@@ -222,8 +222,9 @@ const processManager = {
       containerUuid
     }) {
       return new Promise(resolve => {
-        const lol = router.app._route.meta.uuid
-        const browserDefinition = getters.getStoredTab(lol, parentUuid)
+        const recordUuid = router.app._route.query.action
+        const windowsUuid = router.app._route.meta.uuid
+        const browserDefinition = getters.getStoredTab(windowsUuid, parentUuid)
         const processModal = getters.getModalDialogManager({
           containerUuid: containerUuid
         })
@@ -233,10 +234,6 @@ const processManager = {
         // const parametersList = rootGetters.getProcessParameters({
         //   containerUuid
         // })
-
-        const selectionsList = rootGetters.getBrowserSelectionToServer({
-          containerUuid: parentUuid
-        })
 
         const isSession = !isEmptyValue(getToken())
         let procesingNotification = {
@@ -256,9 +253,7 @@ const processManager = {
         requestRunProcess({
           uuid: containerUuid,
           parametersList,
-          // TODO: Add support to tableSelectedId
-          tableSelectedId: null,
-          selectionsList
+          recordUuid
         })
           .then(runProcessRepsonse => {
             isProcessedError = runProcessRepsonse.isError
