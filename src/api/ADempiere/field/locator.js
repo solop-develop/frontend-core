@@ -19,6 +19,7 @@
 
 import { getEntities } from '@/api/ADempiere/user-interface/persistence.js'
 import { OPERATOR_EQUAL } from '@/utils/ADempiere/dataUtils.js'
+import { WAREHOUSE } from '@/utils/ADempiere/constants/systemColumns'
 
 const tableName = 'M_Locator'
 
@@ -27,15 +28,15 @@ export function getLocatorList({
   warehouseId
 }) {
   return new Promise(resolve => {
-    const conditions = [{
-      columnName: `M_Warehouse_ID`,
+    const filters = [{
+      columnName: WAREHOUSE,
       operator: OPERATOR_EQUAL.operator,
       value: warehouseId
     }]
 
     getEntities({
       tableName,
-      conditions
+      filters
     }).then(locatorData => {
       const locatorList = []
 
@@ -44,7 +45,7 @@ export function getLocatorList({
           locatorList.push({
             id: record.id,
             value: record.attributes.Value,
-            warehouseId: record.attributes.M_Warehouse_ID,
+            warehouseId: record.attributes[WAREHOUSE],
             rack: record.attributes.X,
             column: record.attributes.Y,
             level: record.attributes.Z

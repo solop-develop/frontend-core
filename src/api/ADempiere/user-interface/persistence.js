@@ -22,7 +22,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
  * Object List from window
  * @param {string} windowUuid
  * @param {string} tabUuid
- * @param {array}  conditionsList
+ * @param {array}  filters
  * @param {array}  columnsList // TODO: Add support on adempiere-vue
  * @param {string} orderByClause
  * @param {string} pageToken
@@ -30,17 +30,17 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 export function getEntities({
   windowUuid,
   tabUuid,
-  conditions = [],
   columns = [],
   contextAttributesList = [],
   sorting = [],
   searchValue,
-  filters,
+  filters = [],
   pageToken,
   pageSize
 }) {
-  if (isEmptyValue(filters)) {
-    filters = conditions.map(condition => {
+  // used as where clause
+  if (!isEmptyValue(filters)) {
+    filters = filters.map(condition => {
       const { value, operator, columnName, valueTo, values } = condition
       return {
         column_name: columnName,

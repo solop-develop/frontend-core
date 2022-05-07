@@ -184,16 +184,18 @@ export default {
 
       const currentRoute = router.app._route
       delete currentRoute.query.filters
+
+      const query = currentRoute.query
+      if (tab.isParentTab) {
+        query.action = 'create-new'
+      }
       // set action
       router.push({
         name: currentRoute.name,
         params: {
           ...currentRoute.params
         },
-        query: {
-          ...currentRoute.query,
-          action: 'create-new'
-        }
+        query
       }, () => {})
 
       let defaultAttributes = rootGetters.getParsedDefaultValues({
