@@ -78,7 +78,9 @@ export default {
     if (!isEmptyValue(tabDefinition.processes)) {
       tabDefinition.processes.forEach(process => {
         // const { uuid, name, description } = process
-
+        // dispatch('getProcessDefinitionFromServer', {
+        //   uuid: process.uuid
+        // })
         dispatch('setModalDialog', {
           containerUuid: process.uuid,
           title: process.name,
@@ -86,6 +88,11 @@ export default {
             dispatch('startProcessOfWindows', {
               parentUuid: containerUuid,
               containerUuid: process.uuid
+            })
+          },
+          loadData: () => {
+            return dispatch('getProcessDefinitionFromServer', {
+              uuid: process.uuid
             })
           },
           ...process,

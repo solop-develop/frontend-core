@@ -230,10 +230,12 @@ const processManager = {
         })
         const currentProcess = browserDefinition.processes.find(process => process.name === processModal.title)
 
-        const parametersList = currentProcess.parameters
-        // const parametersList = rootGetters.getProcessParameters({
-        //   containerUuid
         // })
+        const fieldsList = getters.getStoredFieldsFromProcess(containerUuid)
+        const parametersList = rootGetters.getProcessParameters({
+          containerUuid,
+          fieldsList
+        })
 
         const isSession = !isEmptyValue(getToken())
         let procesingNotification = {

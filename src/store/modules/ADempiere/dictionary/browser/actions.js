@@ -70,13 +70,6 @@ export default {
           const { process } = browserDefinition
           if (!isEmptyValue(process)) {
             // get browser definition
-            /**
-             * TODO: Move to action only open process associated.
-             * Does load fields if move to action browsers.
-             */
-            store.dispatch('getProcessDefinitionFromServer', {
-              uuid: process.uuid
-            })
 
             dispatch('setModalDialog', {
               containerUuid: process.uuid,
@@ -87,6 +80,12 @@ export default {
                   containerUuid: process.uuid
                 })
               },
+              loadData: () => {
+                return dispatch('getProcessDefinitionFromServer', {
+                  uuid: process.uuid
+                })
+              },
+              ...process,
               // TODO: Change to string and import dynamic in component
               componentPath: () => import('@theme/components/ADempiere/PanelDefinition/index.vue'),
               isShowed: false

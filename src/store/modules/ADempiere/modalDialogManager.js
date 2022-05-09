@@ -28,18 +28,20 @@ const modalDialogManager = {
 
   mutations: {
     setModalDialog(state, {
+      cancelMethod,
       containerUuid,
       componentPath,
-      cancelMethod,
       doneMethod,
+      loadData,
       title,
       isShowed
     }) {
       Vue.set(state.modalDialogManager, containerUuid, {
+        cancelMethod,
         containerUuid,
         componentPath,
         doneMethod,
-        cancelMethod,
+        loadData,
         title,
         isShowed
       })
@@ -66,6 +68,7 @@ const modalDialogManager = {
       componentPath,
       doneMethod = function() {},
       cancelMethod = function() {},
+      loadData = function() {},
       title,
       isShowed = false
     }) {
@@ -73,6 +76,7 @@ const modalDialogManager = {
         containerUuid,
         componentPath,
         doneMethod,
+        loadData,
         cancelMethod,
         title,
         isShowed

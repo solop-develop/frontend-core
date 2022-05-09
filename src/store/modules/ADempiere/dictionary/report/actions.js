@@ -86,6 +86,11 @@ export default {
                 containerUuid: uuid
               })
             },
+            loadData: () => {
+              return dispatch('getProcessDefinitionFromServer', {
+                uuid: uuid
+              })
+            },
             // TODO: Change to string and import dynamic in component
             componentPath: () => import('@theme/components/ADempiere/PanelDefinition/index.vue'),
             isShowed: false
