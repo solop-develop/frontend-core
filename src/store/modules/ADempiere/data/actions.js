@@ -176,6 +176,7 @@ const actions = {
               parentUuid,
               containerUuid,
               contextColumnNames: itemField.reference.contextColumnNames,
+              contextColumnNamesByDefaultValue: itemField.contextColumnNames,
               //
               id: itemField.id,
               fieldUuid: itemField.uuid,

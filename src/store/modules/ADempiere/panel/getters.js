@@ -329,7 +329,8 @@ const getters = {
             const optionsList = rootGetters.getStoredLookupAll({
               parentUuid,
               containerUuid,
-              contextColumnNames,
+              contextColumnNames: fieldItem.reference.contextColumnNames,
+              contextColumnNamesByDefaultValue: contextColumnNames,
               id,
               uuid
             })
