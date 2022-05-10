@@ -58,29 +58,36 @@ module.exports = {
           '/guide/': [
             {
               title: 'Essentials',
-              collapsable: false,
+              collapsable: true,
               children: genEssentialsSidebar()
             },
             {
+              tille: 'Use Cases',
+              collapsable: true,
+              children: genUseCasesSidebar()
+            },
+            {
               title: 'Advanced',
-              collapsable: false,
+              collapsable: true,
               children: genAdvancedSidebar()
             },
             {
               title: 'Components',
-              collapsable: false,
+              collapsable: true,
               children: genComponentSidebar()
             },
             {
               title: 'Forms',
-              collapsable: false,
+              collapsable: true,
               children: genFormsSidebar()
             },
             {
               title: 'Other',
-              collapsable: false,
+              collapsable: true,
               children: [
+                '/guide/other/discord.md',
                 '/guide/other/gitter.md',
+                '/guide/other/telegram.md',
                 '/guide/other/release-notes.md'
               ]
             }
@@ -121,29 +128,36 @@ module.exports = {
           '/es/guide/': [
             {
               title: 'Esenciales',
-              collapsable: false,
+              collapsable: true,
               children: genEssentialsSidebar('/es')
             },
             {
+              tille: 'Casos de Uso',
+              collapsable: true,
+              children: genUseCasesSidebar('/es')
+            },
+            {
               title: 'Avanzado',
-              collapsable: false,
+              collapsable: true,
               children: genAdvancedSidebar('/es')
             },
             {
               title: 'Componentes',
-              collapsable: false,
+              collapsable: true,
               children: genComponentSidebar('/es')
             },
             {
               title: 'Formularios',
-              collapsable: false,
+              collapsable: true,
               children: genFormsSidebar('/es')
             },
             {
               title: 'Otro',
-              collapsable: false,
+              collapsable: true,
               children: [
+                '/es/guide/other/discord.md',
                 '/es/guide/other/gitter.md',
+                '/es/guide/other/telegram.md',
                 '/es/guide/other/release-notes.md'
               ]
             }
@@ -192,27 +206,32 @@ module.exports = {
           '/zh/guide/': [
             {
               title: '組件',
-              collapsable: false,
+              collapsable: true,
               children: genEssentialsSidebar('/zh')
             },
             {
+              tille: 'Use Cases',
+              collapsable: true,
+              children: genUseCasesSidebar()
+            },
+            {
               title: '进阶',
-              collapsable: false,
+              collapsable: true,
               children: genAdvancedSidebar('/zh')
             },
             {
               title: '成分',
-              collapsable: false,
+              collapsable: true,
               children: genComponentSidebar()
             },
             {
               title: '形式',
-              collapsable: false,
+              collapsable: true,
               children: genFormsSidebar()
             },
             {
               title: '其它',
-              collapsable: false,
+              collapsable: true,
               children: [
                 '/zh/guide/other/faq.md',
                 '/zh/guide/other/release-notes.md'
@@ -270,6 +289,15 @@ function genEssentialsSidebar(type = '') {
     '/guide/essentials/import.md',
     '/guide/essentials/deploy.md',
     '/guide/essentials/env.md'
+  ]
+  return mapArr.map(i => {
+    return type + i
+  })
+}
+
+function genUseCasesSidebar(type = '') {
+  const mapArr = [
+    '/guide/use-cases/process.md'
   ]
   return mapArr.map(i => {
     return type + i
