@@ -36,7 +36,7 @@
               placement="top"
               type="primary"
               size="large"
-              :color="checkStatus(activity).color"
+              color="#67C23A"
             >
               <el-card>
                 <div slot="header" class="clearfix" style="display: flex;">

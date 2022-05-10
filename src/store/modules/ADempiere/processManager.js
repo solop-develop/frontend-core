@@ -222,6 +222,7 @@ const processManager = {
       containerUuid
     }) {
       return new Promise(resolve => {
+        const recordId = router.app._route.query.recordId
         const recordUuid = router.app._route.query.action
         const windowsUuid = router.app._route.meta.uuid
         const browserDefinition = getters.getStoredTab(windowsUuid, parentUuid)
@@ -255,7 +256,8 @@ const processManager = {
         requestRunProcess({
           uuid: containerUuid,
           parametersList,
-          recordUuid
+          recordUuid,
+          recordId
         })
           .then(runProcessRepsonse => {
             isProcessedError = runProcessRepsonse.isError

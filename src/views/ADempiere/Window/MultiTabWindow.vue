@@ -129,7 +129,8 @@ export default defineComponent({
                 name: root.$route.name,
                 query: {
                   ...root.$route.query,
-                  action: response.uuid
+                  action: response.uuid,
+                  recordId: response.id
                 },
                 params: {
                   ...root.$route.params,
@@ -165,7 +166,9 @@ export default defineComponent({
             name: root.$route.name,
             query: {
               ...root.$route.query,
-              action: row.UUID
+              action: row.UUID,
+              tableName: tab.tableName,
+              recordId: row[`${tab.tableName}_ID`]
             },
             params: {
               ...root.$route.params,

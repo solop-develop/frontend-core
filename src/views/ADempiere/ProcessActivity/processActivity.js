@@ -94,16 +94,16 @@ export default defineComponent({
     })
     const getProcessLogSuccess = computed(() => {
       return getProcessLog.value.filter(element => {
-        const { isError, output, isReport, isProcessing } = element
-        if ((!isError && !isProcessing) || (isError && !isProcessing && isReport && !root.isEmptyValue(output.output))) {
+        const { isError, isReport, isProcessing } = element
+        if ((!isError && !isProcessing) || (isError && !isProcessing && isReport && !root.isEmptyValue(element.instanceUuid))) {
           return element
         }
       })
     })
     const getProcessLogError = computed(() => {
       return getProcessLog.value.filter(element => {
-        const { isError, output, isReport, isProcessing } = element
-        if ((isError && !isProcessing) || (isError && !isProcessing && isReport && root.isEmptyValue(output.output))) {
+        const { isError, isReport, isProcessing } = element
+        if ((isError && !isProcessing && !isReport) || (isError && !isProcessing && isReport && root.isEmptyValue(element.instanceUuid))) {
           return element
         }
       })
