@@ -37,6 +37,10 @@ const fieldOptions = {
     thisWindow: ' y esta Ventana',
     allWindows: ' y todas las Ventanas'
   },
+  // field info
+  info: {
+    defaultValue: 'Valor Predeterminado'
+  },
   hideThisField: 'Ocultar Este Campo'
 }
 

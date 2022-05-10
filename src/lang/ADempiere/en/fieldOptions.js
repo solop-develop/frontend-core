@@ -37,6 +37,10 @@ const fieldOptions = {
     thisWindow: ' and this Window',
     allWindows: ' and all Windows'
   },
+  // field info
+  info: {
+    defaultValue: 'Default Value'
+  },
   hideThisField: 'Hide This Field'
 }
 

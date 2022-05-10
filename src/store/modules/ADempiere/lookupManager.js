@@ -294,6 +294,7 @@ const lookupManager = {
       parentUuid,
       containerUuid,
       contextColumnNames,
+      contextColumnNamesByDefaultValue = [],
       uuid
     }) => {
       const contextAttributesList = getContextAttributes({
@@ -311,13 +312,19 @@ const lookupManager = {
         contextAttributesList
       })
 
-      // set item values getter from server into list
+      // get of stored default value
       if (isEmptyValue(optionsList)) {
+        const contextAttributesListByDefaultValue = getContextAttributes({
+          parentUuid,
+          containerUuid,
+          contextColumnNames: contextColumnNamesByDefaultValue,
+          isBooleanToString: true
+        })
         const option = rootGetters.getStoredDefaultValue({
           parentUuid,
           containerUuid,
           contextColumnNames,
-          contextAttributesList,
+          contextAttributesList: contextAttributesListByDefaultValue,
           uuid
         })
 
