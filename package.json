@@ -6,15 +6,18 @@
   "contributors": [
     {
       "name": "Yamel Senih",
-      "url": "https://github.com/YamelSenih/"
+      "url": "https://github.com/YamelSenih/",
+      "email": "ySenih@erpya.com"
     },
     {
       "name": "Edwin Betancourt",
-      "url": "https://github.com/EdwinBetanc0urt/"
+      "url": "https://github.com/EdwinBetanc0urt/",
+      "email": "EdwinBetanc0urt@outlook.com"
     },
     {
       "name": "Elsio Sanchez",
-      "url": "https://github.com/elsiosanchez"
+      "url": "https://github.com/elsiosanchez",
+      "email": "elsiosanches@gmail.com"
     }
   ],
   "scripts": {

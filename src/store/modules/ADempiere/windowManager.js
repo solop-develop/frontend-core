@@ -84,6 +84,8 @@ const windowManager = {
      * Get list entities
      * @param {string} parentUuid
      * @param {string} containerUuid
+     * @param {string} searchValue used to compare with selections columns
+     * @param {array} filters used as where clause
      * @param {number} pageNumber
      * @returns {promise} array entities list
      */
@@ -94,7 +96,7 @@ const windowManager = {
     }, {
       parentUuid,
       containerUuid,
-      searchValue,
+      searchValue = '',
       filters = [],
       pageNumber
     }) {

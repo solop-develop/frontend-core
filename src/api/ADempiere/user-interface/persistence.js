@@ -22,7 +22,8 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
  * Object List from window
  * @param {string} windowUuid
  * @param {string} tabUuid
- * @param {array}  filters
+ * @param {string} searchValue used to compare with selections columns
+ * @param {array} filters used as where clause
  * @param {array}  columnsList // TODO: Add support on adempiere-vue
  * @param {string} orderByClause
  * @param {string} pageToken
@@ -33,7 +34,7 @@ export function getEntities({
   columns = [],
   contextAttributesList = [],
   sorting = [],
-  searchValue,
+  searchValue = '',
   filters = [],
   pageToken,
   pageSize
