@@ -159,10 +159,10 @@ adempiere-ui-client | > Listening at  http://localhost:9526/
   <img alt="ERP Consultores y Asociados" width="250px" src="https://erpya.com/wp-content/uploads/2017/11/ERP-logotipo-H-color.png" />
 </a>
 <a href="http://westfalia-it.com/">
-  <img width="150px" src="https://i2.wp.com/www.westfalia-it.com/wp-content/uploads/sites/30/2017/12/logo_copy.jpg?fit=265%2C357" />
+  <img width="150px" src="http://westfalia-it.com/wp-content/uploads/2021/04/logo_.gif" />
 </a>
 <a href="http://openupsolutions.com/">
-  <img width="250px" src="https://i2.wp.com/openupsolutions.com/wp-content/uploads/sites/32/2017/05/Openup-Solutions-Logo-2017-80x200px.png?fit=243%2C40" />
+  <img width="250px" src="https://user-images.githubusercontent.com/45974454/167717853-7c02defb-4b69-4d3d-af68-5db3e956ee6f.png" />
 </a>
 
 Sea un patrocinante y coloque su logo en nuestro LEEME en GitHub con un enlace directo a su sitio web. [Sea un Patrocinante](https://www.paypal.me/YamelSenih)
