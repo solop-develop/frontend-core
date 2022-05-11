@@ -126,6 +126,7 @@ export default defineComponent({
     // get report from vuex store or request from server
     function getReport() {
       if (!isEmptyValue(storedReportDefinition.value)) {
+        findActionsMenu()
         getCachedReport()
         return
       }
@@ -197,6 +198,12 @@ export default defineComponent({
       } else {
         displayReport(getStoredReportOutput.value)
       }
+    }
+
+    function findActionsMenu() {
+      store.dispatch('setReportActionsMenu', {
+        containerUuid: reportUuid
+      })
     }
 
     const relationsManager = ref({
