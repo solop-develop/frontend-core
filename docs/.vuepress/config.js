@@ -7,7 +7,7 @@ var { genNav, getComponentSidebar, deepClone } = utils
 module.exports = {
   title: 'adempiere-vue',
   description: 'The new UI for ADempiere ERP',
-  base: '/frontend-core/',
+  base: '/adempiere-vue/',
   head: [
     [
       'link',
@@ -18,8 +18,8 @@ module.exports = {
     ]
   ],
   themeConfig: {
-    repo: 'solop-develop/frontend-core',
-    docsRepo: 'solop-develop/frontend-core',
+    repo: 'adempiere/adempiere-vue',
+    docsRepo: 'adempiere/adempiere-vue',
     docsDir: 'docs',
     editLinks: true,
     sidebarDepth: 3,
@@ -295,7 +295,7 @@ function genEssentialsSidebar(type = '') {
   })
 }
 
-function genUseCasesSidebar(type = 'es') {
+function genUseCasesSidebar(type = '') {
   const mapArr = [
     '/guide/use-cases/process.md'
   ]
