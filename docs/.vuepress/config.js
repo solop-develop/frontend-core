@@ -7,7 +7,7 @@ var { genNav, getComponentSidebar, deepClone } = utils
 module.exports = {
   title: 'frontend-core',
   description: 'The new UI for ADempiere ERP',
-  base: '/adempiere-vue/',
+  base: '/frontend-core/',
   head: [
     [
       'link',
