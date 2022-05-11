@@ -151,7 +151,7 @@ Para los campos de seleccionables (Lista, Tabla y Tabla Directa), deben filtrars
 
 
 ### Visualización
-1. Todos los parámtros con valor por defecto, o con obligatoriedad se visualizan en la primera carga.
+1. Todos los parámetros con valor por defecto, o con obligatoriedad se visualizan en la primera carga.
 
 
 ### Obligatoriedad
