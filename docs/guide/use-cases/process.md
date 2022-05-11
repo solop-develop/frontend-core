@@ -1,8 +1,8 @@
-# Casos de Uso: Procesos
+# Use Cases: Process
 
-## Apertura
+## Opening
 
-### Árbol de Menú
+### Menu Tree
 Open a process from the menu tree:
 1. Expand the menu tree in **Business Partner Relationship**.
 2. Select the **Send Text Email** process.
