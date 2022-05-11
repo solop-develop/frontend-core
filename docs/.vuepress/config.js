@@ -5,7 +5,7 @@ var utils = require('./utils.js')
 var { genNav, getComponentSidebar, deepClone } = utils
 
 module.exports = {
-  title: 'adempiere-vue',
+  title: 'frontend-core',
   description: 'The new UI for ADempiere ERP',
   base: '/adempiere-vue/',
   head: [
@@ -18,8 +18,8 @@ module.exports = {
     ]
   ],
   themeConfig: {
-    repo: 'adempiere/adempiere-vue',
-    docsRepo: 'adempiere/adempiere-vue',
+    repo: 'solop-develop/frontend-core',
+    docsRepo: 'solop-develop/frontend-core',
     docsDir: 'docs',
     editLinks: true,
     sidebarDepth: 3,
