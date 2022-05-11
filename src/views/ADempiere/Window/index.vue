@@ -389,6 +389,7 @@ export default defineComponent({
     function getWindow() {
       let window = storedWindow.value
       if (!isEmptyValue(window)) {
+        generateWindow()
         setLoadWindow(window)
         return
       }
@@ -436,7 +437,6 @@ export default defineComponent({
     }
     // load metadata and generate window
     getWindow()
-    generateWindow()
 
     return {
       windowUuid,
