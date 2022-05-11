@@ -27,6 +27,7 @@
           :container-uuid="reportUuid"
           :actions-manager="actionsManager"
           :relations-manager="relationsManager"
+          :report-format="reportFormat"
         />
         <br>
         <div class="content">

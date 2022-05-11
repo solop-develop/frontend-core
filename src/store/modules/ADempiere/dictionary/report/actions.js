@@ -154,12 +154,13 @@ export default {
           icon: 'el-icon-document',
           enabled: true,
           svg: false,
-          actionName: 'runReportAs',
+          actionName: 'runReportAsPrintFormat',
           uuid: null,
-          runReportAs: ({ root, containerUuid }) => {
+          runReportAsPrintFormat: ({ root, containerUuid, reportFormat }) => {
             root.$store.dispatch('startReport', {
               containerUuid,
-              printFormatUuid: printFormat.printFormatUuid
+              printFormatUuid: printFormat.printFormatUuid,
+              reportFormat
             })
           }
         })
@@ -180,12 +181,13 @@ export default {
           icon: 'el-icon-document',
           enabled: true,
           svg: false,
-          actionName: 'runReportAs',
+          actionName: 'runReportAsView',
           uuid: null,
-          runReportAs: ({ root, containerUuid }) => {
+          runReportAsView: ({ root, containerUuid, reportFormat }) => {
             root.$store.dispatch('startReport', {
               containerUuid,
-              reportViewUuid: reportView.reportViewUuid
+              reportViewUuid: reportView.reportViewUuid,
+              reportFormat
             })
           }
         })
