@@ -1,6 +1,6 @@
 # Use Cases: Process
 
-## Opened
+## Opening
 
 #### Menu
 Openend a process from menu:

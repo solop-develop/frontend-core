@@ -62,7 +62,7 @@ module.exports = {
               children: genEssentialsSidebar()
             },
             {
-              tille: 'Use Cases',
+              title: 'Use Cases',
               collapsable: true,
               children: genUseCasesSidebar()
             },
@@ -132,7 +132,7 @@ module.exports = {
               children: genEssentialsSidebar('/es')
             },
             {
-              tille: 'Casos de Uso',
+              title: 'Casos de Uso',
               collapsable: true,
               children: genUseCasesSidebar('/es')
             },
@@ -210,7 +210,7 @@ module.exports = {
               children: genEssentialsSidebar('/zh')
             },
             {
-              tille: 'Use Cases',
+              title: 'Use Cases',
               collapsable: true,
               children: genUseCasesSidebar()
             },
@@ -295,7 +295,7 @@ function genEssentialsSidebar(type = '') {
   })
 }
 
-function genUseCasesSidebar(type = '') {
+function genUseCasesSidebar(type = 'es') {
   const mapArr = [
     '/guide/use-cases/process.md'
   ]
