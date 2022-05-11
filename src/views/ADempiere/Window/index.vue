@@ -436,6 +436,7 @@ export default defineComponent({
     }
     // load metadata and generate window
     getWindow()
+    generateWindow()
 
     return {
       windowUuid,

@@ -169,11 +169,6 @@ export const runProcessOfWindow = {
       uuid,
       isShowed: true
     })
-    // store.dispatch('startProcessOfWindow', {
-    //   parentUuid,
-    //   containerUuid,
-    //   uuid
-    // })
   }
 }
 
