@@ -23,20 +23,14 @@ Open a process from the menu Lookup:
 3. Select the process that matches the result.
 
 ##### Zk Version:
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-menu-lookup-zk.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-menu-lookup-zk.gif')">
 
 ##### Vue Version:
 1. Click on the magnifying glass located to the right of the header.
 2. In the search engine that appears type **Send Text Email**.
 3. Select the process that matches the result.
 
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-menu-lookup-vue.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-menu-lookup-vue.gif')">
 
 
 
@@ -47,10 +41,7 @@ Open a recent items process:
 2. Select any process.
 
 ##### Vue Version:
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-recent-items-vue.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-recent-items-vue.gif')">
 
 ### Relations
 Open a process from the relationships of the same menu level:
@@ -64,10 +55,7 @@ Open a process from the relationships of the same menu level:
 ADempiere Zk client does not have an equivalent feature.
 
 ##### Vue Version:
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-relations-vue.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-relations-vue.gif')">
 
 
 
@@ -80,10 +68,7 @@ Open the associated processes in the window:
 3. Click on the gear icon in the top bar to list the processes.
 4. Select the **Generate Token for Third Party Access** process.
 
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-window-zk.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-window-zk.gif')">
 
 ##### Vue Version:
 1. Display the menu tree under **Business Partner Relationship**. 2.
@@ -91,10 +76,7 @@ Open the associated processes in the window:
 3. In the top right list, list the actions menu.
 4. Select the **Generate Token for Third Party Access** process.
 
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-window-vue.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-window-vue.gif')">
 
 
 
@@ -108,10 +90,7 @@ ADempiere Zk client does not have an equivalent feature.
 ##### Vue Version:
 1. Locate in the menu tree under **Historical Processes** and open it.
 2. Select any process with parameters **Send Text Email**.
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-relations-vue.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-relations-vue.gif')">
 
 
 ## Load
@@ -138,16 +117,10 @@ For the selectable fields (List, Table and Direct Table), the results must be fi
 4. List the values of the **Bank Account To** field and verify that the value selected in the previous field is excluded from the result.
 
 ##### Zk Version:
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-dynamic-validation-zk.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-dynamic-validation-zk.gif')">
 
 ##### Vue Version:
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-dynamic-validation-vue.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-dynamic-validation-vue.gif')">
 
 
 
@@ -180,20 +153,14 @@ Manage default values for the different types of parameters.
 2. Click opposite on the parameter value and select **Preference Value**.
 3. Note that the **Payment Type** parameter has a default value (A = Direct Deposit).
 
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-default-value-zk.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-default-value-zk.gif')">
 
 ##### Vue Version:
 1. Open the **Bank Transfer** process.
 2. Click on the parameter name and select **Information**.
 3. Note that the **Statement Date** parameter and **Payment Type** parameter have default values and are properly set in the parameters.
 
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-default-value-vue.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-default-value-vue.gif')">
 
 <!-- #### Zoom In -->
 
@@ -208,10 +175,7 @@ The following validations must be ensured in order to execute a process:
 * If it is a process associated to a window, it is not allowed to be executed in a new record.
 * If it is a process associated to an intelligent query it must have at least one selected row.
 
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-validate-mandatory-vue.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-validate-mandatory-vue.gif')">
 
 
 ### Execution
@@ -224,10 +188,7 @@ The following validations must be ensured in order to execute a process:
 ### Closing the Process on Execution
 When starting the execution of a process, you must close the current view.
 
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-run-vue.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-run-vue.gif')">
 
 ### Output
 The output is visible at the end of the process execution, as a notification, however it can be displayed in the process history.

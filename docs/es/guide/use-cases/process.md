@@ -23,20 +23,14 @@ Aperturar un proceso desde el buscador del menú:
 3. Seleccionar el proceso coincidente con el resultado.
 
 ##### Versión ZK:
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-menu-lookup-zk.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-menu-lookup-zk.gif')"  width="800px">
 
 ##### Versión Vue:
 1. Hacer clic en la lupa ubicada a la derecha de la cabecera.
 2. En el buscador que se despliega escribir **Envío Texto Correo Electrónico**.
 3. Seleccionar el proceso coincidente con el resultado.
 
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-menu-lookup-vue.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-menu-lookup-vue.gif')">
 
 
 
@@ -47,10 +41,7 @@ Aperturar un proceso de ítems recientes:
 2. Seleccionar caulquier proceso.
 
 ##### Versión Vue:
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-recent-items-vue.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+  <img :src="$withBase('/images/use-cases/process-recent-items-vue.gif')">
 
 ### Relaciones
 Aperturar un proceso desde las relaciones del mismo nivel del menú:
@@ -64,10 +55,7 @@ Aperturar un proceso desde las relaciones del mismo nivel del menú:
 El cliente ZK de ADempiere no cuenta con una caracteristica equivalente.
 
 ##### Versión Vue:
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-relations-vue.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-relations-vue.gif')">
 
 
 
@@ -80,10 +68,7 @@ Abrir los procesos asociados en la ventana:
 3. Dar clic en el icono del engranaje, en la barra superior, para listar los procesos.
 4. Seleccionar el proceso **Generar Token para Acceso de Terceros**
 
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-window-zk.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-window-zk.gif')">
 
 ##### Versión Vue:
 1. Desplegar el árbol de menú en **Relación con Socios del Negocio**.
@@ -91,10 +76,7 @@ Abrir los procesos asociados en la ventana:
 3. En la parte superior a la derecha listar, listar el menú de acciones.
 4. Seleccionar el proceso **Generar Token para Acceso de Terceros**
 
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-window-vue.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-window-vue.gif')">
 
 
 
@@ -108,10 +90,7 @@ El cliente ZK de ADempiere no cuenta con una caracteristica equivalente.
 ##### Versión Vue:
 1. Ubicar en el árbol de menú en **Histórico Procesos** y abrirlo.
 2. Seleccionar cualquier proceso con parametros **Envío Texto Correo Electrónico**.
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-relations-vue.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-relations-vue.gif')">
 
 
 ## Carga
@@ -137,16 +116,10 @@ Para los campos de seleccionables (Lista, Tabla y Tabla Directa), deben filtrars
 4. Listar los valores del campo **Cuenta Bancaria Para** y verificar que el valor seleccionado en el campo anterior se excluye del resultado.
 
 ##### Versión ZK:
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-dynamic-validation-zk.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-dynamic-validation-zk.gif')">
 
 ##### Versión Vue:
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-dynamic-validation-vue.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-dynamic-validation-vue.gif')">
 
 
 
@@ -179,20 +152,14 @@ Manejar valor por defecto para los distintos tipos de parámetros.
 2. Hacer clic contrario en el valor del parámetro y seleccionar **Valor de Preferencia**.
 3. Observe que el parámetro **Tipo de Pago** tiene valor por defecto (A = Deposito Directo).
 
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-default-value-zk.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-default-value-zk.gif')">
 
 ##### Versión Vue:
 1. Abrir el proceso **Transferencia Bancaria**.
 2. Hacer clic en el nombre del parámetro y seleccionar **Información**.
 3. Observe que el parámetro **Fecha de Estado de Cuenta** y parámetro **Tipo de Pago** tienen valores por defectos y debidamente establecidos en los parámetros.
 
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-default-value-vue.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-default-value-vue.gif')">
 
 <!-- #### Acercar -->
 
@@ -207,10 +174,7 @@ Se deben asegurar las siguientes validaciones para poder ejecutar un proceso:
 * Si es proceso asociado a una ventana no permite ejecutarse en un nuevo registro.
 * Si es proceso asociado a una consulta inteligente debe tener minímo una fila selecionada.
 
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-validate-mandatory-vue.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-validate-mandatory-vue.gif')">
 
 
 ### Ejecución
@@ -223,10 +187,7 @@ Se deben asegurar las siguientes validaciones para poder ejecutar un proceso:
 ### Cierre del Proceso al Ejecutarse
 Al comenzar la ejecución de un proceso, debe cerrar la vista actual.
 
-<video width="800px" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-run-vue.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+<img :src="$withBase('/images/use-cases/process-run-vue.gif')">
 
 ### Salida
 La salida es visuble al culminar la ejecucion del proceso, como notificación, sin embargo puede visualizarse en el historico de procesos.
