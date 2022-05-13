@@ -151,37 +151,83 @@ In ADempiere you can currently access a window from a field that is in another f
 
 ## Execution
 
-<!--### Validación
-Se deben asegurar las siguientes validaciones para poder ejecutar un reporte:
+### Parameters
+The parameters (fields) of the processes must be loaded when opening in case the report handles parameters according to each type of visualization.
 
-* Todos los campos obligatorios deben tener valores.
-* Si es reporte asociado a una ventana no permite ejecutarse en un nuevo registro.
-* Si es reporte asociado a una consulta inteligente debe tener minímo una fila selecionada.
+1. Open the **Open Balances** report.
+2. Note the different types of parameters: String, Yes and No, Date, Amount, List, Table.
 
-<video width="100%" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-validate-mandatory-vue.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+##### ZK Version:
+<img :src="$withBase('/images/use-cases/report/run/run-params-zk.gif')" alt="ZK Desktop" width="100%">
+
+##### Vue Version:
+<img :src="$withBase('/images/use-cases/report/run/run-params-vue.gif')" alt="ZK Desktop" width="100%">
+
+### Validation
+The following validations must be ensured in order to run a report:
+
+* All required fields must have values.
+* If it is a report associated to a window, it is not allowed to run on a new record.
+
+##### Vue Version:
+<img :src="$withBase('/images/use-cases/report/run/run-validation-vue.gif')" alt="ZK Desktop" width="100%">
+
+### Execution
+1. Pull down the menu tree to **Pending Balance Management**.
+2. Select the **Open Balances** report.
+3. Fill in the fields.
+4. Execute in the actions menu.
+
+##### Vue Version:
+<img :src="$withBase('/images/use-cases/report/run/run-validation-vue.gif')" alt="ZK Desktop" width="100%">
+
+### Download
+
+Currently in the ADempiere ZK interface if you run a report in PDF format and you need to download it in EXCEL you must re-run the report in EXCEL format and then click on the download option.
+
+In the ADempiere-Vue interface if you run a report in HTML and you need to download it, it is not necessary to re-run the report in the format you want to download. At the bottom of the report title positioned to the left you have the option to download it in any type of format.
+
+##### ZK version:
+<img :src="$withBase('/images/use-cases/report/run/run-download-zk.gif')" alt="ZK Desktop" width="100%">
+
+##### Vue Version:
+<img :src="$withBase('/images/use-cases/report/run/run-download-vue.gif')" alt="ZK Desktop" width="100%">
+
+### Change Parameters
+
+Currently in the ADempiere ZK interface it is not possible to change parameters in the report viewer container.
+
+##### Vue Version:
+<img :src="$withBase('/images/use-cases/report/run/run-download-vue.gif')" alt="ZK Desktop" width="100%">
+
+### Change Print Format
+
+It is required that from the report viewer you can change the print format to generate a new report.
+
+##### ZK Version:
+<img :src="$withBase('/images/use-cases/report/run/run-print-format-zk.gif')" alt="ZK Desktop" width="100%">
+
+##### Vue Version:
+<img :src="$withBase('/images/use-cases/report/run/run-print-format-vue.gif')" alt="ZK Desktop" width="100%">
 
 
-### Ejecución
-1. Desplegar el árbol de menu en **Relación con Socios del Negocio**.
-2. Seleccionar el reporte **Envío Texto Correo Electrónico**.
-3. Llenar los campos.
-4. Ejecutar en el menu de acciones.
+#### Change File Extension
+
+It is required that from the report viewer you can change the file extension to generate new report.
+
+##### ZK Version:
+<img :src="$withBase('/images/use-cases/report/run/run-change-file-extension-zk.gif')" alt="ZK Desktop" width="100%">
+
+##### Vue Version:
+<img :src="$withBase('/images/use-cases/report/run/run/run-change-file-extension-vue.gif')" alt="ZK Desktop" width="100%">
 
 
-### Cierre del Reporte al Ejecutarse
-Al comenzar la ejecución de un reporte, debe cerrar la vista actual.
+### Drill Down
 
-<video width="100%" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-run-vue.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+It is required that from the report viewer you can change Report View to generate new report.
 
-### Salida
-La salida es visuble al culminar la ejecucion del reporte, como notificación, sin embargo puede visualizarse en el historico de procesos.
+##### ZK Version:
+<img :src="$withBase('/images/use-cases/report/run/run-drill-down-zk.gif')" alt="ZK Desktop" width="100%">
 
-<img :src="$withBase('/images/use-cases/process-log-vue.png')" alt="Vue Desktop" width="100%">
-
---->
+##### Vue Version:
+<img :src="$withBase('/images/use-cases/report/run/run-drill-down-vue.gif')" alt="ZK Desktop" width="100%">

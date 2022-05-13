@@ -155,37 +155,83 @@ En ADempiere actualmente se puede acceder a una ventana desde un campo que está
 
 ## Ejecución
 
-<!--### Validación
+### Parámetros
+Los parámetros (campos) de los procesos deben cargar al abrirse en el caso de que el reporte maneje parámetros segun cada tipo de visualizacion.
+
+1. Abrir el reporte **Saldos Abiertos**.
+2. Notese los diferentes tipos de parámetros: Cadena, Si y No, Fecha, Monto, Lista, Tabla.
+
+##### Versión ZK:
+<img :src="$withBase('/images/use-cases/report/run/run-params-zk.gif')" alt="ZK Desktop" width="100%">
+
+##### Versión Vue:
+<img :src="$withBase('/images/use-cases/report/run/run-params-vue.gif')" alt="ZK Desktop" width="100%">
+
+### Validación
 Se deben asegurar las siguientes validaciones para poder ejecutar un reporte:
 
 * Todos los campos obligatorios deben tener valores.
 * Si es reporte asociado a una ventana no permite ejecutarse en un nuevo registro.
-* Si es reporte asociado a una consulta inteligente debe tener minímo una fila selecionada.
 
-<video width="100%" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-validate-mandatory-vue.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
-
+##### Versión Vue:
+<img :src="$withBase('/images/use-cases/report/run/run-validation-vue.gif')" alt="ZK Desktop" width="100%">
 
 ### Ejecución
-1. Desplegar el árbol de menu en **Relación con Socios del Negocio**.
-2. Seleccionar el reporte **Envío Texto Correo Electrónico**.
+1. Desplegar el árbol de menu en **Gestión de Saldos Pendientes**.
+2. Seleccionar el reporte **Saldos Abiertos**.
 3. Llenar los campos.
 4. Ejecutar en el menu de acciones.
 
+##### Versión Vue:
+<img :src="$withBase('/images/use-cases/report/run/run-validation-vue.gif')" alt="ZK Desktop" width="100%">
 
-### Cierre del Reporte al Ejecutarse
-Al comenzar la ejecución de un reporte, debe cerrar la vista actual.
+### Descargar
 
-<video width="100%" controls>
-  <source type="video/mp4" :src="$withBase('/images/use-cases/process-run-vue.mp4')">
-  Your browser does not support the mp4 video tag.
-</video>
+Actualmente en la interfaz de ADempiere ZK si ejecuto un reporte en formato PDF y se requiere descargarlo en EXCEL debe volver a ejecutar el reporte en el formato de EXCEL y luego hacer click en la opción de descargar
 
-### Salida
-La salida es visuble al culminar la ejecucion del reporte, como notificación, sin embargo puede visualizarse en el historico de procesos.
+En la interfaz de ADempiere-Vue si ejecuto un reporte en HTML y se requiere descargarlo no es necesario volver a ejecutar el reporte con el formato que se desea descargar. En la parte inferior del titulo del reporte posicionado al izquierda tiene la opción de descargarlo en cualquier tipo de formato
 
-<img :src="$withBase('/images/use-cases/process-log-vue.png')" alt="Vue Desktop" width="100%">
+##### Versión ZK:
+<img :src="$withBase('/images/use-cases/report/run/run-download-zk.gif')" alt="ZK Desktop" width="100%">
 
---->
+##### Versión Vue:
+<img :src="$withBase('/images/use-cases/report/run/run-download-vue.gif')" alt="ZK Desktop" width="100%">
+
+### Cambiar Parámetros
+
+Actualmente en la interfaz de ADempiere ZK no se puede cambiar de parámetros en el contenedor del visor de reporte
+
+##### Versión Vue:
+<img :src="$withBase('/images/use-cases/report/run/run-download-vue.gif')" alt="ZK Desktop" width="100%">
+
+### Cambiar Formato de Impresión
+
+Se requiere que desde el visor de reporte se pueda cambiar formato de impresión para generar nuevo reporte
+
+##### Versión ZK:
+<img :src="$withBase('/images/use-cases/report/run/run-print-format-zk.gif')" alt="ZK Desktop" width="100%">
+
+##### Versión Vue:
+<img :src="$withBase('/images/use-cases/report/run/run-print-format-vue.gif')" alt="ZK Desktop" width="100%">
+
+
+#### Cambiar Extensión de Archivo
+
+Se requiere que desde el visor de reporte se pueda cambiar la extensión del archivo para generar nuevo reporte
+
+##### Versión ZK:
+<img :src="$withBase('/images/use-cases/report/run/run-change-file-extension-zk.gif')" alt="ZK Desktop" width="100%">
+
+##### Versión Vue:
+<img :src="$withBase('/images/use-cases/report/run/run-change-file-extension-vue.gif')" alt="ZK Desktop" width="100%">
+
+
+### Drill Down
+
+Se requiere que desde el visor de reporte se pueda cambiar Vista de Reporte para generar nuevo reporte
+
+##### Versión ZK:
+<img :src="$withBase('/images/use-cases/report/run/run-drill-down-zk.gif')" alt="ZK Desktop" width="100%">
+
+##### Versión Vue:
+<img :src="$withBase('/images/use-cases/report/run/run-drill-down-vue.gif')" alt="ZK Desktop" width="100%">
