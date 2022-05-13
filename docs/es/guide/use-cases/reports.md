@@ -83,7 +83,7 @@ Los parámetros (campos) de los procesos deben cargar al abrirse en el caso de q
 2. Notese los diferentes tipos de parámetros: Cadena, Si y No, Fecha, Monto, Lista, Tabla.
 
 ##### Versión ZK:
-<img :src="$withBase('/images/use-cases/report/carga-params.gif')" alt="ZK Desktop" width="800px">
+<img :src="$withBase('/images/use-cases/report/carga-params-zk.png')" alt="ZK Desktop" width="800px">
 
 ##### Versión Vue:
 <img :src="$withBase('/images/use-cases/report/carga-params-vue.png')" alt="ZK Desktop" width="800px">
@@ -94,7 +94,7 @@ Al cargar todos los parámetros con valor por defecto, o con obligatoriedad se v
 
 ##### Versión ZK:
 Actualmente en la interfaz del zk al abrir un reporte en este caso **Saldos Abiertos** carga todos los campos en la vista 
-<img :src="$withBase('/images/use-cases/report/carga-params.gif')" alt="ZK Desktop" width="800px">
+<img :src="$withBase('/images/use-cases/report/carga-params-zk.gif')" alt="ZK Desktop" width="800px">
 
 ##### Versión Vue:
 En la interfaz de ADempiere-Vue abrir un reporte en este caso **Saldos Abiertos** solo muestra los campos con valor por defecto, o con obligatoriedad.
