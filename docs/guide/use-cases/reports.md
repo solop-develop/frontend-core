@@ -8,10 +8,10 @@ Open a report from the menu tree:
 2. Select the **Open Balances** report.
 
 #### ZK Version:
-<img :src="$withBase('/images/use-cases/report/open-menu-zk.gif')" alt="ZK Desktop" width="800px">
+<img :src="$withBase('/images/use-cases/report/open-menu-zk.gif')" alt="ZK Desktop" width="100%">
 
 #### Vue Version:
-<img :src="$withBase('/images/use-cases/report/open-menu-vue.gif')" alt="ZK Desktop" width="800px">
+<img :src="$withBase('/images/use-cases/report/open-menu-vue.gif')" alt="ZK Desktop" width="100%">
 
 
 ### Menu Browser
@@ -22,10 +22,10 @@ Open a report from the menu browser:
 3. Select the report matching the result.
 
 ##### ZK Version:
-<img :src="$withBase('/images/use-cases/report/open-search-menu.gif')" alt="ZK Desktop" width="800px">
+<img :src="$withBase('/images/use-cases/report/open-search-menu.gif')" alt="ZK Desktop" width="100%">
 
 ##### Vue Version:
-<img :src="$withBase('/images/use-cases/report/open-search-menu-vue.gif')" alt="ZK Desktop" width="800px">
+<img :src="$withBase('/images/use-cases/report/open-search-menu-vue.gif')" alt="ZK Desktop" width="100%">
 
 
 ### Recent Items
@@ -35,10 +35,10 @@ Open a report of recent items:
 2. Select any report or in case of using the quick search of the recent items table select the report matching the result.
 
 ##### ZK Version:
-<img :src="$withBase('/images/use-cases/report/open-recent-item-zk.gif')" alt="ZK Desktop" width="800px">
+<img :src="$withBase('/images/use-cases/report/open-recient-item-zk.gif')" alt="ZK Desktop" width="100%">
 
 ##### Vue Version:
-<img :src="$withBase('/images/use-cases/report/open-recient-item-vue.gif')" alt="ZK Desktop" width="800px">
+<img :src="$withBase('/images/use-cases/report/open-recient-item-vue.gif')" alt="ZK Desktop" width="100%">
 
 
 ### Relationships
@@ -57,7 +57,7 @@ ADempiere's ZK client does not have an equivalent feature.
 
 
 #### Vue Version:
-<img :src="$withBase('/images/use-cases/report/open-relations-vue.gif')" alt="ZK Desktop" width="800px">
+<img :src="$withBase('/images/use-cases/report/open-relations-vue.gif')" alt="ZK Desktop" width="100%">
 
 
 ### Re Open Report from the Process History
@@ -70,7 +70,7 @@ Currently the ADempiere ZK client does not have an equivalent feature.
 1. Locate in the menu tree in **Historical Processes** and open it.
 2. Select any report with parameters **Balance in Bank**.
 
-<img :src="$withBase('/images/use-cases/report/open-process-activity.gif')" alt="ZK Desktop" width="800px">
+<img :src="$withBase('/images/use-cases/report/open-process-activity.gif')" alt="ZK Desktop" width="100%">
 
 ## Loading
 ### Parameters
@@ -80,10 +80,10 @@ The parameters (fields) of the processes must be loaded when opening in case the
 2. Note the different types of parameters: String, Yes and No, Date, Amount, List, Table.
 
 ##### ZK Version:
-<img :src="$withBase('/images/use-cases/report/carga-params.gif')" alt="ZK Desktop" width="800px">
+<img :src="$withBase('/images/use-cases/report/carga-params.gif')" alt="ZK Desktop" width="100%">
 
 ##### Vue Version:
-<img :src="$withBase('/images/use-cases/report/load-params-vue.png')" alt="ZK Desktop" width="800px">
+<img :src="$withBase('/images/use-cases/report/carga-params-vue.png')" alt="ZK Desktop" width="100%">
 
 
 ### Display
@@ -91,25 +91,24 @@ When loading all parameters with default value, or with mandatory are displayed 
 
 ##### ZK Version:
 Currently in the zk interface when opening a report in this case **Open Balances** loads all fields in the view. 
-<img :src="$withBase('/images/use-cases/report/load-params.gif')" alt="ZK Desktop" width="800px">
+<img :src="$withBase('/images/use-cases/report/carga-params-zk.gif')" alt="ZK Desktop" width="100%">
 
 ##### Vue Version:
 In the ADempiere-Vue interface opening a report in this case **Open Balances** only shows the fields with default value, or with mandatory.
 Thus creating a more pleasant and minimalistic view for the user.
-<img :src="$withBase('/images/use-cases/report/load-display.gif')" alt="ZK Desktop" width="800px">
+<img :src="$withBase('/images/use-cases/report/carga-display.gif')" alt="ZK Desktop" width="100%">
 
 ### Mandatory
 
 ##### ZK Version:
 1. Open the **Balance in Bank** report.
 2. Mandatory fields show with a red asterisk (*) on the right side of their name.
-<img :src="$withBase('/images/use-cases/report/load-mandatory-zk.png')" alt="ZK Desktop" width="800px">
+<img :src="$withBase('/images/use-cases/report/carga-mandatory-zk.png')" alt="ZK Desktop" width="100%">
 
 ##### Vue Version:
 1. Open the **Balance in Bank** report.
 2. Mandatory fields show with a red asterisk (*) to the right side of their name, and empty mandatory fields highlight with a red border above the field.
-<img :src="$withBase('/images/use-cases/report/load-mandatory-vue.png')" alt="ZK Desktop" width="800px">
-
+<img :src="$withBase('/images/use-cases/report/carga-mandatory-vue.png')" alt="ZK Desktop" width="100%">
 
 <!-- ### Read Only -->
 
@@ -123,7 +122,7 @@ Handle default value for different types of parameters.
 2. Counter click on the parameter value and select **Preference Value**.
 3. Note that the **Document Status** parameter has default value (CO = Complete).
 
-<img :src="$withBase('/images/use-cases/report/load-defaul-value-zk.gif')" alt="ZK Desktop" width="800px">
+<img :src="$withBase('/images/use-cases/report/carga-defaul-value-zk.gif')" alt="ZK Desktop" width="100%">
 
 
 ##### Vue Version:
@@ -131,7 +130,7 @@ Handle default value for different types of parameters.
 2. Click on the parameter name and select **Information** or **Preference**.
 3. Note that the **Document Status** parameter has default value (CO = Complete).
 
-<img :src="$withBase('/images/use-cases/report/load-defaul-value-vue.gif')" alt="ZK Desktop" width="800px">
+<img :src="$withBase('/images/use-cases/report/carga-defaul-value-vue.gif')" alt="ZK Desktop" width="100%">
 
 ### Zoom in
 
@@ -142,13 +141,13 @@ In ADempiere you can currently access a window from a field that is in another f
 1. Open the **Payment Selection Detail** report.
 2. Counter click on the **Charge** parameter and select **Find**.
 
-<img :src="$withBase('/images/use-cases/report/carga-zoom-zk.gif')" alt="ZK Desktop" width="800px">
+<img :src="$withBase('/images/use-cases/report/carga-zoom-zk.gif')" alt="ZK Desktop" width="100%">
 
 ##### Vue Version:
 1. Open the **Payment Selection Detail** report.
 2. Counter click on the **Charge** parameter and select **Find**.
 
-<img :src="$withBase('/images/use-cases/report/load-zoom-vue.gif')" alt="ZK Desktop" width="800px">
+<img :src="$withBase('/images/use-cases/report/carga-zoom-vue.gif')" alt="ZK Desktop" width="100%">
 
 ## Execution
 
@@ -159,7 +158,7 @@ Se deben asegurar las siguientes validaciones para poder ejecutar un reporte:
 * Si es reporte asociado a una ventana no permite ejecutarse en un nuevo registro.
 * Si es reporte asociado a una consulta inteligente debe tener minímo una fila selecionada.
 
-<video width="800px" controls>
+<video width="100%" controls>
   <source type="video/mp4" :src="$withBase('/images/use-cases/process-validate-mandatory-vue.mp4')">
   Your browser does not support the mp4 video tag.
 </video>
@@ -175,7 +174,7 @@ Se deben asegurar las siguientes validaciones para poder ejecutar un reporte:
 ### Cierre del Reporte al Ejecutarse
 Al comenzar la ejecución de un reporte, debe cerrar la vista actual.
 
-<video width="800px" controls>
+<video width="100%" controls>
   <source type="video/mp4" :src="$withBase('/images/use-cases/process-run-vue.mp4')">
   Your browser does not support the mp4 video tag.
 </video>
@@ -183,6 +182,6 @@ Al comenzar la ejecución de un reporte, debe cerrar la vista actual.
 ### Salida
 La salida es visuble al culminar la ejecucion del reporte, como notificación, sin embargo puede visualizarse en el historico de procesos.
 
-<img :src="$withBase('/images/use-cases/process-log-vue.png')" alt="Vue Desktop" width="800px">
+<img :src="$withBase('/images/use-cases/process-log-vue.png')" alt="Vue Desktop" width="100%">
 
 --->
