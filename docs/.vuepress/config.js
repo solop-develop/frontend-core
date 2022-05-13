@@ -297,7 +297,8 @@ function genEssentialsSidebar(type = '') {
 
 function genUseCasesSidebar(type = '') {
   const mapArr = [
-    '/guide/use-cases/process.md'
+    '/guide/use-cases/process.md',
+    '/guide/use-cases/reports.md'
   ]
   return mapArr.map(i => {
     return type + i
