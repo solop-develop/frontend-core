@@ -347,6 +347,7 @@ function genComponentSidebar(type = '') {
     '/guide/components/lock-unlock-records.md',
     '/guide/components/dashboard.md',
     '/guide/components/process.md',
+    '/guide/components/reports.md',
     '/guide/components/guide.md',
     '/guide/components/workflows-and-activities.md'
   ]
