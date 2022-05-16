@@ -3,8 +3,8 @@
 ## Apertura
 
 ### Árbol de Menú
-Aperturar un proceso dede el arbol de menú:
-1. Desplegar el árbol de menu en **Relación con Socios del Negocio**.
+Abrir un proceso desde el árbol de menú:
+1. Desplegar el árbol de menú en **Relación con Socios del Negocio**.
 2. Seleccionar el proceso **Envío Texto Correo Electrónico**.
 
 ##### Versión ZK:
@@ -16,9 +16,9 @@ Aperturar un proceso dede el arbol de menú:
 
 
 ### Buscador del Menú
-Aperturar un proceso desde el buscador del menú:
+Abrir un proceso desde el buscador del menú:
 
-1. Desplegar el árbol de menu.
+1. Desplegar el árbol de menú.
 2. En el buscador de la parte superior escribir **Envío Texto Correo Electrónico**.
 3. Seleccionar el proceso coincidente con el resultado.
 
@@ -41,10 +41,10 @@ Aperturar un proceso desde el buscador del menú:
 
 
 ### Ítems Recientes
-Aperturar un proceso de ítems recientes:
+Abrir un proceso de ítems recientes:
 
 1. Ubicar el tablero **Ítems Recientes**.
-2. Seleccionar caulquier proceso.
+2. Seleccionar cualquier proceso.
 
 ##### Versión Vue:
 <video width="100%" controls>
@@ -53,15 +53,15 @@ Aperturar un proceso de ítems recientes:
 </video>
 
 ### Relaciones
-Aperturar un proceso desde las relaciones del mismo nivel del menú:
+Abrir un proceso desde las relaciones del mismo nivel del menú:
 
 1. Desplegar el árbol de menú en **Relación con Socios del Negocio**.
 2. Seleccionar la ventana **Información de Agentes de la Compañía**.
-3. Desplegar la lista del el menú de relacciones, en la parte superior a la derecha de la ventana.
+3. Desplegar la lista del el menú de relaciones, en la parte superior a la derecha de la ventana.
 4. Ubicar y seleccionar el proceso **Envío Texto Correo Electrónico**.
 
 ##### Versión ZK:
-El cliente ZK de ADempiere no cuenta con una caracteristica equivalente.
+El cliente ZK de ADempiere no cuenta con una característica equivalente.
 
 ##### Versión Vue:
 <video width="100%" controls>
@@ -100,14 +100,14 @@ Abrir los procesos asociados en la ventana:
 
 ### Re Abrir Proceso desde el Histórico Procesos
 
-Aperturar un proceso el **Histórico Procesos** con los parámetros ejecutados del proceso seleccionado:
+Abrir un proceso el **Histórico Procesos** con los parámetros ejecutados del proceso seleccionado:
 
 ##### Versión ZK:
-El cliente ZK de ADempiere no cuenta con una caracteristica equivalente.
+El cliente ZK de ADempiere no cuenta con una característica equivalente.
 
 ##### Versión Vue:
 1. Ubicar en el árbol de menú en **Histórico Procesos** y abrirlo.
-2. Seleccionar cualquier proceso con parametros **Envío Texto Correo Electrónico**.
+2. Seleccionar cualquier proceso con parámetros **Envío Texto Correo Electrónico**.
 <video width="100%" controls>
   <source type="video/mp4" :src="$withBase('/images/use-cases/process-relations-vue.mp4')">
   Your browser does not support the mp4 video tag.
@@ -116,10 +116,10 @@ El cliente ZK de ADempiere no cuenta con una caracteristica equivalente.
 
 ## Carga
 ### Parámetros
-Los parámetros (campos) de los procesos deben cargar al abrirse en el caso de que el proceso maneje parámetros segun cada tipo de visualizacion.
+Los parámetros (campos) de los procesos deben cargar al abrirse en el caso de que el proceso maneje parámetros según cada tipo de visualización.
 
 1. Abrir el proceso **Transferencia Bancaria**.
-2. Notese los diferentes tipos de parámetros: Cadena, Si y No, Fecha, Monto, Lista, Tabla.
+2. Nótese los diferentes tipos de parámetros: Cadena, Si y No, Fecha, Monto, Lista, Tabla.
 
 ##### Versión ZK:
 <img :src="$withBase('/images/use-cases/process-parameters-zk.png')" alt="ZK Desktop" width="100%">
@@ -163,7 +163,7 @@ Para los campos de seleccionables (Lista, Tabla y Tabla Directa), deben filtrars
 
 ##### Versión Vue:
 1. Abrir el proceso **Transferencia Bancaria**.
-2. Los campos obligatorios muestran con un asterisco (*) rojo al lado derecho de su nombre, y aquellos obligatorios vacios resaltan con un borde rojo sobre el campo.
+2. Los campos obligatorios muestran con un asterisco (*) rojo al lado derecho de su nombre, y aquellos obligatorios vacíos resaltan con un borde rojo sobre el campo.
 <img :src="$withBase('/images/use-cases/process-mandatory-vue.png')" alt="ZK Desktop" width="100%">
 
 
@@ -205,7 +205,7 @@ Se deben asegurar las siguientes validaciones para poder ejecutar un proceso:
 
 * Todos los campos obligatorios deben tener valores.
 * Si es proceso asociado a una ventana no permite ejecutarse en un nuevo registro.
-* Si es proceso asociado a una consulta inteligente debe tener minímo una fila selecionada.
+* Si es proceso asociado a una consulta inteligente debe tener mínimo una fila seleccionada.
 
 <video width="100%" controls>
   <source type="video/mp4" :src="$withBase('/images/use-cases/process-validate-mandatory-vue.mp4')">
@@ -214,10 +214,10 @@ Se deben asegurar las siguientes validaciones para poder ejecutar un proceso:
 
 
 ### Ejecución
-1. Desplegar el árbol de menu en **Relación con Socios del Negocio**.
+1. Desplegar el árbol de menú en **Relación con Socios del Negocio**.
 2. Seleccionar el proceso **Envío Texto Correo Electrónico**.
 3. Llenar los campos.
-4. Ejecutar en el menu de acciones.
+4. Ejecutar en el menú de acciones.
 
 
 ### Cierre del Proceso al Ejecutarse
@@ -229,6 +229,6 @@ Al comenzar la ejecución de un proceso, debe cerrar la vista actual.
 </video>
 
 ### Salida
-La salida es visuble al culminar la ejecucion del proceso, como notificación, sin embargo puede visualizarse en el historico de procesos.
+La salida es visible al culminar la ejecución del proceso, como notificación, sin embargo puede visualizarse en el histórico de procesos.
 
 <img :src="$withBase('/images/use-cases/process-log-vue.png')" alt="Vue Desktop" width="100%">
