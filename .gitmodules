@@ -1,0 +1,4 @@
+[submodule "src/themes/frontend-default-theme"]
+	path = src/themes/frontend-default-theme
+	url = https://github.com/solop-develop/frontend-default-theme.git
+	branch = experimental
