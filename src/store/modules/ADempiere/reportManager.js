@@ -132,7 +132,17 @@ const reportManager = {
           reportViewUuid
         })
           .then(runReportRepsonse => {
-            const { instanceUuid, output } = runReportRepsonse
+            const { instanceUuid, output, isError } = runReportRepsonse
+
+            if (isError) {
+              showNotification({
+                title: language.t('notifications.error'),
+                message: reportDefinition.name,
+                summary: runReportRepsonse.summary,
+                type: 'error'
+              })
+              console.warn(`Error running the process. ${runReportRepsonse.summary}.`)
+            }
 
             let link = {
               href: undefined,
@@ -218,7 +228,17 @@ const reportManager = {
           parametersList
         })
           .then(runReportRepsonse => {
-            const { instanceUuid, output } = runReportRepsonse
+            const { instanceUuid, output, isError } = runReportRepsonse
+
+            if (isError) {
+              showNotification({
+                title: language.t('notifications.error'),
+                message: reportDefinition.name,
+                summary: runReportRepsonse.summary,
+                type: 'error'
+              })
+              console.warn(`Error running the report. ${runReportRepsonse.summary}.`)
+            }
 
             let link = {
               href: undefined,
