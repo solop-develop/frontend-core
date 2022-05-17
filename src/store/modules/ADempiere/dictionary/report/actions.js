@@ -154,11 +154,17 @@ export default {
           icon: 'el-icon-document',
           enabled: true,
           svg: false,
-          actionName: 'runReportAs',
+          actionName: 'runReportAsPrintFormat',
           uuid: null,
-          runReportAs: ({ root, containerUuid }) => {
-            root.$store.dispatch('startReport', {
+          runReportAsPrintFormat: ({
+            instanceUuid,
+            root,
+            containerUuid
+          }) => {
+            root.$store.dispatch('buildReport', {
               containerUuid,
+              instanceUuid,
+              action: printFormat,
               printFormatUuid: printFormat.printFormatUuid
             })
           }
