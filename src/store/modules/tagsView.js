@@ -16,7 +16,7 @@ const mutations = {
       )) return
       state.visitedViews.push(
         Object.assign({}, view, {
-          title: view.meta.title + ':_' + view.params.name
+          title: view.meta.title
         })
       )
     } else {
