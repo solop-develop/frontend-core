@@ -269,15 +269,15 @@ Use [gRPC ADempiere Server](https://github.com/adempiere/adempiere-gRPC-Server) 
 
 ```bash
 # clone the project
-git clone -b develop git@github.com:adempiere/adempiere-vue-.git
+git clone -b experimental --recursive https://github.com/solop-develop/frontend-core.git
 
 # enter the project directory
-cd adempiere-vue
+cd frontend-core
 
-# install dependency
-yarn install
+# install dependency (yarn install --frozen-lockfile)
+yarn ci
 
-# develop
+# run project as develop
 yarn dev
 ```
 

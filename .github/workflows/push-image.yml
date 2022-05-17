@@ -7,11 +7,13 @@ on:
   # Triggers the workflow on push events but only for the develop branch
   push:
     branches:
-      - develop
+      - main
       - master
-      - test/**
+      - develop
+      - test**
     paths-ignore:
       - 'docs/**'
+      - .github/workflows/docs.yml
 
 jobs:
 
@@ -21,36 +23,34 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [14.x]
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Node configuration
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
 
-      - name: Install packages
-        run: yarn ci
+      - name: Enable https to install packages
+        run: git config --global url."https://".insteadOf git://
 
       - name: Install packages lerna
         run: yarn global add lerna
 
-      - name: Add sub module
-        run: git submodule add -b develop https://github.com/adempiere/adv-default-theme.git src/themes/default
-
-      - name: Install packages
-        run: yarn
-
       - name: Update sub module
         run: git submodule update --init --remote
+
+      - name: Install packages
+        run: yarn ci
 
       - name: Compile dist
         run: yarn build:prod
 
       - name: Upload dist app
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: adempiere-vue
           path: dist
@@ -63,16 +63,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Download build dist app
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: adempiere-vue
           path: dist
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           # CONFIGURE DOCKER SECRETS INTO REPOSITORY
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -97,10 +97,10 @@ jobs:
 
       - name: Get branch name
         id: branch-name
-        uses: tj-actions/branch-names@v4.8
+        uses: tj-actions/branch-names@v5
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: .
           file: ./build/Dockerfile.prod
