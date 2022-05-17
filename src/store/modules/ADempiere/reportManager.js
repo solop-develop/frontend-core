@@ -168,6 +168,7 @@ const reportManager = {
               instanceUuid,
               reportUuid: containerUuid,
               link,
+              parametersList,
               url: link.href,
               download: link.download
             })
@@ -240,6 +241,7 @@ const reportManager = {
               instanceUuid,
               reportUuid: containerUuid,
               link,
+              parametersList,
               url: link.href,
               download: link.download
             })
@@ -412,7 +414,6 @@ const reportManager = {
             containerUuid: uuid
           })
         }
-
         requestGetReportOutput({
           parametersList,
           printFormatUuid,
@@ -443,6 +444,7 @@ const reportManager = {
               instanceUuid,
               isReport: true,
               link,
+              parametersList,
               url: link.href,
               download: link.download
             }
@@ -454,6 +456,73 @@ const reportManager = {
           .catch(error => {
             console.warn(`Error getting report output: ${error.message}. Code: ${error.code}.`)
           })
+      })
+    },
+
+    buildReport({ commit, dispatch, getters }, {
+      containerUuid,
+      instanceUuid,
+      uuid,
+      tableName,
+      printFormatUuid,
+      reportViewUuid,
+      reportName,
+      reportType,
+      action,
+      parametersList = []
+    }) {
+      if (isEmptyValue(instanceUuid)) {
+        dispatch('startReport', {
+          containerUuid,
+          printFormatUuid,
+          reportFormat: reportType
+        })
+        return
+      }
+      const storedReportOutput = getters.getReportOutput(instanceUuid)
+
+      if (isEmptyValue(reportType) && !isEmptyValue(storedReportOutput)) {
+        reportType = storedReportOutput.reportType
+      }
+
+      if (isEmptyValue(parametersList) && !isEmptyValue(storedReportOutput)) {
+        parametersList = storedReportOutput.parametersList
+      }
+
+      if (isEmptyValue(tableName) && !isEmptyValue(action)) {
+        tableName = action.tableName
+      }
+
+      if (isEmptyValue(reportName) && !isEmptyValue(action)) {
+        reportName = action.name
+      }
+
+      if (isEmptyValue(uuid) && !isEmptyValue(action)) {
+        uuid = action.reportUuid
+      }
+
+      if (isEmptyValue(printFormatUuid) && !isEmptyValue(storedReportOutput)) {
+        printFormatUuid = storedReportOutput.printFormatUuid
+      }
+
+      if (isEmptyValue(reportViewUuid) && !isEmptyValue(storedReportOutput)) {
+        reportViewUuid = storedReportOutput.reportViewUuid
+      }
+      dispatch('getReportOutputFromServer', {
+        uuid,
+        reportType,
+        reportName,
+        tableName,
+        printFormatUuid,
+        parametersList,
+        instanceUuid,
+        reportViewUuid
+      }).then(reportOutput => {
+        dispatch('tagsView/updateVisitedView', {
+          instanceUuid,
+          ...router.app._route,
+          title: `${language.t('route.reportViewer')}: ${reportOutput.name}`
+        })
       })
     }
   },
