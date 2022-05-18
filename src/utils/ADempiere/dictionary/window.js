@@ -182,12 +182,7 @@ export const generateReportOfWindow = {
   icon: 'el-icon-document',
   actionName: 'generateReportOfWindow',
   generateReportOfWindow: ({ parentUuid, containerUuid, uuid }) => {
-    const recordUuid = store.getters.getUuidOfContainer(parentUuid)
-    console.log(containerUuid, parentUuid, 12, recordUuid)
-    console.log(store.getters.getShowedModalDialog({
-      containerUuid: uuid
-    }))
-    store.commit('setSelectProcessWindows', recordUuid)
+    store.commit('setSelectProcessWindows', uuid)
     store.commit('setShowedModalDialog', {
       containerUuid: uuid,
       isShowed: true

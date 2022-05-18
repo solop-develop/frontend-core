@@ -90,6 +90,8 @@ const reportManager = {
       reportViewUuid
     }) {
       return new Promise(resolve => {
+        const recordId = router.app._route.params.recordId
+        const tableName = router.app._route.params.recordId
         const reportDefinition = rootGetters.getStoredReport(containerUuid)
         const { fieldsList } = reportDefinition
 
@@ -138,8 +140,10 @@ const reportManager = {
         requestRunReport({
           uuid: containerUuid,
           reportType,
+          tableName,
           parametersList,
           printFormatUuid,
+          recordId,
           reportViewUuid
         })
           .then(runReportRepsonse => {
