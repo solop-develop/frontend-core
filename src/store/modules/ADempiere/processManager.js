@@ -25,8 +25,10 @@ import {
 
 // utils and helper methods
 import { getToken } from '@/utils/auth'
+import { viewerSupportedFormats } from '@/utils/ADempiere/dictionary/report.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage, showNotification } from '@/utils/ADempiere/notification'
+import { buildLinkHref } from '@/utils/ADempiere/resource.js'
 
 const initState = {
   printFormatList: {}
@@ -231,7 +233,6 @@ const processManager = {
         })
         const currentProcess = browserDefinition.processes.find(process => process.name === processModal.title)
 
-        // })
         const fieldsList = getters.getStoredFieldsFromProcess(containerUuid)
         const parametersList = rootGetters.getProcessParameters({
           containerUuid,
@@ -262,7 +263,45 @@ const processManager = {
           .then(runProcessRepsonse => {
             isProcessedError = runProcessRepsonse.isError
             summary = runProcessRepsonse.summary
+            let link = {
+              href: undefined,
+              download: undefined
+            }
+            const { output, instanceUuid } = runProcessRepsonse
+            if (output) {
+              link = buildLinkHref({
+                fileName: output.fileName,
+                outputStream: output.outputStream,
+                type: output.mimeType
+              })
 
+              // donwloaded not support render report
+              if (!viewerSupportedFormats.includes('pdf')) {
+                link.click()
+              }
+
+              router.push({
+                name: 'Report Viewer',
+                params: {
+                  reportUuid: containerUuid,
+                  instanceUuid,
+                  fileName: output.fileName,
+                  // menuParentUuid,
+                  name: output.name,
+                  tableName: output.tableName
+                }
+              }, () => {})
+
+              commit('setReportOutput', {
+                ...output,
+                instanceUuid,
+                reportUuid: containerUuid,
+                link,
+                parametersList: [],
+                url: link.href,
+                download: link.download
+              })
+            }
             resolve(runProcessRepsonse)
           })
           .catch(error => {

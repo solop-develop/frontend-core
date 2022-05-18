@@ -11,8 +11,7 @@ const mutations = {
       if (state.visitedViews.some(v =>
         v.params &&
         v.params.reportUuid === view.params.reportUuid &&
-        v.params.tableName === view.params.tableName &&
-        v.params.name === view.params.name
+        v.params.tableName === view.params.tableName
       )) return
       state.visitedViews.push(
         Object.assign({}, view, {
