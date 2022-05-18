@@ -26,6 +26,7 @@ import {
   createNewRecord,
   deleteRecord,
   runProcessOfWindow,
+  generateReportOfWindow,
   refreshRecords
 } from '@/utils/ADempiere/dictionary/window.js'
 import {
@@ -77,33 +78,59 @@ export default {
 
     if (!isEmptyValue(tabDefinition.processes)) {
       tabDefinition.processes.forEach(process => {
-        // const { uuid, name, description } = process
-        // dispatch('getProcessDefinitionFromServer', {
-        //   uuid: process.uuid
-        // })
-        dispatch('setModalDialog', {
-          containerUuid: process.uuid,
-          title: process.name,
-          doneMethod: () => {
-            dispatch('startProcessOfWindows', {
-              parentUuid: containerUuid,
-              containerUuid: process.uuid
-            })
-          },
-          loadData: () => {
-            return dispatch('getProcessDefinitionFromServer', {
-              uuid: process.uuid
-            })
-          },
-          ...process,
-          // TODO: Change to string and import dynamic in component
-          componentPath: () => import('@theme/components/ADempiere/PanelDefinition/index.vue'),
-          isShowed: false
-        })
-        actionsList.push({
-          ...runProcessOfWindow,
-          ...process
-        })
+        let currentAction = {}
+        if (process.isReport) {
+          currentAction = {
+            ...generateReportOfWindow,
+            ...process,
+            containerUuid: process.uuid
+          }
+          console.info(`process uuid`, process.uuid)
+          dispatch('setModalDialog', {
+            containerUuid: process.uuid,
+            title: process.name,
+            doneMethod: () => {
+              dispatch('startReportOfWindows', {
+                parentUuid: containerUuid,
+                containerUuid: process.uuid
+              })
+            },
+            loadData: () => {
+              return dispatch('getReportDefinitionFromServer', {
+                uuid: process.uuid
+              })
+            },
+            // TODO: Change to string and import dynamic in component
+            componentPath: () => import('@theme/components/ADempiere/PanelDefinition/index.vue'),
+            isShowed: false
+          })
+        } else {
+          currentAction = {
+            ...runProcessOfWindow,
+            ...process,
+            containerUuid: process.uuid
+          }
+          dispatch('setModalDialog', {
+            containerUuid: process.uuid,
+            title: process.name,
+            doneMethod: () => {
+              dispatch('startProcessOfWindows', {
+                parentUuid: containerUuid,
+                containerUuid: process.uuid
+              })
+            },
+            loadData: () => {
+              return dispatch('getProcessDefinitionFromServer', {
+                uuid: process.uuid
+              })
+            },
+            // TODO: Change to string and import dynamic in component
+            componentPath: () => import('@theme/components/ADempiere/PanelDefinition/index.vue'),
+            isShowed: false
+          })
+        }
+
+        actionsList.push(currentAction)
       })
     }
 

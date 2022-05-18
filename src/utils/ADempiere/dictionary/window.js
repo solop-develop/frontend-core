@@ -166,7 +166,30 @@ export const runProcessOfWindow = {
     store.commit('setSelectProcessWindows', uuid)
     store.commit('setShowedModalDialog', {
       containerUuid: uuid,
-      uuid,
+      isShowed: true
+    })
+  }
+}
+
+export const generateReportOfWindow = {
+  name: lang.t('actionMenu.generateReport'),
+  enabled: ({ parentUuid, containerUuid }) => {
+    return !isEmptyValue(
+      store.getters.getUuidOfContainer(containerUuid)
+    )
+  },
+  svg: false,
+  icon: 'el-icon-document',
+  actionName: 'generateReportOfWindow',
+  generateReportOfWindow: ({ parentUuid, containerUuid, uuid }) => {
+    const recordUuid = store.getters.getUuidOfContainer(parentUuid)
+    console.log(containerUuid, parentUuid, 12, recordUuid)
+    console.log(store.getters.getShowedModalDialog({
+      containerUuid: uuid
+    }))
+    store.commit('setSelectProcessWindows', recordUuid)
+    store.commit('setShowedModalDialog', {
+      containerUuid: uuid,
       isShowed: true
     })
   }
