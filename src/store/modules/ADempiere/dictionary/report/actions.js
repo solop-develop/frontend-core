@@ -128,9 +128,9 @@ export default {
           actionName: 'runReportAs',
           uuid: null,
           runReportAs: ({ root, containerUuid }) => {
-            root.$store.dispatch('startReport', {
+            root.$store.dispatch('buildReport', {
               containerUuid,
-              reportFormat: reportType.type
+              reportType: reportType.type
             })
           }
         })
@@ -189,7 +189,7 @@ export default {
           actionName: 'runReportAs',
           uuid: null,
           runReportAs: ({ root, containerUuid }) => {
-            root.$store.dispatch('startReport', {
+            root.$store.dispatch('buildReport', {
               containerUuid,
               reportViewUuid: reportView.reportViewUuid
             })
@@ -245,7 +245,7 @@ export default {
    * @param {string}  containerUuid
    * @param {array}  fieldsList
    */
-  setReportDefaultValues({ dispatch, getters }, {
+  setReportDefaultValues({ commit, dispatch, getters }, {
     containerUuid,
     fieldsList = []
   }) {
@@ -265,6 +265,11 @@ export default {
         containerUuid,
         isOverWriteParent: true,
         attributes: defaultAttributes
+      })
+
+      // clear last parameters with report generated
+      commit('setReportGenerated', {
+        containerUuid
       })
 
       resolve(defaultAttributes)

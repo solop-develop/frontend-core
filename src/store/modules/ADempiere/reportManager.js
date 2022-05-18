@@ -30,7 +30,7 @@ import {
 } from '@/api/ADempiere/report'
 
 // constants
-import { viewerSupportedFormats } from '@/utils/ADempiere/dictionary/report.js'
+import { viewerSupportedFormats, DEFAULT_REPORT_TYPE } from '@/utils/ADempiere/dictionary/report.js'
 
 // utils and helper methods
 import { getToken } from '@/utils/auth'
@@ -45,8 +45,8 @@ const initState = {
   reportFormatsList: {},
   reportViewsList: {},
   drillTablesList: {},
-  reportOutput: {},
-  reportsOutput: {}
+  reportsOutput: {},
+  reportsGenerated: {}
 }
 
 const reportManager = {
@@ -68,6 +68,15 @@ const reportManager = {
     setReportOutput(state, reportOutput) {
       Vue.set(state.reportsOutput, reportOutput.instanceUuid, reportOutput)
     },
+    setReportGenerated(state, { containerUuid, parametersList, reportType, printFormatUuid, reportViewUuid }) {
+      Vue.set(state.reportsGenerated, containerUuid, {
+        containerUuid,
+        parametersList,
+        reportType,
+        printFormatUuid,
+        reportViewUuid
+      })
+    },
     resetStateReportManager(state) {
       state = initState
     }
@@ -76,7 +85,7 @@ const reportManager = {
   actions: {
     startReport({ commit, dispatch, rootGetters }, {
       containerUuid,
-      reportFormat = 'html',
+      reportType = DEFAULT_REPORT_TYPE,
       printFormatUuid,
       reportViewUuid
     }) {
@@ -120,13 +129,15 @@ const reportManager = {
         dispatch('tagsView/delView', currentRoute)
         // go to back page
         const oldRouter = tabViewsVisited[tabViewsVisited.length - 1]
-        router.push({
-          path: oldRouter.path
-        }, () => {})
+        if (!isEmptyValue(oldRouter)) {
+          router.push({
+            path: oldRouter.path
+          }, () => {})
+        }
 
         requestRunReport({
           uuid: containerUuid,
-          reportType: reportFormat,
+          reportType,
           parametersList,
           printFormatUuid,
           reportViewUuid
@@ -156,7 +167,7 @@ const reportManager = {
               })
 
               // donwloaded not support render report
-              if (!viewerSupportedFormats.includes(reportFormat)) {
+              if (!viewerSupportedFormats.includes(reportType)) {
                 link.click()
               }
 
@@ -195,13 +206,20 @@ const reportManager = {
                 reportingNotification.close()
               }, 1000)
             }
+            commit('setReportGenerated', {
+              containerUuid,
+              parametersList,
+              reportType,
+              printFormatUuid,
+              reportViewUuid
+            })
           })
       })
     },
 
     downloadReport({ commit, rootGetters }, {
       containerUuid,
-      reportFormat = 'html'
+      reportType = DEFAULT_REPORT_TYPE
     }) {
       return new Promise(resolve => {
         const reportDefinition = rootGetters.getStoredReport(containerUuid)
@@ -225,7 +243,7 @@ const reportManager = {
 
         requestRunReport({
           uuid: containerUuid,
-          reportType: reportFormat,
+          reportType,
           parametersList
         })
           .then(runReportRepsonse => {
@@ -491,63 +509,104 @@ const reportManager = {
       action,
       parametersList = []
     }) {
-      if (isEmptyValue(instanceUuid)) {
-        dispatch('startReport', {
-          containerUuid,
-          printFormatUuid,
-          reportFormat: reportType
-        })
-        return
-      }
-      const storedReportOutput = getters.getReportOutput(instanceUuid)
-
-      if (isEmptyValue(reportType) && !isEmptyValue(storedReportOutput)) {
-        reportType = storedReportOutput.reportType
+      const currentRoute = router.app._route
+      // generated with refresh web browser
+      if (isEmptyValue(containerUuid)) {
+        if (currentRoute.params && currentRoute.params.reportUuid) {
+          containerUuid = currentRoute.params.reportUuid
+        }
       }
 
-      if (isEmptyValue(parametersList) && !isEmptyValue(storedReportOutput)) {
-        parametersList = storedReportOutput.parametersList
+      const storedReportGenerated = getters.getReportGenerated(containerUuid)
+
+      if (!isEmptyValue(storedReportGenerated)) {
+        if (isEmptyValue(reportType)) {
+          reportType = storedReportGenerated.reportType
+        }
+        if (isEmptyValue(parametersList)) {
+          parametersList = storedReportGenerated.parametersList
+        }
+        if (isEmptyValue(uuid) && !isEmptyValue(action)) {
+          uuid = action.reportUuid
+        }
+        if (isEmptyValue(printFormatUuid)) {
+          printFormatUuid = storedReportGenerated.printFormatUuid
+        }
+        if (isEmptyValue(reportViewUuid)) {
+          reportViewUuid = storedReportGenerated.reportViewUuid
+        }
       }
 
       if (isEmptyValue(tableName) && !isEmptyValue(action)) {
         tableName = action.tableName
       }
-
       if (isEmptyValue(reportName) && !isEmptyValue(action)) {
         reportName = action.name
       }
 
-      if (isEmptyValue(uuid) && !isEmptyValue(action)) {
-        uuid = action.reportUuid
-      }
-
-      if (isEmptyValue(printFormatUuid) && !isEmptyValue(storedReportOutput)) {
-        printFormatUuid = storedReportOutput.printFormatUuid
-      }
-
-      if (isEmptyValue(reportViewUuid) && !isEmptyValue(storedReportOutput)) {
-        reportViewUuid = storedReportOutput.reportViewUuid
-      }
-      dispatch('getReportOutputFromServer', {
-        uuid,
-        reportType,
-        reportName,
-        tableName,
-        printFormatUuid,
-        parametersList,
-        instanceUuid,
-        reportViewUuid
-      }).then(reportOutput => {
-        dispatch('tagsView/updateVisitedView', {
-          instanceUuid,
-          ...router.app._route,
-          title: `${language.t('route.reportViewer')}: ${reportOutput.name}`
+      if (isEmptyValue(instanceUuid)) {
+        dispatch('startReport', {
+          containerUuid,
+          reportType,
+          printFormatUuid,
+          reportViewUuid
         })
+        return
+      }
+
+      return new Promise((resolve) => {
+        dispatch('getReportOutputFromServer', {
+          uuid,
+          reportType,
+          reportName,
+          tableName,
+          printFormatUuid,
+          parametersList,
+          instanceUuid,
+          reportViewUuid
+        })
+          .then(reportOutput => {
+            dispatch('tagsView/updateVisitedView', {
+              instanceUuid,
+              ...currentRoute,
+              title: `${language.t('route.reportViewer')}: ${reportOutput.name}`
+            })
+
+            if (!isEmptyValue(reportOutput)) {
+              if (isEmptyValue(parametersList)) {
+                parametersList = reportOutput.parametersList
+              }
+              if (isEmptyValue(tableName)) {
+                tableName = reportOutput.tableName
+              }
+              if (isEmptyValue(printFormatUuid)) {
+                printFormatUuid = reportOutput.printFormatUuid
+              }
+              if (isEmptyValue(reportViewUuid)) {
+                reportViewUuid = reportOutput.reportViewUuid
+              }
+            }
+
+            resolve(reportOutput)
+          })
+          .finally(() => {
+            commit('setReportGenerated', {
+              containerUuid,
+              parametersList,
+              reportType,
+              printFormatUuid,
+              reportViewUuid
+            })
+          })
       })
     }
   },
 
   getters: {
+    getReportGenerated: (state) => (containerUuid) => {
+      return state.reportsGenerated[containerUuid]
+    },
+
     getReportOutput: (state) => (instanceUuid) => {
       return state.reportsOutput[instanceUuid]
     },

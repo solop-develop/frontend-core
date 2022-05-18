@@ -37,7 +37,7 @@
           />
 
           <file-render
-            :format="reportFormat"
+            :format="reportType"
             :content="reportContent"
             :src="link.href"
             :mime-type="getStoredReportOutput.mimeType"
@@ -79,6 +79,8 @@ import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp/index.vue'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { showNotification } from '@/utils/ADempiere/notification.js'
+import { getExtensionFromFile } from '@/utils/ADempiere/resource.js'
+import { DEFAULT_REPORT_TYPE } from '@/utils/ADempiere/dictionary/report.js'
 
 export default defineComponent({
   name: 'ReportViewer',
@@ -95,7 +97,7 @@ export default defineComponent({
     const reportUuid = root.$route.params.reportUuid
     const { containerManager, actionsManager, storedReportDefinition } = mixinReport(reportUuid)
     const isLoading = ref(false)
-    const reportFormat = ref('html')
+    const reportType = ref(DEFAULT_REPORT_TYPE)
     const reportContent = ref('')
 
     const getStoredReportOutput = computed(() => {
@@ -108,9 +110,9 @@ export default defineComponent({
 
     function displayReport(reportOutput) {
       if (!reportOutput.isError) {
-        const { output, reportType } = reportOutput
+        const { output, reportType: format } = reportOutput
 
-        reportFormat.value = reportType
+        reportType.value = format
         reportContent.value = output
 
         isLoading.value = true
@@ -178,10 +180,10 @@ export default defineComponent({
                   object: parameters
                 })
 
-                const reportType = fileName.split('.').pop()
-                store.dispatch('getReportOutputFromServer', {
+                const reportFormat = getExtensionFromFile(fileName)
+                store.dispatch('buildReport', {
                   uuid: reportUuid,
-                  reportType,
+                  reportType: reportFormat,
                   reportName: fileName,
                   tableName: root.$route.params.tableName,
                   parametersList,
@@ -212,13 +214,13 @@ export default defineComponent({
 
     onMounted(() => {
       getReport()
-      root.$route.meta.reportFormat = reportFormat.value
+      root.$route.meta.reportType = reportType.value
     })
 
     return {
       reportUuid,
       isLoading,
-      reportFormat,
+      reportType,
       reportContent,
       actionsManager,
       relationsManager,
