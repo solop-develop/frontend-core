@@ -181,6 +181,16 @@ The following validations must be ensured in order to run a report:
 ##### Vue Version:
 <img :src="$withBase('/images/use-cases/report/run/run-validation-vue.gif')" alt="ZK Desktop" width="100%">
 
+### Run from Window
+
+Currently in the ADempiere-Vue version you can run reports.
+
+1. Open the **Documents Receivable** window.
+2. Go to the Actions menu and expand the list.
+3. Select the **Print Invoice** Option.
+##### Vue Version:
+<img :src="$withBase('/images/use-cases/report/run/open-windows.gif')" alt="ZK Desktop" width="100%">
+
 ### Download
 
 Currently in the ADempiere ZK interface if you run a report in PDF format and you need to download it in EXCEL you must re-run the report in EXCEL format and then click on the download option.

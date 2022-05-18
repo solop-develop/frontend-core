@@ -186,6 +186,16 @@ Se deben asegurar las siguientes validaciones para poder ejecutar un reporte:
 ##### Versión Vue:
 <img :src="$withBase('/images/use-cases/report/run/run-validation-vue.gif')" alt="ZK Desktop" width="100%">
 
+### Ejecutar desde la Ventana
+
+Actualmente en la versión de ADempiere-Vue se pueden ejecutar reportes.
+
+1. Abra la ventana de **Documentos por Cobrar**
+2. Dirijase al menú de acciones y despliegue la lista
+3. Seleccione la Opción de **Imprimir Factura**
+##### Versión Vue:
+<img :src="$withBase('/images/use-cases/report/run/open-windows.gif')" alt="ZK Desktop" width="100%">
+
 ### Descargar
 
 Actualmente en la interfaz de ADempiere ZK si ejecuto un reporte en formato PDF y se requiere descargarlo en EXCEL debe volver a ejecutar el reporte en el formato de EXCEL y luego hacer clic en la opción de descargar
