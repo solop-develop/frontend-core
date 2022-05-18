@@ -188,7 +188,7 @@ export default {
           svg: false,
           actionName: 'runReportView',
           uuid: null,
-          runReportAs: ({ root, containerUuid }) => {
+          runReportView: ({ root, containerUuid }) => {
             root.$store.dispatch('buildReport', {
               containerUuid,
               action: reportView,
