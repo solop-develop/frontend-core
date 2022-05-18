@@ -133,9 +133,10 @@ export default {
         } = view.meta
 
         if (panelType !== 'window') {
-          const setDefaul = this.$store._actions[`set${capitalize(panelType)}DefaultValues`]
-          if (setDefaul) {
-            this.$store.dispatch(`set${capitalize(panelType)}DefaultValues`, {
+          const defaultValuesDispatch = `set${capitalize(panelType)}DefaultValues`
+          const isExists = this.$store._actions[defaultValuesDispatch]
+          if (isExists) {
+            this.$store.dispatch(defaultValuesDispatch, {
               parentUuid,
               containerUuid,
               panelType,

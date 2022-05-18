@@ -19,6 +19,16 @@
 // Please add the necessary functions here:
 import { config } from '@/utils/ADempiere/config'
 import { getToken } from '@/utils/auth'
+
+/**
+ * Extract extension file from file name
+ * @param {string} fileName
+ * @returns
+ */
+export function getExtensionFromFile(fileName) {
+  return fileName.split('.').pop()
+}
+
 // Merge two arrays and return merged array
 export function mergeByteArray(currentArray, arrayToMerge) {
   const mergedArray = new currentArray.constructor(currentArray.length + arrayToMerge.length)

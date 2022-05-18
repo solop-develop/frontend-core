@@ -46,6 +46,11 @@ export const reportFormatsList = [
   'xml'
 ]
 
+/**
+ * Default report type to generate
+ */
+export const DEFAULT_REPORT_TYPE = 'pdf'
+
 export const runReport = {
   name: language.t('actionMenu.generateReport'),
   description: language.t('actionMenu.generateDefaultReport'),
@@ -59,7 +64,7 @@ export const runReport = {
   actionName: 'runReport',
   uuid: null,
   runReport: ({ containerUuid }) => {
-    store.dispatch('startReport', {
+    store.dispatch('buildReport', {
       containerUuid
     })
   }
@@ -77,7 +82,7 @@ export const runReportAs = {
   uuid: null,
   childs: [],
   runReportAs: ({ containerUuid }) => {
-    store.dispatch('startReport', {
+    store.dispatch('buildReport', {
       containerUuid
     })
   }
@@ -95,7 +100,7 @@ export const runReportAsPrintFormat = {
   uuid: null,
   childs: [],
   runReportAsPrintFormat: ({ containerUuid }) => {
-    store.dispatch('startReport', {
+    store.dispatch('buildReport', {
       containerUuid
     })
   }
@@ -113,7 +118,7 @@ export const runReportAsView = {
   uuid: null,
   childs: [],
   runReportAsView: ({ containerUuid }) => {
-    store.dispatch('startReport', {
+    store.dispatch('buildReport', {
       containerUuid
     })
   }

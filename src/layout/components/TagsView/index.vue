@@ -70,6 +70,9 @@ import { generateTitle } from '@/utils/i18n'
 import path from 'path'
 import draggable from 'vuedraggable'
 
+// utils and helper methods
+import { capitalize } from '@/utils/ADempiere/formatValue/stringFormat'
+
 export default {
   components: { ScrollPane, draggable },
   data() {
@@ -202,23 +205,39 @@ export default {
           this.toLastView(visitedViews, view)
         }
       }).finally(() => {
+        // report view
+        if (view.params && view.params.reportUuid) {
+          view.meta.uuid = view.params.reportUuid
+        }
         if (view.meta && view.meta.uuid && view.meta.type) {
+          const panelType = view.meta.type
           let parentUuid
           let containerUuid = view.meta.uuid
-          if (view.meta.type === 'window') {
+          if (panelType === 'window') {
             parentUuid = view.meta.uuid
             containerUuid = view.meta.tabUuid
             this.$store.dispatch('setWindowOldRoute')
           }
 
+          const defaultValuesDispatch = `set${capitalize(panelType)}DefaultValues`
+          const isExists = this.$store._actions[defaultValuesDispatch]
+          if (isExists) {
+            this.$store.dispatch(defaultValuesDispatch, {
+              parentUuid,
+              containerUuid,
+              panelType,
+              isNewRecord: false
+            })
+          }
+
           this.$store.dispatch('setDefaultValues', {
             parentUuid,
             containerUuid,
-            panelType: view.meta.type,
+            panelType,
             isNewRecord: false
           })
 
-          if (['window', 'browser'].includes(view.meta.type)) {
+          if (['window', 'browser'].includes(panelType)) {
             this.$store.dispatch('deleteRecordContainer', {
               viewUuid: view.meta.uuid
             })
