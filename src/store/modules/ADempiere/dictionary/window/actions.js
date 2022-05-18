@@ -15,6 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import router from '@/router'
+import store from '@/store'
 
 // api request methods
 import { requestWindowMetadata } from '@/api/ADempiere/dictionary/window.js'
@@ -33,6 +34,7 @@ import {
   sharedLink,
   recordAccess
 } from '@/utils/ADempiere/constants/actionsMenuList.js'
+import evaluator, { getContext } from '@/utils/ADempiere/contextUtils.js'
 
 export default {
   addWindow({ commit, dispatch }, windowResponse) {
@@ -78,19 +80,14 @@ export default {
 
     if (!isEmptyValue(tabDefinition.processes)) {
       tabDefinition.processes.forEach(process => {
-        let currentAction = {}
+        let defaultAction = {}
         if (process.isReport) {
-          currentAction = {
-            ...generateReportOfWindow,
-            ...process,
-            containerUuid: process.uuid
-          }
-          console.info(`process uuid`, process.uuid)
+          defaultAction = generateReportOfWindow
           dispatch('setModalDialog', {
             containerUuid: process.uuid,
             title: process.name,
             doneMethod: () => {
-              dispatch('startReportOfWindows', {
+              dispatch('startReport', {
                 parentUuid: containerUuid,
                 containerUuid: process.uuid
               })
@@ -105,11 +102,7 @@ export default {
             isShowed: false
           })
         } else {
-          currentAction = {
-            ...runProcessOfWindow,
-            ...process,
-            containerUuid: process.uuid
-          }
+          defaultAction = runProcessOfWindow
           dispatch('setModalDialog', {
             containerUuid: process.uuid,
             title: process.name,
@@ -130,7 +123,36 @@ export default {
           })
         }
 
-        actionsList.push(currentAction)
+        // TODO: Improve performance, evaluate whether it is possible to directly
+        // add the field display logic in the process associated with the field.
+        const fieldAssociated = store.getters.getStoredFieldFromProcess({
+          windowUuid: parentUuid,
+          tabUuid: containerUuid,
+          processUuid: process.uuid
+        })
+
+        let displayed = ({ containerUuid, parentUuid }) => {
+          return true
+        }
+        if (fieldAssociated && !isEmptyValue(fieldAssociated.displayLogic)) {
+          displayed = ({ parentUuid, containerUuid }) => {
+            // evaluate display logic of field with process associated to hidden/showed
+            const isDisplayedFromLogic = evaluator.evaluateLogic({
+              parentUuid,
+              containerUuid,
+              context: getContext,
+              logic: fieldAssociated.displayLogic
+            })
+            return isDisplayedFromLogic
+          }
+        }
+
+        actionsList.push({
+          ...defaultAction,
+          ...process,
+          containerUuid: process.uuid,
+          displayed
+        })
       })
     }
 

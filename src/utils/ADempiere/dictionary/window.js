@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import lang from '@/lang'
+import language from '@/lang'
 import store from '@/store'
 
 // utils and helpers methods
@@ -81,12 +81,16 @@ export function isReadOnlyColumn({ isReadOnly }) {
  */
 export const createNewRecord = {
   sequence: 0,
-  name: lang.t('actionMenu.createNewRecord'),
+  name: language.t('actionMenu.createNewRecord'),
   type: 'setDefaultValues',
   enabled: ({ parentUuid, containerUuid }) => {
-    return !isEmptyValue(
-      store.getters.getUuidOfContainer(containerUuid)
-    )
+    const tab = store.getters.getStoredTab(parentUuid, containerUuid)
+    if (tab.isInsertRecord) {
+      const recordUuid = store.getters.getUuidOfContainer(containerUuid)
+      return !isEmptyValue(recordUuid)
+    }
+
+    return false
   },
   svg: false,
   icon: 'el-icon-circle-plus-outline',
@@ -101,7 +105,7 @@ export const createNewRecord = {
 
 export const undoChange = {
   sequence: 0,
-  name: lang.t('actionMenu.createNewRecord'),
+  name: language.t('actionMenu.createNewRecord'),
   type: 'undoModifyData',
   enabled: ({ parentUuid, containerUuid }) => {
     return isEmptyValue(
@@ -116,14 +120,18 @@ export const undoChange = {
 }
 
 /**
- * Delete record (entity) with record
+ * Delete record (entity)
  */
 export const deleteRecord = {
-  name: lang.t('actionMenu.deleteRecord'),
+  name: language.t('actionMenu.deleteRecord'),
   enabled: ({ parentUuid, containerUuid }) => {
-    return !isEmptyValue(
-      store.getters.getUuidOfContainer(containerUuid)
-    )
+    const tab = store.getters.getStoredTab(parentUuid, containerUuid)
+    if (tab.isInsertRecord && tab.isDeleteable) {
+      const recordUuid = store.getters.getUuidOfContainer(containerUuid)
+      return !isEmptyValue(recordUuid)
+    }
+
+    return false
   },
   svg: false,
   icon: 'el-icon-delete',
@@ -138,13 +146,13 @@ export const deleteRecord = {
     })
       .then(() => {
         showMessage({
-          message: lang.t('recordManager.deleteRecordSuccessful'),
+          message: language.t('recordManager.deleteRecordSuccessful'),
           type: 'success'
         })
       })
       .catch(error => {
         showMessage({
-          message: lang.t('recordManager.deleteRecordError'),
+          message: language.t('recordManager.deleteRecordError'),
           type: 'error'
         })
         console.warn(`Delete Entity - Error ${error.message}, Code: ${error.code}.`)
@@ -152,12 +160,14 @@ export const deleteRecord = {
   }
 }
 
+/**
+ * Run process associated on table or button field
+ */
 export const runProcessOfWindow = {
-  name: lang.t('actionMenu.runProcess'),
+  name: language.t('actionMenu.runProcess'),
   enabled: ({ parentUuid, containerUuid }) => {
-    return !isEmptyValue(
-      store.getters.getUuidOfContainer(containerUuid)
-    )
+    const recordUuid = store.getters.getUuidOfContainer(containerUuid)
+    return !isEmptyValue(recordUuid)
   },
   svg: false,
   icon: 'el-icon-setting',
@@ -171,12 +181,14 @@ export const runProcessOfWindow = {
   }
 }
 
+/**
+ * Generate report associated on table or button field
+ */
 export const generateReportOfWindow = {
-  name: lang.t('actionMenu.generateReport'),
+  name: language.t('actionMenu.generateReport'),
   enabled: ({ parentUuid, containerUuid }) => {
-    return !isEmptyValue(
-      store.getters.getUuidOfContainer(containerUuid)
-    )
+    const recordUuid = store.getters.getUuidOfContainer(containerUuid)
+    return !isEmptyValue(recordUuid)
   },
   svg: false,
   icon: 'el-icon-document',
@@ -191,7 +203,7 @@ export const generateReportOfWindow = {
 }
 
 export const refreshRecords = {
-  name: lang.t('actionMenu.refreshRecords'),
+  name: language.t('actionMenu.refreshRecords'),
   enabled: () => {
     return true
   },
@@ -208,7 +220,7 @@ export const refreshRecords = {
 }
 
 export const lockRecord = {
-  name: lang.t('actionMenu.refreshRecords'),
+  name: language.t('actionMenu.refreshRecords'),
   type: 'lockRecord',
   enabled: ({ parentUuid, containerUuid }) => {
     return !isEmptyValue(
@@ -223,7 +235,7 @@ export const lockRecord = {
 }
 
 export const unlockRecord = {
-  name: lang.t('actionMenu.refreshRecords'),
+  name: language.t('actionMenu.refreshRecords'),
   type: 'unlockRecord',
   enabled: ({ parentUuid, containerUuid }) => {
     return !isEmptyValue(
@@ -238,7 +250,7 @@ export const unlockRecord = {
 }
 
 export const recordAccess = {
-  name: lang.t('actionMenu.refreshRecords'),
+  name: language.t('actionMenu.refreshRecords'),
   enabled: ({ parentUuid, containerUuid }) => {
     return !isEmptyValue(
       store.getters.getUuidOfContainer(containerUuid)

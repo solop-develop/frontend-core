@@ -48,7 +48,7 @@ export default {
    * Get report dictionary definition
    * @param {string} uuid of dictionary
    */
-  getReportDefinitionFromServer({ dispatch }, {
+  getReportDefinitionFromServer({ dispatch, getters }, {
     uuid
   }) {
     return new Promise((resolve, reject) => {
@@ -78,23 +78,27 @@ export default {
 
           resolve(reportDefinition)
 
-          dispatch('setModalDialog', {
-            containerUuid: uuid,
-            title: reportDefinition.name,
-            doneMethod: () => {
-              dispatch('startReport', {
-                containerUuid: uuid
-              })
-            },
-            loadData: () => {
-              return dispatch('getProcessDefinitionFromServer', {
-                uuid: uuid
-              })
-            },
-            // TODO: Change to string and import dynamic in component
-            componentPath: () => import('@theme/components/ADempiere/PanelDefinition/index.vue'),
-            isShowed: false
-          })
+          // exist dialog if is process associated
+          const storedModalDialog = getters.getModalDialogManager({ containerUuid: uuid })
+          if (isEmptyValue(storedModalDialog)) {
+            dispatch('setModalDialog', {
+              containerUuid: uuid,
+              title: reportDefinition.name,
+              doneMethod: () => {
+                dispatch('startReport', {
+                  containerUuid: uuid
+                })
+              },
+              loadData: () => {
+                return dispatch('getReportDefinitionFromServer', {
+                  uuid: uuid
+                })
+              },
+              // TODO: Change to string and import dynamic in component
+              componentPath: () => import('@theme/components/ADempiere/PanelDefinition/index.vue'),
+              isShowed: false
+            })
+          }
         })
         .catch(error => {
           reject(error)

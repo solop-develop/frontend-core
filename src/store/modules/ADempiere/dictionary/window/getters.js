@@ -81,6 +81,20 @@ export default {
   },
 
   /**
+   * Field with process associated
+   * @param {string} windowUuid or parentUuid
+   * @param {string} tabUuid or containerUuid
+   * @param {string} processUuid process associated
+   * @returns {object}
+   */
+  getStoredFieldFromProcess: (state, getters) => ({ windowUuid, tabUuid, processUuid }) => {
+    return getters.getStoredFieldsFromTab(windowUuid, tabUuid)
+      .find(field => {
+        return field.process && field.process.uuid === processUuid
+      })
+  },
+
+  /**
    * Determinate if panel is ready to send, all fields mandatory and displayed with values
    * @param {string}  containerUuid
    * @param {object}  row, data to compare if is table

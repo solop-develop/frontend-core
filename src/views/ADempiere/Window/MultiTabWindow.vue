@@ -59,7 +59,7 @@
 
 <script>
 import { defineComponent, computed, ref } from '@vue/composition-api'
-import lang from '@/lang'
+import language from '@/lang'
 import router from '@/router'
 import store from '@/store'
 
@@ -113,6 +113,10 @@ export default defineComponent({
 
     const showRecordAccess = computed(() => {
       return store.getters.getShowPanelRecordAccess
+    })
+
+    const currentTabUuid = computed(() => {
+      return store.getters.getCurrentTab(props.windowMetadata.uuid).uuid
     })
 
     const containerManager = {
@@ -227,22 +231,24 @@ export default defineComponent({
       }
     }
 
-    const actionsManager = ref({
-      parentUuid: props.windowMetadata.uuid,
-      containerUuid: props.windowMetadata.currentTabUuid,
+    const actionsManager = computed(() => {
+      return {
+        parentUuid: props.windowMetadata.uuid,
+        containerUuid: currentTabUuid.value,
 
-      defaultActionName: lang.t('actionMenu.createNewRecord'),
-      tableName: store.getters.getTableName(props.windowMetadata.uuid, props.windowMetadata.currentTabUuid),
-      getActionList: () => {
-        return store.getters.getStoredActionsMenu({
-          containerUuid: props.windowMetadata.currentTabUuid
-        })
+        defaultActionName: language.t('actionMenu.createNewRecord'),
+        tableName: store.getters.getTableName(props.windowMetadata.uuid, currentTabUuid.value),
+        getActionList: () => {
+          return store.getters.getStoredActionsMenu({
+            containerUuid: currentTabUuid.value
+          })
+        }
       }
     })
 
     const referencesManager = ref({
       getTableName: () => {
-        const tabUuid = props.windowMetadata.currentTabUuid
+        const tabUuid = currentTabUuid.value
         const windowUuid = props.windowMetadata.uuid
 
         return store.getters.getTableName(windowUuid, tabUuid)
@@ -257,7 +263,7 @@ export default defineComponent({
     }
 
     return {
-      currentTabUuid: props.windowMetadata.currentTabUuid,
+      currentTabUuid,
       actionsManager,
       allTabsList,
       referencesManager,
