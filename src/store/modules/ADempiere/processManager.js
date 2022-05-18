@@ -25,9 +25,9 @@ import {
 
 // utils and helper methods
 import { getToken } from '@/utils/auth'
-import { viewerSupportedFormats } from '@/utils/ADempiere/dictionary/report.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage, showNotification } from '@/utils/ADempiere/notification'
+import { viewerSupportedFormats } from '@/utils/ADempiere/dictionary/report.js'
 import { buildLinkHref } from '@/utils/ADempiere/resource.js'
 
 const initState = {
@@ -233,6 +233,7 @@ const processManager = {
         })
         const currentProcess = browserDefinition.processes.find(process => process.name === processModal.title)
 
+        // })
         const fieldsList = getters.getStoredFieldsFromProcess(containerUuid)
         const parametersList = rootGetters.getProcessParameters({
           containerUuid,
@@ -254,6 +255,12 @@ const processManager = {
 
         let isProcessedError = false
         let summary = ''
+        let instanceUuid = ''
+        let link = {
+          href: undefined,
+          download: undefined
+        }
+        let output
         requestRunProcess({
           uuid: containerUuid,
           parametersList,
@@ -263,18 +270,16 @@ const processManager = {
           .then(runProcessRepsonse => {
             isProcessedError = runProcessRepsonse.isError
             summary = runProcessRepsonse.summary
-            let link = {
-              href: undefined,
-              download: undefined
+            if (isEmptyValue(runProcessRepsonse.output)) {
+              output = runProcessRepsonse.output
+              instanceUuid = runProcessRepsonse
             }
-            const { output, instanceUuid } = runProcessRepsonse
-            if (output) {
+            if (!isEmptyValue(output)) {
               link = buildLinkHref({
                 fileName: output.fileName,
                 outputStream: output.outputStream,
                 type: output.mimeType
               })
-
               // donwloaded not support render report
               if (!viewerSupportedFormats.includes('pdf')) {
                 link.click()
@@ -302,6 +307,7 @@ const processManager = {
                 download: link.download
               })
             }
+
             resolve(runProcessRepsonse)
           })
           .catch(error => {
