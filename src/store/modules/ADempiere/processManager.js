@@ -27,8 +27,6 @@ import {
 import { getToken } from '@/utils/auth'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage, showNotification } from '@/utils/ADempiere/notification'
-import { viewerSupportedFormats } from '@/utils/ADempiere/dictionary/report.js'
-import { buildLinkHref } from '@/utils/ADempiere/resource.js'
 
 const initState = {
   printFormatList: {}
@@ -255,12 +253,6 @@ const processManager = {
 
         let isProcessedError = false
         let summary = ''
-        let instanceUuid = ''
-        let link = {
-          href: undefined,
-          download: undefined
-        }
-        let output
         requestRunProcess({
           uuid: containerUuid,
           parametersList,
@@ -270,43 +262,6 @@ const processManager = {
           .then(runProcessRepsonse => {
             isProcessedError = runProcessRepsonse.isError
             summary = runProcessRepsonse.summary
-            if (isEmptyValue(runProcessRepsonse.output)) {
-              output = runProcessRepsonse.output
-              instanceUuid = runProcessRepsonse
-            }
-            if (!isEmptyValue(output)) {
-              link = buildLinkHref({
-                fileName: output.fileName,
-                outputStream: output.outputStream,
-                type: output.mimeType
-              })
-              // donwloaded not support render report
-              if (!viewerSupportedFormats.includes('pdf')) {
-                link.click()
-              }
-
-              router.push({
-                name: 'Report Viewer',
-                params: {
-                  reportUuid: containerUuid,
-                  instanceUuid,
-                  fileName: output.fileName,
-                  // menuParentUuid,
-                  name: output.name,
-                  tableName: output.tableName
-                }
-              }, () => {})
-
-              commit('setReportOutput', {
-                ...output,
-                instanceUuid,
-                reportUuid: containerUuid,
-                link,
-                parametersList: [],
-                url: link.href,
-                download: link.download
-              })
-            }
 
             resolve(runProcessRepsonse)
           })
