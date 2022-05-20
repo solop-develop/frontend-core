@@ -173,6 +173,10 @@ const browserControl = {
           resolve([])
           return
         }
+        commit('setBrowserData', {
+          containerUuid,
+          isLoaded: false
+        })
 
         requestBrowserSearch({
           uuid: containerUuid,
@@ -199,7 +203,8 @@ const browserControl = {
               containerUuid,
               recordsList,
               recordCount: browserSearchResponse.recordCount,
-              nextPageToken: token
+              nextPageToken: token,
+              isLoaded: true
             })
 
             showMessage({
@@ -214,7 +219,8 @@ const browserControl = {
             // Set default registry values so that the table does not say loading,
             // there was already a response from the server
             commit('setBrowserData', {
-              containerUuid
+              containerUuid,
+              isLoaded: true
             })
 
             showMessage({

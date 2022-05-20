@@ -65,6 +65,7 @@
         :header="tableHeader"
         :data-table="recordsList"
         :is-show-search="false"
+        :is-loading-data-table="!isLoaded"
       />
     </el-main>
 
@@ -141,6 +142,14 @@ export default defineComponent({
 
     const storedBrowser = computed(() => {
       return store.getters.getStoredBrowser(browserUuid)
+    })
+
+    const isLoaded = computed(() => {
+      const browser = store.state.browserManager.browserData[browserUuid]
+      if (root.isEmptyValue(browser)) {
+        return true
+      }
+      return browser.isLoaded
     })
 
     /**
@@ -452,6 +461,7 @@ export default defineComponent({
       actionsManager,
       relationsManager,
       // computed
+      isLoaded,
       isShowContextMenu,
       openedCriteria,
       processUuid,
