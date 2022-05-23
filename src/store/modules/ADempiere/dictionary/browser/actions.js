@@ -32,7 +32,7 @@ import { generatePanelAndFields } from '@/utils/ADempiere/dictionary/panel.js'
 import {
   isDisplayedField, isMandatoryField,
   refreshBrowserSearh, runProcessOfBrowser,
-  zoomWindow
+  zoomWindow, runDeleteable
 } from '@/utils/ADempiere/dictionary/browser.js'
 
 export default {
@@ -118,6 +118,7 @@ export default {
 
       actionsList.push(actionProcess)
     }
+    actionsList.push(runDeleteable)
 
     // export selected records
     actionsList.push(exportRecordsSelected)
@@ -244,6 +245,15 @@ export default {
         isClearSelection: true
       })
     }
+  },
+
+  deleteRecordOfBrowser({ commit, dispatch, getters }, {
+    containerUuid,
+    selection
+  }) {
+    dispatch('getBrowserSearch', {
+      containerUuid
+    })
   }
 
 }

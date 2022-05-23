@@ -74,3 +74,23 @@ export function requestBrowserSearch({
       return convertEntityList(responseBrowserSearch)
     })
 }
+
+/**
+ * Delete Record Browser
+ * @param {string} uuid
+ * @param {number} id
+ * @param {string} tableName
+ */
+export function deleteRecordBrowser({
+  id,
+  uuid,
+  tableName
+}) {
+  const { getEntity } = require('@/api/ADempiere/common/persistence.js')
+
+  return getEntity({
+    tableName,
+    recordId: id,
+    recordUuid: uuid
+  })
+}

@@ -143,6 +143,44 @@ export const runProcessOfBrowser = {
 }
 
 /**
+ * isDeleteable
+ */
+
+export const runDeleteable = {
+  name: language.t('actionMenu.delete'),
+  enabled: ({ containerUuid, containerManager }) => {
+    const { isDeleteable } = store.getters.getStoredBrowser(containerUuid)
+    if (!isDeleteable) {
+      return false
+    }
+    const selection = containerManager.getSelection({
+      containerUuid
+    })
+
+    return !isEmptyValue(selection)
+  },
+  svg: false,
+  icon: 'el-icon-delete',
+  actionName: 'deleteRecordOfBrowser',
+  uuid: null,
+  deleteRecordOfBrowser: ({ containerUuid, containerManager }) => {
+    const selection = containerManager.getSelection({
+      containerUuid
+    })
+    if (isEmptyValue(selection)) {
+      showNotification({
+        title: language.t('data.selectionRequired'),
+        type: 'warning'
+      })
+      return
+    }
+    store.dispatch('deleteRecordOfBrowser', {
+      containerUuid
+    })
+  }
+}
+
+/**
  * Zoom in on the window associated with the smart browser
  * @param {string} uuid of window
  */

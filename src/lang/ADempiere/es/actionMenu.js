@@ -37,6 +37,7 @@ const actionMenu = {
   generateWithReportView: 'Cambiar vista de reporte para generar',
   // browser
   exportSelectedRecords: 'Exportar Registros Seleccionados',
+  delete: 'Eliminar',
   // relations
   relations: 'Relaciones',
   withoutRelations: 'Sin Relaciones',
