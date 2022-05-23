@@ -41,6 +41,7 @@ const actionMenu = {
   relations: 'Relations',
   withoutRelations: 'Without Relations',
   // references
+  delete: 'Delete',
   references: 'References',
   withoutReferences: 'Without references for record'
 }
