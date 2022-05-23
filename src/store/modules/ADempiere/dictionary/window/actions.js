@@ -93,6 +93,9 @@ export default {
               })
             },
             loadData: () => {
+              dispatch('getProcessDefinitionFromServer', {
+                uuid: process.uuid
+              })
               return dispatch('getReportDefinitionFromServer', {
                 uuid: process.uuid
               })
