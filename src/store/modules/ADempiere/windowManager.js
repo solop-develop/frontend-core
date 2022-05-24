@@ -25,13 +25,15 @@ import {
 import {
   deleteEntity
 } from '@/api/ADempiere/common/persistence.js'
-
+import {
+  getToken
+} from '@/utils/auth'
 // constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
 
 // utils and helper methods
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils.js'
-import { isEmptyValue, generatePageToken } from '@/utils/ADempiere/valueUtils.js'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification'
 
 const initState = {
@@ -101,11 +103,13 @@ const windowManager = {
       pageNumber
     }) {
       return new Promise(resolve => {
+        const currentPageNumber = pageNumber
+
         let pageToken
         if (!isEmptyValue(pageNumber)) {
-          pageNumber-- // TODO: Remove with fix in backend
-          const token = getters.getTabPageToken({ containerUuid })
-          pageToken = generatePageToken({ pageNumber, token })
+          pageNumber--
+          const token = getToken()
+          pageToken = token + '-' + pageNumber
         }
 
         const { contextColumnNames, name } = rootGetters.getStoredTab(parentUuid, containerUuid)
@@ -127,6 +131,11 @@ const windowManager = {
           resolve([])
           return
         }
+        commit('setTabData', {
+          parentUuid,
+          isLoaded: false,
+          containerUuid
+        })
 
         getEntities({
           windowUuid: parentUuid,
@@ -150,8 +159,9 @@ const windowManager = {
               parentUuid,
               containerUuid,
               recordsList: dataToStored,
-              pageNumber,
-              nextPageToken: dataResponse.nextPageToken,
+              nextPageToken: getToken(),
+              pageNumber: currentPageNumber,
+              isLoaded: true,
               recordCount: dataResponse.recordCount
             })
 
@@ -160,6 +170,7 @@ const windowManager = {
           .catch(() => {
             commit('setTabData', {
               parentUuid,
+              isLoaded: true,
               containerUuid
             })
             resolve([])
@@ -239,6 +250,9 @@ const windowManager = {
         pageNumber: 1,
         isLoaded: false
       }
+    },
+    getIsLoadedTabRecord: (state, getters) => ({ containerUuid }) => {
+      return state.tabData[containerUuid].isLoaded
     },
     getTabRecordCount: (state, getters) => ({ containerUuid }) => {
       return getters.getTabData({ containerUuid }).recordCount

@@ -321,6 +321,17 @@ export default defineComponent({
           containerUuid
         })
       },
+      getRecordCount({ containerUuid }) {
+        return store.getters.getBrowserRecordCount({
+          containerUuid
+        })
+      },
+
+      getPageNumber({ containerUuid }) {
+        return store.getters.getBrowserPageNumber({
+          containerUuid
+        })
+      },
 
       /**
        * @returns Promisse with value and displayedValue
@@ -407,9 +418,15 @@ export default defineComponent({
       },
 
       setPage: ({ containerUuid, pageNumber }) => {
-        store.commit('getBrowserSearch', {
+        store.dispatch('getBrowserSearch', {
           containerUuid,
           pageNumber
+        })
+      },
+
+      isLoadedRecords: ({ containerUuid }) => {
+        return store.getters.getBrowserIsLoadedRecordsList({
+          containerUuid
         })
       }
     }

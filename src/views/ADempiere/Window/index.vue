@@ -261,6 +261,12 @@ export default defineComponent({
         })
       },
 
+      isLoadedRecords: ({ containerUuid }) => {
+        return store.getters.getIsLoadedTabRecord({
+          containerUuid
+        })
+      },
+
       getRecordCount({ containerUuid }) {
         return store.getters.getTabRecordCount({
           containerUuid
@@ -307,11 +313,24 @@ export default defineComponent({
         })
       },
 
+      getPageNumber({ containerUuid }) {
+        return store.getters.getTabPageNumber({
+          containerUuid
+        })
+      },
+
       changeFieldShowedFromUser({ parentUuid, containerUuid, fieldsShowed }) {
         store.dispatch('changeTabFieldShowedFromUser', {
           parentUuid,
           containerUuid,
           fieldsShowed
+        })
+      },
+
+      setPage: ({ containerUuid, pageNumber }) => {
+        store.dispatch('getEntities', {
+          containerUuid,
+          pageNumber
         })
       },
 

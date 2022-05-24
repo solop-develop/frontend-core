@@ -27,7 +27,9 @@ export const ROW_ATTRIBUTES = {
   // row index to fast manager
   rowIndex: 0,
   // indicate if is read only row (same isReadOnlyForm)
-  isReadOnlyFromRow: false
+  isReadOnlyFromRow: false,
+  // Indicates the amount of registration
+  pageSize: 15
 }
 
 /**

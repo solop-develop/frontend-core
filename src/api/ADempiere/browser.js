@@ -16,6 +16,8 @@
 
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
+// constants
+import { ROW_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
 
 /**
  * Request a browser search
@@ -65,7 +67,7 @@ export function requestBrowserSearch({
     params: {
       // Page Data
       page_token: pageToken,
-      page_size: pageSize
+      page_size: ROW_ATTRIBUTES.pageSize
     }
   })
     .then(responseBrowserSearch => {

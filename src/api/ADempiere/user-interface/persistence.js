@@ -17,6 +17,8 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+// constants
+import { ROW_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
 
 /**
  * Object List from window
@@ -89,7 +91,7 @@ export function getEntities({
       sorting: sortingDefinition,
       // Page Data
       page_token: pageToken,
-      page_size: pageSize
+      page_size: ROW_ATTRIBUTES.pageSize
     }
   })
     .then(response => {
