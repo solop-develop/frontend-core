@@ -255,7 +255,6 @@ const value = {
      * uuid), from a view (container)
      * @param {string} parentUuid
      * @param {string} containerUuid
-     * @param {string} format array|object|pairs|map
      * @returns {object|array}
      */
     getValuesViewType: (state) => ({

@@ -15,6 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import language from '@/lang'
+import router from '@/router'
 import store from '@/store'
 
 // utils and helpers methods
@@ -190,8 +191,8 @@ export const generateReportOfWindow = {
     const recordUuid = store.getters.getUuidOfContainer(containerUuid)
     return !isEmptyValue(recordUuid)
   },
-  svg: false,
-  icon: 'el-icon-document',
+  isSvgIcon: true,
+  icon: 'skill',
   actionName: 'generateReportOfWindow',
   generateReportOfWindow: ({ parentUuid, containerUuid, uuid }) => {
     store.commit('setSelectProcessWindows', uuid)
@@ -199,6 +200,38 @@ export const generateReportOfWindow = {
       containerUuid: uuid,
       isShowed: true
     })
+  }
+}
+
+/**
+ * Open Smart Browser Associated in Process
+ */
+export const openBrowserAssociated = {
+  name: language.t('actionMenu.openSmartBrowser'),
+  enabled: ({ parentUuid, containerUuid }) => {
+    const recordUuid = store.getters.getUuidOfContainer(containerUuid)
+    return !isEmptyValue(recordUuid)
+  },
+  isSvgIcon: true,
+  icon: 'search',
+  actionName: 'openBrowserAssociated',
+  openBrowserAssociated: function({ parentUuid, containerUuid, uuid }) {
+    const process = store.getters.getStoredProcessFromTab({
+      windowUuid: parentUuid,
+      tabUuid: containerUuid,
+      processUuid: uuid
+    })
+
+    router.push({
+      name: 'Smart Browser',
+      params: {
+        browserId: 0,
+        browserUuid: process.browserUuid
+      },
+      query: {
+        parentUuid
+      }
+    }, () => {})
   }
 }
 

@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import language from '@/lang'
 import router from '@/router'
 import store from '@/store'
 
@@ -34,9 +35,13 @@ import {
   refreshBrowserSearh, runProcessOfBrowser,
   zoomWindow, runDeleteable
 } from '@/utils/ADempiere/dictionary/browser.js'
+import { showNotification } from '@/utils/ADempiere/notification.js'
 
 export default {
-  getBrowserDefinitionFromServer({ commit, dispatch }, uuid) {
+  getBrowserDefinitionFromServer({ commit, dispatch, rootGetters }, {
+    uuid,
+    parentUuid = '' // context of associated
+  }) {
     return new Promise(resolve => {
       requestBrowserMetadata({
         uuid
@@ -58,6 +63,17 @@ export default {
           dispatch('setBrowserActionsMenu', {
             containerUuid: browserDefinition.uuid
           })
+
+          // set parent context
+          if (!isEmptyValue(parentUuid)) {
+            const parentContext = rootGetters.getValuesView({
+              parentUuid
+            })
+            dispatch('updateValuesOfContainer', {
+              containerUuid: uuid,
+              attributes: parentContext
+            })
+          }
 
           // set default values into fields
           dispatch('setBrowserDefaultValues', {
@@ -91,6 +107,24 @@ export default {
               isShowed: false
             })
           }
+        })
+        .catch(error => {
+          showNotification({
+            title: language.t('notifications.error'),
+            message: language.t('smartBrowser.dictionaryError'),
+            type: 'error'
+          })
+          console.warn(`Error getting Smart Browser definition: ${error.message}. Code: ${error.code}.`)
+
+          // close current page
+          const currentRoute = router.app._route
+          const tabViewsVisited = rootGetters.visitedViews
+          dispatch('tagsView/delView', currentRoute)
+          // go to back page
+          const oldRouter = tabViewsVisited[tabViewsVisited.length - 1]
+          router.push({
+            path: oldRouter.path
+          }, () => {})
         })
     })
   },

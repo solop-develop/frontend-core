@@ -86,7 +86,7 @@
 <script>
 import { computed, defineComponent, ref } from '@vue/composition-api'
 
-import lang from '@/lang'
+import language from '@/lang'
 import store from '@/store'
 
 // componets and mixins
@@ -134,9 +134,22 @@ export default defineComponent({
     const browserMetadata = ref({})
     const containerManagerProcess = ref({})
 
-    let browserUuid = root.$route.meta.uuid
+    let parentUuid = ''
+    if (!isEmptyValue(root.$route.query) && !isEmptyValue(root.$route.query.parentUuid)) {
+      parentUuid = root.$route.query.parentUuid
+    }
+
+    let browserUuid = ''
+    // set uuid with linked menu
+    if (!isEmptyValue(root.$route.meta) && !isEmptyValue(root.$route.meta.uuid)) {
+      browserUuid = root.$route.meta.uuid
+    }
+    // set uuid from associated browser without menu
+    if (!isEmptyValue(root.$route.params) && !isEmptyValue(root.$route.params.browserUuid)) {
+      browserUuid = root.$route.params.browserUuid
+    }
     // set uuid from test
-    if (!root.isEmptyValue(props.uuid)) {
+    if (!isEmptyValue(props.uuid)) {
       browserUuid = props.uuid
     }
 
@@ -146,7 +159,7 @@ export default defineComponent({
 
     const isLoaded = computed(() => {
       const browser = store.state.browserManager.browserData[browserUuid]
-      if (root.isEmptyValue(browser)) {
+      if (isEmptyValue(browser)) {
         return true
       }
       return browser.isLoaded
@@ -178,7 +191,7 @@ export default defineComponent({
       if (browserMetadata.value.awaitForValuesToQuery) {
         return false
       }
-      return root.isEmptyValue(
+      return isEmptyValue(
         store.getters.getBrowserFieldsEmptyMandatory({
           containerUuid: browserUuid
         })
@@ -190,7 +203,7 @@ export default defineComponent({
         // by default criteria if closed
         const openCriteria = []
         const browser = storedBrowser.value
-        if (!root.isEmptyValue(browser)) {
+        if (!isEmptyValue(browser)) {
           if (browser.isShowedCriteria) {
             // open criteria
             openCriteria.push('opened-criteria')
@@ -222,6 +235,14 @@ export default defineComponent({
 
       const { containerManager: containerManagerByProcess } = mixinProcess(processUuid)
       containerManagerProcess.value = containerManagerByProcess
+
+      if (!isEmptyValue(root.$route.params) && !isEmptyValue(root.$route.params.browserUuid)) {
+        // update name in tag view
+        store.dispatch('tagsView/updateVisitedView', {
+          ...root.$route,
+          title: `${language.t('route.smartBrowser')}: ${browser.name}`
+        })
+      }
     }
 
     function getBrowserDefinition() {
@@ -231,7 +252,10 @@ export default defineComponent({
         return
       }
 
-      store.dispatch('getBrowserDefinitionFromServer', browserUuid)
+      store.dispatch('getBrowserDefinitionFromServer', {
+        uuid: browserUuid,
+        parentUuid
+      })
         .then(browserResponse => {
           generateBrowser(browserResponse)
 
@@ -416,14 +440,14 @@ export default defineComponent({
 
     const processName = computed(() => {
       const browser = storedBrowser.value
-      if (!root.isEmptyValue(browser)) {
+      if (!isEmptyValue(browser)) {
         const process = storedBrowser.value.process
-        if (!root.isEmptyValue(process)) {
+        if (!isEmptyValue(process)) {
           return process.name
         }
       }
 
-      return lang.t('actionMenu.runProcess')
+      return language.t('actionMenu.runProcess')
     })
 
     const actionsManager = computed(() => {

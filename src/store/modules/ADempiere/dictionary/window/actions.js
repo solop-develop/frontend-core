@@ -28,6 +28,7 @@ import {
   deleteRecord,
   runProcessOfWindow,
   generateReportOfWindow,
+  openBrowserAssociated,
   refreshRecords
 } from '@/utils/ADempiere/dictionary/window.js'
 import {
@@ -82,7 +83,9 @@ export default {
       tabDefinition.processes.forEach(process => {
         let defaultAction = {}
         if (process.isReport) {
-          defaultAction = generateReportOfWindow
+          defaultAction = {
+            ...generateReportOfWindow
+          }
           dispatch('setModalDialog', {
             containerUuid: process.uuid,
             title: process.name,
@@ -104,8 +107,14 @@ export default {
             componentPath: () => import('@theme/components/ADempiere/PanelDefinition/index.vue'),
             isShowed: false
           })
+        } else if (!isEmptyValue(process.browserUuid)) {
+          defaultAction = {
+            ...openBrowserAssociated
+          }
         } else {
-          defaultAction = runProcessOfWindow
+          defaultAction = {
+            ...runProcessOfWindow
+          }
           dispatch('setModalDialog', {
             containerUuid: process.uuid,
             title: process.name,

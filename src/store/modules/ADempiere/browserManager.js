@@ -222,6 +222,7 @@ const browserControl = {
               containerUuid,
               isLoaded: true
             })
+            resolve([])
 
             showMessage({
               title: language.t('notifications.error'),
