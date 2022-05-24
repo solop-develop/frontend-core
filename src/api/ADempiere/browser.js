@@ -16,6 +16,7 @@
 
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 // constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
 
@@ -52,6 +53,17 @@ export function requestBrowserSearch({
     }
   })
 
+  // context attributes
+  let contextAttributes = []
+  if (!isEmptyValue(contextAttributesList)) {
+    contextAttributes = contextAttributesList.map(attribute => {
+      return {
+        key: attribute.columnName,
+        value: attribute.value
+      }
+    })
+  }
+
   return request({
     url: '/user-interface/smart-browser/browser-items',
     method: 'post',
@@ -62,7 +74,7 @@ export function requestBrowserSearch({
       // DSL Query
       filters,
       // Custom Query
-      context_attributes: contextAttributesList
+      context_attributes: contextAttributes
     },
     params: {
       // Page Data

@@ -4,6 +4,8 @@ import extensionFile from './extensionFile'
 import fieldDisplayOptions from './fieldDisplayOptions'
 import fieldOptions from './fieldOptions'
 import recordManager from './recordManager'
+import route from './route'
+import smartBrowser from './smartBrowser'
 import window from './window'
 
 export default {
@@ -12,27 +14,10 @@ export default {
   fieldDisplayOptions,
   fieldOptions,
   recordManager,
+  route,
+  smartBrowser,
 
   language: 'Idioma',
-  route: {
-    dashboard: 'Panel de control',
-    documentation: 'Documentación',
-    calendar: 'Calendario',
-    forgotPassword: '¿Olvidó su Contraseña?',
-    userEnrollment: 'Registrarse',
-    guide: 'Guía',
-    page401: '401',
-    page404: '404',
-    profile: 'Perfil',
-    ProcessActivity: 'Histórico Procesos',
-    withoutLog: 'No se Encontró Registro de Error ',
-    ProductInfo: 'Información de Producto',
-    role: 'Rol',
-    organization: 'Organización',
-    warehouse: 'Almacén',
-    reportViewer: 'Visor de Reportes',
-    PriceChecking: 'Consulta del precio'
-  },
   notifications: {
     // simplex
     completed: 'Completado',

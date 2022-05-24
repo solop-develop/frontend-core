@@ -81,6 +81,23 @@ export default {
   },
 
   /**
+   * Process associated on tab
+   * @param {string} windowUuid or parentUuid
+   * @param {string} tabUuid or containerUuid
+   * @param {string} processUuid process associated
+   * @returns {object}
+   */
+  getStoredProcessFromTab: (state, getters) => ({ windowUuid, tabUuid, processUuid }) => {
+    const storedTab = getters.getStoredTab(windowUuid, tabUuid)
+
+    return storedTab
+      .processes
+      .find(process => {
+        return process.uuid === processUuid
+      })
+  },
+
+  /**
    * Field with process associated
    * @param {string} windowUuid or parentUuid
    * @param {string} tabUuid or containerUuid

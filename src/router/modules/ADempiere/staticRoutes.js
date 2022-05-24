@@ -70,6 +70,25 @@ const staticRoutes = [
   },
 
   {
+    path: '/browser',
+    component: Layout,
+    hidden: true,
+    redirect: 'browser/:browserId/:browserUuid?',
+    children: [
+      {
+        path: ':browserId/:browserUuid?',
+        component: () => import('@/views/ADempiere/Browser'),
+        name: 'Smart Browser',
+        meta: {
+          icon: 'search',
+          title: language.t('route.smartBrowser'),
+          type: 'browser'
+        }
+      }
+    ]
+  },
+
+  {
     path: '/PriceChecking',
     component: Layout,
     hidden: true,

@@ -36,6 +36,7 @@ const actionMenu = {
   reportViews: 'Vistas de Reporte',
   generateWithReportView: 'Cambiar vista de reporte para generar',
   // browser
+  openSmartBrowser: 'Abrir Consulta Inteligente',
   exportSelectedRecords: 'Exportar Registros Seleccionados',
   delete: 'Eliminar',
   // relations
