@@ -288,18 +288,35 @@ export default {
   }) {
     const { tableName, keyColumn } = getters.getStoredBrowser(containerUuid)
     const listRecordId = selection.map(list => list[keyColumn])
+    showNotification({
+      title: language.t('actionMenu.delete'),
+      message: language.t('actionMenu.delete'),
+      summary: language.t('data.noDescription'),
+      type: 'info'
+    })
     return new Promise((resolve, reject) => {
       requestDeleteBrowser({
         tableName,
         listRecordId
       })
         .then(async(response) => {
+          showNotification({
+            title: language.t('notifications.succesful'),
+            message: response,
+            type: 'success'
+          })
           await dispatch('getBrowserSearch', {
             containerUuid
           })
           resolve(response)
         })
         .catch(error => {
+          showNotification({
+            title: language.t('notifications.error'),
+            message: error.message,
+            type: 'error'
+          })
+          console.warn(`Error getting Smart Browser definition: ${error.message}. Code: ${error.code}.`)
           reject(error)
         })
     })
