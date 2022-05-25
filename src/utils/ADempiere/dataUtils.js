@@ -14,6 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+// utils and helper methods
+import { getToken } from '@/utils/auth'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+
 export const OPERATOR_EQUAL = {
   operator: 'EQUAL',
   symbol: '='
@@ -227,3 +231,44 @@ export const OPERATORS_IGNORE_VALUE = [
   OPERATOR_NULL.operator,
   OPERATOR_NOT_NULL.operator
 ]
+
+/**
+ * Return token of pagination.
+ * @author EdwinBetanc0urt <EdwinBetanc0urt@oulook.com>
+ * @param {string} token
+ * @returns {string}
+ */
+export function extractPagingToken(token) {
+  if (isEmptyValue(token)) {
+    return ''
+  }
+
+  const lastIndex = token.lastIndexOf('-')
+  const onlyToken = token.slice(0, lastIndex)
+
+  return onlyToken
+}
+
+/**
+ * Return token of pagination.
+ * @author EdwinBetanc0urt <EdwinBetanc0urt@oulook.com>
+ * @param {number} pageNumber
+ * @param {string} token
+ * @returns {string}
+ */
+export function generatePageToken({ pageNumber = 1, token }) {
+  if (isEmptyValue(pageNumber) || pageNumber < 1) {
+    pageNumber = 1
+  }
+
+  if (isEmptyValue(token)) {
+    return getToken() + '-' + pageNumber
+  }
+
+  const onlyToken = extractPagingToken(token)
+  if (isEmptyValue(onlyToken)) {
+    return ''
+  }
+
+  return onlyToken + '-' + pageNumber
+}

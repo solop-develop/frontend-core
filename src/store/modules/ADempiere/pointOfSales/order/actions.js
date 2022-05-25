@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+// api request methods
 import {
   createOrder,
   getOrder,
@@ -22,7 +23,10 @@ import {
   listOrders,
   printTicket
 } from '@/api/ADempiere/form/point-of-sales.js'
-import { isEmptyValue, extractPagingToken, convertValuesToSendListOrders } from '@/utils/ADempiere/valueUtils.js'
+
+// utils and helper methods
+import { isEmptyValue, convertValuesToSendListOrders } from '@/utils/ADempiere/valueUtils.js'
+import { extractPagingToken } from '@/utils/ADempiere/dataUtils'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 
 /**

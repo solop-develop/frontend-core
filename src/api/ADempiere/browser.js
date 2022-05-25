@@ -17,8 +17,9 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+
 // constants
-import { ROW_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/constants/table'
 
 /**
  * Request a browser search
@@ -43,7 +44,7 @@ export function requestBrowserSearch({
   tableName,
   contextAttributesList = [],
   nextPageToken: pageToken,
-  pageSize
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   const filters = parametersList.map(parameter => {
     return {
@@ -79,7 +80,7 @@ export function requestBrowserSearch({
     params: {
       // Page Data
       page_token: pageToken,
-      page_size: ROW_ATTRIBUTES.pageSize
+      page_size: pageSize
     }
   })
     .then(responseBrowserSearch => {

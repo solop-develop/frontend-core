@@ -28,12 +28,11 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { isDisplayedField } from '@/utils/ADempiere/dictionary/browser'
+import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 
 const initState = {
   browserData: {}
 }
-
-import { getToken } from '@/utils/auth'
 
 const browserControl = {
   state: initState,
@@ -146,9 +145,8 @@ const browserControl = {
 
         let pageToken
         if (!isEmptyValue(pageNumber)) {
-          pageNumber--
-          const token = getToken()
-          pageToken = token + '-' + pageNumber
+          pageNumber-- // TODO: Remove with fix in backend
+          pageToken = generatePageToken({ pageNumber })
         }
 
         const { fieldsList, contextColumnNames } = rootGetters.getStoredBrowser(containerUuid)
@@ -199,7 +197,7 @@ const browserControl = {
               containerUuid,
               recordsList,
               recordCount: browserSearchResponse.recordCount,
-              nextPageToken: getToken(),
+              nextPageToken: browserSearchResponse.nextPageToken,
               pageNumber: currentPageNumber,
               isLoaded: true
             })

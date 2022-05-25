@@ -27,9 +27,7 @@ export const ROW_ATTRIBUTES = {
   // row index to fast manager
   rowIndex: 0,
   // indicate if is read only row (same isReadOnlyForm)
-  isReadOnlyFromRow: false,
-  // Indicates the amount of registration
-  pageSize: 15
+  isReadOnlyFromRow: false
 }
 
 /**
@@ -37,3 +35,9 @@ export const ROW_ATTRIBUTES = {
  * not to send to the server
  */
 export const ROW_KEY_ATTRIBUTES = Object.keys(ROW_ATTRIBUTES)
+
+/**
+ * Rows of records number by page
+ * As pageSize on backend
+ */
+export const ROWS_OF_RECORDS_BY_PAGE = 15

@@ -25,9 +25,7 @@ import {
 import {
   deleteEntity
 } from '@/api/ADempiere/common/persistence.js'
-import {
-  getToken
-} from '@/utils/auth'
+
 // constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
 
@@ -35,6 +33,7 @@ import { ROW_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification'
+import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 
 const initState = {
   tabData: {}
@@ -93,7 +92,6 @@ const windowManager = {
      */
     getEntities({
       commit,
-      getters,
       rootGetters
     }, {
       parentUuid,
@@ -107,9 +105,8 @@ const windowManager = {
 
         let pageToken
         if (!isEmptyValue(pageNumber)) {
-          pageNumber--
-          const token = getToken()
-          pageToken = token + '-' + pageNumber
+          pageNumber-- // TODO: Remove with fix in backend
+          pageToken = generatePageToken({ pageNumber })
         }
 
         const { contextColumnNames, name } = rootGetters.getStoredTab(parentUuid, containerUuid)
@@ -159,7 +156,7 @@ const windowManager = {
               parentUuid,
               containerUuid,
               recordsList: dataToStored,
-              nextPageToken: getToken(),
+              nextPageToken: dataResponse.nextPageToken,
               pageNumber: currentPageNumber,
               isLoaded: true,
               recordCount: dataResponse.recordCount
