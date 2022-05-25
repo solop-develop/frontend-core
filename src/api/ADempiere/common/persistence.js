@@ -94,7 +94,8 @@ export function updateEntity({
 export function deleteEntity({
   tableName,
   recordId,
-  recordUuid
+  recordUuid,
+  listRecordId
 }) {
   return request({
     url: '/common/api/delete',
@@ -102,7 +103,8 @@ export function deleteEntity({
     data: {
       table_name: tableName,
       id: recordId,
-      uuid: recordUuid
+      uuid: recordUuid,
+      ids: listRecordId
     }
   }).then(response => {
     return response

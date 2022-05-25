@@ -175,7 +175,8 @@ export const runDeleteable = {
       return
     }
     store.dispatch('deleteRecordOfBrowser', {
-      containerUuid
+      containerUuid,
+      selection
     })
   }
 }

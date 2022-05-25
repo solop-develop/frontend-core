@@ -20,6 +20,7 @@ import store from '@/store'
 
 // api request methods
 import { requestBrowserMetadata } from '@/api/ADempiere/dictionary/smart-browser.js'
+import { deleteEntity as requestDeleteBrowser } from '@/api/ADempiere/common/persistence.js'
 
 // constants
 import {
@@ -285,8 +286,22 @@ export default {
     containerUuid,
     selection
   }) {
-    dispatch('getBrowserSearch', {
-      containerUuid
+    const { tableName, keyColumn } = getters.getStoredBrowser(containerUuid)
+    const listRecordId = selection.map(list => list[keyColumn])
+    return new Promise((resolve, reject) => {
+      requestDeleteBrowser({
+        tableName,
+        listRecordId
+      })
+        .then(async(response) => {
+          await dispatch('getBrowserSearch', {
+            containerUuid
+          })
+          resolve(response)
+        })
+        .catch(error => {
+          reject(error)
+        })
     })
   }
 
