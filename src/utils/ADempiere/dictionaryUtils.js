@@ -17,7 +17,7 @@
 import evaluator from '@/utils/ADempiere/evaluator'
 import { arrayMatches, isEmptyValue, parsedValueComponent } from '@/utils/ADempiere/valueUtils'
 import { getContext, getParentFields, getPreference, parseContext } from '@/utils/ADempiere/contextUtils'
-import REFERENCES, { BUTTON, FIELDS_QUANTITY, YES_NO, DEFAULT_SIZE, isHiddenField } from '@/utils/ADempiere/references'
+import REFERENCES, { FIELDS_QUANTITY, YES_NO, DEFAULT_SIZE, isHiddenField } from '@/utils/ADempiere/references'
 import {
   FIELD_OPERATORS_LIST, OPERATOR_EQUAL,
   OPERATOR_LIKE, OPERATOR_GREATER_EQUAL, OPERATOR_LESS_EQUAL
@@ -417,7 +417,7 @@ export function fieldIsDisplayed({
   isDisplayedFromLogic
 }, isTable = false) {
   // button field not showed
-  if (displayType === BUTTON.id) {
+  if (isHiddenField(displayType)) {
     return false
   }
 

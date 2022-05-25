@@ -86,17 +86,17 @@ export const BINARY_DATA = {
 
 // Button
 export const BUTTON = {
-  // this component is hidden
   id: 28,
+  uuid: 'a47ec1c2-fb40-11e8-a479-7a0060f0aa01',
   isSupported: true,
   valueType: 'STRING',
   componentPath: 'FieldButton',
   size: {
-    xs: 0,
-    sm: 0,
-    md: 0,
-    lg: 0,
-    xl: 0
+    xs: 6,
+    sm: 6,
+    md: 6,
+    lg: 6,
+    xl: 6
   }
 }
 
@@ -619,7 +619,7 @@ export function isAddRangeField({ isRange, displayType }) {
  * Fields not showed in panel's
  */
 export const FIELDS_HIDDEN = [
-  BUTTON.id
+  // BUTTON.id
 ]
 
 /**

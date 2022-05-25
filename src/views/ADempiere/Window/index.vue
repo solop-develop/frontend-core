@@ -149,7 +149,11 @@ export default defineComponent({
         const isWithRecord = recordUuid !== 'create-new' &&
           !isEmptyValue(recordUuid)
 
-        if (isWithRecord) {
+        if (!isWithRecord) {
+          if (field.componentPath === 'FieldButton') {
+            return true
+          }
+        } else {
           // client id value of record
           const clientIdRecord = store.getters.getValueOfField({
             parentUuid,
@@ -184,7 +188,7 @@ export default defineComponent({
             containerUuid,
             columnName: PROCESSED
           })
-          if (isProcessed) {
+          if (isProcessed && field.componentPath !== 'FieldButton') {
             return true
           }
 
@@ -194,7 +198,7 @@ export default defineComponent({
             containerUuid,
             columnName: PROCESSING
           })
-          if (isProcessing) {
+          if (isProcessing && field.componentPath !== 'FieldButton') {
             return true
           }
         }

@@ -21,18 +21,30 @@ import store from '@/store'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { isEmptyValue, recursiveTreeSearch } from '@/utils/ADempiere/valueUtils.js'
 
+/**
+ * Zoom in view with uuid
+ * @author Edwin Betancourt <EdwinBetanc0urt@outlook.com>
+ * @param {string} uuid
+ * @param {object} params
+ * @param {object} query
+ * @param {boolean} isShowMessage
+ * @returns {boolean} if find the view
+ */
 export function zoomIn({
   uuid,
   params = {},
-  query = {}
+  query = {},
+  isShowMessage = true
 }) {
   if (isEmptyValue(uuid)) {
-    showMessage({
-      type: 'error',
-      showClose: true,
-      message: language.t('notifications.emptyValues')
-    })
-    return
+    if (isShowMessage) {
+      showMessage({
+        type: 'error',
+        showClose: true,
+        message: language.t('notifications.emptyValues')
+      })
+    }
+    return false
   }
 
   const menuTree = store.getters.permission_routes
@@ -51,13 +63,18 @@ export function zoomIn({
       params,
       query
     }, () => {})
-  } else {
+
+    return true
+  }
+
+  if (isShowMessage) {
     showMessage({
       type: 'error',
       showClose: true,
       message: language.t('notifications.noRoleAccess')
     })
   }
+  return false
 }
 
 /**

@@ -96,6 +96,7 @@ export default {
               })
             },
             loadData: () => {
+              // TODO: Verify it
               dispatch('getProcessDefinitionFromServer', {
                 uuid: process.uuid
               })

@@ -23,6 +23,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { generatePanelAndFields } from '@/utils/ADempiere/dictionary/panel.js'
 import { isHiddenField } from '@/utils/ADempiere/references.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
+import { zoomIn } from '@/utils/ADempiere/coreUtils'
 
 /**
  * Is displayed field in panel single record
@@ -215,23 +216,40 @@ export const openBrowserAssociated = {
   isSvgIcon: true,
   icon: 'search',
   actionName: 'openBrowserAssociated',
-  openBrowserAssociated: function({ parentUuid, containerUuid, uuid }) {
-    const process = store.getters.getStoredProcessFromTab({
-      windowUuid: parentUuid,
-      tabUuid: containerUuid,
-      processUuid: uuid
-    })
+  openBrowserAssociated: function({ parentUuid, containerUuid, uuid, browserUuid }) {
+    if (isEmptyValue(browserUuid)) {
+      const process = store.getters.getStoredProcessFromTab({
+        windowUuid: parentUuid,
+        tabUuid: containerUuid,
+        processUuid: uuid
+      })
+      browserUuid = process.browserUuid
+    }
 
-    router.push({
-      name: 'Smart Browser',
+    const inMenu = zoomIn({
+      uuid: browserUuid,
       params: {
         browserId: 0,
-        browserUuid: process.browserUuid
+        browserUuid
       },
       query: {
         parentUuid
-      }
-    }, () => {})
+      },
+      isShowMessage: false
+    })
+
+    if (!inMenu) {
+      router.push({
+        name: 'Smart Browser',
+        params: {
+          browserId: 0,
+          browserUuid
+        },
+        query: {
+          parentUuid
+        }
+      }, () => {})
+    }
   }
 }
 

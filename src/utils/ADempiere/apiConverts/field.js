@@ -14,8 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { convertContextInfo } from '@/utils/ADempiere/apiConverts/core.js'
 import { camelizeObjectKeys, renameObjectKey } from '../transformObject'
+import { convertContextInfo } from '@/utils/ADempiere/apiConverts/core.js'
+import { convertProcess } from '@/utils/ADempiere/apiConverts/dictionary'
 
 export function convertField(field) {
   const convertedField = camelizeObjectKeys(field)
@@ -26,6 +27,9 @@ export function convertField(field) {
   convertedField.fieldDefinition = convertFieldDefinition(field.Fielddefinition)
   delete convertedField['Fielddefinition']
   convertedField.valueMin = field.value_max
+  if (field.process) {
+    convertedField.process = convertProcess(field.process)
+  }
   renameObjectKey(convertedField, 'columnSql', 'columnSQL')
   return convertedField
 }
