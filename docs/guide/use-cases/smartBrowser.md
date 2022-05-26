@@ -1,251 +1,170 @@
-# Casos de Uso: Smart Browser
+# Use Cases: Smart Browser
 
-## Apertura
+## Opening
 
-### Árbol de Menú
-Abrir un reporte desde el árbol de menú:
-1. Desplegar el árbol de menú en **Gestión del Sistema/Reglas Generales/Seguridad**.
-2. Seleccionar el Smart Browser **Consulta de Usuarios/Contactos**.
+### Menu Tree
+Open a report from the menu tree:
+1. Pull down the menu tree under **System Management/General Rules/Security**.
+2. Select the Smart Browser > **User/Contacts Query**.
 
-#### Versión Escritorio ZK:
-<img :src="$withBase('/images/use-cases/smartbrowser/open/open-menu-destok-zk.gif')" alt="ZK Desktop" width="100%">
+#### ZK Desktop Version:
+<img :src="$withBase('/images/use-cases/smartbrowser/open/open-menu-destok-zk.gif')" width="100%">
 
 #### Versión Escritorio Vue:
-<img :src="$withBase('/images/use-cases/smartbrowser/open/open-menu-destok-ui.gif')" alt="ZK Desktop" width="100%">
+<img :src="$withBase('/images/use-cases/smartbrowser/open/open-menu-destok-ui.gif')" width="100%">
 
 #### Versión Móvil Vue:
-<img :src="$withBase('/images/use-cases/smartbrowser/open/open-menu-mobil-ui.gif')" alt="ZK Desktop" width="100%">
+<img :src="$withBase('/images/use-cases/smartbrowser/open/open-menu-mobile-ui.gif')" width="100%">
 
 
 
-### Buscador del Menú
-Abrir un reporte desde el buscador del menú:
+### Menu Browser
+Open a report from the menu browser:
 
-2. En el buscador de la parte superior escribir **Consulta de Usuarios/Contactos**.
-3. Seleccionar el Smart Browser coincidente con el resultado.
+2. In the search engine at the top type **User/Contacts Query**.
+3. Select the Smart Browser that matches the result.
 
-##### Versión ZK:
-<img :src="$withBase('/images/use-cases/report/open-search-menu.gif')" alt="ZK Desktop" width="100%">
+#### ZK Desktop Version:
+<img :src="$withBase('/images/use-cases/smartbrowser/open/open-search-menu-destok-zk.gif')" width="100%">
 
-##### Versión Vue:
-<img :src="$withBase('/images/use-cases/report/open-search-menu-vue.gif')" alt="ZK Desktop" width="100%">
+#### Vue Desktop Version:
+<img :src="$withBase('/images/use-cases/smartbrowser/open/open-search-menu-destok-ui.gif')" width="100%">
 
+#### Versión Móvil Vue:
+<img :src="$withBase('/images/use-cases/smartbrowser/open/open-search-menu-mobile-ui.gif')" width="100%">
 
-### Ítems Recientes
-Abrir un reporte de ítems recientes:
 
-1. Ubicar el tablero **Ítems Recientes**.
-2. Seleccionar cualquier reporte o en caso de usar la búsqueda rápida de la tabla de ítems recientes seleccionar el reporte coincidente con el resultado.
+### Recent Items
+Open a Smart Browser **(Smart Browser)** of recent items:
 
-##### Versión ZK:
-<img :src="$withBase('/images/use-cases/report/open-recient-item-zk.gif')" alt="ZK Desktop" width="100%">
+1. Locate the **Recent Items** dashboard.
+2. Select any **Smart Browser** or in case of using the quick search of the recent items table select the **Smart Browser** matching the result.
 
-##### Versión Vue:
-<img :src="$withBase('/images/use-cases/report/open-recient-item-vue.gif')" alt="ZK Desktop" width="100%">
+##### ZK Desktop Version:
+<img :src="$withBase('/images/use-cases/smartbrowser/open/open-recien-item-mobile-ui.gif')" width="100%">
 
+##### Versión Escritorio Vue:
+<img :src="$withBase('/images/use-cases/smartbrowser/open/open-recien-item-destok-ui.gif')" width="100%">
 
-### Relaciones
-Abrir un reporte desde las relaciones del mismo nivel del menú:
+#### Versión Móvil Vue:
+<img :src="$withBase('/images/use-cases/smartbrowser/open/open-recien-item-mobile-ui.gif')" width="100%">
 
-El cliente ZK de ADempiere no cuenta con una característica equivalente.
 
+### Relationships
+Open a Smart Browser **(Smart Browser)** from the same menu level relations:
 
-### Pasos a seguir
+ADempiere's ZK client does not have a feature.
 
-1.  Desplegar el árbol de menú en **Gestión de Saldos Pendientes**
-2.  Seleccione el reporte de **Saldos Abiertos a la Fecha**
-3.  Desplegar la lista del el menú de relaciones, en la parte superior a la derecha de la ventana.
-4. Ubicar y seleccionar el reporte **Saldos Abiertos**.
 
+### Steps to follow
 
+1. Pull down the menu tree in **System Management/General Rules/Security**.
+2. Select the **My Profile** window.
+3.  Pull down the Relationship menu list at the top right of the window.
+4.  Locate and select the **Smart Browser** > **User/Contact Query**.
 
-#### Versión Vue:
-<img :src="$withBase('/images/use-cases/report/open-relations-vue.gif')" alt="ZK Desktop" width="100%">
 
 
+#### Vue Version:
+<img :src="$withBase('/images/use-cases/smartbrowser/open/open-relations-destok-ui.gif')" width="100%">
 
+## Load
 
-### Re Abrir Reporte desde el Histórico Procesos
+### Parameters
+The parameters (fields) of the **Smart Browser** are used to perform the record search. Only the fields with default value will be displayed, or with mandatory value.
 
-Abrir un reporte el **Histórico Procesos** con los parámetros ejecutados del reporte seleccionado
+1. Open the **Smart Browser** **Process Orders in Batch**.
+2. Note the **Document Status** parameter.
 
-Actualmente en el cliente ZK de ADempiere no cuenta con una característica equivalente.
+#### ZK Desktop Version:
+<img :src="$withBase('/images/use-cases/smartbrowser/load/params-zk.png')" width="100%">
 
-##### Versión Vue:
-1. Ubicar en el árbol de menú en **Histórico Procesos** y abrirlo.
-2. Seleccionar cualquier reporte con parámetros **Saldo en Banco**.
+#### Vue Desktop Version:
+<img :src="$withBase('/images/use-cases/smartbrowser/load/params.png')" width="100%">
 
-<img :src="$withBase('/images/use-cases/report/open-process-activity.gif')" alt="ZK Desktop" width="100%">
+#### Vue Mobile Version:
+<img :src="$withBase('/images/use-cases/smartbrowser/load/params-mobile-ui.gif')" width="100%">
 
-## Carga
 
-### Parámetros
-Los parámetros (campos) de los procesos deben cargar al abrirse en el caso de que el reporte maneje parámetros según cada tipo de visualización.
+### Display
+When loading all parameters with default value, or with mandatory are displayed on first load.
 
-1. Abrir el reporte **Saldos Abiertos**.
-2. Nótese los diferentes tipos de parámetros: Cadena, Si y No, Fecha, Monto, Lista, Tabla.
+#### ZK Desktop Version:
+Currently in the Zk interface when opening a **Smart Browser** in this case **Process Orders in Batch** loads all fields in the view. 
+<img :src="$withBase('/images/use-cases/smartbrowser/load/mandatory-zk.gif')" width="100%">
 
-##### Versión ZK:
-<img :src="$withBase('/images/use-cases/report/carga-params-zk.png')" alt="ZK Desktop" width="100%">
+#### Vue Desktop Version:
+In the ADempiere-Vue interface open a **Smart Browser** in this case **Process Orders in Batch** only shows the fields with default value, or with mandatory.
 
-##### Versión Vue:
-<img :src="$withBase('/images/use-cases/report/carga-params-vue.png')" alt="ZK Desktop" width="100%">
+<img :src="$withBase('/images/use-cases/smartbrowser/load/mandatory-vue.gif')" width="100%">
 
+#### Mobile Version Vue:
+<img :src="$withBase('/images/use-cases/smartbrowser/load/mandatory-mobile-ui.gif')" width="100%">
 
-### Visualización
-Al cargar todos los parámetros con valor por defecto, o con obligatoriedad se visualizan en la primera carga.
+### Mandatory
 
-##### Versión ZK:
-Actualmente en la interfaz del Zk al abrir un reporte en este caso **Saldos Abiertos** carga todos los campos en la vista 
-<img :src="$withBase('/images/use-cases/report/carga-params-zk.gif')" alt="ZK Desktop" width="100%">
+##### ZK Version:
+1. Open the **Process Orders in Batch** report.
+2. Mandatory fields show with an asterisk (*red on the right side of their name.
+<img :src="$withBase('/images/use-cases/smartbrowser/load/display-zk.png')" width="100%">
 
-##### Versión Vue:
-En la interfaz de ADempiere-Vue abrir un reporte en este caso **Saldos Abiertos** solo muestra los campos con valor por defecto, o con obligatoriedad.
-Creando así una vista mas agradable y minimalista para el usuario
-<img :src="$withBase('/images/use-cases/report/carga-display.gif')" alt="ZK Desktop" width="100%">
+##### Vue Version:
+1. Open the **Process Orders in Batch** report.
+2. Mandatory fields show with an asterisk (*red on the right side of their name, and those mandatory empty ones highlight with a red border above the field.
+<img :src="$withBase('/images/use-cases/smartbrowser/load/display-ui.gif')" width="100%">
 
-### Obligatoriedad
 
-##### Versión ZK:
-1. Abrir el reporte **Saldo en Banco**.
-2. Los campos obligatorios muestran con un asterisco (*) rojo al lado derecho de su nombre.
-<img :src="$withBase('/images/use-cases/report/carga-mandatory-zk.png')" alt="ZK Desktop" width="100%">
+### Record
 
-##### Versión Vue:
-1. Abrir el reporte **Saldo en Banco**.
-2. Los campos obligatorios muestran con un asterisco (*) rojo al lado derecho de su nombre, y aquellos obligatorios vacíos resaltan con un borde rojo sobre el campo.
-<img :src="$withBase('/images/use-cases/report/carga-mandatory-vue.png')" alt="ZK Desktop" width="100%">
+It is a table where the records are found depending on the parameters found in the [**Search Criteria**](#search-criteria). 
 
+#### ZK Desktop Version:
+Currently in the Zk interface when opening a **Smart Browser** in this case **Process Orders in Batch** it is not possible to observe the table with records in a dynamic way.
+<img :src="$withBase('/images/use-cases/smartbrowser/load/search-record-zk.gif')" width="100%">
 
-<!-- ### Solo Lectura -->
+#### Vue Desktop Version:
+In the ADempiere-Vue interface open a **Smart Browser** in this case **Process Orders in Batch** the table with the records is below which add a parameter in the [**Search Criteria**](#search-criteria) you can see how the records are filtered from the table
+<img :src="$withBase('/images/use-cases/smartbrowser/load/search-record-ui.gif')" width="100%">
 
+#### Vue Mobile Version:
+In the ADempiere-Vue interface open a **Smart Browser** in this case **Process Orders in Batch** the table with the records is below which add a parameter in the [**Search Criteria**](#search-criteria) you can see how the records are filtered from the table
+<img :src="$withBase('/images/use-cases/smartbrowser/load/search-record-ui-mobile.gif')" width="100%">
 
-### Valor por Defecto
 
-Manejar valor por defecto para los distintos tipos de parámetros.
+### Search Criteria
 
-##### Versión Vue:
-1. Abrir el reporte **Asignación de Pago**.
-2. Hacer clic contrario en el valor del parámetro y seleccionar **Valor de Preferencia**.
-3. Observe que el parámetro **Document Status** tiene valor por defecto (CO = Completo).
+This is where the [**parameters**](#parameters) which are taken into account for log filtering are located. 
 
-<img :src="$withBase('/images/use-cases/report/carga-defaul-value-zk.gif')" alt="ZK Desktop" width="100%">
+#### ZK Desktop Version:
+Currently in the Zk interface in the Search Criteria it shows all the search parameters and after selecting the parameters you have to click on the Start Search button. Also when bringing record it is hidden. It is also difficult to know where to display the Search Criteria option again.
 
+<img :src="$withBase('/images/use-cases/smartbrowser/load/search-criteria-zk.gif')" width="100%">
 
-##### Versión Vue:
-1. Abrir el reporte **Asignación de Pago**.
-2. Hacer clic en el nombre del parámetro y seleccionar **Información** o **Preferencia**.
-3. Observe que el parámetro **Document Status** tiene valor por defecto (CO = Completo).
+#### Vue Desktop Version:
+En la interfaz de ADempiere-Vue en el Criterio de Búsqueda muestra todos solo los parámetros que sean [**obligatorio**](#obligatoriedad) o tengan un valor por defecto. También si se requiere agregar más parámetros en la parte superior ubicado a la derecha hay una lista con los parámetros disponibles
+<img :src="$withBase('/images/use-cases/smartbrowser/load/search-criteria-ui-.gif')" width="100%">
 
-<img :src="$withBase('/images/use-cases/report/carga-defaul-value-vue.gif')" alt="ZK Desktop" width="100%">
+#### Versión Móvil Vue:
+En la interfaz de ADempiere-Vue en el Criterio de Búsqueda muestra todos solo los parámetros que sean [**obligatorio**](#obligatoriedad) o tengan un valor por defecto. También si se requiere agregar más parámetros en la parte superior ubicado a la derecha hay una lista con los parámetros disponibles
+<img :src="$withBase('/images/use-cases/smartbrowser/load/search-criteria-ui-mobile.gif')" width="100%">
 
-### Acercar
+:::tip <b>Notes:</b>.
+In the ADempiere-Vue interface if in the Search Criteria in the parameter lose focus or pressing Enter will automatically perform the search.
+:::
+### Pagination
+If in the search you get a lot of records you should paginate
+#### ZK Desktop Version:
+Currently in the Zk interface it loads in the table all the record quantity of the search result. 
+<img :src="$withBase('/images/use-cases/smartbrowser/load/paging-zk.gif')" width="100%">
 
-En ADempiere actualmente se puede acceder a una ventana desde un campo que está en otro que está relacionado, como se muestra a continuación.
+#### Vue Desktop Version:
+In the ADempiere-Vue interface if the search result gets many records the total number of records found and their page count are displayed in the table so that the log load is not so heavy
+<img :src="$withBase('/images/use-cases/smartbrowser/load/')" width="100%">
 
+#### Vue Mobile Version:
+In the ADempiere-Vue interface if the search result gets many records the total number of records found and their page count are displayed in the table so that the record load is not so heavy
+<img :src="$withBase('/images/use-cases/smartbrowser/load/')" width="100%">
 
-##### Versión Vue:
-1. Abrir el reporte **Detalle de Selección de Pagos**.
-2. Hacer clic contrario en el parámetro **Cargo** y seleccionar **Acercar**.
+## Execution
 
-<img :src="$withBase('/images/use-cases/report/carga-zoom-zk.gif')" alt="ZK Desktop" width="100%">
-
-##### Versión Vue:
-1. Abrir el reporte **Detalle de Selección de Pagos**.
-2. Hacer clic contrario en el parámetro **Cargo** y seleccionar **Acercar**.
-
-<img :src="$withBase('/images/use-cases/report/carga-zoom-vue.gif')" alt="ZK Desktop" width="100%">
-
-## Ejecución
-
-### Parámetros
-Los parámetros (campos) de los procesos deben cargar al abrirse en el caso de que el reporte maneje parámetros según cada tipo de visualización.
-
-1. Abrir el reporte **Saldos Abiertos**.
-2. Nótese los diferentes tipos de parámetros: Cadena, Si y No, Fecha, Monto, Lista, Tabla.
-
-##### Versión ZK:
-<img :src="$withBase('/images/use-cases/report/run/run-params-zk.gif')" alt="ZK Desktop" width="100%">
-
-##### Versión Vue:
-<img :src="$withBase('/images/use-cases/report/run/run-params-vue.gif')" alt="ZK Desktop" width="100%">
-
-### Validación
-Se deben asegurar las siguientes validaciones para poder ejecutar un reporte:
-
-* Todos los campos obligatorios deben tener valores.
-* Si es reporte asociado a una ventana no permite ejecutarse en un nuevo registro.
-
-##### Versión Vue:
-<img :src="$withBase('/images/use-cases/report/run/run-validation-vue.gif')" alt="ZK Desktop" width="100%">
-
-### Ejecución
-1. Desplegar el árbol de menú en **Gestión de Saldos Pendientes**.
-2. Seleccionar el reporte **Saldos Abiertos**.
-3. Llenar los campos.
-4. Ejecutar en el menú de acciones.
-
-##### Versión Vue:
-<img :src="$withBase('/images/use-cases/report/run/run-validation-vue.gif')" alt="ZK Desktop" width="100%">
-
-### Ejecutar desde la Ventana
-
-Actualmente en la versión de ADempiere-Vue se pueden ejecutar reportes.
-
-1. Abra la ventana de **Documentos por Cobrar**
-2. Dirijase al menú de acciones y despliegue la lista
-3. Seleccione la Opción de **Imprimir Factura**
-##### Versión Vue:
-<img :src="$withBase('/images/use-cases/report/run/open-windows.gif')" alt="ZK Desktop" width="100%">
-
-### Descargar
-
-Actualmente en la interfaz de ADempiere ZK si ejecuto un reporte en formato PDF y se requiere descargarlo en EXCEL debe volver a ejecutar el reporte en el formato de EXCEL y luego hacer clic en la opción de descargar
-
-En la interfaz de ADempiere-Vue si ejecuto un reporte en HTML y se requiere descargarlo no es necesario volver a ejecutar el reporte con el formato que se desea descargar. En la parte inferior del titulo del reporte posicionado al izquierda tiene la opción de descargarlo en cualquier tipo de formato
-
-##### Versión ZK:
-<img :src="$withBase('/images/use-cases/report/run/run-download-zk.gif')" alt="ZK Desktop" width="100%">
-
-##### Versión Vue:
-<img :src="$withBase('/images/use-cases/report/run/run-download-vue.gif')" alt="ZK Desktop" width="100%">
-
-### Cambiar Parámetros
-
-Actualmente en la interfaz de ADempiere ZK no se puede cambiar de parámetros en el contenedor del visor de reporte
-
-##### Versión Vue:
-<img :src="$withBase('/images/use-cases/report/run/run-download-vue.gif')" alt="ZK Desktop" width="100%">
-
-### Cambiar Formato de Impresión
-
-Se requiere que desde el visor de reporte se pueda cambiar formato de impresión para generar nuevo reporte
-
-##### Versión ZK:
-<img :src="$withBase('/images/use-cases/report/run/run-print-format-zk.gif')" alt="ZK Desktop" width="100%">
-
-##### Versión Vue:
-<img :src="$withBase('/images/use-cases/report/run/run-print-format-vue.gif')" alt="ZK Desktop" width="100%">
-
-
-#### Cambiar Extensión de Archivo
-
-Se requiere que desde el visor de reporte se pueda cambiar la extensión del archivo para generar nuevo reporte
-
-##### Versión ZK:
-<img :src="$withBase('/images/use-cases/report/run/run-change-file-extension-zk.gif')" alt="ZK Desktop" width="100%">
-
-##### Versión Vue:
-<img :src="$withBase('/images/use-cases/report/run/run-change-file-extension-vue.gif')" alt="ZK Desktop" width="100%">
-
-
-### Drill Down
-
-Se requiere que desde el visor de reporte se pueda cambiar Vista de Reporte para generar nuevo reporte
-
-##### Versión ZK:
-<img :src="$withBase('/images/use-cases/report/run/run-drill-down-zk.gif')" alt="ZK Desktop" width="100%">
-
-##### Versión Vue:
-<img :src="$withBase('/images/use-cases/report/run/run-drill-down-vue.gif')" alt="ZK Desktop" width="100%">
-
+### Parameters
