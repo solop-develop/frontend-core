@@ -298,7 +298,8 @@ function genEssentialsSidebar(type = '') {
 function genUseCasesSidebar(type = '') {
   const mapArr = [
     '/guide/use-cases/process.md',
-    '/guide/use-cases/reports.md'
+    '/guide/use-cases/reports.md',
+    '/guide/use-cases/smartBrowser.md'
   ]
   return mapArr.map(i => {
     return type + i
@@ -348,6 +349,7 @@ function genComponentSidebar(type = '') {
     '/guide/components/dashboard.md',
     '/guide/components/process.md',
     '/guide/components/reports.md',
+    '/guide/components/smart-browser.md',
     '/guide/components/guide.md',
     '/guide/components/workflows-and-activities.md'
   ]
