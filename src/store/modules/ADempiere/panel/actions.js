@@ -441,7 +441,8 @@ const actions = {
       }
     }
     const dependentsList = fieldsList.filter(fieldItem => {
-      return field.dependentFieldsList.includes(fieldItem.columnName)
+      return field.dependentFieldsList.includes(fieldItem.columnName) ||
+        field.dependentFieldsList.includes(fieldItem.elementName)
     })
 
     //  Iterate for change logic
@@ -505,6 +506,15 @@ const actions = {
             columnName: fieldDependent.columnName,
             value: newValue
           })
+          // update values for field on elememnt name of column
+          if (fieldDependent.columnName !== fieldDependent.elementName) {
+            commit('updateValueOfField', {
+              parentUuid,
+              containerUuid,
+              columnName: fieldDependent.elementName,
+              value: newValue
+            })
+          }
         }
       }
 

@@ -37,6 +37,7 @@ import {
   zoomWindow, runDeleteable
 } from '@/utils/ADempiere/dictionary/browser.js'
 import { showNotification } from '@/utils/ADempiere/notification.js'
+import { isLookup } from '@/utils/ADempiere/references'
 
 export default {
   getBrowserDefinitionFromServer({ commit, dispatch, rootGetters }, {
@@ -57,8 +58,26 @@ export default {
             isAddFieldsRange: true,
             fieldOverwrite: {
               isShowedFromUser: false
+            },
+            sortField: 'seqNoGrid'
+          })
+
+          browserDefinition.elementsList = {}
+          browserDefinition.columnsList = {}
+          browserDefinition.fieldsList.forEach(fieldItem => {
+            browserDefinition.elementsList[fieldItem.columnName] = fieldItem.elementName
+            browserDefinition.columnsList[fieldItem.elementName] = fieldItem.columnName
+            if (isLookup(fieldItem.displayType)) {
+              browserDefinition.elementsList[`DisplayColumn_` + fieldItem.columnName] = `DisplayColumn_` + fieldItem.elementName
+              browserDefinition.columnsList[`DisplayColumn_` + fieldItem.elementName] = `DisplayColumn_` + fieldItem.columnName
+            }
+
+            if (fieldItem.isRange) {
+              browserDefinition.elementsList[fieldItem.columnNameTo] = fieldItem.elementNameTo
+              browserDefinition.columnsList[fieldItem.elementNameTo] = fieldItem.columnNameTo
             }
           })
+
           commit('addBrowserToList', browserDefinition)
 
           dispatch('setBrowserActionsMenu', {
@@ -201,19 +220,29 @@ export default {
       }
 
       const currentRoute = router.app._route
-      const defaultAttributes = getters.getParsedDefaultValues({
+      const defaultAttributesWithColumn = getters.getParsedDefaultValues({
         containerUuid,
         isSOTrxMenu: currentRoute.meta.isSalesTransaction,
         fieldsList
       })
 
+      // elements of colums
+      const defaultAttributesWithElement = defaultAttributesWithColumn.map(attribute => {
+        return {
+          ...attribute,
+          columnName: browserDefinition.elementsList[attribute.columnName]
+        }
+      })
+
+      const defaultAttributesList = defaultAttributesWithColumn.concat(defaultAttributesWithElement)
+
       dispatch('updateValuesOfContainer', {
         containerUuid,
         isOverWriteParent: true,
-        attributes: defaultAttributes
+        attributes: defaultAttributesList
       })
 
-      resolve(defaultAttributes)
+      resolve(defaultAttributesList)
 
       if (!isEmptyValue(browserDefinition.process)) {
         // clear values to process associated

@@ -28,14 +28,14 @@ import { zoomIn } from '@/utils/ADempiere/coreUtils'
 /**
  * Is displayed field in panel single record
  */
-export function isDisplayedField({ isDisplayed, isDisplayedFromLogic, isActive, displayType }) {
+export function isDisplayedField({ isDisplayed, displayLogic, isDisplayedFromLogic, isActive, displayType }) {
   // button field not showed
   if (isHiddenField(displayType)) {
     return false
   }
 
   // verify if field is active and displayed
-  return isActive && isDisplayed && isDisplayedFromLogic
+  return isActive && isDisplayed && (isEmptyValue(displayLogic) || isDisplayedFromLogic)
 }
 
 /**

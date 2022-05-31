@@ -352,7 +352,7 @@ export default defineComponent({
           columnName
         })
       },
-      getLookupList({ parentUuid, containerUuid, uuid, id, contextColumnNames, columnName, searchValue }) {
+      getLookupList({ parentUuid, containerUuid, uuid, id, contextColumnNames, columnName, searchValue, isAddBlankValue, blankValue }) {
         return store.dispatch('getLookupListFromServer', {
           parentUuid,
           containerUuid,
@@ -360,7 +360,10 @@ export default defineComponent({
           fieldUuid: uuid,
           id,
           columnName,
-          searchValue
+          searchValue,
+          // app attributes
+          isAddBlankValue,
+          blankValue
         })
       },
 

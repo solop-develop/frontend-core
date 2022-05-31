@@ -31,14 +31,14 @@ import { isHiddenField } from '@/utils/ADempiere/references'
  * @param {boolean} isDisplayedFromLogic
  * @returns {boolean}
  */
-export function isDisplayedField({ displayType, isActive, isDisplayed, isDisplayedFromLogic }) {
+export function isDisplayedField({ displayType, isActive, isDisplayed, displayLogic, isDisplayedFromLogic }) {
   // button field not showed
   if (isHiddenField(displayType)) {
     return false
   }
 
   // verify if field is active
-  return isActive && isDisplayed && isDisplayedFromLogic
+  return isActive && isDisplayed && (isEmptyValue(displayLogic) || isDisplayedFromLogic)
 }
 
 /**

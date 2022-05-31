@@ -26,13 +26,13 @@ import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 /**
  * Is displayed field in panel query criteria
  */
-export function isDisplayedField({ displayType, isActive, isQueryCriteria, isDisplayedFromLogic }) {
+export function isDisplayedField({ displayType, isActive, isQueryCriteria, displayLogic, isDisplayedFromLogic }) {
   // button field not showed
   if (isHiddenField(displayType)) {
     return false
   }
 
-  return isActive && isQueryCriteria && isDisplayedFromLogic
+  return isActive && isQueryCriteria && (isEmptyValue(displayLogic) || isDisplayedFromLogic)
 }
 
 /**
@@ -145,7 +145,6 @@ export const runProcessOfBrowser = {
 /**
  * isDeleteable
  */
-
 export const runDeleteable = {
   name: language.t('actionMenu.delete'),
   enabled: ({ containerUuid, containerManager }) => {
@@ -202,6 +201,105 @@ export const zoomWindow = {
   zoomWindow: ({ uuid }) => {
     zoomIn({
       uuid
+    })
+  }
+}
+
+/**
+ * Manage the browser panel
+ */
+export const containerManager = {
+  getPanel({ containerUuid }) {
+    return store.getters.getStoredBrowser(containerUuid)
+  },
+  getFieldsList({ containerUuid }) {
+    return store.getters.getStoredFieldsFromBrowser(containerUuid)
+  },
+
+  actionPerformed({ field, value, valueTo, containerUuid }) {
+    return store.dispatch('browserActionPerformed', {
+      containerUuid,
+      field,
+      value,
+      valueTo
+    })
+  },
+
+  setDefaultValues: ({ parentUuid, containerUuid }) => {
+    store.dispatch('setBrowserDefaultValues', {
+      parentUuid,
+      containerUuid
+    })
+  },
+
+  /**
+   * Is displayed field in panel single record
+   */
+  isDisplayedField,
+
+  isMandatoryField,
+
+  isReadOnlyField,
+
+  changeFieldShowedFromUser({ containerUuid, fieldsShowed }) {
+    store.dispatch('changeBrowserFieldShowedFromUser', {
+      containerUuid,
+      fieldsShowed
+    })
+  },
+
+  setSelection: ({
+    containerUuid,
+    recordsSelected
+  }) => {
+    store.commit('setBrowserSelectionsList', {
+      containerUuid,
+      selectionsList: recordsSelected
+    })
+  },
+  getSelection: ({
+    containerUuid
+  }) => {
+    return store.getters.getBrowserSelectionsList({
+      containerUuid
+    })
+  },
+  getRecordCount({ containerUuid }) {
+    return store.getters.getBrowserRecordCount({
+      containerUuid
+    })
+  },
+
+  getPageNumber({ containerUuid }) {
+    return store.getters.getBrowserPageNumber({
+      containerUuid
+    })
+  },
+
+  /**
+   * @returns Promisse with value and displayedValue
+   */
+  getDefaultValue({ parentUuid, containerUuid, uuid, id, contextColumnNames, columnName }) {
+    return store.dispatch('getDefaultValueFromServer', {
+      parentUuid,
+      containerUuid,
+      contextColumnNames,
+      browseFieldUuid: uuid,
+      id,
+      //
+      columnName
+    })
+  },
+  getLookupList({ parentUuid, containerUuid, contextColumnNames, uuid, searchValue, isAddBlankValue = false, blankValue }) {
+    return store.dispatch('getLookupListFromServer', {
+      parentUuid,
+      containerUuid,
+      contextColumnNames,
+      browseFieldUuid: uuid,
+      searchValue,
+      // app attributes
+      isAddBlankValue,
+      blankValue
     })
   }
 }

@@ -69,6 +69,8 @@ const lookupManager = {
      * @param {string} tableName
      * @param {string} directQuery
      * @param {string|number} value identifier or key
+     * @param {boolean} isAddBlankValue add blanck value option in fist element on list
+     * @param {string|number} blankValue value to add in empty option ("", -1, null, undefined)
      */
     getLookupListFromServer({ commit, rootGetters }, {
       isAddBlankValue = false,
@@ -132,6 +134,8 @@ const lookupManager = {
                 })
               }
             })
+
+            // add blanck value option in fist element on list
             if (isAddBlankValue) {
               optionsList.unshift({
                 displayedValue: ' ',

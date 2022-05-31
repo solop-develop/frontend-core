@@ -102,9 +102,10 @@ import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp'
 
 // utils and helper methods
 import {
-  isDisplayedField, isDisplayedColumn,
-  isMandatoryField, isMandatoryColumn,
-  isReadOnlyField, isReadOnlyColumn
+  containerManager,
+  isDisplayedColumn,
+  isMandatoryColumn,
+  isReadOnlyColumn
 } from '@/utils/ADempiere/dictionary/browser.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
@@ -287,99 +288,6 @@ export default defineComponent({
       store.commit('setBrowserData', {
         containerUuid: browserUuid
       })
-    }
-
-    const containerManager = {
-      getPanel({ containerUuid }) {
-        return store.getters.getStoredBrowser(containerUuid)
-      },
-      getFieldsList({ containerUuid }) {
-        return store.getters.getStoredFieldsFromBrowser(containerUuid)
-      },
-
-      actionPerformed({ field, value, valueTo, containerUuid }) {
-        return store.dispatch('browserActionPerformed', {
-          containerUuid,
-          field,
-          value,
-          valueTo
-        })
-      },
-
-      setDefaultValues: ({ parentUuid, containerUuid }) => {
-        store.dispatch('setBrowserDefaultValues', {
-          parentUuid,
-          containerUuid
-        })
-      },
-
-      /**
-       * Is displayed field in panel single record
-       */
-      isDisplayedField,
-
-      isMandatoryField,
-
-      isReadOnlyField,
-
-      changeFieldShowedFromUser({ containerUuid, fieldsShowed }) {
-        store.dispatch('changeBrowserFieldShowedFromUser', {
-          containerUuid,
-          fieldsShowed
-        })
-      },
-
-      setSelection: ({
-        containerUuid,
-        recordsSelected
-      }) => {
-        store.commit('setBrowserSelectionsList', {
-          containerUuid,
-          selectionsList: recordsSelected
-        })
-      },
-      getSelection: ({
-        containerUuid
-      }) => {
-        return store.getters.getBrowserSelectionsList({
-          containerUuid
-        })
-      },
-      getRecordCount({ containerUuid }) {
-        return store.getters.getBrowserRecordCount({
-          containerUuid
-        })
-      },
-
-      getPageNumber({ containerUuid }) {
-        return store.getters.getBrowserPageNumber({
-          containerUuid
-        })
-      },
-
-      /**
-       * @returns Promisse with value and displayedValue
-       */
-      getDefaultValue({ parentUuid, containerUuid, uuid, id, contextColumnNames, columnName }) {
-        return store.dispatch('getDefaultValueFromServer', {
-          parentUuid,
-          containerUuid,
-          contextColumnNames,
-          browseFieldUuid: uuid,
-          id,
-          //
-          columnName
-        })
-      },
-      getLookupList({ parentUuid, containerUuid, contextColumnNames, uuid, searchValue }) {
-        return store.dispatch('getLookupListFromServer', {
-          parentUuid,
-          containerUuid,
-          contextColumnNames,
-          browseFieldUuid: uuid,
-          searchValue
-        })
-      }
     }
 
     const containerManagerTable = {

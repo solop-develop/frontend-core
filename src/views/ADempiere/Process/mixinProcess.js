@@ -79,13 +79,16 @@ export default (processUuid) => {
         columnName
       })
     },
-    getLookupList({ parentUuid, containerUuid, contextColumnNames, uuid, searchValue }) {
+    getLookupList({ parentUuid, containerUuid, contextColumnNames, uuid, searchValue, isAddBlankValue = false, blankValue }) {
       return store.dispatch('getLookupListFromServer', {
         parentUuid,
         containerUuid,
         contextColumnNames,
         processParameterUuid: uuid,
-        searchValue
+        searchValue,
+        // app attributes
+        isAddBlankValue,
+        blankValue
       })
     }
   }

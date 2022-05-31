@@ -129,7 +129,8 @@ export function generatePanelAndFields({
   isAddFieldsRange = false,
   isAddFieldUuid = false,
   isAddLinkColumn = false,
-  fieldOverwrite = {}
+  fieldOverwrite = {},
+  sortField = 'sequence' //  sequence, sortNo, seqNoGrid
 }) {
   const fieldAdditionalAttributes = {
     parentUuid,
@@ -189,10 +190,6 @@ export function generatePanelAndFields({
 
   if (!isEmptyValue(fieldsRangeList)) {
     fieldsList = fieldsList.concat(fieldsRangeList)
-    // order range fields
-    fieldsList = sortFields({
-      fieldsList
-    })
   }
 
   // TODO: Improve performance and reduce array cycles
@@ -246,6 +243,11 @@ export function generatePanelAndFields({
       fieldsList.push(fieldUuid)
     }
   }
+
+  fieldsList = sortFields({
+    fieldsList,
+    orderBy: sortField
+  })
 
   // panel for save on store
   const panel = {

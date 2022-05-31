@@ -35,6 +35,19 @@ export default {
     return undefined
   },
 
+  getStoredColumnsFromBrowser: (state, getters) => (browserUuid) => {
+    const browser = getters.getStoredBrowser(browserUuid)
+    const columnsList = []
+    if (!isEmptyValue(browser)) {
+      browser.fieldsList.forEach(field => {
+        columnsList.push(field.columnName)
+        columnsList.push(field.elementName)
+      })
+      return columnsList
+    }
+    return columnsList
+  },
+
   getProcessOfBrowser: (state, getters, rootState, rootGetters) => (browserUuid) => {
     const { process } = getters.getStoredBrowser(browserUuid)
 

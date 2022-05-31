@@ -57,7 +57,7 @@ export function generateField({
 
   const componentReference = evalutateTypeField(fieldToGenerate.displayType)
   let evaluatedLogics = {
-    isDisplayedFromLogic: fieldToGenerate.isDisplayed,
+    isDisplayedFromLogic: fieldToGenerate.isDisplayed || fieldToGenerate.isQueryCriteria,
     isMandatoryFromLogic: false,
     isReadOnlyFromLogic: false
   }
@@ -209,7 +209,7 @@ export function generateField({
   if (field.isRange) {
     field.operator = OPERATOR_GREATER_EQUAL.operator
     field.columnNameTo = `${columnName}_To`
-    field.elementNameTo = `${field.elementNameTo}_To`
+    field.elementNameTo = `${field.elementName}_To`
     if (typeRange) {
       field.uuid = `${field.uuid}_To`
       field.columnName = field.columnNameTo
@@ -219,7 +219,11 @@ export function generateField({
       field.defaultValue = field.defaultValueTo
       field.parsedDefaultValue = field.parsedDefaultValueTo
       field.operator = OPERATOR_LESS_EQUAL.operator
-      field.sequence = field.sequence + 1
+
+      // increment order sequence
+      field.sequence = field.sequence > 0 ? field.sequence + 1 : 0
+      field.seqNoGrid = field.seqNoGrid > 0 ? field.seqNoGrid + 1 : 0
+      field.sortNo = field.sortNo > 0 ? field.sortNo + 1 : 0
 
       // if field with value displayed in main panel
       if (!isEmptyValue(parsedDefaultValueTo)) {
@@ -262,8 +266,8 @@ export function getEvaluatedLogics({
     context: getContext
   }
 
-  let isDisplayedFromLogic = isDisplayed
-  if (!isEmptyValue(displayLogic)) {
+  let isDisplayedFromLogic = isEmptyValue(displayLogic)
+  if (isDisplayedFromLogic) {
     isDisplayedFromLogic = evaluator.evaluateLogic({
       ...commonParameters,
       logic: displayLogic
