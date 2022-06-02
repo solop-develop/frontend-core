@@ -60,14 +60,15 @@ export function isReadOnlyField({ isReadOnly, isReadOnlyFromLogic }) {
 /**
  * Is displayed column in table multi record
  */
-export function isDisplayedColumn({ isDisplayedGrid, isDisplayedFromLogic, isActive, isKey, displayType }) {
+export function isDisplayedColumn({ isDisplayedGrid, isDisplayedFromLogic, isActive, isKey, displayType, displayLogic }) {
   // key or button field not showed
   if (isKey || isHiddenField(displayType)) {
     return false
   }
 
   // window (table) result
-  return isActive && isDisplayedGrid && isDisplayedFromLogic
+  return isActive && isDisplayedGrid &&
+    (isEmptyValue(displayLogic) || isDisplayedFromLogic)
 }
 
 export function isMandatoryColumn({ isMandatory, isMandatoryFromLogic }) {

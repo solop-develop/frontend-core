@@ -529,7 +529,7 @@ export function tableColumnDataType(column, currentOption) {
     return true
   }
   if (currentOption === language.t('table.dataTable.showMinimalistView') &&
-    ['AD_Client_ID', 'AD_Org_ID', 'IsActive'].includes(column.columnName)) {
+    !['AD_Client_ID', 'AD_Org_ID', 'IsActive'].includes(column.columnName)) {
     return true
   }
   return false
