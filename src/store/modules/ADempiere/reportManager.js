@@ -93,12 +93,14 @@ const reportManager = {
         const recordId = router.app._route.params.recordId
         const tableName = router.app._route.params.recordId
         const reportDefinition = rootGetters.getStoredReport(containerUuid)
-        const { fieldsList } = reportDefinition
-
-        const fieldsEmpty = rootGetters.getProcessParametersEmptyMandatory({
-          containerUuid,
-          fieldsList
-        })
+        let fieldsList, fieldsEmpty, parametersList
+        if (!isEmptyValue(reportDefinition) && !isEmptyValue(reportDefinition.fieldsList)) {
+          fieldsList = reportDefinition.fieldsList
+          fieldsEmpty = rootGetters.getProcessParametersEmptyMandatory({
+            containerUuid,
+            fieldsList
+          })
+        }
         if (!isEmptyValue(fieldsEmpty)) {
           showMessage({
             message: language.t('notifications.mandatoryFieldMissing') + fieldsEmpty,
@@ -107,10 +109,12 @@ const reportManager = {
           return
         }
 
-        const parametersList = rootGetters.getReportParameters({
-          containerUuid,
-          fieldsList
-        })
+        if (!isEmptyValue(fieldsList)) {
+          parametersList = rootGetters.getReportParameters({
+            containerUuid,
+            fieldsList
+          })
+        }
 
         let reportingNotification = {
           close: () => false

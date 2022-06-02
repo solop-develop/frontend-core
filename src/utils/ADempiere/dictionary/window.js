@@ -197,7 +197,18 @@ export const generateReportOfWindow = {
   icon: 'skill',
   actionName: 'generateReportOfWindow',
   generateReportOfWindow: ({ parentUuid, containerUuid, uuid }) => {
+    const listMenu = store.getters.getStoredActionsMenu({ containerUuid })
+    const report = listMenu.find(word => word.uuid === uuid && word.containerUuid === uuid)
     store.commit('setSelectProcessWindows', uuid)
+    if (!report.isHasParameters) {
+      store.dispatch('getProcessDefinitionFromServer', { uuid })
+      store.dispatch('getReportDefinitionFromServer', { uuid })
+      store.dispatch('startReport', {
+        parentUuid: containerUuid,
+        containerUuid: uuid
+      })
+      return
+    }
     store.commit('setShowedModalDialog', {
       containerUuid: uuid,
       isShowed: true

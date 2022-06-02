@@ -222,6 +222,7 @@ const processManager = {
       containerUuid
     }) {
       return new Promise(resolve => {
+        let parametersList
         const recordId = router.app._route.query.recordId
         const recordUuid = router.app._route.query.action
         const windowsUuid = router.app._route.meta.uuid
@@ -233,10 +234,12 @@ const processManager = {
 
         // })
         const fieldsList = getters.getStoredFieldsFromProcess(containerUuid)
-        const parametersList = rootGetters.getProcessParameters({
-          containerUuid,
-          fieldsList
-        })
+        if (!isEmptyValue(fieldsList)) {
+          parametersList = rootGetters.getProcessParameters({
+            containerUuid,
+            fieldsList
+          })
+        }
 
         const isSession = !isEmptyValue(getToken())
         let procesingNotification = {
