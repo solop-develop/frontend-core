@@ -16,6 +16,7 @@
 
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { GLOBAL_CONTEXT_PREFIX, ACCOUNTING_CONTEXT_PREFIX } from '@/utils/ADempiere/contextUtils'
 
 /**
  * This class is used for evaluate a conditional
@@ -151,8 +152,8 @@ class evaluator {
     expr = /@/
     if (expr.test(first)) {
       first = first.replace(/@/g, '').trim()
-      isGlobal = first.startsWith('#')
-      isCountable = first.startsWith('$')
+      isGlobal = first.startsWith(GLOBAL_CONTEXT_PREFIX)
+      isCountable = first.startsWith(ACCOUNTING_CONTEXT_PREFIX)
       if (isGlobal || isCountable) {
         parentUuid = null
         containerUuid = null

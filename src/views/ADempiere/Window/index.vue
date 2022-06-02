@@ -161,7 +161,7 @@ export default defineComponent({
             columnName: CLIENT
           })
           // evaluate client id context with record
-          const preferenceClientId = store.getters.getPreferenceClientId
+          const preferenceClientId = store.getters.getSessionContextClientId
           if (clientIdRecord !== preferenceClientId) {
             return true
           }
@@ -233,7 +233,7 @@ export default defineComponent({
         }
 
         // evaluate client id context with record
-        const preferenceClientId = store.getters.getPreferenceClientId
+        const preferenceClientId = store.getters.getSessionContextClientId
         if (preferenceClientId !== parseInt(row.AD_Client_ID, 10) && isWithRecord) {
           return true
         }
@@ -341,7 +341,7 @@ export default defineComponent({
       /**
        * @returns Promisse with value and displayedValue
        */
-      getDefaultValue({ parentUuid, containerUuid, uuid, id, contextColumnNames, columnName }) {
+      getDefaultValue({ parentUuid, containerUuid, uuid, id, contextColumnNames, columnName, value }) {
         return store.dispatch('getDefaultValueFromServer', {
           parentUuid,
           containerUuid,
@@ -349,7 +349,8 @@ export default defineComponent({
           fieldUuid: uuid,
           id,
           //
-          columnName
+          columnName,
+          value
         })
       },
       getLookupList({ parentUuid, containerUuid, uuid, id, contextColumnNames, columnName, searchValue, isAddBlankValue, blankValue }) {

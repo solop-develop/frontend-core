@@ -15,11 +15,15 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import Vue from 'vue'
-// Delete when get global context and account context
-import { isEmptyValue, typeValue } from '@/utils/ADempiere/valueUtils.js'
-import { CLIENT, ORGANIZATION } from '@/utils/ADempiere/constants/systemColumns.js'
 
-const preference = {
+// constants
+import { CLIENT, ORGANIZATION } from '@/utils/ADempiere/constants/systemColumns.js'
+import { ACCOUNTING_CONTEXT_PREFIX, GLOBAL_CONTEXT_PREFIX } from '@/utils/ADempiere/contextUtils'
+
+// utils and helper methods
+import { isEmptyValue, typeValue } from '@/utils/ADempiere/valueUtils.js'
+
+const sessionContext = {
   state: {
     preference: {}
   },
@@ -154,12 +158,33 @@ const preference = {
     }
   },
   getters: {
+    getAllSessionContext: (state) => {
+      return state.preference
+    },
+    getGlobalContext: (state) => {
+      const globalContext = {}
+      Object.keys(state.preference).forEach(key => {
+        if (key.startsWith(GLOBAL_CONTEXT_PREFIX)) {
+          globalContext[key] = state.preference[key]
+        }
+      })
+      return globalContext
+    },
+    getAccountingContext: (state) => {
+      const accountingContext = {}
+      Object.keys(state.preference).forEach(key => {
+        if (key.startsWith(ACCOUNTING_CONTEXT_PREFIX)) {
+          accountingContext[key] = state.preference[key]
+        }
+      })
+      return accountingContext
+    },
     /**
      * @param  {string} parentUuid
      * @param  {string} containerUuid
      * @param  {string} columnName
      */
-    getPreference: (state) => ({
+    getSessionContext: (state) => ({
       parentUuid,
       containerUuid,
       columnName
@@ -190,16 +215,13 @@ const preference = {
       value = state.preference[columnName]
       return value
     },
-    getAllPreference: (state) => {
-      return state.preference
+    getSessionContextClientId: (state) => {
+      return parseInt(state.preference[GLOBAL_CONTEXT_PREFIX + CLIENT], 10)
     },
-    getPreferenceClientId: (state) => {
-      return parseInt(state.preference['#' + CLIENT], 10)
-    },
-    getPreferenceOrgId: (state) => {
-      return parseInt(state.preference['#' + ORGANIZATION], 10)
+    getSessionContextOrgtId: (state) => {
+      return parseInt(state.preference[GLOBAL_CONTEXT_PREFIX + ORGANIZATION], 10)
     }
   }
 }
 
-export default preference
+export default sessionContext

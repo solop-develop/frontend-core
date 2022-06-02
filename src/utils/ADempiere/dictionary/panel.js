@@ -192,21 +192,7 @@ export function generatePanelAndFields({
     fieldsList = fieldsList.concat(fieldsRangeList)
   }
 
-  // TODO: Improve performance and reduce array cycles
-  // Get dependent fields
-  fieldsList.forEach((itemField, index, listFields) => {
-    if (!isEmptyValue(itemField.parentFieldsList) && itemField.isActive) {
-      itemField.parentFieldsList.forEach(parentColumnName => {
-        const parentField = listFields.find(parentFieldItem => {
-          return parentFieldItem.columnName === parentColumnName &&
-            parentColumnName !== itemField.columnName
-        })
-        if (parentField) {
-          parentField.dependentFieldsList.push(itemField.columnName)
-        }
-      })
-    }
-  })
+  fieldsList = generateDependenFieldsList(fieldsList)
 
   identifierColumns = sortFields({
     fieldsList: identifierColumns,
@@ -268,4 +254,40 @@ export function generatePanelAndFields({
   delete panel.fields
 
   return panel
+}
+
+/**
+ * Get dependent fields on all elemnets
+ * TODO: Improve performance and reduce array cycles
+ * @param {array} fieldsList
+ * @returns {array}
+ */
+export function generateDependenFieldsList(fieldsList) {
+  fieldsList.forEach((itemField, index, listFields) => {
+    if (isEmptyValue(itemField.parentFieldsList) || !itemField.isActive) {
+      return
+    }
+
+    itemField.parentFieldsList.forEach(parentColumnName => {
+      const parentField = listFields.find(parentFieldItem => {
+        return parentColumnName !== itemField.columnName &&
+          (parentColumnName === parentFieldItem.columnName ||
+          parentColumnName === parentFieldItem.elementName)
+      })
+
+      if (isEmptyValue(parentField)) {
+        return
+      }
+
+      // set and remove duplicates columnNames
+      parentField.dependentFieldsList = [
+        ...new Set([
+          itemField.columnName,
+          ...parentField.dependentFieldsList
+        ])
+      ]
+    })
+  })
+
+  return fieldsList
 }

@@ -109,6 +109,7 @@ export function getEntities({
  * @param {string} browseFieldUuid, uuid of browser field
  * @param {integer} id, identifier of field
  * @param {string} columnUuid, uuid of column
+ * @param {mixed} value, value to overwrite default value on dictionary definition
  */
 export function requestDefaultValue({
   contextAttributesList,
@@ -116,7 +117,8 @@ export function requestDefaultValue({
   processParameterUuid,
   browseFieldUuid,
   id,
-  columnUuid
+  columnUuid,
+  value
 }) {
   let contextAttributes = []
   if (!isEmptyValue(contextAttributesList)) {
@@ -137,7 +139,8 @@ export function requestDefaultValue({
       process_parameter_uuid: processParameterUuid,
       browse_field_uuid: browseFieldUuid,
       id,
-      column_uuid: columnUuid
+      column_uuid: columnUuid,
+      value
     }
   })
     .then(valueResponse => {

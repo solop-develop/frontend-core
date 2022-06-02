@@ -68,7 +68,7 @@ export default (reportUuid) => {
     /**
      * @returns Promisse with value and displayedValue
      */
-    getDefaultValue({ parentUuid, containerUuid, uuid, id, contextColumnNames, columnName }) {
+    getDefaultValue({ parentUuid, containerUuid, uuid, id, contextColumnNames, columnName, value }) {
       return store.dispatch('getDefaultValueFromServer', {
         parentUuid,
         containerUuid,
@@ -76,7 +76,8 @@ export default (reportUuid) => {
         processParameterUuid: uuid,
         id,
         //
-        columnName
+        columnName,
+        value
       })
     },
     getLookupList({ parentUuid, containerUuid, contextColumnNames, uuid, searchValue, isAddBlankValue = false, blankValue }) {

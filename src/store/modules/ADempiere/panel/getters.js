@@ -283,6 +283,7 @@ const getters = {
     if (isEmptyValue(fieldsList)) {
       fieldsList = getters.getFieldsListFromPanel(containerUuid)
     }
+
     const attributesRangue = []
     const attributesDisplayColumn = []
     const attributesObject = {}
@@ -291,26 +292,32 @@ const getters = {
         const { id, uuid, columnName, defaultValue, contextColumnNames } = fieldItem
         const isSQL = String(defaultValue).includes('@SQL=') && isGetServer
 
-        const parsedDefaultValue = getDefaultValue({
-          ...fieldItem,
-          parentUuid,
-          contextColumnNames,
-          isSOTrxMenu
-        })
+        let parsedDefaultValue
+        if (!isSQL) {
+          parsedDefaultValue = getDefaultValue({
+            ...fieldItem,
+            parentUuid,
+            contextColumnNames,
+            isSOTrxMenu
+          })
+        }
         attributesObject[columnName] = parsedDefaultValue
 
         if (fieldItem.isRange && fieldItem.componentPath !== 'FieldNumber') {
           const { columnNameTo, elementNameTo, defaultValueTo } = fieldItem
           const isSQLTo = String(defaultValueTo).includes('@SQL=') && isGetServer
 
-          const parsedDefaultValueTo = getDefaultValue({
-            ...fieldItem,
-            parentUuid,
-            contextColumnNames,
-            isSOTrxMenu,
-            columnName: columnNameTo,
-            elementName: elementNameTo
-          })
+          let parsedDefaultValueTo
+          if (!isSQLTo) {
+            parsedDefaultValueTo = getDefaultValue({
+              ...fieldItem,
+              parentUuid,
+              contextColumnNames,
+              isSOTrxMenu,
+              columnName: columnNameTo,
+              elementName: elementNameTo
+            })
+          }
 
           attributesObject[columnNameTo] = parsedDefaultValueTo
           attributesRangue.push({

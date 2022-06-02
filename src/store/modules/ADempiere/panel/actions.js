@@ -23,6 +23,7 @@ import evaluator, { getContext, parseContext } from '@/utils/ADempiere/contextUt
 import { fieldIsDisplayed } from '@/utils/ADempiere/dictionaryUtils.js'
 import { assignedGroup } from '@/utils/ADempiere/dictionary/panel'
 import router from '@/router'
+import { isLookup } from '@/utils/ADempiere/references'
 
 const actions = {
   addPanel({ commit, dispatch, getters }, params) {
@@ -475,7 +476,7 @@ const actions = {
           logic: fieldDependent.readOnlyLogic
         })
       }
-      //  Default Value
+      // default value without sql
       if (!isEmptyValue(fieldDependent.defaultValue) &&
         fieldDependent.defaultValue.includes('@') &&
         !fieldDependent.defaultValue.includes('@SQL=')) {
@@ -485,6 +486,8 @@ const actions = {
           value: fieldDependent.defaultValue
         }).value
       }
+
+      // default value with sql
       if (!isEmptyValue(fieldDependent.defaultValue) &&
         fieldDependent.defaultValue.includes('@SQL=')) {
         defaultValue = parseContext({
@@ -493,28 +496,40 @@ const actions = {
           isSQL: true,
           value: fieldDependent.defaultValue
         }).query
-        if (defaultValue !== fieldDependent.parsedDefaultValue) {
-          const newValue = await dispatch('getDefaultValueFromServer', {
-            parentUuid,
-            containerUuid,
-            query: defaultValue
-          })
-          //  Update values for field
+
+        const { displayedValue, value: newValue } = containerManager.getDefaultValue({
+          parentUuid,
+          containerUuid,
+          contextColumnNames: fieldDependent.contextColumnNames,
+          uuid: fieldDependent.uuid,
+          id: fieldDependent.id,
+          columnName: fieldDependent.columnName
+        })
+
+        // update values for field
+        commit('updateValueOfField', {
+          parentUuid,
+          containerUuid,
+          columnName: fieldDependent.columnName,
+          value: newValue
+        })
+        // update values for field on elememnt name of column
+        if (fieldDependent.columnName !== fieldDependent.elementName) {
           commit('updateValueOfField', {
             parentUuid,
             containerUuid,
-            columnName: fieldDependent.columnName,
+            columnName: fieldDependent.elementName,
             value: newValue
           })
-          // update values for field on elememnt name of column
-          if (fieldDependent.columnName !== fieldDependent.elementName) {
-            commit('updateValueOfField', {
-              parentUuid,
-              containerUuid,
-              columnName: fieldDependent.elementName,
-              value: newValue
-            })
-          }
+        }
+        // update displayed value for field
+        if (isLookup(fieldDependent.displayType)) {
+          commit('updateValueOfField', {
+            parentUuid,
+            containerUuid,
+            columnName: fieldDependent.displayColumnName,
+            value: displayedValue
+          })
         }
       }
 

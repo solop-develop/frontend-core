@@ -61,6 +61,7 @@ const defaultValueManager = {
      * @param {string} columnName
      * @param {array} contextColumnNames
      * @param {string} fieldUuid|processParameterUuid|columnUuid|browseFieldUuid
+     * @param {mixed} value overwrite default value on dictionary definition
      */
     getDefaultValueFromServer({ state, commit, rootGetters }, {
       parentUuid,
@@ -72,7 +73,8 @@ const defaultValueManager = {
       processParameterUuid,
       browseFieldUuid,
       columnUuid,
-      columnName
+      columnName,
+      value
     }) {
       const defaultEmptyResponse = {
         uuid: undefined,
@@ -104,7 +106,7 @@ const defaultValueManager = {
           return
         }
 
-        const clientId = rootGetters.getPreferenceClientId
+        const clientId = rootGetters.getSessionContextClientId
 
         let key = clientId
         if (!isEmptyValue(fieldUuid)) {
@@ -124,13 +126,15 @@ const defaultValueManager = {
           return
         }
         state.inRequest.set(key, true)
+
         requestDefaultValue({
           contextAttributesList,
           id,
           fieldUuid,
           processParameterUuid,
           browseFieldUuid,
-          columnUuid
+          columnUuid,
+          value
         })
           .then(valueResponse => {
             const values = {}
@@ -145,7 +149,7 @@ const defaultValueManager = {
                 values[column] = value
               })
             }
-            const value = values.KeyColumn
+            const valueOfServer = values.KeyColumn
             const displayedValue = values.DisplayColumn
 
             commit('setDefaultValue', {
@@ -162,7 +166,7 @@ const defaultValueManager = {
               parentUuid,
               containerUuid,
               columnName,
-              value
+              value: valueOfServer
             })
             if (!isEmptyValue(values.DisplayColumn)) {
               commit('updateValueOfField', {
@@ -175,7 +179,7 @@ const defaultValueManager = {
 
             resolve({
               displayedValue,
-              value: value,
+              value: valueOfServer,
               uuid: values.uuid
             })
           })
@@ -197,7 +201,7 @@ const defaultValueManager = {
       value
     }) {
       return new Promise(resolve => {
-        const clientId = rootGetters.getPreferenceClientId
+        const clientId = rootGetters.getSessionContextClientId
         let key = `${clientId}|${uuid}`
 
         const contextAttributesList = getContextAttributes({
@@ -238,7 +242,7 @@ const defaultValueManager = {
         })
       }
 
-      const clientId = rootGetters.getPreferenceClientId
+      const clientId = rootGetters.getSessionContextClientId
       let key = `${clientId}|${uuid}`
       const contextKey = generateContextKey(contextAttributesList)
       key += contextKey

@@ -27,6 +27,21 @@ import evaluator from '@/utils/ADempiere/evaluator'
 export default evaluator
 
 /**
+ * Prefix context of global prefix (#)
+ */
+export const GLOBAL_CONTEXT_PREFIX = `#`
+
+/**
+ * Prefix context of accounting prefix ($)
+ */
+export const ACCOUNTING_CONTEXT_PREFIX = `$`
+
+/**
+ * Prefix context of preference prefix (P|)
+ */
+export const PREFERENCE_CONTEXT_PREFIX = `P|`
+
+/**
  * Get context state from vuex store
  * @param {string} parentUuid UUID Window
  * @param {string} containerUuid  UUID Tab, Process, SmartBrowser, Report and Form
@@ -42,13 +57,13 @@ export const getContext = ({
   columnName
 }) => {
   let value
-  const isPreferenceValue = columnName.startsWith('$') ||
-    columnName.startsWith('#') ||
-    columnName.startsWith(`P|`)
+  const isPreferenceValue = columnName.startsWith(ACCOUNTING_CONTEXT_PREFIX) ||
+    columnName.startsWith(GLOBAL_CONTEXT_PREFIX) ||
+    columnName.startsWith(PREFERENCE_CONTEXT_PREFIX)
 
   // get value to session context
   if (isPreferenceValue) {
-    value = store.getters.getPreference({
+    value = store.getters.getSessionContext({
       parentUuid,
       containerUuid,
       columnName
@@ -94,12 +109,13 @@ export function getPreference({
     return value
   }
 
-  //        USER PREFERENCES
+  // USER PREFERENCES
   // View Preferences
+  // TODO: Verify it, never gets values
   if (parentUuid) {
     value = getContext({
-      parentUuid: 'P|' + parentUuid,
-      containerUuid: 'P|' + containerUuid,
+      parentUuid: PREFERENCE_CONTEXT_PREFIX + parentUuid,
+      containerUuid: PREFERENCE_CONTEXT_PREFIX + containerUuid,
       columnName
     })
     if (!isEmptyValue(value)) {
@@ -107,27 +123,27 @@ export function getPreference({
     }
   }
 
-  //  Global Preferences
+  // Global Preferences
   value = getContext({
-    columnName: 'P|' + columnName
+    columnName: PREFERENCE_CONTEXT_PREFIX + columnName
   })
   if (!isEmptyValue(value)) {
     return value
   }
 
-  //        SYSTEM PREFERENCES
+  // SYSTEM PREFERENCES
   // Login setting
   // get # globals context only window
   value = getContext({
-    columnName: '#' + columnName
+    columnName: GLOBAL_CONTEXT_PREFIX + columnName
   })
   if (!isEmptyValue(value)) {
     return value
   }
 
-  //  Accounting setting
+  // Accounting setting
   value = getContext({
-    columnName: '$' + columnName
+    columnName: ACCOUNTING_CONTEXT_PREFIX + columnName
   })
 
   return value
@@ -149,28 +165,34 @@ export function getParentFields({
   readOnlyLogic,
   reference,
   defaultValue,
+  contextColumnNames = [],
   defaultValueTo
 }) {
-  let contextColumnNames = []
-  //  Validate reference
+  let contextColumnNamesByReference = []
+  // validate reference
   if (!isEmptyValue(reference) && !isEmptyValue(reference.contextColumnNames)) {
-    contextColumnNames = reference.contextColumnNames
+    contextColumnNamesByReference = reference.contextColumnNames
   }
 
-  const parentFields = Array.from(new Set([
-    //  For Display logic
-    ...evaluator.parseDepends(displayLogic),
-    //  For Mandatory Logic
-    ...evaluator.parseDepends(mandatoryLogic),
-    //  For Read Only Logic
-    ...evaluator.parseDepends(readOnlyLogic),
-    //  For Default Value
-    ...evaluator.parseDepends(defaultValue),
-    //  For Default Value To
-    ...evaluator.parseDepends(defaultValueTo),
-    //  For Validation Code / SQL values
-    ...contextColumnNames
-  ]))
+  // remove duplicated elements
+  const parentFields = [
+    ...new Set([
+      // For Validation Code
+      ...contextColumnNamesByReference,
+      // For Display logic
+      ...evaluator.parseDepends(displayLogic),
+      // For Mandatory Logic
+      ...evaluator.parseDepends(mandatoryLogic),
+      // For Read Only Logic
+      ...evaluator.parseDepends(readOnlyLogic),
+      // For Default Value
+      ...contextColumnNames,
+      // For Default Value
+      ...evaluator.parseDepends(defaultValue),
+      // For Default Value To
+      ...evaluator.parseDepends(defaultValueTo)
+    ])
+  ]
 
   return parentFields
 }
@@ -201,7 +223,7 @@ export function parseContext({
     value = undefined
     if (ACCOUNTING_COLUMNS.includes(columnName)) {
       value = contextInfo = getContext({
-        columnName: '$' + columnName
+        columnName: ACCOUNTING_CONTEXT_PREFIX + columnName
       })
     }
 
@@ -249,7 +271,7 @@ export function parseContext({
 
     if (isEmptyValue(contextInfo)) {
       // get global context
-      if (token.startsWith('#') || token.startsWith('$')) {
+      if (token.startsWith(GLOBAL_CONTEXT_PREFIX) || token.startsWith(ACCOUNTING_CONTEXT_PREFIX)) {
         contextInfo = getContext({
           columnName
         })
@@ -257,7 +279,7 @@ export function parseContext({
         // get accounting context
         if (ACCOUNTING_COLUMNS.includes(columnName)) {
           contextInfo = getContext({
-            columnName: '$' + columnName
+            columnName: ACCOUNTING_CONTEXT_PREFIX + columnName
           })
         }
       }

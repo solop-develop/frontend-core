@@ -144,7 +144,7 @@ const lookupManager = {
               })
             }
 
-            const clientId = rootGetters.getPreferenceClientId
+            const clientId = rootGetters.getSessionContextClientId
 
             let key = clientId
             if (!isEmptyValue(fieldUuid)) {
@@ -192,7 +192,7 @@ const lookupManager = {
           value
         })
 
-        const clientId = rootGetters.getPreferenceClientId
+        const clientId = rootGetters.getSessionContextClientId
 
         const contextAttributesList = getContextAttributes({
           parentUuid,
@@ -227,7 +227,7 @@ const lookupManager = {
       contextAttributesList = [],
       uuid
     }) => {
-      let key = rootGetters.getPreferenceClientId
+      let key = rootGetters.getSessionContextClientId
       if (!isEmptyValue(uuid)) {
         key += `|${uuid}`
       }
