@@ -227,6 +227,50 @@ const windowManager = {
             reject(error)
           })
       })
+    },
+    /**
+     * Delete Entity table
+     * @param {string} parentUuid
+     * @param {string} containerUuid
+     */
+    deleteSelectedRecordsFromWindow({
+      dispatch,
+      getters
+    }, {
+      parentUuid,
+      containerUuid
+    }) {
+      const getTabSelectionsList = getters.getTabSelectionsList({ containerUuid })
+      const tableName = getters.getTableName(parentUuid, containerUuid)
+      const listRecordId = getTabSelectionsList.map(list => list[tableName + '_ID'])
+      showMessage({
+        message: language.t('table.dataTable.deleteSelection'),
+        type: 'info'
+      })
+      return new Promise((resolve, reject) => {
+        deleteEntity({
+          tableName,
+          listRecordId
+        })
+          .then(async(response) => {
+            showMessage({
+              message: language.t('notifications.succesful'),
+              type: 'success'
+            })
+            await dispatch('getEntities', {
+              parentUuid,
+              containerUuid
+            })
+            resolve(response)
+          })
+          .catch(error => {
+            showMessage({
+              message: language.t('notifications.error'),
+              type: 'error'
+            })
+            reject(error)
+          })
+      })
     }
   },
 
