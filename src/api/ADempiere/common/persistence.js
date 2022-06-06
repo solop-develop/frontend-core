@@ -90,6 +90,7 @@ export function updateEntity({
  * @param {string}  tableName
  * @param {number}  recordId
  * @param {string}  recordUuid
+ * @param {array}  listRecordId
  */
 export function deleteEntity({
   tableName,

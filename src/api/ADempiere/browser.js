@@ -91,21 +91,53 @@ export function requestBrowserSearch({
 }
 
 /**
- * Delete Record Browser
- * @param {string} uuid
- * @param {number} id
- * @param {string} tableName
+ * Update browser entity
+ * @param {number} id smart browser identifier
+ * @param {string}uuid universally unique identifier
+ * @param {array} attributesList
  */
-export function deleteRecordBrowser({
+export function updateBrowserEntity({
   id,
   uuid,
-  tableName
+  recordId,
+  attributesList
 }) {
-  const { getEntity } = require('@/api/ADempiere/common/persistence.js')
+  return request({
+    url: '/user-interface/smart-browser/update-browser-entity',
+    method: 'post',
+    data: {
+      id,
+      uuid,
+      record_id: recordId,
+      attributes: attributesList
+    }
+  })
+    .then(browserEntityUpdateResponse => {
+      const { convertEntity } = require('@/utils/ADempiere/apiConverts/persistence.js')
 
-  return getEntity({
+      return convertEntity(browserEntityUpdateResponse)
+    })
+}
+
+/**
+ * Delete Record Browser
+ * @param {string}  tableName
+ * @param {number}  recordId
+ * @param {string}  recordUuid
+ * @param {array}  listRecordId
+ */
+export function requestDeleteBrowser({
+  tableName,
+  recordId,
+  recordUuid,
+  listRecordId
+}) {
+  const { deleteEntity } = require('@/api/ADempiere/common/persistence.js')
+
+  return deleteEntity({
     tableName,
-    recordId: id,
-    recordUuid: uuid
+    recordId,
+    recordUuid,
+    listRecordId
   })
 }

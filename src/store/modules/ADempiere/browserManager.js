@@ -18,7 +18,7 @@ import Vue from 'vue'
 import language from '@/lang'
 
 // api request methods
-import { requestBrowserSearch } from '@/api/ADempiere/browser'
+import { requestBrowserSearch, updateBrowserEntity, requestDeleteBrowser } from '@/api/ADempiere/browser'
 
 // constants
 import { ROW_ATTRIBUTES, ROW_KEY_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
@@ -26,8 +26,8 @@ import { ROW_ATTRIBUTES, ROW_KEY_ATTRIBUTES } from '@/utils/ADempiere/constants/
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils'
-import { showMessage } from '@/utils/ADempiere/notification'
-import { isDisplayedField } from '@/utils/ADempiere/dictionary/browser'
+import { showMessage, showNotification } from '@/utils/ADempiere/notification'
+import { isDisplayedField, isReadOnlyColumn } from '@/utils/ADempiere/dictionary/browser'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 
 const initState = {
@@ -228,6 +228,99 @@ const browserControl = {
             console.warn(`Error getting browser search: ${error.message}. Code: ${error.code}.`)
           })
       })
+    },
+
+    updateRecordOfBrowser({ dispatch, getters }, {
+      containerUuid,
+      row
+    }) {
+      const { uuid, id, keyColumn, fieldsList } = getters.getStoredBrowser(containerUuid)
+
+      const recordId = row[keyColumn]
+
+      const attributesList = getters.getBrowserRowToServer({
+        containerUuid,
+        row,
+        keyName: 'key',
+        fieldsList
+      })
+
+      // const currentSelection = getters.getBrowserSelectionsList({
+      //   containerUuid
+      // })
+
+      // console.log(uuid, keyColumn, row, attributesList)
+      return new Promise((resolve, reject) => {
+        updateBrowserEntity({
+          uuid,
+          id,
+          recordId,
+          attributesList
+        })
+          .then(response => {
+            showMessage({
+              message: language.t('recordManager.updatedRecord'),
+              type: 'success'
+            })
+
+            // update records
+            dispatch('getBrowserSearch', {
+              containerUuid
+            })
+
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Error Update Records of Smart Browser: ${error.message}. Code: ${error.code}.`)
+            showNotification({
+              title: language.t('notifications.error'),
+              message: error.message,
+              type: 'error'
+            })
+            showMessage(error)
+          })
+      })
+    },
+
+    deleteRecordOfBrowser({ dispatch, getters }, {
+      containerUuid,
+      selection
+    }) {
+      const { tableName, keyColumn } = getters.getStoredBrowser(containerUuid)
+      const listRecordId = selection.map(list => list[keyColumn])
+
+      showNotification({
+        title: language.t('actionMenu.delete'),
+        message: language.t('actionMenu.delete'),
+        summary: language.t('data.noDescription'),
+        type: 'info'
+      })
+      return new Promise((resolve, reject) => {
+        requestDeleteBrowser({
+          tableName,
+          listRecordId
+        })
+          .then(async(response) => {
+            showNotification({
+              title: language.t('notifications.succesful'),
+              message: response,
+              type: 'success'
+            })
+            await dispatch('getBrowserSearch', {
+              containerUuid
+            })
+            resolve(response)
+          })
+          .catch(error => {
+            showNotification({
+              title: language.t('notifications.error'),
+              message: error.message,
+              type: 'error'
+            })
+            console.warn(`Error Delete Records of Smart Browser: ${error.message}. Code: ${error.code}.`)
+            reject(error)
+          })
+      })
     }
   },
 
@@ -282,6 +375,30 @@ const browserControl = {
         return row[columnName]
       }
       return undefined
+    },
+
+    getBrowserRowToServer: (state, getter, rootState, rootGetters) => ({
+      containerUuid,
+      row,
+      fieldsList = [],
+      keyName = 'columnName'
+    }) => {
+      if (isEmptyValue(fieldsList)) {
+        fieldsList = rootGetters.getStoredFieldsFromBrowser(containerUuid)
+      }
+      const attributesList = []
+      fieldsList.filter(itemField => {
+        return !isReadOnlyColumn(itemField)
+      }).forEach(itemField => {
+        const { columnName } = itemField
+
+        attributesList.push({
+          value: row[columnName],
+          [keyName]: columnName
+        })
+      })
+
+      return attributesList
     },
 
     /**

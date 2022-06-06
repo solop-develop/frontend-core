@@ -317,6 +317,21 @@ export default defineComponent({
         row
       }) => {
         // TODO: Logic to implement in table
+        // console.info('%c seekRecord %c method without implementation.', 'color: #fff; background-color: red;', 'color: blue;', row)
+      },
+
+      confirmRowChanges: ({
+        containerUuid,
+        row
+      }) => {
+        const { isUpdateable, tableName } = store.getters.getStoredBrowser(containerUuid)
+        if (!isUpdateable || isEmptyValue(tableName)) {
+          return Promise.resolve({})
+        }
+        return store.dispatch('updateRecordOfBrowser', {
+          containerUuid,
+          row
+        })
       },
 
       setRow: ({ containerUuid, rowIndex, row }) => {
