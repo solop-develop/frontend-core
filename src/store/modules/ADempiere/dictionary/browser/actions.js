@@ -215,7 +215,7 @@ export default {
     return new Promise(resolve => {
       const browserDefinition = getters.getStoredBrowser(containerUuid)
 
-      if (isEmptyValue(fieldsList)) {
+      if (isEmptyValue(fieldsList) && !isEmptyValue(browserDefinition)) {
         fieldsList = browserDefinition.fieldsList
       }
 

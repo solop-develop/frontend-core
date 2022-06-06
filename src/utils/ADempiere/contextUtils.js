@@ -29,17 +29,17 @@ export default evaluator
 /**
  * Prefix context of global prefix (#)
  */
-export const GLOBAL_CONTEXT_PREFIX = `#`
+export const GLOBAL_CONTEXT_PREFIX = evaluator.GLOBAL_CONTEXT_PREFIX
 
 /**
  * Prefix context of accounting prefix ($)
  */
-export const ACCOUNTING_CONTEXT_PREFIX = `$`
+export const ACCOUNTING_CONTEXT_PREFIX = evaluator.ACCOUNTING_CONTEXT_PREFIX
 
 /**
  * Prefix context of preference prefix (P|)
  */
-export const PREFERENCE_CONTEXT_PREFIX = `P|`
+export const PREFERENCE_CONTEXT_PREFIX = evaluator.PREFERENCE_CONTEXT_PREFIX
 
 /**
  * Get context state from vuex store
