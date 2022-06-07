@@ -116,7 +116,7 @@ class evaluator {
       }
     })
     return Boolean(retValue)
- * } // evaluateLogic
+  } // evaluateLogic
 
   /**
    * Evaluate Logic Tuples
