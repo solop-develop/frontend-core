@@ -23,25 +23,22 @@
     class="view-base process-view"
     style="height: 84vh;"
   >
-    <el-header
-      v-if="showContextMenu"
-      style="height: 30px;"
-    >
-      <action-menu
-        :parent-uuid="processUuid"
-        :container-uuid="processUuid"
-        :container-manager="containerManager"
-        :actions-manager="actionsManager"
-        :relations-manager="relationsManager"
-      />
-    </el-header>
-
     <el-main>
       <el-card class="content-collapse card-process">
         <title-and-help
           :name="processMetadata.name"
           :help="processMetadata.help"
         />
+
+        <div style="float: right;padding-left: 1%;">
+          <action-menu
+            :parent-uuid="processUuid"
+            :container-uuid="processUuid"
+            :container-manager="containerManager"
+            :actions-manager="actionsManager"
+            :relations-manager="relationsManager"
+          />
+        </div>
 
         <panel-definition
           :container-uuid="processUuid"

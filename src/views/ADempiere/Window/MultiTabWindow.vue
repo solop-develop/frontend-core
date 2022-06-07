@@ -18,15 +18,6 @@
 
 <template>
   <div>
-    <!-- // TODO: Add header window component for auxiliary menu and worflow status -->
-    <action-menu
-      :parent-uuid="windowMetadata.uuid"
-      :container-uuid="currentTabUuid"
-      :container-manager="containerManager"
-      :references-manager="referencesManager"
-      :actions-manager="actionsManager"
-      :relations-manager="relationsManager"
-    />
 
     <embedded
       :visible="showRecordAccess"

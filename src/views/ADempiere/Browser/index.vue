@@ -24,6 +24,14 @@
     style="height: 86vh;"
   >
     <el-header v-if="isShowContextMenu">
+      <div style="float: right;padding-top: 1%;">
+        <action-menu
+          :container-manager="containerManager"
+          :container-uuid="browserUuid"
+          :actions-manager="actionsManager"
+          :relations-manager="relationsManager"
+        />
+      </div>
       <div class="center" style="width: 100%">
         <!-- TODO: Correct when the title is large -->
         <title-and-help
@@ -31,13 +39,6 @@
           :help="browserMetadata.help"
         />
       </div>
-
-      <action-menu
-        :container-manager="containerManager"
-        :container-uuid="browserUuid"
-        :actions-manager="actionsManager"
-        :relations-manager="relationsManager"
-      />
     </el-header>
 
     <el-main>
