@@ -19,7 +19,12 @@ import {
   requestLanguagesList
 } from '@/api/ADempiere/system-core.js'
 
+import {
+  requestRunProcess as runCache
+} from '@/api/ADempiere/process'
+
 // utils and helper methods
+import { processHeader } from '@/utils/ADempiere/constants/process'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertDateFormat } from '@/utils/ADempiere/formatValue/dateFormat.js'
 
@@ -71,7 +76,16 @@ const system = {
             console.warn(`Error getting Languages List: ${error.message}. Code: ${error.code}.`)
           })
       })
+    },
+    runCache({ commit, dispatch }) {
+      runCache({
+        uuid: processHeader.resetCache
+      })
+        .then(() => {
+          location.reload()
+        })
     }
+
   },
 
   getters: {

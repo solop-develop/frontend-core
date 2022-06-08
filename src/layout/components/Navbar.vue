@@ -11,11 +11,15 @@
     />
     <breadcrumb v-show="!isMenuMobile || device!=='mobile'" id="breadcrumb-container" class="breadcrumb-container" :style="isMobile ? { width: '40%' } : { width: 'auto' } " />
     <div v-show="isMenuMobile && isMobile" style="display: inline-flex; float: right;">
+      <el-button icon="el-icon-s-tools" type="text" />
       <search id="header-search" class="right-menu-item" style="padding-top: 10px;" />
       <header-notification style="padding-top: 6px;" />
     </div>
     <div class="right-menu">
       <template v-if="device!=='mobile'">
+        <el-tooltip class="item" effect="dark" content="Reinicia Cache" placement="top-start">
+          <el-button icon="el-icon-s-tools" type="text" style="color: black;font-size: 18px;" @click="isResetCache()" />
+        </el-tooltip>
         <el-tooltip v-if="$route.meta.type !== 'window'" :content="$t('route.guide')" placement="top-start">
           <el-button icon="el-icon-info" type="text" style="color: black;font-size: larger" @click.prevent.stop="guide" />
         </el-tooltip>
@@ -165,6 +169,9 @@ export default {
     },
     isMenuOption() {
       this.isMenuMobile = !this.isMenuMobile
+    },
+    isResetCache() {
+      this.$store.dispatch('runCache')
     },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
