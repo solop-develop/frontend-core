@@ -24,7 +24,7 @@ import {
 } from '@/api/ADempiere/process'
 
 // utils and helper methods
-import { processHeader } from '@/utils/ADempiere/constants/process'
+import { RESET_CACHE_PROCESS_UUID } from '@/utils/ADempiere/constants/process'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertDateFormat } from '@/utils/ADempiere/formatValue/dateFormat.js'
 
@@ -79,7 +79,7 @@ const system = {
     },
     runCache({ commit, dispatch }) {
       runCache({
-        uuid: processHeader.resetCache
+        uuid: RESET_CACHE_PROCESS_UUID
       })
         .then(() => {
           location.reload()

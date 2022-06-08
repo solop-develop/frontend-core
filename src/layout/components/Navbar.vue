@@ -18,7 +18,7 @@
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <el-tooltip class="item" effect="dark" content="Reinicia Cache" placement="top-start">
-          <el-button icon="el-icon-s-tools" type="text" style="color: black;font-size: 18px;" @click="isResetCache()" />
+          <el-button icon="el-icon-s-tools" type="text" style="color: black;font-size: 18px;" @click="cacheReset()" />
         </el-tooltip>
         <el-tooltip v-if="$route.meta.type !== 'window'" :content="$t('route.guide')" placement="top-start">
           <el-button icon="el-icon-info" type="text" style="color: black;font-size: larger" @click.prevent.stop="guide" />
@@ -170,7 +170,7 @@ export default {
     isMenuOption() {
       this.isMenuMobile = !this.isMenuMobile
     },
-    isResetCache() {
+    cacheReset() {
       this.$store.dispatch('runCache')
     },
     toggleSideBar() {

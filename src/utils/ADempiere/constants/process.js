@@ -14,6 +14,4 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-export const processHeader = {
-  resetCache: 'a42acf86-fb40-11e8-a479-7a0060f0aa01'
-}
+export const RESET_CACHE_PROCESS_UUID = 'a42acf86-fb40-11e8-a479-7a0060f0aa01'
