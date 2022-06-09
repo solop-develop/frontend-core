@@ -35,6 +35,12 @@ jobs:
       - name: Enable https to install packages
         run: git config --global url."https://".insteadOf git://
 
+      - name: Install packages lerna
+        run: yarn global add lerna
+
+      - name: Update sub module
+        run: git submodule update --init --remote
+        
       - name: Install packages
         run: yarn ci
 
