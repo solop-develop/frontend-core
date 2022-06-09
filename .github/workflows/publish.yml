@@ -109,8 +109,8 @@ jobs:
           file: ./build/Dockerfile.prod
           push: true
           tags: |
-            ${{ secrets.DOCKER_REPO_PROXY_FRONTEND }}:latest
-            ${{ secrets.DOCKER_REPO_PROXY_FRONTEND }}:${{ github.event.release.tag_name }}
+            ${{ secrets.DOCKER_REPO_FRONTEND }}:latest
+            ${{ secrets.DOCKER_REPO_FRONTEND }}:${{ github.event.release.tag_name }}
           build-args: |
             NGINX_RELEASE=1.21.6
 
@@ -121,8 +121,8 @@ jobs:
           file: ./build/Dockerfile.prod
           push: true
           tags: |
-            ${{ secrets.DOCKER_REPO_PROXY_FRONTEND }}:alpine
-            ${{ secrets.DOCKER_REPO_PROXY_FRONTEND }}:alpine-${{ github.event.release.tag_name }}
+            ${{ secrets.DOCKER_REPO_FRONTEND }}:alpine
+            ${{ secrets.DOCKER_REPO_FRONTEND }}:alpine-${{ github.event.release.tag_name }}
           build-args: |
             NGINX_RELEASE=1.21.6-alpine
             
