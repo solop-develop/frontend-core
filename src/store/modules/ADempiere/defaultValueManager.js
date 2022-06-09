@@ -122,7 +122,7 @@ const defaultValueManager = {
 
         // if it is the same request, it is not made
         if (state.inRequest.get(key)) {
-          resolve()
+          resolve(defaultEmptyResponse)
           return
         }
         state.inRequest.set(key, true)

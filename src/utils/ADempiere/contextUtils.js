@@ -334,6 +334,9 @@ export function parseContext({
  * Get context attribures list
  * @param {string} containerUuid
  * @param {array<string>} contextColumnNames
+ * @param {string} keyName key or column name
+ * @param {boolean} isBooleanToString convert true or false to Y or N
+ * @param {boolean} isForceBoolean undefined or null to false
  * @returns {array<object>}
  */
 export function getContextAttributes({
@@ -341,7 +344,8 @@ export function getContextAttributes({
   containerUuid,
   contextColumnNames = [],
   isBooleanToString = false,
-  isForceBoolean = false
+  isForceBoolean = false,
+  keyName = 'columnName'
 }) {
   const contextAttributesList = []
   if (isEmptyValue(contextColumnNames)) {
@@ -359,7 +363,7 @@ export function getContextAttributes({
 
     contextAttributesList.push({
       value,
-      columnName
+      [keyName]: columnName
     })
   })
 

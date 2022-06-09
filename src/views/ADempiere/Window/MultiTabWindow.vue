@@ -18,12 +18,12 @@
 
 <template>
   <div>
-
     <embedded
       :visible="showRecordAccess"
     >
       <record-access />
     </embedded>
+
     <tab-manager
       :parent-uuid="windowMetadata.uuid"
       :container-manager="containerManager"
@@ -31,14 +31,14 @@
       :all-tabs-list="allTabsList"
     />
 
-    <tab-manager
+    <tab-manager-child
       v-if="isWithChildsTab"
       :parent-uuid="windowMetadata.uuid"
       :container-manager="containerManager"
       :tabs-list="windowMetadata.tabsListChild"
       :all-tabs-list="allTabsList"
-      :is-parent-tabs="false"
     />
+
     <modal-dialog
       v-if="!isEmptyValue(processUuid)"
       :container-manager="containerManagerProcess"
@@ -50,16 +50,17 @@
 
 <script>
 import { defineComponent, computed, ref } from '@vue/composition-api'
-import language from '@/lang'
+
 import router from '@/router'
 import store from '@/store'
 
 // components and mixins
 import ActionMenu from '@theme/components/ADempiere/ActionMenu/index.vue'
-import TabManager from '@theme/components/ADempiere/TabManager/index.vue'
 import Embedded from '@theme/components/ADempiere/Dialog/embedded'
 import RecordAccess from '@theme/components/ADempiere/RecordAccess'
 import ModalDialog from '@theme/components/ADempiere/ModalDialog/index.vue'
+import TabManager from '@theme/components/ADempiere/TabManager/index.vue'
+import TabManagerChild from '@theme/components/ADempiere/TabManager/tabChild.vue'
 
 // utils and helpers methods
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
@@ -73,7 +74,8 @@ export default defineComponent({
     RecordAccess,
     Embedded,
     ModalDialog,
-    TabManager
+    TabManager,
+    TabManagerChild
   },
 
   props: {
@@ -198,68 +200,22 @@ export default defineComponent({
           // change Dependents
           store.dispatch('changeDependentFieldsList', {
             field,
-            fieldsList
+            fieldsList,
+            containerManager: props.windowManager
           })
         })
-      },
-
-      seekTab: function(eventInfo) {
-        console.log('seekTab: ', eventInfo)
-        return new Promise()
-      },
-
-      // To Default Table
-      setPage: ({
-        parentUuid,
-        containerUuid,
-        pageNumber = 0
-      }) => {
-        store.dispatch('getEntities', {
-          parentUuid,
-          containerUuid,
-          pageNumber
-        })
       }
+
     }
 
-    const actionsManager = computed(() => {
-      return {
-        parentUuid: props.windowMetadata.uuid,
-        containerUuid: currentTabUuid.value,
-
-        defaultActionName: language.t('actionMenu.createNewRecord'),
-        tableName: store.getters.getTableName(props.windowMetadata.uuid, currentTabUuid.value),
-        getActionList: () => {
-          return store.getters.getStoredActionsMenu({
-            containerUuid: currentTabUuid.value
-          })
-        }
-      }
-    })
-
-    const referencesManager = ref({
-      getTableName: () => {
-        const tabUuid = currentTabUuid.value
-        const windowUuid = props.windowMetadata.uuid
-
-        return store.getters.getTableName(windowUuid, tabUuid)
-      }
-    })
-
-    const relationsManager = ref({
-      menuParentUuid: root.$route.meta.parentUuid
-    })
     if (props.windowMetadata.tabsList) {
       allTabsList.value = props.windowMetadata.tabsList
     }
 
     return {
       currentTabUuid,
-      actionsManager,
       allTabsList,
-      referencesManager,
       showRecordAccess,
-      relationsManager,
       isWithChildsTab,
       containerManager
     }

@@ -109,20 +109,56 @@ const windowManager = {
           pageToken = generatePageToken({ pageNumber })
         }
 
-        const { contextColumnNames, name } = rootGetters.getStoredTab(parentUuid, containerUuid)
+        const { contextColumnNames, name, linkColumnName, parentColumnName } = rootGetters.getStoredTab(parentUuid, containerUuid)
+
+        // add filters with link column name and parent column name
+        if (!isEmptyValue(linkColumnName) &&
+          !contextColumnNames.includes(linkColumnName) &&
+          !filters.some(filter => filter.columnName === linkColumnName)) {
+          const value = rootGetters.getValueOfField({
+            parentUuid,
+            containerUuid,
+            columnName: linkColumnName
+          })
+          if (!isEmptyValue(value)) {
+            filters.push({
+              columnName: linkColumnName,
+              value
+            })
+          } else {
+            console.warn(`without context to ${linkColumnName} to filter in getEntities`)
+          }
+        }
+        if (!isEmptyValue(parentColumnName) &&
+          !contextColumnNames.includes(parentColumnName &&
+          !filters.some(filter => filter.columnName === parentColumnName))) {
+          const value = rootGetters.getValueOfField({
+            parentUuid,
+            containerUuid,
+            columnName: parentColumnName
+          })
+          if (!isEmptyValue(value)) {
+            filters.push({
+              columnName: parentColumnName,
+              value
+            })
+          } else {
+            console.warn(`without context to ${parentColumnName} to filter in getEntities`)
+          }
+        }
 
         // get context values
         const contextAttributesList = getContextAttributes({
           parentUuid,
-          containerUuid,
-          contextColumnNames
+          contextColumnNames,
+          keyName: 'key'
         })
 
         const isWithoutValues = contextAttributesList.find(attribute => isEmptyValue(attribute.value))
         if (isWithoutValues) {
-          console.warn(`Without response, fill the **${isWithoutValues.columnName}** field in **${name}** tab.`)
+          console.warn(`Without response, fill the **${isWithoutValues.key}** field in **${name}** tab.`)
           showMessage({
-            message: language.t('notifications.mandatoryFieldMissing') + isWithoutValues.columnName,
+            message: language.t('notifications.mandatoryFieldMissing') + isWithoutValues.key,
             type: 'info'
           })
           resolve([])

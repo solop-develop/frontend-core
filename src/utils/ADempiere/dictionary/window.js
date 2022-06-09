@@ -18,6 +18,14 @@ import language from '@/lang'
 import router from '@/router'
 import store from '@/store'
 
+// constants
+import {
+  READ_ONLY_FORM_COLUMNS
+} from '@/utils/ADempiere/constants/systemColumns.js'
+import {
+  ACTIVE, CLIENT, PROCESSING, PROCESSED, UUID
+} from '@/utils/ADempiere/constants/systemColumns'
+
 // utils and helpers methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { generatePanelAndFields } from '@/utils/ADempiere/dictionary/panel.js'
@@ -60,14 +68,14 @@ export function isReadOnlyField({ isReadOnly, isReadOnlyFromLogic }) {
 /**
  * Is displayed column in table multi record
  */
-export function isDisplayedColumn({ isDisplayedGrid, isDisplayedFromLogic, isActive, isKey, displayType, displayLogic }) {
+export function isDisplayedColumn({ isDisplayed, isDisplayedGrid, isDisplayedFromLogic, isActive, isKey, displayType, displayLogic }) {
   // key or button field not showed
   if (isKey || isHiddenField(displayType)) {
     return false
   }
 
   // window (table) result
-  return isActive && isDisplayedGrid &&
+  return isActive && isDisplayed && isDisplayedGrid &&
     (isEmptyValue(displayLogic) || isDisplayedFromLogic)
 }
 
@@ -370,26 +378,56 @@ export function generateTabs({
       itemTab.isTranslationTab || itemTab.isSortTab ||
       itemTab.isAdvancedTab || itemTab.isHasTree
     )
-  }).map((tabItem, index) => {
-    const isParentTab = Boolean(firstTabTableName === tabItem.tableName)
+  }).map((currentTab, index, listTabs) => {
+    const isParentTab = Boolean(firstTabTableName === currentTab.tableName)
+
+    const convertRelationTabs = (itemTab) => {
+      return {
+        name: itemTab.name,
+        id: itemTab.id,
+        uuid: itemTab.uuid,
+        tableName: itemTab.tableName,
+        sequence: itemTab.sequence,
+        tabLevel: itemTab.tabLevel
+      }
+    }
+
+    const parentTabs = listTabs
+      .filter(itemTab => {
+        return itemTab.uuid !== currentTab.uuid &&
+          itemTab.sequence < currentTab.sequence &&
+          itemTab.tabLevel < currentTab.tabLevel
+      })
+      .map(convertRelationTabs)
+
+    const childTabs = listTabs
+      .filter(itemTab => {
+        return itemTab.uuid !== currentTab.uuid &&
+          itemTab.sequence > currentTab.sequence &&
+          itemTab.tabLevel > currentTab.tabLevel
+      })
+      .map(convertRelationTabs)
+
     // let tab = tabItem
     const tab = {
-      ...tabItem,
+      ...currentTab,
       parentUuid,
-      containerUuid: tabItem.uuid,
-      tabGroup: tabItem.fieldGroup,
+      containerUuid: currentTab.uuid,
+      tabGroup: currentTab.fieldGroup,
       firstTabUuid,
       // relations
+      childTabs,
       isParentTab,
+      parentTabs,
       // app properties
-      isShowedRecordNavigation: !(tabItem.isSingleRow || isParentTab), // TODO: @deprecated
-      isShowedTableRecords: !(tabItem.isSingleRow || isParentTab),
+      isShowedRecordNavigation: !(currentTab.isSingleRow || isParentTab), // TODO: @deprecated
+      isShowedTableRecords: !(currentTab.isSingleRow || isParentTab),
       index // this index is not related to the index in which the tabs are displayed
     }
 
     return generatePanelAndFields({
       parentUuid,
-      containerUuid: tabItem.uuid,
+      containerUuid: currentTab.uuid,
       panelMetadata: tab,
       isAddFieldUuid: true,
       isAddLinkColumn: true,
@@ -425,5 +463,308 @@ export function generateTabs({
     tabsListParent,
     tabsListChild,
     tabsList
+  }
+}
+
+/**
+ * Manage the window tab panel
+ */
+export const containerManager = {
+  getPanel({ parentUuid, containerUuid }) {
+    return store.getters.getStoredTab(parentUuid, containerUuid)
+  },
+  getFieldsList: ({ parentUuid, containerUuid }) => {
+    return store.getters.getStoredFieldsFromTab(parentUuid, containerUuid)
+  },
+
+  actionPerformed: function(eventInfo) {
+    console.log('actionPerformed: ', eventInfo)
+    return new Promise()
+  },
+
+  setDefaultValues: ({ parentUuid, containerUuid }) => {
+    store.dispatch('setTabDefaultValues', {
+      parentUuid,
+      containerUuid
+    })
+  },
+
+  seekRecord: function(eventInfo) {
+    console.log('seekRecord: ', eventInfo)
+    // return new Promise()
+  },
+
+  seekTab: function(eventInfo) {
+    console.log('seekTab: ', eventInfo)
+    return new Promise()
+  },
+
+  isDisplayedField,
+  isDisplayedColumn,
+
+  isReadOnlyField(field) {
+    const { parentUuid, containerUuid } = field
+
+    const { isParentTab, isReadOnly } = store.getters.getStoredTab(parentUuid, containerUuid)
+    // if tab is read only, all fields are read only
+    if (isReadOnly) {
+      return true
+    }
+    if (!isParentTab) {
+      // if parent record is new lock childs field to read only
+      const recordParentTab = store.getters.getUuidOfContainer(field.firstTabUuid)
+      if (isEmptyValue(recordParentTab) || recordParentTab === 'create-new') {
+        return true
+      }
+    }
+
+    // record uuid
+    const recordUuid = store.getters.getValueOfField({
+      parentUuid,
+      containerUuid,
+      columnName: UUID
+    })
+    // edit mode is diferent to create new
+    const isWithRecord = recordUuid !== 'create-new' &&
+      !isEmptyValue(recordUuid)
+
+    if (!isWithRecord) {
+      if (field.componentPath === 'FieldButton') {
+        return true
+      }
+    } else {
+      // client id value of record
+      const clientIdRecord = store.getters.getValueOfField({
+        parentUuid,
+        containerUuid,
+        columnName: CLIENT
+      })
+      // evaluate client id context with record
+      const preferenceClientId = store.getters.getSessionContextClientId
+      if (clientIdRecord !== preferenceClientId) {
+        return true
+      }
+
+      // not updateable and record saved
+      if (!field.isUpdateable) {
+        return true
+      }
+
+      // is active value of record
+      const isActiveRecord = store.getters.getValueOfField({
+        parentUuid,
+        containerUuid,
+        columnName: ACTIVE
+      })
+      // record is inactive isReadOnlyFromForm
+      if (!isActiveRecord && field.columnName !== 'IsActive') {
+        return true
+      }
+
+      // is processed value of record
+      const isProcessed = store.getters.getValueOfField({
+        parentUuid,
+        containerUuid,
+        columnName: PROCESSED
+      })
+      if (isProcessed && field.componentPath !== 'FieldButton') {
+        return true
+      }
+
+      // is processing value of record
+      const isProcessing = store.getters.getValueOfField({
+        parentUuid,
+        containerUuid,
+        columnName: PROCESSING
+      })
+      if (isProcessing && field.componentPath !== 'FieldButton') {
+        return true
+      }
+    }
+
+    if (field.isAlwaysUpdateable) {
+      return false
+    }
+
+    return isReadOnlyField(field) || field.isReadOnlyFromForm
+  },
+
+  isReadOnlyColumn({
+    field,
+    // records values
+    row
+  }) {
+    // if tab is read only, all columns are read only
+    const { isReadOnly } = store.getters.getStoredTab(field.parentUuid, field.containerUuid)
+    if (isReadOnly) {
+      return true
+    }
+
+    // read only with metadata
+    if (isReadOnlyColumn(field)) {
+      true
+    }
+
+    // not updateable and record saved
+    const isWithRecord = !isEmptyValue(row.UUID)
+    if (!field.isUpdateable && isWithRecord) {
+      return true
+    }
+
+    // evaluate client id context with record
+    const preferenceClientId = store.getters.getSessionContextClientId
+    if (preferenceClientId !== parseInt(row.AD_Client_ID, 10) && isWithRecord) {
+      return true
+    }
+
+    // columnName: IsActive
+    const fieldReadOnlyForm = READ_ONLY_FORM_COLUMNS.find(item => {
+      return !item.isChangedAllForm &&
+        // columnName: IsActive, Processed, Processing
+        Object.prototype.hasOwnProperty.call(row, item.columnName)
+    })
+
+    if (fieldReadOnlyForm) {
+      const { columnName, valueIsReadOnlyForm } = fieldReadOnlyForm
+      // compare if is same key
+      return field.columnName !== columnName &&
+        // compare if is same value
+        row[columnName] === valueIsReadOnlyForm
+    }
+
+    return false
+  },
+
+  isMandatoryField,
+  isMandatoryColumn,
+
+  getStoredData({ containerUuid }) {
+    return store.getters.getTabData({
+      containerUuid
+    })
+  },
+
+  isLoadedRecords: ({ containerUuid }) => {
+    return store.getters.getIsLoadedTabRecord({
+      containerUuid
+    })
+  },
+
+  getRecordCount({ containerUuid }) {
+    return store.getters.getTabRecordCount({
+      containerUuid
+    })
+  },
+
+  getRecordsList: ({ containerUuid }) => {
+    return store.getters.getTabRecordsList({
+      containerUuid: containerUuid
+    })
+  },
+
+  getRow: ({ containerUuid, rowIndex, rowUuid }) => {
+    return store.getters.getTabRowData({
+      containerUuid,
+      rowIndex,
+      rowUuid
+    })
+  },
+
+  getCell: ({ containerUuid, rowIndex, rowUuid, columnName }) => {
+    return store.getters.getTabCellData({
+      containerUuid,
+      rowIndex,
+      rowUuid,
+      columnName
+    })
+  },
+
+  setSelection: ({
+    containerUuid,
+    recordsSelected
+  }) => {
+    store.commit('setTabSelectionsList', {
+      containerUuid,
+      selectionsList: recordsSelected
+    })
+  },
+  getSelection: ({
+    containerUuid
+  }) => {
+    return store.getters.getTabSelectionsList({
+      containerUuid
+    })
+  },
+
+  // To Default Table
+  setPage: ({
+    parentUuid,
+    containerUuid,
+    pageNumber = 0
+  }) => {
+    store.dispatch('getEntities', {
+      parentUuid,
+      containerUuid,
+      pageNumber
+    })
+  },
+  getPageNumber({ containerUuid }) {
+    return store.getters.getTabPageNumber({
+      containerUuid
+    })
+  },
+
+  changeFieldShowedFromUser({ parentUuid, containerUuid, fieldsShowed }) {
+    store.dispatch('changeTabFieldShowedFromUser', {
+      parentUuid,
+      containerUuid,
+      fieldsShowed
+    })
+  },
+
+  /**
+   * @returns Promisse with value and displayedValue
+   */
+  getDefaultValue({ parentUuid, containerUuid, uuid, id, contextColumnNames, columnName, value }) {
+    return store.dispatch('getDefaultValueFromServer', {
+      parentUuid,
+      containerUuid,
+      contextColumnNames,
+      fieldUuid: uuid,
+      id,
+      //
+      columnName,
+      value
+    })
+  },
+  getLookupList({ parentUuid, containerUuid, uuid, id, contextColumnNames, columnName, searchValue, isAddBlankValue, blankValue }) {
+    return store.dispatch('getLookupListFromServer', {
+      parentUuid,
+      containerUuid,
+      contextColumnNames,
+      fieldUuid: uuid,
+      id,
+      columnName,
+      searchValue,
+      // app attributes
+      isAddBlankValue,
+      blankValue
+    })
+  },
+
+  getRecordLogs({ tableName, recordId, recordUuid }) {
+    return store.dispatch('listRecordLogs', {
+      tableName,
+      recordId,
+      recordUuid
+    })
+  },
+
+  getAttachment({ tableName, recordId, recordUuid }) {
+    return store.dispatch('findAttachment', {
+      tableName,
+      recordId,
+      recordUuid
+    })
   }
 }

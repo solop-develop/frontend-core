@@ -25,6 +25,7 @@ import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/constants/table'
  * Object List from window
  * @param {string} windowUuid
  * @param {string} tabUuid
+ * @param {array} contextAttributesList { key, value }
  * @param {string} searchValue used to compare with selections columns
  * @param {array} filters used as where clause
  * @param {array}  columnsList // TODO: Add support on adempiere-vue
@@ -56,17 +57,6 @@ export function getEntities({
     })
   }
 
-  // context attributes
-  let contextAttributes = []
-  if (!isEmptyValue(contextAttributesList)) {
-    contextAttributes = contextAttributesList.map(attribute => {
-      return {
-        key: attribute.columnName,
-        value: attribute.value
-      }
-    })
-  }
-
   let sortingDefinition
   if (!isEmptyValue(sorting)) {
     sortingDefinition = sorting.map(sortValue => {
@@ -83,7 +73,7 @@ export function getEntities({
     params: {
       window_uuid: windowUuid,
       tab_uuid: tabUuid,
-      context_attributes: contextAttributes,
+      context_attributes: contextAttributesList,
       // DSL Query
       search_value: searchValue,
       filters,

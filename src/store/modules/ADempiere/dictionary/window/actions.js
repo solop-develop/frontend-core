@@ -20,6 +20,9 @@ import store from '@/store'
 // api request methods
 import { requestWindowMetadata } from '@/api/ADempiere/dictionary/window.js'
 
+// constants
+import { containerManager } from '@/utils/ADempiere/dictionary/window'
+
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import {
@@ -323,7 +326,8 @@ export default {
           // activate logics
           dispatch('changeDependentFieldsList', {
             field,
-            fieldsList: tab.fieldsList
+            fieldsList: tab.fieldsList,
+            containerManager
           })
         }
       })

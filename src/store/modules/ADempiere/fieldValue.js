@@ -141,6 +141,9 @@ const value = {
       columnName
     }) => {
       let value
+      if (isEmptyValue(columnName)) {
+        return value
+      }
       if (containerUuid) {
         // get in tab level
         value = getters.getValueOfFieldOnContainer({
