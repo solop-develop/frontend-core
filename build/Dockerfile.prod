@@ -10,13 +10,6 @@ ENV API_URL="https://api.erpya.com"
 COPY build/start.sh .
 COPY dist/ /usr/share/nginx/html/
 
-RUN chown -R nginx /usr/share/nginx/html/ && \
-	chown -R nginx /var/cache/nginx && \
-	chown -R nginx /var/log/nginx && \
-	chown -R nginx /etc/nginx/conf.d && \
-	touch /var/run/nginx.pid && \
-    chown -R nginx /var/run/nginx.pid && \
-    chmod +x *.sh 
+RUN chmod +x *.sh 
 
-USER nginx
 ENTRYPOINT ["sh" , "start.sh"]
