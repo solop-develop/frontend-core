@@ -40,6 +40,9 @@ import { defineComponent, computed } from '@vue/composition-api'
 // components and mixins
 import TabManager from '@theme/components/ADempiere/TabManager/index.vue'
 
+// utils and helper methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+
 export default defineComponent({
   name: 'StandardWindow',
 
@@ -58,9 +61,9 @@ export default defineComponent({
     }
   },
 
-  setup(props, { root }) {
+  setup(props) {
     const isWithChildsTab = computed(() => {
-      return !root.isEmptyValue(props.windowMetadata.tabsListChild)
+      return !isEmptyValue(props.windowMetadata.tabsListChild)
     })
 
     return {

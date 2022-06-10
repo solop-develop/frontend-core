@@ -15,7 +15,16 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { defineComponent, computed, onMounted, ref } from '@vue/composition-api'
+
+import lang from '@/lang'
+import router from '@/router'
+import store from '@/store'
+
+// components and mixins
 import LoadingView from '@theme/components/ADempiere/LoadingView'
+
+// utils and helper methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
 
@@ -34,17 +43,17 @@ export default defineComponent({
 
     // process local is running
     const getterAllInExecution = computed(() => {
-      return root.$store.getters.getAllInExecution
+      return store.getters.getAllInExecution
     })
 
     // process local and send with response
     const getterAllFinishProcess = computed(() => {
-      return root.$store.getters.getAllFinishProcess
+      return store.getters.getAllFinishProcess
     })
 
     // session process from server
     const getterAllSessionProcess = computed(() => {
-      return root.$store.getters.getAllSessionProcess
+      return store.getters.getAllSessionProcess
     })
 
     // all process
@@ -59,7 +68,7 @@ export default defineComponent({
         // let processMetadataReturned = {}
         if (element !== undefined) {
           const processMetadataReturned = {}
-          let infoMetadata = !root.isEmptyValue(element.output) ? findStoredReportUuid(element.uuid) : getProcessMetadata(element.uuid)
+          let infoMetadata = !isEmptyValue(element.output) ? findStoredReportUuid(element.uuid) : getProcessMetadata(element.uuid)
           if (!infoMetadata) {
             infoMetadata = {}
           }
@@ -67,7 +76,7 @@ export default defineComponent({
           Object.assign(processMetadataReturned, element, infoMetadata)
           processMetadataReturned.parametersList = element.parametersList
           const indexRepeat = processAllReturned.findIndex(item => {
-            return item.instanceUuid === element.instanceUuid && !root.isEmptyValue(element.instanceUuid)
+            return item.instanceUuid === element.instanceUuid && !isEmptyValue(element.instanceUuid)
           })
           if (indexRepeat > -1) {
             // update attributes in exists process to return
@@ -87,7 +96,7 @@ export default defineComponent({
     const getProcessLog = computed(() => {
       return getRunProcessAll.value.filter(element => {
         const { isError, isProcessing } = element
-        if (!root.isEmptyValue(isError) && !root.isEmptyValue(isProcessing)) {
+        if (!isEmptyValue(isError) && !isEmptyValue(isProcessing)) {
           return element
         }
       })
@@ -95,7 +104,7 @@ export default defineComponent({
     const getProcessLogSuccess = computed(() => {
       return getProcessLog.value.filter(element => {
         const { isError, isReport, isProcessing } = element
-        if ((!isError && !isProcessing) || (isError && !isProcessing && isReport && !root.isEmptyValue(element.instanceUuid))) {
+        if ((!isError && !isProcessing) || (isError && !isProcessing && isReport && !isEmptyValue(element.instanceUuid))) {
           return element
         }
       })
@@ -103,7 +112,7 @@ export default defineComponent({
     const getProcessLogError = computed(() => {
       return getProcessLog.value.filter(element => {
         const { isError, isReport, isProcessing } = element
-        if ((isError && !isProcessing && !isReport) || (isError && !isProcessing && isReport && root.isEmptyValue(element.instanceUuid))) {
+        if ((isError && !isProcessing && !isReport) || (isError && !isProcessing && isReport && isEmptyValue(element.instanceUuid))) {
           return element
         }
       })
@@ -117,11 +126,11 @@ export default defineComponent({
       })
     })
     const language = computed(() => {
-      return root.$store.getters.language
+      return store.getters.language
     })
     const isLoadProcess = ref(true)
     onMounted(() => {
-      root.$store.dispatch('getSessionProcessFromServer', {
+      store.dispatch('getSessionProcessFromServer', {
         pageToken: pageToken.value,
         pageSize: pageSize.value
       })
@@ -133,14 +142,14 @@ export default defineComponent({
         })
     })
     const getProcessMetadata = (uuid) => {
-      return root.$store.getters.getStoredProcess(uuid)
+      return store.getters.getStoredProcess(uuid)
     }
     const findStoredReportUuid = (uuid) => {
-      return root.$store.getters.getStoredReport(uuid)
+      return store.getters.getStoredReport(uuid)
     }
     function handleCommand(activity) {
       if (activity.command === 'seeReport') {
-        root.$router.push({
+        router.push({
           name: 'Report Viewer',
           params: {
             reportUuid: activity.uuid,
@@ -150,7 +159,7 @@ export default defineComponent({
           }
         }, () => {})
       } else if (activity.command === 'zoomIn') {
-        const parameters = root.isEmptyValue(activity.parametersList) ? activity.parameters : activity.parametersList
+        const parameters = isEmptyValue(activity.parametersList) ? activity.parameters : activity.parametersList
         zoomIn({
           uuid: activity.uuid,
           query: {
@@ -166,7 +175,7 @@ export default defineComponent({
       const attributes = convertObjectToKeyValue({
         object: parameters
       })
-      root.$store.dispatch('updateValuesOfContainer', {
+      store.dispatch('updateValuesOfContainer', {
         containerUuid,
         isOverWriteParent: true,
         attributes
@@ -175,20 +184,20 @@ export default defineComponent({
 
     const checkStatus = ({ isError, isProcessing, output, isReport }) => {
       const status = {
-        text: root.$t('notifications.completed'),
+        text: lang.t('notifications.completed'),
         type: 'success',
         color: '#67C23A'
       }
       // is executing
       if (isProcessing) {
-        status.text = root.$t('notifications.processing')
+        status.text = lang.t('notifications.processing')
         status.type = 'info'
         status.color = '#909399'
         return status
       }
       // is with error
       if (isError) {
-        status.text = root.$t('notifications.error')
+        status.text = lang.t('notifications.error')
         status.type = 'danger'
         status.color = '#F56C6C'
         return status
@@ -198,26 +207,26 @@ export default defineComponent({
     }
 
     const generateTitle = (title) => {
-      const hasKey = root.$te('table.ProcessActivity.' + title)
+      const hasKey = lang.te('table.ProcessActivity.' + title)
       if (hasKey) {
         // $t : this method from vue-i18n, inject in @/lang/index.js
-        const translatedTitle = root.$t('table.ProcessActivity.' + title)
+        const translatedTitle = lang.t('table.ProcessActivity.' + title)
         return translatedTitle
       }
       return title
     }
     const findTranslation = (title) => {
-      const hasKey = root.$te('views.' + title)
+      const hasKey = lang.te('views.' + title)
       if (hasKey) {
         // $t : this method from vue-i18n, inject in @/lang/index.js
-        const translatedTitle = root.$t('views.' + title)
+        const translatedTitle = lang.t('views.' + title)
         return translatedTitle
       }
       return title
     }
 
     const translateDate = (value) => {
-      return root.$d(new Date(value), 'long', language.value)
+      return lang.d(new Date(value), 'long', language.value)
     }
     const currentKey = ref(0)
     const showkey = (value) => {

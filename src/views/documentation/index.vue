@@ -28,6 +28,9 @@
 <script>
 import { defineComponent, computed } from '@vue/composition-api'
 
+import store from '@/store'
+
+// components and mixins
 import RepositoryDocumentation from './RepositoryDocumentation'
 
 export default defineComponent({
@@ -37,9 +40,9 @@ export default defineComponent({
     RepositoryDocumentation
   },
 
-  setup(props, { root }) {
+  setup(props) {
     const isMobile = computed(() => {
-      return root.$store.state.app.device === 'mobile'
+      return store.state.app.device === 'mobile'
     })
 
     const defaultSize = computed(() => {
