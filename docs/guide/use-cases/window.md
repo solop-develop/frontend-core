@@ -35,7 +35,7 @@ Open a Window from the recent items dashboard:
 2. Locate the recent items dashboard.
 3. Select any window that has recently been opened.
 ##### Vue Desktop Version:
-<img :src="$withBase('/images/use-cases/window/open/open-recent-item-desktop-vue.gif')" alt="ZK Desktop" width="100%">
+<img :src="$withBase('/images/use-cases/window/open/open-recient-item-desktop-vue.gif')" alt="ZK Desktop" width="100%">
 
 ##### Vue Mobile Version:
 <img :src="$withBase('/images/use-cases/window/open/open-recient-item-mobile-vue.gif')" alt="ZK Desktop" width="100%">
