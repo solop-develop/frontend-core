@@ -10,15 +10,13 @@ ENV API_URL="https://api.erpya.com"
 COPY build/start.sh .
 COPY dist/ /usr/share/nginx/html/
 
-RUN addgroup adempiere && \
-    adduser --disabled-password --gecos ""  --ingroup adempiere --no-create-home adempiere && \
-	chown -R adempiere /usr/share/nginx/html/ && \
-	chown -R adempiere /var/cache/nginx && \
-	chown -R adempiere /var/log/nginx && \
-	chown -R adempiere /etc/nginx/conf.d && \
+RUN chown -R nginx /usr/share/nginx/html/ && \
+	chown -R nginx /var/cache/nginx && \
+	chown -R nginx /var/log/nginx && \
+	chown -R nginx /etc/nginx/conf.d && \
 	touch /var/run/nginx.pid && \
-    chown -R adempiere /var/run/nginx.pid && \
+    chown -R nginx /var/run/nginx.pid && \
     chmod +x *.sh 
 
-USER adempiere
+USER nginx
 ENTRYPOINT ["sh" , "start.sh"]
