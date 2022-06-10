@@ -299,7 +299,8 @@ function genUseCasesSidebar(type = '') {
   const mapArr = [
     '/guide/use-cases/process.md',
     '/guide/use-cases/reports.md',
-    '/guide/use-cases/smartBrowser.md'
+    '/guide/use-cases/smartBrowser.md',
+    '/guide/use-cases/window.md'
   ]
   return mapArr.map(i => {
     return type + i
