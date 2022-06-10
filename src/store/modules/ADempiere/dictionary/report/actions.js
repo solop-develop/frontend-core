@@ -15,6 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import router from '@/router'
+import store from '@/store'
 
 // api request methods
 import { requestProcessMetadata as requestReportMetadata } from '@/api/ADempiere/dictionary/process.js'
@@ -132,7 +133,7 @@ export default {
           actionName: 'runReportAs',
           uuid: null,
           runReportAs: ({ root, containerUuid }) => {
-            root.$store.dispatch('buildReport', {
+            store.dispatch('buildReport', {
               containerUuid,
               reportType: reportType.type
             })
@@ -165,7 +166,7 @@ export default {
             root,
             containerUuid
           }) => {
-            root.$store.dispatch('buildReport', {
+            store.dispatch('buildReport', {
               containerUuid,
               instanceUuid,
               action: printFormat,
@@ -193,7 +194,7 @@ export default {
           actionName: 'runReportView',
           uuid: null,
           runReportView: ({ root, containerUuid }) => {
-            root.$store.dispatch('buildReport', {
+            store.dispatch('buildReport', {
               containerUuid,
               action: reportView,
               reportViewUuid: reportView.reportViewUuid

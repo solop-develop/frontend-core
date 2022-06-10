@@ -70,6 +70,8 @@ import mixinReport from '@/views/ADempiere/Report/mixinReport.js'
 import PanelDefinition from '@theme/components/ADempiere/PanelDefinition/index.vue'
 import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp/index.vue'
 
+// utils and helper methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { convertProcess as convertReport } from '@/utils/ADempiere/apiConverts/dictionary.js'
 import { generateProcess as generateReport } from '@/utils/ADempiere/dictionary/process.js'
 
@@ -97,7 +99,7 @@ export default defineComponent({
 
     let reportUuid = root.$route.meta.uuid
     // set uuid from test
-    if (!root.isEmptyValue(props.uuid)) {
+    if (!isEmptyValue(props.uuid)) {
       reportUuid = props.uuid
     }
 
@@ -122,7 +124,7 @@ export default defineComponent({
       }
 
       // metadata props use for test
-      if (!root.isEmptyValue(props.metadata)) {
+      if (!isEmptyValue(props.metadata)) {
         // from server response
         report = convertReport(props.metadata)
         // add apps properties

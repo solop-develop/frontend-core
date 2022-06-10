@@ -24,12 +24,14 @@
 <script>
 import { defineComponent, computed } from '@vue/composition-api'
 
+import store from '@/store'
+
 export default defineComponent({
   name: 'ProcessActivityFromDevice',
 
-  setup(props, { root }) {
+  setup() {
     const isMobile = computed(() => {
-      return root.$store.state.app.device === 'mobile'
+      return store.state.app.device === 'mobile'
     })
 
     const templateDevice = computed(() => {
