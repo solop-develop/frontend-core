@@ -28,8 +28,14 @@
 <script>
 import { defineComponent } from '@vue/composition-api'
 
+import router from '@/router'
+import store from '@/store'
+
+// components and mixins
 import WindowView from '@/views/ADempiere/Window'
 import multiTabMetadata from './multiTabWindow.json'
+
+// utils and helper methods
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
 
 export default defineComponent({
@@ -42,21 +48,21 @@ export default defineComponent({
 
     const containerManager = {
       actionPerformed: ({ field, value }) => {
-        root.$store.dispatch('actionPerformed', {
+        store.dispatch('actionPerformed', {
           field,
           value
         })
       },
 
       seekRecord: ({ row, tableName, parentUuid, containerUuid }) => {
-        root.$router.push({
+        router.push({
           name: root.$route.name,
           query: {
             ...root.$route.query,
             action: row.UUID
           },
           params: {
-            ...root.$router.params,
+            ...root.$route.params,
             tableName,
             recordId: row[`${tableName}_ID`]
           }
@@ -65,7 +71,7 @@ export default defineComponent({
         const attributes = convertObjectToKeyValue({
           object: row
         })
-        root.$store.dispatch('notifyPanelChange', {
+        store.dispatch('notifyPanelChange', {
           parentUuid,
           containerUuid,
           attributes

@@ -20,10 +20,8 @@ import store from '@/store'
 
 // constants
 import {
+  ACTIVE, CLIENT, PROCESSING, PROCESSED, UUID,
   READ_ONLY_FORM_COLUMNS
-} from '@/utils/ADempiere/constants/systemColumns.js'
-import {
-  ACTIVE, CLIENT, PROCESSING, PROCESSED, UUID
 } from '@/utils/ADempiere/constants/systemColumns'
 
 // utils and helpers methods

@@ -141,9 +141,17 @@
 <script>
 import { defineComponent, computed, ref } from '@vue/composition-api'
 
+// constants
 import { config } from '@/utils/ADempiere/config'
+
+// components and mixins
 import RepositoryTags from './RepositoryTags'
+
+// api request methods
 import { fetchReleasesList, fetchReadme } from '@/api/documentation/documentation'
+
+// utils and helper methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { copyToClipboard } from '@/utils/ADempiere/coreUtils'
 
 export default defineComponent({
@@ -160,7 +168,7 @@ export default defineComponent({
     }
   },
 
-  setup(props, { root }) {
+  setup(props) {
     const isLoadedRepository = ref(false)
     const isLoadedReleases = ref(false)
     const repositoryData = ref({})
@@ -185,8 +193,8 @@ export default defineComponent({
           href: response.html_url,
           description: response.description,
           avatar: response.organization.avatar_url,
-          clone: root.isEmptyValue(response.clone_url) ? '' : String(response.clone_url),
-          sshUrl: root.isEmptyValue(response.ssh_url) ? '' : String(response.ssh_url),
+          clone: isEmptyValue(response.clone_url) ? '' : String(response.clone_url),
+          sshUrl: isEmptyValue(response.ssh_url) ? '' : String(response.ssh_url),
           branches: response.branches_url,
           downloadZip: response.html_url + '/archive/refs/heads/' + response.default_branch + '.zip'
         }
@@ -203,7 +211,7 @@ export default defineComponent({
           response.forEach(release => {
             let download
             let titleDownload
-            if (!root.isEmptyValue(release.assets)) {
+            if (!isEmptyValue(release.assets)) {
               download = release.assets[0].browser_download_url
               titleDownload = release.assets[0].name
             }
@@ -211,7 +219,7 @@ export default defineComponent({
               title: release.name,
               href: release.html_url,
               author: release.author.login,
-              body: root.isEmptyValue(release.body) ? '' : String(release.body),
+              body: isEmptyValue(release.body) ? '' : String(release.body),
               created_at: release.created_at,
               download,
               titleDownload
@@ -219,11 +227,11 @@ export default defineComponent({
           })
 
           const { releaseNo } = config.repository
-          if (!root.isEmptyValue(releaseNo) && !root.isEmptyValue(releasesList.value)) {
+          if (!isEmptyValue(releaseNo) && !isEmptyValue(releasesList.value)) {
             releaseNotes.value = releasesList.value.find(release => {
               return release.title === releaseNo
             })
-            if (root.isEmptyValue(releaseNotes.value)) {
+            if (isEmptyValue(releaseNotes.value)) {
               releaseNotes.value = releasesList.value[0]
             }
           }

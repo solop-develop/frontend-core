@@ -40,7 +40,7 @@ jobs:
 
       - name: Update sub module
         run: git submodule update --init --remote
-        
+
       - name: Install packages
         run: yarn ci
 
