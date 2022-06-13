@@ -23,6 +23,9 @@ import store from '@/store'
 // components and mixins
 import LoadingView from '@theme/components/ADempiere/LoadingView'
 
+// constants
+import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
+
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
@@ -150,7 +153,7 @@ export default defineComponent({
     function handleCommand(activity) {
       if (activity.command === 'seeReport') {
         router.push({
-          name: 'Report Viewer',
+          name: REPORT_VIEWER_NAME,
           params: {
             reportUuid: activity.uuid,
             instanceUuid: activity.instanceUuid,

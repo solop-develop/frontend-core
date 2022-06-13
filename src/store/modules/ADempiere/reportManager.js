@@ -30,6 +30,7 @@ import {
 } from '@/api/ADempiere/report'
 
 // constants
+import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
 import { viewerSupportedFormats, DEFAULT_REPORT_TYPE } from '@/utils/ADempiere/dictionary/report.js'
 
 // utils and helper methods
@@ -176,7 +177,7 @@ const reportManager = {
               }
 
               router.push({
-                name: 'Report Viewer',
+                name: REPORT_VIEWER_NAME,
                 params: {
                   reportUuid: reportDefinition.uuid,
                   instanceUuid,

@@ -1,6 +1,10 @@
 import {
   requestRunProcess
 } from '@/api/ADempiere/process'
+
+// constants
+import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
+
 import { showNotification } from '@/utils/ADempiere/notification'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import language from '@/lang'
@@ -1071,7 +1075,7 @@ export default {
       }
 
       router.push({
-        name: 'Report Viewer',
+        name: REPORT_VIEWER_NAME,
         params: {
           processId: processOutput.processId,
           instanceUuid: processOutput.instanceUuid,

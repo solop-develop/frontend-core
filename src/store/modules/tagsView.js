@@ -1,5 +1,8 @@
 import router from '@/router'
 
+// constants
+import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
+
 const state = {
   visitedViews: [],
   cachedViews: []
@@ -7,7 +10,7 @@ const state = {
 
 const mutations = {
   ADD_VISITED_VIEW: (state, view) => {
-    if (view.name === 'Report Viewer') {
+    if (view.name === REPORT_VIEWER_NAME) {
       if (state.visitedViews.some(v =>
         v.params &&
         v.params.reportUuid === view.params.reportUuid &&

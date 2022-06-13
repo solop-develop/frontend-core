@@ -18,6 +18,9 @@
 import Layout from '@/layout'
 import language from '@/lang'
 
+// constants
+import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
+
 const staticRoutes = [
   {
     path: '*',
@@ -59,7 +62,7 @@ const staticRoutes = [
       {
         path: ':reportUuid/:instanceUuid/:fileName/:tableName?',
         component: () => import('@/views/ADempiere/ReportViewer'),
-        name: 'Report Viewer',
+        name: REPORT_VIEWER_NAME,
         meta: {
           title: language.t('route.reportViewer'),
           type: 'report',

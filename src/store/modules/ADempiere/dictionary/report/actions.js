@@ -194,9 +194,16 @@ export default {
           actionName: 'runReportView',
           uuid: null,
           runReportView: ({ root, containerUuid }) => {
+            const currentRoute = router.app._route
+            let instanceUuid = 'not-empty'
+            if (currentRoute.params && currentRoute.params.instanceUuid) {
+              instanceUuid = currentRoute.params.instanceUuid
+            }
+
             store.dispatch('buildReport', {
               containerUuid,
               action: reportView,
+              instanceUuid,
               reportViewUuid: reportView.reportViewUuid
             })
           }

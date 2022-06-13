@@ -15,7 +15,10 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 const today = new Date()
-export default [
+
+export const REPORT_VIEWER_NAME = 'Report Viewer'
+
+export const staticReportRoutes = [
   {
     uuid: '92b9a696-adba-4409-a200-7df0ba74cb63',
     action: 'processOption',
