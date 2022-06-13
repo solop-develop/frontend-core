@@ -58,11 +58,6 @@ export function zoomIn({
   })
 
   if (!isEmptyValue(viewSearch)) {
-    console.log({
-      name: viewSearch.name,
-      params,
-      query
-    })
     router.push({
       name: viewSearch.name,
       params,
