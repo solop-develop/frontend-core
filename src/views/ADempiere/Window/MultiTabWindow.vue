@@ -29,6 +29,8 @@
       :container-manager="containerManager"
       :tabs-list="windowMetadata.tabsListParent"
       :all-tabs-list="allTabsList"
+      :references-manager="referencesManager"
+      :actions-manager="actionsManager"
     />
 
     <tab-manager-child
@@ -37,6 +39,8 @@
       :container-manager="containerManager"
       :tabs-list="windowMetadata.tabsListChild"
       :all-tabs-list="allTabsList"
+      :references-manager="referencesManager"
+      :actions-manager="actionsManager"
     />
 
     <modal-dialog
@@ -51,6 +55,7 @@
 <script>
 import { defineComponent, computed, ref } from '@vue/composition-api'
 
+import language from '@/lang'
 import router from '@/router'
 import store from '@/store'
 
@@ -207,6 +212,27 @@ export default defineComponent({
       }
 
     }
+    const actionsManager = computed(() => {
+      return {
+        parentUuid: props.windowMetadata.uuid,
+        containerUuid: currentTabUuid.value,
+        defaultActionName: language.t('actionMenu.createNewRecord'),
+        tableName: store.getters.getTableName(props.windowMetadata.uuid, currentTabUuid.value),
+        getActionList: () => {
+          return store.getters.getStoredActionsMenu({
+            containerUuid: currentTabUuid.value
+          })
+        }
+      }
+    })
+
+    const referencesManager = ref({
+      getTableName: () => {
+        const tabUuid = currentTabUuid.value
+        const windowUuid = props.windowMetadata.uuid
+        return store.getters.getTableName(windowUuid, tabUuid)
+      }
+    })
 
     if (props.windowMetadata.tabsList) {
       allTabsList.value = props.windowMetadata.tabsList
@@ -215,6 +241,8 @@ export default defineComponent({
     return {
       currentTabUuid,
       allTabsList,
+      referencesManager,
+      actionsManager,
       showRecordAccess,
       isWithChildsTab,
       containerManager

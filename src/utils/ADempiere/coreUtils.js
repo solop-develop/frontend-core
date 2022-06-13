@@ -62,9 +62,7 @@ export function zoomIn({
     router.push({
       name: viewSearch.name,
       params,
-      query: {
-        filters: selection
-      }
+      query
     }, () => {})
 
     return true

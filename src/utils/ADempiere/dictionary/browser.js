@@ -214,7 +214,9 @@ export const zoomWindow = {
       }]
     }
     zoomIn({
-      selection: filters,
+      query: {
+        filters
+      },
       uuid
     })
   }
