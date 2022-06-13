@@ -27,13 +27,15 @@
       v-if="showContextMenu"
       style="height: 30px;"
     >
-      <action-menu
-        :container-manager="containerManager"
-        :parent-uuid="reportUuid"
-        :container-uuid="reportUuid"
-        :actions-manager="actionsManager"
-        :relations-manager="relationsManager"
-      />
+      <div style="float: right;padding-left: 1%;">
+        <action-menu
+          :container-manager="containerManager"
+          :parent-uuid="reportUuid"
+          :container-uuid="reportUuid"
+          :actions-manager="actionsManager"
+          :relations-manager="relationsManager"
+        />
+      </div>
     </el-header>
 
     <el-main>

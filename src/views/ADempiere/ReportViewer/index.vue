@@ -21,13 +21,15 @@
   <div v-if="isLoading" key="report-viewer-loaded" style="min-height: inherit;">
     <el-row type="flex" style="min-height: inherit;">
       <el-col :span="24">
-        <action-menu
-          :container-manager="containerManager"
-          :parent-uuid="reportUuid"
-          :container-uuid="reportUuid"
-          :actions-manager="actionsManager"
-          :relations-manager="relationsManager"
-        />
+        <div style="float: right;padding-left: 1%;">
+          <action-menu
+            :container-manager="containerManager"
+            :parent-uuid="reportUuid"
+            :container-uuid="reportUuid"
+            :actions-manager="actionsManager"
+            :relations-manager="relationsManager"
+          />
+        </div>
         <br>
         <div class="content">
           <title-and-help
