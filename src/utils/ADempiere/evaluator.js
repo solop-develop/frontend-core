@@ -40,9 +40,9 @@ class evaluator {
    */
   static GLOBAL_CONTEXT_PREFIX = `#`
 
-   /**
-    * Prefix context of accounting prefix ($)
-    */
+  /**
+   * Prefix context of accounting prefix ($)
+   */
   static ACCOUNTING_CONTEXT_PREFIX = `$`
 
   /**

@@ -21,6 +21,7 @@ import store from '@/store'
 import { isHiddenField } from '@/utils/ADempiere/references'
 import { showMessage, showNotification } from '@/utils/ADempiere/notification.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { OPERATOR_IN } from '@/utils/ADempiere/dataUtils.js'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 
 /**
@@ -198,8 +199,22 @@ export const zoomWindow = {
   type: 'zoom',
   actionName: 'zoomWindow',
   uuid: null,
-  zoomWindow: ({ uuid }) => {
+  zoomWindow: ({ uuid, containerUuid }) => {
+    let filters
+    const browser = store.getters.getStoredBrowser(containerUuid)
+    const selection = store.getters.getBrowserSelectionsList({ containerUuid })
+    if (!isEmptyValue(selection) && !isEmptyValue(browser)) {
+      const keyColumn = browser.keyColumn
+      const elementColumn = browser.elementsList[keyColumn]
+      const listRecord = selection.map(list => list[keyColumn])
+      filters = [{
+        columnName: elementColumn,
+        values: listRecord,
+        operator: OPERATOR_IN.operator
+      }]
+    }
     zoomIn({
+      selection: filters,
       uuid
     })
   }

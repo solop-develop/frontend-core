@@ -34,7 +34,8 @@ export function zoomIn({
   uuid,
   params = {},
   query = {},
-  isShowMessage = true
+  isShowMessage = true,
+  selection
 }) {
   if (isEmptyValue(uuid)) {
     if (isShowMessage) {
@@ -61,7 +62,9 @@ export function zoomIn({
     router.push({
       name: viewSearch.name,
       params,
-      query
+      query: {
+        filters: selection
+      }
     }, () => {})
 
     return true
