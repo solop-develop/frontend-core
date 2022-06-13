@@ -144,7 +144,6 @@ export const changeParameters = {
   // enabled: true,
   enabled: ({ root }) => {
     const currentRoute = router.app._route
-    console.log(currentRoute, currentRoute.name === REPORT_VIEWER_NAME)
     if (currentRoute.name === REPORT_VIEWER_NAME) {
       return true
     }
