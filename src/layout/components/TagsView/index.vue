@@ -70,6 +70,9 @@ import { generateTitle } from '@/utils/i18n'
 import path from 'path'
 import draggable from 'vuedraggable'
 
+// constants
+import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
+
 // utils and helper methods
 import { capitalize } from '@/utils/ADempiere/formatValue/stringFormat'
 
@@ -115,7 +118,7 @@ export default {
   methods: {
     generateTitle, // generateTitle by vue-i18n
     isActive(route) {
-      if (route.name === 'Report Viewer') {
+      if (route.name === REPORT_VIEWER_NAME) {
         const isSameReport = route.params.reportUuid === this.$route.params.reportUuid
         if (isSameReport && route.params.tableName === this.$route.params.tableName) {
           return isSameReport
@@ -168,7 +171,7 @@ export default {
       const tags = this.$refs.tag
       this.$nextTick(() => {
         for (const tag of tags) {
-          if (this.$route.name === 'Report Viewer') {
+          if (this.$route.name === REPORT_VIEWER_NAME) {
             if (this.$route.params && tag.to.params &&
               tag.to.params.reportUuid === this.$route.params.reportUuid &&
               tag.to.params.tableName === this.$route.params.tableName) {
