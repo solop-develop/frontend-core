@@ -22,7 +22,7 @@ import language from '@/lang'
  * @returns {string} true => 'Yes' or 'Si', false => 'Not' or 'No'
  */
 export const convertBooleanToTranslationLang = (booleanValue) => {
-  if (booleanValue === true || booleanValue === 'true' || booleanValue === 'Y') {
+  if (booleanValue === true || booleanValue === 'true' || booleanValue === 'Y' || booleanValue === 'Yes') {
     return language.t('components.switchActiveText')
   }
 
@@ -36,7 +36,7 @@ export const convertBooleanToTranslationLang = (booleanValue) => {
  * @returns {strin}
  */
 export const convertBooleanToString = (booleanValue, isForce = true) => {
-  if (booleanValue === true || booleanValue === 'true' || booleanValue === 'Y') {
+  if (booleanValue === true || booleanValue === 'true' || booleanValue === 'Y' || booleanValue === 'Yes') {
     return 'Y'
   }
   if (isForce) {
@@ -55,12 +55,14 @@ export const convertStringToBoolean = (valueToParsed) => {
 
   switch (String(valueToParsed).trim()) {
     case 'N':
+    case 'No':
     case 'false':
     case language.t('components.switchInactiveText'):
       valReturn = false
       break
 
     case 'Y':
+    case 'Yes':
     case 'true':
     case language.t('components.switchActiveText'):
       valReturn = true

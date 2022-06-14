@@ -17,6 +17,7 @@
 // utils and helpers methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { isDisplayedField, isMandatoryField } from '@/utils/ADempiere/dictionary/window.js'
+import { DISPLAY_COLUMN_PREFIX, getDefaultValue } from '@/utils/ADempiere/dictionaryUtils.js'
 
 /**
  * Dictionary Window Getters
@@ -160,5 +161,129 @@ export default {
 
   getProcessWindowsSelect: (state) => {
     return state.selectProcessUuid
+  },
+
+  getTabParsedDefaultValue: (state, getters, rootState, rootGetters) => ({
+    parentUuid,
+    containerUuid,
+    isGetServer = true,
+    isSOTrxMenu,
+    fieldsList = [],
+    formatToReturn = 'array'
+  }) => {
+    const storedTab = getters.getStoredTab(parentUuid, containerUuid)
+    if (isEmptyValue(fieldsList)) {
+      fieldsList = storedTab.fieldsList
+    }
+
+    const { linkColumnName, parentColumnName } = storedTab
+
+    const attributesDisplayColumn = []
+    const attributesObject = {}
+    let attributesList = fieldsList
+      .map(fieldItem => {
+        const { uuid, columnName, defaultValue, contextColumnNames } = fieldItem
+        const isSQL = String(defaultValue).includes('@SQL=') && isGetServer
+        const isLinkColumn = !isEmptyValue(linkColumnName) && columnName === linkColumnName
+        const isParentColumn = !isEmptyValue(parentColumnName) && columnName === parentColumnName
+
+        let parsedDefaultValue
+        if (!isSQL) {
+          parsedDefaultValue = getDefaultValue({
+            ...fieldItem,
+            parentUuid,
+            contextColumnNames,
+            isSOTrxMenu
+          })
+        }
+        // get value of link column
+        if (isLinkColumn) {
+          parsedDefaultValue = rootGetters.getValueOfField({
+            parentUuid,
+            columnName: linkColumnName
+          })
+        }
+        // get value of parent column
+        if (isParentColumn) {
+          parsedDefaultValue = rootGetters.getValueOfField({
+            parentUuid,
+            columnName: parentColumnName
+          })
+        }
+        attributesObject[columnName] = parsedDefaultValue
+
+        // add display column to default
+        if (fieldItem.componentPath === 'FieldSelect') {
+          const { displayColumnName } = fieldItem
+          let displayedValue
+          if (!isEmptyValue(parsedDefaultValue)) {
+            // get displayed value of link column
+            if (isLinkColumn) {
+              displayedValue = rootGetters.getValueOfField({
+                parentUuid,
+                columnName: DISPLAY_COLUMN_PREFIX + linkColumnName
+              })
+            }
+
+            // get displayed value of parent column
+            if (isParentColumn) {
+              displayedValue = rootGetters.getValueOfField({
+                parentUuid,
+                columnName: DISPLAY_COLUMN_PREFIX + parentColumnName
+              })
+            }
+
+            // get displayed value of stored default value
+            if (isEmptyValue(displayedValue)) {
+              const storedDefaultValue = rootGetters.getStoredDefaultValue({
+                parentUuid,
+                containerUuid,
+                contextColumnNames: contextColumnNames,
+                uuid
+              })
+              if (!isEmptyValue(storedDefaultValue)) {
+                displayedValue = storedDefaultValue.displayedValue
+              }
+            }
+
+            // get displayed value of stored lookup
+            if (isEmptyValue(displayedValue)) {
+              const storedLookupList = rootGetters.getStoredLookupList({
+                parentUuid,
+                containerUuid,
+                contextColumnNames: fieldItem.reference.contextColumnNames,
+                uuid
+              })
+              if (!isEmptyValue(storedLookupList)) {
+                const option = storedLookupList.find(item => item.value === parsedDefaultValue)
+                if (!isEmptyValue(option)) {
+                  displayedValue = option.displayedValue
+                }
+              }
+            }
+          }
+
+          attributesObject[displayColumnName] = displayedValue
+          attributesDisplayColumn.push({
+            columnName: displayColumnName,
+            value: displayedValue,
+            isSQL
+          })
+        }
+
+        return {
+          columnName,
+          value: parsedDefaultValue,
+          // valueType: fieldItem.valueType,
+          isSQL
+        }
+      })
+
+    if (formatToReturn === 'array') {
+      attributesList = attributesList.concat(attributesDisplayColumn)
+      return attributesList
+    }
+    return attributesObject
   }
+
 }

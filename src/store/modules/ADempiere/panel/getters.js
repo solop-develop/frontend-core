@@ -342,7 +342,7 @@ const getters = {
               uuid
             })
             if (!isEmptyValue(optionsList)) {
-              const option = optionsList.find(item => item.id === parsedDefaultValue)
+              const option = optionsList.find(item => item.value === parsedDefaultValue)
               if (!isEmptyValue(option)) {
                 displayedValue = option.displayedValue
               }

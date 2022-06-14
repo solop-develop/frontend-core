@@ -22,6 +22,7 @@ import { requestWindowMetadata } from '@/api/ADempiere/dictionary/window.js'
 
 // constants
 import { containerManager } from '@/utils/ADempiere/dictionary/window'
+import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -282,7 +283,7 @@ export default {
         query
       }, () => {})
 
-      let defaultAttributes = rootGetters.getParsedDefaultValues({
+      let defaultAttributes = rootGetters.getTabParsedDefaultValue({
         parentUuid,
         containerUuid,
         isSOTrxMenu: currentRoute.meta.isSalesTransaction,
@@ -309,15 +310,27 @@ export default {
         })
       }
 
-      defaultAttributes.forEach(attribute => {
-        commit('addChangeToPersistenceQueue', {
-          ...attribute,
-          containerUuid
-        }, {
-          root: true
-        })
+      // update fields values
+      dispatch('updateValuesOfContainer', {
+        parentUuid,
+        containerUuid,
+        isOverWriteParent,
+        attributes: defaultAttributes
+      }, {
+        root: true
+      })
 
-        if (!attribute.columnName.includes('DisplayColumn')) {
+      defaultAttributes.forEach(attribute => {
+        if (!attribute.columnName.includes(DISPLAY_COLUMN_PREFIX)) {
+          if (!isEmptyValue(attribute.value)) {
+            commit('addChangeToPersistenceQueue', {
+              ...attribute,
+              containerUuid
+            }, {
+              root: true
+            })
+          }
+
           const field = rootGetters.getStoredFieldFromTab({
             windowUuid: parentUuid,
             tabUuid: containerUuid,
@@ -330,15 +343,6 @@ export default {
             containerManager
           })
         }
-      })
-
-      dispatch('updateValuesOfContainer', {
-        parentUuid,
-        containerUuid,
-        isOverWriteParent,
-        attributes: defaultAttributes
-      }, {
-        root: true
       })
 
       resolve(defaultAttributes)
