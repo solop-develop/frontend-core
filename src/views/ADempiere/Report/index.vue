@@ -23,28 +23,21 @@
     class="view-base report-view"
     style="height: 84vh;"
   >
-    <el-header
-      v-if="showContextMenu"
-      style="height: 30px;"
-    >
-      <div style="float: right;padding-left: 1%;">
-        <action-menu
-          :container-manager="containerManager"
-          :parent-uuid="reportUuid"
-          :container-uuid="reportUuid"
-          :actions-manager="actionsManager"
-          :relations-manager="relationsManager"
-        />
-      </div>
-    </el-header>
-
     <el-main>
       <el-card class="content-collapse card-report">
         <title-and-help
           :name="reportMetadata.name"
           :help="reportMetadata.help"
         />
-
+        <div style="float: right;padding-left: 1%;">
+          <action-menu
+            :container-manager="containerManager"
+            :parent-uuid="reportUuid"
+            :container-uuid="reportUuid"
+            :actions-manager="actionsManager"
+            :relations-manager="relationsManager"
+          />
+        </div>
         <panel-definition
           :container-uuid="reportUuid"
           :panel-metadata="reportMetadata"
