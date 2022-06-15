@@ -30,6 +30,11 @@ import {
 } from '@/utils/ADempiere/constants/systemColumns'
 
 /**
+ * Display Column Prefix on Column Name: "DisplayColumn_ColumnName"
+ */
+export const DISPLAY_COLUMN_PREFIX = `DisplayColumn_`
+
+/**
  * Generate field to app
  * @param {object}  fieldToGenerate
  * @param {object}  moreAttributes, additional attributes
@@ -172,7 +177,7 @@ export function generateField({
     componentPath: componentReference.componentPath,
     isSupported: componentReference.isSupported,
     size: componentReference.size || DEFAULT_SIZE,
-    displayColumnName: `DisplayColumn_${columnName}`, // key to display column
+    displayColumnName: DISPLAY_COLUMN_PREFIX + columnName, // key to display column
     // value attributes
     parsedDefaultValue,
     parsedDefaultValueTo,

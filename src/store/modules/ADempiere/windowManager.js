@@ -127,7 +127,7 @@ const windowManager = {
               value
             })
           } else {
-            console.warn(`without context to ${linkColumnName} to filter in getEntities`)
+            console.warn(`Get entities without context to ${linkColumnName} to filter in getEntities`)
           }
         }
         if (!isEmptyValue(parentColumnName) &&
@@ -144,7 +144,7 @@ const windowManager = {
               value
             })
           } else {
-            console.warn(`without context to ${parentColumnName} to filter in getEntities`)
+            console.warn(`Get entities without context to ${parentColumnName} to filter in getEntities`)
           }
         }
 
@@ -157,11 +157,7 @@ const windowManager = {
 
         const isWithoutValues = contextAttributesList.find(attribute => isEmptyValue(attribute.value))
         if (isWithoutValues) {
-          console.warn(`Without response, fill the **${isWithoutValues.key}** field in **${name}** tab.`)
-          showMessage({
-            message: language.t('notifications.mandatoryFieldMissing') + isWithoutValues.key,
-            type: 'info'
-          })
+          console.warn(`Get entites without response, fill the **${isWithoutValues.key}** field in **${name}** tab.`)
           resolve([])
           return
         }

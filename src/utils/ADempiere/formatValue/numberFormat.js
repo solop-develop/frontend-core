@@ -66,6 +66,13 @@ export function formatNumber({
 
   let formattedNumber
   switch (displayType) {
+    // ID, Integer
+    case (isIntegerField(displayType) && displayType):
+    default:
+      formattedNumber = formatQuantity({ value, isInteger: true })
+      break
+
+    // Amount, Costs+Prices
     case (isCurrencyField(displayType) && displayType):
       formattedNumber = formatPrice({ value, currency, country })
       break
@@ -73,11 +80,6 @@ export function formatNumber({
     case NUMBER.id:
     case QUANTITY.id:
       formattedNumber = formatQuantity({ value })
-      break
-
-    case (isIntegerField(displayType) && displayType):
-    default:
-      formattedNumber = formatQuantity({ value, isInteger: true })
       break
   }
 
