@@ -23,5 +23,13 @@ export function notSubmitForm(event) {
   return false
 }
 
+/**
+ * Columns number on layout by component ui
+ * https://element.eleme.io/#/es/component/layout
+ */
 export const LAYOUT_SIZE_COLUMN = 24
+
+/**
+ * Default size of column
+ */
 export const DEFAULT_SIZE_COLUMN = 0
