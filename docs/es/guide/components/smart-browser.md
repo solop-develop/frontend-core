@@ -1,6 +1,6 @@
-# Navegador Inteligente (Smart Browser)
+# Consulta Inteligente (Smart Browser)
 
-El componente de **Navegador Inteligente (Smart Browser)**Muestra una vista minimalista la cual está conformada por múltiples campos de criterio de búsqueda con los cuales se utilizan para la consulta de registros.
+El componente de **Consulta Inteligente (Smart Browser)** Muestra una vista minimalista la cual está conformada por múltiples campos de criterio de búsqueda con los cuales se utilizan para la consulta de registros.
 La tabla de resultados cuenta con selecciones para ejecución del proceso actual.
 
 ## Versión de Escritorio ADempiere-ZK
@@ -19,7 +19,7 @@ La tabla de resultados cuenta con selecciones para ejecución del proceso actual
 
 Dicho componente también cuenta con un menú ubicado en la parte superior alineado a la derecha. El cual está conformada por 3 opciones: Ejecución, Relaciones y Referencias.
 
-  - **Ejecución:** Esta opción cuenta con todas las ejecuciones del **Navegador Inteligente (Smart Browser)** actual y se identifica con un fondo azul. Es tanto como de ejecución rápida del proceso como también está conformada por lista desplegable con las diferentes opciones.
+  - **Ejecución:** Esta opción cuenta con todas las ejecuciones del **Consulta Inteligente (Smart Browser)** actual y se identifica con un fondo azul. Es tanto como de ejecución rápida del proceso como también está conformada por lista desplegable con las diferentes opciones.
   :::tip
 - Exportar Registros Seleccionados
 - Eliminar
@@ -30,11 +30,11 @@ Dicho componente también cuenta con un menú ubicado en la parte superior aline
   <br>
     <img :src="$withBase('/images/components/smart-browser/run-action-ui.png')" alt="Menú del Componente Reporte - Ejecución" width="100%">
 
-  - **Relaciones:** Esta opción cuenta con todas las Ventanas, Reportes y Navegador Inteligente (Smart Browser) que estén relacionada con el Reporte actual. En caso de tener relaciones esta opción cuenta con una lista desplegable el cual al seleccionar una opción redirigirá a la opción seleccionada y esta opción se identifica con un fondo verde.
+  - **Relaciones:** Esta opción cuenta con todas las Ventanas, Reportes y Consulta Inteligente (Smart Browser) que estén relacionada con el Reporte actual. En caso de tener relaciones esta opción cuenta con una lista desplegable el cual al seleccionar una opción redirigirá a la opción seleccionada y esta opción se identifica con un fondo verde.
 
   <img :src="$withBase('/images/components/smart-browser/relation-action-ui.png')" width="100%">
   <br>
-  - **Referencia:** Esta opción se encuentra deshabilitada para los **Navegador Inteligente (Smart Browser)** ya que no es relevante para su funcionamiento y esta opción se identifica con un fondo anaranjado.
+  - **Referencia:** Esta opción se encuentra deshabilitada para los **Consulta Inteligente (Smart Browser)** ya que no es relevante para su funcionamiento y esta opción se identifica con un fondo anaranjado.
   <img :src="$withBase('/images/components/smart-browser/referens-action-ui.png')" width="100%">
 
 ### Vista del Menú en Versión Escritorio ADempiere-Vue
@@ -45,7 +45,7 @@ Dicho componente también cuenta con un menú ubicado en la parte superior aline
 
 ## Visualización de los campos
 
-Para una mejor vista el componente **Navegador Inteligente (Smart Browser)** aunque mantienen el mismo orden se encuentran ocultos por defectos. Al menos que el campo tenga un valor por defecto o sean obligatorio
+Para una mejor vista el componente **Consulta Inteligente (Smart Browser)** aunque mantienen el mismo orden se encuentran ocultos por defectos. Al menos que el campo tenga un valor por defecto o sean obligatorio
 
 ### Vista del Menú en Versión Escritorio ADempiere-Vue
 <img :src="$withBase('/images/components/smart-browser/fields-mobile-vue.gif')" width="100%">
@@ -55,7 +55,7 @@ Para una mejor vista el componente **Navegador Inteligente (Smart Browser)** aun
 
 ## Ejecución
 
-Para ejecutar un proceso asociado a un **Navegador Inteligente (Smart Browser)** primero se debe seleccionar un registro luego dirigirse a la parte superior a la izquierda en el menú de acciones. seleccione el proceso llene los parámetros obligatorios y ejecute el proceso asociado
+Para ejecutar un proceso asociado a un **Consulta Inteligente (Smart Browser)** primero se debe seleccionar un registro luego dirigirse a la parte superior a la izquierda en el menú de acciones. seleccione el proceso llene los parámetros obligatorios y ejecute el proceso asociado
 
 
 ### Vista del Menú en Versión Escritorio ADempiere-Vue

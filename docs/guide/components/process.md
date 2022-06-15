@@ -1,52 +1,92 @@
 # Process
 
-The "Process" component displays a minimalistic view which is made up of multiple parameters which are used to execute the current process. This component also has dynamic validations and visualization of the fields.
-
-#
-
-## ADempiere-ZK Desktop Version Processes
-
-<img :src="$withBase('/images/components/process/zk.png')" alt="Procesos en Versión de Escritorio ZK" width="600px">
-
-## ADempiere-Vue Desktop Version Processes
-
-<img :src="$withBase('/images/components/process/vue.png')" alt="Procesos en Versión Escritorio" width="600px">
-
-## ADempiere-Vue Mobile Version Processes
-
-<img :src="$withBase('/images/components/process/vue-mobile.png')" alt="Procesos en Versión Móvil" width="600px">
-
-This component also has a menu located on the top right side. It consists of 3 options: Execution, Relations and References.
+The **Process** component displays a minimalistic view which is made up of multiple parameters which are used to execute the current process. This component also has dynamic validations and visualization of the fields.
 
 
-## **Process Component Menu**
-<img :src="$withBase('/images/components/process/menu-process.png')" alt="Menu de Procesos en Versión Escritorio" width="800px">
+## Interface
+### Processes in Desktop Version ADempiere-ZK
+
+<img :src="$withBase('/images/components/process/zk.png')" alt="ZK Desktop Version Processes" width="600px">
+
+### ADempiere-Vue Desktop Version Processes
+
+It consists of a panel with [**Field display**](#field-display) and a [**Execution Menu**](#process-component-menu) located at the top, aligned to the right.
+
+<img :src="$withBase('/images/components/process/vue.png')" alt="Desktop Version Processes" width="600px">
+
+### ADempiere-Vue Mobile Version Processes
+This consists of a panel with [**Field display**](#field-display) and a [**Execution Menu**](#process-component-menu) located at the top right aligned.
+
+<img :src="$withBase('/images/components/process/vue-mobile.png')" alt="Processes in Mobile Version" width="600px">
 
 
-  - **Execution:** This option has all the executions of the current process and is identified with a blue background. This option is both a quick run and a drop-down list with the process name and description. By default the main action in the run list is always first. 
-  <br>
-  <img :src="$withBase('/images/components/process/menu-action.gif')" alt="Procesos en Versión Escritorio" width="800px">
-  - **Relations:** This option has all the Windows, Processes, Smart Browser and Report that are related to the current process. In case of relationships this option has a drop-down list which when selecting an option will redirect to the selected option and this option is identified with a green background. 
-  <img :src="$withBase('/images/components/process/menu-releations.gif')" alt="Procesos en Versión Escritorio" width="800px">
-  <br>
-  - **References:** This option is disabled for the processes as it is not relevant to their operation and this option is identified with an orange background.
-  <img :src="$withBase('/images/components/process/menu-referens.gif')" alt="Procesos en Versión Escritorio" width="800px">
+## Process Component Menu
 
-## Display Fields
+  - **Execution:** This option counts all executions of the current process and is identified with a blue background. This option is both as a quick run and also a drop down list with the process name and description. By default the main action of the run list is always first. 
 
-For a more minimalist and simpler view, the fields in the process component, although they maintain the same order, are hidden by default unless the field has a default value or is mandatory. 
+<img :src="$withBase('/images/components/process/menu-process.png')" alt="Desktop Version Process Menu" width="800px">
+
+## Field display
+
+For a more minimalistic and simpler view the fields in the process component although they keep the same order are hidden by default unless the field has a default value or are mandatory 
 
 <img :src="$withBase('/images/components/process/field.gif')" width="800px">
 
+## How does it work?
+### Desktop Version
 
-## ¿How to use in the Desktop version?
-
-In the desktop version you must fill in all the required fields and go to the menu to execute the process.
+In the desktop version you must fill in all the required fields and go to the menu in order to run the process
 
 <img :src="$withBase('/images/components/process/run-process.gif')" />
 
-## ¿How to use in the mobile version?
+### Mobile version
 
-In the desktop version you must fill in all the required fields and go to the menu to execute the process.
+In the mobile version you must fill in all the required fields and go to the menu in order to run the process
 
-<img :src="$withBase('/images/components/process/run-process-mobile.gif')"  width="800px"/>
+<img :src="$withBase('/images/components/process/run-process-mobile.gif')" width="800px"/>
+
+
+## Developer Options
+
+### File Location
+[Process](#Process) window is located in the following path:
+
+
+```bash
+    └─ src                              # Main source code
+        └──views            			# Global views
+              └───ADempiere             # ADempiere specific views
+                    └── Process     	# Process Container
+```
+
+Here you can see the [**Process**](https://github.com/solop-develop/frontend-core/blob/experimental/src/views/ADempiere/Process/index.vue) file.
+
+Logics of the [**Process**](#process) window is located at the following path:
+
+```bash
+    └─ src                                   # Main source code
+        └──views              			     # Global views
+                └─ADempiere                  # ADempiere specific views
+                    └── Process         	 # Process Container
+                      └── mixinProcess.js    # Report Logic Container
+```
+Here you can see the [**mixinProcess.js**](https://github.com/solop-develop/frontend-core/blob/experimental/src/api/ADempiere/mixinProcess.js) file.
+
+The [**Process**](#process) service consumption call is located in the following path:
+
+```bash
+    └─ src                                   # Main source code
+        └──views              			     # Global Services
+                └─ADempiere                  # ADempiere specific services
+                    └── process.js         	 # Process service main directory
+```
+Here you can see the [**process.js**](https://github.com/solop-develop/frontend-core/blob/experimental/src/api/ADempiere/process.js) file.
+
+### The called services of the component are:
+
+
+[GET /api/dictionary/process](https://adempiere.github.io/proxy-adempiere-api/guide/es/default-modules/adempiere-api/dictionary.html#get-api-dictionary-process)<br>
+[POST /api/common/api/process](#)
+
+## Demo
+Here you can see a [Demo](https://vue-develop.solopcloud.com/#/6b1c00f8-a762-48c1-9e30-b634ff2953ba/a3e5c878-fb40-11e8-a479-7a0060f0aa01/process/383)

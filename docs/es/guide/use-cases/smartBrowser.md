@@ -1,11 +1,11 @@
-# Casos de Uso: Navegador Inteligente (Smart Browser)
+# Casos de Uso: Consulta Inteligente (Smart Browser)
 
 ## Apertura
 
 ### Árbol de Menú
 Abrir un reporte desde el árbol de menú:
 1. Desplegar el árbol de menú en **Gestión del Sistema/Reglas Generales/Seguridad**.
-2. Seleccionar el Navegador Inteligente **(Smart Browser)** > **Consulta de Usuarios/Contactos**.
+2. Seleccionar el Consulta Inteligente **(Smart Browser)** > **Consulta de Usuarios/Contactos**.
 
 #### Versión Escritorio ZK:
 <img :src="$withBase('/images/use-cases/smartbrowser/open/open-menu-destok-zk.gif')" width="100%">
@@ -22,7 +22,7 @@ Abrir un reporte desde el árbol de menú:
 Abrir un reporte desde el buscador del menú:
 
 2. En el buscador de la parte superior escribir **Consulta de Usuarios/Contactos**.
-3. Seleccionar el Navegador Inteligente **(Smart Browser)** coincidente con el resultado.
+3. Seleccionar el Consulta Inteligente **(Smart Browser)** coincidente con el resultado.
 
 #### Versión Escritorio ZK:
 <img :src="$withBase('/images/use-cases/smartbrowser/open/open-search-menu-destok-zk.gif')" width="100%">
@@ -35,10 +35,10 @@ Abrir un reporte desde el buscador del menú:
 
 
 ### Ítems Recientes
-Abrir un Navegador Inteligente **(Smart Browser)** de ítems recientes:
+Abrir un Consulta Inteligente **(Smart Browser)** de ítems recientes:
 
 1. Ubicar el tablero **Ítems Recientes**.
-2. Seleccionar cualquier Navegador Inteligente **(Smart Browser)** o en caso de usar la búsqueda rápida de la tabla de ítems recientes seleccionar el Navegador Inteligente **(Smart Browser)** coincidente con el resultado.
+2. Seleccionar cualquier Consulta Inteligente **(Smart Browser)** o en caso de usar la búsqueda rápida de la tabla de ítems recientes seleccionar el Consulta Inteligente **(Smart Browser)** coincidente con el resultado.
 
 ##### Versión Escritorio ZK:
 <img :src="$withBase('/images/use-cases/smartbrowser/open/open-recien-item-mobile-ui.gif')" width="100%">
@@ -51,7 +51,7 @@ Abrir un Navegador Inteligente **(Smart Browser)** de ítems recientes:
 
 
 ### Relaciones
-Abrir un Navegador Inteligente **(Smart Browser)** desde las relaciones del mismo nivel del menú:
+Abrir un Consulta Inteligente **(Smart Browser)** desde las relaciones del mismo nivel del menú:
 
 El cliente ZK de ADempiere no cuenta con una característica.
 
@@ -61,7 +61,7 @@ El cliente ZK de ADempiere no cuenta con una característica.
 1.  Desplegar el árbol de menú en **Gestión del Sistema/Reglas Generales/Seguridad**.
 2.  Seleccione la ventana **Mi Perfil**
 3.  Desplegar la lista del menú de relaciones, en la parte superior a la derecha de la ventana.
-4.  Ubicar y seleccionar el Navegador Inteligente **(Smart Browser)** >  **Consulta de Usuarios/Contactos**.
+4.  Ubicar y seleccionar el Consulta Inteligente **(Smart Browser)** >  **Consulta de Usuarios/Contactos**.
 
 
 
@@ -71,9 +71,9 @@ El cliente ZK de ADempiere no cuenta con una característica.
 ## Carga
 
 ### Parámetros
-Los parámetros (campos) de los **Navegador Inteligente (Smart Browser)** Se utiliza para realizar la búsqueda de registro. Solo se mostrara los campos con valor por defecto, o con obligatoriedad.
+Los parámetros (campos) de los **Consulta Inteligente (Smart Browser)** Se utiliza para realizar la búsqueda de registro. Solo se mostrara los campos con valor por defecto, o con obligatoriedad.
 
-1. Abrir el **Navegador Inteligente (Smart Browser)** **Procesar Órdenes en Lote**.
+1. Abrir el **Consulta Inteligente (Smart Browser)** **Procesar Órdenes en Lote**.
 2. Nota el parámetro **Estado del Documento**
 
 #### Versión Escritorio ZK:
@@ -90,11 +90,11 @@ Los parámetros (campos) de los **Navegador Inteligente (Smart Browser)** Se uti
 Al cargar todos los parámetros con valor por defecto, o con obligatoriedad se visualizan en la primera carga.
 
 #### Versión Escritorio ZK:
-Actualmente en la interfaz del Zk al abrir un **Navegador Inteligente (Smart Browser)** en este caso **Procesar Órdenes en Lote** carga todos los campos en la vista 
+Actualmente en la interfaz del Zk al abrir un **Consulta Inteligente (Smart Browser)** en este caso **Procesar Órdenes en Lote** carga todos los campos en la vista 
 <img :src="$withBase('/images/use-cases/smartbrowser/load/mandatory-zk.gif')" width="100%">
 
 #### Versión Escritorio Vue:
-En la interfaz de ADempiere-Vue abrir un **Navegador Inteligente (Smart Browser)** en este caso **Procesar Órdenes en Lote** solo muestra los campos con valor por defecto, o con obligatoriedad.
+En la interfaz de ADempiere-Vue abrir un **Consulta Inteligente (Smart Browser)** en este caso **Procesar Órdenes en Lote** solo muestra los campos con valor por defecto, o con obligatoriedad.
 
 <img :src="$withBase('/images/use-cases/smartbrowser/load/mandatory-vue.gif')" width="100%">
 
@@ -119,15 +119,15 @@ En la interfaz de ADempiere-Vue abrir un **Navegador Inteligente (Smart Browser)
 Es una tabla donde se encuentran los registros dependiendo de los parámetros que se encuentre en el [**Criterio de Búsqueda**](#criterio-de-búsqueda) 
 
 #### Versión Escritorio ZK:
-Actualmente en la interfaz del Zk al abrir un **Navegador Inteligente (Smart Browser)** en este caso **Procesar Órdenes en Lote** no se logra observar la tabla con registro de una forma dinámica
+Actualmente en la interfaz del Zk al abrir un **Consulta Inteligente (Smart Browser)** en este caso **Procesar Órdenes en Lote** no se logra observar la tabla con registro de una forma dinámica
 <img :src="$withBase('/images/use-cases/smartbrowser/load/search-record-zk.gif')" width="100%">
 
 #### Versión Escritorio Vue:
-En la interfaz de ADempiere-Vue abrir un **Navegador Inteligente (Smart Browser)** en este caso **Procesar Órdenes en Lote** la tabla con los registro se encuentra abajo el cual agrega un parámetro en el [**Criterio de Búsqueda**](#criterio-de-búsqueda)  podrá observar cómo se filtran los registro de la tabla
+En la interfaz de ADempiere-Vue abrir un **Consulta Inteligente (Smart Browser)** en este caso **Procesar Órdenes en Lote** la tabla con los registro se encuentra abajo el cual agrega un parámetro en el [**Criterio de Búsqueda**](#criterio-de-búsqueda)  podrá observar cómo se filtran los registro de la tabla
 <img :src="$withBase('/images/use-cases/smartbrowser/load/search-record-ui.gif')" width="100%">
 
 #### Versión Móvil Vue:
-En la interfaz de ADempiere-Vue abrir un **Navegador Inteligente (Smart Browser)** en este caso **Procesar Órdenes en Lote** la tabla con los registro se encuentra abajo el cual agrega un parámetro en el [**Criterio de Búsqueda**](#criterio-de-búsqueda) podrá observar cómo se filtran los registro de la tabla
+En la interfaz de ADempiere-Vue abrir un **Consulta Inteligente (Smart Browser)** en este caso **Procesar Órdenes en Lote** la tabla con los registro se encuentra abajo el cual agrega un parámetro en el [**Criterio de Búsqueda**](#criterio-de-búsqueda) podrá observar cómo se filtran los registro de la tabla
 <img :src="$withBase('/images/use-cases/smartbrowser/load/search-record-ui-mobile.gif')" width="100%">
 
 
@@ -168,7 +168,7 @@ En la interfaz de ADempiere-Vue si el resultado de la búsqueda obtiene muchos r
 ## Ejecución
 
 ### Parámetros
- Al ejecutar un proceso en el **Navegador Inteligente (Smart Browser)** despliega un modal con los parametros.
+ Al ejecutar un proceso en el **Consulta Inteligente (Smart Browser)** despliega un modal con los parametros.
 
 #### Versión Escritorio ZK:
 <img :src="$withBase('/images/use-cases/smartbrowser/run/params-zk.png')" width="100%">
@@ -180,7 +180,7 @@ En la interfaz de ADempiere-Vue si el resultado de la búsqueda obtiene muchos r
 <img :src="$withBase('/images/use-cases/smartbrowser/run/params-mobile-ui.gif')" width="100%">
 
 ### Validación
-En la interfaz de ADempiere-Vue cuando no se cumple una avalidacion en los  **Navegador Inteligente (Smart Browser)** muestra en una notificacion 
+En la interfaz de ADempiere-Vue cuando no se cumple una avalidacion en los  **Consulta Inteligente (Smart Browser)** muestra en una notificacion 
 #### Versión Escritorio ZK:
 <img :src="$withBase('/images/use-cases/smartbrowser/run/validation-zk.gif')" width="100%">
 

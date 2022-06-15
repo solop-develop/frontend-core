@@ -30,11 +30,11 @@ This component also has a menu located on the top right side. It is made up of 3
   <br>
     <img :src="$withBase('/images/components/smart-browser/run-action-ui.png')" alt="Menú del Componente Reporte - Ejecución" width="100%">
 
-  - **Relaciones:** Esta opción cuenta con todas las Ventanas, Reportes y Navegador Inteligente (Smart Browser) que estén relacionada con el Reporte actual. En caso de tener relaciones esta opción cuenta con una lista desplegable el cual al seleccionar una opción redirigirá a la opción seleccionada y esta opción se identifica con un fondo verde.
+  - **Relaciones:** Esta opción cuenta con todas las Ventanas, Reportes y Consulta Inteligente (Smart Browser) que estén relacionada con el Reporte actual. En caso de tener relaciones esta opción cuenta con una lista desplegable el cual al seleccionar una opción redirigirá a la opción seleccionada y esta opción se identifica con un fondo verde.
 
   <img :src="$withBase('/images/components/smart-browser/relation-action-ui.png')" width="100%">
   <br>
-  - **Referencia:** Esta opción se encuentra deshabilitada para los **Navegador Inteligente (Smart Browser)** ya que no es relevante para su funcionamiento y esta opción se identifica con un fondo anaranjado.
+  - **Referencia:** Esta opción se encuentra deshabilitada para los **Consulta Inteligente (Smart Browser)** ya que no es relevante para su funcionamiento y esta opción se identifica con un fondo anaranjado.
   <img :src="$withBase('/images/components/smart-browser/referens-action-ui.png')" width="100%">
 
 ### Menu View in ADempiere-Vue Desktop Version
