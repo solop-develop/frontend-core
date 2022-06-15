@@ -22,3 +22,6 @@ export function notSubmitForm(event) {
   event.preventDefault()
   return false
 }
+
+export const LAYOUT_SIZE_COLUMN = 24
+export const DEFAULT_SIZE_COLUMN = 0

@@ -14,13 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import Vue from 'vue'
 // api request methods
 import { requestFieldMetadata } from '@/api/ADempiere/dictionary/window'
+// constants
+import { DEFAULT_SIZE_COLUMN } from '@/utils/ADempiere/componentUtils'
 
 const initStateLookup = {
   referenceList: [],
   fieldsList: [],
-  validationRuleList: []
+  validationRuleList: [],
+  defaultSizeField: {}
 }
 
 const field = {
@@ -37,6 +41,21 @@ const field = {
     },
     resetStateLookup(state) {
       state = initStateLookup
+    },
+    setSizeField(state, {
+      parentUuid,
+      containerUuid,
+      sizeField = DEFAULT_SIZE_COLUMN
+    }) {
+      const defaultSizeField = {
+        parentUuid,
+        containerUuid,
+        sizeField
+      }
+      Vue.set(state.defaultSizeField, containerUuid, defaultSizeField)
+    },
+    sizeField(state, size) {
+      state.defaultSizeField = size
     }
   },
   actions: {
@@ -77,6 +96,23 @@ const field = {
         .catch(error => {
           console.warn(`Get Field - Error ${error.code}: ${error.message}.`)
         })
+    },
+    /**
+     * Change the columns of the panel
+     * @param {string} parentUuid
+     * @param {string} containerUuid
+     * @param {number} sizeField
+     */
+    changeSizeField({ commit }, {
+      parentUuid,
+      containerUuid,
+      sizeField
+    }) {
+      commit('setSizeField', {
+        parentUuid,
+        containerUuid,
+        sizeField
+      })
     }
   },
   getters: {
@@ -107,6 +143,9 @@ const field = {
       return state.fieldsList.find(fieldItem => {
         return fieldItem.tableName === tableName && fieldItem.columnName === columnName
       })
+    },
+    getSizeColumn: (state, getters) => ({ containerUuid }) => {
+      return state.defaultSizeField[containerUuid].sizeField || DEFAULT_SIZE_COLUMN
     }
   }
 }

@@ -28,6 +28,7 @@ import {
 
 // constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
+import { DEFAULT_SIZE_COLUMN } from '@/utils/ADempiere/componentUtils'
 
 // utils and helper methods
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils.js'
@@ -169,7 +170,12 @@ const windowManager = {
           isLoaded: false,
           containerUuid
         })
-
+        commit('setSizeField', {
+          parentUuid,
+          isLoaded: true,
+          containerUuid,
+          sizeField: DEFAULT_SIZE_COLUMN
+        })
         getEntities({
           windowUuid: parentUuid,
           tabUuid: containerUuid,
