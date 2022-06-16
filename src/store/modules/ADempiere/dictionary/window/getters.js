@@ -18,6 +18,7 @@
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { isDisplayedField, isMandatoryField } from '@/utils/ADempiere/dictionary/window.js'
 import { DISPLAY_COLUMN_PREFIX, getDefaultValue } from '@/utils/ADempiere/dictionaryUtils.js'
+import { getContext } from '@/utils/ADempiere/contextUtils'
 
 /**
  * Dictionary Window Getters
@@ -185,7 +186,7 @@ export default {
         const { uuid, columnName, defaultValue, contextColumnNames } = fieldItem
         const isSQL = String(defaultValue).includes('@SQL=') && isGetServer
         const isLinkColumn = !isEmptyValue(linkColumnName) && columnName === linkColumnName
-        const isParentColumn = !isEmptyValue(parentColumnName) && columnName === parentColumnName
+        const isParentColumn = fieldItem.isParent || (!isEmptyValue(parentColumnName) && columnName === parentColumnName)
 
         let parsedDefaultValue
         if (!isSQL) {
@@ -198,16 +199,17 @@ export default {
         }
         // get value of link column
         if (isLinkColumn) {
-          parsedDefaultValue = rootGetters.getValueOfField({
+          parsedDefaultValue = getContext({
             parentUuid,
-            columnName: linkColumnName
+            columnName
           })
         }
         // get value of parent column
         if (isParentColumn) {
-          parsedDefaultValue = rootGetters.getValueOfField({
+          parsedDefaultValue = getContext({
             parentUuid,
-            columnName: parentColumnName
+            columnName,
+            isForceSession: true
           })
         }
         attributesObject[columnName] = parsedDefaultValue
@@ -219,7 +221,7 @@ export default {
           if (!isEmptyValue(parsedDefaultValue)) {
             // get displayed value of link column
             if (isLinkColumn) {
-              displayedValue = rootGetters.getValueOfField({
+              displayedValue = getContext({
                 parentUuid,
                 columnName: DISPLAY_COLUMN_PREFIX + linkColumnName
               })
@@ -227,9 +229,9 @@ export default {
 
             // get displayed value of parent column
             if (isParentColumn) {
-              displayedValue = rootGetters.getValueOfField({
+              displayedValue = getContext({
                 parentUuid,
-                columnName: DISPLAY_COLUMN_PREFIX + parentColumnName
+                columnName: DISPLAY_COLUMN_PREFIX + columnName
               })
             }
 
