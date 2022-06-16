@@ -3,15 +3,16 @@
 El componente de **Consulta Inteligente (Smart Browser)** Muestra una vista minimalista la cual está conformada por múltiples campos de criterio de búsqueda con los cuales se utilizan para la consulta de registros.
 La tabla de resultados cuenta con selecciones para ejecución del proceso actual.
 
-## Versión de Escritorio ADempiere-ZK
+## Interfaz
+### Versión Escritorio ADempiere-ZK
 
 <img :src="$withBase('/images/components/smart-browser/desktop-zk.png')" alt="Reportes en Versión de Escritorio ZK" width="100%">
 
-## Versión Escritorio ADempiere-Vue
+### Versión Escritorio ADempiere-Vue
 
 <img :src="$withBase('/images/components/smart-browser/desktop-ui.png')" alt="Reportes en Versión de Escritorio ZK" width="100%">
 
-## Versión Móvil ADempiere-Vue
+### Versión Móvil ADempiere-Vue
 
 <img :src="$withBase('/images/components/smart-browser/mobile-ui.png')" alt="Reportes en Versión Móvil" width="100%">
 
@@ -28,14 +29,6 @@ Dicho componente también cuenta con un menú ubicado en la parte superior aline
 - Compartir Enlace
   :::
   <br>
-    <img :src="$withBase('/images/components/smart-browser/run-action-ui.png')" alt="Menú del Componente Reporte - Ejecución" width="100%">
-
-  - **Relaciones:** Esta opción cuenta con todas las Ventanas, Reportes y Consulta Inteligente (Smart Browser) que estén relacionada con el Reporte actual. En caso de tener relaciones esta opción cuenta con una lista desplegable el cual al seleccionar una opción redirigirá a la opción seleccionada y esta opción se identifica con un fondo verde.
-
-  <img :src="$withBase('/images/components/smart-browser/relation-action-ui.png')" width="100%">
-  <br>
-  - **Referencia:** Esta opción se encuentra deshabilitada para los **Consulta Inteligente (Smart Browser)** ya que no es relevante para su funcionamiento y esta opción se identifica con un fondo anaranjado.
-  <img :src="$withBase('/images/components/smart-browser/referens-action-ui.png')" width="100%">
 
 ### Vista del Menú en Versión Escritorio ADempiere-Vue
 <img :src="$withBase('/images/components/smart-browser/run-action-ui.gif')" alt="Menú del Componente Reporte - Ejecución" width="100%">
@@ -47,41 +40,41 @@ Dicho componente también cuenta con un menú ubicado en la parte superior aline
 
 Para una mejor vista el componente **Consulta Inteligente (Smart Browser)** aunque mantienen el mismo orden se encuentran ocultos por defectos. Al menos que el campo tenga un valor por defecto o sean obligatorio
 
-### Vista del Menú en Versión Escritorio ADempiere-Vue
-<img :src="$withBase('/images/components/smart-browser/fields-mobile-vue.gif')" width="100%">
+### Vista en Versión Escritorio ADempiere-Vue
+<img :src="$withBase('/images/components/smart-browser/fields-vue.gif')" width="100%">
 
-### Vista del Menú en Versión Móvil ADempiere-Vue
-<img :src="$withBase('/images/components/smart-browser/fields-desktop-vue.gif')" width="100%">
+### Vista en Versión Móvil ADempiere-Vue
+<img :src="$withBase('/images/components/smart-browser/fields-mobile-vue.gif')" width="100%">
 
 ## Ejecución
 
 Para ejecutar un proceso asociado a un **Consulta Inteligente (Smart Browser)** primero se debe seleccionar un registro luego dirigirse a la parte superior a la izquierda en el menú de acciones. seleccione el proceso llene los parámetros obligatorios y ejecute el proceso asociado
 
 
-### Vista del Menú en Versión Escritorio ADempiere-Vue
+### Vista en Versión Escritorio ADempiere-Vue
 <img :src="$withBase('/images/components/smart-browser/run-desktop-vue.gif')" width="100%">
 
-### Vista del Menú en Versión Móvil ADempiere-Vue
+### Vista en Versión Móvil ADempiere-Vue
 <img :src="$withBase('/images/components/smart-browser/run-mobile-vue.gif')" width="100%">
 
 ## Exportar Registros Seleccionados
 
 Esta opción se encuentra en el [menú de acciones](#menú-del-componente-acciones) en la opción de Ejecución
 
-### Vista del Menú en Versión Escritorio ADempiere-Vue
+### Vista en Versión Escritorio ADempiere-Vue
 <img :src="$withBase('/images/components/smart-browser/export-browser-desktop.gif')" width="100%">
 
-### Vista del Menú en Versión Móvil ADempiere-Vue
+### Vista en Versión Móvil ADempiere-Vue
 <img :src="$withBase('/images/components/smart-browser/export-browser.gif')" width="100%">
 
 ## Acercar Ventana
 
 Esta opción se encuentra en el [menú de acciones](#menú-del-componente-acciones) en la opción de Ejecución
 
-### Vista del Menú en Versión Escritorio ADempiere-Vue
+### Vista en Versión Escritorio ADempiere-Vue
 <img :src="$withBase('/images/components/smart-browser/zoom-browser-desktop.gif')" width="100%">
 
-### Vista del Menú en Versión Móvil ADempiere-Vue
+### Vista en Versión Móvil ADempiere-Vue
 <img :src="$withBase('/images/components/smart-browser/zoom-browser-mobile.gif')" width="100%">
 
 ## Opciones para el Desarrollador
