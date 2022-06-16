@@ -132,7 +132,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [14.x]
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
@@ -150,7 +150,7 @@ jobs:
         run: |
           cd docs
           yarn ci
-          yarn build --if-present
+          yarn build
 
       - name: Upload dist docs
         uses: actions/upload-artifact@v3

@@ -50,6 +50,12 @@ jobs:
           yarn ci
           yarn build
 
+      - name: Upload dist docs
+        uses: actions/upload-artifact@v3
+        with:
+          name: adempiere-vue-docs
+          path: docs/.vuepress/dist
+
       - name: Init new repo in dist folder and commit generated files
         run: |
           cd docs/.vuepress/dist
