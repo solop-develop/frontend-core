@@ -167,28 +167,6 @@ export function zeroPad(number, pad = 2) {
   return Array(+(zero > 0 && zero)).join('0') + number
 }
 
-// /**
-//  * Get date and time from client in a object value
-//  * @param {string} type Type value of return
-//  * @returns {object|string}
-//  */
-// export function clientDateTime(date = null, type = '') {
-//   if (date == null || date === undefined || (typeof date === 'string' && date.trim() === '')) {
-//     // instance the objet Data with current date from client
-//     date = new Date()
-//   } else {
-//     // instance the objet Data with date or time send
-//     date = new Date(date)
-//   }
-
-//   const onlyToken = extractPagingToken(token)
-//   if (isEmptyValue(onlyToken)) {
-//     return ''
-//   }
-
-//   return onlyToken + '-' + pageNumber
-// }
-
 export function convertFieldsListToShareLink(fieldsList) {
   let attributesListLink = ''
   fieldsList.map(fieldItem => {

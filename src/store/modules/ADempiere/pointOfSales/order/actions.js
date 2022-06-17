@@ -26,7 +26,7 @@ import {
 
 // utils and helper methods
 import { isEmptyValue, convertValuesToSendListOrders } from '@/utils/ADempiere/valueUtils.js'
-import { extractPagingToken } from '@/utils/ADempiere/dataUtils'
+import { extractPagingToken, generatePageToken } from '@/utils/ADempiere/dataUtils'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 
 /**
@@ -233,15 +233,9 @@ export default {
       posUuid = getters.posAttributes.currentPointOfSales.uuid
     }
 
-    let { pageNumber, token } = state.listOrder
-    if (isEmptyValue(pageNumber)) {
-      pageNumber = 0
-    }
-    let pageToken
-    if (!isEmptyValue(token)) {
-      const page = pageNumber > 0 ? pageNumber - 1 : 0
-      pageToken = token + '-' + page
-    }
+    const { pageNumber } = state.listOrder
+    const pageToken = generatePageToken({ pageNumber })
+
     let values = getters.getValuesView({
       containerUuid: 'Orders-List'
     })
@@ -267,9 +261,8 @@ export default {
       pageToken
     })
       .then(responseOrdersList => {
-        if (isEmptyValue(token) || isEmptyValue(pageToken)) {
-          token = extractPagingToken(responseOrdersList.nextPageToken)
-        }
+        // TODO: Validate this implementation with extractPagingToken
+        const token = extractPagingToken(responseOrdersList.nextPageToken)
 
         commit('setListOrder', {
           ...responseOrdersList,

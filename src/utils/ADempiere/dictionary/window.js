@@ -698,7 +698,7 @@ export const containerManager = {
   setPage: ({
     parentUuid,
     containerUuid,
-    pageNumber = 0
+    pageNumber = 1
   }) => {
     store.dispatch('getEntities', {
       parentUuid,

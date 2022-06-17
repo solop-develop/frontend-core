@@ -93,6 +93,7 @@ const windowManager = {
      */
     getEntities({
       commit,
+      getters,
       rootGetters
     }, {
       parentUuid,
@@ -102,13 +103,14 @@ const windowManager = {
       pageNumber
     }) {
       return new Promise(resolve => {
-        const currentPageNumber = pageNumber
-
-        let pageToken
-        if (!isEmptyValue(pageNumber)) {
-          pageNumber-- // TODO: Remove with fix in backend
-          pageToken = generatePageToken({ pageNumber })
+        if (isEmptyValue(pageNumber)) {
+          // refresh with same page
+          pageNumber = getters.getTabPageNumber({
+            containerUuid
+          })
         }
+        const currentPageNumber = pageNumber
+        const pageToken = generatePageToken({ pageNumber })
 
         const { contextColumnNames, name, linkColumnName, parentColumnName } = rootGetters.getStoredTab(parentUuid, containerUuid)
 

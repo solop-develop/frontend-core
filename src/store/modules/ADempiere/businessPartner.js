@@ -20,7 +20,7 @@ import { requestListBusinessPartner } from '@/api/ADempiere/system-core.js'
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
-import { extractPagingToken } from '@/utils/ADempiere/dataUtils'
+import { extractPagingToken, generatePageToken } from '@/utils/ADempiere/dataUtils'
 
 const withoutResponse = {
   isLoaded: false,
@@ -62,18 +62,7 @@ const businessPartner = {
       criteria,
       pageNumber
     }) {
-      let pageToken, token
-      if (isEmptyValue(pageNumber)) {
-        pageNumber = state.businessPartner.pageNumber
-        if (isEmptyValue(pageNumber)) {
-          pageNumber = 0 // default page is 1
-        }
-
-        token = state.businessPartner.token
-        if (!isEmptyValue(token)) {
-          pageToken = token + '-' + pageNumber
-        }
-      }
+      const pageToken = generatePageToken({ pageNumber })
 
       return requestListBusinessPartner({
         searchValue,
@@ -88,6 +77,7 @@ const businessPartner = {
         pageToken
       })
         .then(responseBusinessPartnerList => {
+          let token
           if (isEmptyValue(token) || isEmptyValue(pageToken)) {
             token = extractPagingToken(responseBusinessPartnerList.nextPageToken)
           }

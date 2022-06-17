@@ -141,13 +141,14 @@ const browserControl = {
           type: 'info'
         })
 
-        const currentPageNumber = pageNumber
-
-        let pageToken
-        if (!isEmptyValue(pageNumber)) {
-          pageNumber-- // TODO: Remove with fix in backend
-          pageToken = generatePageToken({ pageNumber })
+        if (isEmptyValue(pageNumber)) {
+          // refresh with same page
+          pageNumber = getters.getBrowserPageNumber({
+            containerUuid
+          })
         }
+        const currentPageNumber = pageNumber
+        const pageToken = generatePageToken({ pageNumber })
 
         const { fieldsList, contextColumnNames } = rootGetters.getStoredBrowser(containerUuid)
 
