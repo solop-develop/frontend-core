@@ -32,4 +32,4 @@ export const LAYOUT_SIZE_COLUMN = 24
 /**
  * Default size of column
  */
-export const DEFAULT_SIZE_COLUMN = 0
+export const DEFAULT_SIZE_COLUMN = 3
