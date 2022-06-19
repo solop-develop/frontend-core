@@ -20,9 +20,7 @@ import language from '@/lang'
 
 // api request methods
 import {
-  requestRunProcess as requestRunReport
-} from '@/api/ADempiere/process.js'
-import {
+  requestGenerateReport,
   requestListPrintFormats,
   requestListReportsViews,
   requestListDrillTables,
@@ -87,11 +85,11 @@ const reportManager = {
       containerUuid,
       reportType = DEFAULT_REPORT_TYPE,
       printFormatUuid,
-      reportViewUuid
+      reportViewUuid,
+      tableName,
+      recordUuid
     }) {
       return new Promise(resolve => {
-        const recordId = router.app._route.params.recordId
-        const tableName = router.app._route.params.recordId
         const reportDefinition = rootGetters.getStoredReport(containerUuid)
         const { fieldsList } = reportDefinition
 
@@ -125,26 +123,28 @@ const reportManager = {
           })
         }
 
-        // close current page
-        const currentRoute = router.app._route
-        const tabViewsVisited = rootGetters.visitedViews
-        dispatch('tagsView/delView', currentRoute)
-        // go to back page
-        const oldRouter = tabViewsVisited[tabViewsVisited.length - 1]
-        if (!isEmptyValue(oldRouter)) {
-          router.push({
-            path: oldRouter.path
-          }, () => {})
+        if (isEmptyValue(recordUuid)) {
+          // close current page
+          const currentRoute = router.app._route
+          const tabViewsVisited = rootGetters.visitedViews
+          dispatch('tagsView/delView', currentRoute)
+          // go to back page
+          const oldRouter = tabViewsVisited[tabViewsVisited.length - 1]
+          if (!isEmptyValue(oldRouter)) {
+            router.push({
+              path: oldRouter.path
+            }, () => {})
+          }
         }
 
-        requestRunReport({
+        requestGenerateReport({
           uuid: containerUuid,
           reportType,
-          tableName,
           parametersList,
           printFormatUuid,
-          recordId,
-          reportViewUuid
+          reportViewUuid,
+          tableName,
+          recordUuid
         })
           .then(runReportRepsonse => {
             const { instanceUuid, output, isError } = runReportRepsonse
@@ -245,7 +245,7 @@ const reportManager = {
           })
         }
 
-        requestRunReport({
+        requestGenerateReport({
           uuid: containerUuid,
           reportType,
           parametersList

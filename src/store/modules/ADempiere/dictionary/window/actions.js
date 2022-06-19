@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import language from '@/lang'
 import router from '@/router'
 import store from '@/store'
 
@@ -39,7 +40,9 @@ import {
   sharedLink,
   recordAccess
 } from '@/utils/ADempiere/constants/actionsMenuList.js'
-import evaluator, { getContext } from '@/utils/ADempiere/contextUtils.js'
+import evaluator, { getContext, getContextAttributes } from '@/utils/ADempiere/contextUtils.js'
+import { showMessage } from '@/utils/ADempiere/notification'
+import mixinReport from '@/views/ADempiere/Report/mixinReport'
 
 export default {
   addWindow({ commit, dispatch }, windowResponse) {
@@ -73,7 +76,7 @@ export default {
     })
   },
 
-  setTabActionsMenu({ commit, dispatch, getters }, {
+  setTabActionsMenu({ commit, dispatch, getters, rootGetters }, {
     parentUuid,
     containerUuid
   }) {
@@ -84,26 +87,78 @@ export default {
     actionsList.push(createNewRecord)
 
     if (!isEmptyValue(tabDefinition.processes)) {
+      let relatedColumns = []
+      const parentColumns = tabDefinition.fieldsList
+        .filter(fieldItem => {
+          return fieldItem.isParent || fieldItem.isKey
+        })
+        .map(fieldItem => {
+          return fieldItem.columnName
+        })
+
+      if (!isEmptyValue(tabDefinition.parentColumn)) {
+        relatedColumns = relatedColumns.push(tabDefinition.parentColumn)
+      }
+      relatedColumns = relatedColumns.concat(parentColumns)
+
       tabDefinition.processes.forEach(process => {
         let defaultAction = {}
         if (process.isReport) {
           defaultAction = {
             ...generateReportOfWindow
           }
+
+          const { containerManager } = mixinReport(process.uuid)
+
           dispatch('setModalDialog', {
             containerUuid: process.uuid,
             title: process.name,
+            containerManager,
             doneMethod: () => {
+              const fieldsList = rootGetters.getReportParameters({
+                containerUuid: process.uuid
+              })
+              const emptyMandatory = rootGetters.getFieldsListEmptyMandatory({
+                containerUuid: process.uuid,
+                fieldsList
+              })
+              if (!isEmptyValue(emptyMandatory)) {
+                showMessage({
+                  message: language.t('notifications.mandatoryFieldMissing') + emptyMandatory,
+                  type: 'info'
+                })
+                return
+              }
+
+              const recordUuid = rootGetters.getUuidOfContainer(containerUuid)
+              const { tableName } = tabDefinition
+
               dispatch('startReport', {
                 parentUuid: containerUuid,
-                containerUuid: process.uuid
+                containerUuid: process.uuid,
+                recordUuid,
+                tableName
+              })
+            },
+            beforeOpen: () => {
+              // set context values
+              const parentValues = getContextAttributes({
+                parentUuid,
+                containerUuid,
+                contextColumnNames: relatedColumns
+              })
+
+              dispatch('updateValuesOfContainer', {
+                containerUuid: process.uuid,
+                attributes: parentValues
               })
             },
             loadData: () => {
-              // TODO: Verify it
-              dispatch('getProcessDefinitionFromServer', {
-                uuid: process.uuid
-              })
+              const reportDefinition = rootGetters.getStoredReport(process.uuid)
+              if (!isEmptyValue(reportDefinition)) {
+                return Promise.resolve(reportDefinition)
+              }
+
               return dispatch('getReportDefinitionFromServer', {
                 uuid: process.uuid
               })
@@ -124,12 +179,36 @@ export default {
             containerUuid: process.uuid,
             title: process.name,
             doneMethod: () => {
+              // TODO: Get container uuid with multiple tabs and same process
+              const recordUuid = rootGetters.getUuidOfContainer(containerUuid)
+              const { tableName } = tabDefinition
+
               dispatch('startProcessOfWindows', {
                 parentUuid: containerUuid,
-                containerUuid: process.uuid
+                containerUuid: process.uuid,
+                tableName,
+                recordUuid
+              })
+            },
+            beforeOpen: () => {
+              // set context values
+              const parentValues = getContextAttributes({
+                parentUuid,
+                containerUuid,
+                contextColumnNames: relatedColumns
+              })
+
+              dispatch('updateValuesOfContainer', {
+                containerUuid: process.uuid,
+                attributes: parentValues
               })
             },
             loadData: () => {
+              const reportDefinition = rootGetters.getStoredProcess(process.uuid)
+              if (!isEmptyValue(reportDefinition)) {
+                return Promise.resolve(reportDefinition)
+              }
+
               return dispatch('getProcessDefinitionFromServer', {
                 uuid: process.uuid
               })

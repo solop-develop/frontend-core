@@ -18,6 +18,59 @@
 import { request } from '@/utils/ADempiere/request'
 
 /**
+ * Request a Generate Report
+ * This function allows follow structure:
+ * @param {string}  uuid, uuid from report to run
+ * @param {string}  reportType, format to output report (pdf, html, csv, ...)
+ * @param {string}  tableName, table name of tab, used only window
+ * @param {number}  recordId, record identifier, used only window
+ * @param {string}  recordUuid, record universal unique identifier, used only window
+ * @param {array}   parametersList, parameters from process [{ columnName, value }]
+ * @param {string}  printFormatUuid
+ * @param {boolean} isSummary
+ * @param {string}  reportViewUuid
+ */
+export function requestGenerateReport({
+  uuid,
+  reportType,
+  tableName,
+  recordId,
+  recordUuid,
+  parametersList = [],
+  isSummary,
+  printFormatUuid,
+  reportViewUuid
+}) {
+  parametersList = parametersList.map(parameter => {
+    return {
+      key: parameter.columnName,
+      value: parameter.value
+    }
+  })
+
+  return request({
+    url: '/common/api/process',
+    method: 'post',
+    data: {
+      process_uuid: uuid,
+      table_name: tableName,
+      id: recordId,
+      uuid: recordUuid,
+      is_summary: isSummary,
+      report_type: reportType,
+      report_view_uuid: reportViewUuid,
+      parameters: parametersList,
+      print_format_uuid: printFormatUuid
+    }
+  })
+    .then(reportGeneratedResponse => {
+      const { convertProcessLog } = require('@/utils/ADempiere/apiConverts/process.js')
+
+      return convertProcessLog(reportGeneratedResponse)
+    })
+}
+
+/**
  * Request Pending Documents List
  * @param {string} tableName
  * @param {string} uuid report universally unique identifier

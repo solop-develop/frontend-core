@@ -35,7 +35,7 @@ import {
   refreshBrowserSearh, runProcessOfBrowser,
   zoomWindow, runDeleteable
 } from '@/utils/ADempiere/dictionary/browser.js'
-import { showNotification } from '@/utils/ADempiere/notification.js'
+import { showMessage, showNotification } from '@/utils/ADempiere/notification.js'
 import { isLookup } from '@/utils/ADempiere/references'
 
 export default {
@@ -110,6 +110,19 @@ export default {
               containerUuid: process.uuid,
               title: process.name,
               doneMethod: () => {
+                const fieldsList = rootGetters.getStoredFieldsFromProcess(process.uuid)
+                const emptyMandatory = rootGetters.getFieldsListEmptyMandatory({
+                  containerUuid: process.uuid,
+                  fieldsList
+                })
+                if (!isEmptyValue(emptyMandatory)) {
+                  showMessage({
+                    message: language.t('notifications.mandatoryFieldMissing') + emptyMandatory,
+                    type: 'info'
+                  })
+                  return
+                }
+
                 store.dispatch('startProcessOfBrowser', {
                   parentUuid: browserDefinition.uuid,
                   containerUuid: process.uuid

@@ -183,7 +183,9 @@ export const runProcessOfWindow = {
   actionName: 'runProcessOfWindow',
   runProcessOfWindow: ({ parentUuid, containerUuid, uuid }) => {
     store.commit('setSelectProcessWindows', uuid)
+
     store.commit('setShowedModalDialog', {
+      parentUuid: containerUuid,
       containerUuid: uuid,
       isShowed: true
     })
@@ -204,7 +206,9 @@ export const generateReportOfWindow = {
   actionName: 'generateReportOfWindow',
   generateReportOfWindow: ({ parentUuid, containerUuid, uuid }) => {
     store.commit('setSelectProcessWindows', uuid)
+
     store.commit('setShowedModalDialog', {
+      parentUuid: containerUuid,
       containerUuid: uuid,
       isShowed: true
     })

@@ -21,7 +21,6 @@ import { request } from '@/utils/ADempiere/request'
  * Request a process
  * This function allows follow structure:
  * @param {string}  uuid, uuid from process to run
- * @param {string}  reportType, format to output report (pdf, html, csv, ...)
  * @param {string}  tableName, table name of tab, used only window
  * @param {number}  recordId, record identifier, used only window
  * @param {string}  recordUuid, record universal unique identifier, used only window
@@ -31,23 +30,16 @@ import { request } from '@/utils/ADempiere/request'
           selectionId,
           selectionValues: [{ columnName, value }]
       }]
- * @param {string}  printFormatUuid
- * @param {boolean} isSummary
  * @param {number}  tableSelectedId, used only browser // TODO: Add support on adempiere-vue
- * @param {string}  reportViewUuid
  */
 export function requestRunProcess({
   uuid,
-  reportType,
   tableName,
   recordId,
   recordUuid,
   parametersList = [],
   selectionsList = [],
-  isSummary,
-  tableSelectedId,
-  printFormatUuid,
-  reportViewUuid
+  tableSelectedId
 }) {
   parametersList = parametersList.map(parameter => {
     return {
@@ -64,13 +56,9 @@ export function requestRunProcess({
       table_name: tableName,
       id: recordId,
       uuid: recordUuid,
-      is_summary: isSummary,
-      report_type: reportType,
       table_selected_id: tableSelectedId,
-      report_view_uuid: reportViewUuid,
       parameters: parametersList,
-      selections: selectionsList,
-      print_format_uuid: printFormatUuid
+      selections: selectionsList
     }
   })
     .then(processRunResponse => {

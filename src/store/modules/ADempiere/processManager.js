@@ -164,17 +164,7 @@ const processManager = {
 
         let isProcessedError = false
         let summary = ''
-        /*
-        // close current page
-        const currentRoute = router.app._route
-        const tabViewsVisited = rootGetters.visitedViews
-        dispatch('tagsView/delView', currentRoute)
-        // go to back page
-        const oldRouter = tabViewsVisited[tabViewsVisited.length - 1]
-        router.push({
-          path: oldRouter.path
-        }, () => {})
-        */
+
         requestRunProcess({
           uuid: containerUuid,
           parametersList,
@@ -219,11 +209,11 @@ const processManager = {
 
     startProcessOfWindows({ commit, dispatch, getters, rootGetters }, {
       parentUuid,
-      containerUuid
+      containerUuid,
+      tableName,
+      recordUuid
     }) {
       return new Promise(resolve => {
-        const recordId = router.app._route.query.recordId
-        const recordUuid = router.app._route.query.action
         const windowsUuid = router.app._route.meta.uuid
         const browserDefinition = getters.getStoredTab(windowsUuid, parentUuid)
         const processModal = getters.getModalDialogManager({
@@ -231,7 +221,6 @@ const processManager = {
         })
         const currentProcess = browserDefinition.processes.find(process => process.name === processModal.title)
 
-        // })
         const fieldsList = getters.getStoredFieldsFromProcess(containerUuid)
         const parametersList = rootGetters.getProcessParameters({
           containerUuid,
@@ -256,18 +245,19 @@ const processManager = {
         requestRunProcess({
           uuid: containerUuid,
           parametersList,
-          recordUuid,
-          recordId
+          tableName,
+          recordUuid
         })
           .then(runProcessRepsonse => {
             isProcessedError = runProcessRepsonse.isError
             summary = runProcessRepsonse.summary
 
+            // TODO: Update record on window
             resolve(runProcessRepsonse)
           })
           .catch(error => {
             isProcessedError = true
-            console.warn(`Error getting print formats: ${error.message}. Code: ${error.code}.`)
+            console.warn(`Error executing process: ${error.message}. Code: ${error.code}.`)
           })
           .finally(() => {
             // commit('resetStateWindowManager', {
