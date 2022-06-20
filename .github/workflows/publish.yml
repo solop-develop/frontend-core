@@ -57,6 +57,8 @@ jobs:
   # Publish dist binaries to application
   publish-app-dist:
     name: Upload ADempiere-Vue binaries
+    # TODO: Does not support edit release: {"resource":"Release","code":"already_exists","field":"tag_name"}
+    if: ${{ github.event_name == 'release' && github.event.action == 'created' }}
     needs:
       - build-app
     runs-on: ubuntu-latest
