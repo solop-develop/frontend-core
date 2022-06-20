@@ -18,7 +18,7 @@ import Vue from 'vue'
 // api request methods
 import { requestFieldMetadata } from '@/api/ADempiere/dictionary/window'
 // constants
-import { DEFAULT_SIZE_COLUMN } from '@/utils/ADempiere/componentUtils'
+import { DEFAULT_COLUMNS_PER_ROW } from '@/utils/ADempiere/componentUtils'
 import { isEmptyValue } from '@/utils/ADempiere'
 
 const initStateLookup = {
@@ -46,7 +46,7 @@ const field = {
     setSizeField(state, {
       parentUuid,
       containerUuid,
-      sizeField = DEFAULT_SIZE_COLUMN
+      sizeField = DEFAULT_COLUMNS_PER_ROW
     }) {
       const defaultSizeField = {
         parentUuid,
@@ -147,9 +147,9 @@ const field = {
     },
     getSizeColumn: (state, getters) => ({ containerUuid }) => {
       if (!isEmptyValue(state.defaultSizeField[containerUuid])) {
-        return state.defaultSizeField[containerUuid].sizeField || DEFAULT_SIZE_COLUMN
+        return state.defaultSizeField[containerUuid].sizeField || DEFAULT_COLUMNS_PER_ROW
       }
-      return DEFAULT_SIZE_COLUMN
+      return DEFAULT_COLUMNS_PER_ROW
     }
   }
 }

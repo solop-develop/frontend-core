@@ -24,12 +24,12 @@ export function notSubmitForm(event) {
 }
 
 /**
- * Columns number on layout by component ui
+ * Max number columns per row on layout by component ui
  * https://element.eleme.io/#/es/component/layout
  */
-export const LAYOUT_SIZE_COLUMN = 24
+export const LAYOUT_MAX_COLUMNS_PER_ROW = 24
 
 /**
- * Default size of column
+ * Default columns per row on layout
  */
-export const DEFAULT_SIZE_COLUMN = 3
+export const DEFAULT_COLUMNS_PER_ROW = 3

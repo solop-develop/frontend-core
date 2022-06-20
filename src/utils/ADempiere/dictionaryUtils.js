@@ -61,11 +61,13 @@ export function generateField({
   let isColumnDocumentStatus = false
 
   const componentReference = evalutateTypeField(fieldToGenerate.displayType)
-  let evaluatedLogics = {
-    isDisplayedFromLogic: fieldToGenerate.isDisplayed || fieldToGenerate.isQueryCriteria,
-    isMandatoryFromLogic: false,
-    isReadOnlyFromLogic: false
-  }
+
+  // evaluate logics (diplayed, mandatory, readOnly)
+  let evaluatedLogics = getEvaluatedLogics({
+    parentUuid: moreAttributes.parentUuid,
+    containerUuid: moreAttributes.containerUuid,
+    ...fieldToGenerate
+  })
 
   let parentFieldsList = []
   let parsedDefaultValue = fieldToGenerate.defaultValue
@@ -146,19 +148,11 @@ export function generateField({
       })
 
       if (String(fieldToGenerate.defaultValueTo).includes('@SQL=')) {
-        isShowedFromUser = true
         isGetServerValue = true
       }
     }
 
     parentFieldsList = getParentFields(fieldToGenerate)
-
-    // evaluate logics (diplayed, mandatory, readOnly)
-    evaluatedLogics = getEvaluatedLogics({
-      parentUuid: moreAttributes.parentUuid,
-      containerUuid: moreAttributes.containerUuid,
-      ...fieldToGenerate
-    })
 
     // manage document status and tag document status
     isColumnDocumentStatus = isDocumentStatus({
@@ -231,15 +225,17 @@ export function generateField({
       field.sortNo = field.sortNo > 0 ? field.sortNo + 1 : 0
 
       // if field with value displayed in main panel
-      if (!isEmptyValue(parsedDefaultValueTo)) {
+      if (!isEmptyValue(parsedDefaultValueTo) && (fieldToGenerate.isMandatory || evaluatedLogics.isMandatoryFromLogic)) {
         field.isShowedFromUser = true
+        field.isShowedFromUserDefault = true
       }
     }
   }
 
   // if field with value displayed in main panel
-  if (!typeRange && !isEmptyValue(parsedDefaultValue)) {
+  if (!typeRange && isEmptyValue(fieldToGenerate.defaultValue) && (fieldToGenerate.isMandatory || evaluatedLogics.isMandatoryFromLogic)) {
     field.isShowedFromUser = true
+    field.isShowedFromUserDefault = true
   }
 
   // hidden field type button
