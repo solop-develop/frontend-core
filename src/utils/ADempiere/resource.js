@@ -19,6 +19,8 @@
 // Please add the necessary functions here:
 import { config } from '@/utils/ADempiere/config'
 import { getToken } from '@/utils/auth'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { mimeTypeOfReport } from '@/utils/ADempiere/dictionary/report'
 
 /**
  * Extract extension file from file name
@@ -151,6 +153,7 @@ export function buildBlobAndValues({
  * Build link from ouput report
  * @param {string} fileName
  * @param {string} mimeType
+ * @param {string} extension
  * @param {array} outputStream
  * @param {boolean} isDownload
  * @returns link
@@ -158,9 +161,17 @@ export function buildBlobAndValues({
 export function buildLinkHref({
   fileName,
   mimeType,
+  extension,
   outputStream,
   isDownload = false
 }) {
+  if (isEmptyValue(mimeType)) {
+    if (isEmptyValue(extension)) {
+      extension = getExtensionFromFile(fileName)
+    }
+    mimeType = mimeTypeOfReport[extension]
+  }
+
   const { blobFile } = buildBlobAndValues({
     mimeType,
     outputStream

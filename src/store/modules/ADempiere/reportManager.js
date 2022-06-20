@@ -167,7 +167,7 @@ const reportManager = {
               link = buildLinkHref({
                 fileName: output.fileName,
                 outputStream: output.outputStream,
-                type: output.mimeType
+                mimeType: output.mimeType
               })
 
               // donwloaded not support render report
