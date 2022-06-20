@@ -92,15 +92,45 @@ jobs:
     steps:
       - id: check_secret_job
         run: |
-          if [[ "${{ secrets.DOCKER_REPO_FRONTEND }}" != "" && \
-                "${{ secrets.DOCKER_USERNAME }}" != "" && \
-                "${{ secrets.DOCKER_TOKEN }}" != "" ]]; \
+          if [[ "${{ secrets.DOCKER_USERNAME }}" != "" ]]; \
           then
             echo "Secrets to use a container registry were configured in the repo"
             echo "::set-output name=is_have_secrets::true"
           else
             echo "Secrets to use a container registry were not configured in the repo"
             echo "::set-output name=is_have_secrets::false"
+          fi
+
+  # Check secrets to push image in docker hub registry
+  check-docker-secrets-token:
+    name: Check if docker hub registry information was set on secrets
+    needs:
+      - build-app
+    runs-on: ubuntu-latest
+    steps:
+      - id: check_secret_job
+        run: |
+          if [[ "${{ secrets.DOCKER_TOKEN }}" != null ]]; \
+          then
+            echo "Secrets to use a container registry were configured in the repo"
+          else
+            echo "Secrets to use a container registry were not configured in the repo"
+          fi
+
+  # Check secrets to push image in docker hub registry
+  check-docker-secrets-repo:
+    name: Check if docker hub registry information was set on secrets
+    needs:
+      - build-app
+    runs-on: ubuntu-latest
+    steps:
+      - id: check_secret_job
+        run: |
+          if [[ "${{ secrets.DOCKER_REPO_FRONTEND }}" != "" ]]; \
+          then
+            echo "Secrets to use a container registry were configured in the repo"
+          else
+            echo "Secrets to use a container registry were not configured in the repo"
           fi
 
   # Publish docker image in Docker Hub registry to application
