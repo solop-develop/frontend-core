@@ -18,9 +18,11 @@ const actionMenu = {
   // actions
   refreshRecords: 'Refresh Records',
   deleteRecord: 'Delete Record',
+  new: 'New',
   createNewRecord: 'New Record',
   shareLink: 'Share Link',
   shareLinkDescription: 'Share current route in the clipboard',
+  undo: 'Undo',
   withoutActions: 'Without Actions',
   zoomWindow: 'Zoom Window',
   // process

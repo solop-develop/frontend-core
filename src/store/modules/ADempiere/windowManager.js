@@ -36,7 +36,9 @@ import { showMessage } from '@/utils/ADempiere/notification'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 
 const initState = {
-  tabData: {}
+  tabData: {},
+  // container uuid: record uuid
+  currentRecordOnPanel: {}
 }
 
 const windowManager = {
@@ -73,6 +75,13 @@ const windowManager = {
       selectionsList
     }) {
       Vue.set(state.tabData[containerUuid], 'selectionsList', selectionsList)
+    },
+
+    setRecordUuidOnPanel(state, {
+      containerUuid,
+      recordUuid
+    }) {
+      Vue.set(state.currentRecordOnPanel, containerUuid, recordUuid)
     },
 
     resetStateWindowManager(state) {
@@ -162,7 +171,6 @@ const windowManager = {
           resolve([])
           return
         }
-
         commit('setTabData', {
           parentUuid,
           isLoaded: false,
@@ -351,11 +359,11 @@ const windowManager = {
         return recordsList[rowIndex]
       }
 
-      return recordsList.find(itemData => {
-        if (itemData.UUID === recordUuid) {
-          return true
-        }
-      })
+      if (!isEmptyValue(recordUuid)) {
+        return recordsList.find(itemData => {
+          return itemData.UUID === recordUuid
+        })
+      }
     },
     getTabCellData: (state, getters) => ({ containerUuid, recordUuid, rowIndex, columnName }) => {
       const recordsList = getters.getTabRecordsList({ containerUuid })
@@ -377,6 +385,10 @@ const windowManager = {
         return row[columnName]
       }
       return undefined
+    },
+
+    getCurrentRecordOnPanel: (state) => (containerUuid) => {
+      return state.currentRecordOnPanel[containerUuid]
     }
   }
 }

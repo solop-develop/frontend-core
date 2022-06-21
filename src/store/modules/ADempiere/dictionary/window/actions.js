@@ -34,7 +34,8 @@ import {
   runProcessOfWindow,
   generateReportOfWindow,
   openBrowserAssociated,
-  refreshRecords
+  refreshRecords,
+  undoChange
 } from '@/utils/ADempiere/dictionary/window.js'
 import {
   sharedLink,
@@ -85,6 +86,7 @@ export default {
     const actionsList = []
 
     actionsList.push(createNewRecord)
+    actionsList.push(undoChange)
 
     if (!isEmptyValue(tabDefinition.processes)) {
       let relatedColumns = []

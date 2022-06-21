@@ -25,8 +25,9 @@ import {
 } from '@/utils/ADempiere/constants/systemColumns'
 
 // utils and helpers methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat'
 import { generatePanelAndFields } from '@/utils/ADempiere/dictionary/panel.js'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { isHiddenField } from '@/utils/ADempiere/references.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import { zoomIn } from '@/utils/ADempiere/coreUtils'
@@ -94,7 +95,7 @@ export const createNewRecord = {
   type: 'setDefaultValues',
   enabled: ({ parentUuid, containerUuid }) => {
     const tab = store.getters.getStoredTab(parentUuid, containerUuid)
-    if (tab.isInsertRecord) {
+    if (tab.isInsertRecord && !tab.isReadOnly) {
       const recordUuid = store.getters.getUuidOfContainer(containerUuid)
       return !isEmptyValue(recordUuid)
     }
@@ -105,6 +106,21 @@ export const createNewRecord = {
   icon: 'el-icon-circle-plus-outline',
   actionName: 'createNewRecord',
   createNewRecord: ({ parentUuid, containerUuid }) => {
+    const tab = store.getters.getStoredTab(parentUuid, containerUuid)
+    if (!tab.isInsertRecord || tab.isReadOnly) {
+      return false
+    }
+    const recordUuid = store.getters.getUuidOfContainer(containerUuid)
+    if (isEmptyValue(recordUuid)) {
+      return false
+    }
+
+    // set old record
+    store.commit('setRecordUuidOnPanel', {
+      containerUuid,
+      recordUuid
+    })
+
     store.dispatch('setTabDefaultValues', {
       parentUuid,
       containerUuid
@@ -114,7 +130,7 @@ export const createNewRecord = {
 
 export const undoChange = {
   sequence: 0,
-  name: language.t('actionMenu.createNewRecord'),
+  name: language.t('actionMenu.undo'),
   type: 'undoModifyData',
   enabled: ({ parentUuid, containerUuid }) => {
     return isEmptyValue(
@@ -125,6 +141,25 @@ export const undoChange = {
   icon: 'el-icon-circle-plus-outline',
   actionName: 'undoChange',
   undoChange: ({ parentUuid, containerUuid }) => {
+    const oldRecordUuid = store.getters.getCurrentRecordOnPanel(containerUuid)
+    if (isEmptyValue(oldRecordUuid)) {
+      return false
+    }
+
+    const row = store.getters.getTabRowData({
+      containerUuid,
+      recordUuid: oldRecordUuid
+    })
+
+    const attributes = convertObjectToKeyValue({
+      object: row
+    })
+
+    store.dispatch('notifyPanelChange', {
+      parentUuid,
+      containerUuid,
+      attributes
+    })
   }
 }
 
@@ -135,7 +170,7 @@ export const deleteRecord = {
   name: language.t('actionMenu.deleteRecord'),
   enabled: ({ parentUuid, containerUuid }) => {
     const tab = store.getters.getStoredTab(parentUuid, containerUuid)
-    if (tab.isInsertRecord && tab.isDeleteable) {
+    if (tab.isDeleteable && !tab.isReadOnly) {
       const recordUuid = store.getters.getUuidOfContainer(containerUuid)
       return !isEmptyValue(recordUuid)
     }
@@ -147,6 +182,11 @@ export const deleteRecord = {
   type: 'deleteEntity',
   actionName: 'deleteRecord',
   deleteRecord: ({ parentUuid, containerUuid, recordId, recordUuid }) => {
+    const tab = store.getters.getStoredTab(parentUuid, containerUuid)
+    if (!tab.isDeleteable || tab.isReadOnly) {
+      return false
+    }
+
     store.dispatch('deleteEntity', {
       parentUuid,
       containerUuid,
