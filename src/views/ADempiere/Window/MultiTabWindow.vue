@@ -17,39 +17,40 @@
 -->
 
 <template>
-  <div>
-    <embedded
-      :visible="showRecordAccess"
-    >
-      <record-access />
-    </embedded>
-
-    <tab-manager
-      :parent-uuid="windowMetadata.uuid"
-      :container-manager="containerManager"
-      :tabs-list="windowMetadata.tabsListParent"
-      :all-tabs-list="allTabsList"
-      :references-manager="referencesManager"
-      :actions-manager="actionsManager"
-    />
-
-    <tab-manager-child
-      v-if="isWithChildsTab"
-      :parent-uuid="windowMetadata.uuid"
-      :container-manager="containerManager"
-      :tabs-list="windowMetadata.tabsListChild"
-      :all-tabs-list="allTabsList"
-      :references-manager="referencesManager"
-      :actions-manager="actionsManager"
-    />
-
-    <modal-dialog
-      v-if="!isEmptyValue(processUuid)"
-      :container-manager="containerManagerProcess"
-      :parent-uuid="currentTabUuid"
-      :container-uuid="processUuid"
-    />
-  </div>
+  <el-container style="height: 100%!important;">
+    <el-main id="mainWindow">
+      <embedded
+        :visible="showRecordAccess"
+      >
+        <record-access />
+      </embedded>
+      <tab-manager
+        :parent-uuid="windowMetadata.uuid"
+        :container-manager="containerManager"
+        :tabs-list="windowMetadata.tabsListParent"
+        :all-tabs-list="allTabsList"
+        :references-manager="referencesManager"
+        :actions-manager="actionsManager"
+      />
+      <modal-dialog
+        v-if="!isEmptyValue(processUuid)"
+        :container-manager="containerManagerProcess"
+        :parent-uuid="currentTabUuid"
+        :container-uuid="processUuid"
+      />
+    </el-main>
+    <el-footer>
+      <tab-manager-child
+        v-if="isWithChildsTab"
+        :parent-uuid="windowMetadata.uuid"
+        :container-manager="containerManager"
+        :tabs-list="windowMetadata.tabsListChild"
+        :all-tabs-list="allTabsList"
+        :references-manager="referencesManager"
+        :actions-manager="actionsManager"
+      />
+    </el-footer>
+  </el-container>
 </template>
 
 <script>
@@ -251,3 +252,13 @@ export default defineComponent({
 
 })
 </script>
+
+<style>
+.el-footer {
+  height: 50% !important;
+}
+.el-main {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+</style>
