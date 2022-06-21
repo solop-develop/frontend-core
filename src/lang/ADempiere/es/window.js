@@ -39,6 +39,8 @@ const window = {
   callout: {
     error: 'Error En Callout'
   },
+  toggleSingle: 'Cambiar Mono',
+  multiRecord: 'Multi Registro',
   gridToggle: 'Cambiar mono/multi registro',
   toggleTabContentVisibility: 'Cambiar visibilidad del contenido de la pestaña'
 }

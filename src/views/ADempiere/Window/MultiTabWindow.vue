@@ -38,8 +38,17 @@
         :parent-uuid="currentTabUuid"
         :container-uuid="processUuid"
       />
+      <tab-manager-child
+        v-if="isWithChildsTab && isMobile"
+        :parent-uuid="windowMetadata.uuid"
+        :container-manager="containerManager"
+        :tabs-list="windowMetadata.tabsListChild"
+        :all-tabs-list="allTabsList"
+        :references-manager="referencesManager"
+        :actions-manager="actionsManager"
+      />
     </el-main>
-    <el-footer>
+    <el-footer v-if="!isMobile">
       <tab-manager-child
         v-if="isWithChildsTab"
         :parent-uuid="windowMetadata.uuid"
@@ -112,6 +121,10 @@ export default defineComponent({
 
     const showRecordAccess = computed(() => {
       return store.getters.getShowPanelRecordAccess
+    })
+
+    const isMobile = computed(() => {
+      return store.state.app.device === 'mobile'
     })
 
     const currentTabUuid = computed(() => {
@@ -246,7 +259,8 @@ export default defineComponent({
       actionsManager,
       showRecordAccess,
       isWithChildsTab,
-      containerManager
+      containerManager,
+      isMobile
     }
   }
 
