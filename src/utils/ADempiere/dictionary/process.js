@@ -28,6 +28,7 @@ import { isHiddenField } from '@/utils/ADempiere/references'
  * @param {number} displayType
  * @param {boolean} isActive
  * @param {boolean} isDisplayed
+ * @param {string} displayLogic
  * @param {boolean} isDisplayedFromLogic
  * @returns {boolean}
  */
@@ -43,22 +44,22 @@ export function isDisplayedField({ displayType, isActive, isDisplayed, displayLo
 
 /**
  * Process manager mandatory logic
+ * TODO: Add support on ADempiere core to mandatory logic
  * @param {boolean} isMandatory
- * @param {boolean} isMandatoryFromLogic
  * @returns {boolean}
  */
-export function isMandatoryField({ isMandatory, isMandatoryFromLogic }) {
-  return isMandatory || isMandatoryFromLogic
+export function isMandatoryField({ isMandatory }) {
+  return isMandatory
 }
 
 /**
  * Process is read only field
- * @param {boolean} isReadOnly
+ * @param {string} readOnlyLogic
  * @param {boolean} isReadOnlyFromLogic
  * @returns {boolean}
  */
-export function isReadOnlyField({ isReadOnly, isReadOnlyFromLogic }) {
-  return isReadOnly && isReadOnlyFromLogic
+export function isReadOnlyField({ readOnlyLogic, isReadOnlyFromLogic }) {
+  return !isEmptyValue(readOnlyLogic) && isReadOnlyFromLogic
 }
 
 /**

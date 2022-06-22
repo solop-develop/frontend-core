@@ -50,8 +50,8 @@ export function isDisplayedField({ isDisplayed, displayLogic, isDisplayedFromLog
  * @param {boolean} isMandatoryFromLogic
  * @returns {boolean}
  */
-export function isMandatoryField({ isMandatory, isMandatoryFromLogic }) {
-  return isMandatory || isMandatoryFromLogic
+export function isMandatoryField({ isMandatory, mandatoryLogic, isMandatoryFromLogic }) {
+  return isMandatory || (!isEmptyValue(mandatoryLogic) && isMandatoryFromLogic)
 }
 
 /**
@@ -60,8 +60,8 @@ export function isMandatoryField({ isMandatory, isMandatoryFromLogic }) {
  * @param {boolean} isReadOnlyFromLogic
  * @returns {boolean}
  */
-export function isReadOnlyField({ isReadOnly, isReadOnlyFromLogic }) {
-  return isReadOnly || isReadOnlyFromLogic
+export function isReadOnlyField({ isReadOnly, readOnlyLogic, isReadOnlyFromLogic }) {
+  return isReadOnly || (!isEmptyValue(readOnlyLogic) && isReadOnlyFromLogic)
 }
 
 /**
@@ -78,8 +78,8 @@ export function isDisplayedColumn({ isDisplayed, isDisplayedGrid, isDisplayedFro
     (isEmptyValue(displayLogic) || isDisplayedFromLogic)
 }
 
-export function isMandatoryColumn({ isMandatory, isMandatoryFromLogic }) {
-  return isMandatory || isMandatoryFromLogic
+export function isMandatoryColumn({ isMandatory, mandatoryLogic, isMandatoryFromLogic }) {
+  return isMandatory || (!isEmptyValue(mandatoryLogic) && isMandatoryFromLogic)
 }
 
 export function isReadOnlyColumn({ isReadOnly }) {
