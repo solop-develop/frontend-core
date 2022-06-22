@@ -39,7 +39,7 @@
         :container-uuid="processUuid"
       />
       <tab-manager-child
-        v-if="isWithChildsTab && isMobile"
+        v-if="((isWithChildsTab && isMobile) || getTab.isTableViewFullScreen)"
         :parent-uuid="windowMetadata.uuid"
         :container-manager="containerManager"
         :tabs-list="windowMetadata.tabsListChild"
@@ -48,7 +48,7 @@
         :actions-manager="actionsManager"
       />
     </el-main>
-    <el-footer v-if="!isMobile">
+    <el-footer v-if="!isMobile && !getTab.isTableViewFullScreen" :style="getTab.isTableViewFullScreen ? 'height: 20% !important;' : 'height: 50% !important;'">
       <tab-manager-child
         v-if="isWithChildsTab"
         :parent-uuid="windowMetadata.uuid"
@@ -240,6 +240,10 @@ export default defineComponent({
       }
     })
 
+    const getTab = computed(() => {
+      return store.getters.getCurrentTab(props.windowMetadata.uuid)
+    })
+
     const referencesManager = ref({
       getTableName: () => {
         const tabUuid = currentTabUuid.value
@@ -260,7 +264,8 @@ export default defineComponent({
       showRecordAccess,
       isWithChildsTab,
       containerManager,
-      isMobile
+      isMobile,
+      getTab
     }
   }
 
