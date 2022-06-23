@@ -40,6 +40,20 @@ export default {
     return state.storedWindows[windowUuid].tabsList
   },
 
+  /**
+   * Get tabs list form table name
+   * @param {string} parentUuid window uuid
+   * @param {string} tableName table name to get tabs on window
+   * @param {string} containerUuid optional, if exists exclude this tab
+   * @returns
+   */
+  getStoredTabsFromTableName: (state) => ({ parentUuid, tableName, containerUuid = '' }) => {
+    return state.storedWindows[parentUuid].tabsList.filter(tab => {
+      return tab.tableName === tableName &&
+        tab.uuid !== containerUuid
+    })
+  },
+
   getStoredTab: (state) => (windowUuid, tabUuid) => {
     return state.storedWindows[windowUuid].tabsList.find(tab => {
       return tab.uuid === tabUuid

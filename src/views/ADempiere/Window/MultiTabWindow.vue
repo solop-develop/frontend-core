@@ -176,20 +176,21 @@ export default defineComponent({
           })
           return
         }
-        const tab = store.getters.getStoredTab(parentUuid, containerUuid)
-        if (tab.isParentTab) {
+        const tabDefinition = store.getters.getStoredTab(parentUuid, containerUuid)
+        if (tabDefinition.isParentTab) {
+          const { tableName } = tabDefinition
           router.push({
             name: root.$route.name,
             query: {
               ...root.$route.query,
               action: row.UUID,
-              tableName: tab.tableName,
-              recordId: row[`${tab.tableName}_ID`]
+              tableName,
+              recordId: row[`${tableName}_ID`]
             },
             params: {
               ...root.$route.params,
-              tableName: tab.tableName,
-              recordId: row[`${tab.tableName}_ID`]
+              tableName,
+              recordId: row[`${tableName}_ID`]
             }
           }, () => {})
         }
@@ -211,7 +212,7 @@ export default defineComponent({
           parentUuid,
           containerUuid,
           attributes,
-          isOverWriteParent: tab.isParentTab
+          isOverWriteParent: tabDefinition.isParentTab
         })
 
         // active logics with set records values
@@ -223,9 +224,25 @@ export default defineComponent({
             containerManager: props.windowManager
           })
         })
-      }
 
+        // update records and logics on child tabs
+        tabDefinition.childTabs.filter(tabItem => {
+          // get loaded tabs with records
+          return store.getters.getIsLoadedTabRecord({
+            containerUuid: tabItem.uuid
+          })
+        }).forEach(tabItem => {
+          // if loaded data refresh this data
+          // TODO: Verify with get one entity, not get all list
+          store.dispatch('getEntities', {
+            parentUuid,
+            containerUuid: tabItem.uuid,
+            pageNumber: 1 // reload with first page
+          })
+        })
+      }
     }
+
     const actionsManager = computed(() => {
       return {
         parentUuid: props.windowMetadata.uuid,

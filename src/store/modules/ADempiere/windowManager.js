@@ -27,11 +27,14 @@ import {
 } from '@/api/ADempiere/common/persistence.js'
 
 // constants
+import { UUID } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
 
 // utils and helper methods
+import { containerManager } from '@/utils/ADempiere/dictionary/window'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 
@@ -98,9 +101,11 @@ const windowManager = {
      * @param {array} filters used as where clause
      * @param {number} pageNumber
      * @returns {promise} array entities list
+     * @returns {promise} array current entity
      */
     getEntities({
       commit,
+      dispatch,
       getters,
       rootGetters
     }, {
@@ -111,16 +116,20 @@ const windowManager = {
       pageNumber
     }) {
       return new Promise(resolve => {
+        const storedPage = getters.getTabPageNumber({
+          containerUuid
+        })
         if (isEmptyValue(pageNumber)) {
           // refresh with same page
-          pageNumber = getters.getTabPageNumber({
-            containerUuid
-          })
+          pageNumber = storedPage
         }
         const currentPageNumber = pageNumber
         const pageToken = generatePageToken({ pageNumber })
 
-        const { contextColumnNames, name, linkColumnName, parentColumnName } = rootGetters.getStoredTab(parentUuid, containerUuid)
+        const {
+          contextColumnNames, name, linkColumnName,
+          parentColumnName, fieldsList
+        } = rootGetters.getStoredTab(parentUuid, containerUuid)
 
         // add filters with link column name and parent column name
         if (!isEmptyValue(linkColumnName) &&
@@ -177,6 +186,7 @@ const windowManager = {
           containerUuid
         })
 
+        const currentRoute = router.app._route
         getEntities({
           windowUuid: parentUuid,
           tabUuid: containerUuid,
@@ -195,6 +205,52 @@ const windowManager = {
               }
             })
 
+            // update current record
+            if (!isEmptyValue(dataToStored)) {
+              let currentRow = dataToStored.at(0) // set first record
+              const recordUuid = rootGetters.getUuidOfContainer(containerUuid)
+              if (!isEmptyValue(recordUuid) && storedPage === pageNumber) {
+                const recordFromUuid = dataToStored.find(record => record[UUID] === recordUuid)
+                if (!isEmptyValue(recordFromUuid)) {
+                  currentRow = recordFromUuid
+                }
+              }
+
+              // remove datatables app attributes
+              for (const key in ROW_ATTRIBUTES) {
+                delete currentRow[key]
+              }
+
+              const defaultValues = getters.getParsedDefaultValues({
+                parentUuid,
+                containerUuid,
+                isSOTrxMenu: currentRoute.meta.isSalesTransaction,
+                fieldsList,
+                formatToReturn: 'object'
+              })
+              const attributes = convertObjectToKeyValue({
+                object: {
+                  ...defaultValues,
+                  ...currentRow
+                }
+              })
+              dispatch('updateValuesOfContainer', {
+                parentUuid,
+                containerUuid,
+                attributes
+              })
+
+              // active logics with set records values
+              fieldsList.forEach(field => {
+                // change Dependents
+                dispatch('changeDependentFieldsList', {
+                  field,
+                  fieldsList,
+                  containerManager
+                })
+              })
+            }
+
             commit('setTabData', {
               parentUuid,
               containerUuid,
@@ -207,7 +263,8 @@ const windowManager = {
 
             resolve(dataToStored)
           })
-          .catch(() => {
+          .catch(error => {
+            console.warn(`Error get entites`, error.message)
             commit('setTabData', {
               parentUuid,
               isLoaded: true,
@@ -322,7 +379,7 @@ const windowManager = {
      * Used by result in tab
      * @param {string} containerUuid
      */
-    getTabData: (state, getters) => ({ containerUuid }) => {
+    getTabData: (state) => ({ containerUuid }) => {
       return state.tabData[containerUuid] || {
         parentUuid: undefined,
         containerUuid,
@@ -336,7 +393,9 @@ const windowManager = {
       }
     },
     getIsLoadedTabRecord: (state, getters) => ({ containerUuid }) => {
-      return state.tabData[containerUuid].isLoaded
+      return getters.getTabData({
+        containerUuid
+      }).isLoaded || false
     },
     getTabRecordCount: (state, getters) => ({ containerUuid }) => {
       return getters.getTabData({ containerUuid }).recordCount

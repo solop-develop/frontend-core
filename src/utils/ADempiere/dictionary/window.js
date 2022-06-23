@@ -313,11 +313,35 @@ export const refreshRecords = {
   icon: 'el-icon-refresh',
   actionName: 'refreshRecords',
   refreshRecords: ({ parentUuid, containerUuid }) => {
-    // used to window
+    // refresh records on current tab
     store.dispatch('getEntities', {
       parentUuid,
       containerUuid
     })
+
+    // get tabs with same table to refresh without current tab
+    const tableName = store.getters.getTableName(parentUuid, containerUuid)
+    const tabsWithSameTable = store.getters.getStoredTabsFromTableName({
+      parentUuid,
+      containerUuid,
+      tableName
+    })
+    // update records on tabs with same table
+    if (!isEmptyValue(tabsWithSameTable)) {
+      tabsWithSameTable.forEach(tab => {
+        const isLoaded = store.getters.getIsLoadedTabRecord({
+          containerUuid: tab.uuid
+        })
+        // if loaded data refresh this data
+        // TODO: Verify with one entity, not all list
+        if (isLoaded) {
+          store.dispatch('getEntities', {
+            parentUuid,
+            containerUuid: tab.uuid
+          })
+        }
+      })
+    }
   }
 }
 
