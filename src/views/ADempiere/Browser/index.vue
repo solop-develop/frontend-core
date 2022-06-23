@@ -21,7 +21,6 @@
     v-if="isLoadedMetadata"
     key="browser-loaded"
     class="view-base browser-view"
-    style="height: 86vh;"
   >
     <el-header v-if="isShowContextMenu">
       <div style="float: right;padding-top: 1%;">
@@ -59,6 +58,7 @@
 
       <!-- result of records in the table -->
       <default-table
+        id="mainBrowser"
         class="browser-table-result"
         :container-uuid="browserUuid"
         :container-manager="containerManagerTable"

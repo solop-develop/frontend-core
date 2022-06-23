@@ -287,6 +287,10 @@ export const containerManager = {
     })
   },
 
+  panelMain() {
+    return 'mainBrowser'
+  },
+
   getPageNumber({ containerUuid }) {
     return store.getters.getBrowserPageNumber({
       containerUuid

@@ -568,6 +568,10 @@ export const containerManager = {
     return new Promise()
   },
 
+  panelMain() {
+    return 'mainWindow'
+  },
+
   isDisplayedField,
   isDisplayedColumn,
 
