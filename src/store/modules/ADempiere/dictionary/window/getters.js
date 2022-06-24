@@ -300,6 +300,59 @@ export default {
       return attributesList
     }
     return attributesObject
+  },
+
+  /**
+   * Available fields to showed/hidden
+   * to show, used in components FilterFields
+   * @param {string} containerUuid
+   * @param {array} fieldsList
+   * @param {function} showedMethod
+   * @param {boolean} isEvaluateShowed
+   * @param {boolean} isEvaluateDefaultValue
+   */
+  getTabFieldsListToHidden: (state, getters) => ({
+    parentUuid,
+    containerUuid,
+    isTable = false,
+    fieldsList = [],
+    showedMethod = isDisplayedField,
+    isEvaluateDefaultValue = false,
+    isEvaluateShowed = true
+  }) => {
+    if (isEmptyValue(fieldsList)) {
+      fieldsList = getters.getStoredFieldsFromTab(parentUuid, containerUuid)
+    }
+
+    // all optionals (not mandatory) fields
+    return fieldsList
+      .filter(fieldItem => {
+        const { defaultValue } = fieldItem
+        const isMandatory = fieldItem.isMandatory || fieldItem.isMandatoryFromLogic
+
+        // parent column
+        if (fieldItem.isParent) {
+          return true
+        }
+        if (isMandatory && isEmptyValue(defaultValue) && !isTable) {
+          return false
+        }
+
+        if (isEvaluateDefaultValue && isEvaluateShowed) {
+          return showedMethod(fieldItem) &&
+            !isEmptyValue(defaultValue)
+        }
+
+        if (isEvaluateDefaultValue) {
+          return !isEmptyValue(defaultValue)
+        }
+
+        if (isEvaluateShowed) {
+          return showedMethod(fieldItem)
+        }
+
+        return true
+      })
   }
 
 }

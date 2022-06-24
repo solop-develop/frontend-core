@@ -46,6 +46,24 @@ export function isDisplayedField({ isDisplayed, displayLogic, isDisplayedFromLog
 }
 
 /**
+ * Default showed field from user
+ */
+export function evaluateDefaultFieldShowed({ defaultValue, isMandatory, isShowedFromUser, isParent }) {
+  if (String(defaultValue).includes('@SQL=')) {
+    return true
+  }
+
+  if (isEmptyValue(defaultValue) && isMandatory && !isParent) {
+    return true
+  }
+
+  if (isShowedFromUser) {
+    return true
+  }
+  return false
+}
+
+/**
  * Tab manager mandatory logic
  * @param {boolean} isMandatoryFromLogic
  * @returns {boolean}
@@ -503,7 +521,8 @@ export function generateTabs({
         isReadOnlyFromForm: true,
         isShowedFromUser: false,
         firstTabUuid
-      }
+      },
+      evaluateDefaultFieldShowed
     })
   })
 
@@ -545,6 +564,16 @@ export const containerManager = {
   getFieldsList: ({ parentUuid, containerUuid }) => {
     return store.getters.getStoredFieldsFromTab(parentUuid, containerUuid)
   },
+  getFieldsToHidden: ({ parentUuid, containerUuid, fieldsList, showedMethod, isEvaluateDefaultValue, isTable }) => {
+    return store.getters.getTabFieldsListToHidden({
+      parentUuid,
+      containerUuid,
+      fieldsList,
+      showedMethod,
+      isEvaluateDefaultValue,
+      isTable
+    })
+  },
 
   actionPerformed: function(eventInfo) {
     console.log('actionPerformed: ', eventInfo)
@@ -573,6 +602,12 @@ export const containerManager = {
   },
 
   isDisplayedField,
+  isDisplayedDefault: ({ isMandatory, isParent, defaultValue, parsedDefaultValue }) => {
+    if (isMandatory && !isParent && isEmptyValue(defaultValue)) {
+      return true
+    }
+    return false
+  },
   isDisplayedColumn,
 
   isReadOnlyField(field) {

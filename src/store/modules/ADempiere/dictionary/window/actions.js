@@ -41,9 +41,10 @@ import {
   sharedLink,
   recordAccess
 } from '@/utils/ADempiere/constants/actionsMenuList.js'
-import evaluator, { getContext, getContextAttributes } from '@/utils/ADempiere/contextUtils.js'
+import evaluator from '@/utils/ADempiere/evaluator'
+import { getContext, getContextAttributes } from '@/utils/ADempiere/contextUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification'
-import mixinReport from '@/views/ADempiere/Report/mixinReport'
+import { containerManager as containerManagerReport } from '@/utils/ADempiere/dictionary/report'
 
 export default {
   addWindow({ commit, dispatch }, windowResponse) {
@@ -110,12 +111,10 @@ export default {
             ...generateReportOfWindow
           }
 
-          const { containerManager } = mixinReport(process.uuid)
-
           dispatch('setModalDialog', {
             containerUuid: process.uuid,
             title: process.name,
-            containerManager,
+            containerManager: containerManagerReport,
             doneMethod: () => {
               const fieldsList = rootGetters.getReportParameters({
                 containerUuid: process.uuid

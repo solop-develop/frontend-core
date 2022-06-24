@@ -19,6 +19,9 @@ import store from '@/store'
 
 // utils and helpers methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import {
+  containerManager as containerManagerProcess
+} from '@/utils/ADempiere/dictionary/process'
 
 /**
  * Suppoerted render files
@@ -169,6 +172,50 @@ export const changeParameters = {
     store.commit('setShowedModalDialog', {
       containerUuid,
       isShowed: true
+    })
+  }
+}
+
+/**
+ * Container manager to Report panel
+ */
+export const containerManager = {
+  ...containerManagerProcess,
+
+  getPanel({ containerUuid }) {
+    return store.getters.getStoredReport(containerUuid)
+  },
+  getFieldsList({ containerUuid }) {
+    return store.getters.getStoredFieldsFromReport(containerUuid)
+  },
+  getFieldsToHidden: ({ parentUuid, containerUuid, fieldsList, showedMethod, isEvaluateDefaultValue, isTable }) => {
+    return store.getters.getReportParametersListToHidden({
+      parentUuid,
+      containerUuid,
+      fieldsList,
+      showedMethod,
+      isEvaluateDefaultValue,
+      isTable
+    })
+  },
+
+  changeFieldShowedFromUser({ containerUuid, fieldsShowed }) {
+    store.dispatch('changeReportFieldShowedFromUser', {
+      containerUuid,
+      fieldsShowed
+    })
+  },
+
+  actionPerformed: ({ field, value }) => {
+    // store.dispatch('reportActionPerformed', {
+    //   field,
+    //   value
+    // })
+  },
+
+  setDefaultValues: ({ containerUuid }) => {
+    store.dispatch('setReportDefaultValues', {
+      containerUuid
     })
   }
 }

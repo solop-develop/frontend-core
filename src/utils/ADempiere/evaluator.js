@@ -34,21 +34,21 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
  *  - @Name@>J
  *  - Strings may be in single quotes (optional)
  */
-class evaluator {
+export class evaluator {
   /**
    * Prefix context of global prefix (#)
    */
-  static GLOBAL_CONTEXT_PREFIX = `#`
+  static GLOBAL_CONTEXT_PREFIX = '#'
 
   /**
    * Prefix context of accounting prefix ($)
    */
-  static ACCOUNTING_CONTEXT_PREFIX = `$`
+  static ACCOUNTING_CONTEXT_PREFIX = '$'
 
   /**
    * Prefix context of preference prefix (P|)
    */
-  static PREFERENCE_CONTEXT_PREFIX = `P|`
+  static PREFERENCE_CONTEXT_PREFIX = 'P|'
 
   /**
    * Evaluate logic's

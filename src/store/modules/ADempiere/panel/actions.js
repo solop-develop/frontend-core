@@ -19,7 +19,8 @@ import {
   typeValue
 } from '@/utils/ADempiere/valueUtils.js'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
-import evaluator, { getContext, parseContext } from '@/utils/ADempiere/contextUtils.js'
+import evaluator from '@/utils/ADempiere/evaluator'
+import { getContext, parseContext } from '@/utils/ADempiere/contextUtils'
 import { fieldIsDisplayed } from '@/utils/ADempiere/dictionaryUtils.js'
 import { assignedGroup } from '@/utils/ADempiere/dictionary/panel'
 import router from '@/router'

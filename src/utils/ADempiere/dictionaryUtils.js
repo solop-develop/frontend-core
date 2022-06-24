@@ -44,16 +44,13 @@ export function generateField({
   fieldToGenerate,
   moreAttributes,
   typeRange = false,
+  evaluateDefaultFieldShowed = ({ isShowedFromUser }) => {
+    return isShowedFromUser
+  },
   isSOTrxMenu
 }) {
   const { columnName } = fieldToGenerate
-  let isShowedFromUser = false
   let isGetServerValue = false
-  // verify if it no overwrite value with ...moreAttributes
-  if (moreAttributes.isShowedFromUser) {
-    isShowedFromUser = moreAttributes.isShowedFromUser
-  }
-
   let isColumnReadOnlyForm = false
   let isChangedAllForm = false
   let valueIsReadOnlyForm
@@ -129,7 +126,7 @@ export function generateField({
     })
 
     if (String(fieldToGenerate.defaultValue).includes('@SQL=')) {
-      isShowedFromUser = true
+      // isShowedFromUser = true
       isGetServerValue = true
     }
 
@@ -186,8 +183,8 @@ export function generateField({
     dependentFieldsList: [],
     // TODO: Add support on server
     // app attributes
-    isShowedFromUser,
-    isShowedFromUserDefault: isShowedFromUser, // set this value when reset panel
+    isShowedFromUser: false,
+    isShowedFromUserDefault: false, // set this value when reset panel
     isShowedTableFromUser: fieldToGenerate.isDisplayed,
     isFixedTableColumn: false,
     valueType: componentReference.valueType, // value type to convert with gGRPC
@@ -225,18 +222,21 @@ export function generateField({
       field.sortNo = field.sortNo > 0 ? field.sortNo + 1 : 0
 
       // if field with value displayed in main panel
-      if (!isEmptyValue(parsedDefaultValueTo) && (fieldToGenerate.isMandatory || evaluatedLogics.isMandatoryFromLogic)) {
-        field.isShowedFromUser = true
-        field.isShowedFromUserDefault = true
-      }
+      field.isShowedFromUser = evaluateDefaultFieldShowed({
+        ...field,
+        defaultValue: parsedDefaultValueTo
+      })
     }
   }
 
   // if field with value displayed in main panel
-  if (!typeRange && isEmptyValue(fieldToGenerate.defaultValue) && (fieldToGenerate.isMandatory || evaluatedLogics.isMandatoryFromLogic)) {
-    field.isShowedFromUser = true
-    field.isShowedFromUserDefault = true
+  if (!typeRange) {
+    field.isShowedFromUser = evaluateDefaultFieldShowed({
+      ...field,
+      defaultValue: parsedDefaultValue
+    })
   }
+  field.isShowedFromUserDefault = field.isShowedFromUser
 
   // hidden field type button
   if (isHiddenField(field.displayType)) {
@@ -255,7 +255,6 @@ export function generateField({
 export function getEvaluatedLogics({
   parentUuid,
   containerUuid,
-  isDisplayed = true,
   displayLogic,
   mandatoryLogic,
   readOnlyLogic

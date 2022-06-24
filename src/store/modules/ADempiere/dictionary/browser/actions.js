@@ -32,6 +32,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { generatePanelAndFields } from '@/utils/ADempiere/dictionary/panel.js'
 import {
   isDisplayedField, isMandatoryField,
+  evaluateDefaultFieldShowed,
   refreshBrowserSearh, runProcessOfBrowser,
   zoomWindow, runDeleteable
 } from '@/utils/ADempiere/dictionary/browser.js'
@@ -54,11 +55,11 @@ export default {
               ...browserResponse,
               isShowedCriteria: true
             },
-            isAddFieldsRange: true,
             fieldOverwrite: {
               isShowedFromUser: false
             },
-            sortField: 'seqNoGrid'
+            sortField: 'seqNoGrid',
+            evaluateDefaultFieldShowed
           })
 
           browserDefinition.elementsList = {}

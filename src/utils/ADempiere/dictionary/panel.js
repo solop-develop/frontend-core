@@ -18,6 +18,7 @@
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { generateField } from '@/utils/ADempiere/dictionaryUtils.js'
 import { getFieldTemplate } from '@/utils/ADempiere/lookupFactory.js'
+import { isAddRangeField } from '@/utils/ADempiere/references'
 
 /**
  * Order the fields, then assign the groups to each field, and finally group
@@ -116,7 +117,6 @@ export function assignedGroup({
  * @param {string} parentUuid
  * @param {string} containerUuid
  * @param {object} panelMetadata
- * @param {boolean} isAddFieldsRange
  * @param {boolean} isAddFieldUuid
  * @param {boolean} isAddLinkColumn
  * @param {object} fieldOverwrite
@@ -126,11 +126,11 @@ export function generatePanelAndFields({
   parentUuid,
   containerUuid,
   panelMetadata = {},
-  isAddFieldsRange = false,
   isAddFieldUuid = false,
   isAddLinkColumn = false,
   fieldOverwrite = {},
-  sortField = 'sequence' //  sequence, sortNo, seqNoGrid
+  sortField = 'sequence', //  sequence, sortNo, seqNoGrid,
+  evaluateDefaultFieldShowed
 }) {
   const fieldAdditionalAttributes = {
     parentUuid,
@@ -153,6 +153,7 @@ export function generatePanelAndFields({
   let fieldsList = panelMetadata.fields.map((fieldItem, index) => {
     const fieldDefinition = generateField({
       fieldToGenerate: fieldItem,
+      evaluateDefaultFieldShowed,
       moreAttributes: {
         ...fieldAdditionalAttributes,
         fieldsListIndex: index
@@ -175,9 +176,10 @@ export function generatePanelAndFields({
     }
 
     // Add new field if is range number
-    if (isAddFieldsRange && fieldDefinition.isRange && componentPath === 'FieldNumber') {
+    if (isAddRangeField(fieldDefinition)) {
       const fieldRange = generateField({
         fieldToGenerate: fieldItem,
+        evaluateDefaultFieldShowed,
         moreAttributes: fieldAdditionalAttributes,
         typeRange: true
       })

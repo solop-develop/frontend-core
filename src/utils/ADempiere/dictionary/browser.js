@@ -37,6 +37,19 @@ export function isDisplayedField({ displayType, isActive, isQueryCriteria, displ
 }
 
 /**
+ * Default showed field from user
+ */
+export function evaluateDefaultFieldShowed({ defaultValue, isMandatory, isShowedFromUser }) {
+  if (isMandatory || !isEmptyValue(defaultValue)) {
+    return true
+  }
+  if (isShowedFromUser) {
+    return true
+  }
+  return false
+}
+
+/**
  * Smart Browser not manager mandatory logic, used as query
  * @param {boolean} isMandatoryFromLogic
  * @returns {boolean}
@@ -232,6 +245,15 @@ export const containerManager = {
   getFieldsList({ containerUuid }) {
     return store.getters.getStoredFieldsFromBrowser(containerUuid)
   },
+  getFieldsToHidden: ({ containerUuid, showedMethod, isEvaluateDefaultValue, isTable, fieldsList }) => {
+    return store.getters.getBrowserFieldsListToHidden({
+      containerUuid,
+      fieldsList,
+      showedMethod,
+      isEvaluateDefaultValue,
+      isTable
+    })
+  },
 
   actionPerformed({ field, value, valueTo, containerUuid }) {
     return store.dispatch('browserActionPerformed', {
@@ -253,6 +275,13 @@ export const containerManager = {
    * Is displayed field in panel single record
    */
   isDisplayedField,
+  isDisplayedDefault: ({ isMandatory, defaultValue }) => {
+    // add is showed from user
+    if (isMandatory || !isEmptyValue(defaultValue)) {
+      return true
+    }
+    return false
+  },
 
   isMandatoryField,
 

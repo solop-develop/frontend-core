@@ -17,7 +17,7 @@
 const fieldsDisplayOptions = {
   // fields showed options
   minimalistView: 'Vista Minimalista.',
-  showOAllFields: 'Mostrar Todos Los Campos.',
+  showAllFields: 'Mostrar Todos Los Campos.',
   showFieldsWithValue: 'Mostrar Campos Con Valor Por Defecto.',
   Show2Columns: 'Mostrar 2 Columnas',
   Show3Columns: 'Mostrar 3 Columnas',

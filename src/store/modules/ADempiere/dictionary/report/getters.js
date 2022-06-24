@@ -143,6 +143,53 @@ export default {
     })
 
     return reportParameters
+  },
+
+  /**
+   * Available fields to showed/hidden
+   * to show, used in components FilterFields
+   * @param {string} containerUuid
+   * @param {array} fieldsList
+   * @param {function} showedMethod
+   * @param {boolean} isEvaluateShowed
+   * @param {boolean} isEvaluateDefaultValue
+   */
+  getReportParametersListToHidden: (state, getters) => ({
+    containerUuid,
+    isTable = false,
+    fieldsList = [],
+    showedMethod = isDisplayedField,
+    isEvaluateDefaultValue = false,
+    isEvaluateShowed = true
+  }) => {
+    if (isEmptyValue(fieldsList)) {
+      fieldsList = getters.getStoredFieldsFromReport(containerUuid)
+    }
+
+    // all optionals (not mandatory) fields
+    return fieldsList
+      .filter(fieldItem => {
+        const { defaultValue } = fieldItem
+
+        if (fieldItem.isMandatory && !isTable) {
+          return false
+        }
+
+        if (isEvaluateDefaultValue && isEvaluateShowed) {
+          return showedMethod(fieldItem) &&
+            !isEmptyValue(defaultValue)
+        }
+
+        if (isEvaluateDefaultValue) {
+          return !isEmptyValue(defaultValue)
+        }
+
+        if (isEvaluateShowed) {
+          return showedMethod(fieldItem)
+        }
+
+        return true
+      })
   }
 
 }
