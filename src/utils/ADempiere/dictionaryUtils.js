@@ -30,6 +30,11 @@ import {
 } from '@/utils/ADempiere/constants/systemColumns'
 
 /**
+ * Display Column Prefix on Column Name: "DisplayColumn_ColumnName"
+ */
+export const DISPLAY_COLUMN_PREFIX = `DisplayColumn_`
+
+/**
  * Generate field to app
  * @param {object}  fieldToGenerate
  * @param {object}  moreAttributes, additional attributes
@@ -39,16 +44,13 @@ export function generateField({
   fieldToGenerate,
   moreAttributes,
   typeRange = false,
+  evaluateDefaultFieldShowed = ({ isShowedFromUser }) => {
+    return isShowedFromUser
+  },
   isSOTrxMenu
 }) {
   const { columnName } = fieldToGenerate
-  let isShowedFromUser = false
   let isGetServerValue = false
-  // verify if it no overwrite value with ...moreAttributes
-  if (moreAttributes.isShowedFromUser) {
-    isShowedFromUser = moreAttributes.isShowedFromUser
-  }
-
   let isColumnReadOnlyForm = false
   let isChangedAllForm = false
   let valueIsReadOnlyForm
@@ -56,11 +58,13 @@ export function generateField({
   let isColumnDocumentStatus = false
 
   const componentReference = evalutateTypeField(fieldToGenerate.displayType)
-  let evaluatedLogics = {
-    isDisplayedFromLogic: fieldToGenerate.isDisplayed || fieldToGenerate.isQueryCriteria,
-    isMandatoryFromLogic: false,
-    isReadOnlyFromLogic: false
-  }
+
+  // evaluate logics (diplayed, mandatory, readOnly)
+  let evaluatedLogics = getEvaluatedLogics({
+    parentUuid: moreAttributes.parentUuid,
+    containerUuid: moreAttributes.containerUuid,
+    ...fieldToGenerate
+  })
 
   let parentFieldsList = []
   let parsedDefaultValue = fieldToGenerate.defaultValue
@@ -122,7 +126,7 @@ export function generateField({
     })
 
     if (String(fieldToGenerate.defaultValue).includes('@SQL=')) {
-      isShowedFromUser = true
+      // isShowedFromUser = true
       isGetServerValue = true
     }
 
@@ -141,19 +145,11 @@ export function generateField({
       })
 
       if (String(fieldToGenerate.defaultValueTo).includes('@SQL=')) {
-        isShowedFromUser = true
         isGetServerValue = true
       }
     }
 
     parentFieldsList = getParentFields(fieldToGenerate)
-
-    // evaluate logics (diplayed, mandatory, readOnly)
-    evaluatedLogics = getEvaluatedLogics({
-      parentUuid: moreAttributes.parentUuid,
-      containerUuid: moreAttributes.containerUuid,
-      ...fieldToGenerate
-    })
 
     // manage document status and tag document status
     isColumnDocumentStatus = isDocumentStatus({
@@ -172,7 +168,7 @@ export function generateField({
     componentPath: componentReference.componentPath,
     isSupported: componentReference.isSupported,
     size: componentReference.size || DEFAULT_SIZE,
-    displayColumnName: `DisplayColumn_${columnName}`, // key to display column
+    displayColumnName: DISPLAY_COLUMN_PREFIX + columnName, // key to display column
     // value attributes
     parsedDefaultValue,
     parsedDefaultValueTo,
@@ -187,8 +183,8 @@ export function generateField({
     dependentFieldsList: [],
     // TODO: Add support on server
     // app attributes
-    isShowedFromUser,
-    isShowedFromUserDefault: isShowedFromUser, // set this value when reset panel
+    isShowedFromUser: false,
+    isShowedFromUserDefault: false, // set this value when reset panel
     isShowedTableFromUser: fieldToGenerate.isDisplayed,
     isFixedTableColumn: false,
     valueType: componentReference.valueType, // value type to convert with gGRPC
@@ -226,16 +222,21 @@ export function generateField({
       field.sortNo = field.sortNo > 0 ? field.sortNo + 1 : 0
 
       // if field with value displayed in main panel
-      if (!isEmptyValue(parsedDefaultValueTo)) {
-        field.isShowedFromUser = true
-      }
+      field.isShowedFromUser = evaluateDefaultFieldShowed({
+        ...field,
+        parsedDefaultValue: parsedDefaultValueTo
+      })
     }
   }
 
   // if field with value displayed in main panel
-  if (!typeRange && !isEmptyValue(parsedDefaultValue)) {
-    field.isShowedFromUser = true
+  if (!typeRange) {
+    field.isShowedFromUser = evaluateDefaultFieldShowed({
+      ...field,
+      parsedDefaultValue
+    })
   }
+  field.isShowedFromUserDefault = field.isShowedFromUser
 
   // hidden field type button
   if (isHiddenField(field.displayType)) {
@@ -254,7 +255,6 @@ export function generateField({
 export function getEvaluatedLogics({
   parentUuid,
   containerUuid,
-  isDisplayed = true,
   displayLogic,
   mandatoryLogic,
   readOnlyLogic

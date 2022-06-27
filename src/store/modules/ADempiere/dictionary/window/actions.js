@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import language from '@/lang'
 import router from '@/router'
 import store from '@/store'
 
@@ -22,6 +23,7 @@ import { requestWindowMetadata } from '@/api/ADempiere/dictionary/window.js'
 
 // constants
 import { containerManager } from '@/utils/ADempiere/dictionary/window'
+import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -32,13 +34,17 @@ import {
   runProcessOfWindow,
   generateReportOfWindow,
   openBrowserAssociated,
-  refreshRecords
+  refreshRecords,
+  undoChange
 } from '@/utils/ADempiere/dictionary/window.js'
 import {
   sharedLink,
   recordAccess
 } from '@/utils/ADempiere/constants/actionsMenuList.js'
-import evaluator, { getContext } from '@/utils/ADempiere/contextUtils.js'
+import evaluator from '@/utils/ADempiere/evaluator'
+import { getContext, getContextAttributes } from '@/utils/ADempiere/contextUtils.js'
+import { showMessage } from '@/utils/ADempiere/notification'
+import { containerManager as containerManagerReport } from '@/utils/ADempiere/dictionary/report'
 
 export default {
   addWindow({ commit, dispatch }, windowResponse) {
@@ -72,7 +78,7 @@ export default {
     })
   },
 
-  setTabActionsMenu({ commit, dispatch, getters }, {
+  setTabActionsMenu({ commit, dispatch, getters, rootGetters }, {
     parentUuid,
     containerUuid
   }) {
@@ -81,28 +87,79 @@ export default {
     const actionsList = []
 
     actionsList.push(createNewRecord)
+    actionsList.push(undoChange)
 
     if (!isEmptyValue(tabDefinition.processes)) {
+      let relatedColumns = []
+      const parentColumns = tabDefinition.fieldsList
+        .filter(fieldItem => {
+          return fieldItem.isParent || fieldItem.isKey || fieldItem.isMandatory
+        })
+        .map(fieldItem => {
+          return fieldItem.columnName
+        })
+
+      if (!isEmptyValue(tabDefinition.parentColumn)) {
+        relatedColumns = relatedColumns.push(tabDefinition.parentColumn)
+      }
+      relatedColumns = relatedColumns.concat(parentColumns)
+
       tabDefinition.processes.forEach(process => {
         let defaultAction = {}
         if (process.isReport) {
           defaultAction = {
             ...generateReportOfWindow
           }
+
           dispatch('setModalDialog', {
             containerUuid: process.uuid,
             title: process.name,
+            containerManager: containerManagerReport,
             doneMethod: () => {
+              const fieldsList = rootGetters.getReportParameters({
+                containerUuid: process.uuid
+              })
+              const emptyMandatory = rootGetters.getFieldsListEmptyMandatory({
+                containerUuid: process.uuid,
+                fieldsList
+              })
+              if (!isEmptyValue(emptyMandatory)) {
+                showMessage({
+                  message: language.t('notifications.mandatoryFieldMissing') + emptyMandatory,
+                  type: 'info'
+                })
+                return
+              }
+
+              const recordUuid = rootGetters.getUuidOfContainer(containerUuid)
+              const { tableName } = tabDefinition
+
               dispatch('startReport', {
                 parentUuid: containerUuid,
-                containerUuid: process.uuid
+                containerUuid: process.uuid,
+                recordUuid,
+                tableName
+              })
+            },
+            beforeOpen: () => {
+              // set context values
+              const parentValues = getContextAttributes({
+                parentUuid,
+                containerUuid,
+                contextColumnNames: relatedColumns
+              })
+
+              dispatch('updateValuesOfContainer', {
+                containerUuid: process.uuid,
+                attributes: parentValues
               })
             },
             loadData: () => {
-              // TODO: Verify it
-              dispatch('getProcessDefinitionFromServer', {
-                uuid: process.uuid
-              })
+              const reportDefinition = rootGetters.getStoredReport(process.uuid)
+              if (!isEmptyValue(reportDefinition)) {
+                return Promise.resolve(reportDefinition)
+              }
+
               return dispatch('getReportDefinitionFromServer', {
                 uuid: process.uuid
               })
@@ -123,12 +180,61 @@ export default {
             containerUuid: process.uuid,
             title: process.name,
             doneMethod: () => {
+              // TODO: Get container uuid with multiple tabs and same process
+              const recordUuid = rootGetters.getUuidOfContainer(containerUuid)
+              const { tableName } = tabDefinition
+
               dispatch('startProcessOfWindows', {
                 parentUuid: containerUuid,
-                containerUuid: process.uuid
+                containerUuid: process.uuid,
+                tableName,
+                recordUuid
+              }).then(async processResponse => {
+                if (processResponse.isError) {
+                  return
+                }
+
+                // update records
+                await dispatch('getEntities', {
+                  parentUuid,
+                  containerUuid
+                })
+                // update records and logics on child tabs
+                tabDefinition.childTabs.filter(tabItem => {
+                  // get loaded tabs with records
+                  return store.getters.getIsLoadedTabRecord({
+                    containerUuid: tabItem.uuid
+                  })
+                }).forEach(tabItem => {
+                  // if loaded data refresh this data
+                  // TODO: Verify with get one entity, not get all list
+                  store.dispatch('getEntities', {
+                    parentUuid,
+                    containerUuid: tabItem.uuid,
+                    pageNumber: 1 // reload with first page
+                  })
+                })
+              })
+            },
+            beforeOpen: () => {
+              // set context values
+              const parentValues = getContextAttributes({
+                parentUuid,
+                containerUuid,
+                contextColumnNames: relatedColumns
+              })
+
+              dispatch('updateValuesOfContainer', {
+                containerUuid: process.uuid,
+                attributes: parentValues
               })
             },
             loadData: () => {
+              const reportDefinition = rootGetters.getStoredProcess(process.uuid)
+              if (!isEmptyValue(reportDefinition)) {
+                return Promise.resolve(reportDefinition)
+              }
+
               return dispatch('getProcessDefinitionFromServer', {
                 uuid: process.uuid
               })
@@ -282,7 +388,7 @@ export default {
         query
       }, () => {})
 
-      let defaultAttributes = rootGetters.getParsedDefaultValues({
+      let defaultAttributes = rootGetters.getTabParsedDefaultValue({
         parentUuid,
         containerUuid,
         isSOTrxMenu: currentRoute.meta.isSalesTransaction,
@@ -309,15 +415,27 @@ export default {
         })
       }
 
-      defaultAttributes.forEach(attribute => {
-        commit('addChangeToPersistenceQueue', {
-          ...attribute,
-          containerUuid
-        }, {
-          root: true
-        })
+      // update fields values
+      dispatch('updateValuesOfContainer', {
+        parentUuid,
+        containerUuid,
+        isOverWriteParent,
+        attributes: defaultAttributes
+      }, {
+        root: true
+      })
 
-        if (!attribute.columnName.includes('DisplayColumn')) {
+      defaultAttributes.forEach(attribute => {
+        if (!attribute.columnName.includes(DISPLAY_COLUMN_PREFIX)) {
+          if (!isEmptyValue(attribute.value)) {
+            commit('addChangeToPersistenceQueue', {
+              ...attribute,
+              containerUuid
+            }, {
+              root: true
+            })
+          }
+
           const field = rootGetters.getStoredFieldFromTab({
             windowUuid: parentUuid,
             tabUuid: containerUuid,
@@ -330,15 +448,6 @@ export default {
             containerManager
           })
         }
-      })
-
-      dispatch('updateValuesOfContainer', {
-        parentUuid,
-        containerUuid,
-        isOverWriteParent,
-        attributes: defaultAttributes
-      }, {
-        root: true
       })
 
       resolve(defaultAttributes)

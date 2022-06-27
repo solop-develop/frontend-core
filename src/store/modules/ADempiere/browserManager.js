@@ -141,13 +141,14 @@ const browserControl = {
           type: 'info'
         })
 
-        const currentPageNumber = pageNumber
-
-        let pageToken
-        if (!isEmptyValue(pageNumber)) {
-          pageNumber-- // TODO: Remove with fix in backend
-          pageToken = generatePageToken({ pageNumber })
+        if (isEmptyValue(pageNumber)) {
+          // refresh with same page
+          pageNumber = getters.getBrowserPageNumber({
+            containerUuid
+          })
         }
+        const currentPageNumber = pageNumber
+        const pageToken = generatePageToken({ pageNumber })
 
         const { fieldsList, contextColumnNames } = rootGetters.getStoredBrowser(containerUuid)
 
@@ -320,6 +321,15 @@ const browserControl = {
             console.warn(`Error Delete Records of Smart Browser: ${error.message}. Code: ${error.code}.`)
             reject(error)
           })
+      })
+    },
+
+    clearBrowserData({ commit }, {
+      containerUuid
+    }) {
+      // clear data on this browser
+      commit('clearBrowserData', {
+        containerUuid
       })
     }
   },

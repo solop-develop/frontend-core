@@ -159,12 +159,17 @@ const getters = {
     // all optionals (not mandatory) fields
     return fieldsList
       .filter(fieldItem => {
+        const { defaultValue } = fieldItem
         const isMandatory = fieldItem.isMandatory || fieldItem.isMandatoryFromLogic
-        if (isMandatory && !isTable) {
+
+        // parent column
+        if (fieldItem.isParent) {
+          return true
+        }
+        if (isMandatory && isEmptyValue(defaultValue) && !isTable) {
           return false
         }
 
-        const { defaultValue } = fieldItem
         if (isEvaluateDefaultValue && isEvaluateShowed) {
           return showedMethod(fieldItem) &&
             !isEmptyValue(defaultValue)
@@ -342,7 +347,7 @@ const getters = {
               uuid
             })
             if (!isEmptyValue(optionsList)) {
-              const option = optionsList.find(item => item.id === parsedDefaultValue)
+              const option = optionsList.find(item => item.value === parsedDefaultValue)
               if (!isEmptyValue(option)) {
                 displayedValue = option.displayedValue
               }

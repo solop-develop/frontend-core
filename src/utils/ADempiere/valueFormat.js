@@ -36,6 +36,9 @@ export function convertObjectToKeyValue({
   keyName = 'columnName',
   valueName = 'value'
 }) {
+  if (isEmptyValue(object)) {
+    return []
+  }
   return Object.keys(object).map(key => {
     const returnPairs = {}
     returnPairs[keyName] = key

@@ -1,36 +1,30 @@
 # Proceso
 
-El componente de "Proceso", Muestra una vista minimalista la cual está conformada de  múltiples parámetros con los cuales se utilizan para ejecutar el proceso actual. Este componente también cuenta con validaciones dinámicas y visualización de los campos.
+El componente de **Proceso** Muestra una vista minimalista la cual está conformada de  múltiples parámetros con los cuales se utilizan para ejecutar el proceso actual. Este componente también cuenta con validaciones dinámicas y visualización de los campos.
 
-#
+## Interfaz
 
-## Procesos en Versión de Escritorio ADempiere-ZK
+### Procesos en Versión de Escritorio ADempiere-ZK
 
 <img :src="$withBase('/images/components/process/zk.png')" alt="Procesos en Versión de Escritorio ZK" width="600px">
 
-## Procesos en Versión Escritorio ADempiere-Vue
+### Procesos en Versión Escritorio ADempiere-Vue
+
+Este conformado por un panel donde se encuentran [**Visualización de los campos**](#visualizacion-de-los-campos) y un [**Menú de Ejecución**](#menu-del-componente-proceso) ubicado en la parte superior alineado a la derecha
 
 <img :src="$withBase('/images/components/process/vue.png')" alt="Procesos en Versión Escritorio" width="600px">
 
-## Procesos en Versión Móvil ADempiere-Vue
+### Procesos en Versión Móvil ADempiere-Vue
+Este conformado por un panel donde se encuentran [**Visualización de los campos**](#visualizacion-de-los-campos) y un [**Menú de Ejecución**](#menu-del-componente-proceso) ubicado en la parte superior alineado a la derecha
 
 <img :src="$withBase('/images/components/process/vue-mobile.png')" alt="Procesos en Versión Móvil" width="600px">
 
-Dicho componente también cuenta con un menú ubicado en la parte superior alineado a la derecha. El cual está conformada por 3 opciones Ejecución, Relaciones y Referencias.
-
 
 ## **Menú del Componente Proceso**
-<img :src="$withBase('/images/components/process/menu-process.png')" alt="Menu de Procesos en Versión Escritorio" width="800px">
-
 
   - **Ejecución:** Esta opción cuenta con todas las ejecuciones del proceso actual y se identifica con un fondo azul. Esta opción es tanto como de ejecución rápida como también una  lista desplegable con el nombre del proceso y descripción. Por defecto la acción principal de la lista de ejecución siempre esta de primera 
-  <br>
-  <img :src="$withBase('/images/components/process/menu-action.gif')" alt="Procesos en Versión Escritorio" width="800px">
-  - **Relaciones:** Esta opción cuenta con todas las Ventanas, Procesos, Smart Browser y Reporte que estén relacionada con el proceso actual. En caso de tener relaciones esta opción cuenta con una lista desplegable el cual al seleccionar una opción redirigirá a la opción seleccionada  y esta opción se identifica con un fondo verde.
-  <img :src="$withBase('/images/components/process/menu-releations.gif')" alt="Procesos en Versión Escritorio" width="800px">
-  <br>
-  - **Referencia:** Esta opción se encuentra deshabilitada para los procesos ya que no es relevante para su funcionamiento y esta opción se identifica con un fondo anaranjado.
-  <img :src="$withBase('/images/components/process/menu-referens.gif')" alt="Procesos en Versión Escritorio" width="800px">
+
+<img :src="$withBase('/images/components/process/menu-process.png')" alt="Menu de Procesos en Versión Escritorio" width="800px">
 
 ## Visualización de los campos
 
@@ -38,15 +32,41 @@ Para una vista más minimalista y sencilla los campos en el componente proceso a
 
 <img :src="$withBase('/images/components/process/field.gif')" width="800px">
 
+## ¿Cómo Funciona ?
+### Versión de Escritorio
 
-## ¿Cómo se utiliza en la versión de Escritorio?
-
-En la versión de escritorio debe llenar todos los campos obligatorio y dirigirse al menu para poder ejecutar el proceso
+En la versión de escritorio debe llenar todos los campos obligatorio y dirigirse al menú para poder ejecutar el proceso
 
 <img :src="$withBase('/images/components/process/run-process.gif')" />
 
-## ¿Cómo se utiliza en la versión móvil?
+### Versión móvil
 
-En la versión de escritorio debe llenar todos los campos obligatorio y dirigirse al menu para poder ejecutar el proceso
+En la versión de móvil debe llenar todos los campos obligatorio y dirigirse al menú para poder ejecutar el proceso
 
 <img :src="$withBase('/images/components/process/run-process-mobile.gif')"  width="800px"/>
+
+
+## Opciones para el Desarrollador
+
+### Ubicación de Archivos
+Ventana de [**Proceso**](#proceso) se encuentra en la siguiente ruta:
+
+
+```bash
+    └─ src                              # Código fuente principal
+        └──views            			# Vistas globales
+              └───ADempiere             # Vistas específicos de ADempiere
+                    └── Process     	# Contenedor del Proceso
+```
+Aquí puede ver el archivo [**Process**](https://github.com/solop-develop/frontend-core/blob/experimental/src/views/ADempiere/Process/index.vue)
+
+Lógicas de la ventana de [**Proceso**](#proceso) se encuentra en la siguiente ruta:
+
+```bash
+    └─ src                                   # Código fuente principal
+        └──views              			     # Vistas globales
+                └─ADempiere                  # Vistas específicos de ADempiere
+                    └── Process         	 # Contenedor del Visor de Proceso
+                      └── mixinProcess.js    # Contenedor de las Logicas de Reporte
+```
+Aquí puede ver el archivo [**mixinProcess.js**](https://github.com/solop-develop/frontend-core/blob/experimental/src/api/ADempiere/mixinProcess.js)

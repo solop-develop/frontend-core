@@ -21,6 +21,7 @@ import store from '@/store'
 import { isHiddenField } from '@/utils/ADempiere/references'
 import { showMessage, showNotification } from '@/utils/ADempiere/notification.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { OPERATOR_IN } from '@/utils/ADempiere/dataUtils.js'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 
 /**
@@ -33,6 +34,19 @@ export function isDisplayedField({ displayType, isActive, isQueryCriteria, displ
   }
 
   return isActive && isQueryCriteria && (isEmptyValue(displayLogic) || isDisplayedFromLogic)
+}
+
+/**
+ * Default showed field from user
+ */
+export function evaluateDefaultFieldShowed({ defaultValue, parsedDefaultValue, isMandatory, isShowedFromUser }) {
+  if (isMandatory) {
+    return true
+  }
+  if (!isEmptyValue(defaultValue) || !isEmptyValue(parsedDefaultValue)) {
+    return true
+  }
+  return Boolean(isShowedFromUser)
 }
 
 /**
@@ -198,8 +212,24 @@ export const zoomWindow = {
   type: 'zoom',
   actionName: 'zoomWindow',
   uuid: null,
-  zoomWindow: ({ uuid }) => {
+  zoomWindow: ({ uuid, containerUuid }) => {
+    let filters
+    const browser = store.getters.getStoredBrowser(containerUuid)
+    const selection = store.getters.getBrowserSelectionsList({ containerUuid })
+    if (!isEmptyValue(selection) && !isEmptyValue(browser)) {
+      const keyColumn = browser.keyColumn
+      const elementColumn = browser.elementsList[keyColumn]
+      const listRecord = selection.map(list => list[keyColumn])
+      filters = [{
+        columnName: elementColumn,
+        values: listRecord,
+        operator: OPERATOR_IN.operator
+      }]
+    }
     zoomIn({
+      query: {
+        filters
+      },
       uuid
     })
   }
@@ -214,6 +244,15 @@ export const containerManager = {
   },
   getFieldsList({ containerUuid }) {
     return store.getters.getStoredFieldsFromBrowser(containerUuid)
+  },
+  getFieldsToHidden: ({ containerUuid, showedMethod, isEvaluateDefaultValue, isTable, fieldsList }) => {
+    return store.getters.getBrowserFieldsListToHidden({
+      containerUuid,
+      fieldsList,
+      showedMethod,
+      isEvaluateDefaultValue,
+      isTable
+    })
   },
 
   actionPerformed({ field, value, valueTo, containerUuid }) {
@@ -236,6 +275,13 @@ export const containerManager = {
    * Is displayed field in panel single record
    */
   isDisplayedField,
+  isDisplayedDefault: ({ isMandatory, defaultValue }) => {
+    // add is showed from user
+    if (isMandatory || !isEmptyValue(defaultValue)) {
+      return true
+    }
+    return false
+  },
 
   isMandatoryField,
 
@@ -268,6 +314,10 @@ export const containerManager = {
     return store.getters.getBrowserRecordCount({
       containerUuid
     })
+  },
+
+  panelMain() {
+    return 'mainBrowser'
   },
 
   getPageNumber({ containerUuid }) {

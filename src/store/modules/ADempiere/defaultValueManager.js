@@ -20,6 +20,9 @@ import Vue from 'vue'
 import { requestDefaultValue } from '@/api/ADempiere/user-interface/persistence.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
+// constants
+import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
+
 // utils and helper methods
 import { isSameSize } from '@/utils/ADempiere/formatValue/iterableFormat'
 import { generateContextKey, getContextAttributes } from '@/utils/ADempiere/contextUtils'
@@ -101,7 +104,7 @@ const defaultValueManager = {
 
         const isWithoutValues = contextAttributesList.find(attribute => isEmptyValue(attribute.value))
         if (isWithoutValues) {
-          console.warn(`Without response, fill the ${isWithoutValues.columnName} field.`)
+          console.warn(`Default value without response, fill the ${isWithoutValues.columnName} field.`)
           resolve(defaultEmptyResponse)
           return
         }
@@ -172,7 +175,7 @@ const defaultValueManager = {
               commit('updateValueOfField', {
                 parentUuid,
                 containerUuid,
-                columnName: `DisplayColumn_${columnName}`,
+                columnName: DISPLAY_COLUMN_PREFIX + columnName,
                 value: displayedValue
               })
             }

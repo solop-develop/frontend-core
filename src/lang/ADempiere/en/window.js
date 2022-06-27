@@ -40,6 +40,8 @@ const window = {
   callout: {
     error: 'Error In Callout'
   },
+  toggleSingle: 'Toggle Single',
+  multiRecord: 'Multi Record',
   gridToggle: 'Toggle single/multi record',
   toggleTabContentVisibility: 'Toggle tab content visibility'
 }

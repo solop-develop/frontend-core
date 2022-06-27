@@ -17,9 +17,9 @@
 // This file is used for set a static values for references of fields,
 // currently exists for ADempiere metadata distints display types and are represented for follow:
 export const DEFAULT_SIZE = {
-  xs: 6,
-  sm: 8,
-  md: 2,
+  xs: 24,
+  sm: 12,
+  md: 8,
   lg: 6,
   xl: 6
 }
@@ -30,13 +30,7 @@ export const ACCOUNT_ELEMENT = {
   isSupported: false,
   valueType: 'INTEGER',
   componentPath: 'FieldText',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Amount (Number with 4 decimals)
@@ -45,13 +39,7 @@ export const AMOUNT = {
   isSupported: true,
   valueType: 'DECIMAL',
   componentPath: 'FieldNumber',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Resource Assignment
@@ -60,13 +48,7 @@ export const RESOURCE_ASSIGNMENT = {
   isSupported: false,
   valueType: 'INTEGER',
   componentPath: 'FieldText',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Binary Data (display type BLOB)
@@ -75,13 +57,7 @@ export const BINARY_DATA = {
   isSupported: true,
   valueType: 'INTEGER',
   componentPath: 'FieldBinary',
-  size: {
-    xs: 6,
-    sm: 6,
-    md: 6,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Button
@@ -91,13 +67,7 @@ export const BUTTON = {
   isSupported: true,
   valueType: 'STRING',
   componentPath: 'FieldButton',
-  size: {
-    xs: 6,
-    sm: 6,
-    md: 6,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Chart
@@ -106,13 +76,7 @@ export const CHART = {
   isSupported: false,
   valueType: 'STRING',
   componentPath: 'FieldText',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Color
@@ -121,13 +85,7 @@ export const COLOR = {
   isSupported: false,
   valueType: 'INTEGER',
   componentPath: 'FieldColor',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Cost or Prices
@@ -136,13 +94,7 @@ export const COSTS_PLUS_PRICES = {
   isSupported: true,
   valueType: 'DECIMAL',
   componentPath: 'FieldNumber',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Date
@@ -151,13 +103,7 @@ export const DATE = {
   isSupported: true,
   valueType: 'DATE',
   componentPath: 'FieldDate',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Date with time
@@ -166,13 +112,7 @@ export const DATE_PLUS_TIME = {
   isSupported: true,
   valueType: 'DATE',
   componentPath: 'FieldDate',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Local File
@@ -181,13 +121,7 @@ export const LOCAL_FILE = {
   isSupported: true,
   valueType: 'STRING',
   componentPath: 'FieldText',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Local File Path
@@ -196,13 +130,7 @@ export const LOCAL_FILE_PATH = {
   isSupported: true,
   valueType: 'STRING',
   componentPath: 'FieldText',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Local File Path or Name
@@ -211,13 +139,7 @@ export const LOCAL_FILE_PATH_OR_NAME = {
   isSupported: true,
   valueType: 'STRING',
   componentPath: 'FieldText',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // ID
@@ -226,13 +148,7 @@ export const ID = {
   isSupported: true,
   valueType: 'INTEGER',
   componentPath: 'FieldNumber',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Binary Image Data
@@ -241,13 +157,7 @@ export const IMAGE = {
   isSupported: true,
   valueType: 'INTEGER',
   componentPath: 'FieldImage',
-  size: {
-    xs: 6,
-    sm: 6,
-    md: 6,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Integer
@@ -256,13 +166,7 @@ export const INTEGER = {
   isSupported: true,
   valueType: 'INTEGER',
   componentPath: 'FieldNumber',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Reference List
@@ -271,13 +175,7 @@ export const LIST = {
   isSupported: true,
   valueType: 'STRING',
   componentPath: 'FieldSelect',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Location Address
@@ -286,13 +184,7 @@ export const LOCATION_ADDRESS = {
   isSupported: true,
   valueType: 'INTEGER',
   componentPath: 'FieldLocation',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Warehouse Locator Data type
@@ -301,13 +193,7 @@ export const LOCATOR_WAREHOUSE = {
   isSupported: true,
   valueType: 'INTEGER',
   componentPath: 'FieldLocator',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Memo
@@ -316,13 +202,7 @@ export const MEMO = {
   isSupported: true,
   valueType: 'STRING',
   componentPath: 'FieldTextLong',
-  size: {
-    xs: 24,
-    sm: 24,
-    md: 24,
-    lg: 24,
-    xl: 24
-  }
+  size: DEFAULT_SIZE
 }
 
 // Float Number
@@ -331,13 +211,7 @@ export const NUMBER = {
   isSupported: true,
   valueType: 'DECIMAL',
   componentPath: 'FieldNumber',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Printer Name
@@ -346,13 +220,7 @@ export const PRINTER_NAME = {
   isSupported: true,
   valueType: 'STRING',
   componentPath: 'FieldText',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Product Attribute
@@ -361,13 +229,7 @@ export const PRODUCT_ATTRIBUTE = {
   isSupported: false,
   valueType: 'INTEGER',
   componentPath: 'FieldNumber',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Quantity
@@ -376,13 +238,7 @@ export const QUANTITY = {
   isSupported: true,
   valueType: 'DECIMAL',
   componentPath: 'FieldNumber',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Search
@@ -391,13 +247,7 @@ export const SEARCH = {
   isSupported: true,
   valueType: 'INTEGER',
   componentPath: 'FieldSelect',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Char (display type String)
@@ -406,13 +256,7 @@ export const CHAR = {
   isSupported: true,
   valueType: 'STRING',
   componentPath: 'FieldText',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Table List
@@ -421,13 +265,7 @@ export const TABLE = {
   isSupported: true,
   valueType: 'INTEGER',
   componentPath: 'FieldSelect',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Table Dir
@@ -436,13 +274,7 @@ export const TABLE_DIRECT = {
   isSupported: true,
   valueType: 'INTEGER',
   componentPath: 'FieldSelect',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Text
@@ -451,13 +283,7 @@ export const TEXT = {
   isSupported: true,
   valueType: 'STRING',
   componentPath: 'FieldText',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Text Long
@@ -466,13 +292,7 @@ export const TEXT_LONG = {
   isSupported: true,
   valueType: 'STRING',
   componentPath: 'FieldTextLong',
-  size: {
-    xs: 24,
-    sm: 24,
-    md: 24,
-    lg: 24,
-    xl: 24
-  }
+  size: DEFAULT_SIZE
 }
 
 // Time
@@ -481,13 +301,7 @@ export const TIME = {
   isSupported: true,
   valueType: 'DATE',
   componentPath: 'FieldTime',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // URL
@@ -496,13 +310,7 @@ export const URL = {
   isSupported: true,
   valueType: 'STRING',
   componentPath: 'FieldUrl',
-  size: {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 6,
-    xl: 6
-  }
+  size: DEFAULT_SIZE
 }
 
 // Yes No
@@ -511,13 +319,7 @@ export const YES_NO = {
   isSupported: true,
   valueType: 'BOOLEAN',
   componentPath: 'FieldYesNo',
-  size: {
-    xs: 14,
-    sm: 8,
-    md: 6,
-    lg: 6,
-    xl: 4
-  }
+  size: DEFAULT_SIZE
 }
 
 export const FIELDS_LOOKUP = [

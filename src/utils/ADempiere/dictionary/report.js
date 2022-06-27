@@ -23,6 +23,9 @@ import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
 
 // utils and helpers methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import {
+  containerManager as containerManagerProcess
+} from '@/utils/ADempiere/dictionary/process'
 
 /**
  * Suppoerted render files
@@ -49,6 +52,29 @@ export const reportFormatsList = [
   'xlsx',
   'xml'
 ]
+
+/**
+ * Documents mime type
+ */
+export const mimeTypeOfReport = {
+  doc: 'application/msword',
+  docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  dot: 'application/msword',
+  dotx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+  csv: 'text/csv;charset=utf-8',
+  htm: 'text/html;charset=utf-8',
+  html: 'text/html;charset=utf-8',
+  md: 'text/markdown;charset=utf-8',
+  odt: 'application/vnd.oasis.opendocument.text',
+  pdf: 'application/pdf',
+  ps: 'application/postscript',
+  rtf: 'application/rtf',
+  ssv: 'application/vnd.shade-save-file',
+  txt: 'text/plain;charset=utf-8',
+  xls: 'application/vnd.ms-excel; ',
+  xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  xml: 'application/xml'
+}
 
 /**
  * Default report type to generate
@@ -158,6 +184,50 @@ export const changeParameters = {
     store.commit('setShowedModalDialog', {
       containerUuid,
       isShowed: true
+    })
+  }
+}
+
+/**
+ * Container manager to Report panel
+ */
+export const containerManager = {
+  ...containerManagerProcess,
+
+  getPanel({ containerUuid }) {
+    return store.getters.getStoredReport(containerUuid)
+  },
+  getFieldsList({ containerUuid }) {
+    return store.getters.getStoredFieldsFromReport(containerUuid)
+  },
+  getFieldsToHidden: ({ parentUuid, containerUuid, fieldsList, showedMethod, isEvaluateDefaultValue, isTable }) => {
+    return store.getters.getReportParametersListToHidden({
+      parentUuid,
+      containerUuid,
+      fieldsList,
+      showedMethod,
+      isEvaluateDefaultValue,
+      isTable
+    })
+  },
+
+  changeFieldShowedFromUser({ containerUuid, fieldsShowed }) {
+    store.dispatch('changeReportFieldShowedFromUser', {
+      containerUuid,
+      fieldsShowed
+    })
+  },
+
+  actionPerformed: ({ field, value }) => {
+    // store.dispatch('reportActionPerformed', {
+    //   field,
+    //   value
+    // })
+  },
+
+  setDefaultValues: ({ containerUuid }) => {
+    store.dispatch('setReportDefaultValues', {
+      containerUuid
     })
   }
 }

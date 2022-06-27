@@ -24,28 +24,28 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertBooleanToString } from '@/utils/ADempiere/formatValue/booleanFormat.js'
 import evaluator from '@/utils/ADempiere/evaluator'
 
-export default evaluator
-
 /**
  * Prefix context of global prefix (#)
  */
-export const GLOBAL_CONTEXT_PREFIX = evaluator.GLOBAL_CONTEXT_PREFIX
+export const GLOBAL_CONTEXT_PREFIX = '#' // evaluator.GLOBAL_CONTEXT_PREFIX
 
 /**
  * Prefix context of accounting prefix ($)
  */
-export const ACCOUNTING_CONTEXT_PREFIX = evaluator.ACCOUNTING_CONTEXT_PREFIX
+export const ACCOUNTING_CONTEXT_PREFIX = '$' // evaluator.ACCOUNTING_CONTEXT_PREFIX
 
 /**
  * Prefix context of preference prefix (P|)
  */
-export const PREFERENCE_CONTEXT_PREFIX = evaluator.PREFERENCE_CONTEXT_PREFIX
+export const PREFERENCE_CONTEXT_PREFIX = 'P|' // evaluator.PREFERENCE_CONTEXT_PREFIX
 
 /**
  * Get context state from vuex store
  * @param {string} parentUuid UUID Window
  * @param {string} containerUuid  UUID Tab, Process, SmartBrowser, Report and Form
- * @param {boolean} isBooleanToString if convert true to 'Y'
+ * @param {boolean} isBooleanToString if convert true to 'Y', or return string
+ * @param {boolean} isForceBoolean if convert boolean to string force 'Example' to true
+ * @param {boolean} isForceSession find into global (#) and accounting ($) context
  * @param {string} columnName (context)  Entity to search
  * @returns
  */
@@ -54,6 +54,7 @@ export const getContext = ({
   containerUuid,
   isBooleanToString = false,
   isForceBoolean = true,
+  isForceSession = false,
   columnName
 }) => {
   let value
@@ -75,6 +76,22 @@ export const getContext = ({
       containerUuid,
       columnName
     })
+
+    // get to global and accounting context
+    if (isForceSession && isEmptyValue(value)) {
+      value = store.getters.getSessionContext({
+        parentUuid,
+        containerUuid,
+        columnName: GLOBAL_CONTEXT_PREFIX + columnName
+      })
+      if (isEmptyValue(value)) {
+        value = store.getters.getSessionContext({
+          parentUuid,
+          containerUuid,
+          columnName: ACCOUNTING_CONTEXT_PREFIX + columnName
+        })
+      }
+    }
   }
 
   if (isBooleanToString) {

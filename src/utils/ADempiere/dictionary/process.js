@@ -21,13 +21,14 @@ import store from '@/store'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { generateField } from '@/utils/ADempiere/dictionaryUtils'
 import { sortFields } from '@/utils/ADempiere/dictionary/panel'
-import { isHiddenField } from '@/utils/ADempiere/references'
+import { isAddRangeField, isHiddenField } from '@/utils/ADempiere/references'
 
 /**
  * Is displayed field parameter in process/report panel
  * @param {number} displayType
  * @param {boolean} isActive
  * @param {boolean} isDisplayed
+ * @param {string} displayLogic
  * @param {boolean} isDisplayedFromLogic
  * @returns {boolean}
  */
@@ -42,23 +43,36 @@ export function isDisplayedField({ displayType, isActive, isDisplayed, displayLo
 }
 
 /**
+ * Default showed field from user
+ */
+export function evaluateDefaultFieldShowed({ defaultValue, parsedDefaultValue, isMandatory, isShowedFromUser }) {
+  if (isMandatory) {
+    return true
+  }
+  if (!isEmptyValue(defaultValue) || !isEmptyValue(parsedDefaultValue)) {
+    return true
+  }
+  return Boolean(isShowedFromUser)
+}
+
+/**
  * Process manager mandatory logic
+ * TODO: Add support on ADempiere core to mandatory logic
  * @param {boolean} isMandatory
- * @param {boolean} isMandatoryFromLogic
  * @returns {boolean}
  */
-export function isMandatoryField({ isMandatory, isMandatoryFromLogic }) {
-  return isMandatory || isMandatoryFromLogic
+export function isMandatoryField({ isMandatory }) {
+  return isMandatory
 }
 
 /**
  * Process is read only field
- * @param {boolean} isReadOnly
+ * @param {string} readOnlyLogic
  * @param {boolean} isReadOnlyFromLogic
  * @returns {boolean}
  */
-export function isReadOnlyField({ isReadOnly, isReadOnlyFromLogic }) {
-  return isReadOnly && isReadOnlyFromLogic
+export function isReadOnlyField({ readOnlyLogic, isReadOnlyFromLogic }) {
+  return !isEmptyValue(readOnlyLogic) && isReadOnlyFromLogic
 }
 
 /**
@@ -87,14 +101,16 @@ export function generateProcess({
       .map(fieldItem => {
         const field = generateField({
           fieldToGenerate: fieldItem,
-          moreAttributes: additionalAttributes
+          moreAttributes: additionalAttributes,
+          evaluateDefaultFieldShowed
         })
         // Add new field if is range number
-        if (field.isRange && field.componentPath === 'FieldNumber') {
+        if (isAddRangeField(field)) {
           const fieldRange = generateField({
             fieldToGenerate: fieldItem,
             moreAttributes: additionalAttributes,
-            typeRange: true
+            typeRange: true,
+            evaluateDefaultFieldShowed
           })
 
           fieldsRangeList.push(fieldRange)
@@ -142,6 +158,92 @@ export const runProcess = {
   runProcess: ({ containerUuid }) => {
     store.dispatch('startProcess', {
       containerUuid
+    })
+  }
+}
+
+/**
+ * Container manager to Process panel
+ */
+export const containerManager = {
+  getPanel({ containerUuid }) {
+    return store.getters.getStoredProcess(containerUuid)
+  },
+  getFieldsList({ containerUuid }) {
+    return store.getters.getStoredFieldsFromProcess(containerUuid)
+  },
+  getFieldsToHidden: ({ parentUuid, containerUuid, fieldsList, showedMethod, isEvaluateDefaultValue, isTable }) => {
+    return store.getters.getProcessParametersListToHidden({
+      parentUuid,
+      containerUuid,
+      fieldsList,
+      showedMethod,
+      isEvaluateDefaultValue,
+      isTable
+    })
+  },
+
+  actionPerformed: ({ field, value }) => {
+    // store.dispatch('processActionPerformed', {
+    //   field,
+    //   value
+    // })
+  },
+
+  setDefaultValues: ({ containerUuid }) => {
+    store.dispatch('setProcessDefaultValues', {
+      containerUuid
+    })
+  },
+
+  isDisplayedField,
+  isDisplayedDefault: ({ isMandatory, defaultValue, isShowedFromUser }) => {
+    // add is showed from user
+    if (isMandatory) {
+      return true
+    }
+    if (!isEmptyValue(defaultValue)) {
+      return isShowedFromUser
+    }
+    return false
+  },
+
+  isReadOnlyField,
+
+  isMandatoryField,
+
+  changeFieldShowedFromUser({ containerUuid, fieldsShowed }) {
+    store.dispatch('changeProcessFieldShowedFromUser', {
+      containerUuid,
+      fieldsShowed
+    })
+  },
+
+  /**
+   * @returns Promisse with value and displayedValue
+   */
+  getDefaultValue({ parentUuid, containerUuid, uuid, id, contextColumnNames, columnName, value }) {
+    return store.dispatch('getDefaultValueFromServer', {
+      parentUuid,
+      containerUuid,
+      contextColumnNames,
+      processParameterUuid: uuid,
+      id,
+      //
+      columnName,
+      value
+    })
+  },
+  getLookupList({ parentUuid, containerUuid, contextColumnNames, uuid, searchValue, isAddBlankValue = false, blankValue }) {
+    return store.dispatch('getLookupListFromServer', {
+      parentUuid,
+      containerUuid,
+      contextColumnNames,
+      processParameterUuid: uuid,
+      searchValue,
+      // app attributes
+      isAddBlankValue,
+      blankValue
     })
   }
 }

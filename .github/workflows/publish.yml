@@ -1,6 +1,6 @@
 # This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
 # For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
-# This file was contributed by Carlos Parada and Yamel Senih from ERP Consultores y Asociados, C.A
+# This file was contributed by Carlos Parada, Edwin Betancourt, and Yamel Senih from ERP Consultores y Asociados, C.A
 
 name: Publish Project
 
@@ -57,6 +57,8 @@ jobs:
   # Publish dist binaries to application
   publish-app-dist:
     name: Upload ADempiere-Vue binaries
+    # TODO: Does not support edit release: {"resource":"Release","code":"already_exists","field":"tag_name"}
+    if: ${{ github.event_name == 'release' && github.event.action == 'created' }}
     needs:
       - build-app
     runs-on: ubuntu-latest
@@ -79,11 +81,35 @@ jobs:
         with:
           args: 'Adempiere-Vue.zip'
 
+  # Check secrets to push image in docker hub registry
+  check-docker-secrets:
+    name: Check if docker hub registry information was set on secrets
+    needs:
+      - build-app
+    runs-on: ubuntu-latest
+    outputs:
+      is_have_secrets: ${{ steps.check_secret_job.outputs.is_have_secrets }}
+    steps:
+      - id: check_secret_job
+        run: |
+          if [[ "${{ secrets.DOCKER_REPO_FRONTEND }}" != "" && \
+                "${{ secrets.DOCKER_USERNAME }}" != "" && \
+                "${{ secrets.DOCKER_TOKEN }}" != "" ]]; \
+          then
+            echo "Secrets to use a container registry are configured in the repo"
+            echo "::set-output name=is_have_secrets::true"
+          else
+            echo "Secrets to use a container registry were not configured in the repo"
+            echo "::set-output name=is_have_secrets::false"
+          fi
+
   # Publish docker image in Docker Hub registry to application
   push-imame-dhr:
     name: Push Docker image to Docker Hub
     needs:
-      - build-app
+      - check-docker-secrets
+    # Skip step based on secret
+    if: needs.check-docker-secrets.outputs.is_have_secrets == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -132,7 +158,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [14.x]
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
@@ -150,7 +176,7 @@ jobs:
         run: |
           cd docs
           yarn ci
-          yarn build --if-present
+          yarn build
 
       - name: Upload dist docs
         uses: actions/upload-artifact@v3

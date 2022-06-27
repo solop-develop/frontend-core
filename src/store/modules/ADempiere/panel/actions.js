@@ -19,7 +19,8 @@ import {
   typeValue
 } from '@/utils/ADempiere/valueUtils.js'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
-import evaluator, { getContext, parseContext } from '@/utils/ADempiere/contextUtils.js'
+import evaluator from '@/utils/ADempiere/evaluator'
+import { getContext, parseContext } from '@/utils/ADempiere/contextUtils'
 import { fieldIsDisplayed } from '@/utils/ADempiere/dictionaryUtils.js'
 import { assignedGroup } from '@/utils/ADempiere/dictionary/panel'
 import router from '@/router'
@@ -415,9 +416,8 @@ const actions = {
    * @param {array} fieldsList, list of fields
    * @param {object} containerManager, logic implement by panel type
    * TODO: Not working with fields generated on lookupFactory
-   * TODO: Evaluated with reference (direct query) lookup item
    */
-  changeDependentFieldsList({ commit, dispatch, getters }, {
+  changeDependentFieldsList({ commit, getters, rootGetters }, {
     field,
     fieldsList,
     containerManager
@@ -497,14 +497,33 @@ const actions = {
           value: fieldDependent.defaultValue
         }).query
 
-        const { displayedValue, value: newValue } = containerManager.getDefaultValue({
-          parentUuid,
+        let newValue, displayedValue
+
+        newValue = rootGetters.getValueOfField({
           containerUuid,
-          contextColumnNames: fieldDependent.contextColumnNames,
-          uuid: fieldDependent.uuid,
-          id: fieldDependent.id,
           columnName: fieldDependent.columnName
         })
+        if (!isEmptyValue(newValue)) {
+          displayedValue = rootGetters.getValueOfField({
+            containerUuid,
+            columnName: fieldDependent.displayColumnName
+          })
+        } else {
+          const {
+            value: valueByServer,
+            displayedValue: displayedValueByServer
+          } = containerManager.getDefaultValue({
+            parentUuid,
+            containerUuid,
+            contextColumnNames: fieldDependent.contextColumnNames,
+            uuid: fieldDependent.uuid,
+            id: fieldDependent.id,
+            columnName: fieldDependent.columnName
+          })
+
+          displayedValue = displayedValueByServer
+          newValue = valueByServer
+        }
 
         // update values for field
         commit('updateValueOfField', {

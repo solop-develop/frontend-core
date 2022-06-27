@@ -17,40 +17,55 @@
 -->
 
 <template>
-  <div>
-    <embedded
-      :visible="showRecordAccess"
-    >
-      <record-access />
-    </embedded>
-
-    <tab-manager
-      :parent-uuid="windowMetadata.uuid"
-      :container-manager="containerManager"
-      :tabs-list="windowMetadata.tabsListParent"
-      :all-tabs-list="allTabsList"
-    />
-
-    <tab-manager-child
-      v-if="isWithChildsTab"
-      :parent-uuid="windowMetadata.uuid"
-      :container-manager="containerManager"
-      :tabs-list="windowMetadata.tabsListChild"
-      :all-tabs-list="allTabsList"
-    />
-
-    <modal-dialog
-      v-if="!isEmptyValue(processUuid)"
-      :container-manager="containerManagerProcess"
-      :parent-uuid="currentTabUuid"
-      :container-uuid="processUuid"
-    />
-  </div>
+  <el-container style="height: 100%!important;">
+    <el-main id="mainWindow">
+      <embedded
+        :visible="showRecordAccess"
+      >
+        <record-access />
+      </embedded>
+      <tab-manager
+        :parent-uuid="windowMetadata.uuid"
+        :container-manager="containerManager"
+        :tabs-list="windowMetadata.tabsListParent"
+        :all-tabs-list="allTabsList"
+        :references-manager="referencesManager"
+        :actions-manager="actionsManager"
+      />
+      <modal-dialog
+        v-if="!isEmptyValue(processUuid)"
+        :container-manager="containerManagerProcess"
+        :parent-uuid="currentTabUuid"
+        :container-uuid="processUuid"
+      />
+      <tab-manager-child
+        v-if="((isWithChildsTab && isMobile) || getTab.isTableViewFullScreen)"
+        :parent-uuid="windowMetadata.uuid"
+        :container-manager="containerManager"
+        :tabs-list="windowMetadata.tabsListChild"
+        :all-tabs-list="allTabsList"
+        :references-manager="referencesManager"
+        :actions-manager="actionsManager"
+      />
+    </el-main>
+    <el-footer v-if="!isMobile && !getTab.isTableViewFullScreen" :style="getTab.isTableViewFullScreen ? 'height: 20% !important;' : 'height: 50% !important;'">
+      <tab-manager-child
+        v-if="isWithChildsTab"
+        :parent-uuid="windowMetadata.uuid"
+        :container-manager="containerManager"
+        :tabs-list="windowMetadata.tabsListChild"
+        :all-tabs-list="allTabsList"
+        :references-manager="referencesManager"
+        :actions-manager="actionsManager"
+      />
+    </el-footer>
+  </el-container>
 </template>
 
 <script>
 import { defineComponent, computed, ref } from '@vue/composition-api'
 
+import language from '@/lang'
 import router from '@/router'
 import store from '@/store'
 
@@ -108,6 +123,10 @@ export default defineComponent({
       return store.getters.getShowPanelRecordAccess
     })
 
+    const isMobile = computed(() => {
+      return store.state.app.device === 'mobile'
+    })
+
     const currentTabUuid = computed(() => {
       return store.getters.getCurrentTab(props.windowMetadata.uuid).uuid
     })
@@ -157,20 +176,21 @@ export default defineComponent({
           })
           return
         }
-        const tab = store.getters.getStoredTab(parentUuid, containerUuid)
-        if (tab.isParentTab) {
+        const tabDefinition = store.getters.getStoredTab(parentUuid, containerUuid)
+        if (tabDefinition.isParentTab) {
+          const { tableName } = tabDefinition
           router.push({
             name: root.$route.name,
             query: {
               ...root.$route.query,
               action: row.UUID,
-              tableName: tab.tableName,
-              recordId: row[`${tab.tableName}_ID`]
+              tableName,
+              recordId: row[`${tableName}_ID`]
             },
             params: {
               ...root.$route.params,
-              tableName: tab.tableName,
-              recordId: row[`${tab.tableName}_ID`]
+              tableName,
+              recordId: row[`${tableName}_ID`]
             }
           }, () => {})
         }
@@ -192,7 +212,7 @@ export default defineComponent({
           parentUuid,
           containerUuid,
           attributes,
-          isOverWriteParent: tab.isParentTab
+          isOverWriteParent: tabDefinition.isParentTab
         })
 
         // active logics with set records values
@@ -204,9 +224,50 @@ export default defineComponent({
             containerManager: props.windowManager
           })
         })
-      }
 
+        // update records and logics on child tabs
+        tabDefinition.childTabs.filter(tabItem => {
+          // get loaded tabs with records
+          return store.getters.getIsLoadedTabRecord({
+            containerUuid: tabItem.uuid
+          })
+        }).forEach(tabItem => {
+          // if loaded data refresh this data
+          // TODO: Verify with get one entity, not get all list
+          store.dispatch('getEntities', {
+            parentUuid,
+            containerUuid: tabItem.uuid,
+            pageNumber: 1 // reload with first page
+          })
+        })
+      }
     }
+
+    const actionsManager = computed(() => {
+      return {
+        parentUuid: props.windowMetadata.uuid,
+        containerUuid: currentTabUuid.value,
+        defaultActionName: language.t('actionMenu.createNewRecord'),
+        tableName: store.getters.getTableName(props.windowMetadata.uuid, currentTabUuid.value),
+        getActionList: () => {
+          return store.getters.getStoredActionsMenu({
+            containerUuid: currentTabUuid.value
+          })
+        }
+      }
+    })
+
+    const getTab = computed(() => {
+      return store.getters.getCurrentTab(props.windowMetadata.uuid)
+    })
+
+    const referencesManager = ref({
+      getTableName: () => {
+        const tabUuid = currentTabUuid.value
+        const windowUuid = props.windowMetadata.uuid
+        return store.getters.getTableName(windowUuid, tabUuid)
+      }
+    })
 
     if (props.windowMetadata.tabsList) {
       allTabsList.value = props.windowMetadata.tabsList
@@ -215,11 +276,25 @@ export default defineComponent({
     return {
       currentTabUuid,
       allTabsList,
+      referencesManager,
+      actionsManager,
       showRecordAccess,
       isWithChildsTab,
-      containerManager
+      containerManager,
+      isMobile,
+      getTab
     }
   }
 
 })
 </script>
+
+<style>
+.el-footer {
+  height: 50% !important;
+}
+.el-main {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+</style>

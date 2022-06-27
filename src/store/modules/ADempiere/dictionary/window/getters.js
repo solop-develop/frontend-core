@@ -17,6 +17,8 @@
 // utils and helpers methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { isDisplayedField, isMandatoryField } from '@/utils/ADempiere/dictionary/window.js'
+import { DISPLAY_COLUMN_PREFIX, getDefaultValue } from '@/utils/ADempiere/dictionaryUtils.js'
+import { getContext } from '@/utils/ADempiere/contextUtils'
 
 /**
  * Dictionary Window Getters
@@ -36,6 +38,20 @@ export default {
 
   getStoredTabs: (state) => (windowUuid) => {
     return state.storedWindows[windowUuid].tabsList
+  },
+
+  /**
+   * Get tabs list form table name
+   * @param {string} parentUuid window uuid
+   * @param {string} tableName table name to get tabs on window
+   * @param {string} containerUuid optional, if exists exclude this tab
+   * @returns
+   */
+  getStoredTabsFromTableName: (state) => ({ parentUuid, tableName, containerUuid = '' }) => {
+    return state.storedWindows[parentUuid].tabsList.filter(tab => {
+      return tab.tableName === tableName &&
+        tab.uuid !== containerUuid
+    })
   },
 
   getStoredTab: (state) => (windowUuid, tabUuid) => {
@@ -160,5 +176,183 @@ export default {
 
   getProcessWindowsSelect: (state) => {
     return state.selectProcessUuid
+  },
+
+  getTabParsedDefaultValue: (state, getters, rootState, rootGetters) => ({
+    parentUuid,
+    containerUuid,
+    isGetServer = true,
+    isSOTrxMenu,
+    fieldsList = [],
+    formatToReturn = 'array'
+  }) => {
+    const storedTab = getters.getStoredTab(parentUuid, containerUuid)
+    if (isEmptyValue(fieldsList)) {
+      fieldsList = storedTab.fieldsList
+    }
+
+    const { linkColumnName, parentColumnName } = storedTab
+
+    const attributesDisplayColumn = []
+    const attributesObject = {}
+    let attributesList = fieldsList
+      .map(fieldItem => {
+        const { uuid, columnName, defaultValue, contextColumnNames } = fieldItem
+        const isSQL = String(defaultValue).includes('@SQL=') && isGetServer
+        const isLinkColumn = !isEmptyValue(linkColumnName) && columnName === linkColumnName
+        const isParentColumn = fieldItem.isParent || (!isEmptyValue(parentColumnName) && columnName === parentColumnName)
+
+        let parsedDefaultValue
+        if (!isSQL) {
+          parsedDefaultValue = getDefaultValue({
+            ...fieldItem,
+            parentUuid,
+            contextColumnNames,
+            isSOTrxMenu
+          })
+        }
+        // get value of link column
+        if (isLinkColumn) {
+          parsedDefaultValue = getContext({
+            parentUuid,
+            columnName
+          })
+        }
+        // get value of parent column
+        if (isParentColumn) {
+          parsedDefaultValue = getContext({
+            parentUuid,
+            columnName,
+            isForceSession: true
+          })
+        }
+        attributesObject[columnName] = parsedDefaultValue
+
+        // add display column to default
+        if (fieldItem.componentPath === 'FieldSelect') {
+          const { displayColumnName } = fieldItem
+          let displayedValue
+          if (!isEmptyValue(parsedDefaultValue)) {
+            // get displayed value of link column
+            if (isLinkColumn) {
+              displayedValue = getContext({
+                parentUuid,
+                columnName: DISPLAY_COLUMN_PREFIX + linkColumnName
+              })
+            }
+
+            // get displayed value of parent column
+            if (isParentColumn) {
+              displayedValue = getContext({
+                parentUuid,
+                columnName: DISPLAY_COLUMN_PREFIX + columnName
+              })
+            }
+
+            // get displayed value of stored default value
+            if (isEmptyValue(displayedValue)) {
+              const storedDefaultValue = rootGetters.getStoredDefaultValue({
+                parentUuid,
+                containerUuid,
+                contextColumnNames: contextColumnNames,
+                uuid
+              })
+              if (!isEmptyValue(storedDefaultValue)) {
+                displayedValue = storedDefaultValue.displayedValue
+              }
+            }
+
+            // get displayed value of stored lookup
+            if (isEmptyValue(displayedValue)) {
+              const storedLookupList = rootGetters.getStoredLookupList({
+                parentUuid,
+                containerUuid,
+                contextColumnNames: fieldItem.reference.contextColumnNames,
+                uuid
+              })
+              if (!isEmptyValue(storedLookupList)) {
+                const option = storedLookupList.find(item => item.value === parsedDefaultValue)
+                if (!isEmptyValue(option)) {
+                  displayedValue = option.displayedValue
+                }
+              }
+            }
+          }
+
+          attributesObject[displayColumnName] = displayedValue
+          attributesDisplayColumn.push({
+            columnName: displayColumnName,
+            value: displayedValue,
+            isSQL
+          })
+        }
+
+        return {
+          columnName,
+          value: parsedDefaultValue,
+          // valueType: fieldItem.valueType,
+          isSQL
+        }
+      })
+
+    if (formatToReturn === 'array') {
+      attributesList = attributesList.concat(attributesDisplayColumn)
+      return attributesList
+    }
+    return attributesObject
+  },
+
+  /**
+   * Available fields to showed/hidden
+   * to show, used in components FilterFields
+   * @param {string} containerUuid
+   * @param {array} fieldsList
+   * @param {function} showedMethod
+   * @param {boolean} isEvaluateShowed
+   * @param {boolean} isEvaluateDefaultValue
+   */
+  getTabFieldsListToHidden: (state, getters) => ({
+    parentUuid,
+    containerUuid,
+    isTable = false,
+    fieldsList = [],
+    showedMethod = isDisplayedField,
+    isEvaluateDefaultValue = false,
+    isEvaluateShowed = true
+  }) => {
+    if (isEmptyValue(fieldsList)) {
+      fieldsList = getters.getStoredFieldsFromTab(parentUuid, containerUuid)
+    }
+
+    // all optionals (not mandatory) fields
+    return fieldsList
+      .filter(fieldItem => {
+        const { defaultValue } = fieldItem
+        const isMandatory = fieldItem.isMandatory || fieldItem.isMandatoryFromLogic
+
+        // parent column
+        if (fieldItem.isParent) {
+          return true
+        }
+        if (isMandatory && isEmptyValue(defaultValue) && !isTable) {
+          return false
+        }
+
+        if (isEvaluateDefaultValue && isEvaluateShowed) {
+          return showedMethod(fieldItem) &&
+            !isEmptyValue(defaultValue)
+        }
+
+        if (isEvaluateDefaultValue) {
+          return !isEmptyValue(defaultValue)
+        }
+
+        if (isEvaluateShowed) {
+          return showedMethod(fieldItem)
+        }
+
+        return true
+      })
   }
+
 }

@@ -25,8 +25,9 @@ import {
 } from '@/utils/ADempiere/constants/systemColumns'
 
 // utils and helpers methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat'
 import { generatePanelAndFields } from '@/utils/ADempiere/dictionary/panel.js'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { isHiddenField } from '@/utils/ADempiere/references.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import { zoomIn } from '@/utils/ADempiere/coreUtils'
@@ -45,12 +46,30 @@ export function isDisplayedField({ isDisplayed, displayLogic, isDisplayedFromLog
 }
 
 /**
+ * Default showed field from user
+ */
+export function evaluateDefaultFieldShowed({ defaultValue, isMandatory, isShowedFromUser, isParent }) {
+  if (String(defaultValue).includes('@SQL=')) {
+    return true
+  }
+
+  if (isEmptyValue(defaultValue) && isMandatory && !isParent) {
+    return true
+  }
+
+  if (isShowedFromUser) {
+    return true
+  }
+  return false
+}
+
+/**
  * Tab manager mandatory logic
  * @param {boolean} isMandatoryFromLogic
  * @returns {boolean}
  */
-export function isMandatoryField({ isMandatory, isMandatoryFromLogic }) {
-  return isMandatory || isMandatoryFromLogic
+export function isMandatoryField({ isMandatory, mandatoryLogic, isMandatoryFromLogic }) {
+  return isMandatory || (!isEmptyValue(mandatoryLogic) && isMandatoryFromLogic)
 }
 
 /**
@@ -59,8 +78,8 @@ export function isMandatoryField({ isMandatory, isMandatoryFromLogic }) {
  * @param {boolean} isReadOnlyFromLogic
  * @returns {boolean}
  */
-export function isReadOnlyField({ isReadOnly, isReadOnlyFromLogic }) {
-  return isReadOnly || isReadOnlyFromLogic
+export function isReadOnlyField({ isReadOnly, readOnlyLogic, isReadOnlyFromLogic }) {
+  return isReadOnly || (!isEmptyValue(readOnlyLogic) && isReadOnlyFromLogic)
 }
 
 /**
@@ -77,8 +96,8 @@ export function isDisplayedColumn({ isDisplayed, isDisplayedGrid, isDisplayedFro
     (isEmptyValue(displayLogic) || isDisplayedFromLogic)
 }
 
-export function isMandatoryColumn({ isMandatory, isMandatoryFromLogic }) {
-  return isMandatory || isMandatoryFromLogic
+export function isMandatoryColumn({ isMandatory, mandatoryLogic, isMandatoryFromLogic }) {
+  return isMandatory || (!isEmptyValue(mandatoryLogic) && isMandatoryFromLogic)
 }
 
 export function isReadOnlyColumn({ isReadOnly }) {
@@ -94,7 +113,7 @@ export const createNewRecord = {
   type: 'setDefaultValues',
   enabled: ({ parentUuid, containerUuid }) => {
     const tab = store.getters.getStoredTab(parentUuid, containerUuid)
-    if (tab.isInsertRecord) {
+    if (tab.isInsertRecord && !tab.isReadOnly) {
       const recordUuid = store.getters.getUuidOfContainer(containerUuid)
       return !isEmptyValue(recordUuid)
     }
@@ -105,6 +124,21 @@ export const createNewRecord = {
   icon: 'el-icon-circle-plus-outline',
   actionName: 'createNewRecord',
   createNewRecord: ({ parentUuid, containerUuid }) => {
+    const tab = store.getters.getStoredTab(parentUuid, containerUuid)
+    if (!tab.isInsertRecord || tab.isReadOnly) {
+      return false
+    }
+    const recordUuid = store.getters.getUuidOfContainer(containerUuid)
+    if (isEmptyValue(recordUuid)) {
+      return false
+    }
+
+    // set old record
+    store.commit('setRecordUuidOnPanel', {
+      containerUuid,
+      recordUuid
+    })
+
     store.dispatch('setTabDefaultValues', {
       parentUuid,
       containerUuid
@@ -114,7 +148,7 @@ export const createNewRecord = {
 
 export const undoChange = {
   sequence: 0,
-  name: language.t('actionMenu.createNewRecord'),
+  name: language.t('actionMenu.undo'),
   type: 'undoModifyData',
   enabled: ({ parentUuid, containerUuid }) => {
     return isEmptyValue(
@@ -125,6 +159,25 @@ export const undoChange = {
   icon: 'el-icon-circle-plus-outline',
   actionName: 'undoChange',
   undoChange: ({ parentUuid, containerUuid }) => {
+    const oldRecordUuid = store.getters.getCurrentRecordOnPanel(containerUuid)
+    if (isEmptyValue(oldRecordUuid)) {
+      return false
+    }
+
+    const row = store.getters.getTabRowData({
+      containerUuid,
+      recordUuid: oldRecordUuid
+    })
+
+    const attributes = convertObjectToKeyValue({
+      object: row
+    })
+
+    store.dispatch('notifyPanelChange', {
+      parentUuid,
+      containerUuid,
+      attributes
+    })
   }
 }
 
@@ -135,7 +188,7 @@ export const deleteRecord = {
   name: language.t('actionMenu.deleteRecord'),
   enabled: ({ parentUuid, containerUuid }) => {
     const tab = store.getters.getStoredTab(parentUuid, containerUuid)
-    if (tab.isInsertRecord && tab.isDeleteable) {
+    if (tab.isDeleteable && !tab.isReadOnly) {
       const recordUuid = store.getters.getUuidOfContainer(containerUuid)
       return !isEmptyValue(recordUuid)
     }
@@ -147,6 +200,11 @@ export const deleteRecord = {
   type: 'deleteEntity',
   actionName: 'deleteRecord',
   deleteRecord: ({ parentUuid, containerUuid, recordId, recordUuid }) => {
+    const tab = store.getters.getStoredTab(parentUuid, containerUuid)
+    if (!tab.isDeleteable || tab.isReadOnly) {
+      return false
+    }
+
     store.dispatch('deleteEntity', {
       parentUuid,
       containerUuid,
@@ -183,7 +241,9 @@ export const runProcessOfWindow = {
   actionName: 'runProcessOfWindow',
   runProcessOfWindow: ({ parentUuid, containerUuid, uuid }) => {
     store.commit('setSelectProcessWindows', uuid)
+
     store.commit('setShowedModalDialog', {
+      parentUuid: containerUuid,
       containerUuid: uuid,
       isShowed: true
     })
@@ -204,7 +264,9 @@ export const generateReportOfWindow = {
   actionName: 'generateReportOfWindow',
   generateReportOfWindow: ({ parentUuid, containerUuid, uuid }) => {
     store.commit('setSelectProcessWindows', uuid)
+
     store.commit('setShowedModalDialog', {
+      parentUuid: containerUuid,
       containerUuid: uuid,
       isShowed: true
     })
@@ -269,11 +331,35 @@ export const refreshRecords = {
   icon: 'el-icon-refresh',
   actionName: 'refreshRecords',
   refreshRecords: ({ parentUuid, containerUuid }) => {
-    // used to window
+    // refresh records on current tab
     store.dispatch('getEntities', {
       parentUuid,
       containerUuid
     })
+
+    // get tabs with same table to refresh without current tab
+    const tableName = store.getters.getTableName(parentUuid, containerUuid)
+    const tabsWithSameTable = store.getters.getStoredTabsFromTableName({
+      parentUuid,
+      containerUuid,
+      tableName
+    })
+    // update records on tabs with same table
+    if (!isEmptyValue(tabsWithSameTable)) {
+      tabsWithSameTable.forEach(tab => {
+        const isLoaded = store.getters.getIsLoadedTabRecord({
+          containerUuid: tab.uuid
+        })
+        // if loaded data refresh this data
+        // TODO: Verify with one entity, not all list
+        if (isLoaded) {
+          store.dispatch('getEntities', {
+            parentUuid,
+            containerUuid: tab.uuid
+          })
+        }
+      })
+    }
   }
 }
 
@@ -420,6 +506,8 @@ export function generateTabs({
       // app properties
       isShowedRecordNavigation: !(currentTab.isSingleRow || isParentTab), // TODO: @deprecated
       isShowedTableRecords: !(currentTab.isSingleRow || isParentTab),
+      isTableViewFullScreen: false,
+      isViewFullScreen: false,
       index // this index is not related to the index in which the tabs are displayed
     }
 
@@ -431,8 +519,10 @@ export function generateTabs({
       isAddLinkColumn: true,
       fieldOverwrite: {
         isReadOnlyFromForm: true,
+        isShowedFromUser: false,
         firstTabUuid
-      }
+      },
+      evaluateDefaultFieldShowed
     })
   })
 
@@ -474,6 +564,16 @@ export const containerManager = {
   getFieldsList: ({ parentUuid, containerUuid }) => {
     return store.getters.getStoredFieldsFromTab(parentUuid, containerUuid)
   },
+  getFieldsToHidden: ({ parentUuid, containerUuid, fieldsList, showedMethod, isEvaluateDefaultValue, isTable }) => {
+    return store.getters.getTabFieldsListToHidden({
+      parentUuid,
+      containerUuid,
+      fieldsList,
+      showedMethod,
+      isEvaluateDefaultValue,
+      isTable
+    })
+  },
 
   actionPerformed: function(eventInfo) {
     console.log('actionPerformed: ', eventInfo)
@@ -497,7 +597,17 @@ export const containerManager = {
     return new Promise()
   },
 
+  panelMain() {
+    return 'mainWindow'
+  },
+
   isDisplayedField,
+  isDisplayedDefault: ({ isMandatory, isParent, defaultValue, parsedDefaultValue }) => {
+    if (isMandatory && !isParent && isEmptyValue(defaultValue)) {
+      return true
+    }
+    return false
+  },
   isDisplayedColumn,
 
   isReadOnlyField(field) {
@@ -698,7 +808,7 @@ export const containerManager = {
   setPage: ({
     parentUuid,
     containerUuid,
-    pageNumber = 0
+    pageNumber = 1
   }) => {
     store.dispatch('getEntities', {
       parentUuid,

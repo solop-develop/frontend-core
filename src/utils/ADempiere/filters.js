@@ -163,11 +163,11 @@ class Filters {
         type = 'NUMBER'
       }
 
-      this.filtersList.set(columnName, [
+      this.filtersList.set(columnName, {
         columnName,
         type,
         value
-      ])
+      })
     })
 
     return this
@@ -179,6 +179,18 @@ class Filters {
    */
   getAsArray() {
     return Array.from(this.filtersList.values())
+  }
+
+  /**
+   * Get array of objects, [{ columnName, value, operator }]
+   * @returns array objects
+   */
+  getAsObject() {
+    const filters = []
+    for (const item of this.filtersList) {
+      filters.push(item[1])
+    }
+    return filters
   }
 
   get asArray() {

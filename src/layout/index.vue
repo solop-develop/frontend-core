@@ -67,6 +67,7 @@ export default {
     @include clearfix;
     position: relative;
     height: 100%;
+    overflow: hidden;
     width: 100%;
 
     &.mobile.openSidebar {

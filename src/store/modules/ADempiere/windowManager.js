@@ -27,16 +27,21 @@ import {
 } from '@/api/ADempiere/common/persistence.js'
 
 // constants
+import { UUID } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
 
 // utils and helper methods
+import { containerManager } from '@/utils/ADempiere/dictionary/window'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 
 const initState = {
-  tabData: {}
+  tabData: {},
+  // container uuid: record uuid
+  currentRecordOnPanel: {}
 }
 
 const windowManager = {
@@ -46,6 +51,7 @@ const windowManager = {
     setTabData(state, {
       parentUuid,
       containerUuid,
+      searchValue = '',
       recordsList = [],
       selectionsList = [],
       nextPageToken,
@@ -57,6 +63,7 @@ const windowManager = {
       const dataTab = {
         parentUuid,
         containerUuid,
+        searchValue,
         recordsList,
         selectionsList,
         nextPageToken,
@@ -68,11 +75,22 @@ const windowManager = {
       Vue.set(state.tabData, containerUuid, dataTab)
     },
 
+    clearTabData(state, { containerUuid }) {
+      Vue.set(state.tabData, containerUuid, undefined)
+    },
+
     setTabSelectionsList(state, {
       containerUuid,
       selectionsList
     }) {
       Vue.set(state.tabData[containerUuid], 'selectionsList', selectionsList)
+    },
+
+    setRecordUuidOnPanel(state, {
+      containerUuid,
+      recordUuid
+    }) {
+      Vue.set(state.currentRecordOnPanel, containerUuid, recordUuid)
     },
 
     resetStateWindowManager(state) {
@@ -89,9 +107,12 @@ const windowManager = {
      * @param {array} filters used as where clause
      * @param {number} pageNumber
      * @returns {promise} array entities list
+     * @returns {promise} array current entity
      */
     getEntities({
       commit,
+      dispatch,
+      getters,
       rootGetters
     }, {
       parentUuid,
@@ -101,15 +122,26 @@ const windowManager = {
       pageNumber
     }) {
       return new Promise(resolve => {
+        const storedPage = getters.getTabPageNumber({
+          containerUuid
+        })
+        if (isEmptyValue(pageNumber)) {
+          // refresh with same page
+          pageNumber = storedPage
+        }
         const currentPageNumber = pageNumber
+        const pageToken = generatePageToken({ pageNumber })
 
-        let pageToken
-        if (!isEmptyValue(pageNumber)) {
-          pageNumber-- // TODO: Remove with fix in backend
-          pageToken = generatePageToken({ pageNumber })
+        if (isEmptyValue(searchValue)) {
+          searchValue = getters.getSearchValueTabRecordsList({
+            containerUuid
+          })
         }
 
-        const { contextColumnNames, name, linkColumnName, parentColumnName } = rootGetters.getStoredTab(parentUuid, containerUuid)
+        const {
+          contextColumnNames, name, linkColumnName,
+          parentColumnName, fieldsList
+        } = rootGetters.getStoredTab(parentUuid, containerUuid)
 
         // add filters with link column name and parent column name
         if (!isEmptyValue(linkColumnName) &&
@@ -126,7 +158,7 @@ const windowManager = {
               value
             })
           } else {
-            console.warn(`without context to ${linkColumnName} to filter in getEntities`)
+            console.warn(`Get entities without context to ${linkColumnName} to filter in getEntities`)
           }
         }
         if (!isEmptyValue(parentColumnName) &&
@@ -143,7 +175,7 @@ const windowManager = {
               value
             })
           } else {
-            console.warn(`without context to ${parentColumnName} to filter in getEntities`)
+            console.warn(`Get entities without context to ${parentColumnName} to filter in getEntities`)
           }
         }
 
@@ -156,11 +188,7 @@ const windowManager = {
 
         const isWithoutValues = contextAttributesList.find(attribute => isEmptyValue(attribute.value))
         if (isWithoutValues) {
-          console.warn(`Without response, fill the **${isWithoutValues.key}** field in **${name}** tab.`)
-          showMessage({
-            message: language.t('notifications.mandatoryFieldMissing') + isWithoutValues.key,
-            type: 'info'
-          })
+          console.warn(`Get entites without response, fill the **${isWithoutValues.key}** field in **${name}** tab.`)
           resolve([])
           return
         }
@@ -170,6 +198,7 @@ const windowManager = {
           containerUuid
         })
 
+        const currentRoute = router.app._route
         getEntities({
           windowUuid: parentUuid,
           tabUuid: containerUuid,
@@ -188,9 +217,56 @@ const windowManager = {
               }
             })
 
+            // update current record
+            if (!isEmptyValue(dataToStored)) {
+              let currentRow = dataToStored.at(0) // set first record
+              const recordUuid = rootGetters.getUuidOfContainer(containerUuid)
+              if (!isEmptyValue(recordUuid) && storedPage === pageNumber) {
+                const recordFromUuid = dataToStored.find(record => record[UUID] === recordUuid)
+                if (!isEmptyValue(recordFromUuid)) {
+                  currentRow = recordFromUuid
+                }
+              }
+
+              // remove datatables app attributes
+              for (const key in ROW_ATTRIBUTES) {
+                delete currentRow[key]
+              }
+
+              const defaultValues = getters.getParsedDefaultValues({
+                parentUuid,
+                containerUuid,
+                isSOTrxMenu: currentRoute.meta.isSalesTransaction,
+                fieldsList,
+                formatToReturn: 'object'
+              })
+              const attributes = convertObjectToKeyValue({
+                object: {
+                  ...defaultValues,
+                  ...currentRow
+                }
+              })
+              dispatch('updateValuesOfContainer', {
+                parentUuid,
+                containerUuid,
+                attributes
+              })
+
+              // active logics with set records values
+              fieldsList.forEach(field => {
+                // change Dependents
+                dispatch('changeDependentFieldsList', {
+                  field,
+                  fieldsList,
+                  containerManager
+                })
+              })
+            }
+
             commit('setTabData', {
               parentUuid,
               containerUuid,
+              searchValue,
               recordsList: dataToStored,
               nextPageToken: dataResponse.nextPageToken,
               pageNumber: currentPageNumber,
@@ -200,7 +276,8 @@ const windowManager = {
 
             resolve(dataToStored)
           })
-          .catch(() => {
+          .catch(error => {
+            console.warn(`Error get entites`, error.message)
             commit('setTabData', {
               parentUuid,
               isLoaded: true,
@@ -307,6 +384,27 @@ const windowManager = {
             reject(error)
           })
       })
+    },
+
+    clearTabData({ commit, rootGetters }, {
+      parentUuid,
+      containerUuid
+    }) {
+      // clear only this tab
+      if (!isEmptyValue(containerUuid)) {
+        commit('clearTabData', {
+          containerUuid
+        })
+        return
+      }
+
+      // clear all tabs
+      const { tabsList } = rootGetters.getStoredWindow(parentUuid)
+      tabsList.forEach(tab => {
+        commit('clearTabData', {
+          containerUuid: tab.uuid
+        })
+      })
     }
   },
 
@@ -315,10 +413,11 @@ const windowManager = {
      * Used by result in tab
      * @param {string} containerUuid
      */
-    getTabData: (state, getters) => ({ containerUuid }) => {
+    getTabData: (state) => ({ containerUuid }) => {
       return state.tabData[containerUuid] || {
         parentUuid: undefined,
         containerUuid,
+        searchValue: '',
         recordsList: [],
         selectionsList: [],
         nextPageToken: undefined,
@@ -329,7 +428,14 @@ const windowManager = {
       }
     },
     getIsLoadedTabRecord: (state, getters) => ({ containerUuid }) => {
-      return state.tabData[containerUuid].isLoaded
+      return getters.getTabData({
+        containerUuid
+      }).isLoaded || false
+    },
+    getSearchValueTabRecordsList: (state, getters) => ({ containerUuid }) => {
+      return getters.getTabData({
+        containerUuid
+      }).searchValue || ''
     },
     getTabRecordCount: (state, getters) => ({ containerUuid }) => {
       return getters.getTabData({ containerUuid }).recordCount
@@ -352,11 +458,11 @@ const windowManager = {
         return recordsList[rowIndex]
       }
 
-      return recordsList.find(itemData => {
-        if (itemData.UUID === recordUuid) {
-          return true
-        }
-      })
+      if (!isEmptyValue(recordUuid)) {
+        return recordsList.find(itemData => {
+          return itemData.UUID === recordUuid
+        })
+      }
     },
     getTabCellData: (state, getters) => ({ containerUuid, recordUuid, rowIndex, columnName }) => {
       const recordsList = getters.getTabRecordsList({ containerUuid })
@@ -378,6 +484,10 @@ const windowManager = {
         return row[columnName]
       }
       return undefined
+    },
+
+    getCurrentRecordOnPanel: (state) => (containerUuid) => {
+      return state.currentRecordOnPanel[containerUuid]
     }
   }
 }
