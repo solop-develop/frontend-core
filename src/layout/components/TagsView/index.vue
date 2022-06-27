@@ -216,7 +216,6 @@ export default {
           if (panelType === 'window') {
             parentUuid = view.meta.uuid
             containerUuid = view.meta.tabUuid
-            this.$store.dispatch('setWindowOldRoute')
           }
 
           const defaultValuesDispatch = `set${capitalize(panelType)}DefaultValues`
@@ -228,18 +227,22 @@ export default {
               panelType,
               isNewRecord: false
             })
+          } else {
+            this.$store.dispatch('setDefaultValues', {
+              parentUuid,
+              containerUuid,
+              panelType,
+              isNewRecord: false
+            })
           }
 
-          this.$store.dispatch('setDefaultValues', {
-            parentUuid,
-            containerUuid,
-            panelType,
-            isNewRecord: false
-          })
-
-          if (['window', 'browser'].includes(panelType)) {
-            this.$store.dispatch('deleteRecordContainer', {
-              viewUuid: view.meta.uuid
+          if (panelType === 'window') {
+            this.$store.dispatch('clearTabData', {
+              parentUuid
+            })
+          } else if (panelType === 'browser') {
+            this.$store.dispatch('clearBrowserData', {
+              containerUuid
             })
           }
         }

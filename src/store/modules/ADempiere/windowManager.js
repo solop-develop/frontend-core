@@ -75,6 +75,10 @@ const windowManager = {
       Vue.set(state.tabData, containerUuid, dataTab)
     },
 
+    clearTabData(state, { containerUuid }) {
+      Vue.set(state.tabData, containerUuid, undefined)
+    },
+
     setTabSelectionsList(state, {
       containerUuid,
       selectionsList
@@ -379,6 +383,27 @@ const windowManager = {
             })
             reject(error)
           })
+      })
+    },
+
+    clearTabData({ commit, rootGetters }, {
+      parentUuid,
+      containerUuid
+    }) {
+      // clear only this tab
+      if (!isEmptyValue(containerUuid)) {
+        commit('clearTabData', {
+          containerUuid
+        })
+        return
+      }
+
+      // clear all tabs
+      const { tabsList } = rootGetters.getStoredWindow(parentUuid)
+      tabsList.forEach(tab => {
+        commit('clearTabData', {
+          containerUuid: tab.uuid
+        })
       })
     }
   },

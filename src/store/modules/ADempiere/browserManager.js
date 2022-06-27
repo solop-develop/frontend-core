@@ -322,6 +322,15 @@ const browserControl = {
             reject(error)
           })
       })
+    },
+
+    clearBrowserData({ commit }, {
+      containerUuid
+    }) {
+      // clear data on this browser
+      commit('clearBrowserData', {
+        containerUuid
+      })
     }
   },
 
