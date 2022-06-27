@@ -51,6 +51,7 @@ const windowManager = {
     setTabData(state, {
       parentUuid,
       containerUuid,
+      searchValue = '',
       recordsList = [],
       selectionsList = [],
       nextPageToken,
@@ -62,6 +63,7 @@ const windowManager = {
       const dataTab = {
         parentUuid,
         containerUuid,
+        searchValue,
         recordsList,
         selectionsList,
         nextPageToken,
@@ -125,6 +127,12 @@ const windowManager = {
         }
         const currentPageNumber = pageNumber
         const pageToken = generatePageToken({ pageNumber })
+
+        if (isEmptyValue(searchValue)) {
+          searchValue = getters.getSearchValueTabRecordsList({
+            containerUuid
+          })
+        }
 
         const {
           contextColumnNames, name, linkColumnName,
@@ -254,6 +262,7 @@ const windowManager = {
             commit('setTabData', {
               parentUuid,
               containerUuid,
+              searchValue,
               recordsList: dataToStored,
               nextPageToken: dataResponse.nextPageToken,
               pageNumber: currentPageNumber,
@@ -383,6 +392,7 @@ const windowManager = {
       return state.tabData[containerUuid] || {
         parentUuid: undefined,
         containerUuid,
+        searchValue: '',
         recordsList: [],
         selectionsList: [],
         nextPageToken: undefined,
@@ -396,6 +406,11 @@ const windowManager = {
       return getters.getTabData({
         containerUuid
       }).isLoaded || false
+    },
+    getSearchValueTabRecordsList: (state, getters) => ({ containerUuid }) => {
+      return getters.getTabData({
+        containerUuid
+      }).searchValue || ''
     },
     getTabRecordCount: (state, getters) => ({ containerUuid }) => {
       return getters.getTabData({ containerUuid }).recordCount

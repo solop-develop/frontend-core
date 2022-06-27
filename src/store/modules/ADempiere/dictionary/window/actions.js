@@ -189,6 +189,31 @@ export default {
                 containerUuid: process.uuid,
                 tableName,
                 recordUuid
+              }).then(async processResponse => {
+                if (processResponse.isError) {
+                  return
+                }
+
+                // update records
+                await dispatch('getEntities', {
+                  parentUuid,
+                  containerUuid
+                })
+                // update records and logics on child tabs
+                tabDefinition.childTabs.filter(tabItem => {
+                  // get loaded tabs with records
+                  return store.getters.getIsLoadedTabRecord({
+                    containerUuid: tabItem.uuid
+                  })
+                }).forEach(tabItem => {
+                  // if loaded data refresh this data
+                  // TODO: Verify with get one entity, not get all list
+                  store.dispatch('getEntities', {
+                    parentUuid,
+                    containerUuid: tabItem.uuid,
+                    pageNumber: 1 // reload with first page
+                  })
+                })
               })
             },
             beforeOpen: () => {

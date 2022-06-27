@@ -20,79 +20,12 @@ import store from '@/store'
 import lang from '@/lang'
 
 // utils and helper methods
-import {
-  isDisplayedField,
-  isMandatoryField,
-  isReadOnlyField
-} from '@/utils/ADempiere/dictionary/process.js'
+import { containerManager } from '@/utils/ADempiere/dictionary/process.js'
 
 export default (processUuid) => {
   const storedProcessDefinition = computed(() => {
     return store.getters.getStoredProcess(processUuid)
   })
-
-  const containerManager = {
-    getPanel({ containerUuid }) {
-      return store.getters.getStoredProcess(containerUuid)
-    },
-    getFieldsList({ containerUuid }) {
-      return store.getters.getStoredFieldsFromProcess(containerUuid)
-    },
-
-    actionPerformed: ({ field, value }) => {
-      // store.dispatch('processActionPerformed', {
-      //   field,
-      //   value
-      // })
-    },
-
-    setDefaultValues: ({ containerUuid }) => {
-      store.dispatch('setProcessDefaultValues', {
-        containerUuid
-      })
-    },
-
-    isDisplayedField,
-
-    isReadOnlyField,
-
-    isMandatoryField,
-
-    changeFieldShowedFromUser({ containerUuid, fieldsShowed }) {
-      store.dispatch('changeProcessFieldShowedFromUser', {
-        containerUuid,
-        fieldsShowed
-      })
-    },
-
-    /**
-     * @returns Promisse with value and displayedValue
-     */
-    getDefaultValue({ parentUuid, containerUuid, uuid, id, contextColumnNames, columnName, value }) {
-      return store.dispatch('getDefaultValueFromServer', {
-        parentUuid,
-        containerUuid,
-        contextColumnNames,
-        processParameterUuid: uuid,
-        id,
-        //
-        columnName,
-        value
-      })
-    },
-    getLookupList({ parentUuid, containerUuid, contextColumnNames, uuid, searchValue, isAddBlankValue = false, blankValue }) {
-      return store.dispatch('getLookupListFromServer', {
-        parentUuid,
-        containerUuid,
-        contextColumnNames,
-        processParameterUuid: uuid,
-        searchValue,
-        // app attributes
-        isAddBlankValue,
-        blankValue
-      })
-    }
-  }
 
   const actionsList = computed(() => {
     return store.getters.getStoredActionsMenu({
