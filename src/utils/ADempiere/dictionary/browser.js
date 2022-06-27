@@ -39,14 +39,14 @@ export function isDisplayedField({ displayType, isActive, isQueryCriteria, displ
 /**
  * Default showed field from user
  */
-export function evaluateDefaultFieldShowed({ defaultValue, isMandatory, isShowedFromUser }) {
-  if (isMandatory || !isEmptyValue(defaultValue)) {
+export function evaluateDefaultFieldShowed({ defaultValue, parsedDefaultValue, isMandatory, isShowedFromUser }) {
+  if (isMandatory) {
     return true
   }
-  if (isShowedFromUser) {
+  if (!isEmptyValue(defaultValue) || !isEmptyValue(parsedDefaultValue)) {
     return true
   }
-  return false
+  return Boolean(isShowedFromUser)
 }
 
 /**

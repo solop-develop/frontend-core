@@ -224,7 +224,7 @@ export function generateField({
       // if field with value displayed in main panel
       field.isShowedFromUser = evaluateDefaultFieldShowed({
         ...field,
-        defaultValue: parsedDefaultValueTo
+        parsedDefaultValue: parsedDefaultValueTo
       })
     }
   }
@@ -233,7 +233,7 @@ export function generateField({
   if (!typeRange) {
     field.isShowedFromUser = evaluateDefaultFieldShowed({
       ...field,
-      defaultValue: parsedDefaultValue
+      parsedDefaultValue
     })
   }
   field.isShowedFromUserDefault = field.isShowedFromUser

@@ -178,7 +178,7 @@ export default {
     }
 
     // all optionals (not mandatory) fields
-    const a = fieldsList
+    return fieldsList
       .filter(fieldItem => {
         const { defaultValue } = fieldItem
 
@@ -201,8 +201,6 @@ export default {
 
         return true
       })
-    console.log(a)
-    return a
   }
 
 }

@@ -93,7 +93,7 @@ export default {
       let relatedColumns = []
       const parentColumns = tabDefinition.fieldsList
         .filter(fieldItem => {
-          return fieldItem.isParent || fieldItem.isKey
+          return fieldItem.isParent || fieldItem.isKey || fieldItem.isMandatory
         })
         .map(fieldItem => {
           return fieldItem.columnName

@@ -45,15 +45,14 @@ export function isDisplayedField({ displayType, isActive, isDisplayed, displayLo
 /**
  * Default showed field from user
  */
-export function evaluateDefaultFieldShowed({ name, defaultValue, isMandatory, isShowedFromUser }) {
-  if (!isEmptyValue(defaultValue) || isMandatory) {
+export function evaluateDefaultFieldShowed({ defaultValue, parsedDefaultValue, isMandatory, isShowedFromUser }) {
+  if (isMandatory) {
     return true
   }
-
-  if (isShowedFromUser) {
+  if (!isEmptyValue(defaultValue) || !isEmptyValue(parsedDefaultValue)) {
     return true
   }
-  return false
+  return Boolean(isShowedFromUser)
 }
 
 /**
@@ -198,10 +197,13 @@ export const containerManager = {
   },
 
   isDisplayedField,
-  isDisplayedDefault: ({ isMandatory, defaultValue }) => {
+  isDisplayedDefault: ({ isMandatory, defaultValue, isShowedFromUser }) => {
     // add is showed from user
-    if (isMandatory || !isEmptyValue(defaultValue)) {
+    if (isMandatory) {
       return true
+    }
+    if (!isEmptyValue(defaultValue)) {
+      return isShowedFromUser
     }
     return false
   },
