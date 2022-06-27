@@ -634,6 +634,12 @@ const reportManager = {
       return state.reportViewsList[containerUuid] || []
     },
 
+    getReportView: (state, getters) => ({ containerUuid, reportViewUuid }) => {
+      return getters.getReportViewList(containerUuid).find(reportView => {
+        return reportView.reportViewUuid === reportViewUuid
+      })
+    },
+
     getDrillTablesList: (state) => (containerUuid) => {
       return state.drillTablesList[containerUuid] || []
     }
