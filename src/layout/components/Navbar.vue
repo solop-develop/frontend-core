@@ -131,14 +131,14 @@ export default {
     fieldPanel() {
       return this.$store.getters.getStoredFieldsFromProcess(this.$route.meta.uuid).filter(field => field.isMandatory || field.isShowedFromUser)
     },
-    fieldtab() {
+    fieldTab() {
       const tab = this.$store.getters.getStoredWindow(this.$route.meta.uuid)
       if (!this.isEmptyValue(tab)) {
         const tabChildIndex = parseInt(this.$route.query.tabChild)
         const tabIndex = parseInt(this.$route.query.tab)
-        const listFieldTab = tab.tabsListParent[tabIndex].fieldsList.filter(field => field.isMandatory && field.isShowedFromUser)
-        const tabsListChild = tab.tabsListChild[tabChildIndex].fieldsList.filter(field => field.isMandatory && field.isShowedFromUser)
-        return listFieldTab.concat(tabsListChild)
+        const fieldsListParentTab = tab.tabsListParent[tabIndex].fieldsList.filter(field => field.isMandatory && field.isShowedFromUser)
+        const fieldsListChildTab = tab.tabsListChild[tabChildIndex].fieldsList.filter(field => field.isMandatory && field.isShowedFromUser)
+        return fieldsListParentTab.concat(fieldsListChildTab)
       }
       return []
     },
