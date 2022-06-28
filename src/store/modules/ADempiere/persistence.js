@@ -18,6 +18,7 @@ import language from '@/lang'
 
 // constants
 import { LOG_COLUMNS_NAME_LIST } from '@/utils/ADempiere/constants/systemColumns'
+import { ROW_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
 
 // api request methods
 import {
@@ -108,7 +109,7 @@ const persistence = {
       })
     },
 
-    flushPersistenceQueue({ getters }, {
+    flushPersistenceQueue({ commit, getters }, {
       containerUuid,
       tableName,
       recordUuid
@@ -152,6 +153,17 @@ const persistence = {
                   type: 'success'
                 })
                 response.type = 'createEntity'
+
+                // add new row on table
+                commit('setTabRow', {
+                  containerUuid,
+                  row: {
+                    ...response.attributes,
+                    ...ROW_ATTRIBUTES
+                    // rowIndex: 0
+                  }
+                })
+
                 resolve(response)
               })
               .catch(error => reject(error))

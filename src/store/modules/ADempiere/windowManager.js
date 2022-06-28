@@ -75,6 +75,17 @@ const windowManager = {
       Vue.set(state.tabData, containerUuid, dataTab)
     },
 
+    setTabRow(state, { containerUuid, row, index }) {
+      const recordsList = state.tabData[containerUuid].recordsList
+      if (!isEmptyValue(index)) {
+        recordsList.splice(index, 0, row)
+      } else {
+        recordsList.unshift(row)
+      }
+
+      Vue.set(state.tabData[containerUuid], 'recordsList', recordsList)
+    },
+
     clearTabData(state, { containerUuid }) {
       Vue.set(state.tabData, containerUuid, undefined)
     },

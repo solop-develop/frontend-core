@@ -22,7 +22,7 @@ const actionMenu = {
   createNewRecord: 'Nuevo Registro',
   shareLink: 'Compartir Enlace',
   shareLinkDescription: 'Compartir ruta actual en el porta-papeles',
-  undo: 'Deshaser',
+  undo: 'Deshacer',
   withoutActions: 'Sin Actiones',
   zoomWindow: 'Acercar Ventana',
   // process
