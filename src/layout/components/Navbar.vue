@@ -20,7 +20,7 @@
         <el-tooltip class="item" effect="dark" content="Reinicia Cache" placement="top-start">
           <el-button icon="el-icon-s-tools" type="text" style="color: black;font-size: 18px;" @click="cacheReset()" />
         </el-tooltip>
-        <el-tooltip v-if="$route.meta.type !== 'window'" :content="$t('route.guide')" placement="top-start">
+        <el-tooltip :content="$t('route.guide')" placement="top-start">
           <el-button icon="el-icon-info" type="text" style="color: black;font-size: larger" @click.prevent.stop="guide" />
         </el-tooltip>
         <search id="header-search" class="right-menu-item" />
@@ -131,6 +131,17 @@ export default {
     fieldPanel() {
       return this.$store.getters.getStoredFieldsFromProcess(this.$route.meta.uuid).filter(field => field.isMandatory || field.isShowedFromUser)
     },
+    fieldtab() {
+      const tab = this.$store.getters.getStoredWindow(this.$route.meta.uuid)
+      if (!this.isEmptyValue(tab)) {
+        const tabChildIndex = parseInt(this.$route.query.tabChild)
+        const tabIndex = parseInt(this.$route.query.tab)
+        const listFieldTab = tab.tabsListParent[tabIndex].fieldsList.filter(field => field.isMandatory || field.isShowedFromUser)
+        const tabsListChild = tab.tabsListChild[tabChildIndex].fieldsList.filter(field => field.isMandatory || field.isShowedFromUser)
+        return listFieldTab.concat(tabsListChild)
+      }
+      return []
+    },
     getForm() {
       return this.$store.getters.getForm(this.$route.meta.uuid)
     },
@@ -230,7 +241,7 @@ export default {
           })
           break
         case 'window':
-          field = this.listWindow.map(steps => {
+          field = this.fieldtab.map(steps => {
             return {
               element: '#' + steps.columnName,
               popover: {
