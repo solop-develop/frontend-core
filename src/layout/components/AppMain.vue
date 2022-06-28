@@ -22,7 +22,7 @@ export default {
   },
 
   created() {
-    this.readRouteParameters()
+    // this.readRouteParameters()
   },
 
   methods: {

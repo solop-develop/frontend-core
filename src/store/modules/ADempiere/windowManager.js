@@ -129,6 +129,12 @@ const windowManager = {
           // refresh with same page
           pageNumber = storedPage
         }
+
+        if (!isEmptyValue(filters)) {
+          const parseFilter = JSON.parse(filters)
+          filters = [parseFilter]
+        }
+
         const currentPageNumber = pageNumber
         const pageToken = generatePageToken({ pageNumber })
 
