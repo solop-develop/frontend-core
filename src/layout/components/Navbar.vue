@@ -136,8 +136,8 @@ export default {
       if (!this.isEmptyValue(tab)) {
         const tabChildIndex = parseInt(this.$route.query.tabChild)
         const tabIndex = parseInt(this.$route.query.tab)
-        const listFieldTab = tab.tabsListParent[tabIndex].fieldsList.filter(field => field.isMandatory || field.isShowedFromUser)
-        const tabsListChild = tab.tabsListChild[tabChildIndex].fieldsList.filter(field => field.isMandatory || field.isShowedFromUser)
+        const listFieldTab = tab.tabsListParent[tabIndex].fieldsList.filter(field => field.isMandatory && field.isShowedFromUser)
+        const tabsListChild = tab.tabsListChild[tabChildIndex].fieldsList.filter(field => field.isMandatory && field.isShowedFromUser)
         return listFieldTab.concat(tabsListChild)
       }
       return []
@@ -174,6 +174,7 @@ export default {
   },
   methods: {
     guide() {
+      this.driver = new Driver()
       const value = this.formatGuide(this.$route.meta.type)
       this.driver.defineSteps(value)
       this.driver.start()
