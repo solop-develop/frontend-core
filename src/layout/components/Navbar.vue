@@ -242,7 +242,7 @@ export default {
           })
           break
         case 'window':
-          field = this.fieldtab.map(steps => {
+          field = this.fieldTab.map(steps => {
             return {
               element: '#' + steps.columnName,
               popover: {
