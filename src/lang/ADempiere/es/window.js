@@ -16,6 +16,9 @@
 const window = {
   newRecord: 'Nuevo Registro',
   deleteRecord: 'Eliminar Registro',
+  confirmDeleteRecord: '¿Está seguro de que quiere eliminar este registro?',
+  cancel: 'Cancelar',
+  confirm: 'Confirmar',
   undoNew: 'Descartar Nuevo Registro',
   containerInfo: {
     notes: 'Listado de Notas',

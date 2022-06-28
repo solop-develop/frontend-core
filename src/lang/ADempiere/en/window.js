@@ -17,6 +17,9 @@
 const window = {
   newRecord: 'New Record',
   deleteRecord: 'Delete Record',
+  confirmDeleteRecord: 'Are you sure you want to delete this record?',
+  cancel: 'Cancel',
+  confirm: 'Confirm',
   undoNew: 'Undo New Record',
   containerInfo: {
     notes: 'Notes List',
