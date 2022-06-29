@@ -61,6 +61,7 @@ export default {
       activity: 'Worflow for Approval',
       link: 'Go to Procces Logs'
     },
+    resetCache: 'Reset Cache',
     dashboard: 'Dashboard',
     github: 'Github',
     logOut: 'Log Out',

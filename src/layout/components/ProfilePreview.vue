@@ -7,7 +7,7 @@
           <br>
           <b> {{ userName }} </b>
           <br>
-          <el-button round style="margin-top: 3%;"> {{ currentRole.name }} </el-button>
+          <el-button round style="margin-top: 3%;" @click="handleClick"> {{ currentRole.name }} </el-button>
         </el-col>
       </el-row>
     </router-link>
@@ -69,6 +69,13 @@ export default {
       })
 
       return uri
+    }
+  },
+  methods: {
+    handleClick() {
+      this.$router.push({
+        name: 'Profile'
+      }, () => {})
     }
   }
 }

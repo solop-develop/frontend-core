@@ -61,6 +61,7 @@ export default {
       activity: 'Flujos de Trabajos por Aprobar',
       link: 'Ir a Histórico de Procesos'
     },
+    resetCache: 'Reiniciar Cache',
     logOut: 'Salir',
     dashboard: 'Panel de control',
     github: 'Github',

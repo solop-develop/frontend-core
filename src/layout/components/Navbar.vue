@@ -17,9 +17,9 @@
     </div>
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <el-tooltip class="item" effect="dark" content="Reinicia Cache" placement="top-start">
-          <el-button icon="el-icon-s-tools" type="text" style="color: black;font-size: 18px;" @click="cacheReset()" />
-        </el-tooltip>
+        <!-- <el-tooltip class="item" effect="dark" content="Reinicia Cache" placement="top-start">
+          <el-button icon="el-icon-refresh-right" type="text" style="color: black;font-size: 18px;" @click="cacheReset()" />
+        </el-tooltip> -->
         <el-tooltip :content="$t('route.guide')" placement="top-start">
           <el-button icon="el-icon-info" type="text" style="color: black;font-size: larger" @click.prevent.stop="guide" />
         </el-tooltip>
@@ -47,7 +47,7 @@
             :user="user"
             :avatar="avatar"
           />
-          <el-button type="text" style="float: left;" @click="handleClick">{{ $t('navbar.profile') }}</el-button>
+          <el-button type="text" style="float: left;" @click="cacheReset()"> {{ $t('navbar.resetCache') }}</el-button>
           <el-button type="text" style="float: right;" @click="logout">{{ $t('navbar.logOut') }}</el-button>
         </div>
         <el-button slot="reference" type="text" style="padding-top: 0px;">
