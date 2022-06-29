@@ -29,9 +29,11 @@
 
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
 
-        <!-- <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
+        <!--
+        <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
-        </el-tooltip> -->
+        </el-tooltip>
+        -->
 
         <lang-select class="right-menu-item hover-effect" />
 
