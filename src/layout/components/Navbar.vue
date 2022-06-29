@@ -29,9 +29,9 @@
 
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
 
-        <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
+        <!-- <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
-        </el-tooltip>
+        </el-tooltip> -->
 
         <lang-select class="right-menu-item hover-effect" />
 
@@ -65,7 +65,7 @@ import Breadcrumb from '@theme/components/Breadcrumb'
 import Hamburger from '@theme/components/Hamburger'
 import ErrorLog from '@theme/components/ErrorLog'
 import Screenfull from '@theme/components/Screenfull'
-import SizeSelect from '@theme/components/SizeSelect'
+// import SizeSelect from '@theme/components/SizeSelect'
 import LangSelect from '@theme/components/LangSelect'
 import Search from '@theme/components/HeaderSearch'
 import HeaderNotification from '@theme/components/ADempiere/HeaderNotification'
@@ -80,7 +80,7 @@ export default {
     Hamburger,
     ErrorLog,
     Screenfull,
-    SizeSelect,
+    // SizeSelect,
     LangSelect,
     ProfilePreview,
     Search
