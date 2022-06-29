@@ -43,6 +43,7 @@
               <el-form
                 label-position="top"
                 label-width="200px"
+                @submit.native.prevent="notSubmitForm"
               >
                 <el-row>
                   <field

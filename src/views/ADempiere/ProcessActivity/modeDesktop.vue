@@ -91,7 +91,12 @@
                 </div>
                 <el-collapse-transition>
                   <div v-show="(currentKey === index)">
-                    <el-form label-position="top" style="padding-left: 1%;" :inline="true">
+                    <el-form
+                      label-position="top"
+                      style="padding-left: 1%;"
+                      :inline="true"
+                      @submit.native.prevent="notSubmitForm"
+                    >
                       <el-form-item :label="$t('table.ProcessActivity.Logs')" style="margin-bottom: 0;">
 
                         <span v-if="activity.isReport && !isEmptyValue(activity.summary)">
@@ -208,7 +213,12 @@
                 </div>
                 <el-collapse-transition>
                   <div v-show="(currentKey === index)">
-                    <el-form label-position="top" style="padding-left: 1%;" :inline="true">
+                    <el-form
+                      label-position="top"
+                      style="padding-left: 1%;"
+                      :inline="true"
+                      @submit.native.prevent="notSubmitForm"
+                    >
                       <el-form-item :label="$t('table.ProcessActivity.Logs')" style="margin-bottom: 0;">
 
                         <span v-if="activity.isReport && !isEmptyValue(activity.summary)">
