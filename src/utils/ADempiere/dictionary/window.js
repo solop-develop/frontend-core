@@ -230,17 +230,22 @@ export const deleteRecord = {
       return false
     }
 
-    const selectionsRecords = store.getters.getTabSelectionsList({
-      containerUuid
-    })
-
-    if (tab.isDeleteable && !tab.isReadOnly && tab.isShowedTableRecords && !isEmptyValue(selectionsRecords)) {
+    // delete selection of records on table
+    if (tab.isShowedTableRecords) {
+      const selectionsRecords = store.getters.getTabSelectionsList({
+        containerUuid
+      })
+      if (isEmptyValue(selectionsRecords)) {
+        return false;
+      }
       store.dispatch('deleteSelectedRecordsFromWindow', {
         parentUuid,
         containerUuid
       })
       return
     }
+    
+    // delete record on panel
     store.dispatch('deleteEntity', {
       parentUuid,
       containerUuid,
