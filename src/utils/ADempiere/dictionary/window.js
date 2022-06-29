@@ -188,18 +188,33 @@ export const deleteRecord = {
   name: language.t('actionMenu.deleteRecord'),
   enabled: ({ parentUuid, containerUuid }) => {
     const tab = store.getters.getStoredTab(parentUuid, containerUuid)
+    // TODO: Verify index Parent Tab
+    if (tab.isParentTab && tab.index > 0) {
+      return false
+    }
     if (tab.isDeleteable && !tab.isReadOnly) {
-      const recordUuid = store.getters.getUuidOfContainer(containerUuid)
-      if (!isEmptyValue(recordUuid) && recordUuid !== 'create-new') {
-        // client id value of record
-        const clientIdRecord = store.getters.getValueOfField({
-          parentUuid,
-          containerUuid,
-          columnName: CLIENT
+      const preferenceClientId = store.getters.getSessionContextClientId
+      if (tab.isShowedTableRecords) {
+        const selectionsRecords = store.getters.getTabSelectionsList({
+          containerUuid
         })
-        // evaluate client id context with record
-        const preferenceClientId = store.getters.getSessionContextClientId
-        return clientIdRecord === preferenceClientId
+        if (isEmptyValue(selectionsRecords)) {
+          return false
+        }
+        const isOtherClient = selectionsRecords.some(record => record[CLIENT] !== preferenceClientId)
+        return !isOtherClient
+      } else {
+        const recordUuid = store.getters.getUuidOfContainer(containerUuid)
+        if (!isEmptyValue(recordUuid) && recordUuid !== 'create-new') {
+          // client id value of record
+          const clientIdRecord = store.getters.getValueOfField({
+            parentUuid,
+            containerUuid,
+            columnName: CLIENT
+          })
+          // evaluate client id context with record
+          return clientIdRecord === preferenceClientId
+        }
       }
     }
 
@@ -215,6 +230,17 @@ export const deleteRecord = {
       return false
     }
 
+    const selectionsRecords = store.getters.getTabSelectionsList({
+      containerUuid
+    })
+
+    if (tab.isDeleteable && !tab.isReadOnly && tab.isShowedTableRecords && !isEmptyValue(selectionsRecords)) {
+      store.dispatch('deleteSelectedRecordsFromWindow', {
+        parentUuid,
+        containerUuid
+      })
+      return
+    }
     store.dispatch('deleteEntity', {
       parentUuid,
       containerUuid,
