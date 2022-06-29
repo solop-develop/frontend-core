@@ -190,7 +190,17 @@ export const deleteRecord = {
     const tab = store.getters.getStoredTab(parentUuid, containerUuid)
     if (tab.isDeleteable && !tab.isReadOnly) {
       const recordUuid = store.getters.getUuidOfContainer(containerUuid)
-      return !isEmptyValue(recordUuid)
+      if (!isEmptyValue(recordUuid) && recordUuid !== 'create-new') {
+        // client id value of record
+        const clientIdRecord = store.getters.getValueOfField({
+          parentUuid,
+          containerUuid,
+          columnName: CLIENT
+        })
+        // evaluate client id context with record
+        const preferenceClientId = store.getters.getSessionContextClientId
+        return clientIdRecord === preferenceClientId
+      }
     }
 
     return false
