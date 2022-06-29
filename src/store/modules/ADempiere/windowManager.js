@@ -362,6 +362,7 @@ const windowManager = {
      * Delete Entity table
      * @param {string} parentUuid
      * @param {string} containerUuid
+     * TODO: Add suport to uuid list
      */
     deleteSelectedRecordsFromWindow({
       dispatch,
@@ -370,9 +371,10 @@ const windowManager = {
       parentUuid,
       containerUuid
     }) {
-      const getTabSelectionsList = getters.getTabSelectionsList({ containerUuid })
       const tableName = getters.getTableName(parentUuid, containerUuid)
-      const listRecordId = getTabSelectionsList.map(list => list[tableName + '_ID'])
+      const selectionsList = getters.getTabSelectionsList({ containerUuid })
+      const listRecordId = selectionsList.map(list => list[tableName + '_ID'])
+
       showMessage({
         message: language.t('table.dataTable.deleteSelection'),
         type: 'info'

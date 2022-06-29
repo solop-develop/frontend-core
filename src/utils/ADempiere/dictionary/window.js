@@ -236,7 +236,7 @@ export const deleteRecord = {
         containerUuid
       })
       if (isEmptyValue(selectionsRecords)) {
-        return false;
+        return false
       }
       store.dispatch('deleteSelectedRecordsFromWindow', {
         parentUuid,
@@ -244,7 +244,7 @@ export const deleteRecord = {
       })
       return
     }
-    
+
     // delete record on panel
     store.dispatch('deleteEntity', {
       parentUuid,
