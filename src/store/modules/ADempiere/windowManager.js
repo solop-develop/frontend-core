@@ -278,6 +278,12 @@ const windowManager = {
                   containerManager
                 })
               })
+            } else {
+              // set default values to create if without records response
+              dispatch('setTabDefaultValues', {
+                parentUuid,
+                containerUuid
+              })
             }
 
             commit('setTabData', {
@@ -305,6 +311,14 @@ const windowManager = {
       })
     },
 
+    /**
+     * Delete Entity panel
+     * @param {string} parentUuid
+     * @param {string} containerUuid
+     * @param {number} recordId
+     * @param {string} recordUuid
+     * @returns {promise}
+     */
     deleteEntity({
       dispatch,
       rootGetters
@@ -323,33 +337,11 @@ const windowManager = {
           recordUuid
         })
           .then(responseDeleteEntity => {
+            // TODO: Remove row in array of stored recrods, if empty stored records refresh
             dispatch('getEntities', {
               parentUuid,
               containerUuid
             })
-              .then(listEntities => {
-                const entity = listEntities[0]
-                const currentRoute = router.app._route
-                // set first record of table in panel
-                router.push({
-                  name: currentRoute.name,
-                  params: {
-                    ...currentRoute.params
-                  },
-                  query: {
-                    ...currentRoute.query,
-                    action: entity.UUID
-                  }
-                }, () => {})
-
-                dispatch('notifyPanelChange', {
-                  parentUuid,
-                  containerUuid,
-                  attributes: entity
-                }, {
-                  root: true
-                })
-              })
 
             resolve(responseDeleteEntity)
           })
