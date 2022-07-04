@@ -25,6 +25,8 @@
         <record-access />
       </embedded>
       <tab-manager
+        ref="tab-manager"
+        class="tab-manager"
         :parent-uuid="windowMetadata.uuid"
         :container-manager="containerManager"
         :tabs-list="windowMetadata.tabsListParent"
@@ -48,9 +50,10 @@
         :actions-manager="actionsManager"
       />
     </el-main>
-    <el-footer v-if="!isMobile && !getTab.isTableViewFullScreen" :style="getTab.isTableViewFullScreen ? 'height: 20% !important;' : 'height: 50% !important;'">
+    <el-footer v-if="!isMobile && !getTab.isTableViewFullScreen" id="footerWindow" :style="styleFullScreen">
       <tab-manager-child
         v-if="isWithChildsTab"
+        class="tab-manager"
         :parent-uuid="windowMetadata.uuid"
         :container-manager="containerManager"
         :tabs-list="windowMetadata.tabsListChild"
@@ -129,6 +132,33 @@ export default defineComponent({
 
     const currentTabUuid = computed(() => {
       return store.getters.getCurrentTab(props.windowMetadata.uuid).uuid
+    })
+
+    const currentTabChild = computed(() => {
+      if (!isEmptyValue(currentTab.value.childTabs) && !isEmptyValue(root.$route.query.tabChild)) {
+        const index = parseInt(root.$route.query.tabChild, 10)
+        return store.getters.getStoredTab(
+          props.windowMetadata.uuid,
+          props.windowMetadata.tabsListChild[index].uuid
+        )
+      }
+      return {}
+    })
+
+    const currentTab = computed(() => {
+      return store.getters.getCurrentTab(props.windowMetadata.uuid)
+    })
+
+    const styleFullScreen = computed(() => {
+      if (isEmptyValue(currentTab.value.childTabs)) {
+        return 'height: 0% !important'
+      } else if (!isEmptyValue(currentTab.value.childTabs) && currentTab.value.isTableViewFullScreen) {
+        return 'height: 20% !important'
+      } else if (!isEmptyValue(currentTab.value.childTabs) && !currentTab.value.isTableViewFullScreen && !isEmptyValue(currentTabChild.value) && currentTabChild.value.isTabChildFullScreen) {
+        return 'height: 75% !important'
+      }
+
+      return 'height: 50% !important'
     })
 
     const containerManager = {
@@ -282,7 +312,10 @@ export default defineComponent({
       isWithChildsTab,
       containerManager,
       isMobile,
-      getTab
+      getTab,
+      styleFullScreen,
+      currentTabChild,
+      currentTab
     }
   }
 
@@ -296,5 +329,8 @@ export default defineComponent({
 .el-main {
   padding-top: 0px;
   padding-bottom: 0px;
+}
+.tab-manager {
+  height: 100%;
 }
 </style>
