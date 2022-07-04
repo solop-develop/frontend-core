@@ -53,7 +53,8 @@
           <el-button type="text" style="float: right;" @click="logout">{{ $t('navbar.logOut') }}</el-button>
         </div>
         <el-button slot="reference" type="text" style="padding-top: 0px;">
-          <img :src="avatarResize" class="user-avatar">
+          <img v-if="!isEmptyValue(avatar)" :src="avatarResize" class="user-avatar">
+          <svg-icon v-else icon-class="AD" style="width: 2em !important;height: 2em !important;font-size: 27px;" />
         </el-button>
       </el-popover>
     </div>
@@ -118,10 +119,6 @@ export default {
       'device'
     ]),
     avatarResize() {
-      if (this.isEmptyValue(this.avatar)) {
-        return 'https://avatars1.githubusercontent.com/u/1263359?s=200&v=4?imageView2/1/w/80/h/80'
-      }
-
       const { uri } = getImagePath({
         file: this.avatar,
         width: 40,
