@@ -69,7 +69,6 @@
 import { defineComponent, computed, ref } from '@vue/composition-api'
 
 import language from '@/lang'
-import router from '@/router'
 import store from '@/store'
 
 // components and mixins
@@ -81,7 +80,6 @@ import TabManager from '@theme/components/ADempiere/TabManager/index.vue'
 import TabManagerChild from '@theme/components/ADempiere/TabManager/tabChild.vue'
 
 // utils and helpers methods
-import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 export default defineComponent({
@@ -162,115 +160,7 @@ export default defineComponent({
     })
 
     const containerManager = {
-      ...props.windowManager,
-
-      actionPerformed: ({ field, value }) => {
-        return store.dispatch('actionPerformed', {
-          field,
-          value
-        })
-          .then(response => {
-            if (response.type === 'createEntity') {
-              router.push({
-                name: root.$route.name,
-                query: {
-                  ...root.$route.query,
-                  action: response.uuid,
-                  recordId: response.id
-                },
-                params: {
-                  ...root.$route.params,
-                  recordId: response.id
-                }
-              }, () => {})
-            }
-
-            const { parentUuid, containerUuid } = field
-            const tab = store.getters.getStoredTab(parentUuid, containerUuid)
-
-            // set response values
-            store.dispatch('updateValuesOfContainer', {
-              parentUuid,
-              containerUuid,
-              isOverWriteParent: tab.isParentTab,
-              attributes: response.attributes
-            })
-          })
-      },
-
-      seekRecord: ({ row, parentUuid, containerUuid }) => {
-        if (isEmptyValue(row)) {
-          store.dispatch('setTabDefaultValues', {
-            parentUuid,
-            containerUuid
-          })
-          return
-        }
-        const tabDefinition = store.getters.getStoredTab(parentUuid, containerUuid)
-        if (tabDefinition.isParentTab) {
-          const { tableName } = tabDefinition
-          router.push({
-            name: root.$route.name,
-            query: {
-              ...root.$route.query,
-              action: row.UUID,
-              tableName,
-              recordId: row[`${tableName}_ID`]
-            },
-            params: {
-              ...root.$route.params,
-              tableName,
-              recordId: row[`${tableName}_ID`]
-            }
-          }, () => {})
-        }
-
-        const fieldsList = store.getters.getStoredFieldsFromTab(parentUuid, containerUuid)
-        const defaultValues = store.getters.getParsedDefaultValues({
-          parentUuid,
-          containerUuid,
-          isSOTrxMenu: root.$route.meta.isSalesTransaction,
-          fieldsList,
-          formatToReturn: 'object'
-        })
-
-        const attributes = convertObjectToKeyValue({
-          object: Object.assign(defaultValues, row)
-        })
-
-        store.dispatch('notifyPanelChange', {
-          parentUuid,
-          containerUuid,
-          attributes,
-          isOverWriteParent: tabDefinition.isParentTab
-        })
-
-        // active logics with set records values
-        fieldsList.forEach(field => {
-          // change Dependents
-          store.dispatch('changeDependentFieldsList', {
-            field,
-            fieldsList,
-            containerManager: props.windowManager
-          })
-        })
-
-        // update records and logics on child tabs
-        tabDefinition.childTabs.filter(tabItem => {
-          // get loaded tabs with records
-          return store.getters.getIsLoadedTabRecord({
-            containerUuid: tabItem.uuid
-          })
-        }).forEach(tabItem => {
-          // if loaded data refresh this data
-          // TODO: Verify with get one entity, not get all list
-          store.dispatch('getEntities', {
-            parentUuid,
-            containerUuid: tabItem.uuid,
-            pageNumber: 1 // reload with first page
-          })
-        })
-      }
+      ...props.windowManager
     }
 
     const actionsManager = computed(() => {

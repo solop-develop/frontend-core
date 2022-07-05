@@ -364,7 +364,7 @@ export default {
    * @param {string}  containerUuid
    * TODO: Evaluate if it is necessary to parse the default values
    */
-  setTabDefaultValues({ commit, dispatch, rootGetters }, {
+  setTabDefaultValues({ commit, dispatch, getters, rootGetters }, {
     parentUuid,
     containerUuid,
     isOverWriteParent = true
@@ -415,6 +415,13 @@ export default {
         })
       }
 
+      const recordUuid = store.getters.getUuidOfContainer(containerUuid)
+      // set old record
+      store.commit('setRecordUuidOnPanel', {
+        containerUuid,
+        recordUuid
+      })
+
       // update fields values
       dispatch('updateValuesOfContainer', {
         parentUuid,
@@ -450,7 +457,30 @@ export default {
         }
       })
 
+      // return values
       resolve(defaultAttributes)
+
+      // update records and logics on child tabs
+      tab.childTabs
+        .filter(tabItem => {
+          // get loaded tabs with records
+          return getters.getIsLoadedTabRecord({
+            containerUuid: tabItem.uuid
+          }) || getters.getIsLoadedTabOldRecord({
+            containerUuid: tabItem.uuid
+          })
+        })
+        .forEach(tabItem => {
+          // if loaded data refresh this data
+          dispatch('setTabDefaultValues', {
+            parentUuid,
+            containerUuid: tabItem.uuid
+          })
+          commit('setNewTabData', {
+            parentUuid,
+            containerUuid: tabItem.uuid
+          })
+        })
     })
   }
 

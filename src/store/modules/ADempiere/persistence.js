@@ -174,9 +174,6 @@ const persistence = {
   },
 
   getters: {
-    getPersistenceMap: (state) => (tableName) => {
-      return state.persistence[tableName]
-    },
     getPersistenceAttributes: (state) => (containerUuid) => {
       const attributesMap = state.persistence[containerUuid]
       if (!isEmptyValue(attributesMap)) {

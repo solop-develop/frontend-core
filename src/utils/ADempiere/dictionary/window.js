@@ -128,16 +128,16 @@ export const createNewRecord = {
     if (!tab.isInsertRecord || tab.isReadOnly) {
       return false
     }
-    const recordUuid = store.getters.getUuidOfContainer(containerUuid)
-    if (isEmptyValue(recordUuid)) {
-      return false
-    }
+    // const recordUuid = store.getters.getUuidOfContainer(containerUuid)
+    // if (isEmptyValue(recordUuid)) {
+    //   return false
+    // }
 
-    // set old record
-    store.commit('setRecordUuidOnPanel', {
-      containerUuid,
-      recordUuid
-    })
+    // // set old record
+    // store.commit('setRecordUuidOnPanel', {
+    //   containerUuid,
+    //   recordUuid
+    // })
 
     store.dispatch('setTabDefaultValues', {
       parentUuid,
@@ -177,6 +177,38 @@ export const undoChange = {
       parentUuid,
       containerUuid,
       attributes
+    })
+
+    const tab = store.getters.getStoredTab(parentUuid, containerUuid)
+    // update records and logics on child tabs
+    tab.childTabs.filter(tabItem => {
+      // get loaded tabs with records
+      return store.getters.getIsLoadedTabRecord({
+        containerUuid: tabItem.uuid
+      })
+    }).forEach(tabItem => {
+      store.dispatch('setOldAsCurrentTabData', {
+        parentUuid,
+        containerUuid: tabItem.uuid
+      })
+
+      const oldRecordUuid = store.getters.getCurrentRecordOnPanel(tabItem.uuid)
+      if (isEmptyValue(oldRecordUuid)) {
+        return false
+      }
+
+      const row = store.getters.getTabRowData({
+        containerUuid: tabItem.uuid,
+        recordUuid: oldRecordUuid
+      })
+      const attributes = convertObjectToKeyValue({
+        object: row
+      })
+      store.dispatch('notifyPanelChange', {
+        parentUuid,
+        containerUuid: tabItem.uuid,
+        attributes
+      })
     })
   }
 }
@@ -617,9 +649,39 @@ export const containerManager = {
     })
   },
 
-  actionPerformed: function(eventInfo) {
-    console.log('actionPerformed: ', eventInfo)
-    return new Promise()
+  actionPerformed: ({ field, value }) => {
+    return store.dispatch('actionPerformed', {
+      field,
+      value
+    })
+      .then(response => {
+        if (response.type === 'createEntity') {
+          const currentRoute = router.app._route
+          router.push({
+            name: currentRoute.name,
+            query: {
+              ...currentRoute.query,
+              action: response.uuid,
+              recordId: response.id
+            },
+            params: {
+              ...currentRoute.params,
+              recordId: response.id
+            }
+          }, () => {})
+        }
+
+        const { parentUuid, containerUuid } = field
+        const tab = store.getters.getStoredTab(parentUuid, containerUuid)
+
+        // set response values
+        store.dispatch('updateValuesOfContainer', {
+          parentUuid,
+          containerUuid,
+          isOverWriteParent: tab.isParentTab,
+          attributes: response.attributes
+        })
+      })
   },
 
   setDefaultValues: ({ parentUuid, containerUuid }) => {
@@ -629,9 +691,79 @@ export const containerManager = {
     })
   },
 
-  seekRecord: function(eventInfo) {
-    console.log('seekRecord: ', eventInfo)
-    // return new Promise()
+  seekRecord: ({ row, parentUuid, containerUuid }) => {
+    if (isEmptyValue(row)) {
+      store.dispatch('setTabDefaultValues', {
+        parentUuid,
+        containerUuid
+      })
+      return
+    }
+    const tabDefinition = store.getters.getStoredTab(parentUuid, containerUuid)
+    const currentRoute = router.app._route
+    if (tabDefinition.isParentTab) {
+      const { tableName } = tabDefinition
+      router.push({
+        name: currentRoute.name,
+        query: {
+          ...currentRoute.query,
+          action: row.UUID,
+          tableName,
+          recordId: row[`${tableName}_ID`]
+        },
+        params: {
+          ...currentRoute.params,
+          tableName,
+          recordId: row[`${tableName}_ID`]
+        }
+      }, () => {})
+    }
+
+    const fieldsList = store.getters.getStoredFieldsFromTab(parentUuid, containerUuid)
+    const defaultValues = store.getters.getParsedDefaultValues({
+      parentUuid,
+      containerUuid,
+      isSOTrxMenu: currentRoute.meta.isSalesTransaction,
+      fieldsList,
+      formatToReturn: 'object'
+    })
+
+    const attributes = convertObjectToKeyValue({
+      object: Object.assign(defaultValues, row)
+    })
+
+    store.dispatch('notifyPanelChange', {
+      parentUuid,
+      containerUuid,
+      attributes,
+      isOverWriteParent: tabDefinition.isParentTab
+    })
+
+    // active logics with set records values
+    fieldsList.forEach(field => {
+      // change Dependents
+      store.dispatch('changeDependentFieldsList', {
+        field,
+        fieldsList,
+        containerManager: containerManager
+      })
+    })
+
+    // update records and logics on child tabs
+    tabDefinition.childTabs.filter(tabItem => {
+      // get loaded tabs with records
+      return store.getters.getIsLoadedTabRecord({
+        containerUuid: tabItem.uuid
+      })
+    }).forEach(tabItem => {
+      // if loaded data refresh this data
+      // TODO: Verify with get one entity, not get all list
+      store.dispatch('getEntities', {
+        parentUuid,
+        containerUuid: tabItem.uuid,
+        pageNumber: 1 // reload with first page
+      })
+    })
   },
 
   seekTab: function(eventInfo) {

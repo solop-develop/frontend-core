@@ -32,7 +32,7 @@ import { ROW_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
 
 // utils and helper methods
 import { containerManager } from '@/utils/ADempiere/dictionary/window'
-import { getContextAttributes } from '@/utils/ADempiere/contextUtils.js'
+import { getContextAttributes, generateContextKey } from '@/utils/ADempiere/contextUtils.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat'
 import { showMessage } from '@/utils/ADempiere/notification'
@@ -40,8 +40,21 @@ import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 
 const initState = {
   tabData: {},
+  oldTabData: {},
   // container uuid: record uuid
-  currentRecordOnPanel: {}
+  emtpyTabData: {
+    parentUuid: undefined,
+    containerUuid: undefined,
+    contextKey: '',
+    searchValue: '',
+    currentRecordUuid: undefined,
+    recordsList: [],
+    selectionsList: [],
+    nextPageToken: undefined,
+    recordCount: 0,
+    isLoaded: false,
+    pageNumber: 1
+  }
 }
 
 const windowManager = {
@@ -51,28 +64,56 @@ const windowManager = {
     setTabData(state, {
       parentUuid,
       containerUuid,
+      contextKey = '',
       searchValue = '',
+      currentRecordUuid = '',
       recordsList = [],
       selectionsList = [],
       nextPageToken,
       recordCount = 0,
       isLoaded = true,
-      isLoadedContext = false,
       pageNumber = 1
     }) {
       const dataTab = {
         parentUuid,
         containerUuid,
+        contextKey,
         searchValue,
+        currentRecordUuid,
         recordsList,
         selectionsList,
         nextPageToken,
         recordCount,
         isLoaded,
-        isLoadedContext,
         pageNumber
       }
       Vue.set(state.tabData, containerUuid, dataTab)
+      Vue.set(state.oldTabData, containerUuid, dataTab)
+    },
+
+    setNewTabData(state, { parentUuid, containerUuid }) {
+      // current to old data
+      const currentAsOld = state.tabData[containerUuid]
+      Vue.set(state.oldTabData, containerUuid, currentAsOld)
+
+      // new empty as current
+      Vue.set(state.tabData, containerUuid, {
+        ...state.emtpyTabData,
+        parentUuid,
+        containerUuid
+      })
+    },
+
+    setOldAsCurrentTabData(state, { containerUuid }) {
+      // set old to current data
+      const oldAsCurrent = state.oldTabData[containerUuid]
+      Vue.set(state.tabData, containerUuid, oldAsCurrent)
+
+      // new emty as old
+      Vue.set(state.oldTabData, containerUuid, {
+        ...state.emtpyTabData,
+        containerUuid
+      })
     },
 
     setTabRow(state, { containerUuid, row, index }) {
@@ -101,7 +142,7 @@ const windowManager = {
       containerUuid,
       recordUuid
     }) {
-      Vue.set(state.currentRecordOnPanel, containerUuid, recordUuid)
+      Vue.set(state.tabData[containerUuid], 'currentRecordUuid', recordUuid)
     },
 
     resetStateWindowManager(state) {
@@ -234,6 +275,7 @@ const windowManager = {
               }
             })
 
+            let currentRecordUuid
             // update current record
             if (!isEmptyValue(dataToStored)) {
               let currentRow = dataToStored.at(0) // set first record
@@ -244,6 +286,7 @@ const windowManager = {
                   currentRow = recordFromUuid
                 }
               }
+              currentRecordUuid = currentRow[UUID]
 
               // remove datatables app attributes
               for (const key in ROW_ATTRIBUTES) {
@@ -286,10 +329,13 @@ const windowManager = {
               })
             }
 
+            const contextKey = generateContextKey(contextAttributesList, 'key')
             commit('setTabData', {
               parentUuid,
               containerUuid,
+              contextKey,
               searchValue,
+              currentRecordUuid,
               recordsList: dataToStored,
               nextPageToken: dataResponse.nextPageToken,
               pageNumber: currentPageNumber,
@@ -309,6 +355,35 @@ const windowManager = {
             resolve([])
           })
       })
+    },
+
+    setOldAsCurrentTabData({ commit, dispatch, getters, rootGetters }, {
+      parentUuid,
+      containerUuid
+    }) {
+      const currentData = getters.getTabOldData({ containerUuid })
+
+      commit('setOldAsCurrentTabData', containerUuid)
+
+      if (!isEmptyValue(currentData.recordsList)) {
+        let currentRow = currentData.recordsList.at(0)
+        const currentRecordUuid = currentData.currentRecordUuid
+        if (!isEmptyValue(currentRecordUuid)) {
+          const recordFromUuid = currentData.recordsList.find(row => {
+            return row[UUID] === currentRecordUuid
+          })
+
+          if (!isEmptyValue(recordFromUuid)) {
+            currentRow = recordFromUuid
+          }
+        }
+
+        dispatch('updateValuesOfContainer', {
+          parentUuid,
+          containerUuid,
+          attributes: currentRow
+        })
+      }
     },
 
     /**
@@ -426,22 +501,35 @@ const windowManager = {
      */
     getTabData: (state) => ({ containerUuid }) => {
       return state.tabData[containerUuid] || {
-        parentUuid: undefined,
-        containerUuid,
-        searchValue: '',
-        recordsList: [],
-        selectionsList: [],
-        nextPageToken: undefined,
-        recordCount: 0,
-        isLoadedContext: false,
-        pageNumber: 1,
-        isLoaded: false
+        ...state.emtpyTabData,
+        containerUuid
+      }
+    },
+    getTabOldData: (state) => ({ containerUuid }) => {
+      return state.oldTabData[containerUuid] || {
+        ...state.emtpyTabData,
+        containerUuid
       }
     },
     getIsLoadedTabRecord: (state, getters) => ({ containerUuid }) => {
       return getters.getTabData({
         containerUuid
       }).isLoaded || false
+    },
+    getIsLoadedTabOldRecord: (state, getters) => ({ containerUuid }) => {
+      return getters.getTabOldData({
+        containerUuid
+      }).isLoaded || false
+    },
+    getTabContextKey: (state, getters) => ({ containerUuid }) => {
+      return getters.getTabData({
+        containerUuid
+      }).contextKey || ''
+    },
+    getTabOldContextKey: (state, getters) => ({ containerUuid }) => {
+      return getters.getTabOldData({
+        containerUuid
+      }).contextKey || ''
     },
     getSearchValueTabRecordsList: (state, getters) => ({ containerUuid }) => {
       return getters.getTabData({
@@ -497,8 +585,15 @@ const windowManager = {
       return undefined
     },
 
-    getCurrentRecordOnPanel: (state) => (containerUuid) => {
-      return state.currentRecordOnPanel[containerUuid]
+    getCurrentRecordOnPanel: (state, getters) => (containerUuid) => {
+      return getters.getTabData({
+        containerUuid
+      }).currentRecordUuid
+    },
+    getOldRecordOnPanel: (state, getters) => (containerUuid) => {
+      return getters.getTabOldData({
+        containerUuid
+      }).currentRecordUuid
     }
   }
 }

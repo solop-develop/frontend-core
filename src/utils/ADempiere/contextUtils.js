@@ -387,14 +387,20 @@ export function getContextAttributes({
   return contextAttributesList
 }
 
-export function generateContextKey(contextAttributes = []) {
+/**
+ * Get context key based on attributes list
+ * @param {array} contextAttributes
+ * @param {string} keyName, default is 'columnName' or 'key'
+ * @returns {string} '_|key|value'
+ */
+export function generateContextKey(contextAttributes = [], keyName = 'columnName,') {
   let contextKey = ''
   if (isEmptyValue(contextAttributes)) {
     return contextKey
   }
 
-  contextAttributes.map(attribute => {
-    contextKey += '|' + attribute.columnName + '|' + attribute.value
+  contextAttributes.forEach(attribute => {
+    contextKey += '|' + attribute[keyName] + '|' + attribute.value
   })
   return '_' + contextKey
 }
