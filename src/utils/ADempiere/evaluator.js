@@ -186,9 +186,6 @@ export class evaluator {
       firstEval = value // replace with it's value
     }
 
-    // if (isEmptyValue(firstEval)) {
-    //   return defaultReturned
-    // }
     if (typeof firstEval === 'string') {
       firstEval = firstEval.replace(/['"]/g, '').trim() // strip ' and "
     }
@@ -216,6 +213,11 @@ export class evaluator {
     }
     if (second.includes('_ID') && isEmptyValue(secondEval)) {
       secondEval = '0'
+    }
+
+    // value is empty return default (util to displayed)
+    if (isEmptyValue(firstEval)) {
+      return defaultReturned
     }
 
     // Logical Comparison
