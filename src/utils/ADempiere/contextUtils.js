@@ -14,10 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import router from '@/router'
 import store from '@/store'
 
 // constants
-import { ACCOUNTING_COLUMNS } from '@/utils/ADempiere/constants/systemColumns.js'
+import { ACCOUNTING_COLUMNS, SALES_TRANSACTION_COLUMNS } from '@/utils/ADempiere/constants/systemColumns.js'
 
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -62,7 +63,7 @@ export const getContext = ({
     columnName.startsWith(GLOBAL_CONTEXT_PREFIX) ||
     columnName.startsWith(PREFERENCE_CONTEXT_PREFIX)
 
-  // get value to session context
+  // get value by session context
   if (isPreferenceValue) {
     value = store.getters.getSessionContext({
       parentUuid,
@@ -70,14 +71,14 @@ export const getContext = ({
       columnName
     })
   } else {
-    // get value to container view
+    // get value by container view
     value = store.getters.getValueOfField({
       parentUuid,
       containerUuid,
       columnName
     })
 
-    // get to global and accounting context
+    // get by global and accounting context
     if (isForceSession && isEmptyValue(value)) {
       value = store.getters.getSessionContext({
         parentUuid,
@@ -92,6 +93,12 @@ export const getContext = ({
         })
       }
     }
+  }
+
+  // get by menu sales transaction
+  if (isEmptyValue(value) && SALES_TRANSACTION_COLUMNS.includes(columnName)) {
+    const currentRoute = router.app._route
+    value = currentRoute.meta.isSalesTransaction
   }
 
   if (isBooleanToString) {
@@ -303,7 +310,7 @@ export function parseContext({
     }
 
     // menu attribute isEmptyValue isSOTrx
-    if (!isEmptyValue(isSOTrxMenu) && token === 'IsSOTrx' && isEmptyValue(contextInfo)) {
+    if (!isEmptyValue(isSOTrxMenu) && isEmptyValue(contextInfo) && SALES_TRANSACTION_COLUMNS.includes(token)) {
       contextInfo = isSOTrxMenu
     }
 

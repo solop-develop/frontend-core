@@ -28,6 +28,17 @@ export const UUID = 'UUID'
 
 export const WAREHOUSE = 'M_Warehouse_ID'
 
+export const IS_SALES_TRANSACTION = 'IsSalesTransaction'
+export const IS_SO_TRX = 'IsSOTrx'
+
+/**
+ * Is sales transaction (IsSOTrx, IsSalesTransaction)
+ */
+export const SALES_TRANSACTION_COLUMNS = [
+  IS_SALES_TRANSACTION,
+  IS_SO_TRX
+]
+
 /**
  * Log columns list into table
  * Manages with user session
