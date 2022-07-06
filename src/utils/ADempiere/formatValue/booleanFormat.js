@@ -49,6 +49,7 @@ export const convertBooleanToString = (booleanValue, isForce = true) => {
 /**
  * Convert string values ('Y' or 'N') to component compatible Boolean values
  * @param {mixed} valueToParsed
+ * @returns {boolean}
  */
 export const convertStringToBoolean = (valueToParsed) => {
   let valReturn = valueToParsed

@@ -26,9 +26,10 @@ import {
 
 // utils and helpers methods
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat'
+import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
 import { generatePanelAndFields } from '@/utils/ADempiere/dictionary/panel.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import { isHiddenField } from '@/utils/ADempiere/references.js'
+import { BUTTON, isHiddenField } from '@/utils/ADempiere/references.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import { zoomIn } from '@/utils/ADempiere/coreUtils'
 
@@ -811,7 +812,7 @@ export const containerManager = {
       !isEmptyValue(recordUuid)
 
     if (!isWithRecord) {
-      if (field.componentPath === 'FieldButton') {
+      if (field.displayType === BUTTON.id) {
         return true
       }
     } else {
@@ -832,35 +833,39 @@ export const containerManager = {
         return true
       }
 
-      // is active value of record
-      const isActiveRecord = store.getters.getValueOfField({
-        parentUuid,
-        containerUuid,
-        columnName: ACTIVE
-      })
       // record is inactive isReadOnlyFromForm
-      if (!isActiveRecord && field.columnName !== 'IsActive') {
-        return true
+      if (field.columnName !== ACTIVE) {
+        // is active value of record
+        const isActiveRecord = store.getters.getValueOfField({
+          parentUuid,
+          containerUuid,
+          columnName: ACTIVE
+        })
+        if (!isActiveRecord) {
+          return true
+        }
       }
 
-      // is processed value of record
-      const isProcessed = store.getters.getValueOfField({
-        parentUuid,
-        containerUuid,
-        columnName: PROCESSED
-      })
-      if (isProcessed && field.componentPath !== 'FieldButton') {
-        return true
-      }
+      if (field.displayType !== BUTTON.id) {
+        // is processed value of record
+        const isProcessed = store.getters.getValueOfField({
+          parentUuid,
+          containerUuid,
+          columnName: PROCESSED
+        })
+        if (convertStringToBoolean(isProcessed)) {
+          return true
+        }
 
-      // is processing value of record
-      const isProcessing = store.getters.getValueOfField({
-        parentUuid,
-        containerUuid,
-        columnName: PROCESSING
-      })
-      if (isProcessing && field.componentPath !== 'FieldButton') {
-        return true
+        // is processing value of record
+        const isProcessing = store.getters.getValueOfField({
+          parentUuid,
+          containerUuid,
+          columnName: PROCESSING
+        })
+        if (convertStringToBoolean(isProcessing)) {
+          return true
+        }
       }
     }
 
