@@ -27,6 +27,12 @@ module.exports = {
 
   /**
    * @type {boolean} true | false
+   * @description Whether fix the auto save
+   */
+  autoSave: false,
+
+  /**
+   * @type {boolean} true | false
    * @description Whether show the logo in sidebar
    */
   sidebarLogo: true,

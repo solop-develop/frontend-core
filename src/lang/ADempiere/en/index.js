@@ -260,7 +260,8 @@ export default {
     sidebarLogo: 'Sidebar Logo',
     showContextMenu: 'Show Context Information',
     isShowTitle: 'Show Títle',
-    isShowMenu: 'Show Menu'
+    isShowMenu: 'Show Menu',
+    autoSave: 'Auto Save'
   },
   profile: {
     aboutMe: 'About Me',
