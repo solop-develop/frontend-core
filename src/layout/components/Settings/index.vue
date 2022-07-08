@@ -54,15 +54,20 @@
 
 <script>
 import { computed, ref } from '@vue/composition-api'
+
 import store from '@/store'
 
 // components and mixins
-
 import ThemePicker from '@theme/components/ThemePicker'
 
 export default {
-  components: { ThemePicker },
-  setup(props, { root }) {
+  name: 'GeneralSettings',
+
+  components: {
+    ThemePicker
+  },
+
+  setup(props) {
     const activeName = ref('1')
 
     const isShowTitleForm = computed({
