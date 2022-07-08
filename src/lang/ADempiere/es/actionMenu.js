@@ -23,6 +23,7 @@ const actionMenu = {
   shareLink: 'Compartir Enlace',
   shareLinkDescription: 'Compartir ruta actual en el porta-papeles',
   undo: 'Deshacer',
+  save: 'Guardar',
   withoutActions: 'Sin Actiones',
   zoomWindow: 'Acercar Ventana',
   // process

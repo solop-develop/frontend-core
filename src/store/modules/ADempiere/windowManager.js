@@ -545,6 +545,19 @@ const windowManager = {
     getTabSelectionsList: (state, getters) => ({ containerUuid }) => {
       return getters.getTabData({ containerUuid }).selectionsList
     },
+    getTabCurrentRecord: (state, getters) => ({ containerUuid }) => {
+      const recordUuid = getters.getUuidOfContainer(containerUuid)
+      const list = getters.getTabData({ containerUuid }).recordsList
+      let record = []
+      if (!isEmptyValue(recordUuid) && !isEmptyValue(list)) {
+        record = list.find(row => {
+          if (row.UUID === recordUuid) {
+            return row
+          }
+        })
+      }
+      return record
+    },
     getTabPageNumber: (state, getters) => ({ containerUuid }) => {
       return getters.getTabData({ containerUuid }).pageNumber
     },

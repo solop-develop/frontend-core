@@ -43,33 +43,69 @@ const persistence = {
     },
     addChangeToPersistenceQueue(state, {
       containerUuid,
+      recordUuid,
       columnName,
+      oldValue,
       // valueType,
       value
     }) {
-      if (isEmptyValue(state.persistence[containerUuid])) {
-        state.persistence[containerUuid] = new Map()
+      if (!isEmptyValue(state.persistence[containerUuid]) && !isEmptyValue(recordUuid)) {
+        state.persistence[containerUuid][recordUuid] = new Map()
+      } else {
+        state.persistence[containerUuid] = {
+          [recordUuid]: new Map()
+        }
       }
       // Set value
-      state.persistence[containerUuid].set(columnName, {
-        columnName: columnName,
-        // valueType,
-        value
-      })
+      if (!isEmptyValue(state.persistence[containerUuid]) && !isEmptyValue(recordUuid)) {
+        state.persistence[containerUuid][recordUuid].set(columnName, {
+          columnName: columnName,
+          oldValue,
+          value
+        })
+      } else {
+        state.persistence[containerUuid].set([columnName], {
+          columnName: columnName,
+          oldValue,
+          value
+        })
+      }
+    },
+    clearToPersistence(state, {
+      containerUuid,
+      recordUuid,
+      columnName,
+      oldValue,
+      value
+    }) {
+      if (state.persistence[containerUuid]) {
+        if (state.persistence[containerUuid][recordUuid]) {
+          state.persistence[containerUuid][recordUuid] = new Map()
+        }
+      }
     }
   },
 
   actions: {
-    actionPerformed({ commit, getters, dispatch }, {
+    actionPerformed({ commit, getters, rootState, dispatch }, {
       field,
       recordUuid,
       value
     }) {
       return new Promise((resolve, reject) => {
         const { parentUuid, containerUuid } = field
+        const currentRecord = getters.getTabCurrentRecord({ containerUuid })
+        const autoSave = rootState.settings.autoSave
+        let oldValue
+        if (currentRecord) {
+          oldValue = currentRecord[field.columnName]
+        }
+
         commit('addChangeToPersistenceQueue', {
           containerUuid,
+          recordUuid: getters.getUuidOfContainer(field.containerUuid),
           columnName: field.columnName,
+          oldValue,
           value
         })
 
@@ -97,15 +133,17 @@ const persistence = {
           recordUuid = getters.getUuidOfContainer(field.containerUuid)
         }
 
-        dispatch('flushPersistenceQueue', {
-          containerUuid,
-          tableName: field.tabTableName,
-          recordUuid
-        })
-          .then(response => {
-            resolve(response)
+        if (autoSave) {
+          dispatch('flushPersistenceQueue', {
+            containerUuid,
+            tableName: field.tabTableName,
+            recordUuid
           })
-          .catch(error => reject(error))
+            .then(response => {
+              resolve(response)
+            })
+            .catch(error => reject(error))
+        }
       })
     },
 
@@ -115,7 +153,7 @@ const persistence = {
       recordUuid
     }) {
       return new Promise((resolve, reject) => {
-        let attributesList = getters.getPersistenceAttributes(containerUuid)
+        let attributesList = getters.getPersistenceAttributes({ containerUuid, recordUuid })
           .filter(itemField => {
             // omit send to server (to create or update) columns manage by backend
             return itemField.isAlwaysUpdateable ||
@@ -174,9 +212,14 @@ const persistence = {
   },
 
   getters: {
-    getPersistenceAttributes: (state) => (containerUuid) => {
-      const attributesMap = state.persistence[containerUuid]
-      if (!isEmptyValue(attributesMap)) {
+    getPersistenceAttributes: (state) => ({ containerUuid, recordUuid }) => {
+      if (
+        !isEmptyValue(containerUuid) &&
+        !isEmptyValue(recordUuid) &&
+        !isEmptyValue(state.persistence[containerUuid]) &&
+        !isEmptyValue(state.persistence[containerUuid][recordUuid])
+      ) {
+        const attributesMap = state.persistence[containerUuid][recordUuid]
         return [
           ...attributesMap.values()
         ]
