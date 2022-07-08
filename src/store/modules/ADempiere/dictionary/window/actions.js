@@ -432,8 +432,13 @@ export default {
         root: true
       })
 
+      // clear old values
+      dispatch('clearPersistence', {
+        containerUuid
+      })
+
       defaultAttributes.forEach(attribute => {
-        if (!attribute.columnName.includes(DISPLAY_COLUMN_PREFIX)) {
+        if (!attribute.columnName.startsWith(DISPLAY_COLUMN_PREFIX)) {
           if (!isEmptyValue(attribute.value)) {
             commit('addChangeToPersistenceQueue', {
               ...attribute,

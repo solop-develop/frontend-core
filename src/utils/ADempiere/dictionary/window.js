@@ -50,7 +50,7 @@ export function isDisplayedField({ isDisplayed, displayLogic, isDisplayedFromLog
  * Default showed field from user
  */
 export function evaluateDefaultFieldShowed({ defaultValue, isMandatory, isShowedFromUser, isParent }) {
-  if (String(defaultValue).includes('@SQL=')) {
+  if (String(defaultValue).startsWith('@SQL=')) {
     return true
   }
 
@@ -738,6 +738,11 @@ export const containerManager = {
       containerUuid,
       attributes,
       isOverWriteParent: tabDefinition.isParentTab
+    })
+
+    // clear old values
+    store.dispatch('clearPersistence', {
+      containerUuid
     })
 
     // active logics with set records values

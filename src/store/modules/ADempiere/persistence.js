@@ -56,6 +56,12 @@ const persistence = {
         // valueType,
         value
       })
+    },
+    // clear old values
+    clearPersistence(state, {
+      containerUuid
+    }) {
+      state.persistence[containerUuid] = new Map()
     }
   },
 
@@ -137,6 +143,11 @@ const persistence = {
                   type: 'success'
                 })
                 resolve(response)
+
+                // clear old values
+                commit('clearPersistence', {
+                  containerUuid
+                })
               })
               .catch(error => reject(error))
           } else {
@@ -165,6 +176,11 @@ const persistence = {
                 })
 
                 resolve(response)
+
+                // clear old values
+                commit('clearPersistence', {
+                  containerUuid
+                })
               })
               .catch(error => reject(error))
           }
