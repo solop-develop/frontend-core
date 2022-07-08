@@ -50,7 +50,7 @@ export function isDisplayedField({ isDisplayed, displayLogic, isDisplayedFromLog
  * Default showed field from user
  */
 export function evaluateDefaultFieldShowed({ defaultValue, isMandatory, isShowedFromUser, isParent }) {
-  if (String(defaultValue).includes('@SQL=')) {
+  if (String(defaultValue).startsWith('@SQL=')) {
     return true
   }
 

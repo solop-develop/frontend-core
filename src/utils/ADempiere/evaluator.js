@@ -211,10 +211,10 @@ export class evaluator {
     }
 
     // Handling of ID compare (null => 0)
-    if (first.includes('_ID') && isEmptyValue(firstEval)) {
+    if (first.endsWith('_ID') && isEmptyValue(firstEval)) {
       firstEval = '0'
     }
-    if (second.includes('_ID') && isEmptyValue(secondEval)) {
+    if (second.endsWith('_ID') && isEmptyValue(secondEval)) {
       secondEval = '0'
     }
 

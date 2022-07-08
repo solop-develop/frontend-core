@@ -1,4 +1,8 @@
 
+// constants
+import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
+
+// utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 const getters = {
@@ -66,7 +70,7 @@ const getters = {
       const records = []
 
       Object.keys(itemRow).forEach(key => {
-        if (!key.includes('DisplayColumn') && !withOut.includes(key)) {
+        if (!key.startsWith(DISPLAY_COLUMN_PREFIX) && !withOut.includes(key)) {
           // evaluate metadata attributes before to convert
           if (fieldsListSelection.includes(key)) {
             records.push({

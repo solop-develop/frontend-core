@@ -377,13 +377,18 @@ export function getContextAttributes({
   }
 
   contextColumnNames.forEach(columnName => {
-    const value = getContext({
+    let value = getContext({
       parentUuid,
       containerUuid,
       columnName,
       isBooleanToString,
       isForceBoolean
     })
+
+    // if identifier and empty, send value in zero
+    if (isEmptyValue(value) && (columnName.endsWith('_ID') || columnName.endsWith('_ID_To'))) {
+      value = 0
+    }
 
     contextAttributesList.push({
       value,

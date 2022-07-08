@@ -4,6 +4,7 @@ import {
 
 // constants
 import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
+import { viewerSupportedFormats } from '@/utils/ADempiere/dictionary/report'
 
 import { showNotification } from '@/utils/ADempiere/notification'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -434,7 +435,7 @@ export default {
               link.href = window.URL.createObjectURL(blob)
               link.download = output.fileName
               // download report file
-              if (!['pdf', 'html'].includes(reportType)) {
+              if (!viewerSupportedFormats.includes(reportType)) {
                 link.click()
               }
               const contextMenuMetadata = rootGetters.getContextMenu(processResult.processUuid)

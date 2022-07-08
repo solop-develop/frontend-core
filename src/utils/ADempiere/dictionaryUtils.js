@@ -125,7 +125,7 @@ export function generateField({
       isSOTrxMenu
     })
 
-    if (String(fieldToGenerate.defaultValue).includes('@SQL=')) {
+    if (String(fieldToGenerate.defaultValue).startsWith('@SQL=')) {
       // isShowedFromUser = true
       isGetServerValue = true
     }
@@ -144,7 +144,7 @@ export function generateField({
         isSOTrxMenu
       })
 
-      if (String(fieldToGenerate.defaultValueTo).includes('@SQL=')) {
+      if (String(fieldToGenerate.defaultValueTo).startsWith('@SQL=')) {
         isGetServerValue = true
       }
     }

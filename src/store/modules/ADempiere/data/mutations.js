@@ -14,6 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+// constants
+import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
+
 const mutations = {
 
   deleteRecordContainer(state, payload) {
@@ -22,7 +25,7 @@ const mutations = {
   notifyCellTableChange: (state, payload) => {
     payload.row[payload.columnName] = payload.value
     if (payload.displayColumnName !== undefined) {
-      const key = `DisplayColumn_${payload.columnName}`
+      const key = DISPLAY_COLUMN_PREFIX + payload.columnName
       payload.row[key] = payload.displayColumnName
     }
   },
@@ -30,7 +33,7 @@ const mutations = {
     if (payload.row !== undefined) {
       payload.row[payload.columnName] = payload.value
       if (payload.displayColumnName !== undefined) {
-        const key = `DisplayColumn_${payload.columnName}`
+        const key = DISPLAY_COLUMN_PREFIX + payload.columnName
         payload.row[key] = payload.displayColumnName
       }
     }

@@ -356,7 +356,7 @@ export function parsedValueComponent({
         value = convertBooleanToString(value)
       }
       // Table (18) or Table Direct (19)
-      if (TABLE_DIRECT.id === displayType || TABLE.id === displayType && columnName.includes('_ID')) {
+      if (TABLE_DIRECT.id === displayType || TABLE.id === displayType && columnName.endsWith('_ID')) {
         if (!isEmptyValue(value)) {
           value = Number(value)
         }
