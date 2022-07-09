@@ -67,7 +67,7 @@ import store from '@/store'
 
 // constants
 import { CHAR, DEFAULT_SIZE, TABLE_DIRECT } from '@/utils/ADempiere/references.js'
-import { evalutateTypeField, getDefaultValue, getEvaluatedLogics } from '@/utils/ADempiere/dictionaryUtils.js'
+import { DISPLAY_COLUMN_PREFIX, evalutateTypeField, getDefaultValue, getEvaluatedLogics } from '@/utils/ADempiere/dictionaryUtils.js'
 
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -266,7 +266,7 @@ export function getFieldTemplate(overwriteDefinition) {
     description: '',
     help: '',
     columnName: '',
-    displayColumnName: `DisplayColumn_${overwriteDefinition.columnName}`, // key to display column
+    displayColumnName: DISPLAY_COLUMN_PREFIX + overwriteDefinition.columnName, // key to display column
     fieldGroup: {
       name: '',
       fieldGroupType: ''

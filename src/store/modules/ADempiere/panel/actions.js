@@ -479,7 +479,7 @@ const actions = {
       // default value without sql
       if (!isEmptyValue(fieldDependent.defaultValue) &&
         fieldDependent.defaultValue.includes('@') &&
-        !fieldDependent.defaultValue.includes('@SQL=')) {
+        !fieldDependent.defaultValue.startsWith('@SQL=')) {
         defaultValue = parseContext({
           parentUuid,
           containerUuid,
@@ -489,7 +489,7 @@ const actions = {
 
       // default value with sql
       if (!isEmptyValue(fieldDependent.defaultValue) &&
-        fieldDependent.defaultValue.includes('@SQL=')) {
+        fieldDependent.defaultValue.startsWith('@SQL=')) {
         defaultValue = parseContext({
           parentUuid,
           containerUuid,

@@ -26,6 +26,7 @@ import {
   exportRecordsSelected,
   sharedLink
 } from '@/utils/ADempiere/constants/actionsMenuList'
+import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -68,8 +69,8 @@ export default {
             browserDefinition.elementsList[fieldItem.columnName] = fieldItem.elementName
             browserDefinition.columnsList[fieldItem.elementName] = fieldItem.columnName
             if (isLookup(fieldItem.displayType)) {
-              browserDefinition.elementsList[`DisplayColumn_` + fieldItem.columnName] = `DisplayColumn_` + fieldItem.elementName
-              browserDefinition.columnsList[`DisplayColumn_` + fieldItem.elementName] = `DisplayColumn_` + fieldItem.columnName
+              browserDefinition.elementsList[DISPLAY_COLUMN_PREFIX + fieldItem.columnName] = DISPLAY_COLUMN_PREFIX + fieldItem.elementName
+              browserDefinition.columnsList[DISPLAY_COLUMN_PREFIX + fieldItem.elementName] = DISPLAY_COLUMN_PREFIX + fieldItem.columnName
             }
 
             if (fieldItem.isRange) {

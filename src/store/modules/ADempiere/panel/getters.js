@@ -14,6 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+// constants
+import { OPERATORS_IGNORE_VALUE } from '@/utils/ADempiere/dataUtils'
+
+// utils and helper methods
 import {
   isEmptyValue,
   parsedValueComponent
@@ -295,7 +299,7 @@ const getters = {
     let attributesList = fieldsList
       .map(fieldItem => {
         const { id, uuid, columnName, defaultValue, contextColumnNames } = fieldItem
-        const isSQL = String(defaultValue).includes('@SQL=') && isGetServer
+        const isSQL = String(defaultValue).startsWith('@SQL=') && isGetServer
 
         let parsedDefaultValue
         if (!isSQL) {
@@ -310,7 +314,7 @@ const getters = {
 
         if (fieldItem.isRange && fieldItem.componentPath !== 'FieldNumber') {
           const { columnNameTo, elementNameTo, defaultValueTo } = fieldItem
-          const isSQLTo = String(defaultValueTo).includes('@SQL=') && isGetServer
+          const isSQLTo = String(defaultValueTo).startsWith('@SQL=') && isGetServer
 
           let parsedDefaultValueTo
           if (!isSQLTo) {
@@ -525,7 +529,7 @@ const getters = {
             })
           }
           if (!isEmptyValue(value) || !isEmptyValue(valueTo) || (fieldItem.isAdvancedQuery &&
-            ['NULL', 'NOT_NULL'].includes(fieldItem.operator))) {
+            OPERATORS_IGNORE_VALUE.includes(fieldItem.operator))) {
             return true
           }
         }
@@ -551,7 +555,8 @@ const getters = {
         }
 
         let values = []
-        if (parameterItem.isAdvancedQuery && ['IN', 'NOT_IN'].includes(parameterItem.operator)) {
+        if (parameterItem.isAdvancedQuery &&
+          OPERATORS_IGNORE_VALUE.includes(parameterItem.operator)) {
           if (Array.isArray(value)) {
             values = value.map(itemValue => {
               const isMandatory = !parameterItem.isAdvancedQuery &&

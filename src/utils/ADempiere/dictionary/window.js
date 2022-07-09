@@ -741,8 +741,11 @@ export const containerManager = {
     })
 
     // clear old values
-    store.dispatch('clearPersistence', {
-      containerUuid
+    store.dispatch('clearPersistenceQueue', {
+      containerUuid,
+      recordUuid: row[UUID]
+    }, {
+      root: true
     })
 
     // active logics with set records values
