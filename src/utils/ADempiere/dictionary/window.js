@@ -180,6 +180,14 @@ export const undoChange = {
       attributes
     })
 
+    // clear old values
+    store.dispatch('clearPersistenceQueue', {
+      containerUuid,
+      recordUuid: row[UUID]
+    }, {
+      root: true
+    })
+
     const tab = store.getters.getStoredTab(parentUuid, containerUuid)
     // update records and logics on child tabs
     tab.childTabs.filter(tabItem => {
@@ -209,6 +217,14 @@ export const undoChange = {
         parentUuid,
         containerUuid: tabItem.uuid,
         attributes
+      })
+
+      // clear old values
+      store.dispatch('clearPersistenceQueue', {
+        containerUuid,
+        recordUuid: row[UUID]
+      }, {
+        root: true
       })
     })
   }

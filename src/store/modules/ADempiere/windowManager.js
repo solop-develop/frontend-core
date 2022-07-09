@@ -419,6 +419,12 @@ const windowManager = {
             })
 
             resolve(responseDeleteEntity)
+
+            // clear old values
+            dispatch('clearPersistenceQueue', {
+              containerUuid,
+              recordUuid
+            })
           })
           .catch(error => {
             reject(error)
