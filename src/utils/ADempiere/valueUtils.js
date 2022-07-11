@@ -15,13 +15,15 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import language from '@/lang'
-import { getResoursePath } from '@/utils/ADempiere/resource.js'
+
 // constants
 import { TABLE, TABLE_DIRECT } from '@/utils/ADempiere/references.js'
+import { DISPLAY_COLUMN_PREFIX, IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
+import { OPERATION_PATTERN } from '@/utils/ADempiere/formatValue/numberFormat.js'
 
 // utils and helper methods
 import { convertBooleanToString, convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat.js'
-import { OPERATION_PATTERN } from '@/utils/ADempiere/formatValue/numberFormat.js'
+import { getResoursePath } from '@/utils/ADempiere/resource.js'
 
 /**
  * Checks if value is empty. Deep-checks arrays and objects
@@ -86,6 +88,27 @@ export const isEmptyValue = function(value) {
   }
 
   return isEmpty
+}
+
+/**
+ * Is identifier empty value
+ * @param {string} columnName
+ * @param {mixed} value
+ * @returns {boolean}
+ */
+export function isIdentifierEmpty({
+  columnName,
+  value
+}) {
+  if (isEmptyValue(value)) {
+    return true
+  }
+  if (!columnName.startsWith(DISPLAY_COLUMN_PREFIX) &&
+    (columnName.endsWith(IDENTIFIER_COLUMN_SUFFIX) ||
+    columnName.endsWith('_ID_To')) && String(value).trim() === '0') {
+    return true
+  }
+  return false
 }
 
 /**
@@ -367,7 +390,8 @@ export function parsedValueComponent({
         value = convertBooleanToString(value)
       }
       // Table (18) or Table Direct (19)
-      if (TABLE_DIRECT.id === displayType || TABLE.id === displayType && columnName.endsWith('_ID')) {
+      if (TABLE_DIRECT.id === displayType || TABLE.id === displayType &&
+        (columnName.endsWith('_ID_To') || columnName.endsWith(IDENTIFIER_COLUMN_SUFFIX))) {
         if (!isEmptyValue(value)) {
           value = Number(value)
         }

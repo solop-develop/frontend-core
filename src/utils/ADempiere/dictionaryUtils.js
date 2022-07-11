@@ -35,6 +35,11 @@ import {
 export const DISPLAY_COLUMN_PREFIX = `DisplayColumn_`
 
 /**
+ * Identifier Column Suffix on Column Name: "_ID"
+ */
+export const IDENTIFIER_COLUMN_SUFFIX = `_ID`
+
+/**
  * Generate field to app
  * @param {object}  fieldToGenerate
  * @param {object}  moreAttributes, additional attributes

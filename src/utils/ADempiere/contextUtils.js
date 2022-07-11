@@ -21,7 +21,7 @@ import store from '@/store'
 import { ACCOUNTING_COLUMNS, SALES_TRANSACTION_COLUMNS } from '@/utils/ADempiere/constants/systemColumns.js'
 
 // utils and helper methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { isEmptyValue, isIdentifierEmpty } from '@/utils/ADempiere/valueUtils.js'
 import { convertBooleanToString } from '@/utils/ADempiere/formatValue/booleanFormat.js'
 import evaluator from '@/utils/ADempiere/evaluator'
 
@@ -386,7 +386,7 @@ export function getContextAttributes({
     })
 
     // if identifier and empty, send value in zero
-    if (isEmptyValue(value) && (columnName.endsWith('_ID') || columnName.endsWith('_ID_To'))) {
+    if (isIdentifierEmpty({ columnName, value })) {
       value = 0
     }
 
