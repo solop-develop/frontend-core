@@ -145,6 +145,13 @@ const windowManager = {
       Vue.set(state.tabData[containerUuid], 'currentRecordUuid', recordUuid)
     },
 
+    setSearchValueTabRecordsList(state, {
+      containerUuid,
+      searchValue
+    }) {
+      Vue.set(state.tabData[containerUuid], 'searchValue', searchValue)
+    },
+
     resetStateWindowManager(state) {
       state = initState
     }
