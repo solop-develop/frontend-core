@@ -119,12 +119,37 @@ const windowManager = {
     setTabRow(state, { containerUuid, row, index }) {
       const recordsList = state.tabData[containerUuid].recordsList
       if (!isEmptyValue(index)) {
-        recordsList.splice(index, 0, row)
+        recordsList.splice(index, 1, row)
       } else {
         recordsList.unshift(row)
       }
 
       Vue.set(state.tabData[containerUuid], 'recordsList', recordsList)
+    },
+
+    setTabRowWithRecord(state, { containerUuid, row, recordUuid }) {
+      if (isEmptyValue(recordUuid)) {
+        return
+      }
+
+      const recordsList = state.tabData[containerUuid].recordsList
+      //   .map(currentRow => {
+      //     if (currentRow[UUID] === recordUuid) {
+      //       return {
+      //         currentRow,
+      //         ...row
+      //       }
+      //     }
+      //     return currentRow
+      //   })
+      const index = recordsList.map(currentRow => {
+        return currentRow[UUID] === recordUuid
+      })
+
+      if (index >= 0) {
+        recordsList.splice(index, 1, row)
+        Vue.set(state.tabData[containerUuid], 'recordsList', recordsList)
+      }
     },
 
     clearTabData(state, { containerUuid }) {

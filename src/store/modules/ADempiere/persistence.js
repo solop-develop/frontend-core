@@ -193,6 +193,26 @@ const persistence = {
                   message: language.t('recordManager.updatedRecord'),
                   type: 'success'
                 })
+
+                // add new row on table
+                commit('setTabRowWithRecord', {
+                  containerUuid,
+                  recordUuid: response.attributes[UUID],
+                  row: {
+                    ...response.attributes,
+                    ...ROW_ATTRIBUTES
+                  }
+                })
+
+                // update fields values
+                dispatch('updateValuesOfContainer', {
+                  parentUuid,
+                  containerUuid,
+                  attributes: response.attributes
+                }, {
+                  root: true
+                })
+
                 resolve(response)
 
                 // clear old values
