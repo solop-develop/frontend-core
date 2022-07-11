@@ -152,6 +152,7 @@ const persistence = {
         const autoSave = rootState.settings.autoSave
         if (autoSave) {
           dispatch('flushPersistenceQueue', {
+            parentUuid: field.parentUuid,
             containerUuid,
             tableName: field.tabTableName,
             recordUuid
@@ -165,6 +166,7 @@ const persistence = {
     },
 
     flushPersistenceQueue({ commit, dispatch, getters }, {
+      parentUuid,
       containerUuid,
       tableName,
       recordUuid
@@ -225,11 +227,20 @@ const persistence = {
                   }
                 })
 
+                // update fields values
+                dispatch('updateValuesOfContainer', {
+                  parentUuid,
+                  containerUuid,
+                  attributes: response.attributes
+                }, {
+                  root: true
+                })
+
                 resolve(response)
 
-                // without record uuid to clear new
                 // clear old values
                 dispatch('clearPersistenceQueue', {
+                  // without record uuid to clear new
                   containerUuid
                 })
               })
