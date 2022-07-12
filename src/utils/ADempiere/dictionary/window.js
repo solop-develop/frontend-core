@@ -530,7 +530,9 @@ export function generateWindow(responseWindow) {
     isShowedTabsParent: true,
     isShowedTabsChildren: true,
     isShowedRecordNavigation: undefined, // TODO: @deprecated
-    isShowedAdvancedQuery: false
+    isShowedAdvancedQuery: false,
+    isFullScreenTabsParent: false,
+    isFullScreenTabsChildren: false
   }
 
   // delete unused property
@@ -596,9 +598,6 @@ export function generateTabs({
       // app properties
       isShowedRecordNavigation: !(currentTab.isSingleRow || isParentTab), // TODO: @deprecated
       isShowedTableRecords: !(currentTab.isSingleRow || isParentTab),
-      isTableViewFullScreen: false,
-      isTabChildFullScreen: false,
-      isViewFullScreen: false,
       index // this index is not related to the index in which the tabs are displayed
     }
 
