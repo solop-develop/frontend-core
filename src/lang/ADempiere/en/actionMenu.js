@@ -16,6 +16,7 @@
 
 const actionMenu = {
   // actions
+  refresh: 'Refresh',
   refreshRecords: 'Refresh Records',
   deleteRecord: 'Delete Record',
   new: 'New',

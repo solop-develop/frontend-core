@@ -16,6 +16,7 @@
 
 const actionMenu = {
   // actions
+  refresh: 'Refrescar',
   refreshRecords: 'Refrescar Registros',
   deleteRecord: 'Eliminar Registro',
   new: 'Nuevo',

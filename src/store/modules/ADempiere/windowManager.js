@@ -142,7 +142,7 @@ const windowManager = {
       //     }
       //     return currentRow
       //   })
-      const index = recordsList.map(currentRow => {
+      const index = recordsList.findIndex(currentRow => {
         return currentRow[UUID] === recordUuid
       })
 
@@ -585,16 +585,8 @@ const windowManager = {
     },
     getTabCurrentRecord: (state, getters) => ({ containerUuid }) => {
       const recordUuid = getters.getUuidOfContainer(containerUuid)
-      const list = getters.getTabData({ containerUuid }).recordsList
-      let record = []
-      if (!isEmptyValue(recordUuid) && !isEmptyValue(list)) {
-        record = list.find(row => {
-          if (row.UUID === recordUuid) {
-            return row
-          }
-        })
-      }
-      return record
+
+      return getters.getTabRowData({ recordUuid })
     },
     getTabPageNumber: (state, getters) => ({ containerUuid }) => {
       return getters.getTabData({ containerUuid }).pageNumber
@@ -604,6 +596,10 @@ const windowManager = {
     },
     getTabRowData: (state, getters) => ({ containerUuid, recordUuid, rowIndex }) => {
       const recordsList = getters.getTabRecordsList({ containerUuid })
+      if (isEmptyValue(recordsList)) {
+        return {}
+      }
+
       if (!isEmptyValue(rowIndex)) {
         return recordsList[rowIndex]
       }
@@ -613,6 +609,8 @@ const windowManager = {
           return itemData.UUID === recordUuid
         })
       }
+
+      return {}
     },
     getTabCellData: (state, getters) => ({ containerUuid, recordUuid, rowIndex, columnName }) => {
       const recordsList = getters.getTabRecordsList({ containerUuid })

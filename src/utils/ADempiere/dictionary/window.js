@@ -23,6 +23,7 @@ import {
   ACTIVE, CLIENT, PROCESSING, PROCESSED, UUID,
   READ_ONLY_FORM_COLUMNS
 } from '@/utils/ADempiere/constants/systemColumns'
+import { ROW_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
 
 // utils and helpers methods
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat'
@@ -32,6 +33,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { BUTTON, isHiddenField } from '@/utils/ADempiere/references.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import { zoomIn } from '@/utils/ADempiere/coreUtils'
+import { getEntity } from '@/api/ADempiere/user-interface/persistence'
 
 /**
  * Is displayed field in panel single record
@@ -409,6 +411,53 @@ export const openBrowserAssociated = {
         }
       }, () => {})
     }
+  }
+}
+
+export const refreshRecord = {
+  name: language.t('actionMenu.refreshRecords'),
+  enabled: ({ containerUuid }) => {
+    const recordUuid = store.getters.getUuidOfContainer(containerUuid)
+    return !isEmptyValue(recordUuid) && recordUuid !== 'create-new'
+  },
+  svg: false,
+  icon: 'el-icon-refresh',
+  actionName: 'refreshRecords',
+  refreshRecord: ({ parentUuid, containerUuid, recordId, recordUuid }) => {
+    if (isEmptyValue(recordUuid)) {
+      recordUuid = store.getters.getUuidOfContainer(containerUuid)
+    }
+
+    getEntity({
+      tabUuid: containerUuid,
+      recordId,
+      recordUuid
+    })
+      .then(response => {
+        const currentRow = store.getters.getTabRowData({
+          recordUuid
+        })
+
+        // add new row on table
+        store.commit('setTabRowWithRecord', {
+          containerUuid,
+          recordUuid,
+          row: {
+            ...ROW_ATTRIBUTES,
+            ...currentRow,
+            ...response.attributes
+          }
+        })
+
+        // update fields values
+        store.dispatch('updateValuesOfContainer', {
+          parentUuid,
+          containerUuid,
+          attributes: response.attributes
+        }, {
+          root: true
+        })
+      })
   }
 }
 
@@ -972,19 +1021,19 @@ export const containerManager = {
     })
   },
 
-  getRow: ({ containerUuid, rowIndex, rowUuid }) => {
+  getRow: ({ containerUuid, rowIndex, recordUuid }) => {
     return store.getters.getTabRowData({
       containerUuid,
       rowIndex,
-      rowUuid
+      recordUuid
     })
   },
 
-  getCell: ({ containerUuid, rowIndex, rowUuid, columnName }) => {
+  getCell: ({ containerUuid, rowIndex, recordUuid, columnName }) => {
     return store.getters.getTabCellData({
       containerUuid,
       rowIndex,
-      rowUuid,
+      recordUuid,
       columnName
     })
   },

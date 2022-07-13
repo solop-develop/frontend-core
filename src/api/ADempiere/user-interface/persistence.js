@@ -22,6 +22,33 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/constants/table'
 
 /**
+ * Get entity from tab uuid and record id or record uuid
+ * @param {string} tabUuid
+ * @param {number}  recordId
+ * @param {string}  recordUuid
+ */
+export function getEntity({
+  tabUuid,
+  recordId,
+  recordUuid
+}) {
+  return request({
+    url: '/user-interface/window/entity',
+    method: 'get',
+    params: {
+      tab_uuid: tabUuid,
+      uuid: recordUuid,
+      id: recordId
+    }
+  })
+    .then(entityResponse => {
+      const { convertEntity } = require('@/utils/ADempiere/apiConverts/persistence.js')
+
+      return convertEntity(entityResponse)
+    })
+}
+
+/**
  * Object List from window
  * @param {string} windowUuid
  * @param {string} tabUuid
