@@ -16,6 +16,7 @@
 
 const actionMenu = {
   // actions
+  refresh: 'Refresh',
   refreshRecords: 'Refresh Records',
   deleteRecord: 'Delete Record',
   new: 'New',
@@ -23,6 +24,7 @@ const actionMenu = {
   shareLink: 'Share Link',
   shareLinkDescription: 'Share current route in the clipboard',
   undo: 'Undo',
+  save: 'Save',
   withoutActions: 'Without Actions',
   zoomWindow: 'Zoom Window',
   // process

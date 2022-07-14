@@ -235,7 +235,8 @@ export default {
     sidebarLogo: 'Logotipo de la barra lateral',
     showContextMenu: 'Mostrar Menu de Contexto',
     isShowTitle: 'Mostrar Título',
-    isShowMenu: 'Mostrar Menu'
+    isShowMenu: 'Mostrar Menu',
+    autoSave: 'Guardado Automático'
   },
   profile: {
     aboutMe: 'Sobre Mi',

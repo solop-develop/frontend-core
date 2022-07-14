@@ -16,6 +16,7 @@
 
 const actionMenu = {
   // actions
+  refresh: 'Refrescar',
   refreshRecords: 'Refrescar Registros',
   deleteRecord: 'Eliminar Registro',
   new: 'Nuevo',
@@ -23,6 +24,7 @@ const actionMenu = {
   shareLink: 'Compartir Enlace',
   shareLinkDescription: 'Compartir ruta actual en el porta-papeles',
   undo: 'Deshacer',
+  save: 'Guardar',
   withoutActions: 'Sin Actiones',
   zoomWindow: 'Acercar Ventana',
   // process

@@ -22,6 +22,7 @@ import { requestBrowserSearch, updateBrowserEntity, requestDeleteBrowser } from 
 
 // constants
 import { ROW_ATTRIBUTES, ROW_KEY_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
+import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -451,7 +452,7 @@ const browserControl = {
         const attributesList = []
 
         Object.keys(itemRow).forEach(columnName => {
-          if (!columnName.includes('DisplayColumn') && !ROW_KEY_ATTRIBUTES.includes(columnName)) {
+          if (!columnName.startsWith(DISPLAY_COLUMN_PREFIX) && !ROW_KEY_ATTRIBUTES.includes(columnName)) {
             // evaluate metadata attributes before to convert
             if (fieldsListSelection.includes(columnName)) {
               attributesList.push({

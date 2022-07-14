@@ -42,124 +42,204 @@
         >
           <el-switch v-model="sidebarLogo" />
         </el-form-item>
+        <el-form-item
+          :label="$t('settings.autoSave')"
+        >
+          <el-switch v-model="showAutoSave" />
+        </el-form-item>
       </el-form>
     </div>
   </div>
 </template>
 
 <script>
+import { computed, ref } from '@vue/composition-api'
+
+import store from '@/store'
+
+// components and mixins
 import ThemePicker from '@theme/components/ThemePicker'
 
 export default {
-  components: { ThemePicker },
-  data() {
-    return {
-      activeName: '1'
-    }
+  name: 'GeneralSettings',
+
+  components: {
+    ThemePicker
   },
-  computed: {
-    isShowTitleForm: {
+
+  setup(props) {
+    const activeName = ref('1')
+
+    const isShowTitleForm = computed({
+      // getter
       get() {
-        return this.$store.getters.getIsShowTitleForm
+        return store.getters.getIsShowTitleForm
       },
-      set(val) {
-        this.$store.commit('changeShowTitleForm', val)
+      // setter
+      set(newValue) {
+        // Note: we are using destructuring assignment syntax here.
+        store.commit('changeShowTitleForm', newValue)
       }
-    },
-    isShowJob() {
-      return this.$store.getters.language === 'zh'
-    },
-    fixedHeader: {
+    })
+
+    const showNavar = computed({
+      // getter
       get() {
-        return this.$store.state.settings.fixedHeader
+        return store.state.settings.showNavar
       },
-      set(val) {
-        this.$store.dispatch('settings/changeSetting', {
-          key: 'fixedHeader',
-          value: val
-        })
-      }
-    },
-    showNavar: {
-      get() {
-        return this.$store.state.settings.showNavar
-      },
-      set(val) {
-        this.$store.dispatch('settings/changeSetting', {
+      // setter
+      set(newValue) {
+        // Note: we are using destructuring assignment syntax here.
+        store.dispatch('settings/changeSetting', {
           key: 'showNavar',
-          value: val
+          value: newValue
         })
       }
-    },
-    showMenu: {
+    })
+
+    const fixedHeader = computed({
+      // getter
       get() {
-        return this.$store.state.settings.showMenu
+        return store.state.settings.fixedHeader
       },
-      set(val) {
-        this.$store.dispatch('app/toggleSideBar')
-        this.$store.dispatch('settings/changeSetting', {
+      // setter
+      set(newValue) {
+        // Note: we are using destructuring assignment syntax here.
+        store.dispatch('settings/changeSetting', {
+          key: 'fixedHeader',
+          value: newValue
+        })
+      }
+    })
+
+    const showMenu = computed({
+      // getter
+      get() {
+        return store.state.settings.showMenu
+      },
+      // setter
+      set(newValue) {
+        // Note: we are using destructuring assignment syntax here.
+        store.dispatch('app/toggleSideBar')
+        store.dispatch('settings/changeSetting', {
           key: 'showMenu',
-          value: val
+          value: newValue
         })
       }
-    },
-    tagsView: {
+    })
+
+    const tagsView = computed({
+      // getter
       get() {
-        return this.$store.state.settings.tagsView
+        return store.state.settings.tagsView
       },
-      set(val) {
-        this.$store.dispatch('settings/changeSetting', {
+      // setter
+      set(newValue) {
+        // Note: we are using destructuring assignment syntax here.
+        store.dispatch('settings/changeSetting', {
           key: 'tagsView',
-          value: val
+          value: newValue
         })
       }
-    },
-    showContextMenu: {
+    })
+
+    const showContextMenu = computed({
+      // getter
       get() {
-        return this.$store.state.settings.showContextMenu
+        return store.state.settings.showContextMenu
       },
-      set(val) {
-        this.$store.dispatch('settings/changeSetting', {
+      // setter
+      set(newValue) {
+        // Note: we are using destructuring assignment syntax here.
+        store.dispatch('settings/changeSetting', {
           key: 'showContextMenu',
-          value: val
+          value: newValue
         })
       }
-    },
-    sidebarLogo: {
+    })
+
+    const sidebarLogo = computed({
+      // getter
       get() {
-        return this.$store.state.settings.sidebarLogo
+        return store.state.settings.sidebarLogo
       },
-      set(val) {
-        this.$store.dispatch('settings/changeSetting', {
+      // setter
+      set(newValue) {
+        // Note: we are using destructuring assignment syntax here.
+        store.dispatch('settings/changeSetting', {
           key: 'sidebarLogo',
-          value: val
+          value: newValue
         })
       }
-    },
-    supportPinyinSearch: {
+    })
+
+    const supportPinyinSearch = computed({
+      // getter
       get() {
-        return this.$store.state.settings.supportPinyinSearch
+        return store.state.settings.supportPinyinSearch
       },
-      set(val) {
-        this.$store.dispatch('settings/changeSetting', {
+      // setter
+      set(newValue) {
+        // Note: we are using destructuring assignment syntax here.
+        store.dispatch('settings/changeSetting', {
           key: 'supportPinyinSearch',
-          value: val
+          value: newValue
         })
       }
-    },
-    lang() {
-      return this.$store.getters.language
-    }
-  },
-  methods: {
-    changeDisplatedTitle() {
-      this.$store.commit('changeShowTitleForm', !this.isShowTitleForm)
-    },
-    themeChange(val) {
-      this.$store.dispatch('settings/changeSetting', {
+    })
+
+    const showAutoSave = computed({
+      // getter
+      get() {
+        return store.state.settings.autoSave
+      },
+      // setter
+      set(newValue) {
+        // Note: we are using destructuring assignment syntax here.
+        store.dispatch('settings/changeSetting', {
+          key: 'autoSave',
+          value: newValue
+        })
+      }
+    })
+
+    const lang = computed(() => {
+      return store.getters.language
+    })
+
+    const isShowJob = computed(() => {
+      return store.getters.language === 'zh'
+    })
+
+    function themeChange(val) {
+      store.dispatch('settings/changeSetting', {
         key: 'theme',
         value: val
       })
+    }
+
+    function changeDisplatedTitle() {
+      store.commit('changeShowTitleForm', !isShowTitleForm.value)
+    }
+
+    return {
+      // data
+      activeName,
+      // Computed
+      isShowTitleForm,
+      showNavar,
+      fixedHeader,
+      showMenu,
+      tagsView,
+      showContextMenu,
+      sidebarLogo,
+      supportPinyinSearch,
+      showAutoSave,
+      lang,
+      isShowJob,
+      // methods
+      themeChange,
+      changeDisplatedTitle
     }
   }
 }

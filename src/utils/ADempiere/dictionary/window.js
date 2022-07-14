@@ -23,6 +23,7 @@ import {
   ACTIVE, CLIENT, PROCESSING, PROCESSED, UUID,
   READ_ONLY_FORM_COLUMNS
 } from '@/utils/ADempiere/constants/systemColumns'
+import { ROW_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
 
 // utils and helpers methods
 import evaluator from '@/utils/ADempiere/evaluator'
@@ -34,6 +35,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { BUTTON, isHiddenField } from '@/utils/ADempiere/references.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import { zoomIn } from '@/utils/ADempiere/coreUtils'
+import { getEntity } from '@/api/ADempiere/user-interface/persistence'
 
 /**
  * Is displayed field in panel single record
@@ -52,7 +54,7 @@ export function isDisplayedField({ isDisplayed, displayLogic, isDisplayedFromLog
  * Default showed field from user
  */
 export function evaluateDefaultFieldShowed({ defaultValue, isMandatory, isShowedFromUser, isParent }) {
-  if (String(defaultValue).includes('@SQL=')) {
+  if (String(defaultValue).startsWith('@SQL=')) {
     return true
   }
 
@@ -182,6 +184,14 @@ export const undoChange = {
       attributes
     })
 
+    // clear old values
+    store.dispatch('clearPersistenceQueue', {
+      containerUuid,
+      recordUuid: row[UUID]
+    }, {
+      root: true
+    })
+
     const tab = store.getters.getStoredTab(parentUuid, containerUuid)
     // update records and logics on child tabs
     tab.childTabs.filter(tabItem => {
@@ -211,6 +221,14 @@ export const undoChange = {
         parentUuid,
         containerUuid: tabItem.uuid,
         attributes
+      })
+
+      // clear old values
+      store.dispatch('clearPersistenceQueue', {
+        containerUuid,
+        recordUuid: row[UUID]
+      }, {
+        root: true
       })
     })
   }
@@ -398,6 +416,53 @@ export const openBrowserAssociated = {
   }
 }
 
+export const refreshRecord = {
+  name: language.t('actionMenu.refreshRecords'),
+  enabled: ({ containerUuid }) => {
+    const recordUuid = store.getters.getUuidOfContainer(containerUuid)
+    return !isEmptyValue(recordUuid) && recordUuid !== 'create-new'
+  },
+  svg: false,
+  icon: 'el-icon-refresh',
+  actionName: 'refreshRecords',
+  refreshRecord: ({ parentUuid, containerUuid, recordId, recordUuid }) => {
+    if (isEmptyValue(recordUuid)) {
+      recordUuid = store.getters.getUuidOfContainer(containerUuid)
+    }
+
+    getEntity({
+      tabUuid: containerUuid,
+      recordId,
+      recordUuid
+    })
+      .then(response => {
+        const currentRow = store.getters.getTabRowData({
+          recordUuid
+        })
+
+        // add new row on table
+        store.commit('setTabRowWithRecord', {
+          containerUuid,
+          recordUuid,
+          row: {
+            ...ROW_ATTRIBUTES,
+            ...currentRow,
+            ...response.attributes
+          }
+        })
+
+        // update fields values
+        store.dispatch('updateValuesOfContainer', {
+          parentUuid,
+          containerUuid,
+          attributes: response.attributes
+        }, {
+          root: true
+        })
+      })
+  }
+}
+
 export const refreshRecords = {
   name: language.t('actionMenu.refreshRecords'),
   enabled: () => {
@@ -516,7 +581,9 @@ export function generateWindow(responseWindow) {
     isShowedTabsParent: true,
     isShowedTabsChildren: true,
     isShowedRecordNavigation: undefined, // TODO: @deprecated
-    isShowedAdvancedQuery: false
+    isShowedAdvancedQuery: false,
+    isFullScreenTabsParent: false,
+    isFullScreenTabsChildren: false
   }
 
   // delete unused property
@@ -601,9 +668,6 @@ export function generateTabs({
       // app properties
       isShowedRecordNavigation: !(currentTab.isSingleRow || isParentTab), // TODO: @deprecated
       isShowedTableRecords: !(currentTab.isSingleRow || isParentTab),
-      isTableViewFullScreen: false,
-      isTabChildFullScreen: false,
-      isViewFullScreen: false,
       index // this index is not related to the index in which the tabs are displayed
     }
 
@@ -759,6 +823,14 @@ export const containerManager = {
       containerUuid,
       attributes,
       isOverWriteParent: tabDefinition.isParentTab
+    })
+
+    // clear old values
+    store.dispatch('clearPersistenceQueue', {
+      containerUuid,
+      recordUuid: row[UUID]
+    }, {
+      root: true
     })
 
     // active logics with set records values
@@ -970,19 +1042,19 @@ export const containerManager = {
     })
   },
 
-  getRow: ({ containerUuid, rowIndex, rowUuid }) => {
+  getRow: ({ containerUuid, rowIndex, recordUuid }) => {
     return store.getters.getTabRowData({
       containerUuid,
       rowIndex,
-      rowUuid
+      recordUuid
     })
   },
 
-  getCell: ({ containerUuid, rowIndex, rowUuid, columnName }) => {
+  getCell: ({ containerUuid, rowIndex, recordUuid, columnName }) => {
     return store.getters.getTabCellData({
       containerUuid,
       rowIndex,
-      rowUuid,
+      recordUuid,
       columnName
     })
   },

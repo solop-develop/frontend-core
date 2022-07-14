@@ -1,7 +1,7 @@
 import variables from '@/styles/element-variables.scss'
 import defaultSettings from '@/settings'
 
-const { showSettings, tagsView, fixedHeader, showNavar, sidebarLogo, supportPinyinSearch, showContextMenu } = defaultSettings
+const { showSettings, tagsView, fixedHeader, showNavar, sidebarLogo, supportPinyinSearch, showContextMenu, autoSave } = defaultSettings
 
 const state = {
   theme: variables.theme,
@@ -12,6 +12,7 @@ const state = {
   supportPinyinSearch,
   showContextMenu,
   showNavar,
+  autoSave,
   showMenu: true
 }
 

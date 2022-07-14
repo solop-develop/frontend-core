@@ -41,7 +41,7 @@
         :container-uuid="processUuid"
       />
       <tab-manager-child
-        v-if="((isWithChildsTab && isMobile) || getTab.isTableViewFullScreen)"
+        v-if="isWithChildsTab && isMobile"
         :parent-uuid="windowMetadata.uuid"
         :container-manager="containerManager"
         :tabs-list="windowMetadata.tabsListChild"
@@ -50,9 +50,8 @@
         :actions-manager="actionsManager"
       />
     </el-main>
-    <el-footer v-if="!isMobile && !getTab.isTableViewFullScreen" id="footerWindow" :style="styleFullScreen">
+    <el-footer v-if="isWithChildsTab && !isMobile" id="footerWindow" :style="styleFullScreen">
       <tab-manager-child
-        v-if="isWithChildsTab"
         class="tab-manager"
         :parent-uuid="windowMetadata.uuid"
         :container-manager="containerManager"
@@ -132,28 +131,15 @@ export default defineComponent({
       return store.getters.getCurrentTab(props.windowMetadata.uuid).uuid
     })
 
-    const currentTabChild = computed(() => {
-      if (!isEmptyValue(currentTab.value.childTabs) && !isEmptyValue(root.$route.query.tabChild)) {
-        const index = parseInt(root.$route.query.tabChild, 10)
-        return store.getters.getStoredTab(
-          props.windowMetadata.uuid,
-          props.windowMetadata.tabsListChild[index].uuid
-        )
-      }
-      return {}
-    })
-
-    const currentTab = computed(() => {
-      return store.getters.getCurrentTab(props.windowMetadata.uuid)
-    })
-
     const styleFullScreen = computed(() => {
-      if (isEmptyValue(currentTab.value.childTabs)) {
+      if (!isWithChildsTab.value) {
         return 'height: 0% !important'
-      } else if (!isEmptyValue(currentTab.value.childTabs) && currentTab.value.isTableViewFullScreen) {
-        return 'height: 20% !important'
-      } else if (!isEmptyValue(currentTab.value.childTabs) && !currentTab.value.isTableViewFullScreen && !isEmptyValue(currentTabChild.value) && currentTabChild.value.isTabChildFullScreen) {
-        return 'height: 75% !important'
+      } else {
+        if (props.windowMetadata.isFullScreenTabsParent) {
+          return 'height: 20% !important'
+        } else if (props.windowMetadata.isFullScreenTabsChildren) {
+          return 'height: 75% !important'
+        }
       }
 
       return 'height: 50% !important'
@@ -177,10 +163,6 @@ export default defineComponent({
       }
     })
 
-    const getTab = computed(() => {
-      return store.getters.getCurrentTab(props.windowMetadata.uuid)
-    })
-
     const referencesManager = ref({
       getTableName: () => {
         const tabUuid = currentTabUuid.value
@@ -202,10 +184,7 @@ export default defineComponent({
       isWithChildsTab,
       containerManager,
       isMobile,
-      getTab,
-      styleFullScreen,
-      currentTabChild,
-      currentTab
+      styleFullScreen
     }
   }
 

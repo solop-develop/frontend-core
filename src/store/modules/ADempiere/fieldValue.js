@@ -23,7 +23,7 @@ import {
 
 // utils and helpers methods
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
-import { isEmptyValue, typeValue } from '@/utils/ADempiere/valueUtils.js'
+import { isEmptyValue, isIdentifierEmpty, typeValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat.js'
 
 const value = {
@@ -102,10 +102,15 @@ const value = {
           if (isOverWriteParent) {
             Vue.set(state.field, keyParent, value)
           } else {
+            // const parentValue = state[keyParent]
             if (!isEmptyValue(value)) {
               // tab child no replace parent context with empty
               Vue.set(state.field, keyParent, value)
             }
+            // if ((isIdentifierEmpty({ columnName, value: parentValue }))) {
+            //   console.log({ columnName, value, parentValue, keyParent })
+            //   Vue.set(state.field, keyParent, value)
+            // }
           }
         }
 
@@ -152,7 +157,7 @@ const value = {
         })
       }
 
-      if (parentUuid && isEmptyValue(value)) {
+      if (parentUuid && (isIdentifierEmpty({ columnName, value }))) {
         // get in window level
         value = getters.getValueOfFieldOnParent({
           parentUuid,

@@ -59,3 +59,59 @@ En ADempiere actualmente se puede acceder a una ventana desde los **Smart Browse
 
 ##### Versión Móvil Vue:
 <img :src="$withBase('/images/use-cases/window/open/open-zoom-sb-mobile-vue.gif')" alt="ZK Desktop" width="100%">
+
+## CRUD
+
+### Nuevo Registro
+
+Crear Nuevo Registro. Para crear un nuevo registro puede usar los **Botones de Conveniencia** o dirigirse al menu ubicado en el lado derecho y seleccione la opción de **Nuevo Registro** 
+Para guardar solo debe llenar los campos obligatorio 
+
+##### Versión Escritorio Vue:
+<img :src="$withBase('/images/use-cases/window/ejecute/new-record-desktop-vue.gif')" alt="ZK Desktop" width="100%">
+
+##### Versión Móvil Vue:
+<img :src="$withBase('/images/use-cases/window/ejecute/new-record-mobile-vue.gif')" alt="ZK Desktop" width="100%">
+
+
+### Lectura
+
+Navegación entre registro, Navegación entre Pestaña, modo Multivista y Mono Vista
+
+
+##### Versión Escritorio Vue:
+
+<img :src="$withBase('/images/use-cases/window/ejecute/navegation-desktop-vue.gif')" alt="ZK Desktop" width="100%">
+
+##### Versión Móvil Vue:
+<img :src="$withBase('/images/use-cases/window/ejecute/navegation-mobile-vue.gif')" alt="ZK Desktop" width="100%">
+
+
+### Actualizar 
+
+Al modificar un valor de un campo apenas pueda el focos o pulse Enter se guardar los campos
+
+
+##### Versión Escritorio Vue:
+
+<img :src="$withBase('/images/use-cases/window/ejecute/update-desktop-vue.gif')" alt="ZK Desktop" width="100%">
+
+##### Versión Móvil Vue:
+<img :src="$withBase('/images/use-cases/window/ejecute/update-mobile-vue.gif')" alt="ZK Desktop" width="100%">
+
+
+### Eliminar 
+
+Para eliminar un registro puede usar los **Botones de Conveniencia** o dirigirse al menu ubicado en el lado derecho y seleccione la opción de **Eliminar Registro** 
+
+Al seleccionar la Acción de **Eliminar** aparecerá un diálogo con el cual tendrá que confirmar eliminar un registro en casos de equivocarse 
+
+
+##### Versión Escritorio Vue:
+
+<img :src="$withBase('/images/use-cases/window/ejecute/delete-desktop-vue.gif')" alt="ZK Desktop" width="100%">
+
+##### Versión Móvil Vue:
+<img :src="$withBase('/images/use-cases/window/ejecute/delete-mobile-vue.gif')" alt="ZK Desktop" width="100%">
+
+

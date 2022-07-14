@@ -119,12 +119,37 @@ const windowManager = {
     setTabRow(state, { containerUuid, row, index }) {
       const recordsList = state.tabData[containerUuid].recordsList
       if (!isEmptyValue(index)) {
-        recordsList.splice(index, 0, row)
+        recordsList.splice(index, 1, row)
       } else {
         recordsList.unshift(row)
       }
 
       Vue.set(state.tabData[containerUuid], 'recordsList', recordsList)
+    },
+
+    setTabRowWithRecord(state, { containerUuid, row, recordUuid }) {
+      if (isEmptyValue(recordUuid)) {
+        return
+      }
+
+      const recordsList = state.tabData[containerUuid].recordsList
+      //   .map(currentRow => {
+      //     if (currentRow[UUID] === recordUuid) {
+      //       return {
+      //         currentRow,
+      //         ...row
+      //       }
+      //     }
+      //     return currentRow
+      //   })
+      const index = recordsList.findIndex(currentRow => {
+        return currentRow[UUID] === recordUuid
+      })
+
+      if (index >= 0) {
+        recordsList.splice(index, 1, row)
+        Vue.set(state.tabData[containerUuid], 'recordsList', recordsList)
+      }
     },
 
     clearTabData(state, { containerUuid }) {
@@ -143,6 +168,13 @@ const windowManager = {
       recordUuid
     }) {
       Vue.set(state.tabData[containerUuid], 'currentRecordUuid', recordUuid)
+    },
+
+    setSearchValueTabRecordsList(state, {
+      containerUuid,
+      searchValue
+    }) {
+      Vue.set(state.tabData[containerUuid], 'searchValue', searchValue)
     },
 
     resetStateWindowManager(state) {
@@ -419,6 +451,12 @@ const windowManager = {
             })
 
             resolve(responseDeleteEntity)
+
+            // clear old values
+            dispatch('clearPersistenceQueue', {
+              containerUuid,
+              recordUuid
+            })
           })
           .catch(error => {
             reject(error)
@@ -545,6 +583,11 @@ const windowManager = {
     getTabSelectionsList: (state, getters) => ({ containerUuid }) => {
       return getters.getTabData({ containerUuid }).selectionsList
     },
+    getTabCurrentRecord: (state, getters) => ({ containerUuid }) => {
+      const recordUuid = getters.getUuidOfContainer(containerUuid)
+
+      return getters.getTabRowData({ recordUuid })
+    },
     getTabPageNumber: (state, getters) => ({ containerUuid }) => {
       return getters.getTabData({ containerUuid }).pageNumber
     },
@@ -553,6 +596,10 @@ const windowManager = {
     },
     getTabRowData: (state, getters) => ({ containerUuid, recordUuid, rowIndex }) => {
       const recordsList = getters.getTabRecordsList({ containerUuid })
+      if (isEmptyValue(recordsList)) {
+        return {}
+      }
+
       if (!isEmptyValue(rowIndex)) {
         return recordsList[rowIndex]
       }
@@ -562,6 +609,8 @@ const windowManager = {
           return itemData.UUID === recordUuid
         })
       }
+
+      return {}
     },
     getTabCellData: (state, getters) => ({ containerUuid, recordUuid, rowIndex, columnName }) => {
       const recordsList = getters.getTabRecordsList({ containerUuid })
