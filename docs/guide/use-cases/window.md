@@ -60,6 +60,56 @@ In ADempiere you can currently access a window from the **Smart Browsers**, as s
 ##### Vue Mobile Version:
 <img :src="$withBase('/images/use-cases/window/open/open-zoom-sb-mobile-vue.gif')" alt="ZK Desktop" width="100%">
 
+## Load
+
+### Tab (Mono Record Mode)
+
+In Mono Record mode the panel with the window fields is displayed.
+
+  :::tip <h3> Note </h3>
+When opening or loading a window it will be positioned on the first parent tab and all tabs that are at a lower level that have the same table name.
+In the case of business partner that were still at a lower level eh customer, suppliers, employees, but have the same table name.
+
+This allows to visualize the information of 2 tabs at the same time.
+  :::
+
+<h3> ZK Desktop Version: </h3>.
+<img :src="$withBase('/images/use-cases/window/load/tab/tab/tab-zk.png')" alt="ZK Desktop" width="100%">
+
+<h3> Vue Desktop version:</h3>
+<img :src="$withBase('/images/use-cases/window/load/tab/tab/tab-vue.png')" alt="ZK Desktop" width="100%">
+
+<h3> Mobile Vue Version:</h3>
+<img :src="$withBase('/images/use-cases/window/load/tab/tab/tab-vue-mobile.png')" alt="ZK Desktop" width="100%">
+
+#### Display Logic
+<h3> ZK Desktop version:</h3>
+<img :src="$withBase('/images/use-cases/window/load/tab/display-logi-zk.gif')" alt="ZK Desktop" width="100%">
+
+<h3> Vue Desktop version:</h3>
+<img :src="$withBase('/images/use-cases/window/load/tab/display-logi-vue.gif')" alt="ZK Desktop" width="100%">
+
+<h3> Mobile Vue Version:</h3>
+<img :src="$withBase('/images/use-cases/window/load/tab/display-logi-vue-mobile.gif')" alt="ZK Desktop" width="100%">
+
+### Table (Multi-Registration Mode)
+
+In Multi Record mode a table with record is displayed.
+
+  :::tip <h3> Table Options and Tools </h3>.
+  - Selection
+  - Page
+  - Change Column Display 
+  - Record Changes 
+  :::
+
+<h3> ZK Desktop Version:</h3>.
+<img :src="$withBase('/images/use-cases/window/load/table/table-zk.png')" alt="ZK Desktop" width="100%">
+
+<h3> Vue Desktop version:</h3>
+<img :src="$withBase('/images/use-cases/window/load/table/table-table-vue.png')" alt="ZK Desktop" width="100%">
+
+
 ## CRUD
 
 ### New Record
@@ -114,7 +164,3 @@ When you select the **Delete Action** a dialog will appear with which you will h
 ##### Vue Mobile Version:
 <img :src="$withBase('/images/use-cases/window/ejecute/delete-mobile-vue.gif')" alt="ZK Desktop" width="100%">
 
-
-
-
-Translated with www.DeepL.com/Translator (free version)

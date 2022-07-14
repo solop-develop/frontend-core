@@ -60,6 +60,55 @@ En ADempiere actualmente se puede acceder a una ventana desde los **Smart Browse
 ##### Versión Móvil Vue:
 <img :src="$withBase('/images/use-cases/window/open/open-zoom-sb-mobile-vue.gif')" alt="ZK Desktop" width="100%">
 
+## Carga
+
+### Pestaña (Modo Mono Registro)
+
+En modo de Mono Registro se muestra el panel con los campos de la ventana
+
+  :::tip <h3> Nota </h3>
+Al Abrir o cargar una ventana se posicionara en la primera pestaña padre y todas las pestañas que estén a un nivel inferior que tengan el mismo nombre de tabla.
+En el caso de socio de negocio que todavía estaban a un nivel inferior eh cliente, proveedores, empleados, pero tienen el mismo nombre de tabla.
+
+Esto pemite visualizar la informacion de 2 pestañás al mismo tiempo
+  :::
+
+<h3> Versión Escritorio ZK: </h3>
+<img :src="$withBase('/images/use-cases/window/load/tab/tab-zk.png')" alt="ZK Desktop" width="100%">
+
+<h3> Versión Escritorio Vue:</h3>
+<img :src="$withBase('/images/use-cases/window/load/tab/tab-vue.png')" alt="ZK Desktop" width="100%">
+
+<h3> Versión Móvil Vue:</h3>
+<img :src="$withBase('/images/use-cases/window/load/tab/tab-vue-mobile.png')" alt="ZK Desktop" width="100%">
+
+#### Lógica de Visualización
+<h3> Versión Escritorio ZK:</h3>
+<img :src="$withBase('/images/use-cases/window/load/tab/display-logi-zk.gif')" alt="ZK Desktop" width="100%">
+
+<h3> Versión Escritorio Vue:</h3>
+<img :src="$withBase('/images/use-cases/window/load/tab/display-logi-vue.gif')" alt="ZK Desktop" width="100%">
+
+<h3> Versión Móvil Vue:</h3>
+<img :src="$withBase('/images/use-cases/window/load/tab/display-logi-vue-mobile.gif')" alt="ZK Desktop" width="100%">
+
+### Tabla (Modo Multi Registro)
+
+En modo de Multi Registro se muestra una tabla con registro
+
+  :::tip <h3> Opciones y Herramientas de la Tabla </h3>
+  - Seleccion
+  - Paginacion
+  - Cambiar la Visualizacion de la columna 
+  - Cambios de registro 
+  :::
+
+<h3> Versión Escritorio ZK:</h3>
+<img :src="$withBase('/images/use-cases/window/load/table/table-zk.png')" alt="ZK Desktop" width="100%">
+
+<h3> Versión Escritorio Vue:</h3>
+<img :src="$withBase('/images/use-cases/window/load/table/table-vue.png')" alt="ZK Desktop" width="100%">
+
 ## CRUD
 
 ### Nuevo Registro
@@ -113,5 +162,3 @@ Al seleccionar la Acción de **Eliminar** aparecerá un diálogo con el cual ten
 
 ##### Versión Móvil Vue:
 <img :src="$withBase('/images/use-cases/window/ejecute/delete-mobile-vue.gif')" alt="ZK Desktop" width="100%">
-
-
