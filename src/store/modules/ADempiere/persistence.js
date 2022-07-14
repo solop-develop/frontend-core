@@ -142,6 +142,7 @@ const persistence = {
             message: language.t('notifications.mandatoryFieldMissing') + emptyFields,
             type: 'info'
           })
+          resolve()
           return
         }
 
@@ -161,6 +162,8 @@ const persistence = {
               resolve(response)
             })
             .catch(error => reject(error))
+        } else {
+          resolve()
         }
       })
     },

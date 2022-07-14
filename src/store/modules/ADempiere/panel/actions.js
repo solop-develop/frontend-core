@@ -397,16 +397,17 @@ const actions = {
               attributes: response.attributes
             })
           }
-
+        })
+        .catch(error => {
+          console.warn(`${field.name} ActionPerformed error: ${error.message}.`)
+        })
+        .finally(() => {
           // Change Dependents
           dispatch('changeDependentFieldsList', {
             field,
             fieldsList,
             containerManager
           })
-        })
-        .catch(error => {
-          console.warn(`${field.panelType}ActionPerformed error: ${error.message}.`)
         })
     })
   },

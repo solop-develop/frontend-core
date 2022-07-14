@@ -272,8 +272,7 @@ export function generateDependenFieldsList(fieldsList) {
 
     itemField.parentFieldsList.forEach(parentColumnName => {
       const parentField = listFields.find(parentFieldItem => {
-        return parentColumnName !== itemField.columnName &&
-          (parentColumnName === parentFieldItem.columnName ||
+        return (parentColumnName === parentFieldItem.columnName ||
           parentColumnName === parentFieldItem.elementName)
       })
 

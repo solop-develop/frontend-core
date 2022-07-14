@@ -35,6 +35,34 @@ import { showMessage } from '@/utils/ADempiere/notification.js'
 import { zoomIn } from '@/utils/ADempiere/coreUtils'
 import { getEntity } from '@/api/ADempiere/user-interface/persistence'
 
+export function isReadOnlyTab({ parentUuid, containerUuid }) {
+  const { windowType } = store.getters.getStoredWindow(parentUuid)
+  if (windowType === 'Q') {
+    return true
+  }
+
+  const { isReadOnly, readOnlyLogic } = store.getters.getStoredTab(parentUuid, containerUuid)
+  // if tab is read only, all fields are read only
+  if (isReadOnly) {
+    return true
+  }
+
+  if (!isEmptyValue(readOnlyLogic)) {
+    // const isReadOnlyFromLogic = evaluator.evaluateLogic({
+    //   context: getContext,
+    //   parentUuid,
+    //   containerUuid,
+    //   logic: readOnlyLogic,
+    //   defaultReturned: false
+    // })
+    // if (isReadOnlyFromLogic) {
+    //   return true
+    // }
+  }
+
+  return false
+}
+
 /**
  * Is displayed field in panel single record
  */
@@ -115,8 +143,17 @@ export const createNewRecord = {
   name: language.t('actionMenu.createNewRecord'),
   type: 'setDefaultValues',
   enabled: ({ parentUuid, containerUuid }) => {
+    if (isReadOnlyTab({ parentUuid, containerUuid })) {
+      return false
+    }
+
     const tab = store.getters.getStoredTab(parentUuid, containerUuid)
-    if (tab.isInsertRecord && !tab.isReadOnly) {
+    // TODO: Verify index Parent Tab
+    if (tab.isParentTab && tab.index > 0) {
+      return false
+    }
+
+    if (tab.isInsertRecord) {
       const recordUuid = store.getters.getUuidOfContainer(containerUuid)
       return !isEmptyValue(recordUuid)
     }
@@ -127,8 +164,16 @@ export const createNewRecord = {
   icon: 'el-icon-circle-plus-outline',
   actionName: 'createNewRecord',
   createNewRecord: ({ parentUuid, containerUuid }) => {
+    if (isReadOnlyTab({ parentUuid, containerUuid })) {
+      return false
+    }
+
     const tab = store.getters.getStoredTab(parentUuid, containerUuid)
-    if (!tab.isInsertRecord || tab.isReadOnly) {
+    if (!tab.isInsertRecord) {
+      return false
+    }
+    // TODO: Verify index Parent Tab
+    if (tab.isParentTab && tab.index > 0) {
       return false
     }
     // const recordUuid = store.getters.getUuidOfContainer(containerUuid)
@@ -191,6 +236,13 @@ export const undoChange = {
     })
 
     const tab = store.getters.getStoredTab(parentUuid, containerUuid)
+    tab.fieldsList.forEach(field => {
+      store.dispatch('changeDependentFieldsList', {
+        field,
+        containerManager
+      })
+    })
+
     // update records and logics on child tabs
     tab.childTabs.filter(tabItem => {
       // get loaded tabs with records
@@ -221,6 +273,13 @@ export const undoChange = {
         attributes
       })
 
+      tabItem.fieldsList.forEach(field => {
+        store.dispatch('changeDependentFieldsList', {
+          field,
+          containerManager
+        })
+      })
+
       // clear old values
       store.dispatch('clearPersistenceQueue', {
         containerUuid,
@@ -238,12 +297,16 @@ export const undoChange = {
 export const deleteRecord = {
   name: language.t('actionMenu.deleteRecord'),
   enabled: ({ parentUuid, containerUuid }) => {
+    if (isReadOnlyTab({ parentUuid, containerUuid })) {
+      return false
+    }
+
     const tab = store.getters.getStoredTab(parentUuid, containerUuid)
     // TODO: Verify index Parent Tab
     if (tab.isParentTab && tab.index > 0) {
       return false
     }
-    if (tab.isDeleteable && !tab.isReadOnly) {
+    if (tab.isDeleteable) {
       const preferenceClientId = store.getters.getSessionContextClientId
       if (tab.isShowedTableRecords) {
         const selectionsRecords = store.getters.getTabSelectionsList({
@@ -276,8 +339,12 @@ export const deleteRecord = {
   type: 'deleteEntity',
   actionName: 'deleteRecord',
   deleteRecord: ({ parentUuid, containerUuid, recordId, recordUuid }) => {
+    if (isReadOnlyTab({ parentUuid, containerUuid })) {
+      return false
+    }
+
     const tab = store.getters.getStoredTab(parentUuid, containerUuid)
-    if (!tab.isDeleteable || tab.isReadOnly) {
+    if (!tab.isDeleteable) {
       return false
     }
 
@@ -720,6 +787,15 @@ export const containerManager = {
       value
     })
       .then(response => {
+        if (isEmptyValue(response)) {
+          // change Dependents
+          store.dispatch('changeDependentFieldsList', {
+            field,
+            containerManager: containerManager
+          })
+          return
+        }
+
         if (response.type === 'createEntity') {
           const currentRoute = router.app._route
           router.push({
@@ -860,11 +936,13 @@ export const containerManager = {
   isReadOnlyField(field) {
     const { parentUuid, containerUuid } = field
 
-    const { isParentTab, isReadOnly } = store.getters.getStoredTab(parentUuid, containerUuid)
     // if tab is read only, all fields are read only
-    if (isReadOnly) {
+    if (isReadOnlyTab({ parentUuid, containerUuid })) {
       return true
     }
+
+    const { isParentTab } = store.getters.getStoredTab(parentUuid, containerUuid)
+
     if (!isParentTab) {
       // if parent record is new lock childs field to read only
       const recordParentTab = store.getters.getUuidOfContainer(field.firstTabUuid)
@@ -874,11 +952,7 @@ export const containerManager = {
     }
 
     // record uuid
-    const recordUuid = store.getters.getValueOfField({
-      parentUuid,
-      containerUuid,
-      columnName: UUID
-    })
+    const recordUuid = store.getters.getUuidOfContainer(containerUuid)
     // edit mode is diferent to create new
     const isWithRecord = recordUuid !== 'create-new' &&
       !isEmptyValue(recordUuid)
