@@ -39,6 +39,7 @@ import { getEntity } from '@/api/ADempiere/user-interface/persistence'
 
 export function isReadOnlyTab({ parentUuid, containerUuid }) {
   const { windowType } = store.getters.getStoredWindow(parentUuid)
+  // window is "Only Query" type
   if (windowType === 'Q') {
     return true
   }
