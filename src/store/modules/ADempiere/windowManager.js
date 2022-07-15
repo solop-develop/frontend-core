@@ -583,16 +583,18 @@ const windowManager = {
     getTabSelectionsList: (state, getters) => ({ containerUuid }) => {
       return getters.getTabData({ containerUuid }).selectionsList
     },
-    getTabCurrentRecord: (state, getters) => ({ containerUuid }) => {
-      const recordUuid = getters.getUuidOfContainer(containerUuid)
-
-      return getters.getTabRowData({ recordUuid })
-    },
     getTabPageNumber: (state, getters) => ({ containerUuid }) => {
       return getters.getTabData({ containerUuid }).pageNumber
     },
     getTabPageToken: (state, getters) => ({ containerUuid }) => {
       return getters.getTabData({ containerUuid }).nextPageToken
+    },
+    getTabCurrentRow: (state, getters) => ({ containerUuid }) => {
+      // get current record uuid with container uuid
+      const recordUuid = getters.getUuidOfContainer(containerUuid)
+
+      // get row with record uuid
+      return getters.getTabRowData({ containerUuid, recordUuid })
     },
     getTabRowData: (state, getters) => ({ containerUuid, recordUuid, rowIndex }) => {
       const recordsList = getters.getTabRecordsList({ containerUuid })

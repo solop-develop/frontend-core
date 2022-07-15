@@ -111,7 +111,9 @@ const persistence = {
     }) {
       return new Promise((resolve, reject) => {
         const { parentUuid, containerUuid } = field
-        const currentRecord = getters.getTabCurrentRecord({ containerUuid })
+        const currentRecord = getters.getTabCurrentRow({
+          containerUuid
+        })
         let oldValue
         if (!isEmptyValue(currentRecord)) {
           oldValue = currentRecord[field.columnName]
@@ -175,7 +177,10 @@ const persistence = {
       recordUuid
     }) {
       return new Promise((resolve, reject) => {
-        let attributesList = getters.getPersistenceAttributes({ containerUuid, recordUuid })
+        let attributesList = getters.getPersistenceAttributes({
+          containerUuid,
+          recordUuid
+        })
           .filter(itemField => {
             // omit send to server (to create or update) columns manage by backend
             return itemField.isAlwaysUpdateable ||
@@ -273,6 +278,37 @@ const persistence = {
       })
     },
 
+    setOldPersistenceValues({ commit, dispatch, getters }, {
+      parentUuid,
+      containerUuid,
+      recordUuid
+    }) {
+      const valuesChanges = getters.getPersistenceAttributesChanges({
+        parentUuid,
+        containerUuid,
+        recordUuid
+      })
+
+      // set old value as current value
+      valuesChanges.forEach(attribute => {
+        const { columnName, oldValue } = attribute
+
+        commit('updateValueOfField', {
+          parentUuid,
+          containerUuid,
+          columnName,
+          value: oldValue
+        }, {
+          root: true
+        })
+      })
+
+      dispatch('clearPersistenceQueue', {
+        containerUuid,
+        recordUuid
+      })
+    },
+
     // clear old values
     clearPersistenceQueue({ commit }, {
       containerUuid,
@@ -288,6 +324,7 @@ const persistence = {
   getters: {
     getPersistenceAttributes: (state) => ({ containerUuid, recordUuid }) => {
       const key = containerUuid + '_' + recordUuid
+
       if (!isEmptyValue(state.persistence[key])) {
         return Object.values(state.persistence[key])
           // only changes
@@ -298,6 +335,48 @@ const persistence = {
       }
       return []
     },
+
+    /**
+     * Evaluate current and old values, if is new compate current values with default values
+     * @param {string} parentUuid
+     * @param {string} containerUuid
+     * @param {string} recordUuid
+     * @returns {array}
+     */
+    getPersistenceAttributesChanges: (state, getters, rootState, rootGetters) => ({
+      parentUuid,
+      containerUuid,
+      recordUuid
+    }) => {
+      const key = containerUuid + '_' + recordUuid
+
+      if (!isEmptyValue(state.persistence[key])) {
+        if (isEmptyValue(recordUuid)) {
+          const defaultRow = rootGetters.getTabParsedDefaultValue({
+            parentUuid,
+            containerUuid,
+            isAddDisplayColumn: false,
+            formatToReturn: 'object'
+          })
+
+          return Object.values(state.persistence[key])
+            // only changes with default value
+            .filter(attribute => {
+              const { value, columnName } = attribute
+              return !isSameValues(value, defaultRow[columnName])
+            })
+        }
+
+        return Object.values(state.persistence[key])
+          // only changes
+          .filter(attribute => {
+            const { value, oldValue } = attribute
+            return !isSameValues(value, oldValue)
+          })
+      }
+      return []
+    },
+
     getPersistenceAttributes2: (state) => ({ containerUuid, recordUuid }) => {
       if (
         !isEmptyValue(containerUuid) &&

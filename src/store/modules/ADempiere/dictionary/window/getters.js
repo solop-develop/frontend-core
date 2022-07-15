@@ -182,6 +182,7 @@ export default {
     parentUuid,
     containerUuid,
     isGetServer = true,
+    isAddDisplayColumn = true,
     isSOTrxMenu,
     fieldsList = [],
     formatToReturn = 'array'
@@ -229,7 +230,7 @@ export default {
         attributesObject[columnName] = parsedDefaultValue
 
         // add display column to default
-        if (fieldItem.componentPath === 'FieldSelect') {
+        if (isAddDisplayColumn && fieldItem.componentPath === 'FieldSelect') {
           const { displayColumnName } = fieldItem
           let displayedValue
           if (!isEmptyValue(parsedDefaultValue)) {

@@ -433,12 +433,12 @@ export default {
       })
 
       // clear old values
-      // dispatch('clearPersistenceQueue', {
-      //   containerUuid,
-      //   recordUuid
-      // }, {
-      //   root: true
-      // })
+      dispatch('clearPersistenceQueue', {
+        containerUuid,
+        recordUuid
+      }, {
+        root: true
+      })
 
       defaultAttributes.forEach(attribute => {
         if (!attribute.columnName.startsWith(DISPLAY_COLUMN_PREFIX)) {

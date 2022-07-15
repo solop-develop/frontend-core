@@ -211,9 +211,40 @@ export const undoChange = {
   undoChange: ({ parentUuid, containerUuid }) => {
     const oldRecordUuid = store.getters.getCurrentRecordOnPanel(containerUuid)
     if (isEmptyValue(oldRecordUuid)) {
+      // clear values
+      store.dispatch('setTabDefaultValues', {
+        parentUuid,
+        containerUuid
+      })
       return false
     }
 
+    // clear only changes into current record
+    const currentRecordUuid = store.getters.getUuidOfContainer(containerUuid)
+    if (!isEmptyValue(currentRecordUuid)) {
+      const currentChanges = store.getters.getPersistenceAttributes({
+        containerUuid,
+        recordUuid: currentRecordUuid
+      })
+      if (!isEmptyValue(currentChanges)) {
+        store.dispatch('setOldPersistenceValues', {
+          parentUuid,
+          containerUuid,
+          recordUuid: currentRecordUuid
+        })
+
+        const tab = store.getters.getStoredTab(parentUuid, containerUuid)
+        tab.fieldsList.forEach(field => {
+          store.dispatch('changeDependentFieldsList', {
+            field,
+            containerManager
+          })
+        })
+        return
+      }
+    }
+
+    // set old record as current record
     const row = store.getters.getTabRowData({
       containerUuid,
       recordUuid: oldRecordUuid
