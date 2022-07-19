@@ -162,8 +162,8 @@ export const runProcessOfBrowser = {
 export const runDeleteable = {
   name: language.t('actionMenu.delete'),
   enabled: ({ containerUuid, containerManager }) => {
-    const { isDeleteable } = store.getters.getStoredBrowser(containerUuid)
-    if (!isDeleteable) {
+    const { isDeleteable, tableName } = store.getters.getStoredBrowser(containerUuid)
+    if (!isDeleteable || isEmptyValue(tableName)) {
       return false
     }
     const selection = containerManager.getSelection({
