@@ -15,7 +15,9 @@ const containerInfo = {
   // TODO: Go to Vuex Module
   state: {
     listRecordLogs: [],
-    recordAttachment: []
+    recordAttachment: [],
+    showContainerInfo: false,
+    containerPanelInfo: {}
   },
   mutations: {
     addListRecordLogs(state, payload) {
@@ -23,6 +25,12 @@ const containerInfo = {
     },
     setAttachment(state, attachment) {
       state.recordAttachment = attachment
+    },
+    setShowLogs(state, show) {
+      state.showContainerInfo = show
+    },
+    setContainerInfo(state, params) {
+      state.containerPanelInfo = params
     }
   },
   actions: {
@@ -33,9 +41,6 @@ const containerInfo = {
     }) {
       const pageSize = 0
       const pageToken = 0
-      if (isEmptyValue(tableName) && (isEmptyValue(recordId) || isEmptyValue(recordUuid))) {
-        return
-      }
       return requestListEntityLogs({
         tableName,
         recordId,
@@ -48,6 +53,9 @@ const containerInfo = {
           return response
         })
         .catch(error => {
+          commit('addListRecordLogs', {
+            entityLogsList: []
+          })
           console.warn(`Error getting List Record Logs: ${error.message}. Code: ${error.code}.`)
         })
     },
@@ -85,6 +93,25 @@ const containerInfo = {
         .catch(error => {
           console.warn(`Error getting List Record Logs: ${error.message}. Code: ${error.code}.`)
         })
+    },
+    showLogs({ commit, dispatch, state }, {
+      show
+    }) {
+      const { currentTab, currentRecord } = state.containerPanelInfo
+      if (show && !isEmptyValue(currentTab) && !isEmptyValue(currentRecord)) {
+        dispatch('listRecordLogs', {
+          tableName: currentTab.tableName,
+          recordId: currentRecord[currentTab.tableName],
+          recordUuid: currentRecord.UUID
+        })
+      }
+      commit('setShowLogs', show)
+    },
+    panelInfo({ commit }, {
+      currentRecord,
+      currentTab
+    }) {
+      commit('setContainerInfo', { currentRecord, currentTab })
     }
   },
   getters: {
@@ -93,6 +120,12 @@ const containerInfo = {
     },
     getAttachment: (state) => {
       return state.recordAttachment
+    },
+    getShowLogs: (state) => {
+      return state.showContainerInfo
+    },
+    getContainerInfo: (state) => {
+      return state.containerPanelInfo
     }
   }
 }

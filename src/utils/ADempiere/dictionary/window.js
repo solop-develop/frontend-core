@@ -766,7 +766,8 @@ export function generateTabs({
       // app properties
       isShowedRecordNavigation: !(currentTab.isSingleRow || isParentTab), // TODO: @deprecated
       isShowedTableRecords: !(currentTab.isSingleRow || isParentTab),
-      index // this index is not related to the index in which the tabs are displayed
+      index, // this index is not related to the index in which the tabs are displayed
+      isSelected: false
     }
 
     return generatePanelAndFields({
