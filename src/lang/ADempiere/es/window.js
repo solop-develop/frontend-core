@@ -36,6 +36,12 @@ const window = {
       label: 'Anexo',
       uploadFiles: 'Cargar Archivos',
       newFiles: 'Nuevos Archivos'
+    },
+    log: {
+      changeHistory: 'Histórico de Cambios',
+      tab: 'Pestañá',
+      recordID: 'ID del Registro',
+      recordUUID: 'UUID del Registro'
     }
   },
   documentStatus: 'Estatus del Documento',

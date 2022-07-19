@@ -37,6 +37,12 @@ const window = {
       label: 'Attachment',
       uploadFiles: 'Upload Files',
       newFiles: 'New Files'
+    },
+    log: {
+      changeHistory: 'Change History',
+      tab: 'Tab',
+      recordID: 'Log ID',
+      recordUUID: 'Log UUID'
     }
   },
   documentStatus: 'Document Status',
