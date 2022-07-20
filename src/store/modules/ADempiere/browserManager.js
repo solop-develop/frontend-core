@@ -247,12 +247,7 @@ const browserControl = {
         fieldsList
       })
 
-      // const currentSelection = getters.getBrowserSelectionsList({
-      //   containerUuid
-      // })
-
-      // console.log(uuid, keyColumn, row, attributesList)
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         updateBrowserEntity({
           uuid,
           id,
@@ -265,10 +260,10 @@ const browserControl = {
               type: 'success'
             })
 
-            // update records
-            dispatch('getBrowserSearch', {
-              containerUuid
-            })
+            // refresh records
+            // dispatch('getBrowserSearch', {
+            //   containerUuid
+            // })
 
             resolve(response)
           })
