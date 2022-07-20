@@ -38,11 +38,13 @@
             :relations-manager="relationsManager"
           />
         </div>
-        <panel-definition
-          :container-uuid="reportUuid"
-          :panel-metadata="reportMetadata"
-          :container-manager="containerManager"
-        />
+        <el-scrollbar ref="reportView" :max-height="500" :height="200" :vertical="false" class="scroll-tab-report">
+          <panel-definition
+            :container-uuid="reportUuid"
+            :panel-metadata="reportMetadata"
+            :container-manager="containerManager"
+          />
+        </el-scrollbar>
       </el-card>
     </el-main>
   </el-container>
@@ -184,5 +186,10 @@ export default defineComponent({
   .el-card {
     width: 100% !important;
     height: 100% !important;
+  }
+  .scroll-tab-report {
+    width: 100% !important;
+    height: 95%!important;
+    max-height: 120%!important;
   }
 </style>

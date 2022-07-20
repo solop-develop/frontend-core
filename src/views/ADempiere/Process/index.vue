@@ -39,11 +39,12 @@
             :relations-manager="relationsManager"
           />
         </div>
-
-        <panel-definition
-          :container-uuid="processUuid"
-          :container-manager="containerManager"
-        />
+        <el-scrollbar ref="reportView" :max-height="500" :height="200" :vertical="false" class="scroll-tab-process">
+          <panel-definition
+            :container-uuid="processUuid"
+            :container-manager="containerManager"
+          />
+        </el-scrollbar>
       </el-card>
     </el-main>
   </el-container>
@@ -185,5 +186,10 @@ export default defineComponent({
   .el-card {
     width: 100% !important;
     height: 100% !important;
+  }
+  .scroll-tab-process {
+    width: 100% !important;
+    height: 95%!important;
+    max-height: 120%!important;
   }
 </style>
