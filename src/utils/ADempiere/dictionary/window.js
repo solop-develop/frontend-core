@@ -1252,5 +1252,13 @@ export const containerManager = {
       recordId,
       recordUuid
     })
+  },
+
+  listChats({ tableName, recordId, recordUuid }) {
+    return store.dispatch('listChatEntries', {
+      tableName,
+      recordId,
+      recordUuid
+    })
   }
 }

@@ -21,7 +21,7 @@ const window = {
   confirm: 'Confirmar',
   undoNew: 'Descartar Nuevo Registro',
   containerInfo: {
-    notes: 'Listado de Notas',
+    notes: 'Notas',
     changeLog: 'Actividad',
     workflowLog: 'Histórico de Flujo de Trabajo',
     changeDetail: 'Detalle del cambio',
@@ -41,7 +41,8 @@ const window = {
       changeHistory: 'Histórico de Cambios',
       tab: 'Pestañá',
       recordID: 'ID del Registro',
-      recordUUID: 'UUID del Registro'
+      recordUUID: 'UUID del Registro',
+      tableName: 'Nombre de la Tabla'
     }
   },
   documentStatus: 'Estatus del Documento',

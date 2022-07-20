@@ -68,7 +68,9 @@ export default {
       })
         .then(responseList => {
           const { entityChatsList: chatList } = responseList
-
+          if (isEmptyValue(chatList)) {
+            commit('addListChatEntries', [])
+          }
           chatList.forEach(chat => {
             const uuid = chat.chatUuid
 

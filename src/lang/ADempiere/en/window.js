@@ -42,7 +42,8 @@ const window = {
       changeHistory: 'Change History',
       tab: 'Tab',
       recordID: 'Log ID',
-      recordUUID: 'Log UUID'
+      recordUUID: 'Log UUID',
+      tableName: 'Table Name'
     }
   },
   documentStatus: 'Document Status',
