@@ -18,7 +18,6 @@ const initStateUtils = {
   updateOrder: false,
   updatePayment: false,
   createBusinessPartner: false,
-  listBusinessPartner: false,
   copyShippingAddress: true,
   step: 0,
   updateCustomer: false,
@@ -106,9 +105,6 @@ export default {
     },
     popoverCreateBusinessPartner(state, createBusinessPartner) {
       state.createBusinessPartner = createBusinessPartner
-    },
-    popoverListBusinessPartner(state, payload) {
-      state.listBusinessPartner = payload
     },
     popoverOverdrawnInvoice(state, payload) {
       state.overdrawnInvoice = payload
@@ -230,9 +226,6 @@ export default {
     changePopover({ commit }, params) {
       commit('popoverCreateBusinessPartner', params)
     },
-    changePopoverListBusinessPartner({ commit }, params) {
-      commit('popoverListBusinessPartner', params)
-    },
     changeShowAddNewAddress({ commit }, params) {
       commit('setShowAddNewAddress', params)
     },
@@ -318,9 +311,6 @@ export default {
     },
     getPopoverCreateBusinessParnet: (state) => {
       return state.createBusinessPartner
-    },
-    getPopoverListBusinessParnet: (state) => {
-      return state.listBusinessPartner
     },
     getCopyShippingAddress: (state) => {
       return state.copyShippingAddress

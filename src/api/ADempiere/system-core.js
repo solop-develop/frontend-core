@@ -17,6 +17,9 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
+// constants
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/constants/table'
+
 // Get Organization list from role
 export function requestOrganizationsList({
   roleUuid,
@@ -214,7 +217,7 @@ export function requestListBusinessPartner({
   phone,
   // Query
   // criteria,
-  pageSize,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
 }) {
   return request({

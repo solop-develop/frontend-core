@@ -246,7 +246,7 @@ export const SEARCH = {
   id: 30,
   isSupported: true,
   valueType: 'INTEGER',
-  componentPath: 'FieldSelect',
+  componentPath: 'FieldSearch',
   size: DEFAULT_SIZE
 }
 
