@@ -56,13 +56,18 @@ export default {
           parentUuid: windowResponse.uuid,
           containerUuid: tab.uuid
         })
+
+        // dispatch('setTabDefaultValues', {
+        //   parentUuid: windowResponse.uuid,
+        //   containerUuid: tab.uuid
+        // })
       })
 
       resolve(windowResponse)
     })
   },
 
-  getWindowDefinitionFromServer({ dispatch }, {
+  getWindowDefinitionFromServer({ dispatch, rootGetters }, {
     uuid
   }) {
     return new Promise(resolve => {
@@ -74,6 +79,24 @@ export default {
           dispatch('addWindow', window)
 
           resolve(window)
+        })
+        .catch(error => {
+          showMessage({
+            type: 'error',
+            message: error.message
+          })
+
+          // close current page
+          const currentRoute = router.app._route
+          const tabViewsVisited = rootGetters.visitedViews
+          dispatch('tagsView/delView', currentRoute)
+          // go to back page
+          const oldRouter = tabViewsVisited[tabViewsVisited.length - 1]
+          if (!isEmptyValue(oldRouter)) {
+            router.push({
+              path: oldRouter.path
+            }, () => {})
+          }
         })
     })
   },
@@ -417,10 +440,12 @@ export default {
 
       const recordUuid = store.getters.getUuidOfContainer(containerUuid)
       // set old record
-      store.commit('setRecordUuidOnPanel', {
-        containerUuid,
-        recordUuid
-      })
+      if (!isEmptyValue(recordUuid)) {
+        store.commit('setRecordUuidOnPanel', {
+          containerUuid,
+          recordUuid
+        })
+      }
 
       // update fields values
       dispatch('updateValuesOfContainer', {
