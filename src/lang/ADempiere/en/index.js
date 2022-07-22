@@ -18,6 +18,7 @@
 
 import actionMenu from './actionMenu'
 import businessPartner from './businessPartner'
+import orderList from './orderList'
 import extensionFile from './extensionFile'
 import fieldDisplayOptions from './fieldDisplayOptions'
 import fieldOptions from './fieldOptions'
@@ -29,6 +30,7 @@ import window from './window'
 export default {
   actionMenu,
   businessPartner,
+  orderList,
   extensionFile,
   fieldDisplayOptions,
   fieldOptions,
