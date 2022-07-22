@@ -21,6 +21,7 @@ import language from '@/lang'
 // constants
 import { LOG_COLUMNS_NAME_LIST, UUID } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
+import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 
 // api request methods
 import {
@@ -106,6 +107,7 @@ const persistence = {
   actions: {
     actionPerformed({ commit, getters, rootState, dispatch }, {
       field,
+      columnName,
       recordUuid,
       value
     }) {
@@ -114,15 +116,21 @@ const persistence = {
         const currentRecord = getters.getTabCurrentRow({
           containerUuid
         })
+
+        // column name to displayedValue
+        if (isEmptyValue(columnName)) {
+          columnName = field.columnName
+        }
+
         let oldValue
         if (!isEmptyValue(currentRecord)) {
-          oldValue = currentRecord[field.columnName]
+          oldValue = currentRecord[columnName]
         }
 
         commit('addChangeToPersistenceQueue', {
           containerUuid,
           recordUuid: getters.getUuidOfContainer(field.containerUuid),
-          columnName: field.columnName,
+          columnName,
           oldValue,
           value
         })
@@ -184,7 +192,8 @@ const persistence = {
           .filter(itemField => {
             // omit send to server (to create or update) columns manage by backend
             return itemField.isAlwaysUpdateable ||
-              !LOG_COLUMNS_NAME_LIST.includes(itemField.columnName)
+              (!LOG_COLUMNS_NAME_LIST.includes(itemField.columnName) &&
+              !itemField.columnName.startsWith(DISPLAY_COLUMN_PREFIX))
           })
 
         if (!isEmptyValue(attributesList)) {
@@ -355,7 +364,7 @@ const persistence = {
           const defaultRow = rootGetters.getTabParsedDefaultValue({
             parentUuid,
             containerUuid,
-            isAddDisplayColumn: false,
+            isAddDisplayColumn: true,
             formatToReturn: 'object'
           })
 

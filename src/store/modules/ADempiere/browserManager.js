@@ -148,7 +148,6 @@ const browserControl = {
             containerUuid
           })
         }
-        const currentPageNumber = pageNumber
         const pageToken = generatePageToken({ pageNumber })
 
         const { fieldsList, contextColumnNames } = rootGetters.getStoredBrowser(containerUuid)
@@ -200,7 +199,7 @@ const browserControl = {
               recordsList,
               recordCount: browserSearchResponse.recordCount,
               nextPageToken: browserSearchResponse.nextPageToken,
-              pageNumber: currentPageNumber,
+              pageNumber,
               isLoaded: true
             })
 

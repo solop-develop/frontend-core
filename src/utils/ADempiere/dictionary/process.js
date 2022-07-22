@@ -88,6 +88,7 @@ export function generateProcess({
   const panelType = processToGenerate.isReport ? 'report' : 'process'
   const additionalAttributes = {
     containerUuid: processToGenerate.uuid,
+    panelName: processToGenerate.name,
     isEvaluateValueChanges: true,
     panelType
   }

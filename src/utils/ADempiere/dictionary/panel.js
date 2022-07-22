@@ -137,6 +137,7 @@ export function generatePanelAndFields({
     containerUuid,
     // tab attributes
     tabTableName: panelMetadata.tableName,
+    panelName: panelMetadata.name,
     // app attributes
     isShowedFromUser: true,
     isReadOnlyFromForm: false,

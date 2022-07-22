@@ -386,6 +386,7 @@ const actions = {
       containerManager.actionPerformed({
         containerUuid: field.containerUuid,
         field,
+        columnName,
         value,
         recordUuid
       })

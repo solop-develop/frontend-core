@@ -213,14 +213,12 @@ const windowManager = {
           // refresh with same page
           pageNumber = storedPage
         }
+        const pageToken = generatePageToken({ pageNumber })
 
         if (!isEmptyValue(filters)) {
           const parseFilter = JSON.parse(filters)
           filters = [parseFilter]
         }
-
-        const currentPageNumber = pageNumber
-        const pageToken = generatePageToken({ pageNumber })
 
         if (isEmptyValue(searchValue)) {
           searchValue = getters.getSearchValueTabRecordsList({
@@ -370,7 +368,7 @@ const windowManager = {
               currentRecordUuid,
               recordsList: dataToStored,
               nextPageToken: dataResponse.nextPageToken,
-              pageNumber: currentPageNumber,
+              pageNumber,
               isLoaded: true,
               recordCount: dataResponse.recordCount
             })

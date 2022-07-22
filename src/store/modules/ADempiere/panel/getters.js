@@ -29,6 +29,7 @@ import {
   fieldIsDisplayed,
   getDefaultValue
 } from '@/utils/ADempiere/dictionaryUtils.js'
+import { isLookup } from '@/utils/ADempiere/references'
 
 const getters = {
   getPanel: (state) => (containerUuid) => {
@@ -338,7 +339,7 @@ const getters = {
         }
 
         // add display column to default
-        if (fieldItem.componentPath === 'FieldSelect') {
+        if (isLookup(fieldItem.displayType)) {
           const { displayColumnName } = fieldItem
           let displayedValue
           if (!isEmptyValue(parsedDefaultValue)) {
