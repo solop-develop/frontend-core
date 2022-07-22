@@ -23,6 +23,7 @@ import { clientDateTime } from '@/utils/ADempiere/formatValue/dateFormat.js'
 import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 import { exportFileFromJson, supportedTypes } from '@/utils/ADempiere/exportUtil.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { isLookup } from '@/utils/ADempiere/references'
 
 /**
  * Shared url link
@@ -103,7 +104,7 @@ export const exportRecords = ({ parentUuid, containerUuid, containerManager, for
   })
 
   const columnsAvalable = fieldsListAvailable.map(fieldItem => {
-    if (fieldItem.componentPath === 'FieldSelect') {
+    if (isLookup(fieldItem.displayType)) {
       return fieldItem.displayColumnName
     }
     return fieldItem.columnName

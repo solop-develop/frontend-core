@@ -19,6 +19,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { isDisplayedField, isMandatoryField } from '@/utils/ADempiere/dictionary/window.js'
 import { DISPLAY_COLUMN_PREFIX, getDefaultValue } from '@/utils/ADempiere/dictionaryUtils.js'
 import { getContext } from '@/utils/ADempiere/contextUtils'
+import { isLookup } from '@/utils/ADempiere/references'
 
 /**
  * Dictionary Window Getters
@@ -230,7 +231,7 @@ export default {
         attributesObject[columnName] = parsedDefaultValue
 
         // add display column to default
-        if (isAddDisplayColumn && fieldItem.componentPath === 'FieldSelect') {
+        if (isAddDisplayColumn && isLookup(fieldItem.displayType)) {
           const { displayColumnName } = fieldItem
           let displayedValue
           if (!isEmptyValue(parsedDefaultValue)) {

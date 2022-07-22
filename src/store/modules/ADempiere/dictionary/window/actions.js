@@ -466,16 +466,16 @@ export default {
       })
 
       defaultAttributes.forEach(attribute => {
-        if (!attribute.columnName.startsWith(DISPLAY_COLUMN_PREFIX)) {
-          if (!isEmptyValue(attribute.value)) {
-            commit('addChangeToPersistenceQueue', {
-              ...attribute,
-              containerUuid
-            }, {
-              root: true
-            })
-          }
+        if (!isEmptyValue(attribute.value)) {
+          commit('addChangeToPersistenceQueue', {
+            ...attribute,
+            containerUuid
+          }, {
+            root: true
+          })
+        }
 
+        if (!attribute.columnName.startsWith(DISPLAY_COLUMN_PREFIX)) {
           const field = rootGetters.getStoredFieldFromTab({
             windowUuid: parentUuid,
             tabUuid: containerUuid,

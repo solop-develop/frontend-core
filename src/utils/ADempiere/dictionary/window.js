@@ -834,9 +834,10 @@ export const containerManager = {
     })
   },
 
-  actionPerformed: ({ field, value }) => {
+  actionPerformed: ({ field, columnName, value }) => {
     return store.dispatch('actionPerformed', {
       field,
+      columnName,
       value
     })
       .then(response => {
