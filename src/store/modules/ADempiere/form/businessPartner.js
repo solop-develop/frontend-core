@@ -40,9 +40,11 @@ const initState = {
     nextPageToken: undefined,
     recordCount: 0,
     isLoaded: false,
+    BPshow: false,
     pageNumber: 1
   },
-  businessPartnerData: {}
+  businessPartnerData: {},
+  BPShow: {}
 }
 
 const businessPartner = {
@@ -56,12 +58,14 @@ const businessPartner = {
       nextPageToken,
       recordCount = 0,
       isLoaded = true,
+      BPshow = false,
       pageNumber = 1
     }) {
       Vue.set(state.businessPartnerData, containerUuid, {
         containerUuid,
         currentRow,
         recordsList,
+        BPshow,
         nextPageToken,
         recordCount,
         isLoaded,
@@ -73,6 +77,13 @@ const businessPartner = {
       currentRow = {}
     }) {
       Vue.set(state.businessPartnerData[containerUuid], 'currentRow', currentRow)
+    },
+
+    setBusinessPartnerShow(state, {
+      containerUuid,
+      BPshow = false
+    }) {
+      Vue.set(state.BPShow, containerUuid, BPshow)
     },
 
     changePopoverListBusinessPartner(state, isShowed = false) {
@@ -185,6 +196,9 @@ const businessPartner = {
     },
     getBusinessPartnerPopoverList: (state) => {
       return state.businessPartnerPopoverList
+    },
+    getBPShow: (state) => ({ containerUuid }) => {
+      return state.BPShow[containerUuid]
     }
   }
 }
