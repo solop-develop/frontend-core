@@ -246,5 +246,45 @@ export const containerManager = {
       isAddBlankValue,
       blankValue
     })
+  },
+  generalInfoSearch({
+    containerUuid,
+    contextAttributesList,
+    parametersList,
+    fieldUuid,
+    id,
+    referenceUuid,
+    searchValue,
+    tableName,
+    columnName,
+    columnUuid,
+    pageToken,
+    pageSize,
+    pageNumber
+  }) {
+    return store.dispatch('findGeneralInfo', {
+      containerUuid,
+      contextAttributesList,
+      parametersList,
+      processParameterUuid: fieldUuid,
+      id,
+      referenceUuid,
+      searchValue,
+      tableName,
+      columnName,
+      columnUuid,
+      pageToken,
+      pageSize,
+      pageNumber
+    })
+  },
+  searchTableHeader({
+    containerUuid,
+    tableName
+  }) {
+    return store.dispatch('searchTableHeader', {
+      containerUuid,
+      tableName
+    })
   }
 }

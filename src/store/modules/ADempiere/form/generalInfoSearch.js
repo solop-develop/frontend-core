@@ -106,7 +106,7 @@ const generalInfoSearch = {
   },
 
   actions: {
-    findGeneralInfo({ commit, getters }, {
+    findGeneralInfo({ commit, getters, dispatch }, {
       containerUuid,
       contextAttributesList,
       parametersList,
@@ -155,6 +155,10 @@ const generalInfoSearch = {
           pageSize
         })
           .then(response => {
+            dispatch('searchTableHeader', {
+              containerUuid,
+              tableName
+            })
             let recordsList = []
             if (response.recordsList) {
               recordsList = response.recordsList.map(list => list.attributes)
