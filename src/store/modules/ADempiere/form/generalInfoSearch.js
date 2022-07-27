@@ -19,14 +19,13 @@
 import Vue from 'vue'
 
 // api request methods
-import { requestListBusinessPartner } from '@/api/ADempiere/system-core.js'
-import { tableSearchFields } from '@/api/ADempiere/field/search'
+import { tableSearchFields, gridGeneralInfo } from '@/api/ADempiere/field/search'
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
-// import { generatePageToken } from '@/utils/ADempiere/dataUtils'
+import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 
 const initState = {
   businessPartnerPopoverList: false,
@@ -77,7 +76,7 @@ const generalInfoSearch = {
         pageNumber
       })
     },
-    setBusinessPartnerSelectedRow(state, {
+    setGeneralInfoSelectedRow(state, {
       containerUuid,
       currentRow = {}
     }) {
@@ -109,40 +108,57 @@ const generalInfoSearch = {
   actions: {
     findGeneralInfo({ commit, getters }, {
       containerUuid,
+      contextAttributesList,
+      parametersList,
+      fieldUuid,
+      processParameterUuid,
+      browseFieldUuid,
+      id,
+      //
+      referenceUuid,
       searchValue,
-      value,
-      name,
-      contactName,
-      eMail,
-      postalCode,
-      phone,
-      filters = [],
+      //
+      tableName,
+      columnName,
+      columnUuid,
+      //
+      pageToken,
+      pageSize,
       pageNumber
     }) {
       return new Promise(resolve => {
-        // if (isEmptyValue(pageNumber) || pageNumber < 1) {
-        //   // const storedPage = getters.getBusinessPartnerPageNumber({
-        //   //   containerUuid
-        //   // })
-        //   // refresh with same page
-        //   pageNumber = 5
-        // }
-        // const pageToken = generatePageToken({ pageNumber })
+        if (isEmptyValue(pageNumber) || pageNumber < 1) {
+          const storedPage = getters.getGeneralInfoPageNumber({
+            containerUuid
+          })
+          // refresh with same page
+          pageNumber = storedPage
+        }
+        const pageToken = generatePageToken({ pageNumber })
 
-        requestListBusinessPartner({
+        return gridGeneralInfo({
+          contextAttributesList,
+          parametersList,
+          fieldUuid,
+          processParameterUuid,
+          browseFieldUuid,
+          id,
+          //
+          referenceUuid,
           searchValue,
-          value,
-          name,
-          contactName,
-          eMail,
-          postalCode,
-          phone,
-          // Query
-          filters,
-          pageToken: ''
+          //
+          tableName,
+          columnName,
+          columnUuid,
+          //
+          pageToken,
+          pageSize
         })
-          .then(responseBusinessPartnerList => {
-            const { businessPartnersList: recordsList } = responseBusinessPartnerList
+          .then(response => {
+            let recordsList = []
+            if (response.recordsList) {
+              recordsList = response.recordsList.map(list => list.attributes)
+            }
 
             let currentRow = {}
             // update current record
@@ -155,10 +171,10 @@ const generalInfoSearch = {
               containerUuid,
               currentRow,
               recordsList,
-              nextPageToken: responseBusinessPartnerList.nextPageToken,
+              nextPageToken: response.nextPageToken,
               pageNumber,
               isLoaded: true,
-              recordCount: responseBusinessPartnerList.recordCount
+              recordCount: response.recordCount
             })
 
             resolve(recordsList)
@@ -172,10 +188,12 @@ const generalInfoSearch = {
           })
       })
     },
+
     searchTableHeader({ commit }, {
       containerUuid,
       tableName,
-      fieldList = []
+      fieldList = [],
+      listHeard = []
     }) {
       // return new Promise(resolve => {
       return tableSearchFields({
@@ -204,9 +222,13 @@ const generalInfoSearch = {
               list: fieldList
             })
           }
+          const { convertField } = require('@/utils/ADempiere/apiConverts/field.js')
+          if (response.records.length > 0) {
+            listHeard = response.records.map(heard => convertField(heard))
+          }
           commit('setTableHeader', {
             containerUuid,
-            list: response.records
+            list: listHeard
           })
           return fieldList
         })
@@ -217,33 +239,6 @@ const generalInfoSearch = {
             message: error.message
           })
         })
-      // })
-    },
-    findIdentifierFields({ commit }, {
-      containerUuid,
-      tableName
-    }) {
-      console.log({
-        containerUuid,
-        tableName
-      })
-      // return new Promise(resolve => {
-      //   identifierFields({
-      //     tableName
-      //   })
-      //     .then(response => {
-      //       commit('setIdentifier', {
-      //         containerUuid,
-      //         list: response.records
-      //       })
-      //     })
-      //     .catch(error => {
-      //       console.warn(error)
-      //       showMessage({
-      //         type: 'info',
-      //         message: error.message
-      //       })
-      //     })
       // })
     }
   },

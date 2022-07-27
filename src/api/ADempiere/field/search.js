@@ -50,7 +50,7 @@ export function identifierFields({
     })
 }
 
-export function requestLookupList({
+export function gridGeneralInfo({
   contextAttributesList,
   parametersList = [],
   fieldUuid,
@@ -85,7 +85,7 @@ export function requestLookupList({
   }
 
   return request({
-    url: '/dictionary/grid/general-info',
+    url: '/grid/general-info',
     method: 'get',
     params: {
       context_attributes: contextAttributes,
@@ -107,6 +107,7 @@ export function requestLookupList({
     }
   })
     .then(response => {
-      return response
+      const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
+      return convertEntityList(response)
     })
 }
