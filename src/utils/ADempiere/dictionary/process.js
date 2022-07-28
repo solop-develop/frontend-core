@@ -249,32 +249,22 @@ export const containerManager = {
   },
   generalInfoSearch({
     containerUuid,
-    contextAttributesList,
-    parametersList,
-    fieldUuid,
-    id,
-    referenceUuid,
+    contextColumnNames,
+    filters,
+    uuid,
     searchValue,
     tableName,
     columnName,
-    columnUuid,
-    pageToken,
-    pageSize,
     pageNumber
   }) {
     return store.dispatch('findGeneralInfo', {
       containerUuid,
-      contextAttributesList,
-      parametersList,
-      processParameterUuid: fieldUuid,
-      id,
-      referenceUuid,
+      contextColumnNames,
+      filters,
+      processParameterUuid: uuid,
       searchValue,
       tableName,
       columnName,
-      columnUuid,
-      pageToken,
-      pageSize,
       pageNumber
     })
   },

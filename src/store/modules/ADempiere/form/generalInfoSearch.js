@@ -19,13 +19,18 @@
 import Vue from 'vue'
 
 // api request methods
-import { tableSearchFields, gridGeneralInfo } from '@/api/ADempiere/field/search'
-import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
+import { tableSearchFields, requestGridGeneralInfo } from '@/api/ADempiere/field/search'
+
+// constants
+import { CHAR, SEARCH, TABLE, TABLE_DIRECT } from '@/utils/ADempiere/references'
 
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
+import { generateField } from '@/utils/ADempiere/dictionaryUtils'
+import { getContextAttributes } from '@/utils/ADempiere/contextUtils'
+import { isSameSize } from '@/utils/ADempiere/formatValue/iterableFormat'
 
 const initState = {
   businessPartnerPopoverList: false,
@@ -46,7 +51,7 @@ const initState = {
     pageNumber: 1
   },
   generalInfoSearch: {},
-  tableHeaderList: [],
+  tableHeaderList: {},
   fileListIdentifier: [],
   generalInfoShow: {}
 }
@@ -92,40 +97,38 @@ const generalInfoSearch = {
 
     setTableHeader(state, {
       containerUuid,
-      list = []
+      fieldsList = []
     }) {
-      Vue.set(state.tableHeaderList, containerUuid, list)
+      console.log('setTableHeader', containerUuid, fieldsList)
+      Vue.set(state.tableHeaderList, containerUuid, fieldsList)
     },
 
     setIdentifier(state, {
       containerUuid,
-      list = []
+      fieldsList = []
     }) {
-      Vue.set(state.fileListIdentifier, containerUuid, list)
+      Vue.set(state.fileListIdentifier, containerUuid, fieldsList)
     }
   },
 
   actions: {
     findGeneralInfo({ commit, getters, dispatch }, {
       containerUuid,
-      contextAttributesList,
-      parametersList,
+      contextColumnNames = [],
+      filters,
+      //
       fieldUuid,
       processParameterUuid,
       browseFieldUuid,
-      id,
       //
-      referenceUuid,
       searchValue,
       //
       tableName,
       columnName,
-      columnUuid,
       //
-      pageToken,
-      pageSize,
       pageNumber
     }) {
+      console.log(containerUuid, searchValue)
       return new Promise(resolve => {
         if (isEmptyValue(pageNumber) || pageNumber < 1) {
           const storedPage = getters.getGeneralInfoPageNumber({
@@ -136,23 +139,30 @@ const generalInfoSearch = {
         }
         const pageToken = generatePageToken({ pageNumber })
 
-        return gridGeneralInfo({
+        const contextAttributesList = getContextAttributes({
+          containerUuid,
+          contextColumnNames,
+          isBooleanToString: true
+        })
+        // fill context value to continue
+        if (!isSameSize(contextColumnNames, contextAttributesList)) {
+          resolve([])
+          return
+        }
+
+        return requestGridGeneralInfo({
           contextAttributesList,
-          parametersList,
+          filters,
           fieldUuid,
           processParameterUuid,
           browseFieldUuid,
-          id,
           //
-          referenceUuid,
           searchValue,
           //
           tableName,
           columnName,
-          columnUuid,
           //
-          pageToken,
-          pageSize
+          pageToken
         })
           .then(response => {
             dispatch('searchTableHeader', {
@@ -193,57 +203,68 @@ const generalInfoSearch = {
       })
     },
 
-    searchTableHeader({ commit }, {
+    searchTableHeader({ commit, getters }, {
       containerUuid,
-      tableName,
-      fieldList = [],
-      listHeard = []
+      tableName
     }) {
-      // return new Promise(resolve => {
-      return tableSearchFields({
-        tableName
-      })
-        .then(response => {
-          if (response.records.length > 0) {
-            response.records.forEach(field => {
-              if (field.display_type === 10) {
-                const { columnName, elementColumnName = columnName, identifierSequence, displayType, sequence } = camelizeObjectKeys(field)
-                fieldList.push({
-                  elementColumnName,
-                  columnName,
-                  tableName,
-                  isFromDictionary: false,
-                  overwriteDefinition: {
-                    identifierSequence,
-                    displayType,
-                    sequence
+      return new Promise(resolve => {
+        const storedFieldsList = getters.getTableHeader({ containerUuid })
+        if (!isEmptyValue(storedFieldsList)) {
+          resolve(storedFieldsList)
+          return
+        }
+
+        tableSearchFields({
+          tableName
+        })
+          .then(response => {
+            const fieldsList = response.fieldsList
+              .filter(field => {
+                // https://github.com/adempiere/adempiere/blob/develop/client/src/org/compiere/apps/search/InfoGeneral.java#L388-L389
+                // without search, table, and table direct references
+                return ![SEARCH.id, TABLE.id, TABLE_DIRECT.id].includes(field.displayType) &&
+                  // key is used to seleccion column, unnused on vue client
+                  !field.isKey
+              })
+              .sort((fieldA, fieldB) => {
+                // https://github.com/adempiere/adempiere/blob/develop/client/src/org/compiere/apps/search/InfoGeneral.java#L332
+                return fieldA.seqNo < fieldB.seqNo
+              })
+              .map(field => {
+                const fieldGenerated = generateField({
+                  fieldToGenerate: field,
+                  moreAttributes: {
+                    isFromDictionary: false,
+                    isMandatory: false,
+                    isMandatoryLogic: '',
+                    containerUuid,
+                    // app attributes
+                    isShowedFromUser: true,
+                    isReadOnlyFromForm: false
                   }
                 })
-              }
-            })
+                return fieldGenerated
+              })
+
             commit('setIdentifier', {
               containerUuid,
-              list: fieldList
+              fieldsList
             })
-          }
-          const { convertField } = require('@/utils/ADempiere/apiConverts/field.js')
-          if (response.records.length > 0) {
-            listHeard = response.records.map(heard => convertField(heard))
-          }
-          commit('setTableHeader', {
-            containerUuid,
-            list: listHeard
+            commit('setTableHeader', {
+              containerUuid,
+              fieldsList
+            })
+
+            resolve(fieldsList)
           })
-          return fieldList
-        })
-        .catch(error => {
-          console.warn(error)
-          showMessage({
-            type: 'info',
-            message: error.message
+          .catch(error => {
+            console.warn(error.message)
+            showMessage({
+              type: 'info',
+              message: error.message
+            })
           })
-        })
-      // })
+      })
     }
   },
   getters: {
@@ -257,11 +278,11 @@ const generalInfoSearch = {
         containerUuid
       }
     },
-    // getIsLoadedBusinessPartnerRecord: (state, getters) => ({ containerUuid }) => {
-    //   return getters.getGeneralInfoData({
-    //     containerUuid
-    //   }).isLoaded
-    // },
+    getIsLoadedGeneralInfoRecords: (state, getters) => ({ containerUuid }) => {
+      return getters.getGeneralInfoData({
+        containerUuid
+      }).isLoaded
+    },
     getGeneralInfoRecordsList: (state, getters) => ({ containerUuid }) => {
       return getters.getGeneralInfoData({
         containerUuid
@@ -286,10 +307,16 @@ const generalInfoSearch = {
       return state.generalInfoShow[containerUuid]
     },
     getTableHeader: (state) => ({ containerUuid }) => {
-      return state.tableHeaderList[containerUuid]
+      return state.tableHeaderList[containerUuid] || []
+    },
+    getQueryFieldsList: (state, getters) => ({ containerUuid }) => {
+      const fieldsList = getters.getTableHeader({ containerUuid })
+      return fieldsList.filter(field => {
+        return CHAR.id === field.displayType
+      })
     },
     getIdentifier: (state) => ({ containerUuid }) => {
-      return state.fileListIdentifier[containerUuid]
+      return state.fileListIdentifier[containerUuid] || []
     }
   }
 }

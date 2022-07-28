@@ -19,6 +19,7 @@ import { request } from '@/utils/ADempiere/request'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 // constants
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/constants/table'
 
 export function tableSearchFields({
   tableName
@@ -31,7 +32,15 @@ export function tableSearchFields({
     }
   })
     .then(response => {
-      return response
+      const { convertField } = require('@/utils/ADempiere/apiConverts/field.js')
+
+      return {
+        recordCount: response.record_count,
+        fieldsList: response.records.map(field => {
+          return convertField(field)
+        }),
+        nextPageToken: response.next_page_token
+      }
     })
 }
 
@@ -46,13 +55,21 @@ export function identifierFields({
     }
   })
     .then(response => {
-      return response
+      const { convertField } = require('@/utils/ADempiere/apiConverts/field.js')
+
+      return {
+        recordCount: response.record_count,
+        fieldsList: response.records.map(field => {
+          return convertField(field)
+        }),
+        nextPageToken: response.next_page_token
+      }
     })
 }
 
-export function gridGeneralInfo({
+export function requestGridGeneralInfo({
   contextAttributesList,
-  parametersList = [],
+  filters = [],
   fieldUuid,
   processParameterUuid,
   browseFieldUuid,
@@ -66,14 +83,16 @@ export function gridGeneralInfo({
   columnUuid,
   //
   pageToken,
-  pageSize
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
-  const filters = parametersList.map(parameter => {
+  filters = filters.map(attribute => {
     return {
-      column_name: parameter.columnName,
-      value: parameter.value
+      column_name: attribute.columnName,
+      operator: attribute.operator,
+      value: attribute.value
     }
   })
+
   let contextAttributes = []
   if (!isEmptyValue(contextAttributesList)) {
     contextAttributes = contextAttributesList.map(attribute => {
@@ -102,8 +121,8 @@ export function gridGeneralInfo({
       column_name: columnName,
       column_uuid: columnUuid,
       // Page Data
-      pageToken,
-      pageSize
+      page_token: pageToken,
+      page_size: pageSize
     }
   })
     .then(response => {

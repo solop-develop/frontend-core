@@ -59,7 +59,9 @@ const system = {
           pageSize: undefined
         })
           .then(languageResponse => {
+            /*
             dispatch('serverListActivity', rootGetters['user/getUserUuid'])
+            */
             const languagesList = languageResponse.languagesList.map(language => {
               return {
                 ...language,
