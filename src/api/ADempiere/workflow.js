@@ -105,7 +105,7 @@ export function workflowActivities({
     params: {
       user_uuid: userUuid,
       // Page Data
-      pageToken,
+      page_token: pageToken,
       pageSize
     }
   })
