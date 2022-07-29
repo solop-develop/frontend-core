@@ -4,11 +4,13 @@ import {
 import { isEmptyValue } from '@/utils/ADempiere'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import language from '@/lang'
+import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 
 const activity = {
   listActivity: [],
   currentActivity: {},
   recordCount: 0,
+  pageNumber: 0,
   isLoadActivity: false
 }
 
@@ -26,18 +28,22 @@ export default {
     },
     setIsLoadActivity(state, load) {
       state.isLoadActivity = load
+    },
+    setCurrentPage(state, number) {
+      state.pageNumber = number
     }
   },
   actions: {
-    serverListActivity({ commit, state, dispatch, rootGetters }, pageToken) {
+    serverListActivity({ commit, state, dispatch, rootGetters }, pageNumber, pageToken) {
       const userUuid = rootGetters['user/getUserUuid']
       const name = language.t('navbar.badge.activity')
       if (isEmptyValue(userUuid)) {
         return
       }
-      // if (isEmptyValue(pageToken)) {
-      //   pageToken = ''
-      // }
+      if (!isEmptyValue(pageNumber)) {
+        commit('setCurrentPage', pageNumber)
+        pageToken = generatePageToken({ pageNumber })
+      }
       commit('setIsLoadActivity', true)
       workflowActivities({
         userUuid,
@@ -98,6 +104,9 @@ export default {
     },
     getIsLoadActivity: (state) => {
       return state.isLoadActivity
+    },
+    getCurrentPageNumber: (state) => {
+      return state.pageNumber
     }
   }
 }
