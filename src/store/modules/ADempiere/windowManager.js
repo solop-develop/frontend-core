@@ -28,7 +28,7 @@ import {
 
 // constants
 import { UUID } from '@/utils/ADempiere/constants/systemColumns'
-import { ROW_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
+import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 
 // utils and helper methods
 import { containerManager } from '@/utils/ADempiere/dictionary/window'

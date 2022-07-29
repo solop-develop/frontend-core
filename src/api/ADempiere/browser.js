@@ -19,7 +19,7 @@ import { request } from '@/utils/ADempiere/request'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 // constants
-import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/constants/table'
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 /**
  * Request a browser search

@@ -20,7 +20,7 @@ import language from '@/lang'
 
 // constants
 import { LOG_COLUMNS_NAME_LIST, UUID } from '@/utils/ADempiere/constants/systemColumns'
-import { ROW_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
+import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 
 // api request methods
@@ -93,10 +93,11 @@ const persistence = {
     // clear old values
     clearPersistenceQueue(state, {
       containerUuid,
-      recordUuid
+      recordUuid,
+      logs = {}
     }) {
       const key = containerUuid + '_' + recordUuid
-      Vue.set(state.persistence, key, {})
+      Vue.set(state.persistence, key, logs)
 
       // state.persistence[containerUuid] = {
       //   [recordUuid]: new Map()
@@ -299,33 +300,44 @@ const persistence = {
       })
 
       // set old value as current value
-      valuesChanges.forEach(attribute => {
-        const { columnName, oldValue } = attribute
+      const LastChange = valuesChanges[valuesChanges.length - 1]
+      const { columnName, oldValue } = LastChange
 
-        commit('updateValueOfField', {
-          parentUuid,
-          containerUuid,
-          columnName,
-          value: oldValue
-        }, {
-          root: true
-        })
+      commit('updateValueOfField', {
+        parentUuid,
+        containerUuid,
+        columnName,
+        recordUuid,
+        value: oldValue
+      }, {
+        root: true
       })
 
       dispatch('clearPersistenceQueue', {
         containerUuid,
-        recordUuid
+        columnName,
+        recordUuid,
+        logs: valuesChanges
       })
     },
 
     // clear old values
     clearPersistenceQueue({ commit }, {
       containerUuid,
-      recordUuid
+      recordUuid,
+      columnName,
+      logs
     }) {
+      let changeLogs
+      if (!isEmptyValue(logs)) {
+        changeLogs = logs.filter(log => log.columnName !== columnName)
+      }
+
       commit('clearPersistenceQueue', {
         containerUuid,
-        recordUuid
+        recordUuid,
+        columnName,
+        logs: changeLogs
       })
     }
   },

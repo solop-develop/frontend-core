@@ -19,7 +19,7 @@
 import Vue from 'vue'
 
 // api request methods
-import { requestListBusinessPartner } from '@/api/ADempiere/system-core.js'
+import { requestProductsList } from '@/api/ADempiere/form/product-info'
 
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -29,7 +29,7 @@ import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 const initState = {
   businessPartnerPopoverList: false,
   // container uuid: record uuid
-  emtpyBusinessPartnerData: {
+  emtpyProductData: {
     parentUuid: undefined,
     containerUuid: undefined,
     contextKey: '',
@@ -40,59 +40,48 @@ const initState = {
     nextPageToken: undefined,
     recordCount: 0,
     isLoaded: false,
-    BPshow: false,
     pageNumber: 1
   },
-  businessPartnerData: {},
-  BPShow: {}
+  businessPartnerData: {}
 }
 
-const businessPartner = {
+const productInfo = {
   state: initState,
 
   mutations: {
-    setBusinessPartnerData(state, {
+    setProductData(state, {
       containerUuid,
       currentRow = {},
       recordsList = [],
       nextPageToken,
       recordCount = 0,
       isLoaded = true,
-      BPshow = false,
       pageNumber = 1
     }) {
       Vue.set(state.businessPartnerData, containerUuid, {
         containerUuid,
         currentRow,
         recordsList,
-        BPshow,
         nextPageToken,
         recordCount,
         isLoaded,
         pageNumber
       })
     },
-    setBusinessPartnerSelectedRow(state, {
+    setProductSelectedRow(state, {
       containerUuid,
       currentRow = {}
     }) {
       Vue.set(state.businessPartnerData[containerUuid], 'currentRow', currentRow)
     },
 
-    setBusinessPartnerShow(state, {
-      containerUuid,
-      show = false
-    }) {
-      Vue.set(state.BPShow, containerUuid, show)
-    },
-
-    changePopoverListBusinessPartner(state, isShowed = false) {
+    changePopoverListProduct(state, isShowed = false) {
       state.businessPartnerPopoverList = isShowed
     }
   },
 
   actions: {
-    getBusinessPartners({ commit, getters }, {
+    getProducts({ commit, getters }, {
       containerUuid,
       searchValue,
       value,
@@ -106,7 +95,7 @@ const businessPartner = {
     }) {
       return new Promise(resolve => {
         if (isEmptyValue(pageNumber) || pageNumber < 1) {
-          const storedPage = getters.getBusinessPartnerPageNumber({
+          const storedPage = getters.getProductPageNumber({
             containerUuid
           })
           // refresh with same page
@@ -114,7 +103,7 @@ const businessPartner = {
         }
         const pageToken = generatePageToken({ pageNumber })
 
-        requestListBusinessPartner({
+        requestProductsList({
           searchValue,
           value,
           name,
@@ -126,8 +115,8 @@ const businessPartner = {
           filters,
           pageToken
         })
-          .then(responseBusinessPartnerList => {
-            const { businessPartnersList: recordsList } = responseBusinessPartnerList
+          .then(responseProductList => {
+            const { businessPartnersList: recordsList } = responseProductList
 
             let currentRow = {}
             // update current record
@@ -136,14 +125,14 @@ const businessPartner = {
               currentRow = recordsList.at(0)
             }
 
-            commit('setBusinessPartnerData', {
+            commit('setProductData', {
               containerUuid,
               currentRow,
               recordsList,
-              nextPageToken: responseBusinessPartnerList.nextPageToken,
+              nextPageToken: responseProductList.nextPageToken,
               pageNumber,
               isLoaded: true,
-              recordCount: responseBusinessPartnerList.recordCount
+              recordCount: responseProductList.recordCount
             })
 
             resolve(recordsList)
@@ -163,44 +152,41 @@ const businessPartner = {
      * Used by result in Business Partner List
      * @param {string} containerUuid
      */
-    getBusinessPartnerData: (state) => ({ containerUuid }) => {
+    getProductData: (state) => ({ containerUuid }) => {
       return state.businessPartnerData[containerUuid] || {
-        ...state.emtpyBusinessPartnerData,
+        ...state.emtpyProductData,
         containerUuid
       }
     },
-    getIsLoadedBusinessPartnerRecord: (state, getters) => ({ containerUuid }) => {
-      return getters.getBusinessPartnerData({
+    getIsLoadedProductRecord: (state, getters) => ({ containerUuid }) => {
+      return getters.getProductData({
         containerUuid
       }).isLoaded
     },
-    getBusinessPartnerRecordsList: (state, getters) => ({ containerUuid }) => {
-      return getters.getBusinessPartnerData({
+    getProductRecordsList: (state, getters) => ({ containerUuid }) => {
+      return getters.getProductData({
         containerUuid
       }).recordsList
     },
-    getBusinessPartnerRecordCount: (state, getters) => ({ containerUuid }) => {
-      return getters.getBusinessPartnerData({
+    getProductRecordCount: (state, getters) => ({ containerUuid }) => {
+      return getters.getProductData({
         containerUuid
       }).recordCount
     },
-    getBusinessPartnerPageNumber: (state, getters) => ({ containerUuid }) => {
-      return getters.getBusinessPartnerData({
+    getProductPageNumber: (state, getters) => ({ containerUuid }) => {
+      return getters.getProductData({
         containerUuid
       }).pageNumber
     },
-    getBusinessPartnerCurrentRow: (state, getters) => ({ containerUuid }) => {
-      return getters.getBusinessPartnerData({
+    getProductCurrentRow: (state, getters) => ({ containerUuid }) => {
+      return getters.getProductData({
         containerUuid
       }).currentRow
     },
-    getBusinessPartnerPopoverList: (state) => {
+    getProductPopoverList: (state) => {
       return state.businessPartnerPopoverList
-    },
-    getBPShow: (state) => ({ containerUuid }) => {
-      return state.BPShow[containerUuid]
     }
   }
 }
 
-export default businessPartner
+export default productInfo

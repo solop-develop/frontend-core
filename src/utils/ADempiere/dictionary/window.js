@@ -23,7 +23,7 @@ import {
   ACTIVE, CLIENT, PROCESSING, PROCESSED, UUID,
   READ_ONLY_FORM_COLUMNS
 } from '@/utils/ADempiere/constants/systemColumns'
-import { ROW_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
+import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 
 // utils and helpers methods
 import evaluator from '@/utils/ADempiere/evaluator'
@@ -1264,32 +1264,22 @@ export const containerManager = {
   },
   generalInfoSearch({
     containerUuid,
-    contextAttributesList,
-    parametersList,
-    fieldUuid,
-    id,
-    referenceUuid,
+    contextColumnNames,
+    filters,
+    uuid,
     searchValue,
     tableName,
     columnName,
-    columnUuid,
-    pageToken,
-    pageSize,
     pageNumber
   }) {
     return store.dispatch('findGeneralInfo', {
       containerUuid,
-      contextAttributesList,
-      parametersList,
-      fieldUuid,
-      id,
-      referenceUuid,
+      contextColumnNames,
+      filters,
+      fieldUuid: uuid,
       searchValue,
       tableName,
       columnName,
-      columnUuid,
-      pageToken,
-      pageSize,
       pageNumber
     })
   },

@@ -21,7 +21,7 @@ import language from '@/lang'
 import { requestBrowserSearch, updateBrowserEntity, requestDeleteBrowser } from '@/api/ADempiere/browser'
 
 // constants
-import { ROW_ATTRIBUTES, ROW_KEY_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
+import { ROW_ATTRIBUTES, ROW_KEY_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 
 // utils and helper methods
@@ -178,12 +178,7 @@ const browserControl = {
           containerUuid,
           isLoaded: false
         })
-        console.log({
-          uuid: containerUuid,
-          contextAttributesList,
-          parametersList,
-          nextPageToken: pageToken
-        })
+
         requestBrowserSearch({
           uuid: containerUuid,
           contextAttributesList,

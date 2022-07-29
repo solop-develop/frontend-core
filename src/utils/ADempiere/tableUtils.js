@@ -1,6 +1,6 @@
 // ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
+// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+// Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -41,3 +41,19 @@ export const ROW_KEY_ATTRIBUTES = Object.keys(ROW_ATTRIBUTES)
  * As pageSize on backend
  */
 export const ROWS_OF_RECORDS_BY_PAGE = 15
+
+/**
+ * Generate index to element-ui table
+ * @link https://element.eleme.cn/#/es/component/table#indice-personalizado
+ * @param {number} indexRow current index of row
+ * @param {number} pageSize records by page
+ * @param {number} pageNumber page of pagination
+ * @returns {number} current index
+ */
+export function indexRowByPage({
+  indexRow,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
+  pageNumber = 1
+}) {
+  return (pageNumber - 1) * pageSize + (indexRow + 1)
+}
