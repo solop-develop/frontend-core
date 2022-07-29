@@ -21,7 +21,6 @@
     v-if="isLoadedMetadata"
     key="report-loaded"
     class="view-base report-view"
-    style="height: 84vh;"
   >
     <el-main>
       <el-card class="content-collapse card-report">

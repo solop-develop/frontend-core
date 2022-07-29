@@ -21,7 +21,6 @@
     v-if="isLoadedMetadata"
     key="process-loaded"
     class="view-base process-view"
-    style="height: 84vh;"
   >
     <el-main>
       <el-card class="content-collapse card-process">
