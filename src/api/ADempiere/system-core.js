@@ -18,14 +18,14 @@
 import { request } from '@/utils/ADempiere/request'
 
 // constants
-import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/constants/table'
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 // Get Organization list from role
 export function requestOrganizationsList({
   roleUuid,
   roleId,
   pageToken,
-  pageSize
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
     url: '/common/organizations',
@@ -56,7 +56,7 @@ export function requestWarehousesList({
   organizationUuid,
   organizationId,
   pageToken,
-  pageSize
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
     url: '/common/warehouses',
@@ -105,7 +105,7 @@ export function requestGetCountryDefinition({
 // Get languages from api
 export function requestLanguagesList({
   pageToken,
-  pageSize
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
     url: '/common/languages',

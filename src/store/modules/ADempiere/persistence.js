@@ -20,7 +20,7 @@ import language from '@/lang'
 
 // constants
 import { LOG_COLUMNS_NAME_LIST, UUID } from '@/utils/ADempiere/constants/systemColumns'
-import { ROW_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
+import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 
 // api request methods

@@ -23,7 +23,7 @@ import {
   ACTIVE, CLIENT, PROCESSING, PROCESSED, UUID,
   READ_ONLY_FORM_COLUMNS
 } from '@/utils/ADempiere/constants/systemColumns'
-import { ROW_ATTRIBUTES } from '@/utils/ADempiere/constants/table'
+import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 
 // utils and helpers methods
 import evaluator from '@/utils/ADempiere/evaluator'
