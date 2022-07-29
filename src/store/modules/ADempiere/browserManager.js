@@ -178,12 +178,7 @@ const browserControl = {
           containerUuid,
           isLoaded: false
         })
-        console.log({
-          uuid: containerUuid,
-          contextAttributesList,
-          parametersList,
-          nextPageToken: pageToken
-        })
+
         requestBrowserSearch({
           uuid: containerUuid,
           contextAttributesList,

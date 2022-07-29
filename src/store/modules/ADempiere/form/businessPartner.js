@@ -83,10 +83,6 @@ const businessPartner = {
       containerUuid,
       show = false
     }) {
-      console.log({
-        containerUuid,
-        show
-      })
       Vue.set(state.BPShow, containerUuid, show)
     },
 
@@ -202,7 +198,6 @@ const businessPartner = {
       return state.businessPartnerPopoverList
     },
     getBPShow: (state) => ({ containerUuid }) => {
-      console.log(state.BPShow[containerUuid], containerUuid)
       return state.BPShow[containerUuid]
     }
   }

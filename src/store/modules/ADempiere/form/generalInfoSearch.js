@@ -99,7 +99,6 @@ const generalInfoSearch = {
       containerUuid,
       fieldsList = []
     }) {
-      console.log('setTableHeader', containerUuid, fieldsList)
       Vue.set(state.tableHeaderList, containerUuid, fieldsList)
     },
 
@@ -128,7 +127,6 @@ const generalInfoSearch = {
       //
       pageNumber
     }) {
-      console.log(containerUuid, searchValue)
       return new Promise(resolve => {
         if (isEmptyValue(pageNumber) || pageNumber < 1) {
           const storedPage = getters.getGeneralInfoPageNumber({
