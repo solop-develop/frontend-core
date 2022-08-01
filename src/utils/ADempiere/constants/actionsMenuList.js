@@ -89,12 +89,12 @@ export const recordAccess = {
   }
 }
 
-export const exportRecords = ({ parentUuid, containerUuid, containerManager, formatToExport = 'json' }) => {
+export const exportRecords = ({ parentUuid, containerUuid, containerManager, formatToExport = 'json', currrentRecord = [] }) => {
   const selection = containerManager.getSelection({
     containerUuid
   })
-
   const fieldsListAvailable = containerManager.getFieldsList({
+    parentUuid,
     containerUuid
   }).filter(fieldItem => {
     const isDisplayed = fieldItem.isDisplayed || fieldItem.isDisplayedFromLogic
@@ -102,7 +102,6 @@ export const exportRecords = ({ parentUuid, containerUuid, containerManager, for
       return fieldItem
     }
   })
-
   const columnsAvalable = fieldsListAvailable.map(fieldItem => {
     if (isLookup(fieldItem.displayType)) {
       return fieldItem.displayColumnName
@@ -114,20 +113,19 @@ export const exportRecords = ({ parentUuid, containerUuid, containerManager, for
     return fieldItem.name
   })
 
+  const recordData = isEmptyValue(currrentRecord) ? selection : [currrentRecord]
   // filter only showed columns
-  const data = selection.map(row => {
+  const data = recordData.map(row => {
     const newRow = {}
     columnsAvalable.forEach(column => {
       newRow[column] = row[column]
     })
     return newRow
   })
-
   const title = containerManager.getPanel({
     parentUuid,
     containerUuid
   }).name
-
   exportFileFromJson({
     header: headerList,
     data,
@@ -159,9 +157,42 @@ export const exportRecordsSelected = {
       svg: false,
       icon: 'el-icon-download',
       actionName: 'exportRecordsSelected',
-      exportRecordsSelected: ({ root, containerUuid, containerManager }) => {
+      exportRecordsSelected: ({ root, parentUuid, containerUuid, containerManager }) => {
         // change default format to current format
-        exportRecords({ root, containerUuid, containerManager, formatToExport: format })
+        exportRecords({ root, parentUuid, containerUuid, containerManager, formatToExport: format })
+      }
+    }
+  })
+}
+
+export const exportCurrentRecord = {
+  name: language.t('actionMenu.exportRecord'),
+  enabled: ({ containerUuid, containerManager }) => {
+    const currentRecord = store.getters.getUuidOfContainer(containerUuid)
+
+    return !isEmptyValue(currentRecord)
+  },
+  svg: false,
+  icon: 'el-icon-download',
+  actionName: 'exportCurrentRecord',
+  exportCurrentRecord: ({ root, parentUuid, containerUuid, containerManager }) => {
+    const currrentRecord = store.getters.getTabCurrentRow({ containerUuid })
+    exportRecords({ parentUuid, containerUuid, containerManager, currrentRecord })
+  },
+  // generate export formats
+  childs: Object.keys(supportedTypes).map(format => {
+    return {
+      name: supportedTypes[format],
+      enabled: ({ containerUuid, containerManager }) => {
+        return true
+      },
+      svg: false,
+      icon: 'el-icon-download',
+      actionName: 'exportCurrentRecord',
+      exportCurrentRecord: ({ root, parentUuid, containerUuid, containerManager }) => {
+        // change default format to current format
+        const currrentRecord = store.getters.getTabCurrentRow({ containerUuid })
+        exportRecords({ root, parentUuid, containerUuid, containerManager, formatToExport: format, currrentRecord })
       }
     }
   })

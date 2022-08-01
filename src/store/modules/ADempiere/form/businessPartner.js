@@ -84,11 +84,11 @@ const businessPartner = {
       show = false
     }) {
       Vue.set(state.BPShow, containerUuid, show)
-    },
-
-    changePopoverListBusinessPartner(state, isShowed = false) {
-      state.businessPartnerPopoverList = isShowed
     }
+
+    // changePopoverListBusinessPartner(state, isShowed = false) {
+    //   state.businessPartnerPopoverList = isShowed
+    // }
   },
 
   actions: {

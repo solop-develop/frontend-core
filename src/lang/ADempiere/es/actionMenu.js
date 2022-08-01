@@ -42,6 +42,7 @@ const actionMenu = {
   // browser
   openSmartBrowser: 'Abrir Consulta Inteligente',
   exportSelectedRecords: 'Exportar Registros Seleccionados',
+  exportRecord: 'Exportar Registro',
   delete: 'Eliminar',
   // relations
   relations: 'Relaciones',

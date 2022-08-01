@@ -41,7 +41,8 @@ const actionMenu = {
   generateWithReportView: 'Change report view to generate',
   // browser
   openSmartBrowser: 'Open Smart Browser',
-  exportSelectedRecords: 'Exportar Registros Seleccionados',
+  exportSelectedRecords: 'Export Selected Records',
+  exportRecord: 'Export Record',
   // relations
   relations: 'Relations',
   withoutRelations: 'Without Relations',

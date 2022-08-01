@@ -39,6 +39,8 @@ import {
 } from '@/utils/ADempiere/dictionary/window.js'
 import {
   sharedLink,
+  exportRecordsSelected,
+  exportCurrentRecord,
   recordAccess
 } from '@/utils/ADempiere/constants/actionsMenuList.js'
 import evaluator from '@/utils/ADempiere/evaluator'
@@ -304,6 +306,8 @@ export default {
     actionsList.push(deleteRecord)
     actionsList.push(refreshRecords)
     actionsList.push(recordAccess)
+    actionsList.push(exportCurrentRecord)
+    actionsList.push(exportRecordsSelected)
     actionsList.push(sharedLink)
 
     commit('setActionMenu', {
