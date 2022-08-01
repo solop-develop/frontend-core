@@ -82,6 +82,7 @@ export default {
                 commit('addListChatEntries', responseChat.chatEntriesList)
               })
               .catch(error => {
+                commit('addListChatEntries', [])
                 console.warn(`Error getting List Chat Entries: ${error.message}. Code: ${error.code}.`)
               })
           })
@@ -89,6 +90,7 @@ export default {
           commit('addListRecordChats', responseList)
         })
         .catch(error => {
+          commit('addListChatEntries', [])
           console.warn(`Error getting List Chat: ${error.message}. Code: ${error.code}.`)
         })
     }

@@ -17,7 +17,13 @@ const containerInfo = {
     listRecordLogs: [],
     recordAttachment: [],
     showContainerInfo: false,
-    containerPanelInfo: {}
+    containerPanelInfo: {},
+    currentFieldList: {
+      fieldsList: [],
+      option: '',
+      columnName: ''
+    },
+    columnName: ''
   },
   mutations: {
     addListRecordLogs(state, payload) {
@@ -31,6 +37,16 @@ const containerInfo = {
     },
     setContainerInfo(state, params) {
       state.containerPanelInfo = params
+    },
+    setCurrentFieldList(state, { fieldsList, option, columnName }) {
+      state.currentFieldList = {
+        fieldsList,
+        columnName,
+        option
+      }
+    },
+    setFieldFocusColumnName(state, columnName) {
+      state.columnName = columnName
     }
   },
   actions: {
@@ -112,6 +128,16 @@ const containerInfo = {
       currentTab
     }) {
       commit('setContainerInfo', { currentRecord, currentTab })
+    },
+    fieldListInfo({ commit }, {
+      info
+    }) {
+      const { fieldsList, columnName, option } = info
+      commit('setCurrentFieldList', {
+        fieldsList,
+        columnName,
+        option
+      })
     }
   },
   getters: {
@@ -126,6 +152,12 @@ const containerInfo = {
     },
     getContainerInfo: (state) => {
       return state.containerPanelInfo
+    },
+    getCurrentFieldList: (state) => {
+      return state.currentFieldList
+    },
+    getFieldFocusColumnName: (state) => {
+      return state.columnName
     }
   }
 }
