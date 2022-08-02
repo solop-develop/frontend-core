@@ -18,7 +18,7 @@
 
 <template>
   <el-container style="height: 100%!important;">
-    <el-main id="mainWindow">
+    <el-main id="mainWindow" :style="isMobile ? 'overflow: auto;' : 'overflow: hidden;'">
       <embedded
         :visible="showRecordAccess"
       >
@@ -195,6 +195,7 @@ export default defineComponent({
 <style>
 .el-footer {
   height: 50% !important;
+  overflow: hidden;
 }
 .el-main {
   padding-top: 0px;
