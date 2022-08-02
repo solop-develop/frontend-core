@@ -34,20 +34,21 @@
         :references-manager="referencesManager"
         :actions-manager="actionsManager"
       />
-      <modal-dialog
-        v-if="!isEmptyValue(processUuid)"
-        :container-manager="containerManagerProcess"
-        :parent-uuid="currentTabUuid"
-        :container-uuid="processUuid"
-      />
       <tab-manager-child
         v-if="isWithChildsTab && isMobile"
+        class="tab-manager"
         :parent-uuid="windowMetadata.uuid"
         :container-manager="containerManager"
         :tabs-list="windowMetadata.tabsListChild"
         :all-tabs-list="allTabsList"
         :references-manager="referencesManager"
         :actions-manager="actionsManager"
+      />
+      <modal-dialog
+        v-if="!isEmptyValue(processUuid)"
+        :container-manager="containerManagerProcess"
+        :parent-uuid="currentTabUuid"
+        :container-uuid="processUuid"
       />
     </el-main>
     <el-footer v-if="isWithChildsTab && !isMobile" id="footerWindow" :style="styleFullScreen">
