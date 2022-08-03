@@ -1,4 +1,4 @@
-# Casos de Uso: Consulta Inteligente (Smart Browser)
+# Consulta Inteligente (Smart Browser)
 
 ## Apertura
 

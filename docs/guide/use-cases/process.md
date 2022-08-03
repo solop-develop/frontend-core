@@ -1,4 +1,4 @@
-## Use Cases: Processes
+## Processes
 
 ## Opening
 

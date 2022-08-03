@@ -1,4 +1,4 @@
-# Casos de Uso: Ventanas
+# Ventanas
 
 ## Apertura
 

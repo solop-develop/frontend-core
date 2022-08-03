@@ -1,4 +1,4 @@
-# Casos de Uso: Procesos
+# Procesos
 
 ## Apertura
 

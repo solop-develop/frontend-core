@@ -1,4 +1,4 @@
-## Use Cases: Search Type Forms (Fields)
+## Search Type Forms (Fields)
 
 
 ## Generic Form

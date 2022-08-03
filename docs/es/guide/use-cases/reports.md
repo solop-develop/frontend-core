@@ -1,4 +1,4 @@
-# Casos de Uso: Reporte
+# Reporte
 
 ## Apertura
 

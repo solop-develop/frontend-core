@@ -1,4 +1,4 @@
-## Use Cases: Windows
+## Windows
 
 ## Opening
 

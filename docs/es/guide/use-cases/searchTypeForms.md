@@ -1,4 +1,4 @@
-# Casos de Uso: Formularios Tipo Búsqueda (Campos)
+# Formularios Tipo Búsqueda (Campos)
 
 
 ## Formulario Genérico

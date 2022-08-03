@@ -301,7 +301,9 @@ function genUseCasesSidebar(type = '') {
     '/guide/use-cases/reports.md',
     '/guide/use-cases/smartBrowser.md',
     '/guide/use-cases/window.md',
-    '/guide/use-cases/searchTypeForms.md'
+    '/guide/use-cases/searchTypeForms.md',
+    '/guide/use-cases/notes.md',
+    '/guide/use-cases/activity.md',
   ]
   return mapArr.map(i => {
     return type + i
@@ -333,12 +335,12 @@ function genComponentSidebar(type = '') {
   const mapArr = [
     // '/guide/components/preference.md',
     // '/guide/components/record-access.md',
-    // '/guide/components/notes.md',
+    '/guide/components/notes.md',
     // '/guide/components/information.md',
     // '/guide/components/update.md',
     // '/guide/components/translation.md',
     // '/guide/components/zoom-in.md',
-    // '/guide/components/activity.md',
+    '/guide/components/activity.md',
     // '/guide/components/close-tab.md',
     // '/guide/components/close-other-tabs.md',
     // '/guide/components/close-all.md',
@@ -351,9 +353,9 @@ function genComponentSidebar(type = '') {
     // '/guide/components/dashboard.md',
     '/guide/components/process.md',
     '/guide/components/reports.md',
-    '/guide/components/smart-browser.md'
-    // '/guide/components/guide.md',
-    // '/guide/components/workflows-and-activities.md'
+    '/guide/components/smart-browser.md',
+    '/guide/components/guide.md',
+    '/guide/components/workflows-and-activities.md'
   ]
   return mapArr.map(i => {
     return type + i

@@ -1,4 +1,4 @@
-### Use Cases: Report
+### Report
 
 ## Open
 

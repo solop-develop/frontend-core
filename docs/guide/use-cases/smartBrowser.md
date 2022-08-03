@@ -1,4 +1,4 @@
-# Use Cases: Smart Browser
+# Smart Browser
 
 ## Opening
 
