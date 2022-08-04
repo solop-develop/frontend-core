@@ -91,7 +91,8 @@ const lookupManager = {
       columnUuid
     }) {
       return new Promise(resolve => {
-        if (isEmptyValue(fieldUuid) && isEmptyValue(processParameterUuid) && isEmptyValue(browseFieldUuid)) {
+        if (isEmptyValue(fieldUuid) && isEmptyValue(processParameterUuid) && isEmptyValue(browseFieldUuid) &&
+          (isEmptyValue(tableName) && isEmptyValue(columnName))) {
           resolve([])
           return
         }
