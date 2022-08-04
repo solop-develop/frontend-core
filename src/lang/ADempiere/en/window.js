@@ -40,6 +40,10 @@ const window = {
     },
     log: {
       changeHistory: 'Change History',
+      updated: 'Updated',
+      updatedBy: 'Updated By',
+      newValue: 'New Value',
+      oldValue: 'Old Value',
       tab: 'Tab',
       recordID: 'Log ID',
       recordUUID: 'Log UUID',
