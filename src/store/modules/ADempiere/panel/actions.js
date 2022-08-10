@@ -358,8 +358,7 @@ const actions = {
         fieldsList = getters.getFieldsListFromPanel(containerUuid)
         field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
       }
-
-      if (containerManager.getFieldsList) {
+      if (containerManager.getFieldsList && !isEmptyValue(field.parentUuid)) {
         fieldsList = containerManager.getFieldsList({
           parentUuid: field.parentUuid,
           containerUuid: field.containerUuid

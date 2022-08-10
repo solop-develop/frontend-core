@@ -89,12 +89,13 @@ export function getDefaultFormat(isTime) {
  * @param {string|date} object
  * @param {boolean} isTime
  */
-export function formatDate(date, isTime = false) {
+export function formatDate(date, isTime = false, format) {
   if (isEmptyValue(date)) {
     return undefined
   }
   //  Format
   return moment.utc(date).format(getDateFormat({
+    format,
     isTime
   }))
 }

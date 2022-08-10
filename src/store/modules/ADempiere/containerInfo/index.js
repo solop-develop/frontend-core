@@ -18,6 +18,7 @@ const containerInfo = {
     recordAttachment: [],
     showContainerInfo: false,
     containerPanelInfo: {},
+    fieldLogs: [],
     currentFieldList: {
       fieldsList: [],
       option: '',
@@ -47,6 +48,9 @@ const containerInfo = {
     },
     setFieldFocusColumnName(state, columnName) {
       state.columnName = columnName
+    },
+    setLogField(state, logs) {
+      state.fieldLogs = logs
     }
   },
   actions: {
@@ -138,6 +142,33 @@ const containerInfo = {
         columnName,
         option
       })
+    },
+    findFieldLogs({ commit }, {
+      tableName,
+      recordId,
+      recordUuid,
+      columnName
+    }) {
+      return requestListEntityLogs({
+        tableName,
+        recordId,
+        recordUuid
+      })
+        .then(response => {
+          const { entityLogsList } = response
+
+          // commit('addListRecordLogs', response)
+          const fieldLogs = entityLogsList.filter(logs => {
+            if (logs.changeLogsList[0].columnName === columnName) {
+              return logs
+            }
+          })
+          commit('setLogField', fieldLogs)
+          return response
+        })
+        .catch(error => {
+          console.warn(`Error getting List Field Logs: ${error.message}. Code: ${error.code}.`)
+        })
     }
   },
   getters: {
@@ -158,6 +189,9 @@ const containerInfo = {
     },
     getFieldFocusColumnName: (state) => {
       return state.columnName
+    },
+    getFieldLogs: (state) => {
+      return state.fieldLogs
     }
   }
 }

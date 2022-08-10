@@ -38,6 +38,10 @@ const window = {
       newFiles: 'Nuevos Archivos'
     },
     log: {
+      updated: 'Actualizado',
+      updatedBy: 'Actualizado Por',
+      newValue: 'Nuevo Valor',
+      oldValue: 'Valor Antiguo',
       changeHistory: 'Histórico de Cambios',
       tab: 'Pestañá',
       recordID: 'ID del Registro',

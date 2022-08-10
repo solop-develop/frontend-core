@@ -18,7 +18,7 @@
 
 <template>
   <el-container style="height: 100%!important;">
-    <el-main id="mainWindow" :style="isMobile ? 'overflow: auto;' : 'overflow: hidden;'">
+    <el-main id="mainWindow" :style="(isMobile || isEmptyValue(windowMetadata.tabsListChild)) ? 'overflow: auto;' : 'overflow: hidden;'">
       <embedded
         :visible="showRecordAccess"
       >
