@@ -26,6 +26,7 @@ import recordManager from './recordManager'
 import route from './route'
 import smartBrowser from './smartBrowser'
 import window from './window'
+import actionNotice from './form/actionNotice'
 
 export default {
   actionMenu,
@@ -37,6 +38,7 @@ export default {
   recordManager,
   route,
   smartBrowser,
+  actionNotice,
 
   language: 'Idioma',
   notifications: {

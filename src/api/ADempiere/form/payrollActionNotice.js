@@ -79,7 +79,7 @@ export function listPayrollMovements({
     })
 }
 
-export function listPayrollMovement({
+export function savePayrollMovement({
   id,
   uuid,
   contextAttributes,
@@ -87,7 +87,7 @@ export function listPayrollMovement({
   attributes
 }) {
   return request({
-    url: `${config.payrollActionNotice.endpoint}/list-payroll-movement`,
+    url: `${config.payrollActionNotice.endpoint}/save-payroll-movement`,
     method: 'get',
     params: {
       filters,
@@ -103,21 +103,17 @@ export function listPayrollMovement({
 }
 
 export function deletePayrollMovement({
-  id,
+  ids,
   uuids,
-  contextAttributes,
-  filters,
-  attributes
+  contextAttributes
 }) {
   return request({
-    url: `${config.payrollActionNotice.endpoint}/delete-payroll-movement`,
+    url: `${config.payrollActionNotice.endpoint}/delete-payroll-movements`,
     method: 'get',
     params: {
-      filters,
-      id,
+      ids,
       uuids,
-      context_attributes: contextAttributes,
-      attributes
+      context_attributes: contextAttributes
     }
   })
     .then(response => {
