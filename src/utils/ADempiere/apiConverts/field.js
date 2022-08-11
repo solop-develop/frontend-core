@@ -30,6 +30,12 @@ export function convertField(field) {
   if (field.process) {
     convertedField.process = convertProcess(field.process)
   }
+
+  convertedField.dependentFieldsList = convertedField.dependentFields.map(dependetField => {
+    return camelizeObjectKeys(dependetField)
+  })
+  delete convertedField['dependentFields']
+
   renameObjectKey(convertedField, 'columnSql', 'columnSQL')
   return convertedField
 }

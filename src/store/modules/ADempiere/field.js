@@ -134,7 +134,7 @@ const field = {
     },
     getFieldFromElementColumnName: (state) => (elementColumnName) => {
       return state.fieldsList.find(fieldItem => {
-        return fieldItem.elementColumnName === elementColumnName
+        return fieldItem.elementName === elementColumnName
       })
     },
     getFieldFromTableNameAndColumnName: (state) => ({

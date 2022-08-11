@@ -185,7 +185,7 @@ export function generateField({
     ...evaluatedLogics,
     //
     parentFieldsList,
-    dependentFieldsList: [],
+    // dependentFieldsList: [],
     // TODO: Add support on server
     // app attributes
     isShowedFromUser: false,

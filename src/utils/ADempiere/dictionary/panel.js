@@ -195,7 +195,8 @@ export function generatePanelAndFields({
     fieldsList = fieldsList.concat(fieldsRangeList)
   }
 
-  fieldsList = generateDependenFieldsList(fieldsList)
+  // get from server
+  // fieldsList = generateDependenFieldsList(fieldsList)
 
   identifierColumns = sortFields({
     fieldsList: identifierColumns,
@@ -262,6 +263,7 @@ export function generatePanelAndFields({
 /**
  * Get dependent fields on all elemnets
  * TODO: Improve performance and reduce array cycles
+ * TODO: Add dependents on all tabs to window container
  * @param {array} fieldsList
  * @returns {array}
  */

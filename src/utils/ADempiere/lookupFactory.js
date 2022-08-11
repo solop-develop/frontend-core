@@ -134,7 +134,7 @@ export function createFieldFromDictionary({
               uuid,
               columnUuid,
               elementUuid,
-              elementColumnName,
+              elementName: elementColumnName,
               tableName,
               columnName,
               ...overwriteDefinition
@@ -267,6 +267,7 @@ export function getFieldTemplate(overwriteDefinition) {
     help: '',
     columnName: '',
     displayColumnName: DISPLAY_COLUMN_PREFIX + overwriteDefinition.columnName, // key to display column
+    elementName: '',
     fieldGroup: {
       name: '',
       fieldGroupType: ''
@@ -327,6 +328,10 @@ export function getFieldTemplate(overwriteDefinition) {
     isShowedFromUser: false,
     isFixedTableColumn: false,
     ...overwriteDefinition
+  }
+
+  if (isEmptyValue(fieldTemplateMetadata.elementName) && !isEmptyValue(fieldTemplateMetadata.columnName)) {
+    fieldTemplateMetadata.elementColumnName = fieldTemplateMetadata.columnName
   }
 
   // get parsed parent fields list

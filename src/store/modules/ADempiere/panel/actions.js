@@ -402,15 +402,17 @@ const actions = {
           console.warn(`${field.name} ActionPerformed error: ${error.message}.`)
         })
         .finally(() => {
+          // TODO: Duplicated with actionPerformed
           // Change Dependents
-          dispatch('changeDependentFieldsList', {
-            field,
-            fieldsList,
-            containerManager
-          })
+          // dispatch('changeDependentFieldsList', {
+          //   field,
+          //   fieldsList,
+          //   containerManager
+          // })
         })
     })
   },
+
   /**
    * Change dependent fields (default value, logics displayed, mandatory and read only)
    * @param {object} field, definition and attributes
@@ -428,86 +430,124 @@ const actions = {
       return
     }
 
-    const { parentUuid, containerUuid } = field
-    //  Get all fields
+    const { parentUuid } = field
+
+    // Get all fields
     if (isEmptyValue(fieldsList)) {
       if (containerManager && containerManager.getFieldsList) {
         fieldsList = containerManager.getFieldsList({
           parentUuid,
-          containerUuid
+          containerUuid: field.containerUuid
         })
       } else {
         // TODO: Legacy implementation
         // @deprecated replace with container manager
-        fieldsList = getters.getFieldsListFromPanel(containerUuid)
+        fieldsList = getters.getFieldsListFromPanel(field.containerUuid)
       }
     }
-    const dependentsList = fieldsList.filter(fieldItem => {
-      return field.dependentFieldsList.includes(fieldItem.columnName) ||
-        field.dependentFieldsList.includes(fieldItem.elementName)
-    })
 
-    //  Iterate for change logic
-    dependentsList.map(async fieldDependent => {
+    // Iterate for change logic
+    field.dependentFieldsList.map(async fieldDependentDefinition => {
+      const { containerUuid, columnName } = fieldDependentDefinition
+
+      // Get all fields on different container
+      let currentFieldsList = fieldsList
+      if (containerManager && containerManager.getFieldsList && containerUuid !== field.containerUuid) {
+        currentFieldsList = containerManager.getFieldsList({
+          parentUuid,
+          containerUuid
+        })
+      }
+      if (isEmptyValue(currentFieldsList)) {
+        console.warn('fieldsList not found in vuex store', {
+          parentUuid,
+          parentColumnName: field.columnName,
+          parentContainerName: field.panelName,
+          parentContainerUuid: field.containerUuid,
+          dependentColumnName: columnName,
+          dependentContainerName: fieldDependentDefinition.containerName,
+          dependentContainerUuid: fieldDependentDefinition.containerUuid
+        })
+        return
+      }
+      // TODO: Improve peformance get field with key-value
+      const storedFieldDependent = currentFieldsList.find(fieldItem => {
+        return columnName === fieldItem.columnName ||
+          columnName === fieldItem.elementName
+      })
+
+      if (isEmptyValue(storedFieldDependent)) {
+        console.warn('field not found in vuex store', {
+          parentUuid,
+          parentColumnName: field.columnName,
+          parentContainerName: field.panelName,
+          parentContainerUuid: field.containerUuid,
+          dependentColumnName: columnName,
+          dependentContainerName: fieldDependentDefinition.containerName,
+          dependentContainerUuid: fieldDependentDefinition.containerUuid
+        })
+        return
+      }
+
       //  isDisplayed Logic
       let isDisplayedFromLogic, isMandatoryFromLogic, isReadOnlyFromLogic, defaultValue
-      if (!isEmptyValue(fieldDependent.displayLogic)) {
+      if (!isEmptyValue(storedFieldDependent.displayLogic)) {
         isDisplayedFromLogic = evaluator.evaluateLogic({
           context: getContext,
           parentUuid,
           containerUuid,
-          logic: fieldDependent.displayLogic
+          logic: storedFieldDependent.displayLogic
         })
       }
       //  Mandatory Logic
-      if (!isEmptyValue(fieldDependent.mandatoryLogic)) {
+      if (!isEmptyValue(storedFieldDependent.mandatoryLogic)) {
         isMandatoryFromLogic = evaluator.evaluateLogic({
           context: getContext,
           parentUuid,
           containerUuid,
-          logic: fieldDependent.mandatoryLogic
+          logic: storedFieldDependent.mandatoryLogic
         })
       }
       //  Read Only Logic
-      if (!isEmptyValue(fieldDependent.readOnlyLogic)) {
+      if (!isEmptyValue(storedFieldDependent.readOnlyLogic)) {
         isReadOnlyFromLogic = evaluator.evaluateLogic({
           context: getContext,
           parentUuid,
           containerUuid,
-          logic: fieldDependent.readOnlyLogic
+          logic: storedFieldDependent.readOnlyLogic
         })
       }
       // default value without sql
-      if (!isEmptyValue(fieldDependent.defaultValue) &&
-        fieldDependent.defaultValue.includes('@') &&
-        !fieldDependent.defaultValue.startsWith('@SQL=')) {
+      if (!isEmptyValue(storedFieldDependent.defaultValue) &&
+      storedFieldDependent.defaultValue.includes('@') &&
+        !storedFieldDependent.defaultValue.startsWith('@SQL=')) {
         defaultValue = parseContext({
           parentUuid,
           containerUuid,
-          value: fieldDependent.defaultValue
+          value: storedFieldDependent.defaultValue
         }).value
       }
 
       // default value with sql
-      if (!isEmptyValue(fieldDependent.defaultValue) &&
-        fieldDependent.defaultValue.startsWith('@SQL=')) {
+      if (!isEmptyValue(storedFieldDependent.defaultValue) &&
+      storedFieldDependent.defaultValue.startsWith('@SQL=')) {
         defaultValue = parseContext({
           parentUuid,
           containerUuid,
           isSQL: true,
-          value: fieldDependent.defaultValue
+          value: storedFieldDependent.defaultValue
         }).query
 
         let newValue, displayedValue
 
         newValue = rootGetters.getValueOfField({
           containerUuid,
-          columnName: fieldDependent.columnName
+          columnName: columnName
         })
         if (!isEmptyValue(newValue)) {
           displayedValue = rootGetters.getValueOfField({
             containerUuid,
-            columnName: fieldDependent.displayColumnName
+            columnName: storedFieldDependent.displayColumnName
           })
         } else {
           const {
@@ -516,10 +556,10 @@ const actions = {
           } = containerManager.getDefaultValue({
             parentUuid,
             containerUuid,
-            contextColumnNames: fieldDependent.contextColumnNames,
-            uuid: fieldDependent.uuid,
-            id: fieldDependent.id,
-            columnName: fieldDependent.columnName
+            contextColumnNames: storedFieldDependent.contextColumnNames,
+            uuid: storedFieldDependent.uuid,
+            id: storedFieldDependent.id,
+            columnName: columnName
           })
 
           displayedValue = displayedValueByServer
@@ -530,31 +570,31 @@ const actions = {
         commit('updateValueOfField', {
           parentUuid,
           containerUuid,
-          columnName: fieldDependent.columnName,
+          columnName: columnName,
           value: newValue
         })
         // update values for field on elememnt name of column
-        if (fieldDependent.columnName !== fieldDependent.elementName) {
+        if (columnName !== storedFieldDependent.elementName) {
           commit('updateValueOfField', {
             parentUuid,
             containerUuid,
-            columnName: fieldDependent.elementName,
+            columnName: storedFieldDependent.elementName,
             value: newValue
           })
         }
         // update displayed value for field
-        if (isLookup(fieldDependent.displayType)) {
+        if (isLookup(storedFieldDependent.displayType)) {
           commit('updateValueOfField', {
             parentUuid,
             containerUuid,
-            columnName: fieldDependent.displayColumnName,
+            columnName: storedFieldDependent.displayColumnName,
             value: displayedValue
           })
         }
       }
 
       commit('changeFieldLogic', {
-        field: fieldDependent,
+        field: storedFieldDependent,
         isDisplayedFromLogic,
         isMandatoryFromLogic,
         isReadOnlyFromLogic,

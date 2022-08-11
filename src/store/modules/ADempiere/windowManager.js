@@ -342,6 +342,7 @@ const windowManager = {
                 attributes
               })
 
+              // TODO: Evaluate seek record on container manager
               // active logics with set records values
               fieldsList.forEach(field => {
                 // change Dependents
