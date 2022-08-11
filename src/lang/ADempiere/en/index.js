@@ -27,6 +27,7 @@ import route from './route'
 import smartBrowser from './smartBrowser'
 import window from './window'
 import actionNotice from './form/actionNotice'
+import payrollActionNotice from './form/payrollActionNotice'
 
 export default {
   actionMenu,
@@ -39,6 +40,8 @@ export default {
   route,
   smartBrowser,
   actionNotice,
+  payrollActionNotice,
+
   language: 'Language',
   notifications: {
     // simplex

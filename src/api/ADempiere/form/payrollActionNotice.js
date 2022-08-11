@@ -120,3 +120,18 @@ export function deletePayrollMovement({
       return response
     })
 }
+
+export function conceptDefinition({
+  id
+}) {
+  return request({
+    url: `${config.payrollActionNotice.endpoint}/get-payroll-concept-definition`,
+    method: 'get',
+    params: {
+      id
+    }
+  })
+    .then(response => {
+      return response
+    })
+}

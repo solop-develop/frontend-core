@@ -43,6 +43,9 @@
   "weight": {
     "endpoint": "/form/addons/weight"
   },
+  "payrollActionNotice": {
+    "endpoint": "/form/addons/payroll-action-notice"
+  },
   "session": {
     "timeout": 300000
   },

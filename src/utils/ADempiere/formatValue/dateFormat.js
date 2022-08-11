@@ -93,11 +93,17 @@ export function formatDate(date, isTime = false, format) {
   if (isEmptyValue(date)) {
     return undefined
   }
-  //  Format
   return moment.utc(date).format(getDateFormat({
     format,
     isTime
   }))
+}
+
+export function dateTimeFormats(date, format) {
+  if (isEmptyValue(date)) {
+    return undefined
+  }
+  return moment(date).format(format)
 }
 
 /**

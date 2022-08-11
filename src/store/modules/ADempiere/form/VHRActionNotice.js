@@ -20,7 +20,8 @@ import {
   listPayrollConcepts,
   listPayrollMovements,
   savePayrollMovement,
-  deletePayrollMovement
+  deletePayrollMovement,
+  conceptDefinition
 } from '@/api/ADempiere/form/payrollActionNotice.js'
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -51,7 +52,8 @@ const payrollActionNotice = {
     listOptions: [],
     value: null
   },
-  listConcepts: []
+  listConcepts: [],
+  conceptDefinitio: []
 }
 
 export default {
@@ -68,6 +70,9 @@ export default {
     },
     setListConcepts(state, list) {
       state.listConcepts = list
+    },
+    setConceptDefinition(state, attributes) {
+      state.conceptDefinitio = attributes
     }
   },
   actions: {
@@ -102,6 +107,7 @@ export default {
             value: state.employee.value
           })
           dispatch('findListConcepts')
+          dispatch('findPayrollConcepts')
         })
         .catch(error => {
           console.warn(`Error getting listEmployee: ${error.message}. Code: ${error.code}.`)
@@ -171,7 +177,7 @@ export default {
     },
 
     saveMovement({ commit, state, dispatch }, {
-      id,
+      id = 0,
       uuid,
       attributes
     }) {
@@ -202,7 +208,7 @@ export default {
           dispatch('findListConcepts')
         })
         .catch(error => {
-          console.warn(`Error getting listPayrollMovements: ${error.message}. Code: ${error.code}.`)
+          console.warn(`Error getting saveMovement: ${error.message}. Code: ${error.code}.`)
         })
     },
 
@@ -218,7 +224,29 @@ export default {
           dispatch('findListConcepts')
         })
         .catch(error => {
-          console.warn(`Error deletePayrollMovement: ${error.message}. Code: ${error.code}.`)
+          console.warn(`Error deleteConcepts: ${error.message}. Code: ${error.code}.`)
+        })
+    },
+
+    conceptDefinition({ commit }, {
+      id
+    }) {
+      console.log({ id })
+      conceptDefinition({
+        id
+      })
+        .then(response => {
+          console.log({ response })
+          const { attributes } = response
+          const alo = {
+            ...convertValuesToSend(attributes),
+            referenceUuid: attributes[1].value
+          }
+          commit('setConceptDefinition', alo)
+        })
+        .catch(error => {
+          console.log({ error })
+          console.warn(`Error conceptDefinition: ${error.message}. Code: ${error.code}.`)
         })
     }
 
@@ -257,6 +285,10 @@ export default {
      */
     getDataListConcept: (state) => {
       return state.listConcepts
+    },
+
+    getConceptDefinitio: (state) => {
+      return state.conceptDefinitio
     }
   }
 }
