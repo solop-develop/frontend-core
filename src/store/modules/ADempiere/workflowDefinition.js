@@ -22,18 +22,23 @@ const workflow = {
       routeToDelete
     }) {
       return new Promise(resolve => {
+        console.log({
+          uuid: containerUuid,
+          id
+        })
         requestWorkflowMetadata({
           uuid: containerUuid,
           id
         })
           .then(workflowResponse => {
+            console.log({ workflowResponse })
             const panelType = 'workflow'
 
             // Panel for save on store
             const newWorkflow = {
               ...workflowResponse,
               containerUuid,
-              fieldsList: [],
+              // fieldsList: [],
               panelType
             }
 

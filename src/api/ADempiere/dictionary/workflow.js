@@ -34,8 +34,10 @@ export function requestWorkflowMetadata({
       id
     }
   })
-    .then(workflowResponse => {
-      const { convertWorkflow } = require('@/utils/ADempiere/apiConverts/dictionary.js')
-      return convertWorkflow(workflowResponse)
-    })
+  // .then(workflowResponse => {
+  //   console.log({ workflowResponse })
+  //   // const { convertWorkflow } = require('@/utils/ADempiere/apiConverts/dictionary.js')
+  //   // const { convertWorkflow } = require('@/utils/ADempiere/apiConverts/dictionary.js')
+  //   return workflowResponse
+  // })
 }

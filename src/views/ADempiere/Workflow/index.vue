@@ -24,7 +24,7 @@
       />
     </el-header>
     <el-main v-if="isLoadedMetadata">
-      <workflow
+      <panel-workflow
         v-if="!isEmptyValue(node)"
         :node-transition-list="listWorkflowTransition"
         :node-list="node"
@@ -49,13 +49,13 @@
 // import ContextMenu from '@theme/components/ADempiere/ContextMenu'
 // import MainPanel from '@theme/components/ADempiere/Panel'
 import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp'
-import Workflow from '@theme/components/ADempiere/Workflow'
+import panelWorkflow from '@theme/components/ADempiere/Workflow'
 import { getWorkflow } from '@/api/ADempiere/workflow.js'
 
 export default {
   name: 'Workflow',
   components: {
-    Workflow,
+    panelWorkflow,
     TitleAndHelp
   },
   props: {
@@ -72,6 +72,11 @@ export default {
       },
       workflowMetadata: {},
       node: [],
+      currentNode: [{
+        classname: 'delete',
+        id: ''
+      }],
+      transitions: [],
       listWorkflowTransition: [],
       isLoadedMetadata: false,
       panelType: 'workflow'
@@ -85,6 +90,7 @@ export default {
       return this.workflowMetadata.fileName || this.$route.meta.title
     },
     getWorkflow() {
+      console.log(this.$store.getters.getWorkflowUuid(this.workflowUuid), this.workflowUuid)
       return this.$store.getters.getWorkflowUuid(this.workflowUuid)
     },
     nodoWorkflow() {
@@ -101,21 +107,27 @@ export default {
   },
   methods: {
     gettWorkflow() {
+      console.log({ getWorkflow: this.getWorkflow })
       const workflow = this.getWorkflow
       if (workflow) {
         this.workflowMetadata = workflow
         this.isLoadedMetadata = true
       } else {
+        console.log(123, { workflow })
         this.$store.dispatch('getPanelAndFields', {
           containerUuid: this.workflowUuid,
           panelType: this.panelType,
           routeToDelete: this.$route
         }).then(workflowResponse => {
+          console.log({ workflowResponse })
           this.workflowMetadata = workflowResponse
-          this.listWorkflow(this.workflowMetadata)
+          this.listWorkflow(workflowResponse)
         }).finally(() => {
           this.isLoadedMetadata = true
         })
+        console.log(this.getWorkflow)
+        // this.listWorkflow(this.getWorkflow)
+        this.isLoadedMetadata = true
       }
       this.serverWorkflow(this.workflowMetadata)
     },
@@ -135,14 +147,16 @@ export default {
     },
     listWorkflow(workflow) {
       // Highlight Current Node
+      console.log({ workflow })
       this.transitions = []
-      if (!this.isEmptyValue(workflow.node.uuid)) {
+      if (!this.isEmptyValue(workflow.node) && !this.isEmptyValue(workflow.node.uuid)) {
         this.currentNode = [{
           classname: 'delete',
           id: workflow.start_node.uuid
         }]
       }
       const nodes = workflow.workflow_nodes.filter(node => !this.isEmptyValue(node.uuid))
+      console.log({ nodes })
       this.listNodeTransitions(nodes)
       if (!this.isEmptyValue(nodes)) {
         this.node = nodes.map((workflow, key) => {
