@@ -42,6 +42,10 @@ export const HEADER_TABLE = [
     key: 'TextMsg'
   },
   {
+    label: language.t('payrollActionNotice.serviceDate'),
+    key: 'ServiceDate'
+  },
+  {
     label: language.t('payrollActionNotice.description'),
     key: 'Description'
   }
@@ -86,6 +90,10 @@ export const DATA_ATRIBUTES = [
   },
   {
     key: 'ValidFrom',
+    value: ''
+  },
+  {
+    key: 'ServiceDate',
     value: ''
   }
 ]

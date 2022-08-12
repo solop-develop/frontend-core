@@ -53,7 +53,9 @@ const payrollActionNotice = {
     value: null
   },
   listConcepts: [],
-  conceptDefinitio: []
+  conceptDefinitio: {
+    ColumnType: ''
+  }
 }
 
 export default {
@@ -136,7 +138,7 @@ export default {
           dispatch('findListConcepts')
         })
         .catch(error => {
-          console.warn(`Error getting listEmployee: ${error.message}. Code: ${error.code}.`)
+          console.warn(`Error getting listPayrollConcepts: ${error.message}. Code: ${error.code}.`)
         })
     },
 
@@ -231,12 +233,10 @@ export default {
     conceptDefinition({ commit }, {
       id
     }) {
-      console.log({ id })
       conceptDefinition({
         id
       })
         .then(response => {
-          console.log({ response })
           const { attributes } = response
           const alo = {
             ...convertValuesToSend(attributes),
@@ -245,7 +245,6 @@ export default {
           commit('setConceptDefinition', alo)
         })
         .catch(error => {
-          console.log({ error })
           console.warn(`Error conceptDefinition: ${error.message}. Code: ${error.code}.`)
         })
     }

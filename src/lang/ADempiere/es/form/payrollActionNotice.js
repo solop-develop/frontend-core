@@ -21,6 +21,7 @@ const payrollActionNotice = {
   quantity: 'Cantidad',
   amount: 'Monto',
   textMessage: 'Mensaje de texto',
+  serviceDate: 'Fecha de Servicio',
   description: 'Descripción'
 }
 
