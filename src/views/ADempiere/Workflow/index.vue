@@ -44,26 +44,31 @@
 </template>
 
 <script>
+// components and mixins
 // When supporting the workflow, smart browser and reports,
 // the ContextMenu and sticky must be placed in the layout
 // import ContextMenu from '@theme/components/ADempiere/ContextMenu'
 // import MainPanel from '@theme/components/ADempiere/Panel'
 import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp'
 import panelWorkflow from '@theme/components/ADempiere/Workflow'
+
 import { getWorkflow } from '@/api/ADempiere/workflow.js'
 
 export default {
-  name: 'Workflow',
+  name: 'WorkflowView',
+
   components: {
     panelWorkflow,
     TitleAndHelp
   },
+
   props: {
     isEdit: {
       type: Boolean,
       default: false
     }
   },
+
   data() {
     return {
       size: {
@@ -82,6 +87,7 @@ export default {
       panelType: 'workflow'
     }
   },
+
   computed: {
     workflowUuid() {
       return this.$route.meta.uuid
@@ -90,7 +96,6 @@ export default {
       return this.workflowMetadata.fileName || this.$route.meta.title
     },
     getWorkflow() {
-      console.log(this.$store.getters.getWorkflowUuid(this.workflowUuid), this.workflowUuid)
       return this.$store.getters.getWorkflowUuid(this.workflowUuid)
     },
     nodoWorkflow() {
@@ -102,30 +107,28 @@ export default {
       })
     }
   },
+
   created() {
     this.gettWorkflow()
   },
+
   methods: {
     gettWorkflow() {
-      console.log({ getWorkflow: this.getWorkflow })
       const workflow = this.getWorkflow
       if (workflow) {
         this.workflowMetadata = workflow
         this.isLoadedMetadata = true
       } else {
-        console.log(123, { workflow })
         this.$store.dispatch('getPanelAndFields', {
           containerUuid: this.workflowUuid,
           panelType: this.panelType,
           routeToDelete: this.$route
         }).then(workflowResponse => {
-          console.log({ workflowResponse })
           this.workflowMetadata = workflowResponse
           this.listWorkflow(workflowResponse)
         }).finally(() => {
           this.isLoadedMetadata = true
         })
-        console.log(this.getWorkflow)
         // this.listWorkflow(this.getWorkflow)
         this.isLoadedMetadata = true
       }
@@ -147,7 +150,6 @@ export default {
     },
     listWorkflow(workflow) {
       // Highlight Current Node
-      console.log({ workflow })
       this.transitions = []
       if (!this.isEmptyValue(workflow.node) && !this.isEmptyValue(workflow.node.uuid)) {
         this.currentNode = [{
@@ -156,7 +158,6 @@ export default {
         }]
       }
       const nodes = workflow.workflow_nodes.filter(node => !this.isEmptyValue(node.uuid))
-      console.log({ nodes })
       this.listNodeTransitions(nodes)
       if (!this.isEmptyValue(nodes)) {
         this.node = nodes.map((workflow, key) => {
@@ -212,6 +213,7 @@ export default {
   }
 }
 </script>
+
 <style scoped>
   .panel_main {
     height: 100%;
