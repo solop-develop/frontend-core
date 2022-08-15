@@ -611,13 +611,6 @@ const actions = {
     routeToDelete,
     isAdvancedQuery = false
   }) {
-    console.log({
-      parentUuid,
-      containerUuid,
-      panelType,
-      panelMetadata,
-      routeToDelete
-    })
     let executeAction
     switch (panelType) {
       case 'process':
