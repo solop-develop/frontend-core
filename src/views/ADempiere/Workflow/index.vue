@@ -24,7 +24,7 @@
       />
     </el-header>
     <el-main v-if="isLoadedMetadata">
-      <panel-workflow
+      <workflow-diagram
         v-if="!isEmptyValue(node)"
         :node-transition-list="listWorkflowTransition"
         :node-list="node"
@@ -45,12 +45,8 @@
 
 <script>
 // components and mixins
-// When supporting the workflow, smart browser and reports,
-// the ContextMenu and sticky must be placed in the layout
-// import ContextMenu from '@theme/components/ADempiere/ContextMenu'
-// import MainPanel from '@theme/components/ADempiere/Panel'
 import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp'
-import panelWorkflow from '@theme/components/ADempiere/Workflow'
+import WorkflowDiagram from '@theme/components/ADempiere/WorkflowDiagram'
 
 import { getWorkflow } from '@/api/ADempiere/workflow.js'
 
@@ -58,7 +54,7 @@ export default {
   name: 'WorkflowView',
 
   components: {
-    panelWorkflow,
+    WorkflowDiagram,
     TitleAndHelp
   },
 
@@ -157,7 +153,8 @@ export default {
           id: workflow.start_node.uuid
         }]
       }
-      const nodes = workflow.workflow_nodes.filter(node => !this.isEmptyValue(node.uuid))
+      const nodes = workflow.workflow_nodes // .filter(node => !this.isEmptyValue(node.uuid))
+
       this.listNodeTransitions(nodes)
       if (!this.isEmptyValue(nodes)) {
         this.node = nodes.map((workflow, key) => {
@@ -183,15 +180,15 @@ export default {
               if (this.isEmptyValue(nextNode.description)) {
                 this.transitions.push({
                   id: id + key,
-                  target: uuid,
-                  source: nextNode.node_next_uuid
+                  target: nextNode.node_next_uuid,
+                  source: uuid
                 })
               } else {
                 this.transitions.push({
                   id: id + key,
                   label: nextNode.description,
-                  target: uuid,
-                  source: nextNode.node_next_uuid
+                  target: nextNode.node_next_uuid,
+                  source: uuid
                 })
               }
             }

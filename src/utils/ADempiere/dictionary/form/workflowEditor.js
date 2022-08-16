@@ -14,6 +14,29 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+export const WORKFLOW_EDITOR_FORM = 'WFPanel'
+
 export const TABLE_NAME = 'AD_Workflow'
 
 export const COLUMN_NAME = 'AD_Workflow_ID'
+
+export default [
+  // Workflow List
+  {
+    tableName: TABLE_NAME,
+    columnName: COLUMN_NAME,
+    isFromDictionary: true,
+    overwriteDefinition: {
+      size: 24,
+      sequence: 10,
+      // cssClassName: 'price-inquiry',
+      // inputSize: 'large',
+      // handleFocusGained: true,
+      // handleFocusLost: true,
+      // handleActionKeyPerformed: true,
+      isDisplayed: true,
+      isReadOnly: false
+      // componentPath: 'FieldSelect'
+    }
+  }
+]
