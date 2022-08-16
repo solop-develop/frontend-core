@@ -18,6 +18,25 @@
 import { request } from '@/utils/ADempiere/request'
 
 /**
+ * Request workflow definition
+ * @param {string} uuid universally unique identifier
+ * @param {number} id, identifier
+ */
+export function requestWorkflowMetadata({
+  uuid,
+  id
+}) {
+  return request({
+    url: '/workflow/workflow',
+    method: 'get',
+    params: {
+      uuid,
+      id
+    }
+  })
+}
+
+/**
  * Request Document Status List
  * @param {string} tableName
  * @param {number} recordId
