@@ -2,6 +2,8 @@ import {
   workflowActivities,
   runDocAction
 } from '@/api/ADempiere/workflow.js'
+
+import { requestListWorkflowsLogs } from '@/api/ADempiere/window'
 import { isEmptyValue } from '@/utils/ADempiere'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import language from '@/lang'
@@ -14,7 +16,8 @@ const activity = {
   recordCount: 0,
   pageNumber: 0,
   isLoadActivity: false,
-  workflowActionsList: []
+  workflowActionsList: [],
+  workflowLogs: []
 }
 
 export default {
@@ -41,6 +44,14 @@ export default {
     }) {
       Vue.set(state.workflowActionsList, containerUuid, {
         options
+      })
+    },
+    setWorkFlowLogs(state, {
+      containerUuid,
+      list = []
+    }) {
+      Vue.set(state.workflowLogs, containerUuid, {
+        list
       })
     }
   },
@@ -120,6 +131,33 @@ export default {
         .catch(error => {
           console.warn(`Error Run Doc Action: ${error.message}. Code: ${error.code}.`)
         })
+    },
+    searchWorkflowHistory({ commit }, {
+      containerUuid,
+      tableName,
+      recordId,
+      recordUuid
+    }) {
+      console.log({ containerUuid,
+        tableName,
+        recordId,
+        recordUuid
+      })
+      return requestListWorkflowsLogs({
+        tableName,
+        recordId,
+        recordUuid
+      })
+        .then(response => {
+          const { workflowLogsList } = response
+          commit('setWorkFlowLogs', {
+            containerUuid,
+            list: workflowLogsList
+          })
+        })
+        .catch(error => {
+          console.warn(`Error Run Doc Action: ${error.message}. Code: ${error.code}.`)
+        })
     }
   },
   getters: {
@@ -140,6 +178,9 @@ export default {
     },
     getWorkFlowActions: (state) => ({ containerUuid }) => {
       return state.workflowActionsList[containerUuid] || []
+    },
+    getWorkFlowLogs: (state) => ({ containerUuid }) => {
+      return state.workflowLogs[containerUuid] || []
     }
   }
 }

@@ -1254,6 +1254,14 @@ export const containerManager = {
       recordUuid
     })
   },
+  searchWorkflowHistory({ tableName, recordId, recordUuid, containerUuid }) {
+    return store.dispatch('searchWorkflowHistory', {
+      tableName,
+      containerUuid,
+      recordId,
+      recordUuid
+    })
+  },
 
   listChats({ tableName, recordId, recordUuid }) {
     return store.dispatch('listChatEntries', {

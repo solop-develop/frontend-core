@@ -34,7 +34,6 @@ const containerInfo = {
         recordUuid
       })
         .then(response => {
-          console.log({ response })
           commit('setRecordAccess', response)
           return response
         })
