@@ -1,17 +1,20 @@
 import {
-  workflowActivities
+  workflowActivities,
+  runDocAction
 } from '@/api/ADempiere/workflow.js'
 import { isEmptyValue } from '@/utils/ADempiere'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import language from '@/lang'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
+import Vue from 'vue'
 
 const activity = {
   listActivity: [],
   currentActivity: {},
   recordCount: 0,
   pageNumber: 0,
-  isLoadActivity: false
+  isLoadActivity: false,
+  workflowActionsList: []
 }
 
 export default {
@@ -31,6 +34,14 @@ export default {
     },
     setCurrentPage(state, number) {
       state.pageNumber = number
+    },
+    setWorkFlowActions(state, {
+      containerUuid,
+      options = []
+    }) {
+      Vue.set(state.workflowActionsList, containerUuid, {
+        options
+      })
     }
   },
   actions: {
@@ -90,6 +101,25 @@ export default {
     },
     selectedActivity({ commit }, activity) {
       commit('setCurrentActivity', activity)
+    },
+    changeActionsDoc({ commit }, {
+      tableName,
+      id,
+      uuid,
+      docAction
+    }) {
+      return runDocAction({
+        tableName,
+        id,
+        uuid,
+        docAction
+      })
+        .then(response => {
+          console.log({ response })
+        })
+        .catch(error => {
+          console.warn(`Error Run Doc Action: ${error.message}. Code: ${error.code}.`)
+        })
     }
   },
   getters: {
@@ -107,6 +137,9 @@ export default {
     },
     getCurrentPageNumber: (state) => {
       return state.pageNumber
+    },
+    getWorkFlowActions: (state) => ({ containerUuid }) => {
+      return state.workflowActionsList[containerUuid] || []
     }
   }
 }

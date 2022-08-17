@@ -141,7 +141,16 @@ export default defineComponent({
     }
 
     const renderWindowComponent = computed(() => {
-      const windowComponent = () => import('@/views/ADempiere/Window/MultiTabWindow.vue')
+      let windowComponent
+      switch (windowMetadata.value.windowType) {
+        case 'T':
+          windowComponent = () => import('@/views/ADempiere/Window/DocumentWindow.vue')
+          break
+        default:
+          windowComponent = () => import('@/views/ADempiere/Window/MultiTabWindow.vue')
+          break
+      }
+      // const windowComponent = () => import('@/views/ADempiere/Window/MultiTabWindow.vue')
 
       return windowComponent
     })

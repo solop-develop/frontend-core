@@ -162,3 +162,29 @@ export function getWorkflow({
       return listWorkflowActivities
     })
 }
+
+// Run Doc Action
+/**
+ * Request Document Status List
+ * @param {string} tableName
+ * @param {number} id
+ * @param {string} uuid
+ * @param {string} docAction
+ */
+export function runDocAction({
+  tableName,
+  id,
+  uuid,
+  docAction
+}) {
+  return request({
+    url: '/workflow/run-document-action',
+    method: 'get',
+    params: {
+      table_name: tableName,
+      id,
+      uuid,
+      document_action: docAction
+    }
+  })
+}
