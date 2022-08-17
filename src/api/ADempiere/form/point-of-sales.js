@@ -214,6 +214,7 @@ export function updateCustomer({
 }
 
 export function customer({
+  posUuid,
   searchValue,
   value,
   name,
@@ -227,6 +228,7 @@ export function customer({
     method: 'get',
     params: {
       search_value: searchValue,
+      pos_uuid: posUuid,
       value,
       name,
       contact_name: contactName,
@@ -243,11 +245,12 @@ export function customer({
 }
 
 // Get order from uuid
-export function getOrder(orderUuid) {
+export function getOrder(orderUuid, posUuid) {
   return request({
     url: `${config.pointOfSales.endpoint}/order`,
     method: 'get',
     params: {
+      pos_uuid: posUuid,
       order_uuid: orderUuid
     }
   })
@@ -260,8 +263,8 @@ export function getOrder(orderUuid) {
 
 // Create order from POS
 export function deleteOrder({
-  orderUuid
-  // posUuid,
+  orderUuid,
+  posUuid
   // customerUuid,
   // documentTypeUuid,
   // salesRepresentativeUuid
@@ -270,8 +273,8 @@ export function deleteOrder({
     url: `${config.pointOfSales.endpoint}/delete-order`,
     method: 'post',
     data: {
-      order_uuid: orderUuid
-      // pos_uuid: posUuid,
+      order_uuid: orderUuid,
+      pos_uuid: posUuid
       // customer_uuid: customerUuid,
       // document_type_uuid: documentTypeUuid,
       // sales_representative_uuid: salesRepresentativeUuid
@@ -336,6 +339,7 @@ export function listOrders({
 
 // Create order line from order uuid and product
 export function createOrderLine({
+  posUuid,
   orderUuid,
   priceListUuid,
   warehouseUuid,
@@ -350,6 +354,7 @@ export function createOrderLine({
     url: `${config.pointOfSales.endpoint}/create-order-line`,
     method: 'post',
     data: {
+      pos_uuid: posUuid,
       order_uuid: orderUuid,
       product_uuid: productUuid,
       description,
@@ -370,6 +375,7 @@ export function createOrderLine({
 
 // updateOrderLine orders from pos uuid
 export function updateOrderLine({
+  posUuid,
   orderLineUuid,
   description,
   quantity,
@@ -383,6 +389,7 @@ export function updateOrderLine({
     method: 'post',
     data: {
       // is_add_quantity: true,
+      pos_uuid: posUuid,
       order_line_uuid: orderLineUuid,
       description,
       quantity,
@@ -401,12 +408,14 @@ export function updateOrderLine({
 
 // delete Order Line
 export function deleteOrderLine({
+  posUuid,
   orderLineUuid
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/delete-order-line`,
     method: 'post',
     data: {
+      pos_uuid: posUuid,
       order_line_uuid: orderLineUuid
     }
   })
@@ -416,6 +425,7 @@ export function deleteOrderLine({
 }
 
 export function listOrderLines({
+  posUuid,
   orderUuid,
   pageSize,
   pageToken
@@ -424,6 +434,7 @@ export function listOrderLines({
     url: `${config.pointOfSales.endpoint}/order-lines`,
     method: 'get',
     params: {
+      pos_uuid: posUuid,
       order_uuid: orderUuid,
       page_size: pageSize,
       page_token: pageToken
@@ -442,11 +453,12 @@ export function listOrderLines({
     })
 }
 
-export function getKeyLayout({ keyLayoutUuid }) {
+export function getKeyLayout({ keyLayoutUuid, posUuid }) {
   return request({
     url: `${config.pointOfSales.endpoint}/key-layout`,
     method: 'get',
     params: {
+      pos_uuid: posUuid,
       key_layout_uuid: keyLayoutUuid
     }
   })
@@ -586,6 +598,7 @@ export function createPayment({
 // Update Payment
 
 export function updatePayment({
+  posUuid,
   paymentUuid,
   bankUuid,
   referenceNo,
@@ -598,6 +611,7 @@ export function updatePayment({
     url: `${config.pointOfSales.endpoint}/update-payment`,
     method: 'post',
     data: {
+      pos_uuid: posUuid,
       payment_uuid: paymentUuid,
       bank_uuid: bankUuid,
       reference_no: referenceNo,
@@ -615,12 +629,14 @@ export function updatePayment({
 // Delete Payment
 
 export function deletePayment({
+  posUuid,
   paymentUuid
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/delete-payment`,
     method: 'post',
     data: {
+      pos_uuid: posUuid,
       payment_uuid: paymentUuid
     }
   })
@@ -997,6 +1013,7 @@ export function createCustomerBankAccount({
     })
 }
 export function listCustomerBankAccounts({
+  posUuid,
   customerUuid,
   pageToken
 }) {
@@ -1004,6 +1021,7 @@ export function listCustomerBankAccounts({
     url: `${config.pointOfSales.endpoint}/customer-bank-accounts`,
     method: 'get',
     params: {
+      pos_uuid: posUuid,
       customer_uuid: customerUuid,
       page_token: pageToken
     }
@@ -1013,12 +1031,14 @@ export function listCustomerBankAccounts({
     })
 }
 export function daleteCustomerBankAccounts({
+  posUuid,
   customerBankAccountUuid
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/delete-bank-account`,
     method: 'post',
     data: {
+      pos_uuid: posUuid,
       customer_bank_account_uuid: customerBankAccountUuid
     }
   })
@@ -1111,12 +1131,14 @@ export function listRefundReference({
     })
 }
 export function deleteRefundReference({
+  posUuid,
   uuid
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/delete-payment-reference`,
     method: 'post',
     data: {
+      pos_uuid: posUuid,
       uuid
     }
   })
@@ -1132,6 +1154,7 @@ export function deleteRefundReference({
  * @param {string} salesRepresentativeUuid - Sales Representative UUID reference
  */
 export function createShipmentLine({
+  posUuid,
   shipmentUuid,
   orderLineUuid
 }) {
@@ -1139,6 +1162,7 @@ export function createShipmentLine({
     url: `${config.pointOfSales.endpoint}/create-shipment-line`,
     method: 'post',
     data: {
+      pos_uuid: posUuid,
       shipment_uuid: shipmentUuid,
       order_line_uuid: orderLineUuid
     }
@@ -1150,12 +1174,14 @@ export function createShipmentLine({
 
 // Delete Shipment
 export function deleteShipment({
+  posUuid,
   shipmentLineUuid
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/delete-shipment-line`,
     method: 'post',
     data: {
+      pos_uuid: posUuid,
       shipment_line_uuid: shipmentLineUuid
     }
   })
@@ -1166,12 +1192,14 @@ export function deleteShipment({
 
 // List Shipment
 export function shipments({
+  posUuid,
   shipmentUuid
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/shipment-lines`,
     method: 'get',
     params: {
+      pos_uuid: posUuid,
       shipment_uuid: shipmentUuid
     }
   })
@@ -1192,6 +1220,7 @@ export function shipments({
  */
 
 export function processShipment({
+  posUuid,
   shipmentUuid,
   description
 }) {
@@ -1199,6 +1228,7 @@ export function processShipment({
     url: `${config.pointOfSales.endpoint}/process-shipment`,
     method: 'post',
     data: {
+      pos_uuid: posUuid,
       shipment_uuid: shipmentUuid,
       description,
       document_action: 'CO'

@@ -138,13 +138,17 @@ const contextMenu = {
           })
       })
     },
-    listDocumentStatus({ commit }, {
+    listDocumentStatus({ commit, getters }, {
       tableName,
       recordId,
       recordUuid,
       documentAction,
-      documentStatus
+      documentStatus,
+      containerUuid
     }) {
+      if (isEmptyValue(recordUuid)) {
+        recordUuid = getters.getUuidOfContainer(containerUuid)
+      }
       return new Promise(resolve => {
         requestListDocumentStatuses({
           tableName,

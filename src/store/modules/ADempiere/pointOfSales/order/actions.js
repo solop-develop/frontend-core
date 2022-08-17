@@ -129,6 +129,7 @@ export default {
    * @param {number} discountRate DiscountRate Producto
    */
   createOrderLine({ commit, dispatch, rootGetters }, {
+    posUuid,
     orderUuid,
     productUuid,
     chargeUuid,
@@ -137,8 +138,12 @@ export default {
     price,
     discountRate
   }) {
+    if (isEmptyValue(posUuid)) {
+      posUuid = rootGetters.posAttributes.currentPointOfSales.uuid
+    }
     const { currentPriceList, currentWarehouse } = rootGetters.posAttributes.currentPointOfSales
     createOrderLine({
+      posUuid,
       orderUuid,
       priceListUuid: currentPriceList.uuid,
       warehouseUuid: currentWarehouse.uuid,
@@ -170,8 +175,9 @@ export default {
     if (isEmptyValue(orderUuid)) {
       orderUuid = rootGetters.posAttributes.currentPointOfSales.currentOrder.uuid // this.currentOrder.uuid
     }
+    const posUuid = rootGetters.posAttributes.currentPointOfSales.uuid
     if (!isEmptyValue(orderUuid)) {
-      getOrder(orderUuid)
+      getOrder(orderUuid, posUuid)
         .then(orderResponse => {
           dispatch('fillOrde', {
             attribute: orderResponse,
@@ -289,9 +295,10 @@ export default {
   currentOrder({ commit }, findOrder) {
     commit('findOrder', findOrder)
   },
-  findOrderServer({ commit }, orderUuid) {
+  findOrderServer({ commit, rootGetters }, orderUuid) {
     if (typeof orderUuid === 'string' && !isEmptyValue(orderUuid)) {
-      getOrder(orderUuid)
+      const posUuid = rootGetters.posAttributes.currentPointOfSales.uuid
+      getOrder(orderUuid, posUuid)
         .then(responseOrder => {
           commit('findOrder', responseOrder)
         })

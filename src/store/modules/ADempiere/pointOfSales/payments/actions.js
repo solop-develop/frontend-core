@@ -123,8 +123,10 @@ export default {
     const payment = state.paymentBox
     payment.splice(0)
   },
-  searchConversion({ commit }, params) {
+  searchConversion({ commit, rootGetters }, params) {
+    const posUuid = isEmptyValue(params.currentPOS) ? rootGetters.posAttributes.currentPointOfSales.uuid : params.currentPOS.uuid
     return requestGetConversionRate({
+      posUuid,
       conversionTypeUuid: params.conversionTypeUuid,
       currencyFromUuid: params.currencyFromUuid,
       currencyToUuid: params.currencyToUuid,
@@ -143,8 +145,10 @@ export default {
         })
       })
   },
-  conversionDivideRate({ commit, dispatch }, params) {
+  conversionDivideRate({ commit, dispatch, rootGetters }, params) {
+    const posUuid = isEmptyValue(params.currentPOS) ? rootGetters.posAttributes.currentPointOfSales.uuid : params.currentPOS.uuid
     return requestGetConversionRate({
+      posUuid,
       conversionTypeUuid: params.conversionTypeUuid,
       currencyFromUuid: params.currencyFromUuid,
       currencyToUuid: params.currencyToUuid,
@@ -248,6 +252,7 @@ export default {
         })
     } else {
       return updatePayment({
+        posUuid,
         paymentUuid: listPayments.uuid,
         bankUuid,
         referenceNo,
@@ -286,6 +291,7 @@ export default {
     paymentUuid
   }) {
     deletePayment({
+      posUuid,
       paymentUuid
     })
       .then(response => {
@@ -503,10 +509,12 @@ export default {
       })
   },
   listCustomerBankAccounts({ commit, dispatch }, {
+    posUuid,
     customerUuid,
     pageToken
   }) {
     listCustomerBankAccounts({
+      posUuid,
       customerUuid,
       pageToken
     })
@@ -576,6 +584,7 @@ export default {
     uuid
   }) {
     deleteRefundReference({
+      posUuid,
       uuid
     })
       .then(response => {

@@ -26,11 +26,13 @@ export default {
   listOrderLine({ commit }, params) {
     commit('setListOrderLine', params)
   },
-  listOrderLinesFromServer({ commit }, orderUuid) {
+  listOrderLinesFromServer({ commit, rootGetters }, orderUuid) {
     if (isEmptyValue(orderUuid)) {
       return
     }
+    const posUuid = rootGetters.posAttributes.currentPointOfSales.uuid
     listOrderLines({
+      posUuid,
       orderUuid
     })
       .then(response => {

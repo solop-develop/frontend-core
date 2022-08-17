@@ -207,20 +207,20 @@ export default defineComponent({
     watch(recordUuid, (newValue, oldValue) => {
       if (newValue !== oldValue && !isEmptyValue(newValue)) {
         loaDocument()
+        store.dispatch('listDocumentStatus', {
+          tableName: referencesManager.value.getTableName(),
+          recordUuid: recordUuid.value,
+          containerUuid: currentTabUuid.value
+        })
+          .then(response => {
+            const { documentActionsList } = response
+            store.commit('setWorkFlowActions', {
+              containerUuid: currentTabUuid.value,
+              options: documentActionsList
+            })
+          })
       }
     })
-
-    store.dispatch('listDocumentStatus', {
-      tableName: referencesManager.value.getTableName(),
-      recordUuid: recordUuid.value
-    })
-      .then(response => {
-        const { documentActionsList } = response
-        store.commit('setWorkFlowActions', {
-          containerUuid: currentTabUuid.value,
-          options: documentActionsList
-        })
-      })
 
     return {
       recordUuid,

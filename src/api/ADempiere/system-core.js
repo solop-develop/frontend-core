@@ -191,12 +191,14 @@ export function requestCreateBusinessPartner({
 }
 
 export function requestGetBusinessPartner({
+  posUuid,
   searchValue
 }) {
   return request({
     url: '/common/business-partner',
     method: 'get',
     params: {
+      pos_uuid: posUuid,
       search_value: searchValue
     }
   })
@@ -208,6 +210,7 @@ export function requestGetBusinessPartner({
 }
 
 export function requestListBusinessPartner({
+  posUuid,
   searchValue,
   value,
   name,
@@ -224,6 +227,7 @@ export function requestListBusinessPartner({
     url: '/common/business-partners',
     method: 'get',
     params: {
+      pos_uuid: posUuid,
       search_value: searchValue,
       value,
       name,
@@ -258,6 +262,7 @@ export function requestListBusinessPartner({
  * @returns {promise}
  */
 export function requestGetConversionRate({
+  posUuid,
   conversionTypeUuid,
   currencyFromUuid,
   currencyToUuid,
@@ -267,6 +272,7 @@ export function requestGetConversionRate({
     url: '/common/conversion-rate',
     method: 'get',
     params: {
+      pos_uuid: posUuid,
       conversion_type_uuid: conversionTypeUuid,
       currency_from_uuid: currencyFromUuid,
       currency_to_uuid: currencyToUuid,
