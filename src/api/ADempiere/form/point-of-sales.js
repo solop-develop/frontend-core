@@ -1156,7 +1156,8 @@ export function deleteRefundReference({
 export function createShipmentLine({
   posUuid,
   shipmentUuid,
-  orderLineUuid
+  orderLineUuid,
+  quantity
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/create-shipment-line`,
@@ -1164,7 +1165,8 @@ export function createShipmentLine({
     data: {
       pos_uuid: posUuid,
       shipment_uuid: shipmentUuid,
-      order_line_uuid: orderLineUuid
+      order_line_uuid: orderLineUuid,
+      quantity: quantity
     }
   })
     .then(responseShipmentLine => {
