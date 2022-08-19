@@ -14,7 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import language from '@/lang'
 import router from '@/router'
+
+// api request methods
 import {
   getPointOfSales,
   listPointOfSales,
@@ -25,9 +28,10 @@ import {
   listPrices,
   listCurrencies
 } from '@/api/ADempiere/form/point-of-sales.js'
+
+// utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
-import language from '@/lang'
 
 /**
  * Pos Actions
@@ -35,6 +39,7 @@ import language from '@/lang'
 export default {
   /**
    * Load Point of Sale Data from Server
+   * TODO: Unused, removed on FormDefinition component, created hook
    */
   loadDataFromServer({ dispatch, getters }) {
     const PointOfSales = getters.posAttributes.currentPointOfSales
@@ -55,7 +60,7 @@ export default {
         commit('setCurrentPointOfSales', response)
       })
       .catch(error => {
-        console.warn(`listPointOfSalesFromServer: ${error.message}. Code: ${error.code}.`)
+        console.warn(`findPointOfSales: ${error.message}. Code: ${error.code}.`)
         showMessage({
           type: 'error',
           message: error.message,
