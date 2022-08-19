@@ -114,6 +114,7 @@ export default {
       if (workflow) {
         this.workflowMetadata = workflow
         this.isLoadedMetadata = true
+        this.listWorkflow(workflow)
       } else {
         this.$store.dispatch('getPanelAndFields', {
           containerUuid: this.workflowUuid,
