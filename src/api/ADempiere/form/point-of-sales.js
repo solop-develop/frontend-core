@@ -381,7 +381,6 @@ export function updateOrderLine({
   quantity,
   price,
   discountRate,
-  priceListUuid,
   warehouseUuid
 }) {
   return request({
@@ -395,7 +394,6 @@ export function updateOrderLine({
       quantity,
       price,
       discount_rate: discountRate,
-      price_list_uuid: priceListUuid,
       warehouse_uuid: warehouseUuid
     }
   })

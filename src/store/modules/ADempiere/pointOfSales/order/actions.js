@@ -109,6 +109,7 @@ export default {
         dispatch('reloadOrder', { orderUuid: response.uuid })
       })
       .catch(error => {
+        dispatch('reloadOrder', { orderUuid })
         console.error(error.message)
         showMessage({
           type: 'error',
@@ -179,6 +180,7 @@ export default {
     if (!isEmptyValue(orderUuid)) {
       getOrder(orderUuid, posUuid)
         .then(orderResponse => {
+          commit('setCurrentPriceList', orderResponse.priceList)
           dispatch('fillOrde', {
             attribute: orderResponse,
             setToStore: false
