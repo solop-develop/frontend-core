@@ -20,6 +20,7 @@ import language from '@/lang'
 import { requestWorkflowMetadata } from '@/api/ADempiere/workflow'
 
 // utils and helper methods
+import { generateWorkflowDiagram } from '@/utils/ADempiere/dictionary/workflow'
 import { showMessage } from '@/utils/ADempiere/notification'
 
 const workflow = {
@@ -55,6 +56,7 @@ const workflow = {
             const newWorkflow = {
               ...workflowResponse,
               containerUuid,
+              diagramMetadata: generateWorkflowDiagram(workflowResponse),
               // fieldsList: [],
               panelType
             }

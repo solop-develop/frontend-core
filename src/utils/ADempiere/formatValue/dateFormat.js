@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import lang from '@/lang'
 import store from '@/store'
 import moment from 'moment'
 
@@ -155,4 +156,14 @@ export function formatDateToSend(date) {
     return undefined
   }
   return date.slice(0, 10)
+}
+
+/**
+ * Translate date by long value
+ * @param {number} value
+ * @returns {string}
+ */
+export function translateDateByLong(value) {
+  const language = store.getters.language
+  return lang.$d(new Date(value), 'long', language)
 }
