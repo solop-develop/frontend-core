@@ -323,7 +323,7 @@ export default {
       .then(response => {
         showMessage({
           type: 'success',
-          message: response,
+          message: response.result,
           showClose: true
         })
       })
