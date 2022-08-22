@@ -327,6 +327,7 @@ export function getFieldTemplate(overwriteDefinition) {
     contextInfo: undefined,
     isShowedFromUser: false,
     isFixedTableColumn: false,
+    isEnabledOptionsFields: false,
     ...overwriteDefinition
   }
 

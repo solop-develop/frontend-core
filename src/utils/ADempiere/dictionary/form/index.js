@@ -21,11 +21,14 @@ import store from '@/store'
 import { isHiddenField } from '@/utils/ADempiere/references'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
-export function getLookupList({ parentUuid, containerUuid, uuid }) {
+export function getLookupList({ parentUuid, containerUuid, referenceUuid, uuid, columnUuid, searchValue }) {
   return store.dispatch('getLookupListFromServer', {
     parentUuid,
     containerUuid,
-    fieldUuid: uuid
+    referenceUuid,
+    fieldUuid: uuid,
+    columnUuid,
+    searchValue
   })
 }
 

@@ -200,6 +200,7 @@ export function generateField({
     defaultOperator: operator,
     operatorsList,
     // popover's
+    isEnabledOptionsFields: false,
     isColumnDocumentStatus,
     isComparisonField,
     isNumericField,

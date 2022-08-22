@@ -24,6 +24,7 @@ import { showMessage } from '@/utils/ADempiere/notification'
 
 const workflow = {
   state: {
+    // TODO: Change array to object key-value to improve performance
     workflow: []
   },
 
@@ -89,6 +90,11 @@ const workflow = {
     getWorkflowUuid: (state) => (workflowUuid) => {
       return state.workflow.find(
         item => item.uuid === workflowUuid
+      )
+    },
+    getStoredWorkflowById: (state) => (workflowId) => {
+      return state.workflow.find(
+        item => item.id === workflowId
       )
     }
   }
