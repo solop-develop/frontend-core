@@ -168,5 +168,8 @@ export default {
   },
   getNewCustomer: (state) => {
     return state.newCustomer
+  },
+  getListWarehouseLine: (state) => {
+    return state.listWarehouse
   }
 }

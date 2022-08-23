@@ -15,7 +15,8 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import {
-  listOrderLines
+  listOrderLines,
+  listStocks
 } from '@/api/ADempiere/form/point-of-sales.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
@@ -93,5 +94,51 @@ export default {
   },
   currentLine({ commit }, currentLine) {
     commit('setLine', currentLine)
+  },
+  findWarehouse({ commit, rootGetters }, {
+    value,
+    sku
+  }) {
+    const posUuid = rootGetters.posAttributes.currentPointOfSales.uuid
+    return listStocks({
+      posUuid,
+      value,
+      sku
+    })
+      .then(response => {
+        const list = response.stocks.map(stock => {
+          return {
+            label: stock.warehouse_name,
+            id: stock.warehouse_id,
+            uuid: stock.warehouse_uuid,
+            attributeName: stock.attribute_name,
+            qty: stock.qty
+          }
+        })
+        const options = []
+
+        list.forEach(element => {
+          if (isEmptyValue(options)) {
+            options.push({
+              ...element
+            })
+          }
+          const currentStock = options.find(stock => stock.id === element.id)
+          const index = options.findIndex(stock => stock.id === element.id)
+          if (!isEmptyValue(currentStock) && !isEmptyValue(options)) {
+            options[index].qty = currentStock.qty + element.qty
+          }
+          if (isEmptyValue(currentStock)) {
+            options.push({
+              ...element
+            })
+          }
+        })
+        commit('setListWarehouse', options)
+      })
+      .catch(error => {
+        commit('setListWarehouse', [])
+        console.warn(`-List Warehouse Error ${error.code}: ${error.message}.`)
+      })
   }
 }

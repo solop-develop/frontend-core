@@ -27,5 +27,8 @@ export default {
   },
   pin(state, pin) {
     state.validatePin = pin
+  },
+  setListWarehouse(state, list) {
+    state.listWarehouse = list
   }
 }

@@ -1480,3 +1480,22 @@ export function availableSellers({
       return camelizeObjectKeys(response)
     })
 }
+
+export function listStocks({
+  posUuid,
+  value,
+  sku
+}) {
+  return request({
+    url: `${config.pointOfSales.endpoint}/stocks`,
+    method: 'get',
+    params: {
+      pos_uuid: posUuid,
+      value,
+      sku
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
