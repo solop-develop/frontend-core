@@ -1053,13 +1053,15 @@ export function daleteCustomerBankAccounts({
 export function createShipment({
   posUuid,
   orderUuid,
-  salesRepresentativeUuid
+  salesRepresentativeUuid,
+  isCreateLinesFromOrder
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/create-shipment`,
     method: 'post',
     data: {
       pos_uuid: posUuid,
+      is_create_lines_from_order: isCreateLinesFromOrder,
       order_uuid: orderUuid,
       sales_representative_uuid: salesRepresentativeUuid
     }
