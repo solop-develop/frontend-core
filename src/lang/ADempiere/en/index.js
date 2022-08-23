@@ -407,6 +407,7 @@ export default {
           copyOrder: 'Copy Order',
           createNewReturnOrder: 'Create a new return order',
           confirmDelivery: 'Confirm Delivery',
+          deliverAllProducts: 'Deliver all products',
           emptyProductDelivery: 'Product not in Order'
         },
         cashManagement: {

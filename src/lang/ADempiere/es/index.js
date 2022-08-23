@@ -382,6 +382,7 @@ export default {
           copyOrder: 'Copiar Orden',
           createNewReturnOrder: 'Crear una nueva orden de devolución',
           confirmDelivery: 'Confirmar Entrega',
+          deliverAllProducts: 'Entrega todos los productos',
           emptyProductDelivery: 'Producto no se Encuentra en la Orden'
         },
         cashManagement: {
