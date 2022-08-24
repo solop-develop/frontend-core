@@ -132,7 +132,8 @@ export default {
           }
           if (isEmptyValue(currentStock)) {
             options.push({
-              ...element
+              ...element,
+              sumaryQty: [element.qty]
             })
           }
         })
