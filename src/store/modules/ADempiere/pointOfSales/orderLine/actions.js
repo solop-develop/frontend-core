@@ -18,8 +18,12 @@ import {
   listOrderLines,
   listStocks
 } from '@/api/ADempiere/form/point-of-sales.js'
+
+// utils and helper methods
+import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
+
 /**
  * Order Line Actions
  */
@@ -138,9 +142,13 @@ export default {
           }
         })
         const listStock = options.map(list => {
+          const sumaryQty = list.sumaryQty.reduce((a, b) => a + b, 0)
+
           return {
             ...list,
-            sumaryQty: list.sumaryQty.reduce((a, b) => a + b, 0)
+            sumaryQty: formatQuantity({
+              value: sumaryQty
+            })
           }
         })
         commit('setListWarehouse', listStock)
