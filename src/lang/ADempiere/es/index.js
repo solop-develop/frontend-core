@@ -377,6 +377,7 @@ export default {
           cancelSaleTransaction: 'Anular Transacción de Venta',
           createPos: 'Crear Retiro de Punto de Venta',
           print: 'Imprimir Documento',
+          preview: 'Ver Vista Previa',
           cancelOrder: 'Cancelar Orden',
           orderRemoved: 'Orden Borrada',
           copyOrder: 'Copiar Orden',

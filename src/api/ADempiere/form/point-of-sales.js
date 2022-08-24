@@ -520,6 +520,23 @@ export function printTicket({
     })
 }
 
+export function printTicketPreviwer({
+  posUuid,
+  orderUuid
+}) {
+  return request({
+    url: `${config.pointOfSales.endpoint}/print-preview`,
+    method: 'post',
+    data: {
+      pos_uuid: posUuid,
+      order_uuid: orderUuid
+    }
+  })
+    .then(printTicketPreviwer => {
+      return printTicketPreviwer
+    })
+}
+
 export function generateImmediateInvoice({
   posId,
   posUuid

@@ -402,6 +402,7 @@ export default {
           cancelSaleTransaction: 'Cancel Sale Transaction',
           createPos: 'Create Point of Sale Withdrawal',
           print: 'Print Document',
+          preview: 'View Preview',
           cancelOrder: 'Cancel Order',
           orderRemoved: 'Order Deleted',
           copyOrder: 'Copy Order',

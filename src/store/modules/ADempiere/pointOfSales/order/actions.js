@@ -21,7 +21,8 @@ import {
   updateOrder,
   createOrderLine,
   listOrders,
-  printTicket
+  printTicket,
+  printTicketPreviwer
 } from '@/api/ADempiere/form/point-of-sales.js'
 
 // utils and helper methods
@@ -316,7 +317,7 @@ export default {
     commit('findOrder', {})
   },
   printTicket({ commit, dispatch }, { posUuid, orderUuid }) {
-    printTicket({
+    return printTicket({
       posUuid,
       orderUuid
     })
@@ -326,6 +327,29 @@ export default {
           message: response.result,
           showClose: true
         })
+        return response
+      })
+      .catch(error => {
+        console.warn(error.message)
+        showMessage({
+          type: 'error',
+          message: error.message,
+          showClose: true
+        })
+      })
+  },
+  printTicketPreviwer({ commit, dispatch }, { posUuid, orderUuid }) {
+    return printTicketPreviwer({
+      posUuid,
+      orderUuid
+    })
+      .then(response => {
+        showMessage({
+          type: 'success',
+          message: response.result,
+          showClose: true
+        })
+        return response
       })
       .catch(error => {
         console.warn(error.message)
