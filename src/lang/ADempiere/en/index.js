@@ -475,9 +475,9 @@ export default {
           addBillingAddress: 'Add Billing Address',
           billingAddress: 'Billing Address',
           shippingAddress: 'Shipping Address',
-          withoutSetting: 'Sin Establecer',
+          withoutSetting: 'Without Setting',
           taxId: 'Tax Identification',
-          searchValue: 'Valor de la Búsqueda',
+          searchValue: 'Search Value',
           address: {
             edit: 'Edit',
             selectAddress: 'Select Address',
