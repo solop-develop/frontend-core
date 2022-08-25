@@ -318,7 +318,6 @@ export default {
   },
   printTicket({ commit, dispatch, rootGetters }, { posUuid, orderUuid }) {
     const isAllowsPrintDocument = rootGetters.posAttributes.currentPointOfSales.isAllowsPrintDocument
-    console.log({ isAllowsPrintDocument })
     if (!isAllowsPrintDocument) {
       return
     }
