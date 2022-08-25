@@ -61,6 +61,7 @@ export default {
         dispatch('fillOrde', { attribute: order })
 
         commit('setIsReloadListOrders')
+        commit('customer', {})
         return order
       })
       .catch(error => {

@@ -79,7 +79,6 @@ const businessPartner = {
         pageToken
       })
         .then(responseBusinessPartnerList => {
-          console.log('listBPartnerFromServer', responseBusinessPartnerList)
           commit('setBusinessPartnersList', {
             ...responseBusinessPartnerList,
             isLoaded: true,
