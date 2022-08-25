@@ -452,6 +452,7 @@ export default {
           shippingAddress: 'Dirección de Envío',
           withoutSetting: 'Sin Establecer',
           taxId: 'Identificación Fiscal',
+          searchValue: 'Valor de la Búsqueda',
           address: {
             edit: 'Editar',
             selectAddress: 'Seleccionar Dirección',

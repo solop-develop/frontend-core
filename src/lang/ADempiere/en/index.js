@@ -477,6 +477,7 @@ export default {
           shippingAddress: 'Shipping Address',
           withoutSetting: 'Sin Establecer',
           taxId: 'Tax Identification',
+          searchValue: 'Valor de la Búsqueda',
           address: {
             edit: 'Edit',
             selectAddress: 'Select Address',
