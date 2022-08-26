@@ -30,6 +30,7 @@ import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
+import { translateDateByLong } from '@/utils/ADempiere/formatValue/dateFormat'
 
 export default defineComponent({
   name: 'ProcessActivity',
@@ -128,9 +129,7 @@ export default defineComponent({
         }
       })
     })
-    const language = computed(() => {
-      return store.getters.language
-    })
+
     const isLoadProcess = ref(true)
     onMounted(() => {
       store.dispatch('getSessionProcessFromServer', {
@@ -228,9 +227,6 @@ export default defineComponent({
       return title
     }
 
-    const translateDate = (value) => {
-      return lang.d(new Date(value), 'long', language.value)
-    }
     const currentKey = ref(0)
     const showkey = (value) => {
       if (value === currentKey.value) {
@@ -253,14 +249,13 @@ export default defineComponent({
       getProcessLogSuccess,
       getProcessLogError,
       getProcessLogProcessing,
-      language,
       // methods
       showkey,
       handleCommand,
       checkStatus,
       generateTitle,
       findTranslation,
-      translateDate,
+      translateDateByLong,
       setProcessParameters
     }
   }

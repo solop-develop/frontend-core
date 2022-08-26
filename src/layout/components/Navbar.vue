@@ -91,7 +91,6 @@ export default {
   data() {
     return {
       user: {},
-      listWindow: [],
       isMenuMobile: false,
       driver: null
     }
@@ -99,12 +98,6 @@ export default {
   computed: {
     isMobile() {
       return this.$store.state.app.device === 'mobile'
-    },
-    isShowedPOSKeyLaout() {
-      return this.$store.getters.getShowPOSKeyLayout
-    },
-    showCollection() {
-      return this.$store.getters.getShowCollectionPos
     },
     showGuide() {
       const typeViews = this.$route.meta.type

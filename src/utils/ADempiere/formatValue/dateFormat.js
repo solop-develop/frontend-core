@@ -165,5 +165,5 @@ export function formatDateToSend(date) {
  */
 export function translateDateByLong(value) {
   const language = store.getters.language
-  return lang.$d(new Date(value), 'long', language)
+  return lang.d(new Date(value), 'long', language)
 }

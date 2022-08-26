@@ -118,7 +118,7 @@
                     </el-form>
                   </div>
                 </el-collapse-transition>
-                <p style="padding-left: 1%;color: cadetblue;margin: 0px;"> # {{ translateDate(activity.lastRun) }} </p>
+                <p style="padding-left: 1%;color: cadetblue;margin: 0px;"> # {{ translateDateByLong(activity.lastRun) }} </p>
               </el-card>
             </el-timeline-item>
           </el-timeline>
@@ -214,7 +214,7 @@
                     </el-form>
                   </div>
                 </el-collapse-transition>
-                <p style="padding-left: 1%;color: cadetblue;margin: 0px;"> # {{ translateDate(activity.lastRun) }} </p>
+                <p style="padding-left: 1%;color: cadetblue;margin: 0px;"> # {{ translateDateByLong(activity.lastRun) }} </p>
               </el-card>
             </el-timeline-item>
           </el-timeline>
@@ -312,7 +312,7 @@
                     </el-form>
                   </div>
                 </el-collapse-transition>
-                <p style="padding-left: 1%;color: cadetblue;margin: 0px;"> # {{ translateDate(activity.lastRun) }} </p>
+                <p style="padding-left: 1%;color: cadetblue;margin: 0px;"> # {{ translateDateByLong(activity.lastRun) }} </p>
               </el-card>
             </el-timeline-item>
           </el-timeline>
