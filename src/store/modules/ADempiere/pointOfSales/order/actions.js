@@ -329,7 +329,7 @@ export default {
       .then(response => {
         showMessage({
           type: 'success',
-          message: response.result,
+          message: response,
           showClose: true
         })
         return response
