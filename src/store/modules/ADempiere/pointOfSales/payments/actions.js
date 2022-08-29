@@ -208,7 +208,7 @@ export default {
     currencyUuid
   }) {
     const listPayments = getters.getListPayments.payments.find(payment => {
-      if ((payment.paymentMethodUuid === paymentMethodUuid) && (payment.tenderTypeCode === 'X') && (currencyUuid === payment.currencyUuid)) {
+      if ((payment.paymentMethod.uuid === paymentMethodUuid) && (payment.tenderTypeCode === 'X') && (currencyUuid === payment.currency.uuid)) {
         return payment
       }
       return undefined
