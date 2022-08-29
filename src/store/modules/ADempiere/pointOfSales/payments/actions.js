@@ -380,7 +380,7 @@ export default {
       currencyUuid
     })
   },
-  sendCreateCustomerAccount({ commit, dispatch }, {
+  sendCreateCustomerAccount({ commit, dispatch, getters }, {
     customerAccount,
     posUuid,
     orderUuid,
@@ -395,39 +395,81 @@ export default {
     paymentMethodUuid,
     currencyUuid
   }) {
-    return createPayment({
-      customerAccount,
-      posUuid,
-      orderUuid,
-      invoiceUuid,
-      bankUuid,
-      referenceNo,
-      description,
-      amount,
-      convertedAmount,
-      paymentDate,
-      tenderTypeCode,
-      paymentMethodUuid,
-      currencyUuid,
-      isRefund: true
+    const listPayments = getters.getListPayments.payments.find(payment => {
+      console.log({ payment })
+      if (payment.isRefund && (payment.paymentMethod.uuid === paymentMethodUuid) && (payment.tenderTypeCode === 'X') && (currencyUuid === payment.currency.uuid)) {
+        return payment
+      }
+      return undefined
     })
-      .then(response => {
-        const orderUuid = response.orderUuid
-        dispatch('listPayments', { posUuid, orderUuid })
-        return {
-          ...response,
-          type: 'success'
-        }
+    if (isEmptyValue(listPayments)) {
+      return createPayment({
+        customerAccount,
+        posUuid,
+        orderUuid,
+        invoiceUuid,
+        bankUuid,
+        referenceNo,
+        description,
+        amount,
+        convertedAmount,
+        paymentDate,
+        tenderTypeCode,
+        paymentMethodUuid,
+        currencyUuid,
+        isRefund: true
       })
-      .catch(error => {
-        console.warn(`ListPaymentsFromServer: ${error.message}. Code: ${error.code}.`)
-        showMessage({
-          type: 'error',
-          message: error.message,
-          showClose: true
+        .then(response => {
+          const orderUuid = response.orderUuid
+          dispatch('listPayments', { posUuid, orderUuid })
+          return {
+            ...response,
+            type: 'success'
+          }
         })
-        return { type: 'error' }
+        .catch(error => {
+          console.warn(`ListPaymentsFromServer: ${error.message}. Code: ${error.code}.`)
+          showMessage({
+            type: 'error',
+            message: error.message,
+            showClose: true
+          })
+          return { type: 'error' }
+        })
+    } else {
+      return updatePayment({
+        posUuid,
+        paymentUuid: listPayments.uuid,
+        bankUuid,
+        referenceNo,
+        description,
+        amount: listPayments.amount + amount,
+        paymentDate,
+        paymentMethodUuid,
+        tenderTypeCode
       })
+        .then(response => {
+          const orderUuid = response.order_uuid
+          dispatch('listPayments', { posUuid, orderUuid })
+          dispatch('reloadOrder', { posUuid, orderUuid })
+          return {
+            ...response,
+            type: 'Success'
+          }
+        })
+        .catch(error => {
+          console.warn(`ListPaymentsFromServer: ${error.message}. Code: ${error.code}.`)
+          showMessage({
+            type: 'error',
+            message: error.message,
+            showClose: true
+          })
+          return {
+            ...error,
+            type: 'error'
+          }
+        })
+    }
   },
   /**
   * Refund payment at a later time
