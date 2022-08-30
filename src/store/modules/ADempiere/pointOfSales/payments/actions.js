@@ -170,11 +170,6 @@ export default {
       })
       .catch(error => {
         console.warn(`conversionDivideRate: ${error.message}. Code: ${error.code}.`)
-        showMessage({
-          type: 'error',
-          message: error.message,
-          showClose: true
-        })
       })
   },
   conversionDivideRate({ commit, dispatch, getters, rootGetters }, params) {
