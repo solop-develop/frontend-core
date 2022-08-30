@@ -16,7 +16,8 @@
 
 import {
   listOrderLines,
-  listStocks
+  listStocks,
+  listUom
 } from '@/api/ADempiere/form/point-of-sales.js'
 
 // utils and helper methods
@@ -156,6 +157,21 @@ export default {
       .catch(error => {
         commit('setListWarehouse', [])
         console.warn(`-List Warehouse Error ${error.code}: ${error.message}.`)
+      })
+  },
+  findUom({ commit, rootGetters }, {
+    productId
+  }) {
+    const posUuid = rootGetters.posAttributes.currentPointOfSales.uuid
+    return listUom({
+      posUuid,
+      productId
+    })
+      .then(response => {
+        return response
+      })
+      .catch(error => {
+        console.warn(`-List Uom Error ${error.code}: ${error.message}.`)
       })
   }
 }

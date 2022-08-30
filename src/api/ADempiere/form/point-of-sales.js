@@ -381,6 +381,7 @@ export function updateOrderLine({
   quantity,
   price,
   discountRate,
+  uomUuid,
   warehouseUuid
 }) {
   return request({
@@ -394,6 +395,7 @@ export function updateOrderLine({
       quantity,
       price,
       discount_rate: discountRate,
+      uom_uuid: uomUuid,
       warehouse_uuid: warehouseUuid
     }
   })
@@ -1514,6 +1516,23 @@ export function listStocks({
       pos_uuid: posUuid,
       value,
       sku
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+export function listUom({
+  posUuid,
+  productId
+}) {
+  return request({
+    url: 'common/list-product-conversion',
+    method: 'get',
+    params: {
+      pos_uuid: posUuid,
+      product_id: productId
     }
   })
     .then(response => {
