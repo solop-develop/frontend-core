@@ -28,6 +28,7 @@ import smartBrowser from './smartBrowser'
 import window from './window'
 import actionNotice from './form/actionNotice'
 import payrollActionNotice from './form/payrollActionNotice'
+import pointOfSales from './form/pointOfSales'
 
 export default {
   actionMenu,
@@ -41,6 +42,7 @@ export default {
   smartBrowser,
   actionNotice,
   payrollActionNotice,
+  pointOfSales,
 
   language: 'Language',
   notifications: {

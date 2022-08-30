@@ -14,6 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import lang from '@/lang'
+
+// api request methods
 import {
   requestGetConversionRate,
   createPayment,
@@ -29,6 +32,9 @@ import {
   listRefundReference,
   deleteRefundReference
 } from '@/api/ADempiere/form/point-of-sales.js'
+
+// utils and helper methods
+import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 
@@ -123,7 +129,7 @@ export default {
     const payment = state.paymentBox
     payment.splice(0)
   },
-  searchConversion({ commit, rootGetters }, params) {
+  searchConversion({ commit, getters, rootGetters }, params) {
     const posUuid = isEmptyValue(params.currentPOS) ? rootGetters.posAttributes.currentPointOfSales.uuid : params.currentPOS.uuid
     return requestGetConversionRate({
       posUuid,
@@ -133,6 +139,29 @@ export default {
       conversionDate: params.conversionDate
     })
       .then(response => {
+        if (isEmptyValue(response) || response.id <= 0) {
+          let conversionDate = params.conversionDate
+          if (isEmptyValue(conversionDate)) {
+            conversionDate = formatDate(new Date())
+          }
+          const currencyFrom = getters.getCurrenciesList.find(currency => {
+            return currency.uuid === params.currencyFromUuid
+          })
+          const currencyTo = getters.getCurrenciesList.find(currency => {
+            return currency.uuid === params.currencyToUuid
+          })
+
+          showMessage({
+            type: 'warning',
+            message: lang.t('pointOfSales.conversionRate.withoutConversionRate') + conversionDate + ', ' +
+              currencyFrom.currency_symbol + ' => ' + currencyTo.currency_symbol
+          })
+          console.warn(
+            lang.t('pointOfSales.conversionRate.withoutConversionRate') + conversionDate + ', ' +
+            currencyFrom.currency_symbol + ' => ' + currencyTo.currency_symbol
+          )
+        }
+
         commit('addConversionToList', response)
         return response
       })
@@ -145,7 +174,7 @@ export default {
         })
       })
   },
-  conversionDivideRate({ commit, dispatch, rootGetters }, params) {
+  conversionDivideRate({ commit, dispatch, getters, rootGetters }, params) {
     const posUuid = isEmptyValue(params.currentPOS) ? rootGetters.posAttributes.currentPointOfSales.uuid : params.currentPOS.uuid
     return requestGetConversionRate({
       posUuid,
@@ -155,6 +184,28 @@ export default {
       conversionDate: params.conversionDate
     })
       .then(response => {
+        if (isEmptyValue(response) || response.id <= 0) {
+          let conversionDate = params.conversionDate
+          if (isEmptyValue(conversionDate)) {
+            conversionDate = formatDate(new Date())
+          }
+          const currencyFrom = getters.getCurrenciesList.find(currency => {
+            return currency.uuid === params.currencyFromUuid
+          })
+          const currencyTo = getters.getCurrenciesList.find(currency => {
+            return currency.uuid === params.currencyToUuid
+          })
+
+          showMessage({
+            type: 'warning',
+            message: lang.t('pointOfSales.conversionRate.withoutConversionRate') + conversionDate + ', ' +
+              currencyFrom.currency_symbol + ' => ' + currencyTo.currency_symbol
+          })
+          console.warn(
+            lang.t('pointOfSales.conversionRate.withoutConversionRate') + conversionDate + ', ' +
+            currencyFrom.currency_symbol + ' => ' + currencyTo.currency_symbol
+          )
+        }
         commit('setFieldCurrency', response.currencyTo)
         if (!isEmptyValue(response.currencyTo)) {
           const currency = {

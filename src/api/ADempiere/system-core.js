@@ -254,7 +254,7 @@ export function requestListBusinessPartner({
 }
 
 /**
- * TODO: Add uuid support
+ * Get currency rate
  * @param {string} conversionTypeUuid
  * @param {string} currencyFromUuid
  * @param {string} currencyToUuid
