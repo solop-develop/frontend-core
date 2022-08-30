@@ -382,6 +382,7 @@ export function updateOrderLine({
   price,
   discountRate,
   uomUuid,
+  isAddQuantity,
   warehouseUuid
 }) {
   return request({
@@ -396,6 +397,7 @@ export function updateOrderLine({
       price,
       discount_rate: discountRate,
       uom_uuid: uomUuid,
+      is_add_quantity: isAddQuantity,
       warehouse_uuid: warehouseUuid
     }
   })
@@ -586,7 +588,9 @@ export function createPayment({
   paymentMethodUuid,
   chargeUuid,
   isRefund,
-  currencyUuid
+  currencyUuid,
+  collectingAgentUuid,
+  referenceBankAccountUuid
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/create-payment`,
@@ -604,7 +608,9 @@ export function createPayment({
       tender_type_code: tenderTypeCode,
       payment_method_uuid: paymentMethodUuid,
       is_refund: isRefund,
-      currency_uuid: currencyUuid
+      currency_uuid: currencyUuid,
+      collecting_agent_uuid: collectingAgentUuid,
+      reference_bank_account_uuid: referenceBankAccountUuid
     }
   })
     .then(createPaymentResponse => {
@@ -622,7 +628,8 @@ export function updatePayment({
   description,
   amount,
   paymentDate,
-  tenderTypeCode
+  tenderTypeCode,
+  referenceBankAccountUuid
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/update-payment`,
@@ -635,7 +642,8 @@ export function updatePayment({
       description: description,
       amount: amount,
       payment_date: paymentDate,
-      tender_type_code: tenderTypeCode
+      tender_type_code: tenderTypeCode,
+      reference_bank_account_uuid: referenceBankAccountUuid
     }
   })
     .then(updatePaymentResponse => {
