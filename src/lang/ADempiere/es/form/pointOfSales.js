@@ -17,8 +17,12 @@
  */
 
 const pointOfSales = {
+  collection: {
+    chargeAmount: 'Cargo',
+    installmentAmount: 'Abono'
+  },
   conversionRate: {
-    withoutConversionRate: 'No existe tasa de cambio registrada al dia '
+    withoutConversionRate: 'No existe tasa de cambio registrada al día '
   }
 }
 
