@@ -131,7 +131,7 @@ export default {
   },
   searchConversion({ commit, getters, rootGetters }, params) {
     const posUuid = isEmptyValue(params.currentPOS) ? rootGetters.posAttributes.currentPointOfSales.uuid : params.currentPOS.uuid
-    if (!isEmptyValue(params.currencyToUuid)) {
+    if (isEmptyValue(params.currencyToUuid)) {
       return
     }
     return requestGetConversionRate({
