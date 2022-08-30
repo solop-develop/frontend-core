@@ -396,7 +396,6 @@ export default {
     currencyUuid
   }) {
     const listPayments = getters.getListPayments.payments.find(payment => {
-      console.log({ payment })
       if (payment.isRefund && (payment.paymentMethod.uuid === paymentMethodUuid) && (payment.tenderTypeCode === 'X') && (currencyUuid === payment.currency.uuid)) {
         return payment
       }
