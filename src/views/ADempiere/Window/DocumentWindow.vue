@@ -187,8 +187,8 @@ export default defineComponent({
     })
     const additionalOptions = ref({})
 
-    function loaDocument(params) {
-      if (isEmptyValue(recordUuid.value)) {
+    function loaDocument() {
+      if (isEmptyValue(recordUuid.value) || recordUuid.value === 'create-new') {
         return
       }
       store.dispatch('listDocumentActionStatus', {
@@ -205,7 +205,7 @@ export default defineComponent({
     }
 
     watch(recordUuid, (newValue, oldValue) => {
-      if (newValue !== oldValue && !isEmptyValue(newValue)) {
+      if (newValue !== oldValue && !isEmptyValue(newValue) && newValue !== 'create-new') {
         loaDocument()
         store.dispatch('listDocumentStatus', {
           tableName: referencesManager.value.getTableName(),
