@@ -15,6 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import Vue from 'vue'
+import lang from '@/lang'
 
 // api request methods
 import { requestLookupList } from '@/api/ADempiere/window.js'
@@ -22,6 +23,7 @@ import { requestLookupList } from '@/api/ADempiere/window.js'
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { getContextAttributes, generateContextKey } from '@/utils/ADempiere/contextUtils.js'
+import { showMessage } from '@/utils/ADempiere/notification'
 
 const initStateLookup = {
   lookupItem: {},
@@ -172,6 +174,10 @@ const lookupManager = {
             resolve(optionsList)
           })
           .catch(error => {
+            showMessage({
+              message: lang.t('login.unexpectedError') + '\n' + error.message,
+              type: 'error'
+            })
             console.warn(`Get Lookup List, Select Base - Error ${error.code}: ${error.message}.`)
           })
       })
