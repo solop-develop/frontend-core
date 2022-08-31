@@ -510,6 +510,9 @@ export default {
         noDayRate: 'No daily rate has been generated for the currency.',
         refund: 'Refund',
         paymentMethods: 'Payment Methods',
+        bankAcount: 'Bank Acount',
+        isCashWith: 'Use Cash Funds',
+        transferFunds: 'Transfer Funds',
         emptyRate: 'No conversion rate to date',
         Currency: 'Currency',
         TenderType: {

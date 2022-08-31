@@ -1512,6 +1512,21 @@ export function availableSellers({
     })
 }
 
+export function availableCash({
+  posUuid
+}) {
+  return request({
+    url: `${config.pointOfSales.endpoint}/available-cash`,
+    method: 'get',
+    params: {
+      pos_uuid: posUuid
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
 export function listStocks({
   posUuid,
   value,
