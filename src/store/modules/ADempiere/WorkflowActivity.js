@@ -138,11 +138,6 @@ export default {
       recordId,
       recordUuid
     }) {
-      console.log({ containerUuid,
-        tableName,
-        recordId,
-        recordUuid
-      })
       return requestListWorkflowsLogs({
         tableName,
         recordId,
