@@ -16,9 +16,7 @@ jobs:
   build-app:
     name: Build dist ADempiere-Vue
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14.x]
+
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
@@ -26,7 +24,7 @@ jobs:
       - name: Node configuration
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 14.x
           cache: 'yarn'
 
       - name: Set tag version into config file
@@ -156,9 +154,7 @@ jobs:
   build-docs:
     name: Build dist ADempiere-Vue docs
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14.x]
+
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
@@ -166,7 +162,7 @@ jobs:
       - name: Node configuration
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 14.x
           cache: 'yarn'
 
       - name: Enable https to install packages
