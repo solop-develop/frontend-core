@@ -23,7 +23,12 @@ const pointOfSales = {
   },
   conversionRate: {
     withoutConversionRate: 'There is no current exchange rate '
-  }
+  },
+  keyLayout: {
+    quantity: 'Quantity'
+  },
+  withoutPOSTerminal: 'Without POS Terminal',
+  withoutPriceList: 'Without Price List'
 }
 
 export default pointOfSales

@@ -96,6 +96,11 @@ export function showMessage({ type = 'success', message, duration = 0 }) {
     delay = duration
   }
 
+  if (type === 'warn') {
+    console.warn(message)
+  } else if (type === 'error') {
+    console.error(message)
+  }
   return Message({
     message,
     type,
