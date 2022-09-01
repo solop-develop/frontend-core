@@ -1,7 +1,7 @@
 # This workflow will run tests using node and then publish a package to GitHub Container Registry and Docker Hub Regitry when a pushed into main branches
 # This file was contributed by EdwinBetanc0urt@outlook.com from ERP Consultores y Asociados, C.A
 
-name: Push Main Branches
+name: Continuous Integration
 
 on:
   # Triggers the workflow on push events but only for the develop branch
@@ -22,9 +22,7 @@ jobs:
   build-app:
     name: Build dist adempiere-vue
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14.x]
+
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
@@ -32,7 +30,7 @@ jobs:
       - name: Node configuration
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 14.x
           cache: 'yarn'
 
       - name: Enable https to install packages
