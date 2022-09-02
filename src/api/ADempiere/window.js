@@ -73,7 +73,7 @@ export function requestLookupList({
       column_uuid: columnUuid,
       // Page Data
       pageToken,
-      pageSize
+      page_size: pageSize
     }
   })
     .then(lookupListResponse => {
