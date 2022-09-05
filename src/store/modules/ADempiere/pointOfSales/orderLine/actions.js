@@ -46,6 +46,7 @@ export default {
           return {
             ...lineItem,
             quantityOrdered: lineItem.quantity,
+            quantityOrderedLine: lineItem.quantityOrdered,
             priceActual: lineItem.price,
             discount: lineItem.discountRate,
             product: {
