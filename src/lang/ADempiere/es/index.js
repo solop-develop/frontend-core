@@ -419,6 +419,8 @@ export default {
       tableProduct: {
         product: 'Producto',
         quantity: 'Cantidad',
+        uom: 'UM',
+        unitOfMeasure: 'Unidad de Medida',
         options: 'Opciones',
         editQuantities: 'Editar Cantidades',
         pin: 'Ingrese Pin',
