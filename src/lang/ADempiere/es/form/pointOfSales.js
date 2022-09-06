@@ -17,6 +17,14 @@
  */
 
 const pointOfSales = {
+  customer: {
+    listCustomers: 'Listar Clientes',
+    listBusinessPartners: 'Listar Socios de Negocios',
+    newCustomer: 'Nuevo Cliente',
+    newBusinessPartner: 'Nuevo Socio de Negocio',
+    updateCustomer: 'Actualizar Cliente',
+    updateBusinessPartner: 'Actualizar Socio de Negocio'
+  },
   collection: {
     chargeAmount: 'Cargo',
     creditAmount: 'Abono'

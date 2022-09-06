@@ -17,7 +17,6 @@ const initStateUtils = {
   parametersProcessPos: [],
   updateOrder: false,
   updatePayment: false,
-  createBusinessPartner: false,
   copyShippingAddress: true,
   step: 0,
   updateCustomer: false,
@@ -103,9 +102,6 @@ export default {
     },
     setStepCurrent(state, step) {
       state.step = step
-    },
-    popoverCreateBusinessPartner(state, createBusinessPartner) {
-      state.createBusinessPartner = createBusinessPartner
     },
     popoverOverdrawnInvoice(state, payload) {
       state.overdrawnInvoice = payload
@@ -227,9 +223,6 @@ export default {
     updatePaymentPos({ commit }, params) {
       commit('setUpdatePayment', params)
     },
-    changePopover({ commit }, params) {
-      commit('popoverCreateBusinessPartner', params)
-    },
     changeShowAddNewAddress({ commit }, params) {
       commit('setShowAddNewAddress', params)
     },
@@ -312,9 +305,6 @@ export default {
     },
     getUpdatePaymentPos: (state) => {
       return state.updatePayment
-    },
-    getPopoverCreateBusinessParnet: (state) => {
-      return state.createBusinessPartner
     },
     getCopyShippingAddress: (state) => {
       return state.copyShippingAddress

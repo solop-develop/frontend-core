@@ -16,27 +16,30 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const pointOfSales = {
-  customer: {
-    listCustomers: 'List Customers',
-    listBusinessPartners: 'List Business Partners',
-    newCustomer: 'New Customer',
-    newBusinessPartner: 'New Business Partner',
-    updateCustomer: 'Update Customer',
-    updateBusinessPartner: 'Update Business Partner'
-  },
-  collection: {
-    chargeAmount: 'Charge',
-    creditAmount: 'Installment'
-  },
-  conversionRate: {
-    withoutConversionRate: 'There is no current exchange rate '
-  },
-  keyLayout: {
-    quantity: 'Quantity'
-  },
-  withoutPOSTerminal: 'Without POS Terminal',
-  withoutPriceList: 'Without Price List'
+const defaultInitState = {
+  createBusinessPartner: false
 }
 
-export default pointOfSales
+/**
+ * Business Partner Customer Vuex Module
+ */
+const busiessPartnerCustomer = {
+  state: defaultInitState,
+  mutations: {
+    popoverCreateBusinessPartner(state, isShowed) {
+      state.createBusinessPartner = isShowed
+    }
+  },
+  actions: {
+    popoverCreateBusinessPartner({ commit }, isShowed) {
+      commit('popoverCreateBusinessPartner', isShowed)
+    }
+  },
+  getters: {
+    getPopoverCreateBusinessPartner: (state) => {
+      return state.createBusinessPartner
+    }
+  }
+}
+
+export default busiessPartnerCustomer
