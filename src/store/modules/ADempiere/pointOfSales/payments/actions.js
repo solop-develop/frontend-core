@@ -147,22 +147,6 @@ export default {
           if (isEmptyValue(conversionDate)) {
             conversionDate = formatDate(new Date())
           }
-          const currencyFrom = getters.getCurrenciesList.find(currency => {
-            return currency.uuid === params.currencyFromUuid
-          })
-          const currencyTo = getters.getCurrenciesList.find(currency => {
-            return currency.uuid === params.currencyToUuid
-          })
-
-          showMessage({
-            type: 'warning',
-            message: lang.t('pointOfSales.conversionRate.withoutConversionRate') + conversionDate + ', ' +
-              currencyFrom.currency_symbol + ' => ' + currencyTo.currency_symbol
-          })
-          console.warn(
-            lang.t('pointOfSales.conversionRate.withoutConversionRate') + conversionDate + ', ' +
-            currencyFrom.currency_symbol + ' => ' + currencyTo.currency_symbol
-          )
         }
 
         commit('addConversionToList', response)

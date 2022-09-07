@@ -284,9 +284,15 @@ export default {
         })
       })
       .catch(error => {
+        commit('setListOrder', {
+          isLoaded: true,
+          ordersList: [],
+          isReload: false,
+          posUuid
+        })
         console.warn(`listOrdersFromServer: ${error.message}. Code: ${error.code}.`)
         showMessage({
-          type: 'info',
+          type: 'error',
           message: error.message,
           showClose: true
         })
@@ -309,7 +315,7 @@ export default {
         .catch(error => {
           console.warn(`findOrderServer: ${error.message}. Code: ${error.code}.`)
           showMessage({
-            type: 'info',
+            type: 'error',
             message: error.message,
             showClose: true
           })
