@@ -58,7 +58,8 @@ export function formatNumber({
   value,
   displayType,
   currency,
-  country
+  country,
+  precision
 }) {
   if (isEmptyValue(value)) {
     value = 0
@@ -79,7 +80,7 @@ export function formatNumber({
 
     case NUMBER.id:
     case QUANTITY.id:
-      formattedNumber = formatQuantity({ value })
+      formattedNumber = formatQuantity({ value, precision })
       break
   }
 
@@ -91,18 +92,20 @@ export function formatNumber({
  * @param {number} value
  * @param {boolean} isInteger
  */
-export function formatQuantity({ value, isInteger = false }) {
+export function formatQuantity({ value, isInteger = false, precision }) {
   if (isEmptyValue(value)) {
     value = 0
   }
 
-  let precision = getStandardPrecision()
+  if (isEmptyValue(precision)) {
+    precision = getStandardPrecision()
+  }
   // without decimals
   // if (Number.isInteger(value)) {
   if (isInteger) {
     precision = 0
   }
-
+  console.log(precision)
   // get formatted decimal number
   return new Intl.NumberFormat(undefined, {
     useGrouping: true, // thousands separator
