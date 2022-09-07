@@ -105,7 +105,7 @@ export function formatQuantity({ value, isInteger = false, precision }) {
   if (isInteger) {
     precision = 0
   }
-  console.log(precision)
+
   // get formatted decimal number
   return new Intl.NumberFormat(undefined, {
     useGrouping: true, // thousands separator
