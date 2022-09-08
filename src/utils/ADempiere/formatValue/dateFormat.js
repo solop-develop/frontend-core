@@ -167,3 +167,45 @@ export function translateDateByLong(value) {
   const language = store.getters.language
   return lang.d(new Date(value), 'long', language)
 }
+
+/**
+ * Get web browser time zone
+ * @returns {string}
+ */
+export function getBrowserTimeZone() {
+  const dateFormat = new Intl.DateTimeFormat('default', {})
+  const usedOptions = dateFormat.resolvedOptions()
+  return usedOptions.timeZone
+}
+
+/**
+ * Or get a Date object with the specified Time zone
+ * @param {date|string|number} value of date
+ * @param {string} timeZone
+ * @returns {date}
+ */
+export function changeTimeZone({
+  value,
+  timeZone
+}) {
+  if (isEmptyValue(timeZone)) {
+    timeZone = getBrowserTimeZone()
+  }
+
+  let date = value
+  if (typeof value === 'string') {
+    // TODO: Verify it time zone
+    if (value.length <= 10) {
+      value += 'T00:00:00' // without time zone
+    }
+    date = new Date(value)
+  } else if (typeof value === 'number') {
+    date = new Date(value)
+  }
+
+  return new Date(
+    date.toLocaleString('en-US', {
+      timeZone
+    })
+  )
+}
