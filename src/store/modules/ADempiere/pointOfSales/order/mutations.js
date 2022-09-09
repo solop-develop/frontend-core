@@ -27,9 +27,6 @@ export default {
       ...listOrder
     }
   },
-  setOrdersListPageNumber(state, pageNumber) {
-    state.listOrder.pageNumber = pageNumber
-  },
   showListOrders(state, isShow) {
     state.listOrder.isShowPopover = isShow
   },

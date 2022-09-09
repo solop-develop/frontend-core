@@ -232,18 +232,18 @@ export default {
    * Set page number of pagination list
    * @param {number}  pageNumber
    */
-  setOrdersListPageNumber({ commit, dispatch }, pageNumber) {
-    commit('setOrdersListPageNumber', pageNumber)
-    dispatch('listOrdersFromServer', {})
-  },
   listOrdersFromServer({ state, commit, getters }, {
-    posUuid
+    posUuid,
+    pageNumber
   }) {
     if (isEmptyValue(posUuid)) {
       posUuid = getters.posAttributes.currentPointOfSales.uuid
     }
 
-    const { pageNumber } = state.listOrder
+    if (isEmptyValue(pageNumber) || pageNumber <= 0) {
+      // refresh with same page
+      pageNumber = state.listOrder.pageNumber
+    }
     const pageToken = generatePageToken({ pageNumber })
 
     let values = getters.getValuesView({
