@@ -16,6 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@import './form.scss';
-@import './view.scss';
-@import './text.scss';
+
+.input-as-password,
+input[type=text].input-as-password {
+  text-security: disc;
+  -webkit-text-security: disc;
+  -mox-text-security: disc;
+  -ms-text-security: disc;
+  -o-text-security: disc;
+
+  input[type=text],
+  >input[type=text] {
+    text-security: disc;
+    -webkit-text-security: disc;
+    -mox-text-security: disc;
+    -ms-text-security: disc;
+    -o-text-security: disc;
+  }
+}
