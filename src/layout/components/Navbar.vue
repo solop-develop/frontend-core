@@ -16,7 +16,7 @@
       <header-notification style="padding-top: 6px;" />
     </div>
     <div class="right-menu">
-      <template v-if="device!=='mobile'">
+      <template>
         <!-- <el-tooltip class="item" effect="dark" content="Reinicia Cache" placement="top-start">
           <el-button icon="el-icon-refresh-right" type="text" style="color: black;font-size: 18px;" @click="cacheReset()" />
         </el-tooltip> -->
