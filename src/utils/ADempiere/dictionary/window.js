@@ -1238,6 +1238,18 @@ export const containerManager = {
       blankValue
     })
   },
+  getSearchInfoList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, uuid, filters, searchValue }) {
+    return store.dispatch('searchInfoList', {
+      parentUuid,
+      containerUuid,
+      contextColumnNames,
+      fieldUuid: uuid,
+      tableName,
+      columnName,
+      filters,
+      searchValue
+    })
+  },
 
   getRecordLogs({ tableName, recordId, recordUuid }) {
     return store.dispatch('listRecordLogs', {

@@ -18,11 +18,11 @@ import router from '@/router'
 import store from '@/store'
 
 // constants
-import { ACCOUNTING_COLUMNS, SALES_TRANSACTION_COLUMNS } from '@/utils/ADempiere/constants/systemColumns.js'
+import { ACCOUNTING_COLUMNS, IS_SO_TRX, SALES_TRANSACTION_COLUMNS } from '@/utils/ADempiere/constants/systemColumns.js'
 
 // utils and helper methods
 import { isEmptyValue, isIdentifierEmpty } from '@/utils/ADempiere/valueUtils.js'
-import { convertBooleanToString } from '@/utils/ADempiere/formatValue/booleanFormat.js'
+import { convertBooleanToString, convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat.js'
 import evaluator from '@/utils/ADempiere/evaluator'
 
 /**
@@ -415,4 +415,21 @@ export function generateContextKey(contextAttributes = [], keyName = 'columnName
     contextKey += '|' + attribute[keyName] + '|' + attribute.value
   })
   return '_' + contextKey
+}
+
+/**
+ * Get Is Sales Transaction on tab, window or container
+ * @param {string} parentUuid
+ * @param {containerUuid} containerUuid
+ * @returns {boolean}
+ */
+export function isSalesTransaction({ parentUuid, containerUuid }) {
+  // get value by container view
+  const isSOTrx = store.getters.getValueOfField({
+    parentUuid,
+    containerUuid,
+    columnName: IS_SO_TRX
+  })
+
+  return convertStringToBoolean(isSOTrx)
 }

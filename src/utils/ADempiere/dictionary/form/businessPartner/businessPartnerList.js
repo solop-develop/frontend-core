@@ -16,5 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export const BUSINESS_PARTNERS_LIST_FORM = 'Business-Partner-List'
+export const TABLE_NAME = 'C_BPartner'
 
+export const COLUMN_NAME = 'C_BPartner_ID'
+
+export const BUSINESS_PARTNERS_LIST_FORM = 'Business-Partner-List'

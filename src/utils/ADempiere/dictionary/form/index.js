@@ -91,6 +91,15 @@ export function isReadOnlyField({ isActive, isReadOnly, readOnlyLogic, isReadOnl
     (!isEmptyValue(readOnlyLogic) && isReadOnlyFromLogic))
 }
 
+/**
+ * Is read only column
+ * @param {boolean} isActive
+ * @returns {boolean}
+ */
+export function isReadOnlyColumn({ isActive }) {
+  return true
+}
+
 export const containerManager = {
   changeFieldShowedFromUser,
   isDisplayedField,
@@ -99,6 +108,8 @@ export const containerManager = {
   isMandatoryField,
 
   isReadOnlyField,
+
+  isReadOnlyColumn,
 
   getLookupList,
 

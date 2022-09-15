@@ -353,6 +353,20 @@ export const containerManager = {
       blankValue
     })
   },
+  getSearchInfoList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, uuid, filters, searchValue, pageNumber }) {
+    return store.dispatch('searchInfoList', {
+      parentUuid,
+      containerUuid,
+      contextColumnNames,
+      processParameterUuid: uuid,
+      tableName,
+      columnName,
+      filters,
+      searchValue,
+      pageNumber
+    })
+  },
+  // TODO: Deperecated
   generalInfoSearch({
     containerUuid,
     contextColumnNames,
@@ -363,7 +377,7 @@ export const containerManager = {
     columnName,
     pageNumber
   }) {
-    return store.dispatch('findGeneralInfo', {
+    return store.dispatch('searchInfoList', {
       containerUuid,
       contextColumnNames,
       filters,

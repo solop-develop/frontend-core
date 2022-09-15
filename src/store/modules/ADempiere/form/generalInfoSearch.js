@@ -23,6 +23,7 @@ import { tableSearchFields, requestGridGeneralInfo } from '@/api/ADempiere/field
 
 // constants
 import { CHAR, SEARCH, TABLE, TABLE_DIRECT } from '@/utils/ADempiere/references'
+import { TABLE_NAME as TABLE_NAME_BPartner } from '@/utils/ADempiere/dictionary/form/businessPartner/businessPartnerList'
 
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -111,6 +112,81 @@ const generalInfoSearch = {
   },
 
   actions: {
+    /**
+     * Generic action to call specific action
+     * @param {string} parentUuid
+     * @param {string} containerUuid
+     * @param {array} contextColumnNames
+     * @param {string} fieldUuid
+     * @param {string} processParameterUuid
+     * @param {string} browseFieldUuid
+     * @param {string} columnUuid
+     * @param {string} columnUuid
+     * @param {array} filters
+     * @param {string} searchValue
+     * @param {number} pageNumber
+     * @returns {promise}
+     */
+    searchInfoList({ dispatch }, {
+      parentUuid,
+      containerUuid,
+      contextColumnNames = [],
+      //
+      fieldUuid,
+      processParameterUuid,
+      browseFieldUuid,
+      columnUuid,
+      //
+      tableName,
+      columnName,
+      //
+      filters,
+      searchValue,
+      pageNumber
+    }) {
+      return new Promise(resolve => {
+        if (tableName === TABLE_NAME_BPartner) {
+          return dispatch('gridBusinessPartners', {
+            parentUuid,
+            containerUuid,
+            contextColumnNames,
+            //
+            fieldUuid,
+            processParameterUuid,
+            browseFieldUuid,
+            columnUuid,
+            //
+            tableName,
+            columnName,
+            //
+            filters,
+            searchValue,
+            pageNumber
+          }).then(response => {
+            resolve(response)
+          })
+        }
+        return dispatch('findGeneralInfo', {
+          containerUuid,
+          contextColumnNames,
+          filters,
+          //
+          fieldUuid,
+          processParameterUuid,
+          browseFieldUuid,
+          //
+          searchValue,
+          //
+          tableName,
+          columnName,
+          //
+          pageNumber
+        }).then(response => {
+          resolve(response)
+        })
+      })
+    },
+
     findGeneralInfo({ commit, getters, dispatch }, {
       containerUuid,
       contextColumnNames = [],

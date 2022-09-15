@@ -19,9 +19,13 @@
 import Vue from 'vue'
 
 // api request methods
-import { requestListBusinessPartner } from '@/api/ADempiere/system-core.js'
+import { requestListBusinessPartner } from '@/api/ADempiere/businessPartner'
+
+// constants
+import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 
 // utils and helper methods
+import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
@@ -98,16 +102,21 @@ const businessPartner = {
   },
 
   actions: {
-    getBusinessPartners({ commit, getters }, {
+    gridBusinessPartners({ commit, getters }, {
+      parentUuid,
       containerUuid,
-      searchValue,
-      value,
-      name,
-      contactName,
-      eMail,
-      postalCode,
-      phone,
+      contextColumnNames = [],
+      //
+      fieldUuid,
+      processParameterUuid,
+      browseFieldUuid,
+      columnUuid,
+      //
+      tableName,
+      columnName,
+      //
       filters = [],
+      searchValue,
       pageNumber
     }) {
       return new Promise(resolve => {
@@ -120,20 +129,46 @@ const businessPartner = {
         }
         const pageToken = generatePageToken({ pageNumber })
 
+        const isSOTrx = isSalesTransaction({
+          parentUuid,
+          containerUuid
+        })
+
+        if (!isEmptyValue(isSOTrx)) {
+          let columnName = 'IsVendor'
+          if (isSOTrx) {
+            columnName = 'IsCustomer'
+          }
+          filters.push({
+            columnName,
+            value: true
+          })
+        }
+
         requestListBusinessPartner({
-          searchValue,
-          value,
-          name,
-          contactName,
-          eMail,
-          postalCode,
-          phone,
+          contextColumnNames,
+          //
+          fieldUuid,
+          processParameterUuid,
+          browseFieldUuid,
+          columnUuid,
+          //
+          tableName,
+          columnName,
           // Query
           filters,
+          searchValue,
           pageToken
         })
           .then(responseBusinessPartnerList => {
-            const { businessPartnersList: recordsList } = responseBusinessPartnerList
+            const recordsList = responseBusinessPartnerList.recordsList.map((record, rowIndex) => {
+              return {
+                ...record.attributes,
+                // datatables app attributes
+                ...ROW_ATTRIBUTES,
+                rowIndex
+              }
+            })
 
             let currentRow = {}
             // update current record
@@ -164,6 +199,7 @@ const businessPartner = {
       })
     }
   },
+
   getters: {
     /**
      * Used by result in Business Partner List
