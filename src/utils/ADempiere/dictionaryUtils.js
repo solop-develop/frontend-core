@@ -273,7 +273,7 @@ export function getEvaluatedLogics({
   }
 
   let isDisplayedFromLogic = isEmptyValue(displayLogic)
-  if (isDisplayedFromLogic) {
+  if (!isDisplayedFromLogic) {
     isDisplayedFromLogic = evaluator.evaluateLogic({
       ...commonParameters,
       logic: displayLogic

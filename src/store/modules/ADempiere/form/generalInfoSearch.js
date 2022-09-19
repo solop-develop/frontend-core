@@ -168,6 +168,7 @@ const generalInfoSearch = {
         }
         return dispatch('findGeneralInfo', {
           containerUuid,
+          parentUuid,
           contextColumnNames,
           filters,
           //
@@ -189,6 +190,7 @@ const generalInfoSearch = {
 
     findGeneralInfo({ commit, getters, dispatch }, {
       containerUuid,
+      parentUuid,
       contextColumnNames = [],
       filters,
       //
@@ -212,8 +214,8 @@ const generalInfoSearch = {
           pageNumber = storedPage
         }
         const pageToken = generatePageToken({ pageNumber })
-
         const contextAttributesList = getContextAttributes({
+          parentUuid,
           containerUuid,
           contextColumnNames,
           isBooleanToString: true
@@ -245,7 +247,12 @@ const generalInfoSearch = {
             })
             let recordsList = []
             if (response.recordsList) {
-              recordsList = response.recordsList.map(list => list.attributes)
+              recordsList = response.recordsList.map(list => {
+                return {
+                  ...list.attributes,
+                  IdentifierTable: list.tableName
+                }
+              })
             }
 
             let currentRow = {}

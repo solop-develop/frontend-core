@@ -130,3 +130,43 @@ export function requestGridGeneralInfo({
       return convertEntityList(response)
     })
 }
+
+export function requestListAccountingCombinations({
+  contextAttributesList,
+  filters = [],
+  pageToken,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
+}) {
+  filters = filters.map(attribute => {
+    return {
+      column_name: attribute.columnName,
+      operator: attribute.operator,
+      value: attribute.value
+    }
+  })
+
+  let contextAttributes = []
+  if (!isEmptyValue(contextAttributesList)) {
+    contextAttributes = contextAttributesList.map(attribute => {
+      return {
+        key: attribute.columnName,
+        value: attribute.value
+      }
+    })
+  }
+
+  return request({
+    url: '/general-ledger/accounting-combinations',
+    method: 'get',
+    params: {
+      context_attributes: contextAttributes,
+      filters,
+      page_token: pageToken,
+      page_size: pageSize
+    }
+  })
+    .then(response => {
+      const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
+      return convertEntityList(response)
+    })
+}

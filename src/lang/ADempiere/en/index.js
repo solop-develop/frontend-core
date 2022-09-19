@@ -29,7 +29,7 @@ import window from './window'
 import actionNotice from './form/actionNotice'
 import payrollActionNotice from './form/payrollActionNotice'
 import pointOfSales from './form/pointOfSales'
-import fieldFormSearch from './fieldFormSearch'
+import infoSearch from './fieldFormSearch'
 
 export default {
   actionMenu,
@@ -37,7 +37,7 @@ export default {
   orderList,
   extensionFile,
   fieldDisplayOptions,
-  fieldFormSearch,
+  infoSearch,
   fieldOptions,
   recordManager,
   route,

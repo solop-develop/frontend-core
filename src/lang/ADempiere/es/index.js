@@ -26,7 +26,7 @@ import recordManager from './recordManager'
 import route from './route'
 import smartBrowser from './smartBrowser'
 import window from './window'
-import fieldFormSearch from './fieldFormSearch'
+import infoSearch from './fieldFormSearch'
 import actionNotice from './form/actionNotice'
 import payrollActionNotice from './form/payrollActionNotice'
 import pointOfSales from './form/pointOfSales'
@@ -37,7 +37,7 @@ export default {
   orderList,
   extensionFile,
   fieldDisplayOptions,
-  fieldFormSearch,
+  infoSearch,
   fieldOptions,
   recordManager,
   route,

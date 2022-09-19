@@ -1284,6 +1284,7 @@ export const containerManager = {
   },
   generalInfoSearch({
     containerUuid,
+    parentUuid,
     contextColumnNames,
     filters,
     uuid,
@@ -1294,6 +1295,7 @@ export const containerManager = {
   }) {
     return store.dispatch('findGeneralInfo', {
       containerUuid,
+      parentUuid,
       contextColumnNames,
       filters,
       fieldUuid: uuid,

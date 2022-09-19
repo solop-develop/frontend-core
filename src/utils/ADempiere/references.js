@@ -29,7 +29,7 @@ export const ACCOUNT_ELEMENT = {
   id: 25,
   isSupported: false,
   valueType: 'INTEGER',
-  componentPath: 'FieldText',
+  componentPath: 'FieldAccount',
   size: DEFAULT_SIZE
 }
 
