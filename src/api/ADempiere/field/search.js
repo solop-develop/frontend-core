@@ -194,7 +194,7 @@ export function requestSaveAccountingCombination({
   contextAttributes
 }) {
   return request({
-    url: '/general-ledger/save-accounting-combinations',
+    url: '/general-ledger/save-accounting-combination',
     method: 'get',
     params: {
       id,
