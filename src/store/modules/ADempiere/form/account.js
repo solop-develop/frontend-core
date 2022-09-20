@@ -21,7 +21,7 @@ import Vue from 'vue'
 // api request methods
 import {
   requestListAccountingCombinations,
-  // requestGetAccountingCombination,
+  requestGetAccountingCombination,
   requestSaveAccountingCombination
 } from '@/api/ADempiere/field/search'
 
@@ -117,6 +117,8 @@ const AccountCombinations = {
 
   actions: {
     saveAccountCombinations({ dispatch }, {
+      parentUuid,
+      containerUuid,
       id,
       uuid,
       attributes,
@@ -134,6 +136,26 @@ const AccountCombinations = {
           })
           .catch(error => {
             console.warn(`Save Account Combinations - Error ${error.code}: ${error.message}.`)
+            showMessage({
+              type: 'info',
+              message: error.message
+            })
+          })
+      })
+    },
+
+    getAccountCombination({ dispatch }, {
+      id
+    }) {
+      return new Promise(resolve => {
+        return requestGetAccountingCombination({
+          id
+        })
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Get Account Combinations - Error ${error.code}: ${error.message}.`)
             showMessage({
               type: 'info',
               message: error.message
