@@ -19,7 +19,11 @@
 import Vue from 'vue'
 
 // api request methods
-import { requestListAccountingCombinations } from '@/api/ADempiere/field/search'
+import {
+  requestListAccountingCombinations,
+  // requestGetAccountingCombination,
+  requestSaveAccountingCombination
+} from '@/api/ADempiere/field/search'
 
 // constants
 
@@ -29,7 +33,7 @@ import { showMessage } from '@/utils/ADempiere/notification'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 // import { generateField } from '@/utils/ADempiere/dictionaryUtils'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils'
-// import { isSameSize } from '@/utils/ADempiere/formatValue/iterableFormat'
+import { isSameSize } from '@/utils/ADempiere/formatValue/iterableFormat'
 
 const initState = {
   businessPartnerPopoverList: false,
@@ -112,81 +116,31 @@ const AccountCombinations = {
   },
 
   actions: {
-    /**
-    * Generic action to call specific action
-    * @param {string} parentUuid
-    * @param {string} containerUuid
-    * @param {array} contextColumnNames
-    * @param {string} fieldUuid
-    * @param {string} processParameterUuid
-    * @param {string} browseFieldUuid
-    * @param {string} columnUuid
-    * @param {string} columnUuid
-    * @param {array} filters
-    * @param {string} searchValue
-    * @param {number} pageNumber
-    * @returns {promise}
-    */
-    // searchInfoList({ dispatch }, {
-    //   parentUuid,
-    //   containerUuid,
-    //   contextColumnNames = [],
-    //   //
-    //   fieldUuid,
-    //   processParameterUuid,
-    //   browseFieldUuid,
-    //   columnUuid,
-    //   //
-    //   tableName,
-    //   columnName,
-    //   //
-    //   filters,
-    //   searchValue,
-    //   pageNumber
-    // }) {
-    //   return new Promise(resolve => {
-    //     if (tableName === TABLE_NAME_BPartner) {
-    //       return dispatch('gridBusinessPartners', {
-    //         parentUuid,
-    //         containerUuid,
-    //         contextColumnNames,
-    //         //
-    //         fieldUuid,
-    //         processParameterUuid,
-    //         browseFieldUuid,
-    //         columnUuid,
-    //         //
-    //         tableName,
-    //         columnName,
-    //         //
-    //         filters,
-    //         searchValue,
-    //         pageNumber
-    //       }).then(response => {
-    //         resolve(response)
-    //       })
-    //     }
-    //     return dispatch('findGeneralInfo', {
-    //       containerUuid,
-    //       parentUuid,
-    //       contextColumnNames,
-    //       filters,
-    //       //
-    //       fieldUuid,
-    //       processParameterUuid,
-    //       browseFieldUuid,
-    //       //
-    //       searchValue,
-    //       //
-    //       tableName,
-    //       columnName,
-    //       //
-    //       pageNumber
-    //     }).then(response => {
-    //       resolve(response)
-    //     })
-    //   })
-    // },
+    saveAccountCombinations({ dispatch }, {
+      id,
+      uuid,
+      attributes,
+      contextAttributes
+    }) {
+      return new Promise(resolve => {
+        return requestSaveAccountingCombination({
+          id,
+          uuid,
+          attributes,
+          contextAttributes
+        })
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Save Account Combinations - Error ${error.code}: ${error.message}.`)
+            showMessage({
+              type: 'info',
+              message: error.message
+            })
+          })
+      })
+    },
 
     listAccountCombinations({ commit, getters, dispatch }, {
       containerUuid,
@@ -215,10 +169,10 @@ const AccountCombinations = {
           })
         }
         // fill context value to continue
-        // if (!isSameSize(contextColumnNames, contextAttributesList)) {
-        //   resolve([])
-        //   return
-        // }
+        if (isSameSize(contextColumnNames, contextAttributesList)) {
+          resolve([])
+          return
+        }
         return requestListAccountingCombinations({
           contextAttributesList,
           filters,
@@ -264,70 +218,6 @@ const AccountCombinations = {
           })
       })
     }
-
-    // searchTableHeader({ commit, getters }, {
-    //   containerUuid,
-    //   tableName
-    // }) {
-    //   return new Promise(resolve => {
-    //     const storedFieldsList = getters.getTableHeader({ containerUuid })
-    //     if (!isEmptyValue(storedFieldsList)) {
-    //       resolve(storedFieldsList)
-    //       return
-    //     }
-
-    //     tableSearchFields({
-    //       tableName
-    //     })
-    //       .then(response => {
-    //         const fieldsList = response.fieldsList
-    //           .filter(field => {
-    //             // https://github.com/adempiere/adempiere/blob/develop/client/src/org/compiere/apps/search/InfoGeneral.java#L388-L389
-    //             // without search, table, and table direct references
-    //             return ![SEARCH.id, TABLE.id, TABLE_DIRECT.id].includes(field.displayType) &&
-    //               // key is used to seleccion column, unnused on vue client
-    //               !field.isKey
-    //           })
-    //           .sort((fieldA, fieldB) => {
-    //             // https://github.com/adempiere/adempiere/blob/develop/client/src/org/compiere/apps/search/InfoGeneral.java#L332
-    //             return fieldA.seqNo < fieldB.seqNo
-    //           })
-    //           .map(field => {
-    //             const fieldGenerated = generateField({
-    //               fieldToGenerate: field,
-    //               moreAttributes: {
-    //                 isFromDictionary: false,
-    //                 isMandatory: false,
-    //                 isMandatoryLogic: '',
-    //                 containerUuid,
-    //                 // app attributes
-    //                 isShowedFromUser: true,
-    //                 isReadOnlyFromForm: false
-    //               }
-    //             })
-    //             return fieldGenerated
-    //           })
-
-    //         commit('setIdentifier', {
-    //           containerUuid,
-    //           fieldsList
-    //         })
-    //         commit('setTableHeader', {
-    //           containerUuid,
-    //           fieldsList
-    //         })
-
-    //         resolve(fieldsList)
-    //       })
-    //       .catch(error => {
-    //         console.warn(error.message)
-    //         showMessage({
-    //           type: 'info',
-    //           message: error.message
-    //         })
-    //       })
-    //   })
-    // }
   },
   getters: {
     /**

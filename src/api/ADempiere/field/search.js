@@ -170,3 +170,41 @@ export function requestListAccountingCombinations({
       return convertEntityList(response)
     })
 }
+
+export function requestGetAccountingCombination({
+  id
+}) {
+  return request({
+    url: '/general-ledger/accounting-combination',
+    method: 'get',
+    params: {
+      id
+    }
+  })
+    .then(response => {
+      const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
+      return convertEntityList(response)
+    })
+}
+
+export function requestSaveAccountingCombination({
+  id,
+  uuid,
+  attributes,
+  contextAttributes
+}) {
+  return request({
+    url: '/general-ledger/save-accounting-combinations',
+    method: 'get',
+    params: {
+      id,
+      uuid,
+      attributes,
+      context_attributes: contextAttributes
+    }
+  })
+    .then(response => {
+      const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
+      return convertEntityList(response)
+    })
+}
