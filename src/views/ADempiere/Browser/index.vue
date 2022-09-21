@@ -93,7 +93,7 @@ import store from '@/store'
 // componets and mixins
 // import ActionMenu from '@theme/components/ADempiere/ActionMenu/index.vue'
 import ActionMenu from '@theme/components/ADempiere/ActionMenu/index.vue'
-import DefaultTable from '@theme/components/ADempiere/DefaultTable/index.vue'
+import DefaultTable from '@theme/components/ADempiere/DataTable/index.vue'
 import CollapseCriteria from '@theme/components/ADempiere/CollapseCriteria/index.vue'
 import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
 import mixinProcess from '@/views/ADempiere/Process/mixinProcess.js'

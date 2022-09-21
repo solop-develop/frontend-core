@@ -57,3 +57,11 @@ export function indexRowByPage({
 }) {
   return (pageNumber - 1) * pageSize + (indexRow + 1)
 }
+
+export function totalRowByPage({
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
+  pageNumber = 1
+}) {
+  console.log(pageSize, pageNumber)
+  return (pageSize * pageNumber)
+}

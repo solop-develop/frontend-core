@@ -228,6 +228,7 @@ export default {
     dataTable: {
       search: 'Buscar',
       selected: 'Seleccionados',
+      recordsPage: 'Registros por Página',
       deleteSelection: 'Eliminar Registros Seleccionados',
       advancedQuery: 'Consulta Avanzada',
       exportZip: 'Exportar Zip',
