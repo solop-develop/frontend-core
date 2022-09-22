@@ -48,12 +48,13 @@ const initState = {
     contextKey: '',
     searchValue: '',
     currentRecordUuid: undefined,
-    recordsList: [],
-    selectionsList: [],
+    recordsList: [], // list of response records
+    selectionsList: [], // record selection
     nextPageToken: undefined,
-    recordCount: 0,
-    isLoaded: false,
-    pageNumber: 1
+    recordCount: 0, // total number of all records
+    isLoaded: false, // has not been charged the first time
+    isLoading: false, // request currently in progress
+    pageNumber: 1 // page number of records
   }
 }
 
@@ -72,6 +73,7 @@ const windowManager = {
       nextPageToken,
       recordCount = 0,
       isLoaded = true,
+      isLoading = false,
       pageNumber = 1
     }) {
       const dataTab = {
@@ -85,6 +87,7 @@ const windowManager = {
         nextPageToken,
         recordCount,
         isLoaded,
+        isLoading,
         pageNumber
       }
       Vue.set(state.tabData, containerUuid, dataTab)
@@ -175,6 +178,13 @@ const windowManager = {
       searchValue
     }) {
       Vue.set(state.tabData[containerUuid], 'searchValue', searchValue)
+    },
+
+    setIsLoadingTabRecordsList(state, {
+      containerUuid,
+      isLoading
+    }) {
+      Vue.set(state.tabData[containerUuid], 'isLoading', isLoading)
     },
 
     resetStateWindowManager(state) {
@@ -287,6 +297,11 @@ const windowManager = {
         })
 
         const currentRoute = router.app._route
+
+        commit('setIsLoadingTabRecordsList', {
+          containerUuid,
+          isLoading: true
+        })
         getEntities({
           windowUuid: parentUuid,
           tabUuid: containerUuid,
@@ -371,6 +386,7 @@ const windowManager = {
               nextPageToken: dataResponse.nextPageToken,
               pageNumber,
               isLoaded: true,
+              isLoading: false,
               recordCount: dataResponse.recordCount
             })
 
@@ -382,6 +398,10 @@ const windowManager = {
               parentUuid,
               isLoaded: true,
               containerUuid
+            })
+            commit('setIsLoadingTabRecordsList', {
+              containerUuid,
+              isLoading: false
             })
             resolve([])
           })
