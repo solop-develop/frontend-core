@@ -23,7 +23,7 @@ import {
   requestListAccountingCombinations,
   requestGetAccountingCombination,
   requestSaveAccountingCombination
-} from '@/api/ADempiere/field/search'
+} from '@/api/ADempiere/field/accoutingCombination'
 
 // constants
 
@@ -144,18 +144,22 @@ const AccountCombinations = {
       })
     },
 
-    getAccountCombination({ dispatch }, {
-      id
+    getAccountingCombination({ dispatch }, {
+      id,
+      uuid,
+      value // as combination
     }) {
       return new Promise(resolve => {
         return requestGetAccountingCombination({
-          id
+          id,
+          uuid,
+          value
         })
           .then(response => {
             resolve(response)
           })
           .catch(error => {
-            console.warn(`Get Account Combinations - Error ${error.code}: ${error.message}.`)
+            console.warn(`Get Accounting Combinations - Error ${error.code}: ${error.message}.`)
             showMessage({
               type: 'info',
               message: error.message

@@ -40,6 +40,11 @@ export const DISPLAY_COLUMN_PREFIX = `DisplayColumn_`
 export const IDENTIFIER_COLUMN_SUFFIX = `_ID`
 
 /**
+ * Universally Unique Identifier Column Suffix on Column Name: "_UUID"
+ */
+export const UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX = `_UUID`
+
+/**
  * Generate field to app
  * @param {object}  fieldToGenerate
  * @param {object}  moreAttributes, additional attributes
