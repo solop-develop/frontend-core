@@ -87,8 +87,18 @@ export function requestSaveAccountingCombination({
   id,
   uuid,
   attributes,
-  contextAttributes
+  contextAttributesList
 }) {
+  let contextAttributes = []
+  if (!isEmptyValue(contextAttributesList)) {
+    contextAttributes = contextAttributesList.map(attribute => {
+      return {
+        key: attribute.columnName,
+        value: attribute.value
+      }
+    })
+  }
+
   return request({
     url: '/general-ledger/save-accounting-combination',
     method: 'get',
