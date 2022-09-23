@@ -193,7 +193,9 @@ export function changeTimeZone({
   }
 
   let date = value
-  if (typeof value === 'string') {
+  if (isEmptyValue(date)) {
+    date = new Date()
+  } if (typeof value === 'string') {
     // TODO: Verify it time zone
     if (value.length <= 10) {
       value += 'T00:00:00' // without time zone
