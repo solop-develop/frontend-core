@@ -75,7 +75,7 @@ const lookupManager = {
      * @param {string|number} blankValue value to add in empty option ("", -1, null, undefined)
      */
     getLookupListFromServer({ commit, rootGetters }, {
-      isAddBlankValue = false,
+      isAddBlankValue = true,
       blankValue,
       parentUuid,
       containerUuid,
@@ -264,6 +264,14 @@ const lookupManager = {
       contextAttributesList = [],
       uuid
     }) => {
+      if (isEmptyValue(contextAttributesList) && !isEmptyValue(contextColumnNames)) {
+        contextAttributesList = getContextAttributes({
+          parentUuid,
+          containerUuid,
+          contextColumnNames,
+          isBooleanToString: true
+        })
+      }
       const lookup = getters.getStoredLookup({
         parentUuid,
         containerUuid,
