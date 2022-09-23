@@ -429,7 +429,7 @@ export function deleteOrderLine({
 export function listOrderLines({
   posUuid,
   orderUuid,
-  pageSize,
+  pageSize = 50,
   pageToken
 }) {
   return request({
