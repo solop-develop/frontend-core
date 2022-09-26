@@ -35,6 +35,21 @@ const pointOfSales = {
   keyLayout: {
     quantity: 'Quantity'
   },
+  order: {
+    dateOfOrder: 'Date of Order',
+    documentType: 'Document Type'
+  },
+  orderLine: {
+    edit: 'Line Edit',
+    updateSuccess: 'Order Line Successfully Updated'
+  },
+  pin: {
+    validatePin: 'Validate PIN',
+    validateSuccessfully: 'PIN Validate Successfully'
+  },
+  print: {
+    cloudNotConnectPirnter: 'Could not connect to the printer'
+  },
   withoutPOSTerminal: 'Without POS Terminal',
   withoutPriceList: 'Without Price List'
 }
