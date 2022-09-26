@@ -46,6 +46,7 @@ export default {
   payrollActionNotice,
   pointOfSales,
 
+  edit: 'Edit',
   language: 'Language',
   notifications: {
     // simplex
