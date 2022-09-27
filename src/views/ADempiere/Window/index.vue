@@ -143,8 +143,18 @@ export default defineComponent({
     const renderWindowComponent = computed(() => {
       let windowComponent
       switch (windowMetadata.value.windowType) {
+        case 'SO':
         case 'T':
           windowComponent = () => import('@/views/ADempiere/Window/DocumentWindow.vue')
+          break
+        case 'MM':
+          windowComponent = () => import('@/views/ADempiere/Window/MaterialsManagement.vue')
+          break
+        case 'FI':
+          windowComponent = () => import('@/views/ADempiere/Window/Finances.vue')
+          break
+        case 'GL':
+          windowComponent = () => import('@/views/ADempiere/Window/GeneralLedger.vue')
           break
         default:
           windowComponent = () => import('@/views/ADempiere/Window/MultiTabWindow.vue')
