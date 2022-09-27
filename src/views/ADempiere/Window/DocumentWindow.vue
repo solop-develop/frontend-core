@@ -204,6 +204,9 @@ export default defineComponent({
         })
     }
 
+    // Load data document options
+    loaDocument()
+
     watch(recordUuid, (newValue, oldValue) => {
       if (newValue !== oldValue && !isEmptyValue(newValue) && newValue !== 'create-new') {
         loaDocument()
