@@ -355,13 +355,15 @@ const actions = {
     return new Promise(resolve => {
       // get field
       let fieldsList = []
-      if (containerManager && containerManager.getFieldsList) {
-        fieldsList = containerManager.getFieldsList({
-          parentUuid,
-          containerUuid
-        })
-      } else {
+      if (isEmptyValue(field)) {
         fieldsList = getters.getFieldsListFromPanel(containerUuid)
+        field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
+      }
+      if (containerManager.getFieldsList && !isEmptyValue(field.parentUuid)) {
+        fieldsList = containerManager.getFieldsList({
+          parentUuid: field.parentUuid,
+          containerUuid: field.containerUuid
+        })
       }
 
       if (isEmptyValue(field)) {
