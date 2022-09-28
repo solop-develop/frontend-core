@@ -143,7 +143,7 @@ export default defineComponent({
     const renderWindowComponent = computed(() => {
       let windowComponent
       switch (windowMetadata.value.windowType) {
-        case 'SO':
+        case 'PO':
         case 'T':
           windowComponent = () => import('@/views/ADempiere/Window/DocumentWindow.vue')
           break
