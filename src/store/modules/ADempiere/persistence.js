@@ -136,6 +136,18 @@ const persistence = {
           value
         })
 
+        // start callout on server
+        dispatch('startCallout', {
+          parentUuid,
+          containerUuid,
+          field,
+          callout: field.callout,
+          columnName,
+          valueType: field.valueType,
+          value,
+          oldValue
+        })
+
         const emptyFields = getters.getTabFieldsEmptyMandatory({
           parentUuid,
           containerUuid,

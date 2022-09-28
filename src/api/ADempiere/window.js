@@ -166,25 +166,27 @@ export function runCallOutRequest({
   windowNo,
   tabUuid,
   tableName,
+  contextAttributesList = [],
   columnName,
-  value,
-  oldValue,
   callout,
-  attributesList = []
+  valueType,
+  value,
+  oldValue
 }) {
   return request({
     url: '/user-interface/window/run-callout',
     method: 'post',
     data: {
-      table_name: tableName,
       window_uuid: windowUuid,
-      tab_uuid: tabUuid,
-      callout,
-      column_name: columnName,
-      old_value: oldValue,
-      value,
       window_no: windowNo,
-      context_attributes: attributesList
+      tab_uuid: tabUuid,
+      table_name: tableName,
+      context_attributes: contextAttributesList,
+      column_name: columnName,
+      callout,
+      value_type: valueType,
+      value,
+      old_value: oldValue
     }
   })
     .then(response => {

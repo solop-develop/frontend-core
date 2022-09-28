@@ -345,6 +345,7 @@ const actions = {
    * - Action for Custom panel from type
   */
   notifyFieldChange({ dispatch, getters }, {
+    parentUuid,
     containerUuid,
     containerManager,
     columnName,
@@ -354,15 +355,21 @@ const actions = {
     return new Promise(resolve => {
       // get field
       let fieldsList = []
-      if (isEmptyValue(field)) {
-        fieldsList = getters.getFieldsListFromPanel(containerUuid)
-        field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
-      }
-      if (containerManager.getFieldsList && !isEmptyValue(field.parentUuid)) {
+      if (containerManager && containerManager.getFieldsList) {
         fieldsList = containerManager.getFieldsList({
-          parentUuid: field.parentUuid,
-          containerUuid: field.containerUuid
+          parentUuid,
+          containerUuid
         })
+      } else {
+        fieldsList = getters.getFieldsListFromPanel(containerUuid)
+      }
+
+      if (isEmptyValue(field)) {
+        field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
+        if (isEmptyValue(field)) {
+          console.warn('notifyFieldChange: Field not found ', columnName)
+          return
+        }
       }
 
       let value

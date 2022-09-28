@@ -24,56 +24,9 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { getDateFormat } from '@/utils/ADempiere/formatValue/dateFormat.js'
 import { DATE, DATE_PLUS_TIME, TIME, AMOUNT, COSTS_PLUS_PRICES, NUMBER, QUANTITY } from '@/utils/ADempiere/references.js'
 
-/**
- * Convert a object to array pairs
- * @param {object} object, object to convert
- * @param {string} nameKey, name from key in pairs
- * @param {string} nameValue, name from value in pairs
- * @returns {array} [ { nameKey: key, nameValue: value } ]
- */
-export function convertObjectToKeyValue({
-  object,
-  keyName = 'columnName',
-  valueName = 'value'
-}) {
-  if (isEmptyValue(object)) {
-    return []
-  }
-  return Object.keys(object).map(key => {
-    const returnPairs = {}
-    returnPairs[keyName] = key
-    returnPairs[valueName] = object[key]
-    return returnPairs
-  })
-}
-
-/**
- * Convert map of pairs to literal object
- * @param {object} object
- * @returns {map}
- */
-export function convertObjectToHasMap({ object }) {
-  return new Map(
-    Object.entries(object)
-  )
-}
-
-/**
- * Convert map of pairs to literal object
- * @param {map} hasMapToConvert
- * @returns {object} { key: value, key2: value2 }
- */
-export function convertHasMapToObject({ map }) {
-  return Object.fromEntries(map)
-  // const result = {}
-  // map.forEach((value, key) => {
-  //   result[key] = value
-  // })
-  // return result
-}
-
 // TODO: Duplicated exported method, removed this
 export { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
+export { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
 
 //  Get Formatted Price
 export function formatPrice(number, currency) {
