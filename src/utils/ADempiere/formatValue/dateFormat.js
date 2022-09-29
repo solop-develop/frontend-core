@@ -19,7 +19,7 @@ import store from '@/store'
 import moment from 'moment'
 
 // utils and helper methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { isEmptyValue, typeValue } from '@/utils/ADempiere/valueUtils.js'
 import { zeroPad } from '@/utils/ADempiere/formatValue/numberFormat.js'
 
 /**
@@ -90,14 +90,20 @@ export function getDefaultFormat(isTime) {
  * @param {string|date} object
  * @param {boolean} isTime
  */
-export function formatDate(date, isTime = false, format) {
-  if (isEmptyValue(date)) {
+export function formatDate({ value, isTime = false, format }) {
+  if (isEmptyValue(value)) {
     return undefined
   }
-  return moment.utc(date).format(getDateFormat({
-    format,
-    isTime
-  }))
+  if (typeValue(value) === 'DATE') {
+    value = value.getTime()
+  }
+
+  return moment.utc(value).format(
+    getDateFormat({
+      format,
+      isTime
+    })
+  )
 }
 
 export function dateTimeFormats(date, format) {

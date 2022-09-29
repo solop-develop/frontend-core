@@ -12,36 +12,43 @@
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 // A util class for handle format for time, date and others values to beused to display information
 // Note that this file use moment library for a easy conversion
-import moment from 'moment'
-import store from '@/store'
+
+// constants
+import {
+  DATE, DATE_PLUS_TIME, TIME,
+  AMOUNT, COSTS_PLUS_PRICES, NUMBER, QUANTITY,
+  ACCOUNT_ELEMENT, TABLE, TABLE_DIRECT, LIST, SEARCH,
+  YES_NO
+} from '@/utils/ADempiere/references.js'
 
 // utils and helper methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
-import { getDateFormat } from '@/utils/ADempiere/formatValue/dateFormat.js'
-import { DATE, DATE_PLUS_TIME, TIME, AMOUNT, COSTS_PLUS_PRICES, NUMBER, QUANTITY } from '@/utils/ADempiere/references.js'
+import { isEmptyValue, typeValue } from '@/utils/ADempiere/valueUtils.js'
+import { convertBooleanToTranslationLang } from './formatValue/booleanFormat'
 
 // TODO: Duplicated exported method, removed this
-export { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
+import { formatPrice as formatPriceTemp } from '@/utils/ADempiere/formatValue/numberFormat'
+import { formatDate as formatDateTemp } from '@/utils/ADempiere/formatValue/dateFormat'
 export { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
 
-//  Get Formatted Price
+// TODO: Duplicated method remove and use with destructured params
+export function formatDate(value, isTime = false, format) {
+  return formatDateTemp({
+    value,
+    isTime,
+    format
+  })
+}
+
+// TODO: Duplicated method remove and use with destructured params
 export function formatPrice(number, currency) {
-  if (isEmptyValue(number)) {
-    return undefined
-  }
-  //  Get formatted number
-  if (!isEmptyValue(currency)) {
-    return new Intl.NumberFormat(getCountryCode(), {
-      style: 'currency',
-      currency
-    }).format(number)
-  } else {
-    return new Intl.NumberFormat(getCountryCode()).format(number)
-  }
+  return formatPriceTemp({
+    value: number,
+    currency
+  })
 }
 
 //  Format Quantity
@@ -57,59 +64,74 @@ export function formatQuantity(number) {
 }
 
 // TODO: Duplicated exported method, removed this
+export { formatDateToSend } from '@/utils/ADempiere/formatValue/dateFormat'
 // Format percentage based on Intl library
 export { formatPercent } from '@/utils/ADempiere/formatValue/numberFormat.js'
 
-//  Get country code from store
-function getCountryCode() {
-  const languageDefinition = store.getters.getCurrentLanguageDefinition
-  return languageDefinition.languageISO + '-' + languageDefinition.countryCode
-}
-
-// Get Default country
-function getCurrency() {
-  const currencyDefinition = store.getters.getCurrency
-  return currencyDefinition.iSOCode
-}
-
 // Return a format for field depending of reference for him
-export function formatField(value, reference, optionalFormat) {
+export function formatField({
+  value,
+  displayedValue,
+  displayType,
+  optionalFormat
+}) {
   if (isEmptyValue(value)) {
     return undefined
   }
-  if (!reference) {
+  if (!displayType) {
     return value
   }
   //  Format
   let formattedValue
-  switch (reference) {
+  switch (displayType) {
+    case ACCOUNT_ELEMENT.id:
+    case LIST.id:
+    case SEARCH.id:
+    case TABLE.id:
+    case TABLE_DIRECT.id:
+      formattedValue = displayedValue
+      if (isEmptyValue(formattedValue)) {
+        // set value
+        formattedValue = value
+      }
+      break
+
     case DATE.id:
-      formattedValue = moment.utc(value).format(getDateFormat({
+      if (typeValue(value) === 'DATE') {
+        value = value.getTime()
+      }
+      formattedValue = formatDateTemp({
+        value,
+        isTime: false,
         format: optionalFormat
-      }))
+      })
       break
+
     case DATE_PLUS_TIME.id:
-      formattedValue = moment.utc(value).format(getDateFormat({
-        isTime: true
-      }))
-      break
     case TIME.id:
-      formattedValue = moment.utc(value).format(getDateFormat({
-        isTime: true
-      }))
+      formattedValue = formatDateTemp({
+        value,
+        isTime: true,
+        format: optionalFormat
+      })
       break
+
     case AMOUNT.id:
-      formattedValue = formatPrice(value, getCurrency())
-      break
     case COSTS_PLUS_PRICES.id:
-      formattedValue = formatPrice(value, getCurrency())
+      formattedValue = formatPriceTemp({
+        value
+      })
       break
+
     case NUMBER.id:
-      formattedValue = formatQuantity(value)
-      break
     case QUANTITY.id:
       formattedValue = formatQuantity(value)
       break
+
+    case YES_NO.id:
+      formattedValue = convertBooleanToTranslationLang(value)
+      break
+
     default:
       formattedValue = value
   }
@@ -137,10 +159,4 @@ export function trimPercentage(stringToParsed) {
     return parsedValue
   }
   return stringToParsed
-}
-export function formatDateToSend(date) {
-  if (isEmptyValue(date)) {
-    return undefined
-  }
-  return date.slice(0, 10)
 }

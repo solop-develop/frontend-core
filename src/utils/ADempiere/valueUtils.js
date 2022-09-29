@@ -382,6 +382,8 @@ export function parsedValueComponent({
       returnValue = value
       break
 
+    case 'FieldAccount':
+    case 'FieldSearch':
     case 'FieldSelect':
       if (isEmpty) {
         value = undefined
