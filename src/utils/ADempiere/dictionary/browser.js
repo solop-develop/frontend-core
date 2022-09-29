@@ -358,7 +358,7 @@ export const containerManager = {
       parentUuid,
       containerUuid,
       contextColumnNames,
-      processParameterUuid: uuid,
+      browseFieldUuid: uuid,
       tableName,
       columnName,
       filters,

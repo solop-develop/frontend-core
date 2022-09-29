@@ -334,6 +334,14 @@ export const FIELDS_LOOKUP = [
   RESOURCE_ASSIGNMENT.id
 ]
 
+export const SUPPORTED_LOOKUPS = [
+  ACCOUNT_ELEMENT.id,
+  LIST.id,
+  TABLE.id,
+  TABLE_DIRECT.id,
+  SEARCH.id
+]
+
 // Some helper methods
 export function isLookup(displayType) {
   return FIELDS_LOOKUP.includes(displayType)
@@ -496,3 +504,18 @@ export function isIntegerField(displayType) {
 export function isDecimalField(displayType) {
   return FIELDS_DECIMALS.includes(displayType)
 }
+
+export const FIELDS_FILE = [
+  BINARY_DATA.id,
+  IMAGE.id,
+  LOCAL_FILE.id,
+  LOCAL_FILE_PATH.id,
+  LOCAL_FILE_PATH_OR_NAME.id
+]
+
+export const FIELDS_TEXT = [
+  CHAR.id,
+  MEMO.id,
+  TEXT.id,
+  TEXT_LONG.id
+]

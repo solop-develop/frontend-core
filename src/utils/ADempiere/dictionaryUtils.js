@@ -173,6 +173,7 @@ export function generateField({
     ...moreAttributes,
     columnNameTo: undefined,
     elementNameTo: undefined,
+    isSameColumnElement: columnName === fieldToGenerate.elementColumnName,
     isSOTrxMenu,
     // displayed attributes
     componentPath: componentReference.componentPath,
