@@ -32,6 +32,7 @@ import payrollActionNotice from './form/payrollActionNotice'
 import pointOfSales from './form/pointOfSales'
 import accounting from './form/accounting'
 import listStoreProduct from './form/listStoreProduct'
+import timeControl from './form/timeControl'
 
 export default {
   actionMenu,
@@ -51,6 +52,7 @@ export default {
   listStoreProduct,
   edit: 'Editar',
   language: 'Idioma',
+  timeControl,
   notifications: {
     // simplex
     completed: 'Completado',
