@@ -30,6 +30,7 @@ import actionNotice from './form/actionNotice'
 import payrollActionNotice from './form/payrollActionNotice'
 import accounting from './form/accounting'
 import pointOfSales from './form/pointOfSales'
+import listStoreProduct from './form/listStoreProduct'
 import infoSearch from './fieldFormSearch'
 
 export default {
@@ -47,6 +48,7 @@ export default {
   payrollActionNotice,
   pointOfSales,
   accounting,
+  listStoreProduct,
 
   edit: 'Edit',
   language: 'Language',

@@ -31,6 +31,7 @@ import actionNotice from './form/actionNotice'
 import payrollActionNotice from './form/payrollActionNotice'
 import pointOfSales from './form/pointOfSales'
 import accounting from './form/accounting'
+import listStoreProduct from './form/listStoreProduct'
 
 export default {
   actionMenu,
@@ -47,7 +48,7 @@ export default {
   payrollActionNotice,
   pointOfSales,
   accounting,
-
+  listStoreProduct,
   edit: 'Editar',
   language: 'Idioma',
   notifications: {
