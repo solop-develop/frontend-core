@@ -33,6 +33,7 @@
         :all-tabs-list="allTabsList"
         :references-manager="referencesManager"
         :actions-manager="actionsManager"
+        :is-accounting-info="true"
       />
       <tab-manager-child
         v-if="isWithChildsTab && isMobile"

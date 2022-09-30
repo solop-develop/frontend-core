@@ -23,6 +23,10 @@ const window = {
   undoNew: 'Undo New Record',
   containerInfo: {
     notes: 'Notes List',
+    accountingInformation: {
+      title: 'Accounting Information',
+      selection: 'Selection'
+    },
     changeLog: 'ACtivity',
     workflowLog: 'Workflow Log',
     changeDetail: 'Change detail',

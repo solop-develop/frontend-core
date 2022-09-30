@@ -22,6 +22,10 @@ const window = {
   undoNew: 'Descartar Nuevo Registro',
   containerInfo: {
     notes: 'Notas',
+    accountingInformation: {
+      title: 'Información Contable',
+      selection: 'Selección'
+    },
     changeLog: 'Actividad',
     workflowLog: 'Histórico de Flujo de Trabajo',
     changeDetail: 'Detalle del cambio',

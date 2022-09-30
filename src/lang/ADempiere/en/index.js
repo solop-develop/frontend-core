@@ -28,6 +28,7 @@ import smartBrowser from './smartBrowser'
 import window from './window'
 import actionNotice from './form/actionNotice'
 import payrollActionNotice from './form/payrollActionNotice'
+import accounting from './form/accounting'
 import pointOfSales from './form/pointOfSales'
 import infoSearch from './fieldFormSearch'
 
@@ -45,6 +46,7 @@ export default {
   actionNotice,
   payrollActionNotice,
   pointOfSales,
+  accounting,
 
   edit: 'Edit',
   language: 'Language',
