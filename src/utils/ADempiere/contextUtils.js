@@ -249,6 +249,10 @@ export function parseContext({
       value = contextInfo = getContext({
         columnName: ACCOUNTING_CONTEXT_PREFIX + columnName
       })
+    } else if (columnName.startsWith(ACCOUNTING_CONTEXT_PREFIX)) {
+      value = contextInfo = getContext({
+        columnName
+      })
     }
 
     return {
@@ -269,6 +273,13 @@ export function parseContext({
 
   let firstIndexTag = inString.indexOf('@')
 
+  if (firstIndexTag === -1) {
+    if (columnName.startsWith(ACCOUNTING_CONTEXT_PREFIX) || columnName.startsWith(GLOBAL_CONTEXT_PREFIX)) {
+      outString = getContext({
+        columnName
+      })
+    }
+  }
   while (firstIndexTag !== -1) {
     outString = outString + inString.substring(0, firstIndexTag) // up to @
     inString = inString.substring(firstIndexTag + 1, inString.length) // from first @

@@ -330,10 +330,9 @@ export function getDefaultValue({
   let parsedDefaultValue = defaultValue
 
   const isContextValue = String(parsedDefaultValue).includes('@')
-  const isSpeciaColumn = !isEmptyValue(arrayMatches(ACCOUNTING_COLUMNS, [columnName, elementName]))
+
   // search value with context
-  if ((isSpeciaColumn || isContextValue) &&
-    String(parsedDefaultValue).trim() !== '-1') {
+  if (isContextValue && String(parsedDefaultValue).trim() !== '-1') {
     parsedDefaultValue = parseContext({
       parentUuid,
       containerUuid,
@@ -341,6 +340,16 @@ export function getDefaultValue({
       value: parsedDefaultValue,
       isSOTrxMenu
     }).value
+  }
+
+  const isSpeciaColumn = !isEmptyValue(arrayMatches(ACCOUNTING_COLUMNS, [columnName, elementName]))
+  // search value with context
+  if (isSpeciaColumn && String(parsedDefaultValue).trim() !== '-1') {
+    parsedDefaultValue = getPreference({
+      parentUuid,
+      containerUuid,
+      columnName
+    })
   }
 
   // search value preference with column name
