@@ -125,20 +125,6 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/childIncome',
-    component: Layout,
-    redirect: '/childIncome/index',
-    meta: { title: 'guide', icon: 'guide', noCache: true, breadcrumb: false },
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/ADempiere/childIncome/index'),
-        name: 'childIncome',
-        meta: { title: 'Ingreso de Niño', icon: 'user', noCache: true, isIndex: true }
-      }
-    ]
-  },
-  {
     path: '/profile',
     component: Layout,
     redirect: '/profile/index',
