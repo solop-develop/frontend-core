@@ -18,8 +18,8 @@ import language from '@/lang'
 export default [
   // RecurringType
   {
-    fieldUuid: '8d0aabb4-fb40-11e8-a479-7a0060f0aa01',
-    uuid: '8d0aabb4-fb40-11e8-a479-7a0060f0aa01',
+    fieldUuid: '8cf19da4-fb40-11e8-a479-7a0060f0aa01',
+    uuid: '8cf19da4-fb40-11e8-a479-7a0060f0aa01',
     isFromDictionary: true,
     overwriteDefinition: {
       size: 8,

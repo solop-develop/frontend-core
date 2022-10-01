@@ -18,8 +18,8 @@ import language from '@/lang'
 export default [
   {
     label: language.t('timeControl.type'),
-    columnName: 'area',
-    align: 'center'
+    columnName: 'resourceNameType',
+    align: 'resource'
   },
   {
     label: language.t('timeControl.name'),
@@ -33,22 +33,22 @@ export default [
   },
   {
     label: language.t('timeControl.input'),
-    columnName: 'input',
+    columnName: 'dateFrom',
     align: 'center'
   },
   {
     label: language.t('timeControl.output'),
-    columnName: 'output',
+    columnName: 'dateTo',
     align: 'center'
   },
   {
     label: language.t('timeControl.duration'),
-    columnName: 'duration',
+    columnName: 'date',
     align: 'center'
   },
   {
     label: language.t('timeControl.processed'),
-    columnName: 'processed',
+    columnName: 'is_confirmed',
     align: 'center'
   }
 ]

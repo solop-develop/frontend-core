@@ -36,6 +36,8 @@
           <el-form-item>
             <el-button
               type="primary"
+              :loading="isLoadingCreate"
+              :disabled="isValidateAdd"
               @click="addChild()"
             >
               {{ $t('timeControl.addChild') }}
@@ -98,6 +100,8 @@ import { createFieldFromDictionary } from '@/utils/ADempiere/lookupFactory'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { containerManager as containerManagerForm } from '@/utils/ADempiere/dictionary/form/index.js'
+import { isEmptyValue } from '../../../utils/ADempiere'
+import { translateDateByLong } from '@/utils/ADempiere/formatValue/dateFormat.js'
 // import { containerManager as containerManagerWindow } from '@/utils/ADempiere/dictionary/window'
 
 export default defineComponent({
@@ -114,28 +118,44 @@ export default defineComponent({
     const description = ref('')
     const tableData = ref([])
     const isLoadingFields = ref(false)
+    const isLoadingCreate = ref(false)
     const metadataList = ref([])
-    tableData.value = [
-      {
-        name: 'epale',
-        area: 'Epale',
-        description: 'Epale',
-        ...ROW_ATTRIBUTES
+
+    // computed
+
+    const isValidateAdd = computed(() => {
+      if (isEmptyValue(recurringType.value) || isEmptyValue(name.value)) {
+        return true
       }
-    ]
+      return false
+    })
+
+    const alo = store.getters.getValuesView({
+      containerUuid: 'ChildIncome',
+      format: 'array'
+    })
+    console.log({ alo })
 
     const recurringType = computed(() => {
       return store.getters.getValueOfField({
         containerUuid: 'ChildIncome',
-        columnName: 'RecurringType'
+        columnName: 'S_ResourceType_ID'
+      })
+    })
+    const recurringTypeUuid = computed(() => {
+      return store.getters.getValueOfField({
+        containerUuid: 'ChildIncome',
+        columnName: 'S_ResourceType_ID_UUID'
       })
     })
 
     // Function
 
     function addChild() {
+      isLoadingCreate.value = true
       requestCreateResource({
-        area: recurringType.value,
+        typeUuid: recurringTypeUuid.value,
+        typeId: recurringType.value,
         name: name.value,
         description: description.value
       })
@@ -144,15 +164,15 @@ export default defineComponent({
             containerUuid: 'ChildIncome',
             attributes: [
               {
-                columnName: 'RecurringType',
+                columnName: 'S_ResourceType_ID',
                 value: undefined
               },
               {
-                columnName: 'RecurringType_UUID',
+                columnName: 'S_ResourceType_ID_UUID',
                 value: undefined
               },
               {
-                columnName: 'DisplayColumn_RecurringType',
+                columnName: 'DisplayColumn_S_ResourceType_ID',
                 value: undefined
               }
             ]
@@ -169,6 +189,7 @@ export default defineComponent({
         })
         .finally(() => {
           listResource()
+          isLoadingCreate.value = false
         })
     }
 
@@ -193,7 +214,7 @@ export default defineComponent({
 
     function deleteChild(row) {
       requestDeleteResource({
-        row
+        ...row
       })
         .then(response => {
           console.log({ response })
@@ -208,7 +229,6 @@ export default defineComponent({
         .finally(() => {
           listResource()
         })
-      console.log({ row })
     }
 
     function editChild(row) {
@@ -246,7 +266,16 @@ export default defineComponent({
       requestListResource()
         .then(response => {
           const { records } = response
-          tableData.value = records
+          const alo = records.map(a => {
+            return {
+              ...a,
+              resourceNameType: a.resource.name,
+              dateFrom: translateDateByLong(a.assign_date_from),
+              dateTo: translateDateByLong(a.assign_date_to),
+              ...ROW_ATTRIBUTES
+            }
+          })
+          tableData.value = alo
         }).catch(error => {
           showMessage({
             message: error,
@@ -260,6 +289,8 @@ export default defineComponent({
       setFieldsList({})
     }
 
+    listResource()
+
     return {
       // Ref
       area,
@@ -267,9 +298,12 @@ export default defineComponent({
       description,
       tableData,
       isLoadingFields,
+      isLoadingCreate,
       metadataList,
       // Computed
       recurringType,
+      recurringTypeUuid,
+      isValidateAdd,
       // import
       heardList,
       fieldsList,

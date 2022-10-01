@@ -24,7 +24,8 @@ import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 // import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 export function requestCreateResource({
-  area,
+  typeId,
+  typeUuid,
   name,
   description
 }) {
@@ -33,7 +34,8 @@ export function requestCreateResource({
     method: 'get',
     params: {
       //  DSL Query
-      area,
+      type_id: typeId,
+      type_uuid: typeUuid,
       name,
       description
     }
@@ -46,7 +48,7 @@ export function requestCreateResource({
 export function requestUpdateResource({
   id,
   uuid,
-  area,
+  typeUuid,
   name,
   description
 }) {
@@ -57,7 +59,7 @@ export function requestUpdateResource({
       //  DSL Query
       id,
       uuid,
-      area,
+      type_uuid: typeUuid,
       name,
       description
     }
@@ -71,6 +73,7 @@ export function requestDeleteResource({
   id,
   uuid
 }) {
+  console.log(id, uuid)
   return request({
     url: '/form/addons/time-control/delete-resource-assigment',
     method: 'get',
@@ -93,7 +96,7 @@ export function requestListResource() {
       //  DSL Query
       // id,
       // uuid,
-      // area,
+      // type,
       // name,
       // description,
       //  Page Data
