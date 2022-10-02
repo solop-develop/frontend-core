@@ -188,6 +188,7 @@ const lookupManager = {
       containerUuid,
       uuid,
       contextColumnNames = [],
+      contextColumnNamesByDefaultValue = [],
       value
     }) {
       return new Promise(resolve => {
@@ -195,7 +196,7 @@ const lookupManager = {
           parentUuid,
           containerUuid,
           uuid,
-          contextColumnNames,
+          contextColumnNames: contextColumnNamesByDefaultValue,
           value
         })
 

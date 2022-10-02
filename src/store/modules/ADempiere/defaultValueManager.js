@@ -21,7 +21,7 @@ import { requestDefaultValue } from '@/api/ADempiere/user-interface/persistence.
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 // constants
-import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
+import { DISPLAY_COLUMN_PREFIX, UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
 
 // utils and helper methods
 import { isSameSize } from '@/utils/ADempiere/formatValue/iterableFormat'
@@ -140,18 +140,18 @@ const defaultValueManager = {
           value
         })
           .then(valueResponse => {
-            const values = {}
-
-            // TODO: Response from server same name key of value
-            if (valueResponse.attributes.length === 1) {
-              values.KeyColumn = valueResponse.attributes[0].value
-              values.DisplayColumn = undefined
-            } else {
-              valueResponse.attributes.forEach(attribute => {
-                const { key: column, value } = attribute
-                values[column] = value
-              })
+            const values = {
+              KeyColumn: undefined,
+              DisplayColumn: undefined,
+              UUID: undefined
             }
+
+            // do not use the convertArrayKeyValueToObject method to avoid losing a key with an empty value
+            valueResponse.attributes.forEach(attribute => {
+              const { key: column, value } = attribute
+              values[column] = value
+            })
+
             const valueOfServer = values.KeyColumn
             const displayedValue = values.DisplayColumn
 
@@ -162,7 +162,7 @@ const defaultValueManager = {
               id,
               displayedValue,
               value,
-              uuid: values.uuid
+              uuid: values.UUID
             })
 
             commit('updateValueOfField', {
@@ -179,11 +179,19 @@ const defaultValueManager = {
                 value: displayedValue
               })
             }
+            if (!isEmptyValue(values.UUID)) {
+              commit('updateValueOfField', {
+                parentUuid,
+                containerUuid,
+                columnName: columnName + UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX,
+                value: values.UUID
+              })
+            }
 
             resolve({
               displayedValue,
               value: valueOfServer,
-              uuid: values.uuid
+              uuid: values.UUID
             })
           })
           .catch(error => {
