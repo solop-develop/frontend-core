@@ -18,7 +18,7 @@ import Vue from 'vue'
 
 // constants
 import {
-  ACTIVE, PROCESSING, PROCESSED, UUID
+  ACTIVE, PROCESSING, PROCESSED, UUID, ID
 } from '@/utils/ADempiere/constants/systemColumns'
 
 // utils and helpers methods
@@ -298,6 +298,10 @@ const value = {
 
     getUuidOfContainer: (state) => (containerUuid) => {
       return state.field[`${containerUuid}_${UUID}`]
+    },
+
+    getIdOfContainer: (state) => ({ containerUuid, tableName }) => {
+      return state.field[`${containerUuid}_${tableName}_${ID}`]
     },
 
     // Using to read only in data tables in Window

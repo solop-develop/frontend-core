@@ -26,6 +26,8 @@ export const PROCESSED = 'Processed'
 
 export const UUID = 'UUID'
 
+export const ID = 'ID'
+
 export const WAREHOUSE = 'M_Warehouse_ID'
 
 export const IS_SALES_TRANSACTION = 'IsSalesTransaction'
