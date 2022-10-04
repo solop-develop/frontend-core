@@ -24,18 +24,18 @@ import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 // import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 export function requestCreateResource({
-  typeId,
-  typeUuid,
+  resourceTypeId,
+  resourceTypeUuid,
   name,
   description
 }) {
   return request({
-    url: '/form/addons/time-control/create-resource-assigment',
+    url: '/form/addons/time-control/create-resource-assignment',
     method: 'get',
     params: {
       //  DSL Query
-      type_id: typeId,
-      type_uuid: typeUuid,
+      resource_type_id: resourceTypeId,
+      resource_type_uuid: resourceTypeUuid,
       name,
       description
     }
@@ -48,18 +48,16 @@ export function requestCreateResource({
 export function requestUpdateResource({
   id,
   uuid,
-  typeUuid,
   name,
   description
 }) {
   return request({
-    url: '/form/addons/time-control/update-resource-assigment',
+    url: '/form/addons/time-control/update-resource-assignment',
     method: 'get',
     params: {
       //  DSL Query
       id,
       uuid,
-      type_uuid: typeUuid,
       name,
       description
     }
@@ -75,7 +73,7 @@ export function requestDeleteResource({
 }) {
   console.log(id, uuid)
   return request({
-    url: '/form/addons/time-control/delete-resource-assigment',
+    url: '/form/addons/time-control/delete-resource-assignment',
     method: 'get',
     params: {
       //  DSL Query
@@ -88,19 +86,42 @@ export function requestDeleteResource({
       return camelizeObjectKeys(response)
     })
 }
-export function requestListResource() {
+export function requestListResource({
+  resourceTypeId,
+  resourceTypeUuid,
+  name,
+  description,
+  isWaitingForOrdered
+}) {
   return request({
-    url: '/form/addons/time-control/list-resources-assigment',
+    url: '/form/addons/time-control/list-resources-assignment',
+    method: 'post',
+    data: {
+      //  DSL Query
+      resource_type_id: resourceTypeId,
+      resource_type_uuid: resourceTypeUuid,
+      is_waiting_for_ordered: isWaitingForOrdered,
+      name,
+      description,
+      page_size: 25
+    }
+  })
+    .then(response => {
+      // const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
+      return camelizeObjectKeys(response)
+    })
+}
+export function requestConfirmResourceAssignnment({
+  id,
+  uuid
+}) {
+  return request({
+    url: '/form/addons/time-control/confirm-resource-assignment',
     method: 'get',
     params: {
       //  DSL Query
-      // id,
-      // uuid,
-      // type,
-      // name,
-      // description,
-      //  Page Data
-      page_size: 25
+      id,
+      uuid
     }
   })
     .then(response => {

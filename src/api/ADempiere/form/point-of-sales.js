@@ -348,7 +348,8 @@ export function createOrderLine({
   description,
   quantity,
   price,
-  discountRate
+  discountRate,
+  resourceAssignmentUuid
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/create-order-line`,
@@ -363,7 +364,8 @@ export function createOrderLine({
       discount_rate: discountRate,
       charge_uuid: chargeUuid,
       price_list_uuid: priceListUuid,
-      warehouse_uuid: warehouseUuid
+      warehouse_uuid: warehouseUuid,
+      resource_assignment_uuid: resourceAssignmentUuid
     }
   })
     .then(createOrderLineResponse => {

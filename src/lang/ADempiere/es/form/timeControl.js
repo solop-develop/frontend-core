@@ -19,11 +19,13 @@ const timeControl = {
   name: 'Nombre',
   input: 'Entrada',
   output: 'Salida',
-  duration: 'Duraccion',
+  duration: 'Duración',
   processed: 'Procesado',
   description: 'Descripción',
   area: 'Área',
-  addChild: 'Agregar'
+  addChild: 'Agregar',
+  recordConfirmed: 'Registro Confirmado',
+  addResource: 'Agregar Recursos'
 }
 
 export default timeControl

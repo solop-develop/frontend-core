@@ -23,7 +23,9 @@ const timeControl = {
   processed: 'Processed',
   description: 'Description',
   area: 'Área',
-  addChild: 'Add'
+  addChild: 'Add',
+  recordConfirmed: 'Record Confirmed',
+  addResource: 'Add Resources'
 }
 
 export default timeControl

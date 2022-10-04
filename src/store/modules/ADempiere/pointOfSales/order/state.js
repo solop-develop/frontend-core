@@ -40,6 +40,7 @@ export default {
   },
   findOrder: {},
   newCustomer: {},
+  isShowResource: false,
   listOrder: {
     ...withoutResponse,
     isShowPopover: false

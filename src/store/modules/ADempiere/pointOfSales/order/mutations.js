@@ -30,6 +30,9 @@ export default {
   showListOrders(state, isShow) {
     state.listOrder.isShowPopover = isShow
   },
+  showListResources(state, isShow) {
+    state.isShowResource = isShow
+  },
   setIsReloadListOrders(state) {
     state.listOrder.isReload = true
   },
