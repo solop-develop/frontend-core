@@ -347,6 +347,11 @@ export function isLookup(displayType) {
   return FIELDS_LOOKUP.includes(displayType)
 }
 
+// Some helper methods
+export function isSupportLookup(displayType) {
+  return SUPPORTED_LOOKUPS.includes(displayType)
+}
+
 /**
  * All references
  * {number} id: Identifiert to field reference
