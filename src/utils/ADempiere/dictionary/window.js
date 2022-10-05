@@ -701,7 +701,7 @@ export function generateTabs({
   const tabsList = tabs.filter((itemTab) => {
     return !(
       itemTab.isTranslationTab || itemTab.isSortTab ||
-      itemTab.isAdvancedTab || itemTab.isHasTree
+      itemTab.isHasTree
     )
   }).map((currentTab, index, listTabs) => {
     const isParentTab = Boolean(firstTabTableName === currentTab.tableName)
@@ -995,7 +995,12 @@ export const containerManager = {
       return true
     }
 
-    const { isParentTab } = store.getters.getStoredTab(parentUuid, containerUuid)
+    const { isParentTab, linkColumnName, parentColumnName } = store.getters.getStoredTab(parentUuid, containerUuid)
+
+    // fill value with context
+    if (linkColumnName === field.columnName || parentColumnName === field.columnName) {
+      return true
+    }
 
     if (!isParentTab) {
       // if parent record is new lock childs field to read only

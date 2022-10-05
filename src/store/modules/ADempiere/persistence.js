@@ -21,7 +21,7 @@ import language from '@/lang'
 // constants
 import { LOG_COLUMNS_NAME_LIST, UUID } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
-import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
+import { DISPLAY_COLUMN_PREFIX, IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
 
 // api request methods
 import {
@@ -191,7 +191,7 @@ const persistence = {
       })
     },
 
-    flushPersistenceQueue({ commit, dispatch, getters }, {
+    flushPersistenceQueue({ commit, dispatch, getters, rootGetters }, {
       parentUuid,
       containerUuid,
       tableName,
@@ -267,11 +267,30 @@ const persistence = {
                 })
                 response.type = 'createEntity'
 
+                const attributesRecord = response.attributes
+
+                // add display column to current record
+                const { identifierColumns } = rootGetters.getStoredTab(parentUuid, containerUuid)
+                const displayedColumnName = DISPLAY_COLUMN_PREFIX + tableName + IDENTIFIER_COLUMN_SUFFIX
+                let displayedValue = ''
+                identifierColumns.forEach(identifier => {
+                  const { columnName } = identifier
+                  const currentValue = attributesRecord[columnName]
+                  if (isEmptyValue(displayedValue)) {
+                    displayedValue = currentValue
+                    return
+                  }
+                  displayedValue += '_' + currentValue
+                })
+                attributesRecord[displayedColumnName] = displayedValue
+
+                response.attributes = attributesRecord
+
                 // add new row on table
                 commit('setTabRow', {
                   containerUuid,
                   row: {
-                    ...response.attributes,
+                    ...attributesRecord,
                     ...ROW_ATTRIBUTES
                     // rowIndex: 0
                   }
@@ -281,7 +300,7 @@ const persistence = {
                 dispatch('updateValuesOfContainer', {
                   parentUuid,
                   containerUuid,
-                  attributes: response.attributes
+                  attributes: attributesRecord
                 }, {
                   root: true
                 })

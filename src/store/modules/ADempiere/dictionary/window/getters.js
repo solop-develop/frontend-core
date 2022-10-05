@@ -19,7 +19,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { isDisplayedField, isMandatoryField } from '@/utils/ADempiere/dictionary/window.js'
 import { DISPLAY_COLUMN_PREFIX, getDefaultValue } from '@/utils/ADempiere/dictionaryUtils.js'
 import { getContext } from '@/utils/ADempiere/contextUtils'
-import { isLookup } from '@/utils/ADempiere/references'
+import { isLookup, ID } from '@/utils/ADempiere/references'
 
 /**
  * Dictionary Window Getters
@@ -231,51 +231,46 @@ export default {
         attributesObject[columnName] = parsedDefaultValue
 
         // add display column to default
-        if (isAddDisplayColumn && isLookup(fieldItem.displayType)) {
+        if (isAddDisplayColumn && isLookup(fieldItem.displayType) || fieldItem.displayType === ID.id) {
           const { displayColumnName } = fieldItem
           let displayedValue
           if (!isEmptyValue(parsedDefaultValue)) {
-            // get displayed value of link column
-            if (isLinkColumn) {
-              displayedValue = getContext({
-                parentUuid,
-                columnName: DISPLAY_COLUMN_PREFIX + linkColumnName
-              })
-            }
-
-            // get displayed value of parent column
-            if (isParentColumn) {
-              displayedValue = getContext({
-                parentUuid,
-                columnName: DISPLAY_COLUMN_PREFIX + columnName
-              })
-            }
-
-            // get displayed value of stored default value
-            if (isEmptyValue(displayedValue)) {
-              const storedDefaultValue = rootGetters.getStoredDefaultValue({
-                parentUuid,
-                containerUuid,
-                contextColumnNames: contextColumnNames,
-                uuid
-              })
-              if (!isEmptyValue(storedDefaultValue)) {
-                displayedValue = storedDefaultValue.displayedValue
+            // get displayed value of link column or parent column
+            if (isLinkColumn || isParentColumn) {
+              // TODO: Improve with request default value on server
+              if (!Number.isNaN(parsedDefaultValue) && Number(parsedDefaultValue) > 0) {
+                displayedValue = getContext({
+                  parentUuid,
+                  columnName: DISPLAY_COLUMN_PREFIX + columnName
+                })
               }
-            }
+            } else {
+              // get displayed value of stored default value
+              if (isEmptyValue(displayedValue)) {
+                const storedDefaultValue = rootGetters.getStoredDefaultValue({
+                  parentUuid,
+                  containerUuid,
+                  contextColumnNames: contextColumnNames,
+                  uuid
+                })
+                if (!isEmptyValue(storedDefaultValue)) {
+                  displayedValue = storedDefaultValue.displayedValue
+                }
+              }
 
-            // get displayed value of stored lookup
-            if (isEmptyValue(displayedValue)) {
-              const storedLookupList = rootGetters.getStoredLookupList({
-                parentUuid,
-                containerUuid,
-                contextColumnNames: fieldItem.reference.contextColumnNames,
-                uuid
-              })
-              if (!isEmptyValue(storedLookupList)) {
-                const option = storedLookupList.find(item => item.value === parsedDefaultValue)
-                if (!isEmptyValue(option)) {
-                  displayedValue = option.displayedValue
+              // get displayed value of stored lookup
+              if (isEmptyValue(displayedValue)) {
+                const storedLookupList = rootGetters.getStoredLookupList({
+                  parentUuid,
+                  containerUuid,
+                  contextColumnNames: fieldItem.reference.contextColumnNames,
+                  uuid
+                })
+                if (!isEmptyValue(storedLookupList)) {
+                  const option = storedLookupList.find(item => item.value === parsedDefaultValue)
+                  if (!isEmptyValue(option)) {
+                    displayedValue = option.displayedValue
+                  }
                 }
               }
             }
