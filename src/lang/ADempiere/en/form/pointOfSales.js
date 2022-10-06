@@ -27,7 +27,8 @@ const pointOfSales = {
   },
   collection: {
     chargeAmount: 'Charge',
-    creditAmount: 'Installment'
+    creditAmount: 'Installment',
+    others: 'Others'
   },
   conversionRate: {
     withoutConversionRate: 'There is no current exchange rate '

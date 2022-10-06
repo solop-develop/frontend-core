@@ -27,7 +27,8 @@ const pointOfSales = {
   },
   collection: {
     chargeAmount: 'Cargo',
-    creditAmount: 'Abono'
+    creditAmount: 'Abono',
+    others: 'Otros'
   },
   conversionRate: {
     withoutConversionRate: 'No existe tasa de cambio registrada al día '
