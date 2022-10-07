@@ -52,6 +52,27 @@
       :container-manager="containerManager"
       :container-uuid="reportUuid"
     />
+    <el-drawer
+      :visible.sync="drawer"
+      :with-header="false"
+      size="50%"
+    >
+      <options-report
+        :container-uuid="reportUuid"
+        :container-manager="containerManager"
+      />
+    </el-drawer>
+    <el-button
+      type="primary"
+      icon="el-icon-arrow-left"
+      circle
+      style="
+        top: 50%;
+        right: 0%;
+        position: absolute;
+      "
+      @click="drawer = !drawer"
+    />
   </div>
 
   <loading-view
@@ -74,6 +95,7 @@ import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
 import mixinReport from '@/views/ADempiere/Report/mixinReport.js'
 import ModalDialog from '@theme/components/ADempiere/ModalDialog/index.vue'
 import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp/index.vue'
+import OptionsReport from '@theme/components/ADempiere/FileRender/Setup/optionsReportViwer.vue'
 
 // utils and helper methods
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
@@ -90,7 +112,8 @@ export default defineComponent({
     LoadingView,
     ActionMenu,
     ModalDialog,
-    TitleAndHelp
+    TitleAndHelp,
+    OptionsReport
   },
 
   setup(props, { root }) {
@@ -101,6 +124,11 @@ export default defineComponent({
     const reportContent = ref('')
 
     const getStoredReportOutput = computed(() => {
+      console.log({
+        instanceUuid: root.$route.params.instanceUuid,
+        reportUuid,
+        getStoredReportOutput: store.getters.getReportOutput(root.$route.params.instanceUuid)
+      })
       return store.getters.getReportOutput(root.$route.params.instanceUuid)
     })
 
@@ -212,6 +240,8 @@ export default defineComponent({
       menuParentUuid: root.$route.meta.parentUuid
     })
 
+    const drawer = ref(false)
+
     onMounted(() => {
       getReport()
       root.$route.meta.reportType = reportType.value
@@ -224,6 +254,7 @@ export default defineComponent({
       reportContent,
       actionsManager,
       relationsManager,
+      drawer,
       // computeds
       containerManager,
       link,

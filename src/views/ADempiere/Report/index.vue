@@ -45,6 +45,27 @@
           />
         </el-scrollbar>
       </el-card>
+      <el-drawer
+        :visible.sync="isShowPanelConfig"
+        :with-header="false"
+        :before-close="handleClose"
+      >
+        <options-report
+          :container-uuid="reportUuid"
+          :container-manager="containerManager"
+        />
+      </el-drawer>
+      <el-button
+        type="primary"
+        icon="el-icon-arrow-left"
+        circle
+        style="
+          top: 50%;
+          right: 0%;
+          position: absolute;
+        "
+        @click="handleOpem()"
+      />
     </el-main>
   </el-container>
 
@@ -65,6 +86,7 @@ import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
 import mixinReport from '@/views/ADempiere/Report/mixinReport.js'
 import PanelDefinition from '@theme/components/ADempiere/PanelDefinition/index.vue'
 import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp/index.vue'
+import OptionsReport from '@theme/components/ADempiere/FileRender/Setup/optionsReport.vue'
 
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -78,7 +100,8 @@ export default defineComponent({
     ActionMenu,
     LoadingView,
     PanelDefinition,
-    TitleAndHelp
+    TitleAndHelp,
+    OptionsReport
   },
 
   props: {
@@ -104,6 +127,19 @@ export default defineComponent({
     const showContextMenu = computed(() => {
       return store.state.settings.showContextMenu
     })
+
+    const isShowPanelConfig = computed(() => {
+      return store.getters.getShowPanelConfig({
+        containerUuid: reportUuid
+      })
+    })
+
+    function showPanelConfigReport(value) {
+      store.commit('setShowPanelConfig', {
+        containerUuid: reportUuid,
+        value
+      })
+    }
 
     store.dispatch('settings/changeSetting', {
       key: 'showContextMenu',
@@ -152,6 +188,14 @@ export default defineComponent({
       menuParentUuid: root.$route.meta.parentUuid
     })
 
+    function handleClose() {
+      showPanelConfigReport(false)
+    }
+
+    function handleOpem() {
+      showPanelConfigReport(!isShowPanelConfig.value)
+    }
+
     getReport()
 
     return {
@@ -162,7 +206,12 @@ export default defineComponent({
       actionsManager,
       relationsManager,
       // computeds
-      showContextMenu
+      showContextMenu,
+      isShowPanelConfig,
+      // methodos
+      showPanelConfigReport,
+      handleClose,
+      handleOpem
     }
   }
 })

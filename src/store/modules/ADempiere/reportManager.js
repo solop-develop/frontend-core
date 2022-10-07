@@ -45,7 +45,8 @@ const initState = {
   reportViewsList: {},
   drillTablesList: {},
   reportsOutput: {},
-  reportsGenerated: {}
+  reportsGenerated: {},
+  isShowPanelConfig: {}
 }
 
 const reportManager = {
@@ -78,6 +79,9 @@ const reportManager = {
     },
     resetStateReportManager(state) {
       state = initState
+    },
+    setShowPanelConfig(state, { containerUuid, value }) {
+      Vue.set(state.isShowPanelConfig, containerUuid, value)
     }
   },
 
@@ -642,6 +646,10 @@ const reportManager = {
 
     getDrillTablesList: (state) => (containerUuid) => {
       return state.drillTablesList[containerUuid] || []
+    },
+
+    getShowPanelConfig: (state) => ({ containerUuid }) => {
+      return state.isShowPanelConfig[containerUuid]
     }
   }
 }
