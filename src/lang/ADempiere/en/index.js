@@ -33,6 +33,7 @@ import pointOfSales from './form/pointOfSales'
 import listStoreProduct from './form/listStoreProduct'
 import timeControl from './form/timeControl'
 import infoSearch from './fieldFormSearch'
+import report from './report.js'
 
 export default {
   actionMenu,
@@ -51,6 +52,7 @@ export default {
   accounting,
   listStoreProduct,
   timeControl,
+  report,
   edit: 'Edit',
   language: 'Language',
   notifications: {
