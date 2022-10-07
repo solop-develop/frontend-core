@@ -55,7 +55,7 @@ export default {
     formatReturn = 'name'
   }) => {
     if (isEmptyValue(fieldsList)) {
-      fieldsList = getters.getStoredFieldsFromProcess(containerUuid)
+      fieldsList = getters.getStoredFieldsFromReport(containerUuid)
     }
 
     const fieldsEmpty = fieldsList.filter(fieldItem => {

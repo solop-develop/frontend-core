@@ -94,7 +94,7 @@ const reportManager = {
         const reportDefinition = rootGetters.getStoredReport(containerUuid)
         const { fieldsList } = reportDefinition
 
-        const fieldsEmpty = rootGetters.getProcessParametersEmptyMandatory({
+        const fieldsEmpty = rootGetters.getReportParametersEmptyMandatory({
           containerUuid,
           fieldsList
         })
