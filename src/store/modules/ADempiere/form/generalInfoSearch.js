@@ -305,7 +305,7 @@ const generalInfoSearch = {
                 // without search, table, and table direct references
                 return ![SEARCH.id, TABLE.id, TABLE_DIRECT.id].includes(field.displayType) &&
                   // key is used to seleccion column, unnused on vue client
-                  !field.isKey
+                  !field.isKey && field.isDisplayed
               })
               .sort((fieldA, fieldB) => {
                 // https://github.com/adempiere/adempiere/blob/develop/client/src/org/compiere/apps/search/InfoGeneral.java#L332
