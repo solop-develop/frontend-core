@@ -21,7 +21,7 @@ const report = {
   reportOptions: 'Opciones del Reporte',
   preference: 'Preferencia',
   reportSettings: 'Configuración del Reporte',
-  sum: 'Sumar'
+  summary: 'Resumen'
 }
 
 export default report

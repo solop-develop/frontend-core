@@ -173,13 +173,12 @@ export default {
       return false
     },
     handleSuccess({ data, workbook, firstSheetName, worksheet, results, header }) {
-      console.log({ data, workbook, firstSheetName, worksheet, results, header })
-      const epale = results.filter((data, index) => {
+      const dataRow = results.filter((data, index) => {
         if (index <= 5) {
           return data
         }
       })
-      this.tableData = epale
+      this.tableData = dataRow
       this.tableHeader = header
     },
     next() {

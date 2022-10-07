@@ -43,7 +43,6 @@ export function listProductStorage({
     }
   })
     .then(response => {
-      console.log({ response })
       const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
       return convertEntityList(response)
     })

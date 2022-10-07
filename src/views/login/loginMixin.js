@@ -17,7 +17,6 @@ export default {
       })
     },
     pathRedirect(path = 'login') {
-      console.log({ path })
       this.$router.push({
         path
       }).catch(error => {

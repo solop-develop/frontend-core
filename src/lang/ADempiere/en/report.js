@@ -21,7 +21,7 @@ const report = {
   reportOptions: 'Report Options',
   preference: 'Preference',
   reportSettings: 'Report Settings',
-  sum: 'Sum'
+  summary: 'Summary'
 }
 
 export default report

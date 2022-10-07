@@ -101,7 +101,6 @@ export default {
       commit('setSelectedReceiptMatch', select)
     },
     selectedInvoceMatch({ commit }, select) {
-      console.log({ select })
       commit('setSelectedInvoceMatch', select)
     }
   },
