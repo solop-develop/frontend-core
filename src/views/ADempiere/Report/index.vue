@@ -49,6 +49,7 @@
         :visible.sync="isShowPanelConfig"
         :with-header="false"
         :before-close="handleClose"
+        size="50%"
       >
         <options-report
           :container-uuid="reportUuid"

@@ -53,8 +53,9 @@
       :container-uuid="reportUuid"
     />
     <el-drawer
-      :visible.sync="drawer"
+      :visible.sync="isShowPanelConfig"
       :with-header="false"
+      :before-close="handleClose"
       size="50%"
     >
       <options-report
@@ -71,7 +72,7 @@
         right: 0%;
         position: absolute;
       "
-      @click="drawer = !drawer"
+      @click="handleOpem()"
     />
   </div>
 
@@ -124,16 +125,17 @@ export default defineComponent({
     const reportContent = ref('')
 
     const getStoredReportOutput = computed(() => {
-      console.log({
-        instanceUuid: root.$route.params.instanceUuid,
-        reportUuid,
-        getStoredReportOutput: store.getters.getReportOutput(root.$route.params.instanceUuid)
-      })
       return store.getters.getReportOutput(root.$route.params.instanceUuid)
     })
 
     const link = computed(() => {
       return getStoredReportOutput.value.link
+    })
+
+    const isShowPanelConfig = computed(() => {
+      return store.getters.getShowPanelConfig({
+        containerUuid: reportUuid
+      })
     })
 
     function displayReport(reportOutput) {
@@ -236,6 +238,21 @@ export default defineComponent({
       })
     }
 
+    function handleClose() {
+      showPanelConfigReport(false)
+    }
+
+    function handleOpem() {
+      showPanelConfigReport(!isShowPanelConfig.value)
+    }
+
+    function showPanelConfigReport(value) {
+      store.commit('setShowPanelConfig', {
+        containerUuid: reportUuid,
+        value
+      })
+    }
+
     const relationsManager = ref({
       menuParentUuid: root.$route.meta.parentUuid
     })
@@ -255,11 +272,15 @@ export default defineComponent({
       actionsManager,
       relationsManager,
       drawer,
+      isShowPanelConfig,
       // computeds
       containerManager,
       link,
       storedReportDefinition,
-      getStoredReportOutput
+      getStoredReportOutput,
+      handleOpem,
+      handleClose,
+      showPanelConfigReport
     }
   }
 })
