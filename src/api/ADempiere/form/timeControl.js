@@ -91,19 +91,23 @@ export function requestListResource({
   resourceTypeUuid,
   name,
   description,
-  isWaitingForOrdered
+  isWaitingForOrdered,
+  pageToken
 }) {
   return request({
     url: '/form/addons/time-control/list-resources-assignment',
     method: 'post',
+    params: {
+      page_token: pageToken
+    },
     data: {
       //  DSL Query
       resource_type_id: resourceTypeId,
       resource_type_uuid: resourceTypeUuid,
       is_waiting_for_ordered: isWaitingForOrdered,
       name,
-      description,
-      page_size: 25
+      description
+      // page_size: 25
     }
   })
     .then(response => {
