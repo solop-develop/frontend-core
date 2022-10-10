@@ -24,7 +24,7 @@ import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 import { exportFileFromJson, supportedTypes } from '@/utils/ADempiere/exportUtil.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { isLookup } from '@/utils/ADempiere/references'
-
+import { convertBooleanToTranslationLang } from '@/utils/ADempiere/formatValue/booleanFormat.js'
 /**
  * Shared url link
  */
@@ -118,7 +118,11 @@ export const exportRecords = ({ parentUuid, containerUuid, containerManager, for
   const data = recordData.map(row => {
     const newRow = {}
     columnsAvalable.forEach(column => {
-      newRow[column] = row[column]
+      if (typeof row[column] === 'boolean') {
+        newRow[column] = convertBooleanToTranslationLang(row[column])
+      } else {
+        newRow[column] = row[column]
+      }
     })
     return newRow
   })
