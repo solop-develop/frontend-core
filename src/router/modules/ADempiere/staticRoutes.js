@@ -148,7 +148,7 @@ const staticRoutes = [
   {
     path: '/TimeControl',
     component: Layout,
-    hidden: false,
+    hidden: true,
     children: [
       {
         path: '/TimeControl',
