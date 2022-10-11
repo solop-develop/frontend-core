@@ -97,8 +97,7 @@ export const exportRecords = ({ parentUuid, containerUuid, containerManager, for
     parentUuid,
     containerUuid
   }).filter(fieldItem => {
-    const isDisplayed = fieldItem.isDisplayed || fieldItem.isDisplayedFromLogic
-    if (fieldItem.isActive && isDisplayed && !fieldItem.isKey) {
+    if (fieldItem.isActive && fieldItem.isDisplayed && !fieldItem.isKey && fieldItem.sequence > 0) {
       return fieldItem
     }
   })
@@ -108,6 +107,8 @@ export const exportRecords = ({ parentUuid, containerUuid, containerManager, for
     }
     return fieldItem.columnName
   })
+
+  fieldsListAvailable.sort((a, b) => a.sequence - b.sequence)
 
   const headerList = fieldsListAvailable.map(fieldItem => {
     return fieldItem.name
