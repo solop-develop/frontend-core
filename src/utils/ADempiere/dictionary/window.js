@@ -1200,6 +1200,17 @@ export const containerManager = {
       pageNumber
     })
   },
+  setSizePage: ({
+    parentUuid,
+    containerUuid,
+    pageSize = 15
+  }) => {
+    store.dispatch('getEntities', {
+      parentUuid,
+      containerUuid,
+      pageSize
+    })
+  },
   getPageNumber({ containerUuid }) {
     return store.getters.getTabPageNumber({
       containerUuid

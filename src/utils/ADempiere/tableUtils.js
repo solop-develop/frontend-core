@@ -42,6 +42,9 @@ export const ROW_KEY_ATTRIBUTES = Object.keys(ROW_ATTRIBUTES)
  */
 export const ROWS_OF_RECORDS_BY_PAGE = 15
 
+// Number of records per page
+export const NUMBER_RECORDS_PER_PAGE = [15, 25, 50, 100]
+
 /**
  * Generate index to element-ui table
  * @link https://element.eleme.cn/#/es/component/table#indice-personalizado

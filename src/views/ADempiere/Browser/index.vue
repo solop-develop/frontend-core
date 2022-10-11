@@ -371,6 +371,12 @@ export default defineComponent({
           pageNumber
         })
       },
+      setSizePage: ({ containerUuid, pageSize }) => {
+        store.dispatch('getBrowserSearch', {
+          containerUuid,
+          pageSize
+        })
+      },
 
       isLoadedRecords: ({ containerUuid }) => {
         return store.getters.getBrowserIsLoadedRecordsList({

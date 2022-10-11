@@ -47,7 +47,8 @@ const browserControl = {
       isLoaded = true,
       isLoadedContext = false,
       selectionsList = [],
-      pageNumber = 1
+      pageNumber = 1,
+      pageSize = 15
     }) {
       const dataBrowser = {
         containerUuid,
@@ -57,7 +58,8 @@ const browserControl = {
         isLoaded,
         isLoadedContext,
         recordCount,
-        selectionsList
+        selectionsList,
+        pageSize
       }
       Vue.set(state.browserData, containerUuid, dataBrowser)
     },
@@ -133,6 +135,7 @@ const browserControl = {
     getBrowserSearch({ commit, getters, rootGetters }, {
       containerUuid,
       pageNumber,
+      pageSize,
       isClearSelection = false
     }) {
       return new Promise(resolve => {
@@ -183,7 +186,8 @@ const browserControl = {
           uuid: containerUuid,
           contextAttributesList,
           parametersList,
-          nextPageToken: pageToken
+          nextPageToken: pageToken,
+          pageSize
         })
           .then(browserSearchResponse => {
             const recordsList = browserSearchResponse.recordsList.map((record, rowIndex) => {
@@ -201,6 +205,7 @@ const browserControl = {
               recordCount: browserSearchResponse.recordCount,
               nextPageToken: browserSearchResponse.nextPageToken,
               pageNumber,
+              pageSize,
               isLoaded: true
             })
 
@@ -344,6 +349,7 @@ const browserControl = {
         isLoadedContext: false,
         selectionsList: [],
         pageNumber: 1,
+        pageSize: 15,
         isLoaded: false
       }
     },
@@ -358,6 +364,9 @@ const browserControl = {
     },
     getBrowserPageNumber: (state, getters) => ({ containerUuid }) => {
       return getters.getBrowserData(containerUuid).pageNumber
+    },
+    getBrowserPageSize: (state, getters) => ({ containerUuid }) => {
+      return getters.getBrowserData(containerUuid).pageSize
     },
     getBrowserRecordCount: (state, getters) => ({ containerUuid }) => {
       return getters.getBrowserData(containerUuid).recordCount

@@ -74,7 +74,8 @@ const windowManager = {
       recordCount = 0,
       isLoaded = true,
       isLoading = false,
-      pageNumber = 1
+      pageNumber = 1,
+      pageSize = 15
     }) {
       const dataTab = {
         parentUuid,
@@ -88,7 +89,8 @@ const windowManager = {
         recordCount,
         isLoaded,
         isLoading,
-        pageNumber
+        pageNumber,
+        pageSize
       }
       Vue.set(state.tabData, containerUuid, dataTab)
       Vue.set(state.oldTabData, containerUuid, dataTab)
@@ -213,7 +215,8 @@ const windowManager = {
       containerUuid,
       searchValue = '',
       filters = [],
-      pageNumber
+      pageNumber,
+      pageSize
     }) {
       return new Promise(resolve => {
         const storedPage = getters.getTabPageNumber({
@@ -308,7 +311,8 @@ const windowManager = {
           contextAttributesList,
           searchValue,
           filters,
-          pageToken
+          pageToken,
+          pageSize
         })
           .then(dataResponse => {
             const dataToStored = dataResponse.recordsList.map((record, rowIndex) => {
@@ -385,6 +389,7 @@ const windowManager = {
               recordsList: dataToStored,
               nextPageToken: dataResponse.nextPageToken,
               pageNumber,
+              pageSize,
               isLoaded: true,
               isLoading: false,
               recordCount: dataResponse.recordCount
@@ -605,8 +610,8 @@ const windowManager = {
     getTabPageNumber: (state, getters) => ({ containerUuid }) => {
       return getters.getTabData({ containerUuid }).pageNumber
     },
-    getTabPageToken: (state, getters) => ({ containerUuid }) => {
-      return getters.getTabData({ containerUuid }).nextPageToken
+    getTabPageSize: (state, getters) => ({ containerUuid }) => {
+      return getters.getTabData({ containerUuid }).pageSize
     },
     getTabCurrentRow: (state, getters) => ({ containerUuid }) => {
       // get current record uuid with container uuid
