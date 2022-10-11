@@ -429,9 +429,10 @@ const actions = {
    * @param {object} containerManager, logic implement by panel type
    * TODO: Not working with fields generated on lookupFactory
    */
-  changeDependentFieldsList({ commit, getters, rootGetters }, {
+  changeDependentFieldsList({ commit, getters, dispatch }, {
     field,
     fieldsList,
+    isGetDefaultValue = true,
     containerManager
   }) {
     if (isEmptyValue(field.dependentFieldsList)) {
@@ -499,7 +500,7 @@ const actions = {
       }
 
       //  isDisplayed Logic
-      let isDisplayedFromLogic, isMandatoryFromLogic, isReadOnlyFromLogic, defaultValue
+      let isDisplayedFromLogic, isMandatoryFromLogic, isReadOnlyFromLogic
       if (!isEmptyValue(storedFieldDependent.displayLogic)) {
         isDisplayedFromLogic = evaluator.evaluateLogic({
           context: getContext,
@@ -526,88 +527,129 @@ const actions = {
           logic: storedFieldDependent.readOnlyLogic
         })
       }
-      // default value without sql
-      if (!isEmptyValue(storedFieldDependent.defaultValue) &&
-      storedFieldDependent.defaultValue.includes('@') &&
-        !storedFieldDependent.defaultValue.startsWith('@SQL=')) {
-        defaultValue = parseContext({
-          parentUuid,
-          containerUuid,
-          value: storedFieldDependent.defaultValue
-        }).value
-      }
 
-      // default value with sql
-      if (!isEmptyValue(storedFieldDependent.defaultValue) &&
-      storedFieldDependent.defaultValue.startsWith('@SQL=')) {
-        defaultValue = parseContext({
-          parentUuid,
-          containerUuid,
-          isSQL: true,
-          value: storedFieldDependent.defaultValue
-        }).query
-
-        let newValue, displayedValue
-
-        newValue = rootGetters.getValueOfField({
-          containerUuid,
-          columnName: columnName
-        })
-        if (!isEmptyValue(newValue)) {
-          displayedValue = rootGetters.getValueOfField({
-            containerUuid,
-            columnName: storedFieldDependent.displayColumnName
-          })
-        } else {
-          const {
-            value: valueByServer,
-            displayedValue: displayedValueByServer
-          } = containerManager.getDefaultValue({
-            parentUuid,
-            containerUuid,
-            contextColumnNames: storedFieldDependent.contextColumnNames,
-            uuid: storedFieldDependent.uuid,
-            id: storedFieldDependent.id,
-            columnName: columnName
-          })
-
-          displayedValue = displayedValueByServer
-          newValue = valueByServer
-        }
-
-        // update values for field
-        commit('updateValueOfField', {
-          parentUuid,
-          containerUuid,
-          columnName: columnName,
-          value: newValue
-        })
-        // update values for field on elememnt name of column
-        if (columnName !== storedFieldDependent.elementName) {
-          commit('updateValueOfField', {
-            parentUuid,
-            containerUuid,
-            columnName: storedFieldDependent.elementName,
-            value: newValue
-          })
-        }
-        // update displayed value for field
-        if (isLookup(storedFieldDependent.displayType)) {
-          commit('updateValueOfField', {
-            parentUuid,
-            containerUuid,
-            columnName: storedFieldDependent.displayColumnName,
-            value: displayedValue
-          })
-        }
-      }
+      // default value
+      const { parsedDefaultValue } = await dispatch('changeDefaultLogic', {
+        parentUuid,
+        containerUuid,
+        containerManager,
+        field: storedFieldDependent,
+        isGetDefaultValue
+      })
 
       commit('changeFieldLogic', {
         field: storedFieldDependent,
         isDisplayedFromLogic,
         isMandatoryFromLogic,
         isReadOnlyFromLogic,
-        parsedDefaultValue: defaultValue
+        parsedDefaultValue: parsedDefaultValue
+      })
+    })
+  },
+
+  changeDefaultLogic({ commit, rootGetters }, {
+    parentUuid,
+    containerUuid,
+    field,
+    isGetDefaultValue = true,
+    containerManager
+  }) {
+    return new Promise(resolve => {
+      const { columnName } = field
+      const resolveValues = {
+        value: undefined,
+        defaultValue: undefined,
+        displayedValue: undefined
+      }
+
+      let defaultValue, newValue, displayedValue
+
+      if (isEmptyValue(field.defaultValue)) {
+        resolve(resolveValues)
+        return
+      }
+
+      // default value without sql
+      if (field.defaultValue.includes('@') && !field.defaultValue.startsWith('@SQL=')) {
+        defaultValue = parseContext({
+          parentUuid,
+          containerUuid,
+          value: field.defaultValue
+        }).value
+        resolveValues.defaultValue = defaultValue
+        resolve(resolveValues)
+        return
+      }
+
+      // default value with sql
+      if (!isGetDefaultValue || !field.defaultValue.startsWith('@SQL=')) {
+        resolve(resolveValues)
+        return
+      }
+
+      defaultValue = parseContext({
+        parentUuid,
+        containerUuid,
+        isSQL: true,
+        value: field.defaultValue
+      }).query
+
+      newValue = rootGetters.getValueOfField({
+        containerUuid,
+        columnName: columnName
+      })
+      if (!isEmptyValue(newValue)) {
+        displayedValue = rootGetters.getValueOfField({
+          containerUuid,
+          columnName: field.displayColumnName
+        })
+      } else {
+        const {
+          value: valueByServer,
+          displayedValue: displayedValueByServer
+        } = containerManager.getDefaultValue({
+          parentUuid,
+          containerUuid,
+          contextColumnNames: field.contextColumnNames,
+          uuid: field.uuid,
+          id: field.id,
+          columnName: columnName
+        })
+
+        displayedValue = displayedValueByServer
+        newValue = valueByServer
+      }
+
+      // update values for field
+      commit('updateValueOfField', {
+        parentUuid,
+        containerUuid,
+        columnName: columnName,
+        value: newValue
+      })
+      // update values for field on elememnt name of column
+      if (columnName !== field.elementName) {
+        commit('updateValueOfField', {
+          parentUuid,
+          containerUuid,
+          columnName: field.elementName,
+          value: newValue
+        })
+      }
+      // update displayed value for field
+      if (isLookup(field.displayType)) {
+        commit('updateValueOfField', {
+          parentUuid,
+          containerUuid,
+          columnName: field.displayColumnName,
+          value: displayedValue
+        })
+      }
+
+      resolve({
+        value: newValue,
+        defaultValue,
+        displayedValue
       })
     })
   },

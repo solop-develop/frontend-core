@@ -948,7 +948,8 @@ export const containerManager = {
       store.dispatch('changeDependentFieldsList', {
         field,
         fieldsList,
-        containerManager: containerManager
+        containerManager: containerManager,
+        isGetDefaultValue: false
       })
     })
 

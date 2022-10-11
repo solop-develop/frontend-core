@@ -67,7 +67,9 @@ import store from '@/store'
 
 // constants
 import { CHAR, DEFAULT_SIZE, TABLE_DIRECT } from '@/utils/ADempiere/references.js'
-import { DISPLAY_COLUMN_PREFIX, evalutateTypeField, getDefaultValue, getEvaluatedLogics } from '@/utils/ADempiere/dictionaryUtils.js'
+import {
+  DISPLAY_COLUMN_PREFIX, evalutateTypeField, getContextDefaultValue, getEvaluatedLogics
+} from '@/utils/ADempiere/dictionaryUtils.js'
 
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -339,13 +341,13 @@ export function getFieldTemplate(overwriteDefinition) {
   const parentFieldsList = getParentFields(fieldTemplateMetadata)
 
   // TODO: Add support to isSOTrxMenu
-  const parsedDefaultValue = getDefaultValue({
+  const parsedDefaultValue = getContextDefaultValue({
     ...fieldTemplateMetadata
   })
 
   let parsedDefaultValueTo
   if (fieldTemplateMetadata.isRange) {
-    parsedDefaultValueTo = getDefaultValue({
+    parsedDefaultValueTo = getContextDefaultValue({
       ...fieldTemplateMetadata,
       defaultValue: fieldTemplateMetadata.defaultValueTo,
       columnName: `${fieldTemplateMetadata.columnName}_To`,

@@ -126,7 +126,7 @@ export function generateField({
       }
     }
 
-    parsedDefaultValue = getDefaultValue({
+    parsedDefaultValue = getContextDefaultValue({
       ...fieldToGenerate,
       isColumnReadOnlyForm,
       parentUuid: moreAttributes.parentUuid,
@@ -142,7 +142,7 @@ export function generateField({
 
     // VALUE TO
     if (fieldToGenerate.isRange) {
-      parsedDefaultValueTo = getDefaultValue({
+      parsedDefaultValueTo = getContextDefaultValue({
         ...fieldToGenerate,
         isColumnReadOnlyForm,
         parentUuid: moreAttributes.parentUuid,
@@ -314,7 +314,7 @@ export function getEvaluatedLogics({
  * @param {object}  field
  * @param {boolean} isSOTrxMenu
  */
-export function getDefaultValue({
+export function getContextDefaultValue({
   parentUuid,
   containerUuid,
   isSOTrxMenu,
