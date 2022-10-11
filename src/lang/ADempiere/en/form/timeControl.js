@@ -15,6 +15,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 const timeControl = {
+  confirm: 'Cofirm',
+  confirmed: 'Confirmed',
+  confirmProcessRecord: 'Are you sure you want to confirm this record?',
   type: 'Type',
   name: 'Name',
   input: 'Input',
@@ -25,7 +28,8 @@ const timeControl = {
   area: 'Área',
   addChild: 'Add',
   recordConfirmed: 'Record Confirmed',
-  addResource: 'Add Resources'
+  addResource: 'Add Resources',
+  searchRecords: 'Search Records'
 }
 
 export default timeControl

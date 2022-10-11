@@ -45,6 +45,7 @@ export function requestCreateResource({
       return camelizeObjectKeys(response)
     })
 }
+
 export function requestUpdateResource({
   id,
   uuid,
@@ -67,6 +68,7 @@ export function requestUpdateResource({
       return camelizeObjectKeys(response)
     })
 }
+
 export function requestDeleteResource({
   id,
   uuid
@@ -86,18 +88,22 @@ export function requestDeleteResource({
       return camelizeObjectKeys(response)
     })
 }
+
 export function requestListResource({
   resourceTypeId,
   resourceTypeUuid,
   name,
   description,
   isWaitingForOrdered,
+  confirmed,
+  pageSize = 25,
   pageToken
 }) {
   return request({
     url: '/form/addons/time-control/list-resources-assignment',
     method: 'post',
     params: {
+      page_size: pageSize,
       page_token: pageToken
     },
     data: {
@@ -106,8 +112,8 @@ export function requestListResource({
       resource_type_uuid: resourceTypeUuid,
       is_waiting_for_ordered: isWaitingForOrdered,
       name,
-      description
-      // page_size: 25
+      description,
+      confirmed
     }
   })
     .then(response => {
@@ -115,6 +121,7 @@ export function requestListResource({
       return camelizeObjectKeys(response)
     })
 }
+
 export function requestConfirmResourceAssignnment({
   id,
   uuid

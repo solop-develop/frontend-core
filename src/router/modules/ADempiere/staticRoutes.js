@@ -143,6 +143,24 @@ const staticRoutes = [
         }
       }
     ]
+  },
+
+  {
+    path: '/TimeControl',
+    component: Layout,
+    hidden: false,
+    children: [
+      {
+        path: '/TimeControl',
+        component: () => import('@/views/ADempiere/Form'),
+        name: 'TimeControl',
+        meta: {
+          title: 'TimeControl',
+          icon: 'search',
+          isIndex: true
+        }
+      }
+    ]
   }
 ]
 
