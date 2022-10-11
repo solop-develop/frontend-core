@@ -17,7 +17,7 @@
 // utils and helpers methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { isDisplayedField, isMandatoryField } from '@/utils/ADempiere/dictionary/window.js'
-import { DISPLAY_COLUMN_PREFIX, getDefaultValue } from '@/utils/ADempiere/dictionaryUtils.js'
+import { DISPLAY_COLUMN_PREFIX, getContextDefaultValue } from '@/utils/ADempiere/dictionaryUtils.js'
 import { getContext } from '@/utils/ADempiere/contextUtils'
 import { isLookup, ID } from '@/utils/ADempiere/references'
 
@@ -206,7 +206,7 @@ export default {
 
         let parsedDefaultValue
         if (!isSQL) {
-          parsedDefaultValue = getDefaultValue({
+          parsedDefaultValue = getContextDefaultValue({
             ...fieldItem,
             parentUuid,
             contextColumnNames,

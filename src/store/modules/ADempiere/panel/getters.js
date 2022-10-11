@@ -27,7 +27,7 @@ import {
 } from '@/utils/ADempiere/constants/systemColumns'
 import {
   fieldIsDisplayed,
-  getDefaultValue
+  getContextDefaultValue
 } from '@/utils/ADempiere/dictionaryUtils.js'
 import { isLookup } from '@/utils/ADempiere/references'
 
@@ -304,7 +304,7 @@ const getters = {
 
         let parsedDefaultValue
         if (!isSQL) {
-          parsedDefaultValue = getDefaultValue({
+          parsedDefaultValue = getContextDefaultValue({
             ...fieldItem,
             parentUuid,
             contextColumnNames,
@@ -319,7 +319,7 @@ const getters = {
 
           let parsedDefaultValueTo
           if (!isSQLTo) {
-            parsedDefaultValueTo = getDefaultValue({
+            parsedDefaultValueTo = getContextDefaultValue({
               ...fieldItem,
               parentUuid,
               contextColumnNames,

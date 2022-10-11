@@ -147,10 +147,16 @@ const defaultValueManager = {
             }
 
             // do not use the convertArrayKeyValueToObject method to avoid losing a key with an empty value
-            valueResponse.attributes.forEach(attribute => {
-              const { key: column, value } = attribute
-              values[column] = value
-            })
+            // TODO: Response from server same name key of value
+            if (valueResponse.attributes.length === 1) {
+              values.KeyColumn = valueResponse.attributes.at(0).value
+              values.DisplayColumn = undefined
+            } else {
+              valueResponse.attributes.forEach(attribute => {
+                const { key: column, value } = attribute
+                values[column] = value
+              })
+            }
 
             const valueOfServer = values.KeyColumn
             const displayedValue = values.DisplayColumn
