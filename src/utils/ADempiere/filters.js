@@ -156,7 +156,9 @@ class Filters {
 
       let type = 'STRING'
       let value = values[1]
-      if (value.includes('\'')) {
+      if (isEmptyValue(value)) {
+        value
+      } else if (value.includes('\'')) {
         value = value.replace(/'/g, '')
       } else {
         value = Number(value)
