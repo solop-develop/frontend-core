@@ -4,11 +4,12 @@ import {
 } from '@/api/ADempiere/workflow.js'
 
 import { requestListWorkflowsLogs } from '@/api/ADempiere/window'
-import { isEmptyValue } from '@/utils/ADempiere'
+import { isEmptyValue, typeValue } from '@/utils/ADempiere'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import language from '@/lang'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 import Vue from 'vue'
+import { showNotification } from '@/utils/ADempiere/notification'
 
 const activity = {
   listActivity: [],
@@ -113,24 +114,57 @@ export default {
     selectedActivity({ commit }, activity) {
       commit('setCurrentActivity', activity)
     },
-    changeActionsDoc({ commit }, {
+    changeActionsDoc({ commit, dispatch }, {
       tableName,
       id,
       uuid,
-      docAction
+      docAction,
+      containerUuid
     }) {
-      return runDocAction({
-        tableName,
-        id,
-        uuid,
-        docAction
+      return new Promise(resolve => {
+        runDocAction({
+          tableName,
+          id,
+          uuid,
+          docAction
+        })
+          .then(response => {
+            dispatch('listDocumentStatus', {
+              tableName,
+              recordUuid: uuid,
+              recordId: id,
+              containerUuid
+            })
+              .then(responseList => {
+                const { documentActionsList } = responseList
+                commit('setWorkFlowActions', {
+                  containerUuid,
+                  options: documentActionsList
+                })
+              })
+            dispatch('listDocumentActionStatus', {
+              tableName,
+              recordUuid: uuid
+            })
+            let text, isError
+            if (typeValue(response) === 'STRING') {
+              text = response
+              isError = true
+            } else {
+            // if (typeof response === 'object' && response.is_error) {
+              isError = response.is_error
+              text = response.summary
+            }
+            showNotification({
+              message: text,
+              type: isError ? 'error' : 'success'
+            })
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Error Run Doc Action: ${error.message}. Code: ${error.code}.`)
+          })
       })
-        .then(response => {
-          console.log({ response })
-        })
-        .catch(error => {
-          console.warn(`Error Run Doc Action: ${error.message}. Code: ${error.code}.`)
-        })
     },
     searchWorkflowHistory({ commit }, {
       containerUuid,

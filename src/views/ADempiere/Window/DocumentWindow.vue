@@ -203,10 +203,36 @@ export default defineComponent({
           }
         })
     }
+    // additionalOptions.value = listDocumentActions.value
 
     // Load data document options
-    loaDocument()
-
+    const listDocumentActions = computed(() => {
+      const alo = store.getters.getListDocumentActions
+      if (isEmptyValue(alo)) {
+        return []
+      }
+      return store.getters.getListDocumentActions
+    })
+    watch(listDocumentActions, (newValue, oldValue) => {
+      if (!isEmptyValue(additionalOptions.value.currentDocument) &&
+        !isEmptyValue(listDocumentActions.value.defaultDocumentAction) &&
+        listDocumentActions.value.defaultDocumentAction.value !== additionalOptions.value.currentDocument.value
+      ) {
+        loaDocument()
+        store.dispatch('listDocumentStatus', {
+          tableName: referencesManager.value.getTableName(),
+          recordUuid: recordUuid.value,
+          containerUuid: currentTabUuid.value
+        })
+          .then(response => {
+            const { documentActionsList } = response
+            store.commit('setWorkFlowActions', {
+              containerUuid: currentTabUuid.value,
+              options: documentActionsList
+            })
+          })
+      }
+    })
     watch(recordUuid, (newValue, oldValue) => {
       if (newValue !== oldValue && !isEmptyValue(newValue) && newValue !== 'create-new') {
         loaDocument()
@@ -224,6 +250,7 @@ export default defineComponent({
           })
       }
     })
+    loaDocument()
 
     return {
       recordUuid,
@@ -237,7 +264,8 @@ export default defineComponent({
       isMobile,
       styleFullScreen,
       loaDocument,
-      additionalOptions
+      additionalOptions,
+      listDocumentActions
     }
   }
 
