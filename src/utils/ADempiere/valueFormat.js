@@ -21,7 +21,8 @@
 import {
   DATE, DATE_PLUS_TIME, TIME,
   AMOUNT, COSTS_PLUS_PRICES, NUMBER, QUANTITY,
-  ACCOUNT_ELEMENT, TABLE, TABLE_DIRECT, LIST, SEARCH,
+  ACCOUNT_ELEMENT, LOCATION_ADDRESS, // Custom lookups
+  LIST, TABLE, TABLE_DIRECT, SEARCH, // Standard lookups
   YES_NO
 } from '@/utils/ADempiere/references.js'
 
@@ -86,6 +87,7 @@ export function formatField({
   switch (displayType) {
     case ACCOUNT_ELEMENT.id:
     case LIST.id:
+    case LOCATION_ADDRESS.id:
     case SEARCH.id:
     case TABLE.id:
     case TABLE_DIRECT.id:

@@ -337,6 +337,7 @@ export const FIELDS_LOOKUP = [
 export const SUPPORTED_LOOKUPS = [
   ACCOUNT_ELEMENT.id,
   LIST.id,
+  LOCATION_ADDRESS.id,
   TABLE.id,
   TABLE_DIRECT.id,
   SEARCH.id
