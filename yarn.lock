@@ -1352,6 +1352,18 @@
   resolved "https://registry.yarnpkg.com/@soda/get-current-script/-/get-current-script-1.0.2.tgz#a53515db25d8038374381b73af20bb4f2e508d87"
   integrity sha512-T7VNNlYVM1SgQ+VsMYhnDkcGmWhQdL0bDyGm5TlQ3GBXnJscEClUUOKduWTmm2zCnvNLC1hc3JpuXjs/nFOc5w==
 
+"@toast-ui/chart@^4.1.4":
+  version "4.4.3"
+  resolved "https://registry.yarnpkg.com/@toast-ui/chart/-/chart-4.4.3.tgz#e3a5e00a1ce542cbefdba4ae6238828ccef5e7eb"
+  integrity sha512-lvv4g39uwl1DmsdlfrLxSf/qCGus7fDwWrWGlc5w9rcBidrWjZyFNmzfQC0Y/VycOPJR6YqfgPyY59R6+5eBsw==
+
+"@toast-ui/editor-plugin-chart@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@toast-ui/editor-plugin-chart/-/editor-plugin-chart-3.0.1.tgz#3d1efe078abc4b28c315f2a9948cb05e7eade294"
+  integrity sha512-mdqJerDo836kxKZEa3B6NZOJLrb+acRMkPIanYo//9GFPJcllG7KFdZU+K0bSMapEED7W7OJCsOzM0VNThndHg==
+  dependencies:
+    "@toast-ui/chart" "^4.1.4"
+
 "@toast-ui/editor@^3.1.3":
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/@toast-ui/editor/-/editor-3.1.3.tgz#12f15dab1fc9c1db336683f51208f8ba8017abb9"
