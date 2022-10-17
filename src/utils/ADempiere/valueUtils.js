@@ -383,6 +383,7 @@ export function parsedValueComponent({
       break
 
     case 'FieldAccount':
+    case 'FieldLocation':
     case 'FieldSearch':
     case 'FieldSelect':
       if (isEmpty) {
