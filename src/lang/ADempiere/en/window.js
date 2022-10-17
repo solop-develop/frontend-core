@@ -23,6 +23,7 @@ const window = {
   undoNew: 'Undo New Record',
   containerInfo: {
     notes: 'Notes List',
+    emptyNote: 'Cannot create a blank note',
     accountingInformation: {
       title: 'Accounting Information',
       selection: 'Selection'

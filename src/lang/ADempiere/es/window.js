@@ -22,6 +22,7 @@ const window = {
   undoNew: 'Descartar Nuevo Registro',
   containerInfo: {
     notes: 'Notas',
+    emptyNote: 'No se puede crear una nota en blanco',
     accountingInformation: {
       title: 'Información Contable',
       selection: 'Selección'

@@ -4,6 +4,7 @@ import {
   requestCreateChatEntry
 } from '@/api/ADempiere/window'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { showMessage } from '@/utils/ADempiere/notification'
 
 const initStateChatEntries = {
   listRecordChats: [],
@@ -34,23 +35,31 @@ export default {
       recordId,
       comment
     }) {
-      return requestCreateChatEntry({
-        tableName,
-        recordId,
-        comment
-      })
-        .then(() => {
-          commit('isNote', true)
-          commit('setChatText', '')
+      return new Promise(resolve => {
+        requestCreateChatEntry({
+          tableName,
+          recordId,
+          comment
+        })
+          .then((response) => {
+            commit('isNote', true)
+            commit('setChatText', '')
 
-          dispatch('listChatEntries', {
-            tableName,
-            recordId
+            dispatch('listChatEntries', {
+              tableName,
+              recordId
+            })
+            resolve(response)
           })
-        })
-        .catch(error => {
-          console.warn(`Error getting ProductInfo error en guardar: ${error.message}. Code: ${error.code}.`)
-        })
+          .catch(error => {
+            console.warn(`Error in Add New Note: ${error.message}. Code: ${error.code}.`)
+            showMessage({
+              type: 'error',
+              message: error.message
+            })
+            resolve(error)
+          })
+      })
     },
     listChatEntries({ commit }, {
       tableName,
