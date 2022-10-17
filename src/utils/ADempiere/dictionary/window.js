@@ -1011,29 +1011,27 @@ export const containerManager = {
       }
     }
 
+    // client id value of record
+    const clientIdRecord = store.getters.getValueOfField({
+      parentUuid,
+      containerUuid,
+      columnName: CLIENT
+    })
+    // evaluate client id context with record
+    const preferenceClientId = store.getters.getSessionContextClientId
+    if (clientIdRecord !== preferenceClientId) {
+      return true
+    }
+
     // record uuid
     const recordUuid = store.getters.getUuidOfContainer(containerUuid)
     // edit mode is diferent to create new
-    const isWithRecord = recordUuid !== 'create-new' &&
-      !isEmptyValue(recordUuid)
-
+    const isWithRecord = !isEmptyValue(recordUuid) && recordUuid !== 'create-new'
     if (!isWithRecord) {
       if (field.displayType === BUTTON.id) {
         return true
       }
     } else {
-      // client id value of record
-      const clientIdRecord = store.getters.getValueOfField({
-        parentUuid,
-        containerUuid,
-        columnName: CLIENT
-      })
-      // evaluate client id context with record
-      const preferenceClientId = store.getters.getSessionContextClientId
-      if (clientIdRecord !== preferenceClientId) {
-        return true
-      }
-
       // not updateable and record saved
       if (!field.isUpdateable) {
         return true

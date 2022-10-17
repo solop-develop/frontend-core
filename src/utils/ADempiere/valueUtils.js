@@ -17,6 +17,7 @@
 import language from '@/lang'
 
 // constants
+import { CLIENT } from '@/utils/ADempiere//constants/systemColumns'
 import { TABLE, TABLE_DIRECT } from '@/utils/ADempiere/references.js'
 import { DISPLAY_COLUMN_PREFIX, IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
 import { OPERATION_PATTERN } from '@/utils/ADempiere/formatValue/numberFormat.js'
@@ -103,11 +104,14 @@ export function isIdentifierEmpty({
   if (isEmptyValue(value)) {
     return true
   }
+
   if (!columnName.startsWith(DISPLAY_COLUMN_PREFIX) &&
     (columnName.endsWith(IDENTIFIER_COLUMN_SUFFIX) ||
-    columnName.endsWith('_ID_To')) && String(value).trim() === '0') {
+    columnName.endsWith('_ID_To')) &&
+    columnName !== CLIENT && String(value).trim() === '0') {
     return true
   }
+
   return false
 }
 

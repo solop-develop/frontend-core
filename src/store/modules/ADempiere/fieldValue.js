@@ -23,7 +23,7 @@ import {
 
 // utils and helpers methods
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
-import { isEmptyValue, isIdentifierEmpty, typeValue } from '@/utils/ADempiere/valueUtils.js'
+import { isEmptyValue, typeValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat.js'
 
 const value = {
@@ -157,7 +157,7 @@ const value = {
         })
       }
 
-      if (parentUuid && (isIdentifierEmpty({ columnName, value }))) {
+      if (parentUuid) {
         // get in window level
         value = getters.getValueOfFieldOnParent({
           parentUuid,
