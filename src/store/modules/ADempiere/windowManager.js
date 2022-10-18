@@ -136,25 +136,21 @@ const windowManager = {
       if (isEmptyValue(recordUuid)) {
         return
       }
-
-      const recordsList = state.tabData[containerUuid].recordsList
-      //   .map(currentRow => {
-      //     if (currentRow[UUID] === recordUuid) {
-      //       return {
-      //         currentRow,
-      //         ...row
-      //       }
-      //     }
-      //     return currentRow
-      //   })
-      const index = recordsList.findIndex(currentRow => {
-        return currentRow[UUID] === recordUuid
-      })
-
-      if (index >= 0) {
-        recordsList.splice(index, 1, row)
-        Vue.set(state.tabData[containerUuid], 'recordsList', recordsList)
+      let recordsList
+      recordsList = state.tabData[containerUuid].recordsList
+      if (!isEmptyValue(row)) {
+        recordsList = state.tabData[containerUuid].recordsList.map(currentRowTable => {
+          if (currentRowTable.UUID === row.UUID) {
+            return {
+              ...row,
+              isSelectedRow: true
+            }
+          }
+          return currentRowTable
+        })
       }
+
+      Vue.set(state.tabData[containerUuid], 'recordsList', recordsList)
     },
 
     clearTabData(state, { containerUuid }) {
@@ -552,6 +548,36 @@ const windowManager = {
         commit('clearTabData', {
           containerUuid: tab.uuid
         })
+      })
+    },
+    reloadTableData({ commit, getters }, {
+      containerUuid,
+      isLoaded
+    }) {
+      // clear only this tab
+      const {
+        contextKey,
+        searchValue,
+        recordCount,
+        recordsList,
+        selectionsList,
+        currentRecordUuid,
+        pageNumber,
+        pageSize
+      } = getters.getTabData({
+        containerUuid
+      })
+      commit('setTabData', {
+        containerUuid,
+        contextKey,
+        searchValue,
+        recordCount,
+        recordsList,
+        selectionsList,
+        currentRecordUuid,
+        pageNumber,
+        isLoaded,
+        pageSize
       })
     }
   },

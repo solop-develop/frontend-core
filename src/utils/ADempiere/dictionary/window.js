@@ -528,6 +528,10 @@ export const refreshRecord = {
       recordUuid = store.getters.getUuidOfContainer(containerUuid)
     }
 
+    store.dispatch('reloadTableData', {
+      isLoaded: false,
+      containerUuid
+    })
     getEntity({
       tabUuid: containerUuid,
       recordId,
@@ -535,6 +539,7 @@ export const refreshRecord = {
     })
       .then(response => {
         const currentRow = store.getters.getTabRowData({
+          containerUuid,
           recordUuid
         })
 
@@ -556,6 +561,12 @@ export const refreshRecord = {
           attributes: response.attributes
         }, {
           root: true
+        })
+      })
+      .finally(() => {
+        store.dispatch('reloadTableData', {
+          isLoaded: true,
+          containerUuid
         })
       })
   }
