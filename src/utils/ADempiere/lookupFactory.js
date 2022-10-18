@@ -75,7 +75,10 @@ import {
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { getParentFields } from '@/utils/ADempiere/contextUtils.js'
 
-// Create a Field from UUID based on server meta-data
+/**
+ * Create a Field from UUID based on server meta-data
+ * TODO: With table name not stored search, add table name into field metadata
+ */
 export function createFieldFromDictionary({
   containerUuid,
   uuid,

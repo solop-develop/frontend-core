@@ -17,7 +17,7 @@
 import Vue from 'vue'
 
 // constants
-import { CLIENT, ORGANIZATION } from '@/utils/ADempiere/constants/systemColumns.js'
+import { CLIENT, COUNTRY, ORGANIZATION } from '@/utils/ADempiere/constants/systemColumns.js'
 import { ACCOUNTING_CONTEXT_PREFIX, GLOBAL_CONTEXT_PREFIX } from '@/utils/ADempiere/contextUtils'
 
 // utils and helper methods
@@ -214,6 +214,9 @@ const sessionContext = {
 
       value = state.preference[columnName]
       return value
+    },
+    getSessionContextCountrytId: (state) => {
+      return parseInt(state.preference[GLOBAL_CONTEXT_PREFIX + COUNTRY], 10)
     },
     getSessionContextClientId: (state) => {
       return parseInt(state.preference[GLOBAL_CONTEXT_PREFIX + CLIENT], 10)

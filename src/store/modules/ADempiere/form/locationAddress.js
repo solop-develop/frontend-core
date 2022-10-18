@@ -55,11 +55,15 @@ const locationAddress = {
   },
 
   actions: {
-    getCountryDefinition({ commit, getters }, {
+    getCountryDefinition({ commit, getters, rootGetters }, {
       id,
       uuid
     }) {
       return new Promise(resolve => {
+        if (isEmptyValue(uuid) && isEmptyValue(id)) {
+          // get session country client
+          id = rootGetters.getSessionContextCountrytId
+        }
         const storedCountry = getters.getStoredCountryFromId({ id })
         if (!isEmptyValue(storedCountry)) {
           return resolve(storedCountry)

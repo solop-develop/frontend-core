@@ -183,7 +183,7 @@ export const LOCATION_ADDRESS = {
   id: 21,
   isSupported: true,
   valueType: 'INTEGER',
-  componentPath: 'FieldLocation',
+  componentPath: 'FieldLocationAddress',
   size: DEFAULT_SIZE
 }
 

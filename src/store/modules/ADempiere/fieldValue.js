@@ -136,6 +136,27 @@ const value = {
         isOverWriteParent,
         attributes
       })
+    },
+
+    clearValuesOnContainer({ commit, getters }, {
+      containerUuid,
+      isOverWriteParent = false
+    }) {
+      const attributesList = getters.getValuesView({
+        containerUuid
+      }).map(attribute => {
+        const { columnName } = attribute
+        return {
+          columnName,
+          value: undefined
+        }
+      })
+
+      commit('updateValuesOfContainer', {
+        containerUuid,
+        attributes: attributesList,
+        isOverWriteParent
+      })
     }
   },
 
