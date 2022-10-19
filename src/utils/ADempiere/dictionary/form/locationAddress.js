@@ -42,3 +42,16 @@ export function getSequenceAsList(captureSequence) {
     .split('@')
     .filter(value => value.trim())
 }
+
+export const URL_BASE_MAP = 'https://maps.google.com/?q='
+
+/**
+ * Format coordenate form decimal number
+ * @param {number} coordenate
+ * @returns {string}
+ */
+export function formatCoordinateByDecimal(coordenate) {
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 6
+  }).format(coordenate)
+}
