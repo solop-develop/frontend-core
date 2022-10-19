@@ -5,6 +5,7 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
+import { isEmptyValue } from '@/utils/ADempiere'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -69,7 +70,11 @@ router.beforeEach(async(to, from, next) => {
       next()
     } else {
       // other pages that do not have permission to access are redirected to the login page.
-      next(`/login?redirect=${to.path}`)
+      if (!isEmptyValue(to.query.containerUuid) && !isEmptyValue(to.query.action)) {
+        next(`/login?redirect=${to.path}&recordUuid=${to.query.action}&containerUuid=${to.query.containerUuid}`)
+      } else {
+        next(`/login?redirect=${to.path}`)
+      }
       NProgress.done()
     }
   }

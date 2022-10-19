@@ -39,13 +39,12 @@ export const sharedLink = {
   icon: 'el-icon-share',
   actionName: 'sharedLink',
   sharedLink: ({ root, parentUuid, containerUuid }) => {
-    const viewValues = store.getters.getValuesViewType({
-      parentUuid,
-      containerUuid
-    })
+    // const viewValues = store.getters.getValuesViewType({
+    //   parentUuid,
+    //   containerUuid
+    // })
 
-    const pairsValues = Array.from(viewValues.values())
-
+    // const pairsValues = Array.from(viewValues.values())
     router.push({
       name: root.$route.name,
       params: {
@@ -54,7 +53,8 @@ export const sharedLink = {
       query: {
         ...root.$route.query,
         containerUuid,
-        filters: pairsValues
+        parentUuid,
+        action: store.getters.getUuidOfContainer(containerUuid)
       }
     }, () => {})
 

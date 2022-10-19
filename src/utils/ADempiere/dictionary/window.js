@@ -908,21 +908,21 @@ export const containerManager = {
     const tabDefinition = store.getters.getStoredTab(parentUuid, containerUuid)
     const currentRoute = router.app._route
     if (tabDefinition.isParentTab) {
-      const { tableName } = tabDefinition
-      router.push({
-        name: currentRoute.name,
-        query: {
-          ...currentRoute.query,
-          action: row.UUID,
-          tableName,
-          recordId: row[`${tableName}_ID`]
-        },
-        params: {
-          ...currentRoute.params,
-          tableName,
-          recordId: row[`${tableName}_ID`]
-        }
-      }, () => {})
+      // const { tableName } = tabDefinition
+      // router.push({
+      //   name: currentRoute.name,
+      //   query: {
+      //     ...currentRoute.query,
+      //     action: row.UUID,
+      //     tableName,
+      //     recordId: row[`${tableName}_ID`]
+      //   },
+      //   params: {
+      //     ...currentRoute.params,
+      //     tableName,
+      //     recordId: row[`${tableName}_ID`]
+      //   }
+      // }, () => {})
     }
 
     const fieldsList = store.getters.getStoredFieldsFromTab(parentUuid, containerUuid)

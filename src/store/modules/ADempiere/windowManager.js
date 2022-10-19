@@ -211,6 +211,7 @@ const windowManager = {
       containerUuid,
       searchValue = '',
       filters = [],
+      filtersRecord = {},
       pageNumber,
       pageSize
     }) {
@@ -223,7 +224,6 @@ const windowManager = {
           pageNumber = storedPage
         }
         const pageToken = generatePageToken({ pageNumber })
-
         if (!isEmptyValue(filters)) {
           const parseFilter = JSON.parse(filters)
           filters = [parseFilter]
@@ -239,7 +239,6 @@ const windowManager = {
           contextColumnNames, name, linkColumnName,
           parentColumnName, fieldsList
         } = rootGetters.getStoredTab(parentUuid, containerUuid)
-
         // add filters with link column name and parent column name
         if (!isEmptyValue(linkColumnName) &&
           !contextColumnNames.includes(linkColumnName) &&
@@ -301,6 +300,9 @@ const windowManager = {
           containerUuid,
           isLoading: true
         })
+        if (isEmptyValue(filtersRecord)) {
+          filters.push(filtersRecord)
+        }
         getEntities({
           windowUuid: parentUuid,
           tabUuid: containerUuid,

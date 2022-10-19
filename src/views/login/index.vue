@@ -183,7 +183,10 @@ export default {
             .then(() => {
               this.$router.push({
                 path: this.redirect || '/',
-                query: this.otherQuery
+                query: {
+                  ...this.otherQuery,
+                  action: this.$route.query.recordUuid
+                }
               }, () => {})
             })
             .catch(error => {
