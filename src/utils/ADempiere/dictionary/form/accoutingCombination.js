@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -20,4 +20,4 @@ export const TABLE_NAME = 'C_ValidCombination'
 
 export const COLUMN_NAME = 'C_ValidCombination_ID'
 
-export const ACCOUTING_COMBINATIONS_LIST_FORM = 'Business-Partner-List'
+export const ACCOUTING_COMBINATIONS_LIST_FORM = 'Accouting-Combination-List'
