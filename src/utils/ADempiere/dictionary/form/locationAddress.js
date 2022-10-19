@@ -43,7 +43,7 @@ export function getSequenceAsList(captureSequence) {
     .filter(value => value.trim())
 }
 
-export const URL_BASE_MAP = 'https://maps.google.com/?q='
+export const URL_BASE_MAP = 'https://www.google.com/maps?q='
 
 /**
  * Format coordenate form decimal number
