@@ -9,14 +9,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
-// Please add here all locations util methods
 
 export const TABLE_NAME = 'C_Location'
 
@@ -26,7 +24,7 @@ export const LOCATION_ADDRESS_FORM = 'Location-Address'
 
 /**
  * Use this function for get a list of sequence of capture for locations
- * TODO: Evaluate capture sequence by Germany "@A1@ @A2@ @A3@ @A4@ D-@P@ @R@ @C@ @CO@" with D- suffix in postal code
+ * TODO: Evaluate capture sequence by Germany "@A1@ @A2@ @A3@ @A4@ D-@P@ @R@ @C@ @CO@" with "D-" suffix in postal code
  * @param {string} captureSequence
  * @returns {array}
  */
