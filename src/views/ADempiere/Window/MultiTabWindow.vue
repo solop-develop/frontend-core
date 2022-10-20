@@ -135,7 +135,6 @@ export default defineComponent({
     const currentTabUuid = computed(() => {
       return store.getters.getCurrentTab(props.windowMetadata.uuid).uuid
     })
-    console.log(props.windowMetadata)
     const styleFullScreen = computed(() => {
       if (!isWithChildsTab.value) {
         return 'height: 0% !important'
