@@ -325,7 +325,7 @@ export default {
     return fieldsList
       .filter(fieldItem => {
         const { defaultValue } = fieldItem
-        const isMandatory = fieldItem.isMandatory || fieldItem.isMandatoryFromLogic
+        const isMandatory = isMandatoryField(fieldItem)
 
         // parent column
         if (fieldItem.isParent) {

@@ -19,6 +19,7 @@ import router from '@/router'
 import store from '@/store'
 
 // constants
+import { IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
 import {
   ACTIVE, CLIENT, PROCESSING, PROCESSED, UUID,
   READ_ONLY_FORM_COLUMNS
@@ -28,7 +29,7 @@ import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 // utils and helpers methods
 import evaluator from '@/utils/ADempiere/evaluator'
 import { getContext } from '@/utils/ADempiere/contextUtils'
-import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat'
+import { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
 import { generatePanelAndFields } from '@/utils/ADempiere/dictionary/panel.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -98,11 +99,41 @@ export function evaluateDefaultFieldShowed({ defaultValue, isMandatory, isShowed
 
 /**
  * Tab manager mandatory logic
+ * @see https://github.com/adempiere/adempiere/blob/develop/base/src/org/compiere/model/GridField.java#L401
+ * @param {boolean} isKey
+ * @param {string} columnName
+ * @param {boolean} isMandatory
+ * @param {string} mandatoryLogic
  * @param {boolean} isMandatoryFromLogic
  * @returns {boolean}
  */
-export function isMandatoryField({ isMandatory, mandatoryLogic, isMandatoryFromLogic }) {
-  return isMandatory || (!isEmptyValue(mandatoryLogic) && isMandatoryFromLogic)
+export function isMandatoryField({ isKey, columnName, isMandatory, mandatoryLogic, isMandatoryFromLogic }) {
+  // mandatory rule
+  if ((!isEmptyValue(mandatoryLogic) && isMandatoryFromLogic)) {
+    return true
+  }
+  // // is virtual column
+  // if (!isEmptyValue(columnSql) && !isColumnSqlReference) {
+  //   return false
+  // }
+
+  // Numeric Keys and Created/Updated as well as
+  // DocumentNo/Value/ASI ars not mandatory (persistency layer manages them)
+  if (
+    (isKey && columnName.endsWith(IDENTIFIER_COLUMN_SUFFIX)) ||
+    columnName.startsWith('Created') || columnName.startsWith('Updated') ||
+    ['Value', 'DocumentNo', 'M_AttributeSetInstance_ID'].includes(columnName)
+  ) {
+    return false
+  }
+
+  // is mandatory
+  if (isMandatory) {
+    // TODO: Evaluate displayed
+    return true
+  }
+  // return isMandatory || (!isEmptyValue(mandatoryLogic) && isMandatoryFromLogic)
+  return false
 }
 
 /**
