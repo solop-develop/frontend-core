@@ -186,7 +186,7 @@ const actions = {
           commit('SET_CURRENT_ORGANIZATION_ID', currentOrganizationSession.value)
 
           // wait to establish the client and organization to generate the menu
-          await dispatch('getOrganizationsListFromServer', role.uuid)
+          await dispatch('getOrganizationsListFromServer', role.uuid, currentOrganizationSession.value)
 
           resolve(sessionResponse)
 
@@ -358,40 +358,18 @@ const actions = {
 
     return requestOrganizationsList({ roleUuid })
       .then(response => {
+        const organization = response.organizationsList.find(a => a.id === getters.getCurrentOrgId)
         commit('SET_ORGANIZATIONS_LIST', response.organizationsList)
-
-        // TODO: Change id from session context server
-        const currentOrganizationId = getters.getCurrentOrgId
-        // set organization with AD_Org_ID context
-        let organization = response.organizationsList.find(item => {
-          if (item.id === currentOrganizationId) {
-            return item
-          }
-        })
-
-        // set organization with cookie uuid
-        if (!isEmptyValue(organization)) {
-          organization = response.organizationsList.find(item => {
-            if (item.uuid === getCurrentOrganization()) {
-              return item
-            }
-          })
-        }
-
-        // set first organization of list
-        if (isEmptyValue(organization)) {
-          organization = response.organizationsList[0]
-        }
-
-        setCurrentOrganization(organization.uuid)
+        const { uuid, id } = organization
+        setCurrentOrganization(uuid)
         commit('SET_ORGANIZATION', organization)
-        commit('SET_CURRENT_ORGANIZATION_ID', organization.id)
-        commit('setPreferenceContext', {
-          columnName: `#${ORGANIZATION}`,
-          value: organization.id
-        }, {
-          root: true
-        })
+        commit('SET_CURRENT_ORGANIZATION_ID', id)
+        // commit('setPreferenceContext', {
+        //   columnName: `#${ORGANIZATION}`,
+        //   value: organization.id
+        // }, {
+        //   root: true
+        // })
 
         dispatch('getWarehousesList', organization.uuid)
       })
