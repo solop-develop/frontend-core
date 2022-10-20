@@ -217,3 +217,37 @@ export function changeTimeZone({
     })
   )
 }
+
+/**
+ * Format date to time with hours, minutes, and seconds
+ * @param {date|string|number} value
+ * @param {string} timeZone
+ * @returns {string} hh:mm:ss a (01:35:08 pm)
+ */
+export function timeFormat({
+  value,
+  timeZone
+}) {
+  if (isEmptyValue(timeZone)) {
+    timeZone = getBrowserTimeZone()
+  }
+
+  let date = value
+  if (isEmptyValue(date)) {
+    date = new Date()
+  } if (typeof value === 'string') {
+    // TODO: Verify it time zone
+    if (value.length <= 10) {
+      value += 'T00:00:00' // without time zone
+    }
+    date = new Date(value)
+  } else if (typeof value === 'number') {
+    date = new Date(value)
+  }
+  return date.toLocaleString('en-US', {
+    timeZone,
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  })
+}
