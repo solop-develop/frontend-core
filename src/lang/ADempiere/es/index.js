@@ -267,6 +267,7 @@ export default {
   },
   settings: {
     title: 'Configuración',
+    fullGridMode: 'Modo Grilla Completa',
     theme: 'Color del tema',
     tagsView: 'Habilitar Tags-View',
     fixedHeader: 'Encabezado fijo',

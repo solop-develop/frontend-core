@@ -51,7 +51,7 @@
         :container-uuid="processUuid"
       />
     </el-main>
-    <el-footer v-if="isWithChildsTab && !isMobile" id="footerWindow" :style="styleFullScreen">
+    <el-footer v-if="isWithChildsTab && !isMobile && !(settingsFullGridMode && windowMetadata.currentTab.isParentTab && windowMetadata.currentTab.isShowedTableRecords)" id="footerWindow" :style="styleFullScreen">
       <tab-manager-child
         class="tab-manager"
         :parent-uuid="windowMetadata.uuid"
@@ -124,6 +124,10 @@ export default defineComponent({
       return store.getters.getShowPanelRecordAccess
     })
 
+    const settingsFullGridMode = computed(() => {
+      return store.state.settings.fullGridMode
+    })
+
     const isMobile = computed(() => {
       return store.state.app.device === 'mobile'
     })
@@ -131,7 +135,7 @@ export default defineComponent({
     const currentTabUuid = computed(() => {
       return store.getters.getCurrentTab(props.windowMetadata.uuid).uuid
     })
-
+    console.log(props.windowMetadata)
     const styleFullScreen = computed(() => {
       if (!isWithChildsTab.value) {
         return 'height: 0% !important'
@@ -185,7 +189,8 @@ export default defineComponent({
       isWithChildsTab,
       containerManager,
       isMobile,
-      styleFullScreen
+      styleFullScreen,
+      settingsFullGridMode
     }
   }
 

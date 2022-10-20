@@ -47,6 +47,11 @@
         >
           <el-switch v-model="showAutoSave" />
         </el-form-item>
+        <el-form-item
+          :label="$t('settings.fullGridMode')"
+        >
+          <el-switch v-model="showFullGridMode" />
+        </el-form-item>
       </el-form>
     </div>
   </div>
@@ -203,6 +208,21 @@ export default {
       }
     })
 
+    const showFullGridMode = computed({
+      // getter
+      get() {
+        return store.state.settings.fullGridMode
+      },
+      // setter
+      set(newValue) {
+        // Note: we are using destructuring assignment syntax here.
+        store.dispatch('settings/changeSetting', {
+          key: 'fullGridMode',
+          value: newValue
+        })
+      }
+    })
+
     const lang = computed(() => {
       return store.getters.language
     })
@@ -237,6 +257,7 @@ export default {
       showAutoSave,
       lang,
       isShowJob,
+      showFullGridMode,
       // methods
       themeChange,
       changeDisplatedTitle

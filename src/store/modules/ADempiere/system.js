@@ -59,7 +59,7 @@ const system = {
           pageSize: undefined
         })
           .then(languageResponse => {
-            dispatch('serverListActivity')
+            dispatch('serverListActivity', {})
             const languagesList = languageResponse.languagesList.map(language => {
               return {
                 ...language,

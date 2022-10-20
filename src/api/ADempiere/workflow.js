@@ -125,7 +125,7 @@ export function workflowActivities({
       user_uuid: userUuid,
       // Page Data
       page_token: pageToken,
-      pageSize
+      page_size: pageSize
     }
   })
     .then(listWorkflowActivities => {

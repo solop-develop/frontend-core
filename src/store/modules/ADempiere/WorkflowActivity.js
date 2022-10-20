@@ -57,7 +57,11 @@ export default {
     }
   },
   actions: {
-    serverListActivity({ commit, state, dispatch, rootGetters }, pageNumber, pageToken) {
+    serverListActivity({ commit, state, dispatch, rootGetters }, {
+      pageNumber,
+      pageToken,
+      pageSize
+    }) {
       const userUuid = rootGetters['user/getUserUuid']
       const name = language.t('navbar.badge.activity')
       if (isEmptyValue(userUuid)) {
@@ -70,7 +74,8 @@ export default {
       commit('setIsLoadActivity', true)
       workflowActivities({
         userUuid,
-        pageToken
+        pageToken,
+        pageSize
       })
         .then(response => {
           commit('setIsLoadActivity', false)

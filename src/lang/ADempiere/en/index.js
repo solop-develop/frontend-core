@@ -292,6 +292,7 @@ export default {
   },
   settings: {
     title: 'setting',
+    fullGridMode: 'Full grid mode',
     theme: 'Theme Color',
     tagsView: 'Open Tags-View',
     fixedHeader: 'Fixed Header',
