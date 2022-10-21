@@ -219,11 +219,12 @@ const windowManager = {
         const storedPage = getters.getTabPageNumber({
           containerUuid
         })
+        let pageToken
         if (isEmptyValue(pageNumber)) {
           // refresh with same page
           pageNumber = storedPage
         }
-        const pageToken = generatePageToken({ pageNumber })
+        pageToken = generatePageToken({ pageNumber })
         if (!isEmptyValue(filters)) {
           const parseFilter = JSON.parse(filters)
           filters = [parseFilter]
@@ -302,6 +303,9 @@ const windowManager = {
         })
         if (isEmptyValue(filtersRecord)) {
           filters.push(filtersRecord)
+        }
+        if (!isEmptyValue(searchValue)) {
+          pageToken = ''
         }
         getEntities({
           windowUuid: parentUuid,

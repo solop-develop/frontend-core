@@ -183,6 +183,7 @@ export default {
     dialogCancelButton: 'Cancelar',
     dialogConfirmButton: 'Confirmar',
     filterableItems: 'Columnas Opcionales',
+    searchRecord: 'Buscar Registro',
     fixedleItems: 'Columnas Fijas',
     resetAllFilters: 'Reiniciar todos los filtros',
     switchActiveText: 'Si',
