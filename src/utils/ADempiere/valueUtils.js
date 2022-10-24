@@ -725,3 +725,18 @@ export function getSource({ resourceUuid, resourceName, resourceType }) {
   }
   return image
 }
+
+export function fieldsShowDocumentWindow({
+  columnName,
+  windowType
+}) {
+  if (
+    columnName === 'DateOrdered' ||
+    columnName === 'M_Product_ID' ||
+    columnName === 'QtyEntered' &&
+    windowType === 'T'
+  ) {
+    return true
+  }
+  return false
+}

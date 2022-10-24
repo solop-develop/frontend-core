@@ -26,7 +26,10 @@ import { containerManager } from '@/utils/ADempiere/dictionary/window'
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 
 // utils and helper methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import {
+  isEmptyValue,
+  fieldsShowDocumentWindow
+} from '@/utils/ADempiere/valueUtils.js'
 import {
   generateWindow,
   createNewRecord,
@@ -330,11 +333,23 @@ export default {
       fieldsList = getters.getStoredFieldsFromTab(parentUuid, containerUuid)
     }
 
+    const { windowType } = getters.getStoredWindow(parentUuid)
+
     fieldsList.forEach(itemField => {
       if (groupField === itemField.groupAssigned) {
         let isShowedFromUser = false
         if (fieldsShowed.includes(itemField.columnName)) {
           isShowedFromUser = true
+        } else if (
+          fieldsShowDocumentWindow({
+            windowType,
+            columnName: itemField.columnName
+          })
+        ) {
+          isShowedFromUser = fieldsShowDocumentWindow({
+            windowType,
+            columnName: itemField.columnName
+          })
         }
 
         commit('changeTabFieldAttribute', {
