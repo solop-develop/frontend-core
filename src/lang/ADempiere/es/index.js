@@ -302,7 +302,7 @@ export default {
     logsField: 'Bitácora de Cambios',
     contextInfo: 'Información del Contexto',
     logsFieldEmpty: 'El campo no tiene cambios aún',
-    coordination: 'Coordenada',
+    coordination: 'Coordenadas',
     container: {
       defaultValue: 'Valor Predeterminado',
       help: 'Ayuda',
