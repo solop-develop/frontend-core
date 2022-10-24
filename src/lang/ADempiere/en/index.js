@@ -327,6 +327,7 @@ export default {
     logsField: 'Field Change Log',
     logsFieldEmpty: 'The field is still unchanged',
     contextInfo: 'Context Info',
+    coordination: 'Coordination',
     container: {
       help: 'Help',
       defaultValue: 'Default Value',
