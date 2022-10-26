@@ -228,7 +228,7 @@ export const PRODUCT_ATTRIBUTE = {
   id: 35,
   isSupported: false,
   valueType: 'INTEGER',
-  componentPath: 'FieldNumber',
+  componentPath: 'FieldProductAttribute',
   size: DEFAULT_SIZE
 }
 
@@ -338,6 +338,7 @@ export const SUPPORTED_LOOKUPS = [
   ACCOUNT_ELEMENT.id,
   LIST.id,
   LOCATION_ADDRESS.id,
+  PRODUCT_ATTRIBUTE.id,
   TABLE.id,
   TABLE_DIRECT.id,
   SEARCH.id
