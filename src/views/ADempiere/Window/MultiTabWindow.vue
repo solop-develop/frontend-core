@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <el-container style="height: 100%!important;">
+  <el-container v-if="!isLoadWindows" style="height: 100%!important;">
     <el-main id="mainWindow" :style="(isMobile || isEmptyValue(windowMetadata.tabsListChild)) ? 'overflow: auto;' : 'overflow: hidden;'">
       <embedded
         :visible="showRecordAccess"
@@ -63,16 +63,21 @@
       />
     </el-footer>
   </el-container>
+  <loading-view
+    v-else
+    key="process-loading"
+  />
 </template>
 
 <script>
-import { defineComponent, computed, ref } from '@vue/composition-api'
+import { defineComponent, computed, ref, watch } from '@vue/composition-api'
 
 import language from '@/lang'
 import store from '@/store'
 
 // components and mixins
 import ActionMenu from '@theme/components/ADempiere/ActionMenu/index.vue'
+import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
 import Embedded from '@theme/components/ADempiere/Dialog/embedded'
 import RecordAccess from '@theme/components/ADempiere/RecordAccess'
 import ModalDialog from '@theme/components/ADempiere/ModalDialog/index.vue'
@@ -91,7 +96,8 @@ export default defineComponent({
     Embedded,
     ModalDialog,
     TabManager,
-    TabManagerChild
+    TabManagerChild,
+    LoadingView
   },
 
   props: {
@@ -167,6 +173,12 @@ export default defineComponent({
       }
     })
 
+    const isFullGrilla = computed(() => {
+      return props.windowMetadata.currentTab.isParentTab && props.windowMetadata.currentTab.isShowedTableRecords
+    })
+
+    const isLoadWindows = ref(false)
+    const index = ref(0)
     const referencesManager = ref({
       getTableName: () => {
         const tabUuid = currentTabUuid.value
@@ -178,6 +190,15 @@ export default defineComponent({
     if (props.windowMetadata.tabsList) {
       allTabsList.value = props.windowMetadata.tabsList
     }
+    watch(isFullGrilla, (newValue, oldValue) => {
+      if (settingsFullGridMode.value && !newValue && isWithChildsTab.value && index.value === 0) {
+        index.value = 1
+        isLoadWindows.value = true
+        setTimeout(() => {
+          isLoadWindows.value = false
+        }, 500)
+      }
+    })
 
     return {
       currentTabUuid,
@@ -189,7 +210,10 @@ export default defineComponent({
       containerManager,
       isMobile,
       styleFullScreen,
-      settingsFullGridMode
+      settingsFullGridMode,
+      isFullGrilla,
+      index,
+      isLoadWindows
     }
   }
 
