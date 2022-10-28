@@ -115,7 +115,8 @@ export function updateOrder({
   discountAmount,
   discountRateOff,
   warehouseUuid,
-  campaignUuid
+  campaignUuid,
+  sellerUuid
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/update-order`,
@@ -131,6 +132,7 @@ export function updateOrder({
       discount_rate: discount,
       discount_amount_off: discountAmount,
       campaign_uuid: campaignUuid,
+      seller_uuid: sellerUuid,
       discount_rate_off: discountRateOff
     }
   })
