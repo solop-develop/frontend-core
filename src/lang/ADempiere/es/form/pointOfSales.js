@@ -38,7 +38,8 @@ const pointOfSales = {
   },
   order: {
     dateOfOrder: 'Fecha de Orden',
-    documentType: 'Tipo de Documento'
+    documentType: 'Tipo de Documento',
+    showHistoryOrdersList: 'Ver Histórico de Órdenes'
   },
   orderLine: {
     edit: 'Editar Línea',
