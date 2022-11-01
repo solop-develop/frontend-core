@@ -89,7 +89,7 @@ export default {
     priceListUuid,
     warehouseUuid,
     campaignUuid,
-    sellerUuid
+    salesRepresentativeUuid
   }) {
     const isCompleted = rootGetters.posAttributes.currentPointOfSales.currentOrder.isProcessed
     if (isCompleted) {
@@ -107,7 +107,7 @@ export default {
       priceListUuid: currentPriceList,
       warehouseUuid: currentWarehouse,
       campaignUuid,
-      sellerUuid
+      salesRepresentativeUuid
     })
       .then(response => {
         dispatch('reloadOrder', { orderUuid: response.uuid })
