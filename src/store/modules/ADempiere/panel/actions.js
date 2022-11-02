@@ -359,6 +359,10 @@ const actions = {
         fieldsList = getters.getFieldsListFromPanel(containerUuid)
         field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
       }
+      console.log({
+        containerManager,
+        field
+      })
       if (containerManager.getFieldsList && !isEmptyValue(field.parentUuid)) {
         fieldsList = containerManager.getFieldsList({
           parentUuid: field.parentUuid,
@@ -733,11 +737,30 @@ const actions = {
     attributeName,
     attributeValue
   }) {
+    const qlq = getters.getFieldFromColumnName({
+      containerUuid,
+      columnName
+    })
+    console.log({
+      containerUuid,
+      columnName,
+      field,
+      attributeName,
+      attributeValue,
+      qlq
+    })
     if (isEmptyValue(field)) {
       field = getters.getFieldFromColumnName({
         containerUuid,
         columnName
       })
+      console.log({
+        field
+      })
+    }
+    if (isEmptyValue(field)) {
+      console.warn('field is Empty')
+      return
     }
 
     commit('changeFieldAttribure', {

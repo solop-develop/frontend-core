@@ -141,6 +141,7 @@ export function generatePanelAndFields({
     // app attributes
     isShowedFromUser: true,
     isReadOnlyFromForm: false,
+    isAdvancedQuery: containerUuid.includes('_ADVANCE_QUERY'),
     ...fieldOverwrite
   }
 

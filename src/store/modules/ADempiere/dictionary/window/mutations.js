@@ -70,6 +70,13 @@ export default {
   },
 
   /**
+   * Add Advance Query
+   */
+  addAdvanceQuery(state, { parentUuid, tabAdvanceQuery }) {
+    Vue.set(state.storedWindows[parentUuid], 'tabsList', tabAdvanceQuery)
+  },
+
+  /**
    * Change field tab attribute
    * @param {object} field
    * @param {string} attributeName

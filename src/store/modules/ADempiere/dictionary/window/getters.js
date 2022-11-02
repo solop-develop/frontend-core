@@ -58,9 +58,29 @@ export default {
   },
 
   getStoredTab: (state) => (windowUuid, tabUuid) => {
-    return state.storedWindows[windowUuid].tabsList.find(tab => {
-      return tab.uuid === tabUuid
-    })
+    if (!isEmptyValue(state.storedWindows[windowUuid])) {
+      const tab = state.storedWindows[windowUuid].tabsList.find(tab => {
+        return tab.uuid === tabUuid
+      })
+      if (tab) {
+        return tab
+      }
+    }
+    return {}
+  },
+  getFindTabAvanceQuery: (state) => (windowUuid, tabUuid) => {
+    if (!isEmptyValue(state.storedWindows[windowUuid])) {
+      const tab = state.storedWindows[windowUuid].tabsList.find(tab => {
+        // const advanceQuery = tab.containerUuid + '_ADVANCE_QUERY'
+        if (tab.uuid === tabUuid && tab.containerUuid.includes('_ADVANCE_QUERY')) {
+          return tab
+        }
+      })
+      if (tab) {
+        return tab
+      }
+    }
+    return {}
   },
 
   getTableName: (state, getters) => (windowUuid, tabUuid) => {
