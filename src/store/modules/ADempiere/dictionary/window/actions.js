@@ -1,18 +1,20 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Yamel Senih ysenih@erpya.com www.erpya.com
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 import language from '@/lang'
 import router from '@/router'
@@ -34,14 +36,15 @@ import {
   runProcessOfWindow,
   generateReportOfWindow,
   openBrowserAssociated,
+  openSequenceTab,
   refreshRecords,
+  recordAccess,
   undoChange
 } from '@/utils/ADempiere/dictionary/window.js'
 import {
-  sharedLink,
   exportRecordsSelected,
   exportCurrentRecord,
-  recordAccess
+  sharedLink
 } from '@/utils/ADempiere/constants/actionsMenuList.js'
 import evaluator from '@/utils/ADempiere/evaluator'
 import { getContext, getContextAttributes } from '@/utils/ADempiere/contextUtils.js'
@@ -305,6 +308,77 @@ export default {
 
     actionsList.push(deleteRecord)
     actionsList.push(refreshRecords)
+
+    const { sequenceTabsList } = tabDefinition
+    if (!isEmptyValue(sequenceTabsList)) {
+      sequenceTabsList.forEach(sequenceTab => {
+        actionsList.push({
+          ...openSequenceTab,
+          uuid: sequenceTab.uuid,
+          name: sequenceTab.name,
+          description: sequenceTab.description
+        })
+
+        const relatedColumns = sequenceTab.contextColumnNames
+
+        dispatch('setModalDialog', {
+          containerUuid: sequenceTab.uuid,
+          title: sequenceTab.name,
+          containerManager: {
+            ...containerManager,
+            getPanel: ({ parentUuid }) => {
+              const tab = store.getters.getStoredTab(
+                tabDefinition.parentUuid,
+                tabDefinition.uuid
+              )
+              return tab.sequenceTabsList.find(itemTab => {
+                return itemTab.uuid === sequenceTab.uuid
+              })
+            }
+          },
+          // TODO: Change to string and import dynamic in component
+          componentPath: () => import('@theme/components/ADempiere/PanelDefinition/SortPanel.vue'),
+          isShowed: false,
+          beforeOpen: () => {
+            // set context values
+            const parentValues = getContextAttributes({
+              parentUuid,
+              containerUuid,
+              contextColumnNames: relatedColumns
+            })
+
+            dispatch('updateValuesOfContainer', {
+              containerUuid: sequenceTab.uuid,
+              attributes: parentValues
+            })
+          },
+          loadData: () => {
+            return new Promise(resolve => {
+              const recordsListSortTab = rootGetters.getTabSequenceRecordsList({
+                parentUuid,
+                containerUuid,
+                tabUuid: sequenceTab.uuid,
+                contextColumnNames: sequenceTab.contextColumnNames
+              })
+              if (!isEmptyValue(recordsListSortTab)) {
+                resolve(recordsListSortTab)
+                return
+              }
+              dispatch('listTabSequences', {
+                parentUuid,
+                containerUuid,
+                contextColumnNames: sequenceTab.contextColumnNames,
+                tabUuid: sequenceTab.uuid
+              })
+              resolve([])
+            })
+          },
+          doneMethod: () => {
+          }
+        })
+      })
+    }
+
     actionsList.push(recordAccess)
     actionsList.push(exportCurrentRecord)
     actionsList.push(exportRecordsSelected)
