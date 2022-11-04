@@ -835,7 +835,8 @@ export function overdrawnInvoice({
 export function validatePin({
   posUuid,
   pin,
-  requestedAccess
+  requestedAccess,
+  requestedAmount
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/validate-pin`,
@@ -843,7 +844,8 @@ export function validatePin({
     data: {
       pos_uuid: posUuid,
       pin: pin,
-      requested_access: requestedAccess
+      requested_access: requestedAccess,
+      requested_amount: requestedAmount
     }
   })
     .then(pinResponse => {
