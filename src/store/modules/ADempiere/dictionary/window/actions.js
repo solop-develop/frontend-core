@@ -374,6 +374,27 @@ export default {
             })
           },
           doneMethod: () => {
+            dispatch('saveTabSequence', {
+              parentUuid,
+              containerUuid,
+              tabUuid: sequenceTab.uuid
+            })
+          },
+          isDisabledDone: () => {
+            return !rootGetters.getTabSequenceIsChanged({
+              parentUuid,
+              containerUuid,
+              contextColumnNames: sequenceTab.contextColumnNames,
+              tabUuid: sequenceTab.uuid
+            })
+          },
+          cancelMethod: () => {
+            dispatch('discardTabSequenceChanges', {
+              parentUuid,
+              containerUuid,
+              contextColumnNames: sequenceTab.contextColumnNames,
+              tabUuid: sequenceTab.uuid
+            })
           }
         })
       })

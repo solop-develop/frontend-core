@@ -13,11 +13,12 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 import actionMenu from './actionMenu'
 import businessPartner from './businessPartner'
+import components from './components'
 import orderList from './orderList'
 import extensionFile from './extensionFile'
 import fieldDisplayOptions from './fieldDisplayOptions'
@@ -163,6 +164,7 @@ export default {
     button: 'Ver guía'
   },
   components: {
+    ...components,
     date: {
       Today: 'Hoy',
       Yesterday: 'Ayer',
@@ -343,10 +345,6 @@ export default {
     addNote: 'Agregar Nota',
     emptyNote: 'Este registro no posee ninguna nota',
     descriptionNote: 'Agregar Nota o Comentario al Registro'
-  },
-  sequence: {
-    available: 'Disponibles',
-    sequence: 'Secuencia'
   },
   operators: {
     compareSearch: 'Comparar la Búsqueda',

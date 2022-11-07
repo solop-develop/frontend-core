@@ -19,6 +19,14 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
+/**
+ * Save tab sequences changes
+ * @param {string} tabUuid
+ * @param {array} contextAttributesList
+ * @param {number} pageSize
+ * @param {string} pageToken
+ * @returns {promise}
+ */
 export function requestListTabSequences({
   tabUuid,
   // dsl query
@@ -40,8 +48,36 @@ export function requestListTabSequences({
       context_attributes: contextAttributesList
     }
   })
-    .then(businessPartnersResponse => {
+    .then(response => {
       const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
-      return convertEntityList(businessPartnersResponse)
+      return convertEntityList(response)
+    })
+}
+
+/**
+ * Save tab sequences changes
+ * @param {string} tabUuid
+ * @param {array} contextAttributesList
+ * @param {array} entitiesList
+ * @returns {promise}
+ */
+export function requestSaveTabSequences({
+  tabUuid,
+  // dsl query
+  contextAttributesList,
+  entitiesList
+}) {
+  return request({
+    url: '/user-interface/component/tab-sequence/save-tab-sequences',
+    method: 'post',
+    data: {
+      tab_uuid: tabUuid,
+      context_attributes: contextAttributesList,
+      entities_list: entitiesList
+    }
+  })
+    .then(response => {
+      const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
+      return convertEntityList(response)
     })
 }

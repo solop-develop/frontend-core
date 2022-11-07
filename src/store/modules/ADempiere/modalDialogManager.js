@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 import Vue from 'vue'
@@ -36,6 +36,7 @@ const modalDialogManager = {
       componentPath,
       containerManager,
       doneMethod,
+      isDisabledDone,
       loadData,
       title,
       isShowed
@@ -47,6 +48,7 @@ const modalDialogManager = {
         componentPath,
         containerManager,
         doneMethod,
+        isDisabledDone,
         loadData,
         title,
         isShowed
@@ -75,6 +77,7 @@ const modalDialogManager = {
       containerManager = {},
       beforeOpen = function() {},
       doneMethod = function() {},
+      isDisabledDone = function() { return false },
       cancelMethod = function() {},
       loadData = function() {},
       title,
@@ -86,6 +89,7 @@ const modalDialogManager = {
         containerManager,
         beforeOpen,
         doneMethod,
+        isDisabledDone,
         loadData,
         cancelMethod,
         title,

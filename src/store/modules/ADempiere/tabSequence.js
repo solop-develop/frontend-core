@@ -18,11 +18,18 @@
 
 import Vue from 'vue'
 
+import lang from '@/lang'
+
 // api request methods
-import { requestListTabSequences } from '@/api/ADempiere/user-interface/component/tab-sequence'
+import {
+  requestListTabSequences,
+  requestSaveTabSequences
+} from '@/api/ADempiere/user-interface/component/tab-sequence'
 
 // utils and helper methods
 import { getContextAttributes, generateContextKey } from '@/utils/ADempiere/contextUtils'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { showMessage } from '@/utils/ADempiere/notification'
 
 const initState = {
   tabSequence: {}
@@ -37,6 +44,7 @@ const tabSequence = {
       containerUuid,
       tabUuid,
       recordsList,
+      oldRecordsList,
       contextAttributesList,
       contextKey
     }) {
@@ -47,7 +55,7 @@ const tabSequence = {
         containerUuid,
         tabUuid,
         recordsList,
-        oldRecordsList: recordsList,
+        oldRecordsList,
         contextAttributesList,
         contextKey
       })
@@ -78,9 +86,16 @@ const tabSequence = {
           contextAttributesList
         })
           .then(response => {
-            const recordsList = response.recordsList.map(record => {
+            const oldRecordsList = response.recordsList.map(record => {
               return {
                 ...record.attributes
+              }
+            })
+
+            const recordsList = oldRecordsList.map(recordRow => {
+              return {
+                ...recordRow,
+                isEditRow: false
               }
             })
 
@@ -91,12 +106,130 @@ const tabSequence = {
               containerUuid,
               tabUuid,
               recordsList,
+              oldRecordsList,
               contextAttributesList,
               contextKey
             })
 
             resolve(recordsList)
           })
+      })
+    },
+
+    /**
+     * Save records in tab sort (sequence)
+     * @param {string} containerUuid
+     * @param {string} parentUuid
+     */
+    saveTabSequence({ dispatch, getters, rootGetters }, {
+      parentUuid,
+      containerUuid,
+      tabUuid
+    }) {
+      const { sequenceTabsList } = rootGetters.getStoredTab(parentUuid, containerUuid)
+      const sortTab = sequenceTabsList.find(itemTab => {
+        return itemTab.uuid === tabUuid
+      })
+      const { contextColumnNames, tableName, sortOrderColumnName, sortYesNoColumnName } = sortTab
+
+      const { recordsList, oldRecordsList } = getters.getTabSequenceData({
+        parentUuid,
+        containerUuid,
+        tabUuid,
+        contextColumnNames
+      })
+      const entitiesList = []
+      recordsList.filter(recordRow => {
+        return recordRow.isEditRow
+      }).map(recordRow => {
+        const oldRecordRow = oldRecordsList.find(oldRow => oldRow.UUID === recordRow.UUID)
+
+        const attributesList = [{
+          columnName: sortOrderColumnName,
+          value: recordRow[sortOrderColumnName]
+        }]
+
+        const newYesNo = recordRow[sortYesNoColumnName]
+        const oldYesNo = oldRecordRow[sortYesNoColumnName]
+        if (oldYesNo !== newYesNo) {
+          attributesList.push({
+            columnName: sortYesNoColumnName,
+            value: newYesNo
+          })
+        }
+
+        const recordId = recordRow[tableName + '_ID']
+        entitiesList.push({
+          recordId,
+          recordUuid: recordRow.UUID,
+          attributesList
+        })
+      })
+
+      if (isEmptyValue(entitiesList)) {
+        showMessage({
+          message: lang.t('components.sequenceSort.withoutChanges'),
+          type: 'info'
+        })
+        return
+      }
+
+      const contextAttributesList = getContextAttributes({
+        parentUuid,
+        containerUuid,
+        contextColumnNames,
+        keyName: 'key'
+      })
+
+      requestSaveTabSequences({
+        tabUuid,
+        contextAttributesList,
+        entitiesList
+      })
+        .then(response => {
+          dispatch('getEntities', {
+            parentUuid,
+            containerUuid
+          })
+          dispatch('listTabSequences', {
+            parentUuid,
+            containerUuid,
+            tabUuid,
+            contextColumnNames
+          })
+
+          showMessage({
+            message: lang.t('components.sequenceSort.updateSequencesSuccessfully'),
+            type: 'success'
+          })
+        })
+    },
+
+    discardTabSequenceChanges({ commit, getters }, {
+      parentUuid,
+      containerUuid,
+      tabUuid,
+      contextColumnNames
+    }) {
+      const sequenceData = getters.getTabSequenceData({
+        parentUuid,
+        containerUuid,
+        tabUuid,
+        contextColumnNames
+      })
+
+      const { oldRecordsList } = sequenceData
+
+      // same records
+      const recordsList = oldRecordsList.map(recordRow => {
+        return {
+          ...recordRow,
+          isEditRow: false
+        }
+      })
+      commit('setTabSequence', {
+        ...sequenceData,
+        recordsList
       })
     }
   },
@@ -141,6 +274,43 @@ const tabSequence = {
         return tabSequenceData.recordsList
       }
       return []
+    },
+
+    getTabSequenceOldRecordsList: (state, getters) => ({
+      parentUuid,
+      containerUuid,
+      tabUuid,
+      contextColumnNames
+    }) => {
+      const tabSequenceData = getters.getTabSequenceData({
+        parentUuid,
+        containerUuid,
+        tabUuid,
+        contextColumnNames
+      })
+
+      if (tabSequenceData) {
+        return tabSequenceData.oldRecordsList
+      }
+      return []
+    },
+
+    getTabSequenceIsChanged: (state, getters) => ({
+      parentUuid,
+      containerUuid,
+      tabUuid,
+      contextColumnNames
+    }) => {
+      const recordsList = getters.getTabSequenceRecordsList({
+        parentUuid,
+        containerUuid,
+        tabUuid,
+        contextColumnNames
+      })
+
+      return recordsList.some(row => {
+        return row.isEditRow
+      })
     }
   }
 }
