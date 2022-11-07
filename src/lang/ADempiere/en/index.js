@@ -593,6 +593,7 @@ export default {
     byInvoice: {
       title: 'Aisle Vendor Orders to be Invoiced',
       searchCompleteOrders: 'Search complete orders',
+      aisleSales: 'Aisle Sales',
       label: 'To be invoiced',
       toDeliver: 'To be delivered',
       toCollect: 'Receivable',
