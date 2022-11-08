@@ -91,6 +91,7 @@ export default {
         }
         commit('setPointOfSalesList', pointOfSalesList)
         if (pos) {
+          commit('customer', pos.templateCustomer)
           dispatch('setCurrentPOS', pos)
         } else {
           showMessage({
