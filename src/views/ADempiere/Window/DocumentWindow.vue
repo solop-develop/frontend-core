@@ -175,7 +175,7 @@ export default defineComponent({
       }
     })
 
-    const isFullGrilla = computed(() => {
+    const isFullGrid = computed(() => {
       return props.windowMetadata.currentTab.isParentTab && props.windowMetadata.currentTab.isShowedTableRecords
     })
     const isLoadWindows = ref(false)
@@ -193,7 +193,7 @@ export default defineComponent({
       allTabsList.value = props.windowMetadata.tabsList
     }
 
-    watch(isFullGrilla, (newValue, oldValue) => {
+    watch(isFullGrid, (newValue, oldValue) => {
       if (settingsFullGridMode.value && !newValue && isWithChildsTab.value && index.value === 0) {
         index.value = 1
         isLoadWindows.value = true
@@ -293,7 +293,7 @@ export default defineComponent({
       additionalOptions,
       settingsFullGridMode,
       listDocumentActions,
-      isFullGrilla,
+      isFullGrid,
       index,
       isLoadWindows
     }
