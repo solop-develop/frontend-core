@@ -59,25 +59,15 @@ export default {
 
   getStoredTab: (state) => (windowUuid, tabUuid) => {
     if (!isEmptyValue(state.storedWindows[windowUuid])) {
-      const tab = state.storedWindows[windowUuid].tabsList.find(tab => {
-        return tab.uuid === tabUuid
-      })
-      if (tab) {
-        return tab
-      }
+      const tabStore = state.storedWindows[windowUuid].tabsList.find(tab => tab.uuid === tabUuid)
+      if (tabStore) return tabStore
     }
     return {}
   },
   getFindTabAvanceQuery: (state) => (windowUuid, tabUuid) => {
     if (!isEmptyValue(state.storedWindows[windowUuid])) {
-      const tab = state.storedWindows[windowUuid].tabsList.find(tab => {
-        if (tab.uuid === tabUuid && tab.containerUuid.includes('IS_ADVANCE_QUERY')) {
-          return tab
-        }
-      })
-      if (tab) {
-        return tab
-      }
+      const tabQuery = state.storedWindows[windowUuid].tabsList.find(tab => tab.uuid === tabUuid && tab.containerUuid.includes('IS_ADVANCE_QUERY'))
+      if (tabQuery) return tabQuery
     }
     return {}
   },

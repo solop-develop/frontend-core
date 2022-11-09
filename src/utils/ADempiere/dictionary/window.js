@@ -41,11 +41,11 @@ import { zoomIn } from '@/utils/ADempiere/coreUtils'
 import { getEntity } from '@/api/ADempiere/user-interface/persistence'
 
 export function isReadOnlyTab({ parentUuid, containerUuid }) {
-  // const { windowType } = store.getters.getStoredWindow(parentUuid)
-  // // window is "Only Query" type
-  // if (!isEmptyValue(windowType) && windowType === 'Q') {
-  //   return true
-  // }
+  const { windowType } = store.getters.getStoredWindow(parentUuid)
+  // window is "Only Query" type
+  if (!isEmptyValue(windowType) && windowType === 'Q') {
+    return true
+  }
   const { isReadOnly, readOnlyLogic } = store.getters.getStoredTab(parentUuid, containerUuid)
   // if tab is read only, all fields are read only
   if (isReadOnly) {

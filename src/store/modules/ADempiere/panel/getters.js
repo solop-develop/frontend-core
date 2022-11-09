@@ -41,10 +41,7 @@ const getters = {
 
   getFieldsListFromPanel: (state, getters, rootGetters) => (containerUuid, parentUuid) => {
     const panel = rootGetters['dictionary/index'].storedWindows[parentUuid]
-    // const epale = rootGetters.getStoredTab(parentUuid, containerUuid)
-    if (isEmptyValue(panel)) {
-      return []
-    }
+    if (isEmptyValue(panel)) return []
     return panel.fieldsList
   },
 
@@ -52,9 +49,7 @@ const getters = {
     const columName = getters.getFieldsListFromPanel(containerUuid).find(itemField => {
       return itemField.columnName === columnName
     })
-    if (isEmptyValue(columName)) {
-      return {}
-    }
+    if (isEmptyValue(columName)) return {}
     return columName
   },
 
