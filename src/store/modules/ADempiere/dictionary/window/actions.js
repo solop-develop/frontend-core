@@ -40,7 +40,7 @@ import {
   refreshRecords,
   recordAccess,
   undoChange,
-  generateAvanceQueryPanel
+  generateAdvanceQueryPanel
 } from '@/utils/ADempiere/dictionary/window.js'
 import {
   exportRecordsSelected,
@@ -82,7 +82,7 @@ export default {
       })
         .then(async windowResponse => {
           const window = generateWindow(windowResponse)
-          generateAvanceQueryPanel(windowResponse, 'addWindow')
+          generateAdvanceQueryPanel(windowResponse, 'addWindow')
           dispatch('addWindow', window)
 
           resolve(window)

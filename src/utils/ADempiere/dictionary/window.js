@@ -950,7 +950,7 @@ export function generateTabs({
   }
 }
 
-export function generateAvanceQueryTabs(tabs) {
+export function generateAdvanceQueryTabs(tabs) {
   return tabs.map(tab => {
     return {
       ...tab,
@@ -959,14 +959,14 @@ export function generateAvanceQueryTabs(tabs) {
   })
 }
 
-export function generateAvanceQueryPanel(panel, actions) {
+export function generateAdvanceQueryPanel(panel, actions) {
   const { tabs } = panel
   const uuid = panel.uuid + IS_ADVANCE_QUERY
   store.dispatch(actions,
     generateWindow({
       ...panel,
       uuid,
-      tabs: generateAvanceQueryTabs(tabs)
+      tabs: generateAdvanceQueryTabs(tabs)
     })
   )
 }
