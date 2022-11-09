@@ -375,3 +375,4 @@ Modern browsers and Internet Explorer 10+
 - [Edwin Betancourt](https://github.com/EdwinBetanc0urt)
 - [Leonel Matos](https://github.com/leonel1524)
 - [Elsio Sanchez](https://github.com/elsiosanchez)
+

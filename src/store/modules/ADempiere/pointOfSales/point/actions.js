@@ -41,7 +41,8 @@ export default {
    * Load Point of Sale Data from Server
    * TODO: Unused, removed on FormDefinition component, created hook
    */
-  loadDataFromServer({ dispatch, getters }) {
+  loadDataFromServer({ commit, dispatch, getters }) {
+    commit('customer', {})
     const PointOfSales = getters.posAttributes.currentPointOfSales
     if (!isEmptyValue(PointOfSales.uuid)) {
       dispatch('findPointOfSales', PointOfSales.uuid)
@@ -91,6 +92,7 @@ export default {
         }
         commit('setPointOfSalesList', pointOfSalesList)
         if (pos) {
+          commit('customer', pos.templateCustomer)
           dispatch('setCurrentPOS', pos)
         } else {
           showMessage({

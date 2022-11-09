@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 import language from '@/lang'
@@ -558,6 +558,46 @@ export const openBrowserAssociated = {
   }
 }
 
+/**
+ * Run process associated on table or button field
+ * @param {string} parentUuid
+ * @param {string} containerUuid
+ * @param {number} recordId
+ * @param {string} recordUuid
+ */
+export const openSequenceTab = {
+  name: language.t('window.tab.sequenceTab'),
+  enabled: ({ parentUuid, containerUuid }) => {
+    const recordUuid = store.getters.getUuidOfContainer(containerUuid)
+    return !isEmptyValue(recordUuid)
+  },
+  svg: false,
+  icon: 'el-icon-sort',
+  actionName: 'openSequenceTab',
+  openSequenceTab: ({ parentUuid, containerUuid, uuid, contextColumnNames }) => {
+    const currentTab = store.getters.getStoredTab(parentUuid, containerUuid)
+    const { sequenceTabsList } = currentTab
+    const sequenceTab = sequenceTabsList.find(itemTab => {
+      return itemTab.uuid === uuid
+    })
+
+    store.commit('setSelectProcessWindows', sequenceTab.uuid)
+
+    store.commit('setShowedModalDialog', {
+      parentUuid,
+      containerUuid: sequenceTab.uuid,
+      isShowed: true
+    })
+  }
+}
+
+/**
+ * Get current record and refresh values on panel and table
+ * @param {string} parentUuid
+ * @param {string} containerUuid
+ * @param {number} recordId
+ * @param {string} recordUuid
+ */
 export const refreshRecord = {
   name: language.t('actionMenu.refreshRecords'),
   enabled: ({ containerUuid }) => {
@@ -687,17 +727,30 @@ export const unlockRecord = {
   }
 }
 
+/**
+ * Record access
+ * @param {string} tableName
+ * @param {number} recordId
+ * @param {string} recordUuid
+ */
 export const recordAccess = {
-  name: language.t('actionMenu.refreshRecords'),
+  name: language.t('data.recordAccess.actions'),
+  description: language.t('data.noDescription'),
   enabled: ({ parentUuid, containerUuid }) => {
     return !isEmptyValue(
       store.getters.getUuidOfContainer(containerUuid)
     )
   },
   svg: false,
-  icon: 'el-icon-c-scale-to-original',
+  icon: 'el-icon-set-up',
   actionName: 'recordAccess',
-  recordAccess: ({ parentUuid, containerUuid, tableName }) => {
+  recordAccess: ({ tableName, recordId, recordUuid }) => {
+    store.dispatch('listRecordAccess', {
+      tableName,
+      recordId,
+      recordUuid
+    })
+    store.commit('setShowRecordAccess', true)
   }
 }
 
@@ -752,10 +805,21 @@ export function generateTabs({
   const firstTabTableName = tabs[0].tableName
   const firstTabUuid = tabs[0].uuid
 
+  const sequenceTabsListOnWindow = []
+
   // indexes related to visualization
   const tabsList = tabs.filter((itemTab) => {
+    if (itemTab.isSortTab) {
+      sequenceTabsListOnWindow.push({
+        ...itemTab,
+        firstTabUuid,
+        parentUuid,
+        containerUuid: itemTab.uuid
+      })
+      return false
+    }
     return !(
-      itemTab.isTranslationTab || itemTab.isSortTab ||
+      itemTab.isTranslationTab ||
       itemTab.isHasTree
     )
   }).map((currentTab, index, listTabs) => {
@@ -792,6 +856,23 @@ export function generateTabs({
     if (!isEmptyValue(currentTab.displayLogic)) {
       parentFieldsList = evaluator.parseDepends(currentTab.displayLogic)
     }
+
+    const sequenceTabsList = sequenceTabsListOnWindow
+      .filter(itemTab => {
+        return itemTab.isSortTab &&
+          itemTab.tableName === currentTab.tableName
+      })
+      .map(itemTab => {
+        return {
+          ...itemTab,
+          parentUuid,
+          parentTabs: [
+            ...parentTabs,
+            convertRelationTabs(currentTab)
+          ]
+        }
+      })
+
     // let tab = tabItem
     const tab = {
       ...currentTab,
@@ -818,6 +899,7 @@ export function generateTabs({
         }
         return true
       },
+      sequenceTabsList,
       // app properties
       isShowedRecordNavigation: !(currentTab.isSingleRow || isParentTab), // TODO: @deprecated
       isShowedTableRecords: !(currentTab.isSingleRow || isParentTab),

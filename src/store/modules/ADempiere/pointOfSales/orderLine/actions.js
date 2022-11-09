@@ -54,6 +54,7 @@ export default {
               priceStandard: lineItem.price,
               help: lineItem.help
             },
+            isloadedLine: false,
             taxIndicator: lineItem.taxRate.taxIndicator,
             grandTotal: lineItem.lineNetAmount
           }
@@ -69,7 +70,7 @@ export default {
         })
       })
   },
-  updateOrderLines({ commit, rootGetters }, params) {
+  updateOrderLines({ commit, state, getters, rootGetters }, params) {
     // const line = rootGetters.getListOrderLine
     const line = rootGetters.posAttributes.currentPointOfSales.currentOrder.lineOrder
     const found = line.map(element => {
@@ -174,5 +175,8 @@ export default {
       .catch(error => {
         console.warn(`-List Uom Error ${error.code}: ${error.message}.`)
       })
+  },
+  changeLoadedLine({ commit }, isLoaded) {
+    commit('setIsloadedLine', isLoaded)
   }
 }

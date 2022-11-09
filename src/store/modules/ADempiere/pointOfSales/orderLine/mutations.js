@@ -30,5 +30,8 @@ export default {
   },
   setListWarehouse(state, list) {
     state.listWarehouse = list
+  },
+  setIsloadedLine(state, loaded) {
+    state.isloadedLine = loaded
   }
 }
