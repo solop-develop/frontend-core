@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <el-container style="height: 100%!important;">
+  <el-container v-if="!isLoadWindows" style="height: 100%!important;">
     <el-main id="mainWindow" :style="(isMobile || isEmptyValue(windowMetadata.tabsListChild)) ? 'overflow: auto;' : 'overflow: hidden;'">
       <embedded
         :visible="showRecordAccess"
@@ -52,7 +52,7 @@
         :container-uuid="processUuid"
       />
     </el-main>
-    <el-footer v-if="isWithChildsTab && !isMobile" id="footerWindow" :style="styleFullScreen">
+    <el-footer v-if="isWithChildsTab && !isMobile && !(settingsFullGridMode && windowMetadata.currentTab.isParentTab && windowMetadata.currentTab.isShowedTableRecords)" id="footerWindow" :style="styleFullScreen">
       <tab-manager-child
         class="tab-manager"
         :parent-uuid="windowMetadata.uuid"
@@ -64,6 +64,10 @@
       />
     </el-footer>
   </el-container>
+  <loading-view
+    v-else
+    key="process-loading"
+  />
 </template>
 
 <script>
@@ -79,6 +83,7 @@ import RecordAccess from '@theme/components/ADempiere/RecordAccess'
 import ModalDialog from '@theme/components/ADempiere/ModalDialog/index.vue'
 import TabManager from '@theme/components/ADempiere/TabManager/index.vue'
 import TabManagerChild from '@theme/components/ADempiere/TabManager/tabChild.vue'
+import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
 
 // utils and helpers methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -92,7 +97,8 @@ export default defineComponent({
     Embedded,
     ModalDialog,
     TabManager,
-    TabManagerChild
+    TabManagerChild,
+    LoadingView
   },
 
   props: {
@@ -123,6 +129,10 @@ export default defineComponent({
 
     const showRecordAccess = computed(() => {
       return store.getters.getShowPanelRecordAccess
+    })
+
+    const settingsFullGridMode = computed(() => {
+      return store.state.settings.fullGridMode
     })
 
     const isMobile = computed(() => {
@@ -165,6 +175,12 @@ export default defineComponent({
       }
     })
 
+    const isFullGrilla = computed(() => {
+      return props.windowMetadata.currentTab.isParentTab && props.windowMetadata.currentTab.isShowedTableRecords
+    })
+    const isLoadWindows = ref(false)
+    const index = ref(0)
+
     const referencesManager = ref({
       getTableName: () => {
         const tabUuid = currentTabUuid.value
@@ -176,6 +192,16 @@ export default defineComponent({
     if (props.windowMetadata.tabsList) {
       allTabsList.value = props.windowMetadata.tabsList
     }
+
+    watch(isFullGrilla, (newValue, oldValue) => {
+      if (settingsFullGridMode.value && !newValue && isWithChildsTab.value && index.value === 0) {
+        index.value = 1
+        isLoadWindows.value = true
+        setTimeout(() => {
+          isLoadWindows.value = false
+        }, 500)
+      }
+    })
 
     const recordUuid = computed(() => {
       const record = store.getters.getUuidOfContainer(currentTabUuid.value)
@@ -265,7 +291,11 @@ export default defineComponent({
       styleFullScreen,
       loaDocument,
       additionalOptions,
-      listDocumentActions
+      settingsFullGridMode,
+      listDocumentActions,
+      isFullGrilla,
+      index,
+      isLoadWindows
     }
   }
 
