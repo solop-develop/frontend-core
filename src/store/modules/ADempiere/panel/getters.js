@@ -45,14 +45,11 @@ const getters = {
     if (isEmptyValue(panel)) {
       return []
     }
-    console.log({ fieldsList: panel.fieldsList })
     return panel.fieldsList
   },
 
   getFieldFromColumnName: (state, getters, rootState) => ({ containerUuid, parentUuid, columnName }) => {
-    console.log({ state, rootState })
     const columName = getters.getFieldsListFromPanel(containerUuid).find(itemField => {
-      console.log({ itemField }, itemField.name)
       return itemField.columnName === columnName
     })
     if (isEmptyValue(columName)) {

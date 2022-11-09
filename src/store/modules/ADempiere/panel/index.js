@@ -21,7 +21,6 @@ const panel = {
       payload.panel[payload.attributeName] = payload.attributeValue
     },
     changeFieldAttribure(state, payload) {
-      console.log({ payload }, payload.field, payload.field[payload.attributeName], 46454)
       payload.field[payload.attributeName] = payload.attributeValue
     },
     changeFieldLogic(state, payload) {

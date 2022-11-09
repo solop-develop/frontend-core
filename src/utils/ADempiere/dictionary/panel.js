@@ -19,6 +19,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { generateField } from '@/utils/ADempiere/dictionaryUtils.js'
 import { getFieldTemplate } from '@/utils/ADempiere/lookupFactory.js'
 import { isAddRangeField } from '@/utils/ADempiere/references'
+import { IS_ADVANCE_QUERY } from '@/utils/ADempiere/dictionaryUtils'
 
 /**
  * Order the fields, then assign the groups to each field, and finally group
@@ -141,7 +142,7 @@ export function generatePanelAndFields({
     // app attributes
     isShowedFromUser: true,
     isReadOnlyFromForm: false,
-    isAdvancedQuery: containerUuid.includes('_ADVANCE_QUERY'),
+    isAdvancedQuery: containerUuid.includes(IS_ADVANCE_QUERY),
     ...fieldOverwrite
   }
 

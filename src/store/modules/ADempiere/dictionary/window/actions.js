@@ -35,7 +35,8 @@ import {
   generateReportOfWindow,
   openBrowserAssociated,
   refreshRecords,
-  undoChange
+  undoChange,
+  generateAvanceQueryPanel
 } from '@/utils/ADempiere/dictionary/window.js'
 import {
   sharedLink,
@@ -77,20 +78,9 @@ export default {
         uuid
       })
         .then(async windowResponse => {
-          const advanceQueryWindow = {
-            ...windowResponse,
-            uuid: windowResponse.uuid + '_ADVANCE_QUERY',
-            tabs: windowResponse.tabs.map(tab => {
-              return {
-                ...tab,
-                uuid: tab.uuid + '_ADVANCE_QUERY'
-              }
-            })
-          }
           const window = generateWindow(windowResponse)
-          const panel = generateWindow(advanceQueryWindow)
+          generateAvanceQueryPanel(windowResponse, 'addWindow')
           dispatch('addWindow', window)
-          dispatch('addWindow', panel)
 
           resolve(window)
         })

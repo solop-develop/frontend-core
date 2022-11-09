@@ -225,7 +225,7 @@ const windowManager = {
           pageNumber = storedPage
         }
         pageToken = generatePageToken({ pageNumber })
-        if (!isEmptyValue(filters)) {
+        if (!isEmptyValue(filters) && typeof filters !== 'object') {
           const parseFilter = JSON.parse(filters)
           filters = [parseFilter]
         }
@@ -301,7 +301,7 @@ const windowManager = {
           containerUuid,
           isLoading: true
         })
-        if (isEmptyValue(filtersRecord)) {
+        if (!isEmptyValue(filtersRecord)) {
           filters.push(filtersRecord)
         }
         if (!isEmptyValue(searchValue)) {

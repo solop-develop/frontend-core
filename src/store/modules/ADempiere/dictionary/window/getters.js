@@ -71,8 +71,7 @@ export default {
   getFindTabAvanceQuery: (state) => (windowUuid, tabUuid) => {
     if (!isEmptyValue(state.storedWindows[windowUuid])) {
       const tab = state.storedWindows[windowUuid].tabsList.find(tab => {
-        // const advanceQuery = tab.containerUuid + '_ADVANCE_QUERY'
-        if (tab.uuid === tabUuid && tab.containerUuid.includes('_ADVANCE_QUERY')) {
+        if (tab.uuid === tabUuid && tab.containerUuid.includes('IS_ADVANCE_QUERY')) {
           return tab
         }
       })

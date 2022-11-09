@@ -45,6 +45,11 @@ export const IDENTIFIER_COLUMN_SUFFIX = `_ID`
 export const UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX = `_UUID`
 
 /**
+ * Identifierm Field is Advance Query
+ */
+export const IS_ADVANCE_QUERY = 'IS_ADVANCE_QUERY'
+
+/**
  * Generate field to app
  * @param {object}  fieldToGenerate
  * @param {object}  moreAttributes, additional attributes

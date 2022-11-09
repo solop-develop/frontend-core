@@ -27,7 +27,7 @@ import {
   READ_ONLY_FORM_COLUMNS
 } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
-
+import { IS_ADVANCE_QUERY } from '@/utils/ADempiere/dictionaryUtils'
 // utils and helpers methods
 import evaluator from '@/utils/ADempiere/evaluator'
 import { getContext } from '@/utils/ADempiere/contextUtils'
@@ -866,6 +866,27 @@ export function generateTabs({
     tabsListChild,
     tabsList
   }
+}
+
+export function generateAvanceQueryTabs(tabs) {
+  return tabs.map(tab => {
+    return {
+      ...tab,
+      uuid: tab.uuid + IS_ADVANCE_QUERY
+    }
+  })
+}
+
+export function generateAvanceQueryPanel(panel, actions) {
+  const { tabs } = panel
+  const uuid = panel.uuid + IS_ADVANCE_QUERY
+  store.dispatch(actions,
+    generateWindow({
+      ...panel,
+      uuid,
+      tabs: generateAvanceQueryTabs(tabs)
+    })
+  )
 }
 
 /**
