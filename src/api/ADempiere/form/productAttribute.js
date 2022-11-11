@@ -73,3 +73,66 @@ export function getProductAttribute({
       return camelizeObjectKeys(response)
     })
 }
+
+export function createProductAttributeSetInstance({
+  id,
+  uuid,
+  guaranteeDate,
+  lot,
+  serial,
+  attributes,
+  productId,
+  productUuid,
+  productAttributeSetId,
+  productAttributeSetUuid
+}) {
+  return request({
+    url: '/material-management/save-product-attribute-set-instance',
+    method: 'post',
+    data: {
+      //  DSL Query
+      id,
+      uuid,
+      guarantee_date: guaranteeDate,
+      lot,
+      serial,
+      attributes,
+      product_id: productId,
+      product_uuid: productUuid,
+      product_attribute_set_id: productAttributeSetId,
+      product_attribute_set_uuid: productAttributeSetUuid
+    }
+  })
+    .then(response => {
+      // const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
+      return camelizeObjectKeys(response)
+    })
+}
+
+export function getProductAttributeSetInstace({
+  id,
+  uuid,
+  productId,
+  productUuid,
+  productAttributeSetInstanceId,
+  productAttributeSetInstanceUuid
+}) {
+  return request({
+    url: '/material-management/get-product-attribute-set-instance',
+    method: 'post',
+    data: {
+      //  DSL Query
+      id,
+      uuid,
+      product_id: productId,
+      product_uuid: productUuid,
+      product_attribute_set_instance_id: productAttributeSetInstanceId,
+      product_attribute_set_instance_uuid: productAttributeSetInstanceUuid
+    }
+  })
+    .then(response => {
+      // const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
+      return camelizeObjectKeys(response)
+    })
+}
+
