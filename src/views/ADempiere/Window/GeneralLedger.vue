@@ -1,7 +1,7 @@
 <!--
  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
  Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
- Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
+ Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <el-container style="height: 100%!important;">
+  <el-container v-if="!isLoadWindows" style="height: 100%!important;">
     <el-main id="mainWindow" :style="(isMobile || isEmptyValue(windowMetadata.tabsListChild)) ? 'overflow: auto;' : 'overflow: hidden;'">
       <embedded
         :visible="showRecordAccess"
@@ -33,7 +33,6 @@
         :all-tabs-list="allTabsList"
         :references-manager="referencesManager"
         :actions-manager="actionsManager"
-        :is-accounting-info="true"
       />
       <tab-manager-child
         v-if="isWithChildsTab && isMobile"
@@ -52,7 +51,7 @@
         :container-uuid="processUuid"
       />
     </el-main>
-    <el-footer v-if="isWithChildsTab && !isMobile" id="footerWindow" :style="styleFullScreen">
+    <el-footer v-if="isWithChildsTab && !isMobile && !(settingsFullGridMode && windowMetadata.currentTab.isParentTab && windowMetadata.currentTab.isShowedTableRecords)" id="footerWindow" :style="styleFullScreen">
       <tab-manager-child
         class="tab-manager"
         :parent-uuid="windowMetadata.uuid"
@@ -64,16 +63,21 @@
       />
     </el-footer>
   </el-container>
+  <loading-view
+    v-else
+    key="process-loading"
+  />
 </template>
 
 <script>
-import { defineComponent, computed, ref } from '@vue/composition-api'
+import { defineComponent, computed, ref, watch } from '@vue/composition-api'
 
 import language from '@/lang'
 import store from '@/store'
 
 // components and mixins
 import ActionMenu from '@theme/components/ADempiere/ActionMenu/index.vue'
+import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
 import Embedded from '@theme/components/ADempiere/Dialog/embedded'
 import RecordAccess from '@theme/components/ADempiere/RecordAccess'
 import ModalDialog from '@theme/components/ADempiere/ModalDialog/index.vue'
@@ -92,7 +96,8 @@ export default defineComponent({
     Embedded,
     ModalDialog,
     TabManager,
-    TabManagerChild
+    TabManagerChild,
+    LoadingView
   },
 
   props: {
@@ -125,6 +130,10 @@ export default defineComponent({
       return store.getters.getShowPanelRecordAccess
     })
 
+    const settingsFullGridMode = computed(() => {
+      return store.state.settings.fullGridMode
+    })
+
     const isMobile = computed(() => {
       return store.state.app.device === 'mobile'
     })
@@ -132,7 +141,6 @@ export default defineComponent({
     const currentTabUuid = computed(() => {
       return store.getters.getCurrentTab(props.windowMetadata.uuid).uuid
     })
-
     const styleFullScreen = computed(() => {
       if (!isWithChildsTab.value) {
         return 'height: 0% !important'
@@ -165,6 +173,12 @@ export default defineComponent({
       }
     })
 
+    const isFullGrid = computed(() => {
+      return props.windowMetadata.currentTab.isParentTab && props.windowMetadata.currentTab.isShowedTableRecords
+    })
+
+    const isLoadWindows = ref(false)
+    const index = ref(0)
     const referencesManager = ref({
       getTableName: () => {
         const tabUuid = currentTabUuid.value
@@ -176,6 +190,15 @@ export default defineComponent({
     if (props.windowMetadata.tabsList) {
       allTabsList.value = props.windowMetadata.tabsList
     }
+    watch(isFullGrid, (newValue, oldValue) => {
+      if (settingsFullGridMode.value && !newValue && isWithChildsTab.value && index.value === 0) {
+        index.value = 1
+        isLoadWindows.value = true
+        setTimeout(() => {
+          isLoadWindows.value = false
+        }, 500)
+      }
+    })
 
     return {
       currentTabUuid,
@@ -186,7 +209,11 @@ export default defineComponent({
       isWithChildsTab,
       containerManager,
       isMobile,
-      styleFullScreen
+      styleFullScreen,
+      settingsFullGridMode,
+      isFullGrid,
+      index,
+      isLoadWindows
     }
   }
 
