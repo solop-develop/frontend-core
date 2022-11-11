@@ -103,7 +103,7 @@ export function evaluateDefaultFieldShowed({ columnName, defaultValue, isMandato
   }
 
   // TODO: Evaluated window type
-  if (['DateOrdered', 'DatePromised', 'M_Product_ID', 'QtyEntered'].includes(columnName)) {
+  if (['DateInvoiced', 'DateOrdered', 'DatePromised', 'DateTrx', 'M_Product_ID', 'QtyEntered'].includes(columnName)) {
     return true
   }
 
