@@ -298,6 +298,7 @@ export default {
   window,
   field: {
     field: 'Campo',
+    emptyFieldAttribute: 'Ningún grupo de Atributos definidos para el producto',
     info: 'Información',
     calculator: 'Calculadora',
     preference: 'Preferencia',

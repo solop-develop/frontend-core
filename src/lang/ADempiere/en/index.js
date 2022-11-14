@@ -323,6 +323,7 @@ export default {
   window,
   field: {
     field: 'Field',
+    emptyFieldAttribute: 'No Attributes group defined for the product',
     info: 'Information',
     calculator: 'Calculator',
     preference: 'Preference',
