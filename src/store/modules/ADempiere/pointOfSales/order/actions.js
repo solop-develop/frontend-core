@@ -351,7 +351,11 @@ export default {
         })
       })
   },
-  printTicketPreviwer({ commit, dispatch }, { posUuid, orderUuid }) {
+  printTicketPreviwer({ commit, dispatch, rootGetters }, { posUuid, orderUuid }) {
+    const isAllowsPreviewDocument = rootGetters.posAttributes.currentPointOfSales.isAllowsPreviewDocument
+    if (!isAllowsPreviewDocument) {
+      return
+    }
     return printTicketPreviwer({
       posUuid,
       orderUuid
