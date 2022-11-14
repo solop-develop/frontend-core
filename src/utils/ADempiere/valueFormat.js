@@ -79,7 +79,7 @@ export function formatField({
   if (isEmptyValue(value)) {
     return undefined
   }
-  if (!displayType) {
+  if (isEmptyValue(displayType)) {
     return value
   }
   //  Format

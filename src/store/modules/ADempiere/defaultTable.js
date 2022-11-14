@@ -1,24 +1,44 @@
 import language from '@/lang'
+import { isEmptyValue } from '@/utils/ADempiere'
+import Vue from 'vue'
 
 const defaultTable = {
-  tableOption: language.t('table.dataTable.showMinimalistView')
+  oprionsViwer: {}
 }
 
 export default {
   state: defaultTable,
   mutations: {
-    setTableOption(state, payload) {
-      state.tableOption = payload
+    setTableOption(state, {
+      parentUuid,
+      containerUuid,
+      tableOption = language.t('table.dataTable.showMinimalistView')
+    }) {
+      const defaultTableOptions = {
+        parentUuid,
+        containerUuid,
+        tableOption
+      }
+      Vue.set(state.oprionsViwer, containerUuid, defaultTableOptions)
     }
   },
   actions: {
-    selectOption({ commit }, option) {
-      commit('setTableOption', option)
+    selectOption({ commit, state }, {
+      parentUuid,
+      containerUuid,
+      tableOption
+    }) {
+      commit('setTableOption', {
+        parentUuid,
+        containerUuid,
+        tableOption
+      })
     }
   },
   getters: {
-    getTableOption: (state) => {
-      return state.tableOption
+    getTableOption: (state) => (containerUuid) => {
+      if (isEmptyValue(state.oprionsViwer[containerUuid])) return language.t('table.dataTable.showMinimalistView')
+      return state.oprionsViwer[containerUuid].tableOption
     }
   }
 }
