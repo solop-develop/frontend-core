@@ -645,10 +645,15 @@ const windowManager = {
     getTabPageSize: (state, getters) => ({ containerUuid }) => {
       return getters.getTabData({ containerUuid }).pageSize
     },
-    getTabCurrentRow: (state, getters) => ({ containerUuid }) => {
+    getTabCurrentRow: (state, getters, rootState, rootGetters) => ({ containerUuid }) => {
       // get current record uuid with container uuid
       const recordUuid = getters.getUuidOfContainer(containerUuid)
-
+      if (isEmptyValue(recordUuid)) {
+        return rootGetters.getValuesView({
+          containerUuid,
+          format: 'object'
+        })
+      }
       // get row with record uuid
       return getters.getTabRowData({ containerUuid, recordUuid })
     },

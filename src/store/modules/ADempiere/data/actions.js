@@ -384,7 +384,7 @@ const actions = {
       if (isSendCallout && !withOutColumnNames.includes(field.columnName) &&
         !isEmptyValue(newValue) && !isEmptyValue(field.callout)) {
         withOutColumnNames.push(field.columnName)
-        dispatch('runCallout', {
+        dispatch('startCallout', {
           parentUuid,
           containerUuid,
           tableName: field.tableName,

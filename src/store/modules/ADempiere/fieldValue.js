@@ -247,7 +247,7 @@ const value = {
       const objectValues = {}
       const pairsValues = []
       const mapValues = new Map()
-      const arrayValues = Object.keys(contextAllContainers).map(key => {
+      Object.keys(contextAllContainers).map(key => {
         const value = contextAllContainers[key]
         if (isOnlyColumns) {
           key = key
@@ -268,7 +268,10 @@ const value = {
       })
 
       if (format === 'array') {
-        return arrayValues
+        // not to duplicate the value
+        return convertObjectToKeyValue({
+          object: objectValues
+        })
       }
       if (format === 'pairs') {
         return pairsValues

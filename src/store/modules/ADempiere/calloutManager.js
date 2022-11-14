@@ -20,11 +20,14 @@ import lang from '@/lang'
 
 import { runCallOutRequest } from '@/api/ADempiere/window'
 
+// constants
+import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
+import { DISPLAY_COLUMN_PREFIX, UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
+
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
-import { DISPLAY_COLUMN_PREFIX, UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
 // import { containerManager } from '@/utils/ADempiere/dictionary/window'
 
 const initState = {
@@ -63,9 +66,11 @@ const calloutManager = {
           parentUuid,
           containerUuid
         }).filter(attribute => {
+          const { columnName } = attribute
           return !isEmptyValue(attribute.value) &&
-            !attribute.columnName.startsWith(DISPLAY_COLUMN_PREFIX) &&
-            !attribute.columnName.endsWith(UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX)
+            !columnName.startsWith(DISPLAY_COLUMN_PREFIX) &&
+            !columnName.endsWith(UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX) &&
+            !Object.prototype.hasOwnProperty.call(ROW_ATTRIBUTES, columnName)
         })
 
         runCallOutRequest({

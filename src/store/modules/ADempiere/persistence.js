@@ -32,6 +32,7 @@ import {
 // utils and helper methods
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
+import { getContextDefaultValue } from '@/utils/ADempiere/dictionaryUtils.js'
 
 const persistence = {
   state: {
@@ -123,9 +124,16 @@ const persistence = {
           columnName = field.columnName
         }
 
+        // TODO: Old value is not working
         let oldValue
         if (!isEmptyValue(currentRecord)) {
           oldValue = currentRecord[columnName]
+        }
+        if (isEmptyValue(currentRecord) || oldValue === value) {
+          const defaultValue = getContextDefaultValue({
+            ...field
+          })
+          oldValue = defaultValue
         }
 
         commit('addChangeToPersistenceQueue', {
