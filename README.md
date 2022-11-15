@@ -108,6 +108,7 @@ docker run -it \
 	--name adempiere-vue \
 	-p 80:80 \
 	-e API_URL="http://localhost:8085" \
+	-e TZ="America/Caracas" \
 	erpya/adempiere-vue
 ```
 
@@ -115,6 +116,8 @@ docker run -it \
 ### Environment variables for the configuration
 
  * `API_URL`: It indicates the address of the server to which you will point the service [Proxy-Adempiere-Api](https://github.com/adempiere/proxy-adempiere-api), by default its value is `http://localhost:8085`.
+
+ * `TZ`: (Time Zone) Indicates the time zone to set in the nginx-based container, the default value is `America/Caracas` (UTC -4:00).
 
 NOTE: If you do not change the values of the environment variables, it is not necessary to indicate them in the `docker run` command, since the default values will be set.
 

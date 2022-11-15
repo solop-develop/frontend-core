@@ -91,6 +91,7 @@ docker run -it \
 	--name adempiere-vue \
 	-p 80:80 \
 	-e API_URL="http://localhost:8085" \
+	-e TZ="America/Caracas" \
 	erpya/adempiere-vue
 ```
 
@@ -98,6 +99,9 @@ docker run -it \
 ### Variables de entorno para la configuración
 
  * `API_URL`: Indica la dirección URL del servidor con el que se comunicará por defecto el cliente web [Proxy-Adempiere-Api](https://github.com/adempiere/proxy-adempiere-api), el valor por defecto es `http://localhost:8085`.
+
+ * `TZ`: (Time Zone) Indica el huso horario a establecer en el contenedor basado en nginx, el valor por defecto es `America/Caracas` (UTC -4:00).
+
 
 NOTA: Si no cambias los valores de esta variable de entorno, no es necesario indicarlo en el comando `docker run`, por defecto colocará el valor que se encuentra predeterminado.
 
