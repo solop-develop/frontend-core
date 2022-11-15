@@ -297,3 +297,27 @@ export function generateDependenFieldsList(fieldsList) {
 
   return fieldsList
 }
+
+export function panelAdvanceQuery({
+  isAdvancedQuery,
+  tabPanel,
+  listTabs
+}) {
+  const tabAdvancedQuery = {
+    ...tabPanel,
+    parentUuid: tabPanel.parentUuid + isAdvancedQuery,
+    containerUuid: tabPanel.containerUuid + isAdvancedQuery,
+    fieldsList: tabPanel.fieldsList.map(field => {
+      return {
+        ...field,
+        isAdvancedQuery: true,
+        isShowedFromUser: false,
+        parentUuid: field.parentUuid + isAdvancedQuery,
+        containerUuid: field.containerUuid + isAdvancedQuery
+      }
+    }),
+    uuid: tabPanel.uuid + isAdvancedQuery
+  }
+  listTabs.push(tabAdvancedQuery)
+  return listTabs
+}

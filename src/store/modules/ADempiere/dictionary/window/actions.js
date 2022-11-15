@@ -39,9 +39,9 @@ import {
   openSequenceTab,
   refreshRecords,
   recordAccess,
-  undoChange,
-  generateAdvanceQueryPanel
+  undoChange
 } from '@/utils/ADempiere/dictionary/window.js'
+import { panelAdvanceQuery } from '@/utils/ADempiere/dictionary/panel.js'
 import {
   exportRecordsSelected,
   exportCurrentRecord,
@@ -82,7 +82,7 @@ export default {
       })
         .then(async windowResponse => {
           const window = generateWindow(windowResponse)
-          generateAdvanceQueryPanel(windowResponse, 'addWindow')
+          // generateAdvanceQueryPanel(windowResponse, 'addWindow')
           dispatch('addWindow', window)
 
           resolve(window)
@@ -616,6 +616,20 @@ export default {
           })
         })
     })
-  }
+  },
 
+  setTabAdvanceuery({ commit, rootGetters }, {
+    parentUuid,
+    containerUuid,
+    isAdvancedQuery
+  }) {
+    const tabAdvanceQuery = panelAdvanceQuery({
+      tabPanel: rootGetters.getStoredTab(parentUuid, containerUuid),
+      parentUuid,
+      containerUuid,
+      isAdvancedQuery,
+      listTabs: rootGetters.getStoredTabs(parentUuid)
+    })
+    commit('addAdvanceQuery', { parentUuid, tabAdvanceQuery })
+  }
 }
