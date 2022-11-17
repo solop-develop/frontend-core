@@ -43,7 +43,9 @@ const window = {
     attachment: {
       label: 'Attachment',
       uploadFiles: 'Upload Files',
-      newFiles: 'New Files'
+      newFiles: 'New Files',
+      error: 'Failed to Save Files',
+      success: 'Files Saved Successfully'
     },
     log: {
       changeHistory: 'Change History',
