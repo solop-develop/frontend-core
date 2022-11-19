@@ -24,6 +24,7 @@ import store from '@/store'
 import { requestWindowMetadata } from '@/api/ADempiere/dictionary/window.js'
 
 // constants
+import { CLIENT } from '@/utils/ADempiere/constants/systemColumns'
 import { containerManager } from '@/utils/ADempiere/dictionary/window'
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 
@@ -383,6 +384,17 @@ export default {
             })
           },
           isDisabledDone: () => {
+            // client id value of record
+            const clientIdRecord = rootGetters.getValueOfField({
+              parentUuid,
+              containerUuid,
+              columnName: CLIENT
+            })
+            // evaluate client id context with record
+            const sessionClientId = rootGetters.getSessionContextClientId
+            if (clientIdRecord !== sessionClientId) {
+              return true
+            }
             return !rootGetters.getTabSequenceIsChanged({
               parentUuid,
               containerUuid,

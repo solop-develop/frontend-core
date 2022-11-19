@@ -18,6 +18,7 @@
 
 const sequenceSort = {
   available: 'Disponibles',
+  disableWithSearch: 'Si hay una búsqueda la funcionalidad arrastrar y soltar se desabilita',
   sequence: 'Secuencia',
   updateSequencesSuccessfully: 'Secuencias actualizadas exitosamente',
   withoutChanges: 'Secuencias/Ordenado sin cambios'
