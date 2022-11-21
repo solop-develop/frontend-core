@@ -934,13 +934,15 @@ export function listCurrencies({
  * @param {string} posUuidd - POS UUID reference
  */
 export function listTenderTypes({
-  posUuid
+  posUuid,
+  pageSize = 50
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/available-payment-methods`,
     method: 'get',
     params: {
-      pos_uuid: posUuid
+      pos_uuid: posUuid,
+      page_size: pageSize
     }
   })
     .then(listTenderType => {
