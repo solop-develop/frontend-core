@@ -18,6 +18,7 @@
 
 const sequenceSort = {
   available: 'Available',
+  disableWithSearch: 'If there is a search, the drag and drop functionality is disabled.',
   sequence: 'Sequence',
   updateSequencesSuccessfully: 'Sequences updated successfully',
   withoutChanges: 'Sequence/Sorted without changes'

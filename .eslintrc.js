@@ -68,6 +68,7 @@ module.exports = {
     }],
     'new-cap': [2, {
       'newIsCap': true,
+      'properties': false, // new Constructor.staticMethod()
       'capIsNew': false
     }],
     'new-parens': 2,

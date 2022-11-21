@@ -1353,19 +1353,21 @@ export const containerManager = {
   setPage: ({
     parentUuid,
     containerUuid,
+    pageSize,
     pageNumber = 1
   }) => {
     store.dispatch('getEntities', {
       parentUuid,
       containerUuid,
+      pageSize,
       pageNumber
     })
   },
   setSizePage: ({
     parentUuid,
     containerUuid,
-    pageSize = 15,
-    pageNumber
+    pageNumber = 1,
+    pageSize = 15
   }) => {
     store.dispatch('getEntities', {
       parentUuid,

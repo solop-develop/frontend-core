@@ -43,7 +43,9 @@ const window = {
     attachment: {
       label: 'Anexo',
       uploadFiles: 'Cargar Archivos',
-      newFiles: 'Nuevos Archivos'
+      newFiles: 'Nuevos Archivos',
+      error: 'Error A Guardar Archivos',
+      success: 'Archivos Guardado con Éxito'
     },
     log: {
       updated: 'Actualizado',
