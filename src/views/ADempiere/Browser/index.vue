@@ -365,16 +365,18 @@ export default defineComponent({
         })
       },
 
-      setPage: ({ containerUuid, pageNumber }) => {
+      setPage: ({ containerUuid, pageNumber, pageSize }) => {
         store.dispatch('getBrowserSearch', {
           containerUuid,
-          pageNumber
+          pageNumber,
+          pageSize
         })
       },
-      setSizePage: ({ containerUuid, pageSize }) => {
+      setSizePage: ({ containerUuid, pageSize, pageNumber }) => {
         store.dispatch('getBrowserSearch', {
           containerUuid,
-          pageSize
+          pageSize,
+          pageNumber
         })
       },
 

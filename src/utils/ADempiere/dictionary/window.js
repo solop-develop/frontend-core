@@ -1364,12 +1364,14 @@ export const containerManager = {
   setSizePage: ({
     parentUuid,
     containerUuid,
-    pageSize = 15
+    pageSize = 15,
+    pageNumber
   }) => {
     store.dispatch('getEntities', {
       parentUuid,
       containerUuid,
-      pageSize
+      pageSize,
+      pageNumber
     })
   },
   getPageNumber({ containerUuid }) {
