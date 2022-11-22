@@ -581,6 +581,7 @@ export default {
     productInfo: {
       product: 'Producto',
       codeProduct: 'Código de Producto',
+      addProduct: 'Producto Agregado',
       productInformation: 'Información de Producto',
       chargerInformation: 'Información del Cargo',
       code: 'Código',

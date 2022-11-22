@@ -606,6 +606,7 @@ export default {
     productInfo: {
       product: 'Product',
       codeProduct: 'Códe Product',
+      addProduct: 'Product Added',
       productInformation: 'Product Information',
       chargerInformation: 'Charger Information',
       code: 'Code',
