@@ -45,7 +45,9 @@ const window = {
       uploadFiles: 'Cargar Archivos',
       newFiles: 'Nuevos Archivos',
       error: 'Error A Guardar Archivos',
-      success: 'Archivos Guardado con Éxito'
+      success: 'Archivos Guardado con Éxito',
+      uploadFile: 'Cargar Archivo (Upload)',
+      selectFile: 'Selecciona un archivo'
     },
     log: {
       updated: 'Actualizado',

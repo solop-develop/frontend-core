@@ -45,7 +45,9 @@ const window = {
       uploadFiles: 'Upload Files',
       newFiles: 'New Files',
       error: 'Failed to Save Files',
-      success: 'Files Saved Successfully'
+      success: 'Files Saved Successfully',
+      uploadFile: 'Upload File',
+      selectFile: 'Select File'
     },
     log: {
       changeHistory: 'Change History',
