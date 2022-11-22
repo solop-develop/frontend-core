@@ -22,7 +22,7 @@ import Vue from 'vue'
 import { tableSearchFields, requestGridGeneralInfo } from '@/api/ADempiere/field/search'
 
 // constants
-import { CHAR, SEARCH, TABLE, TABLE_DIRECT } from '@/utils/ADempiere/references'
+import { SEARCH, TABLE, TABLE_DIRECT } from '@/utils/ADempiere/references'
 import { TABLE_NAME as TABLE_NAME_BPartner } from '@/utils/ADempiere/dictionary/form/businessPartner/businessPartnerList'
 
 // utils and helper methods
@@ -393,7 +393,7 @@ const generalInfoSearch = {
     getQueryFieldsList: (state, getters) => ({ containerUuid }) => {
       const fieldsList = getters.getTableHeader({ containerUuid })
       return fieldsList.filter(field => {
-        return CHAR.id === field.displayType
+        return field.componentPath === 'FieldText'
       })
     },
     getIdentifier: (state) => ({ containerUuid }) => {
