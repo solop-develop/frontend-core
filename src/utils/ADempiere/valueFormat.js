@@ -1,18 +1,20 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Yamel Senih ysenih@erpya.com www.erpya.com
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program. If not, see <https://www.gnu.org/licenses/>.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 // A util class for handle format for time, date and others values to beused to display information
 // Note that this file use moment library for a easy conversion
@@ -21,19 +23,20 @@
 import {
   DATE, DATE_PLUS_TIME, TIME,
   AMOUNT, COSTS_PLUS_PRICES, NUMBER, QUANTITY,
+  CHAR, MEMO, TEXT, TEXT_LONG,
   ACCOUNT_ELEMENT, LOCATION_ADDRESS, PRODUCT_ATTRIBUTE, // Custom lookups
   LIST, TABLE, TABLE_DIRECT, SEARCH, // Standard lookups
   YES_NO
 } from '@/utils/ADempiere/references.js'
 
 // utils and helper methods
-import { isEmptyValue, typeValue } from '@/utils/ADempiere/valueUtils.js'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertBooleanToTranslationLang } from './formatValue/booleanFormat'
-
+export { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
+import { decodeHtmlEntities } from '@/utils/ADempiere/formatValue/stringFormat.js'
 // TODO: Duplicated exported method, removed this
 import { formatPrice as formatPriceTemp } from '@/utils/ADempiere/formatValue/numberFormat'
 import { formatDate as formatDateTemp } from '@/utils/ADempiere/formatValue/dateFormat'
-export { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
 
 // TODO: Duplicated method remove and use with destructured params
 export function formatDate(value, isTime = false, format) {
@@ -100,9 +103,6 @@ export function formatField({
       break
 
     case DATE.id:
-      if (typeValue(value) === 'DATE') {
-        value = value.getTime()
-      }
       formattedValue = formatDateTemp({
         value,
         isTime: false,
@@ -133,6 +133,13 @@ export function formatField({
 
     case YES_NO.id:
       formattedValue = convertBooleanToTranslationLang(value)
+      break
+
+    case CHAR.id:
+    case MEMO.id:
+    case TEXT.id:
+    case TEXT_LONG.id:
+      formattedValue = decodeHtmlEntities(value)
       break
 
     default:

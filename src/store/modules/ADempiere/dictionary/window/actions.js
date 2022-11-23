@@ -34,6 +34,7 @@ import {
   generateWindow,
   createNewRecord,
   deleteRecord,
+  exportCurrentRecord,
   runProcessOfWindow,
   generateReportOfWindow,
   openBrowserAssociated,
@@ -45,7 +46,6 @@ import {
 import { panelAdvanceQuery } from '@/utils/ADempiere/dictionary/panel.js'
 import {
   exportRecordsSelected,
-  exportCurrentRecord,
   sharedLink
 } from '@/utils/ADempiere/constants/actionsMenuList.js'
 import evaluator from '@/utils/ADempiere/evaluator'
@@ -416,7 +416,16 @@ export default {
 
     actionsList.push(recordAccess)
     actionsList.push(exportCurrentRecord)
-    actionsList.push(exportRecordsSelected)
+    actionsList.push({
+      ...exportRecordsSelected,
+      // overwrite displayed method
+      displayed: ({ parentUuid, containerUuid }) => {
+        const currentTab = store.getters.getStoredTab(parentUuid, containerUuid)
+
+        // only multi record
+        return currentTab.isShowedTableRecords
+      }
+    })
     actionsList.push(sharedLink)
 
     commit('setActionMenu', {

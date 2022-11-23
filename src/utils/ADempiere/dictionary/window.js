@@ -28,6 +28,10 @@ import {
 } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { IS_ADVANCE_QUERY } from '@/utils/ADempiere/dictionaryUtils'
+
+// api request methods
+import { getEntity } from '@/api/ADempiere/user-interface/persistence'
+
 // utils and helpers methods
 import evaluator from '@/utils/ADempiere/evaluator'
 import { getContext } from '@/utils/ADempiere/contextUtils'
@@ -38,7 +42,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { BUTTON, isHiddenField } from '@/utils/ADempiere/references.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import { zoomIn } from '@/utils/ADempiere/coreUtils'
-import { getEntity } from '@/api/ADempiere/user-interface/persistence'
+import { exportRecords, supportedTypes } from '@/utils/ADempiere/exportUtil.js'
 
 export function isReadOnlyTab({ parentUuid, containerUuid }) {
   const window = store.getters.getStoredWindow(parentUuid)
@@ -465,6 +469,48 @@ export const deleteRecord = {
         console.warn(`Delete Entity - Error ${error.message}, Code: ${error.code}.`)
       })
   }
+}
+
+/**
+ * Export current record
+ */
+export const exportCurrentRecord = {
+  name: language.t('actionMenu.exportRecord'),
+  displayed: ({ parentUuid, containerUuid }) => {
+    const currentTab = store.getters.getStoredTab(parentUuid, containerUuid)
+
+    // only single record
+    return !currentTab.isShowedTableRecords
+  },
+  enabled: ({ containerUuid, containerManager }) => {
+    const currentRecord = store.getters.getUuidOfContainer(containerUuid)
+
+    return !isEmptyValue(currentRecord)
+  },
+  svg: false,
+  icon: 'el-icon-download',
+  actionName: 'exportCurrentRecord',
+  exportCurrentRecord: ({ root, parentUuid, containerUuid, containerManager }) => {
+    const currrentRecord = store.getters.getTabCurrentRow({ containerUuid })
+    exportRecords({ parentUuid, containerUuid, containerManager, currrentRecord })
+  },
+  // generate export formats
+  childs: Object.keys(supportedTypes).map(format => {
+    return {
+      name: supportedTypes[format],
+      enabled: ({ containerUuid, containerManager }) => {
+        return true
+      },
+      svg: false,
+      icon: 'el-icon-download',
+      actionName: 'exportCurrentRecord',
+      exportCurrentRecord: ({ root, parentUuid, containerUuid, containerManager }) => {
+        // change default format to current format
+        const currrentRecord = store.getters.getTabCurrentRow({ containerUuid })
+        exportRecords({ root, parentUuid, containerUuid, containerManager, formatToExport: format, currrentRecord })
+      }
+    }
+  })
 }
 
 /**

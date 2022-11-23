@@ -1,25 +1,31 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Elsio Sanchez esanchez@erpya.com www.erpya.com
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import language from '@/lang'
 
 // utils and helper methods
+import { convertBooleanToTranslationLang } from '@/utils/ADempiere/formatValue/booleanFormat.js'
+import { clientDateTime } from '@/utils/ADempiere/formatValue/dateFormat'
+import { decodeHtmlEntities } from '@/utils/ADempiere/formatValue/stringFormat'
 import { export_json_to_excel } from '@/vendor/Export2Excel'
 import { export_txt_to_zip } from '@/vendor/Export2Zip'
-import language from '@/lang'
-import { convertBooleanToTranslationLang } from '@/utils/ADempiere/formatValue/booleanFormat.js'
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { formatField } from '@/utils/ADempiere/valueFormat'
 
 // export file with records
 export const supportedTypes = {
@@ -150,4 +156,63 @@ export function exportZipFile({
     txtName,
     zipName
   )
+}
+
+/**
+ * Export records
+ * @param {string} parentUuid
+ * @param {string} containerUuid
+ * @param {object} containerManager
+ * @param {string} formatToExport
+ * @param {array} formatToExport
+ */
+export const exportRecords = ({ parentUuid, containerUuid, containerManager, formatToExport = 'json', currrentRecord = { }}) => {
+  let selection = [currrentRecord]
+  if (isEmptyValue(currrentRecord)) {
+    selection = containerManager.getSelection({
+      containerUuid
+    })
+  }
+  const fieldsListAvailable = containerManager.getFieldsList({
+    parentUuid,
+    containerUuid
+  }).filter(fieldItem => {
+    // TODO: Verify with containerManager.isDisplayedColumn
+    if (fieldItem.isActive && fieldItem.isDisplayed && !fieldItem.isKey && fieldItem.sequence > 0) {
+      return fieldItem
+    }
+  }).sort((a, b) => a.sequence - b.sequence)
+
+  const headerList = fieldsListAvailable.map(fieldItem => {
+    // decode html entities
+    return decodeHtmlEntities(fieldItem.name)
+  })
+
+  // filter only showed columns
+  const data = selection.map(row => {
+    const newRow = {}
+    fieldsListAvailable.forEach(field => {
+      const { columnName, displayColumnName, displayType } = field
+      const value = formatField({
+        displayType,
+        value: row[columnName],
+        displayedValue: row[displayColumnName]
+      })
+
+      newRow[columnName] = value
+    })
+    return newRow
+  })
+
+  const title = containerManager.getPanel({
+    parentUuid,
+    containerUuid
+  }).name
+
+  exportFileFromJson({
+    header: headerList,
+    data,
+    fileName: `${title} ${clientDateTime()}`,
+    exportType: formatToExport
+  })
 }
