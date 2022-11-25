@@ -45,6 +45,9 @@ const pointOfSales = {
     edit: 'Line Edit',
     updateSuccess: 'Order Line Successfully Updated'
   },
+  permissions: {
+    previewDocumentNotAllowed: '"Document Preview" is not allowed for your user'
+  },
   pin: {
     validatePin: 'Validate PIN',
     validateSuccessfully: 'PIN Validate Successfully'

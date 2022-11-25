@@ -1,18 +1,22 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Elsio Sanchez esanchez@erpya.com www.erpya.com
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Elsio Sanchez elsiosanchez@gmail.com https://github.com/elsiosanchez
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program. If not, see <https://www.gnu.org/licenses/>.
+*/
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import language from '@/lang'
 
 // api request methods
 import {
@@ -351,30 +355,38 @@ export default {
         })
       })
   },
-  printTicketPreviwer({ commit, dispatch, rootGetters }, { posUuid, orderUuid }) {
-    const isAllowsPreviewDocument = rootGetters.posAttributes.currentPointOfSales.isAllowsPreviewDocument
-    if (!isAllowsPreviewDocument) {
-      return
-    }
-    return printTicketPreviwer({
-      posUuid,
-      orderUuid
+  printTicketPreviwer({ rootGetters }, {
+    posUuid, orderUuid
+  }) {
+    return new Promise((resolve, reject) => {
+      const isAllowsPreviewDocument = rootGetters.posAttributes.currentPointOfSales.isAllowsPreviewDocument
+
+      if (!isAllowsPreviewDocument) {
+        return reject({
+          message: language.t('pointOfSales.permissions.previewDocumentNotAllowed')
+        })
+      }
+
+      printTicketPreviwer({
+        posUuid,
+        orderUuid
+      })
+        .then(response => {
+          showMessage({
+            type: 'success',
+            message: response.result,
+            showClose: true
+          })
+          resolve(response)
+        })
+        .catch(error => {
+          console.warn(error.message)
+          showMessage({
+            type: 'error',
+            message: error.message,
+            showClose: true
+          })
+        })
     })
-      .then(response => {
-        showMessage({
-          type: 'success',
-          message: response.result,
-          showClose: true
-        })
-        return response
-      })
-      .catch(error => {
-        console.warn(error.message)
-        showMessage({
-          type: 'error',
-          message: error.message,
-          showClose: true
-        })
-      })
   }
 }
