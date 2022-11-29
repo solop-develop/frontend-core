@@ -84,7 +84,6 @@ export default {
    */
   changeTabFieldAttribute(state, payload) {
     const { attributeName, attributeValue } = payload
-
     payload.field[attributeName] = attributeValue
   },
   /**
@@ -94,5 +93,21 @@ export default {
    */
   setSelectProcessWindows(state, uuid) {
     state.selectProcessUuid = uuid
+  },
+  changeFieldPanelAttribute(state, payload) {
+    const { attributeName, columnName, attributeValue, tabUuid, windowUuid } = payload
+    if (isEmptyValue(state.storedWindows[windowUuid])) {
+      console.warn('tab not found')
+      return
+    }
+    if (isEmptyValue(state.storedWindows[windowUuid].tabsList)) {
+      console.warn('tabsList not found')
+      return
+    }
+    if (isEmptyValue(state.storedWindows[windowUuid].tabsList.find(tab => tab.uuid === tabUuid).fieldsList)) {
+      console.warn('Fields not found')
+      return
+    }
+    state.storedWindows[windowUuid].tabsList.find(tab => tab.uuid === tabUuid).fieldsList.find(a => a.columnName === columnName)[attributeName] = attributeValue
   }
 }

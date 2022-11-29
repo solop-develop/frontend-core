@@ -744,7 +744,12 @@ const actions = {
       return
     }
 
-    commit('changeFieldAttribure', {
+    // commit('changeFieldAttribure', {
+    //   field,
+    //   attributeName,
+    //   attributeValue
+    // })
+    commit('changeTabFieldAttribute', {
       field,
       attributeName,
       attributeValue

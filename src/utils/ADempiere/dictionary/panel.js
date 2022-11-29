@@ -16,11 +16,14 @@
 
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
-import { generateField } from '@/utils/ADempiere/dictionaryUtils.js'
+import { generateField, evalutateTypeField } from '@/utils/ADempiere/dictionaryUtils.js'
 import { getFieldTemplate } from '@/utils/ADempiere/lookupFactory.js'
 import { isAddRangeField } from '@/utils/ADempiere/references'
 import { IS_ADVANCE_QUERY } from '@/utils/ADempiere/dictionaryUtils'
-
+import {
+  FIELD_OPERATORS_LIST, OPERATOR_EQUAL,
+  OPERATOR_LIKE
+} from '@/utils/ADempiere/dataUtils'
 /**
  * Order the fields, then assign the groups to each field, and finally group
  * in an array according to each field group to show in panel (or table).
@@ -154,6 +157,14 @@ export function generatePanelAndFields({
 
   // convert fields and add app attributes
   let fieldsList = panelMetadata.fields.map((fieldItem, index) => {
+    // console.log({
+    //   fieldToGenerate: fieldItem,
+    //   evaluateDefaultFieldShowed,
+    //   moreAttributes: {
+    //     ...fieldAdditionalAttributes,
+    //     fieldsListIndex: index
+    //   }
+    // })
     const fieldDefinition = generateField({
       fieldToGenerate: fieldItem,
       evaluateDefaultFieldShowed,
@@ -308,16 +319,39 @@ export function panelAdvanceQuery({
     parentUuid: tabPanel.parentUuid + isAdvancedQuery,
     containerUuid: tabPanel.containerUuid + isAdvancedQuery,
     fieldsList: tabPanel.fieldsList.map(field => {
+      let operator = OPERATOR_EQUAL.operator
+      const componentReference = evalutateTypeField(field.displayType)
+      // const isComparisonField = !['FieldBinary', 'FieldButton', 'FieldImage'].includes(componentReference.componentPath)
+      // console.log({ isComparisonField })
+      let operatorsList = field.operatorsList
+      // if (isComparisonField) {
+      const operatorsField = FIELD_OPERATORS_LIST.find(item => {
+        return item.componentPath === componentReference.componentPath
+      })
+      if (operatorsField) {
+        operatorsList = operatorsField.operatorsList
+      }
+      // }
+
+      if (['FieldText', 'FieldTextLong', 'FieldUrl'].includes(componentReference.componentPath)) {
+        operator = OPERATOR_LIKE.operator
+      }
+      // console.log({ operatorsList, operatorsField }, field.name)
       return {
         ...field,
         isAdvancedQuery: true,
         isShowedFromUser: false,
         parentUuid: field.parentUuid + isAdvancedQuery,
-        containerUuid: field.containerUuid + isAdvancedQuery
+        containerUuid: field.containerUuid + isAdvancedQuery,
+        operatorsList,
+        operator
       }
     }),
     uuid: tabPanel.uuid + isAdvancedQuery
   }
+  // tabAdvancedQuery.fieldsList.forEach(element => {
+  //   console.log({ element }, element.name, element.operatorsList, element.operator)
+  // })
   listTabs.push(tabAdvancedQuery)
   return listTabs
 }
