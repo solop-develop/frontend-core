@@ -105,7 +105,6 @@ export function getImagePath({
  * @param {string} resourceName
  * @returns {object} url, urn and uri with path to request
  */
-
 export function getResoursePath({
   resourceUuid,
   resourceName
@@ -119,6 +118,22 @@ export function getResoursePath({
     urn,
     uri
   }
+}
+
+/**
+ * @param {string} resourceUuid
+ * @param {string} resourceName
+ * @param {string} resourceType
+ */
+export function getSource({ resourceUuid, resourceName, resourceType }) {
+  const image = getResoursePath({
+    resourceUuid,
+    resourceName
+  })
+  if (isEmptyValue(image)) {
+    return require('@/image/ADempiere/priceChecking/no-image.jpg')
+  }
+  return image
 }
 
 /**

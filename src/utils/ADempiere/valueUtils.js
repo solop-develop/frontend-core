@@ -1,18 +1,20 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Yamel Senih ysenih@erpya.com www.erpya.com
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 import language from '@/lang'
 
@@ -24,7 +26,6 @@ import { OPERATION_PATTERN } from '@/utils/ADempiere/formatValue/numberFormat.js
 
 // utils and helper methods
 import { convertBooleanToString, convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat.js'
-import { getResoursePath } from '@/utils/ADempiere/resource.js'
 
 /**
  * Checks if value is empty. Deep-checks arrays and objects
@@ -714,15 +715,4 @@ export function convertValuesToSend(values) {
     }
   })
   return valuesToSend
-}
-
-export function getSource({ resourceUuid, resourceName, resourceType }) {
-  const image = getResoursePath({
-    resourceUuid,
-    resourceName
-  })
-  if (isEmptyValue(image)) {
-    return require('@/image/ADempiere/priceChecking/no-image.jpg')
-  }
-  return image
 }
