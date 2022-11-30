@@ -169,6 +169,7 @@ export default {
       Today: 'Today',
       Yesterday: 'Yesterday',
       Week: 'Last week',
+      currentWeek: 'Current Week',
       LastMonth: 'Last month',
       CurrentMonth: 'The current month'
     },
