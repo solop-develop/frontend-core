@@ -90,7 +90,7 @@ export default {
     const showNavar = computed({
       // getter
       get() {
-        return store.state.settings.showNavar
+        return store.getters['settings/getShowNavar']
       },
       // setter
       set(newValue) {
@@ -105,7 +105,7 @@ export default {
     const fixedHeader = computed({
       // getter
       get() {
-        return store.state.settings.fixedHeader
+        return store.getters['settings/getFixedHeader']
       },
       // setter
       set(newValue) {
@@ -151,7 +151,7 @@ export default {
     const showContextMenu = computed({
       // getter
       get() {
-        return store.state.settings.showContextMenu
+        return store.getters['settings/getShowContextMenu']
       },
       // setter
       set(newValue) {
@@ -166,7 +166,7 @@ export default {
     const sidebarLogo = computed({
       // getter
       get() {
-        return store.state.settings.sidebarLogo
+        return store.getters['settings/getSidebarLogo']
       },
       // setter
       set(newValue) {
@@ -196,7 +196,7 @@ export default {
     const showAutoSave = computed({
       // getter
       get() {
-        return store.state.settings.autoSave
+        return store.getters['settings/getAutoSave']
       },
       // setter
       set(newValue) {
@@ -211,7 +211,7 @@ export default {
     const showFullGridMode = computed({
       // getter
       get() {
-        return store.state.settings.fullGridMode
+        return store.getters['settings/getFullGridMode']
       },
       // setter
       set(newValue) {
