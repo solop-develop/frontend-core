@@ -59,7 +59,8 @@ const window = {
       recordID: 'ID del Registro',
       recordUUID: 'UUID del Registro',
       tableName: 'Nombre de la Tabla'
-    }
+    },
+    referenceRecords: 'Documentos Relacionados'
   },
   documentStatus: 'Estatus del Documento',
   callout: {
