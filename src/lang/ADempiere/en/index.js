@@ -458,6 +458,8 @@ export default {
       tableProduct: {
         product: 'Product',
         quantity: 'Quantity',
+        basePrice: 'Base Price',
+        baseQuantity: 'Base Quantity',
         uom: 'UOM',
         unitOfMeasure: 'Unit of Measure',
         options: 'Options',

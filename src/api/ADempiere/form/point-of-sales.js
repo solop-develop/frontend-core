@@ -545,6 +545,25 @@ export function printTicketPreviwer({
     })
 }
 
+export function printShipmentPreviwer({
+  posUuid,
+  shipmentUuid,
+  reportType
+}) {
+  return request({
+    url: `${config.pointOfSales.endpoint}/print-shipment-preview`,
+    method: 'post',
+    data: {
+      pos_uuid: posUuid,
+      shipment_uuid: shipmentUuid,
+      report_type: reportType
+    }
+  })
+    .then(printShipmentPreviwer => {
+      return printShipmentPreviwer
+    })
+}
+
 export function generateImmediateInvoice({
   posId,
   posUuid
