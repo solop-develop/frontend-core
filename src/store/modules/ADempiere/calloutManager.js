@@ -13,11 +13,12 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 import lang from '@/lang'
 
+// api request methods
 import { runCallOutRequest } from '@/api/ADempiere/window'
 
 // constants
@@ -25,26 +26,13 @@ import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { DISPLAY_COLUMN_PREFIX, UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
 
 // utils and helper methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
-// import { containerManager } from '@/utils/ADempiere/dictionary/window'
-
-const initState = {
-  calloutManager: {}
-}
 
 const calloutManager = {
-  state: initState,
-
-  mutations: {
-    resetStateCalloutManager(state) {
-      state = initState
-    }
-  },
-
   actions: {
-    startCallout({ dispatch, rootGetters }, {
+    startCallout({ commit, dispatch, rootGetters }, {
       parentUuid,
       containerUuid,
       callout,
@@ -61,6 +49,12 @@ const calloutManager = {
           return
         }
 
+        const { fieldsList, isParentTab, firstTabUuid } = rootGetters.getStoredTab(parentUuid, containerUuid)
+        let fieldsListParent = []
+        if (!isParentTab && !isEmptyValue(firstTabUuid)) {
+          fieldsListParent = rootGetters.getStoredFieldsFromTab(parentUuid, firstTabUuid)
+        }
+
         // const window = rootGetters.getStoredWindow(parentUuid)
         const contextAttributesList = rootGetters.getValuesView({
           parentUuid,
@@ -71,6 +65,28 @@ const calloutManager = {
             !columnName.startsWith(DISPLAY_COLUMN_PREFIX) &&
             !columnName.endsWith(UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX) &&
             !Object.prototype.hasOwnProperty.call(ROW_ATTRIBUTES, columnName)
+        }).map(attribute => {
+          const { columnName, value } = attribute
+          let valueType = 'UNKNOWN'
+
+          const field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
+          if (!isEmptyValue(field)) {
+            valueType = field.valueType
+          } else {
+            // find on parent tab (first tab)
+            const parentField = fieldsListParent.find(fieldItem => fieldItem.columnName === columnName)
+            if (!isEmptyValue(parentField)) {
+              valueType = parentField.valueType
+            }
+          }
+
+          return {
+            key: columnName,
+            value: {
+              value,
+              valueType
+            }
+          }
         })
 
         runCallOutRequest({
@@ -116,6 +132,27 @@ const calloutManager = {
               object: values
             })
 
+            const recordUuid = rootGetters.getUuidOfContainer(containerUuid)
+            attributesList.forEach(attribute => {
+              const { value, columnName } = attribute
+
+              const oldValue = rootGetters.getValueOfFieldOnContainer({
+                parentUuid,
+                containerUuid,
+                columnName
+              })
+              // add changes to send
+              if (!isSameValues(value, oldValue)) {
+                commit('addChangeToPersistenceQueue', {
+                  containerUuid,
+                  recordUuid,
+                  columnName,
+                  oldValue,
+                  value
+                })
+              }
+            })
+
             dispatch('updateValuesOfContainer', {
               parentUuid,
               containerUuid,
@@ -141,12 +178,6 @@ const calloutManager = {
             console.warn(`Field ${columnName} error callout. Code ${error.code}: ${error.message}`)
           })
       })
-    }
-  },
-
-  getters: {
-    getCalloutManager: (state) => {
-      return state.calloutManager
     }
   }
 }
