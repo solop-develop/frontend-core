@@ -209,6 +209,7 @@ const windowManager = {
     }, {
       parentUuid,
       containerUuid,
+      tabUuid,
       searchValue = '',
       filters = [],
       filtersRecord = {},
@@ -307,6 +308,7 @@ const windowManager = {
         if (!isEmptyValue(searchValue)) {
           pageToken = ''
         }
+        if (isEmptyValue(tabUuid)) tabUuid = containerUuid
         getEntities({
           windowUuid: parentUuid,
           tabUuid: containerUuid,
