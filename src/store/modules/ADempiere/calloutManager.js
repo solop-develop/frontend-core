@@ -141,15 +141,19 @@ const calloutManager = {
                 containerUuid,
                 columnName
               })
+
               // add changes to send
               if (!isSameValues(value, oldValue)) {
-                commit('addChangeToPersistenceQueue', {
-                  containerUuid,
-                  recordUuid,
-                  columnName,
-                  oldValue,
-                  value
-                })
+                const field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
+                if (!isEmptyValue(field)) {
+                  commit('addChangeToPersistenceQueue', {
+                    containerUuid,
+                    recordUuid,
+                    columnName,
+                    oldValue,
+                    value
+                  })
+                }
               }
             })
 

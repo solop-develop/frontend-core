@@ -209,10 +209,13 @@ const persistence = {
     }) {
       return new Promise((resolve, reject) => {
         const { fieldsList } = rootGetters.getStoredTab(parentUuid, containerUuid)
-        let attributesList = getters.getPersistenceAttributes({
+
+        const persistenceAttributesList = getters.getPersistenceAttributes({
           containerUuid,
           recordUuid
         })
+
+        let attributesList = persistenceAttributesList
           .filter(attribute => {
             const { columnName } = attribute
 
@@ -222,21 +225,26 @@ const persistence = {
             }
 
             const field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
-            // prevent `PO.set_Value: Column not updateable`
-            if (!isEmptyValue(recordUuid) && !field.isUpdateable) {
-              return false
+            if (!isEmptyValue(field)) {
+              if (field.isAlwaysUpdateable) {
+                return true
+              }
+              // prevent `PO.set_Value: Column not updateable`
+              if (!isEmptyValue(recordUuid) && !field.isUpdateable) {
+                return false
+              }
+              if (LOG_COLUMNS_NAME_LIST.includes(columnName)) {
+                return false
+              }
             }
-            if (!field.isAlwaysUpdateable &&
-              LOG_COLUMNS_NAME_LIST.includes(columnName)) {
-              return false
-            }
+
             return true
           })
 
         if (!isEmptyValue(attributesList)) {
           if (!isEmptyValue(recordUuid)) {
             // Update existing entity
-            updateEntity({
+            return updateEntity({
               tableName,
               recordUuid,
               attributesList
@@ -280,7 +288,7 @@ const persistence = {
             attributesList = attributesList.filter(itemAttribute => !isEmptyValue(itemAttribute.value))
 
             // Create new entity
-            createEntity({
+            return createEntity({
               tableName,
               attributesList
             })
