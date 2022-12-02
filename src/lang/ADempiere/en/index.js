@@ -168,9 +168,10 @@ export default {
     date: {
       Today: 'Today',
       Yesterday: 'Yesterday',
-      Week: 'Last week',
-      LastMonth: 'Last month',
-      CurrentMonth: 'The current month'
+      Week: 'Last Week',
+      currentWeek: 'Current Week',
+      LastMonth: 'Last Month',
+      CurrentMonth: 'Current Month'
     },
     documentation: 'Documentation',
     binaryButton: 'Upload file',

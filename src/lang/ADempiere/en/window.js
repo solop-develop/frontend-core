@@ -59,7 +59,8 @@ const window = {
       recordID: 'Log ID',
       recordUUID: 'Log UUID',
       tableName: 'Table Name'
-    }
+    },
+    referenceRecords: 'Document Reference'
   },
   documentStatus: 'Document Status',
   callout: {

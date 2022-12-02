@@ -17,6 +17,7 @@
 */
 
 import language from '@/lang'
+import router from '@/router'
 
 // api request methods
 import {
@@ -193,6 +194,17 @@ export default {
             attribute: orderResponse,
             setToStore: false
           })
+          // Establish order in the route
+          const currentRoute = router.app._route
+          // set action
+          router.push({
+            params: {
+              ...currentRoute.params
+            },
+            query: {
+              action: orderUuid
+            }
+          }, () => {})
           dispatch('currentOrder', orderResponse)
         // dispatch('listOrderLinesFromServer', orderResponse.uuid)
         })

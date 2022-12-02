@@ -168,9 +168,10 @@ export default {
     date: {
       Today: 'Hoy',
       Yesterday: 'Ayer',
-      Week: 'La semana pasada',
-      LastMonth: 'El mes pasado',
-      CurrentMonth: 'El mes actual'
+      Week: 'Semana Pasada',
+      currentWeek: 'Semana Actual',
+      LastMonth: 'Mes Pasado',
+      CurrentMonth: 'Mes Actual'
     },
     documentation: 'Documentación',
     binaryButton: 'Subir archivo',
@@ -398,7 +399,7 @@ export default {
           copyOrder: 'Copiar Orden',
           createNewReturnOrder: 'Crear una nueva orden de devolución',
           confirmDelivery: 'Confirmar Entrega',
-          deliverAllProducts: 'Entrega todos los productos',
+          deliverAllProducts: 'Entregar Todo',
           emptyProductDelivery: 'Producto no se Encuentra en la Orden'
         },
         cashManagement: {
