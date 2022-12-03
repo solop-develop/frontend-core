@@ -17,7 +17,10 @@
  */
 
 // api request methods
-import { getAttachment } from '@/api/ADempiere/user-interface/component/resource'
+import { requestAttachment } from '@/api/ADempiere/user-interface/component/resource'
+
+// utils and helper methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 const initStateAttachment = {
   listAttachment: []
@@ -33,28 +36,40 @@ const attachment = {
   },
 
   actions: {
-    attachments({ commit }, {
+    findAttachment({ commit }, {
       tableName,
       recordId,
       recordUuid
     }) {
-      getAttachment({
+      const pageSize = 0
+      const pageToken = 0
+      if (isEmptyValue(tableName) && (isEmptyValue(recordId) || isEmptyValue(recordUuid))) {
+        return
+      }
+      return requestAttachment({
         tableName,
         recordId,
-        recordUuid
+        recordUuid,
+        pageSize,
+        pageToken
       })
         .then(response => {
-          const list = response.resource_references_list.map(file => {
+          const resourceReferencesList = response.resourceReferencesList.map(element => {
             return {
-              name: file.file_name,
-              type: file.content_type,
-              description: file.description,
-              size: file.file_size,
-              uuid: file.resource_uuid,
-              text: file.text_msg
+              ...element
+              // url: getSource({
+              //   resourceUuid: element.resource_uuid,
+              //   resourceName: element.file_name,
+              //   resourceType: element.content_type
+              // })
             }
           })
-          commit('setListAttachment', list)
+          commit('setListAttachment', resourceReferencesList)
+
+          return response
+        })
+        .catch(error => {
+          console.warn(`Error getting List Record Logs: ${error.message}. Code: ${error.code}.`)
         })
     }
   },

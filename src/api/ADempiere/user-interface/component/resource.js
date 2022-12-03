@@ -98,7 +98,7 @@ export function getResourceReference({
  * @param {number}  recordId
  * @param {string}  recordUuid
  */
-export function getAttachment({
+export function requestAttachment({
   tableName,
   recordId,
   recordUuid
@@ -124,4 +124,27 @@ export function uploadAttachment({
   list
 }) {
   console.info(`Upload Files array ${list}, recordId ${recordId}, recordUuid ${recordUuid}, tableName ${tableName}`)
+}
+
+/**
+ * Delete resource and file
+ * @param {number} resourceId
+ * @param {string} recordUuid
+ * @param {string} resourceName as fileName
+ * @returns {promise}
+ */
+export function deleteResourceReference({
+  resourceId,
+  resourceUuid,
+  resourceName
+}) {
+  return request({
+    url: '/user-interface/component/resource/delete-resource-reference',
+    method: 'get',
+    params: {
+      resource_id: resourceId,
+      resource_uuid: resourceUuid,
+      resource_name: resourceName
+    }
+  })
 }
