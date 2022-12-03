@@ -95,6 +95,10 @@ docker run -it \
 	erpya/adempiere-vue
 ```
 
+O facilmente ejecutar el contenedor usando `docker-compose` con el siguiente comando:
+```shell
+docker-compose up
+```
 
 ### Variables de entorno para la configuración
 
@@ -102,60 +106,9 @@ docker run -it \
 
  * `TZ`: (Time Zone) Indica el huso horario a establecer en el contenedor basado en nginx, el valor por defecto es `America/Caracas` (UTC -4:00).
 
+> **Nota**
+> Si no cambias los valores de esta variable de entorno, no es necesario indicarlo en el comando `docker run`, por defecto colocará el valor que se encuentra predeterminado.
 
-NOTA: Si no cambias los valores de esta variable de entorno, no es necesario indicarlo en el comando `docker run`, por defecto colocará el valor que se encuentra predeterminado.
-
-
-### Corriendo los contenedores con docker-compose:
-
-Facilmente puedes correr el contenedor usando docker-compose con el siguiente comando:
-```shell
-docker-compose up
-```
-
-Salida de la consola:
-```shell
-Building web-client
-Step 1/8 : FROM node:12-alpine
- ---> 057fa4cc38c2
-Step 2/8 : LABEL maintainer="EdwinBetanc0urt@outlook.com"       description="ADempiere-Vue"
- ---> Running in d096cf76ce2d
-Removing intermediate container d096cf76ce2d
- ---> 46cc05704121
-Step 3/8 : ENV RELEASE_VERSION="3.9.3"
- ---> Running in 9048d159aaf9
-Removing intermediate container 9048d159aaf9
- ---> a19699234a5d
-Step 4/8 : ENV URL_REPO="https://github.com/adempiere/adempiere-vue"    BINARY_NAME="v$RELEASE_VERSION.zip"     VUE_APP_PROXY_ADDRESS="localhost"       VUE_APP_PROXY_PORT="8989"
- ---> Running in c703a3818cbf
-Removing intermediate container c703a3818cbf
- ---> 86b0c2b269c6
-Step 5/8 : RUN mkdir -p /opt/Apps &&    cd /opt/Apps &&         echo "Install needed packages... $BINARY_NAME $RELEASE_VERSION" &&      apk --no-cache add curl unzip &&        curl --output "$BINARY_NAME" -L "$URL_REPO/archive/$BINARY_NAME" &&     unzip -o "$BINARY_NAME" &&      rm "$BINARY_NAME" &&    mv "adempiere-vue-$RELEASE_VERSION" adempiere-vue &&    cd adempiere-vue &&    npm install &&   npm run build:prod
- ---> Running in 6f3cb21924dd
-Install needed packages... v3.9.3.zip 3.9.3
-fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/main/x86_64/APKINDEX.tar.gz
-fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/community/x86_64/APKINDEX.tar.gz
-(1/5) Installing ca-certificates (20191127-r2)
-(2/5) Installing nghttp2-libs (1.40.0-r1)
-(3/5) Installing libcurl (7.67.0-r0)
-(4/5) Installing curl (7.67.0-r0)
-(5/5) Installing unzip (6.0-r6)
-Executing busybox-1.31.1-r9.trigger
-Executing ca-certificates-20191127-r2.trigger
-OK: 9 MiB in 21 packages
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100   128  100   128    0     0    149      0 --:--:-- --:--:-- --:--:--   149
-100  916k    0  916k    0     0   180k      0 --:--:--  0:00:05 --:--:--  254k
-Archive:  v3.9.3.zip
-1d684b76328e3f6bcd3f75ea011087cce1c13a3c
-   creating: adempiere-vue-3.9.3/
-  inflating: adempiere-vue-3.9.3/.babelrc
-  inflating: adempiere-vue-3.9.3/.editorconfig
-adempiere-ui-client |
-adempiere-ui-client | > Listening at  http://localhost:9526/
-
-```
 
 ## Patrocinantes
 
@@ -166,7 +119,7 @@ adempiere-ui-client | > Listening at  http://localhost:9526/
   <img width="150px" src="http://westfalia-it.com/wp-content/uploads/2021/04/logo_.gif" />
 </a>
 <a href="http://openupsolutions.com/">
-  <img width="250px" src="https://user-images.githubusercontent.com/45974454/167717853-7c02defb-4b69-4d3d-af68-5db3e956ee6f.png" />
+  <img width="250px" src="https://openupsolutions.com/wp-content/uploads/2021/08/logo-openup-horizontal.jpg" />
 </a>
 
 Sea un patrocinante y coloque su logo en nuestro LEEME en GitHub con un enlace directo a su sitio web. [Sea un Patrocinante](https://www.paypal.me/YamelSenih)
