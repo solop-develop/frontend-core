@@ -18,7 +18,7 @@
 
 <template>
   <el-container v-if="!isLoadWindows" style="height: 100%!important;">
-    <el-main id="mainWindow" :style="(isMobile || isEmptyValue(windowMetadata.tabsListChild)) ? 'overflow: auto;' : 'overflow: hidden;'">
+    <el-main id="mainWindow" :style="(isMobile || isEmptyValue(windowMetadata.tabsListChild)) ? 'overflow: hidden;' : 'overflow: hidden;'">
       <embedded
         :visible="showRecordAccess"
       >
