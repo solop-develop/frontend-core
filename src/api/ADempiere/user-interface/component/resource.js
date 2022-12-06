@@ -22,6 +22,31 @@ import { config } from '@/utils/ADempiere/config'
 
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
+/**
+ * Attachment Existents on Record
+ * @param {string}  tableName
+ * @param {number}  recordId
+ * @param {string}  recordUuid
+ */
+export function requestExistsAttachment({
+  tableName,
+  recordId,
+  recordUuid
+}) {
+  return request({
+    url: '/user-interface/component/resource/exists-attachment',
+    method: 'get',
+    params: {
+      table_name: tableName,
+      record_id: recordId,
+      record_uuid: recordUuid
+    }
+  })
+    .then(response => {
+      return response
+    })
+}
+
 // Download a resource from file name
 export function requestResource({ resourceUuid, resourceName }, callBack = {
   onData: () => {},
