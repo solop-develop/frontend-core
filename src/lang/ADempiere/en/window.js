@@ -30,7 +30,7 @@ const window = {
       title: 'Accounting Information',
       selection: 'Selection'
     },
-    changeLog: 'ACtivity',
+    changeLog: 'Activity',
     workflowLog: 'Workflow Log',
     changeDetail: 'Change detail',
     logWorkflow: {
@@ -58,7 +58,9 @@ const window = {
       tab: 'Tab',
       recordID: 'Log ID',
       recordUUID: 'Log UUID',
-      tableName: 'Table Name'
+      tableName: 'Table Name',
+      field: 'Field',
+      column: 'Column'
     },
     referenceRecords: 'Document Reference'
   },

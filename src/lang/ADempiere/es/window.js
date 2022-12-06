@@ -58,7 +58,9 @@ const window = {
       tab: 'Pestañá',
       recordID: 'ID del Registro',
       recordUUID: 'UUID del Registro',
-      tableName: 'Nombre de la Tabla'
+      tableName: 'Nombre de la Tabla',
+      field: 'Campo',
+      column: 'Columna'
     },
     referenceRecords: 'Documentos Relacionados'
   },
