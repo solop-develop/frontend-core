@@ -42,6 +42,7 @@
           <panel-definition
             :container-uuid="processUuid"
             :container-manager="containerManager"
+            :is-tab-panel="true"
           />
         </el-scrollbar>
       </el-card>

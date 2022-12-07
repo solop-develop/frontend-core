@@ -42,6 +42,7 @@
             :container-uuid="reportUuid"
             :panel-metadata="reportMetadata"
             :container-manager="containerManager"
+            :is-tab-panel="true"
           />
         </el-scrollbar>
       </el-card>
