@@ -142,13 +142,53 @@ export function requestAttachment({
     })
 }
 
-export function uploadAttachment({
+/**
+ * Set resource reference
+ * @param {number} resourceId
+ * @param {string} recordUuid
+ * @param {string} resourceName as fileName
+ * @returns {promise}
+ */
+export function setResourceReference({
   tableName,
   recordId,
   recordUuid,
-  list
+  textMessage,
+  fileName,
+  fileSize
 }) {
-  console.info(`Upload Files array ${list}, recordId ${recordId}, recordUuid ${recordUuid}, tableName ${tableName}`)
+  return request({
+    url: '/user-interface/component/resource/set-resource-reference',
+    method: 'post',
+    data: {
+      // attachment values
+      table_name: tableName,
+      record_id: recordId,
+      record_uuid: recordUuid,
+      // attachment reference values
+      text_message: textMessage,
+      file_name: fileName,
+      file_size: fileSize
+    }
+  })
+}
+
+export function requestUploadAttachment({
+  resourceId,
+  resourceUuid,
+  fileName,
+  file
+}) {
+  return request({
+    url: '/user-interface/component/resource/save-attachment',
+    method: 'post',
+    data: {
+      resource_id: resourceId,
+      resource_uuid: resourceUuid,
+      file_name: fileName,
+      file
+    }
+  })
 }
 
 /**
