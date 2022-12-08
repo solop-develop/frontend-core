@@ -34,6 +34,7 @@ import pointOfSales from './form/pointOfSales'
 import accounting from './form/accounting'
 import listStoreProduct from './form/listStoreProduct'
 import timeControl from './form/timeControl'
+import VPayPrint from './form/VPayPrint'
 import report from './report.js'
 
 export default {
@@ -56,6 +57,7 @@ export default {
   edit: 'Editar',
   language: 'Idioma',
   timeControl,
+  VPayPrint,
   notifications: {
     // simplex
     completed: 'Completado',

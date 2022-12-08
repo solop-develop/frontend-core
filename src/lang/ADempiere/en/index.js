@@ -33,6 +33,7 @@ import accounting from './form/accounting'
 import pointOfSales from './form/pointOfSales'
 import listStoreProduct from './form/listStoreProduct'
 import timeControl from './form/timeControl'
+import VPayPrint from './form/VPayPrint'
 import infoSearch from './fieldFormSearch'
 import report from './report.js'
 
@@ -53,6 +54,7 @@ export default {
   accounting,
   listStoreProduct,
   timeControl,
+  VPayPrint,
   report,
   edit: 'Edit',
   language: 'Language',

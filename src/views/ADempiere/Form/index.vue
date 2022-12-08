@@ -57,7 +57,7 @@
             <el-button
               v-if="!isShowTitleForm"
               type="text"
-              style="position: absolute; right: 10px;"
+              style="position: absolute; right: 10px;z-index: 5;"
               :circle="true"
               icon="el-icon-arrow-down"
               @click="changeDisplatedTitle"
