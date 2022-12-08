@@ -27,6 +27,12 @@ import recordManager from './recordManager'
 import route from './route'
 import smartBrowser from './smartBrowser'
 import window from './window'
+import infoSearch from './fieldFormSearch'
+import report from './report.js'
+
+/**
+ * Translations of Forms
+ */
 import actionNotice from './form/actionNotice'
 import payrollActionNotice from './form/payrollActionNotice'
 import accounting from './form/accounting'
@@ -34,8 +40,6 @@ import pointOfSales from './form/pointOfSales'
 import listStoreProduct from './form/listStoreProduct'
 import timeControl from './form/timeControl'
 import VPayPrint from './form/VPayPrint'
-import infoSearch from './fieldFormSearch'
-import report from './report.js'
 
 export default {
   actionMenu,
