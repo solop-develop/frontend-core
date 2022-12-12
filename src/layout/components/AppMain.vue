@@ -1,6 +1,6 @@
 <template>
   <!-- <div id="appMain" class="app-main"> -->
-  <transition id="brazil" name="fade-transform" mode="out-in">
+  <transition name="fade-transform" mode="out-in">
     <keep-alive id="casemiro" :include="cachedViews">
       <router-view id="neymar" :key="key" />
     </keep-alive>
