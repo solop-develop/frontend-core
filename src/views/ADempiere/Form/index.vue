@@ -16,70 +16,72 @@
  along with this program.  If not, see <https:www.gnu.org/licenses/>.
 -->
 <template>
-  <el-container
-    v-if="isLoaded"
-    key="form-loaded"
-    :class="showNavar ? 'view-base' : 'show-header-view-base'"
-    style="height: 84vh;"
-  >
-    <el-header
-      v-if="showContextMenu"
-      style="height: 39px; background: white;"
+  <div style="height: 100vh;overflow: auto;">
+    <el-container
+      v-if="isLoaded"
+      key="form-loaded"
+      :class="showNavar ? 'view-base' : 'show-header-view-base'"
+      style="height: 100vh;"
     >
-      <!-- TODO: Add action menu -->
+      <el-header
+        v-if="showContextMenu"
+        style="height: 39px; background: white;"
+      >
+        <!-- TODO: Add action menu -->
 
-      <modal-dialog
-        :parent-uuid="$route.meta.parentUuid"
-        :container-uuid="formUuid"
-        :panel-type="panelType"
-      />
-    </el-header>
-    <el-main style="padding-right: 0px !important; padding-bottom: 0px !important;padding-top: 0px !important;padding-left: 0px !important;">
-      <el-row>
-        <el-col :span="24">
-          <el-card
-            class="content-collapse"
-            :style="isEmptyValue(formMetadata.fieldsList) ? 'height: 100% !important;' : ''"
-          >
-            <title-and-help
-              v-if="isShowTitleForm"
-              :name="formName"
-              :help="formMetadata.help"
+        <modal-dialog
+          :parent-uuid="$route.meta.parentUuid"
+          :container-uuid="formUuid"
+          :panel-type="panelType"
+        />
+      </el-header>
+      <el-main style="padding-right: 0px !important; padding-bottom: 0px !important;padding-top: 0px !important;padding-left: 0px !important;">
+        <el-row>
+          <el-col :span="24">
+            <el-card
+              class="content-collapse"
+              :style="isEmptyValue(formMetadata.fieldsList) ? 'height: 100% !important;' : ''"
             >
+              <title-and-help
+                v-if="isShowTitleForm"
+                :name="formName"
+                :help="formMetadata.help"
+              >
+                <el-button
+                  type="text"
+                  style="float: right; z-index: 5"
+                  :circle="true"
+                  icon="el-icon-arrow-up"
+                  @click="changeDisplatedTitle"
+                />
+              </title-and-help>
               <el-button
+                v-if="!isShowTitleForm"
                 type="text"
-                style="float: right; z-index: 5"
+                style="position: absolute; right: 10px;z-index: 5;"
                 :circle="true"
-                icon="el-icon-arrow-up"
+                icon="el-icon-arrow-down"
                 @click="changeDisplatedTitle"
               />
-            </title-and-help>
-            <el-button
-              v-if="!isShowTitleForm"
-              type="text"
-              style="position: absolute; right: 10px;z-index: 5;"
-              :circle="true"
-              icon="el-icon-arrow-down"
-              @click="changeDisplatedTitle"
-            />
 
-            <form-panel
-              :metadata="{
-                ...formMetadata,
-                fileName: formFileName,
-                title: formName
-              }"
-            />
-          </el-card>
-        </el-col>
-      </el-row>
-    </el-main>
-  </el-container>
+              <form-panel
+                :metadata="{
+                  ...formMetadata,
+                  fileName: formFileName,
+                  title: formName
+                }"
+              />
+            </el-card>
+          </el-col>
+        </el-row>
+      </el-main>
+    </el-container>
 
-  <loading-view
-    v-else
-    key="form-loading"
-  />
+    <loading-view
+      v-else
+      key="form-loading"
+    />
+  </div>
 </template>
 
 <script>

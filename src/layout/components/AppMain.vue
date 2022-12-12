@@ -1,11 +1,11 @@
 <template>
-  <section id="appMain" class="app-main">
-    <transition name="fade-transform" mode="out-in">
-      <keep-alive :include="cachedViews">
-        <router-view :key="key" />
-      </keep-alive>
-    </transition>
-  </section>
+  <!-- <div id="appMain" class="app-main"> -->
+  <transition id="brazil" name="fade-transform" mode="out-in">
+    <keep-alive id="casemiro" :include="cachedViews">
+      <router-view id="neymar" :key="key" />
+    </keep-alive>
+  </transition>
+  <!-- </div> -->
 </template>
 
 <script>
