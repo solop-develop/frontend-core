@@ -836,7 +836,6 @@ export function generateWindow(responseWindow) {
     // App properties
     isShowedTabsParent: true,
     isShowedTabsChildren: true,
-    isShowedRecordNavigation: undefined, // TODO: @deprecated
     isShowedAdvancedQuery: false,
     isFullScreenTabsParent: false,
     isFullScreenTabsChildren: false
