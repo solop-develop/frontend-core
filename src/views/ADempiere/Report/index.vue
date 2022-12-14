@@ -17,59 +17,64 @@
 -->
 
 <template>
-  <el-container
+  <!-- <el-container
     v-if="isLoadedMetadata"
     key="report-loaded"
     class="view-base report-view"
   >
-    <el-main>
-      <el-card class="content-collapse card-report">
-        <title-and-help
-          :name="reportMetadata.name"
-          :help="reportMetadata.help"
-        />
-        <div style="float: right;padding-left: 1%;">
-          <action-menu
-            :container-manager="containerManager"
-            :parent-uuid="reportUuid"
-            :container-uuid="reportUuid"
-            :actions-manager="actionsManager"
-            :relations-manager="relationsManager"
-          />
-        </div>
-        <el-scrollbar ref="reportView" :max-height="500" :height="200" :vertical="false" class="scroll-tab-report">
-          <panel-definition
-            :container-uuid="reportUuid"
-            :panel-metadata="reportMetadata"
-            :container-manager="containerManager"
-            :is-tab-panel="true"
-          />
-        </el-scrollbar>
-      </el-card>
-      <el-drawer
-        :visible.sync="isShowPanelConfig"
-        :with-header="false"
-        :before-close="handleClose"
-        size="50%"
-      >
-        <options-report
-          :container-uuid="reportUuid"
-          :container-manager="containerManager"
-        />
-      </el-drawer>
-      <el-button
-        type="primary"
-        icon="el-icon-arrow-left"
-        circle
-        style="
-          top: 50%;
-          right: 0%;
-          position: absolute;
-        "
-        @click="handleOpem()"
+    <el-main> -->
+  <div
+    v-if="isLoadedMetadata"
+    id="report-loaded"
+  >
+    <el-card class="content-collapse card-report">
+      <title-and-help
+        :name="reportMetadata.name"
+        :help="reportMetadata.help"
       />
-    </el-main>
-  </el-container>
+      <div style="float: right;padding-left: 1%;">
+        <action-menu
+          :container-manager="containerManager"
+          :parent-uuid="reportUuid"
+          :container-uuid="reportUuid"
+          :actions-manager="actionsManager"
+          :relations-manager="relationsManager"
+        />
+      </div>
+      <el-scrollbar ref="reportView" :max-height="500" :height="200" :vertical="false" class="scroll-tab-report">
+        <panel-definition
+          :container-uuid="reportUuid"
+          :panel-metadata="reportMetadata"
+          :container-manager="containerManager"
+          :is-tab-panel="true"
+        />
+      </el-scrollbar>
+    </el-card>
+    <el-drawer
+      :visible.sync="isShowPanelConfig"
+      :with-header="false"
+      :before-close="handleClose"
+      size="50%"
+    >
+      <options-report
+        :container-uuid="reportUuid"
+        :container-manager="containerManager"
+      />
+    </el-drawer>
+    <el-button
+      type="primary"
+      icon="el-icon-arrow-left"
+      circle
+      style="
+        top: 50%;
+        right: 0%;
+        position: absolute;
+      "
+      @click="handleOpem()"
+    />
+  </div>
+  <!-- </el-main>
+  </el-container> -->
 
   <loading-view
     v-else

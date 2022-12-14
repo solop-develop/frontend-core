@@ -17,60 +17,52 @@
 -->
 
 <template>
-  <el-container id="container-new" style="padding: 0px;height: 100% !important;overflow: auto;">
-    <el-main id="main-new" style="padding: 0px;height: 90vh !important;">
-      <el-container v-if="!isLoadWindows" id="original" style="height: 100% !important;display: block;">
-        <div id="panelTabMain" :style="sizeTab">
-          <embedded
-            :visible="showRecordAccess"
-          >
-            <record-access />
-          </embedded>
-          <tab-manager
-            ref="tab-manager"
-            class="tab-manager"
-            :parent-uuid="windowMetadata.uuid"
-            :container-manager="containerManager"
-            :tabs-list="windowMetadata.tabsListParent"
-            :all-tabs-list="allTabsList"
-            :references-manager="referencesManager"
-            :actions-manager="actionsManager"
-          />
-          <tab-manager-child
-            v-if="isWithChildsTab && isMobile"
-            class="tab-manager"
-            :parent-uuid="windowMetadata.uuid"
-            :container-manager="containerManager"
-            :tabs-list="windowMetadata.tabsListChild"
-            :all-tabs-list="allTabsList"
-            :references-manager="referencesManager"
-            :actions-manager="actionsManager"
-          />
-          <modal-dialog
-            v-if="!isEmptyValue(processUuid)"
-            :container-manager="containerManagerProcess"
-            :parent-uuid="currentTabUuid"
-            :container-uuid="processUuid"
-          />
-        </div>
-        <div id="panelTabChildMain" :style="sizeTabChild">
-          <tab-manager-child
-            class="tab-manager"
-            :parent-uuid="windowMetadata.uuid"
-            :container-manager="containerManager"
-            :tabs-list="windowMetadata.tabsListChild"
-            :all-tabs-list="allTabsList"
-            :references-manager="referencesManager"
-            :actions-manager="actionsManager"
-          />
-        </div>
-      </el-container>
-      <loading-view
-        v-else
-        key="process-loading"
+  <div style="height: 100% !important;width: 100% !important;">
+    <div id="tab-manager" :style="sizeTab">
+      <embedded
+        :visible="showRecordAccess"
+      >
+        <record-access />
+      </embedded>
+      <tab-manager
+        ref="tab-manager"
+        class="tab-manager"
+        :parent-uuid="windowMetadata.uuid"
+        :container-manager="containerManager"
+        :tabs-list="windowMetadata.tabsListParent"
+        :all-tabs-list="allTabsList"
+        :references-manager="referencesManager"
+        :actions-manager="actionsManager"
       />
-    </el-main>
-  </el-container>
+      <tab-manager-child
+        v-if="isWithChildsTab && isMobile"
+        class="tab-manager"
+        :parent-uuid="windowMetadata.uuid"
+        :container-manager="containerManager"
+        :tabs-list="windowMetadata.tabsListChild"
+        :all-tabs-list="allTabsList"
+        :references-manager="referencesManager"
+        :actions-manager="actionsManager"
+      />
+      <modal-dialog
+        v-if="!isEmptyValue(processUuid)"
+        :container-manager="containerManagerProcess"
+        :parent-uuid="currentTabUuid"
+        :container-uuid="processUuid"
+      />
+    </div>
+    <div v-if="isWithChildsTab" id="tab-manager-child" :style="sizeTabChild">
+      <tab-manager-child
+        class="tab-manager"
+        :parent-uuid="windowMetadata.uuid"
+        :container-manager="containerManager"
+        :tabs-list="windowMetadata.tabsListChild"
+        :all-tabs-list="allTabsList"
+        :references-manager="referencesManager"
+        :actions-manager="actionsManager"
+      />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -180,8 +172,8 @@ export default defineComponent({
       } else {
         if (props.windowMetadata.isFullScreenTabsParent) {
           return 'height: 550px !important'
-        } else if (props.windowMetadata.isFullScreenTabsChildren) {
-          return 'height: 550px !important'
+        // } else if (!isEmptyVAlue(props.windowMetadata.isFullScreenTabsChildren) && props.windowMetadata.isFullScreenTabsChildren) {
+        //   return 'height: 550px !important'
         }
       }
 
@@ -205,7 +197,7 @@ export default defineComponent({
     })
 
     const sizeTab = computed(() => {
-      if (!isWithChildsTab.value) return 'height: 0% !important'
+      if (!isWithChildsTab.value) return 'height: 100% !important'
       if (isViewFullScreenParent.value) return 'height: 80% !important'
       return 'height: 50% !important'
     })
