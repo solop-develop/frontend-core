@@ -1436,6 +1436,14 @@ export const containerManager = {
     })
   },
 
+  changeTabTableShowedFromUser({ parentUuid, containerUuid, fieldsShowed }) {
+    store.dispatch('changeTabTableShowedFromUser', {
+      parentUuid,
+      containerUuid,
+      fieldsShowed
+    })
+  },
+
   /**
    * @returns Promisse with value and displayedValue
    */

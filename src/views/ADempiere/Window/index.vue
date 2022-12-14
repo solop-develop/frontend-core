@@ -18,8 +18,8 @@
 
 <template>
   <div v-if="isLoaded" key="window-loaded" class="view-base">
-    <el-container style="height: 90vh;">
-      <el-aside style="width: 100%; margin-bottom: 0px; padding-right: 10px; padding-left: 10px;">
+    <el-container style="height: 100% !important;">
+      <el-aside style="width: 100%; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; padding-right: 10px; padding-left: 10px;overflow: auto;">
         <component
           :is="renderWindowComponent"
           :window-manager="containerManagerWindow"

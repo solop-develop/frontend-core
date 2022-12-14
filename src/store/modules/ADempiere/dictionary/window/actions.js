@@ -464,6 +464,36 @@ export default {
     })
   },
 
+  /**
+   * Used by components/fields/filterFields
+   */
+  changeTabTableShowedFromUser({ commit, getters }, {
+    parentUuid,
+    containerUuid,
+    groupField,
+    fieldsShowed,
+    fieldsList = []
+  }) {
+    if (isEmptyValue(fieldsList)) {
+      fieldsList = getters.getStoredFieldsFromTab(parentUuid, containerUuid)
+    }
+
+    fieldsList.forEach(itemField => {
+      if (groupField === itemField.groupAssigned) {
+        let isShowedTableFromUser = false
+        if (fieldsShowed.includes(itemField.columnName)) {
+          isShowedTableFromUser = true
+        }
+
+        commit('changeTabFieldAttribute', {
+          field: itemField,
+          attributeName: 'isShowedTableFromUser',
+          attributeValue: isShowedTableFromUser
+        })
+      }
+    })
+  },
+
   changeTabAttribute({ commit, getters }, {
     parentUuid,
     containerUuid,
