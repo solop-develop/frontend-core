@@ -836,7 +836,6 @@ export function generateWindow(responseWindow) {
     // App properties
     isShowedTabsParent: true,
     isShowedTabsChildren: true,
-    isShowedRecordNavigation: undefined, // TODO: @deprecated
     isShowedAdvancedQuery: false,
     isFullScreenTabsParent: false,
     isFullScreenTabsChildren: false
@@ -952,7 +951,7 @@ export function generateTabs({
       sequenceTabsList,
       // app properties
       isShowedRecordNavigation: !(currentTab.isSingleRow || isParentTab), // TODO: @deprecated
-      isShowedTableRecords: !(currentTab.isSingleRow || isParentTab),
+      isShowedTableRecords: !isParentTab, // @TODO: !(currentTab.isSingleRow || isParentTab),
       index, // this index is not related to the index in which the tabs are displayed
       isSelected: false
     }
