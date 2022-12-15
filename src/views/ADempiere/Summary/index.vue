@@ -16,7 +16,7 @@
  along with this program.  If not, see <https:www.gnu.org/licenses/>.
 -->
 <template>
-  <div v-if="isIndex" key="sumary" class="app-container">
+  <div v-if="isIndex" id="sumary" key="sumary" class="app-container" style="overflow: auto;">
     <title-and-help
       :name="$route.meta.title"
       :help="$route.meta.description"

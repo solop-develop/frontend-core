@@ -17,68 +17,57 @@
 -->
 
 <template>
-  <el-container
+  <div
     v-if="isLoadedMetadata"
+    id="browser-loaded"
     key="browser-loaded"
     class="view-base browser-view"
   >
-    <el-header v-if="isShowContextMenu">
-      <div style="float: right;padding-top: 1%;">
-        <action-menu
-          :container-manager="containerManager"
-          :container-uuid="browserUuid"
-          :actions-manager="actionsManager"
-          :relations-manager="relationsManager"
-        />
-      </div>
-      <div class="center" style="width: 100%">
-        <!-- TODO: Correct when the title is large -->
-        <title-and-help
-          :name="browserMetadata.name"
-          :help="browserMetadata.help"
-        />
-      </div>
-    </el-header>
-
-    <el-main>
-      <!-- query criteria -->
-      <collapse-criteria
-        :title="$t('views.searchCriteria')"
-        :container-uuid="browserUuid"
-        :container-manager="containerManager"
-      >
-        <panel-definition
-          class="browser-query-criteria"
-          :container-uuid="browserUuid"
-          :panel-metadata="browserMetadata"
-          :container-manager="containerManager"
-          :is-show-filter="false"
-          :is-tab-panel="true"
-        />
-      </collapse-criteria>
-
-      <!-- result of records in the table -->
-      <default-table
-        id="mainBrowser"
-        class="browser-table-result"
-        :container-uuid="browserUuid"
-        :container-manager="containerManagerTable"
-        :panel-metadata="browserMetadata"
-        :header="tableHeader"
-        :data-table="recordsList"
-        :is-show-search="false"
-        :is-loading-data-table="!isLoaded"
+    <el-card class="content-collapse card-browser" style="overflow: auto;position: absolute;height: 100%;">
+      <title-and-help
+        :name="browserMetadata.name"
+        :help="browserMetadata.help"
       />
-    </el-main>
-
+      <div id="browser-query-criteria">
+        <!-- uery Criteria -->
+        <collapse-criteria
+          :title="$t('views.searchCriteria')"
+          :container-uuid="browserUuid"
+          :container-manager="containerManager"
+        >
+          <panel-definition
+            class="browser-query-criteria"
+            :container-uuid="browserUuid"
+            :panel-metadata="browserMetadata"
+            :container-manager="containerManager"
+            :is-show-filter="false"
+            :is-tab-panel="true"
+          />
+        </collapse-criteria>
+        <br>
+      </div>
+      <div id="browser-table">
+        <!-- Result of Records in the Table -->
+        <default-table
+          id="mainBrowser"
+          class="browser-table-result"
+          :container-uuid="browserUuid"
+          :container-manager="containerManagerTable"
+          :panel-metadata="browserMetadata"
+          :header="tableHeader"
+          :data-table="recordsList"
+          :is-show-search="false"
+          :is-loading-data-table="!isLoaded"
+        />
+      </div>
+    </el-card>
     <modal-dialog
       v-if="!isEmptyValue(processUuid)"
       :container-manager="containerManagerProcess"
       :parent-uuid="browserUuid"
       :container-uuid="processUuid"
     />
-  </el-container>
-
+  </div>
   <loading-view
     v-else
     key="browser-loading"

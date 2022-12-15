@@ -27,28 +27,28 @@
     v-if="isLoadedMetadata"
     id="report-loaded"
   >
-    <el-card class="content-collapse card-report">
+    <el-card class="content-collapse card-report" style="overflow: auto;">
       <title-and-help
         :name="reportMetadata.name"
         :help="reportMetadata.help"
       />
-      <div style="float: right;padding-left: 1%;">
+      <div id="report-view">
         <action-menu
           :container-manager="containerManager"
           :parent-uuid="reportUuid"
           :container-uuid="reportUuid"
           :actions-manager="actionsManager"
           :relations-manager="relationsManager"
+          style="float: right;padding-left: 1%;"
         />
-      </div>
-      <el-scrollbar ref="reportView" :max-height="500" :height="200" :vertical="false" class="scroll-tab-report">
         <panel-definition
           :container-uuid="reportUuid"
           :panel-metadata="reportMetadata"
           :container-manager="containerManager"
           :is-tab-panel="true"
         />
-      </el-scrollbar>
+        <br>
+      </div>
     </el-card>
     <el-drawer
       :visible.sync="isShowPanelConfig"

@@ -17,37 +17,36 @@
 -->
 
 <template>
-  <el-container
+  <div
     v-if="isLoadedMetadata"
-    key="process-loaded"
-    class="view-base process-view"
+    id="process-loaded"
   >
-    <el-main>
-      <el-card class="content-collapse card-process">
-        <title-and-help
-          :name="processMetadata.name"
-          :help="processMetadata.help"
+    <el-card class="content-collapse card-report" style="overflow: auto;position: absolute;">
+      <title-and-help
+        :name="processMetadata.name"
+        :help="processMetadata.help"
+      />
+      <div id="process-loaded">
+        <action-menu
+          id="action-menu"
+          :parent-uuid="processUuid"
+          :container-uuid="processUuid"
+          :container-manager="containerManager"
+          :actions-manager="actionsManager"
+          :relations-manager="relationsManager"
+          style="padding-left: 90%;text-align: end;"
         />
-
-        <div style="float: right;padding-left: 1%;">
-          <action-menu
-            :parent-uuid="processUuid"
-            :container-uuid="processUuid"
-            :container-manager="containerManager"
-            :actions-manager="actionsManager"
-            :relations-manager="relationsManager"
-          />
-        </div>
-        <el-scrollbar ref="reportView" :max-height="500" :height="200" :vertical="false" class="scroll-tab-process">
-          <panel-definition
-            :container-uuid="processUuid"
-            :container-manager="containerManager"
-            :is-tab-panel="true"
-          />
-        </el-scrollbar>
-      </el-card>
-    </el-main>
-  </el-container>
+        <!-- style="float: right;padding-left: 1%;z-index: 99;" -->
+        <panel-definition
+          id="panel-definition"
+          :container-uuid="processUuid"
+          :container-manager="containerManager"
+          :is-tab-panel="true"
+        />
+        <br>
+      </div>
+    </el-card>
+  </div>
 
   <loading-view
     v-else
