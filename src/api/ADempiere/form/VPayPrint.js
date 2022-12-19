@@ -16,24 +16,39 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// import { request } from '@/utils/ADempiere/request'
-// import { config } from '@/utils/ADempiere/config'
+import { request } from '@/utils/ADempiere/request'
+import { config } from '@/utils/ADempiere/config'
 
-// List Payment Selection
+/**
+ * List Payment Selection
+ */
 export function listPaymentSelection() {
-  // return request({
-  //   url: `${config.payrollActionNotice.endpoint}/list-payment-selecction`,
-  //   method: 'get'
-  // })
-  //   .then(response => {
-  //     return response
-  //   })
-  console.info(`Implement Service to List Payment Selection`)
+  return request({
+    url: `${config.vPayPrint.endpoint}/list-payment-selection`,
+    method: 'post'
+  })
+    .then(response => {
+      return response
+    })
 }
-
+/**
+ * List Payment Rules
+ * @param {String} id, Current Payment Selection ID
+ * @param {String} uuid, Current Payment Selection UUID
+ */
 export function paymentSelection({
   id,
   uuid
 }) {
-  console.info(`Implement Service to obtain Payment Selection Data ID ${id} UUID ${uuid}`)
+  return request({
+    url: `${config.vPayPrint.endpoint}/payment-selection`,
+    method: 'get',
+    params: {
+      id,
+      uuid
+    }
+  })
+    .then(response => {
+      return response
+    })
 }
