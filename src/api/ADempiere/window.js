@@ -17,7 +17,6 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
-
 /**
  * Request a Lookup list data from Reference
  * The main attributes that function hope are:
@@ -117,6 +116,34 @@ export function requestReferencesList({
       const { convertReferencesList } = require('@/utils/ADempiere/apiConverts/values.js')
 
       return convertReferencesList(referencesListResposnse)
+    })
+}
+
+/**
+ * Reference List from Window
+ * @param {string}  tableName
+ * @param {string}  windowUuid
+ * @param {string}  recordUuid
+ * @param {number}  recordId
+ */
+export function requestExistsReferences({
+  tabId,
+  tabUuid,
+  recordId,
+  recordUuid
+}) {
+  return request({
+    url: '/user-interface/window/exists-references',
+    method: 'get',
+    params: {
+      record_id: recordId,
+      record_uuid: recordUuid,
+      tab_id: tabId,
+      tab_uuid: tabUuid
+    }
+  })
+    .then(referencesListResposnse => {
+      return referencesListResposnse
     })
 }
 
