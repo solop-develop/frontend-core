@@ -22,8 +22,24 @@ const VPayPrint = {
   currentBalance: 'Current Balance',
   paymentRule: 'Payment Rule',
   currency: 'Currency',
-  documentNo: 'Document No.',
-  numberPayments: 'Number of Payments'
+  documentNo: 'Document Number',
+  numberPayments: 'Number of Payments',
+  nextSequence: 'Next Sequence',
+  buttons: {
+    labelPanel: 'What do you want to do?',
+    print: 'Print',
+    toExport: 'Export',
+    processOnLine: 'Process OnLine'
+  },
+  headerTable: {
+    title: 'Batch Detail',
+    provider: 'Supplier',
+    invoice: 'OV/Invoice',
+    grandTotal: 'Grand Total',
+    subscriber: 'Subscriber',
+    payable: 'To be paid',
+    pending: 'Pending'
+  }
 }
 
 export default VPayPrint

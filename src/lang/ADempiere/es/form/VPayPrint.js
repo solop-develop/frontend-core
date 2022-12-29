@@ -24,6 +24,7 @@ const VPayPrint = {
   currency: 'Moneda',
   documentNo: 'Numero de Documento',
   numberPayments: 'Número de Pagos',
+  nextSequence: 'Siguiente Secuencia',
   buttons: {
     labelPanel: '¿Qué desea hacer?',
     print: 'Imprimir',

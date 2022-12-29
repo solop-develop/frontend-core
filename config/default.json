@@ -49,5 +49,8 @@
   "session": {
     "timeout": 300000
   },
+  "vPayPrint": {
+    "endpoint": "form/addons/payment-print-export"
+  },
   "theme": "src/themes/default"
 }
