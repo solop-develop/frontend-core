@@ -23,7 +23,22 @@ const VPayPrint = {
   paymentRule: 'Regla de Pago',
   currency: 'Moneda',
   documentNo: 'Numero de Documento',
-  numberPayments: 'Número de Pagos'
+  numberPayments: 'Número de Pagos',
+  buttons: {
+    labelPanel: '¿Qué desea hacer?',
+    print: 'Imprimir',
+    toExport: 'Exportar',
+    processOnLine: 'Procesar en Línea'
+  },
+  headerTable: {
+    title: 'Detalle del Lote',
+    provider: 'Proveedor',
+    invoice: 'OV/Factura',
+    grandTotal: 'Gran Total',
+    subscriber: 'Abonado',
+    payable: 'Por Pagar',
+    pending: 'Pendiente'
+  }
 }
 
 export default VPayPrint
