@@ -29,7 +29,7 @@ const VPayPrint = {
     labelPanel: '¿Qué desea hacer?',
     print: 'Imprimir',
     toExport: 'Exportar',
-    processOnLine: 'Procesar en Línea'
+    processOnLine: 'Transferencia'
   },
   headerTable: {
     title: 'Detalle del Lote',
@@ -37,8 +37,20 @@ const VPayPrint = {
     invoice: 'OV/Factura',
     grandTotal: 'Gran Total',
     subscriber: 'Abonado',
-    payable: 'Por Pagar',
+    payable: 'Monto a Pagar',
     pending: 'Pendiente'
+  },
+  message: {
+    paymentRule: {
+      onCredit: 'A Crédito',
+      check: 'Cheque',
+      directDeposit: 'Depósito Directo',
+      directDebit: 'Débito Directo',
+      creditCard: 'Tarjeta De Crédito'
+    },
+    processMessage: 'Desea Procesar Todos los Pagos tipo ',
+    printMessage: 'Desea Imprimir Todos los Pagos tipo ',
+    ExportMessage: 'Desea Exportar Todos los Pagos tipo '
   }
 }
 
