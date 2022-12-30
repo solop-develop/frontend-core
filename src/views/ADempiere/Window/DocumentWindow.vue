@@ -1,7 +1,7 @@
 <!--
  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
+ Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
@@ -9,15 +9,15 @@
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with this program.  If not, see <https:www.gnu.org/licenses/>.
+ along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
-  <div style="height: 100% !important;width: 100% !important;">
+  <div class="document-window" style="height: 100% !important;width: 100% !important;">
     <div id="tab-manager" :style="sizeTab">
       <embedded
         :visible="showRecordAccess"
@@ -72,7 +72,7 @@ import { defineComponent, computed, watch, ref } from '@vue/composition-api'
 import language from '@/lang'
 import store from '@/store'
 
-// components and mixins
+// Components and Mixins
 import ActionMenu from '@theme/components/ADempiere/ActionMenu/index.vue'
 import Embedded from '@theme/components/ADempiere/Dialog/embedded'
 import RecordAccess from '@theme/components/ADempiere/RecordAccess'
@@ -81,7 +81,7 @@ import TabManager from '@theme/components/ADempiere/TabManager/index.vue'
 import TabManagerChild from '@theme/components/ADempiere/TabManager/tabChild.vue'
 import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
 
-// utils and helpers methods
+// Utils and Helpers Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import useFullScreenContainer from '@theme/components/ADempiere/ContainerOptions/FullScreenContainer/useFullScreenContainer'
 
@@ -121,7 +121,6 @@ export default defineComponent({
     /**
      * Const
      */
-
     const containerManager = {
       ...props.windowManager
     }
@@ -129,7 +128,6 @@ export default defineComponent({
     /**
      * Ref
      */
-
     const allTabsList = ref([])
 
     const isLoadWindows = ref(false)
@@ -213,13 +211,19 @@ export default defineComponent({
     })
 
     const sizeTab = computed(() => {
-      if (!isWithChildsTab.value) return 'height: 100% !important'
-      if (isViewFullScreenParent.value) return 'height: 66% !important'
+      if (!isWithChildsTab.value) {
+        return 'height: 100% !important'
+      }
+      if (isViewFullScreenParent.value) {
+        return 'height: 66% !important'
+      }
       return 'height: 50% !important'
     })
 
     const sizeTabChild = computed(() => {
-      if (isViewFullScreenChild.value) return 'height: 66% !important'
+      if (isViewFullScreenChild.value) {
+        return 'height: 66% !important'
+      }
       return 'height: 50% !important'
     })
 
@@ -229,8 +233,8 @@ export default defineComponent({
 
     // Load data document options
     const listDocumentActions = computed(() => {
-      const alo = store.getters.getListDocumentActions
-      if (isEmptyValue(alo)) {
+      const documentActionsList = store.getters.getListDocumentActions
+      if (isEmptyValue(documentActionsList)) {
         return []
       }
       return store.getters.getListDocumentActions
@@ -272,7 +276,6 @@ export default defineComponent({
     /**
      * Watch
      */
-
     watch(isFullGrid, (newValue, oldValue) => {
       if (settingsFullGridMode.value && !newValue && isWithChildsTab.value && index.value === 0) {
         index.value = 1
@@ -357,10 +360,6 @@ export default defineComponent({
 </script>
 
 <style>
-.el-footer {
-  height: 50% !important;
-  overflow: hidden;
-}
 .el-main {
   padding-top: 0px;
   padding-bottom: 0px;

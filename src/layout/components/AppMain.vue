@@ -1,11 +1,11 @@
 <template>
-  <section id="appMainLayout" style="height: 90% !important;display: initial;position: absolute;width: 100% !important;">
+  <div id="appMain" class="app-main">
     <transition name="fade-transform" mode="out-in">
       <keep-alive :include="cachedViews">
         <router-view :key="key" style="height: 100% !important;width: 100% !important;display: flow-root;sss" />
       </keep-alive>
     </transition>
-  </section>
+  </div>
 </template>
 
 <script>

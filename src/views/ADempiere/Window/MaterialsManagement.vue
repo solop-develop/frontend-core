@@ -1,7 +1,7 @@
 <!--
  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
+ Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
@@ -9,11 +9,11 @@
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with this program.  If not, see <https:www.gnu.org/licenses/>.
+ along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -24,6 +24,7 @@
       >
         <record-access />
       </embedded>
+
       <tab-manager
         ref="tab-manager"
         class="tab-manager"
@@ -116,11 +117,10 @@ export default defineComponent({
     }
   },
 
-  setup(props, { root }) {
+  setup(props) {
     /**
      * Const
      */
-
     const containerManager = {
       ...props.windowManager
     }
@@ -128,7 +128,6 @@ export default defineComponent({
     /**
      * Ref
      */
-
     const allTabsList = ref([])
 
     const isLoadWindows = ref(false)
@@ -197,13 +196,19 @@ export default defineComponent({
     })
 
     const sizeTab = computed(() => {
-      if (!isWithChildsTab.value) return 'height: 100% !important'
-      if (isViewFullScreenParent.value) return 'height: 80% !important'
+      if (!isWithChildsTab.value) {
+        return 'height: 100% !important'
+      }
+      if (isViewFullScreenParent.value) {
+        return 'height: 80% !important'
+      }
       return 'height: 50% !important'
     })
 
     const sizeTabChild = computed(() => {
-      if (isViewFullScreenChild.value) return 'height: 80% !important'
+      if (isViewFullScreenChild.value) {
+        return 'height: 80% !important'
+      }
       return 'height: 50% !important'
     })
 
@@ -228,7 +233,6 @@ export default defineComponent({
     /**
      * Watch
      */
-
     watch(isFullGrid, (newValue, oldValue) => {
       if (settingsFullGridMode.value && !newValue && isWithChildsTab.value && index.value === 0) {
         index.value = 1
@@ -271,10 +275,6 @@ export default defineComponent({
 </script>
 
 <style>
-.el-footer {
-  height: 50% !important;
-  overflow: hidden;
-}
 .el-main {
   padding-top: 0px;
   padding-bottom: 0px;

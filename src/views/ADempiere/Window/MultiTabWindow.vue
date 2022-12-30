@@ -1,7 +1,7 @@
 <!--
  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
+ Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
@@ -9,11 +9,11 @@
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with this program.  If not, see <https:www.gnu.org/licenses/>.
+ along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -24,6 +24,7 @@
       >
         <record-access />
       </embedded>
+
       <tab-manager
         ref="tab-manager"
         class="tab-manager"
@@ -51,6 +52,7 @@
         :container-uuid="processUuid"
       />
     </div>
+
     <div v-if="isWithChildsTab" id="tab-manager-child" :style="sizeTabChild">
       <tab-manager-child
         class="tab-manager"
@@ -71,7 +73,7 @@ import { defineComponent, computed, ref, watch } from '@vue/composition-api'
 import language from '@/lang'
 import store from '@/store'
 
-// components and mixins
+// Components and Mixins
 import ActionMenu from '@theme/components/ADempiere/ActionMenu/index.vue'
 import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
 import Embedded from '@theme/components/ADempiere/Dialog/embedded'
@@ -80,7 +82,7 @@ import ModalDialog from '@theme/components/ADempiere/ModalDialog/index.vue'
 import TabManager from '@theme/components/ADempiere/TabManager/index.vue'
 import TabManagerChild from '@theme/components/ADempiere/TabManager/tabChild.vue'
 
-// utils and helpers methods
+// Utils and Helpers Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import useFullScreenContainer from '@theme/components/ADempiere/ContainerOptions/FullScreenContainer/useFullScreenContainer'
 
@@ -116,11 +118,10 @@ export default defineComponent({
     }
   },
 
-  setup(props, { root }) {
+  setup(props) {
     /**
      * Const
      */
-
     const containerManager = {
       ...props.windowManager
     }
@@ -128,7 +129,6 @@ export default defineComponent({
     /**
      * Ref
      */
-
     const allTabsList = ref([])
 
     const isLoadWindows = ref(false)
@@ -197,13 +197,19 @@ export default defineComponent({
     })
 
     const sizeTab = computed(() => {
-      if (!isWithChildsTab.value) return 'height: 100% !important'
-      if (isViewFullScreenParent.value) return 'height: 80% !important'
+      if (!isWithChildsTab.value) {
+        return 'height: 100% !important'
+      }
+      if (isViewFullScreenParent.value) {
+        return 'height: 80% !important'
+      }
       return 'height: 50% !important'
     })
 
     const sizeTabChild = computed(() => {
-      if (isViewFullScreenChild.value) return 'height: 80% !important'
+      if (isViewFullScreenChild.value) {
+        return 'height: 80% !important'
+      }
       return 'height: 50% !important'
     })
 
@@ -271,10 +277,6 @@ export default defineComponent({
 </script>
 
 <style>
-.el-footer {
-  height: 50% !important;
-  overflow: hidden;
-}
 .el-main {
   padding-top: 0px;
   padding-bottom: 0px;
