@@ -1,7 +1,7 @@
 <!--
  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
+ Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
@@ -9,11 +9,11 @@
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with this program.  If not, see <https:www.gnu.org/licenses/>.
+ along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -38,9 +38,10 @@
           :parent-uuid="reportUuid"
           :container-uuid="reportUuid"
           :actions-manager="actionsManager"
-          :relations-manager="relationsManager"
           style="float: right;padding-left: 1%;"
         />
+        <br><br>
+
         <panel-definition
           :container-uuid="reportUuid"
           :panel-metadata="reportMetadata"
@@ -50,31 +51,30 @@
         <br>
       </div>
     </el-card>
+
     <el-drawer
       :visible.sync="isShowPanelConfig"
-      :with-header="false"
+      :with-header="true"
       :before-close="handleClose"
+      :show-close="true"
+      :title="$t('report.reportSettings')"
       size="50%"
     >
       <options-report
         :container-uuid="reportUuid"
         :container-manager="containerManager"
+        :is-show-title="false"
       />
     </el-drawer>
+
     <el-button
       type="primary"
       icon="el-icon-arrow-left"
       circle
-      style="
-        top: 50%;
-        right: 0%;
-        position: absolute;
-      "
+      style="top: 50%; right: 0%; position: absolute;"
       @click="handleOpem()"
     />
   </div>
-  <!-- </el-main>
-  </el-container> -->
 
   <loading-view
     v-else
@@ -92,8 +92,8 @@ import ActionMenu from '@theme/components/ADempiere/ActionMenu/index.vue'
 import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
 import mixinReport from '@/views/ADempiere/Report/mixinReport.js'
 import PanelDefinition from '@theme/components/ADempiere/PanelDefinition/index.vue'
+import OptionsReport from '@theme/components/ADempiere/ReportManager/Setup/optionsReport.vue'
 import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp/index.vue'
-import OptionsReport from '@theme/components/ADempiere/FileRender/Setup/optionsReport.vue'
 
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -191,10 +191,6 @@ export default defineComponent({
         })
     }
 
-    const relationsManager = ref({
-      menuParentUuid: root.$route.meta.parentUuid
-    })
-
     function handleClose() {
       showPanelConfigReport(false)
     }
@@ -211,7 +207,6 @@ export default defineComponent({
       reportMetadata,
       containerManager,
       actionsManager,
-      relationsManager,
       // computeds
       showContextMenu,
       isShowPanelConfig,

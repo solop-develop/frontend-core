@@ -70,11 +70,4 @@ export default {
     padding-right: 15px;
   }
 }
-.el-tabs--border-card > .el-tabs__content {
-  padding: 1, 0, 1, 15px;
-  overflow: auto;
-  // padding-top: 0px;
-  height: 86%;
-  // padding-bottom: 0px;
-}
 </style>
