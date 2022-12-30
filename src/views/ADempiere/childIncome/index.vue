@@ -1,3 +1,21 @@
+<!--
+ ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
+ Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <https:www.gnu.org/licenses/>.
+-->
+
 <template>
   <el-container
     key="child-income-loaded"
@@ -83,13 +101,19 @@
 
 <script>
 import { defineComponent, ref, computed } from '@vue/composition-api'
+
 import store from '@/store'
+
 // componets and mixins
 import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp'
 import FieldDefinition from '@theme/components/ADempiere/FieldDefinition/index.vue'
-import heardList from './headerTable'
+
+// Constants
 import fieldsList from './fieldsList'
-// utils and helper methods
+import heardList from './headerTable'
+import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
+
+// Utils and Helper Methods
 import {
   requestCreateResource,
   requestUpdateResource,
@@ -97,22 +121,21 @@ import {
   requestListResource
 } from '@/api/ADempiere/form/timeControl.js'
 import { createFieldFromDictionary } from '@/utils/ADempiere/lookupFactory'
-import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { containerManager as containerManagerForm } from '@/utils/ADempiere/dictionary/form/index.js'
-import { isEmptyValue } from '../../../utils/ADempiere'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { translateDateByLong } from '@/utils/ADempiere/formatValue/dateFormat.js'
-// import { containerManager as containerManagerWindow } from '@/utils/ADempiere/dictionary/window'
 
 export default defineComponent({
   name: 'ChildIncome',
+
   components: {
     TitleAndHelp,
     FieldDefinition
   },
-  setup(props, { root }) {
-    // Ref
 
+  setup() {
+    // Ref
     const area = ref('')
     const name = ref('')
     const description = ref('')
@@ -122,19 +145,12 @@ export default defineComponent({
     const metadataList = ref([])
 
     // computed
-
     const isValidateAdd = computed(() => {
       if (isEmptyValue(recurringType.value) || isEmptyValue(name.value)) {
         return true
       }
       return false
     })
-
-    const alo = store.getters.getValuesView({
-      containerUuid: 'ChildIncome',
-      format: 'array'
-    })
-    console.log({ alo })
 
     const recurringType = computed(() => {
       return store.getters.getValueOfField({
@@ -266,16 +282,16 @@ export default defineComponent({
       requestListResource()
         .then(response => {
           const { records } = response
-          const alo = records.map(a => {
+          const recordsList = records.map(row => {
             return {
-              ...a,
-              resourceNameType: a.resource.name,
-              dateFrom: translateDateByLong(a.assign_date_from),
-              dateTo: translateDateByLong(a.assign_date_to),
+              ...row,
+              resourceNameType: row.resource.name,
+              dateFrom: translateDateByLong(row.assign_date_from),
+              dateTo: translateDateByLong(row.assign_date_to),
               ...ROW_ATTRIBUTES
             }
           })
-          tableData.value = alo
+          tableData.value = recordsList
         }).catch(error => {
           showMessage({
             message: error,

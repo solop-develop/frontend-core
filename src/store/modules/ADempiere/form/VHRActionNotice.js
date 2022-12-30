@@ -238,11 +238,11 @@ export default {
       })
         .then(response => {
           const { attributes } = response
-          const alo = {
+          const row = {
             ...convertValuesToSend(attributes),
             referenceUuid: attributes[1].value
           }
-          commit('setConceptDefinition', alo)
+          commit('setConceptDefinition', row)
         })
         .catch(error => {
           console.warn(`Error conceptDefinition: ${error.message}. Code: ${error.code}.`)
