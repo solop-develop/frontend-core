@@ -9,19 +9,19 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// utils and helpers methods
+// Utils and Helpers Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { isDisplayedField, isMandatoryField } from '@/utils/ADempiere/dictionary/window.js'
 import { DISPLAY_COLUMN_PREFIX, getContextDefaultValue } from '@/utils/ADempiere/dictionaryUtils.js'
 import { getContext } from '@/utils/ADempiere/contextUtils'
-import { isSupportLookup, ID } from '@/utils/ADempiere/references'
+import { isSupportLookup, ID, YES_NO } from '@/utils/ADempiere/references'
 
 /**
  * Dictionary Window Getters
@@ -346,13 +346,16 @@ export default {
         if (fieldItem.isParent) {
           return true
         }
-        if (isMandatory && isEmptyValue(defaultValue) && !isTable) {
+        // Yes/No field always boolean value
+        const isYesNo = fieldItem.displayType === YES_NO.id
+        if (isMandatory && (isEmptyValue(defaultValue) && !isYesNo) && !isTable) {
           return false
         }
 
         if (isEvaluateDefaultValue && isEvaluateShowed) {
           return showedMethod(fieldItem) &&
-            !isEmptyValue(defaultValue)
+            !isEmptyValue(defaultValue) &&
+            !isYesNo
         }
 
         if (isEvaluateDefaultValue) {

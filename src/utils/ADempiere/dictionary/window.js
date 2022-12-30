@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -20,19 +20,21 @@ import language from '@/lang'
 import router from '@/router'
 import store from '@/store'
 
-// constants
-import { IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
+// Constants
+import {
+  IDENTIFIER_COLUMN_SUFFIX, IS_ADVANCE_QUERY
+} from '@/utils/ADempiere/dictionaryUtils'
 import {
   ACTIVE, CLIENT, PROCESSING, PROCESSED, UUID,
   READ_ONLY_FORM_COLUMNS
 } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
-import { IS_ADVANCE_QUERY } from '@/utils/ADempiere/dictionaryUtils'
+import { YES_NO } from '@/utils/ADempiere/references'
 
-// api request methods
+// Api Request Methods
 import { getEntity } from '@/api/ADempiere/user-interface/persistence'
 
-// utils and helpers methods
+// Utils and Helpers Methods
 import evaluator from '@/utils/ADempiere/evaluator'
 import { getContext } from '@/utils/ADempiere/contextUtils'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
@@ -97,12 +99,16 @@ export function isDisplayedField({ isDisplayed, displayLogic, isDisplayedFromLog
  * @param {boolean} isShowedFromUser
  * @param {boolean} isParent
  */
-export function evaluateDefaultFieldShowed({ columnName, defaultValue, isMandatory, isShowedFromUser, isParent }) {
+export function evaluateDefaultFieldShowed({ columnName, defaultValue, displayType, isMandatory, isShowedFromUser, isParent }) {
   if (String(defaultValue).startsWith('@SQL=')) {
     return true
   }
 
   if (isEmptyValue(defaultValue) && isMandatory && !isParent) {
+    // Yes/No field always boolean value (as default value)
+    if (displayType === YES_NO.id) {
+      return false
+    }
     return true
   }
 
@@ -1187,8 +1193,12 @@ export const containerManager = {
   },
 
   isDisplayedField,
-  isDisplayedDefault: ({ isMandatory, isParent, defaultValue, parsedDefaultValue }) => {
+  isDisplayedDefault: ({ isMandatory, isParent, defaultValue, displayType, parsedDefaultValue }) => {
     if (isMandatory && !isParent && isEmptyValue(defaultValue)) {
+      // Yes/No field always boolean value (as default value)
+      if (displayType === YES_NO.id) {
+        return false
+      }
       return true
     }
     return false
