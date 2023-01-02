@@ -9,11 +9,11 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 export const CLIENT = 'AD_Client_ID'
@@ -37,6 +37,8 @@ export const WAREHOUSE = 'M_Warehouse_ID'
 export const IS_SALES_TRANSACTION = 'IsSalesTransaction'
 
 export const IS_SO_TRX = 'IsSOTrx'
+
+export const DOCUMENT_STATUS = 'DocStatus'
 
 /**
  * Is sales transaction (IsSOTrx, IsSalesTransaction)
@@ -78,7 +80,7 @@ export const DOCUMENT_COLUMNS_NAME_LIST = [
   'DateDoc',
   'Description',
   'DocAction',
-  'DocStatus',
+  DOCUMENT_STATUS,
   'DocumentNo',
   'IsApproved',
   PROCESSED,
@@ -95,7 +97,7 @@ export const ACCOUNTING_COLUMNS = [
  * Documents status columns list
  */
 export const DOCUMENT_STATUS_COLUMNS_LIST = [
-  'DocStatus',
+  DOCUMENT_STATUS,
   'O_DocStatus'
 ]
 

@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -26,9 +26,10 @@ import fieldOptions from './fieldOptions'
 import recordManager from './recordManager'
 import route from './route'
 import smartBrowser from './smartBrowser'
-import window from './window'
 import infoSearch from './fieldFormSearch'
 import report from './report.js'
+import window from './window'
+import workflow from './workflow'
 
 /**
  * Translations of Forms
@@ -60,6 +61,8 @@ export default {
   timeControl,
   VPayPrint,
   report,
+  workflow,
+
   edit: 'Edit',
   language: 'Language',
   notifications: {

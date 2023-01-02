@@ -9,14 +9,71 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+
+/**
+ * Tag Render compatible with element button
+ * @param {string} documentStatus or document action
+ * @returns {object}
+ */
+export function tagRender(documentStatus) {
+  let effect = 'plain'
+  let type = 'info'
+  switch (documentStatus) {
+    case 'AP':
+      type = 'success'
+      effect = 'light'
+      break
+
+    case 'CO':
+      type = 'success'
+      effect = 'dark'
+      break
+
+    case '??':
+    case 'DR':
+      type = 'info'
+      effect = 'light'
+      break
+
+    case 'CL':
+      type = 'primary'
+      break
+    case 'IP':
+      type = 'warning'
+      effect = 'light'
+      break
+
+    case 'WC':
+    case 'WP':
+      type = 'warning'
+      effect = 'dark'
+      break
+
+    case 'VO':
+      type = 'danger'
+      effect = 'plain'
+      break
+
+    case 'NA':
+    case 'IN':
+    case 'RE':
+      type = 'danger'
+      effect = 'light'
+      break
+  }
+  return {
+    type,
+    effect
+  }
+}
 
 export function generateTransitions(nodesList) {
   const transitionsList = []
