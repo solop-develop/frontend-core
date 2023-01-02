@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -17,6 +17,9 @@
  */
 
 import language from '@/lang'
+
+// Constants
+import { BUTTON } from '@/utils/ADempiere/references.js'
 
 // utils and helper methods
 import { convertBooleanToTranslationLang } from '@/utils/ADempiere/formatValue/booleanFormat.js'
@@ -178,9 +181,22 @@ export const exportRecords = ({ parentUuid, containerUuid, containerManager, for
     containerUuid
   }).filter(fieldItem => {
     // TODO: Verify with containerManager.isDisplayedColumn
-    if (fieldItem.isActive && fieldItem.isDisplayed && !fieldItem.isKey && fieldItem.sequence > 0) {
-      return fieldItem
+    // Hide not displayed fields
+    if (!(fieldItem.isDisplayed && fieldItem.isDisplayedGrid)) {
+      return false
     }
+    // Hide encrypted fields
+    if (fieldItem.isEncrypted) {
+      return false
+    }
+    // Hide simple button fields without a value
+    if (fieldItem.displayType === BUTTON.id) { // && fieldItem.referenceValue === 0) {
+      return false
+    }
+    if (fieldItem.isActive && !fieldItem.isKey && fieldItem.sequence > 0) {
+      return true
+    }
+    return false
   }).sort((a, b) => a.sequence - b.sequence)
 
   const headerList = fieldsListAvailable.map(fieldItem => {
