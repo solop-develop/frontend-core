@@ -24,14 +24,14 @@
           }"
           tag="span"
           class="tags-view-item"
-          @click.middle.native="!isAffix(tag) ? closeSelectedTag(tag) : ''"
+          @click.middle.native="!isAffix(tag) ? closeValidateTag(tag) : ''"
           @contextmenu.prevent.native="openMenu(tag,$event)"
         >
           <span role="link" @click="navigate" @keypress.enter="navigate">
             <div class="tag-title">
               {{ generateTitle(tag.title) }}
             </div>
-            <div v-if="!tag.meta.affix" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
+            <div v-if="!tag.meta.affix" class="el-icon-close" @click.prevent.stop="closeValidateTag(tag)" />
           </span>
         </router-link>
       </draggable>
@@ -46,21 +46,54 @@
         :to="{ name: tag.name, path: tag.path, query: tag.query, fullPath: tag.fullPath, params: tag.params }"
         tag="span"
         class="tags-view-item"
-        @click.middle.native="!isAffix(tag)?closeSelectedTag(tag):''"
+        @click.middle.native="!isAffix(tag)?closeValidateTag(tag):''"
         @contextmenu.prevent.native="openMenu(tag,$event)"
       >
         <span role="link" @click="navigate" @keypress.enter="navigate">
           {{ generateTitle(tag.title) }}
-          <span v-if="!isAffix(tag)" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
+          <span v-if="!isAffix(tag)" class="el-icon-close" @click.prevent.stop="closeValidateTag(tag)" />
         </span>
       </router-link>
     </scroll-pane>
     <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
       <li @click="refreshSelectedTag(selectedTag)">{{ $t('tagsView.refresh') }}</li>
-      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">{{ $t('tagsView.close') }}</li>
+      <li v-if="!isAffix(selectedTag)" @click="closeValidateTag(selectedTag)">{{ $t('tagsView.close') }}</li>
       <li @click="closeOthersTags">{{ $t('tagsView.closeOthers') }}</li>
       <li @click="closeAllTags(selectedTag)">{{ $t('tagsView.closeAll') }}</li>
     </ul>
+    <el-dialog
+      :title="$t('tagsView.table.label')"
+      :visible.sync="dialogVisible"
+    >
+      <span>
+        <el-table
+          :data="recordModifiedTab"
+          style="width: 100%"
+        >
+          <el-table-column
+            prop="name"
+            :label="$t('tagsView.table.tab')"
+          />
+          <el-table-column
+            prop="emptyMandatory[0].columnName"
+            :label="$t('tagsView.table.field')"
+          />
+          <el-table-column
+            prop="emptyMandatory[0].value"
+            :label="$t('tagsView.table.value')"
+          />
+        </el-table>
+        <!-- {{ recordModifiedTab }} -->
+      </span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">
+          {{ $t('tagsView.buttonClose.discardChanges') }}
+        </el-button>
+        <el-button type="primary" @click="discardChanges(recordModifiedTab)">
+          {{ $t('tagsView.buttonClose.returnToWindow') }}
+        </el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -75,6 +108,7 @@ import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
 
 // utils and helper methods
 import { capitalize } from '@/utils/ADempiere/formatValue/stringFormat'
+import { isEmptyValue } from '@/utils/ADempiere'
 
 export default {
   components: { ScrollPane, draggable },
@@ -84,7 +118,9 @@ export default {
       top: 0,
       left: 0,
       selectedTag: {},
-      affixTags: []
+      affixTags: [],
+      dialogVisible: false,
+      recordModifiedTab: []
     }
   },
   computed: {
@@ -201,6 +237,33 @@ export default {
           })
         })
       })
+    },
+    discardChanges(view) {
+      this.dialogVisible = false
+    },
+    closeValidateTag(view) {
+      const isWindow = this.$store.getters.getStoredWindow(view.meta.uuid)
+      if (!isEmptyValue(isWindow)) {
+        const allListTabs = isWindow.tabsList.map(tabs => {
+          const { parentUuid, name, containerUuid } = tabs
+          const emptyMandatory = this.$store.getters.getPersistenceAttributesChanges({
+            parentUuid,
+            containerUuid,
+            recordUuid: this.$store.getters.getUuidOfContainer(containerUuid)
+          })
+          return {
+            name,
+            emptyMandatory,
+            view: view
+          }
+        })
+        this.recordModifiedTab = allListTabs.filter(modifiedTab => !isEmptyValue(modifiedTab.emptyMandatory))
+        if (!isEmptyValue(this.recordModifiedTab)) {
+          this.dialogVisible = true
+          return
+        }
+      }
+      this.closeSelectedTag(view)
     },
     closeSelectedTag(view) {
       this.$store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {

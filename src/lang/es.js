@@ -163,7 +163,17 @@ export default {
     refresh: 'Actualizar',
     close: 'Cerrar',
     closeOthers: 'Cerrar otros',
-    closeAll: 'Cerrar todos'
+    closeAll: 'Cerrar todos',
+    table: {
+      label: 'Cerrar Ventana',
+      tab: 'Pestaña',
+      field: 'Campo',
+      value: 'Valor'
+    },
+    buttonClose: {
+      discardChanges: 'Descartar Cambios',
+      returnToWindow: 'Regresar a la Ventana'
+    }
   },
   settings: {
     title: 'Page style setting',
