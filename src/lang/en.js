@@ -167,7 +167,7 @@ export default {
     table: {
       label: 'Close the window',
       tab: 'Tab',
-      field: 'Fields',
+      field: 'Field',
       value: 'Value'
     },
     buttonClose: {
