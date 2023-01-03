@@ -49,9 +49,9 @@ export const IDENTIFIER_COLUMN_SUFFIX = `_ID`
 export const UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX = `_UUID`
 
 /**
- * Identifierm Field is Advance Query
+ * Suffix Field is Advanced Query
  */
-export const IS_ADVANCE_QUERY = 'IS_ADVANCE_QUERY'
+export const IS_ADVANCED_QUERY = '-IS_ADVANCED_QUERY'
 
 /**
  * Generate field to app

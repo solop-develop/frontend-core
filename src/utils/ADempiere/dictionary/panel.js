@@ -1,25 +1,29 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// Constants
+import { IS_ADVANCED_QUERY } from '@/utils/ADempiere/dictionaryUtils'
 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-// utils and helper methods
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { generateField } from '@/utils/ADempiere/dictionaryUtils.js'
 import { getFieldTemplate } from '@/utils/ADempiere/lookupFactory.js'
 import { isAddRangeField } from '@/utils/ADempiere/references'
-import { IS_ADVANCE_QUERY } from '@/utils/ADempiere/dictionaryUtils'
 
 /**
  * Order the fields, then assign the groups to each field, and finally group
@@ -142,7 +146,7 @@ export function generatePanelAndFields({
     // app attributes
     isShowedFromUser: true,
     isReadOnlyFromForm: false,
-    isAdvancedQuery: containerUuid.includes(IS_ADVANCE_QUERY),
+    isAdvancedQuery: containerUuid.includes(IS_ADVANCED_QUERY),
     ...fieldOverwrite
   }
 
@@ -299,25 +303,24 @@ export function generateDependenFieldsList(fieldsList) {
 }
 
 export function panelAdvanceQuery({
-  isAdvancedQuery,
-  tabPanel,
-  listTabs
+  parentUuid,
+  containerUuid,
+  tabPanel
 }) {
   const tabAdvancedQuery = {
     ...tabPanel,
-    parentUuid: tabPanel.parentUuid + isAdvancedQuery,
-    containerUuid: tabPanel.containerUuid + isAdvancedQuery,
+    parentUuid: parentUuid + IS_ADVANCED_QUERY,
+    containerUuid: containerUuid + IS_ADVANCED_QUERY,
     fieldsList: tabPanel.fieldsList.map(field => {
       return {
         ...field,
         isAdvancedQuery: true,
-        isShowedFromUser: false,
-        parentUuid: field.parentUuid + isAdvancedQuery,
-        containerUuid: field.containerUuid + isAdvancedQuery
+        isShowedFromUser: field.isSelectionColumn,
+        parentUuid: field.parentUuid + IS_ADVANCED_QUERY,
+        containerUuid: field.containerUuid + IS_ADVANCED_QUERY
       }
     }),
-    uuid: tabPanel.uuid + isAdvancedQuery
+    uuid: tabPanel.uuid + IS_ADVANCED_QUERY
   }
-  listTabs.push(tabAdvancedQuery)
-  return listTabs
+  return tabAdvancedQuery
 }

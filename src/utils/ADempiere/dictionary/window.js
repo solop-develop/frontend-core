@@ -22,7 +22,7 @@ import store from '@/store'
 
 // Constants
 import {
-  IDENTIFIER_COLUMN_SUFFIX, IS_ADVANCE_QUERY
+  IDENTIFIER_COLUMN_SUFFIX
 } from '@/utils/ADempiere/dictionaryUtils'
 import {
   ACTIVE, CLIENT, PROCESSING, PROCESSED, UUID,
@@ -31,7 +31,7 @@ import {
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { YES_NO } from '@/utils/ADempiere/references'
 
-// Api Request Methods
+// API Request Methods
 import { getEntity } from '@/api/ADempiere/user-interface/persistence'
 
 // Utils and Helpers Methods
@@ -1003,27 +1003,6 @@ export function generateTabs({
     tabsListChild,
     tabsList
   }
-}
-
-export function generateAdvanceQueryTabs(tabs) {
-  return tabs.map(tab => {
-    return {
-      ...tab,
-      uuid: tab.uuid + IS_ADVANCE_QUERY
-    }
-  })
-}
-
-export function generateAdvanceQueryPanel(panel, actions) {
-  const { tabs } = panel
-  const uuid = panel.uuid + IS_ADVANCE_QUERY
-  store.dispatch(actions,
-    generateWindow({
-      ...panel,
-      uuid,
-      tabs: generateAdvanceQueryTabs(tabs)
-    })
-  )
 }
 
 /**

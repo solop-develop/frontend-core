@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -20,15 +20,15 @@ import language from '@/lang'
 import router from '@/router'
 import store from '@/store'
 
-// api request methods
+// API Request Methods
 import { requestWindowMetadata } from '@/api/ADempiere/dictionary/window.js'
 
-// constants
+// Constants
 import { CLIENT } from '@/utils/ADempiere/constants/systemColumns'
 import { containerManager } from '@/utils/ADempiere/dictionary/window'
-import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
+import { DISPLAY_COLUMN_PREFIX, IS_ADVANCED_QUERY } from '@/utils/ADempiere/dictionaryUtils'
 
-// utils and helper methods
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import {
   generateWindow,
@@ -83,7 +83,6 @@ export default {
       })
         .then(async windowResponse => {
           const window = generateWindow(windowResponse)
-          // generateAdvanceQueryPanel(windowResponse, 'addWindow')
           dispatch('addWindow', window)
 
           resolve(window)
@@ -669,18 +668,21 @@ export default {
     })
   },
 
-  setTabAdvanceuery({ commit, rootGetters }, {
+  setTabAdvancedQuery({ commit, rootGetters }, {
     parentUuid,
-    containerUuid,
-    isAdvancedQuery
+    containerUuid
   }) {
+    const tabPanel = rootGetters.getStoredTab(parentUuid, containerUuid)
+
     const tabAdvanceQuery = panelAdvanceQuery({
-      tabPanel: rootGetters.getStoredTab(parentUuid, containerUuid),
       parentUuid,
       containerUuid,
-      isAdvancedQuery,
-      listTabs: rootGetters.getStoredTabs(parentUuid)
+      tabPanel
     })
-    commit('addAdvanceQuery', { parentUuid, tabAdvanceQuery })
+
+    commit('setTabAdvancedQuery', {
+      parentUuid: parentUuid + IS_ADVANCED_QUERY,
+      tabAdvanceQuery
+    })
   }
 }
