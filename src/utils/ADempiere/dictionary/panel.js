@@ -18,6 +18,8 @@
 
 // Constants
 import { IS_ADVANCED_QUERY } from '@/utils/ADempiere/dictionaryUtils'
+import { FIELDS_DATE } from '@/utils/ADempiere/references'
+import { OPERATOR_BETWEEN } from '@/utils/ADempiere/dataUtils'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -312,6 +314,12 @@ export function panelAdvanceQuery({
     parentUuid: parentUuid + IS_ADVANCED_QUERY,
     containerUuid: containerUuid + IS_ADVANCED_QUERY,
     fieldsList: tabPanel.fieldsList.map(field => {
+      // TODO: Implement generateFields
+      if (FIELDS_DATE.includes(field.displayType)) {
+        field.columnNameTo = `${field.columnName}_To`
+        field.elementNameTo = `${field.elementName}_To`
+        field.operator = OPERATOR_BETWEEN.operator
+      }
       return {
         ...field,
         isAdvancedQuery: true,

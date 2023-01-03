@@ -526,3 +526,18 @@ export const FIELDS_TEXT = [
   TEXT.id,
   TEXT_LONG.id
 ]
+
+export const FIELDS_DATE = [
+  DATE.id,
+  DATE_PLUS_TIME.id,
+  TIME.id
+]
+
+/**
+ * Is date or time field
+ * @param {number} displayType
+ * @returns {boolean}
+ */
+export function isDateField(displayType) {
+  return FIELDS_DATE.includes(displayType)
+}
