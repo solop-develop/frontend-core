@@ -301,7 +301,17 @@ export default {
     closeAll: 'Close All',
     newRecord: 'New Record',
     seeRecord: 'See Record',
-    advancedQuery: 'Advanced Query'
+    advancedQuery: 'Advanced Query',
+    table: {
+      label: 'Close the window',
+      tab: 'Tab',
+      field: 'Field',
+      value: 'Value'
+    },
+    buttonClose: {
+      discardChanges: 'Discard Changes',
+      returnToWindow: 'Return to Window'
+    }
   },
   settings: {
     title: 'setting',

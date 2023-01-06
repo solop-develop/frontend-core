@@ -1,6 +1,7 @@
 import variables from '@/styles/element-variables.scss'
 import defaultSettings from '@/settings'
 import { isEmptyValue } from '@/utils/ADempiere'
+import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat.js'
 
 const { showSettings, tagsView, fixedHeader, showNavar, sidebarLogo, supportPinyinSearch, showContextMenu, autoSave, fullGridMode } = defaultSettings
 
@@ -8,13 +9,13 @@ const state = {
   theme: variables.theme,
   showSettings,
   tagsView,
-  fixedHeader,
-  sidebarLogo,
+  fixedHeader: !isEmptyValue(localStorage.getItem('fixedHeader')) ? convertStringToBoolean(localStorage.getItem('fixedHeader')) : fixedHeader,
+  sidebarLogo: !isEmptyValue(localStorage.getItem('sidebarLogo')) ? convertStringToBoolean(localStorage.getItem('sidebarLogo')) : sidebarLogo,
   supportPinyinSearch,
-  showContextMenu,
-  showNavar,
-  autoSave: isEmptyValue(localStorage.getItem('autoSave')) ? Boolean(localStorage.getItem('autoSave')) : autoSave,
-  fullGridMode,
+  showContextMenu: !isEmptyValue(localStorage.getItem('showContextMenu')) ? convertStringToBoolean(localStorage.getItem('showContextMenu')) : showContextMenu,
+  showNavar: !isEmptyValue(localStorage.getItem('showNavar')) ? convertStringToBoolean(localStorage.getItem('showNavar')) : showNavar,
+  autoSave: !isEmptyValue(localStorage.getItem('autoSave')) ? convertStringToBoolean(localStorage.getItem('autoSave')) : autoSave,
+  fullGridMode: !isEmptyValue(localStorage.getItem('fullGridMode')) ? convertStringToBoolean(localStorage.getItem('fullGridMode')) : fullGridMode,
   showMenu: true
 }
 
@@ -35,25 +36,25 @@ const actions = {
 
 const getters = {
   getAutoSave: (state) => {
-    return !isEmptyValue(localStorage.getItem('autoSave')) ? Boolean(localStorage.getItem('autoSave')) : state.autoSave
+    return state.autoSave
   },
   getFullGridMode: (state) => {
-    return !isEmptyValue(localStorage.getItem('fullGridMode')) ? Boolean(localStorage.getItem('fullGridMode')) : state.fullGridMode
+    return state.fullGridMode
   },
   getFixedHeader: (state) => {
-    return !isEmptyValue(localStorage.getItem('fixedHeader')) ? Boolean(localStorage.getItem('fixedHeader')) : state.fixedHeader
+    return state.fixedHeader
   },
   getShowTitleForm: (state, getters) => {
-    return !isEmptyValue(localStorage.getItem('ShowTitleForm')) ? Boolean(localStorage.getItem('ShowTitleForm')) : getters.getIsShowTitleForm
+    return !isEmptyValue(localStorage.getItem('ShowTitleForm')) ? convertStringToBoolean(localStorage.getItem('ShowTitleForm')) : getters.getIsShowTitleForm
   },
   getShowContextMenu: (state) => {
-    return !isEmptyValue(localStorage.getItem('showContextMenu')) ? Boolean(localStorage.getItem('showContextMenu')) : state.showContextMenu
+    return state.showContextMenu
   },
   getShowNavar: (state) => {
-    return !isEmptyValue(localStorage.getItem('showNavar')) ? Boolean(localStorage.getItem('showNavar')) : state.showNavar
+    return state.showNavar
   },
   getSidebarLogo: (state) => {
-    return !isEmptyValue(localStorage.getItem('sidebarLogo')) ? Boolean(localStorage.getItem('sidebarLogo')) : state.sidebarLogo
+    return state.sidebarLogo
   }
 }
 

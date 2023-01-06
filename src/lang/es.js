@@ -159,22 +159,6 @@ export default {
     documentation: 'Documentación del tema',
     tips: 'Tips: It is different from the theme-pick on the navbar is two different skinning methods, each with different application scenarios. Refer to the documentation for details.'
   },
-  tagsView: {
-    refresh: 'Actualizar',
-    close: 'Cerrar',
-    closeOthers: 'Cerrar otros',
-    closeAll: 'Cerrar todos',
-    table: {
-      label: 'Cerrar Ventana',
-      tab: 'Pestaña',
-      field: 'Campo',
-      value: 'Valor'
-    },
-    buttonClose: {
-      discardChanges: 'Descartar Cambios',
-      returnToWindow: 'Regresar a la Ventana'
-    }
-  },
   settings: {
     title: 'Page style setting',
     theme: 'Theme Color',

@@ -276,7 +276,17 @@ export default {
     closeAll: 'Cerrar todos',
     newRecord: 'Nuevo Registro',
     seeRecord: 'Ver Registro',
-    advancedQuery: 'Consulta Avanzada'
+    advancedQuery: 'Consulta Avanzada',
+    table: {
+      label: 'Cerrar Ventana',
+      tab: 'Pestaña',
+      field: 'Campo',
+      value: 'Valor'
+    },
+    buttonClose: {
+      discardChanges: 'Descartar Cambios',
+      returnToWindow: 'Regresar a la Ventana'
+    }
   },
   settings: {
     title: 'Configuración',
