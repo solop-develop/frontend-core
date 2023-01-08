@@ -21,7 +21,7 @@ const date = {
   startDate: 'Fecha de Inicio',
   today: 'Hoy',
   yesterday: 'Ayer',
-  Week: 'Semana Pasada',
+  week: 'Semana Pasada',
   currentWeek: 'Semana Actual',
   lastMonth: 'Mes Pasado',
   currentMonth: 'Mes Actual'

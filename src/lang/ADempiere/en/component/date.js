@@ -19,12 +19,12 @@
 const date = {
   endDate: 'End Date',
   startDate: 'Start Date',
-  Today: 'Today',
-  Yesterday: 'Yesterday',
-  Week: 'Last Week',
+  today: 'Today',
+  yesterday: 'Yesterday',
+  week: 'Last Week',
   currentWeek: 'Current Week',
-  LastMonth: 'Last Month',
-  CurrentMonth: 'Current Month'
+  lastMonth: 'Last Month',
+  currentMonth: 'Current Month'
 }
 
 export default date
