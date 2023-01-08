@@ -22,7 +22,7 @@
         <el-input
           ref="userName"
           v-model="loginForm.userName"
-          :placeholder="$t('login.userName')"
+          :placeholder="$t('page.login.userName')"
           name="userName"
           type="text"
           tabindex="1"
@@ -30,7 +30,7 @@
         />
       </el-form-item>
 
-      <el-tooltip v-model="capsTooltip" :content="$t('login.capsLock')" placement="right" manual>
+      <el-tooltip v-model="capsTooltip" :content="$t('page.login.capsLock')" placement="right" manual>
         <el-form-item prop="password">
           <span class="svg-container">
             <svg-icon icon-class="password" />
@@ -104,14 +104,14 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if ((value.trim()).length < 1) {
-        callback(new Error(this.$t('login.noValidUser')))
+        callback(new Error(this.$t('page.login.noValidUser')))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 1) {
-        callback(new Error(this.$t('login.noValidPassword')))
+        callback(new Error(this.$t('page.login.noValidPassword')))
       } else {
         callback()
       }
@@ -190,9 +190,9 @@ export default {
               }, () => {})
             })
             .catch(error => {
-              let message = this.$t('login.unexpectedError')
+              let message = this.$t('page.login.unexpectedError')
               if ([13, 500].includes(error.code)) {
-                message = this.$t('login.invalidLogin')
+                message = this.$t('page.login.invalidLogin')
               }
 
               this.$message.error(message)

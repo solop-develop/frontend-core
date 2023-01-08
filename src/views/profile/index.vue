@@ -13,7 +13,7 @@
               <el-tab-pane :label="$t('profile.role')" name="role">
                 <role />
               </el-tab-pane>
-              <el-tab-pane :label="$t('settings.title')" :name="$t('settings.title')">
+              <el-tab-pane :label="$t('page.settings.title')" :name="$t('page.settings.title')">
                 <settings />
               </el-tab-pane>
             </el-tabs>

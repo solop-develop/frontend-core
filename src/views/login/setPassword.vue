@@ -15,7 +15,7 @@
         </el-col>
       </el-row>
 
-      <el-tooltip v-model="capsTooltip" :content="$t('login.capsLock')" placement="right" auto-complete="off" manual>
+      <el-tooltip v-model="capsTooltip" :content="$t('page.login.capsLock')" placement="right" auto-complete="off" manual>
         <el-form-item prop="password">
           <span class="svg-container">
             <svg-icon icon-class="password" />
@@ -25,7 +25,7 @@
             ref="password"
             v-model="changePasswordForm.password"
             :type="passwordType"
-            :placeholder="$t('login.passwordNew')"
+            :placeholder="$t('page.login.passwordNew')"
             tabindex="1"
             auto-complete="off"
             @keyup.native="checkCapslock"
@@ -37,7 +37,7 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-tooltip v-model="capsTooltipNew" :content="$t('login.capsLock')" placement="right" manual>
+      <el-tooltip v-model="capsTooltipNew" :content="$t('page.login.capsLock')" placement="right" manual>
         <el-form-item prop="passwordConfirm">
           <span class="svg-container">
             <svg-icon icon-class="password" />
@@ -47,7 +47,7 @@
             ref="passwordConfirm"
             v-model="changePasswordForm.passwordConfirm"
             :type="passwordConfirmType"
-            :placeholder="$t('login.passwordConfirmNew')"
+            :placeholder="$t('page.login.passwordConfirmNew')"
             tabindex="2"
             auto-complete="off"
             @keyup.native="checkCapslockNew"
@@ -67,7 +67,7 @@
         style="width:100%;margin-bottom:30px;"
         @click.native.prevent="handleSubmit"
       >
-        {{ $t('login.submit') }}
+        {{ $t('page.login.submit') }}
       </el-button>
 
       <el-button type="text" style="float: left" @click.native.prevent="pathRedirect('login')">
@@ -189,7 +189,7 @@ export default {
             })
           } else {
             this.$message({
-              message: this.$t('login.unexpectedError'),
+              message: this.$t('page.login.unexpectedError'),
               showClose: true,
               type: 'error'
             })
@@ -199,7 +199,7 @@ export default {
         })
         .catch(error => {
           this.$message({
-            message: this.$t('login.unexpectedError'),
+            message: this.$t('page.login.unexpectedError'),
             showClose: true,
             type: 'error'
           })

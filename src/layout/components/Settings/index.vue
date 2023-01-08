@@ -3,52 +3,52 @@
     <div>
       <el-form label-position="top" :inline="true">
         <el-form-item
-          :label="$t('settings.theme')"
+          :label="$t('page.settings.theme')"
         >
           <theme-picker @change="themeChange" />
         </el-form-item>
         <el-form-item
-          :label="$t('settings.fixedHeader')"
+          :label="$t('page.settings.fixedHeader')"
         >
           <el-switch v-model="fixedHeader" />
         </el-form-item>
         <el-form-item
-          :label="$t('settings.tagsView')"
+          :label="$t('page.settings.tagsView')"
         >
           <el-switch v-model="tagsView" />
         </el-form-item>
         <el-form-item
-          :label="$t('settings.fixedHeader')"
+          :label="$t('page.settings.fixedHeader')"
         >
           <el-switch v-model="showNavar" />
         </el-form-item>
         <el-form-item
-          :label="$t('settings.showContextMenu')"
+          :label="$t('page.settings.showContextMenu')"
         >
           <el-switch v-model="showContextMenu" />
         </el-form-item>
         <el-form-item
-          :label="$t('settings.isShowTitle')"
+          :label="$t('page.settings.isShowTitle')"
         >
           <el-switch v-model="isShowTitleForm" />
         </el-form-item>
         <el-form-item
-          :label="$t('settings.isShowMenu')"
+          :label="$t('page.settings.isShowMenu')"
         >
           <el-switch v-model="showMenu" />
         </el-form-item>
         <el-form-item
-          :label="$t('settings.sidebarLogo')"
+          :label="$t('page.settings.sidebarLogo')"
         >
           <el-switch v-model="sidebarLogo" />
         </el-form-item>
         <el-form-item
-          :label="$t('settings.autoSave')"
+          :label="$t('page.settings.autoSave')"
         >
           <el-switch v-model="showAutoSave" />
         </el-form-item>
         <el-form-item
-          :label="$t('settings.fullGridMode')"
+          :label="$t('page.settings.fullGridMode')"
         >
           <el-switch v-model="showFullGridMode" />
         </el-form-item>

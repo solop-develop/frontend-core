@@ -16,11 +16,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-const businessPartner = {
-  edit: 'Editar',
-  notFound: 'Socio de negocio no encontrado.',
-  emptyBusinessPartner: 'Utilice los filtros para realizar la búsqueda de socio de negocio según su Código, Nombre, Email y Teléfono',
-  searchWithEnter: 'Introduzca un valor para buscar Socios de Negocio'
+const processActivity = {
+  action: 'Acción',
+  description: 'Descripción',
+  logs: 'Resumen',
+  name: 'Nombre',
+  status: 'Estado',
+  zoomIn: 'Acercar'
 }
 
-export default businessPartner
+export default processActivity

@@ -16,11 +16,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-const businessPartner = {
-  edit: 'Editar',
-  notFound: 'Socio de negocio no encontrado.',
-  emptyBusinessPartner: 'Utilice los filtros para realizar la búsqueda de socio de negocio según su Código, Nombre, Email y Teléfono',
-  searchWithEnter: 'Introduzca un valor para buscar Socios de Negocio'
+const date = {
+  endDate: 'Fecha de Fin',
+  startDate: 'Fecha de Inicio',
+  today: 'Hoy',
+  yesterday: 'Ayer',
+  Week: 'Semana Pasada',
+  currentWeek: 'Semana Actual',
+  lastMonth: 'Mes Pasado',
+  currentMonth: 'Mes Actual'
 }
 
-export default businessPartner
+export default date

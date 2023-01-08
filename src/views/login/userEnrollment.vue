@@ -8,7 +8,7 @@
         <el-col :span="20">
           <div class="title-container">
             <h3 class="title">
-              {{ $t('login.userEnrollment') }}
+              {{ $t('page.login.userEnrollment') }}
             </h3>
             <lang-select class="set-language" />
           </div>
@@ -19,7 +19,7 @@
         <el-input
           ref="name"
           v-model="enrollmentUserForm.name"
-          :placeholder="$t('login.name')"
+          :placeholder="$t('page.login.name')"
           type="text"
           tabindex="1"
           auto-complete="off"
@@ -33,7 +33,7 @@
         <el-input
           ref="userName"
           v-model="enrollmentUserForm.userName"
-          :placeholder="$t('login.userName')"
+          :placeholder="$t('page.login.userName')"
           type="text"
           tabindex="1"
           auto-complete="off"
@@ -47,7 +47,7 @@
         <el-input
           ref="eMail"
           v-model="enrollmentUserForm.eMail"
-          :placeholder="$t('login.eMail')"
+          :placeholder="$t('page.login.eMail')"
           type="text"
           tabindex="1"
           auto-complete="off"
@@ -55,7 +55,7 @@
         />
       </el-form-item>
 
-      <el-tooltip v-show="isShowPassword" v-model="capsTooltip" :content="$t('login.capsLock')" placement="right" auto-complete="off" manual>
+      <el-tooltip v-show="isShowPassword" v-model="capsTooltip" :content="$t('page.login.capsLock')" placement="right" auto-complete="off" manual>
         <el-form-item prop="password">
           <span class="svg-container">
             <svg-icon icon-class="password" />
@@ -65,7 +65,7 @@
             ref="password"
             v-model="enrollmentUserForm.password"
             :type="passwordType"
-            :placeholder="$t('login.passwordNew')"
+            :placeholder="$t('page.login.passwordNew')"
             tabindex="1"
             auto-complete="off"
             @keyup.native="checkCapslock"
@@ -77,7 +77,7 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-tooltip v-show="isShowPassword" v-model="capsTooltipNew" :content="$t('login.capsLock')" placement="right" manual>
+      <el-tooltip v-show="isShowPassword" v-model="capsTooltipNew" :content="$t('page.login.capsLock')" placement="right" manual>
         <el-form-item prop="passwordConfirm">
           <span class="svg-container">
             <svg-icon icon-class="password" />
@@ -87,7 +87,7 @@
             ref="passwordConfirm"
             v-model="enrollmentUserForm.passwordConfirm"
             :type="passwordConfirmType"
-            :placeholder="$t('login.passwordConfirmNew')"
+            :placeholder="$t('page.login.passwordConfirmNew')"
             tabindex="2"
             auto-complete="off"
             @keyup.native="checkCapslockNew"
@@ -107,7 +107,7 @@
         style="width:100%;margin-bottom:30px;"
         @click.native.prevent="handleSubmit"
       >
-        {{ $t('login.submit') }}
+        {{ $t('page.login.submit') }}
       </el-button>
 
       <el-button type="text" style="float: left" @click.native.prevent="pathRedirect('login')">
@@ -257,7 +257,7 @@ export default {
         requestEnrollUser(dataToSubmit)
           .then(() => {
             this.$message({
-              message: this.$t('login.userEnrollmentSuccessful'),
+              message: this.$t('page.login.userEnrollmentSuccessful'),
               showClose: true,
               type: 'success'
             })
@@ -267,7 +267,7 @@ export default {
           .catch(error => {
             this.$message({
               message: error.message,
-              // message: this.$t('login.unexpectedError'),
+              // message: this.$t('page.login.unexpectedError'),
               showClose: true,
               type: 'error'
             })

@@ -16,11 +16,30 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-const businessPartner = {
-  edit: 'Editar',
-  notFound: 'Socio de negocio no encontrado.',
-  emptyBusinessPartner: 'Utilice los filtros para realizar la búsqueda de socio de negocio según su Código, Nombre, Email y Teléfono',
-  searchWithEnter: 'Introduzca un valor para buscar Socios de Negocio'
+const workflowActivity = {
+  title: 'Your Workflow Activities',
+  filtersSearch: {
+    history: 'History records',
+    forward: 'Re-send'
+  },
+  table: {
+    priority: 'Priority',
+    node: 'Node'
+  },
+  guide: {
+    table: {
+      title: 'Workflow List to be approved',
+      description: 'Select at least one to see the detail and responsible for approval. You can also decide whether to approve, reject or redirect it'
+    },
+    workflow: {
+      title: 'Workflow',
+      description: 'Workflow life cycle diagram. The highlighted Node is the one currently awaiting verification.'
+    },
+    workflowLogs: {
+      title: 'Change Log',
+      description: 'Workflow timeline'
+    }
+  }
 }
 
-export default businessPartner
+export default workflowActivity

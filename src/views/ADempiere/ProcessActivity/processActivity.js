@@ -1,18 +1,20 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 import { defineComponent, computed, onMounted, ref } from '@vue/composition-api'
 
@@ -20,13 +22,13 @@ import lang from '@/lang'
 import router from '@/router'
 import store from '@/store'
 
-// components and mixins
+// Components and Mixins
 import LoadingView from '@theme/components/ADempiere/LoadingView'
 
-// constants
+// Constants
 import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
 
-// utils and helper methods
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
@@ -209,10 +211,10 @@ export default defineComponent({
     }
 
     const generateTitle = (title) => {
-      const hasKey = lang.te('table.ProcessActivity.' + title)
+      const hasKey = lang.te('page.processActivity.' + title)
       if (hasKey) {
         // $t : this method from vue-i18n, inject in @/lang/index.js
-        const translatedTitle = lang.t('table.ProcessActivity.' + title)
+        const translatedTitle = lang.t('page.processActivity.' + title)
         return translatedTitle
       }
       return title

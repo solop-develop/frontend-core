@@ -163,17 +163,7 @@ export default {
     refresh: 'Refresh',
     close: 'Close',
     closeOthers: 'Close Others',
-    closeAll: 'Close All',
-    table: {
-      label: 'Close the window',
-      tab: 'Tab',
-      field: 'Field',
-      value: 'Value'
-    },
-    buttonClose: {
-      discardChanges: 'Discard Changes',
-      returnToWindow: 'Return to Window'
-    }
+    closeAll: 'Close All'
   },
   settings: {
     title: 'Page style setting',

@@ -18,8 +18,10 @@
 
 import actionMenu from './actionMenu'
 import businessPartner from './businessPartner'
-import components from './components'
+import component from './component'
+import form from './form'
 import orderList from './orderList'
+import page from './page'
 import extensionFile from './extensionFile'
 import fieldDisplayOptions from './fieldDisplayOptions'
 import fieldOptions from './fieldOptions'
@@ -45,7 +47,9 @@ import VPayPrint from './form/VPayPrint'
 export default {
   actionMenu,
   businessPartner,
+  component,
   orderList,
+  page,
   extensionFile,
   fieldDisplayOptions,
   infoSearch,
@@ -61,7 +65,6 @@ export default {
   report,
   workflow,
 
-  edit: 'Editar',
   language: 'Idioma',
   timeControl,
   VPayPrint,
@@ -116,36 +119,6 @@ export default {
     size: 'Tamaño global',
     profile: 'Perfil'
   },
-  login: {
-    noValidUser: 'Por favor ingrese el nombre de usuario correcto',
-    noValidPassword: 'La contraseña no puede estar vacía',
-    invalidLogin: 'ID de usuario o contraseña no válida',
-    unexpectedError: 'Se ha producido un error inesperado, intente nuevamente',
-    capsLock: 'Bloqueo de mayúsculas activado',
-    title: 'Formulario de acceso',
-    submit: 'Enviar',
-    logIn: 'Acceso',
-    name: 'Nombre',
-    lastName: 'Apellido',
-    eMail: 'Correo electronico',
-    userName: 'Usuario',
-    userNameOrEmail: 'Usuario o Correo',
-    userEnrollment: 'Registrar usuario',
-    userEnrollmentSuccessful: 'Registro de usuario exitoso, verifique su correo electronico',
-    passwordResetSendLink: 'El enlace para reiniciar la contraseña se envio al correo ',
-    password: 'Contraseña',
-    passwordNew: 'Nueva contraseña',
-    passwordConfirm: 'Confirmar contraseña',
-    passwordConfirmNew: 'Confirmación de nueva contraseña',
-    any: 'nada',
-    thirdparty: 'Conectar con',
-    thirdpartyTips: 'No se puede simular en local, así que combine su propia simulación de negocios.',
-    invalidToken: 'El token utilizado es inválido.',
-    passwordReset: 'Reiniciar contraseña',
-    createPassword: 'Crear contraseña',
-    passwordResetSuccessful: 'El reinicio de contraseña se realizo correctamente',
-    passwordAndConfirmNotMatch: 'La contraseña nueva y su confirmación no coinciden.'
-  },
   documentation: {
     documentation: 'Documentación',
     github: 'Repositorio Github',
@@ -158,30 +131,7 @@ export default {
     goRepository: 'Ir al Repositorio',
     seeDocumentation: 'Ver Documentación'
   },
-  permission: {
-    addRole: 'Nuevo rol',
-    editPermission: 'Permiso de edición',
-    roles: 'Tus permisos',
-    switchRoles: 'Cambiar permisos',
-    tips: 'En algunos casos, no es adecuado usar v-permission, como el componente Element Tab o el-table-column y otros casos de dom de representación asíncrona que solo se pueden lograr configurando manualmente v-if.',
-    delete: 'Borrar',
-    confirm: 'Confirmar',
-    cancel: 'Cancelar'
-  },
-  guide: {
-    description: 'La página de guía es útil para algunas personas que ingresaron al proyecto por primera vez. Puede introducir brevemente las características del proyecto. Demo se basa en ',
-    button: 'Ver guía'
-  },
   components: {
-    ...components,
-    date: {
-      Today: 'Hoy',
-      Yesterday: 'Ayer',
-      Week: 'Semana Pasada',
-      currentWeek: 'Semana Actual',
-      LastMonth: 'Mes Pasado',
-      CurrentMonth: 'Mes Actual'
-    },
     documentation: 'Documentación',
     binaryButton: 'Subir archivo',
     binaryTip: 'Solo archivos con un tamaño menor a 500kb',
@@ -232,20 +182,6 @@ export default {
     drillTable: 'Entrar en Detalle'
   },
   table: {
-    ProcessActivity: {
-      Name: 'Nombre',
-      zoomIn: 'Acercar',
-      Description: 'Descripción',
-      FileName: 'Nombre de Archivo',
-      Output: 'Salida',
-      Action: 'Acción',
-      Status: 'Estado',
-      Logs: 'Resumen',
-      Summary: 'Resumen',
-      complete: 'Completos',
-      error: 'Error',
-      Help: 'Ayuda'
-    },
     dataTable: {
       search: 'Buscar',
       selected: 'Seleccionados',
@@ -268,27 +204,6 @@ export default {
       name: 'Nombre',
       description: 'Descripción'
     }
-  },
-  tagsView: {
-    refresh: 'Actualizar',
-    close: 'Cerrar',
-    closeOthers: 'Cerrar otros',
-    closeAll: 'Cerrar todos',
-    newRecord: 'Nuevo Registro',
-    seeRecord: 'Ver Registro',
-    advancedQuery: 'Consulta Avanzada'
-  },
-  settings: {
-    title: 'Configuración',
-    fullGridMode: 'Modo Grilla Completa',
-    theme: 'Color del tema',
-    tagsView: 'Habilitar Tags-View',
-    fixedHeader: 'Encabezado fijo',
-    sidebarLogo: 'Logotipo de la barra lateral',
-    showContextMenu: 'Mostrar Menu de Contexto',
-    isShowTitle: 'Mostrar Título',
-    isShowMenu: 'Mostrar Menu',
-    autoSave: 'Guardado Automático'
   },
   profile: {
     aboutMe: 'Sobre Mi',
@@ -380,6 +295,7 @@ export default {
     searchWithEnter: 'Pulse enter para realizar la busqueda del producto segun su Codigo, Nombre o UPC'
   },
   form: {
+    ...form,
     pos: {
       title: 'Punto de Venta',
       priceList: 'Lista de Precio',
@@ -572,10 +488,6 @@ export default {
         newOrder: 'crear nueva orden'
       }
     },
-    priceChecking: {
-      productNotFound: 'Producto No Disponible',
-      basePrice: 'Precio Base'
-    },
     byInvoice: {
       title: 'Pedidos Vendedor de Pasillo por Facturar',
       searchCompleteOrders: 'Sólo Completas',
@@ -589,28 +501,6 @@ export default {
       copyShippingAddress: 'Copiar dirección para el envío',
       documentNo: 'Nro. Documento',
       emptyList: 'Utilice los filtros para realizar la busqueda de las ordenes'
-    },
-    productInfo: {
-      product: 'Producto',
-      codeProduct: 'Código de Producto',
-      addProduct: 'Producto Agregado',
-      productInformation: 'Información de Producto',
-      chargerInformation: 'Información del Cargo',
-      code: 'Código',
-      name: 'Nombre',
-      id: 'ID',
-      lastName: 'Nombre2',
-      description: 'Descripción',
-      convertedPrice: 'Precio Convertido',
-      quantityOnHand: 'Existencia',
-      price: 'Precio',
-      taxAmount: 'Monto de Impuesto',
-      totalIncludingTax: 'Total con Impuesto',
-      grandTotal: 'Total General',
-      grandTotalConverted: 'Gran Total Convertido',
-      quantityAvailable: 'Disponible',
-      upc: 'Código de Barras',
-      UM: 'UM'
     },
     guideSteps: {
       productValue: {
@@ -652,31 +542,6 @@ export default {
       },
       toolsPoint: {
         title: 'Herramientas del Punto de Venta'
-      }
-    },
-    activity: {
-      title: 'Sus Actividades de Flujo de Trabajo',
-      filtersSearch: {
-        history: 'Registros históricos',
-        forward: 'Re-enviar'
-      },
-      table: {
-        priority: 'Prioridad',
-        node: 'Nodo'
-      },
-      guide: {
-        table: {
-          title: 'Lista de Flujos de trabajos por aprobar',
-          description: 'Seleccione al menos uno para ver el detalle y responsable de aprobación. De igual manera puede decidir si aprueba, rechaza o redirecciona el mismo'
-        },
-        workflow: {
-          title: 'Flujo de Trabajo',
-          description: 'Diagrama del ciclo de vida del flijo de trabajo. El Nodo resaltado es el que se encuentra actualmente a la espera de verificación.'
-        },
-        workflowLogs: {
-          title: 'Bitacora de Cambios',
-          description: 'Linea de tiempo del flujo de trabajo'
-        }
       }
     },
     match: {

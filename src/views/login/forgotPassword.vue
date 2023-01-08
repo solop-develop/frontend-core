@@ -22,7 +22,7 @@
         <el-input
           ref="userName"
           v-model="forgotForm.userName"
-          :placeholder="$t('login.userNameOrEmail')"
+          :placeholder="$t('page.login.userNameOrEmail')"
           type="text"
           tabindex="1"
           auto-complete="off"
@@ -37,7 +37,7 @@
         style="width:100%;margin-bottom:30px;"
         @click.native.prevent="handleSubmit"
       >
-        {{ $t('login.submit') }}
+        {{ $t('page.login.submit') }}
       </el-button>
 
       <el-button type="text" style="float: left" @click.native.prevent="pathRedirect('login')">
@@ -73,7 +73,7 @@ export default {
           .then(forgotPasswordResponse => {
             if (forgotPasswordResponse === 'Ok') {
               this.$message({
-                message: this.$t('login.passwordResetSendLink') + this.forgotForm.userName,
+                message: this.$t('page.login.passwordResetSendLink') + this.forgotForm.userName,
                 showClose: true,
                 type: 'success'
               })
@@ -81,7 +81,7 @@ export default {
               this.pathRedirect()
             } else {
               this.$message({
-                message: this.$t('login.unexpectedError'),
+                message: this.$t('page.login.unexpectedError'),
                 showClose: true,
                 type: 'error'
               })
@@ -89,7 +89,7 @@ export default {
           })
           .catch(error => {
             this.$message({
-              message: this.$t('login.unexpectedError'),
+              message: this.$t('page.login.unexpectedError'),
               showClose: true,
               type: 'error'
             })

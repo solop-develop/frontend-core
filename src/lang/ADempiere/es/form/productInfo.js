@@ -16,11 +16,27 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-const businessPartner = {
-  edit: 'Editar',
-  notFound: 'Socio de negocio no encontrado.',
-  emptyBusinessPartner: 'Utilice los filtros para realizar la búsqueda de socio de negocio según su Código, Nombre, Email y Teléfono',
-  searchWithEnter: 'Introduzca un valor para buscar Socios de Negocio'
+const productInfo = {
+  product: 'Producto',
+  codeProduct: 'Código de Producto',
+  convertedPrice: 'Precio Convertido',
+  addProduct: 'Producto Agregado',
+  productInformation: 'Información de Producto',
+  chargerInformation: 'Información del Cargo',
+  code: 'Código',
+  name: 'Nombre',
+  lastName: 'Nombre2',
+  id: 'ID',
+  description: 'Descripción',
+  price: 'Precio',
+  quantityOnHand: 'Existencia',
+  taxAmount: 'Monto de Impuesto',
+  totalIncludingTax: 'Total con Impuesto',
+  grandTotal: 'Total General',
+  grandTotalConverted: 'Gran Total Convertido',
+  quantityAvailable: 'Disponible',
+  upc: 'Código de Barras',
+  UM: 'UM'
 }
 
-export default businessPartner
+export default productInfo

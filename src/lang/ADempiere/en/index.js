@@ -18,8 +18,10 @@
 
 import actionMenu from './actionMenu'
 import businessPartner from './businessPartner'
-import components from './components'
+import component from './component'
+import form from './form'
 import orderList from './orderList'
+import page from './page'
 import extensionFile from './extensionFile'
 import fieldDisplayOptions from './fieldDisplayOptions'
 import fieldOptions from './fieldOptions'
@@ -45,7 +47,9 @@ import VPayPrint from './form/VPayPrint'
 export default {
   actionMenu,
   businessPartner,
+  component,
   orderList,
+  page,
   extensionFile,
   fieldDisplayOptions,
   infoSearch,
@@ -63,7 +67,6 @@ export default {
   report,
   workflow,
 
-  edit: 'Edit',
   language: 'Language',
   notifications: {
     // simplex
@@ -116,36 +119,6 @@ export default {
     theme: 'Theme',
     size: 'Global Size'
   },
-  login: {
-    noValidUser: 'Please enter the correct user name',
-    noValidPassword: 'The password can not be empty',
-    invalidLogin: 'User Id or Password invalid',
-    unexpectedError: 'An unexpected error has occurred, try again',
-    capsLock: 'Caps lock is On',
-    title: 'Login Form',
-    submit: 'Submit',
-    logIn: 'Login',
-    name: 'Name',
-    lastName: 'Last name',
-    eMail: 'Email',
-    userName: 'User name',
-    userNameOrEmail: 'User name or Email',
-    userEnrollment: 'Enrollment user',
-    userEnrollmentSuccessful: 'Successful user enrollment, check your email',
-    passwordResetSendLink: 'The link to reset the password was sent to the email ',
-    password: 'Password',
-    passwordNew: 'New password',
-    passwordConfirm: 'Password confirm',
-    passwordConfirmNew: 'New password confirm',
-    any: 'any',
-    thirdparty: 'Or connect with',
-    thirdpartyTips: 'Can not be simulated on local, so please combine you own business simulation.',
-    invalidToken: 'The token used is invalid.',
-    passwordReset: 'Password Reset',
-    createPassword: 'Create password',
-    passwordResetSuccessful: 'Password reset was successful',
-    passwordAndConfirmNotMatch: 'The new password and your confirmation do not match.'
-  },
   documentation: {
     documentation: 'Documentation',
     github: 'Github Repository',
@@ -158,30 +131,7 @@ export default {
     goRepository: 'go to repository',
     seeDocumentation: 'See documentation'
   },
-  permission: {
-    addRole: 'New Role',
-    editPermission: 'Edit',
-    roles: 'Your roles',
-    switchRoles: 'Switch roles',
-    tips: 'In some cases, using v-permission will have no effect. For example: Element-UI  el-tab or el-table-column and other scenes that dynamically render dom. You can only do this with v-if.',
-    delete: 'Delete',
-    confirm: 'Confirm',
-    cancel: 'Cancel'
-  },
-  guide: {
-    description: 'The guide page is useful for some people who entered the project for the first time. You can briefly introduce the features of the project. Demo is based on ',
-    button: 'Show Guide'
-  },
   components: {
-    ...components,
-    date: {
-      Today: 'Today',
-      Yesterday: 'Yesterday',
-      Week: 'Last Week',
-      currentWeek: 'Current Week',
-      LastMonth: 'Last Month',
-      CurrentMonth: 'Current Month'
-    },
     documentation: 'Documentation',
     binaryButton: 'Upload file',
     binaryTip: 'Only files with a size smaller than 500kb',
@@ -232,20 +182,6 @@ export default {
     drillTable: 'Drill Down'
   },
   table: {
-    ProcessActivity: {
-      Name: 'Name',
-      zoomIn: 'Zoom in',
-      Description: 'Description',
-      actions: 'Action',
-      complete: 'Complete',
-      error: 'Error',
-      status: 'Status',
-      Logs: 'Summary',
-      summary: 'Summary',
-      Help: 'Help',
-      FileName: 'FileName',
-      Output: 'Output'
-    },
     dataTable: {
       search: 'Search',
       selected: 'Selected',
@@ -268,52 +204,6 @@ export default {
       name: 'Name',
       description: 'Description'
     }
-  },
-  example: {
-    warning: 'Creating and editing pages cannot be cached by keep-alive because keep-alive include does not currently support caching based on routes, so it is currently cached based on component name. If you want to achieve a similar caching effect, you can use a browser caching scheme such as localStorage. Or do not use keep-alive include to cache all pages directly. See details'
-  },
-  errorLog: {
-    tips: 'Please click the bug icon in the upper right corner',
-    description: 'Now the management system are basically the form of the spa, it enhances the user experience, but it also increases the possibility of page problems, a small negligence may lead to the entire page deadlock. Fortunately Vue provides a way to catch handling exceptions, where you can handle errors or report exceptions.',
-    documentation: 'Document introduction'
-  },
-  excel: {
-    export: 'Export',
-    selectedExport: 'Export Selected Items',
-    placeholder: 'Please enter the file name (default excel-list)'
-  },
-  zip: {
-    export: 'Export',
-    placeholder: 'Please enter the file name (default file)'
-  },
-  pdf: {
-    tips: 'Here we use window.print() to implement the feature of downloading PDF.'
-  },
-  theme: {
-    change: 'Change Theme',
-    documentation: 'Theme documentation',
-    tips: 'Tips: It is different from the theme-pick on the navbar is two different skinning methods, each with different application scenarios. Refer to the documentation for details.'
-  },
-  tagsView: {
-    refresh: 'Refresh',
-    close: 'Close',
-    closeOthers: 'Close Others',
-    closeAll: 'Close All',
-    newRecord: 'New Record',
-    seeRecord: 'See Record',
-    advancedQuery: 'Advanced Query'
-  },
-  settings: {
-    title: 'setting',
-    fullGridMode: 'Full grid mode',
-    theme: 'Theme Color',
-    tagsView: 'Open Tags-View',
-    fixedHeader: 'Fixed Header',
-    sidebarLogo: 'Sidebar Logo',
-    showContextMenu: 'Show Context Information',
-    isShowTitle: 'Show Títle',
-    isShowMenu: 'Show Menu',
-    autoSave: 'Auto Save'
   },
   profile: {
     aboutMe: 'About Me',
@@ -405,6 +295,7 @@ export default {
     searchWithEnter: 'Press enter to search for the product by Product Code, Name or UPC.'
   },
   form: {
+    ...form,
     pos: {
       title: 'POS',
       priceList: 'Price List',
@@ -597,10 +488,6 @@ export default {
         newOrder: 'create new order'
       }
     },
-    priceChecking: {
-      productNotFound: 'Unavailable Product',
-      basePrice: 'Base price'
-    },
     byInvoice: {
       title: 'Aisle Vendor Orders to be Invoiced',
       searchCompleteOrders: 'Search complete orders',
@@ -614,27 +501,6 @@ export default {
       copyShippingAddress: 'Copy shipping address',
       documentNo: 'Document No.',
       emptyList: 'Use the filters to search for orders'
-    },
-    productInfo: {
-      product: 'Product',
-      codeProduct: 'Códe Product',
-      addProduct: 'Product Added',
-      productInformation: 'Product Information',
-      chargerInformation: 'Charger Information',
-      code: 'Code',
-      name: 'Name',
-      lastName: 'Nombre2',
-      id: 'ID',
-      description: 'Description',
-      price: 'Price',
-      quantityOnHand: 'Quantity On Hand',
-      taxAmount: 'Tax Amount',
-      totalIncludingTax: 'Total Including Tax',
-      grandTotal: 'Grand Total',
-      grandTotalConverted: 'Grand Total Converted',
-      quantityAvailable: 'Available',
-      upc: 'UPC / EAN',
-      UM: 'UM'
     },
     guideSteps: {
       productValue: {
@@ -676,25 +542,6 @@ export default {
       },
       toolsPoint: {
         title: 'Point of Sale Tools'
-      }
-    },
-    activity: {
-      title: 'Your Workflow Activities',
-      filtersSearch: {
-        history: 'History records',
-        forward: 'Re-send'
-      },
-      table: {
-        priority: 'Priority',
-        node: 'Node'
-      },
-      workflow: {
-        title: 'Workflow',
-        description: 'Workflow life cycle diagram. The highlighted Node is the one currently awaiting verification.'
-      },
-      workflowLogs: {
-        title: 'Change Log',
-        description: 'Workflow timeline'
       }
     },
     match: {

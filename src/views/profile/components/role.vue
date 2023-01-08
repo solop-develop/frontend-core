@@ -1,6 +1,6 @@
 <template>
   <el-form>
-    <el-form-item :label="$t('login.userName')">
+    <el-form-item :label="$t('page.login.userName')">
       {{ userInfo }}
     </el-form-item>
     <el-form-item :label="$t('profile.currentRole')">
