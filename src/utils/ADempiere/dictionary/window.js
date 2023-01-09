@@ -25,7 +25,7 @@ import {
   IDENTIFIER_COLUMN_SUFFIX
 } from '@/utils/ADempiere/dictionaryUtils'
 import {
-  ACTIVE, CLIENT, PROCESSING, PROCESSED, UUID,
+  ACTIVE, CLIENT, DOCUMENT_ACTION, PROCESSING, PROCESSED, UUID,
   READ_ONLY_FORM_COLUMNS
 } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
@@ -1185,7 +1185,7 @@ export const containerManager = {
   isDisplayedColumn,
 
   isReadOnlyField(field) {
-    const { parentUuid, containerUuid } = field
+    const { parentUuid, containerUuid, columnName } = field
 
     // if tab is read only, all fields are read only
     if (isReadOnlyTab({ parentUuid, containerUuid })) {
@@ -1195,7 +1195,7 @@ export const containerManager = {
     const { isParentTab, linkColumnName, parentColumnName } = store.getters.getStoredTab(parentUuid, containerUuid)
 
     // fill value with context
-    if (linkColumnName === field.columnName || parentColumnName === field.columnName) {
+    if (field.isParent || linkColumnName === columnName || parentColumnName === columnName) {
       return true
     }
 
@@ -1223,49 +1223,52 @@ export const containerManager = {
     const recordUuid = store.getters.getUuidOfContainer(containerUuid)
     // edit mode is diferent to create new
     const isWithRecord = !isEmptyValue(recordUuid) && recordUuid !== 'create-new'
-    if (!isWithRecord) {
-      if (field.displayType === BUTTON.id) {
-        return true
-      }
-    } else {
+    if (isWithRecord) {
       // not updateable and record saved
       if (!field.isUpdateable) {
         return true
       }
 
       // record is inactive isReadOnlyFromForm
-      if (field.columnName !== ACTIVE) {
+      if (columnName !== ACTIVE) {
         // is active value of record
         const isActiveRecord = store.getters.getValueOfField({
           parentUuid,
           containerUuid,
           columnName: ACTIVE
         })
-        if (!isActiveRecord) {
+        if (!convertStringToBoolean(isActiveRecord)) {
           return true
         }
       }
+      // Button to process document
+      if (columnName === DOCUMENT_ACTION) {
+        return false
+      }
 
-      if (field.displayType !== BUTTON.id) {
-        // is processed value of record
-        const isProcessed = store.getters.getValueOfField({
-          parentUuid,
-          containerUuid,
-          columnName: PROCESSED
-        })
-        if (convertStringToBoolean(isProcessed)) {
-          return true
-        }
+      // is processed value of record
+      const isProcessedRecord = store.getters.getValueOfField({
+        parentUuid,
+        containerUuid,
+        columnName: PROCESSED
+      })
+      if (convertStringToBoolean(isProcessedRecord)) {
+        return true
+      }
 
-        // is processing value of record
-        const isProcessing = store.getters.getValueOfField({
-          parentUuid,
-          containerUuid,
-          columnName: PROCESSING
-        })
-        if (convertStringToBoolean(isProcessing)) {
-          return true
-        }
+      // is processing value of record
+      const isProcessingRecord = store.getters.getValueOfField({
+        parentUuid,
+        containerUuid,
+        columnName: PROCESSING
+      })
+      if (convertStringToBoolean(isProcessingRecord)) {
+        return true
+      }
+    } else {
+      // button not invoke (browser/process/report/workflow) without record
+      if (field.displayType === BUTTON.id) {
+        return true
       }
     }
 

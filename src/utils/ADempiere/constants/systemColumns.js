@@ -40,6 +40,8 @@ export const IS_SO_TRX = 'IsSOTrx'
 
 export const DOCUMENT_STATUS = 'DocStatus'
 
+export const DOCUMENT_ACTION = 'DocAction'
+
 /**
  * Is sales transaction (IsSOTrx, IsSalesTransaction)
  */
