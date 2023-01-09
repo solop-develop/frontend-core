@@ -1100,7 +1100,7 @@ export const containerManager = {
     })
   },
 
-  seekRecord: ({ row, parentUuid, containerUuid }) => {
+  seekRecord: ({ row = {}, parentUuid, containerUuid }) => {
     if (isEmptyValue(row)) {
       store.dispatch('setTabDefaultValues', {
         parentUuid,
@@ -1250,48 +1250,49 @@ export const containerManager = {
       if (!field.isUpdateable) {
         return true
       }
-
-      // record is inactive isReadOnlyFromForm
-      if (columnName !== ACTIVE) {
-        // is active value of record
-        const isActiveRecord = store.getters.getValueOfField({
-          parentUuid,
-          containerUuid,
-          columnName: ACTIVE
-        })
-        if (!convertStringToBoolean(isActiveRecord)) {
-          return true
-        }
-      }
-      // Button to process document
-      if (columnName === DOCUMENT_ACTION) {
-        return false
-      }
-
-      // is processed value of record
-      const isProcessedRecord = store.getters.getValueOfField({
-        parentUuid,
-        containerUuid,
-        columnName: PROCESSED
-      })
-      if (convertStringToBoolean(isProcessedRecord)) {
-        return true
-      }
-
-      // is processing value of record
-      const isProcessingRecord = store.getters.getValueOfField({
-        parentUuid,
-        containerUuid,
-        columnName: PROCESSING
-      })
-      if (convertStringToBoolean(isProcessingRecord)) {
-        return true
-      }
     } else {
       // button not invoke (browser/process/report/workflow) without record
       if (field.displayType === BUTTON.id) {
         return true
       }
+    }
+
+    // validate parent record and current record
+    // record is inactive isReadOnlyFromForm
+    if (columnName !== ACTIVE) {
+      // is active value of record
+      const isActiveRecord = store.getters.getValueOfField({
+        parentUuid,
+        containerUuid,
+        columnName: ACTIVE
+      })
+      if (!convertStringToBoolean(isActiveRecord)) {
+        return true
+      }
+    }
+    // Button to process document
+    if (columnName === DOCUMENT_ACTION) {
+      return false
+    }
+
+    // is processed value of record
+    const isProcessedRecord = store.getters.getValueOfField({
+      parentUuid,
+      containerUuid,
+      columnName: PROCESSED
+    })
+    if (convertStringToBoolean(isProcessedRecord)) {
+      return true
+    }
+
+    // is processing value of record
+    const isProcessingRecord = store.getters.getValueOfField({
+      parentUuid,
+      containerUuid,
+      columnName: PROCESSING
+    })
+    if (convertStringToBoolean(isProcessingRecord)) {
+      return true
     }
 
     if (field.isAlwaysUpdateable) {

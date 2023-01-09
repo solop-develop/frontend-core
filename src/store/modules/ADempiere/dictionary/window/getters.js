@@ -16,6 +16,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Constants
+import { ACTIVE, PROCESSED, PROCESSING } from '@/utils/ADempiere/constants/systemColumns'
+
 // Utils and Helpers Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { isDisplayedField, isMandatoryField } from '@/utils/ADempiere/dictionary/window.js'
@@ -234,6 +237,14 @@ export default {
             isForceSession: true
           })
         }
+        // get value on parent tab
+        if ([ACTIVE, PROCESSED, PROCESSING].includes(columnName)) {
+          parsedDefaultValue = rootGetters.getValueOfField({
+            parentUuid,
+            columnName
+          })
+        }
+
         attributesObject[columnName] = parsedDefaultValue
 
         // add display column to default
