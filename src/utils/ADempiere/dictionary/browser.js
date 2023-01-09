@@ -41,8 +41,15 @@ export function isDisplayedField({ displayType, isActive, isQueryCriteria, displ
 /**
  * Default showed field from user
  */
-export function evaluateDefaultFieldShowed({ defaultValue, parsedDefaultValue, isMandatory, isShowedFromUser }) {
-  if (isMandatory) {
+export function evaluateDefaultFieldShowed({
+  displayType, isQueryCriteria, isShowedFromUser,
+  defaultValue, parsedDefaultValue,
+  isMandatory, isMandatoryFromLogic, mandatoryLogic
+}) {
+  const isMandatoryGenerated = isMandatoryField({
+    displayType, isQueryCriteria, isMandatory, isMandatoryFromLogic, mandatoryLogic
+  })
+  if (isMandatoryGenerated) {
     return true
   }
   if (!isEmptyValue(defaultValue) || !isEmptyValue(parsedDefaultValue)) {

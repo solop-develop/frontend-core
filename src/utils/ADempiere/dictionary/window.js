@@ -99,12 +99,19 @@ export function isDisplayedField({ isDisplayed, displayLogic, isDisplayedFromLog
  * @param {boolean} isShowedFromUser
  * @param {boolean} isParent
  */
-export function evaluateDefaultFieldShowed({ columnName, defaultValue, displayType, isMandatory, isShowedFromUser, isParent }) {
+export function evaluateDefaultFieldShowed({
+  isKey, isParent, columnName,
+  defaultValue, displayType, isShowedFromUser,
+  isMandatory, mandatoryLogic, isMandatoryFromLogic
+}) {
   if (String(defaultValue).startsWith('@SQL=')) {
     return true
   }
 
-  if (isEmptyValue(defaultValue) && isMandatory && !isParent) {
+  const isMandatoryGenerated = isMandatoryField({
+    isKey, columnName, displayType, isMandatory, mandatoryLogic, isMandatoryFromLogic
+  })
+  if (isEmptyValue(defaultValue) && isMandatoryGenerated && !isParent) {
     // Yes/No field always boolean value (as default value)
     if (displayType === YES_NO.id) {
       return false
@@ -117,7 +124,12 @@ export function evaluateDefaultFieldShowed({ columnName, defaultValue, displayTy
   }
 
   // TODO: Evaluated window type
-  if (['DateInvoiced', 'DateOrdered', 'DatePromised', 'DateTrx', 'M_Product_ID', 'QtyEntered'].includes(columnName)) {
+  const permissedDisplayedDefault = [
+    VALUE, DOCUMENT_NO,
+    'DateInvoiced', 'DateOrdered', 'DatePromised',
+    'DateTrx', 'M_Product_ID', 'QtyEntered'
+  ]
+  if (permissedDisplayedDefault.includes(columnName)) {
     return true
   }
 
