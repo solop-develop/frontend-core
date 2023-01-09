@@ -25,8 +25,8 @@ import {
   IDENTIFIER_COLUMN_SUFFIX
 } from '@/utils/ADempiere/dictionaryUtils'
 import {
-  ACTIVE, CLIENT, DOCUMENT_ACTION, PROCESSING, PROCESSED, UUID,
-  READ_ONLY_FORM_COLUMNS
+  ACTIVE, CLIENT, DOCUMENT_ACTION, DOCUMENT_NO, PROCESSING,
+  PROCESSED, UUID, VALUE, READ_ONLY_FORM_COLUMNS
 } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { YES_NO } from '@/utils/ADempiere/references'
@@ -134,7 +134,11 @@ export function evaluateDefaultFieldShowed({ columnName, defaultValue, displayTy
  * @param {boolean} isMandatoryFromLogic
  * @returns {boolean}
  */
-export function isMandatoryField({ isKey, columnName, isMandatory, mandatoryLogic, isMandatoryFromLogic }) {
+export function isMandatoryField({ isKey, columnName, displayType, isMandatory, mandatoryLogic, isMandatoryFromLogic }) {
+  if (displayType === BUTTON.id) {
+    return false
+  }
+
   // mandatory rule
   if ((!isEmptyValue(mandatoryLogic) && isMandatoryFromLogic)) {
     return true
@@ -146,10 +150,13 @@ export function isMandatoryField({ isKey, columnName, isMandatory, mandatoryLogi
 
   // Numeric Keys and Created/Updated as well as
   // DocumentNo/Value/ASI ars not mandatory (persistency layer manages them)
+  const notMandatoryRender = [
+    VALUE, DOCUMENT_NO, 'M_AttributeSetInstance_ID'
+  ]
   if (
     (isKey && columnName.endsWith(IDENTIFIER_COLUMN_SUFFIX)) ||
     columnName.startsWith('Created') || columnName.startsWith('Updated') ||
-    ['Value', 'DocumentNo', 'M_AttributeSetInstance_ID'].includes(columnName)
+    notMandatoryRender.includes(columnName)
   ) {
     return false
   }
@@ -187,7 +194,10 @@ export function isDisplayedColumn({ isDisplayed, isDisplayedGrid, isDisplayedFro
     (isEmptyValue(displayLogic) || isDisplayedFromLogic)
 }
 
-export function isMandatoryColumn({ isMandatory, mandatoryLogic, isMandatoryFromLogic }) {
+export function isMandatoryColumn({ displayType, isMandatory, mandatoryLogic, isMandatoryFromLogic }) {
+  if (displayType === BUTTON.id) {
+    return false
+  }
   return isMandatory || (!isEmptyValue(mandatoryLogic) && isMandatoryFromLogic)
 }
 

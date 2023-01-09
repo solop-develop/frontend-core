@@ -38,6 +38,10 @@ export const IS_SALES_TRANSACTION = 'IsSalesTransaction'
 
 export const IS_SO_TRX = 'IsSOTrx'
 
+export const VALUE = 'Value'
+
+export const DOCUMENT_NO = 'DocumentNo'
+
 export const DOCUMENT_STATUS = 'DocStatus'
 
 export const DOCUMENT_ACTION = 'DocAction'
@@ -81,9 +85,9 @@ export const DOCUMENT_COLUMNS_NAME_LIST = [
   'C_DocType_ID',
   'DateDoc',
   'Description',
-  'DocAction',
+  DOCUMENT_ACTION,
   DOCUMENT_STATUS,
-  'DocumentNo',
+  DOCUMENT_NO,
   'IsApproved',
   PROCESSED,
   PROCESSING
