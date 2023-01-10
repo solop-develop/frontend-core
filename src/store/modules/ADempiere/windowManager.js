@@ -25,9 +25,9 @@ import {
   getEntities
 } from '@/api/ADempiere/user-interface/persistence.js'
 import {
+  updateEntity,
   deleteEntity
 } from '@/api/ADempiere/common/persistence.js'
-
 // constants
 import { UUID } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
@@ -132,6 +132,15 @@ const windowManager = {
       }
 
       Vue.set(state.tabData[containerUuid], 'recordsList', recordsList)
+    },
+    setTabCell(state, {
+      containerUuid,
+      rowIndex,
+      columnName,
+      value
+    }) {
+      Vue.set(state.tabData[containerUuid].recordsList[rowIndex], columnName, value)
+      // TODO: Change selection columns
     },
 
     setTabRowWithRecord(state, { containerUuid, row, recordUuid }) {
@@ -534,6 +543,89 @@ const windowManager = {
             resolve(response)
           })
           .catch(error => {
+            showMessage({
+              message: language.t('notifications.error'),
+              type: 'error'
+            })
+            reject(error)
+          })
+      })
+    },
+
+    /**
+     * Update Row of Table in Windows
+     * @param {string} containerUuid
+     * @param {object} row
+     * @returns
+     */
+    updateRowTableWindows({ commit, dispatch, getters }, {
+      parentUuid,
+      containerUuid,
+      tableName,
+      recordUuid,
+      attributesList
+    }) {
+      const persistenceAttributesList = getters.getPersistenceAttributesChanges({
+        parentUuid,
+        containerUuid,
+        recordUuid
+      })
+      if (isEmptyValue(persistenceAttributesList)) return
+      attributesList = persistenceAttributesList.map(record => {
+        const { columnName, oldValue } = record
+        return {
+          columnName,
+          oldValue,
+          value: oldValue
+        }
+      })
+      return new Promise((resolve, reject) => {
+        updateEntity({
+          tableName,
+          recordUuid,
+          attributesList
+        })
+          .then(response => {
+            // TODO: Get list record log
+            showMessage({
+              message: language.t('recordManager.updatedRecord'),
+              type: 'success'
+            })
+            // add new row on table
+            commit('setTabRowWithRecord', {
+              containerUuid,
+              recordUuid: response.attributes[UUID],
+              row: {
+                ...response.attributes,
+                ...ROW_ATTRIBUTES
+              }
+            })
+            // update fields values
+            dispatch('updateValuesOfContainer', {
+              parentUuid,
+              containerUuid,
+              attributes: response.attributes
+            }, {
+              root: true
+            })
+
+            resolve(response)
+
+            // clear old values
+            dispatch('clearPersistenceQueue', {
+              containerUuid,
+              recordUuid: response.attributes[UUID]
+            })
+            // refresh records
+            dispatch('getEntities', {
+              parentUuid,
+              containerUuid
+            })
+
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Error Update Records of Windows Table: ${error.message}. Code: ${error.code}.`)
             showMessage({
               message: language.t('notifications.error'),
               type: 'error'

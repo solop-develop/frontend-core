@@ -1382,6 +1382,23 @@ export const containerManager = {
       recordUuid
     })
   },
+  setCell: ({ containerUuid, rowIndex, columnName, value }) => {
+    return store.commit('setTabCell', {
+      containerUuid,
+      rowIndex,
+      columnName,
+      value
+    })
+  },
+
+  exitEditMode: ({ parentUuid, containerUuid, tableName, recordUuid }) => {
+    return store.dispatch('updateRowTableWindows', {
+      parentUuid,
+      containerUuid,
+      tableName,
+      recordUuid
+    })
+  },
 
   getCell: ({ containerUuid, rowIndex, recordUuid, columnName }) => {
     return store.getters.getTabCellData({
