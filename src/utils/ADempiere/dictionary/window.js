@@ -25,8 +25,8 @@ import {
   IDENTIFIER_COLUMN_SUFFIX
 } from '@/utils/ADempiere/dictionaryUtils'
 import {
-  ACTIVE, CLIENT, PROCESSING, PROCESSED, UUID,
-  READ_ONLY_FORM_COLUMNS
+  ACTIVE, CLIENT, DOCUMENT_ACTION, DOCUMENT_NO, PROCESSING,
+  PROCESSED, UUID, VALUE, READ_ONLY_FORM_COLUMNS
 } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { YES_NO } from '@/utils/ADempiere/references'
@@ -99,12 +99,19 @@ export function isDisplayedField({ isDisplayed, displayLogic, isDisplayedFromLog
  * @param {boolean} isShowedFromUser
  * @param {boolean} isParent
  */
-export function evaluateDefaultFieldShowed({ columnName, defaultValue, displayType, isMandatory, isShowedFromUser, isParent }) {
+export function evaluateDefaultFieldShowed({
+  isKey, isParent, columnName,
+  defaultValue, displayType, isShowedFromUser,
+  isMandatory, mandatoryLogic, isMandatoryFromLogic
+}) {
   if (String(defaultValue).startsWith('@SQL=')) {
     return true
   }
 
-  if (isEmptyValue(defaultValue) && isMandatory && !isParent) {
+  const isMandatoryGenerated = isMandatoryField({
+    isKey, columnName, displayType, isMandatory, mandatoryLogic, isMandatoryFromLogic
+  })
+  if (isEmptyValue(defaultValue) && isMandatoryGenerated && !isParent) {
     // Yes/No field always boolean value (as default value)
     if (displayType === YES_NO.id) {
       return false
@@ -117,7 +124,12 @@ export function evaluateDefaultFieldShowed({ columnName, defaultValue, displayTy
   }
 
   // TODO: Evaluated window type
-  if (['DateInvoiced', 'DateOrdered', 'DatePromised', 'DateTrx', 'M_Product_ID', 'QtyEntered'].includes(columnName)) {
+  const permissedDisplayedDefault = [
+    VALUE, DOCUMENT_NO,
+    'DateInvoiced', 'DateOrdered', 'DatePromised',
+    'DateTrx', 'M_Product_ID', 'QtyEntered'
+  ]
+  if (permissedDisplayedDefault.includes(columnName)) {
     return true
   }
 
@@ -134,7 +146,11 @@ export function evaluateDefaultFieldShowed({ columnName, defaultValue, displayTy
  * @param {boolean} isMandatoryFromLogic
  * @returns {boolean}
  */
-export function isMandatoryField({ isKey, columnName, isMandatory, mandatoryLogic, isMandatoryFromLogic }) {
+export function isMandatoryField({ isKey, columnName, displayType, isMandatory, mandatoryLogic, isMandatoryFromLogic }) {
+  if (displayType === BUTTON.id) {
+    return false
+  }
+
   // mandatory rule
   if ((!isEmptyValue(mandatoryLogic) && isMandatoryFromLogic)) {
     return true
@@ -146,10 +162,13 @@ export function isMandatoryField({ isKey, columnName, isMandatory, mandatoryLogi
 
   // Numeric Keys and Created/Updated as well as
   // DocumentNo/Value/ASI ars not mandatory (persistency layer manages them)
+  const notMandatoryRender = [
+    VALUE, DOCUMENT_NO, 'M_AttributeSetInstance_ID'
+  ]
   if (
     (isKey && columnName.endsWith(IDENTIFIER_COLUMN_SUFFIX)) ||
     columnName.startsWith('Created') || columnName.startsWith('Updated') ||
-    ['Value', 'DocumentNo', 'M_AttributeSetInstance_ID'].includes(columnName)
+    notMandatoryRender.includes(columnName)
   ) {
     return false
   }
@@ -187,7 +206,10 @@ export function isDisplayedColumn({ isDisplayed, isDisplayedGrid, isDisplayedFro
     (isEmptyValue(displayLogic) || isDisplayedFromLogic)
 }
 
-export function isMandatoryColumn({ isMandatory, mandatoryLogic, isMandatoryFromLogic }) {
+export function isMandatoryColumn({ displayType, isMandatory, mandatoryLogic, isMandatoryFromLogic }) {
+  if (displayType === BUTTON.id) {
+    return false
+  }
   return isMandatory || (!isEmptyValue(mandatoryLogic) && isMandatoryFromLogic)
 }
 
@@ -1078,7 +1100,7 @@ export const containerManager = {
     })
   },
 
-  seekRecord: ({ row, parentUuid, containerUuid }) => {
+  seekRecord: ({ row = {}, parentUuid, containerUuid }) => {
     if (isEmptyValue(row)) {
       store.dispatch('setTabDefaultValues', {
         parentUuid,
@@ -1185,7 +1207,7 @@ export const containerManager = {
   isDisplayedColumn,
 
   isReadOnlyField(field) {
-    const { parentUuid, containerUuid } = field
+    const { parentUuid, containerUuid, columnName } = field
 
     // if tab is read only, all fields are read only
     if (isReadOnlyTab({ parentUuid, containerUuid })) {
@@ -1195,7 +1217,7 @@ export const containerManager = {
     const { isParentTab, linkColumnName, parentColumnName } = store.getters.getStoredTab(parentUuid, containerUuid)
 
     // fill value with context
-    if (linkColumnName === field.columnName || parentColumnName === field.columnName) {
+    if (field.isParent || linkColumnName === columnName || parentColumnName === columnName) {
       return true
     }
 
@@ -1223,50 +1245,54 @@ export const containerManager = {
     const recordUuid = store.getters.getUuidOfContainer(containerUuid)
     // edit mode is diferent to create new
     const isWithRecord = !isEmptyValue(recordUuid) && recordUuid !== 'create-new'
-    if (!isWithRecord) {
-      if (field.displayType === BUTTON.id) {
-        return true
-      }
-    } else {
+    if (isWithRecord) {
       // not updateable and record saved
       if (!field.isUpdateable) {
         return true
       }
-
-      // record is inactive isReadOnlyFromForm
-      if (field.columnName !== ACTIVE) {
-        // is active value of record
-        const isActiveRecord = store.getters.getValueOfField({
-          parentUuid,
-          containerUuid,
-          columnName: ACTIVE
-        })
-        if (!isActiveRecord) {
-          return true
-        }
+    } else {
+      // button not invoke (browser/process/report/workflow) without record
+      if (field.displayType === BUTTON.id) {
+        return true
       }
+    }
 
-      if (field.displayType !== BUTTON.id) {
-        // is processed value of record
-        const isProcessed = store.getters.getValueOfField({
-          parentUuid,
-          containerUuid,
-          columnName: PROCESSED
-        })
-        if (convertStringToBoolean(isProcessed)) {
-          return true
-        }
-
-        // is processing value of record
-        const isProcessing = store.getters.getValueOfField({
-          parentUuid,
-          containerUuid,
-          columnName: PROCESSING
-        })
-        if (convertStringToBoolean(isProcessing)) {
-          return true
-        }
+    // validate parent record and current record
+    // record is inactive isReadOnlyFromForm
+    if (columnName !== ACTIVE) {
+      // is active value of record
+      const isActiveRecord = store.getters.getValueOfField({
+        parentUuid,
+        containerUuid,
+        columnName: ACTIVE
+      })
+      if (!convertStringToBoolean(isActiveRecord)) {
+        return true
       }
+    }
+    // Button to process document
+    if (columnName === DOCUMENT_ACTION) {
+      return false
+    }
+
+    // is processed value of record
+    const isProcessedRecord = store.getters.getValueOfField({
+      parentUuid,
+      containerUuid,
+      columnName: PROCESSED
+    })
+    if (convertStringToBoolean(isProcessedRecord)) {
+      return true
+    }
+
+    // is processing value of record
+    const isProcessingRecord = store.getters.getValueOfField({
+      parentUuid,
+      containerUuid,
+      columnName: PROCESSING
+    })
+    if (convertStringToBoolean(isProcessingRecord)) {
+      return true
     }
 
     if (field.isAlwaysUpdateable) {

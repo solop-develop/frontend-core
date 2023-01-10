@@ -9,14 +9,18 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 const window = {
+  advancedQuery: {
+    title: 'Consulta Avanzada',
+    help: 'Realiza una búsqueda haciendo uso de rangos de valores, selección múltiple de valores, y operadores de comparación'
+  },
   newRecord: 'New Record',
   deleteRecord: 'Delete Record',
   confirmDeleteRecord: 'Are you sure you want to delete this record?',
@@ -71,6 +75,14 @@ const window = {
   toggleSingle: 'Toggle Single',
   multiRecord: 'Multi Record',
   gridToggle: 'Toggle single/multi record',
+  recordValidation: {
+    closeWindow: 'Close Window',
+    tab: 'Tab',
+    field: 'Field',
+    value: 'Value',
+    discardChanges: 'Discard Changes',
+    returnToWindow: 'Return to Window'
+  },
   tab: {
     sequenceTab: 'Sequence Tab'
   },

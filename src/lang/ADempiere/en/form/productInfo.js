@@ -9,19 +9,34 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-const sequenceSort = {
-  available: 'Available',
-  disableWithSearch: 'If there is a search, the drag and drop functionality is disabled.',
-  sequence: 'Sequence',
-  updateSequencesSuccessfully: 'Sequences updated successfully',
-  withoutChanges: 'Sequence/Sorted without changes'
+const productInfo = {
+  product: 'Product',
+  codeProduct: 'Códe Product',
+  convertedPrice: 'Converted Price',
+  addProduct: 'Product Added',
+  productInformation: 'Product Information',
+  chargerInformation: 'Charger Information',
+  code: 'Code',
+  name: 'Name',
+  lastName: 'Nombre2',
+  id: 'ID',
+  description: 'Description',
+  price: 'Price',
+  quantityOnHand: 'Quantity On Hand',
+  taxAmount: 'Tax Amount',
+  totalIncludingTax: 'Total Including Tax',
+  grandTotal: 'Grand Total',
+  grandTotalConverted: 'Grand Total Converted',
+  quantityAvailable: 'Available',
+  upc: 'UPC / EAN',
+  UM: 'UM'
 }
 
-export default sequenceSort
+export default productInfo

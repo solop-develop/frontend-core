@@ -16,11 +16,17 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-const businessPartner = {
-  edit: 'Editar',
-  notFound: 'Socio de negocio no encontrado.',
-  emptyBusinessPartner: 'Utilice los filtros para realizar la búsqueda de socio de negocio según su Código, Nombre, Email y Teléfono',
-  searchWithEnter: 'Introduzca un valor para buscar Socios de Negocio'
+const settings = {
+  autoSave: 'Guardado Automático',
+  fixedHeader: 'Encabezado fijo',
+  fullGridMode: 'Modo Grilla Completa',
+  isShowTitle: 'Mostrar Título',
+  isShowMenu: 'Mostrar Menu',
+  showContextMenu: 'Mostrar Menu de Contexto',
+  sidebarLogo: 'Logotipo de la barra lateral',
+  tagsView: 'Habilitar Tags-View',
+  theme: 'Color del tema',
+  title: 'Configuración'
 }
 
-export default businessPartner
+export default settings

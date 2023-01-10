@@ -141,36 +141,38 @@ export default {
             ...generateReportOfWindow
           }
 
+          const doneMethodByReport = () => {
+            const fieldsList = rootGetters.getReportParameters({
+              containerUuid: process.uuid
+            })
+            const emptyMandatory = rootGetters.getFieldsListEmptyMandatory({
+              containerUuid: process.uuid,
+              fieldsList
+            })
+            if (!isEmptyValue(emptyMandatory)) {
+              showMessage({
+                message: language.t('notifications.mandatoryFieldMissing') + emptyMandatory,
+                type: 'info'
+              })
+              return
+            }
+
+            const recordUuid = rootGetters.getUuidOfContainer(containerUuid)
+            const { tableName } = tabDefinition
+
+            dispatch('startReport', {
+              parentUuid: containerUuid,
+              containerUuid: process.uuid,
+              recordUuid,
+              tableName
+            })
+          }
+
           dispatch('setModalDialog', {
             containerUuid: process.uuid,
             title: process.name,
             containerManager: containerManagerReport,
-            doneMethod: () => {
-              const fieldsList = rootGetters.getReportParameters({
-                containerUuid: process.uuid
-              })
-              const emptyMandatory = rootGetters.getFieldsListEmptyMandatory({
-                containerUuid: process.uuid,
-                fieldsList
-              })
-              if (!isEmptyValue(emptyMandatory)) {
-                showMessage({
-                  message: language.t('notifications.mandatoryFieldMissing') + emptyMandatory,
-                  type: 'info'
-                })
-                return
-              }
-
-              const recordUuid = rootGetters.getUuidOfContainer(containerUuid)
-              const { tableName } = tabDefinition
-
-              dispatch('startReport', {
-                parentUuid: containerUuid,
-                containerUuid: process.uuid,
-                recordUuid,
-                tableName
-              })
-            },
+            doneMethod: doneMethodByReport,
             beforeOpen: () => {
               // set context values
               const parentValues = getContextAttributes({
@@ -187,11 +189,30 @@ export default {
             loadData: () => {
               const reportDefinition = rootGetters.getStoredReport(process.uuid)
               if (!isEmptyValue(reportDefinition)) {
+                // auto run report if without parameters
+                if (isEmptyValue(reportDefinition.fieldsList)) {
+                  // close modal dialog
+                  store.commit('setShowedModalDialog', {
+                    containerUuid: reportDefinition.uuid,
+                    isShowed: false
+                  })
+                  doneMethodByReport()
+                }
                 return Promise.resolve(reportDefinition)
               }
 
               return dispatch('getReportDefinitionFromServer', {
                 uuid: process.uuid
+              }).then(reportDefinitionResponse => {
+                // auto run report if without parameters
+                if (isEmptyValue(reportDefinitionResponse.fieldsList)) {
+                  // close modal dialog
+                  store.commit('setShowedModalDialog', {
+                    containerUuid: process.uuid,
+                    isShowed: false
+                  })
+                  doneMethodByReport()
+                }
               })
             },
             // TODO: Change to string and import dynamic in component

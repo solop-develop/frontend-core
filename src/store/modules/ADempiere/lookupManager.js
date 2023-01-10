@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -19,10 +19,10 @@
 import Vue from 'vue'
 import lang from '@/lang'
 
-// api request methods
+// API Request Methods
 import { requestLookupList } from '@/api/ADempiere/window.js'
 
-// utils and helper methods
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { getContextAttributes, generateContextKey } from '@/utils/ADempiere/contextUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification'
@@ -177,7 +177,7 @@ const lookupManager = {
           })
           .catch(error => {
             showMessage({
-              message: lang.t('login.unexpectedError') + '\n' + error.message,
+              message: lang.t('page.login.unexpectedError') + '\n' + error.message,
               type: 'error'
             })
             console.warn(`Get Lookup List, Select Base - Error ${error.code}: ${error.message}.`)

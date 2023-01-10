@@ -16,11 +16,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-const businessPartner = {
-  edit: 'Editar',
-  notFound: 'Socio de negocio no encontrado.',
-  emptyBusinessPartner: 'Utilice los filtros para realizar la búsqueda de socio de negocio según su Código, Nombre, Email y Teléfono',
-  searchWithEnter: 'Introduzca un valor para buscar Socios de Negocio'
+const sequenceSort = {
+  available: 'Available',
+  disableWithSearch: 'If there is a search, the drag and drop functionality is disabled.',
+  sequence: 'Sequence',
+  updateSequencesSuccessfully: 'Sequences updated successfully',
+  withoutChanges: 'Sequence/Sorted without changes'
 }
 
-export default businessPartner
+export default sequenceSort

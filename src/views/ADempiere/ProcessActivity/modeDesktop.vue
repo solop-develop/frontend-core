@@ -81,7 +81,7 @@
                         </el-dropdown-item>
 
                         <el-dropdown-item :command="{ ...activity, command: 'zoomIn' }">
-                          {{ $t('table.ProcessActivity.zoomIn') }}
+                          {{ $t('page.processActivity.zoomIn') }}
                         </el-dropdown-item>
 
                         <!-- TODO: add more actions -->
@@ -97,7 +97,7 @@
                       :inline="true"
                       @submit.native.prevent="notSubmitForm"
                     >
-                      <el-form-item :label="$t('table.ProcessActivity.Logs')" style="margin-bottom: 0;">
+                      <el-form-item :label="$t('page.processActivity.logs')" style="margin-bottom: 0;">
 
                         <span v-if="activity.isReport && !isEmptyValue(activity.summary)">
                           <ul>
@@ -203,7 +203,7 @@
                         </el-dropdown-item>
 
                         <el-dropdown-item :command="{ ...activity, command: 'zoomIn' }">
-                          {{ $t('table.ProcessActivity.zoomIn') }}
+                          {{ $t('page.processActivity.zoomIn') }}
                         </el-dropdown-item>
 
                         <!-- TODO: add more actions -->
@@ -219,7 +219,7 @@
                       :inline="true"
                       @submit.native.prevent="notSubmitForm"
                     >
-                      <el-form-item :label="$t('table.ProcessActivity.Logs')" style="margin-bottom: 0;">
+                      <el-form-item :label="$t('page.processActivity.logs')" style="margin-bottom: 0;">
 
                         <span v-if="activity.isReport && !isEmptyValue(activity.summary)">
                           <ul>
@@ -325,7 +325,7 @@
                         </el-dropdown-item>
 
                         <el-dropdown-item :command="{ ...activity, command: 'zoomIn' }">
-                          {{ $t('table.ProcessActivity.zoomIn') }}
+                          {{ $t('page.processActivity.zoomIn') }}
                         </el-dropdown-item>
 
                         <!-- TODO: add more actions -->
@@ -336,7 +336,7 @@
                 <el-collapse-transition>
                   <div v-show="(currentKey === index)">
                     <el-form label-position="top" style="padding-left: 1%;" :inline="true">
-                      <el-form-item :label="$t('table.ProcessActivity.Logs')" style="margin-bottom: 0;">
+                      <el-form-item :label="$t('page.processActivity.logs')" style="margin-bottom: 0;">
 
                         <span v-if="activity.isReport && !isEmptyValue(activity.summary)">
                           <ul>

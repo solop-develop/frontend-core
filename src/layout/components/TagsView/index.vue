@@ -62,7 +62,7 @@
       <li @click="closeAllTags(selectedTag)">{{ $t('tagsView.closeAll') }}</li>
     </ul>
     <el-dialog
-      :title="$t('tagsView.table.label')"
+      :title="$t('window.recordValidation.closeWindow')"
       :visible.sync="dialogVisible"
     >
       <span>
@@ -72,25 +72,25 @@
         >
           <el-table-column
             prop="name"
-            :label="$t('tagsView.table.tab')"
+            :label="$t('window.recordValidation.tab')"
           />
           <el-table-column
             prop="emptyMandatory[0].columnName"
-            :label="$t('tagsView.table.field')"
+            :label="$t('window.recordValidation.field')"
           />
           <el-table-column
             prop="emptyMandatory[0].value"
-            :label="$t('tagsView.table.value')"
+            :label="$t('window.recordValidation.value')"
           />
         </el-table>
         <!-- {{ recordModifiedTab }} -->
       </span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">
-          {{ $t('tagsView.buttonClose.discardChanges') }}
+          {{ $t('window.recordValidation.discardChanges') }}
         </el-button>
         <el-button type="primary" @click="discardChanges(recordModifiedTab)">
-          {{ $t('tagsView.buttonClose.returnToWindow') }}
+          {{ $t('window.recordValidation.returnToWindow') }}
         </el-button>
       </span>
     </el-dialog>
