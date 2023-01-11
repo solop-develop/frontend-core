@@ -149,6 +149,7 @@ export default defineComponent({
      * Computed
      */
     const isWithChildsTab = computed(() => {
+      if (store.getters['settings/getFullGridMode'] && props.windowMetadata.currentTab.isShowedTableRecords) return false
       return !isEmptyValue(props.windowMetadata.tabsListChild)
     })
 
