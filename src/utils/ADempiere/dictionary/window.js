@@ -419,33 +419,105 @@ export const deleteRecord = {
     if (tab.isParentTab && tab.index > 0) {
       return false
     }
-    if (tab.isDeleteable) {
-      const preferenceClientId = store.getters.getSessionContextClientId
-      if (tab.isShowedTableRecords) {
-        const selectionsRecords = store.getters.getTabSelectionsList({
-          containerUuid
+    if (!tab.isDeleteable) {
+      return false
+    }
+
+    const recordUuid = store.getters.getUuidOfContainer(containerUuid)
+    if (isEmptyValue(recordUuid) || recordUuid === 'create-new') {
+      return false
+    }
+
+    const preferenceClientId = store.getters.getSessionContextClientId
+    if (tab.isShowedTableRecords) {
+      const selectionsRecords = store.getters.getTabSelectionsList({
+        containerUuid
+      })
+      if (isEmptyValue(selectionsRecords)) {
+        return false
+      }
+      let isEditaleParentRecord = true
+      // TODO: Improve creating method to define if record is enabled
+      if (!tab.isParentTab) {
+        // is active value of record
+        const isActiveRecord = store.getters.getValueOfField({
+          parentUuid,
+          columnName: ACTIVE
         })
-        if (isEmptyValue(selectionsRecords)) {
-          return false
-        }
-        const isOtherClient = selectionsRecords.some(record => record[CLIENT] !== preferenceClientId)
-        return !isOtherClient
-      } else {
-        const recordUuid = store.getters.getUuidOfContainer(containerUuid)
-        if (!isEmptyValue(recordUuid) && recordUuid !== 'create-new') {
-          // client id value of record
-          const clientIdRecord = store.getters.getValueOfField({
-            parentUuid,
-            containerUuid,
-            columnName: CLIENT
-          })
-          // evaluate client id context with record
-          return clientIdRecord === preferenceClientId
-        }
+        // client id value of record
+        const clientIdRecord = store.getters.getValueOfField({
+          parentUuid,
+          columnName: CLIENT
+        })
+        // is processed value of record
+        const isProcessedRecord = store.getters.getValueOfField({
+          parentUuid,
+          columnName: PROCESSED
+        })
+        // is processing value of record
+        const isProcessingRecord = store.getters.getValueOfField({
+          parentUuid,
+          columnName: PROCESSING
+        })
+        isEditaleParentRecord = clientIdRecord === preferenceClientId &&
+          convertStringToBoolean(isActiveRecord) &&
+          !convertStringToBoolean(isProcessedRecord) &&
+          !convertStringToBoolean(isProcessingRecord)
+      }
+      if (!isEditaleParentRecord) {
+        return false
+      }
+      const isNotEditableAnyRecord = selectionsRecords.some(record => {
+        return record[CLIENT] !== preferenceClientId ||
+          !record[ACTIVE] || record[PROCESSED] || record[PROCESSING]
+      })
+      if (isNotEditableAnyRecord) {
+        return false
+      }
+    } else {
+      // is active value of record
+      const isActiveRecord = store.getters.getValueOfField({
+        parentUuid,
+        containerUuid,
+        columnName: ACTIVE
+      })
+      if (!convertStringToBoolean(isActiveRecord)) {
+        return false
+      }
+
+      // client id value of record
+      const clientIdRecord = store.getters.getValueOfField({
+        parentUuid,
+        containerUuid,
+        columnName: CLIENT
+      })
+      // evaluate client id context with record
+      if (clientIdRecord !== preferenceClientId) {
+        return false
+      }
+
+      // is processed value of record
+      const isProcessedRecord = store.getters.getValueOfField({
+        parentUuid,
+        containerUuid,
+        columnName: PROCESSED
+      })
+      if (convertStringToBoolean(isProcessedRecord)) {
+        return false
+      }
+
+      // is processing value of record
+      const isProcessingRecord = store.getters.getValueOfField({
+        parentUuid,
+        containerUuid,
+        columnName: PROCESSING
+      })
+      if (convertStringToBoolean(isProcessingRecord)) {
+        return false
       }
     }
 
-    return false
+    return true
   },
   svg: false,
   icon: 'el-icon-delete',

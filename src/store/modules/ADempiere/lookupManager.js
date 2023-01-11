@@ -28,7 +28,6 @@ import { getContextAttributes, generateContextKey } from '@/utils/ADempiere/cont
 import { showMessage } from '@/utils/ADempiere/notification'
 
 const initStateLookup = {
-  lookupItem: {},
   lookupList: {}
 }
 
