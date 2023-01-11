@@ -229,5 +229,18 @@ export const containerManager = {
     store.dispatch('setReportDefaultValues', {
       containerUuid
     })
+  },
+  changeSequence({
+    uuid,
+    attributeName = 'isEditSecuence',
+    attributeValue,
+    attributeNameControl
+  }) {
+    store.commit('changeReportAttribute', {
+      uuid,
+      attributeName,
+      attributeNameControl,
+      attributeValue
+    })
   }
 }

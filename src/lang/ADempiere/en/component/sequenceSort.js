@@ -21,7 +21,9 @@ const sequenceSort = {
   disableWithSearch: 'If there is a search, the drag and drop functionality is disabled.',
   sequence: 'Sequence',
   updateSequencesSuccessfully: 'Sequences updated successfully',
-  withoutChanges: 'Sequence/Sorted without changes'
+  withoutChanges: 'Sequence/Sorted without changes',
+  modifyFieldSequence: 'Modify Field Sequence',
+  saveNewSequence: 'Save New Sequence'
 }
 
 export default sequenceSort

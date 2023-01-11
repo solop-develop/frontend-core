@@ -98,6 +98,7 @@ export function generateProcess({
     containerUuid: processToGenerate.uuid,
     panelName: processToGenerate.name,
     isEvaluateValueChanges: true,
+    isEditSecuence: false,
     panelType
   }
 
@@ -297,6 +298,19 @@ export const containerManager = {
     return store.dispatch('searchTableHeader', {
       containerUuid,
       tableName
+    })
+  },
+  changeSequence({
+    uuid,
+    attributeName = 'isEditSecuence',
+    attributeValue,
+    attributeNameControl
+  }) {
+    store.commit('changeProcessAttribute', {
+      uuid,
+      attributeName,
+      attributeNameControl,
+      attributeValue
     })
   }
 }

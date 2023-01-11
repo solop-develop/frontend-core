@@ -21,7 +21,9 @@ const sequenceSort = {
   disableWithSearch: 'Si hay una búsqueda la funcionalidad arrastrar y soltar se desabilita',
   sequence: 'Secuencia',
   updateSequencesSuccessfully: 'Secuencias actualizadas exitosamente',
-  withoutChanges: 'Secuencias/Ordenado sin cambios'
+  withoutChanges: 'Secuencias/Ordenado sin cambios',
+  modifyFieldSequence: 'Modificar Secuencia de los Campos',
+  saveNewSequence: 'Guardar Nueva Secuencia'
 }
 
 export default sequenceSort

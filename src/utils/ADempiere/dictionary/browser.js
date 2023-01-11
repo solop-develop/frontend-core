@@ -411,5 +411,18 @@ export const containerManager = {
       containerUuid,
       tableName
     })
+  },
+  changeSequence({
+    uuid,
+    attributeName = 'isEditSecuence',
+    attributeValue,
+    attributeNameControl
+  }) {
+    store.commit('changeBrowserAttribute', {
+      uuid,
+      attributeName,
+      attributeNameControl,
+      attributeValue
+    })
   }
 }

@@ -1651,5 +1651,22 @@ export const containerManager = {
       containerUuid,
       tableName
     })
+  },
+  changeSequence({
+    uuid,
+    attributeName = 'isEditSecuence',
+    attributeValue,
+    attributeNameControl,
+    parentUuid,
+    containerUuid
+  }) {
+    return store.dispatch('changeTabAttribute', {
+      uuid,
+      attributeName,
+      attributeNameControl,
+      attributeValue,
+      parentUuid,
+      containerUuid
+    })
   }
 }

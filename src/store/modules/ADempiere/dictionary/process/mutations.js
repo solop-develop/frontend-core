@@ -35,5 +35,19 @@ export default {
     const { attributeName, attributeValue } = payload
 
     payload.field[attributeName] = attributeValue
+  },
+
+  /**
+   * Change Process Attribute
+   * @param {string} uuid - Uuid the Process
+   * @param {string} attributeName - Name of the Attribute to change
+   * @param {string} attributeValue - Value of the Attribute to change
+   */
+  changeProcessAttribute(state, {
+    uuid,
+    attributeName,
+    attributeValue
+  }) {
+    Vue.set(state.storedProcesses[uuid], attributeName, attributeValue)
   }
 }

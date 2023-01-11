@@ -168,7 +168,7 @@ const tabSequence = {
 
       if (isEmptyValue(entitiesList)) {
         showMessage({
-          message: lang.t('components.sequenceSort.withoutChanges'),
+          message: lang.t('component.sequenceSort.withoutChanges'),
           type: 'info'
         })
         return
@@ -199,7 +199,7 @@ const tabSequence = {
           })
 
           showMessage({
-            message: lang.t('components.sequenceSort.updateSequencesSuccessfully'),
+            message: lang.t('component.sequenceSort.updateSequencesSuccessfully'),
             type: 'success'
           })
         })

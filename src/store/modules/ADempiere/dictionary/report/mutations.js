@@ -35,5 +35,18 @@ export default {
     const { attributeName, attributeValue } = payload
 
     payload.field[attributeName] = attributeValue
+  },
+  /**
+   * Change Report Attribute
+   * @param {string} uuid - Uuid the Report
+   * @param {string} attributeName - Name of the Attribute to change
+   * @param {string} attributeValue - Value of the Attribute to change
+   */
+  changeReportAttribute(state, {
+    uuid,
+    attributeName,
+    attributeValue
+  }) {
+    Vue.set(state.storedReports[uuid], attributeName, attributeValue)
   }
 }

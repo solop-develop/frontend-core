@@ -259,7 +259,8 @@ export function generatePanelAndFields({
     selectionColumns,
     identifierColumns,
     isLoadedFieldsList: true,
-    isShowedTotals: false
+    isShowedTotals: false,
+    isEditSecuence: false
   }
 
   // delete unused and dupicated property with 'fieldsList'
