@@ -46,6 +46,29 @@ import { showMessage } from '@/utils/ADempiere/notification.js'
 import { zoomIn } from '@/utils/ADempiere/coreUtils'
 import { exportRecords, supportedTypes } from '@/utils/ADempiere/exportUtil.js'
 
+/**
+ * Evaluate if tab is displayed
+ * @param {string} parentUuid
+ * @param {string} containerUuid
+ * @param {string} displayLogic
+ * @returns {boolean}
+ */
+export function isDisplayedTab({ parentUuid, containerUuid, displayLogic }) {
+  // evaluate display logic
+  if (!isEmptyValue(displayLogic)) {
+    const isDisplayedFromLogic = evaluator.evaluateLogic({
+      context: getContext,
+      parentUuid,
+      containerUuid,
+      logic: displayLogic,
+      defaultReturned: true
+    })
+    return isDisplayedFromLogic
+  }
+
+  return true
+}
+
 export function isReadOnlyTab({ parentUuid, containerUuid }) {
   const window = store.getters.getStoredWindow(parentUuid)
   if (isEmptyValue(window)) return true
@@ -957,7 +980,7 @@ export function generateTabs({
   const sequenceTabsListOnWindow = []
 
   // indexes related to visualization
-  const tabsList = tabs.filter((itemTab) => {
+  const tabsList = tabs.filter((itemTab, index) => {
     if (itemTab.isSortTab) {
       sequenceTabsListOnWindow.push({
         ...itemTab,
@@ -1034,20 +1057,6 @@ export function generateTabs({
       isParentTab,
       parentTabs,
       parentFieldsList,
-      // evaluate display logic
-      isShowedTab: () => {
-        if (!isEmptyValue(currentTab.displayLogic)) {
-          const isDisplayedFromLogic = evaluator.evaluateLogic({
-            context: getContext,
-            parentUuid,
-            containerUuid: currentTab.uuid,
-            logic: currentTab.displayLogic,
-            defaultReturned: true
-          })
-          return isDisplayedFromLogic
-        }
-        return true
-      },
       sequenceTabsList,
       // app properties
       isShowedRecordNavigation: !(currentTab.isSingleRow || isParentTab), // TODO: @deprecated
