@@ -469,15 +469,15 @@ const actions = {
         })
       }
       if (isEmptyValue(currentFieldsList)) {
-        console.warn('fieldsList not found in vuex store', {
-          parentUuid,
-          parentColumnName: field.columnName,
-          parentContainerName: field.panelName,
-          parentContainerUuid: field.containerUuid,
-          dependentColumnName: columnName,
-          dependentContainerName: fieldDependentDefinition.containerName,
-          dependentContainerUuid: fieldDependentDefinition.containerUuid
-        })
+        // console.warn('fieldsList not found in vuex store', {
+        //   parentUuid,
+        //   parentColumnName: field.columnName,
+        //   parentContainerName: field.panelName,
+        //   parentContainerUuid: field.containerUuid,
+        //   dependentColumnName: columnName,
+        //   dependentContainerName: fieldDependentDefinition.containerName,
+        //   dependentContainerUuid: fieldDependentDefinition.containerUuid
+        // })
         return
       }
       // TODO: Improve peformance get field with key-value
