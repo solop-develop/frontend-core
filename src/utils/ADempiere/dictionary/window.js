@@ -994,10 +994,10 @@ export function generateTabs({
       itemTab.isTranslationTab ||
       itemTab.isHasTree
     ) && (
-    // only tabs on second level
+      // only tabs on second level
       itemTab.tabLevel < 2 ||
-        // tabs on third level with second tab is same table name on first tab (BP Accounting)
-        (itemTab.tabLevel < 3 && index > 0 && tabs[index - 1].tableName === firstTabTableName)
+      // tabs on third level with second tab is same table name on first tab (BP Accounting)
+      (itemTab.tabLevel < 3 && index > 0 && tabs[index - 1].tableName === firstTabTableName)
     )
   }).map((currentTab, index, listTabs) => {
     const isParentTab = Boolean(firstTabTableName === currentTab.tableName)
