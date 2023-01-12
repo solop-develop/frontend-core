@@ -32,11 +32,11 @@ const login = {
   userEnrollmentSuccessful: 'Registro de usuario exitoso, verifique su correo electronico',
   passwordResetSendLink: 'El enlace para reiniciar la contraseña se envio al correo ',
   passwordConfirmNew: 'Confirmación de nueva contraseña',
-  invalidToken: 'El token utilizado es inválido.',
+  invalidToken: 'El token utilizado es inválido',
   passwordReset: 'Reiniciar contraseña',
   createPassword: 'Crear contraseña',
   passwordResetSuccessful: 'El reinicio de contraseña se realizo correctamente',
-  passwordAndConfirmNotMatch: 'La contraseña nueva y su confirmación no coinciden.'
+  passwordAndConfirmNotMatch: 'La contraseña nueva y su confirmación no coinciden'
 }
 
 export default login

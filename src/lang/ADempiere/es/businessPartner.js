@@ -18,7 +18,7 @@
 
 const businessPartner = {
   edit: 'Editar',
-  notFound: 'Socio de negocio no encontrado.',
+  notFound: 'Socio de negocio no encontrado',
   emptyBusinessPartner: 'Utilice los filtros para realizar la búsqueda de socio de negocio según su Código, Nombre, Email y Teléfono',
   searchWithEnter: 'Introduzca un valor para buscar Socios de Negocio'
 }

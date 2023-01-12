@@ -18,7 +18,7 @@
 
 const businessPartner = {
   edit: 'Edit',
-  notFound: 'Business partner not found.',
+  notFound: 'Business partner not found',
   emptyBusinessPartner: 'Use the filters to search for a business partner by Code, Name, Email and Phone Number',
   searchWithEnter: 'Enter a value to search for a Business Partners'
 }

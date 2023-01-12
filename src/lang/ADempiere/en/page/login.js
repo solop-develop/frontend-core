@@ -32,11 +32,11 @@ const login = {
   userEnrollmentSuccessful: 'Successful user enrollment, check your email',
   passwordResetSendLink: 'The link to reset the password was sent to the email ',
   passwordConfirmNew: 'New password confirm',
-  invalidToken: 'The token used is invalid.',
+  invalidToken: 'The token used is invalid',
   passwordReset: 'Password Reset',
   createPassword: 'Create password',
   passwordResetSuccessful: 'Password reset was successful',
-  passwordAndConfirmNotMatch: 'The new password and your confirmation do not match.'
+  passwordAndConfirmNotMatch: 'The new password and your confirmation do not match'
 }
 
 export default login

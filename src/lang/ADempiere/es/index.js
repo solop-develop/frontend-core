@@ -80,14 +80,14 @@ export default {
     searching: 'Buscando registros en el servidor',
     succcessSearch: 'La búsqueda se ha realizado',
     searchWithOutRecords: 'La búsqueda finalizo sin resultados',
-    errorSearch: 'La búsqueda no se ha completado.',
+    errorSearch: 'La búsqueda no se ha completado',
     // process
     processing: 'Procesando',
     processExecuted: 'Ejecutado, ver histórico de procesos',
     processError: 'No fue ejecutado',
     //
     emptyValues: 'Parametro(s) con valores vacios',
-    fieldCannotBeEmpty: 'El valor del campo no puede estar vacío.',
+    fieldCannotBeEmpty: 'El valor del campo no puede estar vacío',
     fieldMandatory: 'El campo es obligatorio',
     requestError: 'Error al ejecutar la petición',
     successChangeRole: 'El rol se ha cambiado',
@@ -101,7 +101,7 @@ export default {
     invalidEmailFormat: 'Formato de correo electronico invalido',
     recordLocked: 'Este registro ha sido bloqueado',
     recordUnlocked: 'Este registro ha sido desbloqueado',
-    noRoleAccess: 'Con su rol y configuración actuales, no puede ver esta información.',
+    noRoleAccess: 'Con su rol y configuración actuales, no puede ver esta información',
     errorPointOfSale: 'Sin punto de venta seleccionado',
     emptyPos: 'Este Usuario no tiene Ningún Terminal de PDV Asignado'
   },
@@ -139,18 +139,13 @@ export default {
     contextMenuActions: 'Acciones',
     contextMenuReferences: 'Referencias',
     contextMenuDownload: 'Descargar',
-    ExportTo: 'Exportar a',
-    dateStartPlaceholder: 'Fecha inicial',
-    dateEndPlaceholder: 'Fecha final',
     dialogCancelButton: 'Cancelar',
     dialogConfirmButton: 'Confirmar',
     filterableItems: 'Columnas Opcionales',
     searchRecord: 'Buscar Registro',
     fixedleItems: 'Columnas Fijas',
-    resetAllFilters: 'Reiniciar todos los filtros',
     switchActiveText: 'Si',
-    switchInactiveText: 'No',
-    contextFieldTitle: 'Información de Contexto'
+    switchInactiveText: 'No'
   },
   grid: {
     recordAccess: {
@@ -175,7 +170,7 @@ export default {
     searchCriteria: 'Criterio de Búsqueda',
     unsupportedSorry: 'Lo sentimos',
     unsupportedHeadline: 'Esta vista no está disponible actualmente',
-    unsupportedInfo: 'Verifique que la vista sea compatible con esta versión, o haga clic en el botón a continuación para volver a la página de inicio.',
+    unsupportedInfo: 'Verifique que la vista sea compatible con esta versión, o haga clic en el botón a continuación para volver a la página de inicio',
     unsupportedButton: 'Volver al Panel de control',
     reportView: 'Vistas de Reporte',
     printFormat: 'Formatos de Impresión',

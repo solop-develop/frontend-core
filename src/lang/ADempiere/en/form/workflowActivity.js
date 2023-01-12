@@ -33,7 +33,7 @@ const workflowActivity = {
     },
     workflow: {
       title: 'Workflow',
-      description: 'Workflow life cycle diagram. The highlighted Node is the one currently awaiting verification.'
+      description: 'Workflow life cycle diagram. The highlighted Node is the one currently awaiting verification'
     },
     workflowLogs: {
       title: 'Change Log',

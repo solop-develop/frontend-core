@@ -87,7 +87,7 @@ export default {
     processError: 'Was not executed',
     //
     emptyValues: 'Parameter(s) empty value',
-    fieldCannotBeEmpty: 'The field value cannot be empty.',
+    fieldCannotBeEmpty: 'The field value cannot be empty',
     fieldMandatory: 'The field is mandatory',
     requestError: 'Error executing the request',
     successChangeRole: 'The role has been changed',
@@ -101,7 +101,7 @@ export default {
     invalidEmailFormat: 'Invalid email format',
     recordLocked: 'This record has been locked',
     recordUnlocked: 'This record has been unlocked',
-    noRoleAccess: 'With your current role and settings, you cannot view this information.',
+    noRoleAccess: 'With your current role and settings, you cannot view this information',
     errorPointOfSale: 'No point of sale selected',
     emptyPos: 'This User has no Assigned POS Terminal'
   },
@@ -138,19 +138,14 @@ export default {
     imageError: 'The image exceeds 2MB and does not comply with the valid formats!',
     contextMenuActions: 'Actions',
     contextMenuReferences: 'References',
-    ExportTo: 'Export to',
     contextMenuDownload: 'Download',
-    dateStartPlaceholder: 'Start date',
-    dateEndPlaceholder: 'End date',
     dialogCancelButton: 'Cancel',
     dialogConfirmButton: 'Confirm',
     filterableItems: 'Optional Columns',
     searchRecord: 'Search Record',
     fixedleItems: 'Fixed Columns',
-    resetAllFilters: 'Reset all filters',
     switchActiveText: 'Yes',
-    switchInactiveText: 'Not',
-    contextFieldTitle: 'Context Information'
+    switchInactiveText: 'Not'
   },
   grid: {
     recordAccess: {
@@ -175,7 +170,7 @@ export default {
     searchCriteria: 'Search Criteria',
     unsupportedSorry: 'Sorry',
     unsupportedHeadline: 'This view is currently unavailable',
-    unsupportedInfo: 'Please check that the view is supported in this version, or click the button below to return to the homepage.',
+    unsupportedInfo: 'Please check that the view is supported in this version, or click the button below to return to the homepage',
     unsupportedButton: 'Back to dashboard',
     reportView: 'Report Views',
     printFormat: 'Print Formats',
@@ -292,7 +287,7 @@ export default {
   quickAccess: {
     newRecord: 'Quick Access to Create New Record',
     listRecords: 'Quick Access to List All Records',
-    searchWithEnter: 'Press enter to search for the product by Product Code, Name or UPC.'
+    searchWithEnter: 'Press enter to search for the product by Product Code, Name or UPC'
   },
   form: {
     ...form,
@@ -425,7 +420,7 @@ export default {
         convertedAmount: 'Converted',
         fullPayment: 'Full Payment',
         dayRate: 'Day Rate',
-        noDayRate: 'No daily rate has been generated for the currency.',
+        noDayRate: 'No daily rate has been generated for the currency',
         refund: 'Refund',
         paymentMethods: 'Payment Methods',
         bankAcount: 'Bank Acount',
@@ -499,7 +494,7 @@ export default {
       onlyAllocated: 'Only allocated to current point of sales',
       businessPartner: 'Business Partner',
       copyShippingAddress: 'Copy shipping address',
-      documentNo: 'Document No.',
+      documentNo: 'Document No',
       emptyList: 'Use the filters to search for orders'
     },
     guideSteps: {

@@ -17,7 +17,7 @@
  */
 
 const orderList = {
-  notFound: 'Orden de Venta no encontrado.',
+  notFound: 'Orden de Venta no encontrado',
   label: 'Órden de Venta',
   emptyOrderList: 'Utilice los filtros para realizar la búsqueda de las ordenes de ventas según su No. del Documento, Socio del Negocio, Fecha Desde, Fecha Hasta, Pagado, Procesado y Facturado ',
   searchWithEnter: 'Introduzca un valor para buscar una Orden de Venta'

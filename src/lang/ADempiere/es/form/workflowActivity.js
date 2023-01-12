@@ -33,7 +33,7 @@ const workflowActivity = {
     },
     workflow: {
       title: 'Flujo de Trabajo',
-      description: 'Diagrama del ciclo de vida del flijo de trabajo. El Nodo resaltado es el que se encuentra actualmente a la espera de verificación.'
+      description: 'Diagrama del ciclo de vida del flijo de trabajo. El Nodo resaltado es el que se encuentra actualmente a la espera de verificación'
     },
     workflowLogs: {
       title: 'Bitacora de Cambios',

@@ -17,7 +17,7 @@
  */
 
 const infoSearch = {
-  notFound: ' not found.'
+  notFound: ' not found'
 }
 
 export default infoSearch
