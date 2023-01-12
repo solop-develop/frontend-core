@@ -42,7 +42,8 @@ const containerInfo = {
       option: '',
       columnName: ''
     },
-    columnName: ''
+    columnName: '',
+    isLoaded: false
   },
 
   mutations: {
@@ -67,6 +68,9 @@ const containerInfo = {
     },
     setLogField(state, logs) {
       state.fieldLogs = logs
+    },
+    setIsLoadtRecordLogs(state, loading) {
+      state.isLoaded = loading
     }
   },
 
@@ -78,6 +82,7 @@ const containerInfo = {
     }) {
       const pageSize = 0
       const pageToken = 0
+      commit('setIsLoadtRecordLogs', true)
       return requestListEntityLogs({
         tableName,
         recordId,
@@ -87,12 +92,14 @@ const containerInfo = {
       })
         .then(response => {
           commit('addListRecordLogs', response)
+          commit('setIsLoadtRecordLogs', false)
           return response
         })
         .catch(error => {
           commit('addListRecordLogs', {
             entityLogsList: []
           })
+          commit('setIsLoadtRecordLogs', false)
           console.warn(`Error getting List Record Logs: ${error.message}. Code: ${error.code}.`)
         })
     },
@@ -172,6 +179,9 @@ const containerInfo = {
     },
     getFieldLogs: (state) => {
       return state.fieldLogs
+    },
+    getIsLoadListRecordLogs: (state) => {
+      return state.isLoaded
     }
   }
 }

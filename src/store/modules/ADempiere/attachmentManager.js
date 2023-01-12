@@ -23,7 +23,8 @@ import { requestAttachment } from '@/api/ADempiere/user-interface/component/reso
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 const initStateAttachment = {
-  listAttachment: []
+  listAttachment: [],
+  isLoaded: false
 }
 
 const attachment = {
@@ -32,6 +33,9 @@ const attachment = {
   mutations: {
     setListAttachment(state, payload) {
       state.listAttachment = payload
+    },
+    setIsLoadListAttachment(state, loading) {
+      state.isLoaded = loading
     }
   },
 
@@ -46,6 +50,7 @@ const attachment = {
       if (isEmptyValue(tableName) && (isEmptyValue(recordId) || isEmptyValue(recordUuid))) {
         return
       }
+      commit('setIsLoadListAttachment', true)
       return requestAttachment({
         tableName,
         recordId,
@@ -54,6 +59,7 @@ const attachment = {
         pageToken
       })
         .then(response => {
+          commit('setIsLoadListAttachment', false)
           const resourceReferencesList = response.resourceReferencesList.map(element => {
             return {
               ...element
@@ -69,6 +75,7 @@ const attachment = {
           return response
         })
         .catch(error => {
+          commit('setIsLoadListAttachment', false)
           console.warn(`Error getting List Record Logs: ${error.message}. Code: ${error.code}.`)
         })
     }
@@ -77,6 +84,9 @@ const attachment = {
   getters: {
     getListAttachment: (state) => {
       return state.listAttachment
+    },
+    getIsLoadListAttachment: (state) => {
+      return state.isLoaded
     }
   }
 }

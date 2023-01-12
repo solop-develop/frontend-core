@@ -9,6 +9,7 @@ import { showMessage } from '@/utils/ADempiere/notification'
 const initStateChatEntries = {
   listRecordChats: [],
   listChatEntries: [],
+  isLoaded: false,
   chatText: '',
   isNote: false
 }
@@ -27,6 +28,9 @@ export default {
     },
     isNote(state, payload) {
       state.isNote = payload
+    },
+    setIsLoadListChat(state, loading) {
+      state.isLoaded = loading
     }
   },
   actions: {
@@ -68,6 +72,7 @@ export default {
       pageSize,
       pageToken
     }) {
+      commit('setIsLoadListChat', true)
       return requestListEntityChats({
         tableName,
         recordId,
@@ -97,8 +102,10 @@ export default {
           })
           commit('isNote', !isEmptyValue(chatList))
           commit('addListRecordChats', responseList)
+          commit('setIsLoadListChat', false)
         })
         .catch(error => {
+          commit('setIsLoadListChat', false)
           commit('addListChatEntries', [])
           console.warn(`Error getting List Chat: ${error.message}. Code: ${error.code}.`)
         })
@@ -116,6 +123,9 @@ export default {
     },
     getIsNote: (state) => {
       return state.isNote
+    },
+    getIsLoadListChat: (state) => {
+      return state.isLoaded
     }
   }
 }

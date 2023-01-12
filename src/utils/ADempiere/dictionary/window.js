@@ -1622,7 +1622,7 @@ export const containerManager = {
     })
   },
 
-  listChats({ tableName, recordId, recordUuid }) {
+  recordNotesTab({ tableName, recordId, recordUuid }) {
     return store.dispatch('listChatEntries', {
       tableName,
       recordId,
