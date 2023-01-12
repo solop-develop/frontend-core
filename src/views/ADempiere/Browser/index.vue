@@ -40,7 +40,6 @@
             :container-uuid="browserUuid"
             :panel-metadata="browserMetadata"
             :container-manager="containerManager"
-            :is-show-filter="false"
             :is-tab-panel="true"
           />
         </collapse-criteria>
