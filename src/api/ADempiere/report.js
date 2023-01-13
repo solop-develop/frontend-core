@@ -190,7 +190,6 @@ export function requestGetReportOutput({
   query,
   whereClause,
   orderByClause
-  // criteria
 }) {
   const filters = parametersList.map(parameter => {
     return {
