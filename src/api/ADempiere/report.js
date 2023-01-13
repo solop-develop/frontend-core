@@ -188,8 +188,15 @@ export function requestGetReportOutput({
   query,
   whereClause,
   orderByClause
+  // criteria
 }) {
   const filters = parametersList.map(parameter => {
+    return {
+      column_name: parameter.columnName,
+      value: parameter.value
+    }
+  })
+  const criteria = parametersList.map(parameter => {
     return {
       column_name: parameter.columnName,
       value: parameter.value
@@ -212,7 +219,8 @@ export function requestGetReportOutput({
       // Custom Query
       query,
       where_clause: whereClause,
-      order_by_clause: orderByClause
+      order_by_clause: orderByClause,
+      criteria
     }
   })
     .then(reportOutpuResponse => {
