@@ -16,12 +16,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import date from './date'
-import sequenceSort from './sequenceSort'
-import tree from './tree'
-
-export default {
-  date,
-  sequenceSort,
-  tree
+const tree = {
+  searchNodesOnTree: 'Search inside the tree nodes'
 }
+
+export default tree

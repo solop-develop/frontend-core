@@ -16,12 +16,23 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import date from './date'
-import sequenceSort from './sequenceSort'
-import tree from './tree'
-
-export default {
-  date,
-  sequenceSort,
-  tree
+const initState = {
+  treeTab: {}
 }
+
+const treeTab = {
+  state: initState,
+  muations: {
+
+  },
+
+  actions: {
+
+  },
+
+  getters: {
+
+  }
+}
+
+export default treeTab

@@ -16,12 +16,42 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import date from './date'
-import sequenceSort from './sequenceSort'
-import tree from './tree'
+// Get Instance for connection
+import { request } from '@/utils/ADempiere/request'
 
-export default {
-  date,
-  sequenceSort,
-  tree
+/**
+ * List Tree Tab
+ * @param {string} tableName
+ * @param {number} id node identifier
+ * @param {string} uuid node universally unique identifier
+ * @param {number} elementId element identifier
+ * @param {string} elementIdUuid element universally unique identifier
+ * @returns {promise}
+ */
+export function requestListTreeNodes({
+  tableName,
+  // dsl query
+  id,
+  uuid,
+  elementId,
+  elementIdUuid
+}) {
+  return request({
+    url: '/user-interface/component/tree/list-tree-nodes',
+    method: 'post',
+    data: {
+      table_name: tableName,
+      id,
+      uuid,
+      element_id: elementId,
+      element_uuid: elementIdUuid
+    }
+  })
+    .then(response => {
+      return {
+        recordCount: response.record_count,
+        recordsList: response.records,
+        nextPageToken: response.next_page_token
+      }
+    })
 }

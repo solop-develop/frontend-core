@@ -991,8 +991,7 @@ export function generateTabs({
       return false
     }
     return !(
-      itemTab.isTranslationTab ||
-      itemTab.isHasTree
+      itemTab.isTranslationTab
     )
   }).map((currentTab, index, listTabs) => {
     const isParentTab = Boolean(firstTabTableName === currentTab.tableName)
@@ -1181,14 +1180,28 @@ export const containerManager = {
     })
   },
 
-  seekRecord: ({ row = {}, parentUuid, containerUuid }) => {
-    if (isEmptyValue(row)) {
+  seekRecord: ({ recordUuid, row = {}, parentUuid, containerUuid }) => {
+    if (isEmptyValue(row) && isEmptyValue(recordUuid)) {
       store.dispatch('setTabDefaultValues', {
         parentUuid,
         containerUuid
       })
       return
     }
+    if (isEmptyValue(row)) {
+      row = store.getters.getTabRowData({
+        containerUuid,
+        recordUuid
+      })
+      if (isEmptyValue(row)) {
+        store.dispatch('setTabDefaultValues', {
+          parentUuid,
+          containerUuid
+        })
+        return
+      }
+    }
+
     const tabDefinition = store.getters.getStoredTab(parentUuid, containerUuid)
     const currentRoute = router.app._route
     if (tabDefinition.isParentTab) {

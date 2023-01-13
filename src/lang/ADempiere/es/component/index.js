@@ -18,8 +18,10 @@
 
 import date from './date'
 import sequenceSort from './sequenceSort'
+import tree from './tree'
 
 export default {
   date,
-  sequenceSort
+  sequenceSort,
+  tree
 }
