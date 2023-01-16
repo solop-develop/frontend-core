@@ -161,12 +161,29 @@ export const runProcess = {
 
     return isEmptyValue(fieldsEmpty)
   },
-  svg: false,
+  isSvgIcon: false,
   icon: 'el-icon-setting',
   actionName: 'runProcess',
   uuid: null,
   runProcess: ({ containerUuid }) => {
     store.dispatch('startProcess', {
+      containerUuid
+    })
+  }
+}
+
+export const clearParameters = {
+  name: language.t('process.clearParameters.title'),
+  description: language.t('process.clearParameters.description'),
+  enabled: ({ containerUuid }) => {
+    return true
+  },
+  isSvgIcon: true,
+  icon: 'layers-clear',
+  actionName: 'clearParameters',
+  uuid: null,
+  clearParameters: ({ containerUuid }) => {
+    store.dispatch('setProcessDefaultValues', {
       containerUuid
     })
   }

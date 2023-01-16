@@ -25,6 +25,7 @@ import page from './page'
 import extensionFile from './extensionFile'
 import fieldDisplayOptions from './fieldDisplayOptions'
 import fieldOptions from './fieldOptions'
+import process from './process'
 import recordManager from './recordManager'
 import route from './route'
 import smartBrowser from './smartBrowser'
@@ -50,6 +51,7 @@ export default {
   component,
   orderList,
   page,
+  process,
   extensionFile,
   fieldDisplayOptions,
   infoSearch,

@@ -22,6 +22,7 @@ import component from './component'
 import form from './form'
 import orderList from './orderList'
 import page from './page'
+import process from './process'
 import extensionFile from './extensionFile'
 import fieldDisplayOptions from './fieldDisplayOptions'
 import fieldOptions from './fieldOptions'
@@ -50,6 +51,7 @@ export default {
   component,
   orderList,
   page,
+  process,
   extensionFile,
   fieldDisplayOptions,
   infoSearch,
