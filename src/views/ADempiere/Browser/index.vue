@@ -1,7 +1,7 @@
 <!--
  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
+ Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with this program.  If not, see <https:www.gnu.org/licenses/>.
+ along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -86,8 +86,7 @@ import { computed, defineComponent, ref } from '@vue/composition-api'
 import language from '@/lang'
 import store from '@/store'
 
-// componets and mixins
-// import ActionMenu from '@theme/components/ADempiere/ActionMenu/index.vue'
+// Componets and Mixins
 import ActionMenu from '@theme/components/ADempiere/ActionMenu/index.vue'
 import DefaultTable from '@theme/components/ADempiere/DataTable/index.vue'
 import CollapseCriteria from '@theme/components/ADempiere/CollapseCriteria/index.vue'
@@ -97,7 +96,7 @@ import ModalDialog from '@theme/components/ADempiere/ModalDialog/index.vue'
 import PanelDefinition from '@theme/components/ADempiere/PanelDefinition/index.vue'
 import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp'
 
-// utils and helper methods
+// Utils and Helper Methods
 import {
   containerManager,
   isDisplayedColumn,
@@ -186,9 +185,6 @@ export default defineComponent({
     })
 
     const isReadyToSearch = computed(() => {
-      if (browserMetadata.value.awaitForValuesToQuery) {
-        return false
-      }
       return isEmptyValue(
         store.getters.getBrowserFieldsEmptyMandatory({
           containerUuid: browserUuid

@@ -209,6 +209,32 @@ export const runDeleteable = {
   }
 }
 
+export const clearQueryCriteria = {
+  name: language.t('smartBrowser.clearFields.title'),
+  description: language.t('smartBrowser.clearFields.description'),
+  enabled: ({ containerUuid }) => {
+    return true
+  },
+  isSvgIcon: true,
+  icon: 'layers-clear',
+  actionName: 'clearQueryCriteria',
+  uuid: null,
+  clearQueryCriteria: ({ containerUuid }) => {
+    store.dispatch('setBrowserDefaultValues', {
+      containerUuid
+    })
+
+    const emptyMandatory = store.getters.getBrowserFieldsEmptyMandatory({
+      containerUuid
+    })
+    if (isEmptyValue(emptyMandatory)) {
+      store.dispatch('getBrowserSearch', {
+        containerUuid
+      })
+    }
+  }
+}
+
 /**
  * Zoom in on the window associated with the smart browser
  * @param {string} uuid of window
