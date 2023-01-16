@@ -1,18 +1,20 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 import language from '@/lang'
 import router from '@/router'
@@ -89,7 +91,7 @@ export const runReport = {
     // always active
     return true
   },
-  svg: false,
+  isSvgIcon: false,
   icon: 'el-icon-document',
   actionName: 'runReport',
   uuid: null,
@@ -106,7 +108,7 @@ export const runReportAs = {
   enabled: ({ containerUuid }) => {
     return !isEmptyValue(store.getters.getStoredReportExportTypes(containerUuid))
   },
-  svg: false,
+  isSvgIcon: false,
   icon: 'el-icon-document',
   actionName: 'runReportAs',
   uuid: null,
@@ -124,7 +126,7 @@ export const runReportAsPrintFormat = {
   enabled: ({ containerUuid }) => {
     return !isEmptyValue(store.getters.getPrintFormatList(containerUuid))
   },
-  svg: false,
+  isSvgIcon: false,
   icon: 'el-icon-printer',
   actionName: 'runReportAsPrintFormat',
   uuid: null,
@@ -142,7 +144,7 @@ export const runReportAsView = {
   enabled: ({ containerUuid }) => {
     return !isEmptyValue(store.getters.getReportViewList(containerUuid))
   },
-  svg: false,
+  isSvgIcon: false,
   icon: 'el-icon-data-analysis',
   actionName: 'runReportAsView',
   uuid: null,
@@ -175,7 +177,7 @@ export const changeParameters = {
     }
     return false
   },
-  svg: false,
+  isSvgIcon: false,
   icon: 'el-icon-set-up',
   actionName: 'changeParameters',
   uuid: null,
@@ -184,6 +186,23 @@ export const changeParameters = {
     store.commit('setShowedModalDialog', {
       containerUuid,
       isShowed: true
+    })
+  }
+}
+
+export const clearParameters = {
+  name: language.t('report.clearParameters.title'),
+  description: language.t('report.clearParameters.description'),
+  enabled: ({ containerUuid }) => {
+    return true
+  },
+  isSvgIcon: true,
+  icon: 'layers-clear',
+  actionName: 'clearParameters',
+  uuid: null,
+  clearParameters: ({ containerUuid }) => {
+    store.dispatch('setReportDefaultValues', {
+      containerUuid
     })
   }
 }

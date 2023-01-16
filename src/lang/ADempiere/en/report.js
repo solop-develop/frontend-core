@@ -17,6 +17,10 @@
  */
 
 const report = {
+  clearParameters: {
+    title: 'Clear Parameters',
+    description: 'Clears the values by setting the default values'
+  },
   typeReport: 'Report Type',
   reportViews: 'ReportViews',
   printFormats: 'Print Formats',

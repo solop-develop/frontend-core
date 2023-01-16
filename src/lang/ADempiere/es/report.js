@@ -17,6 +17,10 @@
  */
 
 const report = {
+  clearParameters: {
+    title: 'Limpiar Parámetros',
+    description: 'Limpia los valores estableciendo los valores por defecto'
+  },
   typeReport: 'Tipo de Reporte',
   reportViews: 'Vistas de Reporte',
   printFormats: 'Formatos de Impresión',
