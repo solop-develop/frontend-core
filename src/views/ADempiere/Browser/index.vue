@@ -23,10 +23,17 @@
     key="browser-loaded"
     class="view-base browser-view"
   >
-    <el-card class="content-collapse card-browser" style="overflow: auto;position: absolute;height: 100%;">
+    <el-card class="content-collapse card-browser" style="overflow: auto;position: absolute;height: 100%;padding-bottom: 2%!important">
       <title-and-help
         :name="browserMetadata.name"
         :help="browserMetadata.help"
+      />
+      <action-menu
+        :container-manager="containerManager"
+        :container-uuid="browserUuid"
+        :actions-manager="actionsManager"
+        :relations-manager="relationsManager"
+        style="position: absolute;"
       />
       <div id="browser-query-criteria">
         <!-- uery Criteria -->
