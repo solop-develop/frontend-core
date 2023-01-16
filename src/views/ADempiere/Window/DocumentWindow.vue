@@ -216,14 +216,16 @@ export default defineComponent({
         return 'height: 100% !important'
       }
       if (isViewFullScreenParent.value) {
-        return 'height: 66% !important'
+        // return 'height: -webkit-fill-available'
+        return 'height: 100% !important'
       }
       return 'height: 50% !important'
     })
 
     const sizeTabChild = computed(() => {
       if (isViewFullScreenChild.value) {
-        return 'height: 66% !important'
+        // return 'height: -webkit-fill-available'
+        return 'height: 100% !important'
       }
       return 'height: 50% !important'
     })

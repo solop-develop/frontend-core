@@ -2,7 +2,7 @@
   <div id="appMain" class="app-main">
     <transition name="fade-transform" mode="out-in">
       <keep-alive :include="cachedViews">
-        <router-view :key="key" style="height: 100% !important;width: 100% !important;display: flow-root;sss" />
+        <router-view :key="key" style="height: 100% !important;width: 100% !important;display: contents;" />
       </keep-alive>
     </transition>
   </div>
