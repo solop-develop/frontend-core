@@ -182,6 +182,8 @@ export default {
     dataTable: {
       search: 'Buscar',
       selected: 'Seleccionados',
+      nextRecord: 'Siguiente',
+      previousRecord: 'Anteriror',
       recordsPage: 'Registros por Página',
       deleteSelection: 'Eliminar Registros Seleccionados',
       advancedQuery: 'Consulta Avanzada',

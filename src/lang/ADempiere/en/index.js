@@ -182,6 +182,8 @@ export default {
     dataTable: {
       search: 'Search',
       selected: 'Selected',
+      nextRecord: 'Next',
+      previousRecord: 'Previous',
       recordsPage: 'Records Page',
       deleteSelection: 'Delete Selected Records',
       advancedQuery: 'Advanced Query',
