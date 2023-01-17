@@ -45,7 +45,7 @@ const window = {
       addNote: 'Agregar Nota'
     },
     attachment: {
-      label: 'Adjunto',
+      label: 'Adjuntos',
       uploadFiles: 'Cargar Archivos',
       newFiles: 'Nuevos Archivos',
       error: 'Error A Guardar Archivos',
