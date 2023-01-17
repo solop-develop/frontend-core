@@ -101,6 +101,51 @@ export function isReadOnlyTab({ parentUuid, containerUuid }) {
   return false
 }
 
+export function isEditableRecord({ parentUuid, containerUuid }) {
+  const preferenceClientId = store.getters.getSessionContextClientId
+  // client id value of record
+  const clientIdRecord = store.getters.getValueOfField({
+    parentUuid,
+    containerUuid,
+    columnName: CLIENT
+  })
+  if (preferenceClientId !== clientIdRecord) {
+    return false
+  }
+
+  // is active value of record
+  const isActiveRecord = store.getters.getValueOfField({
+    parentUuid,
+    containerUuid,
+    columnName: ACTIVE
+  })
+  if (!convertStringToBoolean(isActiveRecord)) {
+    return false
+  }
+
+  // is processed value of record
+  const isProcessedRecord = store.getters.getValueOfField({
+    parentUuid,
+    containerUuid,
+    columnName: PROCESSED
+  })
+  if (convertStringToBoolean(isProcessedRecord)) {
+    return false
+  }
+
+  // is processing value of record
+  const isProcessingRecord = store.getters.getValueOfField({
+    parentUuid,
+    containerUuid,
+    columnName: PROCESSING
+  })
+  if (convertStringToBoolean(isProcessingRecord)) {
+    return false
+  }
+
+  return true
+}
+
 /**
  * Is displayed field in panel single record
  */
@@ -258,12 +303,24 @@ export const createNewRecord = {
       return false
     }
 
-    if (tab.isInsertRecord) {
-      const recordUuid = store.getters.getUuidOfContainer(containerUuid)
-      return !isEmptyValue(recordUuid)
+    if (!tab.isInsertRecord) {
+      return false
+    }
+    const recordUuid = store.getters.getUuidOfContainer(containerUuid)
+    if (isEmptyValue(recordUuid)) {
+      return false
     }
 
-    return false
+    if (!tab.isParentTab) {
+      const isEditable = isEditableRecord({
+        parentUuid
+      })
+      if (!isEditable) {
+        return false
+      }
+    }
+
+    return true
   },
   svg: false,
   icon: 'el-icon-circle-plus-outline',
@@ -459,36 +516,14 @@ export const deleteRecord = {
       if (isEmptyValue(selectionsRecords)) {
         return false
       }
-      let isEditaleParentRecord = true
       // TODO: Improve creating method to define if record is enabled
       if (!tab.isParentTab) {
-        // is active value of record
-        const isActiveRecord = store.getters.getValueOfField({
-          parentUuid,
-          columnName: ACTIVE
+        const isEditable = isEditableRecord({
+          parentUuid
         })
-        // client id value of record
-        const clientIdRecord = store.getters.getValueOfField({
-          parentUuid,
-          columnName: CLIENT
-        })
-        // is processed value of record
-        const isProcessedRecord = store.getters.getValueOfField({
-          parentUuid,
-          columnName: PROCESSED
-        })
-        // is processing value of record
-        const isProcessingRecord = store.getters.getValueOfField({
-          parentUuid,
-          columnName: PROCESSING
-        })
-        isEditaleParentRecord = clientIdRecord === preferenceClientId &&
-          convertStringToBoolean(isActiveRecord) &&
-          !convertStringToBoolean(isProcessedRecord) &&
-          !convertStringToBoolean(isProcessingRecord)
-      }
-      if (!isEditaleParentRecord) {
-        return false
+        if (!isEditable) {
+          return false
+        }
       }
       const isNotEditableAnyRecord = selectionsRecords.some(record => {
         return record[CLIENT] !== preferenceClientId ||
@@ -498,44 +533,11 @@ export const deleteRecord = {
         return false
       }
     } else {
-      // is active value of record
-      const isActiveRecord = store.getters.getValueOfField({
+      const isEditable = isEditableRecord({
         parentUuid,
-        containerUuid,
-        columnName: ACTIVE
+        containerUuid
       })
-      if (!convertStringToBoolean(isActiveRecord)) {
-        return false
-      }
-
-      // client id value of record
-      const clientIdRecord = store.getters.getValueOfField({
-        parentUuid,
-        containerUuid,
-        columnName: CLIENT
-      })
-      // evaluate client id context with record
-      if (clientIdRecord !== preferenceClientId) {
-        return false
-      }
-
-      // is processed value of record
-      const isProcessedRecord = store.getters.getValueOfField({
-        parentUuid,
-        containerUuid,
-        columnName: PROCESSED
-      })
-      if (convertStringToBoolean(isProcessedRecord)) {
-        return false
-      }
-
-      // is processing value of record
-      const isProcessingRecord = store.getters.getValueOfField({
-        parentUuid,
-        containerUuid,
-        columnName: PROCESSING
-      })
-      if (convertStringToBoolean(isProcessingRecord)) {
+      if (!isEditable) {
         return false
       }
     }
