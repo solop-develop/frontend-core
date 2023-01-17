@@ -20,7 +20,7 @@ import Vue from 'vue'
 import language from '@/lang'
 import router from '@/router'
 
-// api request methods
+// API Request Methods
 import {
   getEntities,
   updateEntity
@@ -28,11 +28,12 @@ import {
 import {
   deleteEntity
 } from '@/api/ADempiere/common/persistence.js'
-// constants
+
+// Constants
 import { UUID } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 
-// utils and helper methods
+// Utils and Helper Methods
 import { containerManager } from '@/utils/ADempiere/dictionary/window'
 import { getContextAttributes, generateContextKey } from '@/utils/ADempiere/contextUtils.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
