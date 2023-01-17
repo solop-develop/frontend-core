@@ -202,7 +202,7 @@ export default {
       fieldsList = storedTab.fieldsList
     }
 
-    const { linkColumnName, parentColumnName } = storedTab
+    const { isParentTab, linkColumnName, parentColumnName } = storedTab
 
     const attributesDisplayColumn = []
     const attributesObject = {}
@@ -238,7 +238,7 @@ export default {
           })
         }
         // get value on parent tab
-        if ([ACTIVE, PROCESSED, PROCESSING].includes(columnName)) {
+        if (!isParentTab && [ACTIVE, PROCESSED, PROCESSING].includes(columnName)) {
           parsedDefaultValue = rootGetters.getValueOfField({
             parentUuid,
             columnName

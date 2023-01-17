@@ -121,7 +121,7 @@ export const COLUMN_IS_ACTIVE = {
 
 export const COLUMN_PROCESSING = {
   columnName: PROCESSING,
-  defaultValue: true,
+  defaultValue: false,
   valueIsReadOnlyForm: false,
   isChangedAllForm: true
 }
