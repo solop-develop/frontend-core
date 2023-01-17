@@ -1,18 +1,20 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Yamel Senih ysenih@erpya.com www.erpya.com
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
@@ -115,6 +117,74 @@ export function getEntities({
     .then(response => {
       const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
       return convertEntityList(response)
+    })
+}
+
+/**
+ * Create entity
+ * @param {string} tabUuid
+ * @param {array} attributesList
+ */
+export function createEntity({
+  tabUuid,
+  attributesList
+}) {
+  attributesList = attributesList.map(parameter => {
+    return {
+      key: parameter.columnName,
+      value: parameter.value
+    }
+  })
+
+  return request({
+    url: '/user-interface/window/create-entity',
+    method: 'post',
+    data: {
+      tab_uuid: tabUuid,
+      attributes: attributesList
+    }
+  })
+    .then(entityCreateResponse => {
+      const { convertEntity } = require('@/utils/ADempiere/apiConverts/persistence.js')
+
+      return convertEntity(entityCreateResponse)
+    })
+}
+
+/**
+ * Update entity
+ * @param {string} tabUuid
+ * @param {number} recordId
+ * @param {string} recordUuid
+ * @param {array} attributesList
+ */
+export function updateEntity({
+  tabUuid,
+  recordId,
+  recordUuid,
+  attributesList
+}) {
+  attributesList = attributesList.map(parameter => {
+    return {
+      key: parameter.columnName,
+      value: parameter.value
+    }
+  })
+
+  return request({
+    url: '/user-interface/window/update-entity',
+    method: 'post',
+    data: {
+      tab_uuid: tabUuid,
+      id: recordId,
+      uuid: recordUuid,
+      attributes: attributesList
+    }
+  })
+    .then(entityUpdateResponse => {
+      const { convertEntity } = require('@/utils/ADempiere/apiConverts/persistence.js')
+
+      return convertEntity(entityUpdateResponse)
     })
 }
 
