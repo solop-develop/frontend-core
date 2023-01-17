@@ -224,6 +224,9 @@ Become a sponsor and get your logo on our README on GitHub with a link to your s
 Use [gRPC ADempiere Server](https://github.com/adempiere/adempiere-gRPC-Server) as gRPC provider.
 
 ```bash
+# Enable https to install packages
+git config --global url."https://".insteadOf git://
+
 # clone the project
 git clone -b experimental --recursive https://github.com/solop-develop/frontend-core.git
 

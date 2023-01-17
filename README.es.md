@@ -207,6 +207,9 @@ Sea un patrocinante y coloque su logo en nuestro LEEME en GitHub con un enlace d
 Use [gRPC ADempiere Server](https://github.com/adempiere/adempiere-gRPC-Server) como proveedor de gRPC.
 
 ```bash
+# Habilita https para instalar los paquetes
+git config --global url."https://".insteadOf git://
+
 # clone el proyecto
 git clone -b experimental --recursive https://github.com/solop-develop/frontend-core.git
 
