@@ -140,6 +140,7 @@ const windowManager = {
       columnName,
       value
     }) {
+      if (isEmptyValue(rowIndex) && isEmptyValue(state.tabData[containerUuid].recordsList[rowIndex])) return
       Vue.set(state.tabData[containerUuid].recordsList[rowIndex], columnName, value)
       // TODO: Change selection columns
     },

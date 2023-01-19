@@ -195,7 +195,8 @@ export default {
       showAllAvailableColumns: 'Mostrar Todas Columnas Disponibles',
       exportRecordTable: 'Exportar Registros Seleccionados',
       showTotal: 'Mostrar Totales',
-      hiddenTotal: 'Ocultar Totales'
+      hiddenTotal: 'Ocultar Totales',
+      batchEntry: 'Entrada por Lotes'
     },
     recentItems: {
       search: 'Filtrar por nombre, descripción o fecha',

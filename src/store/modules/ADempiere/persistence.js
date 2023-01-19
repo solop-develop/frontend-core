@@ -205,7 +205,8 @@ const persistence = {
       parentUuid,
       containerUuid,
       tableName,
-      recordUuid
+      recordUuid,
+      attributesList
     }) {
       return new Promise((resolve, reject) => {
         const { fieldsList } = rootGetters.getStoredTab(parentUuid, containerUuid)
@@ -215,31 +216,33 @@ const persistence = {
           recordUuid
         })
 
-        let attributesList = persistenceAttributesList
-          .filter(attribute => {
-            const { columnName } = attribute
+        if (isEmptyValue(attributesList)) {
+          attributesList = persistenceAttributesList
+            .filter(attribute => {
+              const { columnName } = attribute
 
-            // omit send to server (to create or update) columns manage by backend
-            if (columnName.startsWith(DISPLAY_COLUMN_PREFIX)) {
-              return false
-            }
-
-            const field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
-            if (!isEmptyValue(field)) {
-              if (field.isAlwaysUpdateable) {
-                return true
-              }
-              // prevent `PO.set_Value: Column not updateable`
-              if (!isEmptyValue(recordUuid) && !field.isUpdateable) {
+              // omit send to server (to create or update) columns manage by backend
+              if (columnName.startsWith(DISPLAY_COLUMN_PREFIX)) {
                 return false
               }
-              if (LOG_COLUMNS_NAME_LIST.includes(columnName)) {
-                return false
-              }
-            }
 
-            return true
-          })
+              const field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
+              if (!isEmptyValue(field)) {
+                if (field.isAlwaysUpdateable) {
+                  return true
+                }
+                // prevent `PO.set_Value: Column not updateable`
+                if (!isEmptyValue(recordUuid) && !field.isUpdateable) {
+                  return false
+                }
+                if (LOG_COLUMNS_NAME_LIST.includes(columnName)) {
+                  return false
+                }
+              }
+
+              return true
+            })
+        }
 
         if (!isEmptyValue(attributesList)) {
           if (!isEmptyValue(recordUuid)) {
