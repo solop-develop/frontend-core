@@ -29,6 +29,7 @@ const window = {
   undoNew: 'Undo New Record',
   containerInfo: {
     notes: 'Notes List',
+    issues: 'Request',
     emptyNote: 'Cannot create a blank note',
     accountingInformation: {
       title: 'Accounting Information',

@@ -33,7 +33,7 @@ import infoSearch from './fieldFormSearch'
 import report from './report.js'
 import window from './window'
 import workflow from './workflow'
-
+import issues from './form/issues'
 /**
  * Translations of Forms
  */
@@ -68,6 +68,7 @@ export default {
   VPayPrint,
   report,
   workflow,
+  issues,
 
   language: 'Language',
   notifications: {

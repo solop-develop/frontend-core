@@ -419,3 +419,52 @@ export function requestCreateChatEntry({
       return convertChatEntry(chatEntryResponse)
     })
 }
+
+/**
+ * Issues exist
+ * @param {string}  tableName
+ * @param {number}  recordId
+ * @param {string}  recordUuid
+ */
+export function requestExistsIssues({
+  tableName,
+  recordId,
+  recordUuid
+}) {
+  return request({
+    url: '/user-interface/component/issue/exists-issues',
+    method: 'get',
+    params: {
+      record_id: recordId,
+      record_uuid: recordUuid,
+      table_name: tableName
+    }
+  })
+    .then(existsIssues => {
+      return existsIssues
+    })
+}
+/**
+ * Issues List from Window
+ * @param {string}  tableName
+ * @param {number}  recordId
+ * @param {string}  recordUuid
+ */
+export function requestListExists({
+  tableName,
+  recordId,
+  recordUuid
+}) {
+  return request({
+    url: '/user-interface/component/issue/list-issues',
+    method: 'post',
+    data: {
+      record_id: recordId,
+      record_uuid: recordUuid,
+      table_name: tableName
+    }
+  })
+    .then(listExists => {
+      return listExists
+    })
+}

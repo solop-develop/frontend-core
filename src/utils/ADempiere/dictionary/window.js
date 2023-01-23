@@ -1621,6 +1621,14 @@ export const containerManager = {
     })
   },
 
+  getListIssues({ tableName, recordId, recordUuid }) {
+    return store.dispatch('listIssues', {
+      tableName,
+      recordId,
+      recordUuid
+    })
+  },
+
   getAttachment({ tableName, recordId, recordUuid }) {
     return store.dispatch('findAttachment', {
       tableName,

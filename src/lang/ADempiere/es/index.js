@@ -44,6 +44,7 @@ import pointOfSales from './form/pointOfSales'
 import listStoreProduct from './form/listStoreProduct'
 import timeControl from './form/timeControl'
 import VPayPrint from './form/VPayPrint'
+import issues from './form/issues'
 
 export default {
   actionMenu,
@@ -66,6 +67,7 @@ export default {
   listStoreProduct,
   report,
   workflow,
+  issues,
 
   language: 'Idioma',
   timeControl,

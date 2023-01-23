@@ -30,6 +30,7 @@ const window = {
   containerInfo: {
     notes: 'Notas',
     emptyNote: 'No se puede crear una nota en blanco',
+    issues: 'Solicitudes',
     accountingInformation: {
       title: 'Información Contable',
       selection: 'Selección'
