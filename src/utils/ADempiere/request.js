@@ -37,6 +37,10 @@ export function request(requestValues) {
   }
   requestValues.params.token = getToken()
   requestValues.params.language = getLanguage() || 'en_US'
+
+  // TODO: Add expires data on headers request
+  requestValues.params.ts = (new Date()).getTime()
+
   return new Promise((resolve, reject) => {
     requestAPI(requestValues)
       .then(response => {
