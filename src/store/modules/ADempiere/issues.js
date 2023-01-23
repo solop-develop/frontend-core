@@ -1,30 +1,38 @@
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+// API Request Methods
 import {
   requestListExists
 } from '@/api/ADempiere/window'
+
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 // import { showMessage } from '@/utils/ADempiere/notification'
 
 const initStateChatEntries = {
   listIssues: [],
-  // listRecordChats: [],
-  // listChatEntries: [],
   isLoaded: false
-  // chatText: '',
-  // isNote: false
 }
 
 export default {
   state: initStateChatEntries,
   mutations: {
-    setChatText(state, payload) {
-      state.chatText = payload
-    },
-    addListChatEntries(state, payload) {
-      state.listChatEntries = payload
-    },
-    isNote(state, payload) {
-      state.isNote = payload
-    },
     // new
     setListIssues(state, payload) {
       state.listIssues = payload
@@ -34,37 +42,6 @@ export default {
     }
   },
   actions: {
-    // createChatEntry({ commit, dispatch }, {
-    //   tableName,
-    //   recordId,
-    //   comment
-    // }) {
-    //   return new Promise(resolve => {
-    //     requestCreateChatEntry({
-    //       tableName,
-    //       recordId,
-    //       comment
-    //     })
-    //       .then((response) => {
-    //         commit('isNote', true)
-    //         commit('setChatText', '')
-
-    //         dispatch('listChatEntries', {
-    //           tableName,
-    //           recordId
-    //         })
-    //         resolve(response)
-    //       })
-    //       .catch(error => {
-    //         console.warn(`Error in Add New Note: ${error.message}. Code: ${error.code}.`)
-    //         showMessage({
-    //           type: 'error',
-    //           message: error.message
-    //         })
-    //         resolve(error)
-    //       })
-    //   })
-    // },
     listIssues({ commit }, {
       tableName,
       recordId,
@@ -82,7 +59,7 @@ export default {
       })
         .then(responseList => {
           const { records } = responseList
-          console.log({ records })
+
           if (isEmptyValue(records)) {
             commit('setListIssues', [])
           }
@@ -91,24 +68,11 @@ export default {
         })
         .catch(error => {
           commit('setIsLoadListIssues', false)
-          commit('addListChatEntries', [])
-          console.warn(`Error getting List Chat: ${error.message}. Code: ${error.code}.`)
+          console.warn(`Error getting List Issues: ${error.message}. Code: ${error.code}.`)
         })
     }
   },
   getters: {
-    // getChatTextLong: (state) => {
-    //   return state.chatText
-    // },
-    // getListRecordChats: (state) => {
-    //   return state.listRecordChats.entityChatsList
-    // },
-    // getChatEntries: (state) => {
-    //   return state.listChatEntries
-    // },
-    // getIsNote: (state) => {
-    //   return state.isNote
-    // },
     getListIssues: (state) => {
       return state.listIssues
     },
