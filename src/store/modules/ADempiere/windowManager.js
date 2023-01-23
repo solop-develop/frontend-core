@@ -347,12 +347,17 @@ const windowManager = {
             let currentRecordUuid
             // update current record
             if (!isEmptyValue(dataToStored)) {
-              let currentRow = dataToStored.at(0) // set first record
+              let currentRow = {
+                // set first record
+                ...dataToStored.at(0)
+              }
               const recordUuid = rootGetters.getUuidOfContainer(containerUuid)
               if (!isEmptyValue(recordUuid) && storedPage === pageNumber) {
                 const recordFromUuid = dataToStored.find(record => record[UUID] === recordUuid)
                 if (!isEmptyValue(recordFromUuid)) {
-                  currentRow = recordFromUuid
+                  currentRow = {
+                    ...recordFromUuid
+                  }
                 }
               }
               currentRecordUuid = currentRow[UUID]
