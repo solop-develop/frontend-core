@@ -338,16 +338,16 @@ export const createNewRecord = {
     if (tab.isParentTab && tab.index > 0) {
       return false
     }
-    // const recordUuid = store.getters.getUuidOfContainer(containerUuid)
-    // if (isEmptyValue(recordUuid)) {
-    //   return false
-    // }
 
-    // // set old record
-    // store.commit('setRecordUuidOnPanel', {
-    //   containerUuid,
-    //   recordUuid
-    // })
+    // if (tab.value.isShowedTableRecords) {
+    //   store.dispatch('changeTabAttribute', {
+    //     attributeName: 'isShowedTableRecords',
+    //     attributeNameControl: undefined,
+    //     attributeValue: false,
+    //     parentUuid: props.parentUuid,
+    //     containerUuid
+    //   })
+    // }
 
     store.dispatch('setTabDefaultValues', {
       parentUuid,
@@ -426,6 +426,12 @@ export const undoChange = {
       recordUuid: row[UUID]
     }, {
       root: true
+    })
+
+    // remove row on table
+    store.commit('removeTabRow', {
+      containerUuid,
+      index: 0
     })
 
     const tab = store.getters.getStoredTab(parentUuid, containerUuid)

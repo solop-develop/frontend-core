@@ -27,9 +27,11 @@ import { requestWindowMetadata } from '@/api/ADempiere/dictionary/window.js'
 import { CLIENT } from '@/utils/ADempiere/constants/systemColumns'
 import { containerManager } from '@/utils/ADempiere/dictionary/window'
 import { DISPLAY_COLUMN_PREFIX, IS_ADVANCED_QUERY } from '@/utils/ADempiere/dictionaryUtils'
+import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { convertArrayKeyValueToObject } from '@/utils/ADempiere/formatValue/iterableFormat'
 import {
   generateWindow,
   createNewRecord,
@@ -664,6 +666,23 @@ export default {
 
       // return values
       resolve(defaultAttributes)
+
+      // add new row on table
+      const defaultRowAttributes = convertArrayKeyValueToObject({
+        array: defaultAttributes
+      })
+      const rowDefaultValues = {
+        ...defaultRowAttributes,
+        ...ROW_ATTRIBUTES,
+        isNewRow: true,
+        isEditRow: true
+      }
+      commit('setTabRow', {
+        containerUuid,
+        row: rowDefaultValues
+      }, {
+        root: true
+      })
 
       // update records and logics on child tabs
       tab.childTabs

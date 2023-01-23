@@ -125,15 +125,41 @@ const windowManager = {
     },
 
     setTabRow(state, { containerUuid, row, index }) {
-      const recordsList = state.tabData[containerUuid].recordsList
+      let recordsList = state.tabData[containerUuid].recordsList
       if (!isEmptyValue(index)) {
-        recordsList.splice(index, 1, row)
+        recordsList.splice(index, 1, {
+          ...row,
+          rowIndex: index
+        })
       } else {
         recordsList.unshift(row)
+
+        recordsList = recordsList.map((rowItem, rowIndex) => {
+          return {
+            ...rowItem,
+            rowIndex
+          }
+        })
       }
 
       Vue.set(state.tabData[containerUuid], 'recordsList', recordsList)
     },
+    removeTabRow(state, { containerUuid, index = 0 }) {
+      // temporal record list
+      let recordsList = state.tabData[containerUuid].recordsList
+      // delete an item
+      recordsList.splice(index, 1)
+      // to set index
+      recordsList = recordsList.map((rowItem, rowIndex) => {
+        return {
+          ...rowItem,
+          rowIndex
+        }
+      })
+
+      Vue.set(state.tabData[containerUuid], 'recordsList', recordsList)
+    },
+
     setTabCell(state, {
       containerUuid,
       rowIndex,
@@ -398,10 +424,10 @@ const windowManager = {
               })
             } else {
               // set default values to create if without records response
-              dispatch('setTabDefaultValues', {
-                parentUuid,
-                containerUuid
-              })
+              // dispatch('setTabDefaultValues', {
+              //   parentUuid,
+              //   containerUuid
+              // })
             }
 
             const contextKey = generateContextKey(contextAttributesList, 'key')
@@ -419,6 +445,14 @@ const windowManager = {
               isLoading: false,
               recordCount: dataResponse.recordCount
             })
+
+            if (isEmptyValue(dataToStored)) {
+              // set default values to create if without records response
+              dispatch('setTabDefaultValues', {
+                parentUuid,
+                containerUuid
+              })
+            }
 
             resolve(dataToStored)
           })
