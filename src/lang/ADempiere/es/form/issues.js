@@ -17,12 +17,13 @@
  */
 
 const issues = {
-  documentNo: 'Numero de Documento',
-  issues: 'Asunto',
+  documentNo: 'Número de Documento',
+  issues: 'Cuestión',
   summary: 'Resumen',
   created: 'Creado',
   priority: 'Prioridad',
   status: 'Estatus',
+  subject: 'Asunto',
   typeOfRequest: 'Tipo de Solicitud',
   assigned: 'Asignado',
   request: 'Solicitud'
