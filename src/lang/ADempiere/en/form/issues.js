@@ -23,7 +23,7 @@ const issues = {
   summary: 'Summary',
   created: 'Created',
   priority: 'Priority',
-  status: 'Status",
+  status: 'Status',
   typeOfRequest: 'Type of Request',
   assigned: 'Assigned',
   request: 'Request'
