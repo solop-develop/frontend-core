@@ -18,7 +18,13 @@
 
 // API Request Methods
 import {
-  requestListExists
+  requestListExists,
+  createIssues,
+  updateIssues,
+  listIssueComments,
+  createIssueComment,
+  updateIssueComment,
+  deleteIssueComment
 } from '@/api/ADempiere/window'
 
 // Utils and Helper Methods
@@ -27,7 +33,10 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 const initStateChatEntries = {
   listIssues: [],
-  isLoaded: false
+  isLoaded: false,
+  isNewIssues: false,
+  currentIssues: {},
+  listComments: []
 }
 
 export default {
@@ -39,10 +48,19 @@ export default {
     },
     setIsLoadListIssues(state, loading) {
       state.isLoaded = loading
+    },
+    setNewIssues(state, newIssues) {
+      state.isNewIssues = newIssues
+    },
+    setCurrentIssues(state, current) {
+      state.currentIssues = current
+    },
+    setListComments(state, comments) {
+      state.listComments = comments
     }
   },
   actions: {
-    listIssues({ commit }, {
+    listRequest({ commit }, {
       tableName,
       recordId,
       recordUuid,
@@ -70,7 +88,189 @@ export default {
           commit('setIsLoadListIssues', false)
           console.warn(`Error getting List Issues: ${error.message}. Code: ${error.code}.`)
         })
+    },
+    newIssues({ commit, dispatch }, {
+      tableName,
+      recordId,
+      recordUuid,
+      subject,
+      summary,
+      requestTypeId,
+      requestTypeUuid,
+      salesRepresentativeId,
+      salesRepresentativeUuid,
+      statusId,
+      statusUuid,
+      priorityValue
+    }) {
+      return new Promise((resolve, reject) => {
+        return createIssues({
+          tableName,
+          recordId,
+          recordUuid,
+          subject,
+          summary,
+          requestTypeId,
+          requestTypeUuid,
+          salesRepresentativeId,
+          salesRepresentativeUuid,
+          statusId,
+          statusUuid,
+          priorityValue
+        })
+          .then(response => {
+            commit('setCurrentIssues', response)
+            resolve(response)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
+    },
+    editIssues({ commit }, {
+      id,
+      uuid,
+      subject,
+      summary,
+      requestTypeId,
+      requestTypeUuid,
+      salesRepresentativeId,
+      salesRepresentativeUuid,
+      statusId,
+      statusUuid,
+      priorityValue
+    }) {
+      return new Promise((resolve, reject) => {
+        return updateIssues({
+          id,
+          uuid,
+          subject,
+          summary,
+          requestTypeId,
+          requestTypeUuid,
+          salesRepresentativeId,
+          salesRepresentativeUuid,
+          statusId,
+          statusUuid,
+          priorityValue
+        })
+          .then(response => {
+            commit('setCurrentIssues', response)
+            resolve(response)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
+    },
+    changeCurrentIssues({ commit, dispatch }, issues) {
+      commit('setCurrentIssues', issues)
+      dispatch('listComments', issues)
+    },
+    listComments({ commit }, {
+      id,
+      uuid
+    }) {
+      return new Promise((resolve, reject) => {
+        return listIssueComments({
+          issueId: id,
+          issueUuid: uuid
+        })
+          .then(response => {
+            const { records } = response
+            if (isEmptyValue(records)) {
+              commit('setListComments', [])
+            }
+            const list = records.map(comment => {
+              return {
+                ...comment,
+                isEdit: false
+              }
+            })
+            commit('setListComments', list)
+            resolve(response)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
+    },
+    newComments({ dispatch }, {
+      id,
+      uuid,
+      result,
+      dateNextAction
+    }) {
+      return new Promise((resolve, reject) => {
+        return createIssueComment({
+          issueId: id,
+          issueUuid: uuid,
+          result,
+          dateNextAction
+        })
+          .then(response => {
+            dispatch('listComments', {
+              id,
+              uuid
+            })
+            resolve(response)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
+    },
+    updateComments({ dispatch }, {
+      id,
+      uuid,
+      result,
+      issuesId,
+      issuesUuid,
+      dateNextAction
+    }) {
+      return new Promise((resolve, reject) => {
+        return updateIssueComment({
+          issueId: id,
+          issueUuid: uuid,
+          result,
+          dateNextAction
+        })
+          .then(response => {
+            dispatch('listComments', {
+              id: issuesId,
+              uuid: issuesUuid
+            })
+            resolve(response)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
+    },
+    deleteComments({ dispatch }, {
+      id,
+      uuid,
+      issuesId,
+      issuesUuid
+    }) {
+      return new Promise((resolve, reject) => {
+        return deleteIssueComment({
+          issueId: id,
+          issueUuid: uuid
+        })
+          .then(response => {
+            dispatch('listComments', {
+              id: issuesId,
+              uuid: issuesUuid
+            })
+            resolve(response)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
     }
+
   },
   getters: {
     getListIssues: (state) => {
@@ -78,6 +278,15 @@ export default {
     },
     getIsLoadListIssues: (state) => {
       return state.isLoaded
+    },
+    getNewIssues: (state) => {
+      return state.isNewIssues
+    },
+    getCurrentIssues: (state) => {
+      return state.currentIssues
+    },
+    getListComments: (state) => {
+      return state.listComments
     }
   }
 }

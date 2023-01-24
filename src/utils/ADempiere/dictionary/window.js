@@ -1628,7 +1628,7 @@ export const containerManager = {
   },
 
   getListIssues({ tableName, recordId, recordUuid }) {
-    return store.dispatch('listIssues', {
+    return store.dispatch('listRequest', {
       tableName,
       recordId,
       recordUuid

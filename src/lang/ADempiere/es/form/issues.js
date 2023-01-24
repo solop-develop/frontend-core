@@ -18,9 +18,9 @@
 
 const issues = {
   documentNo: 'Número de Documento',
-  issues: 'Cuestión',
+  issues: 'Asunto',
   summary: 'Resumen',
-  created: 'Creado',
+  created: 'Creado Por',
   priority: 'Prioridad',
   status: 'Estatus',
   subject: 'Asunto',
