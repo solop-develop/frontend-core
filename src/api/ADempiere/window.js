@@ -650,6 +650,80 @@ export function listIssueComments({
 }
 
 /**
+ * POST Update Issue
+ *
+ * req.query.token - user token
+ * req.query.language - login language
+ * req.body.id - id of record
+ * req.body.uuid - uuid of record
+ * req.body.subject - subject
+ * req.body.summary - summary
+ * req.body.requestTypeId - request type id
+ * req.body.requestTypeUuid - request type uuid
+ */
+
+export function updateIssue({
+  id,
+  uuid,
+  subject,
+  summary,
+  requestTypeId,
+  requestTypeUuid,
+  salesRepresentativeId,
+  salesRepresentativeUuid,
+  statusId,
+  statusUuid,
+  priorityValue
+}) {
+  return request({
+    url: '/user-interface/component/issue/update-issue',
+    method: 'post',
+    data: {
+      id,
+      uuid,
+      subject,
+      summary,
+      request_type_id: requestTypeId,
+      request_type_uuid: requestTypeUuid,
+      sales_representative_id: salesRepresentativeId,
+      sales_representative_uuid: salesRepresentativeUuid,
+      status_id: statusId,
+      status_uuid: statusUuid,
+      priority_value: priorityValue
+    }
+  })
+    .then(listComments => {
+      return listComments
+    })
+}
+
+/**
+ * POST Delete Issue
+ *
+ * req.query.token - user token
+ * req.query.language - login language
+ * req.body.id - id of record
+ * req.body.uuid - uuid of record
+ */
+
+export function deleteIssue({
+  id,
+  uuid
+}) {
+  return request({
+    url: '/user-interface/component/issue/delete-issue',
+    method: 'post',
+    data: {
+      id,
+      uuid
+    }
+  })
+    .then(listComments => {
+      return listComments
+    })
+}
+
+/**
  * POST Create Issue Comment
  *
  * req.query.token - user token
@@ -714,7 +788,7 @@ export function updateIssueComment({
 }
 
 /**
-  * POST Delete Issue
+  * POST Delete Issue Comments
   *
   * req.query.token - user token
   * req.query.language - login language

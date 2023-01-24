@@ -21,6 +21,7 @@ import {
   requestListExists,
   createIssues,
   updateIssues,
+  deleteIssue,
   listIssueComments,
   createIssueComment,
   updateIssueComment,
@@ -81,7 +82,13 @@ export default {
           if (isEmptyValue(records)) {
             commit('setListIssues', [])
           }
-          commit('setListIssues', records)
+          const list = records.map(issues => {
+            return {
+              ...issues,
+              isEdit: false
+            }
+          })
+          commit('setListIssues', list)
           commit('setIsLoadListIssues', false)
         })
         .catch(error => {
@@ -120,6 +127,7 @@ export default {
         })
           .then(response => {
             commit('setCurrentIssues', response)
+            dispatch('listComments', response)
             resolve(response)
           })
           .catch(error => {
@@ -156,6 +164,35 @@ export default {
         })
           .then(response => {
             commit('setCurrentIssues', response)
+            resolve(response)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
+    },
+    deleteIssues({ commit, dispatch }, {
+      id,
+      uuid,
+      recordId,
+      tableName,
+      recordUuid
+    }) {
+      return new Promise((resolve, reject) => {
+        return deleteIssue({
+          id,
+          uuid,
+          tableName,
+          recordId,
+          recordUuid
+        })
+          .then(response => {
+            commit('setCurrentIssues', response)
+            dispatch('listRequest', {
+              tableName,
+              recordId,
+              recordUuid
+            })
             resolve(response)
           })
           .catch(error => {
