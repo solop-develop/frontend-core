@@ -48,3 +48,13 @@ export function requestLisDashboards({
       }
     })
 }
+
+export function listNotifiications() {
+  return request({
+    url: '/dashboard/list-notifications',
+    method: 'get'
+  })
+    .then(notificationsResponse => {
+      return notificationsResponse
+    })
+}
