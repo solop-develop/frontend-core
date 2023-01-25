@@ -1,5 +1,5 @@
 <template>
-  <div id="appMain" class="app-main">
+  <div id="appMain" :class="styleForm">
     <transition name="fade-transform" mode="out-in">
       <keep-alive :include="cachedViews">
         <router-view :key="key" style="height: 100% !important;width: 100% !important;display: contents;" />
@@ -18,6 +18,11 @@ export default {
     },
     key() {
       return this.$route.path
+    },
+    styleForm() {
+      console.log(this.$route)
+      if (this.$route.meta.uuid === '8e4265c6-fb40-11e8-a479-7a0060f0aa01') return 'app-main-from'
+      return 'app-main'
     }
   },
 
@@ -42,6 +47,12 @@ export default {
 .app-main {
   /* 50= navbar  50  */
   max-height: calc(100vh - 50px);
+  width: 100%;
+  position: relative;
+  overflow: auto;
+}
+
+.app-main-from {
   width: 100%;
   position: relative;
   overflow: auto;

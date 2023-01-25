@@ -188,3 +188,56 @@ export function runDocAction({
     }
   })
 }
+
+/**
+ * Process Workflow Activity
+ * @param {number} id
+ * @param {string} uuid
+ * @param {string} message
+ * @param {boolean} isApproved
+ */
+export function processWorkflowActivity({
+  id,
+  uuid,
+  message,
+  isApproved
+}) {
+  return request({
+    url: '/workflow/process-workflow-activity',
+    method: 'post',
+    data: {
+      id,
+      uuid,
+      message,
+      is_approved: isApproved
+    }
+  })
+}
+
+/**
+ * Forward Workflow Activity
+ * @param {number} id
+ * @param {string} uuid
+ * @param {string} message
+ * @param {number} userId
+ * @param {string} userUuid
+ */
+export function forwardWorkflowActivity({
+  id,
+  uuid,
+  message,
+  userId,
+  userUuid
+}) {
+  return request({
+    url: '/workflow/forward-workflow-activity',
+    method: 'post',
+    data: {
+      id,
+      uuid,
+      message,
+      user_id: userId,
+      user_uuid: userUuid
+    }
+  })
+}
