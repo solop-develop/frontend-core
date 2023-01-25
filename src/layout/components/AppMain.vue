@@ -20,8 +20,9 @@ export default {
       return this.$route.path
     },
     styleForm() {
-      console.log(this.$route)
-      if (this.$route.meta.uuid === '8e4265c6-fb40-11e8-a479-7a0060f0aa01') return 'app-main-from'
+      if (this.$route.meta.uuid === '8e4265c6-fb40-11e8-a479-7a0060f0aa01') {
+        return 'app-main-from'
+      }
       return 'app-main'
     }
   },
