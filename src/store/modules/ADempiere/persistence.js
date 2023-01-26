@@ -35,6 +35,7 @@ import {
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import { getContextDefaultValue } from '@/utils/ADempiere/dictionaryUtils.js'
+import { isSupportLookup } from '@/utils/ADempiere/references'
 
 const persistence = {
   state: {
@@ -96,11 +97,10 @@ const persistence = {
     // clear old values
     clearPersistenceQueue(state, {
       containerUuid,
-      recordUuid,
-      logs = {}
+      recordUuid
     }) {
       const key = containerUuid + '_' + recordUuid
-      Vue.set(state.persistence, key, logs)
+      Vue.set(state.persistence, key, {})
 
       // state.persistence[containerUuid] = {
       //   [recordUuid]: new Map()
@@ -136,6 +136,27 @@ const persistence = {
             ...field
           })
           oldValue = defaultValue
+        }
+
+        if (isSupportLookup(field.displayType)) {
+          let displayedValue
+          if (!isEmptyValue(currentRecord)) {
+            displayedValue = currentRecord[field.displayColumnName]
+          }
+          if (isEmptyValue(currentRecord) || oldValue === value) {
+            const defaultValue = getContextDefaultValue({
+              ...field,
+              columnName: field.displayColumnName
+            })
+            displayedValue = defaultValue
+          }
+          commit('addChangeToPersistenceQueue', {
+            containerUuid,
+            recordUuid: getters.getUuidOfContainer(field.containerUuid),
+            columnName: field.displayColumnName,
+            oldValue: displayedValue,
+            value: undefined
+          })
         }
 
         commit('addChangeToPersistenceQueue', {
@@ -367,45 +388,34 @@ const persistence = {
         recordUuid
       })
 
-      // set old value as current value
-      const LastChange = valuesChanges[valuesChanges.length - 1]
-      const { columnName, oldValue } = LastChange
+      valuesChanges.forEach(changes => {
+        const { columnName, oldValue } = changes
 
-      commit('updateValueOfField', {
-        parentUuid,
-        containerUuid,
-        columnName,
-        recordUuid,
-        value: oldValue
-      }, {
-        root: true
+        commit('updateValueOfField', {
+          parentUuid,
+          containerUuid,
+          columnName,
+          recordUuid,
+          value: oldValue
+        }, {
+          root: true
+        })
       })
 
       dispatch('clearPersistenceQueue', {
         containerUuid,
-        columnName,
-        recordUuid,
-        logs: valuesChanges
+        recordUuid
       })
     },
 
     // clear old values
     clearPersistenceQueue({ commit }, {
       containerUuid,
-      recordUuid,
-      columnName,
-      logs
+      recordUuid
     }) {
-      let changeLogs
-      if (!isEmptyValue(logs)) {
-        changeLogs = logs.filter(log => log.columnName !== columnName)
-      }
-
       commit('clearPersistenceQueue', {
         containerUuid,
-        recordUuid,
-        columnName,
-        logs: changeLogs
+        recordUuid
       })
     }
   },
@@ -413,9 +423,10 @@ const persistence = {
   getters: {
     getPersistenceAttributes: (state) => ({ containerUuid, recordUuid }) => {
       const key = containerUuid + '_' + recordUuid
+      const changes = state.persistence[key]
 
-      if (!isEmptyValue(state.persistence[key])) {
-        return Object.values(state.persistence[key])
+      if (!isEmptyValue(changes)) {
+        return Object.values(changes)
           // only changes
           .filter(attribute => {
             const { value, oldValue } = attribute
@@ -438,8 +449,9 @@ const persistence = {
       recordUuid
     }) => {
       const key = containerUuid + '_' + recordUuid
+      const changes = state.persistence[key]
 
-      if (!isEmptyValue(state.persistence[key])) {
+      if (!isEmptyValue(changes)) {
         if (isEmptyValue(recordUuid)) {
           const defaultRow = rootGetters.getTabParsedDefaultValue({
             parentUuid,
@@ -448,7 +460,7 @@ const persistence = {
             formatToReturn: 'object'
           })
 
-          return Object.values(state.persistence[key])
+          return Object.values(changes)
             // only changes with default value
             .filter(attribute => {
               const { value, columnName } = attribute
@@ -456,7 +468,7 @@ const persistence = {
             })
         }
 
-        return Object.values(state.persistence[key])
+        return Object.values(changes)
           // only changes
           .filter(attribute => {
             const { value, oldValue } = attribute
