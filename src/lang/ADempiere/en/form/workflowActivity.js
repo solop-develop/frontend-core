@@ -20,7 +20,10 @@ const workflowActivity = {
   title: 'Your Workflow Activities',
   filtersSearch: {
     history: 'History records',
-    forward: 'Re-send'
+    forward: 'Re-send',
+    user: 'User',
+    approve: 'Approve',
+    workFlowDiagram: 'Work Flow Diagram'
   },
   table: {
     priority: 'Priority',

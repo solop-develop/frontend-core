@@ -20,7 +20,10 @@ const workflowActivity = {
   title: 'Sus Actividades de Flujo de Trabajo',
   filtersSearch: {
     history: 'Registros históricos',
-    forward: 'Re-enviar'
+    forward: 'Re-enviar',
+    user: 'Usuario',
+    approve: 'Aprobar',
+    workFlowDiagram: 'Diagrama del Flujo de Trabajo'
   },
   table: {
     priority: 'Prioridad',
