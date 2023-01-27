@@ -463,7 +463,7 @@ export const containerManager = {
     fieldAttributes
   }) {
     return requestSaveBrowseCustomization({
-      processUuid: containerUuid,
+      browseUuid: containerUuid,
       level,
       levelId,
       levelUuid,

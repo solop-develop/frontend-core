@@ -31,7 +31,7 @@ import { request } from '@/utils/ADempiere/request'
 export function requestSaveBrowseCustomization({
   browseUuid,
   level,
-  leveId,
+  levelId,
   levelUuid,
   fieldAttributes
 }) {
@@ -41,7 +41,7 @@ export function requestSaveBrowseCustomization({
     data: {
       browse_uuid: browseUuid,
       level,
-      level_id: leveId,
+      level_id: levelId,
       level_uuid: levelUuid,
       field_attributes: fieldAttributes
     }

@@ -33,8 +33,7 @@ import { YES_NO } from '@/utils/ADempiere/references'
 
 // API Request Methods
 import { getEntity } from '@/api/ADempiere/user-interface/persistence'
-import { requestSaveWindowCustomization } from '@/api/ADempiere/user-customization/window'
-
+import { requestSaveWindowCustomization } from '@/api/ADempiere/user-customization/window.js'
 // Utils and Helpers Methods
 import evaluator from '@/utils/ADempiere/evaluator'
 import { getContext } from '@/utils/ADempiere/contextUtils'
