@@ -24,6 +24,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { generateField } from '@/utils/ADempiere/dictionaryUtils'
 import { sortFields } from '@/utils/ADempiere/dictionary/panel'
 import { BUTTON, isAddRangeField, isHiddenField } from '@/utils/ADempiere/references'
+import { requestSaveProcessCustomization } from '@/api/ADempiere/user-customization/process'
 
 /**
  * Is displayed field parameter in process/report panel
@@ -144,6 +145,7 @@ export function generateProcess({
     ...additionalAttributes,
     isAssociated: Boolean(containerUuidAssociated),
     containerUuidAssociated,
+    sortOrderColumnName: 'sequence',
     fieldsList
   }
 
@@ -328,6 +330,22 @@ export const containerManager = {
       attributeName,
       attributeNameControl,
       attributeValue
+    })
+  },
+
+  applyCustomization({
+    containerUuid,
+    level,
+    levelId,
+    levelUuid,
+    fieldAttributes
+  }) {
+    return requestSaveProcessCustomization({
+      processUuid: containerUuid,
+      level,
+      levelId,
+      levelUuid,
+      fieldAttributes
     })
   }
 }

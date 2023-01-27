@@ -19,6 +19,9 @@
 import language from '@/lang'
 import store from '@/store'
 
+// API Request Methods
+import { requestSaveBrowseCustomization } from '@/api/ADempiere/user-customization/browse'
+
 // Utils and Helpers Methods
 import { isHiddenField, BUTTON } from '@/utils/ADempiere/references'
 import { showMessage, showNotification } from '@/utils/ADempiere/notification.js'
@@ -449,6 +452,22 @@ export const containerManager = {
       attributeName,
       attributeNameControl,
       attributeValue
+    })
+  },
+
+  applyCustomization({
+    containerUuid,
+    level,
+    levelId,
+    levelUuid,
+    fieldAttributes
+  }) {
+    return requestSaveBrowseCustomization({
+      processUuid: containerUuid,
+      level,
+      levelId,
+      levelUuid,
+      fieldAttributes
     })
   }
 }

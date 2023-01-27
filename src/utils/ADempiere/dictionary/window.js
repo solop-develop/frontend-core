@@ -33,6 +33,7 @@ import { YES_NO } from '@/utils/ADempiere/references'
 
 // API Request Methods
 import { getEntity } from '@/api/ADempiere/user-interface/persistence'
+import { requestSaveWindowCustomization } from '@/api/ADempiere/user-customization/window'
 
 // Utils and Helpers Methods
 import evaluator from '@/utils/ADempiere/evaluator'
@@ -1705,6 +1706,22 @@ export const containerManager = {
       attributeValue,
       parentUuid,
       containerUuid
+    })
+  },
+
+  applyCustomization({
+    containerUuid,
+    level,
+    levelId,
+    levelUuid,
+    fieldAttributes
+  }) {
+    return requestSaveWindowCustomization({
+      tabUuid: containerUuid,
+      level,
+      levelId,
+      levelUuid,
+      fieldAttributes
     })
   }
 }

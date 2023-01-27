@@ -256,6 +256,7 @@ export function generatePanelAndFields({
     fieldsList,
     // app attributes
     keyColumn,
+    sortOrderColumnName: sortField,
     selectionColumns,
     identifierColumns,
     isLoadedFieldsList: true,
