@@ -26,7 +26,10 @@ const issues = {
   status: 'Status',
   typeOfRequest: 'Type of Request',
   assigned: 'Assigned',
-  request: 'Request'
+  request: 'Request',
+  isCreated: 'Created the',
+  by: 'By: ',
+  preview: 'Preview'
 }
 
 export default issues

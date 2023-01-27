@@ -26,7 +26,10 @@ const issues = {
   subject: 'Asunto',
   typeOfRequest: 'Tipo de Solicitud',
   assigned: 'Asignado',
-  request: 'Solicitud'
+  request: 'Solicitud',
+  isCreated: 'Creado el',
+  by: 'Por: ',
+  preview: 'Vista previa'
 }
 
 export default issues
