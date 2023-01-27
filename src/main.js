@@ -11,6 +11,8 @@ import enLang from 'element-ui/lib/locale/lang/en'// 如果使用中文语言包
 
 import VueSplit from 'vue-split-panel'
 import 'vue-resize/dist/vue-resize.css'
+import 'v-markdown-editor/dist/v-markdown-editor.css'
+
 import VueResize from 'vue-resize'
 import WorkflowChart from 'vue-workflow-chart'
 /**
@@ -25,6 +27,8 @@ import VueShortkey from 'vue-shortkey'
 
 import '@/styles/index.scss' // global css
 
+import Editor from 'v-markdown-editor'
+
 import App from './App'
 import store from './store'
 import router from './router'
@@ -36,6 +40,10 @@ import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
 import * as globalMethods from '@/utils/ADempiere/globalMethods' // global methods
+
+import VueMarkdownEditor from '@kangc/v-md-editor'
+import '@kangc/v-md-editor/lib/style/base-editor.css'
+import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js'
 
 /**
  * If you don't want to use mock-server
@@ -49,8 +57,13 @@ if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()
 }
+
+VueMarkdownEditor.use(vuepressTheme)
+
+Vue.use(VueMarkdownEditor)
 Vue.use(VueCompositionApi)
 Vue.use(VMarkdown)
+Vue.use(Editor)
 Vue.use(VueShortkey)
 Vue.use(VueSplit)
 Vue.use(VueResize)

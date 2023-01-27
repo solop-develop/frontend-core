@@ -2,7 +2,7 @@ import {
   workflowActivities,
   runDocAction
 } from '@/api/ADempiere/workflow.js'
-
+import { listNotifiications } from '@/api/ADempiere/dashboard/dashboard.js'
 import { requestListWorkflowsLogs } from '@/api/ADempiere/window'
 import { isEmptyValue, typeValue } from '@/utils/ADempiere'
 import { showMessage } from '@/utils/ADempiere/notification.js'
@@ -18,7 +18,8 @@ const activity = {
   pageNumber: 0,
   isLoadActivity: false,
   workflowActionsList: [],
-  workflowLogs: []
+  workflowLogs: [],
+  listNotifiications: []
 }
 
 export default {
@@ -54,6 +55,9 @@ export default {
       Vue.set(state.workflowLogs, containerUuid, {
         list
       })
+    },
+    setListNotifiications(state, list) {
+      state.listNotifiications = list
     }
   },
   actions: {
@@ -192,6 +196,14 @@ export default {
         .catch(error => {
           console.warn(`Error Run Doc Action: ${error.message}. Code: ${error.code}.`)
         })
+    },
+    findNotifications({ commit }) {
+      return listNotifiications()
+        .then(response => {
+          const { records } = response
+          commit('setListNotifiications', records)
+          return response
+        })
     }
   },
   getters: {
@@ -215,6 +227,9 @@ export default {
     },
     getWorkFlowLogs: (state) => ({ containerUuid }) => {
       return state.workflowLogs[containerUuid] || []
+    },
+    getListNotifiications(state) {
+      return state.listNotifiications
     }
   }
 }
