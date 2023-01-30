@@ -7,7 +7,7 @@
         <navbar v-show="showNavar" />
         <tags-view v-if="needTagsView" />
       </div>
-      <app-main style="height: 100vh;" />
+      <app-main :style="styleContainer" />
       <right-panel v-if="showSettings">
         <settings />
       </right-panel>
@@ -49,6 +49,10 @@ export default {
         withoutAnimation: this.sidebar.withoutAnimation,
         mobile: this.device === 'mobile'
       }
+    },
+    styleContainer() {
+      if (this.$route.meta.type === 'from') return 'display: contents'
+      return 'height: 100vh;'
     }
   },
   methods: {

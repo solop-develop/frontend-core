@@ -37,7 +37,9 @@ const issues = {
   edit: 'Edit',
   delete: 'Delete',
   comment: 'Comment',
-  addNewCommentary: 'Add New Comment'
+  addNewCommentary: 'Add New Comment',
+  change: 'Change',
+  to: 'to'
 }
 
 export default issues

@@ -135,7 +135,7 @@ export default {
           })
       })
     },
-    editIssues({ commit }, {
+    editIssues({ commit, dispatch }, {
       id,
       uuid,
       subject,
@@ -164,6 +164,10 @@ export default {
         })
           .then(response => {
             commit('setCurrentIssues', response)
+            dispatch('listComments', {
+              id,
+              uuid
+            })
             resolve(response)
           })
           .catch(error => {
@@ -202,12 +206,17 @@ export default {
     },
     changeCurrentIssues({ commit, dispatch }, issues) {
       commit('setCurrentIssues', issues)
-      dispatch('listComments', issues)
+      if (!isEmptyValue(issues)) {
+        dispatch('listComments', issues)
+      }
     },
     listComments({ commit }, {
       id,
       uuid
     }) {
+      if (isEmptyValue(id)) {
+        return
+      }
       return new Promise((resolve, reject) => {
         return listIssueComments({
           issueId: id,

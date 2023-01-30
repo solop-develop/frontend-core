@@ -161,6 +161,25 @@ const staticRoutes = [
         }
       }
     ]
+  },
+
+  {
+    path: '/Issues',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/Issues',
+        component: () => import('@/views/ADempiere/Form'),
+        name: 'Issues',
+        meta: {
+          title: 'Issues',
+          icon: 'el-icon-s-promotion',
+          isIndex: true,
+          type: 'from'
+        }
+      }
+    ]
   }
 ]
 
