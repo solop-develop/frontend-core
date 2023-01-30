@@ -1,21 +1,26 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Yamel Senih ysenih@erpya.com www.erpya.com
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
+
+// constants
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 /**
  * Request workflow definition
@@ -51,7 +56,7 @@ export function requestListDocumentStatuses({
   recordId,
   recordUuid,
   documentStatus,
-  pageSize,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
 }) {
   return request({
@@ -63,8 +68,8 @@ export function requestListDocumentStatuses({
       table_name: tableName,
       document_status: documentStatus,
       // Page Data
-      pageToken,
-      pageSize
+      page_token: pageToken,
+      page_size: pageSize
     }
   })
     .then(listDocumentsActionsResponse => {
@@ -83,7 +88,7 @@ export function requestListDocumentActions({
   recordUuid,
   documentStatus,
   documentAction,
-  pageSize,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
 }) {
   return request({
@@ -96,8 +101,8 @@ export function requestListDocumentActions({
       document_action: documentAction,
       document_status: documentStatus,
       // Page Data
-      pageToken,
-      pageSize
+      page_token: pageToken,
+      page_size: pageSize
     }
   })
     .then(listDocumentsActionsResponse => {
@@ -115,7 +120,7 @@ export function requestListDocumentActions({
 // Request a list of Activities from the user's Workflows
 export function workflowActivities({
   userUuid,
-  pageSize,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
 }) {
   return request({
@@ -136,7 +141,7 @@ export function workflowActivities({
       }
     })
 }
-// GET Workflows
+
 /**
  * Request Document Status List
  * @param {string} tableName
@@ -145,7 +150,7 @@ export function workflowActivities({
  */
 export function getWorkflow({
   tableName,
-  pageSize,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
 }) {
   return request({
@@ -154,8 +159,8 @@ export function getWorkflow({
     params: {
       table_name: tableName,
       // Page Data
-      pageToken,
-      pageSize
+      page_token: pageToken,
+      page_size: pageSize
     }
   })
     .then(listWorkflowActivities => {
@@ -163,7 +168,6 @@ export function getWorkflow({
     })
 }
 
-// Run Doc Action
 /**
  * Request Document Status List
  * @param {string} tableName

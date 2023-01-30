@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -20,15 +20,15 @@
 import { request } from '@/utils/ADempiere/request'
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
-// constants
-// import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+// Constants
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 export function requestAccountingFacts({
   tableName,
   recordId,
   recordUuid,
   filters = [],
-  pageSize = 25,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
 }) {
   filters = filters.map(attribute => {
@@ -67,7 +67,7 @@ export function requestStartRePost({
   recordId,
   recordUuid,
   isForce,
-  pageSize,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
 }) {
   return request({

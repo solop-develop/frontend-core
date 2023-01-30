@@ -19,6 +19,9 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
+// Constants
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+
 /**
  * Request a Generate Report
  * This function allows follow structure:
@@ -84,7 +87,7 @@ export function requestListReportsViews({
   tableName,
   uuid,
   pageToken,
-  pageSize
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
     url: '/user-interface/process/report-views',
@@ -123,7 +126,7 @@ export function requestListPrintFormats({
   reportViewUuid,
   uuid,
   pageToken,
-  pageSize
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
     url: '/user-interface/process/print-formats',
@@ -153,7 +156,7 @@ export function requestListPrintFormats({
 export function requestListDrillTables({
   tableName,
   pageToken,
-  pageSize
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
     url: '/user-interface/process/drill-tables',

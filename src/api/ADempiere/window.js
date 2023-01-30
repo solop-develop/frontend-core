@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -19,6 +19,10 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+
+// Constants
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+
 /**
  * Request a Lookup list data from Reference
  * The main attributes that function hope are:
@@ -44,7 +48,7 @@ export function requestLookupList({
   columnUuid,
   //
   pageToken,
-  pageSize
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   let contextAttributes = []
   if (!isEmptyValue(contextAttributesList)) {
@@ -99,7 +103,7 @@ export function requestReferencesList({
   recordId,
   recordUuid,
   pageToken,
-  pageSize
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
     url: '/user-interface/window/references',
@@ -110,8 +114,8 @@ export function requestReferencesList({
       window_uuid: windowUuid,
       table_name: tableName,
       // Page Data
-      pageToken,
-      pageSize
+      page_token: pageToken,
+      page_size: pageSize
     }
   })
     .then(referencesListResposnse => {
@@ -229,7 +233,7 @@ export function requestListEntityLogs({
   recordId,
   recordUuid,
   pageToken,
-  pageSize
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
     url: '/user/log/entity-logs',
@@ -239,8 +243,8 @@ export function requestListEntityLogs({
       id: recordId,
       uuid: recordUuid,
       // Page Data
-      pageToken,
-      pageSize
+      page_token: pageToken,
+      page_size: pageSize
     }
   })
     .then(entityLogsListResponse => {
@@ -262,7 +266,7 @@ export function requestListWorkflowsLogs({
   recordId,
   recordUuid,
   pageToken,
-  pageSize
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
     url: '/user/log/workflow-logs',
@@ -272,8 +276,8 @@ export function requestListWorkflowsLogs({
       id: recordId,
       uuid: recordUuid,
       // Page Data
-      pageToken,
-      pageSize
+      page_token: pageToken,
+      page_size: pageSize
     }
   })
     .then(workflowLogsListResponse => {
@@ -293,7 +297,7 @@ export function requestListWorkflowsLogs({
 export function requestListWorkflows({
   tableName,
   pageToken,
-  pageSize
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
     url: '/user/log/workflow-logs',
@@ -301,8 +305,8 @@ export function requestListWorkflows({
     params: {
       table_name: tableName,
       // Page Data
-      pageToken,
-      pageSize
+      page_token: pageToken,
+      page_size: pageSize
     }
   })
     .then(workflowListResponse => {
@@ -329,7 +333,7 @@ export function requestListEntityChats({
   recordId,
   recordUuid,
   pageToken,
-  pageSize
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
     url: '/user/log/entity-chats',
@@ -339,8 +343,8 @@ export function requestListEntityChats({
       id: recordId,
       uuid: recordUuid,
       // Page Data
-      pageToken,
-      pageSize
+      page_token: pageToken,
+      page_size: pageSize
     }
   })
     .then(entityChatListResponse => {
@@ -365,7 +369,7 @@ export function requestListChatsEntries({
   id,
   uuid,
   pageToken,
-  pageSize
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
     url: '/user/log/chat-entries',
@@ -374,8 +378,8 @@ export function requestListChatsEntries({
       id,
       uuid,
       // Page Data
-      pageToken,
-      pageSize
+      page_token: pageToken,
+      page_size: pageSize
     }
   })
     .then(chatEntriesListResponse => {
@@ -444,6 +448,7 @@ export function requestExistsIssues({
       return existsIssues
     })
 }
+
 /**
  * Issues List from Window
  * @param {string}  tableName
@@ -631,7 +636,6 @@ export function updateIssues({
  * req.query.page_size - size of page (customized)
  * req.query.page_token - token of page (optional for get a specific page)
  */
-
 export function listIssueComments({
   issueId,
   issueUuid
@@ -661,7 +665,6 @@ export function listIssueComments({
  * req.body.requestTypeId - request type id
  * req.body.requestTypeUuid - request type uuid
  */
-
 export function updateIssue({
   id,
   uuid,
@@ -705,7 +708,6 @@ export function updateIssue({
  * req.body.id - id of record
  * req.body.uuid - uuid of record
  */
-
 export function deleteIssue({
   id,
   uuid
@@ -733,7 +735,6 @@ export function deleteIssue({
  * req.body.result - result
  * req.body.dateNextAction - date to next action
  */
-
 export function createIssueComment({
   issueId,
   issueUuid,
@@ -765,7 +766,6 @@ export function createIssueComment({
   * req.body.result - result
   * req.body.dateNextAction - date to next action
  */
-
 export function updateIssueComment({
   issueId,
   issueUuid,
@@ -795,7 +795,6 @@ export function updateIssueComment({
   * req.body.id - id of record
   * req.body.uuid - uuid of record
  */
-
 export function deleteIssueComment({
   issueId,
   issueUuid

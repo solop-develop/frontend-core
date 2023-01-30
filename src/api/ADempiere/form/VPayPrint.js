@@ -19,6 +19,9 @@
 import { request } from '@/utils/ADempiere/request'
 import { config } from '@/utils/ADempiere/config'
 
+// Constants
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+
 /**
  * Set Payment Selection
  * @param {String} id, Current Payment Selection ID
@@ -40,6 +43,7 @@ export function paymentSelection({
       return response
     })
 }
+
 /**
  * List Payment Selection
  */
@@ -52,6 +56,7 @@ export function paymentSelections() {
       return response
     })
 }
+
 /**
  * list Payment Rules
  * @param {String} searchValue, Search value optional
@@ -66,7 +71,7 @@ export function paymentRules({
   paymentSelectionId,
   paymentSelectionUuid,
   //  Page Data
-  pageSize,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
 }) {
   return request({
@@ -84,6 +89,7 @@ export function paymentRules({
       return response
     })
 }
+
 /**
  * list Payment Rules
  * @param {String} searchValue, Search value optional
@@ -100,7 +106,7 @@ export function listPaymentTable({
   paymentRuleId,
   paymentRuleUuid,
   //  Page Data
-  pageSize,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
 }) {
   return request({
@@ -131,7 +137,6 @@ export function listPaymentTable({
  * @param {String} pageSize, Page Size
  * @param {String} pageToken, Page Token
  */
-
 export function documentSequence({
   //  DSL Query
   searchValue,
@@ -141,7 +146,7 @@ export function documentSequence({
   paymentRuleUuid,
   banckAccountId,
   //  Page Data
-  pageSize,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
 }) {
   return request({
@@ -173,7 +178,6 @@ export function documentSequence({
  * @param {String} pageSize, Page Size
  * @param {String} pageToken, Page Token
  */
-
 export function process({
   //  DSL Query
   searchValue,
@@ -183,7 +187,7 @@ export function process({
   paymentRuleUuid,
   documentNo,
   //  Page Data
-  pageSize,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
 }) {
   return request({
@@ -204,6 +208,7 @@ export function process({
       return response
     })
 }
+
 export function exportPayment({
   //  DSL Query
   searchValue,
@@ -213,7 +218,7 @@ export function exportPayment({
   paymentRuleUuid,
   documentNo,
   //  Page Data
-  pageSize,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
 }) {
   return request({
@@ -234,6 +239,7 @@ export function exportPayment({
       return response
     })
 }
+
 export function print({
   //  DSL Query
   searchValue,
@@ -243,7 +249,7 @@ export function print({
   paymentRuleUuid,
   documentNo,
   //  Page Data
-  pageSize,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
 }) {
   return request({

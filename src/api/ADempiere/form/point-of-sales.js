@@ -1,24 +1,29 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Yamel Senih ysenih@erpya.com www.erpya.com
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s):  Yamel Senih ysenih@erpya.com
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 import { config } from '@/utils/ADempiere/config'
 import { isEmptyValue } from '@/utils/ADempiere'
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
+
+// Constants
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 /**
  * method in api/price-checking.js as getProductPrice
@@ -48,7 +53,7 @@ export function getPointOfSales({
 // List Point of sales
 export function listPointOfSales({
   userUuid,
-  pageSize,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
 }) {
   return request({
@@ -142,6 +147,7 @@ export function updateOrder({
       return convertOrder(updateOrderResponse)
     })
 }
+
 // Create Customer
 export function createCustomer({
   value,
@@ -177,6 +183,7 @@ export function createCustomer({
       return convertBusinessPartner(businessPartnerResponse)
     })
 }
+
 // Update Customer
 export function updateCustomer({
   uuid,
@@ -302,7 +309,7 @@ export function listOrders({
   dateOrderedFrom,
   dateOrderedTo,
   salesRepresentativeUuid,
-  pageSize,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
 }) {
   return request({
@@ -433,7 +440,7 @@ export function deleteOrderLine({
 export function listOrderLines({
   posUuid,
   orderUuid,
-  pageSize = 50,
+  pageSize = 50, // ROWS_OF_RECORDS_BY_PAGE,
   pageToken
 }) {
   return request({
@@ -480,7 +487,7 @@ export function getProductPriceList({
   searchValue,
   businessPartnerUuid,
   posUuid,
-  pageSize,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
   priceListUuid,
   warehouseUuid,
   pageToken
@@ -597,7 +604,6 @@ export function createNewReturnOrder({
 }
 
 // Create Payment
-
 export function createPayment({
   posUuid,
   orderUuid,
@@ -642,7 +648,6 @@ export function createPayment({
 }
 
 // Update Payment
-
 export function updatePayment({
   posUuid,
   paymentUuid,
@@ -675,7 +680,6 @@ export function updatePayment({
 }
 
 // Delete Payment
-
 export function deletePayment({
   posUuid,
   paymentUuid
@@ -694,7 +698,6 @@ export function deletePayment({
 }
 
 // List Payments
-
 export function getPaymentsList({
   posUuid,
   orderUuid,
@@ -995,6 +998,7 @@ export function createCustomerAccount({
       return responseCustomerAccount
     })
 }
+
 /**
  * Refund payment at a later time
  * customer_uuid - Customer UUID
@@ -1066,9 +1070,11 @@ export function createCustomerBankAccount({
       return camelizeObjectKeys(responseCreateCustomerBankAccount)
     })
 }
+
 export function listCustomerBankAccounts({
   posUuid,
   customerUuid,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
 }) {
   return request({
@@ -1077,6 +1083,7 @@ export function listCustomerBankAccounts({
     params: {
       pos_uuid: posUuid,
       customer_uuid: customerUuid,
+      page_size: pageSize,
       page_token: pageToken
     }
   })
@@ -1084,6 +1091,7 @@ export function listCustomerBankAccounts({
       return camelizeObjectKeys(responseListCustomerBankAccounts)
     })
 }
+
 export function daleteCustomerBankAccounts({
   posUuid,
   customerBankAccountUuid
@@ -1100,6 +1108,7 @@ export function daleteCustomerBankAccounts({
       return camelizeObjectKeys(responseCreateCustomerBankAccount)
     })
 }
+
 /**
  * Create Shipment
  * @param {string} posUuidd - POS UUID reference
@@ -1126,6 +1135,7 @@ export function createShipment({
       return camelizeObjectKeys(responseShipment)
     })
 }
+
 export function RefundReferenceRequest({
   posUuid,
   description,
@@ -1168,6 +1178,7 @@ export function RefundReferenceRequest({
       return camelizeObjectKeys(responseCreateCustomerBankAccount)
     })
 }
+
 export function listRefundReference({
   posUuid,
   customerUuid,
@@ -1186,6 +1197,7 @@ export function listRefundReference({
       return camelizeObjectKeys(responseCreateCustomerBankAccount)
     })
 }
+
 export function deleteRefundReference({
   posUuid,
   uuid
@@ -1276,7 +1288,6 @@ export function shipments({
  * req.body.document_action - Sales Representative UUID reference
  * Details:
  */
-
 export function processShipment({
   posUuid,
   shipmentUuid,
@@ -1307,7 +1318,6 @@ export function processShipment({
  * req.body.description - POS UUID description
  * Details:
  */
-
 export function reverseSales({
   posUuid,
   orderUuid,
@@ -1356,7 +1366,6 @@ export function listDiscount({
  * req.body.description - POS UUID description
  * Details:
  */
-
 export function cashOpening({
   posUuid,
   collectingAgentUuid,
@@ -1388,7 +1397,6 @@ export function cashOpening({
  * req.body.description - POS UUID description
  * Details:
  */
-
 export function cashWithdrawal({
   posUuid,
   collectingAgentUuid,
@@ -1443,6 +1451,7 @@ export function cashClosing({
       return response
     })
 }
+
 export function allocateSeller({
   posUuid,
   salesRepresentativeUuid
@@ -1459,6 +1468,7 @@ export function allocateSeller({
       return response
     })
 }
+
 export function deallocate({
   posUuid,
   salesRepresentativeUuid
@@ -1475,6 +1485,7 @@ export function deallocate({
       return response
     })
 }
+
 export function releaseOrder({
   posUuid,
   salesRepresentativeUuid,
