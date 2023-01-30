@@ -27,6 +27,7 @@
           type="text"
           tabindex="1"
           autocomplete="on"
+          @keyup.enter.native="jumpToPassword"
         />
       </el-form-item>
 
@@ -166,6 +167,9 @@ export default {
       const { key } = e
       this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
     },
+    jumpToPassword() {
+      this.$refs.password.focus()
+    },
     handleLogin() {
       const query = this.$route.query.redirect
       const expr = '/'
@@ -253,7 +257,6 @@ $cursor: #fff;
     input {
       background: transparent;
       border: 0px;
-      -webkit-appearance: none;
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
       color: $light_gray;
