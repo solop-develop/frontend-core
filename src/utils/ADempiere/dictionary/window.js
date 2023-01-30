@@ -22,7 +22,7 @@ import store from '@/store'
 
 // Constants
 import {
-  IDENTIFIER_COLUMN_SUFFIX
+  IDENTIFIER_COLUMN_SUFFIX, DISPLAY_COLUMN_PREFIX
 } from '@/utils/ADempiere/dictionaryUtils'
 import {
   ACTIVE, CLIENT, DOCUMENT_ACTION, DOCUMENT_NO, PROCESSING,
@@ -1590,6 +1590,34 @@ export const containerManager = {
       //
       columnName,
       value
+    }).then(response => {
+      const recordUuid = store.getters.getUuidOfContainer(containerUuid)
+      if (isEmptyValue(recordUuid)) {
+        // set values on table
+        const rowIndex = store.getters.getTabRowIndex({
+          containerUuid,
+          recordUuid
+        })
+
+        if (!isEmptyValue(response.value)) {
+          store.commit('setTabCell', {
+            parentUuid,
+            containerUuid,
+            rowIndex,
+            columnName,
+            value: response.value
+          })
+        }
+        if (!isEmptyValue(response.displayedValue)) {
+          store.commit('setTabCell', {
+            parentUuid,
+            containerUuid,
+            rowIndex,
+            columnName: DISPLAY_COLUMN_PREFIX + columnName,
+            value: response.displayedValue
+          })
+        }
+      }
     })
   },
   getLookupList({ parentUuid, containerUuid, uuid, id, contextColumnNames, columnName, searchValue, isAddBlankValue, blankValue }) {

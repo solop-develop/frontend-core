@@ -349,7 +349,7 @@ const persistence = {
                     ...attributesRecord,
                     ...ROW_ATTRIBUTES
                   },
-                  index: 0
+                  rowIndex: 0
                 })
 
                 // update fields values

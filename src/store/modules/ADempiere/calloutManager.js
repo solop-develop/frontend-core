@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -18,14 +18,14 @@
 
 import lang from '@/lang'
 
-// api request methods
+// API Request Methods
 import { runCallOutRequest } from '@/api/ADempiere/window'
 
-// constants
+// Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { DISPLAY_COLUMN_PREFIX, UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
 
-// utils and helper methods
+// Utils and Helper Methods
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
@@ -103,29 +103,7 @@ const calloutManager = {
         })
           .then(calloutResponse => {
             const { values } = calloutResponse
-            // if (inTable) {
-            //   const newValues = {
-            //     ...row,
-            //     ...calloutResponse.values
-            //   }
-            //   dispatch('notifyRowTableChange', {
-            //     parentUuid,
-            //     containerUuid,
-            //     row: newValues,
-            //     isEdit: true
-            //   })
-            // } else {
-            //   dispatch('notifyPanelChange', {
-            //     parentUuid,
-            //     containerUuid,
-            //     panelType: 'window',
-            //     newValues: calloutResponse.values,
-            //     isSendToServer: false,
-            //     withOutColumnNames,
-            //     isSendCallout: false,
-            //     isChangeFromCallout: true
-            //   })
-            // }
+
             resolve(values)
 
             const attributesList = convertObjectToKeyValue({
@@ -163,15 +141,25 @@ const calloutManager = {
               attributes: attributesList
             })
 
-            // attributesList.forEach(attributeItem => {
-            //   dispatch('notifyFieldChange', {
-            //     parentUuid,
-            //     containerUuid,
-            //     containerManager,
-            //     columnName: attributeItem.columnName,
-            //     newValue: attributeItem.value
-            //   })
-            // })
+            // set values on table
+            const rowIndex = rootGetters.getTabRowIndex({
+              containerUuid,
+              recordUuid
+            })
+            const currentRow = rootGetters.getTabRowData({
+              containerUuid,
+              recordUuid
+            })
+            commit('setTabRow', {
+              containerUuid,
+              recordUuid,
+              rowIndex,
+              row: {
+                ...ROW_ATTRIBUTES,
+                ...currentRow,
+                ...values
+              }
+            })
           })
           .catch(error => {
             reject(error)

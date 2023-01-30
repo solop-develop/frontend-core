@@ -124,20 +124,20 @@ const windowManager = {
       })
     },
 
-    setTabRow(state, { containerUuid, row, index }) {
+    setTabRow(state, { containerUuid, row, rowIndex }) {
       let recordsList = state.tabData[containerUuid].recordsList
-      if (!isEmptyValue(index)) {
-        recordsList.splice(index, 1, {
+      if (!isEmptyValue(rowIndex)) {
+        recordsList.splice(rowIndex, 1, {
           ...row,
-          rowIndex: index
+          rowIndex
         })
       } else {
         recordsList.unshift(row)
 
-        recordsList = recordsList.map((rowItem, rowIndex) => {
+        recordsList = recordsList.map((rowItem, index) => {
           return {
             ...rowItem,
-            rowIndex
+            rowIndex: index
           }
         })
       }
@@ -166,9 +166,12 @@ const windowManager = {
       columnName,
       value
     }) {
-      if (isEmptyValue(rowIndex) && isEmptyValue(state.tabData[containerUuid].recordsList[rowIndex])) return
+      if (isEmptyValue(rowIndex) || isEmptyValue(containerUuid) || isEmptyValue(columnName) ||
+        isEmptyValue(state.tabData[containerUuid]) || isEmptyValue(state.tabData[containerUuid].recordsList) ||
+        isEmptyValue(state.tabData[containerUuid].recordsList[rowIndex])) {
+        return
+      }
       Vue.set(state.tabData[containerUuid].recordsList[rowIndex], columnName, value)
-      // TODO: Change selection columns
     },
 
     setTabRowWithRecord(state, { containerUuid, row, recordUuid }) {
@@ -806,13 +809,9 @@ const windowManager = {
         return recordsList[rowIndex]
       }
 
-      if (!isEmptyValue(recordUuid)) {
-        return recordsList.find(itemData => {
-          return itemData.UUID === recordUuid
-        })
-      }
-
-      return {}
+      return recordsList.find(itemData => {
+        return itemData.UUID === recordUuid
+      }) || {}
     },
     getTabCellData: (state, getters) => ({ containerUuid, recordUuid, rowIndex, columnName }) => {
       const recordsList = getters.getTabRecordsList({ containerUuid })
@@ -834,6 +833,16 @@ const windowManager = {
         return row[columnName]
       }
       return undefined
+    },
+    getTabRowIndex: (state, getters) => ({ containerUuid, recordUuid }) => {
+      if (isEmptyValue(recordUuid)) {
+        return 0
+      }
+      const recordsList = getters.getTabRecordsList({ containerUuid })
+      const rowIndex = recordsList.findIndex(row => {
+        return row.UUID === recordUuid
+      })
+      return rowIndex
     },
 
     getCurrentRecordOnPanel: (state, getters) => (containerUuid) => {
