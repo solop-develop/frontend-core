@@ -41,9 +41,34 @@ import './utils/error-log' // error log
 import * as filters from './filters' // global filters
 import * as globalMethods from '@/utils/ADempiere/globalMethods' // global methods
 
+/**
+ * Vue Mark Down Editor
+ */
 import VueMarkdownEditor from '@kangc/v-md-editor'
 import '@kangc/v-md-editor/lib/style/base-editor.css'
 import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js'
+
+/**
+ * Vue Mark Down Preview
+ */
+import VMdPreview from '@kangc/v-md-editor/lib/preview'
+import '@kangc/v-md-editor/lib/style/preview.css'
+import githubTheme from '@kangc/v-md-editor/lib/theme/github.js'
+import '@kangc/v-md-editor/lib/theme/style/github.css'
+
+/**
+ * Add internationalization to Vue Mark Down Editor
+ */
+import enUS from '@kangc/v-md-editor/lib/lang/en-US'
+
+VueMarkdownEditor.lang.use('en-US', enUS)
+
+import esES from '@kangc/v-md-editor/lib/lang/es-ES'
+
+VueMarkdownEditor.lang.use('es-ES', esES)
+
+// highlightjs
+import hljs from 'highlight.js'
 
 /**
  * If you don't want to use mock-server
@@ -57,9 +82,17 @@ if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()
 }
-
+/**
+ * Markdown
+ * - VueMarkdownEditor
+ * - VMdPreview
+ */
 VueMarkdownEditor.use(vuepressTheme)
+VMdPreview.use(githubTheme, {
+  Hljs: hljs
+})
 
+Vue.use(VMdPreview)
 Vue.use(VueMarkdownEditor)
 Vue.use(VueCompositionApi)
 Vue.use(VMarkdown)

@@ -29,7 +29,15 @@ const issues = {
   request: 'Request',
   isCreated: 'Created the',
   by: 'By: ',
-  preview: 'Preview'
+  preview: 'Preview',
+  newRequest: 'New Request',
+  backToList: 'Back to List',
+  allRequest: 'All Requests',
+  createNewRequest: 'Create New Request',
+  edit: 'Edit',
+  delete: 'Delete',
+  comment: 'Comment',
+  addNewCommentary: 'Add New Comment'
 }
 
 export default issues
