@@ -29,7 +29,7 @@ const issues = {
   request: 'Solicitud',
   isCreated: 'Creado el',
   by: 'Por: ',
-  preview: 'Vista previa',
+  preview: 'Vista Previa',
   newRequest: 'Nueva Solicitud',
   backToList: 'Regresar a la Lista',
   allRequest: 'Todas las Solicitudes',
