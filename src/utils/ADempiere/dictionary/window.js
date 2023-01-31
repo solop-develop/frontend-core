@@ -25,8 +25,8 @@ import {
   IDENTIFIER_COLUMN_SUFFIX, DISPLAY_COLUMN_PREFIX
 } from '@/utils/ADempiere/dictionaryUtils'
 import {
-  ACTIVE, CLIENT, DOCUMENT_ACTION, DOCUMENT_NO, PROCESSING,
-  PROCESSED, UUID, VALUE, READ_ONLY_FORM_COLUMNS
+  ACTIVE, CLIENT, DOCUMENT_ACTION, DOCUMENT_NO,
+  PROCESSING, PROCESSED, UUID, VALUE //, READ_ONLY_FORM_COLUMNS
 } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { YES_NO } from '@/utils/ADempiere/references'
@@ -1409,29 +1409,83 @@ export const containerManager = {
     // records values
     row
   }) {
-    // if tab is read only, all columns are read only
-    const { isReadOnly } = store.getters.getStoredTab(field.parentUuid, field.containerUuid)
-    if (isReadOnly) {
+    const { parentUuid, containerUuid, columnName } = field
+
+    // if tab is read only, all fields are read only
+    if (isReadOnlyTab({ parentUuid, containerUuid })) {
       return true
     }
 
-    // read only with metadata
-    if (isReadOnlyColumn(field)) {
-      true
-    }
+    const { isParentTab, linkColumnName, parentColumnName } = store.getters.getStoredTab(parentUuid, containerUuid)
 
-    // not updateable and record saved
-    const isWithRecord = !isEmptyValue(row.UUID)
-    if (!field.isUpdateable && isWithRecord) {
+    // fill value with context
+    if (field.isParent || linkColumnName === columnName || parentColumnName === columnName) {
       return true
     }
 
+    if (!isParentTab) {
+      // if parent record is new lock childs field to read only
+      const recordParentTab = store.getters.getUuidOfContainer(field.firstTabUuid)
+      if (isEmptyValue(recordParentTab) || recordParentTab === 'create-new') {
+        return true
+      }
+    }
+
+    // client id value of record
+    const clientIdRecord = parseInt(row[CLIENT], 10)
     // evaluate client id context with record
     const preferenceClientId = store.getters.getSessionContextClientId
-    if (preferenceClientId !== parseInt(row.AD_Client_ID, 10) && isWithRecord) {
+    if (clientIdRecord !== preferenceClientId) {
       return true
     }
 
+    // record uuid
+    const recordUuid = row[UUID]
+    // edit mode is diferent to create new
+    const isWithRecord = !isEmptyValue(recordUuid) && recordUuid !== 'create-new'
+    if (isWithRecord) {
+      // not updateable and record saved
+      if (!field.isUpdateable) {
+        return true
+      }
+    } else {
+      // button not invoke (browser/process/report/workflow) without record
+      if (field.displayType === BUTTON.id) {
+        return true
+      }
+    }
+
+    // validate parent record and current record
+    // record is inactive isReadOnlyFromForm
+    if (columnName !== ACTIVE) {
+      // is active value of record
+      const isActiveRecord = row[ACTIVE]
+      if (!convertStringToBoolean(isActiveRecord)) {
+        return true
+      }
+    }
+    // Button to process document
+    if (columnName === DOCUMENT_ACTION) {
+      return false
+    }
+
+    // is processed value of record
+    const isProcessedRecord = row[PROCESSED]
+    if (convertStringToBoolean(isProcessedRecord)) {
+      return true
+    }
+
+    // is processing value of record
+    const isProcessingRecord = row[PROCESSING]
+    if (convertStringToBoolean(isProcessingRecord)) {
+      return true
+    }
+
+    if (field.isAlwaysUpdateable) {
+      return false
+    }
+
+    /*
     // columnName: IsActive
     const fieldReadOnlyForm = READ_ONLY_FORM_COLUMNS.find(item => {
       return !item.isChangedAllForm &&
@@ -1446,8 +1500,10 @@ export const containerManager = {
         // compare if is same value
         row[columnName] === valueIsReadOnlyForm
     }
+    */
 
-    return false
+    // read only with metadata
+    return isReadOnlyColumn(field)
   },
 
   isMandatoryField,
