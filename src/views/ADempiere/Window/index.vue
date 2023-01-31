@@ -111,10 +111,11 @@ export default defineComponent({
       if (isEmptyValue(currentTab.value.childTabs)) {
         return 'width: 100%; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; padding-right: 10px; padding-left: 3px;overflow: auto;display: contents'
       }
-      if (storedWindow.value.isFullScreenTabsParent || storedWindow.value.isFullScreenTabsChildren) {
-        return 'width: 100%; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; padding-right: 10px; padding-left: 3px;overflow: auto;'
-      }
-      return 'width: 100%; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; padding-right: 10px; padding-left: 3px;overflow: auto;height: 100%;'
+      return 'width: 100%; margin-bottom: 0px; padding-top: 0px; padding-bottom: 10px; padding-right: 10px; padding-left: 3px;overflow: auto;'
+      // if (storedWindow.value.isFullScreenTabsParent || storedWindow.value.isFullScreenTabsChildren) {
+      //   return 'width: 100%; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; padding-right: 10px; padding-left: 3px;overflow: auto;'
+      // }
+      // return 'width: 100%; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; padding-right: 10px; padding-left: 3px;overflow: auto;height: 100%;'
     })
 
     const currentTab = computed(() => {

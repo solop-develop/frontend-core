@@ -170,14 +170,14 @@ export default defineComponent({
       if (!isWithChildsTab.value) {
         return 'height: 0% !important'
       } else {
-        if (props.windowMetadata.isFullScreenTabsParent) {
-          return 'height: 550px !important'
+        // if (props.windowMetadata.isFullScreenTabsParent) {
+        return 'height: 550px !important'
         // } else if (!isEmptyVAlue(props.windowMetadata.isFullScreenTabsChildren) && props.windowMetadata.isFullScreenTabsChildren) {
         //   return 'height: 550px !important'
-        }
+        // }
       }
 
-      return 'height: 50% !important'
+      // return 'height: 50% !important'
     })
 
     const isViewFullScreenChild = computed(() => {

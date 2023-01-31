@@ -171,14 +171,8 @@ export default defineComponent({
       if (!isWithChildsTab.value) {
         return 'height: 0% !important'
       } else {
-        if (props.windowMetadata.isFullScreenTabsParent) {
-          return 'height: 20% !important'
-        } else if (props.windowMetadata.isFullScreenTabsChildren) {
-          return 'height: 75% !important'
-        }
+        return 'height: 550px !important'
       }
-
-      return 'height: 50% !important'
     })
 
     const actionsManager = computed(() => {
