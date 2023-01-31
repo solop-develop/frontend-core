@@ -671,17 +671,23 @@ export default {
       const defaultRowAttributes = convertArrayKeyValueToObject({
         array: defaultAttributes
       })
+
       const rowDefaultValues = {
         ...defaultRowAttributes,
         ...ROW_ATTRIBUTES,
         isNewRow: true,
-        isEditRow: true
+        isEditRow: true,
+        isSelectedRow: true
       }
       commit('setTabRow', {
         containerUuid,
         row: rowDefaultValues
       }, {
         root: true
+      })
+      commit('setTabSelectionsList', {
+        containerUuid,
+        selectionsList: [rowDefaultValues]
       })
 
       // update records and logics on child tabs

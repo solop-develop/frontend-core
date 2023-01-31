@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -18,15 +18,15 @@
 
 import Vue from 'vue'
 
-// api request methods
+// API Request Methods
 import { requestDefaultValue } from '@/api/ADempiere/user-interface/persistence.js'
 
-// constants
+// Constants
 import {
   DISPLAY_COLUMN_PREFIX, UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX
 } from '@/utils/ADempiere/dictionaryUtils'
 
-// utils and helper methods
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { isSameSize } from '@/utils/ADempiere/formatValue/iterableFormat'
 import { generateContextKey, getContextAttributes } from '@/utils/ADempiere/contextUtils'
