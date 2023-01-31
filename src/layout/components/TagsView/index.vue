@@ -256,6 +256,7 @@ export default {
       })
 
       this.dialogVisible = false
+      this.closeSelectedTag(this.recordsModifiedWindow.at().view)
     },
     closeValidateTag(view) {
       if (!view.meta || !view.meta.uuid || !view.meta.type || view.meta.type !== 'window') {
@@ -296,7 +297,8 @@ export default {
               containerUuid,
               name,
               columnName,
-              value
+              value,
+              view
             })
           })
         })
