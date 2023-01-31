@@ -45,6 +45,8 @@ import * as globalMethods from '@/utils/ADempiere/globalMethods' // global metho
  * Vue Mark Down Editor
  */
 import VueMarkdownEditor from '@kangc/v-md-editor'
+import createEmojiPlugin from '@kangc/v-md-editor/lib/plugins/emoji/index'
+import '@kangc/v-md-editor/lib/plugins/emoji/emoji.css'
 import '@kangc/v-md-editor/lib/style/base-editor.css'
 import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js'
 
@@ -88,9 +90,11 @@ if (process.env.NODE_ENV === 'production') {
  * - VMdPreview
  */
 VueMarkdownEditor.use(vuepressTheme)
+VueMarkdownEditor.use(createEmojiPlugin())
 VMdPreview.use(githubTheme, {
   Hljs: hljs
 })
+VMdPreview.use(createEmojiPlugin())
 
 Vue.use(VMdPreview)
 Vue.use(VueMarkdownEditor)
