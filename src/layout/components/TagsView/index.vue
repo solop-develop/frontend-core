@@ -61,13 +61,14 @@
       <li @click="closeOthersTags">{{ $t('tagsView.closeOthers') }}</li>
       <li @click="closeAllTags(selectedTag)">{{ $t('tagsView.closeAll') }}</li>
     </ul>
+
     <el-dialog
       :title="$t('window.recordValidation.closeWindow')"
       :visible.sync="dialogVisible"
     >
       <span>
         <el-table
-          :data="recordModifiedTab"
+          :data="recordsModifiedWindow"
           style="width: 100%"
         >
           <el-table-column
@@ -75,21 +76,20 @@
             :label="$t('window.recordValidation.tab')"
           />
           <el-table-column
-            prop="emptyMandatory[0].columnName"
+            prop="columnName"
             :label="$t('window.recordValidation.field')"
           />
           <el-table-column
-            prop="emptyMandatory[0].value"
+            prop="value"
             :label="$t('window.recordValidation.value')"
           />
         </el-table>
-        <!-- {{ recordModifiedTab }} -->
       </span>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">
+        <el-button @click="discardChanges">
           {{ $t('window.recordValidation.discardChanges') }}
         </el-button>
-        <el-button type="primary" @click="discardChanges(recordModifiedTab)">
+        <el-button type="primary" @click="dialogVisible = false">
           {{ $t('window.recordValidation.returnToWindow') }}
         </el-button>
       </span>
@@ -120,7 +120,7 @@ export default {
       selectedTag: {},
       affixTags: [],
       dialogVisible: false,
-      recordModifiedTab: []
+      recordsModifiedWindow: []
     }
   },
   computed: {
@@ -238,27 +238,71 @@ export default {
         })
       })
     },
-    discardChanges(view) {
+    discardChanges() {
+      const tabs = new Map()
+      this.recordsModifiedWindow.forEach(change => {
+        tabs.set(change.containerUuid, {
+          parentUuid: change.parentUuid,
+          contailerUuid: change.containerUuid
+        })
+      })
+
+      tabs.forEach((value, key, hasMap) => {
+        this.$store.dispatch('setOldPersistenceValues', {
+          parentUuid: value.parentUuid,
+          containerUuid: value.contailerUuid,
+          recordUuid: this.$store.getters.getUuidOfContainer(value.contailerUuid)
+        })
+      })
+
       this.dialogVisible = false
     },
     closeValidateTag(view) {
-      const isWindow = this.$store.getters.getStoredWindow(view.meta.uuid)
-      if (!isEmptyValue(isWindow)) {
-        const allListTabs = isWindow.tabsList.map(tabs => {
+      if (!view.meta || !view.meta.uuid || !view.meta.type || view.meta.type !== 'window') {
+        this.closeSelectedTag(view)
+        return
+      }
+
+      const storedWindow = this.$store.getters.getStoredWindow(view.meta.uuid)
+      const columnsChanges = []
+      this.recordsModifiedWindow = []
+      if (!isEmptyValue(storedWindow)) {
+        storedWindow.tabsList.forEach(tabs => {
           const { parentUuid, name, containerUuid } = tabs
-          const emptyMandatory = this.$store.getters.getPersistenceAttributesChanges({
+          const currentChangesOnTab = this.$store.getters.getPersistenceAttributesChanges({
             parentUuid,
             containerUuid,
             recordUuid: this.$store.getters.getUuidOfContainer(containerUuid)
           })
-          return {
-            name,
-            emptyMandatory,
-            view: view
+          if (isEmptyValue(currentChangesOnTab)) {
+            return
           }
+          currentChangesOnTab.forEach(attribute => {
+            const { columnName, value } = attribute
+
+            // if (columnName.startsWith(DISPLAY_COLUMN_PREFIX)) {
+            //   let tempValue = value
+            //   const tempColumnName = columnName.replace(DISPLAY_COLUMN_PREFIX, '')
+            //   if (isEmptyValue(tempValue)) {
+            //     tempValue = columnsChanges.get(tempColumnName)
+            //   }
+            //   columnsChanges.set(tempColumnName, value)
+            //   return
+            // }
+            // columnsChanges.set(columnName, value)
+
+            columnsChanges.push({
+              parentUuid,
+              containerUuid,
+              name,
+              columnName,
+              value
+            })
+          })
         })
-        this.recordModifiedTab = allListTabs.filter(modifiedTab => !isEmptyValue(modifiedTab.emptyMandatory))
-        if (!isEmptyValue(this.recordModifiedTab)) {
+
+        this.recordsModifiedWindow = columnsChanges
+        if (!isEmptyValue(this.recordsModifiedWindow)) {
           this.dialogVisible = true
           return
         }
