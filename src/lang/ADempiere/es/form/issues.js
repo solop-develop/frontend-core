@@ -38,8 +38,8 @@ const issues = {
   delete: 'Eliminar',
   commentary: 'Comentario',
   addNewCommentary: 'Agregar Nuevo Comentario',
-  change: 'Cambio',
-  to: 'a'
+  change: ' Cambio ',
+  to: ' a '
 }
 
 export default issues
