@@ -1,7 +1,7 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
  * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- * Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
+ * Contributor(s): Elsio Sanchez Elsiosanches@gmail.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -16,31 +16,31 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-const issues = {
-  documentNo: 'Document No',
-  issues: 'Issues',
-  subject: 'Subject',
-  summary: 'Summary',
-  created: 'Created',
-  priority: 'Priority',
-  status: 'Status',
-  typeOfRequest: 'Type of Request',
-  assigned: 'Assigned',
-  request: 'Request',
-  isCreated: 'Created the',
-  by: 'By: ',
-  preview: 'Preview',
-  newRequest: 'New Request',
-  backToList: 'Back to List',
-  allRequest: 'All Requests',
-  createNewRequest: 'Create New Request',
-  edit: 'Edit',
-  delete: 'Delete',
-  comment: 'Comment',
-  addNewCommentary: 'Add New Comment',
-  change: 'Change',
-  to: 'to',
-  emailTemplate: 'Email Template'
-}
+// Get Instance for connection
+import { request } from '@/utils/ADempiere/request'
 
-export default issues
+/**
+ * List Mail Templates
+ */
+export function requestMailTemplates({
+  searchValue,
+  pageSize = 999,
+  pageToken
+}) {
+  return request({
+    url: '/user-interface/component/list-mail-templates',
+    method: 'post',
+    data: {
+      search_value: searchValue,
+      page_size: pageSize,
+      page_token: pageToken
+    }
+  })
+    .then(response => {
+      return {
+        recordCount: response.record_count,
+        records: response.records,
+        nextPageToken: response.next_page_token
+      }
+    })
+}

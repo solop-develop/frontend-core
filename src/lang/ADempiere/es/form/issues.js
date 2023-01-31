@@ -39,7 +39,8 @@ const issues = {
   commentary: 'Comentario',
   addNewCommentary: 'Agregar Nuevo Comentario',
   change: ' Cambio ',
-  to: ' a '
+  to: ' a ',
+  emailTemplate: 'Plantilla de Correo'
 }
 
 export default issues
