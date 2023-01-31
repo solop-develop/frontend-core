@@ -9,17 +9,17 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 
 .input-as-password,
 input[type=text].input-as-password {
-  text-security: disc;
+  // text-security: disc;
   -webkit-text-security: disc;
   -mox-text-security: disc;
   -ms-text-security: disc;
@@ -27,10 +27,15 @@ input[type=text].input-as-password {
 
   input[type=text],
   >input[type=text] {
-    text-security: disc;
+    // text-security: disc;
     -webkit-text-security: disc;
     -mox-text-security: disc;
     -ms-text-security: disc;
     -o-text-security: disc;
   }
+}
+
+button.button-base-icon {
+  padding: 4px 8px;
+  font-size: 24px;
 }
