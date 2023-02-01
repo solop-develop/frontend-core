@@ -1,20 +1,25 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 import language from '@/lang'
+
+// Utils and Helper Methods
+import { removeQuotationMark } from '@/utils/ADempiere/formatValue/stringFormat'
 
 /**
  * Convert boolean value to current translation language
@@ -54,10 +59,13 @@ export const convertBooleanToString = (booleanValue, isForce = true) => {
 export const convertStringToBoolean = (valueToParsed) => {
   let valReturn = valueToParsed
 
-  switch (String(valueToParsed).trim()) {
+  // remove single/double quotation mark 'N' -> N, "Y" -> Y
+  const evaluatedValue = removeQuotationMark(valueToParsed)
+  switch (evaluatedValue) {
     case 'N':
     case 'No':
     case 'false':
+    case false:
     case language.t('components.switchInactiveText'):
       valReturn = false
       break
@@ -65,6 +73,7 @@ export const convertStringToBoolean = (valueToParsed) => {
     case 'Y':
     case 'Yes':
     case 'true':
+    case true:
     case language.t('components.switchActiveText'):
       valReturn = true
       break

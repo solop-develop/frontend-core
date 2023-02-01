@@ -18,14 +18,15 @@
 
 import language from '@/lang'
 
-// constants
+// Constants
 import { CLIENT } from '@/utils/ADempiere//constants/systemColumns'
 import { LIST, TABLE, TABLE_DIRECT } from '@/utils/ADempiere/references.js'
 import { DISPLAY_COLUMN_PREFIX, IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
 import { OPERATION_PATTERN } from '@/utils/ADempiere/formatValue/numberFormat.js'
 
-// utils and helper methods
+// Utils and Helper Methods
 import { convertBooleanToString, convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat.js'
+import { removeQuotationMark } from '@/utils/ADempiere/formatValue/stringFormat'
 
 /**
  * Checks if value is empty. Deep-checks arrays and objects
@@ -406,10 +407,7 @@ export function parsedValueComponent({
         }
       }
       if (LIST.id === displayType) {
-        if (!isEmptyValue(value) && isNaN(value)) {
-          // remove single quotation mark 'DR' -> DR
-          value = value.replace(/(^\'|^\")(\w+)(\"|\')/g, '$2')
-        }
+        value = removeQuotationMark(value)
       }
       // Search or List
       returnValue = value
