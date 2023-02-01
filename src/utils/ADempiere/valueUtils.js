@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -20,7 +20,7 @@ import language from '@/lang'
 
 // constants
 import { CLIENT } from '@/utils/ADempiere//constants/systemColumns'
-import { TABLE, TABLE_DIRECT } from '@/utils/ADempiere/references.js'
+import { LIST, TABLE, TABLE_DIRECT } from '@/utils/ADempiere/references.js'
 import { DISPLAY_COLUMN_PREFIX, IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
 import { OPERATION_PATTERN } from '@/utils/ADempiere/formatValue/numberFormat.js'
 
@@ -403,6 +403,12 @@ export function parsedValueComponent({
         (columnName.endsWith('_ID_To') || columnName.endsWith(IDENTIFIER_COLUMN_SUFFIX))) {
         if (!isEmptyValue(value)) {
           value = Number(value)
+        }
+      }
+      if (LIST.id === displayType) {
+        if (!isEmptyValue(value) && isNaN(value)) {
+          // remove single quotation mark 'DR' -> DR
+          value = value.replace(/(^\'|^\")(\w+)(\"|\')/g, '$2')
         }
       }
       // Search or List
