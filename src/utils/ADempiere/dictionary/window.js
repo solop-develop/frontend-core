@@ -1122,6 +1122,19 @@ export const containerManager = {
   getPanel({ parentUuid, containerUuid }) {
     return store.getters.getStoredTab(parentUuid, containerUuid)
   },
+  changePanelAttribute({
+    parentUuid,
+    containerUuid,
+    attributeName,
+    attributeValue
+  }) {
+    return store.dispatch('changeTabAttribute', {
+      parentUuid,
+      containerUuid,
+      attributeName,
+      attributeValue
+    })
+  },
   getFieldsList: ({ parentUuid, containerUuid }) => {
     return store.getters.getStoredFieldsFromTab(parentUuid, containerUuid)
   },
@@ -1772,23 +1785,6 @@ export const containerManager = {
     return store.dispatch('searchTableHeader', {
       containerUuid,
       tableName
-    })
-  },
-  changeSequence({
-    uuid,
-    attributeName = 'isEditSecuence',
-    attributeValue,
-    attributeNameControl,
-    parentUuid,
-    containerUuid
-  }) {
-    return store.dispatch('changeTabAttribute', {
-      uuid,
-      attributeName,
-      attributeNameControl,
-      attributeValue,
-      parentUuid,
-      containerUuid
     })
   },
 

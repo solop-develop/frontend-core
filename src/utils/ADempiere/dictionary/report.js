@@ -216,6 +216,17 @@ export const containerManager = {
   getPanel({ containerUuid }) {
     return store.getters.getStoredReport(containerUuid)
   },
+  changePanelAttribute({
+    containerUuid,
+    attributeName,
+    attributeValue
+  }) {
+    store.commit('changeReportAttribute', {
+      uuid: containerUuid,
+      attributeName,
+      attributeValue
+    })
+  },
   getFieldsList({ containerUuid }) {
     return store.getters.getStoredFieldsFromReport(containerUuid)
   },
@@ -247,19 +258,6 @@ export const containerManager = {
   setDefaultValues: ({ containerUuid }) => {
     store.dispatch('setReportDefaultValues', {
       containerUuid
-    })
-  },
-  changeSequence({
-    uuid,
-    attributeName = 'isEditSecuence',
-    attributeValue,
-    attributeNameControl
-  }) {
-    store.commit('changeReportAttribute', {
-      uuid,
-      attributeName,
-      attributeNameControl,
-      attributeValue
     })
   }
 }

@@ -145,6 +145,7 @@ export function generateProcess({
     ...additionalAttributes,
     isAssociated: Boolean(containerUuidAssociated),
     containerUuidAssociated,
+    isLoadedFieldsList: true,
     sortOrderColumnName: 'sequence',
     fieldsList
   }
@@ -197,6 +198,17 @@ export const clearParameters = {
 export const containerManager = {
   getPanel({ containerUuid }) {
     return store.getters.getStoredProcess(containerUuid)
+  },
+  changePanelAttribute({
+    containerUuid,
+    attributeName,
+    attributeValue
+  }) {
+    store.commit('changeProcessAttribute', {
+      uuid: containerUuid,
+      attributeName,
+      attributeValue
+    })
   },
   getFieldsList({ containerUuid }) {
     return store.getters.getStoredFieldsFromProcess(containerUuid)
@@ -317,19 +329,6 @@ export const containerManager = {
     return store.dispatch('searchTableHeader', {
       containerUuid,
       tableName
-    })
-  },
-  changeSequence({
-    uuid,
-    attributeName = 'isEditSecuence',
-    attributeValue,
-    attributeNameControl
-  }) {
-    store.commit('changeProcessAttribute', {
-      uuid,
-      attributeName,
-      attributeNameControl,
-      attributeValue
     })
   },
 

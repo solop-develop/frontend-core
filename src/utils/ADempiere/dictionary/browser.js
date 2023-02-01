@@ -286,6 +286,17 @@ export const containerManager = {
   getPanel({ containerUuid }) {
     return store.getters.getStoredBrowser(containerUuid)
   },
+  changePanelAttribute({
+    containerUuid,
+    attributeName,
+    attributeValue
+  }) {
+    store.commit('changeBrowserAttribute', {
+      uuid: containerUuid,
+      attributeName,
+      attributeValue
+    })
+  },
   getFieldsList({ containerUuid }) {
     return store.getters.getStoredFieldsFromBrowser(containerUuid)
   },
@@ -439,19 +450,6 @@ export const containerManager = {
     return store.dispatch('searchTableHeader', {
       containerUuid,
       tableName
-    })
-  },
-  changeSequence({
-    uuid,
-    attributeName = 'isEditSecuence',
-    attributeValue,
-    attributeNameControl
-  }) {
-    store.commit('changeBrowserAttribute', {
-      uuid,
-      attributeName,
-      attributeNameControl,
-      attributeValue
     })
   },
 
