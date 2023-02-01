@@ -36,7 +36,7 @@ const issues = {
   createNewRequest: 'Create New Request',
   edit: 'Edit',
   delete: 'Delete',
-  comment: 'Comment',
+  commentary: 'Comment',
   addNewCommentary: 'Add New Comment',
   change: 'Change',
   to: 'to',
