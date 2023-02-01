@@ -259,7 +259,9 @@ export default {
               id,
               uuid
             })
-            resolve(response)
+              .then(responselist => {
+                resolve(response)
+              })
           })
           .catch(error => {
             reject(error)
