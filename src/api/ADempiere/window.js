@@ -361,6 +361,35 @@ export function requestListEntityChats({
 }
 
 /**
+ * GET Exists chats entries
+ * @param {string} uuid
+ * @param {string} pageToken
+ * @param {string} pageSize
+ */
+export function existsChatsEntries({
+  tableName,
+  recordId,
+  recordUuid,
+  pageToken,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
+}) {
+  return request({
+    url: '/user/log/exists-chat-entries',
+    method: 'get',
+    params: {
+      table_name: tableName,
+      record_id: recordId,
+      record_uuid: recordUuid,
+      // Page Data
+      page_token: pageToken,
+      page_size: pageSize
+    }
+  })
+    .then(response => {
+      return response
+    })
+}
+/**
  * @param {string} uuid
  * @param {string} pageToken
  * @param {string} pageSize
