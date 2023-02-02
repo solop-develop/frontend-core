@@ -40,7 +40,9 @@ const issues = {
   addNewCommentary: 'Add New Comment',
   change: 'Change',
   to: 'to',
-  emailTemplate: 'Email Template'
+  emailTemplate: 'Email Template',
+  nextActionDate: 'Next Action Date',
+  expirationType: 'Expiration Type'
 }
 
 export default issues

@@ -30,6 +30,7 @@ import {
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
 // import { showMessage } from '@/utils/ADempiere/notification'
 
 const initStateChatEntries = {
@@ -85,6 +86,7 @@ export default {
           const list = records.map(issues => {
             return {
               ...issues,
+              dateNextAction: formatDate({ value: issues.date_next_action }),
               isEdit: false
             }
           })

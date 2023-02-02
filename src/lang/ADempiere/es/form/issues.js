@@ -40,7 +40,9 @@ const issues = {
   addNewCommentary: 'Agregar Nuevo Comentario',
   change: ' Cambio ',
   to: ' a ',
-  emailTemplate: 'Plantilla de Correo'
+  emailTemplate: 'Plantilla de Correo',
+  nextActionDate: 'Fecha de Siguiente Acción',
+  expirationType: 'Tipo de Vencimiento'
 }
 
 export default issues
