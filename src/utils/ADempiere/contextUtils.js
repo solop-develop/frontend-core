@@ -437,12 +437,17 @@ export function generateContextKey(contextAttributes = [], keyName = 'columnName
  * @returns {boolean}
  */
 export function isSalesTransaction({ parentUuid, containerUuid }) {
-  // get value by container view
-  const isSOTrx = store.getters.getValueOfField({
+  // get value from container view
+  let isSOTrx = store.getters.getValueOfField({
     parentUuid,
     containerUuid,
     columnName: IS_SO_TRX
   })
+  if (isEmptyValue(isSOTrx)) {
+    // get value from menu
+    const currentRoute = router.app._route
+    isSOTrx = currentRoute.meta.isSalesTransaction
+  }
 
   return convertStringToBoolean(isSOTrx)
 }
