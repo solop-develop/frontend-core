@@ -18,15 +18,15 @@
 
 // API Request Methods
 import {
-  requestListExists,
-  createIssues,
-  updateIssues,
+  requestListIssues,
+  createIssue,
+  updateIssue,
   deleteIssue,
   listIssueComments,
   createIssueComment,
   updateIssueComment,
   deleteIssueComment
-} from '@/api/ADempiere/window'
+} from '@/api/ADempiere/user-interface/component/issue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -69,7 +69,7 @@ export default {
       pageToken
     }) {
       commit('setIsLoadListIssues', true)
-      return requestListExists({
+      return requestListIssues({
         tableName,
         recordId,
         recordUuid,
@@ -108,10 +108,11 @@ export default {
       salesRepresentativeUuid,
       statusId,
       statusUuid,
-      priorityValue
+      priorityValue,
+      dateNextAction
     }) {
       return new Promise((resolve, reject) => {
-        return createIssues({
+        return createIssue({
           tableName,
           recordId,
           recordUuid,
@@ -123,7 +124,8 @@ export default {
           salesRepresentativeUuid,
           statusId,
           statusUuid,
-          priorityValue
+          priorityValue,
+          dateNextAction
         })
           .then(response => {
             commit('setCurrentIssues', response)
@@ -146,10 +148,11 @@ export default {
       salesRepresentativeUuid,
       statusId,
       statusUuid,
-      priorityValue
+      priorityValue,
+      dateNextAction
     }) {
       return new Promise((resolve, reject) => {
-        return updateIssues({
+        return updateIssue({
           id,
           uuid,
           subject,
@@ -160,7 +163,8 @@ export default {
           salesRepresentativeUuid,
           statusId,
           statusUuid,
-          priorityValue
+          priorityValue,
+          dateNextAction
         })
           .then(response => {
             commit('setCurrentIssues', response)
