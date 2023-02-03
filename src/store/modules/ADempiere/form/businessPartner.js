@@ -23,7 +23,7 @@ import { requestListBusinessPartner } from '@/api/ADempiere/businessPartner'
 
 // constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
-
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 // utils and helper methods
 import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -64,7 +64,7 @@ const businessPartner = {
       isLoaded = true,
       BPshow = false,
       pageNumber = 1,
-      pageSize = 15
+      pageSize = ROWS_OF_RECORDS_BY_PAGE
     }) {
       Vue.set(state.businessPartnerData, containerUuid, {
         containerUuid,
