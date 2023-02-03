@@ -230,7 +230,8 @@ const persistence = {
       attributesList
     }) {
       return new Promise((resolve, reject) => {
-        const { fieldsList } = rootGetters.getStoredTab(parentUuid, containerUuid)
+        const tabDefinition = rootGetters.getStoredTab(parentUuid, containerUuid)
+        const { fieldsList } = tabDefinition
 
         const persistenceAttributesList = getters.getPersistenceAttributes({
           containerUuid,
@@ -367,6 +368,21 @@ const persistence = {
                 dispatch('clearPersistenceQueue', {
                   // without record uuid to clear new
                   containerUuid
+                })
+
+                // update records and logics on child tabs
+                tabDefinition.childTabs.filter(tabItem => {
+                  // get loaded tabs with records
+                  return rootGetters.getIsLoadedTabRecord({
+                    containerUuid: tabItem.uuid
+                  })
+                }).forEach(tabItem => {
+                  // if loaded data refresh this data
+                  // TODO: Verify with get one entity, not get all list
+                  dispatch('setTabDefaultValues', {
+                    parentUuid,
+                    containerUuid: tabItem.uuid
+                  })
                 })
               })
               .catch(error => reject(error))

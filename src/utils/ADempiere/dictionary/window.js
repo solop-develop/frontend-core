@@ -1263,13 +1263,16 @@ export const containerManager = {
       isOverWriteParent: tabDefinition.isParentTab
     })
 
-    // clear old values
-    store.dispatch('clearPersistenceQueue', {
-      containerUuid,
-      recordUuid: row[UUID]
-    }, {
-      root: true
-    })
+    // no clear values is new record
+    if (!isEmptyValue(row[UUID])) {
+      // clear old values
+      store.dispatch('clearPersistenceQueue', {
+        containerUuid,
+        recordUuid: row[UUID]
+      }, {
+        root: true
+      })
+    }
 
     // active logics with set records values
     fieldsList.forEach(field => {
