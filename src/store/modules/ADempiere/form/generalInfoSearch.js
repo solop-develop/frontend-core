@@ -69,7 +69,8 @@ const generalInfoSearch = {
       recordCount = 0,
       isLoaded = true,
       show = false,
-      pageNumber = 1
+      pageNumber = 1,
+      pageSize = 15
     }) {
       Vue.set(state.generalInfoSearch, containerUuid, {
         containerUuid,
@@ -79,7 +80,8 @@ const generalInfoSearch = {
         nextPageToken,
         recordCount,
         isLoaded,
-        pageNumber
+        pageNumber,
+        pageSize
       })
     },
     setGeneralInfoSelectedRow(state, {
@@ -142,7 +144,8 @@ const generalInfoSearch = {
       //
       filters,
       searchValue,
-      pageNumber
+      pageNumber,
+      pageSize
     }) {
       return new Promise(resolve => {
         if (tableName === TABLE_NAME_BPartner) {
@@ -161,7 +164,8 @@ const generalInfoSearch = {
             //
             filters,
             searchValue,
-            pageNumber
+            pageNumber,
+            pageSize
           }).then(response => {
             resolve(response)
           })
@@ -181,7 +185,8 @@ const generalInfoSearch = {
           tableName,
           columnName,
           //
-          pageNumber
+          pageNumber,
+          pageSize
         }).then(response => {
           resolve(response)
         })
@@ -203,7 +208,8 @@ const generalInfoSearch = {
       tableName,
       columnName,
       //
-      pageNumber
+      pageNumber,
+      pageSize
     }) {
       return new Promise(resolve => {
         if (isEmptyValue(pageNumber) || pageNumber < 1) {
@@ -238,7 +244,8 @@ const generalInfoSearch = {
           tableName,
           columnName,
           //
-          pageToken
+          pageToken,
+          pageSize
         })
           .then(response => {
             dispatch('searchTableHeader', {
@@ -269,7 +276,8 @@ const generalInfoSearch = {
               nextPageToken: response.nextPageToken,
               pageNumber,
               isLoaded: true,
-              recordCount: response.recordCount
+              recordCount: response.recordCount,
+              pageSize
             })
 
             resolve(recordsList)

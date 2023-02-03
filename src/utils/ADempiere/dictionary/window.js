@@ -1764,7 +1764,8 @@ export const containerManager = {
     searchValue,
     tableName,
     columnName,
-    pageNumber
+    pageNumber,
+    pageSize
   }) {
     return store.dispatch('findGeneralInfo', {
       containerUuid,
@@ -1775,7 +1776,8 @@ export const containerManager = {
       searchValue,
       tableName,
       columnName,
-      pageNumber
+      pageNumber,
+      pageSize
     })
   },
   searchTableHeader({
