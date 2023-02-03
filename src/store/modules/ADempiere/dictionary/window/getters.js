@@ -292,6 +292,13 @@ export default {
                 }
               }
             }
+            if (isEmptyValue(displayedValue) && !fieldItem.isKey && String(defaultValue).includes('@')) {
+              displayedValue = getContext({
+                parentUuid,
+                containerUuid,
+                columnName: DISPLAY_COLUMN_PREFIX + columnName
+              })
+            }
           }
 
           attributesObject[displayColumnName] = displayedValue
