@@ -63,7 +63,8 @@ const businessPartner = {
       recordCount = 0,
       isLoaded = true,
       BPshow = false,
-      pageNumber = 1
+      pageNumber = 1,
+      pageSize = 15
     }) {
       Vue.set(state.businessPartnerData, containerUuid, {
         containerUuid,
@@ -73,7 +74,8 @@ const businessPartner = {
         nextPageToken,
         recordCount,
         isLoaded,
-        pageNumber
+        pageNumber,
+        pageSize
       })
     },
     setBusinessPartnerSelectedRow(state, {
@@ -117,7 +119,8 @@ const businessPartner = {
       //
       filters = [],
       searchValue,
-      pageNumber
+      pageNumber,
+      pageSize
     }) {
       return new Promise(resolve => {
         if (isEmptyValue(pageNumber) || pageNumber < 1) {
@@ -158,7 +161,8 @@ const businessPartner = {
           // Query
           filters,
           searchValue,
-          pageToken
+          pageToken,
+          pageSize
         })
           .then(responseBusinessPartnerList => {
             const recordsList = responseBusinessPartnerList.recordsList.map((record, rowIndex) => {
@@ -183,6 +187,7 @@ const businessPartner = {
               recordsList,
               nextPageToken: responseBusinessPartnerList.nextPageToken,
               pageNumber,
+              pageSize,
               isLoaded: true,
               recordCount: responseBusinessPartnerList.recordCount
             })
