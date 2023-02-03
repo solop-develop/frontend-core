@@ -178,8 +178,11 @@ export function generatePanelAndFields({
     }
     if (fieldDefinition.isIdentifier) {
       identifierColumns.push({
+        name: fieldDefinition.name,
         columnName,
+        displayColumnName: fieldDefinition.displayColumnName,
         identifierSequence: fieldDefinition.identifierSequence,
+        displayType: fieldDefinition.displayType,
         componentPath
       })
     }
