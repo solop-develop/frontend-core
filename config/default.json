@@ -5,8 +5,8 @@
   },
   "adempiere": {
     "api": {
-      "url": "https://api-develop.solopcloud.com/api/adempiere/",
-      "timeout": 9999999
+      "url": "http://localhost:8085/api/adempiere/",
+      "timeout": 10000
     },
     "images": {
       "url": "http://localhost:8085/adempiere-api/img/"
