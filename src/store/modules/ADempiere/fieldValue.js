@@ -147,20 +147,23 @@ const value = {
       containerUuid,
       isOverWriteParent = false
     }) {
-      const attributesList = getters.getValuesView({
-        containerUuid
-      }).map(attribute => {
-        const { columnName } = attribute
-        return {
-          columnName,
-          value: undefined
-        }
-      })
+      return new Promise(resolve => {
+        const attributesList = getters.getValuesView({
+          containerUuid
+        }).map(attribute => {
+          const { columnName } = attribute
+          return {
+            columnName,
+            value: undefined
+          }
+        })
 
-      commit('updateValuesOfContainer', {
-        containerUuid,
-        attributes: attributesList,
-        isOverWriteParent
+        commit('updateValuesOfContainer', {
+          containerUuid,
+          attributes: attributesList,
+          isOverWriteParent
+        })
+        resolve()
       })
     }
   },

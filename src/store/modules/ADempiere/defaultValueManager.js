@@ -158,8 +158,8 @@ const defaultValueManager = {
               values.DisplayColumn = undefined
             } else {
               valueResponse.attributes.forEach(attribute => {
-                const { key: column, value } = attribute
-                values[column] = value
+                const { key: column, value: attributeValue } = attribute
+                values[column] = attributeValue
               })
             }
 

@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 export const TABLE_NAME = 'C_Location'
@@ -42,6 +42,12 @@ export function getSequenceAsList(captureSequence) {
 }
 
 export const URL_BASE_MAP = 'https://www.google.com/maps?q='
+
+export const COORDENATES_COLUMN_NAMES = [
+  'Latitude',
+  'Longitude',
+  'Altitude'
+]
 
 /**
  * Format coordenate form decimal number
