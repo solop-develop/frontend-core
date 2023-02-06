@@ -16,12 +16,12 @@
  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 <template>
-  <div style="height: 100vh;overflow: auto;">
+  <div :style="styleHeight">
+    <!-- {{ styleHeight }} -->
     <el-container
       v-if="isLoaded"
       key="form-loaded"
       :class="showNavar ? 'view-base' : 'show-header-view-base'"
-      style="height: 100vh;"
     >
       <el-main style="padding-right: 0px !important; padding-bottom: 0px !important;padding-top: 0px !important;padding-left: 0px !important;">
         <el-row>
@@ -31,7 +31,7 @@
               :style="isEmptyValue(formMetadata.fieldsList) ? 'height: 100% !important;' : ''"
             >
               <title-and-help
-                v-if="isShowTitleForm"
+                v-if="isShowTitleForm && !isVisibleShowButton"
                 :name="formName"
                 :help="formMetadata.help"
               >
@@ -44,7 +44,7 @@
                 />
               </title-and-help>
               <el-button
-                v-if="!isShowTitleForm"
+                v-if="!isShowTitleForm && !isVisibleShowButton"
                 type="text"
                 style="position: absolute; right: 10px;z-index: 5;"
                 :circle="true"
@@ -129,6 +129,16 @@ export default {
     },
     isShowTitleForm() {
       return this.$store.getters.getIsShowTitleForm
+    },
+    styleHeight() {
+      if (this.formFileName === 'WFActivity') return 'height: 90vh;overflow: auto;'
+      return 'height: 100vh;overflow: auto;'
+    },
+    isMobile() {
+      return this.$store.state.app.device === 'mobile'
+    },
+    isVisibleShowButton() {
+      return this.isMobile
     }
   },
 
@@ -186,12 +196,12 @@ export default {
 
   .view-base {
     /** Add this rule to view base */
-    overflow: hidden;
+    overflow: auto;
   }
   .show-header-view-base {
     height: 100%;
-    min-height: calc(100vh - 26px);
-    overflow: hidden;
+    /* min-height: calc(100vh - 26px); */
+    overflow: auto;
   }
 
   .w-33 {
