@@ -10,7 +10,7 @@
       @click="isMenuOption()"
     />
     <breadcrumb v-show="!isMenuMobile || device!=='mobile'" id="breadcrumb-container" class="breadcrumb-container" :style="isMobile ? { width: '40%' } : { width: 'auto' } " />
-    <div v-show="isMenuMobile && isMobile" style="display: inline-flex; float: right;">
+    <div v-if="isMenuMobile && isMobile" style="display: inline-flex; float: right;">
       <el-button icon="el-icon-s-tools" type="text" />
       <search id="header-search" class="right-menu-item" style="padding-top: 10px;" />
       <header-notification style="padding-top: 6px;" />
