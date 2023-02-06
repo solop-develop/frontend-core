@@ -23,18 +23,6 @@
       :class="showNavar ? 'view-base' : 'show-header-view-base'"
       style="height: 100vh;"
     >
-      <el-header
-        v-if="showContextMenu"
-        style="height: 39px; background: white;"
-      >
-        <!-- TODO: Add action menu -->
-
-        <modal-dialog
-          :parent-uuid="$route.meta.parentUuid"
-          :container-uuid="formUuid"
-          :panel-type="panelType"
-        />
-      </el-header>
       <el-main style="padding-right: 0px !important; padding-bottom: 0px !important;padding-top: 0px !important;padding-left: 0px !important;">
         <el-row>
           <el-col :span="24">
@@ -88,7 +76,7 @@
 // components and mixins
 import FormPanel from '@theme/components/ADempiere/Form'
 import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
-import ModalDialog from '@theme/components/ADempiere/Dialog'
+// import ModalDialog from '@theme/components/ADempiere/Dialog'
 import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp'
 
 export default {
@@ -97,7 +85,7 @@ export default {
   components: {
     FormPanel,
     LoadingView,
-    ModalDialog,
+    // ModalDialog,
     TitleAndHelp
   },
 
