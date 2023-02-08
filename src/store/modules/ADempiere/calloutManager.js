@@ -24,11 +24,13 @@ import { runCallOutRequest } from '@/api/ADempiere/window'
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { DISPLAY_COLUMN_PREFIX, UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
+import { TABLE } from '@/utils/ADempiere/references'
 
 // Utils and Helper Methods
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
+import { isNumber } from '@/utils/ADempiere/formatValue/numberFormat'
 
 const calloutManager = {
   actions: {
@@ -70,13 +72,22 @@ const calloutManager = {
           let valueType = 'UNKNOWN'
 
           const field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
+          let displayType = null
           if (!isEmptyValue(field)) {
             valueType = field.valueType
+            displayType = field.displayType
           } else {
             // find on parent tab (first tab)
             const parentField = fieldsListParent.find(fieldItem => fieldItem.columnName === columnName)
             if (!isEmptyValue(parentField)) {
               valueType = parentField.valueType
+              displayType = parentField.displayType
+            }
+          }
+          if (!isEmptyValue(displayType) && displayType === TABLE.id) {
+            // AD_Language = 'en_US' and table
+            if (!isNumber(value)) {
+              valueType = 'STRING'
             }
           }
 

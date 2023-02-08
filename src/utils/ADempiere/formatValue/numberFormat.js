@@ -29,6 +29,21 @@ import {
 import { charInText, isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 /**
+ * Is Number Value
+ * @param {mixed} value
+ * @returns {boolean}
+ */
+export function isNumber(value) {
+  if (Number.isNaN(value)) {
+    return false
+  }
+  if (isNaN(value)) {
+    return false
+  }
+  true
+}
+
+/**
  * Get Default currency ISO code
  */
 export function getCurrency() {
