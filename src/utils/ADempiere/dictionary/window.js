@@ -1690,6 +1690,7 @@ export const containerManager = {
           })
         }
       }
+      return response
     })
   },
   getLookupList({ parentUuid, containerUuid, uuid, id, contextColumnNames, columnName, searchValue, isAddBlankValue, blankValue }) {
