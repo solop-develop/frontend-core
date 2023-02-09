@@ -52,7 +52,7 @@
         </collapse-criteria>
         <br>
       </div>
-      <div id="browser-table">
+      <div id="browser-table" style="height: inherit;">
         <!-- Result of Records in the Table -->
         <default-table
           id="mainBrowser"
@@ -441,6 +441,9 @@ export default defineComponent({
 .browser-view {
   .browser-collapse {
     margin-bottom: 10px;
+  }
+  .el-card__body {
+    height: 100%;
   }
 
   /* removes the title link effect on collapse */
