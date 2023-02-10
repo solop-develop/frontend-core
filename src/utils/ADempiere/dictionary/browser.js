@@ -19,6 +19,11 @@
 import language from '@/lang'
 import store from '@/store'
 
+// Constants
+import {
+  DISPLAY_COLUMN_PREFIX
+} from '@/utils/ADempiere/dictionaryUtils'
+
 // API Request Methods
 import { requestSaveBrowseCustomization } from '@/api/ADempiere/user-customization/browse'
 
@@ -400,6 +405,21 @@ export const containerManager = {
           containerUuid,
           columnName
         })
+
+        // update element column name
+        if (!field.isSameColumnElement) {
+          store.commit('updateValueOfField', {
+            containerUuid,
+            columnName: field.elementName,
+            value: response.value
+          })
+
+          store.commit('updateValueOfField', {
+            containerUuid,
+            columnName: DISPLAY_COLUMN_PREFIX + field.elementName,
+            value: response.displayedValue
+          })
+        }
         store.dispatch('browserActionPerformed', {
           containerUuid,
           field,
