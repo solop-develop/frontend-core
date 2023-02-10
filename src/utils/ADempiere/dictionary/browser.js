@@ -394,6 +394,19 @@ export const containerManager = {
       //
       columnName,
       value
+    }).then(response => {
+      if (!isEmptyValue(response.value)) {
+        const field = store.getters.getStoredBrowserFieldFromColumnName({
+          containerUuid,
+          columnName
+        })
+        store.dispatch('browserActionPerformed', {
+          containerUuid,
+          field,
+          value: response.value
+        })
+      }
+      return response
     })
   },
   getLookupList({ parentUuid, containerUuid, contextColumnNames, uuid, searchValue, isAddBlankValue = false, blankValue }) {

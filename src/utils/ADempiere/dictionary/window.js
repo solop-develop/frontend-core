@@ -30,10 +30,12 @@ import {
 } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { YES_NO } from '@/utils/ADempiere/references'
+import { containerManager as CONTAINER_MANAGER_BROWSER } from '@/utils/ADempiere/dictionary/browser'
 
 // API Request Methods
 import { getEntity } from '@/api/ADempiere/user-interface/persistence'
 import { requestSaveWindowCustomization } from '@/api/ADempiere/user-customization/window.js'
+
 // Utils and Helpers Methods
 import evaluator from '@/utils/ADempiere/evaluator'
 import { getContext } from '@/utils/ADempiere/contextUtils'
@@ -710,6 +712,51 @@ export const openBrowserAssociated = {
         processUuid: uuid
       })
       browserUuid = process.browserUuid
+    }
+
+    const storedBrowser = store.getters.getStoredBrowser(browserUuid)
+    if (!isEmptyValue(storedBrowser)) {
+      // overwrite values
+      store.dispatch('setBrowserDefaultValues', {
+        containerUuid: browserUuid
+      })
+      const tabContext = store.getters.getValuesView({
+        containerUuid
+      })
+
+      store.dispatch('updateValuesOfContainer', {
+        containerUuid: browserUuid,
+        attributes: tabContext
+      })
+
+      storedBrowser.fieldsList.forEach(itemField => {
+        if (!itemField.isSameColumnElement) {
+          const currentValueElement = tabContext.find(itemAttribute => {
+            return itemAttribute.columnName === itemField.elementName
+          })
+          if (!isEmptyValue(currentValueElement) && !isEmptyValue(currentValueElement.value)) {
+            store.commit('updateValueOfField', {
+              containerUuid: browserUuid,
+              columnName: itemField.elementName,
+              value: currentValueElement.value
+            })
+            store.commit('updateValueOfField', {
+              containerUuid: browserUuid,
+              columnName: itemField.columnName,
+              value: currentValueElement.value
+            })
+          }
+          // change Dependents
+          store.dispatch('changeDependentFieldsList', {
+            field: itemField,
+            containerManager: CONTAINER_MANAGER_BROWSER
+          })
+        }
+      })
+
+      store.dispatch('clearBrowserData', {
+        containerUuid: browserUuid
+      })
     }
 
     const inMenu = zoomIn({

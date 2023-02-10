@@ -9,7 +9,7 @@
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
@@ -35,8 +35,9 @@
         :relations-manager="relationsManager"
         style="position: absolute;"
       />
+
       <div id="browser-query-criteria">
-        <!-- uery Criteria -->
+        <!-- Query Criteria -->
         <collapse-criteria
           :title="$t('views.searchCriteria')"
           :container-uuid="browserUuid"
@@ -74,6 +75,7 @@
       :container-uuid="processUuid"
     />
   </div>
+
   <loading-view
     v-else
     key="browser-loading"
@@ -88,8 +90,8 @@ import store from '@/store'
 
 // Componets and Mixins
 import ActionMenu from '@theme/components/ADempiere/ActionMenu/index.vue'
-import DefaultTable from '@theme/components/ADempiere/DataTable/index.vue'
 import CollapseCriteria from '@theme/components/ADempiere/CollapseCriteria/index.vue'
+import DefaultTable from '@theme/components/ADempiere/DataTable/index.vue'
 import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
 import mixinProcess from '@/views/ADempiere/Process/mixinProcess.js'
 import ModalDialog from '@theme/components/ADempiere/ModalDialog/index.vue'

@@ -1,34 +1,36 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 import Vue from 'vue'
 import language from '@/lang'
 
-// api request methods
+// API Request Methods
 import { requestBrowserSearch, updateBrowserEntity, requestDeleteBrowser } from '@/api/ADempiere/browser'
 
-// constants
+// Constants
 import { ROW_ATTRIBUTES, ROW_KEY_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 
-// utils and helper methods
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils'
 import { showMessage, showNotification } from '@/utils/ADempiere/notification'
-import { isDisplayedField, isReadOnlyColumn } from '@/utils/ADempiere/dictionary/browser'
+import { isDisplayedField, isReadOnlyColumn, containerManager } from '@/utils/ADempiere/dictionary/browser'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 
 const initState = {
@@ -106,29 +108,37 @@ const browserControl = {
       value,
       valueTo
     }) {
-      const fieldsList = getters.getStoredFieldsFromBrowser(containerUuid)
+      return new Promise(resolve => {
+        const fieldsList = getters.getStoredFieldsFromBrowser(containerUuid)
 
-      const fieldsEmpty = getters.getFieldsListEmptyMandatory({
-        containerUuid,
-        fieldsList,
-        showedMethod: isDisplayedField
-      })
-
-      if (!isEmptyValue(fieldsEmpty)) {
-        showMessage({
-          message: language.t('notifications.mandatoryFieldMissing') + fieldsEmpty,
-          type: 'info'
+        // change Dependents
+        dispatch('changeDependentFieldsList', {
+          field,
+          containerManager: containerManager
         })
-        return
-      }
 
-      // Validate if a field is called and visible
-      if (isEmptyValue(field.dependentFieldsList)) {
-        dispatch('getBrowserSearch', {
+        const fieldsEmpty = getters.getFieldsListEmptyMandatory({
           containerUuid,
-          isClearSelection: true
+          fieldsList,
+          showedMethod: isDisplayedField
         })
-      }
+
+        if (!isEmptyValue(fieldsEmpty)) {
+          showMessage({
+            message: language.t('notifications.mandatoryFieldMissing') + fieldsEmpty,
+            type: 'info'
+          })
+          return
+        }
+
+        // Validate if a field is called and visible
+        if (isEmptyValue(field.dependentFieldsList)) {
+          dispatch('getBrowserSearch', {
+            containerUuid,
+            isClearSelection: true
+          })
+        }
+      })
     },
 
     // Search with query criteria

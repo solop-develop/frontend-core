@@ -176,7 +176,7 @@ export default {
     isEvaluateShowed = true
   }) => {
     if (isEmptyValue(fieldsList)) {
-      fieldsList = getters.getStoredFieldsFromReport(containerUuid)
+      fieldsList = getters.getStoredFieldsFromBrowser(containerUuid)
       if (isEmptyValue(fieldsList)) {
         return []
       }
@@ -206,6 +206,57 @@ export default {
 
         return true
       })
+  },
+
+  getStoredBrowserFieldFromUuid: (state, getters) => ({
+    containerUuid,
+    uuid,
+    fieldsList = []
+  }) => {
+    if (isEmptyValue(fieldsList)) {
+      fieldsList = getters.getStoredFieldsFromBrowser(containerUuid)
+      if (isEmptyValue(fieldsList)) {
+        return undefined
+      }
+    }
+
+    return fieldsList.find(itemField => {
+      return itemField.uuid === uuid
+    })
+  },
+
+  getStoredBrowserFieldFromColumnName: (state, getters) => ({
+    containerUuid,
+    columnName,
+    fieldsList = []
+  }) => {
+    if (isEmptyValue(fieldsList)) {
+      fieldsList = getters.getStoredFieldsFromBrowser(containerUuid)
+      if (isEmptyValue(fieldsList)) {
+        return undefined
+      }
+    }
+
+    return fieldsList.find(itemField => {
+      return itemField.columnName === columnName
+    })
+  },
+
+  getStoredBrowserFieldFromElementName: (state, getters) => ({
+    containerUuid,
+    columnName,
+    fieldsList = []
+  }) => {
+    if (isEmptyValue(fieldsList)) {
+      fieldsList = getters.getStoredFieldsFromBrowser(containerUuid)
+      if (isEmptyValue(fieldsList)) {
+        return undefined
+      }
+    }
+
+    return fieldsList.find(itemField => {
+      return itemField.elementName === columnName
+    })
   }
 
 }

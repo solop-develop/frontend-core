@@ -20,20 +20,21 @@ import language from '@/lang'
 import router from '@/router'
 import store from '@/store'
 
-// api request methods
+// API Request Methods
 import { requestBrowserMetadata } from '@/api/ADempiere/dictionary/smart-browser.js'
 
-// constants
+// Constants
 import {
   exportRecordsSelected,
   sharedLink
 } from '@/utils/ADempiere/constants/actionsMenuList'
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 
-// utils and helper methods
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { generatePanelAndFields } from '@/utils/ADempiere/dictionary/panel.js'
 import {
+  containerManager,
   isDisplayedField, isMandatoryField,
   evaluateDefaultFieldShowed,
   clearQueryCriteria,
@@ -88,6 +89,11 @@ export default {
             containerUuid: browserDefinition.uuid
           })
 
+          // set default values into fields
+          dispatch('setBrowserDefaultValues', {
+            containerUuid: browserDefinition.uuid,
+            fieldsList: browserDefinition.fieldsList
+          })
           // set parent context
           if (!isEmptyValue(parentUuid)) {
             const parentContext = rootGetters.getValuesView({
@@ -97,13 +103,32 @@ export default {
               containerUuid: uuid,
               attributes: parentContext
             })
-          }
 
-          // set default values into fields
-          dispatch('setBrowserDefaultValues', {
-            containerUuid: browserDefinition.uuid,
-            fieldsList: browserDefinition.fieldsList
-          })
+            browserDefinition.fieldsList.forEach(itemField => {
+              if (!itemField.isSameColumnElement) {
+                const currentValueElement = parentContext.find(itemAttribute => {
+                  return itemAttribute.columnName === itemField.elementName
+                })
+                if (!isEmptyValue(currentValueElement) && !isEmptyValue(currentValueElement.value)) {
+                  store.commit('updateValueOfField', {
+                    containerUuid: uuid,
+                    columnName: itemField.elementName,
+                    value: currentValueElement.value
+                  })
+                  store.commit('updateValueOfField', {
+                    containerUuid: uuid,
+                    columnName: itemField.columnName,
+                    value: currentValueElement.value
+                  })
+                }
+                // change Dependents
+                store.dispatch('changeDependentFieldsList', {
+                  field: itemField,
+                  containerManager
+                })
+              }
+            })
+          }
 
           resolve(browserDefinition)
 
