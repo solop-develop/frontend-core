@@ -86,6 +86,7 @@ export default {
           commit('addBrowserToList', browserDefinition)
 
           dispatch('setBrowserActionsMenu', {
+            parentUuid,
             containerUuid: browserDefinition.uuid
           })
 
@@ -156,6 +157,16 @@ export default {
                 store.dispatch('startProcessOfBrowser', {
                   parentUuid: browserDefinition.uuid,
                   containerUuid: process.uuid
+                }).then(processOutputResponse => {
+                  // close current page
+                  const currentRoute = router.app._route
+                  const tabViewsVisited = rootGetters.visitedViews
+                  dispatch('tagsView/delView', currentRoute)
+                  // go to back page
+                  const oldRouter = tabViewsVisited[tabViewsVisited.length - 1]
+                  router.push({
+                    path: oldRouter.path
+                  }, () => {})
                 })
               },
               loadData: () => {
@@ -193,9 +204,11 @@ export default {
 
   /**
    * Set actions menu to browser
+   * @param {string} parentUuid tab or process associated
    * @param {string} containerUuid
    */
-  setBrowserActionsMenu({ commit, getters }, {
+  setBrowserActionsMenu({ commit, dispatch, getters }, {
+    parentUuid,
     containerUuid
   }) {
     const browserDefinition = getters.getStoredBrowser(containerUuid)
@@ -204,14 +217,14 @@ export default {
 
     // process associated
     if (!isEmptyValue(browserDefinition.process)) {
-      const { uuid, name, description } = browserDefinition.process
+      const { process } = browserDefinition
+      const { uuid, name, description } = process
       const actionProcess = {
         ...runProcessOfBrowser,
         uuid,
         name,
         description
       }
-
       actionsList.push(actionProcess)
     }
     actionsList.push(runDeleteable)
