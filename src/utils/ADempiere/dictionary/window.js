@@ -1435,6 +1435,12 @@ export const containerManager = {
         return true
       }
     }
+
+    // always updateable field
+    if (field.isAlwaysUpdateable) {
+      return false
+    }
+
     // Button to process document
     if (columnName === DOCUMENT_ACTION) {
       return false
@@ -1458,10 +1464,6 @@ export const containerManager = {
     })
     if (convertStringToBoolean(isProcessingRecord)) {
       return true
-    }
-
-    if (field.isAlwaysUpdateable) {
-      return false
     }
 
     return isReadOnlyField(field) || field.isReadOnlyFromForm
