@@ -1,20 +1,24 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 import { castValueWithType, isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { isNumber } from '@/utils/ADempiere/formatValue/numberFormat'
+import { OPERATOR_EQUAL, OPERATORS_LIST, OPERATOR_NULL } from '@/utils/ADempiere/dataUtils'
 
 class Filters {
   constructor() {
@@ -143,31 +147,46 @@ class Filters {
         // break
         return
       }
-      const compare = condition.replace(/\(|\)|\s+/g, '')
+      const compare = condition.replace(/\(|\)/g, '')
       comparations.push(compare)
     })
 
+    const sqlOperators = /(<>|<=|>=|!=|<|=|>|NOT\s+IN|IN|NOT\s+BETWEEN|BETWEEN|NOT\s+LIKE|LIKE|IS\s+NULL|IS\s+NOT\s+NULL)/
+
     comparations.forEach(compare => {
       // TODO: Add support to <>!=
-      const values = compare.split('=')
+      const values = compare.split(sqlOperators)
 
-      const index = values[0].indexOf('.')
-      const columnName = values[0].substr(index + 1)
+      const index = values.at(0).indexOf('.')
+      const columnName = values.at(0).substr(index + 1)
+      const filterOperator = values.at(1)
+
+      let operatorValue = OPERATORS_LIST.find(itemOperator => {
+        return itemOperator.sqlOperators.includes(filterOperator.trim())
+      })
 
       let type = 'STRING'
-      let value = values[1]
+      let value = values.at(2).trim()
       if (isEmptyValue(value)) {
         value
       } else if (value.includes('\'')) {
         value = value.replace(/'/g, '')
-      } else {
+      } else if (isNumber(value)) {
         value = Number(value)
         type = 'NUMBER'
+      }
+      if (isEmptyValue(operatorValue)) {
+        operatorValue = OPERATOR_EQUAL
+      }
+      if (operatorValue.operator === OPERATOR_NULL.operator) {
+        value = undefined
+        type = 'UNKNOWN'
       }
 
       this.filtersList.set(columnName, {
         columnName,
         type,
+        operator: operatorValue.operator,
         value
       })
     })
