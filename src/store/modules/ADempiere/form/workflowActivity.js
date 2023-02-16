@@ -22,15 +22,14 @@ import language from '@/lang'
 
 // API Request Methods
 import {
-  workflowActivities,
-  runDocAction
+  workflowActivities
 } from '@/api/ADempiere/workflow.js'
 import { listNotifiications } from '@/api/ADempiere/dashboard/dashboard.js'
 import { requestListWorkflowsLogs } from '@/api/ADempiere/window'
 
 // Utils and Helper Methods
-import { isEmptyValue, typeValue } from '@/utils/ADempiere'
-import { showMessage, showNotification } from '@/utils/ADempiere/notification.js'
+import { isEmptyValue } from '@/utils/ADempiere'
+import { showMessage } from '@/utils/ADempiere/notification.js'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 
 const activity = {
@@ -144,58 +143,6 @@ export default {
     },
     selectedActivity({ commit }, activity) {
       commit('setCurrentActivity', activity)
-    },
-    changeActionsDoc({ commit, dispatch }, {
-      tableName,
-      id,
-      uuid,
-      docAction,
-      containerUuid
-    }) {
-      return new Promise(resolve => {
-        runDocAction({
-          tableName,
-          id,
-          uuid,
-          docAction
-        })
-          .then(response => {
-            dispatch('listDocumentStatus', {
-              tableName,
-              recordUuid: uuid,
-              recordId: id,
-              containerUuid
-            })
-              .then(responseList => {
-                const { documentActionsList } = responseList
-                commit('setWorkFlowActions', {
-                  containerUuid,
-                  options: documentActionsList
-                })
-              })
-            dispatch('listDocumentActionStatus', {
-              tableName,
-              recordUuid: uuid
-            })
-            let text, isError
-            if (typeValue(response) === 'STRING') {
-              text = response
-              isError = true
-            } else {
-            // if (typeof response === 'object' && response.is_error) {
-              isError = response.is_error
-              text = response.summary
-            }
-            showNotification({
-              message: text,
-              type: isError ? 'error' : 'success'
-            })
-            resolve(response)
-          })
-          .catch(error => {
-            console.warn(`Error Run Doc Action: ${error.message}. Code: ${error.code}.`)
-          })
-      })
     },
     searchWorkflowHistory({ commit }, {
       containerUuid,
