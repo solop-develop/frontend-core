@@ -98,8 +98,13 @@ export function getEntities({
 
   return request({
     url: '/user-interface/window/entities',
-    method: 'get',
+    method: 'post',
     params: {
+      // Page Data
+      page_token: pageToken,
+      page_size: pageSize
+    },
+    data: {
       window_uuid: windowUuid,
       tab_uuid: tabUuid,
       context_attributes: contextAttributesList,
@@ -108,10 +113,7 @@ export function getEntities({
       filters,
       columns,
       // replace sql values
-      sorting: sortingDefinition,
-      // Page Data
-      page_token: pageToken,
-      page_size: pageSize
+      sorting: sortingDefinition
     }
   })
     .then(response => {
