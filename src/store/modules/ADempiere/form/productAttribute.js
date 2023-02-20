@@ -9,28 +9,37 @@
 *
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
 *
 * You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <https://www.gnu.org/licenses/>.
+* along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
+
+const initState = {
+  productAttribute: {},
+  currentProductAttribute: {},
+  showProductAttribute: false
+}
+
 const productAttribute = {
-  state: {
-    currentProductAttribute: {},
-    showProductAttribute: false
-  },
+  state: initState,
 
   mutations: {
-    setProductAttribute(state, attribute) {
+    setCurrentProductAttribute(state, attribute) {
       state.currentProductAttribute = attribute
     },
     setShowProductAttribute(state, show) {
       state.showProductAttribute = show
     }
   },
+
+  actions: {
+
+  },
+
   getters: {
-    getProductAttribute: (state) => {
+    getCurrentProductAttribute: (state) => {
       return state.currentProductAttribute
     },
     getShowProductAttribute: (state) => {

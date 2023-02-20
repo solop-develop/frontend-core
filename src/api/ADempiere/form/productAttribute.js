@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -20,7 +20,7 @@
 import { request } from '@/utils/ADempiere/request'
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
-export function listProductAttributesSetInstances({
+export function requestListProductAttributesSetInstances({
   id,
   uuid,
   productId,
@@ -42,12 +42,11 @@ export function listProductAttributesSetInstances({
     }
   })
     .then(response => {
-      // const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
       return camelizeObjectKeys(response)
     })
 }
 
-export function getProductAttribute({
+export function requestGetProductAttributeSet({
   id,
   uuid,
   productId,
@@ -69,12 +68,11 @@ export function getProductAttribute({
     }
   })
     .then(response => {
-      // const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
       return camelizeObjectKeys(response)
     })
 }
 
-export function createProductAttributeSetInstance({
+export function requestSaveAttributeSetInstance({
   id,
   uuid,
   guaranteeDate,
@@ -104,18 +102,15 @@ export function createProductAttributeSetInstance({
     }
   })
     .then(response => {
-      // const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
       return camelizeObjectKeys(response)
     })
 }
 
-export function getProductAttributeSetInstace({
+export function requestGetProductAttributeSetInstace({
   id,
   uuid,
   productId,
-  productUuid,
-  productAttributeSetInstanceId,
-  productAttributeSetInstanceUuid
+  productUuid
 }) {
   return request({
     url: '/material-management/get-product-attribute-set-instance',
@@ -125,13 +120,10 @@ export function getProductAttributeSetInstace({
       id,
       uuid,
       product_id: productId,
-      product_uuid: productUuid,
-      product_attribute_set_instance_id: productAttributeSetInstanceId,
-      product_attribute_set_instance_uuid: productAttributeSetInstanceUuid
+      product_uuid: productUuid
     }
   })
     .then(response => {
-      // const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
       return camelizeObjectKeys(response)
     })
 }

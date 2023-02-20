@@ -19,6 +19,7 @@
 import actionMenu from './actionMenu'
 import businessPartner from './businessPartner'
 import component from './component'
+import field from './field'
 import form from './form'
 import orderList from './orderList'
 import page from './page'
@@ -49,6 +50,7 @@ export default {
   actionMenu,
   businessPartner,
   component,
+  field,
   orderList,
   page,
   process,
@@ -222,22 +224,6 @@ export default {
     changeLanguagePlaceholder: 'Choose a language'
   },
   window,
-  field: {
-    field: 'Field',
-    emptyFieldAttribute: 'No Attributes group defined for the product',
-    info: 'Information',
-    calculator: 'Calculator',
-    preference: 'Preference',
-    logsField: 'Field Change Log',
-    logsFieldEmpty: 'The field is still unchanged',
-    contextInfo: 'Context Info',
-    coordination: 'Coordinates',
-    container: {
-      help: 'Help',
-      defaultValue: 'Default Value',
-      description: 'Description'
-    }
-  },
   data: {
     createRecordSuccessful: 'New record created successfully',
     createNewRecord: 'Mode New record',
