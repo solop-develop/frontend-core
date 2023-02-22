@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -19,17 +19,18 @@
 // A util class for handle format for time, date and others values to beused to display information
 // Note that this file use moment library for a easy conversion
 
-// constants
+// Constants
 import {
   DATE, DATE_PLUS_TIME, TIME,
   AMOUNT, COSTS_PLUS_PRICES, NUMBER, QUANTITY,
   CHAR, MEMO, TEXT, TEXT_LONG,
-  ACCOUNT_ELEMENT, LOCATION_ADDRESS, PRODUCT_ATTRIBUTE, // Custom lookups
+  ACCOUNT_ELEMENT, LOCATION_ADDRESS, // Custom lookups
+  LOCATOR_WAREHOUSE, PRODUCT_ATTRIBUTE, // Custom lookups of Producs
   LIST, TABLE, TABLE_DIRECT, SEARCH, // Standard lookups
   YES_NO
 } from '@/utils/ADempiere/references.js'
 
-// utils and helper methods
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertBooleanToTranslationLang } from './formatValue/booleanFormat'
 export { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
@@ -91,6 +92,7 @@ export function formatField({
     case ACCOUNT_ELEMENT.id:
     case LIST.id:
     case LOCATION_ADDRESS.id:
+    case LOCATOR_WAREHOUSE.id:
     case PRODUCT_ATTRIBUTE.id:
     case SEARCH.id:
     case TABLE.id:
