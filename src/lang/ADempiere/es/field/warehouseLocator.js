@@ -16,23 +16,18 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import productAttribute from './productAttribute'
-import warehouseLocator from './warehouseLocator'
-
-export default {
-  field: 'Campo',
-  info: 'Información',
-  calculator: 'Calculadora',
-  preference: 'Preferencia',
-  logsField: 'Bitácora de Cambios',
-  contextInfo: 'Información del Contexto',
-  logsFieldEmpty: 'El campo no tiene cambios aún',
-  coordination: 'Coordenadas',
-  container: {
-    defaultValue: 'Valor Predeterminado',
-    help: 'Ayuda',
-    description: 'Descripción'
-  },
-  productAttribute,
-  warehouseLocator
+const warehouseLocator = {
+  // tab
+  newEdit: 'Nuevo/Editar',
+  selectExisting: 'Seleccionar Existente',
+  // table
+  searchValue: 'Valor de Búsqueda',
+  warehouse: 'Almacén',
+  value: 'Código',
+  isDefault: 'Predeterminado',
+  aisle: 'Rack (X)',
+  bin: 'Columna (Y)',
+  level: 'Nivel (Z)'
 }
+
+export default warehouseLocator

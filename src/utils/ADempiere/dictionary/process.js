@@ -331,6 +331,33 @@ export const containerManager = {
       tableName
     })
   },
+  warehouseLocatorSearch({
+    containerUuid,
+    parentUuid,
+    warehouseId,
+    contextColumnNames,
+    contextAttributesList,
+    uuid,
+    searchValue,
+    // tableName,
+    // columnName,
+    pageNumber,
+    pageSize
+  }) {
+    return store.dispatch('listWarehouseLocators', {
+      containerUuid,
+      parentUuid,
+      warehouseId,
+      contextColumnNames,
+      contextAttributesList,
+      processParameterUuid: uuid,
+      searchValue,
+      // tableName,
+      // columnName,
+      pageNumber,
+      pageSize
+    })
+  },
 
   applyCustomization({
     containerUuid,

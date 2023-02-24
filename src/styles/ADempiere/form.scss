@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 .input-as-password,
 input[type=text].input-as-password {
   // text-security: disc;
@@ -39,3 +38,21 @@ button.button-base-icon {
   padding: 4px 8px;
   font-size: 24px;
 }
+
+button.button-show-popover {
+  padding-left: 9px !important;
+  padding-right: 0px !important;
+  i, svg {
+    font-size: 20px !important;
+  }
+}
+
+.form-min-label {
+  /**
+   * Reduce the spacing between the form element and its label
+   */
+   .el-form-item__label {
+    padding-bottom: 0px !important;
+  }
+}
+

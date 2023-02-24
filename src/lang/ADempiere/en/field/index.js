@@ -17,6 +17,7 @@
  */
 
 import productAttribute from './productAttribute'
+import warehouseLocator from './warehouseLocator'
 
 export default {
   field: 'Field',
@@ -32,5 +33,6 @@ export default {
     defaultValue: 'Default Value',
     description: 'Description'
   },
-  productAttribute
+  productAttribute,
+  warehouseLocator
 }

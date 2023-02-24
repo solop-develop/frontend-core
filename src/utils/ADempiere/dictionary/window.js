@@ -197,7 +197,8 @@ export function evaluateDefaultFieldShowed({
   const permissedDisplayedDefault = [
     VALUE, DOCUMENT_NO,
     'DateInvoiced', 'DateOrdered', 'DatePromised',
-    'DateTrx', 'M_Product_ID', 'QtyEntered'
+    'DateTrx', 'M_Product_ID', 'QtyEntered',
+    'M_Locator_ID'
   ]
   if (permissedDisplayedDefault.includes(columnName)) {
     return true
@@ -1114,7 +1115,7 @@ export function generateTabs({
       sequenceTabsList,
       // app properties
       isShowedRecordNavigation: !(currentTab.isSingleRow || isParentTab), // TODO: @deprecated
-      isShowedTableRecords: !isParentTab, // @TODO: !(currentTab.isSingleRow || isParentTab),
+      isShowedTableRecords: false, // !isParentTab, // @TODO: !(currentTab.isSingleRow || isParentTab),
       index, // this index is not related to the index in which the tabs are displayed
       isSelected: false
     }
@@ -1842,6 +1843,33 @@ export const containerManager = {
     return store.dispatch('searchTableHeader', {
       containerUuid,
       tableName
+    })
+  },
+  warehouseLocatorSearch({
+    containerUuid,
+    parentUuid,
+    warehouseId,
+    contextColumnNames,
+    contextAttributesList,
+    uuid,
+    searchValue,
+    // tableName,
+    // columnName,
+    pageNumber,
+    pageSize
+  }) {
+    return store.dispatch('listWarehouseLocators', {
+      containerUuid,
+      parentUuid,
+      warehouseId,
+      contextColumnNames,
+      contextAttributesList,
+      fieldUuid: uuid,
+      searchValue,
+      // tableName,
+      // columnName,
+      pageNumber,
+      pageSize
     })
   },
 
