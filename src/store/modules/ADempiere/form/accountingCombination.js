@@ -1,38 +1,37 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
  * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- // Contributor(s): Elsio Sanchez elsiosanchez@gmail.com https://github.com/elsiosanchez
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+ * Contributor(s): Elsio Sanchez elsiosanchez@gmail.com https://github.com/elsiosanchez
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 import Vue from 'vue'
 
-// api request methods
+// API Request Methods
 import {
   requestListAccountingCombinations,
   requestGetAccountingCombination,
   requestSaveAccountingCombination
 } from '@/api/ADempiere/field/accoutingCombination'
 
-// constants
+// Constants
+import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 
-// utils and helper methods
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
-import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
-// import { generateField } from '@/utils/ADempiere/dictionaryUtils'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils'
 import { isSameSize } from '@/utils/ADempiere/formatValue/iterableFormat'
 
@@ -179,7 +178,7 @@ const AccountCombinations = {
     }) {
       return new Promise(resolve => {
         if (isEmptyValue(pageNumber) || pageNumber < 1) {
-          const storedPage = getters.getGeneralInfoPageNumber({
+          const storedPage = getters.getAccountCombinationsPageNumber({
             containerUuid
           })
           // refresh with same page
@@ -195,7 +194,7 @@ const AccountCombinations = {
           })
         }
         // fill context value to continue
-        if (isSameSize(contextColumnNames, contextAttributesList)) {
+        if (!isSameSize(contextColumnNames, contextAttributesList)) {
           resolve([])
           return
         }
