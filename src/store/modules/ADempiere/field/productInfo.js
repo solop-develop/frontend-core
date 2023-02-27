@@ -9,25 +9,25 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 import Vue from 'vue'
 
-// api request methods
-import { requestProductsList } from '@/api/ADempiere/form/product-info'
+// API Request Methods
+import { requestProductsList } from '@/api/ADempiere/field/product-info'
 
-// utils and helper methods
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 
 const initState = {
-  businessPartnerPopoverList: false,
+  productInfoPopoverList: false,
   // container uuid: record uuid
   emtpyProductData: {
     parentUuid: undefined,
@@ -42,7 +42,7 @@ const initState = {
     isLoaded: false,
     pageNumber: 1
   },
-  businessPartnerData: {}
+  productInfoData: {}
 }
 
 const productInfo = {
@@ -58,7 +58,7 @@ const productInfo = {
       isLoaded = true,
       pageNumber = 1
     }) {
-      Vue.set(state.businessPartnerData, containerUuid, {
+      Vue.set(state.productInfoData, containerUuid, {
         containerUuid,
         currentRow,
         recordsList,
@@ -72,11 +72,11 @@ const productInfo = {
       containerUuid,
       currentRow = {}
     }) {
-      Vue.set(state.businessPartnerData[containerUuid], 'currentRow', currentRow)
+      Vue.set(state.productInfoData[containerUuid], 'currentRow', currentRow)
     },
 
     changePopoverListProduct(state, isShowed = false) {
-      state.businessPartnerPopoverList = isShowed
+      state.productInfoPopoverList = isShowed
     }
   },
 
@@ -116,7 +116,7 @@ const productInfo = {
           pageToken
         })
           .then(responseProductList => {
-            const { businessPartnersList: recordsList } = responseProductList
+            const { productInfosList: recordsList } = responseProductList
 
             let currentRow = {}
             // update current record
@@ -149,11 +149,11 @@ const productInfo = {
   },
   getters: {
     /**
-     * Used by result in Business Partner List
+     * Used by result in Product List
      * @param {string} containerUuid
      */
     getProductData: (state) => ({ containerUuid }) => {
-      return state.businessPartnerData[containerUuid] || {
+      return state.productInfoData[containerUuid] || {
         ...state.emtpyProductData,
         containerUuid
       }
@@ -184,7 +184,7 @@ const productInfo = {
       }).currentRow
     },
     getProductPopoverList: (state) => {
-      return state.businessPartnerPopoverList
+      return state.productInfoPopoverList
     }
   }
 }
