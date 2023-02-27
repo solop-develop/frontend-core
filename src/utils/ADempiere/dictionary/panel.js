@@ -136,8 +136,9 @@ export function generatePanelAndFields({
   isAddFieldUuid = false,
   isAddLinkColumn = false,
   fieldOverwrite = {},
-  sortField = 'sequence', //  sequence, sortNo, seqNoGrid,
-  evaluateDefaultFieldShowed
+  sortField = 'sequence', // sequence, sortNo, seqNoGrid,
+  evaluateDefaultFieldShowed,
+  evaluateDefaultColumnShowed
 }) {
   const fieldAdditionalAttributes = {
     parentUuid,
@@ -163,6 +164,7 @@ export function generatePanelAndFields({
     const fieldDefinition = generateField({
       fieldToGenerate: fieldItem,
       evaluateDefaultFieldShowed,
+      evaluateDefaultColumnShowed,
       moreAttributes: {
         ...fieldAdditionalAttributes,
         fieldsListIndex: index
@@ -192,6 +194,7 @@ export function generatePanelAndFields({
       const fieldRange = generateField({
         fieldToGenerate: fieldItem,
         evaluateDefaultFieldShowed,
+        evaluateDefaultColumnShowed,
         moreAttributes: fieldAdditionalAttributes,
         typeRange: true
       })

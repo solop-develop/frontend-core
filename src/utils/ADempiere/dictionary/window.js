@@ -197,8 +197,7 @@ export function evaluateDefaultFieldShowed({
   const permissedDisplayedDefault = [
     VALUE, DOCUMENT_NO,
     'DateInvoiced', 'DateOrdered', 'DatePromised',
-    'DateTrx', 'M_Product_ID', 'QtyEntered',
-    'M_Locator_ID'
+    'DateTrx', 'M_Product_ID', 'QtyEntered'
   ]
   if (permissedDisplayedDefault.includes(columnName)) {
     return true
@@ -1131,7 +1130,8 @@ export function generateTabs({
         isShowedFromUser: false,
         firstTabUuid
       },
-      evaluateDefaultFieldShowed
+      evaluateDefaultFieldShowed,
+      evaluateDefaultColumnShowed: evaluateDefaultFieldShowed
     })
   })
 
@@ -1691,8 +1691,8 @@ export const containerManager = {
     })
   },
 
-  changeTabTableShowedFromUser({ parentUuid, containerUuid, fieldsShowed }) {
-    store.dispatch('changeTabTableShowedFromUser', {
+  changeColumnShowedFromUser({ parentUuid, containerUuid, fieldsShowed }) {
+    store.dispatch('changeTabColumnShowedFromUser', {
       parentUuid,
       containerUuid,
       fieldsShowed

@@ -82,6 +82,33 @@ export function isReadOnlyField({ isQueryCriteria, isReadOnlyFromLogic }) {
   return isQueryCriteria && isReadOnlyFromLogic
 }
 
+export function evaluateDefaultColumnShowed({
+  isKey, isActive, displayType, isDisplayed, isShowedTableFromUser,
+  isMandatory, isMandatoryFromLogic, mandatoryLogic
+}) {
+  // const isDisplayedColumnGenerated = isDisplayedColumn({
+  //   isKey,
+  //   isActive,
+  //   displayType,
+  //   isDisplayed,
+  //   isMandatory,
+  //   isMandatoryFromLogic,
+  //   mandatoryLogic
+  // })
+  // if (!isDisplayedColumnGenerated) {
+  //   return
+  // }
+  // const isMandatoryGenerated = isMandatoryColumn({
+  //   displayType, isMandatory, isMandatoryFromLogic, mandatoryLogic
+  // })
+  // if (isMandatoryGenerated) {
+  //   return true
+  // }
+
+  // return Boolean(isShowedTableFromUser)
+  return true
+}
+
 /**
  * Is displayed column in table multi record
  */
@@ -349,6 +376,13 @@ export const containerManager = {
 
   changeFieldShowedFromUser({ containerUuid, fieldsShowed }) {
     store.dispatch('changeBrowserFieldShowedFromUser', {
+      containerUuid,
+      fieldsShowed
+    })
+  },
+  changeColumnShowedFromUser({ parentUuid, containerUuid, fieldsShowed }) {
+    store.dispatch('changeBrowseColumnShowedFromUser', {
+      parentUuid,
       containerUuid,
       fieldsShowed
     })

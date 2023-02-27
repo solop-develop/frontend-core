@@ -37,6 +37,7 @@ import {
   containerManager,
   isDisplayedField, isMandatoryField,
   evaluateDefaultFieldShowed,
+  evaluateDefaultColumnShowed,
   clearQueryCriteria,
   refreshBrowserSearh, runProcessOfBrowser,
   zoomWindow, runDeleteable
@@ -64,7 +65,8 @@ export default {
               isShowedFromUser: false
             },
             sortField: 'seqNoGrid',
-            evaluateDefaultFieldShowed
+            evaluateDefaultFieldShowed,
+            evaluateDefaultColumnShowed
           })
 
           browserDefinition.elementsList = {}
@@ -327,16 +329,16 @@ export default {
     let isChangedDisplayedWithValue = false
 
     fieldsList.forEach(itemField => {
-      const { isShowedFromUser: isShowedOriginal, columnName } = itemField
+      const { columnName } = itemField
 
-      let isShowedFromUser = false
-      if (fieldsShowed.includes(columnName)) {
-        isShowedFromUser = true
+      const isShowedFromUser = fieldsShowed.includes(columnName)
+      if (itemField.isShowedFromUser === isShowedFromUser) {
+        // no to mutate the state unnecessarily
+        return
       }
 
       // not query criteria or mandatory (user display is not affected)
-      if (isShowedOriginal === isShowedFromUser ||
-        !isDisplayedField(itemField) || isMandatoryField(itemField)) {
+      if (!isDisplayedField(itemField) || isMandatoryField(itemField)) {
         return
       }
 
@@ -365,6 +367,34 @@ export default {
         isClearSelection: true
       })
     }
+  },
+
+  /**
+   * Used by components/fields/filterFields
+   */
+  changeBrowseColumnShowedFromUser({ commit, getters }, {
+    containerUuid,
+    groupField,
+    fieldsShowed,
+    fieldsList = []
+  }) {
+    if (isEmptyValue(fieldsList)) {
+      fieldsList = getters.getStoredFieldsFromBrowser(containerUuid)
+    }
+
+    fieldsList.forEach(itemField => {
+      const isShowedTableFromUser = fieldsShowed.includes(itemField.columnName)
+      if (itemField.isShowedTableFromUser === isShowedTableFromUser) {
+        // no to mutate the state unnecessarily
+        return
+      }
+
+      commit('changeBrowserFieldAttribute', {
+        field: itemField,
+        attributeName: 'isShowedTableFromUser',
+        attributeValue: isShowedTableFromUser
+      })
+    })
   }
 
 }

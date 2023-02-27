@@ -66,6 +66,9 @@ export function generateField({
   evaluateDefaultFieldShowed = ({ isShowedFromUser }) => {
     return isShowedFromUser
   },
+  evaluateDefaultColumnShowed = ({ isShowedTableFromUser = true }) => {
+    return isShowedTableFromUser
+  },
   isSOTrxMenu
 }) {
   const { columnName } = fieldToGenerate
@@ -208,7 +211,8 @@ export function generateField({
     // app attributes
     isShowedFromUser: false,
     isShowedFromUserDefault: false, // set this value when reset panel
-    isShowedTableFromUser: fieldToGenerate.isDisplayed,
+    isShowedTableFromUser: false,
+    isShowedTableFromUserDefault: false,
     isFixedTableColumn: false,
     valueType: componentReference.valueType, // value type to convert with gGRPC
     isGetServerValue,
@@ -250,6 +254,10 @@ export function generateField({
         ...field,
         parsedDefaultValue: parsedDefaultValueTo
       })
+      field.isShowedTableFromUser = evaluateDefaultColumnShowed({
+        ...field,
+        parsedDefaultValue: parsedDefaultValueTo
+      })
     }
   }
 
@@ -259,9 +267,13 @@ export function generateField({
       ...field,
       parsedDefaultValue
     })
+    field.isShowedTableFromUser = evaluateDefaultColumnShowed({
+      ...field,
+      parsedDefaultValue
+    })
   }
   field.isShowedFromUserDefault = field.isShowedFromUser
-  field.isShowedTableFromUser = field.isShowedFromUser
+  field.isShowedTableFromUserDefault = field.isShowedTableFromUser
 
   // hidden field type button
   if (isHiddenField(field.displayType)) {

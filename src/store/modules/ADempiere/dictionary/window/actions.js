@@ -472,10 +472,7 @@ export default {
 
     fieldsList.forEach(itemField => {
       if (groupField === itemField.groupAssigned) {
-        let isShowedFromUser = false
-        if (fieldsShowed.includes(itemField.columnName)) {
-          isShowedFromUser = true
-        }
+        const isShowedFromUser = fieldsShowed.includes(itemField.columnName)
 
         commit('changeTabFieldAttribute', {
           field: itemField,
@@ -489,7 +486,7 @@ export default {
   /**
    * Used by components/fields/filterFields
    */
-  changeTabTableShowedFromUser({ commit, getters }, {
+  changeTabColumnShowedFromUser({ commit, getters }, {
     parentUuid,
     containerUuid,
     groupField,
@@ -502,10 +499,7 @@ export default {
 
     fieldsList.forEach(itemField => {
       if (groupField === itemField.groupAssigned) {
-        let isShowedTableFromUser = false
-        if (fieldsShowed.includes(itemField.columnName)) {
-          isShowedTableFromUser = true
-        }
+        const isShowedTableFromUser = fieldsShowed.includes(itemField.columnName)
 
         commit('changeTabFieldAttribute', {
           field: itemField,
