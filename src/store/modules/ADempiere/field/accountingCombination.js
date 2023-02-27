@@ -33,7 +33,6 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils'
-import { isSameSize } from '@/utils/ADempiere/formatValue/iterableFormat'
 
 const initState = {
   businessPartnerPopoverList: false,
@@ -121,9 +120,19 @@ const AccountCombinations = {
       id,
       uuid,
       attributes,
+      contextColumnNames = [],
       contextAttributesList
     }) {
       return new Promise(resolve => {
+        if (isEmptyValue(contextAttributesList)) {
+          contextAttributesList = getContextAttributes({
+            parentUuid,
+            containerUuid,
+            contextColumnNames,
+            isBooleanToString: true
+          })
+        }
+
         return requestSaveAccountingCombination({
           id,
           uuid,
@@ -193,11 +202,7 @@ const AccountCombinations = {
             isBooleanToString: true
           })
         }
-        // fill context value to continue
-        if (!isSameSize(contextColumnNames, contextAttributesList)) {
-          resolve([])
-          return
-        }
+
         return requestListAccountingCombinations({
           contextAttributesList,
           filters,
@@ -243,6 +248,7 @@ const AccountCombinations = {
       })
     }
   },
+
   getters: {
     /**
    * Used by result in Business Partner List

@@ -18,6 +18,8 @@
 
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
+
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 // Constants
@@ -48,7 +50,7 @@ export function requestListAccountingCombinations({
   }
 
   return request({
-    url: '/general-ledger/accounting-combinations',
+    url: '/general-ledger/accouting-combination/accounting-combinations',
     method: 'get',
     params: {
       context_attributes: contextAttributes,
@@ -69,7 +71,7 @@ export function requestGetAccountingCombination({
   value
 }) {
   return request({
-    url: '/general-ledger/accounting-combination',
+    url: '/general-ledger/accouting-combination/accounting-combination',
     method: 'get',
     params: {
       id,
@@ -100,7 +102,7 @@ export function requestSaveAccountingCombination({
   }
 
   return request({
-    url: '/general-ledger/save-accounting-combination',
+    url: '/general-ledger/accouting-combination/save-accounting-combination',
     method: 'get',
     params: {
       id,
