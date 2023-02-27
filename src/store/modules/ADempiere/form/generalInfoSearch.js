@@ -23,7 +23,7 @@ import { tableSearchFields, requestGridGeneralInfo } from '@/api/ADempiere/field
 
 // Constants
 import { CHAR, SEARCH, TABLE, TABLE_DIRECT } from '@/utils/ADempiere/references'
-import { TABLE_NAME as TABLE_NAME_BPartner } from '@/utils/ADempiere/dictionary/form/businessPartner/businessPartnerList'
+import { TABLE_NAME as TABLE_NAME_BPartner } from '@/utils/ADempiere/dictionary/field/businessPartner.js'
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 // Utils and Helper Methods
