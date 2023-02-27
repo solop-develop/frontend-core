@@ -19,7 +19,7 @@
 import Vue from 'vue'
 
 // API Request Methods
-import { requestListBusinessPartner } from '@/api/ADempiere/businessPartner'
+import { requestListBusinessPartner } from '@/api/ADempiere/field/businessPartner'
 
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
