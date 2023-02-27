@@ -19,7 +19,7 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
-// constants
+// Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 // Get Organization list from role
