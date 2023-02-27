@@ -420,11 +420,14 @@ export const containerManager = {
             value: response.displayedValue
           })
         }
-        store.dispatch('browserActionPerformed', {
-          containerUuid,
-          field,
-          value: response.value
-        })
+
+        if (field.isGetServerValue) {
+          store.dispatch('browserActionPerformed', {
+            containerUuid,
+            field,
+            value: response.value
+          })
+        }
       }
       return response
     })
