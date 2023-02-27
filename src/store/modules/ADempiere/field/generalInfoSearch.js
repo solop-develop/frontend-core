@@ -395,7 +395,7 @@ const generalInfoSearch = {
       }).currentRow
     },
     getGeneralInfoShow: (state) => ({ containerUuid }) => {
-      return state.generalInfoShow[containerUuid]
+      return state.generalInfoShow[containerUuid] || false
     },
     getTableHeader: (state) => ({ containerUuid }) => {
       return state.tableHeaderList[containerUuid] || []

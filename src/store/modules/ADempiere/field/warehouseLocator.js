@@ -332,7 +332,7 @@ const warehouseLocator = {
       const date = getters.getWarehouseLocatorData({
         containerUuid
       })
-      return date.isShowed
+      return date.isShowed || false
     }
   }
 }

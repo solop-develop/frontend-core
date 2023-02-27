@@ -22,6 +22,7 @@ const productAttribute = {
   newEdit: 'Nuevo/Editar',
   selectExisting: 'Seleccionar Existente',
   // table
+  searchValue: 'Valor de Búsqueda',
   description: 'Descripción',
   lot: 'Lote',
   serial: 'Serial'

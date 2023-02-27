@@ -244,10 +244,10 @@ const businessPartner = {
       }).currentRow
     },
     getBusinessPartnerPopoverList: (state) => {
-      return state.businessPartnerPopoverList
+      return state.businessPartnerPopoverList || false
     },
     getBPShow: (state) => ({ containerUuid }) => {
-      return state.BPShow[containerUuid]
+      return state.BPShow[containerUuid] || false
     }
   }
 }

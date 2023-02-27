@@ -18,6 +18,11 @@
 
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
+
+// Constants
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+
+// Utils and Helper Methods
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 export function requestListProductAttributesSetInstances({
@@ -26,11 +31,19 @@ export function requestListProductAttributesSetInstances({
   productId,
   productUuid,
   productAttributeSetInstanceId,
-  productAttributeSetInstanceUuid
+  productAttributeSetInstanceUuid,
+  searchValue,
+  pageToken,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
-    url: '/material-management/list-product-attribute-set-instances',
+    url: '/material-management/product-attribute/list-product-attribute-set-instances',
     method: 'post',
+    params: {
+      search_value: searchValue,
+      page_token: pageToken,
+      page_size: pageSize
+    },
     data: {
       //  DSL Query
       id,
@@ -55,7 +68,7 @@ export function requestGetProductAttributeSet({
   productAttributeSetInstanceUuid
 }) {
   return request({
-    url: '/material-management/get-product-attribute-set',
+    url: '/material-management/product-attribute/get-product-attribute-set',
     method: 'post',
     data: {
       //  DSL Query
@@ -85,7 +98,7 @@ export function requestSaveAttributeSetInstance({
   productAttributeSetUuid
 }) {
   return request({
-    url: '/material-management/save-product-attribute-set-instance',
+    url: '/material-management/product-attribute/save-product-attribute-set-instance',
     method: 'post',
     data: {
       //  DSL Query
@@ -113,7 +126,7 @@ export function requestGetProductAttributeSetInstace({
   productUuid
 }) {
   return request({
-    url: '/material-management/get-product-attribute-set-instance',
+    url: '/material-management/product-attribute/get-product-attribute-set-instance',
     method: 'post',
     data: {
       //  DSL Query
