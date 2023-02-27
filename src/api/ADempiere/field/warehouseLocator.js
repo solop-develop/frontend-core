@@ -33,7 +33,7 @@ export function requestListAvailableWarehouses({
   pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
-    url: '/material-management/list-available-warehouses',
+    url: '/material-management/warehouse-locator/list-available-warehouses',
     method: 'post',
     params: {
       search_value: searchValue,
@@ -62,7 +62,7 @@ export function requestListWarehouseLocators({
   pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
-    url: '/material-management/list-warehouse-locators',
+    url: '/material-management/warehouse-locator/list-warehouse-locators',
     method: 'post',
     params: {
       search_value: searchValue,
