@@ -101,8 +101,6 @@ import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp'
 // Utils and Helper Methods
 import {
   containerManager,
-  isDisplayedColumn,
-  isMandatoryColumn,
   isReadOnlyColumn
 } from '@/utils/ADempiere/dictionary/browser.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -292,13 +290,6 @@ export default defineComponent({
         // TODO: Logic to implement in table
       },
 
-      /**
-       * Is displayed column in table multi record
-       */
-      isDisplayedColumn,
-
-      isMandatoryColumn,
-
       isReadOnlyColumn({
         field,
         row
@@ -326,51 +317,6 @@ export default defineComponent({
         return store.dispatch('updateRecordOfBrowser', {
           containerUuid,
           row
-        })
-      },
-
-      setRow: ({ containerUuid, rowIndex, row }) => {
-        return store.commit('setBrowserRow', {
-          containerUuid,
-          rowIndex,
-          row
-        })
-      },
-      getRow: ({ containerUuid, rowIndex }) => {
-        return store.getters.getBrowserRowData({
-          containerUuid,
-          rowIndex
-        })
-      },
-
-      setCell: ({ containerUuid, rowIndex, columnName, value }) => {
-        return store.commit('setBrowserCell', {
-          containerUuid,
-          rowIndex,
-          columnName,
-          value
-        })
-      },
-      getCell: ({ containerUuid, rowIndex, columnName }) => {
-        return store.getters.getBrowserCellData({
-          containerUuid,
-          rowIndex,
-          columnName
-        })
-      },
-
-      setPage: ({ containerUuid, pageNumber, pageSize }) => {
-        store.dispatch('getBrowserSearch', {
-          containerUuid,
-          pageSize,
-          pageNumber
-        })
-      },
-      setSizePage: ({ containerUuid, pageSize, pageNumber = 1 }) => {
-        store.dispatch('getBrowserSearch', {
-          containerUuid,
-          pageNumber,
-          pageSize
         })
       },
 

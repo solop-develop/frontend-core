@@ -369,8 +369,10 @@ export const containerManager = {
     }
     return false
   },
+  isDisplayedColumn,
 
   isMandatoryField,
+  isMandatoryColumn,
 
   isReadOnlyField,
 
@@ -417,6 +419,51 @@ export const containerManager = {
   getPageNumber({ containerUuid }) {
     return store.getters.getBrowserPageNumber({
       containerUuid
+    })
+  },
+
+  setRow: ({ containerUuid, rowIndex, row }) => {
+    return store.commit('setBrowserRow', {
+      containerUuid,
+      rowIndex,
+      row
+    })
+  },
+  getRow: ({ containerUuid, rowIndex }) => {
+    return store.getters.getBrowserRowData({
+      containerUuid,
+      rowIndex
+    })
+  },
+
+  setCell: ({ containerUuid, rowIndex, columnName, value }) => {
+    return store.commit('setBrowserCell', {
+      containerUuid,
+      rowIndex,
+      columnName,
+      value
+    })
+  },
+  getCell: ({ containerUuid, rowIndex, columnName }) => {
+    return store.getters.getBrowserCellData({
+      containerUuid,
+      rowIndex,
+      columnName
+    })
+  },
+
+  setPage: ({ containerUuid, pageNumber, pageSize }) => {
+    store.dispatch('getBrowserSearch', {
+      containerUuid,
+      pageSize,
+      pageNumber
+    })
+  },
+  setSizePage: ({ containerUuid, pageSize, pageNumber = 1 }) => {
+    store.dispatch('getBrowserSearch', {
+      containerUuid,
+      pageNumber,
+      pageSize
     })
   },
 
