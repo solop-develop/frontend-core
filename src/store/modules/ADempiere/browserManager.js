@@ -132,12 +132,10 @@ const browserControl = {
         }
 
         // Validate if a field is called and visible
-        if (isEmptyValue(field.dependentFieldsList)) {
-          dispatch('getBrowserSearch', {
-            containerUuid,
-            isClearSelection: true
-          })
-        }
+        dispatch('getBrowserSearch', {
+          containerUuid,
+          isClearSelection: true
+        })
       })
     },
 
