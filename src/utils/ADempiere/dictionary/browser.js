@@ -23,15 +23,16 @@ import store from '@/store'
 import {
   DISPLAY_COLUMN_PREFIX
 } from '@/utils/ADempiere/dictionaryUtils'
+import { BUTTON } from '@/utils/ADempiere/references'
+import { OPERATOR_IN } from '@/utils/ADempiere/dataUtils.js'
 
 // API Request Methods
 import { requestSaveBrowseCustomization } from '@/api/ADempiere/user-customization/browse'
 
 // Utils and Helpers Methods
-import { isHiddenField, BUTTON } from '@/utils/ADempiere/references'
+import { isHiddenField } from '@/utils/ADempiere/references'
 import { showMessage, showNotification } from '@/utils/ADempiere/notification.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
-import { OPERATOR_IN } from '@/utils/ADempiere/dataUtils.js'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 
 /**
@@ -370,6 +371,12 @@ export const containerManager = {
     return false
   },
   isDisplayedColumn,
+  isDisplayedDefaultTable: ({ isMandatory, isKey }) => {
+    if (isMandatory && !isKey) {
+      return true
+    }
+    return false
+  },
 
   isMandatoryField,
   isMandatoryColumn,
@@ -410,10 +417,6 @@ export const containerManager = {
     return store.getters.getBrowserRecordCount({
       containerUuid
     })
-  },
-
-  panelMain() {
-    return 'mainBrowser'
   },
 
   getPageNumber({ containerUuid }) {

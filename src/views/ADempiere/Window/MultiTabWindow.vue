@@ -32,7 +32,6 @@
         :container-manager="containerManager"
         :tabs-list="windowMetadata.tabsListParent"
         :all-tabs-list="allTabsList"
-        :references-manager="referencesManager"
         :actions-manager="actionsManager"
       />
       <tab-manager-child
@@ -60,7 +59,6 @@
         :container-manager="containerManager"
         :tabs-list="windowMetadata.tabsListChild"
         :all-tabs-list="allTabsList"
-        :references-manager="referencesManager"
         :actions-manager="actionsManager"
       />
     </div>
@@ -82,7 +80,7 @@ import ModalDialog from '@theme/components/ADempiere/ModalDialog/index.vue'
 import TabManager from '@theme/components/ADempiere/TabManager/index.vue'
 import TabManagerChild from '@theme/components/ADempiere/TabManager/tabChild.vue'
 
-// Utils and Helpers Methods
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import useFullScreenContainer from '@theme/components/ADempiere/ContainerOptions/FullScreenContainer/useFullScreenContainer'
 
@@ -134,14 +132,6 @@ export default defineComponent({
     const isLoadWindows = ref(false)
 
     const index = ref(0)
-
-    const referencesManager = ref({
-      getTableName: () => {
-        const tabUuid = currentTabUuid.value
-        const windowUuid = props.windowMetadata.uuid
-        return store.getters.getTableName(windowUuid, tabUuid)
-      }
-    })
 
     /**
      * Computed
@@ -251,14 +241,13 @@ export default defineComponent({
     }
 
     return {
-      // Const
+      // Consts
       containerManager,
-      // Ref
+      // Refs
       allTabsList,
       isLoadWindows,
       index,
-      referencesManager,
-      // Computed
+      // Computeds
       isWithChildsTab,
       showRecordAccess,
       settingsFullGridMode,
@@ -277,7 +266,8 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style lang="scss">
+// MultiTabWindow
 .el-main {
   padding-top: 0px;
   padding-bottom: 0px;

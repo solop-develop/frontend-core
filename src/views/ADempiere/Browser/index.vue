@@ -32,7 +32,6 @@
         :container-manager="containerManager"
         :container-uuid="browserUuid"
         :actions-manager="actionsManager"
-        :relations-manager="relationsManager"
         style="position: absolute;"
       />
 
@@ -62,6 +61,7 @@
           :container-manager="containerManagerTable"
           :panel-metadata="browserMetadata"
           :header="tableHeader"
+          :fields-to-hidden="containerManager.getFieldsToHidden"
           :data-table="recordsList"
           :is-show-search="false"
           :is-loading-data-table="!isLoaded"
@@ -351,10 +351,6 @@ export default defineComponent({
       }
     })
 
-    const relationsManager = ref({
-      menuParentUuid: root.$route.meta.parentUuid
-    })
-
     // get records list
     const recordsList = computed(() => {
       return store.getters.getBrowserRecordsList({
@@ -372,7 +368,6 @@ export default defineComponent({
       containerManagerProcess,
       containerManagerTable,
       actionsManager,
-      relationsManager,
       // computed
       isLoaded,
       isShowContextMenu,
@@ -386,6 +381,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+// Browser View
 .browser-view {
   .browser-collapse {
     margin-bottom: 10px;
@@ -410,7 +406,8 @@ export default defineComponent({
   }
 }
 </style>
-<style scoped>
+<style lang="scss" scoped>
+// Browser View
 .el-main {
   padding-bottom: 0px;
   padding-top: 0px;

@@ -207,6 +207,53 @@ export function evaluateDefaultFieldShowed({
 }
 
 /**
+ * Default showed field from user
+ * @param {string} columnName
+ * @param {string} defaultValue
+ * @param {boolean} isMandatory
+ * @param {boolean} isShowedTableFromUser
+ * @param {boolean} isParent
+ */
+export function evaluateDefaultColumnShowed({
+  isKey, isParent, columnName,
+  defaultValue, displayType, isShowedTableFromUser,
+  isMandatory, mandatoryLogic, isMandatoryFromLogic
+}) {
+  if (String(defaultValue).startsWith('@SQL=')) {
+    return true
+  }
+
+  const isMandatoryGenerated = isMandatoryColumn({
+    isKey, columnName, displayType, isMandatory, mandatoryLogic, isMandatoryFromLogic
+  })
+  if (isEmptyValue(defaultValue) && isMandatoryGenerated && !isParent) {
+    // Yes/No field always boolean value (as default value)
+    if (displayType === YES_NO.id) {
+      return false
+    }
+    return true
+  }
+
+  if (isShowedTableFromUser) {
+    return true
+  }
+
+  // TODO: Evaluated window type
+  const permissedDisplayedDefault = [
+    VALUE, DOCUMENT_NO, 'DocStatus',
+    'DateInvoiced', 'DateOrdered', 'DatePromised',
+    'DateTrx', 'M_Product_ID', 'QtyEntered',
+    'TaskStatus'
+  ]
+
+  if (permissedDisplayedDefault.includes(columnName)) {
+    return true
+  }
+
+  return false
+}
+
+/**
  * Tab manager mandatory logic
  * @see https://github.com/adempiere/adempiere/blob/develop/base/src/org/compiere/model/GridField.java#L401
  * @param {boolean} isKey
@@ -276,7 +323,18 @@ export function isDisplayedColumn({ isDisplayed, isDisplayedGrid, isDisplayedFro
     (isEmptyValue(displayLogic) || isDisplayedFromLogic)
 }
 
-export function isMandatoryColumn({ displayType, isMandatory, mandatoryLogic, isMandatoryFromLogic }) {
+export function isMandatoryColumn({ isKey, columnName, displayType, isMandatory, mandatoryLogic, isMandatoryFromLogic }) {
+  const notMandatoryRender = [
+    VALUE, DOCUMENT_NO, 'M_AttributeSetInstance_ID'
+  ]
+  if (
+    (isKey && columnName.endsWith(IDENTIFIER_COLUMN_SUFFIX)) ||
+    columnName.startsWith('Created') || columnName.startsWith('Updated') ||
+    notMandatoryRender.includes(columnName)
+  ) {
+    return false
+  }
+
   if (displayType === BUTTON.id) {
     return false
   }
@@ -1131,7 +1189,7 @@ export function generateTabs({
         firstTabUuid
       },
       evaluateDefaultFieldShowed,
-      evaluateDefaultColumnShowed: evaluateDefaultFieldShowed
+      evaluateDefaultColumnShowed
     })
   })
 
@@ -1355,10 +1413,6 @@ export const containerManager = {
     return new Promise()
   },
 
-  panelMain() {
-    return 'mainWindow'
-  },
-
   isDisplayedField,
   isDisplayedDefault: ({ isMandatory, isParent, defaultValue, displayType, parsedDefaultValue }) => {
     if (isMandatory && !isParent && isEmptyValue(defaultValue)) {
@@ -1371,6 +1425,16 @@ export const containerManager = {
     return false
   },
   isDisplayedColumn,
+  isDisplayedDefaultTable: ({ isMandatory, isParent, defaultValue, displayType, parsedDefaultValue }) => {
+    if (isMandatory && !isParent && isEmptyValue(defaultValue)) {
+      // Yes/No field always boolean value (as default value)
+      if (displayType === YES_NO.id) {
+        return false
+      }
+      return true
+    }
+    return false
+  },
 
   isReadOnlyField(field) {
     const { parentUuid, containerUuid, columnName } = field

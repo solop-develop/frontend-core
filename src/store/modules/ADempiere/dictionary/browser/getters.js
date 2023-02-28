@@ -9,16 +9,18 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// utils and helper methods
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import { isDisplayedField, isMandatoryField } from '@/utils/ADempiere/dictionary/browser.js'
+import {
+  isDisplayedColumn, isDisplayedField, isMandatoryColumn, isMandatoryField
+} from '@/utils/ADempiere/dictionary/browser.js'
 import { isNumberField } from '@/utils/ADempiere/references'
 
 /**
@@ -171,7 +173,7 @@ export default {
     containerUuid,
     isTable = false,
     fieldsList = [],
-    showedMethod = isDisplayedField,
+    showedMethod = isTable ? isDisplayedColumn : isDisplayedField,
     isEvaluateDefaultValue = false,
     isEvaluateShowed = true
   }) => {
@@ -182,15 +184,19 @@ export default {
       }
     }
 
+    // set mandatory method
+    const mandatoryMethod = isTable ? isMandatoryColumn : isMandatoryField
+
     // all optionals (not mandatory) fields
     return fieldsList
       .filter(fieldItem => {
-        const { defaultValue } = fieldItem
+        const isMandatory = mandatoryMethod(fieldItem)
 
-        if (fieldItem.isMandatory && !isTable) {
+        if (isMandatory) {
           return false
         }
 
+        const { defaultValue } = fieldItem
         if (isEvaluateDefaultValue && isEvaluateShowed) {
           return showedMethod(fieldItem) &&
             !isEmptyValue(defaultValue)

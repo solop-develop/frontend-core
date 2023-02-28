@@ -31,7 +31,6 @@
         :container-manager="containerManager"
         :tabs-list="windowMetadata.tabsListParent"
         :all-tabs-list="allTabsList"
-        :references-manager="referencesManager"
         :actions-manager="actionsManager"
         :additional-options="additionalOptions"
       />
@@ -42,7 +41,6 @@
         :container-manager="containerManager"
         :tabs-list="windowMetadata.tabsListChild"
         :all-tabs-list="allTabsList"
-        :references-manager="referencesManager"
         :actions-manager="actionsManager"
       />
       <modal-dialog
@@ -59,7 +57,6 @@
         :container-manager="containerManager"
         :tabs-list="windowMetadata.tabsListChild"
         :all-tabs-list="allTabsList"
-        :references-manager="referencesManager"
         :actions-manager="actionsManager"
       />
     </div>
@@ -134,6 +131,9 @@ export default defineComponent({
 
     const index = ref(0)
 
+    /**
+     * TODO: Deprecated references
+     */
     const referencesManager = ref({
       getTableName: () => {
         const tabUuid = currentTabUuid.value
@@ -325,15 +325,14 @@ export default defineComponent({
     loaDocument()
 
     return {
-      // Const
+      // Consts
       containerManager,
       // Refs
       allTabsList,
       isLoadWindows,
       index,
-      referencesManager,
       additionalOptions,
-      // Computed
+      // Computeds
       isWithChildsTab,
       showRecordAccess,
       settingsFullGridMode,
@@ -356,7 +355,8 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style lang="scss">
+// DocumentWindow
 .el-main {
   padding-top: 0px;
   padding-bottom: 0px;

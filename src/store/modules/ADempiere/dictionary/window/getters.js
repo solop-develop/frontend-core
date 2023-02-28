@@ -21,7 +21,9 @@ import { ACTIVE, PROCESSED, PROCESSING } from '@/utils/ADempiere/constants/syste
 
 // Utils and Helpers Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import { isDisplayedField, isMandatoryField } from '@/utils/ADempiere/dictionary/window.js'
+import {
+  isDisplayedColumn, isDisplayedField, isMandatoryColumn, isMandatoryField
+} from '@/utils/ADempiere/dictionary/window.js'
 import { DISPLAY_COLUMN_PREFIX, getContextDefaultValue } from '@/utils/ADempiere/dictionaryUtils.js'
 import { getContext } from '@/utils/ADempiere/contextUtils'
 import { isSupportLookup, ID, YES_NO } from '@/utils/ADempiere/references'
@@ -338,7 +340,7 @@ export default {
     containerUuid,
     isTable = false,
     fieldsList = [],
-    showedMethod = isDisplayedField,
+    showedMethod = isTable ? isDisplayedColumn : isDisplayedField,
     isEvaluateDefaultValue = false,
     isEvaluateShowed = true
   }) => {
@@ -349,19 +351,22 @@ export default {
       }
     }
 
+    // set mandatory method
+    const mandatoryMethod = isTable ? isMandatoryColumn : isMandatoryField
+
     // all optionals (not mandatory) fields
     return fieldsList
       .filter(fieldItem => {
-        const { defaultValue } = fieldItem
-        const isMandatory = isMandatoryField(fieldItem)
+        const isMandatory = mandatoryMethod(fieldItem)
 
         // parent column
         if (fieldItem.isParent) {
           return true
         }
         // Yes/No field always boolean value
+        const { defaultValue } = fieldItem
         const isYesNo = fieldItem.displayType === YES_NO.id
-        if (isMandatory && (isEmptyValue(defaultValue) && !isYesNo) && !isTable) {
+        if (isMandatory && (isEmptyValue(defaultValue) && !isYesNo)) {
           return false
         }
 
