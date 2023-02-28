@@ -326,7 +326,7 @@ export default {
       fieldsList = getters.getStoredFieldsFromBrowser(containerUuid)
     }
 
-    let isChangedDisplayedWithValue = false
+    let fieldChangedDisplayedWithValue = false
 
     fieldsList.forEach(itemField => {
       const { columnName } = itemField
@@ -348,7 +348,7 @@ export default {
         attributeValue: isShowedFromUser
       })
 
-      if (!isChangedDisplayedWithValue) {
+      if (!fieldChangedDisplayedWithValue) {
         const value = rootGetters.getValueOfField({
           containerUuid,
           columnName
@@ -356,15 +356,16 @@ export default {
         // if isShowedFromUser was changed with value, the SmartBrowser
         // must send the parameters to update the search result
         if (!isEmptyValue(value)) {
-          isChangedDisplayedWithValue = true
+          fieldChangedDisplayedWithValue = itemField
         }
       }
     })
 
-    if (isChangedDisplayedWithValue) {
-      dispatch('getBrowserSearch', {
+    if (fieldChangedDisplayedWithValue) {
+      // dispatch('getBrowserSearch', {
+      dispatch('browserActionPerformed', {
         containerUuid,
-        isClearSelection: true
+        field: fieldChangedDisplayedWithValue
       })
     }
   },

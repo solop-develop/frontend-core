@@ -31,7 +31,7 @@ import { requestSaveBrowseCustomization } from '@/api/ADempiere/user-customizati
 
 // Utils and Helpers Methods
 import { isHiddenField } from '@/utils/ADempiere/references'
-import { showMessage, showNotification } from '@/utils/ADempiere/notification.js'
+import { showNotification } from '@/utils/ADempiere/notification.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 
@@ -147,17 +147,6 @@ export const refreshBrowserSearh = {
   icon: 'el-icon-refresh',
   actionName: 'refreshRecords',
   refreshRecords: ({ containerUuid }) => {
-    const fieldsEmpty = store.getters.getBrowserFieldsEmptyMandatory({
-      containerUuid
-    })
-    if (!isEmptyValue(fieldsEmpty)) {
-      showMessage({
-        message: language.t('notifications.mandatoryFieldMissing') + fieldsEmpty,
-        type: 'info'
-      })
-      return
-    }
-
     // used to browser
     store.dispatch('getBrowserSearch', {
       containerUuid
@@ -363,9 +352,9 @@ export const containerManager = {
    * Is displayed field in panel single record
    */
   isDisplayedField,
-  isDisplayedDefault: ({ isMandatory, defaultValue }) => {
+  isDisplayedDefault: ({ isMandatory }) => {
     // add is showed from user
-    if (isMandatory || !isEmptyValue(defaultValue)) {
+    if (isMandatory) {
       return true
     }
     return false

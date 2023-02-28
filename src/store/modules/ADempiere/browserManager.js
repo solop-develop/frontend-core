@@ -30,7 +30,7 @@ import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils'
 import { showMessage, showNotification } from '@/utils/ADempiere/notification'
-import { isDisplayedField, isReadOnlyColumn, containerManager } from '@/utils/ADempiere/dictionary/browser'
+import { isReadOnlyColumn, containerManager } from '@/utils/ADempiere/dictionary/browser'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 
 const initState = {
@@ -114,22 +114,9 @@ const browserControl = {
         // change Dependents
         dispatch('changeDependentFieldsList', {
           field,
+          fieldsList,
           containerManager: containerManager
         })
-
-        const fieldsEmpty = getters.getFieldsListEmptyMandatory({
-          containerUuid,
-          fieldsList,
-          showedMethod: isDisplayedField
-        })
-
-        if (!isEmptyValue(fieldsEmpty)) {
-          showMessage({
-            message: language.t('notifications.mandatoryFieldMissing') + fieldsEmpty,
-            type: 'info'
-          })
-          return
-        }
 
         // Validate if a field is called and visible
         dispatch('getBrowserSearch', {
@@ -147,21 +134,24 @@ const browserControl = {
       isClearSelection = false
     }) {
       return new Promise(resolve => {
-        showMessage({
-          title: language.t('notifications.loading'),
-          message: language.t('notifications.searching'),
-          type: 'info'
+        const currentRecordsList = getters.getBrowserRecordsList({
+          containerUuid
         })
 
-        if (isEmptyValue(pageNumber)) {
-          // refresh with same page
-          pageNumber = getters.getBrowserPageNumber({
-            containerUuid
-          })
-        }
-        const pageToken = generatePageToken({ pageNumber })
-
         const { fieldsList, contextColumnNames } = rootGetters.getStoredBrowser(containerUuid)
+
+        const fieldsEmpty = rootGetters.getBrowserFieldsEmptyMandatory({
+          containerUuid,
+          fieldsList
+        })
+        if (!isEmptyValue(fieldsEmpty)) {
+          showMessage({
+            message: language.t('notifications.mandatoryFieldMissing') + fieldsEmpty,
+            type: 'info'
+          })
+          resolve(currentRecordsList)
+          return
+        }
 
         // parameters isQueryCriteria
         const parametersList = rootGetters.getBrowserQueryCriteria({
@@ -182,13 +172,29 @@ const browserControl = {
             message: language.t('notifications.mandatoryFieldMissing') + isWithoutValues.columnName,
             type: 'info'
           })
-          resolve([])
+          resolve(currentRecordsList)
           return
         }
         commit('setBrowserData', {
           containerUuid,
           isLoaded: false
         })
+
+        showMessage({
+          title: language.t('notifications.loading'),
+          message: language.t('notifications.searching'),
+          type: 'info'
+        })
+
+        if (isEmptyValue(pageNumber) || pageNumber < 1) {
+          // refresh with same page
+          const storedPage = getters.getBrowserPageNumber({
+            containerUuid
+          })
+          // refresh with same page
+          pageNumber = storedPage
+        }
+        const pageToken = generatePageToken({ pageNumber })
 
         requestBrowserSearch({
           uuid: containerUuid,
