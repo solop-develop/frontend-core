@@ -1,6 +1,6 @@
 <template>
   <div id="tags-view-container" class="tags-view-container">
-    <scroll-pane ref="scrollPane" class="tags-view-wrapper" @scroll="handleScroll">
+    <scroll-pane ref="scrollPane" class="tags-view-wrapper" style="display: flex;width: 100% !important;" @scroll="handleScroll">
       <draggable
         v-if="!isMobile"
         :list="visitedViews"
@@ -437,7 +437,7 @@ export default {
       flex-direction: row;
       flex-wrap: nowrap;
       flex:none;
-      max-width: 32%;
+      max-width: 50%;
       cursor: pointer;
       height: 26px;
       line-height: 26px;

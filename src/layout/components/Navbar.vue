@@ -9,7 +9,7 @@
       style="padding-top: 13px; color: #000000;font-size: 121%;font-weight: 615!important;"
       @click="isMenuOption()"
     />
-    <breadcrumb v-show="!isMenuMobile || device!=='mobile'" id="breadcrumb-container" class="breadcrumb-container" :style="isMobile ? { width: '40%' } : { width: 'auto' } " />
+    <breadcrumb v-if="device!=='mobile'" id="breadcrumb-container" class="breadcrumb-container" :style="isMobile ? { width: '40%' } : { width: 'auto' } " />
     <div v-if="isMenuMobile && isMobile" style="display: inline-flex; float: right;">
       <el-button icon="el-icon-s-tools" type="text" />
       <search id="header-search" class="right-menu-item" style="padding-top: 10px;" />
@@ -20,14 +20,14 @@
         <!-- <el-tooltip class="item" effect="dark" content="Reinicia Cache" placement="top-start">
           <el-button icon="el-icon-refresh-right" type="text" style="color: black;font-size: 18px;" @click="cacheReset()" />
         </el-tooltip> -->
-        <el-tooltip :content="$t('route.guide')" placement="top-start">
+        <el-tooltip v-if="!isMobile" :content="$t('route.guide')" placement="top-start">
           <el-button icon="el-icon-info" type="text" style="color: black;font-size: larger" @click.prevent.stop="guide" />
         </el-tooltip>
         <search id="header-search" class="right-menu-item" />
         <header-notification id="badge-navar" />
-        <error-log class="errLog-container right-menu-item hover-effect" />
+        <error-log v-if="!isMobile" class="errLog-container right-menu-item hover-effect" />
 
-        <screenfull id="screenfull" class="right-menu-item hover-effect" />
+        <screenfull v-if="!isMobile" id="screenfull" class="right-menu-item hover-effect" />
 
         <!--
         <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
@@ -38,7 +38,7 @@
         <lang-select class="right-menu-item hover-effect" />
 
       </template>
-      <el-button v-show="!isMenuMobile && isMobile" type="text" icon="el-icon-more" @click="isMenuOption()" />
+      <el-button v-if="!isMobile" type="text" icon="el-icon-more" @click="isMenuOption()" />
       <el-popover
         placement="bottom"
         width="260"
