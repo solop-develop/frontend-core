@@ -20,10 +20,10 @@ import language from '@/lang'
 import router from '@/router'
 import store from '@/store'
 
-// constants
+// Constants
 import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
 
-// utils and helpers methods
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import {
   containerManager as containerManagerProcess
@@ -31,8 +31,13 @@ import {
 
 /**
  * Suppoerted render files
+ * @deprecated
  */
-export const viewerSupportedFormats = [
+export const viewerSupportedFormats = REPORT_VIEWER_SUPPORTED_FORMATS
+/**
+ * Suppoerted render files
+ */
+export const REPORT_VIEWER_SUPPORTED_FORMATS = [
   'csv',
   'html',
   'pdf',
@@ -43,7 +48,15 @@ export const viewerSupportedFormats = [
   'xml'
 ]
 
-export const reportFormatsList = [
+/**
+ * All report extension file
+ * @deprecated
+ */
+export const reportFormatsList = REPORT_FORMATS_LIST
+/**
+ * All report extension file
+ */
+export const REPORT_FORMATS_LIST = [
   'arxml',
   'csv',
   'pdf',
