@@ -121,6 +121,19 @@ export default {
       return uri
     },
     fieldPanel() {
+      if (this.$route.meta.type === 'browser') return this.$store.getters.getStoredBrowser(this.$route.meta.uuid).fieldsList.filter(field => field.isMandatory || field.isShowedFromUser)
+      if (this.$route.meta.type === 'report') return this.$store.getters.getStoredReport(this.$route.meta.uuid).fieldsList.filter(field => field.isMandatory || field.isShowedFromUser)
+      if (this.$route.meta.type === 'window') {
+        const { currentTab } = this.$store.getters.getContainerInfo
+        if (!this.isEmptyValue(currentTab)) {
+          const {
+            parentUuid,
+            containerUuid
+          } = currentTab
+          return this.$store.getters.getStoredFieldsFromTab(parentUuid, containerUuid).filter(field => field.isMandatory || field.isShowedFromUser)
+        }
+        return []
+      }
       return this.$store.getters.getStoredFieldsFromProcess(this.$route.meta.uuid).filter(field => field.isMandatory || field.isShowedFromUser)
     },
     fieldTab() {
@@ -233,8 +246,20 @@ export default {
             }
           })
           break
+        case 'browser':
+          field = this.fieldPanel.map(steps => {
+            return {
+              element: '#' + steps.columnName,
+              popover: {
+                title: steps.name,
+                description: steps.description,
+                position: 'top'
+              }
+            }
+          })
+          break
         case 'window':
-          field = this.fieldTab.map(steps => {
+          field = this.fieldPanel.map(steps => {
             return {
               element: '#' + steps.columnName,
               popover: {
