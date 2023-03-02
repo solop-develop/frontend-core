@@ -1,18 +1,20 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 import Vue from 'vue'
 import router from '@/router'
@@ -29,7 +31,7 @@ import {
 
 // constants
 import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
-import { viewerSupportedFormats, DEFAULT_REPORT_TYPE } from '@/utils/ADempiere/dictionary/report.js'
+import { REPORT_VIEWER_SUPPORTED_FORMATS, DEFAULT_REPORT_TYPE } from '@/utils/ADempiere/dictionary/report.js'
 
 // utils and helper methods
 import { getToken } from '@/utils/auth'
@@ -41,7 +43,6 @@ import { showMessage, showNotification } from '@/utils/ADempiere/notification.js
 
 const initState = {
   printFormatList: {},
-  reportFormatsList: {},
   reportViewsList: {},
   drillTablesList: {},
   reportsOutput: {},
@@ -55,9 +56,6 @@ const reportManager = {
   mutations: {
     setPrintFormatsList(state, { containerUuid, printFormatList }) {
       Vue.set(state.printFormatList, containerUuid, printFormatList)
-    },
-    setReportFormatsList(state, { containerUuid, reportFormatsList }) {
-      Vue.set(state.reportFormatsList, containerUuid, reportFormatsList)
     },
     setReportViewsList(state, { containerUuid, reportViewsList }) {
       Vue.set(state.reportViewsList, containerUuid, reportViewsList)
@@ -179,7 +177,7 @@ const reportManager = {
               })
 
               // donwloaded not support render report
-              if (!viewerSupportedFormats.includes(reportType)) {
+              if (!REPORT_VIEWER_SUPPORTED_FORMATS.includes(reportType)) {
                 link.click()
               }
 
@@ -631,13 +629,13 @@ const reportManager = {
     },
 
     getDefaultPrintFormat: (state, getters) => (containerUuid) => {
-      const printFormats = getters.getPrintFormatList(containerUuid)
+      const printFormatsList = getters.getPrintFormatList(containerUuid)
 
-      if (isEmptyValue(printFormats)) {
+      if (isEmptyValue(printFormatsList)) {
         return undefined
       }
-      const defaultPrintFormat = printFormats.find(printFormat => printFormat.isDefault)
-      return defaultPrintFormat || printFormats[0]
+      const defaultPrintFormat = printFormatsList.find(printFormat => printFormat.isDefault)
+      return defaultPrintFormat || printFormatsList.at()
     },
 
     getReportViewList: (state) => (containerUuid) => {
@@ -648,6 +646,16 @@ const reportManager = {
       return getters.getReportViewList(containerUuid).find(reportView => {
         return reportView.reportViewUuid === reportViewUuid
       })
+    },
+
+    getDefaultReportView: (state, getters) => (containerUuid) => {
+      const reportViewsList = getters.getReportViewList(containerUuid)
+
+      if (isEmptyValue(reportViewsList)) {
+        return undefined
+      }
+      const defaultReportView = reportViewsList.find(reportView => reportView.isDefault)
+      return defaultReportView || reportViewsList.at()
     },
 
     getDrillTablesList: (state) => (containerUuid) => {

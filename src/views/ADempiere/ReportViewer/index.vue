@@ -39,9 +39,9 @@
             :format="reportType"
             :content="reportContent"
             :src="link.href"
-            :mime-type="getStoredReportOutput.mimeType"
-            :name="getStoredReportOutput.name"
-            :stream="getStoredReportOutput.outputStream"
+            :mime-type="storedReportOutput.mimeType"
+            :name="storedReportOutput.name"
+            :stream="storedReportOutput.outputStream"
           />
         </div>
       </el-col>
@@ -128,12 +128,12 @@ export default defineComponent({
     const reportType = ref(DEFAULT_REPORT_TYPE)
     const reportContent = ref('')
 
-    const getStoredReportOutput = computed(() => {
+    const storedReportOutput = computed(() => {
       return store.getters.getReportOutput(root.$route.params.instanceUuid)
     })
 
     const link = computed(() => {
-      return getStoredReportOutput.value.link
+      return storedReportOutput.value.link
     })
 
     const isShowPanelConfig = computed(() => {
@@ -175,65 +175,65 @@ export default defineComponent({
     }
 
     function getCachedReport() {
-      if (isEmptyValue(getStoredReportOutput.value)) {
-        const pageSize = undefined
-        const pageToken = undefined
-        store.dispatch('getSessionProcessFromServer', {
-          pageSize,
-          pageToken
-        })
-          .then(runsList => {
-            const fileName = root.$route.params.fileName
-            const instanceUuid = root.$route.params.instanceUuid
-            const currentReportLog = runsList.find(runReport => {
-              return runReport.uuid === reportUuid
+      if (!isEmptyValue(storedReportOutput.value)) {
+        displayReport(storedReportOutput.value)
+        return
+      }
+
+      const pageSize = undefined
+      const pageToken = undefined
+      store.dispatch('getSessionProcessFromServer', {
+        pageSize,
+        pageToken
+      })
+        .then(runsList => {
+          const fileName = root.$route.params.fileName
+          const instanceUuid = root.$route.params.instanceUuid
+          const currentReportLog = runsList.find(runReport => {
+            return runReport.uuid === reportUuid
+          })
+
+          // empty report log
+          if (isEmptyValue(currentReportLog)) {
+            showNotification({
+              type: 'error',
+              title: 'error',
+              message: 'requestError'
             })
 
-            // empty report log
-            if (isEmptyValue(currentReportLog)) {
-              showNotification({
-                type: 'error',
-                title: 'error',
-                message: 'requestError'
+            store.dispatch('tagsView/delView', root.$route)
+              .then(() => {
+                router.push('/', () => {})
+              })
+            return
+          }
+
+          const { output } = currentReportLog
+          // empty output in report log
+          if (isEmptyValue(output.outputStream)) {
+            if (isEmptyValue(storedReportOutput.value)) {
+              const { parameters } = currentReportLog
+              const parametersList = convertObjectToKeyValue({
+                object: parameters
               })
 
-              store.dispatch('tagsView/delView', root.$route)
-                .then(() => {
-                  router.push('/', () => {})
-                })
-              return
+              const reportFormat = getExtensionFromFile(fileName)
+              store.dispatch('buildReport', {
+                uuid: reportUuid,
+                reportType: reportFormat,
+                reportName: fileName,
+                tableName: root.$route.params.tableName,
+                parametersList,
+                instanceUuid
+              }).then(reportOutput => {
+                displayReport(reportOutput)
+              })
+            } else {
+              // add output to render
+              // displayReport(storedReportOutput.value)
             }
-
-            const { output } = currentReportLog
-            // empty output in report log
-            if (isEmptyValue(output.outputStream)) {
-              const storedReportOutput = store.getters.getReportOutput(instanceUuid)
-              if (isEmptyValue(storedReportOutput)) {
-                const { parameters } = currentReportLog
-                const parametersList = convertObjectToKeyValue({
-                  object: parameters
-                })
-
-                const reportFormat = getExtensionFromFile(fileName)
-                store.dispatch('buildReport', {
-                  uuid: reportUuid,
-                  reportType: reportFormat,
-                  reportName: fileName,
-                  tableName: root.$route.params.tableName,
-                  parametersList,
-                  instanceUuid
-                }).then(reportOutput => {
-                  displayReport(reportOutput)
-                })
-              } else {
-                // add output to list
-                // currentReportLog.output = storedReportOutput
-              }
-            }
-          })
-      } else {
-        displayReport(getStoredReportOutput.value)
-      }
+          }
+        })
     }
 
     function findActionsMenu() {
@@ -277,11 +277,12 @@ export default defineComponent({
       relationsManager,
       drawer,
       isShowPanelConfig,
-      // computeds
+      // Computeds
       containerManager,
       link,
       storedReportDefinition,
-      getStoredReportOutput,
+      storedReportOutput,
+      // Methods
       handleOpem,
       handleClose,
       showPanelConfigReport
