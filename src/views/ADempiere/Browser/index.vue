@@ -155,11 +155,11 @@ export default defineComponent({
     })
 
     const isLoaded = computed(() => {
-      const browser = store.state.browserManager.browserData[browserUuid]
-      if (isEmptyValue(browser)) {
-        return true
+      const browserData = store.state.browserManager.browserData[browserUuid]
+      if (isEmptyValue(browserData)) {
+        return false
       }
-      return browser.isLoaded
+      return browserData.isLoaded
     })
 
     /**
@@ -243,6 +243,10 @@ export default defineComponent({
       const browser = storedBrowser.value
       if (browser) {
         generateBrowser(browser)
+
+        if (!isLoaded.value) {
+          defaultSearch()
+        }
         return
       }
 
@@ -258,7 +262,7 @@ export default defineComponent({
     }
 
     function defaultSearch() {
-      // if (this.isLoadedRecords) {
+      // if (isLoadedRecords.value) {
       //   // not research
       //   return
       // }
