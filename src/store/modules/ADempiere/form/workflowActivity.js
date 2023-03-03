@@ -133,11 +133,11 @@ export default {
               quantityActivities: state.listActivity.length
             })
           } else {
-            dispatch('updateNotifications', {
-              name,
-              typeActivity: true,
-              quantityActivities: state.listActivity.length
-            })
+            // dispatch('updateNotifications', {
+            //   name,
+            //   typeActivity: true,
+            //   quantityActivities: state.listActivity.length
+            // })
           }
         })
     },
