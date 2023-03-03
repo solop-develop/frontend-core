@@ -27,7 +27,7 @@ import { removeQuotationMark } from '@/utils/ADempiere/formatValue/stringFormat'
  * @returns {string} true => 'Yes' or 'Si', false => 'Not' or 'No'
  */
 export const convertBooleanToTranslationLang = (booleanValue) => {
-  if (booleanValue === true || booleanValue === 'true' || booleanValue === 'Y' || booleanValue === 'Yes') {
+  if (booleanValue === true || booleanValue === 'true' || booleanValue === 'Yes' || booleanValue === 'Y') {
     return language.t('components.switchActiveText')
   }
 
@@ -38,16 +38,26 @@ export const convertBooleanToTranslationLang = (booleanValue) => {
  * Convert boolean value to string value
  * @param {boolean|string} booleanValue
  * @param {boolean} isForce
- * @returns {strin}
+ * @returns {string} 'Y'/'N'
  */
 export const convertBooleanToString = (booleanValue, isForce = true) => {
-  if (booleanValue === true || booleanValue === 'true' || booleanValue === 'Y' || booleanValue === 'Yes') {
+  if (booleanValue === true ||
+    booleanValue === 'true' ||
+    booleanValue === 'Yes' ||
+    booleanValue === 'Y') {
     return 'Y'
+  } else if (booleanValue === false ||
+    booleanValue === 'false' ||
+    booleanValue === 'Not' ||
+    booleanValue === 'No' ||
+    booleanValue === 'N') {
+    return 'N'
   }
   if (isForce) {
     return 'N'
   }
 
+  // return original value
   return booleanValue
 }
 
@@ -64,6 +74,7 @@ export const convertStringToBoolean = (valueToParsed) => {
   switch (evaluatedValue) {
     case 'N':
     case 'No':
+    case 'Not':
     case 'false':
     case false:
     case language.t('components.switchInactiveText'):
