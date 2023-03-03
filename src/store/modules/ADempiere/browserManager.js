@@ -23,7 +23,9 @@ import language from '@/lang'
 import { requestBrowserSearch, updateBrowserEntity, requestDeleteBrowser } from '@/api/ADempiere/browser'
 
 // Constants
-import { ROW_ATTRIBUTES, ROW_KEY_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
+import {
+  ROW_ATTRIBUTES, ROW_KEY_ATTRIBUTES, ROWS_OF_RECORDS_BY_PAGE
+} from '@/utils/ADempiere/tableUtils'
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 
 // Utils and Helper Methods
@@ -50,7 +52,7 @@ const browserControl = {
       isLoadedContext = false,
       selectionsList = [],
       pageNumber = 1,
-      pageSize = 15
+      pageSize = ROWS_OF_RECORDS_BY_PAGE
     }) {
       const dataBrowser = {
         containerUuid,
@@ -460,10 +462,13 @@ const browserControl = {
       // reduce list
       const fieldsListSelection = fieldsList
         .filter(itemField => {
-          return itemField.isIdentifier || itemField.isUpdateable
+          return itemField.isIdentifier || !isReadOnlyColumn(itemField)
         })
         .map(itemField => {
-          return itemField.columnName
+          return {
+            columnName: itemField.columnName,
+            valueType: itemField.valueType
+          }
         })
 
       selectionsList.forEach(itemRow => {
@@ -471,10 +476,14 @@ const browserControl = {
 
         Object.keys(itemRow).forEach(columnName => {
           if (!columnName.startsWith(DISPLAY_COLUMN_PREFIX) && !ROW_KEY_ATTRIBUTES.includes(columnName)) {
+            const currentField = fieldsListSelection.find(itemField => {
+              return itemField.columnName === columnName
+            })
             // evaluate metadata attributes before to convert
-            if (fieldsListSelection.includes(columnName)) {
+            if (!isEmptyValue(currentField)) {
               attributesList.push({
                 columnName,
+                valueType: currentField.valueType,
                 value: itemRow[columnName]
               })
             }

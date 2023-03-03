@@ -1,29 +1,32 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 import Vue from 'vue'
-import router from '@/router'
-import language from '@/lang'
 
-// api request methods
+import lang from '@/lang'
+import router from '@/router'
+
+// API Request Methods
 import {
   requestRunProcess
 } from '@/api/ADempiere/process'
 
-// utils and helper methods
+// Utils and Helper Methods
 import { getToken } from '@/utils/auth'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage, showNotification } from '@/utils/ADempiere/notification'
@@ -58,7 +61,7 @@ const processManager = {
         })
         if (!isEmptyValue(fieldsEmpty)) {
           showMessage({
-            message: language.t('notifications.mandatoryFieldMissing') + fieldsEmpty,
+            message: lang.t('notifications.mandatoryFieldMissing') + fieldsEmpty,
             type: 'info'
           })
           return
@@ -75,7 +78,7 @@ const processManager = {
         }
         if (isSession) {
           procesingNotification = showNotification({
-            title: language.t('notifications.processing'),
+            title: lang.t('notifications.processing'),
             message: processDefinition.name,
             summary: processDefinition.description,
             type: 'info'
@@ -155,7 +158,7 @@ const processManager = {
         }
         if (isSession) {
           procesingNotification = showNotification({
-            title: language.t('notifications.processing'),
+            title: lang.t('notifications.processing'),
             message: processDefinition.name,
             summary: processDefinition.description,
             type: 'info'
@@ -177,19 +180,19 @@ const processManager = {
             summary = runProcessRepsonse.summary
 
             resolve(runProcessRepsonse)
-          })
-          .catch(error => {
-            isProcessedError = true
-            console.warn(`Error getting print formats: ${error.message}. Code: ${error.code}.`)
-          })
-          .finally(() => {
+
             commit('clearBrowserData', {
               containerUuid: parentUuid
             })
             dispatch('setBrowserDefaultValues', {
               containerUuid: parentUuid
             })
-
+          })
+          .catch(error => {
+            isProcessedError = true
+            console.warn(`Error getting print formats: ${error.message}. Code: ${error.code}.`)
+          })
+          .finally(() => {
             dispatch('finishProcess', {
               summary,
               name: processDefinition.name,
@@ -233,7 +236,7 @@ const processManager = {
         }
         if (isSession) {
           procesingNotification = showNotification({
-            title: language.t('notifications.processing'),
+            title: lang.t('notifications.processing'),
             message: currentProcess.name,
             summary: currentProcess.description,
             type: 'info'
@@ -291,8 +294,8 @@ const processManager = {
     }) {
       let processMessage = {
         name,
-        title: language.t('notifications.succesful'),
-        message: language.t('notifications.processExecuted'),
+        title: lang.t('notifications.succesful'),
+        message: lang.t('notifications.processExecuted'),
         type: 'success',
         summary
       }
@@ -300,11 +303,11 @@ const processManager = {
       if (isError) {
         const errorMessage = !isEmptyValue(summary)
           ? summary
-          : language.t('notifications.error')
+          : lang.t('notifications.error')
 
         processMessage = {
           name,
-          title: language.t('notifications.error'),
+          title: lang.t('notifications.error'),
           message: errorMessage,
           type: 'error'
         }
