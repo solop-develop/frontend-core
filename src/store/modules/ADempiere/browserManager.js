@@ -118,12 +118,13 @@ const browserControl = {
           field,
           fieldsList,
           containerManager: containerManager
-        })
-
-        // Validate if a field is called and visible
-        dispatch('getBrowserSearch', {
-          containerUuid,
-          isClearSelection: true
+        }).then(() => {
+          // Validate if a field is mandatory and visible
+          dispatch('getBrowserSearch', {
+            containerUuid,
+            isClearSelection: true
+          })
+          resolve()
         })
       })
     },

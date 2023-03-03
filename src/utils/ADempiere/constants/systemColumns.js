@@ -30,6 +30,8 @@ export const UUID = 'UUID'
 
 export const ID = 'ID'
 
+export const RECORD_ID = 'Record_ID'
+
 export const COUNTRY = 'C_Country_ID'
 
 export const WAREHOUSE = 'M_Warehouse_ID'

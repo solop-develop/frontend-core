@@ -26,7 +26,8 @@ import {
 } from '@/utils/ADempiere/dictionaryUtils'
 import {
   ACTIVE, CLIENT, DOCUMENT_ACTION, DOCUMENT_NO,
-  PROCESSING, PROCESSED, UUID, VALUE //, READ_ONLY_FORM_COLUMNS
+  PROCESSING, PROCESSED, UUID, VALUE, // READ_ONLY_FORM_COLUMNS
+  RECORD_ID
 } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { YES_NO } from '@/utils/ADempiere/references'
@@ -817,6 +818,24 @@ export const openBrowserAssociated = {
       })
     }
 
+    // set record id from window
+    const storedTab = store.getters.getStoredTab(parentUuid, containerUuid)
+    const { keyColumn } = storedTab
+
+    const recordId = store.getters.getValueOfField({
+      parentUuid,
+      containerUuid,
+      columnName: keyColumn
+    })
+
+    if (!isEmptyValue(recordId)) {
+      store.commit('updateValueOfField', {
+        containerUuid: browserUuid,
+        columnName: RECORD_ID,
+        value: recordId
+      })
+    }
+
     const inMenu = zoomIn({
       uuid: browserUuid,
       params: {
@@ -824,7 +843,9 @@ export const openBrowserAssociated = {
         browserUuid
       },
       query: {
-        parentUuid
+        parentUuid,
+        containerUuid,
+        recordId
       },
       isShowMessage: false
     })
@@ -837,7 +858,9 @@ export const openBrowserAssociated = {
           browserUuid
         },
         query: {
-          parentUuid
+          parentUuid,
+          containerUuid,
+          recordId
         }
       }, () => {})
     }

@@ -26,6 +26,9 @@ import {
   requestRunProcess
 } from '@/api/ADempiere/process'
 
+// Constants
+import { RECORD_ID } from '@/utils/ADempiere/constants/systemColumns'
+
 // Utils and Helper Methods
 import { getToken } from '@/utils/auth'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -168,9 +171,17 @@ const processManager = {
         let isProcessedError = false
         let summary = ''
 
+        const recordId = rootGetters.getValueOfField({
+          parentUuid,
+          containerUuid,
+          columnName: RECORD_ID
+        })
+
         requestRunProcess({
           uuid: containerUuid,
           parametersList,
+          // in window
+          recordId,
           // TODO: Add support to tableSelectedId
           tableSelectedId: null,
           selectionsList
@@ -178,6 +189,37 @@ const processManager = {
           .then(runProcessRepsonse => {
             isProcessedError = runProcessRepsonse.isError
             summary = runProcessRepsonse.summary
+
+            // window refresh data
+            const windowsUuid = router.app._route.query.parentUuid
+            if (!isEmptyValue(recordId) && !isEmptyValue(windowsUuid)) {
+              const storedWindow = rootGetters.getStoredWindow(windowsUuid)
+              if (!isEmptyValue(storedWindow)) {
+                const { tabsList, tabsListParent, tabsListChild } = storedWindow
+                // update records and logics on child tabs
+                tabsList.filter(tabItem => {
+                  // always laoded first tab parent
+                  if (tabItem.uuid === tabsListParent.at().uuid) {
+                    return true
+                  }
+                  // always laoded first tab child
+                  if (!isEmptyValue(tabsListChild) && tabsListChild.at().uuid === tabItem.uuid) {
+                    return true
+                  }
+                  // reloaded tabs with records
+                  return rootGetters.getIsLoadedTabRecord({
+                    containerUuid: tabItem.uuid
+                  })
+                }).forEach(tabItem => {
+                  // if loaded data refresh this data
+                  // TODO: Verify with get one entity, not get all list
+                  dispatch('getEntities', {
+                    parentUuid: windowsUuid,
+                    containerUuid: tabItem.uuid
+                  })
+                })
+              }
+            }
 
             resolve(runProcessRepsonse)
 
@@ -218,11 +260,11 @@ const processManager = {
     }) {
       return new Promise(resolve => {
         const windowsUuid = router.app._route.meta.uuid
-        const browserDefinition = getters.getStoredTab(windowsUuid, parentUuid)
+        const storedTab = getters.getStoredTab(windowsUuid, parentUuid)
         const processModal = getters.getModalDialogManager({
           containerUuid: containerUuid
         })
-        const currentProcess = browserDefinition.processes.find(process => process.name === processModal.title)
+        const currentProcess = storedTab.processes.find(process => process.name === processModal.title)
 
         const fieldsList = getters.getStoredFieldsFromProcess(containerUuid)
         const parametersList = rootGetters.getProcessParameters({
