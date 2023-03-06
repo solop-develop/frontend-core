@@ -152,10 +152,9 @@ const defaultValueManager = {
             }
 
             // do not use the convertArrayKeyValueToObject method to avoid losing a key with an empty value
-            // TODO: Response from server same name key of value
             if (valueResponse.attributes.length === 1) {
+              // number values (Line for example)
               values.KeyColumn = valueResponse.attributes.at(0).value
-              values.DisplayColumn = undefined
             } else {
               valueResponse.attributes.forEach(attribute => {
                 const { key: column, value: attributeValue } = attribute
@@ -172,7 +171,8 @@ const defaultValueManager = {
               contextAttributesList,
               id,
               displayedValue,
-              value,
+              // set value of server to parsed if is number as string "101" -> 101
+              value: valueOfServer,
               uuid: values.UUID
             })
 

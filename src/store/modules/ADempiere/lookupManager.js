@@ -17,6 +17,7 @@
  */
 
 import Vue from 'vue'
+
 import lang from '@/lang'
 
 // API Request Methods
@@ -335,24 +336,27 @@ const lookupManager = {
       })
 
       // get of stored default value
-      if (isEmptyValue(optionsList)) {
-        const contextAttributesListByDefaultValue = getContextAttributes({
-          parentUuid,
-          containerUuid,
-          contextColumnNames: contextColumnNamesByDefaultValue,
-          isBooleanToString: true
-        })
-        const option = rootGetters.getStoredDefaultValue({
-          parentUuid,
-          containerUuid,
-          contextColumnNames: contextColumnNamesByDefaultValue,
-          contextAttributesList: contextAttributesListByDefaultValue,
-          uuid,
-          value
-        })
+      const contextAttributesListByDefaultValue = getContextAttributes({
+        parentUuid,
+        containerUuid,
+        contextColumnNames: contextColumnNamesByDefaultValue,
+        isBooleanToString: true
+      })
+      const option = rootGetters.getStoredDefaultValue({
+        parentUuid,
+        containerUuid,
+        contextColumnNames: contextColumnNamesByDefaultValue,
+        contextAttributesList: contextAttributesListByDefaultValue,
+        uuid,
+        value
+      })
 
-        // add a item option
-        if (!isEmptyValue(option)) {
+      // add a item option
+      if (!isEmptyValue(option)) {
+        const isExists = optionsList.some(optionItem => {
+          return optionItem.value === option.value
+        })
+        if (!isExists) {
           optionsList.push(option)
         }
       }
