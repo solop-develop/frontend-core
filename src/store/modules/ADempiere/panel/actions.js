@@ -19,7 +19,7 @@
 import router from '@/router'
 
 // Utils and Helper Methods
-import { isEmptyValue, typeValue } from '@/utils/ADempiere/valueUtils.js'
+import { isEmptyValue, getTypeOfValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
 import evaluator from '@/utils/ADempiere/evaluator'
 import { getContext, parseContext } from '@/utils/ADempiere/contextUtils'
@@ -325,7 +325,7 @@ const actions = {
     attributes = [],
     isOverWriteParent
   }) {
-    if (typeValue(attributes) === 'OBJECT') {
+    if (getTypeOfValue(attributes) === 'OBJECT') {
       attributes = convertObjectToKeyValue({
         object: attributes
       })
@@ -599,6 +599,7 @@ const actions = {
       }).query
 
       newValue = rootGetters.getValueOfField({
+        parentUuid,
         containerUuid,
         columnName: columnName
       })
@@ -632,7 +633,7 @@ const actions = {
         value: newValue
       })
       // update values for field on elememnt name of column
-      if (columnName !== field.elementName) {
+      if (!field.isSameColumnElement) {
         commit('updateValueOfField', {
           parentUuid,
           containerUuid,

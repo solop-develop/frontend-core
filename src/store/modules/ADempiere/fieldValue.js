@@ -28,7 +28,7 @@ import {
 
 // Utils and Helpers Methods
 import { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
-import { isEmptyValue, typeValue } from '@/utils/ADempiere/valueUtils.js'
+import { isEmptyValue, getTypeOfValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat.js'
 
 const value = {
@@ -92,7 +92,7 @@ const value = {
       attributes = [],
       isOverWriteParent = false
     }) {
-      if (typeValue(attributes) === 'OBJECT') {
+      if (getTypeOfValue(attributes) === 'OBJECT') {
         attributes = convertObjectToKeyValue({
           object: attributes
         })
@@ -140,6 +140,30 @@ const value = {
         containerUuid,
         isOverWriteParent,
         attributes
+      })
+    },
+
+    clearValuesOnParent({ commit, getters }, {
+      parentUuid,
+      isOverWriteParent = false
+    }) {
+      return new Promise(resolve => {
+        const attributesList = getters.getValuesView({
+          parentUuid
+        }).map(attribute => {
+          const { columnName } = attribute
+          return {
+            columnName,
+            value: undefined
+          }
+        })
+
+        commit('updateValuesOfContainer', {
+          parentUuid,
+          attributes: attributesList,
+          isOverWriteParent
+        })
+        resolve()
       })
     },
 
@@ -329,7 +353,7 @@ const value = {
           .replace(`${containerUuid}_`, '')
 
         // set container context (smart browser, process/report, form)
-        const type = typeValue(value)
+        const type = getTypeOfValue(value)
         hashMap.set(columnName, [
           columnName, type, value
         ])

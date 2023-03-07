@@ -533,7 +533,9 @@ export const undoChange = {
         attributes
       })
 
-      tabItem.fieldsList.forEach(field => {
+      const fieldsList = store.getters.getStoredFieldsFromTab(parentUuid, tabItem.uuid)
+
+      fieldsList.forEach(field => {
         store.dispatch('changeDependentFieldsList', {
           field,
           containerManager

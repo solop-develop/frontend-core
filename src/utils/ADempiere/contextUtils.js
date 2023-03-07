@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -19,10 +19,12 @@
 import router from '@/router'
 import store from '@/store'
 
-// constants
-import { ACCOUNTING_COLUMNS, IS_SO_TRX, SALES_TRANSACTION_COLUMNS } from '@/utils/ADempiere/constants/systemColumns.js'
+// Constants
+import {
+  ACCOUNTING_COLUMNS, IS_SO_TRX, SALES_TRANSACTION_COLUMNS
+} from '@/utils/ADempiere/constants/systemColumns.js'
 
-// utils and helper methods
+// Utils and Helper Methods
 import { isEmptyValue, isIdentifierEmpty } from '@/utils/ADempiere/valueUtils.js'
 import { convertBooleanToString, convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat.js'
 import evaluator from '@/utils/ADempiere/evaluator'

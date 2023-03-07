@@ -113,19 +113,19 @@ export default {
                   return itemAttribute.columnName === itemField.elementName
                 })
                 if (!isEmptyValue(currentValueElement) && !isEmptyValue(currentValueElement.value)) {
-                  store.commit('updateValueOfField', {
+                  commit('updateValueOfField', {
                     containerUuid: uuid,
                     columnName: itemField.elementName,
                     value: currentValueElement.value
                   })
-                  store.commit('updateValueOfField', {
+                  commit('updateValueOfField', {
                     containerUuid: uuid,
                     columnName: itemField.columnName,
                     value: currentValueElement.value
                   })
                 }
                 // change Dependents
-                store.dispatch('changeDependentFieldsList', {
+                dispatch('changeDependentFieldsList', {
                   field: itemField,
                   containerManager
                 })
