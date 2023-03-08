@@ -44,7 +44,7 @@ export const isEmptyValue = function(value) {
   }
 
   let isEmpty = false
-  const typeOfValue = typeValue(value)
+  const typeOfValue = getTypeOfValue(value)
 
   switch (typeOfValue) {
     case 'UNDEFINED':

@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -18,21 +18,13 @@
 
 import language from '@/lang'
 
-// constants
+// Constants
 import { TABLE, TABLE_DIRECT } from '@/utils/ADempiere/references'
 
-// api request methods
-import {
-  requestGetContextInfoValue
-} from '@/api/ADempiere/window'
-
-// utils and helper methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+// Utils and Helper Methods
+import { isEmptyValue, getTypeOfValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertArrayKeyValueToObject } from '@/utils/ADempiere/formatValue/iterableFormat.js'
-import { typeValue } from '@/utils/ADempiere/valueUtils.js'
-import {
-  getPreference
-} from '@/utils/ADempiere/contextUtils'
+import { getPreference } from '@/utils/ADempiere/contextUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 
 const actions = {
@@ -118,14 +110,14 @@ const actions = {
           // TODO: Evaluate if is field is read only and FieldSelect
           .filter(itemField => {
             return itemField.componentPath === 'FieldSelect' ||
-              typeValue(values[itemField.columnName]) === 'OBJECT' ||
+              getTypeOfValue(values[itemField.columnName]) === 'OBJECT' ||
               itemField.isGetServerValue
           })
           .map(async itemField => {
             const { columnName, componentPath } = itemField
             let valueGetDisplayColumn = values[columnName]
 
-            if (typeValue(values[columnName]) === 'OBJECT') {
+            if (getTypeOfValue(values[columnName]) === 'OBJECT') {
               if (componentPath === 'FieldSelect') {
                 values[columnName] = ' '
                 values[itemField.displayColumnName] = ' '
@@ -157,7 +149,7 @@ const actions = {
 
             // TODO: Add support with displayedValue response
             if (!isEmptyValue(valueGetDisplayColumn) &&
-              typeValue(valueGetDisplayColumn) === 'OBJECT' &&
+              getTypeOfValue(valueGetDisplayColumn) === 'OBJECT' &&
               valueGetDisplayColumn.isSQL) {
               // get value from Query
               valueGetDisplayColumn = await dispatch('getDefaultValueFromServer', {
@@ -426,32 +418,6 @@ const actions = {
         }
       }
     }
-  },
-  getContextInfoValueFromServer({ commit, getters }, {
-    contextInfoId,
-    contextInfoUuid,
-    sqlStatement
-  }) {
-    // const contextInforField = getters.getContextInfoField(contextInfoUuid, sqlStatement)
-    // if (contextInforField) {
-    //   return contextInforField
-    // }
-    return requestGetContextInfoValue({
-      id: contextInfoId,
-      uuid: contextInfoUuid,
-      query: sqlStatement
-    })
-      .then(contextInfoResponse => {
-        commit('setContextInfoField', {
-          contextInfoUuid,
-          sqlStatement,
-          ...contextInfoResponse
-        })
-        return contextInfoResponse
-      })
-      .catch(error => {
-        console.warn(`Error ${error.code} getting context info value for field ${error.message}.`)
-      })
   },
 
   resetStateBusinessData({ commit }) {

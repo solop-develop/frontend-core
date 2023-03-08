@@ -238,7 +238,7 @@ export function getParentFields({
 export function parseContext({
   parentUuid,
   containerUuid,
-  columnName,
+  columnName = '',
   value,
   isSQL = false,
   isBooleanToString = false,
@@ -250,11 +250,11 @@ export function parseContext({
   if (isEmptyValue(value)) {
     value = undefined
     if (ACCOUNTING_COLUMNS.includes(columnName)) {
-      value = contextInfo = getContext({
+      value = getContext({
         columnName: ACCOUNTING_CONTEXT_PREFIX + columnName
       })
     } else if (columnName.startsWith(ACCOUNTING_CONTEXT_PREFIX)) {
-      value = contextInfo = getContext({
+      value = getContext({
         columnName
       })
     }
