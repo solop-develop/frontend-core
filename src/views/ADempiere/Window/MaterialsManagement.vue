@@ -32,7 +32,6 @@
         :container-manager="containerManager"
         :tabs-list="windowMetadata.tabsListParent"
         :all-tabs-list="allTabsList"
-        :references-manager="referencesManager"
         :actions-manager="actionsManager"
       />
       <tab-manager-child
@@ -42,7 +41,6 @@
         :container-manager="containerManager"
         :tabs-list="windowMetadata.tabsListChild"
         :all-tabs-list="allTabsList"
-        :references-manager="referencesManager"
         :actions-manager="actionsManager"
       />
       <modal-dialog
@@ -59,7 +57,6 @@
         :container-manager="containerManager"
         :tabs-list="windowMetadata.tabsListChild"
         :all-tabs-list="allTabsList"
-        :references-manager="referencesManager"
         :actions-manager="actionsManager"
       />
     </div>
@@ -72,7 +69,7 @@ import { defineComponent, computed, ref, watch } from '@vue/composition-api'
 import language from '@/lang'
 import store from '@/store'
 
-// components and mixins
+// Components and Mixins
 import ActionMenu from '@theme/components/ADempiere/ActionMenu/index.vue'
 import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
 import Embedded from '@theme/components/ADempiere/Dialog/embedded'
@@ -81,7 +78,7 @@ import ModalDialog from '@theme/components/ADempiere/ModalDialog/index.vue'
 import TabManager from '@theme/components/ADempiere/TabManager/index.vue'
 import TabManagerChild from '@theme/components/ADempiere/TabManager/tabChild.vue'
 
-// utils and helpers methods
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import useFullScreenContainer from '@theme/components/ADempiere/ContainerOptions/FullScreenContainer/useFullScreenContainer'
 
@@ -133,14 +130,6 @@ export default defineComponent({
     const isLoadWindows = ref(false)
 
     const index = ref(0)
-
-    const referencesManager = ref({
-      getTableName: () => {
-        const tabUuid = currentTabUuid.value
-        const windowUuid = props.windowMetadata.uuid
-        return store.getters.getTableName(windowUuid, tabUuid)
-      }
-    })
 
     /**
      * Computed
@@ -255,7 +244,6 @@ export default defineComponent({
       allTabsList,
       isLoadWindows,
       index,
-      referencesManager,
       // Computed
       isWithChildsTab,
       showRecordAccess,

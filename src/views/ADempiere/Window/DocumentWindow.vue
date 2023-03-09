@@ -131,17 +131,6 @@ export default defineComponent({
 
     const index = ref(0)
 
-    /**
-     * TODO: Deprecated references
-     */
-    const referencesManager = ref({
-      getTableName: () => {
-        const tabUuid = currentTabUuid.value
-        const windowUuid = props.windowMetadata.uuid
-        return store.getters.getTableName(windowUuid, tabUuid)
-      }
-    })
-
     const additionalOptions = ref({})
     /**
      * Computed
@@ -167,6 +156,8 @@ export default defineComponent({
       return store.getters.getCurrentTab(props.windowMetadata.uuid).uuid
     })
 
+    const tableName = store.getters.getTableName(props.windowMetadata.uuid, currentTabUuid.value)
+
     const styleFullScreen = computed(() => {
       if (!isWithChildsTab.value) {
         return 'height: 0% !important'
@@ -180,7 +171,7 @@ export default defineComponent({
         parentUuid: props.windowMetadata.uuid,
         containerUuid: currentTabUuid.value,
         defaultActionName: language.t('actionMenu.createNewRecord'),
-        tableName: store.getters.getTableName(props.windowMetadata.uuid, currentTabUuid.value),
+        tableName,
         getActionList: () => {
           return store.getters.getStoredActionsMenu({
             containerUuid: currentTabUuid.value
@@ -257,8 +248,9 @@ export default defineComponent({
       if (isEmptyValue(recordUuid.value) || recordUuid.value === 'create-new') {
         return
       }
+
       store.dispatch('listDocumentActionStatus', {
-        tableName: referencesManager.value.getTableName(),
+        tableName,
         recordUuid: recordUuid.value
       })
         .then(response => {
@@ -290,7 +282,7 @@ export default defineComponent({
       ) {
         loaDocument()
         store.dispatch('listDocumentStatus', {
-          tableName: referencesManager.value.getTableName(),
+          tableName,
           recordUuid: recordUuid.value,
           containerUuid: currentTabUuid.value
         })
@@ -308,7 +300,7 @@ export default defineComponent({
       if (newValue !== oldValue && !isEmptyValue(newValue) && newValue !== 'create-new') {
         loaDocument()
         store.dispatch('listDocumentStatus', {
-          tableName: referencesManager.value.getTableName(),
+          tableName,
           recordUuid: recordUuid.value,
           containerUuid: currentTabUuid.value
         })

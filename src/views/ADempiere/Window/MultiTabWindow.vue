@@ -41,7 +41,6 @@
         :container-manager="containerManager"
         :tabs-list="windowMetadata.tabsListChild"
         :all-tabs-list="allTabsList"
-        :references-manager="referencesManager"
         :actions-manager="actionsManager"
       />
       <modal-dialog

@@ -22,7 +22,7 @@ import router from '@/router'
 
 // API Request Methods
 import {
-  getEntities,
+  requestGetEntities,
   updateEntity
 } from '@/api/ADempiere/user-interface/persistence.js'
 import {
@@ -253,6 +253,7 @@ const windowManager = {
       containerUuid,
       tabUuid,
       searchValue = '',
+      referenceUuid = '',
       filters = [],
       filtersRecord = {},
       pageNumber,
@@ -354,11 +355,12 @@ const windowManager = {
           tabUuid = containerUuid
         }
 
-        getEntities({
+        requestGetEntities({
           windowUuid: parentUuid,
           tabUuid: containerUuid,
           contextAttributesList,
           searchValue,
+          referenceUuid,
           filters,
           pageToken,
           pageSize

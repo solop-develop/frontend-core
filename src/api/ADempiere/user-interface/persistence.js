@@ -61,13 +61,14 @@ export function getEntity({
  * @param {string} orderByClause
  * @param {string} pageToken
  */
-export function getEntities({
+export function requestGetEntities({
   windowUuid,
   tabUuid,
   columns = [],
   contextAttributesList = [],
   sorting = [],
   searchValue = '',
+  referenceUuid = '',
   filters = [],
   pageToken,
   pageSize = ROWS_OF_RECORDS_BY_PAGE
@@ -110,6 +111,7 @@ export function getEntities({
       context_attributes: contextAttributesList,
       // DSL Query
       search_value: searchValue,
+      reference_uuid: referenceUuid,
       filters,
       columns,
       // replace sql values

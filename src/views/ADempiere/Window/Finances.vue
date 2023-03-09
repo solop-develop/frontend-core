@@ -32,7 +32,6 @@
         :container-manager="containerManager"
         :tabs-list="windowMetadata.tabsListParent"
         :all-tabs-list="allTabsList"
-        :references-manager="referencesManager"
         :actions-manager="actionsManager"
       />
       <tab-manager-child
@@ -42,7 +41,6 @@
         :container-manager="containerManager"
         :tabs-list="windowMetadata.tabsListChild"
         :all-tabs-list="allTabsList"
-        :references-manager="referencesManager"
         :actions-manager="actionsManager"
       />
       <modal-dialog
@@ -60,7 +58,6 @@
         :container-manager="containerManager"
         :tabs-list="windowMetadata.tabsListChild"
         :all-tabs-list="allTabsList"
-        :references-manager="referencesManager"
         :actions-manager="actionsManager"
       />
     </div>
@@ -118,7 +115,7 @@ export default defineComponent({
     }
   },
 
-  setup(props, { root }) {
+  setup(props) {
     /**
      * Const
      */
@@ -136,14 +133,6 @@ export default defineComponent({
     const isLoadWindows = ref(false)
 
     const index = ref(0)
-
-    const referencesManager = ref({
-      getTableName: () => {
-        const tabUuid = currentTabUuid.value
-        const windowUuid = props.windowMetadata.uuid
-        return store.getters.getTableName(windowUuid, tabUuid)
-      }
-    })
 
     /**
      * Computed
@@ -253,7 +242,6 @@ export default defineComponent({
       allTabsList,
       isLoadWindows,
       index,
-      referencesManager,
       // Computed
       isWithChildsTab,
       showRecordAccess,
