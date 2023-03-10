@@ -462,11 +462,21 @@ const actions = {
 
     // Iterate for change logic
     field.dependentFieldsList.map(async fieldDependentDefinition => {
-      const { containerUuid, columnName } = fieldDependentDefinition
+      let containerName, containerUuid, columnName
+      // old implementation (used on forms)
+      if (getTypeOfValue(fieldDependentDefinition) === 'String') {
+        columnName = fieldDependentDefinition
+        containerUuid = field.containerUuid
+      } else {
+        // new implementation
+        columnName = fieldDependentDefinition.columnName
+        containerUuid = fieldDependentDefinition.containerUuid
+        containerName = fieldDependentDefinition.containerName
+      }
 
       // Get all fields on different container
       let currentFieldsList = fieldsList
-      if (containerManager && containerManager.getFieldsList && containerUuid !== field.containerUuid) {
+      if (!field.isCustomForm && containerManager && containerManager.getFieldsList && containerUuid !== field.containerUuid) {
         currentFieldsList = containerManager.getFieldsList({
           parentUuid,
           containerUuid
@@ -479,8 +489,8 @@ const actions = {
           parentContainerName: field.panelName,
           parentContainerUuid: field.containerUuid,
           dependentColumnName: columnName,
-          dependentContainerName: fieldDependentDefinition.containerName,
-          dependentContainerUuid: fieldDependentDefinition.containerUuid
+          dependentContainerName: containerName,
+          dependentContainerUuid: containerUuid
         })
         return
       }
@@ -497,8 +507,8 @@ const actions = {
           parentContainerName: field.panelName,
           parentContainerUuid: field.containerUuid,
           dependentColumnName: columnName,
-          dependentContainerName: fieldDependentDefinition.containerName,
-          dependentContainerUuid: fieldDependentDefinition.containerUuid
+          dependentContainerName: containerName,
+          dependentContainerUuid: containerUuid
         })
         return
       }

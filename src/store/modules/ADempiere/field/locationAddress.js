@@ -27,7 +27,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 const initState = {
   countries: {},
   isShowedLocation: false,
-  fieldsListLocation: [],
+  fieldsListLocation: {},
   fieldsListLocationShipping: [],
   fieldsListLocationBilling: []
 }
@@ -42,14 +42,18 @@ const locationAddress = {
     setShowedLocation(state, isShowed) {
       state.isShowedLocation = isShowed
     },
+    setFieldsListLocationAddress(state, { containerUuid, fieldsList }) {
+      // state.fieldsListLocation = fieldsListLocation
+      Vue.set(state.fieldsListLocation, containerUuid, fieldsList)
+    },
     setFieldsListLocation(state, fieldsListLocation) {
       state.fieldsListLocation = fieldsListLocation
     },
-    setFieldsListLocationShipping(state, fieldsListLocation) {
-      state.fieldsListLocationShipping = fieldsListLocation
+    setFieldsListLocationShipping(state, fieldsListLocationShipping) {
+      state.fieldsListLocationShipping = fieldsListLocationShipping
     },
-    setFieldsListLocationBilling(state, fieldsListLocation) {
-      state.fieldsListLocationBilling = fieldsListLocation
+    setFieldsListLocationBilling(state, fieldsListLocationBilling) {
+      state.fieldsListLocationBilling = fieldsListLocationBilling
     },
     resetStateLocation(state) {
       state = initState
@@ -105,6 +109,9 @@ const locationAddress = {
     },
     getFieldLocation: (state) => {
       return state.fieldsListLocation
+    },
+    getFieldLocationAddress: (state) => ({ containerUuid }) => {
+      return state.fieldsListLocation[containerUuid] || []
     },
     getFieldsListLocationShipping: (state) => {
       return state.fieldsListLocationShipping
