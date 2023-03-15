@@ -42,7 +42,8 @@ const issues = {
   to: ' a ',
   emailTemplate: 'Plantilla de Correo',
   nextActionDate: 'Fecha de Siguiente Acción',
-  expirationType: 'Tipo de Vencimiento'
+  expirationType: 'Tipo de Vencimiento',
+  timeRecord: 'Registrar Tiempo'
 }
 
 export default issues
