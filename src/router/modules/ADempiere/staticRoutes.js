@@ -164,6 +164,24 @@ const staticRoutes = [
   },
 
   {
+    path: '/time-record',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/time-record',
+        component: () => import('@/views/ADempiere/Form'),
+        name: 'TimeRecord',
+        meta: {
+          title: 'TimeRecord',
+          icon: 'search',
+          isIndex: true
+        }
+      }
+    ]
+  },
+
+  {
     path: '/Issues',
     component: Layout,
     hidden: true,
