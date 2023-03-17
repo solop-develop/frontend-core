@@ -1,5 +1,10 @@
 import Cookies from 'js-cookie'
 
+/**
+ * Prefix to Bearer tokem authorization
+ */
+export const BEARER_TYPE = 'Bearer'
+
 const TokenKey = 'sessionUuid'
 
 export function getToken() {

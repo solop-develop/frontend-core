@@ -1,6 +1,30 @@
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
+
+// Constants
+import { BEARER_TYPE } from '@/utils/auth'
+
+// Utils and Helper Methos
+import { MessageBox, Message } from 'element-ui'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 // create an axios instance
 const service = axios.create({
@@ -17,13 +41,19 @@ service.interceptors.request.use(
     if (!config.params) {
       config.params = {}
     }
-    //  Set header
-    if (store.getters.token) {
+
+    const token = store.getters.token
+    // Set header
+    if (!isEmptyValue(token)) {
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
       // config.headers['X-Token'] = getToken()
     }
+
+    // Json Web Token
+    config.headers.Authorization = `${BEARER_TYPE} ${token}`
+
     return config
   },
   error => {
