@@ -51,14 +51,15 @@
                 icon="el-icon-arrow-down"
                 @click="changeDisplatedTitle"
               />
-
-              <form-panel
-                :metadata="{
-                  ...formMetadata,
-                  fileName: formFileName,
-                  title: formName
-                }"
-              />
+              <div>
+                <form-panel
+                  :metadata="{
+                    ...formMetadata,
+                    fileName: formFileName,
+                    title: formName
+                  }"
+                />
+              </div>
             </el-card>
           </el-col>
         </el-row>
