@@ -19,9 +19,6 @@
 import axios from 'axios'
 import store from '@/store'
 
-// Constants
-import { BEARER_TYPE } from '@/utils/auth'
-
 // Utils and Helper Methos
 import { MessageBox, Message } from 'element-ui'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -50,9 +47,6 @@ service.interceptors.request.use(
       // please modify it according to the actual situation
       // config.headers['X-Token'] = getToken()
     }
-
-    // Json Web Token
-    config.headers.Authorization = `${BEARER_TYPE} ${token}`
 
     return config
   },
