@@ -55,7 +55,6 @@ export function request(requestValues) {
     }
   })
 
-  requestValues.params.token = bearerToken
   requestValues.params.language = getLanguage() || 'en_US'
 
   // TODO: Add expires data on headers request
