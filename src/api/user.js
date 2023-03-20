@@ -85,12 +85,12 @@ export function requestMenu({
  * Logout from server
  * @param {string} token or session UUID
  */
-export function logout(token) {
+export function logout(sessionUuid) {
   return request({
     method: 'post',
     url: '/user/logout',
     data: {
-      token
+      session_uuid: sessionUuid
     }
   })
 }

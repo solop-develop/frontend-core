@@ -265,26 +265,27 @@ const actions = {
 
   // user logout
   logout({ commit, state, getters, rootState, dispatch }) {
-    const token = state.token
+    const sessionUuid = state.token
     return new Promise((resolve, reject) => {
-      commit('SET_TOKEN', '')
-      commit('SET_ROLES', [])
-      removeToken()
-
       commit('setIsSession', false)
       rootState['pointOfSales/point/index'].showPOSCollection = false
       // reset visited views and cached views
       // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
       dispatch('tagsView/delAllViews', null, { root: true })
 
-      // clear sesion cookies
-      removeCurrentRole()
-      removeCurrentOrganization()
-      removeCurrentWarehouse()
-      resetRouter()
-      logout(token).catch(error => {
+      logout(sessionUuid).catch(error => {
         console.warn(error)
       }).finally(() => {
+        // clear sesion cookies
+        removeCurrentRole()
+        removeCurrentOrganization()
+        removeCurrentWarehouse()
+        resetRouter()
+
+        commit('SET_TOKEN', '')
+        commit('SET_ROLES', [])
+        removeToken()
+
         resolve()
       })
     })
