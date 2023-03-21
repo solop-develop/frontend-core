@@ -16,14 +16,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import priceChecking from './priceChecking'
-import productInfo from './productInfo'
-import timeRecord from './timeRecord'
-import workflowActivity from './workflowActivity'
-
-export default {
-  priceChecking,
-  productInfo,
-  timeRecord,
-  workflowActivity
+const timeRecord = {
+  timeRecord: 'Time Record',
+  date: 'Date',
+  name: 'Name',
+  description: 'Description',
+  quantity: 'Quantity',
+  project: 'Project',
+  request: 'Request',
+  add: 'Add'
 }
+
+export default timeRecord

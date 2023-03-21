@@ -18,10 +18,12 @@
 
 import priceChecking from './priceChecking'
 import productInfo from './productInfo'
+import timeRecord from './timeRecord'
 import workflowActivity from './workflowActivity'
 
 export default {
   priceChecking,
   productInfo,
+  timeRecord,
   workflowActivity
 }
