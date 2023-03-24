@@ -437,7 +437,7 @@ export default {
       flex-direction: row;
       flex-wrap: nowrap;
       flex:none;
-      max-width: 50%;
+      max-width: 90%;
       cursor: pointer;
       height: 26px;
       line-height: 26px;

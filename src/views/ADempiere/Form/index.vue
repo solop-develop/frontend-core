@@ -51,7 +51,7 @@
                 icon="el-icon-arrow-down"
                 @click="changeDisplatedTitle"
               />
-              <div>
+              <div style="height: 100%">
                 <form-panel
                   :metadata="{
                     ...formMetadata,
