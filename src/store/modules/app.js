@@ -1,5 +1,7 @@
 import Cookies from 'js-cookie'
 import { getLanguage } from '@/lang/index'
+import { serSessionAttribute } from '@/api/sessionAttribute'
+import { setToken } from '@/utils/auth'
 
 const state = {
   sidebar: {
@@ -50,6 +52,8 @@ const actions = {
     commit('TOGGLE_DEVICE', device)
   },
   setLanguage({ commit }, language) {
+    serSessionAttribute({ language })
+      .then(token => { setToken(token) })
     commit('SET_LANGUAGE', language)
   },
   setSize({ commit }, size) {
