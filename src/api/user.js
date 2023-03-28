@@ -1,3 +1,21 @@
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 // Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
@@ -6,7 +24,7 @@ import { request } from '@/utils/ADempiere/request'
  * @param {string} userName
  * @param {string} password
  */
-export function login({
+export function requestLogin({
   userName,
   password,
   roleUuid,
@@ -30,30 +48,20 @@ export function login({
  * Get User Info
  * @param {string} token or session UUID
  */
-export function requestUserInfoFromSession(token) {
+export function requestUserInfoFromSession() {
   return request({
     url: '/user/info',
-    method: 'get',
-    params: {
-      token
-    }
+    method: 'get'
   })
-    .then(response => {
-      return response
-    })
 }
 
 /**
  * Get session info
- * @param {string} token or session UUID
  */
-export function requestSessionInfo(token) {
+export function requestSessionInfo() {
   return request({
     url: '/user/session',
-    method: 'get',
-    params: {
-      token
-    }
+    method: 'get'
   })
     .then(responseSession => {
       const { convertSession } = require('@/utils/ADempiere/apiConverts/user.js')
@@ -64,17 +72,11 @@ export function requestSessionInfo(token) {
 
 /**
  * Get User menu from server
- * @param {string} sessionUuid
  */
-export function requestMenu({
-  sessionUuid
-}) {
+export function requestMenu() {
   return request({
     url: '/user/menu',
-    method: 'get',
-    params: {
-      token: sessionUuid
-    }
+    method: 'get'
   })
     .then(response => {
       return response
@@ -83,14 +85,10 @@ export function requestMenu({
 
 /**
  * Logout from server
- * @param {string} token or session UUID
  */
-export function logout(sessionUuid) {
+export function requestLogout() {
   return request({
     method: 'post',
-    url: '/user/logout',
-    data: {
-      session_uuid: sessionUuid
-    }
+    url: '/user/logout'
   })
 }
