@@ -95,9 +95,4 @@ export function requestChangeRole({
       warehouse: warehouseUuid
     }
   })
-    .then(responseChangeRole => {
-      const { convertSession } = require('@/utils/ADempiere/apiConverts/user.js')
-
-      return convertSession(responseChangeRole)
-    })
 }

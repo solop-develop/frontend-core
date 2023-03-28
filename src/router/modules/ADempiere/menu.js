@@ -1,24 +1,32 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Leonel Matos lMatos@eroya.com www.erpya.com
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Leonel Matos lMatos@eroya.com
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+import Layout from '@/layout'
 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-import { requestMenu } from '@/api/user.js'
-import { convertAction } from '@/utils/ADempiere/dictionaryUtils.js'
+// Constants
 import staticRoutes from '@/router/modules/ADempiere/staticRoutes.js'
 import testRoutes from '@/router/modules/ADempiere/testRoutes.js'
-import Layout from '@/layout'
+
+// API Request Methods
+import { requestMenu } from '@/api/user.js'
+
+// Utils and Helper Methods
+import { convertAction } from '@/utils/ADempiere/dictionaryUtils.js'
 
 /**
  * Get Menu from server
@@ -166,6 +174,7 @@ function getRouteFromMenuItem({ menu, roleUuid, organizationUuid }) {
       isSummary: menu.is_summary,
       isSalesTransaction: menu.is_sales_transaction,
       noCache: true,
+      referenceId: menu.reference_id,
       referenceUuid: menu.reference_uuid,
       title: menu.name,
       type,

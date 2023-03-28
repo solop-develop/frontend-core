@@ -415,11 +415,9 @@ const actions = {
       roleUuid: getCurrentRole(),
       organizationUuid
     })
-      .then(changeRoleResponse => {
-        const { uuid } = changeRoleResponse
-
-        commit('SET_TOKEN', uuid)
-        setToken(uuid)
+      .then(tokenSession => {
+        commit('SET_TOKEN', tokenSession)
+        setToken(tokenSession)
 
         setCurrentOrganization(organizationUuid)
         const organization = getters.getOrganizations.find(org => org.uuid === organizationUuid)
@@ -433,9 +431,9 @@ const actions = {
         })
 
         // Update user info and context associated with session
-        dispatch('getSessionInfo', uuid)
+        // dispatch('getSessionInfo', tokenSession)
 
-        dispatch('getWarehousesList', organizationUuid)
+        // dispatch('getWarehousesList', organizationUuid)
 
         showMessage({
           message: language.t('notifications.successChangeRole'),
@@ -528,27 +526,25 @@ const actions = {
       organizationUuid,
       warehouseUuid
     })
-      .then(changeRoleResponse => {
-        const { role, uuid } = changeRoleResponse
+      .then(tokenSession => {
+        commit('SET_TOKEN', tokenSession)
+        setToken(tokenSession)
 
-        commit('SET_ROLE', role)
-        setCurrentRole(role.uuid)
+        // commit('SET_ROLE', role)
+        setCurrentRole(roleUuid)
 
-        commit('SET_TOKEN', uuid)
-        setToken(uuid)
+        removeCurrentOrganization()
+        removeCurrentWarehouse()
 
         // Update user info and context associated with session
-        dispatch('getSessionInfo', uuid)
+        // dispatch('getSessionInfo', uuid)
 
         showMessage({
           message: language.t('notifications.successChangeRole'),
           type: 'success',
           showClose: true
         })
-        return {
-          ...role,
-          sessionUuid: uuid
-        }
+        return roleUuid
       })
       .catch(error => {
         showMessage({
