@@ -21,7 +21,7 @@ import { request } from '@/utils/ADempiere/request'
  * Change Warehouse of access
  * @param {array} attribute
  */
-export function serSessionAttribute({
+export function setSessionAttribute({
   warehouseId,
   warehouseUuid,
   language

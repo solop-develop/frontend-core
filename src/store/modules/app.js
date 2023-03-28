@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie'
 import { getLanguage } from '@/lang/index'
-import { serSessionAttribute } from '@/api/sessionAttribute'
+import { setSessionAttribute } from '@/api/sessionAttribute'
 import { setToken } from '@/utils/auth'
 
 const state = {
@@ -52,7 +52,7 @@ const actions = {
     commit('TOGGLE_DEVICE', device)
   },
   setLanguage({ commit }, language) {
-    serSessionAttribute({ language })
+    setSessionAttribute({ language })
       .then(token => { setToken(token) })
     commit('SET_LANGUAGE', language)
   },

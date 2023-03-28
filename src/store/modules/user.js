@@ -32,7 +32,7 @@ import {
   requestRolesList,
   requestChangeRole
 } from '@/api/role.js'
-import { serSessionAttribute } from '@/api/sessionAttribute'
+import { setSessionAttribute } from '@/api/sessionAttribute'
 import {
   getToken,
   setToken,
@@ -496,14 +496,12 @@ const actions = {
     }, {
       root: true
     })
-    serSessionAttribute({
+    setSessionAttribute({
       warehouseId: currentWarehouse.id,
       warehouseUuid: currentWarehouse.uuid
     })
       .then(token => {
-        commit('SET_TOKEN', token)
         setToken(token)
-        dispatch('getSessionInfo')
         location.reload()
       })
   },
