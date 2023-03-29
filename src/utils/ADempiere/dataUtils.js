@@ -312,5 +312,6 @@ export function generatePageToken({ pageNumber = 1, token }) {
   //   return ''
   // }
 
+  // return onlyToken + '-' + pageNumber
   return pageNumber
 }
