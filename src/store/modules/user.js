@@ -16,11 +16,18 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import language from '@/lang'
+
+// Constants
+import { ORGANIZATION, WAREHOUSE } from '@/utils/ADempiere/constants/systemColumns'
+
+// API Request Methods
 import {
-  login,
-  logout,
+  requestLogin,
+  requestLogout,
   requestUserInfoFromSession,
-  requestSessionInfo
+  requestSessionInfo,
+  setSessionAttribute
 } from '@/api/user'
 import {
   requestRolesList,
@@ -44,11 +51,11 @@ import {
   requestOrganizationsList,
   requestWarehousesList
 } from '@/api/ADempiere/system-core'
+
+// Utils and Helper Methods
 import { resetRouter } from '@/router'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import { ORGANIZATION, WAREHOUSE } from '@/utils/ADempiere/constants/systemColumns'
-import language from '@/lang'
 
 const state = {
   token: getToken(),
@@ -134,7 +141,7 @@ const actions = {
     token
   }) {
     return new Promise((resolve, reject) => {
-      login({
+      requestLogin({
         userName,
         password,
         roleUuid,
@@ -154,15 +161,10 @@ const actions = {
 
   /**
    * Get session info
-   * @param {string} sessionUuid as token
    */
-  getSessionInfo({ commit, dispatch }, sessionUuid = null) {
-    if (isEmptyValue(sessionUuid)) {
-      sessionUuid = getToken()
-    }
-
+  getSessionInfo({ commit, dispatch }) {
     return new Promise((resolve, reject) => {
-      requestSessionInfo(sessionUuid)
+      requestSessionInfo()
         .then(async sessionInfo => {
           commit('setIsSession', true)
           commit('setSessionInfo', {
@@ -230,7 +232,7 @@ const actions = {
             root: true
           })
 
-          dispatch('getRolesListFromServer', sessionUuid)
+          dispatch('getRolesListFromServer')
         })
         .catch(error => {
           console.warn(`Error ${error.code} getting context session: ${error.message}.`)
@@ -241,15 +243,10 @@ const actions = {
 
   /**
    * Get user info
-   * @param {string} sessionUuid as token
    */
-  getUserInfoFromSession({ commit, dispatch }, sessionUuid = null) {
-    if (isEmptyValue(sessionUuid)) {
-      sessionUuid = getToken()
-    }
-
+  getUserInfoFromSession({ commit, dispatch }) {
     return new Promise((resolve, reject) => {
-      requestUserInfoFromSession(sessionUuid).then(responseGetInfo => {
+      requestUserInfoFromSession().then(responseGetInfo => {
         if (isEmptyValue(responseGetInfo)) {
           reject({
             code: 0,
@@ -265,7 +262,7 @@ const actions = {
         //   }
         // }
 
-        dispatch('getRolesListFromServer', sessionUuid)
+        dispatch('getRolesListFromServer')
 
         const avatar = responseGetInfo.image
         commit('SET_AVATAR', avatar)
@@ -282,8 +279,7 @@ const actions = {
   },
 
   // user logout
-  logout({ commit, state, getters, rootState, dispatch }) {
-    const sessionUuid = state.token
+  logout({ commit, rootState, dispatch }) {
     return new Promise((resolve, reject) => {
       commit('setIsSession', false)
       rootState['pointOfSales/point/index'].showPOSCollection = false
@@ -291,7 +287,7 @@ const actions = {
       // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
       dispatch('tagsView/delAllViews', null, { root: true })
 
-      logout(sessionUuid).catch(error => {
+      requestLogout().catch(error => {
         console.warn(error)
       }).finally(() => {
         // clear sesion cookies
@@ -319,13 +315,9 @@ const actions = {
     })
   },
 
-  getRolesListFromServer({ commit }, sessionUuid = null) {
-    if (isEmptyValue(sessionUuid)) {
-      sessionUuid = getToken()
-    }
-
+  getRolesListFromServer({ commit }) {
     return new Promise((resolve, reject) => {
-      requestRolesList(sessionUuid)
+      requestRolesList()
         .then(rolesList => {
           // roles must be a non-empty array
           if (isEmptyValue(rolesList)) {
@@ -411,15 +403,12 @@ const actions = {
     })
 
     return requestChangeRole({
-      sessionUuid: getToken(),
       roleUuid: getCurrentRole(),
       organizationUuid
     })
-      .then(changeRoleResponse => {
-        const { uuid } = changeRoleResponse
-
-        commit('SET_TOKEN', uuid)
-        setToken(uuid)
+      .then(tokenSession => {
+        commit('SET_TOKEN', tokenSession)
+        setToken(tokenSession)
 
         setCurrentOrganization(organizationUuid)
         const organization = getters.getOrganizations.find(org => org.uuid === organizationUuid)
@@ -433,9 +422,9 @@ const actions = {
         })
 
         // Update user info and context associated with session
-        dispatch('getSessionInfo', uuid)
+        // dispatch('getSessionInfo', tokenSession)
 
-        dispatch('getWarehousesList', organizationUuid)
+        // dispatch('getWarehousesList', organizationUuid)
 
         showMessage({
           message: language.t('notifications.successChangeRole'),
@@ -469,7 +458,6 @@ const actions = {
     })
       .then(response => {
         commit('SET_WAREHOUSES_LIST', response.warehousesList)
-
         let warehouse = response.warehousesList.find(item => item.uuid === getCurrentWarehouse())
         if (isEmptyValue(warehouse)) {
           warehouse = response.warehousesList[0]
@@ -493,7 +481,8 @@ const actions = {
       })
   },
 
-  changeWarehouse({ commit, state }, {
+  changeWarehouse({ commit, state, dispatch }, {
+    warehouseId,
     warehouseUuid
   }) {
     setCurrentWarehouse(warehouseUuid)
@@ -507,6 +496,14 @@ const actions = {
     }, {
       root: true
     })
+    setSessionAttribute({
+      warehouseId: currentWarehouse.id,
+      warehouseUuid: currentWarehouse.uuid
+    })
+      .then(token => {
+        setToken(token)
+        location.reload()
+      })
   },
 
   // dynamically modify permissions
@@ -523,32 +520,29 @@ const actions = {
     })
 
     return requestChangeRole({
-      sessionUuid: getToken(),
       roleUuid,
       organizationUuid,
       warehouseUuid
     })
-      .then(changeRoleResponse => {
-        const { role, uuid } = changeRoleResponse
+      .then(tokenSession => {
+        commit('SET_TOKEN', tokenSession)
+        setToken(tokenSession)
 
-        commit('SET_ROLE', role)
-        setCurrentRole(role.uuid)
+        // commit('SET_ROLE', role)
+        setCurrentRole(roleUuid)
 
-        commit('SET_TOKEN', uuid)
-        setToken(uuid)
+        removeCurrentOrganization()
+        removeCurrentWarehouse()
 
         // Update user info and context associated with session
-        dispatch('getSessionInfo', uuid)
+        // dispatch('getSessionInfo', uuid)
 
         showMessage({
           message: language.t('notifications.successChangeRole'),
           type: 'success',
           showClose: true
         })
-        return {
-          ...role,
-          sessionUuid: uuid
-        }
+        return roleUuid
       })
       .catch(error => {
         showMessage({

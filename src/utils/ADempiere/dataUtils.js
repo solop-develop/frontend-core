@@ -17,7 +17,7 @@
  */
 
 // utils and helper methods
-import { getToken } from '@/utils/auth'
+// import { getToken } from '@/utils/auth'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export const OPERATOR_EQUAL = {
@@ -303,14 +303,15 @@ export function generatePageToken({ pageNumber = 1, token }) {
     pageNumber = 1
   }
 
-  if (isEmptyValue(token)) {
-    return getToken() + '-' + pageNumber
-  }
+  // if (isEmptyValue(token)) {
+  //   return getToken() + '-' + pageNumber
+  // }
 
-  const onlyToken = extractPagingToken(token)
-  if (isEmptyValue(onlyToken)) {
-    return ''
-  }
+  // const onlyToken = extractPagingToken(token)
+  // if (isEmptyValue(onlyToken)) {
+  //   return ''
+  // }
 
-  return onlyToken + '-' + pageNumber
+  // return onlyToken + '-' + pageNumber
+  return pageNumber
 }

@@ -32,13 +32,10 @@ export function getRoles() {
   })
 }
 
-export function requestRolesList(token) {
+export function requestRolesList() {
   return request({
     url: 'user/roles',
-    method: 'get',
-    params: {
-      token
-    }
+    method: 'get'
   })
     .then(responseRoles => {
       const { convertRole } = require('@/utils/ADempiere/apiConverts/user.js')
@@ -80,7 +77,6 @@ export function deleteRole(id) {
  * @param {string} warehouseUuid
  */
 export function requestChangeRole({
-  sessionUuid,
   roleUuid,
   organizationUuid,
   warehouseUuid
@@ -89,15 +85,9 @@ export function requestChangeRole({
     url: 'user/change-role',
     method: 'post',
     data: {
-      session_uuid: sessionUuid,
       role: roleUuid,
       organization: organizationUuid,
       warehouse: warehouseUuid
     }
   })
-    .then(responseChangeRole => {
-      const { convertSession } = require('@/utils/ADempiere/apiConverts/user.js')
-
-      return convertSession(responseChangeRole)
-    })
 }
