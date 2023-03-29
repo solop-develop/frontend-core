@@ -1,6 +1,10 @@
 import Cookies from 'js-cookie'
+
+// API Request Methods
+import { setSessionAttribute } from '@/api/user'
+
+// Utils and Helper Methods
 import { getLanguage } from '@/lang/index'
-import { setSessionAttribute } from '@/api/sessionAttribute'
 import { setToken } from '@/utils/auth'
 
 const state = {
@@ -53,7 +57,9 @@ const actions = {
   },
   setLanguage({ commit }, language) {
     setSessionAttribute({ language })
-      .then(token => { setToken(token) })
+      .then(token => {
+        setToken(token)
+      })
     commit('SET_LANGUAGE', language)
   },
   setSize({ commit }, size) {

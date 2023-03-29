@@ -92,3 +92,25 @@ export function requestLogout() {
     url: '/user/logout'
   })
 }
+
+/**
+ * Change session attribute
+ * @param {number} warehouseId
+ * @param {string} warehouseUuid
+ * @param {string} language
+ */
+export function setSessionAttribute({
+  warehouseId,
+  warehouseUuid,
+  language
+}) {
+  return request({
+    url: 'user/set-session-attribute',
+    method: 'put',
+    data: {
+      warehouse_id: warehouseId,
+      warehouse_uuid: warehouseUuid,
+      language
+    }
+  })
+}

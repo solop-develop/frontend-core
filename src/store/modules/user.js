@@ -26,13 +26,13 @@ import {
   requestLogin,
   requestLogout,
   requestUserInfoFromSession,
-  requestSessionInfo
+  requestSessionInfo,
+  setSessionAttribute
 } from '@/api/user'
 import {
   requestRolesList,
   requestChangeRole
 } from '@/api/role.js'
-import { setSessionAttribute } from '@/api/sessionAttribute'
 import {
   getToken,
   setToken,
