@@ -20,8 +20,8 @@ const VBankStatementMatch = {
   steps: {
     searchCriteria: 'Criterio de Busqueda',
     automaticMatch: 'Coincidencia Automatica',
-    andbookCoincidences: 'Coincidencia Manual',
-    simulateReconciliation: 'Simular conciliación'
+    pendingMatch: 'Pendiente por Coincidencia',
+    summaryAdjustment: 'Resume y Ajuste'
   },
   field: {
     bankAccount: 'Cuenta Bancaria',
