@@ -28,7 +28,9 @@ const VBankStatementMatch = {
     businessPartner: 'Socio de Negocio',
     searchMode: 'Modo de Búsqueda',
     totalPayment: 'Total del Pago',
-    transactionDate: 'Fecha de la Transacción'
+    transactionDate: 'Fecha de la Transacción',
+    selectNotMatched: 'No Coincide',
+    selectMatched: 'Coincidentes'
   },
   AutomaticMatch: {
     title: 'Coincidencia Automatica',

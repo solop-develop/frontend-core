@@ -52,5 +52,8 @@
   "vPayPrint": {
     "endpoint": "form/addons/payment-print-export"
   },
+  "VBankStatementMatch": {
+    "endpoint": "form/addons/bank-statement-match"
+  },
   "theme": "src/themes/default"
 }

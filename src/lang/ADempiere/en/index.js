@@ -45,6 +45,7 @@ import pointOfSales from './form/pointOfSales'
 import listStoreProduct from './form/listStoreProduct'
 import timeControl from './form/timeControl'
 import VPayPrint from './form/VPayPrint'
+import VBankStatementMatch from './form/VBankStatementMatch'
 
 export default {
   actionMenu,
@@ -71,6 +72,7 @@ export default {
   report,
   workflow,
   issues,
+  VBankStatementMatch,
 
   language: 'Language',
   notifications: {
