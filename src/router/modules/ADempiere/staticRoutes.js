@@ -198,6 +198,44 @@ const staticRoutes = [
         }
       }
     ]
+  },
+  {
+    path: '/ExpressReceipt',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/ExpressReceipt',
+        component: () => import('@/views/ADempiere/Form'),
+        name: 'ExpressReceipt',
+        meta: {
+          title: 'ExpressReceipt',
+          icon: 'el-icon-receiving',
+          isIndex: true,
+          type: 'from'
+        }
+      }
+    ]
+  },
+  {
+    path: '/ExpressShipment',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/ExpressShipment',
+        component: () => import('@/views/ADempiere/Form'),
+        name: 'ExpressShipment',
+        meta: {
+          // title: language.t('route.expressShipment'),
+          title: 'ExpressShipment',
+          // title: language.t('route.reportViewer'),
+          icon: 'shopping',
+          isIndex: true,
+          type: 'from'
+        }
+      }
+    ]
   }
 ]
 
