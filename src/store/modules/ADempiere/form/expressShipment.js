@@ -80,23 +80,26 @@ export default {
       value,
       shipmentId
     }) {
-      listProductRequest({
-        namue,
-        upc,
-        searchValue,
-        sku,
-        value,
-        shipmentId
+      return new Promise(resolve => {
+        listProductRequest({
+          namue,
+          upc,
+          searchValue,
+          sku,
+          value,
+          shipmentId
+        })
+          .then(response => {
+            const { records } = response
+            commit('setListProduct', records)
+            resolve(records)
+          })
+          .catch(error => {
+            resolve([])
+            commit('setListProduct', [])
+            console.warn(`Error getting List Product: ${error.message}. Code: ${error.code}.`)
+          })
       })
-        .then(response => {
-          console.log({ response })
-          const { records } = response
-          commit('setListProduct', records)
-        })
-        .catch(error => {
-          commit('setListProduct', [])
-          console.warn(`Error getting List Product: ${error.message}. Code: ${error.code}.`)
-        })
     },
     listLine({ commit }, {
       shipmentId,
