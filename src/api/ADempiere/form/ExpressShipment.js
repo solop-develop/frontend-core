@@ -49,16 +49,6 @@ export function listProductRequest({
   pageSize,
   shipmentId
 }) {
-  console.log({
-    namue,
-    upc,
-    searchValue,
-    sku,
-    value,
-    pageToken,
-    pageSize,
-    shipmentId
-  })
   return request({
     url: '/form/addons/express-shipment/product',
     method: 'get',
@@ -195,10 +185,6 @@ export function listShipmentLinesRequest({
   shipmentId,
   shipmentUuid
 }) {
-  console.log({
-    shipmentId,
-    shipmentUuid
-  }, 'listShipmentLinesRequest')
   return request({
     url: '/form/addons/express-shipment/shipment-line',
     method: 'get',

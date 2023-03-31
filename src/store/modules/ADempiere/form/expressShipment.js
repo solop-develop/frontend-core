@@ -28,6 +28,7 @@ import {
   deleteShipmentLineRequest,
   listShipmentLinesRequest
 } from '@/api/ADempiere/form/ExpressShipment.js'
+import { isEmptyValue } from '@/utils/ADempiere'
 // Utils and Helper Methods
 import { showMessage } from '@/utils/ADempiere/notification.js'
 
@@ -41,6 +42,7 @@ const expressShipment = {
         name: 'Epale',
         quantity: 12.2
       },
+      isEditQuantity: false,
       id: 1,
       quantity: 12.2
     },
@@ -49,6 +51,7 @@ const expressShipment = {
         value: 'Elm',
         name: 'Elm Tree'
       },
+      isEditQuantity: false,
       id: 2,
       quantity: 2
     }
@@ -99,17 +102,22 @@ export default {
       shipmentId,
       shipmentUuid
     }) {
-      console.log({
-        shipmentId,
-        shipmentUuid
-      }, 'listLine')
       listShipmentLinesRequest({
         shipmentId,
         shipmentUuid
       })
         .then(response => {
+          let list = []
           const { records } = response
-          commit('setListShipmentLines', records)
+          if (!isEmptyValue(records)) {
+            list = records.map(line => {
+              return {
+                ...line,
+                isEditQuantity: false
+              }
+            })
+          }
+          commit('setListShipmentLines', list)
         })
         .catch(error => {
           console.warn(`Error getting List Product: ${error.message}. Code: ${error.code}.`)
@@ -117,15 +125,12 @@ export default {
     },
     // Shipment Line
     createLine({ state, getters, dispatch }, {
-      shipmentId,
-      shipmentUuid,
       productId,
       productUuid,
       description,
       quantity = 1
     }) {
       const { id, uuid } = getters.getCurrentShipment
-      console.log({ id, uuid })
       createShipmentLineRequest({
         shipmentId: id,
         shipmentUuid: uuid,
@@ -135,6 +140,10 @@ export default {
         productUuid
       })
         .then(response => {
+          dispatch('listLine', {
+            shipmentId: id,
+            shipmentUuid: uuid
+          })
           console.log({ response })
         })
         .catch(error => {
@@ -211,7 +220,6 @@ export default {
         uuid
       })
         .then(response => {
-          console.log({ ...response }, 'createShipmentRequest')
           const { id, uuid } = response
           commit('setCurrentShipment', response)
           dispatch('listLine', {
@@ -228,10 +236,8 @@ export default {
           console.warn(`Error Getting Update Shipment Line: ${error.message}. Code: ${error.code}.`)
         })
     },
-    processShipment({ dispatch }, {
-      id,
-      uuid
-    }) {
+    processShipment({ dispatch, getters }) {
+      const { id, uuid } = getters.getCurrentShipment
       processShipmentRequest({
         id,
         uuid
@@ -255,7 +261,6 @@ export default {
   },
   getters: {
     getListProduct(state) {
-      console.log({ state })
       return state.listProduct
     },
     getListShipmentLines(state) {
