@@ -168,7 +168,7 @@ export function updateShipmentLineRequest({
 }) {
   return request({
     url: '/form/addons/express-shipment/shipment-line',
-    method: 'post',
+    method: 'put',
     data: {
       id,
       uuid,
