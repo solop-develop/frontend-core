@@ -16,6 +16,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import lang from '@/lang'
+
 // API Request Methods
 import {
   listProductRequest,
@@ -29,9 +31,9 @@ import {
   listShipmentLinesRequest
 } from '@/api/ADempiere/form/ExpressShipment.js'
 import { isEmptyValue } from '@/utils/ADempiere'
+
 // Utils and Helper Methods
 import { showMessage } from '@/utils/ADempiere/notification.js'
-import lang from '@/lang'
 
 const expressShipment = {
   currentShipment: {},
