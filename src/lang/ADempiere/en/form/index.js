@@ -16,12 +16,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import expressShipment from './expressShipment.js'
 import priceChecking from './priceChecking'
 import productInfo from './productInfo'
 import timeRecord from './timeRecord'
 import workflowActivity from './workflowActivity'
 
 export default {
+  expressShipment,
   priceChecking,
   productInfo,
   timeRecord,

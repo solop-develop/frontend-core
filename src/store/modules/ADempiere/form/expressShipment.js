@@ -240,7 +240,7 @@ export default {
             resolve(response)
             showMessage({
               type: 'success',
-              message: lang.t('ExpressShipment.shipmentComplete'),
+              message: lang.t('from.ExpressShipment.shipmentComplete'),
               showClose: true
             })
           })

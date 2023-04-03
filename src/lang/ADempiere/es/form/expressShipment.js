@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-const ExpressShipment = {
+const expressShipment = {
   title: 'Entrega',
   field: {
     salesOrder: 'Orden de Venta',
@@ -29,4 +29,4 @@ const ExpressShipment = {
   shipmentComplete: 'Entrega Completa'
 }
 
-export default ExpressShipment
+export default expressShipment
