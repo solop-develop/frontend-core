@@ -46,6 +46,7 @@ import listStoreProduct from './form/listStoreProduct'
 import timeControl from './form/timeControl'
 import VPayPrint from './form/VPayPrint'
 import issues from './form/issues'
+import ExpressShipment from './form/ExpressShipment'
 
 export default {
   actionMenu,
@@ -70,6 +71,7 @@ export default {
   report,
   workflow,
   issues,
+  ExpressShipment,
 
   language: 'Idioma',
   timeControl,

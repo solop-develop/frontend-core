@@ -31,31 +31,12 @@ import {
 import { isEmptyValue } from '@/utils/ADempiere'
 // Utils and Helper Methods
 import { showMessage } from '@/utils/ADempiere/notification.js'
+import lang from '@/lang'
 
 const expressShipment = {
   currentShipment: {},
   listProduct: [],
-  listShipmentLines: [
-    {
-      product: {
-        value: 'VO-1',
-        name: 'Epale',
-        quantity: 12.2
-      },
-      isEditQuantity: false,
-      id: 1,
-      quantity: 12.2
-    },
-    {
-      product: {
-        value: 'Elm',
-        name: 'Elm Tree'
-      },
-      isEditQuantity: false,
-      id: 2,
-      quantity: 2
-    }
-  ]
+  listShipmentLines: []
 }
 
 export default {
@@ -147,7 +128,6 @@ export default {
             shipmentId: id,
             shipmentUuid: uuid
           })
-          console.log({ response })
         })
         .catch(error => {
           showMessage({
@@ -158,7 +138,7 @@ export default {
           console.warn(`Error Getting Update Shipment Line: ${error.message}. Code: ${error.code}.`)
         })
     },
-    updateLine({ commit, dispatch }, {
+    updateLine({ commit, dispatch, getters }, {
       id,
       uuid,
       description,
@@ -171,7 +151,11 @@ export default {
         quantity
       })
         .then(response => {
-          console.log({ response })
+          const { id, uuid } = getters.getCurrentShipment
+          dispatch('listLine', {
+            shipmentId: id,
+            shipmentUuid: uuid
+          })
         })
         .catch(error => {
           showMessage({
@@ -180,28 +164,26 @@ export default {
             showClose: true
           })
           console.warn(`Error Getting Update Shipment Line: ${error.message}. Code: ${error.code}.`)
+          const { id, uuid } = getters.getCurrentShipment
+          dispatch('listLine', {
+            shipmentId: id,
+            shipmentUuid: uuid
+          })
         })
     },
-    deleteLine({ dispatch }, {
+    deleteLine({ dispatch, getters }, {
       id,
-      uuid,
-      shipmentId,
-      shipmentUuid
+      uuid
     }) {
-      console.log({ id,
-        uuid,
-        shipmentId,
-        shipmentUuid
-      })
       deleteShipmentLineRequest({
         id,
         uuid
       })
         .then(response => {
-          console.log({ response })
+          const { id, uuid } = getters.getCurrentShipment
           dispatch('listLine', {
-            shipmentId,
-            shipmentUuid
+            shipmentId: id,
+            shipmentUuid: uuid
           })
         })
         .catch(error => {
@@ -239,27 +221,36 @@ export default {
           console.warn(`Error Getting Update Shipment Line: ${error.message}. Code: ${error.code}.`)
         })
     },
-    processShipment({ dispatch, getters }) {
+    processShipment({ commit, dispatch, getters }) {
       const { id, uuid } = getters.getCurrentShipment
-      processShipmentRequest({
-        id,
-        uuid
-      })
-        .then(response => {
-          console.log({ response })
-          // dispatch('listLine', {
-          //   shipmentId,
-          //   shipmentUuid
-          // })
+      return new Promise(resolve => {
+        processShipmentRequest({
+          id,
+          uuid
         })
-        .catch(error => {
-          showMessage({
-            type: 'error',
-            message: error.message,
-            showClose: true
+          .then(response => {
+            const { id, uuid } = response
+            dispatch('listLine', {
+              shipmentId: id,
+              shipmentUuid: uuid
+            })
+            commit('setCurrentShipment', response)
+            resolve(response)
+            showMessage({
+              type: 'success',
+              message: lang.t('ExpressShipment.shipmentComplete'),
+              showClose: true
+            })
           })
-          console.warn(`Error Getting Update Shipment Line: ${error.message}. Code: ${error.code}.`)
-        })
+          .catch(error => {
+            showMessage({
+              type: 'error',
+              message: error.message,
+              showClose: true
+            })
+            console.warn(`Error Getting Update Shipment Line: ${error.message}. Code: ${error.code}.`)
+          })
+      })
     }
   },
   getters: {
