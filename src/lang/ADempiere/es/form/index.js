@@ -16,16 +16,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import mnemonicCommand from './mnemonicCommand.js'
 import expressShipment from './expressShipment.js'
+import workflowActivity from './workflowActivity'
+import expressReceipt from './expressReceipt.js'
 import priceChecking from './priceChecking'
 import productInfo from './productInfo'
 import timeRecord from './timeRecord'
-import workflowActivity from './workflowActivity'
 
 export default {
+  workflowActivity,
+  mnemonicCommand,
   expressShipment,
+  expressReceipt,
   priceChecking,
   productInfo,
-  timeRecord,
-  workflowActivity
+  timeRecord
 }

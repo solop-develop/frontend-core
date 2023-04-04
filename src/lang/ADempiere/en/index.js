@@ -46,8 +46,6 @@ import listStoreProduct from './form/listStoreProduct'
 import timeControl from './form/timeControl'
 import VPayPrint from './form/VPayPrint'
 
-console.log({ ...form })
-
 export default {
   actionMenu,
   businessPartner,
