@@ -350,6 +350,7 @@ export default {
         basePrice: 'Precio Base',
         baseQuantity: 'Cantidad Base',
         quantity: 'Cantidad',
+        isQuantityFromOrderLine: 'Cantidad Completa de la Línea',
         uom: 'UM',
         unitOfMeasure: 'Unidad de Medida',
         options: 'Opciones',

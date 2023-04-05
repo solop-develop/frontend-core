@@ -347,6 +347,7 @@ export default {
       tableProduct: {
         product: 'Product',
         quantity: 'Quantity',
+        isQuantityFromOrderLine: 'Complete Quantity of the Line',
         basePrice: 'Base Price',
         baseQuantity: 'Base Quantity',
         uom: 'UOM',

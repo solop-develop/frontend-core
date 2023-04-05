@@ -205,7 +205,7 @@ const staticRoutes = [
     hidden: true,
     children: [
       {
-        path: '/ExpressReceipt',
+        path: '/Express-receipt',
         component: () => import('@/views/ADempiere/Form'),
         name: 'ExpressReceipt',
         meta: {
@@ -223,7 +223,7 @@ const staticRoutes = [
     hidden: true,
     children: [
       {
-        path: '/ExpressShipment',
+        path: '/Express-shipment',
         component: () => import('@/views/ADempiere/Form'),
         name: 'ExpressShipment',
         meta: {
