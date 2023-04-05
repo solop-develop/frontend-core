@@ -32,6 +32,7 @@ const route = {
   warehouse: 'Warehouse',
   reportViewer: 'Report Viewer',
   smartBrowser: 'Smart Brower',
+  expressShipment: 'Express Shipment',
   PriceChecking: 'Price checking'
 }
 

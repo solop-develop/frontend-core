@@ -32,6 +32,7 @@ const route = {
   warehouse: 'Almacén',
   reportViewer: 'Visor de Reportes',
   smartBrowser: 'Consulta Inteligente',
+  expressShipment: 'Envío Exprés',
   PriceChecking: 'Consulta del precio'
 }
 
