@@ -114,7 +114,8 @@ export default {
       productId,
       productUuid,
       description,
-      quantity = 1
+      quantity = 1,
+      isQuantityFromOrderLine
     }) {
       const { id, uuid } = getters.getCurrentReceipt
       createReceiptLineRequest({
@@ -122,6 +123,7 @@ export default {
         receiptUuid: uuid,
         description,
         quantity,
+        isQuantityFromOrderLine,
         productId,
         productUuid
       })

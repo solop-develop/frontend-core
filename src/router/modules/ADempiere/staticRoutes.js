@@ -236,6 +236,24 @@ const staticRoutes = [
         }
       }
     ]
+  },
+  {
+    path: '/ExpressMovement',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/express-movement',
+        component: () => import('@/views/ADempiere/Form'),
+        name: 'ExpressMovement',
+        meta: {
+          title: 'ExpressMovement',
+          icon: 'tree-table',
+          isIndex: true,
+          type: 'from'
+        }
+      }
+    ]
   }
 ]
 

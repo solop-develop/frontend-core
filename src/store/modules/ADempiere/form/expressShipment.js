@@ -114,12 +114,14 @@ export default {
       productId,
       productUuid,
       description,
+      isQuantityFromOrderLine,
       quantity = 1
     }) {
       const { id, uuid } = getters.getCurrentShipment
       createShipmentLineRequest({
         shipmentId: id,
         shipmentUuid: uuid,
+        isQuantityFromOrderLine,
         description,
         quantity,
         productId,

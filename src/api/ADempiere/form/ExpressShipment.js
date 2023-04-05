@@ -19,8 +19,29 @@
 import { request } from '@/utils/ADempiere/request'
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
+export function listBusinessPartnersShipment({
+  searchValue,
+  pageToken,
+  pageSize
+}) {
+  return request({
+    url: '/form/addons/express-shipment/business-partners',
+    method: 'get',
+    params: {
+      page_size: pageSize,
+      page_token: pageToken,
+      //  DSL Query
+      search_value: searchValue
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
 export function listOrders({
   searchValue,
+  businessPartnerId,
   pageToken,
   pageSize
 }) {
@@ -31,6 +52,7 @@ export function listOrders({
       page_size: pageSize,
       page_token: pageToken,
       //  DSL Query
+      business_partner_id: businessPartnerId,
       search_value: searchValue
     }
   })
@@ -125,6 +147,7 @@ export function createShipmentLineRequest({
   shipmentUuid,
   productId,
   productUuid,
+  isQuantityFromOrderLine,
   description,
   quantity
 }) {
@@ -136,6 +159,7 @@ export function createShipmentLineRequest({
       shipment_uuid: shipmentUuid,
       product_id: productId,
       product_uuid: productUuid,
+      is_quantity_from_order_line: isQuantityFromOrderLine,
       description,
       quantity
     }
