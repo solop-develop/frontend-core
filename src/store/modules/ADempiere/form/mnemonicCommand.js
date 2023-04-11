@@ -28,7 +28,8 @@ import { isEmptyValue } from '@/utils/ADempiere'
 import { showMessage } from '@/utils/ADempiere/notification'
 
 const mnemonicCommand = {
-  listShortkey: []
+  listShortkey: [],
+  isDialogo: false
 }
 
 export default {
@@ -36,6 +37,9 @@ export default {
   mutations: {
     setLisCommantShortkey(state, list) {
       state.listShortkey = list
+    },
+    setDialogoComponent(state, isVisible) {
+      state.isDialogo = isVisible
     }
   },
   actions: {
@@ -69,9 +73,7 @@ export default {
           })
       })
     },
-    listCommand({ commit, getters }, {
-      searchValue
-    }) {
+    listCommand({ commit, getters }, searchValue) {
       const posUuid = getters.posAttributes.currentPointOfSales.uuid
       return new Promise(resolve => {
         if (isEmptyValue(posUuid)) return []
@@ -127,6 +129,9 @@ export default {
   getters: {
     getLisCommantShortkey(state) {
       return state.listShortkey
+    },
+    getDialogoComponent(state) {
+      return state.isDialogo
     }
   }
 }
