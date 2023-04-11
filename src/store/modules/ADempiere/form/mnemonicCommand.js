@@ -29,6 +29,7 @@ import { showMessage } from '@/utils/ADempiere/notification'
 
 const mnemonicCommand = {
   listShortkey: [],
+  currentCommand: {},
   isDialogo: false
 }
 
@@ -40,6 +41,9 @@ export default {
     },
     setDialogoComponent(state, isVisible) {
       state.isDialogo = isVisible
+    },
+    setCurrentCommand(state, command) {
+      state.currentCommand = command
     }
   },
   actions: {
@@ -132,6 +136,9 @@ export default {
     },
     getDialogoComponent(state) {
       return state.isDialogo
+    },
+    getCurrentCommand(state) {
+      return state.currentCommand
     }
   }
 }
