@@ -18,6 +18,7 @@
 
 import mnemonicCommand from './mnemonicCommand.js'
 import expressShipment from './expressShipment.js'
+import expressMovement from './expressMovement.js'
 import workflowActivity from './workflowActivity'
 import expressReceipt from './expressReceipt.js'
 import priceChecking from './priceChecking'
@@ -28,6 +29,7 @@ export default {
   workflowActivity,
   mnemonicCommand,
   expressShipment,
+  expressMovement,
   expressReceipt,
   priceChecking,
   productInfo,

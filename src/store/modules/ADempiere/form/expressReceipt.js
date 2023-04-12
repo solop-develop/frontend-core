@@ -242,7 +242,7 @@ export default {
             resolve(response)
             showMessage({
               type: 'success',
-              message: lang.t('from.ExpressReceipt.receiptComplete'),
+              message: lang.t('form.ExpressReceipt.receiptComplete'),
               showClose: true
             })
           })
