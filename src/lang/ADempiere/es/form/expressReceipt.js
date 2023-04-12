@@ -20,7 +20,8 @@ const expressReceipt = {
   title: 'Recibo',
   field: {
     salesOrder: 'Orden de Compra',
-    productcode: 'Código Producto'
+    productcode: 'Código Producto',
+    isQuantityFromOrderLine: 'Cantidad Completa de la Línea'
   },
   modal: {
     nrOrder: 'Número de Orden',

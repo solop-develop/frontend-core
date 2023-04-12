@@ -20,7 +20,8 @@ const expressReceipt = {
   title: 'Receipt',
   field: {
     salesOrder: 'Purchase Order',
-    productcode: 'Product code'
+    productcode: 'Product code',
+    isQuantityFromOrderLine: 'Complete Quantity of the Line'
   },
   modal: {
     nrOrder: 'Number of Order',
