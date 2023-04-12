@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -39,27 +39,6 @@ export function listWarehouses({
     })
 }
 
-// export function listOrders({
-//   searchValue,
-//   businessPartnerId,
-//   pageToken,
-//   pageSize
-// }) {
-//   return request({
-//     url: '/form/addons/express-movement/sales-orders',
-//     method: 'get',
-//     params: {
-//       page_size: pageSize,
-//       page_token: pageToken,
-//       //  DSL Query
-//       business_partner_id: businessPartnerId,
-//       search_value: searchValue
-//     }
-//   })
-//     .then(response => {
-//       return camelizeObjectKeys(response)
-//     })
-// }
 // Product
 export function listProductRequest({
   namue,
@@ -88,6 +67,7 @@ export function listProductRequest({
       return camelizeObjectKeys(response)
     })
 }
+
 // Movement
 export function createMovementRequest() {
   return request({
@@ -132,6 +112,7 @@ export function deleteMovementRequest({
       return camelizeObjectKeys(response)
     })
 }
+
 // Movement Line
 export function createMovementLineRequest({
   movementId,
@@ -161,6 +142,7 @@ export function createMovementLineRequest({
       return camelizeObjectKeys(response)
     })
 }
+
 export function deleteMovementLineRequest({
   id,
   uuid
@@ -177,6 +159,7 @@ export function deleteMovementLineRequest({
       return camelizeObjectKeys(response)
     })
 }
+
 export function updateMovementLineRequest({
   id,
   uuid,
@@ -214,4 +197,3 @@ export function listMovementLinesRequest({
       return camelizeObjectKeys(response)
     })
 }
-
