@@ -51,13 +51,15 @@ export default {
     documentTypeUuid,
     warehouseUuid
   }) {
-    const { currentPriceList, currentWarehouse, defaultCampaignUuid } = rootGetters.posAttributes.currentPointOfSales
+    const { currentPriceList, currentWarehouse, priceList, defaultCampaignUuid } = rootGetters.posAttributes.currentPointOfSales
+    const priceListUuid = isEmptyValue(currentPriceList) ? priceList.uuid : currentPriceList.uuid
+    console.log({ priceListUuid, priceList, currentPriceList }, isEmptyValue(currentPriceList))
     return createOrder({
       posUuid,
       customerUuid,
       documentTypeUuid,
       salesRepresentativeUuid: rootGetters['user/getUserUuid'],
-      priceListUuid: currentPriceList.uuid,
+      priceListUuid: priceListUuid,
       warehouseUuid: currentWarehouse.uuid,
       campaignUuid: defaultCampaignUuid
     })
