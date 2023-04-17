@@ -1,0 +1,90 @@
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+import { request } from '@/utils/ADempiere/request'
+import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
+
+export function listBusinessPartners({
+  searchValue,
+  pageToken,
+  pageSize
+}) {
+  return request({
+    url: '/form/addons/payment-allocation/business-partners',
+    method: 'get',
+    params: {
+      page_size: pageSize,
+      page_token: pageToken,
+      //  DSL Query
+      search_value: searchValue
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+export function listOrganizations({
+  searchValue,
+  pageToken,
+  pageSize
+}) {
+  return request({
+    url: '/form/addons/payment-allocation/organizations',
+    method: 'get',
+    params: {
+      page_size: pageSize,
+      page_token: pageToken,
+      //  DSL Query
+      search_value: searchValue
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+export function listCurrencies({
+  searchValue,
+  pageToken,
+  pageSize
+}) {
+  return request({
+    url: '/form/addons/payment-allocation/currencies',
+    method: 'get',
+    params: {
+      page_size: pageSize,
+      page_token: pageToken,
+      //  DSL Query
+      search_value: searchValue
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+export function listTransactionTypes() {
+  return request({
+    url: '/form/addons/payment-allocation/transaction-types',
+    method: 'get'
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
