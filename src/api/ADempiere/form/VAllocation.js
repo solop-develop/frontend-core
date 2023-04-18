@@ -88,3 +88,87 @@ export function listTransactionTypes() {
       return camelizeObjectKeys(response)
     })
 }
+
+export function listPayments({
+  // DSL Query
+  searchValue,
+  businessPartnerId,
+  businessPartnerUuid,
+  date,
+  organizationId,
+  organizationUuid,
+  currencyId,
+  currencyUuid,
+  isMultiCurrency,
+  transactionType,
+  isAutomaticWriteOff,
+  // Page Data
+  pageSize,
+  pageToken
+}) {
+  return request({
+    url: '/form/addons/payment-allocation/payments',
+    method: 'get',
+    params: {
+      search_value: searchValue,
+      business_partner_id: businessPartnerId,
+      business_partner_uuid: businessPartnerUuid,
+      date,
+      organization_id: organizationId,
+      organization_uuid: organizationUuid,
+      currency_id: currencyId,
+      currency_uuid: currencyUuid,
+      is_multi_currency: isMultiCurrency,
+      transaction_type: transactionType,
+      is_automatic_write_off: isAutomaticWriteOff,
+      // Page Data
+      page_size: pageSize,
+      page_token: pageToken
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+export function listInvoices({
+  // DSL Query
+  searchValue,
+  businessPartnerId,
+  businessPartnerUuid,
+  date,
+  organizationId,
+  organizationUuid,
+  currencyId,
+  currencyUuid,
+  isMultiCurrency,
+  transactionType,
+  isAutomaticWriteOff,
+  // Page Data
+  pageSize,
+  pageToken
+}) {
+  return request({
+    url: '/form/addons/payment-allocation/invoices',
+    method: 'get',
+    params: {
+      search_value: searchValue,
+      business_partner_id: businessPartnerId,
+      business_partner_uuid: businessPartnerUuid,
+      date,
+      organization_id: organizationId,
+      organization_uuid: organizationUuid,
+      currency_id: currencyId,
+      currency_uuid: currencyUuid,
+      is_multi_currency: isMultiCurrency,
+      transaction_type: transactionType,
+      is_automatic_write_off: isAutomaticWriteOff,
+      // Page Data
+      page_size: pageSize,
+      page_token: pageToken
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}

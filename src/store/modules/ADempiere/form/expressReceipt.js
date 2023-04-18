@@ -110,7 +110,7 @@ export default {
         })
     },
     // Receipt Line
-    createLineReceipt({ state, getters, dispatch }, {
+    createLineReceipt({ commit, getters, dispatch }, {
       productId,
       productUuid,
       description,
@@ -132,6 +132,7 @@ export default {
             receiptId: id,
             receiptUuid: uuid
           })
+          commit('setListProductReceipt', [])
         })
         .catch(error => {
           showMessage({
@@ -139,6 +140,7 @@ export default {
             message: error.message,
             showClose: true
           })
+          commit('setListProductReceipt', [])
           console.warn(`Error Getting Update Receipt Line: ${error.message}. Code: ${error.code}.`)
         })
     },
@@ -160,6 +162,7 @@ export default {
             receiptId: id,
             receiptUuid: uuid
           })
+          commit('setListProductReceipt', [])
         })
         .catch(error => {
           showMessage({
@@ -173,6 +176,7 @@ export default {
             receiptId: id,
             receiptUuid: uuid
           })
+          commit('setListProductReceipt', [])
         })
     },
     deleteLineReceipt({ dispatch, getters }, {
