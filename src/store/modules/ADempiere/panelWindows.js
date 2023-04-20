@@ -138,6 +138,9 @@ export default {
   getters: {
     getListDashboard(state) {
       return state.listDashboard
+    },
+    getNumberDashboard(state) {
+      return state.dashboard
     }
   }
 }
