@@ -16,14 +16,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import dashboard from './dashboard'
-import date from './date'
-import sequenceSort from './sequenceSort'
-import tree from './tree'
-
-export default {
-  dashboard,
-  date,
-  sequenceSort,
-  tree
+const dashboard = {
+  unsupported: {
+    sorry: 'Lo sentimos',
+    title: 'Este panel de control no es compatible actualmente',
+    info: 'Por favor, compruebe que el panel de control es compatible con esta versión, o crear un issue para añadir soporte'
+  }
 }
+
+export default dashboard
