@@ -16,14 +16,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { isEmptyValue } from '../valueUtils'
+
 /**
  * Get Chart Component to rendedr from chart type
  * @see list validation PA_Goal ChartType (id=53315)
  * @param {string} chartType Chart Type
  * @returns {VueComponent} components/ADempiere/Dashboard/charts/
  */
-export function getChartComponent(chartType) {
+export function getChartComponent({ chartType, transformationScript }) {
   let chartComponent
+  if (!isEmptyValue(transformationScript)) {
+    chartComponent = () => import('@theme/components/ADempiere/Dashboard/charts/CustomerChart')
+    return chartComponent
+  }
   switch (chartType) {
     // Bar Chart
     case 'BC':

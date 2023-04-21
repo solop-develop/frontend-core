@@ -26,7 +26,7 @@ export function existsCharts({
   pageToken
 }) {
   return request({
-    url: '/dashboard/window/exists-charts',
+    url: '/dashboard/window/exists-dashboards',
     method: 'get',
     params: {
       tab_id: tabId,
@@ -49,7 +49,7 @@ export function ListWindowCharts({
   pageToken
 }) {
   return request({
-    url: '/dashboard/window/charts',
+    url: '/dashboard/window/dashboards',
     method: 'get',
     params: {
       id,
