@@ -28,6 +28,7 @@ import {
 
 // Utils and Helper Methods
 // import { showMessage } from '@/utils/ADempiere/notification.js'
+import { getContextAttributes } from '@/utils/ADempiere/contextUtils'
 
 const panelWindows = {
   dashboard: 0,
@@ -69,7 +70,7 @@ export default {
           })
       })
     },
-    listWindowDashboard({ commit }, {
+    listWindowDashboard({ commit, getters }, {
       tabId,
       windowId,
       recordId,
@@ -86,6 +87,17 @@ export default {
         })
           .then(response => {
             const { records } = response
+            const { currentTab } = getters.getContainerInfo
+            const {
+              parentUuid,
+              containerUuid
+            } = currentTab
+            const contextAttributesList = getContextAttributes({
+              parentUuid,
+              containerUuid,
+              contextColumnNames: response.context_column_names,
+              isBooleanToString: true
+            })
             const list = records.map(list => {
               return {
                 ...list,
@@ -94,7 +106,10 @@ export default {
                 isCollapsible: list.is_collapsible,
                 isOpenByDefault: list.is_open_by_default,
                 tableName,
+                recordId,
                 recordUuid,
+                contextAttributes: contextAttributesList,
+                transformationScript: list.transformation_script,
                 actions: 'metrics'
               }
             })
