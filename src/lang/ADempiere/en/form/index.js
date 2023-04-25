@@ -23,6 +23,7 @@ import workflowActivity from './workflowActivity'
 import expressReceipt from './expressReceipt.js'
 import priceChecking from './priceChecking'
 import productInfo from './productInfo'
+import VAllocation from './VAllocation'
 import timeRecord from './timeRecord'
 
 export default {
@@ -33,5 +34,6 @@ export default {
   expressReceipt,
   priceChecking,
   productInfo,
+  VAllocation,
   timeRecord
 }
