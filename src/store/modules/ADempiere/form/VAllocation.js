@@ -16,15 +16,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// import lang from '@/lang'
-
 // API Request Methods
 import {
-  // listInvoices,
   listPayments,
   listInvoices
 } from '@/api/ADempiere/form/VAllocation.js'
-// import { isEmptyValue } from '@/utils/ADempiere'
 
 // Utils and Helper Methods
 import { dateTimeFormats } from '@/utils/ADempiere/formatValue/dateFormat'
