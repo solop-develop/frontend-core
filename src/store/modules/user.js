@@ -337,7 +337,7 @@ const actions = {
               })
             }
             if (isEmptyValue(role)) {
-              role = rolesList[0]
+              role = rolesList.at(0)
             }
 
             if (!isEmptyValue(role)) {
@@ -369,7 +369,10 @@ const actions = {
 
     return requestOrganizationsList({ roleUuid })
       .then(response => {
-        const organization = response.organizationsList.find(a => a.id === getters.getCurrentOrgId)
+        let organization = response.organizationsList.find(a => a.id === getters.getCurrentOrgId)
+        if (isEmptyValue(organization)) {
+          organization = response.organizationsList.at(0)
+        }
         commit('SET_ORGANIZATIONS_LIST', response.organizationsList)
         const { uuid, id } = organization
         setCurrentOrganization(uuid)
