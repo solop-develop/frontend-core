@@ -38,6 +38,7 @@ const VAllocation = {
     }
   },
   payment: {
+    title: 'Pagos',
     table: {
       date: 'Fecha',
       apAr: 'CP - CC',
@@ -50,6 +51,7 @@ const VAllocation = {
     }
   },
   invoice: {
+    title: 'Factura',
     table: {
       date: 'Fecha',
       apAr: 'CP - CC',
@@ -63,6 +65,12 @@ const VAllocation = {
       applied: 'Aplicado',
       overUnderPay: 'Pago Sobre/ Por debajo'
     }
+  },
+  description: {
+    difference: 'Diferencia',
+    charge: 'Cargo',
+    organization: 'Organización',
+    description: 'Descripción'
   }
 }
 

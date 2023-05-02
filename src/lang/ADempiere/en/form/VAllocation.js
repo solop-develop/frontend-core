@@ -38,6 +38,7 @@ const VAllocation = {
     }
   },
   payment: {
+    title: 'Payment',
     table: {
       date: 'Date',
       apAr: 'CP - CC',
@@ -50,6 +51,7 @@ const VAllocation = {
     }
   },
   invoice: {
+    title: 'Invoce',
     table: {
       date: 'Date',
       apAr: 'CP - CC',
@@ -63,6 +65,14 @@ const VAllocation = {
       applied: 'Applied',
       overUnderPay: 'Payment Over/Under'
     }
+  },
+  description: {
+    recordQuantity: 'RecordQuantity',
+    totalInvoice: 'Total Invoice',
+    openAmount: 'Open Amount',
+    converted: 'Converted',
+    paid: 'Paid',
+    assigned: 'Assigned'
   }
 }
 

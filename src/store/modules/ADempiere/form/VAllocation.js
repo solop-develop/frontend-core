@@ -21,20 +21,29 @@
 // API Request Methods
 import {
   // listInvoices,
-  listPayments
+  listPayments,
+  listInvoices
 } from '@/api/ADempiere/form/VAllocation.js'
 // import { isEmptyValue } from '@/utils/ADempiere'
 
 // Utils and Helper Methods
-// import { showMessage } from '@/utils/ADempiere/notification.js'
+import { dateTimeFormats } from '@/utils/ADempiere/formatValue/dateFormat'
 
 const VAllocation = {
   searchCriteria: {
     businessPartnerId: '',
-    organizationsId: '',
+    organizationId: '',
     currencyId: '',
     date: '',
     transactionType: ''
+  },
+  listRecord: {
+    payments: [],
+    invoce: []
+  },
+  selectListRecord: {
+    payments: [],
+    invoce: []
   }
 }
 
@@ -48,7 +57,7 @@ export default {
       state.searchCriteria.businessPartnerId = id
     },
     setOrganizations(state, id) {
-      state.searchCriteria.organizationsId = id
+      state.searchCriteria.organizationId = id
     },
     setCurrency(state, id) {
       state.searchCriteria.currencyId = id
@@ -58,6 +67,18 @@ export default {
     },
     setTransactionType(state, type) {
       state.searchCriteria.transactionType = type
+    },
+    setListPayments(state, list) {
+      state.listRecord.payments = list
+    },
+    setListInvoces(state, list) {
+      state.listRecord.invoce = list
+    },
+    setSelectListPayments(state, listSelect) {
+      state.selectListRecord.payments = listSelect
+    },
+    setSelectListInvoces(state, listSelect) {
+      state.selectListRecord.invoce = listSelect
     }
   },
   actions: {
@@ -88,10 +109,64 @@ export default {
           isAutomaticWriteOff
         })
           .then(response => {
-            console.log({ response })
             const { records } = response
-            // commit('setListProduct', records)
-            resolve(records)
+            const list = records.map(payments => {
+              return {
+                ...payments,
+                transaction_date: dateTimeFormats(payments.transaction_date, 'YYYY-MM-DD'),
+                applied: 0,
+                isSelect: false
+              }
+            })
+            commit('setListPayments', list)
+            resolve(list)
+          })
+          .catch(error => {
+            resolve([])
+            // commit('setListProduct', [])
+            console.warn(`Error getting List Product: ${error.message}. Code: ${error.code}.`)
+          })
+      })
+    },
+    findListInvoices({ commit, state }) {
+      return new Promise(resolve => {
+        const {
+          businessPartnerId,
+          businessPartnerUuid,
+          date,
+          organizationId,
+          organizationUuid,
+          currencyId,
+          currencyUuid,
+          isMultiCurrency,
+          transactionType,
+          isAutomaticWriteOff
+        } = state.searchCriteria
+        listInvoices({
+          businessPartnerId,
+          businessPartnerUuid,
+          date,
+          organizationId,
+          organizationUuid,
+          currencyId,
+          currencyUuid,
+          isMultiCurrency,
+          transactionType,
+          isAutomaticWriteOff
+        })
+          .then(response => {
+            const { records } = response
+            const list = records.map(payments => {
+              return {
+                ...payments,
+                date_invoiced: dateTimeFormats(payments.date_invoiced, 'YYYY-MM-DD'),
+                applied: 0,
+                writeOff: 0,
+                isSelect: false
+              }
+            })
+            commit('setListInvoces', list)
+            resolve(list)
           })
           .catch(error => {
             resolve([])
@@ -104,6 +179,15 @@ export default {
   getters: {
     getSearchFilter(state) {
       return state.searchCriteria
+    },
+    getListVAllocation(state) {
+      return state.listRecord
+    },
+    getSelectListPayments(state) {
+      return state.listRecord.payments.filter(list => list.isSelect)
+    },
+    getSelectListInvoces(state) {
+      return state.listRecord.invoce.filter(list => list.isSelect)
     }
   }
 }
