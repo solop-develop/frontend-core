@@ -51,10 +51,8 @@ export default {
       state.metrics = metrics
     },
     setPanelDashboardTab(state, dashboard) {
-      const { tabId, recordId, list } = dashboard
-      Vue.set(state.dashboardList, tabId, {
-        [recordId]: list
-      })
+      const { tabId, list } = dashboard
+      Vue.set(state.dashboardList, tabId, list)
     }
   },
   actions: {
@@ -170,9 +168,7 @@ export default {
       let dashboardList = []
       if (!isEmptyValue(state.dashboardList)) {
         if (!isEmptyValue(state.dashboardList[tabId])) {
-          if (!isEmptyValue(state.dashboardList[tabId][recordId])) {
-            dashboardList = state.dashboardList[tabId][recordId]
-          }
+          dashboardList = state.dashboardList[tabId]
         }
       }
       return dashboardList
