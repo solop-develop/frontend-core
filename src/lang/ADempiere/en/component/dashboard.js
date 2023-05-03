@@ -20,7 +20,8 @@ const dashboard = {
   unsupported: {
     sorry: 'Sorry',
     title: 'This control panel is currently not supported',
-    info: 'Please check that the dashboard is supported in this version, or create issue to add support'
+    info: 'Please check that the dashboard is supported in this version, or create issue to add support',
+    parameters: 'Parameters'
   }
 }
 

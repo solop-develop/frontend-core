@@ -70,7 +70,8 @@ export function getWindowMetrics({
   tableName,
   recordId,
   recordUuid,
-  contextAttributes
+  contextAttributes,
+  filters
 }) {
   return request({
     url: '/dashboard/window/metrics',
@@ -81,7 +82,8 @@ export function getWindowMetrics({
       record_id: recordId,
       record_uuid: recordUuid,
       //  DSL Query
-      context_attributes: contextAttributes
+      context_attributes: contextAttributes,
+      filters
     }
   })
     .then(response => {

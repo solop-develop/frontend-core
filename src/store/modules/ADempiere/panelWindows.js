@@ -133,8 +133,9 @@ export default {
     metrics({ commit }, {
       id,
       uuid,
-      tableName,
+      filters,
       recordId,
+      tableName,
       recordUuid,
       contextAttributes
     }) {
@@ -142,8 +143,9 @@ export default {
         getWindowMetrics({
           id,
           uuid,
-          tableName,
+          filters,
           recordId,
+          tableName,
           recordUuid,
           contextAttributes
         })
