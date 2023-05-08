@@ -29,6 +29,7 @@ import {
 
 // Utils and Helper Methods
 import {
+  containerManager,
   runReport,
   runReportAs,
   changeParameters,
@@ -40,9 +41,18 @@ import { generateProcess as generateReport } from '@/utils/ADempiere/dictionary/
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 export default {
-  addReportToList({ commit }, reportResponse) {
+  addReportToList({ commit, dispatch }, reportResponse) {
     return new Promise(resolve => {
       commit('addReportToList', reportResponse)
+
+      dispatch('setReportDefaultValues', {
+        containerUuid: reportResponse.uuid,
+        fieldsList: reportResponse.fieldsList
+      })
+
+      dispatch('setReportActionsMenu', {
+        containerUuid: reportResponse.uuid
+      })
 
       resolve(reportResponse)
     })
@@ -64,20 +74,11 @@ export default {
             processToGenerate: reportResponse
           })
 
-          dispatch('setReportDefaultValues', {
-            containerUuid: reportDefinition.uuid,
-            fieldsList: reportDefinition.fieldsList
-          })
-
           dispatch('addReportToList', reportDefinition)
 
           await dispatch('getListPrintFormats', {
             uuid,
             id: reportDefinition.id
-          })
-
-          dispatch('setReportActionsMenu', {
-            containerUuid: uuid
           })
 
           resolve(reportDefinition)
@@ -287,6 +288,15 @@ export default {
       // clear last parameters with report generated
       commit('setReportGenerated', {
         containerUuid
+      })
+
+      fieldsList.forEach(field => {
+        // activate logics
+        dispatch('changeDependentFieldsList', {
+          field,
+          fieldsList,
+          containerManager
+        })
       })
 
       resolve(defaultAttributes)

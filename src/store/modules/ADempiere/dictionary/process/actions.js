@@ -18,22 +18,29 @@
 
 import router from '@/router'
 
-// api request methods
+// API Request Methods
 import { requestProcessMetadata } from '@/api/ADempiere/dictionary/process.js'
 
-// constants
+// Constants
 import {
   sharedLink
 } from '@/utils/ADempiere/constants/actionsMenuList.js'
 
-// utils and helper methods
-import { generateProcess, clearParameters, runProcess } from '@/utils/ADempiere/dictionary/process.js'
+// Utils and Helper Methods
+import {
+  containerManager, generateProcess, clearParameters, runProcess
+} from '@/utils/ADempiere/dictionary/process.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default {
   addProcessToList({ commit, dispatch }, processResponse) {
     return new Promise(resolve => {
       commit('addProcessToList', processResponse)
+
+      dispatch('setProcessDefaultValues', {
+        containerUuid: processResponse.uuid,
+        fieldsList: processResponse.fieldsList
+      })
 
       dispatch('seProcessActionsMenu', {
         containerUuid: processResponse.uuid
@@ -57,11 +64,6 @@ export default {
         .then(processResponse => {
           const { processDefinition } = generateProcess({
             processToGenerate: processResponse
-          })
-
-          dispatch('setProcessDefaultValues', {
-            containerUuid: processDefinition.uuid,
-            fieldsList: processDefinition.fieldsList
           })
 
           dispatch('addProcessToList', processDefinition)
@@ -152,6 +154,15 @@ export default {
         containerUuid,
         isOverWriteParent: true,
         attributes: defaultAttributes
+      })
+
+      fieldsList.forEach(field => {
+        // activate logics
+        dispatch('changeDependentFieldsList', {
+          field,
+          fieldsList,
+          containerManager
+        })
       })
 
       resolve(defaultAttributes)

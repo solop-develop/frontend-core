@@ -262,10 +262,10 @@ export const containerManager = {
   },
 
   actionPerformed: ({ field, value }) => {
-    // store.dispatch('reportActionPerformed', {
-    //   field,
-    //   value
-    // })
+    store.dispatch('reportActionPerformed', {
+      field,
+      value
+    })
   },
 
   setDefaultValues: ({ containerUuid }) => {

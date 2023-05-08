@@ -20,7 +20,7 @@ import Vue from 'vue'
 import router from '@/router'
 import language from '@/lang'
 
-// api request methods
+// API Request Methods
 import {
   requestGenerateReport,
   requestListPrintFormats,
@@ -29,17 +29,20 @@ import {
   requestGetReportOutput
 } from '@/api/ADempiere/report'
 
-// constants
+// Constants
 import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
 import { REPORT_VIEWER_SUPPORTED_FORMATS, DEFAULT_REPORT_TYPE } from '@/utils/ADempiere/dictionary/report.js'
 
-// utils and helper methods
+// Utils and Helper Methods
 import { getToken } from '@/utils/auth'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import {
   buildLinkHref
 } from '@/utils/ADempiere/resource.js'
 import { showMessage, showNotification } from '@/utils/ADempiere/notification.js'
+import {
+  containerManager
+} from '@/utils/ADempiere/dictionary/report.js'
 
 const initState = {
   printFormatList: {},
@@ -85,6 +88,24 @@ const reportManager = {
   },
 
   actions: {
+    reportActionPerformed({ dispatch, getters }, {
+      containerUuid,
+      field,
+      value,
+      valueTo
+    }) {
+      return new Promise(resolve => {
+        const fieldsList = getters.getStoredFieldsFromReport(containerUuid)
+
+        // change Dependents
+        dispatch('changeDependentFieldsList', {
+          field,
+          fieldsList,
+          containerManager
+        })
+      })
+    },
+
     startReport({ commit, dispatch, rootGetters }, {
       containerUuid,
       reportType = DEFAULT_REPORT_TYPE,

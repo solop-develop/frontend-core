@@ -33,6 +33,9 @@ import { RECORD_ID } from '@/utils/ADempiere/constants/systemColumns'
 import { getToken } from '@/utils/auth'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage, showNotification } from '@/utils/ADempiere/notification'
+import {
+  containerManager
+} from '@/utils/ADempiere/dictionary/process.js'
 
 const initState = {
   printFormatList: {}
@@ -51,6 +54,24 @@ const processManager = {
   },
 
   actions: {
+    processActionPerformed({ dispatch, getters }, {
+      containerUuid,
+      field,
+      value,
+      valueTo
+    }) {
+      return new Promise(resolve => {
+        const fieldsList = getters.getStoredFieldsFromProcess(containerUuid)
+
+        // change Dependents
+        dispatch('changeDependentFieldsList', {
+          field,
+          fieldsList,
+          containerManager
+        })
+      })
+    },
+
     startProcess({ dispatch, rootGetters }, {
       containerUuid
     }) {

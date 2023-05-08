@@ -225,10 +225,10 @@ export const containerManager = {
   },
 
   actionPerformed: ({ field, value }) => {
-    // store.dispatch('processActionPerformed', {
-    //   field,
-    //   value
-    // })
+    store.dispatch('processActionPerformed', {
+      field,
+      value
+    })
   },
 
   setDefaultValues: ({ containerUuid }) => {
