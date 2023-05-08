@@ -17,6 +17,8 @@
  */
 
 import language from '@/lang'
+import store from '@/store'
+import router from '@/router'
 
 // Constants
 import { CLIENT } from '@/utils/ADempiere//constants/systemColumns'
@@ -91,6 +93,18 @@ export const isEmptyValue = function(value) {
   }
 
   return isEmpty
+}
+
+export const closeTagView = function(currentRoute) {
+  if (isEmptyValue(currentRoute)) currentRoute = router.app._route
+  const tabViewsVisited = store.getters.visitedViews
+  store.dispatch('tagsView/delView', currentRoute)
+  const oldRouter = tabViewsVisited[tabViewsVisited.length - 1]
+  if (!isEmptyValue(oldRouter)) {
+    router.push({
+      path: oldRouter.path
+    }, () => {})
+  }
 }
 
 /**

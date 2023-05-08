@@ -58,7 +58,7 @@
       :before-close="handleClose"
       :show-close="true"
       :title="$t('report.reportSettings')"
-      size="50%"
+      :size="isMobile ? '100%' : '50%'"
     >
       <options-report
         :container-uuid="reportUuid"
@@ -74,6 +74,14 @@
       style="top: 50%; right: 0%; position: absolute;"
       @click="handleOpem()"
     />
+    <panel-footer
+      :container-uuid="reportUuid"
+      :is-button-run="true"
+      :is-button-clear="true"
+      :is-button-close="true"
+      :action-run="runReport"
+      :action-clear="clearParameters"
+    />
   </div>
 
   <loading-view
@@ -86,6 +94,7 @@
 import { defineComponent, computed, ref } from '@vue/composition-api'
 
 import store from '@/store'
+import router from '@/router'
 
 // components and mixins
 import ActionMenu from '@theme/components/ADempiere/ActionMenu/index.vue'
@@ -94,9 +103,10 @@ import mixinReport from '@/views/ADempiere/Report/mixinReport.js'
 import PanelDefinition from '@theme/components/ADempiere/PanelDefinition/index.vue'
 import OptionsReport from '@theme/components/ADempiere/ReportManager/Setup/optionsReport.vue'
 import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp/index.vue'
+import PanelFooter from '@theme/components/ADempiere/PanelFooter/index.vue'
 
 // utils and helper methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { isEmptyValue, closeTagView } from '@/utils/ADempiere/valueUtils'
 import { convertProcess as convertReport } from '@/utils/ADempiere/apiConverts/dictionary.js'
 import { generateProcess as generateReport } from '@/utils/ADempiere/dictionary/process.js'
 
@@ -108,7 +118,8 @@ export default defineComponent({
     LoadingView,
     PanelDefinition,
     TitleAndHelp,
-    OptionsReport
+    OptionsReport,
+    PanelFooter
   },
 
   props: {
@@ -133,6 +144,10 @@ export default defineComponent({
 
     const showContextMenu = computed(() => {
       return store.state.settings.showContextMenu
+    })
+
+    const isMobile = computed(() => {
+      return store.state.app.device === 'mobile'
     })
 
     const isShowPanelConfig = computed(() => {
@@ -199,6 +214,24 @@ export default defineComponent({
       showPanelConfigReport(!isShowPanelConfig.value)
     }
 
+    function closeReport() {
+      const currentRoute = router.app._route
+      closeTagView(currentRoute)
+    }
+
+    function runReport(params) {
+      store.dispatch('buildReport', {
+        containerUuid: reportUuid,
+        isSummary: true
+      })
+    }
+
+    function clearParameters() {
+      store.dispatch('setReportDefaultValues', {
+        containerUuid: reportUuid
+      })
+    }
+
     getReport()
 
     return {
@@ -208,12 +241,17 @@ export default defineComponent({
       containerManager,
       actionsManager,
       // computeds
+      isMobile,
       showContextMenu,
       isShowPanelConfig,
       // methodos
       showPanelConfigReport,
+      clearParameters,
+      closeTagView,
       handleClose,
-      handleOpem
+      closeReport,
+      handleOpem,
+      runReport
     }
   }
 })

@@ -55,7 +55,7 @@
       :visible.sync="isShowPanelConfig"
       :with-header="true"
       :before-close="handleClose"
-      size="50%"
+      :size="isMobile ? '100%' : '50%'"
       :show-close="true"
       :title="$t('report.reportSettings')"
     >
@@ -72,7 +72,7 @@
       style="
         top: 50%;
         right: 0%;
-        position: absolute;
+        position: absolute;8
       "
       @click="handleOpem()"
     />
@@ -134,6 +134,10 @@ export default defineComponent({
 
     const link = computed(() => {
       return storedReportOutput.value.link
+    })
+
+    const isMobile = computed(() => {
+      return store.state.app.device === 'mobile'
     })
 
     const isShowPanelConfig = computed(() => {
@@ -278,10 +282,11 @@ export default defineComponent({
       drawer,
       isShowPanelConfig,
       // Computeds
-      containerManager,
       link,
-      storedReportDefinition,
+      isMobile,
+      containerManager,
       storedReportOutput,
+      storedReportDefinition,
       // Methods
       handleOpem,
       handleClose,

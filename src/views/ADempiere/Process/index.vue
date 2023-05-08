@@ -27,15 +27,17 @@
         :help="processMetadata.help"
       />
       <div id="process-loaded">
-        <action-menu
-          id="action-menu"
-          :parent-uuid="processUuid"
-          :container-uuid="processUuid"
-          :container-manager="containerManager"
-          :actions-manager="actionsManager"
-          :relations-manager="relationsManager"
-          style="padding-left: 90%;text-align: end;"
-        />
+        <span style="float: right;">
+          <action-menu
+            id="action-menu"
+            :parent-uuid="processUuid"
+            :container-uuid="processUuid"
+            :container-manager="containerManager"
+            :actions-manager="actionsManager"
+            :relations-manager="relationsManager"
+          />
+        </span>
+        <br>
         <!-- style="float: right;padding-left: 1%;z-index: 99;" -->
         <panel-definition
           id="panel-definition"
@@ -45,6 +47,15 @@
         />
         <br>
       </div>
+      <panel-footer
+        v-if="isMobile"
+        :container-uuid="processUuid"
+        :is-button-run="true"
+        :is-button-clear="true"
+        :is-button-close="true"
+        :action-run="runProcess"
+        :action-clear="clearParameters"
+      />
     </el-card>
   </div>
 
@@ -65,6 +76,7 @@ import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
 import mixinProcess from '@/views/ADempiere/Process/mixinProcess.js'
 import PanelDefinition from '@theme/components/ADempiere/PanelDefinition/index.vue'
 import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp/index.vue'
+import PanelFooter from '@theme/components/ADempiere/PanelFooter/index.vue'
 
 import { convertProcess } from '@/utils/ADempiere/apiConverts/dictionary.js'
 import { generateProcess } from '@/utils/ADempiere/dictionary/process.js'
@@ -79,7 +91,8 @@ export default defineComponent({
     ActionMenu,
     LoadingView,
     PanelDefinition,
-    TitleAndHelp
+    TitleAndHelp,
+    PanelFooter
   },
 
   props: {
@@ -104,6 +117,10 @@ export default defineComponent({
 
     const showContextMenu = computed(() => {
       return store.state.settings.showContextMenu
+    })
+
+    const isMobile = computed(() => {
+      return store.state.app.device === 'mobile'
     })
 
     store.dispatch('settings/changeSetting', {
@@ -149,6 +166,18 @@ export default defineComponent({
         })
     }
 
+    function runProcess() {
+      store.dispatch('startProcess', {
+        containerUuid: processUuid
+      })
+    }
+
+    function clearParameters() {
+      store.dispatch('setProcessDefaultValues', {
+        containerUuid: processUuid
+      })
+    }
+
     getProcess()
 
     return {
@@ -156,9 +185,12 @@ export default defineComponent({
       isLoadedMetadata,
       processMetadata,
       // computeds
+      isMobile,
       showContextMenu,
       // methods
+      runProcess,
       getProcess,
+      clearParameters,
       // common mixin
       actionsManager,
       containerManager,
