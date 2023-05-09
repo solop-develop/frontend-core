@@ -177,7 +177,7 @@ export default {
     }
   },
   getters: {
-    getInvoiceMatch: (state) => {
+    getInvoiceBankStatementMatch: (state) => {
       return state.invoices
     }
   }

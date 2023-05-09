@@ -258,7 +258,7 @@ export default {
     }
   },
   getters: {
-    getListProduct(state) {
+    getListProductShipment(state) {
       return state.listProduct
     },
     getListShipmentLines(state) {
