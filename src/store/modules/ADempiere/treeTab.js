@@ -16,22 +16,95 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import Vue from 'vue'
+
+// API Request Methods
+import { requestListTreeNodes } from '@/api/ADempiere/user-interface/component/tree-trab'
+
 const initState = {
-  treeTab: {}
+  treeData: {},
+  emtpyTreeData: {
+    parentUuid: undefined,
+    containerUuid: undefined,
+    tableName: undefined,
+    elementId: 0,
+    nodeId: 0,
+    recordUuid: undefined,
+    recordsList: []
+  }
 }
 
 const treeTab = {
   state: initState,
-  muations: {
 
+  mutations: {
+    setTreeNodes(state, {
+      parentUuid,
+      containerUuid,
+      elementId,
+      tableName,
+      nodeId = 0,
+      recordUuid = '',
+      recordsList = []
+    }) {
+      Vue.set(state.treeData, containerUuid, {
+        ...state.emtpyTreeData,
+        parentUuid,
+        containerUuid,
+        elementId,
+        tableName,
+        nodeId,
+        recordUuid,
+        recordsList
+      })
+    }
   },
 
   actions: {
+    getTreeNodesFromServer({ commit, getters }, {
+      parentUuid,
+      containerUuid,
+      nodeId = 0
+    }) {
+      const storedTab = getters.getStoredTab(parentUuid, containerUuid)
+      const { tableName } = storedTab
 
+      const elementId = getters.getValueOfFieldOnContainer({
+        parentUuid,
+        containerUuid,
+        columnName: 'C_Element_ID'
+      })
+
+      return new Promise(resolve => {
+        requestListTreeNodes({
+          tableName,
+          elementId
+        }).then(response => {
+          commit('setTreeNodes', {
+            parentUuid,
+            containerUuid,
+            elementId,
+            tableName,
+            nodeId,
+            recordsList: response.recordsList
+          })
+          resolve(response.recordsList)
+        }).finally(() => {
+          // treePanel.value.setCurrentKey(recordUuid.value)
+        })
+      })
+    }
   },
 
   getters: {
-
+    getStoredTreeNodes: (state) => ({
+      containerUuid
+    }) => {
+      return state.treeData[containerUuid] || {
+        ...state.emtpyTreeData,
+        containerUuid
+      }
+    }
   }
 }
 

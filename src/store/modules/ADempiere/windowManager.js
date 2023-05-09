@@ -282,7 +282,7 @@ const windowManager = {
 
         const {
           contextColumnNames, name, linkColumnName,
-          parentColumnName, fieldsList
+          parentColumnName, fieldsList, isHasTree
         } = rootGetters.getStoredTab(parentUuid, containerUuid)
         // add filters with link column name and parent column name
         if (!isEmptyValue(linkColumnName) &&
@@ -333,6 +333,7 @@ const windowManager = {
           resolve([])
           return
         }
+
         commit('setTabData', {
           parentUuid,
           isLoaded: false,
@@ -454,6 +455,14 @@ const windowManager = {
             if (isEmptyValue(dataToStored)) {
               // set default values to create if without records response
               dispatch('setTabDefaultValues', {
+                parentUuid,
+                containerUuid
+              })
+            }
+
+            // TODO: Set recordId as nodeId
+            if (isHasTree) {
+              dispatch('getTreeNodesFromServer', {
                 parentUuid,
                 containerUuid
               })
