@@ -20,6 +20,7 @@ const tasks = {
   title: 'Tasks',
   summary: 'Summary',
   executions: 'Executions',
+  empty: 'No Data',
   table: {
     id: 'ID',
     name: 'Name',
@@ -31,7 +32,8 @@ const tasks = {
     timeZone: 'Time zone',
     retries: 'Retries',
     status: 'Status',
-    attempt: 'Attempt'
+    attempt: 'Attempt',
+    options: 'Options'
   }
 }
 

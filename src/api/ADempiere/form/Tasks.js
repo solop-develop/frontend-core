@@ -22,14 +22,9 @@ export function listJobs() {
   return axios.get(`http://localhost:8080/v1/jobs`)
     .then(response => {
       const { data } = response
-      console.log({ data, response })
       return data
-      // const { data } = response
-      // console.log({ data })
-      // if (!isEmptyValue(data)) return list.value = data
     })
     .catch(error => {
-      console.warn({ error })
       return error
     })
 }
@@ -40,11 +35,9 @@ export function resumen({
   return axios.get(`http://localhost:8080/v1/jobs/${id}`)
     .then(response => {
       const { data } = response
-      console.log({ data, response })
       return data
     })
     .catch(error => {
-      console.warn({ error })
       return error
     })
 }
@@ -55,11 +48,9 @@ export function executions({
   return axios.get(`http://localhost:8080/v1/jobs/${id}/executions`)
     .then(response => {
       const { data } = response
-      console.log({ data, response })
       return data
     })
     .catch(error => {
-      console.warn({ error })
       return error
     })
 }
@@ -70,16 +61,20 @@ export function run({
   return axios.post(`http://localhost:8080/v1/jobs/${id}`)
     .then(response => {
       const { data } = response
-      console.log({ data, response })
       return data
     })
     .catch(error => {
-      console.warn({ error })
       return error
     })
-  // return request({
-  //   // url: urn,
-  //   method: 'post',
-  //   baseURL: `http://localhost:8080/v1/jobs/${id}`
-  // })
+}
+
+export function restore() {
+  return axios.post(`http://localhost:8080/v1/restore`)
+    .then(response => {
+      const { data } = response
+      return data
+    })
+    .catch(error => {
+      return error
+    })
 }
