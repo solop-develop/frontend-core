@@ -52,6 +52,7 @@
 <script>
 export default {
   name: 'RolesNavbar',
+
   computed: {
     currentRoleUuid: {
       get() {
@@ -101,9 +102,11 @@ export default {
       return this.$store.state.app.device !== 'mobile'
     }
   },
+
   created() {
     this.getLanguages()
   },
+
   methods: {
     changeRole(roleUuid) {
       this.$message({
@@ -121,10 +124,10 @@ export default {
               path: '/'
             }, () => {})
           }
-          this.$store.dispatch('listDashboard', {
-            roleId: response.id,
-            roleUuid: response.uuid
-          })
+          // this.$store.dispatch('getDashboardListFromServer', {
+          //   roleId: response.id,
+          //   roleUuid: response.uuid
+          // })
         })
     },
     changeOrganization(organizationUuid) {

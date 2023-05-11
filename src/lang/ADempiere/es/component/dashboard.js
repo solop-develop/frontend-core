@@ -17,12 +17,19 @@
  */
 
 const dashboard = {
+  parameters: 'Parámetros',
   unsupported: {
     sorry: 'Lo sentimos',
     title: 'Este panel de control no es compatible actualmente',
     info: 'Por favor, compruebe que el panel de control es compatible con esta versión, o crear un issue para añadir soporte'
   },
-  parameters: 'Parámetros'
+  header: {
+    welcome: 'Bienvenid@',
+    role: 'Rol',
+    client: 'Compañia',
+    organization: 'Organización',
+    warehouse: 'Almacén'
+  }
 }
 
 export default dashboard

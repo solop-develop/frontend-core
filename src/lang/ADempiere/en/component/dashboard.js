@@ -17,11 +17,18 @@
  */
 
 const dashboard = {
+  parameters: 'Parameters',
   unsupported: {
     sorry: 'Sorry',
     title: 'This control panel is currently not supported',
-    info: 'Please check that the dashboard is supported in this version, or create issue to add support',
-    parameters: 'Parameters'
+    info: 'Please check that the dashboard is supported in this version, or create issue to add support'
+  },
+  header: {
+    welcome: 'Welcome',
+    role: 'Role',
+    client: 'Client',
+    organization: 'Organization',
+    warehouse: 'Warehouse'
   }
 }
 

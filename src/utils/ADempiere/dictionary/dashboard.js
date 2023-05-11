@@ -16,6 +16,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+export const UNSUPPORTED_DASHBOARDS = [
+  'favourites',
+  'performance',
+  'views'
+]
+
 /**
  * Get Chart Component to rendedr from chart type
  * @see list validation PA_Goal ChartType (id=53315)
