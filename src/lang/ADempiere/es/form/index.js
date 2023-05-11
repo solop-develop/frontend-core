@@ -25,6 +25,7 @@ import priceChecking from './priceChecking'
 import productInfo from './productInfo'
 import VAllocation from './VAllocation'
 import timeRecord from './timeRecord'
+import tasks from './tasks'
 
 export default {
   workflowActivity,
@@ -35,5 +36,6 @@ export default {
   priceChecking,
   productInfo,
   VAllocation,
-  timeRecord
+  timeRecord,
+  tasks
 }

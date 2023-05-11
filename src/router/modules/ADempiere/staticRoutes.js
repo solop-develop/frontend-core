@@ -254,6 +254,24 @@ const staticRoutes = [
         }
       }
     ]
+  },
+  {
+    path: '/tasks',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/tasks',
+        component: () => import('@/views/ADempiere/Form'),
+        name: 'tasks',
+        meta: {
+          title: 'tasks',
+          icon: 'tree-table',
+          isIndex: true,
+          type: 'from'
+        }
+      }
+    ]
   }
 ]
 
