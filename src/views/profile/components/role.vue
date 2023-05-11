@@ -31,6 +31,41 @@
         />
       </el-select>
     </el-form-item>
+
+    <el-form-item :label="$t('route.organization')">
+      <el-select
+        v-model="currentOrganizationUuid"
+        :filterable="!isMobile"
+        value-key="key"
+        @visible-change="showOrganizationsList"
+      >
+        <el-option
+          v-for="(organization, key) in organizationsList"
+          :key="key"
+          :label="organization.name"
+          :value="organization.uuid"
+          :disabled="isEmptyValue(organization.uuid)"
+        />
+      </el-select>
+    </el-form-item>
+
+    <el-form-item :label="$t('route.warehouse')">
+      <el-select
+        v-model="currentWarehouseUuid"
+        :filterable="!isMobile"
+        value-key="key"
+        @visible-change="showWarehouseList"
+      >
+        <el-option
+          v-for="(warehouse, key) in warehousesList"
+          :key="key"
+          :label="warehouse.name"
+          :value="warehouse.uuid"
+          :disabled="isEmptyValue(warehouse.uuid)"
+        />
+      </el-select>
+    </el-form-item>
+
     <el-form-item :label="$t('profile.changeLanguage')">
       <el-select
         v-model="currentLanguage"
@@ -77,6 +112,36 @@ export default {
     rolesList() {
       return this.$store.getters['user/getRoles']
     },
+    currentOrganizationUuid: {
+      get() {
+        const organization = this.$store.getters['user/getOrganization']
+        if (organization) {
+          return organization.uuid
+        }
+        return ''
+      },
+      set(organizationToSet) {
+        this.changeOrganization(organizationToSet)
+      }
+    },
+    organizationsList() {
+      return this.$store.getters['user/getOrganizations']
+    },
+    currentWarehouseUuid: {
+      get() {
+        const warehouse = this.$store.getters['user/getWarehouse']
+        if (warehouse) {
+          return warehouse.uuid
+        }
+        return ''
+      },
+      set(warehouseToSet) {
+        this.changeWarehouse(warehouseToSet)
+      }
+    },
+    warehousesList() {
+      return this.$store.getters['user/getWarehouses']
+    },
     languagesList() {
       return this.$store.getters.getLanguagesList
     },
@@ -103,6 +168,36 @@ export default {
       this.$store.dispatch('user/changeRole', {
         roleUuid: valueSelected,
         isCloseAllViews: false
+      })
+    },
+    showOrganizationsList(isShow) {
+      if (isShow && this.isEmptyValue(this.organizationsList)) {
+        this.$store.dispatch('user/getOrganizationsListFromServer', this.currentRoleUuid)
+      }
+    },
+    changeOrganization(organizationUuid) {
+      this.$message({
+        message: this.$t('notifications.loading'),
+        showClose: true,
+        iconClass: 'el-icon-loading'
+      })
+      const currentOrganization = this.organizationsList.find(element => element.uuid === organizationUuid)
+      this.$router.push({
+        path: '/'
+      }, () => {})
+      this.$store.dispatch('user/changeOrganization', {
+        organizationUuid,
+        organizationId: currentOrganization.id
+      })
+    },
+    showWarehouseList(isShow) {
+      if (isShow && this.isEmptyValue(this.warehousesList)) {
+        this.$store.dispatch('user/getWarehousesList', this.currentOrganizationUuid)
+      }
+    },
+    changeWarehouse(warehouseUuid) {
+      this.$store.dispatch('user/changeWarehouse', {
+        warehouseUuid
       })
     },
     changeLanguage(languageValue) {
