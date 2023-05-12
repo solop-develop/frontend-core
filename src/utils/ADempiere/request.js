@@ -23,7 +23,7 @@ import { BEARER_TYPE } from '@/utils/auth'
 import requestAPI from '@/utils/request'
 import { config } from '@/utils/ADempiere/config'
 import { getToken } from '@/utils/auth'
-import { getLanguage } from '@/lang/index'
+// import { getLanguage } from '@/lang/index'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 // Default request connection for ADempiere with default url
@@ -55,7 +55,7 @@ export function request(requestValues) {
     }
   })
 
-  requestValues.params.language = getLanguage() || 'en_US'
+  // requestValues.params.language = getLanguage() || 'en_US'
 
   // TODO: Add expires data on headers request
   requestValues.params.ts = (new Date()).getTime()
