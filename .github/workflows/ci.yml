@@ -16,6 +16,13 @@ on:
       - 'docs/**'
       - .github/workflows/docs.yml
 
+  pull_request:
+    paths-ignore:
+      - README.md
+      - README.es.md
+      - 'docs/**'
+      - .github/workflows/docs.yml
+
 jobs:
 
   # Build dist application ADempiere-Vue
