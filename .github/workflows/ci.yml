@@ -45,6 +45,12 @@ jobs:
       - name: Install packages
         run: yarn ci
 
+      - name: Run Linter
+        run: yarn lint
+
+      - name: Run Unit Test
+        run: test:unit
+
       - name: Compile dist
         run: yarn build:prod
 
