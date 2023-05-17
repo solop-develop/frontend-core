@@ -1,3 +1,6 @@
+const config = require('./config/default.json')
+const theme = config.theme
+
 module.exports = {
   moduleFileExtensions: ['js', 'jsx', 'json', 'vue'],
   transform: {
@@ -7,7 +10,8 @@ module.exports = {
     '^.+\\.jsx?$': 'babel-jest'
   },
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1'
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '^@theme/(.*)$': '<rootDir>/' + theme + '/$1'
   },
   snapshotSerializers: ['jest-serializer-vue'],
   testMatch: [
