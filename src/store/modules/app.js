@@ -56,11 +56,19 @@ const actions = {
     commit('TOGGLE_DEVICE', device)
   },
   setLanguage({ commit }, language) {
-    setSessionAttribute({ language })
-      .then(token => {
-        setToken(token)
-      })
-    commit('SET_LANGUAGE', language)
+    return new Promise(resolve => {
+      setSessionAttribute({ language })
+        .then(token => {
+          setToken(token)
+          resolve(language)
+        })
+        .catch(error => {
+          console.warn(` Error getting Language ${error}`)
+        })
+        .finally(() => {
+          commit('SET_LANGUAGE', language)
+        })
+    })
   },
   setSize({ commit }, size) {
     commit('SET_SIZE', size)
