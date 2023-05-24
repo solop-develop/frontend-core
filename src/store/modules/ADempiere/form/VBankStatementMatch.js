@@ -61,17 +61,6 @@ export default {
       paymentAmountTo,
       matchMode
     }) {
-      console.log({
-        bankAccountId,
-        bankAccountUuid,
-        dateFrom,
-        dateTo,
-        businessPartnerId,
-        businessPartnerUuid,
-        paymentAmountFrom,
-        paymentAmountTo,
-        matchMode
-      })
       dispatch('findPayments', {
         bankAccountId,
         bankAccountUuid,

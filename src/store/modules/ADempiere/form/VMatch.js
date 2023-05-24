@@ -17,126 +17,279 @@
  */
 
 // API Request Methods
+
 import {
-  receipts,
-  invoces,
-  processReceipt
-} from '@/api/ADempiere/form/match.js'
+  ListMatchedTo,
+  ListMatchedFrom,
+  process
+} from '@/api/ADempiere/form/VMatch.js'
 
 // Utils and Helper Methods
-import { showMessage } from '@/utils/ADempiere/notification.js'
+// import { showMessage } from '@/utils/ADempiere/notification.js'
+import { dateTimeFormats } from '@/utils/ADempiere/formatValue/dateFormat'
 
 const match = {
-  invoices: [],
-  receipts: [],
-  selectedReceipt: [],
-  selectedInvoce: []
+  searchCriteria: {
+    matchMode: '',
+    searchValue: '',
+    matchFromType: '',
+    matchToType: '',
+    vendorId: '',
+    productId: '',
+    dateFrom: '',
+    dateto: ''
+  },
+  displayAssignFrom: '',
+  displayAssignTo: '',
+  matchedFrom: {
+    isLoading: false,
+    list: []
+  },
+  matchedTo: {
+    isLoading: false,
+    list: []
+  },
+  searchModeList: [],
+  assignFromList: [],
+  assignUpList: [],
+  selecteAssignFrom: {},
+  selectedAssignTo: {}
 }
 
 export default {
   state: match,
   mutations: {
-    setInvoiceLisMatch(state, list) {
-      state.invoices = list
+    /**
+     * Search Criteria
+     */
+    setSearchValue(state, id) {
+      state.searchCriteria.searchValue = id
     },
-    setReceiptsListMatch(state, list) {
-      state.receipts = list
+    setMatchFromType(state, id) {
+      state.searchCriteria.matchFromType = id
     },
-    setSelectedReceiptMatch(state, select) {
-      state.selectedReceipt = select
+    setMatchMode(state, id) {
+      console.log({ id })
+      state.searchCriteria.matchMode = id
     },
-    setSelectedInvoceMatch(state, select) {
-      state.selectedInvoce = select
+    setMatchToType(state, id) {
+      state.searchCriteria.matchToType = id
+    },
+    setVendorId(state, id) {
+      state.searchCriteria.vendorId = id
+    },
+    setProductId(state, id) {
+      state.searchCriteria.productId = id
+    },
+    setDateFrom(state, id) {
+      state.searchCriteria.dateFrom = id
+    },
+    setDateto(state, id) {
+      state.searchCriteria.dateto = id
+    },
+    setLabelAssignFrom(state, assignFrom) {
+      state.displayAssignFrom = assignFrom.DisplayColumn
+    },
+    setLabelAssignTo(state, assignTo) {
+      state.displayAssignTo = assignTo.DisplayColumn
+    },
+    setMatchedFrom(state, list) {
+      state.matchedFrom.list = list
+    },
+    setMatchedFromLoading(state, load) {
+      state.matchedFrom.isLoading = load
+    },
+    setMatchedTo(state, list) {
+      state.matchedTo.list = list
+    },
+    setMatchedToLoading(state, load) {
+      state.matchedTo.isLoading = load
+    },
+    setSelecteAssignFrom(state, assignFrom) {
+      state.selecteAssignFrom = assignFrom
+    },
+    setSelecteAssignTo(state, assignTo) {
+      state.selectedAssignTo = assignTo
+    },
+    setAssignFromList(state, list) {
+      state.assignFromList = list
+    },
+    setAssignUpList(state, list) {
+      state.assignUpList = list
+    },
+    setSearchModeList(state, list) {
+      state.searchModeList = list
     }
   },
   actions: {
-    serverReceiptsList({ commit }, {
-      businessPartnerUuid,
-      formUuid
-    }) {
-      receipts({
-        businessPartnerUuid,
-        formUuid
-      })
-        .then(response => {
-          commit('setReceiptsListMatch', response)
-        })
-        .catch(error => {
-          console.warn(`serverReceiptsList: ${error.message}. Code: ${error.code}.`)
-          showMessage({
-            type: 'error',
-            message: error.message,
-            showClose: true
-          })
-        })
-    },
-    serverInvocesList({ commit }, {
-      businessPartnerUuid,
-      formUuid
-    }) {
-      invoces({
-        businessPartnerUuid,
-        formUuid
-      })
-        .then(response => {
-          commit('setInvoiceLisMatch', response)
-        })
-        .catch(error => {
-          console.warn(`serverInvocesList: ${error.message}. Code: ${error.code}.`)
-          showMessage({
-            type: 'error',
-            message: error.message,
-            showClose: true
-          })
-        })
-    },
-    processAssignment({ commit }, {
-      businessPartnerUuid,
-      receiptUuid,
-      invoceUuid,
-      formUuid
-    }) {
-      processReceipt({
-        businessPartnerUuid,
-        receiptUuid,
-        invoceUuid,
-        formUuid
-      })
-        .then(response => {
-          showMessage({
-            type: 'success',
-            message: response.message,
-            showClose: true
-          })
-        })
-        .catch(error => {
-          console.warn(`processAssignment: ${error.message}. Code: ${error.code}.`)
-          showMessage({
-            type: 'error',
-            message: error.message,
-            showClose: true
-          })
-        })
-    },
-    selectedelectedReceiptsMatch({ commit }, select) {
-      commit('setSelectedReceiptMatch', select)
-    },
     selectedInvoceMatch({ commit }, select) {
       commit('setSelectedInvoceMatch', select)
+    },
+    findListMatchedFrom({ commit, state }) {
+      return new Promise(resolve => {
+        const {
+          matchMode,
+          searchValue,
+          matchFromType,
+          matchToType,
+          vendorId,
+          productId,
+          dateFrom,
+          dateto
+        } = state.searchCriteria
+        commit('setMatchedFromLoading', true)
+        ListMatchedFrom({
+          matchMode,
+          searchValue,
+          matchFromType,
+          matchToType,
+          vendorId,
+          productId,
+          dateFrom,
+          dateto
+        })
+          .then(response => {
+            const { records } = response
+            const list = records.map(list => {
+              return {
+                ...list,
+                isSelection: false,
+                date: dateTimeFormats(list.date, 'YYYY-MM-DD')
+              }
+            })
+            commit('setMatchedFrom', list)
+            commit('setMatchedFromLoading', false)
+            resolve(response)
+          })
+          .catch(error => {
+            resolve([])
+            commit('setMatchedFrom', [])
+            commit('setMatchedFromLoading', false)
+            console.warn(`Error getting List Match From: ${error.message}. Code: ${error.code}.`)
+          })
+      })
+    },
+    findListMatchedTo({ commit, state }, {
+      id,
+      vendorId,
+      productId,
+      isSameQuantity
+    }) {
+      return new Promise(resolve => {
+        const {
+          matchMode,
+          searchValue,
+          matchFromType,
+          matchToType,
+          dateFrom,
+          dateto
+        } = state.searchCriteria
+        commit('setMatchedToLoading', true)
+        ListMatchedTo({
+          matchMode,
+          searchValue,
+          matchFromType,
+          matchToType,
+          vendorId,
+          productId,
+          dateFrom,
+          dateto,
+          matchFromSelectedId: id,
+          isSameQuantity
+        })
+          .then(response => {
+            const { records } = response
+            const list = records.map(list => {
+              return {
+                ...list,
+                isSelection: false,
+                date: dateTimeFormats(list.date, 'YYYY-MM-DD')
+              }
+            })
+            commit('setMatchedToLoading', false)
+            commit('setMatchedTo', list)
+            resolve(response)
+          })
+          .catch(error => {
+            resolve([])
+            commit('setMatchedTo', [])
+            commit('setMatchedToLoading', false)
+            console.warn(`Error getting List Match From: ${error.message}. Code: ${error.code}.`)
+          })
+      })
+    },
+    sendProcess({ commit, dispatch, state }) {
+      return new Promise(resolve => {
+        const {
+          matchMode,
+          matchFromType,
+          matchToType
+        } = state.searchCriteria
+        const {
+          id,
+          quantity
+        } = state.selecteAssignFrom
+        const matchedToSelections = [state.selectedAssignTo]
+        commit('setMatchedFromLoading', true)
+        commit('setMatchedToLoading', true)
+        process({
+          matchMode,
+          matchFromType,
+          matchToType,
+          matchFromSelectedId: id,
+          matchedToSelections,
+          quantity
+        })
+          .then(response => {
+            dispatch('findListMatchedFrom')
+            dispatch('clean')
+            resolve(response)
+          })
+          .catch(error => {
+            dispatch('clean')
+            resolve([])
+            console.warn(`Error getting List Match From: ${error.message}. Code: ${error.code}.`)
+          })
+      })
+    },
+    clean({ commit }) {
+      commit('setMatchedFromLoading', false)
+      commit('setMatchedToLoading', false)
+      commit('setMatchedTo', [])
+      commit('setSelecteAssignFrom', {})
+      commit('setSelecteAssignTo', {})
     }
   },
   getters: {
-    getInvoiceMatch: (state) => {
-      return state.invoices
+    getCriteriaVMatch: (state) => {
+      return state.searchCriteria
     },
-    getReceiptsMatch: (state) => {
-      return state.receipts
+    getMatchFromList: (state) => {
+      return state.matchedFrom
     },
-    getSelectedReceiptsMatch: (state) => {
-      return state.selectedReceipt
+    getMatchToList: (state) => {
+      return state.matchedTo
     },
-    getSelectedInvoceMatch: (state) => {
-      return state.selectedInvoce
+    getLabelAssignFrom: (state) => {
+      return state.displayAssignFrom
+    },
+    getLabelAssignTo: (state) => {
+      return state.displayAssignTo
+    },
+    getSelecteAssignFrom: (state) => {
+      return state.selecteAssignFrom
+    },
+    getSelecteAssignTo: (state) => {
+      return state.selectedAssignTo
+    },
+    getAssignFromList: (state) => {
+      return state.assignFromList
+    },
+    getAssignUpList: (state) => {
+      return state.assignUpList
+    },
+    getSearchModeList: (state) => {
+      return state.searchModeList
     }
   }
 }

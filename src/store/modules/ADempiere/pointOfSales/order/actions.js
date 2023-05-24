@@ -53,7 +53,6 @@ export default {
   }) {
     const { currentPriceList, currentWarehouse, priceList, defaultCampaignUuid } = rootGetters.posAttributes.currentPointOfSales
     const priceListUuid = isEmptyValue(currentPriceList) ? priceList.uuid : currentPriceList.uuid
-    console.log({ priceListUuid, priceList, currentPriceList }, isEmptyValue(currentPriceList))
     return createOrder({
       posUuid,
       customerUuid,

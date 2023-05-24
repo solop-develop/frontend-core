@@ -25,6 +25,7 @@ import priceChecking from './priceChecking'
 import productInfo from './productInfo'
 import VAllocation from './VAllocation'
 import timeRecord from './timeRecord'
+import vMatch from './match'
 import tasks from './tasks'
 
 export default {
@@ -37,5 +38,6 @@ export default {
   productInfo,
   VAllocation,
   timeRecord,
+  vMatch,
   tasks
 }
