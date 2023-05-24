@@ -21,6 +21,15 @@ const vMatch = {
     invoice: 'Invoice',
     deliveryReceipt: 'Delivery / Receipt'
   },
+  searchCriteria: {
+    AssignFrom: 'Assign From',
+    AssignTo: 'Assign To',
+    SearchMode: 'Search Mode',
+    BusinessPartner: 'Business Partner',
+    Product: 'Product',
+    DateFrom: 'Date From',
+    DateTo: 'Date To'
+  },
   description: {
     searchCriteria: 'Select a Business Partner to check the pending documents to be assigned',
     invoice: 'Select an Invoice to assign the corresponding Delivery/Receipt to',

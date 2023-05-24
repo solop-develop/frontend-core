@@ -21,6 +21,15 @@ const match = {
     invoice: 'Factura',
     deliveryReceipt: 'Entrega / Recibo'
   },
+  searchCriteria: {
+    assignFrom: 'Asignar Desde',
+    assignTo: 'Asignar Hasta',
+    searchMode: 'Modo de Búsqueda',
+    businessPartner: 'Socio de Negocio',
+    product: 'Producto',
+    dateFrom: 'Fecha desde',
+    dateTo: 'Fecha Hasta'
+  },
   description: {
     searchCriteria: 'Seleccione un Socio de Negocio para verificar los documentos pendientes por asignar',
     invoice: 'Seleccione una Factura para asignar las Entrega/Recibo correspondiente',
