@@ -69,7 +69,6 @@ export default {
       state.searchCriteria.matchFromType = id
     },
     setMatchMode(state, id) {
-      console.log({ id })
       state.searchCriteria.matchMode = id
     },
     setMatchToType(state, id) {
