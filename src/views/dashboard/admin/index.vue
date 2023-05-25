@@ -122,7 +122,9 @@ export default defineComponent({
     })
 
     const warehouse = computed(() => {
-      return store.getters['user/getWarehouse']
+      return store.getters['user/getWarehouse'] || {
+        name: ''
+      }
     })
 
     function loadDashboardsList() {
