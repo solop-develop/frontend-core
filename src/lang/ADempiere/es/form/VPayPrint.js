@@ -50,7 +50,9 @@ const VPayPrint = {
     },
     processMessage: 'Desea Procesar Todos los Pagos tipo ',
     printMessage: 'Desea Imprimir Todos los Pagos tipo ',
-    ExportMessage: 'Desea Exportar Todos los Pagos tipo '
+    ExportMessage: 'Desea Exportar Todos los Pagos tipo ',
+    printRemittanceMessage: '¿ Desea Imprimir Remesa ?',
+    confirmPrintMessage: '¿ Desea Confirmar Impresión ?'
   }
 }
 

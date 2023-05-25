@@ -186,6 +186,7 @@ export function process({
   paymentRuleId,
   paymentRuleUuid,
   documentNo,
+  bankAccountId,
   //  Page Data
   pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
@@ -200,6 +201,7 @@ export function process({
       payment_rule_id: paymentRuleId,
       payment_rule_uuid: paymentRuleUuid,
       document_no: documentNo,
+      bank_account_id: bankAccountId,
       page_size: pageSize,
       page_token: pageToken
     }
@@ -217,6 +219,7 @@ export function exportPayment({
   paymentRuleId,
   paymentRuleUuid,
   documentNo,
+  bankAccountId,
   //  Page Data
   pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
@@ -231,6 +234,7 @@ export function exportPayment({
       payment_rule_id: paymentRuleId,
       payment_rule_uuid: paymentRuleUuid,
       document_no: documentNo,
+      bank_account_id: bankAccountId,
       page_size: pageSize,
       page_token: pageToken
     }
@@ -248,6 +252,7 @@ export function print({
   paymentRuleId,
   paymentRuleUuid,
   documentNo,
+  bankAccountId,
   //  Page Data
   pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
@@ -262,6 +267,73 @@ export function print({
       payment_rule_id: paymentRuleId,
       payment_rule_uuid: paymentRuleUuid,
       document_no: documentNo,
+      bank_account_id: bankAccountId,
+      page_size: pageSize,
+      page_token: pageToken
+    }
+  })
+    .then(response => {
+      return response
+    })
+}
+
+export function confirmPrint({
+  //  DSL Query
+  searchValue,
+  paymentSelectionId,
+  paymentSelectionUuid,
+  paymentRuleId,
+  paymentRuleUuid,
+  documentNo,
+  bankAccountId,
+  //  Page Data
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
+  pageToken
+}) {
+  return request({
+    url: `${config.vPayPrint.endpoint}/confirm-print`,
+    method: 'post',
+    data: {
+      search_value: searchValue,
+      payment_selection_id: paymentSelectionId,
+      payment_selection_uuid: paymentSelectionUuid,
+      payment_rule_id: paymentRuleId,
+      payment_rule_uuid: paymentRuleUuid,
+      document_no: documentNo,
+      bank_account_id: bankAccountId,
+      page_size: pageSize,
+      page_token: pageToken
+    }
+  })
+    .then(response => {
+      return response
+    })
+}
+
+export function printRemittance({
+  //  DSL Query
+  searchValue,
+  paymentSelectionId,
+  paymentSelectionUuid,
+  paymentRuleId,
+  paymentRuleUuid,
+  documentNo,
+  bankAccountId,
+  //  Page Data
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
+  pageToken
+}) {
+  return request({
+    url: `${config.vPayPrint.endpoint}/print-remittance`,
+    method: 'post',
+    data: {
+      search_value: searchValue,
+      payment_selection_id: paymentSelectionId,
+      payment_selection_uuid: paymentSelectionUuid,
+      payment_rule_id: paymentRuleId,
+      payment_rule_uuid: paymentRuleUuid,
+      document_no: documentNo,
+      bank_account_id: bankAccountId,
       page_size: pageSize,
       page_token: pageToken
     }
