@@ -16,27 +16,27 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-const vMatch = {
+const match = {
   title: {
     invoice: 'Invoice',
     deliveryReceipt: 'Delivery / Receipt'
   },
   searchCriteria: {
-    AssignFrom: 'Assign From',
-    AssignTo: 'Assign To',
-    SearchMode: 'Search Mode',
-    BusinessPartner: 'Business Partner',
-    Product: 'Product',
-    DateFrom: 'Date From',
-    DateTo: 'Date To'
+    assignFrom: 'Assign From',
+    assignTo: 'Assign To',
+    searchMode: 'Search Mode',
+    businessPartner: 'BusinessPartner',
+    product: 'Product',
+    dateFrom: 'Date From',
+    dateTo: 'Date To'
   },
   description: {
-    searchCriteria: 'Select a Business Partner to check the pending documents to be assigned',
-    invoice: 'Select an Invoice to assign the corresponding Delivery/Receipt to',
+    searchCriteria: 'Select a Business Partner to check for pending documents to be assigned',
+    invoice: 'Select an Invoice to assign the corresponding Delivery/Receipt',
     deliveryReceipt: 'Select at least one Delivery/Receipt to which you require to assign the selected invoice'
   },
   field: {
-    toAssigned: 'To be Assigned',
+    toAssigned: 'To be assigned',
     assigning: 'Assigning',
     difference: 'Difference'
   },
@@ -50,4 +50,4 @@ const vMatch = {
   }
 }
 
-export default vMatch
+export default match
