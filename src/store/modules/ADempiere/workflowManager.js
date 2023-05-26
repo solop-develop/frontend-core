@@ -24,7 +24,7 @@ import {
 } from '@/api/ADempiere/workflow.js'
 
 // Utils and Helper Methods
-import { isEmptyValue, typeValue } from '@/utils/ADempiere/valueUtils'
+import { isEmptyValue, getTypeOfValue } from '@/utils/ADempiere/valueUtils'
 import { showNotification } from '@/utils/ADempiere/notification.js'
 
 const initState = {
@@ -51,25 +51,25 @@ const workflowManager = {
 
   actions: {
     runDocumentAction({ commit, dispatch }, {
-      tableName,
       recordId,
-      recordUuid,
+      tableName,
       docAction,
+      recordUuid,
+      description,
       containerUuid
     }) {
       return new Promise(resolve => {
         runDocAction({
           tableName,
+          docAction,
           id: recordId,
-          uuid: recordUuid,
-          docAction
+          uuid: recordUuid
         })
           .then(response => {
-            console.log(response)
             dispatch('listDocumentStatus', {
+              recordId,
               tableName,
               recordUuid,
-              recordId,
               containerUuid
             })
               .then(responseList => {
@@ -84,21 +84,21 @@ const workflowManager = {
               recordUuid
             })
 
-            let text, isError
-            if (typeValue(response) === 'STRING') {
+            let text; let isError; let type = 'success'
+            if (getTypeOfValue(response) === 'STRING') {
               text = response
               isError = true
             } else {
               isError = response.is_error
               text = response.summary
             }
-            if (isEmptyValue(text) && !isError) {
-              text = ' '
-            }
+            if (isEmptyValue(text)) text = description
+
+            if (isError) type = 'error'
 
             showNotification({
               message: text,
-              type: isError ? 'error' : 'success'
+              type
             })
             resolve(response)
           })
