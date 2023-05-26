@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -24,7 +24,7 @@ import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 /**
  * Set Payment Selection
- * @param {String} id, Current Payment Selection ID
+ * @param {Number} id, Current Payment Selection ID
  * @param {String} uuid, Current Payment Selection UUID
  */
 export function paymentSelection({
@@ -60,16 +60,14 @@ export function paymentSelections() {
 /**
  * list Payment Rules
  * @param {String} searchValue, Search value optional
- * @param {String} paymentSelectionId, Current Payment Selection ID
- * @param {String} paymentSelectionUuid, Payment Selection Uuid
- * @param {String} pageSize, Page Size
+ * @param {Number} paymentSelectionId, Current Payment Selection ID
+ * @param {Number} pageSize, Page Size
  * @param {String} pageToken, Page Token
  */
 export function paymentRules({
   //  DSL Query
   searchValue,
   paymentSelectionId,
-  paymentSelectionUuid,
   //  Page Data
   pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
@@ -80,7 +78,6 @@ export function paymentRules({
     data: {
       search_value: searchValue,
       payment_selection_id: paymentSelectionId,
-      payment_selection_uuid: paymentSelectionUuid,
       page_size: pageSize,
       page_token: pageToken
     }
@@ -93,18 +90,16 @@ export function paymentRules({
 /**
  * list Payment Rules
  * @param {String} searchValue, Search value optional
- * @param {String} paymentSelectionId, Current Payment Selection ID
- * @param {String} paymentSelectionUuid, Payment Selection Uuid
- * @param {String} pageSize, Page Size
+ * @param {Number} paymentSelectionId, Current Payment Selection ID
+ * @param {Number} paymentRuleId, Current Payment Rule ID
+ * @param {Number} pageSize, Page Size
  * @param {String} pageToken, Page Token
  */
 export function listPaymentTable({
   //  DSL Query
   searchValue,
   paymentSelectionId,
-  paymentSelectionUuid,
   paymentRuleId,
-  paymentRuleUuid,
   //  Page Data
   pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
@@ -115,9 +110,7 @@ export function listPaymentTable({
     data: {
       search_value: searchValue,
       payment_selection_id: paymentSelectionId,
-      payment_selection_uuid: paymentSelectionUuid,
       payment_rule_id: paymentRuleId,
-      payment_rule_uuid: paymentRuleUuid,
       page_size: pageSize,
       page_token: pageToken
     }
@@ -129,38 +122,23 @@ export function listPaymentTable({
 
 /**
  * Document Sequence Number
- * @param {String} searchValue, Search value optional
- * @param {String} paymentSelectionId, Current Payment Selection ID
- * @param {String} paymentSelectionUuid, Payment Selection Uuid
- * @param {String} paymentRuleId, Payment Rules ID
- * @param {String} paymentRuleUuid, Payment Rule Uuid
- * @param {String} pageSize, Page Size
- * @param {String} pageToken, Page Token
+ * @param {Number} paymentSelectionId, Current Payment Selection ID
+ * @param {Number} paymentRuleId, Payment Rules ID
+ * @param {Number} banckAccountId, Bank Account ID
  */
 export function documentSequence({
   //  DSL Query
-  searchValue,
   paymentSelectionId,
-  paymentSelectionUuid,
   paymentRuleId,
-  paymentRuleUuid,
-  banckAccountId,
-  //  Page Data
-  pageSize = ROWS_OF_RECORDS_BY_PAGE,
-  pageToken
+  banckAccountId
 }) {
   return request({
     url: `${config.vPayPrint.endpoint}/document-no`,
     method: 'get',
     params: {
-      search_value: searchValue,
       payment_selection_id: paymentSelectionId,
-      payment_selection_uuid: paymentSelectionUuid,
       payment_rule_id: paymentRuleId,
-      payment_rule_uuid: paymentRuleUuid,
-      bank_account_id: banckAccountId,
-      page_size: pageSize,
-      page_token: pageToken
+      bank_account_id: banckAccountId
     }
   })
     .then(response => {
@@ -171,39 +149,28 @@ export function documentSequence({
 /**
  * process
  * @param {String} searchValue, Search value optional
- * @param {String} paymentSelectionId, Current Payment Selection ID
- * @param {String} paymentSelectionUuid, Payment Selection Uuid
- * @param {String} paymentRuleId, Payment Rules ID
- * @param {String} paymentRuleUuid, Payment Rule Uuid
- * @param {String} pageSize, Page Size
+ * @param {Number} paymentSelectionId, Current Payment Selection ID
+ * @param {Number} paymentRuleId, Payment Rules ID
+ * @param {Number} documentNo, Start Document Sequence
+ * @param {Number} bankAccountId, Bank Account ID
+ * @param {Number} pageSize, Page Size
  * @param {String} pageToken, Page Token
  */
 export function process({
   //  DSL Query
-  searchValue,
   paymentSelectionId,
-  paymentSelectionUuid,
   paymentRuleId,
-  paymentRuleUuid,
   documentNo,
-  bankAccountId,
-  //  Page Data
-  pageSize = ROWS_OF_RECORDS_BY_PAGE,
-  pageToken
+  bankAccountId
 }) {
   return request({
     url: `${config.vPayPrint.endpoint}/process`,
     method: 'post',
     data: {
-      search_value: searchValue,
       payment_selection_id: paymentSelectionId,
-      payment_selection_uuid: paymentSelectionUuid,
       payment_rule_id: paymentRuleId,
-      payment_rule_uuid: paymentRuleUuid,
       document_no: documentNo,
-      bank_account_id: bankAccountId,
-      page_size: pageSize,
-      page_token: pageToken
+      bank_account_id: bankAccountId
     }
   })
     .then(response => {
@@ -213,30 +180,19 @@ export function process({
 
 export function exportPayment({
   //  DSL Query
-  searchValue,
   paymentSelectionId,
-  paymentSelectionUuid,
   paymentRuleId,
-  paymentRuleUuid,
   documentNo,
-  bankAccountId,
-  //  Page Data
-  pageSize = ROWS_OF_RECORDS_BY_PAGE,
-  pageToken
+  bankAccountId
 }) {
   return request({
     url: `${config.vPayPrint.endpoint}/export`,
     method: 'post',
     data: {
-      search_value: searchValue,
       payment_selection_id: paymentSelectionId,
-      payment_selection_uuid: paymentSelectionUuid,
       payment_rule_id: paymentRuleId,
-      payment_rule_uuid: paymentRuleUuid,
       document_no: documentNo,
-      bank_account_id: bankAccountId,
-      page_size: pageSize,
-      page_token: pageToken
+      bank_account_id: bankAccountId
     }
   })
     .then(response => {
@@ -246,30 +202,17 @@ export function exportPayment({
 
 export function print({
   //  DSL Query
-  searchValue,
   paymentSelectionId,
-  paymentSelectionUuid,
   paymentRuleId,
-  paymentRuleUuid,
-  documentNo,
-  bankAccountId,
-  //  Page Data
-  pageSize = ROWS_OF_RECORDS_BY_PAGE,
-  pageToken
+  documentNo
 }) {
   return request({
     url: `${config.vPayPrint.endpoint}/print`,
     method: 'post',
     data: {
-      search_value: searchValue,
       payment_selection_id: paymentSelectionId,
-      payment_selection_uuid: paymentSelectionUuid,
       payment_rule_id: paymentRuleId,
-      payment_rule_uuid: paymentRuleUuid,
-      document_no: documentNo,
-      bank_account_id: bankAccountId,
-      page_size: pageSize,
-      page_token: pageToken
+      document_no: documentNo
     }
   })
     .then(response => {
@@ -279,30 +222,19 @@ export function print({
 
 export function confirmPrint({
   //  DSL Query
-  searchValue,
   paymentSelectionId,
-  paymentSelectionUuid,
   paymentRuleId,
-  paymentRuleUuid,
   documentNo,
-  bankAccountId,
-  //  Page Data
-  pageSize = ROWS_OF_RECORDS_BY_PAGE,
-  pageToken
+  bankAccountId
 }) {
   return request({
     url: `${config.vPayPrint.endpoint}/confirm-print`,
     method: 'post',
     data: {
-      search_value: searchValue,
       payment_selection_id: paymentSelectionId,
-      payment_selection_uuid: paymentSelectionUuid,
       payment_rule_id: paymentRuleId,
-      payment_rule_uuid: paymentRuleUuid,
       document_no: documentNo,
-      bank_account_id: bankAccountId,
-      page_size: pageSize,
-      page_token: pageToken
+      bank_account_id: bankAccountId
     }
   })
     .then(response => {
@@ -312,30 +244,17 @@ export function confirmPrint({
 
 export function printRemittance({
   //  DSL Query
-  searchValue,
   paymentSelectionId,
-  paymentSelectionUuid,
   paymentRuleId,
-  paymentRuleUuid,
-  documentNo,
-  bankAccountId,
-  //  Page Data
-  pageSize = ROWS_OF_RECORDS_BY_PAGE,
-  pageToken
+  documentNo
 }) {
   return request({
     url: `${config.vPayPrint.endpoint}/print-remittance`,
     method: 'post',
     data: {
-      search_value: searchValue,
       payment_selection_id: paymentSelectionId,
-      payment_selection_uuid: paymentSelectionUuid,
       payment_rule_id: paymentRuleId,
-      payment_rule_uuid: paymentRuleUuid,
-      document_no: documentNo,
-      bank_account_id: bankAccountId,
-      page_size: pageSize,
-      page_token: pageToken
+      document_no: documentNo
     }
   })
     .then(response => {
