@@ -84,7 +84,9 @@ const workflowManager = {
               recordUuid
             })
 
-            let text; let isError; let type = 'success'
+            let text
+            let isError
+            let type = 'success'
             if (getTypeOfValue(response) === 'STRING') {
               text = response
               isError = true
@@ -94,7 +96,9 @@ const workflowManager = {
             }
             if (isEmptyValue(text)) text = description
 
-            if (isError) type = 'error'
+            if (isError) {
+              type = 'error'
+            }
 
             showNotification({
               message: text,
