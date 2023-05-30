@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,9 @@
 // Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
+// Utils and Helper Methods
+import { getLanguage } from '@/lang/index'
+
 /**
  * Make login by UserName and password, this function can return user data for show
  * @param {string} userName
@@ -31,9 +34,14 @@ export function requestLogin({
   organizationUuid,
   token
 }) {
+  const language = getLanguage() || 'en_US'
+
   return request({
     url: '/user/login',
     method: 'post',
+    params: {
+      language
+    },
     data: {
       username: userName,
       password,
