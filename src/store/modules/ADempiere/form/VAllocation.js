@@ -21,6 +21,7 @@ import {
   listPayments,
   listInvoices
 } from '@/api/ADempiere/form/VAllocation.js'
+import { isEmptyValue } from '@/utils/ADempiere'
 
 // Utils and Helper Methods
 import { dateTimeFormats } from '@/utils/ADempiere/formatValue/dateFormat'
@@ -40,6 +41,15 @@ const VAllocation = {
   selectListRecord: {
     payments: [],
     invoce: []
+  },
+  difference: {
+    amount: 0,
+    transactionType: ''
+  },
+  listAllDifference: [],
+  list: {
+    payments: [],
+    invoces: []
   }
 }
 
@@ -75,7 +85,32 @@ export default {
     },
     setSelectListInvoces(state, listSelect) {
       state.selectListRecord.invoce = listSelect
+    },
+    setDiference(state, {
+      attribute,
+      value,
+      row
+    }) {
+      state.difference[attribute] = value
+    },
+    setListDifference(state) {
+      const payments = state.list.payments
+      const invoces = state.list.invoces
+      const list = payments.concat(invoces)
+      console.log({
+        list,
+        invoces,
+        payments
+      })
+      state.listAllDifference = list
+    },
+    setListSelectPayments(state, list) {
+      state.list.payments = list
+    },
+    setListSelectInvoices(state, list) {
+      state.list.invoces = list
     }
+
   },
   actions: {
     findListPayment({ commit, state }) {
@@ -180,10 +215,23 @@ export default {
       return state.listRecord
     },
     getSelectListPayments(state) {
-      return state.listRecord.payments.filter(list => list.isSelect)
+      return state.selectListRecord.payments
     },
     getSelectListInvoces(state) {
-      return state.listRecord.invoce.filter(list => list.isSelect)
+      return state.selectListRecord.invoce
+    },
+    getListDifference(state) {
+      const payments = state.list.payments
+      const invoces = state.list.invoces
+      if (isEmptyValue(payments) && isEmptyValue(invoces)) return []
+      return payments.concat(invoces).map(list => {
+        const date = Object.keys(list).find(key => key.includes('date'))
+        return {
+          transactionDate: list[date],
+          transactionType: list.transaction_type.value,
+          amount: list.applied
+        }
+      })
     }
   }
 }

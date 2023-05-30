@@ -17,69 +17,202 @@
 // Get Instance for connectionimport {
 import { request } from '@/utils/ADempiere/request'
 import { config } from '@/utils/ADempiere/config'
+import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
-// systemPayments
+// Bank Accounts
 
-export function listSystemPayments({
-  bankAccountId,
-  bankAccountUuid,
-  dateFrom,
-  dateTo,
-  businessPartnerId,
-  businessPartnerUuid,
-  paymentAmountFrom,
-  paymentAmountTo,
-  matchMode
+export function listBankAccounts({
+  searchValue,
+  pageToken,
+  pageSize
 }) {
   return request({
-    url: `${config.VBankStatementMatch.endpoint}/list-payments`,
+    url: `${config.VBankStatementMatch.endpoint}/bank-accounts`,
     method: 'get',
     params: {
-      bank_account_id: bankAccountId,
-      bank_account_uuid: bankAccountUuid,
-      transaction_date_from: dateFrom,
-      transaction_date_to: dateTo,
-      business_partner_id: businessPartnerId,
-      business_partner_uuid: businessPartnerUuid,
-      payment_amount_from: paymentAmountFrom,
-      payment_amount_to: paymentAmountTo,
-      match_mode: matchMode
+      search_value: searchValue,
+      page_token: pageToken,
+      page_size: pageSize
     }
   })
-    .then(receiptsListResponse => {
-      return receiptsListResponse
+    .then(response => {
+      return camelizeObjectKeys(response)
     })
 }
 
-// import Movements
+// Business Partners
 
-export function listImportMovements({
-  bankAccountId,
-  bankAccountUuid,
-  dateFrom,
-  dateTo,
-  businessPartnerId,
-  businessPartnerUuid,
-  paymentAmountFrom,
-  paymentAmountTo,
-  matchMode
+export function listBusinessPartners({
+  searchValue
 }) {
   return request({
-    url: `${config.VBankStatementMatch.endpoint}/list-imported-bank-movements`,
+    url: `${config.VBankStatementMatch.endpoint}/business-partners`,
     method: 'get',
     params: {
-      bank_account_id: bankAccountId,
-      bank_account_uuid: bankAccountUuid,
-      transaction_date_from: dateFrom,
-      transaction_date_to: dateTo,
-      business_partner_id: businessPartnerId,
-      business_partner_uuid: businessPartnerUuid,
-      payment_amount_from: paymentAmountFrom,
-      payment_amount_to: paymentAmountTo,
-      match_mode: matchMode
+      search_value: searchValue
     }
   })
-    .then(receiptsListResponse => {
-      return receiptsListResponse
+    .then(response => {
+      return camelizeObjectKeys(response)
     })
 }
+
+// Search Modes
+
+export function listSearchModes({
+  searchValue
+}) {
+  return request({
+    url: `${config.VBankStatementMatch.endpoint}/search-modes`,
+    method: 'get',
+    params: {
+      search_value: searchValue
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+// Import Movements
+
+export function listImportedBankMovements({
+  matchMode,
+  searchValue,
+  bankAccountId,
+  paymentAmountTo,
+  bankAccountUuid,
+  businessPartnerId,
+  transactionDateTo,
+  paymentAmountFrom,
+  transactionDateFrom,
+  businessPartnerUuid
+}) {
+  return request({
+    url: `${config.VBankStatementMatch.endpoint}/imported-bank-movements`,
+    method: 'get',
+    params: {
+      match_mode: matchMode,
+      search_value: searchValue,
+      bank_account_id: bankAccountId,
+      payment_amount_to: paymentAmountTo,
+      bank_account_uuid: bankAccountUuid,
+      business_partner_id: businessPartnerId,
+      transaction_date_to: transactionDateTo,
+      payment_amount_from: paymentAmountFrom,
+      transaction_date_from: transactionDateFrom,
+      business_partner_uuid: businessPartnerUuid
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+// Payments
+
+export function listPayments({
+  matchMode,
+  searchValue,
+  bankAccountId,
+  paymentAmountTo,
+  bankAccountUuid,
+  businessPartnerId,
+  transactionDateTo,
+  paymentAmountFrom,
+  transactionDateFrom,
+  businessPartnerUuid
+}) {
+  return request({
+    url: `${config.VBankStatementMatch.endpoint}/payments`,
+    method: 'get',
+    params: {
+      match_mode: matchMode,
+      search_value: searchValue,
+      bank_account_id: bankAccountId,
+      payment_amount_to: paymentAmountTo,
+      bank_account_uuid: bankAccountUuid,
+      business_partner_id: businessPartnerId,
+      transaction_date_to: transactionDateTo,
+      payment_amount_from: paymentAmountFrom,
+      transaction_date_from: transactionDateFrom,
+      business_partner_uuid: businessPartnerUuid
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+// Matching Movements
+
+export function listMatchingMovements({
+  matchMode,
+  searchValue,
+  bankAccountId,
+  paymentAmountTo,
+  bankAccountUuid,
+  businessPartnerId,
+  transactionDateTo,
+  paymentAmountFrom,
+  transactionDateFrom,
+  businessPartnerUuid
+}) {
+  return request({
+    url: `${config.VBankStatementMatch.endpoint}/matching-movements`,
+    method: 'get',
+    params: {
+      match_mode: matchMode,
+      search_value: searchValue,
+      bank_account_id: bankAccountId,
+      payment_amount_to: paymentAmountTo,
+      bank_account_uuid: bankAccountUuid,
+      business_partner_id: businessPartnerId,
+      transaction_date_to: transactionDateTo,
+      payment_amount_from: paymentAmountFrom,
+      transaction_date_from: transactionDateFrom,
+      business_partner_uuid: businessPartnerUuid
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+// Process
+
+export function processMovements({
+  matchMode,
+  searchValue,
+  bankAccountId,
+  bankAccountUuid,
+  paymentAmountTo,
+  paymentAmountFrom,
+  transactionDateTo,
+  businessPartnerId,
+  businessPartnerUuid,
+  transactionDateFrom,
+  macthingSelectionsList
+}) {
+  return request({
+    url: `${config.VBankStatementMatch.endpoint}/process`,
+    method: 'post',
+    params: {
+      match_mode: matchMode,
+      search_value: searchValue,
+      bank_account_id: bankAccountId,
+      payment_amount_to: paymentAmountTo,
+      bank_account_uuid: bankAccountUuid,
+      business_partner_id: businessPartnerId,
+      transaction_date_to: transactionDateTo,
+      payment_amount_from: paymentAmountFrom,
+      transaction_date_from: transactionDateFrom,
+      business_partner_uuid: businessPartnerUuid,
+      matching_selections_list: macthingSelectionsList
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
