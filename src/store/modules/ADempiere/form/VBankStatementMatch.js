@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -94,7 +94,6 @@ export default {
      * @param {number} pageSize
      * @param {string} pageToken
      */
-
     listBankAccount({ commit }, {
       searchValue
     }) {
@@ -137,7 +136,6 @@ export default {
      * @param {number} pageSize
      * @param {string} pageToken
      */
-
     listBusinessPartner({ commit }, {
       searchValue
     }) {
@@ -180,7 +178,6 @@ export default {
      * @param {number} pageSize
      * @param {string} pageToken
      */
-
     listMatchMode({ commit }, {
       searchValue
     }) {
@@ -246,7 +243,6 @@ export default {
         })
           .then(response => {
             const { records } = response
-            console.log({ response })
             if (isEmptyValue(records)) return
             list = records.map(list => {
               return {
@@ -302,7 +298,6 @@ export default {
         })
           .then(response => {
             const { records } = response
-            console.log({ response })
             if (isEmptyValue(records)) return
             list = records.map(list => {
               return {
@@ -361,7 +356,6 @@ export default {
         })
           .then(response => {
             const { records } = response
-            console.log({ response })
             if (isEmptyValue(records)) return
             list = records.map(list => {
               return {
