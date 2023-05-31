@@ -106,10 +106,6 @@ export default {
       attribute,
       value
     }) {
-      console.log({
-        attribute,
-        value
-      })
       state.process[attribute] = value
     },
     setListDifference(state) {
@@ -245,7 +241,6 @@ export default {
           transactionOrganizationId
         })
           .then(response => {
-            console.log({ response })
             dispatch('findListPayment')
             dispatch('findListInvoices')
             resolve(response)
@@ -273,7 +268,9 @@ export default {
     getListDifference(state) {
       const payments = state.list.payments
       const invoces = state.list.invoces
-      if (isEmptyValue(payments) && isEmptyValue(invoces)) return []
+      if (isEmptyValue(payments) && isEmptyValue(invoces)) {
+        return []
+      }
       return payments.concat(invoces).map(list => {
         const date = Object.keys(list).find(key => key.includes('date'))
         return {
