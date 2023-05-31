@@ -22,9 +22,9 @@ import {
   listPayments,
   listInvoices
 } from '@/api/ADempiere/form/VAllocation.js'
-import { isEmptyValue } from '@/utils/ADempiere'
 
 // Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere'
 import { dateTimeFormats } from '@/utils/ADempiere/formatValue/dateFormat'
 
 const VAllocation = {
@@ -53,6 +53,13 @@ const VAllocation = {
   list: {
     payments: [],
     invoces: []
+  },
+  process: {
+    date: '',
+    chargeId: '',
+    description: '',
+    totalDifference: 0,
+    transactionOrganizationId: ''
   }
 }
 
@@ -91,10 +98,19 @@ export default {
     },
     setDiference(state, {
       attribute,
-      value,
-      row
+      value
     }) {
       state.difference[attribute] = value
+    },
+    setProcess(state, {
+      attribute,
+      value
+    }) {
+      console.log({
+        attribute,
+        value
+      })
+      state.process[attribute] = value
     },
     setListDifference(state) {
       const payments = state.list.payments
@@ -207,39 +223,35 @@ export default {
     processSend({ dispatch, state }) {
       return new Promise(resolve => {
         const {
-          date,
-          chargeId,
           currencyId,
-          description,
           businessPartnerId
         } = state.searchCriteria
+        const {
+          date,
+          chargeId,
+          description,
+          totalDifference,
+          transactionOrganizationId
+        } = state.process
         process({
           date,
           chargeId,
           currencyId,
           description,
+          totalDifference,
           businessPartnerId,
           invoiceSelectionList: state.list.invoces,
-          paymentSelectionsList: state.list.payments
-          // transactionOrganizationId
+          paymentSelectionsList: state.list.payments,
+          transactionOrganizationId
         })
           .then(response => {
-            // const { records } = response
-            // const list = records.map(payments => {
-            //   return {
-            //     ...payments,
-            //     transaction_date: dateTimeFormats(payments.transaction_date, 'YYYY-MM-DD'),
-            //     applied: 0,
-            //     isSelect: false
-            //   }
-            // })
-            // commit('setListPayments', list)
             console.log({ response })
+            dispatch('findListPayment')
+            dispatch('findListInvoices')
             resolve(response)
           })
           .catch(error => {
             resolve([])
-            // commit('setListProduct', [])
             console.warn(`Error getting List Product: ${error.message}. Code: ${error.code}.`)
           })
       })
@@ -270,6 +282,9 @@ export default {
           amount: list.applied
         }
       })
+    },
+    getProcess(state) {
+      return state.process
     }
   }
 }
