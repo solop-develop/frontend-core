@@ -214,3 +214,32 @@ export function listTransactionOrganizations({
       return camelizeObjectKeys(response)
     })
 }
+// process
+export function process({
+  transactionOrganizationUuid,
+  paymentSelectionsList = [],
+  transactionOrganizationId,
+  invoiceSelectionList = [],
+  businessPartnerId,
+  description,
+  currencyId,
+  pageToken,
+  chargeId,
+  pageSize,
+  searchValue,
+  date
+}) {
+  return request({
+    url: '/form/addons/payment-allocation/process',
+    method: 'get',
+    params: {
+      page_size: pageSize,
+      page_token: pageToken,
+      //  DSL Query
+      search_value: searchValue
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}

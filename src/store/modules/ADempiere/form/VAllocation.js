@@ -18,6 +18,7 @@
 
 // API Request Methods
 import {
+  process,
   listPayments,
   listInvoices
 } from '@/api/ADempiere/form/VAllocation.js'
@@ -32,7 +33,9 @@ const VAllocation = {
     organizationId: '',
     currencyId: '',
     date: '',
-    transactionType: ''
+    transactionType: '',
+    description: '',
+    chargeId: ''
   },
   listRecord: {
     payments: [],
@@ -97,11 +100,6 @@ export default {
       const payments = state.list.payments
       const invoces = state.list.invoces
       const list = payments.concat(invoces)
-      console.log({
-        list,
-        invoces,
-        payments
-      })
       state.listAllDifference = list
     },
     setListSelectPayments(state, list) {
@@ -198,6 +196,46 @@ export default {
             })
             commit('setListInvoces', list)
             resolve(list)
+          })
+          .catch(error => {
+            resolve([])
+            // commit('setListProduct', [])
+            console.warn(`Error getting List Product: ${error.message}. Code: ${error.code}.`)
+          })
+      })
+    },
+    processSend({ dispatch, state }) {
+      return new Promise(resolve => {
+        const {
+          date,
+          chargeId,
+          currencyId,
+          description,
+          businessPartnerId
+        } = state.searchCriteria
+        process({
+          date,
+          chargeId,
+          currencyId,
+          description,
+          businessPartnerId,
+          invoiceSelectionList: state.list.invoces,
+          paymentSelectionsList: state.list.payments
+          // transactionOrganizationId
+        })
+          .then(response => {
+            // const { records } = response
+            // const list = records.map(payments => {
+            //   return {
+            //     ...payments,
+            //     transaction_date: dateTimeFormats(payments.transaction_date, 'YYYY-MM-DD'),
+            //     applied: 0,
+            //     isSelect: false
+            //   }
+            // })
+            // commit('setListPayments', list)
+            console.log({ response })
+            resolve(response)
           })
           .catch(error => {
             resolve([])
