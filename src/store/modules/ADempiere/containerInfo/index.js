@@ -121,6 +121,12 @@ const containerInfo = {
       currentTab
     }) {
       commit('setContainerInfo', { currentRecord, currentTab })
+
+      commit('changeWindowAttribute', {
+        uuid: currentTab.parentUuid,
+        attributeName: 'currentTabUuid',
+        attributeValue: currentTab.uuid
+      })
     },
     fieldListInfo({ commit }, {
       info

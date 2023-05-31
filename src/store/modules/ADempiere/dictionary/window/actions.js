@@ -111,10 +111,10 @@ export default {
   },
 
   setTabActionsMenu({ commit, dispatch, getters, rootGetters }, {
-    parentUuid,
-    containerUuid
+    parentUuid: windowUuid,
+    containerUuid: tabUuid
   }) {
-    const tabDefinition = getters.getStoredTab(parentUuid, containerUuid)
+    const tabDefinition = getters.getStoredTab(windowUuid, tabUuid)
 
     const actionsList = []
 
@@ -143,7 +143,7 @@ export default {
             ...generateReportOfWindow
           }
 
-          const doneMethodByReport = () => {
+          const doneMethodByReport = ({ parentUuid: tabAssociatedUuid, containerUuid }) => {
             const fieldsList = rootGetters.getReportParameters({
               containerUuid: process.uuid
             })
@@ -159,11 +159,13 @@ export default {
               return
             }
 
-            const recordUuid = rootGetters.getUuidOfContainer(containerUuid)
-            const { tableName } = tabDefinition
+            const recordUuid = rootGetters.getUuidOfContainer(tabAssociatedUuid)
+
+            const storedTab = rootGetters.getStoredTab(windowUuid, tabAssociatedUuid)
+            const { tableName } = storedTab
 
             dispatch('startReport', {
-              parentUuid: containerUuid,
+              parentUuid: tabUuid,
               containerUuid: process.uuid,
               recordUuid,
               tableName
@@ -175,11 +177,11 @@ export default {
             title: process.name,
             containerManager: containerManagerReport,
             doneMethod: doneMethodByReport,
-            beforeOpen: () => {
+            beforeOpen: ({ parentUuid: tabAssociatedUuid, containerUuid }) => {
               // set context values
               const parentValues = getContextAttributes({
-                parentUuid,
-                containerUuid,
+                parentUuid: windowUuid,
+                containerUuid: tabAssociatedUuid,
                 contextColumnNames: relatedColumns
               })
 
@@ -232,13 +234,15 @@ export default {
           dispatch('setModalDialog', {
             containerUuid: process.uuid,
             title: process.name,
-            doneMethod: () => {
+            doneMethod: ({ parentUuid: tabAssociatedUuid, containerUuid }) => {
               // TODO: Get container uuid with multiple tabs and same process
-              const recordUuid = rootGetters.getUuidOfContainer(containerUuid)
-              const { tableName } = tabDefinition
+              const recordUuid = rootGetters.getUuidOfContainer(tabAssociatedUuid)
+
+              const storedTab = rootGetters.getStoredTab(windowUuid, tabAssociatedUuid)
+              const { tableName } = storedTab
 
               dispatch('startProcessOfWindows', {
-                parentUuid: containerUuid,
+                parentUuid: tabAssociatedUuid,
                 containerUuid: process.uuid,
                 tableName,
                 recordUuid
@@ -249,8 +253,8 @@ export default {
 
                 // update records
                 await dispatch('getEntities', {
-                  parentUuid,
-                  containerUuid
+                  parentUuid: windowUuid,
+                  containerUuid: tabUuid
                 })
                 // update records and logics on child tabs
                 tabDefinition.childTabs.filter(tabItem => {
@@ -262,18 +266,18 @@ export default {
                   // if loaded data refresh this data
                   // TODO: Verify with get one entity, not get all list
                   store.dispatch('getEntities', {
-                    parentUuid,
+                    parentUuid: windowUuid,
                     containerUuid: tabItem.uuid,
                     pageNumber: 1 // reload with first page
                   })
                 })
               })
             },
-            beforeOpen: () => {
+            beforeOpen: ({ parentUuid: tabAssociatedUuid, containerUuid }) => {
               // set context values
               const parentValues = getContextAttributes({
-                parentUuid,
-                containerUuid,
+                parentUuid: windowUuid,
+                containerUuid: tabAssociatedUuid,
                 contextColumnNames: relatedColumns
               })
 
@@ -301,8 +305,8 @@ export default {
         // TODO: Improve performance, evaluate whether it is possible to directly
         // add the field display logic in the process associated with the field.
         const fieldAssociated = store.getters.getStoredFieldFromProcess({
-          windowUuid: parentUuid,
-          tabUuid: containerUuid,
+          windowUuid,
+          tabUuid,
           processUuid: process.uuid
         })
 
@@ -364,11 +368,11 @@ export default {
           // TODO: Change to string and import dynamic in component
           componentPath: () => import('@theme/components/ADempiere/PanelDefinition/SortPanel.vue'),
           isShowed: false,
-          beforeOpen: () => {
+          beforeOpen: ({ parentUuid: tabAssociatedUuid, containerUuid }) => {
             // set context values
             const parentValues = getContextAttributes({
-              parentUuid,
-              containerUuid,
+              parentUuid: windowUuid,
+              containerUuid: tabAssociatedUuid,
               contextColumnNames: relatedColumns
             })
 
@@ -380,8 +384,8 @@ export default {
           loadData: () => {
             return new Promise(resolve => {
               const recordsListSortTab = rootGetters.getTabSequenceRecordsList({
-                parentUuid,
-                containerUuid,
+                parentUuid: windowUuid,
+                containerUuid: tabUuid,
                 tabUuid: sequenceTab.uuid,
                 contextColumnNames: sequenceTab.contextColumnNames
               })
@@ -390,26 +394,26 @@ export default {
                 return
               }
               dispatch('listTabSequences', {
-                parentUuid,
-                containerUuid,
+                parentUuid: windowUuid,
+                containerUuid: tabUuid,
                 contextColumnNames: sequenceTab.contextColumnNames,
                 tabUuid: sequenceTab.uuid
               })
               resolve([])
             })
           },
-          doneMethod: () => {
+          doneMethod: ({ parentUuid: tabAssociatedUuid, containerUuid }) => {
             dispatch('saveTabSequence', {
-              parentUuid,
-              containerUuid,
+              parentUuid: windowUuid,
+              containerUuid: tabAssociatedUuid,
               tabUuid: sequenceTab.uuid
             })
           },
-          isDisabledDone: () => {
+          isDisabledDone: ({ parentUuid: tabAssociatedUuid, containerUuid }) => {
             // client id value of record
             const clientIdRecord = rootGetters.getValueOfField({
-              parentUuid,
-              containerUuid,
+              parentUuid: windowUuid,
+              containerUuid: tabAssociatedUuid,
               columnName: CLIENT
             })
             // evaluate client id context with record
@@ -418,16 +422,16 @@ export default {
               return true
             }
             return !rootGetters.getTabSequenceIsChanged({
-              parentUuid,
-              containerUuid,
+              parentUuid: windowUuid,
+              containerUuid: tabAssociatedUuid,
               contextColumnNames: sequenceTab.contextColumnNames,
               tabUuid: sequenceTab.uuid
             })
           },
           cancelMethod: () => {
             dispatch('discardTabSequenceChanges', {
-              parentUuid,
-              containerUuid,
+              parentUuid: windowUuid,
+              containerUuid: tabUuid,
               contextColumnNames: sequenceTab.contextColumnNames,
               tabUuid: sequenceTab.uuid
             })

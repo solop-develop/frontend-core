@@ -152,7 +152,7 @@ export default defineComponent({
     })
 
     const currentTabUuid = computed(() => {
-      return store.getters.getCurrentTab(props.windowMetadata.uuid).uuid
+      return store.getters.getCurrentTabUuid(props.windowMetadata.uuid)
     })
 
     const styleFullScreen = computed(() => {

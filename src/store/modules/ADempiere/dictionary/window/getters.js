@@ -100,6 +100,12 @@ export default {
     return window.currentTabChild
   },
 
+  getCurrentTabUuid: (state, getters) => (windowUuid) => {
+    const window = getters.getStoredWindow(windowUuid)
+
+    return window.currentTabUuid
+  },
+
   getStoredFieldFromTab: (state, getters) => ({ windowUuid, tabUuid, columnName, fieldUuid }) => {
     return getters.getStoredFieldsFromTab(windowUuid, tabUuid)
       .find(field => {
