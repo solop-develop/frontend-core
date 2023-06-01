@@ -113,7 +113,6 @@ const value = {
               Vue.set(state.field, keyParent, value)
             }
             // if ((isIdentifierEmpty({ columnName, value: parentValue }))) {
-            //   console.log({ columnName, value, parentValue, keyParent })
             //   Vue.set(state.field, keyParent, value)
             // }
           }

@@ -26,6 +26,7 @@ import {
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'
 import { dateTimeFormats } from '@/utils/ADempiere/formatValue/dateFormat'
+import { showMessage } from '@/utils/ADempiere/notification.js'
 
 const VAllocation = {
   searchCriteria: {
@@ -163,6 +164,11 @@ export default {
             resolve(list)
           })
           .catch(error => {
+            showMessage({
+              type: 'error',
+              message: error.message,
+              showClose: true
+            })
             resolve([])
             // commit('setListProduct', [])
             console.warn(`Error getting List Product: ${error.message}. Code: ${error.code}.`)
@@ -211,6 +217,11 @@ export default {
           })
           .catch(error => {
             resolve([])
+            showMessage({
+              type: 'error',
+              message: error.message,
+              showClose: true
+            })
             // commit('setListProduct', [])
             console.warn(`Error getting List Product: ${error.message}. Code: ${error.code}.`)
           })
@@ -241,11 +252,21 @@ export default {
           transactionOrganizationId
         })
           .then(response => {
+            showMessage({
+              type: 'ssuccess',
+              message: response,
+              showClose: true
+            })
             dispatch('findListPayment')
             dispatch('findListInvoices')
             resolve(response)
           })
           .catch(error => {
+            showMessage({
+              type: 'error',
+              message: error.message,
+              showClose: true
+            })
             resolve([])
             console.warn(`Error getting List Product: ${error.message}. Code: ${error.code}.`)
           })

@@ -392,7 +392,6 @@ export default {
     getInvoiceBankStatementMatch: (state) => {
       return state.invoices
     },
-    // <--------------->
     getCriteriaVBankStatement: (state) => {
       return state
     },

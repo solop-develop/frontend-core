@@ -216,27 +216,30 @@ export function listTransactionOrganizations({
 }
 // process
 export function process({
-  transactionOrganizationUuid,
-  paymentSelectionsList = [],
-  transactionOrganizationId,
-  invoiceSelectionList = [],
-  businessPartnerId,
-  description,
-  currencyId,
-  pageToken,
+  date,
   chargeId,
-  pageSize,
-  searchValue,
-  date
+  currencyId,
+  description,
+  totalDifference,
+  businessPartnerId,
+  invoiceSelectionList,
+  paymentSelectionsList,
+  transactionOrganizationId
 }) {
   return request({
-    url: '/form/addons/payment-allocation/process',
-    method: 'get',
-    params: {
-      page_size: pageSize,
-      page_token: pageToken,
+    url: '/form/addons/payment-allocation/process-receipt',
+    method: 'post',
+    data: {
       //  DSL Query
-      search_value: searchValue
+      date,
+      description,
+      business_partner_id: businessPartnerId,
+      currency_id: currencyId,
+      charge_id: chargeId,
+      total_difference: totalDifference,
+      transaction_organization_id: transactionOrganizationId,
+      payment_selections: paymentSelectionsList,
+      invoice_selections: invoiceSelectionList
     }
   })
     .then(response => {
