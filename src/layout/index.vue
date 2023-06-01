@@ -3,7 +3,7 @@
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar v-show="showMenu" class="sidebar-container" />
     <div :class="{hasTagsView:needTagsView}" class="main-container" :style="showMenu ? '' : 'margin-left:0px'">
-      <div :class="{'fixed-header':fixedHeader}">
+      <div>
         <navbar v-show="showNavar" />
         <tags-view v-if="needTagsView" />
       </div>
