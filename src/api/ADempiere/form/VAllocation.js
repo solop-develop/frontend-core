@@ -243,6 +243,6 @@ export function process({
     }
   })
     .then(response => {
-      return camelizeObjectKeys(response)
+      return response
     })
 }

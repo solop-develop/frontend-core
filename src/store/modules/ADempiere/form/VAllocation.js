@@ -253,7 +253,7 @@ export default {
         })
           .then(response => {
             showMessage({
-              type: 'ssuccess',
+              type: 'success',
               message: response,
               showClose: true
             })
