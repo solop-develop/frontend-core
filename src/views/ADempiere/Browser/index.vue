@@ -220,7 +220,11 @@ export default defineComponent({
     })
 
     const tableHeader = computed(() => {
-      return storedBrowser.value.fieldsList
+      const { fieldsList } = storedBrowser.value
+      const header = fieldsList.sort((itemA, itemB) => {
+        return itemA.sequence - itemB.sequence
+      })
+      return header
     })
 
     function generateBrowser(browser) {
