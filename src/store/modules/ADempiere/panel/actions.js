@@ -388,13 +388,15 @@ const actions = {
       } else {
         value = newValue
       }
+      const tableName = isEmptyValue(field.tableName) ? field.tabTableName : field.tableName
       resolve({
-        tableName: field.tableName,
+        tableName,
         field,
         value
       })
       // Run specific action
-      const recordUuid = router.app._route.query.action
+      // const recordUuid = router.app._route.query.action
+      const recordUuid = getters.getUuidOfContainer(field.containerUuid)
       containerManager.actionPerformed({
         containerUuid: field.containerUuid,
         field,
