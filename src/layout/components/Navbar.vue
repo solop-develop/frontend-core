@@ -17,7 +17,10 @@
     </div>
     <div class="right-menu">
       <template>
-        <el-tooltip v-if="!isMobile && !isEmptyValue(valueGuide)" :content="$t('route.guide')" placement="top-start">
+        <!-- <el-tooltip class="item" effect="dark" content="Reinicia Cache" placement="top-start">
+          <el-button icon="el-icon-refresh-right" type="text" style="color: black;font-size: 18px;" @click="cacheReset()" />
+        </el-tooltip> -->
+        <el-tooltip v-if="!isMobile" :content="$t('route.guide')" placement="top-start">
           <el-button icon="el-icon-info" type="text" style="color: black;font-size: larger" @click.prevent.stop="guide" />
         </el-tooltip>
         <search id="header-search" class="right-menu-item" />
@@ -25,6 +28,12 @@
         <error-log v-if="!isMobile" class="errLog-container right-menu-item hover-effect" />
 
         <screenfull v-if="!isMobile" id="screenfull" class="right-menu-item hover-effect" />
+
+        <!--
+        <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
+          <size-select id="size-select" class="right-menu-item hover-effect" />
+        </el-tooltip>
+        -->
 
         <lang-select class="right-menu-item hover-effect" />
 
@@ -111,29 +120,11 @@ export default {
 
       return uri
     },
-    storeBrowser() {
-      const { meta } = this.$route
-      const { uuid } = meta
-      const { fieldsList } = this.$store.getters.getStoredBrowser(uuid)
-      return fieldsList.filter(field => field.isMandatory || field.isShowedFromUser)
-    },
-    storeReport() {
-      const { meta } = this.$route
-      const { uuid } = meta
-      const { fieldsList } = this.$store.getters.getStoredReport(uuid)
-      return fieldsList.filter(field => field.isMandatory || field.isShowedFromUser)
-    },
-    storeFieldsFromProcess() {
-      const { meta } = this.$route
-      const { uuid } = meta
-      return this.$store.getters.getStoredFieldsFromProcess(uuid).filter(field => field.isMandatory || field.isShowedFromUser)
-    },
     fieldPanel() {
-      if (this.$route.meta.type === 'browser') return this.storeBrowser
-      if (this.$route.meta.type === 'report') return this.storeReport
+      if (this.$route.meta.type === 'browser') return this.$store.getters.getStoredBrowser(this.$route.meta.uuid).fieldsList.filter(field => field.isMandatory || field.isShowedFromUser)
+      if (this.$route.meta.type === 'report') return this.$store.getters.getStoredReport(this.$route.meta.uuid).fieldsList.filter(field => field.isMandatory || field.isShowedFromUser)
       if (this.$route.meta.type === 'window') {
         const { currentTab } = this.$store.getters.getContainerInfo
-        // this.panelGuide(currentTab)
         if (!this.isEmptyValue(currentTab)) {
           const {
             parentUuid,
@@ -143,7 +134,7 @@ export default {
         }
         return []
       }
-      return this.storeFieldsFromProcess
+      return this.$store.getters.getStoredFieldsFromProcess(this.$route.meta.uuid).filter(field => field.isMandatory || field.isShowedFromUser)
     },
     fieldTab() {
       const tab = this.$store.getters.getStoredWindow(this.$route.meta.uuid)
@@ -157,16 +148,11 @@ export default {
       return []
     },
     getForm() {
-      const { meta } = this.$route
-      const { uuid } = meta
-      const from = this.$store.getters.getForm(uuid)
-      if (this.isEmptyValue(from)) return { fileName: '' }
-      return from
+      return this.$store.getters.getForm(this.$route.meta.uuid)
     },
     formSteps() {
       let form
-      const { fileName } = this.getForm
-      switch (fileName) {
+      switch (this.getForm.fileName) {
         case 'WFActivity':
           form = require('@theme/components/ADempiere/Form/WorkflowActivity/Guide/steps')
           break
@@ -186,11 +172,6 @@ export default {
         type: this.$route.meta.type,
         uuid: this.$route.meta.uuid
       }
-    },
-    valueGuide() {
-      const { meta } = this.$route
-      const { type } = meta
-      return this.formatGuide(type)
     }
   },
   mounted() {
@@ -199,8 +180,8 @@ export default {
   methods: {
     guide() {
       this.driver = new Driver()
-      if (this.isEmptyValue(this.valueGuide)) return
-      this.driver.defineSteps(this.valueGuide)
+      const value = this.formatGuide(this.$route.meta.type)
+      this.driver.defineSteps(value)
       this.driver.start()
     },
     isMenuOption() {
@@ -240,72 +221,51 @@ export default {
     },
     formatGuide(type) {
       let field
-      const position = 'top'
       switch (type) {
         case 'report':
           field = this.fieldPanel.map(steps => {
-            const {
-              name,
-              columnName,
-              description
-            } = steps
             return {
-              element: '#' + columnName,
+              element: '#' + steps.columnName,
               popover: {
-                title: name,
-                description,
-                position
+                title: steps.name,
+                description: steps.description,
+                position: 'top'
               }
             }
           })
           break
         case 'process':
           field = this.fieldPanel.map(steps => {
-            const {
-              name,
-              columnName,
-              description
-            } = steps
             return {
-              element: '#' + columnName,
+              element: '#' + steps.columnName,
               popover: {
-                title: name,
-                description,
-                position
+                title: steps.name,
+                description: steps.description,
+                position: 'top'
               }
             }
           })
           break
         case 'browser':
           field = this.fieldPanel.map(steps => {
-            const {
-              name,
-              columnName,
-              description
-            } = steps
             return {
-              element: '#' + columnName,
+              element: '#' + steps.columnName,
               popover: {
-                title: name,
-                description,
-                position
+                title: steps.name,
+                description: steps.description,
+                position: 'top'
               }
             }
           })
           break
         case 'window':
           field = this.fieldPanel.map(steps => {
-            const {
-              name,
-              columnName,
-              description
-            } = steps
             return {
-              element: '#' + columnName,
+              element: '#' + steps.columnName,
               popover: {
-                title: name,
-                description,
-                position
+                title: steps.name,
+                description: steps.description,
+                position: 'top'
               }
             }
           })
@@ -315,14 +275,6 @@ export default {
           break
       }
       return field
-    },
-    panelGuide(currentTab) {
-      if (this.isEmptyValue(currentTab)) return []
-      const {
-        parentUuid,
-        containerUuid
-      } = currentTab
-      return this.$store.getters.getStoredFieldsFromTab(parentUuid, containerUuid).filter(field => field.isMandatory || field.isShowedFromUser)
     }
   }
 }
