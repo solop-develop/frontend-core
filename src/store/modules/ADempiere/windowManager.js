@@ -325,7 +325,10 @@ const windowManager = {
             columnName: parentColumnName
           })
           if (!isEmptyValue(value)) {
-            filters.push({ columnName: parentColumnName, value })
+            filters.push({
+              columnName: parentColumnName,
+              value
+            })
           } else {
             console.warn(`Get entities without context to ${parentColumnName} to filter in getEntities`)
           }
