@@ -260,7 +260,9 @@ const windowManager = {
       pageSize
     }) {
       return new Promise(resolve => {
-        const storedPage = getters.getTabPageNumber({ containerUuid })
+        const storedPage = getters.getTabPageNumber({
+          containerUuid
+        })
 
         let pageToken
 
@@ -273,16 +275,24 @@ const windowManager = {
           contextColumnNames
         } = rootGetters.getStoredTab(parentUuid, containerUuid)
 
-        if (isEmptyValue(pageNumber)) pageNumber = storedPage
+        if (isEmptyValue(pageNumber)) {
+          pageNumber = storedPage
+        }
 
-        pageToken = generatePageToken({ pageNumber })
+        pageToken = generatePageToken({
+          pageNumber
+        })
 
         if (!isEmptyValue(filters) && typeof filters !== 'object') {
           const parseFilter = JSON.parse(filters)
           filters = [parseFilter]
         }
 
-        if (isEmptyValue(searchValue)) searchValue = getters.getSearchValueTabRecordsList({ containerUuid })
+        if (isEmptyValue(searchValue)) {
+          searchValue = getters.getSearchValueTabRecordsList({
+            containerUuid
+          })
+        }
 
         // add filters with link column name and parent column name
         if (
@@ -330,7 +340,9 @@ const windowManager = {
 
         const isWithoutValues = contextAttributesList.find(attribute => isEmptyValue(attribute.value))
 
-        if (!isEmptyValue(filtersRecord)) filters.push(filtersRecord)
+        if (!isEmptyValue(filtersRecord)) {
+          filters.push(filtersRecord)
+        }
 
         if (isWithoutValues) {
           console.warn(`Get entites without response, fill the **${isWithoutValues.key}** field in **${name}** tab.`)
@@ -367,9 +379,13 @@ const windowManager = {
           }
         }
 
-        if (!isEmptyValue(searchValue)) pageToken = ''
+        if (!isEmptyValue(searchValue)) {
+          pageToken = ''
+        }
 
-        if (isEmptyValue(tabUuid)) tabUuid = containerUuid
+        if (isEmptyValue(tabUuid)) {
+          tabUuid = containerUuid
+        }
 
         requestGetEntities({
           windowUuid: parentUuid,
