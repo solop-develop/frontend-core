@@ -346,7 +346,7 @@ export function isReadOnlyColumn({ isReadOnly }) {
   return isReadOnly
 }
 
-function clearFilter(currentRoute) {
+export function clearFilter(currentRoute) {
   router.replace({
     name: currentRoute.name,
     query: {
