@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,13 +24,13 @@ import { runCallOutRequest } from '@/api/ADempiere/window'
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { DISPLAY_COLUMN_PREFIX, UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
-import { TABLE } from '@/utils/ADempiere/references'
 
 // Utils and Helper Methods
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
 import { isNumber } from '@/utils/ADempiere/formatValue/numberFormat'
+import { isIntegerDisplayType } from '@/utils/ADempiere/references'
 
 const calloutManager = {
   actions: {
@@ -84,7 +84,7 @@ const calloutManager = {
               displayType = parentField.displayType
             }
           }
-          if (!isEmptyValue(displayType) && displayType === TABLE.id) {
+          if (!isEmptyValue(displayType) && isIntegerDisplayType(displayType)) {
             // AD_Language = 'en_US' and table
             if (!isNumber(value)) {
               valueType = 'STRING'

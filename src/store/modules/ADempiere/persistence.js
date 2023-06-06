@@ -126,6 +126,10 @@ const persistence = {
           columnName = field.columnName
         }
 
+        if (isEmptyValue(recordUuid)) {
+          recordUuid = getters.getUuidOfContainer(field.containerUuid)
+        }
+
         // TODO: Old value is not working
         let oldValue
         if (!isEmptyValue(currentRecord)) {
@@ -152,7 +156,7 @@ const persistence = {
           }
           commit('addChangeToPersistenceQueue', {
             containerUuid,
-            recordUuid: getters.getUuidOfContainer(field.containerUuid),
+            recordUuid,
             columnName: field.displayColumnName,
             oldValue: displayedValue,
             value: undefined
@@ -161,7 +165,7 @@ const persistence = {
 
         commit('addChangeToPersistenceQueue', {
           containerUuid,
-          recordUuid: getters.getUuidOfContainer(field.containerUuid),
+          recordUuid,
           columnName,
           oldValue,
           value

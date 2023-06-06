@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -355,6 +355,36 @@ export function isLookup(displayType) {
 // Some helper methods
 export function isSupportLookup(displayType) {
   return SUPPORTED_LOOKUPS.includes(displayType)
+}
+
+export const FIELDS_IDENTIFIER = [
+  ID.id,
+  TABLE.id,
+  TABLE_DIRECT.id,
+  SEARCH.id,
+  ACCOUNT_ELEMENT.id,
+  LOCATION_ADDRESS.id,
+  LOCATOR_WAREHOUSE.id,
+  PRODUCT_ATTRIBUTE.id,
+  RESOURCE_ASSIGNMENT.id
+]
+
+/**
+ * Is Identifier reference
+ * @param {Numner} displayType or reference to displayed
+ * @returns {Boolean}
+ */
+export function isIdentifier(displayType) {
+  return FIELDS_IDENTIFIER.includes(displayType)
+}
+
+/**
+ * Is Integer value to save by this reference to displayed
+ * @param {Numner} displayType or reference to displayed
+ * @returns {Boolean}
+ */
+export function isIntegerDisplayType(displayType) {
+  return FIELDS_IDENTIFIER.includes(displayType) || displayType === INTEGER.id
 }
 
 /**
