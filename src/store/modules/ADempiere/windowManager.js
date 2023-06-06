@@ -343,8 +343,12 @@ const windowManager = {
 
         const isWithoutValues = contextAttributesList.find(attribute => isEmptyValue(attribute.value))
 
-        if (!isEmptyValue(filtersRecord)) {
-          filters.push(filtersRecord)
+        if (!isEmptyValue(filtersRecord) && isEmptyValue(filters)) {
+          filters.map(list => {
+            const { columnName } = list
+            if (filtersRecord.columnName === columnName) return filtersRecord
+            return list
+          })
         }
 
         if (isWithoutValues) {
@@ -378,6 +382,7 @@ const windowManager = {
             !isEmptyValue(listContextAttributes.value) &&
             (listFilters.value !== listContextAttributes.value)
           ) {
+            console.warn(`Get entites without response, fill the **${filters}**`)
             filters = []
           }
         }

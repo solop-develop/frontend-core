@@ -346,6 +346,19 @@ export function isReadOnlyColumn({ isReadOnly }) {
   return isReadOnly
 }
 
+function clearFilter(currentRoute) {
+  router.replace({
+    name: currentRoute.name,
+    query: {
+      ...currentRoute.query,
+      filters: []
+    },
+    params: {
+      ...currentRoute.params
+    }
+  }, () => {})
+}
+
 /**
  * Create new record
  */
@@ -979,7 +992,8 @@ export const refreshRecords = {
     // refresh records on current tab
     store.dispatch('getEntities', {
       parentUuid,
-      containerUuid
+      containerUuid,
+      filters: []
     })
 
     // get tabs with same table to refresh without current tab
@@ -1005,6 +1019,7 @@ export const refreshRecords = {
         }
       })
     }
+    clearFilter(router.app._route)
   }
 }
 
