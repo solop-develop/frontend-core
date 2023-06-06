@@ -12,7 +12,8 @@
             "webRoot": "${workspaceFolder}/src",
             "sourceMapPathOverrides": {
                 "webpack:///src/*": "${webRoot}/*"
-            }
+            },
+            "preLaunchTask": "serve"
         },
         {
             "name": "Vue: Firefox",
@@ -20,14 +21,18 @@
             "type": "firefox",
             "url": "http://localhost:9527",
             "webRoot": "${workspaceFolder}/src",
-            "pathMappings": [{ "url": "webpack:///src/", "path": "${webRoot}/" }]
+            "pathMappings": [
+                { "url": "webpack:///src/", "path": "${webRoot}/" }
+            ],
+            "preLaunchTask": "serve"
         },
         {
             "name": "Vue: Edge",
             "request": "launch",
             "type": "msedge",
             "url": "http://localhost:9527",
-            "webRoot": "${workspaceFolder}/src"
+            "webRoot": "${workspaceFolder}/src",
+            "preLaunchTask": "serve"
         }
     ]
 }
