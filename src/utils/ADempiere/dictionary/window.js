@@ -171,6 +171,7 @@ export function isDisplayedField({ isDisplayed, displayLogic, isDisplayedFromLog
  * @param {boolean} isParent
  */
 export function evaluateDefaultFieldShowed({
+  parentUuid, containerUuid,
   isKey, isParent, columnName,
   defaultValue, displayType, isShowedFromUser,
   isMandatory, mandatoryLogic, isMandatoryFromLogic
@@ -185,6 +186,27 @@ export function evaluateDefaultFieldShowed({
   if (isEmptyValue(defaultValue) && isMandatoryGenerated && !isParent) {
     // Yes/No field always boolean value (as default value)
     if (displayType === YES_NO.id) {
+      // Business Partner Window
+      if (parentUuid === 'a520de12-fb40-11e8-a479-7a0060f0aa01') {
+        // Customer Tab
+        if (containerUuid === 'a49fb436-fb40-11e8-a479-7a0060f0aa01') {
+          if (['IsCustomer'].includes(columnName)) {
+            return true
+          }
+        }
+        // Vendor Tab
+        if (containerUuid === 'a49fb4e0-fb40-11e8-a479-7a0060f0aa01') {
+          if (['IsVendor'].includes(columnName)) {
+            return true
+          }
+        }
+        // Emproyee Tab
+        if (containerUuid === 'a4a07ccc-fb40-11e8-a479-7a0060f0aa01') {
+          if (['IsEmployee'].includes(columnName)) {
+            return true
+          }
+        }
+      }
       return false
     }
     return true
@@ -670,7 +692,7 @@ export const deleteRecord = {
       })
       .catch(error => {
         showMessage({
-          message: language.t('recordManager.deleteRecordError'),
+          message: language.t('recordManager.deleteRecordError') + ' ' + error.message,
           type: 'error'
         })
         console.warn(`Delete Entity - Error ${error.message}, Code: ${error.code}.`)
