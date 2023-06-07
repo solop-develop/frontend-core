@@ -30,7 +30,7 @@ import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 export function requestListUsers({
   searchValue,
   pageToken,
-  pageSize = ROWS_OF_RECORDS_BY_PAGE
+  pageSize = 100
 }) {
   return request({
     url: '/user-customization/list-users',
@@ -52,7 +52,7 @@ export function requestListUsers({
 export function requestListRoles({
   searchValue,
   pageToken,
-  pageSize = ROWS_OF_RECORDS_BY_PAGE
+  pageSize = 100
 }) {
   return request({
     url: '/user-customization/list-roles',
