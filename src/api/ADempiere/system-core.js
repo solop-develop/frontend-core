@@ -27,7 +27,7 @@ export function requestOrganizationsList({
   roleUuid,
   roleId,
   pageToken,
-  pageSize = ROWS_OF_RECORDS_BY_PAGE
+  pageSize = 100
 }) {
   return request({
     url: '/common/organizations',
@@ -58,7 +58,7 @@ export function requestWarehousesList({
   organizationUuid,
   organizationId,
   pageToken,
-  pageSize = ROWS_OF_RECORDS_BY_PAGE
+  pageSize = 100
 }) {
   return request({
     url: '/common/warehouses',
