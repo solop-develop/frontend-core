@@ -346,7 +346,9 @@ const windowManager = {
         if (!isEmptyValue(filtersRecord) && isEmptyValue(filters)) {
           filters.map(list => {
             const { columnName } = list
-            if (filtersRecord.columnName === columnName) return filtersRecord
+            if (filtersRecord.columnName === columnName) {
+              return filtersRecord
+            }
             return list
           })
         }
