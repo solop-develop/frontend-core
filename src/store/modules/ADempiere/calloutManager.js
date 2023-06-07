@@ -24,13 +24,14 @@ import { runCallOutRequest } from '@/api/ADempiere/window'
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { DISPLAY_COLUMN_PREFIX, UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
+import { TABLE } from '@/utils/ADempiere/references'
 
 // Utils and Helper Methods
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
 import { isNumber } from '@/utils/ADempiere/formatValue/numberFormat'
-import { isIntegerDisplayType } from '@/utils/ADempiere/references'
+// import { isIntegerDisplayType } from '@/utils/ADempiere/references'
 
 const calloutManager = {
   actions: {
@@ -84,7 +85,8 @@ const calloutManager = {
               displayType = parentField.displayType
             }
           }
-          if (!isEmptyValue(displayType) && isIntegerDisplayType(displayType)) {
+          if (!isEmptyValue(displayType) && displayType === TABLE.id) {
+            // if (!isEmptyValue(displayType) && isIntegerDisplayType(displayType)) {
             // AD_Language = 'en_US' and table
             if (!isNumber(value)) {
               valueType = 'STRING'
