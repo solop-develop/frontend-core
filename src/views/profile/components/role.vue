@@ -88,9 +88,15 @@
 
 <script>
 import { getLanguage } from '@/lang'
+import store from '@/store'
+import router from '@/router'
+
+// Utils and Helper Methods
+import { showMessage } from '@/utils/ADempiere/notification'
 
 export default {
   name: 'ProfileRole',
+
   data() {
     return {
       valueRol: '',
@@ -98,6 +104,7 @@ export default {
       currentLanguage: getLanguage()
     }
   },
+
   computed: {
     userInfo() {
       const name = this.$store.getters['user/userInfo'].name
@@ -149,15 +156,17 @@ export default {
       return this.$store.state.app.device === 'mobile'
     }
   },
+
   watch: {
     'currentRole.uuid'(uuidRol) {
       this.valueRol = uuidRol
     }
   },
+
   created() {
     this.valueRol = this.currentRole.uuid
-    this.getLanguages()
   },
+
   methods: {
     handleChange(valueSelected) {
       this.$message({
@@ -202,6 +211,26 @@ export default {
     },
     changeLanguage(languageValue) {
       this.currentLanguage = languageValue
+
+      this.$i18n.locale = languageValue
+      store.dispatch('app/setLanguage', languageValue)
+        .then(response => {
+          const currentRoute = router.app._route
+          const { path } = currentRoute
+          if (path !== '/login') {
+            location.reload()
+          }
+          showMessage({
+            message: 'Switch Language Success',
+            type: 'success'
+          })
+        })
+        .catch(error => {
+          showMessage({
+            message: error.message,
+            type: 'error'
+          })
+        })
     },
     loadLanguageList(open) {
       if (open) {
