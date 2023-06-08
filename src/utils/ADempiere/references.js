@@ -26,6 +26,8 @@ export const DEFAULT_SIZE = {
   xl: 6
 }
 
+export const RECORD_ROWS_BY_LIST = 100
+
 // Account Element
 export const ACCOUNT_ELEMENT = {
   id: 25,

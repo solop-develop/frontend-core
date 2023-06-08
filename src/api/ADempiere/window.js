@@ -22,6 +22,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/references.js'
 
 /**
  * Request a Lookup list data from Reference
@@ -48,7 +49,7 @@ export function requestLookupList({
   columnUuid,
   //
   pageToken,
-  pageSize = ROWS_OF_RECORDS_BY_PAGE
+  pageSize = RECORD_ROWS_BY_LIST
 }) {
   let contextAttributes = []
   if (!isEmptyValue(contextAttributesList)) {

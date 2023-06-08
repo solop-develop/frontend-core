@@ -21,7 +21,7 @@ import { request } from '@/utils/ADempiere/request'
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 // constants
-import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/references.js'
 
 export function requestCreateResource({
   resourceTypeId,
@@ -95,7 +95,7 @@ export function requestListResource({
   description,
   isWaitingForOrdered,
   confirmed,
-  pageSize = ROWS_OF_RECORDS_BY_PAGE,
+  pageSize = RECORD_ROWS_BY_LIST,
   pageToken
 }) {
   return request({
