@@ -135,8 +135,7 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_REPO_FRONTEND }}:alpine
             ${{ secrets.DOCKER_REPO_FRONTEND }}:alpine-${{ github.event.release.tag_name }}
-          build-args: |
-            NGINX_RELEASE=1.23.2-alpine
+
 
   # Publish docker image in Docker Hub registry to application
   push-imame-dhr:
@@ -175,8 +174,7 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_REPO_FRONTEND }}:latest
             ${{ secrets.DOCKER_REPO_FRONTEND }}:${{ github.event.release.tag_name }}
-          build-args: |
-            NGINX_RELEASE=1.23.2
+
 
   # Build dist documentation ADempiere-Vue
   build-docs:
