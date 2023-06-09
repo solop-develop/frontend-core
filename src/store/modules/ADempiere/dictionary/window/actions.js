@@ -302,6 +302,15 @@ export default {
           })
         }
 
+        // Add workflow icon
+        if (!isEmptyValue(process.workflowUuid)) {
+          defaultAction = {
+            ...defaultAction,
+            isSvgIcon: true,
+            icon: 'example'
+          }
+        }
+
         // TODO: Improve performance, evaluate whether it is possible to directly
         // add the field display logic in the process associated with the field.
         const fieldAssociated = store.getters.getStoredFieldFromProcess({
