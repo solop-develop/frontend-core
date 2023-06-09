@@ -28,7 +28,8 @@ export const UNSUPPORTED_DASHBOARDS = [
  * @param {string} chartType Chart Type
  * @returns {VueComponent} components/ADempiere/Dashboard/charts/
  */
-export function getChartComponent(chartType) {
+export function getChartComponent(chart) {
+  const { chartType } = chart
   let chartComponent
   switch (chartType) {
     // Bar Chart
