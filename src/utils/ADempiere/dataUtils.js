@@ -178,6 +178,7 @@ export const OPERATORS_FIELD_DATE = {
   componentPath: 'FieldDate',
   isRange: true,
   operatorsList: [
+    OPERATOR_BETWEEN,
     ...STANDARD_OPERATORS_LIST,
     ...RANGE_OPERATORS_LIST,
     ...MULTIPLE_OPERATORS_LIST
