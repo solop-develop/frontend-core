@@ -27,19 +27,18 @@ export function tableSearchFields({
   tableName
 }) {
   return request({
-    url: '/dictionary/table-search-fields',
+    url: '/dictionary/search-info/fields',
     method: 'get',
     params: {
       table_name: tableName
     }
   })
     .then(response => {
-      const { convertField } = require('@/utils/ADempiere/apiConverts/field.js')
-
+      const { camelizeObjectKeys } = require('@/utils/ADempiere/transformObject.js')
       return {
         recordCount: response.record_count,
         fieldsList: response.records.map(field => {
-          return convertField(field)
+          return camelizeObjectKeys(field)
         }),
         nextPageToken: response.next_page_token
       }
