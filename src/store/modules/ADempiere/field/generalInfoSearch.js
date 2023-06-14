@@ -56,7 +56,8 @@ const initState = {
   generalInfoSearch: {},
   tableHeaderList: {},
   fileListIdentifier: [],
-  generalInfoShow: {}
+  generalInfoShow: {},
+  filtersList: {}
 }
 
 const generalInfoSearch = {
@@ -105,6 +106,13 @@ const generalInfoSearch = {
       fieldsList = []
     }) {
       Vue.set(state.tableHeaderList, containerUuid, fieldsList)
+    },
+
+    setFiltersList(state, {
+      containerUuid,
+      isSOTrx = false
+    }) {
+      Vue.set(state.filtersList, containerUuid, isSOTrx)
     },
 
     setIdentifier(state, {
@@ -408,6 +416,9 @@ const generalInfoSearch = {
     },
     getIdentifier: (state) => ({ containerUuid }) => {
       return state.fileListIdentifier[containerUuid] || []
+    },
+    getFilterList: (state) => ({ containerUuid }) => {
+      return state.filtersList[containerUuid] || false
     }
   }
 }
