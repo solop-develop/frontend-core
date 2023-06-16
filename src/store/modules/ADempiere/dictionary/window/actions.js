@@ -41,6 +41,7 @@ import {
   generateReportOfWindow,
   openBrowserAssociated,
   openSequenceTab,
+  refreshRecord,
   refreshRecords,
   recordAccess,
   undoChange
@@ -248,14 +249,14 @@ export default {
                 tableName,
                 recordUuid
               }).then(async processResponse => {
-                if (processResponse.isError) {
-                  return
-                }
+                // if (processResponse.isError) {
+                //   return
+                // }
 
-                // update records
-                await dispatch('getEntities', {
+                await refreshRecord.refreshRecord({
                   parentUuid: windowUuid,
-                  containerUuid: tabUuid
+                  containerUuid: tabAssociatedUuid,
+                  recordUuid
                 })
                 // update records and logics on child tabs
                 tabDefinition.childTabs.filter(tabItem => {
