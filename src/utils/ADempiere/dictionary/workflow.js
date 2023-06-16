@@ -15,8 +15,64 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import store from '@/store'
 
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { DOCUMENT_STATUS } from '../constants/systemColumns'
+import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
+import { getContext } from '@/utils/ADempiere/contextUtils'
+
+export function getDocumentStatusValue({
+  parentUuid,
+  containerUuid
+}) {
+  const documentStatus = getContext({
+    parentUuid,
+    containerUuid,
+    columnName: DOCUMENT_STATUS
+  })
+  return documentStatus
+}
+
+export function getCurrentDocumentDisplayedValue({
+  parentUuid,
+  containerUuid,
+  contextColumnNames,
+  uuid,
+  value
+}) {
+  if (isEmptyValue(value)) {
+    value = getDocumentStatusValue({
+      parentUuid,
+      containerUuid
+    })
+  }
+  if (isEmptyValue(value)) {
+    return undefined
+  }
+  const displayedValue = getContext({
+    parentUuid,
+    containerUuid,
+    columnName: DISPLAY_COLUMN_PREFIX + DOCUMENT_STATUS
+  })
+
+  if (!isEmptyValue(displayedValue)) {
+    return displayedValue
+  }
+
+  const defaultValue = store.getters.getStoredDefaultValue({
+    parentUuid,
+    containerUuid,
+    contextColumnNames,
+    uuid,
+    value
+  })
+  if (!isEmptyValue(defaultValue)) {
+    return defaultValue.displayedValue
+  }
+
+  return undefined
+}
 
 /**
  * Tag Render compatible with element button
@@ -43,9 +99,15 @@ export function tagRender(documentStatus) {
       effect = 'light'
       break
 
-    case 'CL':
+    case '--':
       type = 'primary'
+      effect = 'light'
       break
+    case 'CL':
+      type = 'info'
+      effect = 'dark'
+      break
+
     case 'IP':
       type = 'warning'
       effect = 'light'

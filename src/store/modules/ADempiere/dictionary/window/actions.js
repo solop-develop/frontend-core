@@ -24,7 +24,7 @@ import store from '@/store'
 import { requestWindowMetadata } from '@/api/ADempiere/dictionary/window.js'
 
 // Constants
-import { CLIENT } from '@/utils/ADempiere/constants/systemColumns'
+import { CLIENT, DOCUMENT_STATUS } from '@/utils/ADempiere/constants/systemColumns'
 import { containerManager } from '@/utils/ADempiere/dictionary/window'
 import { DISPLAY_COLUMN_PREFIX, IS_ADVANCED_QUERY } from '@/utils/ADempiere/dictionaryUtils'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
@@ -54,6 +54,7 @@ import evaluator from '@/utils/ADempiere/evaluator'
 import { getContext, getContextAttributes } from '@/utils/ADempiere/contextUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { containerManager as containerManagerReport } from '@/utils/ADempiere/dictionary/report'
+import { getDocumentStatusValue, getCurrentDocumentDisplayedValue } from '@/utils/ADempiere/dictionary/workflow'
 
 export default {
   addWindow({ commit, dispatch }, windowResponse) {
@@ -637,6 +638,37 @@ export default {
       }, {
         root: true
       })
+
+      // TODO: Improve with tab.isDocument (Table.isDocument)
+      // get displayed value on status
+      const fieldDocumentStatus = tab.fieldsList.find(field => {
+        return field.columnName === DOCUMENT_STATUS
+      })
+      if (!isEmptyValue(fieldDocumentStatus)) {
+        const value = getDocumentStatusValue({
+          parentUuid,
+          containerUuid
+        })
+        const storedDisplayedValue = getCurrentDocumentDisplayedValue({
+          parentUuid,
+          containerUuid,
+          uuid: fieldDocumentStatus.uuid,
+          value
+        })
+        const displayedValue = storedDisplayedValue
+        if (isEmptyValue(displayedValue)) {
+          containerManager.getDefaultValue({
+            parentUuid: fieldDocumentStatus.parentUuid,
+            containerUuid: fieldDocumentStatus.containerUuid,
+            contextColumnNames: fieldDocumentStatus.contextColumnNames,
+            //
+            uuid: fieldDocumentStatus.uuid,
+            id: fieldDocumentStatus.id,
+            columnName: fieldDocumentStatus.columnName,
+            value: value
+          })
+        }
+      }
 
       // clear old values
       dispatch('clearPersistenceQueue', {
