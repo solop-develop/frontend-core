@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -18,8 +18,13 @@
 
 import axios from 'axios'
 
+// Constants
+import { config } from '@/utils/ADempiere/config'
+const BASE_URL = config.taskManager.api.url
+
 export function listJobs() {
-  return axios.get(`http://localhost:8080/v1/jobs`)
+  const endPoint = config.taskManager.api.endPoints.jobs
+  return axios.get(`${BASE_URL}${endPoint}`)
     .then(response => {
       const { data } = response
       return data
@@ -29,10 +34,11 @@ export function listJobs() {
     })
 }
 
-export function resumen({
+export function summary({
   id
 }) {
-  return axios.get(`http://localhost:8080/v1/jobs/${id}`)
+  const endPoint = config.taskManager.api.endPoints.jobs
+  return axios.get(`${BASE_URL}${endPoint}/${id}`)
     .then(response => {
       const { data } = response
       return data
@@ -45,7 +51,8 @@ export function resumen({
 export function executions({
   id
 }) {
-  return axios.get(`http://localhost:8080/v1/jobs/${id}/executions`)
+  const endPoint = config.taskManager.api.endPoints.jobs
+  return axios.get(`${BASE_URL}${endPoint}/${id}/executions`)
     .then(response => {
       const { data } = response
       return data
@@ -58,7 +65,8 @@ export function executions({
 export function run({
   id
 }) {
-  return axios.post(`http://localhost:8080/v1/jobs/${id}`)
+  const endPoint = config.taskManager.api.endPoints.runJob
+  return axios.post(`${BASE_URL}${endPoint}/${id}`)
     .then(response => {
       const { data } = response
       return data
@@ -69,7 +77,8 @@ export function run({
 }
 
 export function restore() {
-  return axios.post(`http://localhost:8080/v1/restore`)
+  const endPoint = config.taskManager.api.endPoints.restoreJob
+  return axios.post(`${BASE_URL}${endPoint}`)
     .then(response => {
       const { data } = response
       return data

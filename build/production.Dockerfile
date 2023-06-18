@@ -6,6 +6,7 @@ LABEL maintainer="Elsiosanches@gmail.com; EdwinBetanc0urt@outlook.com;" \
 
 # Init ENV with default values
 ENV API_URL="http://localhost:8085" \
+	TASK_MANAGER_URL="http://localhost:8080" \
 	TZ="America/Caracas"
 
 

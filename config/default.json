@@ -19,6 +19,16 @@
     "url": "https://api.github.com",
     "releaseNo": "releaseNoForDocumentation"
   },
+  "taskManager": {
+    "api": {
+      "url": "http://localhost:8080",
+      "endPoints": {
+        "jobs": "/v1/jobs",
+        "runJob": "/v1/run",
+        "restoreJob": "/v1/restore"
+      }
+    }
+  },
   "documentation": {
     "api": {
       "url": "https://api.github.com/repos/adempiere/"
