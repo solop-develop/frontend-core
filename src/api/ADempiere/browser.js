@@ -52,7 +52,8 @@ export function requestBrowserSearch({
     return {
       column_name: parameter.columnName,
       value: parameter.value,
-      value_to: parameter.valueTo
+      value_to: parameter.valueTo,
+      operator: parameter.operator
     }
   })
 

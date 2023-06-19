@@ -75,7 +75,7 @@ export default {
     const queryParams = []
 
     fieldsList.forEach(fieldItem => {
-      const { columnName } = fieldItem
+      const { columnName, operator } = fieldItem
       const isMandatory = isMandatoryField(fieldItem)
       // evaluate displayed fields
       const isDisplayed = isDisplayedField(fieldItem) &&
@@ -106,7 +106,8 @@ export default {
       if (!isEmptyValue(value)) {
         queryParams.push({
           columnName,
-          value
+          value,
+          operator
         })
       }
     })
