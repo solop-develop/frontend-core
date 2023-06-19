@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanchez@gmail.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,6 @@ const activity = {
   recordCount: 0,
   pageNumber: 0,
   isLoadActivity: false,
-  workflowActionsList: [],
   workflowLogs: [],
   listNotifiications: []
 }
@@ -60,14 +59,6 @@ export default {
     },
     setCurrentPage(state, number) {
       state.pageNumber = number
-    },
-    setWorkFlowActions(state, {
-      containerUuid,
-      options = []
-    }) {
-      Vue.set(state.workflowActionsList, containerUuid, {
-        options
-      })
     },
     setWorkFlowLogs(state, {
       containerUuid,
@@ -190,9 +181,6 @@ export default {
     },
     getCurrentPageNumber: (state) => {
       return state.pageNumber
-    },
-    getWorkFlowActions: (state) => ({ containerUuid }) => {
-      return state.workflowActionsList[containerUuid] || []
     },
     getWorkFlowLogs: (state) => ({ containerUuid }) => {
       return state.workflowLogs[containerUuid] || []

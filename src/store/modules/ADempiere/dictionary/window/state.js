@@ -16,5 +16,6 @@
 
 export default {
   storedWindows: {},
+  storedTableNames: {},
   selectProcessUuid: ''
 }

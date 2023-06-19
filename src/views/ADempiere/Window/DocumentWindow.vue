@@ -1,6 +1,6 @@
 <!--
  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -32,7 +32,6 @@
         :tabs-list="windowMetadata.tabsListParent"
         :all-tabs-list="allTabsList"
         :actions-manager="actionsManager"
-        :additional-options="additionalOptions"
       />
       <tab-manager-child
         v-if="isWithChildsTab && isMobile"
@@ -131,7 +130,6 @@ export default defineComponent({
 
     const index = ref(0)
 
-    const additionalOptions = ref({})
     /**
      * Computed
      */
@@ -219,15 +217,6 @@ export default defineComponent({
       return props.windowMetadata.currentTab.isParentTab && props.windowMetadata.currentTab.isShowedTableRecords
     })
 
-    // Load data document options
-    const listDocumentActions = computed(() => {
-      const documentActionsList = store.getters.getListDocumentActions
-      if (isEmptyValue(documentActionsList)) {
-        return []
-      }
-      return store.getters.getListDocumentActions
-    })
-
     if (props.windowMetadata.tabsList) {
       allTabsList.value = props.windowMetadata.tabsList
     }
@@ -242,27 +231,6 @@ export default defineComponent({
     })
 
     /**
-     * Methods
-     */
-    function loaDocument() {
-      if (isEmptyValue(recordUuid.value) || recordUuid.value === 'create-new') {
-        return
-      }
-
-      store.dispatch('listDocumentActionStatus', {
-        tableName,
-        recordUuid: recordUuid.value
-      })
-        .then(response => {
-          const { documentActionsList, defaultDocumentAction } = response
-          additionalOptions.value = {
-            currentDocument: defaultDocumentAction,
-            options: documentActionsList
-          }
-        })
-    }
-
-    /**
      * Watch
      */
     watch(isFullGrid, (newValue, oldValue) => {
@@ -275,47 +243,6 @@ export default defineComponent({
       }
     })
 
-    watch(listDocumentActions, (newValue, oldValue) => {
-      if (!isEmptyValue(additionalOptions.value.currentDocument) &&
-        !isEmptyValue(listDocumentActions.value.defaultDocumentAction) &&
-        listDocumentActions.value.defaultDocumentAction.value !== additionalOptions.value.currentDocument.value
-      ) {
-        loaDocument()
-        store.dispatch('listDocumentStatus', {
-          tableName,
-          recordUuid: recordUuid.value,
-          containerUuid: currentTabUuid.value
-        })
-          .then(response => {
-            const { documentActionsList } = response
-            store.commit('setWorkFlowActions', {
-              containerUuid: currentTabUuid.value,
-              options: documentActionsList
-            })
-          })
-      }
-    })
-
-    watch(recordUuid, (newValue, oldValue) => {
-      if (newValue !== oldValue && !isEmptyValue(newValue) && newValue !== 'create-new') {
-        loaDocument()
-        store.dispatch('listDocumentStatus', {
-          tableName,
-          recordUuid: recordUuid.value,
-          containerUuid: currentTabUuid.value
-        })
-          .then(response => {
-            const { documentActionsList } = response
-            store.commit('setWorkFlowActions', {
-              containerUuid: currentTabUuid.value,
-              options: documentActionsList
-            })
-          })
-      }
-    })
-    // additionalOptions.value = listDocumentActions.value
-    loaDocument()
-
     return {
       // Consts
       containerManager,
@@ -323,7 +250,6 @@ export default defineComponent({
       allTabsList,
       isLoadWindows,
       index,
-      additionalOptions,
       // Computeds
       isWithChildsTab,
       showRecordAccess,
@@ -333,14 +259,11 @@ export default defineComponent({
       styleFullScreen,
       actionsManager,
       isFullGrid,
-      listDocumentActions,
       recordUuid,
       isViewFullScreenChild,
       isViewFullScreenParent,
       sizeTab,
-      sizeTabChild,
-      // Methods
-      loaDocument
+      sizeTabChild
     }
   }
 

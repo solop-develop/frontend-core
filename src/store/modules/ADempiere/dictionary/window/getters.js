@@ -80,6 +80,10 @@ export default {
     return undefined
   },
 
+  getStoredTableNameByTab: (state) => (tabUuid) => {
+    return state.storedTableNames[tabUuid]
+  },
+
   getStoredFieldsFromTab: (state, getters) => (windowUuid, tabUuid) => {
     const tab = getters.getStoredTab(windowUuid, tabUuid)
     if (!isEmptyValue(tab)) {

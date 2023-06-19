@@ -175,7 +175,7 @@ export function getWorkflow({
  * @param {string} uuid
  * @param {string} docAction
  */
-export function runDocAction({
+export function requestRunDocumentAction({
   tableName,
   id,
   uuid,

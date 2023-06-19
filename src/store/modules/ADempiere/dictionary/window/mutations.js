@@ -55,6 +55,16 @@ export default {
   },
 
   /**
+   * Set Stored Table Name by Tab UUID
+   * @param {*} state
+   * @param {string} uuid table uuid
+   * @param {string} tableName
+   */
+  setTableNameByTab(state, { uuid, tableName }) {
+    Vue.set(state.storedTableNames, uuid, tableName)
+  },
+
+  /**
    *
    * @param {*} state
    * @param {string} parentUuid

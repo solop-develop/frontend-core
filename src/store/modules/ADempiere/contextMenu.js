@@ -1,5 +1,23 @@
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+// Utils and Helper Methods
 import { isEmptyValue, recursiveTreeSearch } from '@/utils/ADempiere/valueUtils.js'
-import { requestListDocumentActions, requestListDocumentStatuses } from '@/api/ADempiere/workflow'
 
 // Store used for set all related to context menu
 // for Window, Process, Smart Browser andother customized component
@@ -18,18 +36,6 @@ const initStateContextMenu = {
   isShowPopoverField: false,
   optionField: {},
   contextMenu: [],
-  listDocumentStatus: {
-    defaultDocumentAction: undefined,
-    documentActionsList: [],
-    recordId: undefined,
-    recordUuid: undefined
-  },
-  listDocumentAction: {
-    defaultDocumentAction: undefined,
-    documentActionsList: [],
-    recordId: undefined,
-    recordUuid: undefined
-  },
   recordAccess: false,
   embedded: {
     name: ''
@@ -44,12 +50,6 @@ const contextMenu = {
     },
     dictionaryResetCacheContextMenu(state) {
       state.contextMenu = []
-    },
-    listDocumentAction(state, payload) {
-      state.listDocumentAction = payload
-    },
-    addlistDocumentStatus(state, payload) {
-      state.listDocumentStatus = payload
     },
     changeShowRigthPanel(state, params) {
       if (isEmptyValue(params)) {
@@ -100,79 +100,6 @@ const contextMenu = {
     addAction({ state }, newAction) {
       newAction.push(state.contextMenu.actions)
     },
-    /**
-     * TODO: Verify tableName params to change in constant
-     * @param {number} recordId
-     * @param {string} recordUuid
-     */
-    listDocumentActionStatus({ commit }, {
-      tableName,
-      recordId,
-      recordUuid,
-      documentAction,
-      documentStatus
-    }) {
-      return new Promise(resolve => {
-        requestListDocumentActions({
-          tableName,
-          recordId,
-          recordUuid,
-          documentAction,
-          documentStatus,
-          pageSize: 0,
-          pageToken: ''
-        })
-          .then(responseDocumentActios => {
-            const documentAction = {
-              defaultDocumentAction: responseDocumentActios.defaultDocumentAction,
-              documentActionsList: responseDocumentActios.documentActionsList,
-              recordId,
-              recordUuid
-            }
-
-            commit('listDocumentAction', documentAction)
-            resolve(documentAction)
-          })
-          .catch(error => {
-            console.warn(`Error getting document action list. Code ${error.code}: ${error.message}.`)
-          })
-      })
-    },
-    listDocumentStatus({ commit, getters }, {
-      tableName,
-      recordId,
-      recordUuid,
-      documentAction,
-      documentStatus,
-      containerUuid
-    }) {
-      if (isEmptyValue(recordUuid)) {
-        recordUuid = getters.getUuidOfContainer(containerUuid)
-      }
-      return new Promise(resolve => {
-        requestListDocumentStatuses({
-          tableName,
-          recordId,
-          recordUuid,
-          documentAction,
-          documentStatus,
-          pageSize: 0,
-          pageToken: ''
-        })
-          .then(responseDocumentStatus => {
-            const documentStatus = {
-              documentActionsList: responseDocumentStatus.documentStatusesList,
-              recordId,
-              recordUuid
-            }
-            commit('addlistDocumentStatus', documentStatus)
-            resolve(documentStatus)
-          })
-          .catch(error => {
-            console.warn(`Error getting document statuses list. Code ${error.code}: ${error.message}.`)
-          })
-      })
-    },
     setOptionField({ commit }, params) {
       commit('fieldContextMenu', params)
     }
@@ -198,15 +125,6 @@ const contextMenu = {
         return menu.actions
       }
       return menu
-    },
-    getListDocumentActions: (state) => {
-      return state.listDocumentAction
-    },
-    getListDocumentStatus: (state) => {
-      return state.listDocumentStatus
-    },
-    getListDocumentActionByUuid: (state) => (recordUuid) => {
-      return state.listDocumentAction.find(itemDocumentAction => itemDocumentAction.recordUuid === recordUuid)
     },
     getFieldContextMenu: (state) => {
       return state.optionField

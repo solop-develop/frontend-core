@@ -60,15 +60,17 @@ export function getCurrentDocumentDisplayedValue({
     return displayedValue
   }
 
-  const defaultValue = store.getters.getStoredDefaultValue({
-    parentUuid,
-    containerUuid,
-    contextColumnNames,
-    uuid,
-    value
-  })
-  if (!isEmptyValue(defaultValue)) {
-    return defaultValue.displayedValue
+  if (!isEmptyValue(uuid)) {
+    const defaultValue = store.getters.getStoredDefaultValue({
+      parentUuid,
+      containerUuid,
+      contextColumnNames,
+      uuid,
+      value
+    })
+    if (!isEmptyValue(defaultValue)) {
+      return defaultValue.displayedValue
+    }
   }
 
   return undefined
