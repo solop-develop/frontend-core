@@ -24,7 +24,7 @@ import { getContext, getParentFields, getPreference, parseContext } from '@/util
 import REFERENCES, { FIELDS_QUANTITY, YES_NO, DEFAULT_SIZE, isHiddenField } from '@/utils/ADempiere/references'
 import {
   FIELD_OPERATORS_LIST, OPERATOR_EQUAL,
-  OPERATOR_LIKE, OPERATOR_GREATER_EQUAL, OPERATOR_LESS_EQUAL
+  OPERATOR_LIKE, OPERATOR_GREATER_EQUAL, OPERATOR_LESS_EQUAL, OPERATOR_BETWEEN
 } from '@/utils/ADempiere/dataUtils'
 import {
   ACCOUNTING_COLUMNS,
@@ -112,21 +112,6 @@ export function generateField({
     fieldToGenerate.isReadOnly = false
     // Is mandatory to showed available filter fields
     fieldToGenerate.isMandatory = false
-
-    // set field operators list
-    isComparisonField = !['FieldBinary', 'FieldButton', 'FieldImage'].includes(componentReference.componentPath)
-    if (isComparisonField) {
-      const operatorsField = FIELD_OPERATORS_LIST.find(item => {
-        return item.componentPath === componentReference.componentPath
-      })
-      if (operatorsField) {
-        operatorsList = operatorsField.operatorsList
-      }
-    }
-
-    if (['FieldText', 'FieldTextLong', 'FieldUrl'].includes(componentReference.componentPath)) {
-      operator = OPERATOR_LIKE.operator
-    }
   } else {
     // Yes No value, and form manage
     if (moreAttributes.isReadOnlyFromForm && YES_NO.id === fieldToGenerate.displayType) {
@@ -178,6 +163,25 @@ export function generateField({
       columnName,
       elementColumnName: fieldToGenerate.elementColumnName
     })
+  }
+  // set field operators list
+  if (moreAttributes.isAdvancedQuery || fieldToGenerate.isQueryCriteria) {
+    isComparisonField = !['FieldBinary', 'FieldButton', 'FieldImage'].includes(componentReference.componentPath)
+    if (isComparisonField) {
+      const operatorsField = FIELD_OPERATORS_LIST.find(item => {
+        return item.componentPath === componentReference.componentPath
+      })
+      if (operatorsField) {
+        operatorsList = operatorsField.operatorsList
+      }
+    }
+
+    if (['FieldText', 'FieldTextLong', 'FieldUrl'].includes(componentReference.componentPath)) {
+      operator = OPERATOR_LIKE.operator
+    }
+    if (['FieldDate', 'FieldTime'].includes(componentReference.componentPath)) {
+      operator = OPERATOR_BETWEEN.operator
+    }
   }
 
   const field = {
