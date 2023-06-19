@@ -35,7 +35,8 @@ const panelWindows = {
   dashboard: 0,
   listDashboard: [],
   metrics: [],
-  dashboardList: {}
+  dashboardList: {},
+  dashboardTab: {}
 }
 
 export default {
@@ -53,19 +54,34 @@ export default {
     setPanelDashboardTab(state, dashboard) {
       const { tabId, list } = dashboard
       Vue.set(state.dashboardList, tabId, list)
+    },
+    setExistsDashboardTab(state, dashboard) {
+      const { tabId, num } = dashboard
+      Vue.set(state.dashboardTab, tabId, num)
     }
   },
   actions: {
-    isDashboard({ commit }, {
+    isDashboard({ commit, state }, {
       tabId,
       windowId
     }) {
       return new Promise(resolve => {
+        if (!isEmptyValue(state.dashboardTab[tabId])) {
+          const num = state.dashboardTab[tabId]
+          commit('setNumberDashboard', num)
+          resolve(num)
+          return num
+        }
         existsCharts({
           tabId,
           windowId
         })
           .then(response => {
+            const dashboard = {
+              tabId,
+              num: response
+            }
+            commit('setExistsDashboardTab', dashboard)
             commit('setNumberDashboard', response)
             resolve(response)
           })
