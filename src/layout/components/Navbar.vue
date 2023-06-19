@@ -181,6 +181,7 @@ export default {
     guide() {
       this.driver = new Driver()
       const value = this.formatGuide(this.$route.meta.type)
+      if (this.isEmptyValue(value)) return
       this.driver.defineSteps(value)
       this.driver.start()
     },
