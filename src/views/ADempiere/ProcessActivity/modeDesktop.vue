@@ -97,7 +97,7 @@
                       :inline="true"
                       @submit.native.prevent="notSubmitForm"
                     >
-                      <el-form-item :label="$t('page.processActivity.logs')" style="margin-bottom: 0;">
+                      <el-form-item :label="$t('page.processActivity.logs')" style="margin-bottom: 0;width: 90%;">
 
                         <span v-if="activity.isReport && !isEmptyValue(activity.summary)">
                           <ul>
@@ -116,11 +116,11 @@
                           {{ $t('route.withoutLog') }}
                         </div>
                         <ul v-else>
-                          <li @click="handleCommand({ ...activity, command: 'zoomIn' })">
+                          <li @click="copyLogs(activity.summary)">
                             {{ activity.summary }}
                           </li>
                           <el-scrollbar wrap-class="popover-scroll">
-                            <li v-for="(logItem, key) in activity.logsList" :key="key" @click="zoomIn(activity)">
+                            <li v-for="(logItem, key) in activity.logsList" :key="key" @click="copyLogs(logItem.log)">
                               {{ logItem.log }}
                             </li>
                           </el-scrollbar>

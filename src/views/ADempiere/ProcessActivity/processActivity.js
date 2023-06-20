@@ -33,6 +33,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
 import { translateDateByLong } from '@/utils/ADempiere/formatValue/dateFormat'
+import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 
 export default defineComponent({
   name: 'ProcessActivity',
@@ -238,6 +239,13 @@ export default defineComponent({
       }
     }
 
+    const copyLogs = (text) => {
+      copyToClipboard({
+        text: JSON.stringify(text),
+        isShowMessage: true
+      })
+    }
+
     return {
       processActivity,
       recordCount,
@@ -253,9 +261,10 @@ export default defineComponent({
       getProcessLogProcessing,
       // methods
       showkey,
-      handleCommand,
+      copyLogs,
       checkStatus,
       generateTitle,
+      handleCommand,
       findTranslation,
       translateDateByLong,
       setProcessParameters
