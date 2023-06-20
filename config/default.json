@@ -6,7 +6,7 @@
   "adempiere": {
     "api": {
       "url": "http://localhost:8085/api/adempiere/",
-      "timeout": 10000
+      "timeout": 99999999
     },
     "images": {
       "url": "http://localhost:8085/adempiere-api/img/"
@@ -24,7 +24,7 @@
       "url": "http://localhost:8080",
       "endPoints": {
         "jobs": "/v1/jobs",
-        "runJob": "/v1/run",
+        "runJob": "/v1/jobs",
         "restoreJob": "/v1/restore"
       }
     }
