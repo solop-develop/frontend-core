@@ -273,6 +273,7 @@ export default {
     LESS: 'Less than "<"',
     LESS_EQUAL: 'Less than equal to "<="',
     BETWEEN: 'Between ">-<"',
+    NOT_BETWEEN: 'Not between "<->"',
     NOT_NULL: 'Is not null',
     NULL: 'Is null',
     IN: 'Include "()"',
