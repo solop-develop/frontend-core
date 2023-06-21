@@ -64,7 +64,7 @@ export function showNotification({ type = 'success', title, message = '', summar
   return Notification({
     title,
     message: `
-      <div style="max-height: 100px; overflow-y: auto;">
+      <div style="max-height: 100px;max-width: 250px; overflow-y: auto;">
         ${message}
       </div>
     `,
