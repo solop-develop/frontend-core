@@ -173,6 +173,9 @@ export default defineComponent({
           }
         })
         setProcessParameters(activity.uuid, parameters)
+      } else if (activity.command === 'copyLogs') {
+        const logsList = activity.summary + activity.logsList.map(list => list.id + list.log)
+        copyLogs(logsList)
       }
     }
 

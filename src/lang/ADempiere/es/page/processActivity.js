@@ -22,7 +22,8 @@ const processActivity = {
   logs: 'Resumen',
   name: 'Nombre',
   status: 'Estado',
-  zoomIn: 'Acercar'
+  zoomIn: 'Acercar',
+  copyOutput: 'Copiar Salida'
 }
 
 export default processActivity

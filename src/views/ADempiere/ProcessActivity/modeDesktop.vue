@@ -83,6 +83,9 @@
                         <el-dropdown-item :command="{ ...activity, command: 'zoomIn' }">
                           {{ $t('page.processActivity.zoomIn') }}
                         </el-dropdown-item>
+                        <el-dropdown-item :command="{ ...activity, command: 'copyLogs' }">
+                          {{ $t('page.processActivity.copyOutput') }}
+                        </el-dropdown-item>
 
                         <!-- TODO: add more actions -->
                       </el-dropdown-menu>
@@ -97,7 +100,7 @@
                       :inline="true"
                       @submit.native.prevent="notSubmitForm"
                     >
-                      <el-form-item :label="$t('page.processActivity.logs')" style="margin-bottom: 0;width: 90%;">
+                      <el-form-item style="margin-bottom: 0;width: 90%;">
 
                         <span v-if="activity.isReport && !isEmptyValue(activity.summary)">
                           <ul>
@@ -116,14 +119,28 @@
                           {{ $t('route.withoutLog') }}
                         </div>
                         <ul v-else>
-                          <li @click="copyLogs(activity.summary)">
+                          <el-descriptions class="margin-top" :column="1" border>
+                            <el-descriptions-item
+                              :label="$t('page.processActivity.logs')"
+                            >
+                              {{ activity.summary }}
+                            </el-descriptions-item>
+                            <el-descriptions-item
+                              v-for="(logItem, key) in activity.logsList"
+                              :key="key"
+                              :label="logItem.id"
+                            >
+                              {{ logItem.log }}
+                            </el-descriptions-item>
+                          </el-descriptions>
+                          <!-- <li @click="copyLogs(activity.summary)">
                             {{ activity.summary }}
                           </li>
                           <el-scrollbar wrap-class="popover-scroll">
                             <li v-for="(logItem, key) in activity.logsList" :key="key" @click="copyLogs(logItem.log)">
                               {{ logItem.log }}
                             </li>
-                          </el-scrollbar>
+                          </el-scrollbar> -->
                         </ul>
                       </el-form-item>
 
