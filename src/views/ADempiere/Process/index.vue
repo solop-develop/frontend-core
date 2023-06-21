@@ -48,7 +48,6 @@
         <br>
       </div>
       <panel-footer
-        v-if="isMobile"
         :container-uuid="processUuid"
         :is-button-run="true"
         :is-button-clear="true"
