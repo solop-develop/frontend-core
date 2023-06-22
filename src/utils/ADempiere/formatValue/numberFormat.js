@@ -53,7 +53,7 @@ export function getCurrency() {
 
 /**
  * Get standard presicion
- * @returns {Number}
+ * @returns {number}
  */
 export function getStandardPrecision() {
   return store.getters.getStandardPrecision
