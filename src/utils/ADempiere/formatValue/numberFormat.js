@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,16 +18,15 @@
 
 import store from '@/store'
 
+// Constants
 import {
-  // currencies
-  isCurrencyField,
-  //
-  NUMBER,
-  QUANTITY,
-  // integers
-  isIntegerField
+  NUMBER, QUANTITY
 } from '@/utils/ADempiere/references.js'
 
+// Utils and Helpers Methods
+import {
+  isCurrencyField, isIntegerField
+} from '@/utils/ADempiere/references.js'
 import { charInText, isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 /**
@@ -52,6 +51,10 @@ export function getCurrency() {
   return store.getters.getCurrencyCode
 }
 
+/**
+ * Get standard presicion
+ * @returns {Number}
+ */
 export function getStandardPrecision() {
   return store.getters.getStandardPrecision
 }
@@ -137,14 +140,19 @@ export function formatQuantity({ value, isInteger = false, precision }) {
  * @param {number} value
  * @param {string} currency
  * @param {string} country
+ * @returns {number}
  */
 export function formatPrice({ value, currency, country = '' }) {
   if (isEmptyValue(value)) {
     value = 0
   }
 
+  // Show amount without currency
   if (isEmptyValue(currency)) {
-    currency = getCurrency()
+    // currency = getCurrency()
+    return formatQuantity({
+      value
+    })
   }
 
   // const precision = getStandardPrecision()
