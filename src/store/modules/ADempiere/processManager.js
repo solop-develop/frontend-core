@@ -277,7 +277,8 @@ const processManager = {
       parentUuid,
       containerUuid,
       tableName,
-      recordUuid
+      recordUuid,
+      parametersList = []
     }) {
       return new Promise(resolve => {
         const windowsUuid = router.app._route.meta.uuid
@@ -287,11 +288,13 @@ const processManager = {
         })
         const currentProcess = storedTab.processes.find(process => process.name === processModal.title)
 
-        const fieldsList = getters.getStoredFieldsFromProcess(containerUuid)
-        const parametersList = rootGetters.getProcessParameters({
-          containerUuid,
-          fieldsList
-        })
+        if (isEmptyValue(parametersList)) {
+          const fieldsList = getters.getStoredFieldsFromProcess(containerUuid)
+          parametersList = rootGetters.getProcessParameters({
+            containerUuid,
+            fieldsList
+          })
+        }
 
         const isSession = !isEmptyValue(getToken())
         let procesingNotification = {

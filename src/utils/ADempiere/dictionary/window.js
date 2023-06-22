@@ -48,6 +48,7 @@ import { BUTTON, isHiddenField } from '@/utils/ADempiere/references.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import { zoomIn } from '@/utils/ADempiere/coreUtils'
 import { exportRecords, supportedTypes } from '@/utils/ADempiere/exportUtil.js'
+import { isRunableDocumentAction } from '@/utils/ADempiere/dictionary/workflow'
 
 /**
  * Evaluate if tab is displayed
@@ -901,6 +902,31 @@ export const openBrowserAssociated = {
         }
       }, () => {})
     }
+  }
+}
+
+/**
+ * Open Document Action to process workflow
+ */
+export const openDocumentAction = {
+  name: language.t('actionMenu.startDocumentAction'),
+  enabled: ({ parentUuid, containerUuid }) => {
+    return isRunableDocumentAction({
+      parentUuid,
+      containerUuid
+    })
+  },
+  isSvgIcon: true,
+  icon: 'example',
+  actionName: 'openDocumentAction',
+  openDocumentAction: ({ parentUuid, containerUuid, uuid }) => {
+    store.commit('setSelectProcessWindows', uuid)
+
+    store.commit('setShowedModalDialog', {
+      parentUuid: containerUuid,
+      containerUuid: uuid,
+      isShowed: true
+    })
   }
 }
 

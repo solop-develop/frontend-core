@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,10 +17,14 @@
  */
 import store from '@/store'
 
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import { DOCUMENT_STATUS } from '../constants/systemColumns'
+// Constants
+import { DOCUMENT_STATUS, PROCESSING } from '@/utils/ADempiere/constants/systemColumns'
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
+
+// Utils and Helpers Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { getContext } from '@/utils/ADempiere/contextUtils'
+import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
 
 export function getDocumentStatusValue({
   parentUuid,
@@ -74,6 +78,47 @@ export function getCurrentDocumentDisplayedValue({
   }
 
   return undefined
+}
+
+/**
+ * Is Enable to Run Document Action
+ * @param {String} parentUuid
+ * @param {String} containerUuid
+ * @returns {Boolean}
+ */
+export function isRunableDocumentAction({ parentUuid, containerUuid }) {
+  // table not document or multi record
+  const storedTab = store.getters.getStoredTab(parentUuid, containerUuid)
+  if (!storedTab.isDocument || storedTab.isShowedTableRecords) {
+    return false
+  }
+
+  // default values as new record
+  const recordUuid = store.getters.getUuidOfContainer(containerUuid)
+  if (isEmptyValue(recordUuid) || recordUuid === 'create-new') {
+    return false
+  }
+
+  const processing = store.getters.getValueOfFieldOnContainer({
+    parentUuid,
+    containerUuid,
+    columnName: PROCESSING
+  })
+  if (convertStringToBoolean(processing)) {
+    return true
+  }
+
+  // TODO: Evalute first the document statuses list
+  // document is closed
+  const documentStatus = store.getters.getValueOfFieldOnContainer({
+    containerUuid,
+    columnName: DOCUMENT_STATUS
+  })
+  if (documentStatus === 'CL') {
+    return false
+  }
+
+  return true
 }
 
 /**

@@ -29,6 +29,8 @@ const actionMenu = {
   zoomWindow: 'Zoom Window',
   // process
   runProcess: 'Run',
+  // workflow
+  startDocumentAction: 'Document Action',
   // report
   generateReport: 'Generate',
   generateDefaultReport: 'Generate with default file extension',

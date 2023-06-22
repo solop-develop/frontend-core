@@ -29,6 +29,8 @@ const actionMenu = {
   zoomWindow: 'Acercar Ventana',
   // process
   runProcess: 'Ejecutar',
+  // workflow
+  startDocumentAction: 'Acción de Documento',
   // report
   generateReport: 'Generar',
   generateDefaultReport: 'Generar con extensión de archivo por defecto',

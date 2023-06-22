@@ -24,7 +24,7 @@ import store from '@/store'
 import { requestWindowMetadata } from '@/api/ADempiere/dictionary/window.js'
 
 // Constants
-import { CLIENT, DOCUMENT_STATUS } from '@/utils/ADempiere/constants/systemColumns'
+import { CLIENT, DOCUMENT_ACTION, DOCUMENT_STATUS } from '@/utils/ADempiere/constants/systemColumns'
 import { containerManager } from '@/utils/ADempiere/dictionary/window'
 import { DISPLAY_COLUMN_PREFIX, IS_ADVANCED_QUERY } from '@/utils/ADempiere/dictionaryUtils'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
@@ -40,6 +40,7 @@ import {
   runProcessOfWindow,
   generateReportOfWindow,
   openBrowserAssociated,
+  openDocumentAction,
   openSequenceTab,
   refreshRecord,
   refreshRecords,
@@ -140,7 +141,7 @@ export default {
       if (!isEmptyValue(tabDefinition.parentColumn)) {
         relatedColumns = relatedColumns.push(tabDefinition.parentColumn)
       }
-      relatedColumns = relatedColumns.concat(parentColumns)
+      relatedColumns = relatedColumns.concat(parentColumns).sort()
 
       tabDefinition.processes.forEach(process => {
         let defaultAction = {}
@@ -233,6 +234,108 @@ export default {
           defaultAction = {
             ...openBrowserAssociated
           }
+        } else if (!isEmptyValue(process.workflowUuid)) {
+          // Add workflow icon
+          defaultAction = {
+            ...openDocumentAction
+          }
+
+          dispatch('setModalDialog', {
+            containerUuid: process.uuid,
+            title: process.name,
+            containerManager: containerManager,
+            doneMethod: ({ parentUuid: tabAssociatedUuid, containerUuid }) => {
+              const recordUuid = rootGetters.getUuidOfContainer(tabAssociatedUuid)
+
+              const storedTab = rootGetters.getStoredTab(windowUuid, tabAssociatedUuid)
+              const { tableName } = storedTab
+
+              const documentAction = getters.getValueOfField({
+                containerUuid: process.uuid,
+                columnName: DOCUMENT_ACTION
+              })
+              const parametersList = []
+              parametersList.push({
+                columnName: DOCUMENT_ACTION,
+                value: documentAction
+              })
+
+              dispatch('startProcessOfWindows', {
+                parentUuid: tabAssociatedUuid,
+                containerUuid: process.uuid,
+                tableName,
+                recordUuid,
+                parametersList
+              }).then(async processResponse => {
+                // if (processResponse.isError) {
+                //   return
+                // }
+
+                // update current record
+                await refreshRecord.refreshRecord({
+                  parentUuid: windowUuid,
+                  containerUuid: tabAssociatedUuid,
+                  recordUuid
+                })
+                // update records and logics on child tabs
+                tabDefinition.childTabs.filter(tabItem => {
+                  // get loaded tabs with records
+                  return store.getters.getIsLoadedTabRecord({
+                    containerUuid: tabItem.uuid
+                  })
+                }).forEach(tabItem => {
+                  // if loaded data refresh this data
+                  // TODO: Verify with get one entity, not get all list
+                  store.dispatch('getEntities', {
+                    parentUuid: windowUuid,
+                    containerUuid: tabItem.uuid,
+                    pageNumber: 1 // reload with first page
+                  })
+                })
+              })
+            },
+            beforeOpen: ({ parentUuid: tabAssociatedUuid, containerUuid }) => {
+              // set context values
+              const parentValues = getContextAttributes({
+                parentUuid: windowUuid,
+                containerUuid: tabAssociatedUuid,
+                contextColumnNames: relatedColumns
+              })
+              let documentAction = getContext({
+                parentUuid: windowUuid,
+                containerUuid: tabAssociatedUuid,
+                columnName: DOCUMENT_ACTION
+              })
+              if (!isEmptyValue(documentAction)) {
+                // If None, suggest closing
+                if (documentAction === '--') {
+                  documentAction = 'CL'
+                  parentValues.push({
+                    columnName: DOCUMENT_ACTION,
+                    value: documentAction
+                  })
+                }
+              }
+
+              dispatch('updateValuesOfContainer', {
+                containerUuid: process.uuid,
+                attributes: parentValues
+              })
+            },
+            loadData: () => {
+              const processDefinition = rootGetters.getStoredProcess(process.uuid)
+              if (!isEmptyValue(processDefinition)) {
+                return Promise.resolve(processDefinition)
+              }
+
+              return dispatch('getProcessDefinitionFromServer', {
+                uuid: process.uuid
+              })
+            },
+            // TODO: Change to string and import dynamic in component
+            componentPath: () => import('@theme/components/ADempiere/PanelDefinition/DocumentAction.vue'),
+            isShowed: false
+          })
         } else {
           defaultAction = {
             ...runProcessOfWindow
@@ -306,15 +409,6 @@ export default {
             componentPath: () => import('@theme/components/ADempiere/PanelDefinition/index.vue'),
             isShowed: false
           })
-        }
-
-        // Add workflow icon
-        if (!isEmptyValue(process.workflowUuid)) {
-          defaultAction = {
-            ...defaultAction,
-            isSvgIcon: true,
-            icon: 'example'
-          }
         }
 
         // TODO: Improve performance, evaluate whether it is possible to directly
