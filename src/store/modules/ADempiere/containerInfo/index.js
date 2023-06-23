@@ -43,7 +43,8 @@ const containerInfo = {
       columnName: ''
     },
     columnName: '',
-    isLoaded: false
+    isLoaded: false,
+    defaultOpenedTab: 'getRecordLogs'
   },
 
   mutations: {
@@ -71,6 +72,9 @@ const containerInfo = {
     },
     setIsLoadtRecordLogs(state, loading) {
       state.isLoaded = loading
+    },
+    setDefaultOpenedTab(state, nameTab) {
+      state.defaultOpenedTab = nameTab
     }
   },
 
@@ -188,6 +192,9 @@ const containerInfo = {
     },
     getIsLoadListRecordLogs: (state) => {
       return state.isLoaded
+    },
+    getDefaultOpenedTab: (state) => {
+      return state.defaultOpenedTab
     }
   }
 }
