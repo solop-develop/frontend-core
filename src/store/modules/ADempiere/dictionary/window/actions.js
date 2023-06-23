@@ -206,7 +206,10 @@ export default {
                     containerUuid: reportDefinition.uuid,
                     isShowed: false
                   })
-                  doneMethodByReport({ parentUuid: tabAssociatedUuid, containerUuid })
+                  doneMethodByReport({
+                    parentUuid: tabAssociatedUuid,
+                    containerUuid
+                  })
                 }
                 return Promise.resolve(reportDefinition)
               }
@@ -221,7 +224,10 @@ export default {
                     containerUuid: process.uuid,
                     isShowed: false
                   })
-                  doneMethodByReport({ parentUuid: tabAssociatedUuid, containerUuid })
+                  doneMethodByReport({
+                    parentUuid: tabAssociatedUuid,
+                    containerUuid
+                  })
                 }
               })
             },
