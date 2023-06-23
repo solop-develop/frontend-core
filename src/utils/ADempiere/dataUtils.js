@@ -140,21 +140,34 @@ const STANDARD_OPERATORS_LIST = [
   OPERATOR_NOT_NULL.operator
 ]
 
-const MULTIPLE_OPERATORS_LIST = [
-  OPERATOR_IN.operator,
-  OPERATOR_NOT_IN.operator
-]
-
 const TEXT_OPERATORS_LIST = [
   OPERATOR_LIKE.operator,
   OPERATOR_NOT_LIKE.operator
 ]
 
-const RANGE_OPERATORS_LIST = [
+const GREATER_LESS_OPERATORS_LIST = [
   OPERATOR_GREATER.operator,
   OPERATOR_GREATER_EQUAL.operator,
   OPERATOR_LESS.operator,
   OPERATOR_LESS_EQUAL.operator
+]
+
+/**
+ * Is value operators
+ */
+export const IGNORE_VALUE_OPERATORS_LIST = [
+  OPERATOR_NULL.operator,
+  OPERATOR_NOT_NULL.operator
+]
+
+export const RANGE_VALUE_OPERATORS_LIST = [
+  OPERATOR_BETWEEN.operator,
+  OPERATOR_NOT_BETWEEN.operator
+]
+
+export const MULTIPLE_VALUES_OPERATORS_LIST = [
+  OPERATOR_IN.operator,
+  OPERATOR_NOT_IN.operator
 ]
 
 export const OPERATORS_LIST = [
@@ -178,8 +191,9 @@ export const OPERATORS_FIELD_AMOUNT = {
   isRange: true,
   operatorsList: [
     ...STANDARD_OPERATORS_LIST,
-    ...RANGE_OPERATORS_LIST,
-    ...MULTIPLE_OPERATORS_LIST
+    ...GREATER_LESS_OPERATORS_LIST,
+    ...RANGE_VALUE_OPERATORS_LIST,
+    ...MULTIPLE_VALUES_OPERATORS_LIST
   ]
 }
 
@@ -187,11 +201,10 @@ export const OPERATORS_FIELD_DATE = {
   componentPath: 'FieldDate',
   isRange: true,
   operatorsList: [
-    OPERATOR_BETWEEN.operator,
-    OPERATOR_NOT_BETWEEN.operator,
+    ...RANGE_VALUE_OPERATORS_LIST,
     ...STANDARD_OPERATORS_LIST,
-    ...RANGE_OPERATORS_LIST,
-    ...MULTIPLE_OPERATORS_LIST
+    ...GREATER_LESS_OPERATORS_LIST,
+    ...MULTIPLE_VALUES_OPERATORS_LIST
   ]
 }
 
@@ -200,8 +213,8 @@ export const OPERATORS_FIELD_NUMBER = {
   isRange: true,
   operatorsList: [
     ...STANDARD_OPERATORS_LIST,
-    ...RANGE_OPERATORS_LIST,
-    ...MULTIPLE_OPERATORS_LIST
+    ...GREATER_LESS_OPERATORS_LIST,
+    ...MULTIPLE_VALUES_OPERATORS_LIST
   ]
 }
 
@@ -210,7 +223,16 @@ export const OPERATORS_FIELD_SELECT = {
   isRange: false,
   operatorsList: [
     ...STANDARD_OPERATORS_LIST,
-    ...MULTIPLE_OPERATORS_LIST
+    ...MULTIPLE_VALUES_OPERATORS_LIST
+  ]
+}
+
+export const OPERATORS_FIELD_SEARCH = {
+  componentPath: 'FieldSearch',
+  isRange: false,
+  operatorsList: [
+    ...STANDARD_OPERATORS_LIST
+    // TODO: Add support to IN and NOT IN
   ]
 }
 
@@ -220,7 +242,7 @@ export const OPERATORS_FIELD_TEXT = {
   operatorsList: [
     ...STANDARD_OPERATORS_LIST,
     ...TEXT_OPERATORS_LIST,
-    ...MULTIPLE_OPERATORS_LIST
+    ...MULTIPLE_VALUES_OPERATORS_LIST
   ]
 }
 
@@ -230,7 +252,7 @@ export const OPERATORS_FIELD_TEXT_LONG = {
   operatorsList: [
     ...STANDARD_OPERATORS_LIST,
     ...TEXT_OPERATORS_LIST,
-    ...MULTIPLE_OPERATORS_LIST
+    ...MULTIPLE_VALUES_OPERATORS_LIST
   ]
 }
 
@@ -238,9 +260,10 @@ export const OPERATORS_FIELD_TIME = {
   componentPath: 'FieldTime',
   isRange: true,
   operatorsList: [
+    ...RANGE_VALUE_OPERATORS_LIST,
     ...STANDARD_OPERATORS_LIST,
-    ...RANGE_OPERATORS_LIST,
-    ...MULTIPLE_OPERATORS_LIST
+    ...GREATER_LESS_OPERATORS_LIST,
+    ...MULTIPLE_VALUES_OPERATORS_LIST
   ]
 }
 
@@ -250,7 +273,7 @@ export const OPERATORS_FIELD_URL = {
   operatorsList: [
     ...STANDARD_OPERATORS_LIST,
     ...TEXT_OPERATORS_LIST,
-    ...MULTIPLE_OPERATORS_LIST
+    ...MULTIPLE_VALUES_OPERATORS_LIST
   ]
 }
 
@@ -267,22 +290,13 @@ export const FIELD_OPERATORS_LIST = [
   OPERATORS_FIELD_AMOUNT,
   OPERATORS_FIELD_DATE,
   OPERATORS_FIELD_NUMBER,
+  OPERATORS_FIELD_SEARCH,
   OPERATORS_FIELD_SELECT,
   OPERATORS_FIELD_TEXT,
   OPERATORS_FIELD_TEXT_LONG,
   OPERATORS_FIELD_TIME,
   OPERATORS_FIELD_URL,
   OPERATORS_FIELD_YES_NO
-]
-
-export const OPERATORS_MULTIPLE_VALUES = [
-  OPERATOR_IN.operator,
-  OPERATOR_NOT_IN.operator
-]
-
-export const OPERATORS_IGNORE_VALUE = [
-  OPERATOR_NULL.operator,
-  OPERATOR_NOT_NULL.operator
 ]
 
 /**

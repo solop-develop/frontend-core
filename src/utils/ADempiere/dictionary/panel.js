@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +18,6 @@
 
 // Constants
 import { IS_ADVANCED_QUERY } from '@/utils/ADempiere/dictionaryUtils'
-import { FIELDS_DATE } from '@/utils/ADempiere/references'
-import { OPERATOR_BETWEEN } from '@/utils/ADempiere/dataUtils'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -322,19 +320,19 @@ export function panelAdvanceQuery({
     parentUuid: parentUuid + IS_ADVANCED_QUERY,
     containerUuid: containerUuid + IS_ADVANCED_QUERY,
     fieldsList: tabPanel.fieldsList.map(field => {
-      // TODO: Implement generateFields
-      if (FIELDS_DATE.includes(field.displayType)) {
-        field.columnNameTo = `${field.columnName}_To`
-        field.elementNameTo = `${field.elementName}_To`
-        field.operator = OPERATOR_BETWEEN.operator
-      }
-      return {
-        ...field,
-        isAdvancedQuery: true,
-        isShowedFromUser: field.isSelectionColumn,
-        parentUuid: field.parentUuid + IS_ADVANCED_QUERY,
-        containerUuid: field.containerUuid + IS_ADVANCED_QUERY
-      }
+      return generateField({
+        fieldToGenerate: {
+          ...field,
+          parentUuid: field.parentUuid + IS_ADVANCED_QUERY,
+          containerUuid: field.containerUuid + IS_ADVANCED_QUERY
+        },
+        moreAttributes: {
+          isAdvancedQuery: true
+        },
+        evaluateDefaultFieldShowed: ({ isSelectionColumn }) => {
+          return isSelectionColumn
+        }
+      })
     }),
     uuid: tabPanel.uuid + IS_ADVANCED_QUERY
   }

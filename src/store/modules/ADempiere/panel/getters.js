@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,17 +16,17 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// constants
-import { OPERATORS_IGNORE_VALUE } from '@/utils/ADempiere/dataUtils'
+// Constants
+import { IGNORE_VALUE_OPERATORS_LIST } from '@/utils/ADempiere/dataUtils'
+import {
+  LOG_COLUMNS_NAME_LIST
+} from '@/utils/ADempiere/constants/systemColumns'
 
-// utils and helper methods
+// Utils and Helper Methods
 import {
   isEmptyValue,
   parsedValueComponent
 } from '@/utils/ADempiere/valueUtils.js'
-import {
-  LOG_COLUMNS_NAME_LIST
-} from '@/utils/ADempiere/constants/systemColumns'
 import {
   fieldIsDisplayed,
   getContextDefaultValue
@@ -532,8 +532,9 @@ const getters = {
               columnName: fieldItem.columnNameTo
             })
           }
-          if (!isEmptyValue(value) || !isEmptyValue(valueTo) || (fieldItem.isAdvancedQuery &&
-            OPERATORS_IGNORE_VALUE.includes(fieldItem.operator))) {
+          if (!isEmptyValue(value) || !isEmptyValue(valueTo) ||
+            ((fieldItem.isAdvancedQuery || fieldItem.isQueryCriteria) &&
+            IGNORE_VALUE_OPERATORS_LIST.includes(fieldItem.operator))) {
             return true
           }
         }
@@ -559,8 +560,8 @@ const getters = {
         }
 
         let values = []
-        if (parameterItem.isAdvancedQuery &&
-          OPERATORS_IGNORE_VALUE.includes(parameterItem.operator)) {
+        if ((parameterItem.isAdvancedQuery || parameterItem.isQueryCriteria) &&
+          IGNORE_VALUE_OPERATORS_LIST.includes(parameterItem.operator)) {
           if (Array.isArray(value)) {
             values = value.map(itemValue => {
               const isMandatory = !parameterItem.isAdvancedQuery &&

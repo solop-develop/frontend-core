@@ -91,7 +91,7 @@ export function generateField({
   let parentFieldsList = []
   let parsedDefaultValue = fieldToGenerate.defaultValue
   let parsedDefaultValueTo = fieldToGenerate.defaultValueTo
-  let operator = OPERATOR_EQUAL.operator
+  let operator
   let isNumericField = componentReference.componentPath === 'FieldNumber'
   let isTranslatedField = fieldToGenerate.isTranslated
   let isComparisonField = false // to list operators comparison
@@ -166,6 +166,7 @@ export function generateField({
   }
   // set field operators list
   if (moreAttributes.isAdvancedQuery || fieldToGenerate.isQueryCriteria) {
+    operator = OPERATOR_EQUAL.operator
     isComparisonField = !['FieldBinary', 'FieldButton', 'FieldImage'].includes(componentReference.componentPath)
     if (isComparisonField) {
       const operatorsField = FIELD_OPERATORS_LIST.find(item => {

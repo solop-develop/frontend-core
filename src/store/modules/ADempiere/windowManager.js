@@ -342,6 +342,11 @@ const windowManager = {
         })
 
         const isWithoutValues = contextAttributesList.find(attribute => isEmptyValue(attribute.value))
+        if (isWithoutValues) {
+          console.warn(`Get entites without response, fill the **${isWithoutValues.key}** field in **${name}** tab.`)
+          resolve([])
+          return
+        }
 
         if (!isEmptyValue(filtersRecord) && isEmptyValue(filters)) {
           filters.map(list => {
@@ -351,12 +356,6 @@ const windowManager = {
             }
             return list
           })
-        }
-
-        if (isWithoutValues) {
-          console.warn(`Get entites without response, fill the **${isWithoutValues.key}** field in **${name}** tab.`)
-          resolve([])
-          return
         }
 
         commit('setTabData', {
