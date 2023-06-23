@@ -196,7 +196,7 @@ export default {
                 attributes: parentValues
               })
             },
-            loadData: () => {
+            loadData: ({ parentUuid: tabAssociatedUuid, containerUuid }) => {
               const reportDefinition = rootGetters.getStoredReport(process.uuid)
               if (!isEmptyValue(reportDefinition)) {
                 // auto run report if without parameters
@@ -206,7 +206,7 @@ export default {
                     containerUuid: reportDefinition.uuid,
                     isShowed: false
                   })
-                  doneMethodByReport()
+                  doneMethodByReport({ parentUuid: tabAssociatedUuid, containerUuid })
                 }
                 return Promise.resolve(reportDefinition)
               }
@@ -221,7 +221,7 @@ export default {
                     containerUuid: process.uuid,
                     isShowed: false
                   })
-                  doneMethodByReport()
+                  doneMethodByReport({ parentUuid: tabAssociatedUuid, containerUuid })
                 }
               })
             },
@@ -292,7 +292,7 @@ export default {
                 attributes: parentValues
               })
             },
-            loadData: () => {
+            loadData: ({ parentUuid: tabAssociatedUuid, containerUuid }) => {
               const reportDefinition = rootGetters.getStoredProcess(process.uuid)
               if (!isEmptyValue(reportDefinition)) {
                 return Promise.resolve(reportDefinition)
