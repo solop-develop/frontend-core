@@ -744,34 +744,35 @@ export default {
         root: true
       })
 
-      // TODO: Improve with tab.isDocument (Table.isDocument)
-      // get displayed value on status
-      const fieldDocumentStatus = tab.fieldsList.find(field => {
-        return field.columnName === DOCUMENT_STATUS
-      })
-      if (!isEmptyValue(fieldDocumentStatus)) {
-        const value = getDocumentStatusValue({
-          parentUuid,
-          containerUuid
+      if (tab.isDocument) {
+        // get displayed value on status
+        const fieldDocumentStatus = tab.fieldsList.find(field => {
+          return field.columnName === DOCUMENT_STATUS
         })
-        const storedDisplayedValue = getCurrentDocumentDisplayedValue({
-          parentUuid,
-          containerUuid,
-          uuid: fieldDocumentStatus.uuid,
-          value
-        })
-        const displayedValue = storedDisplayedValue
-        if (isEmptyValue(displayedValue)) {
-          containerManager.getDefaultValue({
-            parentUuid: fieldDocumentStatus.parentUuid,
-            containerUuid: fieldDocumentStatus.containerUuid,
-            contextColumnNames: fieldDocumentStatus.contextColumnNames,
-            //
-            uuid: fieldDocumentStatus.uuid,
-            id: fieldDocumentStatus.id,
-            columnName: fieldDocumentStatus.columnName,
-            value: value
+        if (!isEmptyValue(fieldDocumentStatus)) {
+          const value = getDocumentStatusValue({
+            parentUuid,
+            containerUuid
           })
+          const storedDisplayedValue = getCurrentDocumentDisplayedValue({
+            parentUuid,
+            containerUuid,
+            uuid: fieldDocumentStatus.uuid,
+            value
+          })
+          const displayedValue = storedDisplayedValue
+          if (isEmptyValue(displayedValue)) {
+            containerManager.getDefaultValue({
+              parentUuid: fieldDocumentStatus.parentUuid,
+              containerUuid: fieldDocumentStatus.containerUuid,
+              contextColumnNames: fieldDocumentStatus.contextColumnNames,
+              //
+              uuid: fieldDocumentStatus.uuid,
+              id: fieldDocumentStatus.id,
+              columnName: fieldDocumentStatus.columnName,
+              value: value
+            })
+          }
         }
       }
 
