@@ -24,6 +24,7 @@ const sequenceSort = {
   withoutChanges: 'Secuencias/Ordenado sin cambios',
   modifyFieldSequence: 'Modificar Secuencia de los Campos',
   saveNewSequence: 'Guardar Personalización',
+  exitNewSequence: 'Salir Personalización',
   personalizationSavedSuccessfully: 'Personalización Guardado Exitosamente',
   customizationlevel: 'Nivel de Customizacion'
 }
