@@ -19,7 +19,7 @@ const fieldsDisplayOptions = {
   minimalistView: 'Minimalist View',
   showAllFields: 'Show All Fields',
   showFieldsWithValue: 'Show Fields With Default Value',
-  showDefaultField: 'Show Default Field',
+  showDefaultField: 'Show Default Fields',
   Show2Columns: 'Show 2 Columns',
   Show3Columns: 'Show 3 Columns',
   Show4Columns: 'Show 4 Columns'

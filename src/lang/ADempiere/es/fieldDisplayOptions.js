@@ -19,7 +19,7 @@ const fieldsDisplayOptions = {
   minimalistView: 'Vista Minimalista',
   showAllFields: 'Mostrar Todos Los Campos',
   showFieldsWithValue: 'Mostrar Campos Con Valor Por Defecto',
-  showDefaultField: 'Mostrar Campo Por Defecto',
+  showDefaultField: 'Mostrar Campos Por Defecto',
   Show2Columns: 'Mostrar 2 Columnas',
   Show3Columns: 'Mostrar 3 Columnas',
   Show4Columns: 'Mostrar 4 Columnas'
