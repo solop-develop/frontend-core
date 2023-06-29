@@ -101,7 +101,7 @@ export function listAccoutingSchemasRequest({
   pageSize = 100
 }) {
   return request({
-    url: '/general-ledger/list-accouting-schemas',
+    url: '/general-ledger/accounting-schemas',
     method: 'get',
     params: {
       page_size: pageSize,
@@ -121,7 +121,7 @@ export function listPostingTypesRequest({
   pageSize = 100
 }) {
   return request({
-    url: '/general-ledger/list-posting-type',
+    url: '/general-ledger/posting-types',
     method: 'get',
     params: {
       page_size: pageSize,
