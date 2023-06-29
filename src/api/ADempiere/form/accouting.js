@@ -27,6 +27,9 @@ export function requestAccountingFacts({
   tableName,
   recordId,
   recordUuid,
+  organizationId,
+  accoutingSchemaId,
+  postingType,
   filters = [],
   pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
@@ -46,14 +49,17 @@ export function requestAccountingFacts({
       //  DSL Query
       table_name: tableName,
       record_id: recordId,
-      record_uuid: recordUuid
-    },
-    data: {
-      // filters
-      filters,
+      record_uuid: recordUuid,
+      accounting_schema_id: accoutingSchemaId,
+      posting_type: postingType,
+      organization_id: organizationId,
       //  Page Data
       page_size: pageSize,
       page_token: pageToken
+    },
+    data: {
+      // filters
+      filters
     }
   })
     .then(response => {
@@ -82,6 +88,66 @@ export function requestStartRePost({
       //  Page Data
       page_size: pageSize,
       page_token: pageToken
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+export function listAccoutingSchemasRequest({
+  searchValue,
+  pageToken,
+  pageSize = 100
+}) {
+  return request({
+    url: '/general-ledger/list-accouting-schemas',
+    method: 'get',
+    params: {
+      page_size: pageSize,
+      page_token: pageToken,
+      //  DSL Query
+      search_value: searchValue
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+export function listPostingTypesRequest({
+  searchValue,
+  pageToken,
+  pageSize = 100
+}) {
+  return request({
+    url: '/general-ledger/list-posting-type',
+    method: 'get',
+    params: {
+      page_size: pageSize,
+      page_token: pageToken,
+      //  DSL Query
+      search_value: searchValue
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+export function listOrganizationsRequest({
+  searchValue,
+  pageToken,
+  pageSize = 100
+}) {
+  return request({
+    url: '/general-ledger/list-organizations',
+    method: 'get',
+    params: {
+      page_size: pageSize,
+      page_token: pageToken,
+      //  DSL Query
+      search_value: searchValue
     }
   })
     .then(response => {

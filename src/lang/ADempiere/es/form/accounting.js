@@ -30,7 +30,14 @@ const accounting = {
   table: 'Tabla',
   recordId: 'ID del Registro',
   rePosAccounting: 'Re-Contabilizar',
-  force: 'Forzar'
+  currency: 'Moneda',
+  transactionDate: 'Fecha de la Transacción',
+  force: 'Forzar',
+  creditSource: 'Crédito Fuente',
+  debitSource: 'Débito Fuente',
+  rate: 'Tasa',
+  description: 'Descripción',
+  typeApplication: 'Tipo de Aplicación'
 }
 
 export default accounting
