@@ -216,6 +216,7 @@ export default defineComponent({
 
     const generateTitle = (title) => {
       const hasKey = lang.te('page.processActivity.' + title)
+      console.log({ hasKey })
       if (hasKey) {
         // $t : this method from vue-i18n, inject in @/lang/index.js
         const translatedTitle = lang.t('page.processActivity.' + title)

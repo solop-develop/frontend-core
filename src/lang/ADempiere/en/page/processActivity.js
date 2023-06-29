@@ -23,7 +23,10 @@ const processActivity = {
   name: 'Name',
   status: 'Status',
   zoomIn: 'Zoom in',
-  copyOutput: 'Copy Output'
+  copyOutput: 'Copy Output',
+  finished: 'Finished',
+  withErrors: 'With Errors',
+  inProcess: 'In Process'
 }
 
 export default processActivity

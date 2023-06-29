@@ -23,7 +23,7 @@
         <el-tab-pane>
           <span slot="label">
             <el-badge :value="getProcessLogSuccess.length" type="success" class="item" style="color: #67C23A">
-              {{ generateTitle('complete') }}
+              {{ $t('page.processActivity.finished') }}
             </el-badge>
           </span>
           <h1 v-if="isEmptyValue(getProcessLogSuccess)" class="text-center">
@@ -162,7 +162,7 @@
         <el-tab-pane>
           <span slot="label">
             <el-badge :value="getProcessLogError.length" class="item" type="danger" style="color: #F56C6C">
-              {{ generateTitle('error') }}
+              {{ $t('page.processActivity.withErrors') }}
             </el-badge>
           </span>
           <h1 v-if="isEmptyValue(getProcessLogError)" class="text-center">
@@ -284,7 +284,7 @@
         <el-tab-pane>
           <span slot="label">
             <el-badge :value="getProcessLogProcessing.length" class="item" type="info" style="color: #909399">
-              Procesando
+              {{ $t('page.processActivity.inProcess') }}
             </el-badge>
           </span>
           <h1 v-if="isEmptyValue(getProcessLogProcessing)" class="text-center">
