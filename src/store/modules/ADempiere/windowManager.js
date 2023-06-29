@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,6 +32,11 @@ import {
 // Constants
 import { UUID } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
+import { IS_ADVANCED_QUERY } from '@/utils/ADempiere/dictionaryUtils'
+import {
+  IGNORE_VALUE_OPERATORS_LIST, MULTIPLE_VALUES_OPERATORS_LIST, RANGE_VALUE_OPERATORS_LIST
+} from '@/utils/ADempiere/dataUtils'
+import { FIELDS_DATE } from '@/utils/ADempiere/references'
 
 // Utils and Helper Methods
 import { containerManager } from '@/utils/ADempiere/dictionary/window'
@@ -895,6 +900,71 @@ const windowManager = {
         return row.UUID === recordUuid
       })
       return rowIndex
+    },
+
+    getTabDataFilters: (state, getters) => ({ parentUuid, containerUuid }) => {
+      const panelAdvancedQuery = getters.getStoredTab(
+        parentUuid + IS_ADVANCED_QUERY,
+        containerUuid + IS_ADVANCED_QUERY
+      )
+      const filters = {}
+      const fieldsList = panelAdvancedQuery.fieldsList.filter(field => {
+        // hidden of search criteria
+        return field.isShowedFromUser
+      })
+      fieldsList.forEach(field => {
+        // default operator
+        const { columnName, operator, valueType } = field
+
+        let value, valueTo, values
+
+        const contextValue = getters.getValueOfFieldOnContainer({
+          containerUuid: containerUuid + IS_ADVANCED_QUERY,
+          columnName: columnName
+        })
+        if (!IGNORE_VALUE_OPERATORS_LIST.includes(operator)) {
+          if (isEmptyValue(contextValue)) {
+            return
+          }
+          // TODO: Improve conditions
+          if (FIELDS_DATE.includes(field.displayType)) {
+            if (MULTIPLE_VALUES_OPERATORS_LIST.includes(operator)) {
+              values = contextValue
+            } else if (RANGE_VALUE_OPERATORS_LIST.includes(operator)) {
+              if (Array.isArray(contextValue)) {
+                value = contextValue.at(0)
+                valueTo = contextValue.at(1)
+              } else {
+                value = contextValue
+                valueTo = getters.getValueOfFieldOnContainer({
+                  containerUuid: containerUuid + IS_ADVANCED_QUERY,
+                  columnName: field.columnNameTo
+                })
+              }
+            } else {
+              value = contextValue
+            }
+          } else {
+            if (Array.isArray(contextValue)) {
+              values = contextValue
+            } else {
+              value = contextValue
+            }
+          }
+        }
+
+        filters[columnName] = {
+          ...filters[columnName] || {},
+          columnName,
+          operator,
+          value,
+          valueTo,
+          values,
+          valueType
+        }
+      })
+
+      return Object.values(filters)
     },
 
     getCurrentRecordOnPanel: (state, getters) => (containerUuid) => {

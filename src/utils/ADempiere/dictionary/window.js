@@ -1809,9 +1809,14 @@ export const containerManager = {
     pageSize,
     pageNumber = 1
   }) => {
+    const filters = store.getters.getTabDataFilters({
+      parentUuid,
+      containerUuid
+    })
     store.dispatch('getEntities', {
       parentUuid,
       containerUuid,
+      filters,
       pageSize,
       pageNumber
     })
@@ -1822,9 +1827,14 @@ export const containerManager = {
     pageNumber = 1,
     pageSize = 15
   }) => {
+    const filters = store.getters.getTabDataFilters({
+      parentUuid,
+      containerUuid
+    })
     store.dispatch('getEntities', {
       parentUuid,
       containerUuid,
+      filters,
       pageSize,
       pageNumber
     })
