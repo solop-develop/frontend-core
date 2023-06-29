@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -154,4 +154,63 @@ export function readOnlyColumn(columnName) {
   return READ_ONLY_FORM_COLUMNS.find(item => {
     return item.columnName === columnName
   })
+}
+
+/**
+ * Validate if column name is reserved
+ * @return {Boolean}
+ */
+export function isReservedColumn(columnName) {
+  //	its must be change for dynamic dictionary query
+  return columnName === 'AD_Client_ID' ||
+    //
+    columnName.startsWith('Created') ||
+    columnName.startsWith('Updated') ||
+    columnName === 'EntityType' ||
+    columnName === 'DocumentNo' ||
+    columnName === 'Processed' ||
+    columnName === 'IsSelfService' ||
+    columnName === 'DocAction' ||
+    columnName === 'DocStatus' ||
+    columnName === 'Posted' ||
+    columnName === 'IsReconciled' ||
+    columnName === 'IsApproved' || // BF [ 1943682 ]
+    columnName === 'IsGenerated' || // BF [ 1943682 ]
+    columnName.startsWith('Ref_') ||
+    //	Order/Invoice
+    columnName === 'GrandTotal' ||
+    columnName === 'TotalLines' ||
+    columnName === 'C_CashLine_ID' ||
+    columnName === 'C_Payment_ID' ||
+    columnName === 'IsPaid' ||
+    columnName === 'IsAllocated' ||
+    // Bug [ 1807947 ]
+    columnName === 'C_DocType_ID' ||
+    columnName === 'Line' ||
+    columnName === 'UUID' ||
+    columnName === 'Reversal_ID' ||
+    columnName === 'ReversalLine_ID' ||
+    columnName === 'ProcessedOn' ||
+    columnName === 'Processing' ||
+    columnName === 'Related_ID' ||
+    columnName === 'SeqNo' ||
+    columnName === 'IsActive' ||
+    columnName === 'RelatedPayment_ID' ||
+    columnName === 'RelatedProduct_ID' ||
+    columnName === 'Ref_BPartner_ID' ||
+    columnName === 'Ref_DefinitionPeriod_ID' ||
+    columnName === 'Ref_InOut_ID' ||
+    columnName === 'Ref_InOutLine_ID' ||
+    columnName === 'Ref_Invoice_ID' ||
+    columnName === 'Ref_InvoiceLine_ID' ||
+    columnName === 'Ref_Order_ID' ||
+    columnName === 'Ref_OrderLine_ID' ||
+    columnName === 'Ref_Payment_ID' ||
+    columnName === 'Ref_RMA_ID' ||
+    columnName === 'Ref_RMALine_ID' ||
+    columnName === 'IsReversal' ||
+    columnName === 'DatePrinted' ||
+    columnName === 'IsPrinted' ||
+    columnName === 'IsOverUnderPayment' ||
+    (columnName.startsWith('Ref_') && columnName.endsWith('_ID'))
 }

@@ -27,10 +27,11 @@ import {
 import {
   ACTIVE, CLIENT, DOCUMENT_ACTION, DOCUMENT_NO,
   PROCESSING, PROCESSED, UUID, VALUE, // READ_ONLY_FORM_COLUMNS
-  RECORD_ID
+  RECORD_ID,
+  LOG_COLUMNS_NAME_LIST
 } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
-import { YES_NO } from '@/utils/ADempiere/references'
+import { ID, LOCATION_ADDRESS, YES_NO } from '@/utils/ADempiere/references'
 import { containerManager as CONTAINER_MANAGER_BROWSER } from '@/utils/ADempiere/dictionary/browser'
 
 // API Request Methods
@@ -422,7 +423,7 @@ export const createNewRecord = {
   svg: false,
   icon: 'el-icon-circle-plus-outline',
   actionName: 'createNewRecord',
-  createNewRecord: ({ parentUuid, containerUuid }) => {
+  createNewRecord: ({ parentUuid, containerUuid, isCopyValues = false }) => {
     if (isReadOnlyTab({ parentUuid, containerUuid })) {
       return false
     }
@@ -445,10 +446,43 @@ export const createNewRecord = {
     //     containerUuid
     //   })
     // }
+    const currentValues = {}
+    if (isCopyValues) {
+      const copyableFields = tab.fieldsList.filter(field => {
+        if (field.isVirtualColumn || field.isKey) {
+          return false
+        }
+        if ([ID.id, LOCATION_ADDRESS.id].includes(field.displayType)) {
+          return false
+        }
+        // Ignore Standard Values
+        const { columnName } = field
+        if (LOG_COLUMNS_NAME_LIST.includes(columnName)) {
+          return false
+        }
+        if ([CLIENT, ACTIVE, PROCESSING, PROCESSED, UUID].includes(columnName)) {
+          return false
+        }
+        return field.isAllowCopy
+      })
+      const tabContext = store.getters.getValuesView({
+        containerUuid,
+        format: 'object'
+      })
+      copyableFields.forEach(field => {
+        const { columnName } = field
+        const value = tabContext[columnName]
+
+        if (!isEmptyValue(value)) {
+          currentValues[columnName] = value
+        }
+      })
+    }
 
     store.dispatch('setTabDefaultValues', {
       parentUuid,
-      containerUuid
+      containerUuid,
+      overwriteValues: currentValues
     })
   }
 }

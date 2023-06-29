@@ -677,6 +677,7 @@ export default {
   setTabDefaultValues({ commit, dispatch, getters, rootGetters }, {
     parentUuid,
     containerUuid,
+    overwriteValues = {},
     isOverWriteParent = true
   }) {
     return new Promise(resolve => {
@@ -722,6 +723,21 @@ export default {
 
         commit('permantLink/setIsReadFilters', null, {
           root: true
+        })
+      }
+
+      // with copy values
+      if (!isEmptyValue(overwriteValues)) {
+        console.log(overwriteValues)
+        defaultAttributes = defaultAttributes.map(attribute => {
+          const filterValue = overwriteValues[attribute.columnName]
+          if (isEmptyValue(filterValue)) {
+            return attribute
+          }
+          return {
+            ...attribute,
+            value: filterValue
+          }
         })
       }
 
