@@ -67,7 +67,7 @@
                   </div>
 
                   <div class="actions">
-                    <el-dropdown @command="handleCommand" trigger="click">
+                    <el-dropdown trigger="click" @command="handleCommand">
                       <span class="el-dropdown-link">
                         {{ $t('components.contextMenuActions') }}
                         <i class="el-icon-arrow-down el-icon--right" />
@@ -206,7 +206,7 @@
                   </div>
 
                   <div class="actions">
-                    <el-dropdown @command="handleCommand" trigger="click">
+                    <el-dropdown trigger="click" @command="handleCommand">
                       <span class="el-dropdown-link">
                         {{ $t('components.contextMenuActions') }}
                         <i class="el-icon-arrow-down el-icon--right" />
@@ -328,7 +328,7 @@
                   </div>
 
                   <div class="actions">
-                    <el-dropdown @command="handleCommand" trigger="click">
+                    <el-dropdown trigger="click" @command="handleCommand">
                       <span class="el-dropdown-link">
                         {{ $t('components.contextMenuActions') }}
                         <i class="el-icon-arrow-down el-icon--right" />

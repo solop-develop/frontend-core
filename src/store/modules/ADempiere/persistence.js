@@ -35,7 +35,7 @@ import {
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import { getContextDefaultValue } from '@/utils/ADempiere/dictionaryUtils.js'
-import { isSupportLookup } from '@/utils/ADempiere/references'
+import { BUTTON, isSupportLookup } from '@/utils/ADempiere/references'
 
 const persistence = {
   state: {
@@ -126,7 +126,7 @@ const persistence = {
           columnName = field.columnName
         }
 
-        if (isEmptyValue(recordUuid)) {
+        if (isEmptyValue(recordUuid) || recordUuid === 'create-new') {
           recordUuid = getters.getUuidOfContainer(field.containerUuid)
         }
 
@@ -142,7 +142,8 @@ const persistence = {
           oldValue = defaultValue
         }
 
-        if (isSupportLookup(field.displayType)) {
+        if (isSupportLookup(field.displayType) ||
+          (['DocAction', 'Record_ID'].includes(columnName) && BUTTON.id === field.displayType)) {
           let displayedValue
           if (!isEmptyValue(currentRecord)) {
             displayedValue = currentRecord[field.displayColumnName]
@@ -183,33 +184,29 @@ const persistence = {
           oldValue
         })
 
-        const emptyFields = getters.getTabFieldsEmptyMandatory({
-          parentUuid,
-          containerUuid,
-          formatReturn: false
-        }).filter(itemField => {
-          // omit send to server (to create or update) columns manage by backend
-          return itemField.isAlwaysUpdateable ||
-            !LOG_COLUMNS_NAME_LIST.includes(itemField.columnName)
-        }).map(itemField => {
-          return itemField.name
-        })
-
-        if (!isEmptyValue(emptyFields)) {
-          showMessage({
-            message: language.t('notifications.mandatoryFieldMissing') + emptyFields,
-            type: 'info'
+        const isAutosave = rootState.settings.autoSave
+        if (isAutosave) {
+          const emptyFields = getters.getTabFieldsEmptyMandatory({
+            parentUuid,
+            containerUuid,
+            formatReturn: false
+          }).filter(itemField => {
+            // omit send to server (to create or update) columns manage by backend
+            return itemField.isAlwaysUpdateable ||
+              !LOG_COLUMNS_NAME_LIST.includes(itemField.columnName)
+          }).map(itemField => {
+            return itemField.name
           })
-          resolve()
-          return
-        }
 
-        if (isEmptyValue(recordUuid) || recordUuid === 'create-new') {
-          recordUuid = getters.getUuidOfContainer(field.containerUuid)
-        }
+          if (!isEmptyValue(emptyFields)) {
+            showMessage({
+              message: language.t('notifications.mandatoryFieldMissing') + emptyFields,
+              type: 'info'
+            })
+            resolve()
+            return
+          }
 
-        const autoSave = rootState.settings.autoSave
-        if (autoSave) {
           dispatch('flushPersistenceQueue', {
             parentUuid: field.parentUuid,
             containerUuid,
