@@ -40,15 +40,18 @@
       </template>
       <el-button v-if="!isMobile" type="text" icon="el-icon-more" @click="isMenuOption()" />
       <el-popover
+        v-model="isProfilePreview"
         placement="bottom"
         width="260"
         trigger="click"
       >
         <div style="padding: 10px;">
-          <profile-preview
-            :user="user"
-            :avatar="avatar"
-          />
+          <div @click="zoomInProfile()">
+            <profile-preview
+              :user="user"
+              :avatar="avatar"
+            />
+          </div>
           <el-button type="text" style="float: left;" @click="cacheReset()"> {{ $t('navbar.resetCache') }}</el-button>
           <el-button type="text" style="float: right;" @click="logout">{{ $t('navbar.logOut') }}</el-button>
         </div>
@@ -92,7 +95,8 @@ export default {
     return {
       user: {},
       isMenuMobile: false,
-      driver: null
+      driver: null,
+      isProfilePreview: true
     }
   },
   computed: {
@@ -178,6 +182,12 @@ export default {
     this.driver = new Driver()
   },
   methods: {
+    zoomInProfile() {
+      this.$router.push({
+        path: '/profile/index'
+      }, () => {})
+      this.isProfilePreview = false
+    },
     guide() {
       this.driver = new Driver()
       const value = this.formatGuide(this.$route.meta.type)

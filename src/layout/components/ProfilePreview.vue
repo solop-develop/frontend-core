@@ -1,18 +1,18 @@
 <template>
   <div class="user-profi">
-    <router-link to="/profile/index">
-      <el-row>
-        <el-col :span="24" style="text-align: center;">
-          <el-avatar shape="circle" :size="100" fit="fill" :src="avatarResize" />
-          <br>
-          <el-button round style="margin-top: 3%;" @click="handleClick">
-            <b>
-              {{ userName }}
-            </b>
-          </el-button>
-        </el-col>
-      </el-row>
-    </router-link>
+    <!-- <router-link to="/profile/index"> -->
+    <el-row>
+      <el-col :span="24" style="text-align: center;">
+        <el-avatar shape="circle" :size="100" fit="fill" :src="avatarResize" />
+        <br>
+        <el-button round style="margin-top: 3%;" @click="handleClick">
+          <b>
+            {{ userName }}
+          </b>
+        </el-button>
+      </el-col>
+    </el-row>
+    <!-- </router-link> -->
     <roles-navbar />
   </div>
 </template>
