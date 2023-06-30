@@ -1,5 +1,9 @@
 <template>
   <div id="appMain" :class="styleForm">
+    <span v-if="isMobile">
+      <navbar />
+      <tags-view />
+    </span>
     <transition name="fade-transform" mode="out-in">
       <keep-alive :include="cachedViews">
         <router-view :key="key" style="height: 100% !important;width: 100% !important;display: contents;" />
@@ -9,9 +13,16 @@
 </template>
 
 <script>
+import Navbar from '@/layout/components/Navbar'
+import TagsView from '@/layout/components/TagsView'
+
 export default {
   name: 'AppMain',
 
+  components: {
+    Navbar,
+    TagsView
+  },
   computed: {
     cachedViews() {
       return this.$store.state.tagsView.cachedViews
@@ -24,6 +35,9 @@ export default {
         return 'app-main-from'
       }
       return 'app-main'
+    },
+    isMobile() {
+      return this.$store.state.app.device === 'mobile'
     }
   },
 

@@ -3,7 +3,7 @@
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar v-show="showMenu" class="sidebar-container" />
     <div :class="{hasTagsView:needTagsView}" class="main-container" :style="showMenu ? '' : 'margin-left:0px'">
-      <div>
+      <div v-if="!isMobile">
         <navbar v-show="showNavar" />
         <tags-view v-if="needTagsView" />
       </div>
@@ -53,6 +53,9 @@ export default {
     styleContainer() {
       if (this.$route.meta.type === 'from') return 'display: contents'
       return 'height: 100vh;'
+    },
+    isMobile() {
+      return this.$store.state.app.device === 'mobile'
     }
   },
   methods: {

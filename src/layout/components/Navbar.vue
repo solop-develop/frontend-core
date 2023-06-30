@@ -96,7 +96,7 @@ export default {
       user: {},
       isMenuMobile: false,
       driver: null,
-      isProfilePreview: true
+      isProfilePreview: false
     }
   },
   computed: {

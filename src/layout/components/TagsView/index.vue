@@ -35,25 +35,28 @@
           </span>
         </router-link>
       </draggable>
-      <router-link
-        v-for="tag in visitedViews"
-        v-else
-        v-slot="{ navigate }"
-        ref="tag"
-        :key="tag.path"
-        custom
-        :class="isActive(tag)?'active':''"
-        :to="{ name: tag.name, path: tag.path, query: tag.query, fullPath: tag.fullPath, params: tag.params }"
-        tag="span"
-        class="tags-view-item"
-        @click.middle.native="!isAffix(tag)?closeValidateTag(tag):''"
-        @contextmenu.prevent.native="openMenu(tag,$event)"
-      >
-        <span role="link" @click="navigate" @keypress.enter="navigate">
-          {{ generateTitle(tag.title) }}
-          <span v-if="!isAffix(tag)" class="el-icon-close" @click.prevent.stop="closeValidateTag(tag)" />
-        </span>
-      </router-link>
+      <template v-else>
+        <div style="display: flex;">
+          <router-link
+            v-for="tag in visitedViews"
+            v-slot="{ navigate }"
+            ref="tag"
+            :key="tag.path"
+            custom
+            :class="isActive(tag)?'active':''"
+            :to="{ name: tag.name, path: tag.path, query: tag.query, fullPath: tag.fullPath, params: tag.params }"
+            tag="span"
+            class="tags-view-item"
+            @click.middle.native="!isAffix(tag)?closeValidateTag(tag):''"
+            @contextmenu.prevent.native="openMenu(tag,$event)"
+          >
+            <span role="link" @click="navigate" @keypress.enter="navigate">
+              {{ generateTitle(tag.title) }}
+              <span v-if="!isAffix(tag)" class="el-icon-close" @click.prevent.stop="closeValidateTag(tag)" />
+            </span>
+          </router-link>
+        </div>
+      </template>
     </scroll-pane>
     <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
       <li @click="refreshSelectedTag(selectedTag)">{{ $t('tagsView.refresh') }}</li>
