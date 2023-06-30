@@ -23,6 +23,7 @@ const processActivity = {
   name: 'Name',
   status: 'Status',
   zoomIn: 'Zoom in',
+  reRun: 'Re-Run',
   copyOutput: 'Copy Output',
   finished: 'Finished',
   withErrors: 'With Errors',

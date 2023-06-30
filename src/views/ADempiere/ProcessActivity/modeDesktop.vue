@@ -80,8 +80,8 @@
                           {{ $t('views.seeReport') }}
                         </el-dropdown-item>
 
-                        <el-dropdown-item :command="{ ...activity, command: 'zoomIn' }">
-                          {{ $t('page.processActivity.zoomIn') }}
+                        <el-dropdown-item v-else :command="{ ...activity, command: 'zoomIn' }">
+                          {{ $t('page.processActivity.reRun') }}
                         </el-dropdown-item>
                         <el-dropdown-item :command="{ ...activity, command: 'copyLogs' }">
                           {{ $t('page.processActivity.copyOutput') }}
