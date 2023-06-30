@@ -199,7 +199,7 @@ export default {
       this.isMenuMobile = !this.isMenuMobile
     },
     cacheReset() {
-      this.$store.dispatch('runCache')
+      this.$store.dispatch('runCacheReset')
     },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
