@@ -1,8 +1,8 @@
 <!--
  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
- Contributor(s): Leonel Matos lmatos@erpya.com www.erpya.com
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
+ Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ Contributor(s): Leonel Matos lmatos@erpya.com
+ Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
@@ -16,6 +16,7 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <https:www.gnu.org/licenses/>.
 -->
+
 <template>
   <div v-if="!isLoadProcess">
     <div v-if="!isEmptyValue(getProcessLog)" key="with-process" class="app-container">
@@ -66,13 +67,13 @@
                   </div>
 
                   <div class="actions">
-                    <el-dropdown @command="handleCommand">
+                    <el-dropdown @command="handleCommand" trigger="click">
                       <span class="el-dropdown-link">
                         {{ $t('components.contextMenuActions') }}
                         <i class="el-icon-arrow-down el-icon--right" />
                       </span>
 
-                      <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-menu slot="dropdown" trigger="click">
                         <el-dropdown-item
                           v-if="activity.isReport"
                           :command="{ ...activity, command: 'seeReport' }"
@@ -205,7 +206,7 @@
                   </div>
 
                   <div class="actions">
-                    <el-dropdown @command="handleCommand">
+                    <el-dropdown @command="handleCommand" trigger="click">
                       <span class="el-dropdown-link">
                         {{ $t('components.contextMenuActions') }}
                         <i class="el-icon-arrow-down el-icon--right" />
@@ -220,7 +221,7 @@
                         </el-dropdown-item>
 
                         <el-dropdown-item :command="{ ...activity, command: 'zoomIn' }">
-                          {{ $t('page.processActivity.zoomIn') }}
+                          {{ $t('page.processActivity.reRun') }}
                         </el-dropdown-item>
 
                         <!-- TODO: add more actions -->
@@ -327,7 +328,7 @@
                   </div>
 
                   <div class="actions">
-                    <el-dropdown @command="handleCommand">
+                    <el-dropdown @command="handleCommand" trigger="click">
                       <span class="el-dropdown-link">
                         {{ $t('components.contextMenuActions') }}
                         <i class="el-icon-arrow-down el-icon--right" />
@@ -342,7 +343,7 @@
                         </el-dropdown-item>
 
                         <el-dropdown-item :command="{ ...activity, command: 'zoomIn' }">
-                          {{ $t('page.processActivity.zoomIn') }}
+                          {{ $t('page.processActivity.reRun') }}
                         </el-dropdown-item>
 
                         <!-- TODO: add more actions -->
