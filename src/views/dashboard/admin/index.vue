@@ -18,7 +18,7 @@
 
 <template>
   <div class="dashboard-editor-container">
-    <el-row :gutter="12">
+    <el-row v-if="!isMobile" :gutter="12">
       <el-col :span="24" style="padding-right:10px;margin-bottom:20px;">
         <el-card shadow="always">
           <el-col :span="16" style="padding-right:10px;margin-bottom:20px;">
@@ -27,6 +27,25 @@
           </el-col>
 
           <el-col :span="8">
+            <br>
+            <b>{{ $t('component.dashboard.header.role') }}: </b> {{ currentRole.name }} <br>
+            <b>{{ $t('component.dashboard.header.client') }}: </b> {{ currentRole.clientName }} <br>
+            <b>{{ $t('component.dashboard.header.organization') }}: </b> {{ organization.name }} <br>
+            <b>{{ $t('component.dashboard.header.warehouse') }}: </b> {{ warehouse.name }} <br>
+            <br>
+          </el-col>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row v-else :gutter="12">
+      <el-col :span="24" style="padding-right:10px;margin-bottom:20px;">
+        <el-card shadow="always">
+          <el-col :span="24" style="padding-right:10px;margin-bottom:20px;">
+            <h1 style="margin-bottom: 5px;">{{ $t('component.dashboard.header.welcome') }} {{ userInfo.name }}</h1>
+            {{ userInfo.description }}
+          </el-col>
+
+          <el-col :span="24">
             <br>
             <b>{{ $t('component.dashboard.header.role') }}: </b> {{ currentRole.name }} <br>
             <b>{{ $t('component.dashboard.header.client') }}: </b> {{ currentRole.clientName }} <br>
@@ -94,6 +113,10 @@ export default defineComponent({
       return store.getters.getStoredMainDashboard
     })
 
+    const isMobile = computed(() => {
+      return store.state.app.device === 'mobile'
+    })
+
     const listDashboard = computed(() => {
       const list = dashboardsList.value
       if (isEmptyValue(list)) {
@@ -151,7 +174,8 @@ export default defineComponent({
       userInfo,
       currentRole,
       organization,
-      warehouse
+      warehouse,
+      isMobile
     }
   }
 })
