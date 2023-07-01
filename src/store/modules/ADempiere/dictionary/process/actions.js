@@ -157,6 +157,7 @@ export default {
       })
       if (isEmptyValue(fieldsList)) {
         resolve(defaultAttributes)
+        return
       }
 
       fieldsList.forEach(field => {
