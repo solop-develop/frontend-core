@@ -51,7 +51,9 @@ const actionMenu = {
   // references
   delete: 'Delete',
   references: 'References',
-  withoutReferences: 'Without references for record'
+  withoutReferences: 'Without references for record',
+  menu: 'Menú the',
+  moreOptions: 'More Options'
 }
 
 export default actionMenu

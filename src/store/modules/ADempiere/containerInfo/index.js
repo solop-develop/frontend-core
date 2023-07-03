@@ -35,6 +35,7 @@ const containerInfo = {
     listRecordLogs: [],
     recordAttachment: [],
     showContainerInfo: false,
+    showMenuMobile: false,
     containerPanelInfo: {},
     fieldLogs: [],
     currentFieldList: {
@@ -53,6 +54,9 @@ const containerInfo = {
     },
     setShowLogs(state, show) {
       state.showContainerInfo = show
+    },
+    setShowMenuMobile(state, show) {
+      state.showMenuMobile = show
     },
     setContainerInfo(state, params) {
       state.containerPanelInfo = params
@@ -177,6 +181,9 @@ const containerInfo = {
     },
     getShowLogs: (state) => {
       return state.showContainerInfo
+    },
+    getShowMenuMobile: (state) => {
+      return state.showMenuMobile
     },
     getContainerInfo: (state) => {
       return state.containerPanelInfo

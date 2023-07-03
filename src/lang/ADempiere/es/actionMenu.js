@@ -51,7 +51,9 @@ const actionMenu = {
   withoutRelations: 'Sin Relaciones',
   // references
   references: 'Referencias',
-  withoutReferences: 'Sin referencias para el registro'
+  withoutReferences: 'Sin referencias para el registro',
+  menu: 'Menú de',
+  moreOptions: 'Más Opciones'
 }
 
 export default actionMenu
