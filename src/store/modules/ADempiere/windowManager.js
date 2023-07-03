@@ -907,8 +907,12 @@ const windowManager = {
         parentUuid + IS_ADVANCED_QUERY,
         containerUuid + IS_ADVANCED_QUERY
       )
+      if (isEmptyValue(panelAdvancedQuery)) {
+        // without filters on advanced query
+        return []
+      }
+
       const filters = {}
-      if (isEmptyValue(panelAdvancedQuery)) return []
       const fieldsList = panelAdvancedQuery.fieldsList.filter(field => {
         // hidden of search criteria
         return field.isShowedFromUser
