@@ -33,6 +33,7 @@ import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertArrayKeyValueToObject } from '@/utils/ADempiere/formatValue/iterableFormat'
 import {
+  isDisplayedField,
   generateWindow,
   createNewRecord,
   deleteRecord,
@@ -591,7 +592,17 @@ export default {
 
     fieldsList.forEach(itemField => {
       if (groupField === itemField.groupAssigned) {
-        const isShowedFromUser = fieldsShowed.includes(itemField.columnName)
+        const { columnName } = itemField
+
+        const isShowedFromUser = fieldsShowed.includes(columnName)
+        if (itemField.isShowedFromUser === isShowedFromUser) {
+          // no to mutate the state unnecessarily
+          return
+        }
+        if (!isDisplayedField(itemField)) {
+          // is hidden by logic not change showed from user
+          return
+        }
 
         commit('changeTabFieldAttribute', {
           field: itemField,

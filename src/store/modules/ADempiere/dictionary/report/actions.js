@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ import {
   runReportAsPrintFormat,
   runReportAsView
 } from '@/utils/ADempiere/dictionary/report.js'
-import { generateProcess as generateReport } from '@/utils/ADempiere/dictionary/process.js'
+import { generateProcess as generateReport, isDisplayedField } from '@/utils/ADempiere/dictionary/process.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 export default {
@@ -245,9 +245,17 @@ export default {
     }
 
     fieldsList.forEach(itemField => {
-      let isShowedFromUser = false
-      if (fieldsShowed.includes(itemField.columnName)) {
-        isShowedFromUser = true
+      const { columnName } = itemField
+
+      const isShowedFromUser = fieldsShowed.includes(columnName)
+      if (itemField.isShowedFromUser === isShowedFromUser) {
+        // no to mutate the state unnecessarily
+        return
+      }
+
+      if (!isDisplayedField(itemField)) {
+        // is hidden by logic not change showed from user
+        return
       }
 
       commit('changeReportFieldAttribute', {
