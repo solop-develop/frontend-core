@@ -34,15 +34,6 @@
         :all-tabs-list="allTabsList"
         :actions-manager="actionsManager"
       />
-      <tab-manager-child
-        v-if="isWithChildsTab && isMobile"
-        class="tab-manager"
-        :parent-uuid="windowMetadata.uuid"
-        :container-manager="containerManager"
-        :tabs-list="windowMetadata.tabsListChild"
-        :all-tabs-list="allTabsList"
-        :actions-manager="actionsManager"
-      />
       <modal-dialog
         v-if="!isEmptyValue(processUuid)"
         :container-manager="containerManagerProcess"

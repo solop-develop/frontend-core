@@ -124,10 +124,11 @@ const containerInfo = {
       }
       commit('setShowLogs', show)
     },
-    panelInfo({ commit }, {
+    panelInfo({ commit, getters, state }, {
       currentRecord,
       currentTab
     }) {
+      if (getters.getShowMenuMobile) return
       commit('setContainerInfo', { currentRecord, currentTab })
 
       commit('changeWindowAttribute', {
