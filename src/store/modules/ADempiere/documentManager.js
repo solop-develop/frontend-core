@@ -27,7 +27,7 @@ import {
 
 // Utils and Helper Methods
 import { isEmptyValue, getTypeOfValue } from '@/utils/ADempiere/valueUtils'
-import { showNotification } from '@/utils/ADempiere/notification.js'
+import { showMessage, showNotification } from '@/utils/ADempiere/notification.js'
 
 const initState = {
   documentStatusesList: {},
@@ -93,6 +93,12 @@ const documentManager = {
           })
 
           resolve(documentStatusesList)
+        }).catch(error => {
+          showMessage({
+            message: error.message,
+            type: 'error'
+          })
+          console.warn(`Error Get Document Statuses: ${error.message}. Code: ${error.code}.`)
         })
       })
     },
@@ -120,6 +126,12 @@ const documentManager = {
           })
 
           resolve(documentActionsList)
+        }).catch(error => {
+          showMessage({
+            message: error.message,
+            type: 'error'
+          })
+          console.warn(`Error Get Document Actions: ${error.message}. Code: ${error.code}.`)
         })
       })
     },
@@ -164,6 +176,10 @@ const documentManager = {
             resolve(response)
           })
           .catch(error => {
+            showMessage({
+              message: error.message,
+              type: 'error'
+            })
             console.warn(`Error Run Doc Action: ${error.message}. Code: ${error.code}.`)
           })
       })
