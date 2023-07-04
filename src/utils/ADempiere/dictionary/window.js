@@ -175,10 +175,13 @@ export function isDisplayedField({ isDisplayed, displayLogic, isDisplayedFromLog
 export function evaluateDefaultFieldShowed({
   parentUuid, containerUuid,
   isKey, isParent, columnName,
-  defaultValue, displayType, isShowedFromUser,
+  defaultValue, displayType, isShowedFromUser, displayLogic,
   isMandatory, mandatoryLogic, isMandatoryFromLogic
 }) {
   if (String(defaultValue).startsWith('@SQL=')) {
+    return true
+  }
+  if (!isEmptyValue(displayLogic)) {
     return true
   }
 
