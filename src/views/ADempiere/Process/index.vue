@@ -27,7 +27,7 @@
         :help="processMetadata.help"
       />
       <div id="process-loaded">
-        <span style="float: right;">
+        <p style="text-align: end;">
           <action-menu
             id="action-menu"
             :parent-uuid="processUuid"
@@ -36,8 +36,8 @@
             :actions-manager="actionsManager"
             :relations-manager="relationsManager"
           />
-        </span>
-        <br>
+        </p>
+        <!-- <br> -->
         <!-- style="float: right;padding-left: 1%;z-index: 99;" -->
         <panel-definition
           id="panel-definition"

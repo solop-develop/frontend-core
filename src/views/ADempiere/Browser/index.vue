@@ -28,12 +28,13 @@
         :name="browserMetadata.name"
         :help="browserMetadata.help"
       />
-      <action-menu
-        :container-manager="containerManager"
-        :container-uuid="browserUuid"
-        :actions-manager="actionsManager"
-        style="position: absolute;"
-      />
+      <p style="text-align: end;">
+        <action-menu
+          :container-manager="containerManager"
+          :container-uuid="browserUuid"
+          :actions-manager="actionsManager"
+        />
+      </p>
 
       <div id="browser-query-criteria">
         <!-- Query Criteria -->
