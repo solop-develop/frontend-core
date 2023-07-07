@@ -33,6 +33,8 @@ const VAllocation = {
     businessPartnerId: '',
     organizationId: '',
     currencyId: '',
+    listOrganization: [],
+    listCurrency: [],
     date: '',
     transactionType: '',
     description: '',
@@ -120,8 +122,21 @@ export default {
     },
     setListSelectInvoices(state, list) {
       state.list.invoces = list
+    },
+    /**
+     * Update Attribute
+     * Generic mutation that allows to change the state of the store
+     * @param {string} attribute - Attribute and which one to update - Requires it to be an Object
+     * @param {string} criteria - Object Criteria
+     * @param {string} value - Value to Update
+     */
+    updateAttributeCriteriaVallocation(state, {
+      attribute,
+      criteria,
+      value
+    }) {
+      state[criteria][attribute] = value
     }
-
   },
   actions: {
     findListPayment({ commit, state }) {

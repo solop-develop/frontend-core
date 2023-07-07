@@ -42,7 +42,7 @@ export function listBusinessPartners({
 export function listOrganizations({
   searchValue,
   pageToken,
-  pageSize
+  pageSize = 250
 }) {
   return request({
     url: '/form/addons/payment-allocation/organizations',
@@ -62,7 +62,7 @@ export function listOrganizations({
 export function listCurrencies({
   searchValue,
   pageToken,
-  pageSize
+  pageSize = 250
 }) {
   return request({
     url: '/form/addons/payment-allocation/currencies',
