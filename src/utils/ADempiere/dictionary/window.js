@@ -1569,10 +1569,11 @@ export const containerManager = {
       return true
     }
 
-    const { isParentTab, linkColumnName, parentColumnName } = store.getters.getStoredTab(parentUuid, containerUuid)
+    // tab properties
+    const { isParentTab, linkColumnName } = store.getters.getStoredTab(parentUuid, containerUuid)
 
     // fill value with context
-    if (field.isParent || linkColumnName === columnName || parentColumnName === columnName) {
+    if (linkColumnName === columnName) {
       return true
     }
 
@@ -1584,18 +1585,6 @@ export const containerManager = {
       }
     }
 
-    // client id value of record
-    const clientIdRecord = store.getters.getValueOfField({
-      parentUuid,
-      containerUuid,
-      columnName: CLIENT
-    })
-    // evaluate client id context with record
-    const preferenceClientId = store.getters.getSessionContextClientId
-    if (clientIdRecord !== preferenceClientId) {
-      return true
-    }
-
     // record uuid
     const recordUuid = store.getters.getUuidOfContainer(containerUuid)
     // edit mode is diferent to create new
@@ -1603,6 +1592,18 @@ export const containerManager = {
     if (isWithRecord) {
       // not updateable and record saved
       if (!field.isUpdateable) {
+        return true
+      }
+
+      // client id value of record
+      const clientIdRecord = store.getters.getValueOfField({
+        parentUuid,
+        containerUuid,
+        columnName: CLIENT
+      })
+      // evaluate client id context with record
+      const preferenceClientId = store.getters.getSessionContextClientId
+      if (clientIdRecord !== preferenceClientId) {
         return true
       }
     } else {
@@ -1617,7 +1618,7 @@ export const containerManager = {
     if (columnName !== ACTIVE) {
       // is active value of record
       const isActiveRecord = store.getters.getValueOfField({
-        parentUuid,
+        parentUuid: isParentTab ? undefined : parentUuid,
         containerUuid,
         columnName: ACTIVE
       })
