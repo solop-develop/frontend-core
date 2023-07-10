@@ -185,6 +185,15 @@ export function evaluateDefaultFieldShowed({
     return true
   }
 
+  if (isParent) {
+    return true
+  }
+
+  const { isParentTab, linkColumnName, parentColumnName } = store.getters.getStoredTab(parentUuid, containerUuid)
+  if (!isParentTab && (linkColumnName === columnName || parentColumnName === columnName)) {
+    return true
+  }
+
   const isMandatoryGenerated = isMandatoryField({
     isKey, columnName, displayType, isMandatory, mandatoryLogic, isMandatoryFromLogic
   })
@@ -243,11 +252,21 @@ export function evaluateDefaultFieldShowed({
  * @param {boolean} isParent
  */
 export function evaluateDefaultColumnShowed({
+  parentUuid, containerUuid,
   isKey, isParent, columnName,
   defaultValue, displayType, isShowedTableFromUser,
   isMandatory, mandatoryLogic, isMandatoryFromLogic
 }) {
   if (String(defaultValue).startsWith('@SQL=')) {
+    return true
+  }
+
+  if (isParent) {
+    return true
+  }
+
+  const { isParentTab, linkColumnName, parentColumnName } = store.getters.getStoredTab(parentUuid, containerUuid)
+  if (!isParentTab && (linkColumnName === columnName || parentColumnName === columnName)) {
     return true
   }
 
