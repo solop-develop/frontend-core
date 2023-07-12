@@ -256,6 +256,24 @@ const staticRoutes = [
         }
       }
     ]
+  },
+  {
+    path: '/VFileImport',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/v-file-import',
+        component: () => import('@/views/ADempiere/Form'),
+        name: 'VFileImport',
+        meta: {
+          title: 'VFileImport',
+          icon: 'tree-table',
+          isIndex: true,
+          type: 'from'
+        }
+      }
+    ]
   }
 ]
 
