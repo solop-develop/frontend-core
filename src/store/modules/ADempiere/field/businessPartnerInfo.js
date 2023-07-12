@@ -119,6 +119,7 @@ const businessPartner = {
       tableName,
       columnName,
       //
+      isFrom = false,
       filters = [],
       searchValue,
       pageNumber,
@@ -139,7 +140,7 @@ const businessPartner = {
           containerUuid
         })
 
-        if (!isEmptyValue(isSOTrx)) {
+        if (!isEmptyValue(isSOTrx) && !isFrom) {
           let columnName = 'IsVendor'
           if (isSOTrx) {
             columnName = 'IsCustomer'

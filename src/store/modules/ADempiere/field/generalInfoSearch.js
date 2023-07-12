@@ -152,6 +152,7 @@ const generalInfoSearch = {
       tableName,
       columnName,
       //
+      isFrom = false,
       filters,
       searchValue,
       pageNumber,
@@ -172,6 +173,7 @@ const generalInfoSearch = {
             tableName,
             columnName,
             //
+            isFrom,
             filters,
             searchValue,
             pageNumber,
