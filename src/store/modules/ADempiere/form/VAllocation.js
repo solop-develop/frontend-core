@@ -63,7 +63,15 @@ const VAllocation = {
     description: '',
     totalDifference: 0,
     transactionOrganizationId: ''
-  }
+  },
+  paymentAssignment: {
+    list: {
+      invoces: [],
+      payments: [],
+      difference: []
+    }
+  },
+  steps: 0
 }
 
 export default {
@@ -136,6 +144,15 @@ export default {
       value
     }) {
       state[criteria][attribute] = value
+    },
+    setChangeSteps(state, steps) {
+      state.steps = steps
+    },
+    setAddListInvoces(state, invoces) {
+      state.paymentAssignment.list.invoces = invoces
+    },
+    setAddListPayments(state, payments) {
+      state.paymentAssignment.list.payments = payments
     }
   },
   actions: {
@@ -318,6 +335,12 @@ export default {
     },
     getProcess(state) {
       return state.process
+    },
+    getPaymentAssignment(state) {
+      return state.paymentAssignment.list
+    },
+    getSteps(state) {
+      return state.steps
     }
   }
 }
