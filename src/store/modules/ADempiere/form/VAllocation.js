@@ -155,11 +155,9 @@ export default {
       state.paymentAssignment.list.payments = payments
     },
     setAddDiference(state, addDiference) {
-      // console.log({ addDiference })
       const allList = state.paymentAssignment.list.difference
       const isExistList = allList.find(row => row.id === addDiference.id)
       if (isEmptyValue(isExistList)) {
-        // console.log({ ...addDiference })
         state.paymentAssignment.list.difference.push(addDiference)
       }
     },
@@ -214,7 +212,6 @@ export default {
               showClose: true
             })
             resolve([])
-            // commit('setListProduct', [])
             console.warn(`Error getting List Product: ${error.message}. Code: ${error.code}.`)
           })
       })
