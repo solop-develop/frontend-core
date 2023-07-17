@@ -153,6 +153,18 @@ export default {
     },
     setAddListPayments(state, payments) {
       state.paymentAssignment.list.payments = payments
+    },
+    setAddDiference(state, addDiference) {
+      // console.log({ addDiference })
+      const allList = state.paymentAssignment.list.difference
+      const isExistList = allList.find(row => row.id === addDiference.id)
+      if (isEmptyValue(isExistList)) {
+        // console.log({ ...addDiference })
+        state.paymentAssignment.list.difference.push(addDiference)
+      }
+    },
+    setDiferenceTotal(state, list) {
+      state.paymentAssignment.list.difference = list
     }
   },
   actions: {
@@ -303,6 +315,14 @@ export default {
             console.warn(`Error getting List Product: ${error.message}. Code: ${error.code}.`)
           })
       })
+    },
+    changeDiference({ commit, state }, {
+      row
+    }) {
+      const list = state.paymentAssignment.list.difference
+      const filters = list.filter(difference => difference.id !== row.id)
+      commit('setDiferenceTotal', filters)
+      return
     }
   },
   getters: {
@@ -341,6 +361,9 @@ export default {
     },
     getSteps(state) {
       return state.steps
+    },
+    getAllDiference(state) {
+      return state.paymentAssignment.list.difference
     }
   }
 }
