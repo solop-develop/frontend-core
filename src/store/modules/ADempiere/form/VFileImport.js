@@ -36,7 +36,13 @@ const VFileImport = {
     listCharsets: [],
     listImportFormats: [],
     listTables: []
-  }
+  },
+  file: {
+    data: [],
+    header: []
+  },
+  infoFormat: {},
+  navigationLine: {}
 }
 
 export default {
@@ -55,6 +61,16 @@ export default {
       value
     }) {
       state[attribute][criteria] = value
+    },
+    setFile(state, file) {
+      state.file = file
+    },
+    setInfoFormat(state, formats) {
+      state.infoFormat = formats
+    },
+    setNavigationLine(state, line) {
+      console.log({ line })
+      state.navigationLine = line
     }
   },
   actions: {
@@ -66,12 +82,12 @@ export default {
           id
         })
           .then(response => {
-            console.log({ response })
             commit('updateAttributeVFileImport', {
               attribute: 'attribute',
               criteria: 'formatFields',
               value: response.formatFields
             })
+            commit('setInfoFormat', response)
             resolve(response)
           })
           .catch(error => {
@@ -115,6 +131,15 @@ export default {
     },
     getOptions(state) {
       return state.options
+    },
+    getFile(state) {
+      return state.file
+    },
+    getInfoFormat(state) {
+      return state.infoFormat
+    },
+    getNavigationLine(state) {
+      return state.navigationLine
     }
   }
 }
