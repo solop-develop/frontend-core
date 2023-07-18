@@ -205,3 +205,51 @@ export function buildLinkHref({
 
   return link
 }
+
+/**
+ * Download Resource
+ * @param {string} resourceUuid
+ * @param {string} resourceName
+ */
+
+export function downloadResource({
+  mimeType,
+  reader,
+  name
+}) {
+  let resource
+  let link = {
+    href: undefined,
+    download: undefined
+  }
+  return new ReadableStream({
+    start(controller) {
+      // The following function handles each data chunk
+      function push() {
+        // "done" is a Boolean and value a "Uint8Array"
+        reader.read().then(({ done, value }) => {
+          // If there is no more data to read
+          if (done) {
+            link = buildLinkHref({
+              fileName: name,
+              outputStream: resource,
+              type: mimeType,
+              isDownload: false
+            })
+            // donwload report file
+            link.click()
+
+            controller.close()
+            return value
+          }
+          // Get the data and send it to the browser via the controller
+          controller.enqueue(value)
+          // Check chunks by logging to the console
+          resource = value
+          push()
+        })
+      }
+      push()
+    }
+  })
+}

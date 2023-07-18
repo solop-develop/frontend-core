@@ -64,6 +64,9 @@ export function requestResource({ resourceUuid, resourceName }, callBack = {
     responseType: 'arraybuffer',
     baseURL: config.adempiere.resource.url
   })
+    .then(response => {
+      return response
+    })
 }
 
 /**
