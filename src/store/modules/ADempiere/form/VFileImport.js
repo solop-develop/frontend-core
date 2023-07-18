@@ -18,7 +18,8 @@
 
 // API Request Methods
 import {
-  getImportFormats
+  getImportFormats,
+  getListImportTables
 } from '@/api/ADempiere/form/VFileImport.js'
 
 // Utils and Helper Methods
@@ -27,11 +28,14 @@ import {
 const VFileImport = {
   attribute: {
     charsets: '',
-    importFormats: ''
+    importFormats: '',
+    tablaId: 0,
+    formatFields: []
   },
   options: {
     listCharsets: [],
-    listImportFormats: []
+    listImportFormats: [],
+    listTables: []
   }
 }
 
@@ -63,12 +67,45 @@ export default {
         })
           .then(response => {
             console.log({ response })
+            commit('updateAttributeVFileImport', {
+              attribute: 'attribute',
+              criteria: 'formatFields',
+              value: response.formatFields
+            })
             resolve(response)
           })
           .catch(error => {
             console.warn(`Error getting Import Formats: ${error.message}. Code: ${error.code}.`)
             resolve([])
           })
+      })
+    },
+    findListTable({ commit }) {
+      getListImportTables()
+        .then(response => {
+          const { records } = response
+          commit('updateAttributeVFileImport', {
+            attribute: 'options',
+            criteria: 'listTables',
+            value: records
+          })
+        })
+        .catch(error => {
+          console.warn(`Error getting Import Table: ${error.message}. Code: ${error.code}.`)
+          commit('updateAttributeVFileImport', {
+            attribute: 'options',
+            criteria: 'listTables',
+            value: []
+          })
+        })
+    },
+    changeTable({ commit }, {
+      id
+    }) {
+      commit('updateAttributeVFileImport', {
+        attribute: 'attribute',
+        criteria: 'tablaId',
+        value: id
       })
     }
   },

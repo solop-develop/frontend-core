@@ -42,6 +42,7 @@ export function listCharsets({
 export function listImportFormats({
   searchValue,
   pageToken,
+  id,
   pageSize = 250
 }) {
   return request({
@@ -50,6 +51,7 @@ export function listImportFormats({
     params: {
       page_size: pageSize,
       page_token: pageToken,
+      table_id: id,
       //  DSL Query
       search_value: searchValue
     }
@@ -68,6 +70,16 @@ export function getImportFormats({
     params: {
       id
     }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+export function getListImportTables() {
+  return request({
+    url: '/form/addons/import-file-loader/list-import-tables',
+    method: 'get'
   })
     .then(response => {
       return camelizeObjectKeys(response)

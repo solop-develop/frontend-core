@@ -51,7 +51,7 @@ export default {
       }
     },
     styleContainer() {
-      if (this.$route.meta.type === 'from') return 'display: contents'
+      if (this.$route.meta.type === 'form') return 'display: contents'
       return 'height: 100vh;'
     },
     isMobile() {
