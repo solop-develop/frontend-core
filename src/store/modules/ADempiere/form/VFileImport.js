@@ -30,6 +30,7 @@ const VFileImport = {
     charsets: '',
     importFormats: '',
     tablaId: 0,
+    isProcess: false,
     formatFields: []
   },
   options: {

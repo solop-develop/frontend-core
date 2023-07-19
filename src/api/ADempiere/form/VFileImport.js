@@ -89,6 +89,8 @@ export function getListImportTables() {
 export function saveRecordImport({
   id,
   charset,
+  isProcess,
+  processId,
   importFormatId
 }) {
   return request({
@@ -97,6 +99,8 @@ export function saveRecordImport({
     data: {
       charset,
       resource_id: id,
+      is_process: isProcess,
+      process_id: processId,
       import_format_id: importFormatId
     }
   })
