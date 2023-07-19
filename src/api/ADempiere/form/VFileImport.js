@@ -85,3 +85,22 @@ export function getListImportTables() {
       return camelizeObjectKeys(response)
     })
 }
+
+export function saveRecordImport({
+  id,
+  charset,
+  importFormatId
+}) {
+  return request({
+    url: '/form/addons/import-file-loader/save-records',
+    method: 'post',
+    data: {
+      charset,
+      resource_id: id,
+      import_format_id: importFormatId
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}

@@ -24,6 +24,7 @@ import expressReceipt from './expressReceipt.js'
 import priceChecking from './priceChecking'
 import productInfo from './productInfo'
 import VAllocation from './VAllocation'
+import VFileImport from './VFileImport'
 import timeRecord from './timeRecord'
 import match from './match'
 import tasks from './tasks'
@@ -37,6 +38,7 @@ export default {
   priceChecking,
   productInfo,
   VAllocation,
+  VFileImport,
   timeRecord,
   match,
   tasks
