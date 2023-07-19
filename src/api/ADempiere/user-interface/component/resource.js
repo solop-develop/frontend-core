@@ -61,12 +61,21 @@ export function requestResource({ resourceUuid, resourceName }, callBack = {
   return request({
     url: urn,
     method: 'get',
-    responseType: 'arraybuffer',
+    // responseType: 'arraybuffer',
     baseURL: config.adempiere.resource.url
   })
-    .then(response => {
-      return response
-    })
+}
+
+export function requestDownloadResource({ resourceUuid, resourceName }) {
+  return request({
+    url: '/user-interface/component/resource/download',
+    method: 'get',
+    // responseType: 'arraybuffer',
+    params: {
+      resource_uuid: resourceUuid,
+      resource_name: resourceName
+    }
+  })
 }
 
 /**

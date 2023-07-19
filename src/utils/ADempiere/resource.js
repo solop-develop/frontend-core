@@ -20,6 +20,11 @@
 // related to upload to server side and downdload from server side to client side.
 // Please add the necessary functions here:
 import { config } from '@/utils/ADempiere/config'
+
+// Constants
+import { BEARER_TYPE } from '@/utils/auth'
+
+// Utils and Helper Methods
 import { getToken } from '@/utils/auth'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { mimeTypeOfReport } from '@/utils/ADempiere/dictionary/report'
@@ -89,8 +94,15 @@ export function getImagePath({
   height,
   operation = 'fit'
 }) {
+  const token = getToken()
+  let bearerToken = token
+  // Json Web Token
+  if (!isEmptyValue(bearerToken) && !bearerToken.startsWith(BEARER_TYPE)) {
+    bearerToken = `${BEARER_TYPE} ${token}`
+  }
+
   const url = config.adempiere.images.url
-  const urn = `img?&token=${getToken()}&action=${operation}&width=${width}&height=${height}&url=${file}`
+  const urn = `img?&token=${bearerToken}&action=${operation}&width=${width}&height=${height}&url=${file}`
   const uri = `${url}${urn}`
 
   return {
@@ -111,8 +123,15 @@ export function getResoursePath({
   resourceUuid,
   resourceName
 }) {
+  const token = getToken()
+  let bearerToken = token
+  // Json Web Token
+  if (!isEmptyValue(bearerToken) && !bearerToken.startsWith(BEARER_TYPE)) {
+    bearerToken = `${BEARER_TYPE} ${token}`
+  }
+
   const url = config.adempiere.resource.url
-  const urn = `resource?token=${getToken()}&resource_uuid=${resourceUuid}&resource_name=${resourceName}`
+  const urn = `resource?token=${bearerToken}&resource_uuid=${resourceUuid}&resource_name=${resourceName}`
   const uri = `${url}${urn}`
 
   return {
