@@ -20,16 +20,21 @@ const VFileImport = {
   title: 'Asignación de Pagos',
   step: {
     selectTable: 'Seleccione Tabla',
-    configureToImport: 'Configurar Archivo a Importar'
+    configureToImport: 'Configurar Archivo a Importar',
+    saveAndProcess: 'Guardar y Procesar'
   },
   selectTable: {
     title: 'Por Favor Seleccione una Tabla',
     importFormat: 'Formato de Importación',
-    listOfCharacterSets: 'Lista de conjuntos de caracteres'
+    listOfCharacterSets: 'Lista de Conjuntos de Caracteres'
   },
   configureToImport: {
     selectFileToImport: 'Seleccione Archivo a Importar',
     emptyDataTable: 'Sin Datos a Importar'
+  },
+  saveAndProcess: {
+    fileName: 'Nombre del Archivo',
+    processes: 'Procesos'
   }
 }
 

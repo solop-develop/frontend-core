@@ -29,6 +29,10 @@ const VFileImport = {
   configureToImport: {
     selectFileToImport: 'Select File to Import',
     emptyDataTable: 'No Data to Import'
+  },
+  saveAndProcess: {
+    fileName: 'File Name',
+    processes: 'Processes'
   }
 }
 

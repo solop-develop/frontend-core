@@ -40,7 +40,8 @@ const VFileImport = {
   },
   file: {
     data: [],
-    header: []
+    header: [],
+    resource: {}
   },
   infoFormat: {},
   navigationLine: {}
@@ -70,7 +71,6 @@ export default {
       state.infoFormat = formats
     },
     setNavigationLine(state, line) {
-      console.log({ line })
       state.navigationLine = line
     }
   },
