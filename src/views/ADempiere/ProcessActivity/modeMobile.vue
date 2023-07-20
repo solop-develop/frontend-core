@@ -18,12 +18,12 @@
 -->
 <template>
   <div v-if="!isLoadProcess">
-    <div v-if="!isEmptyValue(getProcessLog)" key="with-process" class="app-container">
+    <div v-if="!isEmptyValue(getProcessLog)" key="with-process" style="padding: 5px 5px;">
       <el-tabs type="border-card">
-        <el-tab-pane>
+        <el-tab-pane style="padding: 0px !important;">
           <span slot="label">
             <el-badge :value="getProcessLogSuccess.length" type="success" class="item" style="color: #67C23A">
-              {{ generateTitle('complete') }}
+              {{ $t('page.processActivity.finished') }}
             </el-badge>
           </span>
           <h1 v-if="isEmptyValue(getProcessLogSuccess)" class="text-center">
@@ -61,11 +61,12 @@
                           {{ $t('views.seeReport') }}
                         </el-dropdown-item>
 
-                        <el-dropdown-item :command="{ ...activity, command: 'zoomIn' }">
-                          {{ $t('page.processActivity.zoomIn') }}
+                        <el-dropdown-item v-else :command="{ ...activity, command: 'zoomIn' }">
+                          {{ $t('page.processActivity.reRun') }}
                         </el-dropdown-item>
-
-                        <!-- TODO: add more actions -->
+                        <el-dropdown-item :command="{ ...activity, command: 'copyLogs' }">
+                          {{ $t('page.processActivity.copyOutput') }}
+                        </el-dropdown-item>
                       </el-dropdown-menu>
                     </el-dropdown>
                   </div>
@@ -74,11 +75,11 @@
                   <div v-show="(currentKey === index)">
                     <el-form
                       label-position="top"
-                      style="padding-left: 1%;"
+                      style="padding-left: 0%;"
                       :inline="true"
                       @submit.native.prevent="notSubmitForm"
                     >
-                      <el-form-item :label="$t('page.processActivity.logs')" style="margin-bottom: 0;">
+                      <el-form-item style="margin-bottom: 5px;width: 100%;">
 
                         <span v-if="activity.isReport && !isEmptyValue(activity.summary)">
                           <ul>
@@ -91,25 +92,31 @@
                               </li>
                             </el-scrollbar>
                           </ul>
-                          <!-- {{ activity.output.description }}-->
                         </span>
                         <div v-if="isEmptyValue(activity.summary)" key="withSummary">
                           {{ $t('route.withoutLog') }}
                         </div>
-                        <ul v-else>
-                          <li @click="handleCommand({ ...activity, command: 'zoomIn' })">
-                            {{ activity.summary }}
-                          </li>
+                        <ul v-else style="padding: 0px 5px;">
                           <el-scrollbar wrap-class="popover-scroll">
-                            <li v-for="(logItem, key) in activity.logsList" :key="key" @click="zoomIn(activity)">
-                              {{ logItem.log }}
-                            </li>
+                            <el-descriptions class="margin-top" :column="1" border>
+                              <el-descriptions-item
+                                :label="$t('page.processActivity.logs')"
+                              >
+                                {{ activity.summary }}
+                              </el-descriptions-item>
+                              <!-- <el-scrollbar wrap-class="popover-scroll"> -->
+                              <el-descriptions-item
+                                v-for="(logItem, key) in activity.logsList"
+                                :key="key"
+                                :label="logItem.id"
+                              >
+                                {{ logItem.log }}
+                              </el-descriptions-item>
+                              <!-- </el-scrollbar> -->
+                            </el-descriptions>
                           </el-scrollbar>
                         </ul>
                       </el-form-item>
-
-                      <!-- <el-form-item :label="generateTitle('Status')">
-                        show only when it is error -->
                       <el-form-item v-if="!isEmptyValue(activity.panelType)" style="float: right;padding-top: 3%">
                         <el-tag type="success">
                           {{ findTranslation(activity.panelType) }}
@@ -126,7 +133,7 @@
         <el-tab-pane>
           <span slot="label">
             <el-badge :value="getProcessLogError.length" class="item" type="danger" style="color: #F56C6C">
-              {{ generateTitle('error') }}
+              {{ $t('page.processActivity.withErrors') }}
             </el-badge>
           </span>
           <h1 v-if="isEmptyValue(getProcessLogError)" class="text-center">
@@ -222,7 +229,7 @@
         <el-tab-pane>
           <span slot="label">
             <el-badge :value="getProcessLogProcessing.length" class="item" type="info" style="color: #909399">
-              Procesando
+              {{ $t('page.processActivity.inProcess') }}
             </el-badge>
           </span>
           <h1 v-if="isEmptyValue(getProcessLogProcessing)" class="text-center">
@@ -343,10 +350,19 @@
     padding: 0px;
   }
   .popover-scroll {
-    max-height: 200px !important;
+    max-height: 400px !important;
+    /* max-width: 350px; */
   }
   .el-card__body {
     padding-top: 1%;
     padding-bottom: 1%;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  .el-timeline-item__wrapper {
+    padding-left: 15px;
+  }
+  .el-tabs--border-card > .el-tabs__content {
+    padding: 5px;
   }
 </style>
