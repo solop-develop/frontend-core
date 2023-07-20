@@ -64,16 +64,8 @@ const attachment = {
       })
         .then(response => {
           commit('setIsLoadListAttachment', false)
-          const resourceReferencesList = response.resourceReferencesList.map(element => {
-            return {
-              ...element
-              // url: getSource({
-              //   resourceUuid: element.uuid,
-              //   resourceName: element.file_name,
-              //   resourceType: element.content_type
-              // })
-            }
-          })
+          const resourceReferencesList = response.resourceReferencesList
+
           commit('setListAttachment', resourceReferencesList)
           commit('setAttachment', {
             ...response,
@@ -86,7 +78,6 @@ const attachment = {
             const isExistst = resourceReferencesList.some(resourceReference => {
               return resourceReference.id === currentResource.id
             })
-            console.log({ isExistst })
             if (!isExistst) {
               // clear current selected
               commit('setResourceReference', {})

@@ -21,12 +21,13 @@
       "productValue": "product_value",
       "quantity": "quantity",
       "resourceReference": {
-        "resourceUuid": "resource_uuid",
+        "id": "id",
+        "uuid": "uuid",
         "fileName": "file_name",
         "fileSize": "file_size",
         "description": "description",
         "textMsg": "text_msg",
-        "contentType": "content_type∏"
+        "contentType": "content_type"
       }
     }
   ]
