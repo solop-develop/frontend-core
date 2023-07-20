@@ -63,7 +63,8 @@ export function convertDateFormat(dateFormat) {
  */
 export function getDateFormat({
   format,
-  isTime
+  isTime,
+  isDate
 }) {
   if (format) {
     return format
@@ -71,6 +72,9 @@ export function getDateFormat({
   //  Else
   const languageDefinition = store.getters['getCurrentLanguageDefinition']
   if (languageDefinition) {
+    if (isDate && isTime) {
+      return languageDefinition.datePattern + languageDefinition.timePattern
+    }
     return isTime ? languageDefinition.timePattern : languageDefinition.datePattern
   }
 }
@@ -90,7 +94,7 @@ export function getDefaultFormat(isTime) {
  * @param {string|date} object
  * @param {boolean} isTime
  */
-export function formatDate({ value, isTime = false, format }) {
+export function formatDate({ value, isTime = false, isDate = false, format }) {
   if (isEmptyValue(value)) {
     return undefined
   }
@@ -101,7 +105,8 @@ export function formatDate({ value, isTime = false, format }) {
   return moment.utc(value).format(
     getDateFormat({
       format,
-      isTime
+      isTime,
+      isDate
     })
   )
 }

@@ -505,7 +505,7 @@ const actions = {
     })
       .then(token => {
         setToken(token)
-        location.reload()
+        // location.reload()
       })
   },
 

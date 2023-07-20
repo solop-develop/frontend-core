@@ -29,6 +29,7 @@ const tasks = {
     startedAt: 'Started at',
     endedIn: 'Finished at',
     success: 'Success',
+    error: 'Error',
     timeZone: 'Time zone',
     retries: 'Retries',
     status: 'Status',
