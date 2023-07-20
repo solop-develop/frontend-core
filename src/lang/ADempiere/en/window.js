@@ -46,15 +46,6 @@ const window = {
       timeElapsed: 'Time Elapsed',
       addNote: 'Add Note'
     },
-    attachment: {
-      label: 'Attachment',
-      uploadFiles: 'Upload Files',
-      newFiles: 'New Files',
-      error: 'Failed to Save Files',
-      success: 'Files Saved Successfully',
-      uploadFile: 'Upload File',
-      selectFile: 'Select File'
-    },
     log: {
       changeHistory: 'Change History',
       updated: 'Updated',

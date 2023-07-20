@@ -23,6 +23,8 @@ import { requestAttachment } from '@/api/ADempiere/user-interface/component/reso
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 const initStateAttachment = {
+  attachment: {},
+  resourceReference: {},
   listAttachment: [],
   isLoaded: false
 }
@@ -31,8 +33,14 @@ const attachment = {
   state: initStateAttachment,
 
   mutations: {
+    setAttachment(state, payload) {
+      state.attachment = payload
+    },
     setListAttachment(state, payload) {
       state.listAttachment = payload
+    },
+    setResourceReference(state, payload) {
+      state.resourceReference = payload
     },
     setIsLoadListAttachment(state, loading) {
       state.isLoaded = loading
@@ -40,13 +48,11 @@ const attachment = {
   },
 
   actions: {
-    findAttachment({ commit }, {
+    findAttachment({ commit, getters }, {
       tableName,
       recordId,
       recordUuid
     }) {
-      const pageSize = 0
-      const pageToken = 0
       if (isEmptyValue(tableName) && (isEmptyValue(recordId) || isEmptyValue(recordUuid))) {
         return
       }
@@ -54,9 +60,7 @@ const attachment = {
       return requestAttachment({
         tableName,
         recordId,
-        recordUuid,
-        pageSize,
-        pageToken
+        recordUuid
       })
         .then(response => {
           commit('setIsLoadListAttachment', false)
@@ -71,7 +75,23 @@ const attachment = {
             }
           })
           commit('setListAttachment', resourceReferencesList)
-
+          commit('setAttachment', {
+            ...response,
+            tableName,
+            recordId,
+            recordUuid
+          })
+          const currentResource = getters.getResourceReference
+          if (!isEmptyValue(currentResource)) {
+            const isExistst = resourceReferencesList.some(resourceReference => {
+              return resourceReference.id === currentResource.id
+            })
+            console.log({ isExistst })
+            if (!isExistst) {
+              // clear current selected
+              commit('setResourceReference', {})
+            }
+          }
           return response
         })
         .catch(error => {
@@ -82,6 +102,12 @@ const attachment = {
   },
 
   getters: {
+    getAttachment: (state) => {
+      return state.attachment
+    },
+    getResourceReference: (state) => {
+      return state.resourceReference
+    },
     getListAttachment: (state) => {
       return state.listAttachment
     },

@@ -46,15 +46,6 @@ const window = {
       timeElapsed: 'Tiempo transcurrido',
       addNote: 'Agregar Nota'
     },
-    attachment: {
-      label: 'Adjuntos',
-      uploadFiles: 'Cargar Archivos',
-      newFiles: 'Nuevos Archivos',
-      error: 'Error A Guardar Archivos',
-      success: 'Archivos Guardado con Éxito',
-      uploadFile: 'Cargar Archivo (Upload)',
-      selectFile: 'Selecciona un archivo'
-    },
     log: {
       updated: 'Actualizado',
       updatedBy: 'Actualizado Por',

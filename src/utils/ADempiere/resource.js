@@ -46,6 +46,24 @@ export function mergeByteArray(currentArray, arrayToMerge) {
   return mergedArray
 }
 
+/**
+ * Get file zise from bytes
+ * @param {number} bytes size on bytes
+ * @returns {string}
+ */
+export function formatFileSize(bytes) {
+  if (!+bytes) {
+    return '0 Bytes'
+  }
+
+  const k = 1024
+  const sizes = ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`
+}
+
 // Build a base 64 image from array
 export function buildImageFromArray({
   contentType = 'image/*',
@@ -271,4 +289,56 @@ export function downloadResource({
       push()
     }
   })
+}
+
+/**
+ * Conver File
+ * @param {string} contentType
+ * @param {string} fileName
+ */
+export function getImageFromContentType({ contentType, fileName }) {
+  let urlImage
+  switch (contentType) {
+    case 'application/pdf':
+      urlImage = require('@/image/ADempiere/attachment/pdf.png')
+      break
+    case 'application/x-javascript':
+      urlImage = require('@/image/ADempiere/attachment/javascript.png')
+      break
+    case 'application/octet-stream':
+      urlImage = getImageFromExtension({
+        fileName
+      })
+      break
+    case 'text/csv':
+      urlImage = require('@/image/ADempiere/attachment/csv.png')
+      break
+    case 'text/plain':
+      urlImage = require('@/image/ADempiere/attachment/txt.png')
+      break
+    case 'application/vnd.ms-excel':
+      urlImage = require('@/image/ADempiere/attachment/xlsx.png')
+      break
+    default:
+      urlImage
+      break
+  }
+  return urlImage
+}
+
+/**
+ * Conver File
+ * @param {string} contentType
+ * @param {string} fileName
+ */
+export function getImageFromExtension({ fileName }) {
+  let urlImage
+  if (['.xlsx', '.xls'].includes(fileName)) {
+    urlImage = require('@/image/ADempiere/attachment/xlsx.png')
+  } else if (fileName.includes('.rar')) {
+    urlImage = require('@/image/ADempiere/attachment/rar.png')
+  } else if (fileName.includes('.sql')) {
+    urlImage = require('@/image/ADempiere/attachment/sql.png')
+  }
+  return urlImage
 }

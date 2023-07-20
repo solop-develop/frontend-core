@@ -16,16 +16,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import attachment from './attachment'
-import dashboard from './dashboard'
-import date from './date'
-import sequenceSort from './sequenceSort'
-import tree from './tree'
-
-export default {
-  attachment,
-  dashboard,
-  date,
-  sequenceSort,
-  tree
+const attachment = {
+  label: 'Attachment',
+  uploadFiles: 'Upload Files',
+  newFiles: 'New Files',
+  error: 'Failed to Save Files',
+  success: 'Files Saved Successfully',
+  uploadFile: 'Upload File',
+  selectFile: 'Select File',
+  toggleView: 'Toggle View'
 }
+
+export default attachment
