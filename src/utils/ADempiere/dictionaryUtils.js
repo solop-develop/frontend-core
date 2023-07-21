@@ -28,6 +28,9 @@ import {
 } from '@/utils/ADempiere/dataUtils'
 import {
   ACCOUNTING_COLUMNS,
+  CURRENCY,
+  DOCUMENT_ACTION,
+  DOCUMENT_STATUS,
   isDocumentStatus,
   READ_ONLY_FORM_COLUMNS,
   readOnlyColumn
@@ -52,6 +55,15 @@ export const UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX = `_UUID`
  * Suffix Field is Advanced Query
  */
 export const IS_ADVANCED_QUERY = '-IS_ADVANCED_QUERY'
+
+/**
+ * Always get display column
+ */
+export const ALWAYS_DISPLAY_COLUMN = [
+  CURRENCY,
+  DOCUMENT_ACTION,
+  DOCUMENT_STATUS
+]
 
 /**
  * Generate field to app

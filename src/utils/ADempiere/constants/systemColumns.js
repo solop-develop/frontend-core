@@ -34,6 +34,8 @@ export const RECORD_ID = 'Record_ID'
 
 export const COUNTRY = 'C_Country_ID'
 
+export const CURRENCY = 'C_Currency_ID'
+
 export const WAREHOUSE = 'M_Warehouse_ID'
 
 export const IS_SALES_TRANSACTION = 'IsSalesTransaction'
@@ -97,7 +99,7 @@ export const DOCUMENT_COLUMNS_NAME_LIST = [
 
 export const ACCOUNTING_COLUMNS = [
   'C_AcctSchema_ID',
-  'C_Currency_ID',
+  CURRENCY,
   'C_Convertion_Type_ID'
 ]
 

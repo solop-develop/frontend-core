@@ -162,14 +162,23 @@ export function formatPrice({ value, currency, country = '' }) {
   }
 
   // get formatted currency number
-  return new Intl.NumberFormat(country, {
-    style: 'currency',
-    currency,
-    useGrouping: true,
-    // minimumFractionDigits: precision,
-    // maximumFractionDigits: precision,
-    minimumIntegerDigits: 1
-  }).format(value)
+  let formattedValue = value
+  try {
+    formattedValue = new Intl.NumberFormat(country, {
+      style: 'currency',
+      currency,
+      useGrouping: true,
+      // minimumFractionDigits: precision,
+      // maximumFractionDigits: precision,
+      minimumIntegerDigits: 1
+    }).format(value)
+  } catch (e) {
+    // console.warn(e.message)
+    formattedValue = formatQuantity({
+      value
+    })
+  }
+  return formattedValue
 }
 
 /**
