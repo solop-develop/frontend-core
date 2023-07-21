@@ -377,7 +377,7 @@ export default {
         const { defaultValue } = fieldItem
         const isYesNo = fieldItem.displayType === YES_NO.id
         if (isMandatory && (isEmptyValue(defaultValue) && !isYesNo)) {
-          return false
+          return true
         }
 
         if (isEvaluateDefaultValue && isEvaluateShowed) {
