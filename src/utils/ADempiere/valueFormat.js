@@ -78,6 +78,7 @@ export function formatField({
   value,
   displayedValue,
   displayType,
+  currency,
   optionalFormat
 }) {
   if (isEmptyValue(value)) {
@@ -124,7 +125,8 @@ export function formatField({
     case AMOUNT.id:
     case COSTS_PLUS_PRICES.id:
       formattedValue = formatPriceTemp({
-        value
+        value,
+        currency
       })
       break
 

@@ -25,7 +25,8 @@ import {
   IDENTIFIER_COLUMN_SUFFIX, DISPLAY_COLUMN_PREFIX
 } from '@/utils/ADempiere/dictionaryUtils'
 import {
-  ACTIVE, CLIENT, DOCUMENT_ACTION, DOCUMENT_NO,
+  ACTIVE, CLIENT, DOCUMENT_ACTION,
+  DOCUMENT_NO, CURRENCY,
   PROCESSING, PROCESSED, UUID, VALUE, // READ_ONLY_FORM_COLUMNS
   RECORD_ID,
   LOG_COLUMNS_NAME_LIST
@@ -232,9 +233,9 @@ export function evaluateDefaultFieldShowed({
 
   // TODO: Evaluated window type
   const permissedDisplayedDefault = [
-    VALUE, DOCUMENT_NO,
+    VALUE, DOCUMENT_NO, CURRENCY,
     'DateInvoiced', 'DateOrdered', 'DatePromised',
-    'DateTrx', 'M_Product_ID', 'QtyEntered'
+    'DateTrx', 'MovementDate', 'M_Product_ID', 'QtyEntered'
   ]
   if (permissedDisplayedDefault.includes(columnName)) {
     return true
@@ -287,7 +288,7 @@ export function evaluateDefaultColumnShowed({
 
   // TODO: Evaluated window type
   const permissedDisplayedDefault = [
-    VALUE, DOCUMENT_NO, 'DocStatus',
+    VALUE, DOCUMENT_NO, 'DocStatus', CURRENCY,
     'DateInvoiced', 'DateOrdered', 'DatePromised',
     'DateTrx', 'M_Product_ID', 'QtyEntered',
     'TaskStatus'
