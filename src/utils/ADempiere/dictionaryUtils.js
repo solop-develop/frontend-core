@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,22 +17,21 @@
  */
 
 // Utils and Helpers Methods
-import evaluator from '@/utils/ADempiere/evaluator'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { decodeHtmlEntities } from '@/utils/ADempiere/formatValue/stringFormat'
-import { arrayMatches, isEmptyValue, parsedValueComponent } from '@/utils/ADempiere/valueUtils'
-import { getContext, getParentFields, getPreference, parseContext } from '@/utils/ADempiere/contextUtils'
-import REFERENCES, { FIELDS_QUANTITY, YES_NO, DEFAULT_SIZE, isHiddenField } from '@/utils/ADempiere/references'
+import {
+  getContextDefaultValue, getEvaluatedFieldLogics, getParentFields
+} from '@/utils/ADempiere/contextUtils/contextField'
+import REFERENCES, { YES_NO, DEFAULT_SIZE, isHiddenField } from '@/utils/ADempiere/references'
 import {
   FIELD_OPERATORS_LIST, OPERATOR_EQUAL,
   OPERATOR_LIKE, OPERATOR_GREATER_EQUAL, OPERATOR_LESS_EQUAL, OPERATOR_BETWEEN
 } from '@/utils/ADempiere/dataUtils'
 import {
-  ACCOUNTING_COLUMNS,
   CURRENCY,
   DOCUMENT_ACTION,
   DOCUMENT_STATUS,
   isDocumentStatus,
-  READ_ONLY_FORM_COLUMNS,
   readOnlyColumn
 } from '@/utils/ADempiere/constants/systemColumns'
 
@@ -66,6 +65,20 @@ export const ALWAYS_DISPLAY_COLUMN = [
 ]
 
 /**
+ * Evaluate by the ID and name of the reference to call the component type
+ * @param {integer} displayTypeId, received from data
+ * @param {boolean} isAllInfo
+ * @return string type, assigned value to folder after evaluating the parameter
+ */
+export function evalutateTypeField(displayTypeId, isAllInfo = true) {
+  const component = REFERENCES.find(reference => displayTypeId === reference.id)
+  if (isAllInfo) {
+    return component
+  }
+  return component.componentPath
+}
+
+/**
  * Generate field to app
  * @param {object}  fieldToGenerate
  * @param {object}  moreAttributes, additional attributes
@@ -94,7 +107,7 @@ export function generateField({
   const componentReference = evalutateTypeField(fieldToGenerate.displayType)
 
   // evaluate logics (diplayed, mandatory, readOnly)
-  let evaluatedLogics = getEvaluatedLogics({
+  let evaluatedLogics = getEvaluatedFieldLogics({
     parentUuid: moreAttributes.parentUuid,
     containerUuid: moreAttributes.containerUuid,
     ...fieldToGenerate
@@ -300,164 +313,6 @@ export function generateField({
   }
 
   return field
-}
-
-/**
- * Evaluate logics to definition field
- * @param {object}
- */
-export function getEvaluatedLogics({
-  parentUuid,
-  containerUuid,
-  displayLogic,
-  mandatoryLogic,
-  readOnlyLogic
-}) {
-  // evaluate logics
-  const commonParameters = {
-    parentUuid,
-    containerUuid,
-    context: getContext
-  }
-
-  let isDisplayedFromLogic = isEmptyValue(displayLogic)
-  if (!isDisplayedFromLogic) {
-    isDisplayedFromLogic = evaluator.evaluateLogic({
-      ...commonParameters,
-      logic: displayLogic
-    })
-  }
-
-  let isMandatoryFromLogic = false
-  if (!isEmptyValue(mandatoryLogic)) {
-    isMandatoryFromLogic = evaluator.evaluateLogic({
-      ...commonParameters,
-      logic: mandatoryLogic
-    })
-  }
-
-  let isReadOnlyFromLogic = false
-  if (!isEmptyValue(readOnlyLogic)) {
-    isReadOnlyFromLogic = evaluator.evaluateLogic({
-      ...commonParameters,
-      logic: readOnlyLogic
-    })
-  }
-
-  return {
-    isDisplayedFromLogic,
-    isMandatoryFromLogic,
-    isReadOnlyFromLogic
-  }
-}
-
-/**
- * Get parsed default value to set into field
- * @param {object}  field
- * @param {boolean} isSOTrxMenu
- */
-export function getContextDefaultValue({
-  parentUuid,
-  containerUuid,
-  isSOTrxMenu,
-  columnName,
-  elementName,
-  componentPath,
-  displayType,
-  defaultValue,
-  isMandatory,
-  isColumnReadOnlyForm,
-  isKey
-}) {
-  let parsedDefaultValue = defaultValue
-
-  const isContextValue = String(parsedDefaultValue).includes('@')
-
-  // search value with context
-  if (isContextValue && String(parsedDefaultValue).trim() !== '-1') {
-    parsedDefaultValue = parseContext({
-      parentUuid,
-      containerUuid,
-      columnName,
-      value: parsedDefaultValue,
-      isSOTrxMenu
-    }).value
-  }
-
-  const isSpeciaColumn = !isEmptyValue(arrayMatches(ACCOUNTING_COLUMNS, [columnName, elementName]))
-  // search value with context
-  if (isSpeciaColumn && String(parsedDefaultValue).trim() !== '-1') {
-    parsedDefaultValue = getPreference({
-      parentUuid,
-      containerUuid,
-      columnName
-    })
-  }
-
-  // search value preference with column name
-  if (isEmptyValue(parsedDefaultValue) && !isKey &&
-    String(parsedDefaultValue).trim() !== '-1') {
-    parsedDefaultValue = getPreference({
-      parentUuid,
-      containerUuid,
-      columnName
-    })
-
-    // search value preference with element name
-    if (!isEmptyValue(elementName) &&
-      isEmptyValue(parsedDefaultValue)) {
-      parsedDefaultValue = getPreference({
-        parentUuid,
-        containerUuid,
-        columnName: elementName
-      })
-    }
-  }
-
-  // search value with form read only
-  if (isColumnReadOnlyForm && isEmptyValue(parsedDefaultValue)) {
-    const { defaultValue: defaultValueColumn } = READ_ONLY_FORM_COLUMNS.find(columnItem => {
-      return columnItem.columnName === columnName
-    })
-    parsedDefaultValue = defaultValueColumn
-  }
-
-  // set default value
-  if (!isContextValue) {
-    if (isEmptyValue(parsedDefaultValue)) {
-      parsedDefaultValue = defaultValue
-    }
-    if (isMandatory &&
-      isEmptyValue(parsedDefaultValue) &&
-      FIELDS_QUANTITY.includes(displayType)) {
-      parsedDefaultValue = 0
-    }
-  }
-
-  // convert to element-ui compatible value
-  parsedDefaultValue = parsedValueComponent({
-    columnName,
-    componentPath,
-    displayType,
-    isMandatory,
-    value: parsedDefaultValue
-  })
-
-  return parsedDefaultValue
-}
-
-/**
- * Evaluate by the ID and name of the reference to call the component type
- * @param {integer} displayTypeId, received from data
- * @param {boolean} isAllInfo
- * @return string type, assigned value to folder after evaluating the parameter
- */
-export function evalutateTypeField(displayTypeId, isAllInfo = true) {
-  const component = REFERENCES.find(reference => displayTypeId === reference.id)
-  if (isAllInfo) {
-    return component
-  }
-  return component.componentPath
 }
 
 /**
