@@ -36,6 +36,7 @@ import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
  * @param {string}  reportViewUuid
  */
 export function requestGenerateReport({
+  id,
   uuid,
   reportType,
   tableName,
@@ -43,7 +44,9 @@ export function requestGenerateReport({
   recordUuid,
   parametersList = [],
   isSummary,
+  printFormatId,
   printFormatUuid,
+  reportViewId,
   reportViewUuid
 }) {
   parametersList = parametersList.map(parameter => {
@@ -57,14 +60,19 @@ export function requestGenerateReport({
     url: '/common/api/process',
     method: 'post',
     data: {
-      process_uuid: uuid,
+      id,
+      uuid,
+      // record
       table_name: tableName,
-      id: recordId,
-      uuid: recordUuid,
+      record_id: recordId,
+      record_uuid: recordUuid,
+      // report
       is_summary: isSummary,
       report_type: reportType,
+      report_view_id: reportViewId,
       report_view_uuid: reportViewUuid,
       parameters: parametersList,
+      print_format_id: printFormatId,
       print_format_uuid: printFormatUuid
     }
   })
@@ -182,6 +190,8 @@ export function requestListDrillTables({
 
 // Get report output from parameters
 export function requestGetReportOutput({
+  processId,
+  processUuid,
   tableName,
   printFormatUuid,
   reportViewUuid,
@@ -205,6 +215,8 @@ export function requestGetReportOutput({
     url: '/user-interface/process/report-output',
     method: 'get',
     params: {
+      process_id: processId,
+      process_uuid: processUuid,
       table_name: tableName,
       // reference
       print_format_uuid: printFormatUuid,
