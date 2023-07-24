@@ -25,6 +25,7 @@ import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 /**
  * Request a process
  * This function allows follow structure:
+ * @param {string}  id, identifier from process to run
  * @param {string}  uuid, uuid from process to run
  * @param {string}  tableName, table name of tab, used only window
  * @param {number}  recordId, record identifier, used only window
@@ -38,6 +39,7 @@ import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
  * @param {number}  tableSelectedId, used only browser // TODO: Add support on adempiere-vue
  */
 export function requestRunProcess({
+  id,
   uuid,
   tableName,
   recordId,
@@ -57,10 +59,11 @@ export function requestRunProcess({
     url: '/common/api/process',
     method: 'post',
     data: {
-      process_uuid: uuid,
+      id,
+      uuid,
       table_name: tableName,
-      id: recordId,
-      uuid: recordUuid,
+      record_id: recordId,
+      record_uuid: recordUuid,
       table_selected_id: tableSelectedId,
       parameters: parametersList,
       selections: selectionsList

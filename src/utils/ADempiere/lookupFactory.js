@@ -1,18 +1,20 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Yamel Senih ysenih@erpya.com www.erpya.com
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Yamel Senih ysenih@erpya.com
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 // A simple class for make easy lookup for dynamic forms from ADempiere Meta-Data
 // note that it can be used for create meta-data for lookups
@@ -65,15 +67,17 @@
 
 import store from '@/store'
 
-// constants
+// Constants
 import { CHAR, DEFAULT_SIZE, TABLE_DIRECT } from '@/utils/ADempiere/references.js'
 import {
-  DISPLAY_COLUMN_PREFIX, evalutateTypeField, getContextDefaultValue, getEvaluatedLogics
+  DISPLAY_COLUMN_PREFIX, evalutateTypeField
 } from '@/utils/ADempiere/dictionaryUtils.js'
 
-// utils and helper methods
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
-import { getParentFields } from '@/utils/ADempiere/contextUtils.js'
+import {
+  getContextDefaultValue, getEvaluatedFieldLogics, getParentFields
+} from '@/utils/ADempiere/contextUtils/contextField'
 
 /**
  * Create a Field from UUID based on server meta-data
@@ -359,7 +363,7 @@ export function getFieldTemplate(overwriteDefinition) {
   }
 
   // evaluate logics (diplayed, mandatory, readOnly)
-  const evaluatedLogics = getEvaluatedLogics({
+  const evaluatedLogics = getEvaluatedFieldLogics({
     ...fieldTemplateMetadata
   })
 

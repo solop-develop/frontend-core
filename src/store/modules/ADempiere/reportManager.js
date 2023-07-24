@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -228,6 +228,11 @@ const reportManager = {
             resolve(runReportRepsonse)
           })
           .catch(error => {
+            showNotification({
+              title: language.t('notifications.error'),
+              message: error.message,
+              type: 'error'
+            })
             console.warn(`Error getting print formats: ${error.message}. Code: ${error.code}.`)
           })
           .finally(() => {
@@ -484,6 +489,7 @@ const reportManager = {
           })
         }
         requestGetReportOutput({
+          processUuid: uuid,
           parametersList,
           printFormatUuid,
           reportViewUuid,
@@ -589,7 +595,7 @@ const reportManager = {
 
       return new Promise((resolve) => {
         dispatch('getReportOutputFromServer', {
-          uuid,
+          uuid: uuid || containerUuid,
           reportType,
           reportName,
           tableName,
@@ -601,6 +607,7 @@ const reportManager = {
         })
           .then(reportOutput => {
             dispatch('tagsView/updateVisitedView', {
+              processUuid: uuid,
               instanceUuid,
               ...currentRoute,
               title: `${language.t('route.reportViewer')}: ${reportOutput.name}`

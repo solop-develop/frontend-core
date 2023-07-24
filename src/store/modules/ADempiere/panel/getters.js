@@ -27,11 +27,9 @@ import {
   isEmptyValue,
   parsedValueComponent
 } from '@/utils/ADempiere/valueUtils.js'
-import {
-  fieldIsDisplayed,
-  getContextDefaultValue
-} from '@/utils/ADempiere/dictionaryUtils.js'
+import { fieldIsDisplayed } from '@/utils/ADempiere/dictionaryUtils.js'
 import { isSupportLookup } from '@/utils/ADempiere/references'
+import { getContextDefaultValue } from '@/utils/ADempiere/contextUtils/contextField'
 
 const getters = {
   getPanel: (state) => (containerUuid) => {

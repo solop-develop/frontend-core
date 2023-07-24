@@ -54,7 +54,8 @@ import {
   sharedLink
 } from '@/utils/ADempiere/constants/actionsMenuList.js'
 import evaluator from '@/utils/ADempiere/evaluator'
-import { getContext, getContextAttributes } from '@/utils/ADempiere/contextUtils.js'
+import { getContext } from '@/utils/ADempiere/contextUtils'
+import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { containerManager as containerManagerReport } from '@/utils/ADempiere/dictionary/report'
 import { getDocumentStatusValue, getCurrentDocumentDisplayedValue } from '@/utils/ADempiere/dictionary/workflow'

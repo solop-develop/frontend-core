@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Yamel Senih ysenih@erpya.com
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ import {
 // Utils and Helper Methods
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
-import { getContextDefaultValue } from '@/utils/ADempiere/dictionaryUtils.js'
+import { getContextDefaultValue } from '@/utils/ADempiere/contextUtils/contextField'
 import { BUTTON, isSupportLookup } from '@/utils/ADempiere/references'
 
 const persistence = {

@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanchez@gmail.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
-import { getContextAttributes } from '@/utils/ADempiere/contextUtils'
+import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 
 const initState = {
   businessPartnerPopoverList: false,

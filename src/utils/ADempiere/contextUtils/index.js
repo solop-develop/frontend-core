@@ -21,13 +21,16 @@ import store from '@/store'
 
 // Constants
 import {
-  ACCOUNTING_COLUMNS, IS_SO_TRX, SALES_TRANSACTION_COLUMNS
-} from '@/utils/ADempiere/constants/systemColumns.js'
+  ACCOUNTING_COLUMNS,
+  IS_SO_TRX,
+  SALES_TRANSACTION_COLUMNS
+} from '@/utils/ADempiere/constants/systemColumns'
 
 // Utils and Helper Methods
-import { isEmptyValue, isIdentifierEmpty } from '@/utils/ADempiere/valueUtils.js'
-import { convertBooleanToString, convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat.js'
-import evaluator from '@/utils/ADempiere/evaluator'
+import {
+  convertBooleanToString, convertStringToBoolean
+} from '@/utils/ADempiere/formatValue/booleanFormat.js'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 /**
  * Prefix context of global prefix (#)
@@ -178,54 +181,6 @@ export function getPreference({
 } // get preference value
 
 /**
- * Extracts the associated fields from the logics or default values
- * @param {string} displayLogic
- * @param {string} mandatoryLogic
- * @param {string} readOnlyLogic
- * @param {object} reference.contextColumnNames array
- * @param {string} defaultValue
- * @param {string} defaultValueTo
- * @returns {array} List column name of parent fields
- */
-export function getParentFields({
-  displayLogic,
-  mandatoryLogic,
-  readOnlyLogic,
-  reference,
-  defaultValue,
-  contextColumnNames = [],
-  defaultValueTo
-}) {
-  let contextColumnNamesByReference = []
-  // validate reference
-  if (!isEmptyValue(reference) && !isEmptyValue(reference.contextColumnNames)) {
-    contextColumnNamesByReference = reference.contextColumnNames
-  }
-
-  // remove duplicated elements
-  const parentFields = [
-    ...new Set([
-      // For Validation Code
-      ...contextColumnNamesByReference,
-      // For Display logic
-      ...evaluator.parseDepends(displayLogic),
-      // For Mandatory Logic
-      ...evaluator.parseDepends(mandatoryLogic),
-      // For Read Only Logic
-      ...evaluator.parseDepends(readOnlyLogic),
-      // For Default Value
-      ...contextColumnNames,
-      // For Default Value
-      ...evaluator.parseDepends(defaultValue),
-      // For Default Value To
-      ...evaluator.parseDepends(defaultValueTo)
-    ])
-  ]
-
-  return parentFields
-}
-
-/**
  * Parse Context String
  * @param {string} value: (REQUIRED) String to parsing
  * @param {string} parentUuid: (REQUIRED from Window) UUID Window
@@ -368,69 +323,6 @@ export function parseContext({
     value: outString
   }
 } // parseContext
-
-/**
- * Get context attribures list
- * @param {string} containerUuid
- * @param {array<string>} contextColumnNames
- * @param {string} keyName key or column name
- * @param {boolean} isBooleanToString convert true or false to Y or N
- * @param {boolean} isForceBoolean undefined or null to false
- * @returns {array<object>}
- */
-export function getContextAttributes({
-  parentUuid,
-  containerUuid,
-  contextColumnNames = [],
-  isBooleanToString = false,
-  isForceBoolean = false,
-  keyName = 'columnName'
-}) {
-  const contextAttributesList = []
-  if (isEmptyValue(contextColumnNames)) {
-    return contextAttributesList
-  }
-
-  contextColumnNames.forEach(columnName => {
-    let value = getContext({
-      parentUuid,
-      containerUuid,
-      columnName,
-      isBooleanToString,
-      isForceBoolean
-    })
-
-    // if identifier and empty, send value in zero
-    if (isIdentifierEmpty({ columnName, value })) {
-      value = 0
-    }
-
-    contextAttributesList.push({
-      [keyName]: columnName,
-      value
-    })
-  })
-
-  return contextAttributesList
-}
-
-/**
- * Get context key based on attributes list
- * @param {array} contextAttributes
- * @param {string} keyName, default is 'columnName' or 'key'
- * @returns {string} '_|key|value'
- */
-export function generateContextKey(contextAttributes = [], keyName = 'columnName') {
-  let contextKey = ''
-  if (isEmptyValue(contextAttributes)) {
-    return contextKey
-  }
-
-  contextAttributes.forEach(attribute => {
-    contextKey += '|' + attribute[keyName] + '|' + attribute.value
-  })
-  return '_' + contextKey
-}
 
 /**
  * Get Is Sales Transaction on tab, window or container

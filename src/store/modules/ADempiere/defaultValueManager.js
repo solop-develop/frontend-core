@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import {
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { isSameSize } from '@/utils/ADempiere/formatValue/iterableFormat'
-import { generateContextKey, getContextAttributes } from '@/utils/ADempiere/contextUtils'
+import { generateContextKey, getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 
 const initState = {
   inRequest: new Map(),

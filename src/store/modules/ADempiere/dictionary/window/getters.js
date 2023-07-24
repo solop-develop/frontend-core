@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,14 +18,15 @@
 
 // Constants
 import { ACTIVE, PROCESSED, PROCESSING } from '@/utils/ADempiere/constants/systemColumns'
+import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils.js'
 
 // Utils and Helpers Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import {
   isDisplayedColumn, isDisplayedField, isMandatoryColumn, isMandatoryField
 } from '@/utils/ADempiere/dictionary/window.js'
-import { DISPLAY_COLUMN_PREFIX, getContextDefaultValue } from '@/utils/ADempiere/dictionaryUtils.js'
 import { getContext } from '@/utils/ADempiere/contextUtils'
+import { getContextDefaultValue } from '@/utils/ADempiere/contextUtils/contextField'
 import { isSupportLookup, ID, YES_NO } from '@/utils/ADempiere/references'
 
 /**

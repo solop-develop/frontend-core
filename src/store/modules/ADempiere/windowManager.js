@@ -40,7 +40,7 @@ import { FIELDS_DATE } from '@/utils/ADempiere/references'
 
 // Utils and Helper Methods
 import { containerManager } from '@/utils/ADempiere/dictionary/window'
-import { getContextAttributes, generateContextKey } from '@/utils/ADempiere/contextUtils.js'
+import { getContextAttributes, generateContextKey } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat'
 import { showMessage } from '@/utils/ADempiere/notification'
