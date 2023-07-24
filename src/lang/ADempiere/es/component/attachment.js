@@ -24,7 +24,14 @@ const attachment = {
   success: 'Archivos Guardado con Éxito',
   uploadFile: 'Cargar Archivo (Upload)',
   selectFile: 'Selecciona un archivo',
-  toggleView: 'Alternar Visualización'
+  toggleView: 'Alternar Visualización',
+  fileName: 'Nombre del Archivo',
+  fileSize: 'Tamaño del Archivo',
+  fileFormat: 'Formato del Archivo',
+  message: 'Mensaje',
+  description: 'Descripción',
+  addMessage: 'Agregar Mensaje',
+  addDescription: 'Agregar Descripción'
 }
 
 export default attachment

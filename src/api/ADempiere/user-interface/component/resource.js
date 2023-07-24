@@ -225,3 +225,24 @@ export function deleteResourceReference({
     }
   })
 }
+
+/**
+ * Save Attachment Information
+ */
+export function sendAttachmentDescription({
+  id,
+  uuid,
+  description,
+  textMessage
+}) {
+  return request({
+    url: '/user-interface/component/resource/set-resource-reference-description',
+    method: 'put',
+    data: {
+      id,
+      uuid,
+      description,
+      text_message: textMessage
+    }
+  })
+}

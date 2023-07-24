@@ -24,7 +24,14 @@ const attachment = {
   success: 'Files Saved Successfully',
   uploadFile: 'Upload File',
   selectFile: 'Select File',
-  toggleView: 'Toggle View'
+  toggleView: 'Toggle View',
+  fileName: 'File Name',
+  fileSize: 'File Size',
+  fileFormat: 'File Format',
+  message: 'Message',
+  description: 'Description',
+  addMessage: 'Add Message',
+  addDescription: 'Add Description'
 }
 
 export default attachment
