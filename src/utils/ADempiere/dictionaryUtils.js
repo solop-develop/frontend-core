@@ -261,10 +261,15 @@ export function generateField({
 
   // Overwrite some values
   if (field.isRange) {
-    field.operator = OPERATOR_GREATER_EQUAL.operator
+    field.operator = OPERATOR_BETWEEN.operator
+    if (field.isNumericField) {
+      field.operator = OPERATOR_GREATER_EQUAL.operator
+    }
+
     field.columnNameTo = `${columnName}_To`
     field.elementNameTo = `${field.elementName}_To`
     if (typeRange) {
+      field.operator = OPERATOR_LESS_EQUAL.operator
       field.uuid = `${field.uuid}_To`
       field.columnName = field.columnNameTo
       field.elementName = field.elementNameTo
@@ -272,7 +277,6 @@ export function generateField({
       field.value = parsedDefaultValueTo
       field.defaultValue = field.defaultValueTo
       field.parsedDefaultValue = field.parsedDefaultValueTo
-      field.operator = OPERATOR_LESS_EQUAL.operator
 
       // increment order sequence
       field.sequence = field.sequence > 0 ? field.sequence + 1 : 0
