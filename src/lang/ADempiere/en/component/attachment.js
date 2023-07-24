@@ -31,7 +31,8 @@ const attachment = {
   message: 'Message',
   description: 'Description',
   addMessage: 'Add Message',
-  addDescription: 'Add Description'
+  addDescription: 'Add Description',
+  editDescription: 'Edit Description'
 }
 
 export default attachment

@@ -246,3 +246,25 @@ export function sendAttachmentDescription({
     }
   })
 }
+
+/**
+ * Add Description in Header
+ * id - id of attachment
+ * uuid - uuid of attachment
+ * text_message - message or description
+ */
+export function sendAttachmentDescriptionHeader({
+  id,
+  uuid,
+  textMessage
+}) {
+  return request({
+    url: '/user-interface/component/resource/attachment-description',
+    method: 'put',
+    data: {
+      id,
+      uuid,
+      text_message: textMessage
+    }
+  })
+}
