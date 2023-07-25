@@ -61,7 +61,7 @@ export default {
 <style lang="scss" scoped>
 .app-main {
   /* 50= navbar  50  */
-  max-height: calc(100vh - 50px);
+  // max-height: calc(100vh - 50px);
   width: 100%;
   position: relative;
   overflow: auto;

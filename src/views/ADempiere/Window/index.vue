@@ -17,8 +17,8 @@
 -->
 
 <template>
-  <div v-if="isLoaded" key="window-loaded" class="view-base">
-    <el-container style="height: 100% !important;display: block;">
+  <div v-if="isLoaded" key="window-loaded" class="view-base" style="height: 100% !important;width: 100% !important;/* display: contents; */overflow: auto;">
+    <el-container style="height: 100% !important;display: block;overflow: auto;">
       <el-aside :style="styleContainer">
         <component
           :is="renderWindowComponent"

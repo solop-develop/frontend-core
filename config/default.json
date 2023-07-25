@@ -5,14 +5,14 @@
   },
   "adempiere": {
     "api": {
-      "url": "http://localhost:8085/api/adempiere/",
+      "url": "https://api-develop.solopcloud.com/api/adempiere/",
       "timeout": 99999999
     },
     "images": {
-      "url": "http://localhost:8085/adempiere-api/img/"
+      "url": "https://api-develop.solopcloud.com/adempiere-api/img/"
     },
     "resource": {
-      "url": "http://localhost:8085/adempiere-api/"
+      "url": "https://api-develop.solopcloud.com/adempiere-api/"
     }
   },
   "repository": {

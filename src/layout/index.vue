@@ -2,12 +2,12 @@
   <div :class="classObj" class="app-wrapper">
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar v-show="showMenu" class="sidebar-container" />
-    <div :class="{hasTagsView:needTagsView}" class="main-container" :style="showMenu ? '' : 'margin-left:0px'">
+    <div :class="{hasTagsView:needTagsView}" class="main-container" style="height: 100%;">
       <div v-if="!isMobile">
         <navbar v-show="showNavar" />
         <tags-view v-if="needTagsView" />
       </div>
-      <app-main :style="styleContainer" />
+      <app-main style="height: 90%;overflow: hidden;" />
       <right-panel v-if="showSettings">
         <settings />
       </right-panel>
@@ -50,7 +50,13 @@ export default {
         mobile: this.device === 'mobile'
       }
     },
+    storedWindow() {
+      const window = this.$store.getters.getStoredWindow(this.$route.meta.uuid)
+      if (!this.isEmptyValue(window) && this.isEmptyValue(window.tabsListChild)) return true
+      return false
+    },
     styleContainer() {
+      if (this.storedWindow) return 'display: contents'
       if (this.$route.meta.type === 'form') return 'display: contents'
       return 'height: 100vh;'
     },
