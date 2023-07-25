@@ -19,7 +19,7 @@
 import language from '@/lang'
 import router from '@/router'
 import store from '@/store'
-
+import nprogress from 'nprogress'
 // Constants
 import {
   IDENTIFIER_COLUMN_SUFFIX, DISPLAY_COLUMN_PREFIX
@@ -1045,6 +1045,7 @@ export const refreshRecord = {
       isLoaded: false,
       containerUuid
     })
+    nprogress.start()
     return getEntity({
       tabUuid: containerUuid,
       recordId,
@@ -1081,6 +1082,7 @@ export const refreshRecord = {
           isLoaded: true,
           containerUuid
         })
+        nprogress.done()
       })
   }
 }
@@ -1094,12 +1096,16 @@ export const refreshRecords = {
   icon: 'el-icon-refresh',
   actionName: 'refreshRecords',
   refreshRecords: ({ parentUuid, containerUuid }) => {
+    nprogress.start()
     // refresh records on current tab
     store.dispatch('getEntities', {
       parentUuid,
       containerUuid,
       filters: []
     })
+      .finally(() => {
+        nprogress.done()
+      })
 
     // get tabs with same table to refresh without current tab
     const tableName = store.getters.getTableName(parentUuid, containerUuid)
