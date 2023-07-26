@@ -7,7 +7,7 @@
         <navbar v-show="showNavar" />
         <tags-view v-if="needTagsView" />
       </div>
-      <app-main style="height: 90%;overflow: hidden;" />
+      <app-main :style="styleContainer" />
       <right-panel v-if="showSettings">
         <settings />
       </right-panel>
@@ -56,9 +56,8 @@ export default {
       return false
     },
     styleContainer() {
-      if (this.storedWindow) return 'display: contents'
-      if (this.$route.meta.type === 'form') return 'display: contents'
-      return 'height: 100vh;'
+      if (this.$route.meta.title === 'dashboard') return 'height: 90%;overflow: auto;'
+      return 'height: 90%;overflow: hidden;'
     },
     isMobile() {
       return this.$store.state.app.device === 'mobile'
