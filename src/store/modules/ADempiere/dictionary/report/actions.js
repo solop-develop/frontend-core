@@ -66,6 +66,12 @@ export default {
     uuid
   }) {
     return new Promise((resolve, reject) => {
+      const storedModalDialog = getters.getModalDialogManager({ containerUuid: uuid })
+      // exist dialog if is process associated
+      if (!isEmptyValue(storedModalDialog)) {
+        resolve(storedModalDialog)
+        return
+      }
       requestReportMetadata({
         uuid
       })
@@ -83,8 +89,6 @@ export default {
 
           resolve(reportDefinition)
 
-          // exist dialog if is process associated
-          const storedModalDialog = getters.getModalDialogManager({ containerUuid: uuid })
           if (isEmptyValue(storedModalDialog)) {
             dispatch('setModalDialog', {
               containerUuid: uuid,
