@@ -1,7 +1,7 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- * Contributor(s): Yamel Senih ysenih@erpya.com www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Yamel Senih ysenih@erpya.com
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -18,8 +18,12 @@
 
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
-import { config } from '@/utils/ADempiere/config'
 
+// Constants
+import { config } from '@/utils/ADempiere/config'
+import { RESOURCE_TYPE_ATTACHMENT } from '@/utils/ADempiere/resource'
+
+// Utils and Helper Methods
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 /**
@@ -162,9 +166,12 @@ export function requestAttachment({
  * @returns {promise}
  */
 export function setResourceReference({
+  resourceType = RESOURCE_TYPE_ATTACHMENT,
+  //
   tableName,
   recordId,
   recordUuid,
+  //
   textMessage,
   fileName,
   fileSize
@@ -173,6 +180,7 @@ export function setResourceReference({
     url: '/user-interface/component/resource/set-resource-reference',
     method: 'post',
     data: {
+      resource_type: resourceType,
       // attachment values
       table_name: tableName,
       record_id: recordId,
