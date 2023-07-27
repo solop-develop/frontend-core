@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,12 @@ import { BEARER_TYPE } from '@/utils/auth'
 import { getToken } from '@/utils/auth'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { mimeTypeOfReport } from '@/utils/ADempiere/dictionary/report'
+
+export const RESOURCE_TYPE_ATTACHMENT = 0
+
+export const RESOURCE_TYPE_IMAGE = 1
+
+export const RESOURCE_TYPE_FILE = 2
 
 /**
  * Extract extension file from file name
