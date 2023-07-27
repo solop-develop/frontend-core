@@ -38,7 +38,7 @@
         <lang-select class="right-menu-item hover-effect" />
 
       </template>
-      <el-button v-if="!isMobile" type="text" icon="el-icon-more" @click="isMenuOption()" />
+      <el-button v-if="isMobile" type="text" icon="el-icon-more" @click="isMenuOption()" />
       <el-popover
         v-model="isProfilePreview"
         placement="bottom"
@@ -55,8 +55,21 @@
           <el-button type="text" style="float: left;" @click="cacheReset()"> {{ $t('navbar.resetCache') }}</el-button>
           <el-button type="text" style="float: right;" @click="logout">{{ $t('navbar.logOut') }}</el-button>
         </div>
-        <el-button slot="reference" type="text" style="padding-top: 0px;">
-          <img v-if="!isEmptyValue(avatar)" :src="avatarResize" class="user-avatar">
+        <el-button slot="reference" type="text" style="padding-top: 5px;padding-right: 10px;">
+          <img
+            v-if="!isEmptyValue(avatarResize)"
+            :src="avatarResize"
+            class="user-avatar"
+            style="
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              display: inline-block;
+              position: relative;
+              cursor: default;
+              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            "
+          >
           <svg-icon v-else icon-class="AD" style="width: 2em !important;height: 2em !important;font-size: 27px;" />
         </el-button>
       </el-popover>
@@ -117,9 +130,10 @@ export default {
     ]),
     avatarResize() {
       const { uri } = getImagePath({
-        file: this.avatar,
+        file: this.$store.getters['user/userInfo'].image,
         width: 40,
-        height: 40
+        height: 40,
+        operation: 'resize'
       })
 
       return uri
@@ -364,6 +378,13 @@ export default {
         position: relative;
 
         .user-avatar {
+          width: 32px;
+          height: 40px;
+          border-radius: 50%;
+          display: inline-block;
+          position: relative;
+          cursor: default;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
           cursor: pointer;
           width: 40px;
           height: 40px;

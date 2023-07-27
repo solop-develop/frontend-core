@@ -6,8 +6,7 @@
 
     <div class="user-profile">
       <div class="box-center">
-        <pan-thumb :image="avatarResize" :height="'100px'" :width="'100px'" :hoverable="false">
-          <div>Hello</div>
+        <pan-thumb :image="avatarResize" :height="'100px'" :width="'100px'" :hoverable="true">
           {{ currentRole.name }}
         </pan-thumb>
       </div>
@@ -24,39 +23,6 @@
           <li v-for="(item, key) in rolesList" :key="key">
             {{ item.name | uppercaseFirst }}
           </li>
-        </div>
-      </div>
-    </div>
-
-    <div class="user-bio">
-      <div class="user-education user-bio-section">
-        <div class="user-bio-section-header"><svg-icon icon-class="education" /><span>Education</span></div>
-        <div class="user-bio-section-body">
-          <div class="text-muted">
-            JS in Computer Science from the University of Technology
-          </div>
-        </div>
-      </div>
-
-      <div class="user-skills user-bio-section">
-        <div class="user-bio-section-header"><svg-icon icon-class="skill" /><span>Skills</span></div>
-        <div class="user-bio-section-body">
-          <div class="progress-item">
-            <span>Vue</span>
-            <el-progress :percentage="70" />
-          </div>
-          <div class="progress-item">
-            <span>JavaScript</span>
-            <el-progress :percentage="18" />
-          </div>
-          <div class="progress-item">
-            <span>Css</span>
-            <el-progress :percentage="12" />
-          </div>
-          <div class="progress-item">
-            <span>ESLint</span>
-            <el-progress :percentage="100" status="success" />
-          </div>
         </div>
       </div>
     </div>
@@ -91,14 +57,16 @@ export default {
     },
     avatarResize() {
       const defaultAvatar = 'https://avatars1.githubusercontent.com/u/1263359?s=200&v=4?imageView2/1/w/80/h/80'
-      if (this.isEmptyValue(this.user.avatar) || defaultAvatar.includes(this.user.avatar)) {
+      const { image } = this.$store.getters['user/userInfo']
+      if (this.isEmptyValue(image) || defaultAvatar.includes(image)) {
         return defaultAvatar
       }
 
       const { uri } = getImagePath({
-        file: this.user.avatar,
+        file: image,
         width: 100,
-        height: 100
+        height: 100,
+        operation: 'resize'
       })
 
       return uri

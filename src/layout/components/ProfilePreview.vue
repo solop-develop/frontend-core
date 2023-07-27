@@ -1,9 +1,12 @@
 <template>
   <div class="user-profi">
-    <!-- <router-link to="/profile/index"> -->
     <el-row>
       <el-col :span="24" style="text-align: center;">
-        <el-avatar shape="circle" :size="100" fit="fill" :src="avatarResize" />
+        <el-image
+          :src="avatarResize"
+          fit="scale-down"
+          class="circle-image"
+        />
         <br>
         <el-button round style="margin-top: 3%;" @click="handleClick">
           <b>
@@ -12,7 +15,6 @@
         </el-button>
       </el-col>
     </el-row>
-    <!-- </router-link> -->
     <roles-navbar />
   </div>
 </template>
@@ -66,8 +68,9 @@ export default {
 
       const { uri } = getImagePath({
         file: this.userInfo.image,
-        width: 40,
-        height: 40
+        width: 200,
+        height: 200,
+        operation: 'resize'
       })
 
       return uri
@@ -140,5 +143,16 @@ export default {
       font-weight: bold;
     }
   }
+}
+</style>
+<style>
+.circle-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  cursor: default;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 </style>
