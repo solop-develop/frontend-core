@@ -79,7 +79,7 @@
             :label="$t('window.recordValidation.tab')"
           />
           <el-table-column
-            prop="columnName"
+            prop="fieldName"
             :label="$t('window.recordValidation.field')"
           />
           <el-table-column
@@ -272,7 +272,7 @@ export default {
       this.recordsModifiedWindow = []
       if (!isEmptyValue(storedWindow)) {
         storedWindow.tabsList.forEach(tabs => {
-          const { parentUuid, name, containerUuid } = tabs
+          const { parentUuid, name, containerUuid, fieldsList } = tabs
           const currentChangesOnTab = this.$store.getters.getPersistenceAttributesChanges({
             parentUuid,
             containerUuid,
@@ -283,26 +283,26 @@ export default {
           }
           currentChangesOnTab.forEach(attribute => {
             const { columnName, value } = attribute
+            let fieldName = columnName
 
-            // if (columnName.startsWith(DISPLAY_COLUMN_PREFIX)) {
-            //   let tempValue = value
-            //   const tempColumnName = columnName.replace(DISPLAY_COLUMN_PREFIX, '')
-            //   if (isEmptyValue(tempValue)) {
-            //     tempValue = columnsChanges.get(tempColumnName)
-            //   }
-            //   columnsChanges.set(tempColumnName, value)
-            //   return
-            // }
-            // columnsChanges.set(columnName, value)
+            if (!isEmptyValue(fieldsList)) {
+              const labelField = fieldsList.find(list => list.columnName === columnName)
+              if (!isEmptyValue(labelField)) {
+                fieldName = labelField.name
+              }
+            }
 
-            columnsChanges.push({
-              parentUuid,
-              containerUuid,
-              name,
-              columnName,
-              value,
-              view
-            })
+            if (!columnName.includes('DisplayColumn_')) {
+              columnsChanges.push({
+                fieldName,
+                containerUuid,
+                parentUuid,
+                columnName,
+                value,
+                name,
+                view
+              })
+            }
           })
         })
 
