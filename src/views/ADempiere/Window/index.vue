@@ -162,7 +162,6 @@ export default defineComponent({
 
     const renderWindowComponent = computed(() => {
       let windowComponent
-      console.log(windowMetadata.value.windowType)
       switch (windowMetadata.value.windowType) {
         case 'SO':
         case 'PO':

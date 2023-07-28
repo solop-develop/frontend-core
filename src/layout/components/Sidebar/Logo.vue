@@ -49,7 +49,6 @@ export default {
       return this.$store.getters['user/getRole']
     },
     logo() {
-      console.log({ ...this.getRole })
       const { clientLogo } = this.getRole
       if (clientLogo) {
         const { uri } = getImagePath({
