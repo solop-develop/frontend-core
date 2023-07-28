@@ -66,8 +66,8 @@ export default {
 
       const { uri } = getImagePath({
         file: image,
-        width: 150,
-        height: 150,
+        width: 294,
+        height: 294,
         operation: 'resize'
       })
 

@@ -6,14 +6,15 @@
           <div slot="content">{{ getRole.name }} | {{ getRole.clientName }}</div>
           <img v-if="logo" :src="logo" class="sidebar-logo">
           <svg-icon v-else icon-class="AD" style="width: 2em !important;height: 2em !important;font-size: 25px;padding-left: 5px;padding-right: 0px;cursor: pointer;" />
-          <b>{{ title }} </b>
+          <b style="margin-left: 5px;">{{ title }}</b>
         </el-tooltip>
       </router-link>
+
       <span v-else>
         <p key="expand" style="display: flex;text-align: center;width: 100%;padding: 0px 15px;margin-top: 10px;">
           <img v-if="logo" :src="logo" class="sidebar-logo" @click="dashboard()">
           <svg-icon v-else icon-class="AD" style="width: 2em !important;height: 2em !important;font-size: 25px;padding-left: 5px;padding-right: 0px;cursor: pointer;" />
-          <b style="color: white;font-size: 18px;padding-top: 15px;cursor: pointer;" @click="dashboard()">{{ title }}</b><br>
+          <b style="color: white;font-size: 18px;padding-top: 15px;cursor: pointer; margin-left: 5px;" @click="dashboard()">{{ title }}</b><br>
         </p>
         <el-tooltip placement="right">
           <div slot="content">{{ getRole.name }} | {{ getRole.clientName }}</div>
@@ -39,7 +40,7 @@ export default {
   data() {
     return {
       // title: 'Vue Element Admin',
-      title: 'ADempiere Vue'
+      title: 'ADempiere'
       // logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
       // logo: 'https://avatars1.githubusercontent.com/u/1263359?s=200&v=4?imageView2/1/w/80/h/80'
     }
