@@ -19,11 +19,14 @@
 // API Request Methods
 import {
   getImportFormats,
-  getListImportTables
+  getListImportTables,
+  listImportProcess,
+  saveRecordImport
 } from '@/api/ADempiere/form/VFileImport.js'
 
 // Utils and Helper Methods
 // import { isEmptyValue } from '@/utils/ADempiere'
+import { showMessage } from '@/utils/ADempiere/notification'
 
 const VFileImport = {
   attribute: {
@@ -31,12 +34,14 @@ const VFileImport = {
     importFormats: '',
     tablaId: 0,
     isProcess: false,
-    formatFields: []
+    formatFields: [],
+    processDefinition: {}
   },
   options: {
     listCharsets: [],
     listImportFormats: [],
-    listTables: []
+    listTables: [],
+    listProcess: []
   },
   file: {
     data: [],
@@ -123,6 +128,73 @@ export default {
         attribute: 'attribute',
         criteria: 'tablaId',
         value: id
+      })
+    },
+    listProcess({ commit }, {
+      table_name
+    }) {
+      return new Promise(resolve => {
+        listImportProcess({
+          tableName: table_name
+        })
+          .then(response => {
+            const { records } = response
+            const list = records.map(list => {
+              return {
+                ...list,
+                ...list.values
+              }
+            })
+            commit('updateAttributeVFileImport', {
+              attribute: 'options',
+              criteria: 'listProcess',
+              value: list
+            })
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Error getting List Process Import: ${error.message}. Code: ${error.code}.`)
+            resolve([])
+          })
+      })
+    },
+    saveRecords({ commit, getters }) {
+      return new Promise(resolve => {
+        const {
+          charsets,
+          isProcess,
+          importFormats,
+          processDefinition
+        } = getters.getAttribute
+        const { id } = getters.getFile
+        const { containerUuid, fieldsList } = processDefinition
+        const parametersList = getters.getProcessParameters({
+          containerUuid,
+          fieldsList
+        })
+        saveRecordImport({
+          id,
+          isProcess,
+          parameters: parametersList,
+          processId: processDefinition.id,
+          charset: charsets,
+          importFormatId: importFormats
+        })
+          .then(response => {
+            const { message } = response
+            showMessage({
+              type: 'success',
+              message: message
+            })
+            resolve(true)
+          })
+          .catch(error => {
+            showMessage({
+              type: 'error',
+              message: error.message
+            })
+            resolve(true)
+          })
       })
     }
   },

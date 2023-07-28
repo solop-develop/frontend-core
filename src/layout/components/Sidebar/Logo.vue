@@ -10,14 +10,14 @@
         </el-tooltip>
       </router-link>
       <span v-else>
-        <p key="expand" style="display: flex;text-align: center;width: 100%;padding: 0px 15px;margin-top: 10px;">
+        <p key="expand" style="display: flex;text-align: center;width: 100%;padding: 0px 15px;margin-top: 0px;">
           <img v-if="logo" :src="logo" class="sidebar-logo" @click="dashboard()">
           <svg-icon v-else icon-class="AD" style="width: 2em !important;height: 2em !important;font-size: 25px;padding-left: 5px;padding-right: 0px;cursor: pointer;" />
           <b style="color: white;font-size: 18px;padding-top: 15px;cursor: pointer;" @click="dashboard()">{{ title }}</b><br>
         </p>
         <el-tooltip placement="right">
           <div slot="content">{{ getRole.name }} | {{ getRole.clientName }}</div>
-          <p class="sidebar-sub-title" style="color: white; font-size: 12px;margin: 0px;margin-top: 10px;" @click="profile()">
+          <p class="sidebar-sub-title" style="color: white; font-size: 12px;margin: 0px;margin-top: 0px;" @click="profile()">
             {{ getRole.name }} | {{ getRole.clientName }}
           </p>
         </el-tooltip>

@@ -56,10 +56,10 @@
           <el-button type="text" style="float: right;" @click="logout">{{ $t('navbar.logOut') }}</el-button>
         </div>
         <el-button slot="reference" type="text" style="padding-top: 5px;padding-right: 10px;">
-          <img
+          <el-image
             v-if="!isEmptyValue(avatar)"
             :src="avatarResize"
-            class="user-avatar"
+            fit="contain"
             style="
               width: 40px;
               height: 40px;
@@ -69,7 +69,7 @@
               cursor: default;
               box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
             "
-          >
+          />
           <el-avatar v-else size="large" :src="imageDefault" />
         </el-button>
       </el-popover>

@@ -19,7 +19,8 @@
 const VFileImport = {
   step: {
     selectTable: 'Select Table',
-    configureToImport: 'Configure File to Import'
+    configureToImport: 'Configure File to Import',
+    saveAndProcess: 'Save and Process'
   },
   selectTable: {
     title: 'Please Select a Table',

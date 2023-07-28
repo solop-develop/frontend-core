@@ -86,6 +86,21 @@ export function getListImportTables() {
     })
 }
 
+export function listImportProcess({
+  tableName
+}) {
+  return request({
+    url: '/form/addons/import-file-loader/list-import-processes',
+    method: 'get',
+    params: {
+      table_name: tableName
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
 export function saveRecordImport({
   id,
   charset,
