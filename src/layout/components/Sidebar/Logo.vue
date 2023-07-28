@@ -4,31 +4,30 @@
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link sidebar-logo-link-close" to="/">
         <el-tooltip placement="right">
           <div slot="content">{{ getRole.name }} | {{ getRole.clientName }}</div>
-          <img v-if="!isEmptyValue(logo)" :src="logo" class="sidebar-logo">
-          <svg-icon v-else icon-class="AD" style="width: 2em !important;height: 2em !important;font-size: 27px;" />
-          <h1 class="sidebar-title">{{ title }} </h1>
+          <img v-if="logo" :src="logo" class="sidebar-logo">
+          <svg-icon v-else icon-class="AD" style="width: 2em !important;height: 2em !important;font-size: 25px;padding-left: 5px;padding-right: 0px;cursor: pointer;" />
+          <b>{{ title }} </b>
         </el-tooltip>
       </router-link>
-      <div v-else key="expand" class="sidebar-logo-link">
-        <img v-if="!isEmptyValue(logo)" :src="logo" class="sidebar-logo" @click="dashboard()">
-        <svg-icon v-else icon-class="AD" style="width: 2em !important;height: 2em !important;font-size: 27px;" />
-        <h1 class="sidebar-title" @click="dashboard()">{{ title }}</h1><br>
-        <br>
-        <br>
+      <span v-else>
+        <p key="expand" style="display: flex;text-align: center;width: 100%;padding: 0px 15px;margin-top: 10px;">
+          <img v-if="logo" :src="logo" class="sidebar-logo" @click="dashboard()">
+          <svg-icon v-else icon-class="AD" style="width: 2em !important;height: 2em !important;font-size: 25px;padding-left: 5px;padding-right: 0px;cursor: pointer;" />
+          <b style="color: white;font-size: 18px;padding-top: 15px;cursor: pointer;" @click="dashboard()">{{ title }}</b><br>
+        </p>
         <el-tooltip placement="right">
           <div slot="content">{{ getRole.name }} | {{ getRole.clientName }}</div>
-          <p class="sidebar-sub-title" @click="profile()">
+          <p class="sidebar-sub-title" style="color: white; font-size: 12px;margin: 0px;margin-top: 10px;" @click="profile()">
             {{ getRole.name }} | {{ getRole.clientName }}
           </p>
         </el-tooltip>
-      </div>
+      </span>
     </transition>
   </div>
 </template>
 
 <script>
 import { getImagePath } from '@/utils/ADempiere/resource.js'
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 export default {
   name: 'SidebarLogo',
   props: {
@@ -50,20 +49,22 @@ export default {
       return this.$store.getters['user/getRole']
     },
     logo() {
+      console.log({ ...this.getRole })
       const { clientLogo } = this.getRole
-      if (this.isEmptyValue(clientLogo)) return ''
-      const { uri } = getImagePath({
-        file: clientLogo,
-        width: 50,
-        height: 50,
-        operation: 'resize'
-      })
+      if (clientLogo) {
+        const { uri } = getImagePath({
+          file: clientLogo,
+          width: 50,
+          height: 50,
+          operation: 'resize'
+        })
 
-      return uri
+        return uri
+      }
+      return undefined
     }
   },
   methods: {
-    isEmptyValue,
     profile() {
       this.$router.push({
         path: '/profile/index?'
