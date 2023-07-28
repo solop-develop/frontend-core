@@ -6,7 +6,7 @@
 
     <div class="user-profile">
       <div class="box-center">
-        <pan-thumb :image="avatarResize" :height="'100px'" :width="'100px'" :hoverable="true">
+        <pan-thumb :image="avatarResize" :hoverable="true">
           {{ currentRole.name }}
         </pan-thumb>
       </div>
@@ -34,7 +34,9 @@ import PanThumb from '@theme/components/PanThumb'
 import { getImagePath } from '@/utils/ADempiere/resource.js'
 
 export default {
-  components: { PanThumb },
+  components: {
+    PanThumb
+  },
   props: {
     user: {
       type: Object,
@@ -56,20 +58,23 @@ export default {
       return this.$store.getters['user/getRoles']
     },
     avatarResize() {
-      const defaultAvatar = 'https://avatars1.githubusercontent.com/u/1263359?s=200&v=4?imageView2/1/w/80/h/80'
+      // const defaultAvatar = 'https://avatars1.githubusercontent.com/u/1263359?s=200&v=4?imageView2/1/w/80/h/80'
       const { image } = this.$store.getters['user/userInfo']
-      if (this.isEmptyValue(image) || defaultAvatar.includes(image)) {
-        return defaultAvatar
+      if (this.isEmptyValue(image)) {
+        return require('@/image/ADempiere/avatar/no-avatar.png')
       }
 
       const { uri } = getImagePath({
         file: image,
-        width: 100,
-        height: 100,
+        width: 150,
+        height: 150,
         operation: 'resize'
       })
 
       return uri
+    },
+    userInfo() {
+      return this.$store.getters['user/userInfo']
     }
   }
 }

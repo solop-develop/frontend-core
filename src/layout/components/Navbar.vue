@@ -57,7 +57,7 @@
         </div>
         <el-button slot="reference" type="text" style="padding-top: 5px;padding-right: 10px;">
           <img
-            v-if="!isEmptyValue(avatarResize)"
+            v-if="!isEmptyValue(avatar)"
             :src="avatarResize"
             class="user-avatar"
             style="
@@ -70,7 +70,7 @@
               box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
             "
           >
-          <svg-icon v-else icon-class="AD" style="width: 2em !important;height: 2em !important;font-size: 27px;" />
+          <el-avatar v-else size="large" :src="imageDefault" />
         </el-button>
       </el-popover>
     </div>
@@ -122,6 +122,9 @@ export default {
         return true
       }
       return false
+    },
+    imageDefault() {
+      return require('@/image/ADempiere/avatar/no-avatar.png')
     },
     ...mapGetters([
       'sidebar',

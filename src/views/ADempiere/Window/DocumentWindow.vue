@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <div class="document-window" style="height: 99% !important;width: 100% !important;">
+  <div class="document-window" style="height: 90vh !important;width: 100% !important;overflow: auto;">
     <div id="tab-manager" :style="sizeTab">
       <embedded
         :visible="showRecordAccess"
@@ -193,7 +193,7 @@ export default defineComponent({
         // return 'height: -webkit-fill-available'
         return 'height: 100% !important'
       }
-      return 'height: 50% !important'
+      return ''
     })
 
     const sizeTabChild = computed(() => {
@@ -201,7 +201,7 @@ export default defineComponent({
         // return 'height: -webkit-fill-available'
         return 'height: 100% !important'
       }
-      return 'height: 50% !important'
+      return ''
     })
 
     const isFullGrid = computed(() => {

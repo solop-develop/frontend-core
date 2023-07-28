@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <div style="height: 100% !important;width: 100% !important;">
+  <div style="height: 90vh !important;width: 100% !important;overflow: auto;">
     <div id="tab-manager" :style="sizeTab">
       <embedded
         :visible="showRecordAccess"
@@ -183,14 +183,14 @@ export default defineComponent({
       if (isViewFullScreenParent.value) {
         return 'height: 80% !important'
       }
-      return 'height: 50% !important'
+      return ''
     })
 
     const sizeTabChild = computed(() => {
       if (isViewFullScreenChild.value) {
         return 'height: 80% !important'
       }
-      return 'height: 50% !important'
+      return ''
     })
 
     const actionsManager = computed(() => {
