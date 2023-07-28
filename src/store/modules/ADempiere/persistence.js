@@ -35,7 +35,7 @@ import {
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import { getContextDefaultValue } from '@/utils/ADempiere/contextUtils/contextField'
-import { BUTTON, isSupportLookup } from '@/utils/ADempiere/references'
+import { BUTTON, IMAGE, isSupportLookup } from '@/utils/ADempiere/references'
 
 const persistence = {
   state: {
@@ -142,7 +142,7 @@ const persistence = {
           oldValue = defaultValue
         }
 
-        if (isSupportLookup(field.displayType) ||
+        if (isSupportLookup(field.displayType) || IMAGE.id === field.displayType ||
           (['DocAction', 'Record_ID'].includes(columnName) && BUTTON.id === field.displayType)) {
           let displayedValue
           if (!isEmptyValue(currentRecord)) {

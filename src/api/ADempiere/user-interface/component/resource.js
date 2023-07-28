@@ -116,7 +116,7 @@ export function requestImage({
  * @param {number}  resourceId
  * @param {string}  resourceUuid // TODO: Add suppport to resource uuid on backend
  */
-export function getResourceReference({
+export function requestGetResourceReference({
   resourceId,
   resourceUuid
 }) {
@@ -166,7 +166,11 @@ export function requestAttachment({
  * @returns {promise}
  */
 export function setResourceReference({
+  id,
+  uuid,
+  //
   resourceType = RESOURCE_TYPE_ATTACHMENT,
+  resourceId,
   //
   tableName,
   recordId,
@@ -180,7 +184,11 @@ export function setResourceReference({
     url: '/user-interface/component/resource/set-resource-reference',
     method: 'post',
     data: {
+      id,
+      uuid,
+      // parent values (attachment, image, archive)
       resource_type: resourceType,
+      resource_id: resourceId,
       // attachment values
       table_name: tableName,
       record_id: recordId,
