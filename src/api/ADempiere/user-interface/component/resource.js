@@ -117,15 +117,25 @@ export function requestImage({
  * @param {string}  resourceUuid // TODO: Add suppport to resource uuid on backend
  */
 export function requestGetResourceReference({
-  resourceId,
-  resourceUuid
+  id,
+  uuid,
+  resourceName,
+  imageId,
+  imageUuid,
+  archiveId,
+  archiveUuid
 }) {
   return request({
     url: '/user-interface/component/resource/resource-reference',
     method: 'get',
     params: {
-      resource_id: resourceId,
-      resource_uuid: resourceUuid
+      id,
+      uuid,
+      resource_name: resourceName,
+      image_id: imageId,
+      image_uuid: imageUuid,
+      archive_id: archiveId,
+      archive_uud: archiveUuid
     }
   })
     .then(response => {
