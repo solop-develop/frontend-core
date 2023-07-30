@@ -62,7 +62,7 @@ export default {
    * Get report dictionary definition
    * @param {string} uuid of dictionary
    */
-  getReportDefinitionFromServer({ dispatch, getters }, {
+  getReportDefinitionFromServer({ dispatch, getters, rootGetters }, {
     uuid
   }) {
     return new Promise((resolve, reject) => {
@@ -94,7 +94,11 @@ export default {
                   containerUuid: uuid
                 })
               },
-              loadData: () => {
+              loadData: ({ containerUuid }) => {
+                const reportDefinition = rootGetters.getStoredReport(containerUuid)
+                if (!isEmptyValue(reportDefinition)) {
+                  return Promise.resolve(reportDefinition)
+                }
                 return dispatch('getReportDefinitionFromServer', {
                   uuid: uuid
                 })

@@ -171,7 +171,22 @@ export default {
                   }, () => {})
                 })
               },
-              loadData: () => {
+              beforeOpen: ({ parentUuid: browserUuid, containerUuid }) => {
+                // set context values
+                const parentValues = store.getters.getBrowserQueryCriteriaElement({
+                  containerUuid: browserUuid
+                })
+
+                dispatch('updateValuesOfContainer', {
+                  containerUuid: process.uuid,
+                  attributes: parentValues
+                })
+              },
+              loadData: ({ containerUuid }) => {
+                const processDefinition = rootGetters.getStoredFieldsFromProcess(containerUuid)
+                if (!isEmptyValue(processDefinition)) {
+                  return Promise.resolve(processDefinition)
+                }
                 return dispatch('getProcessDefinitionFromServer', {
                   uuid: process.uuid
                 })

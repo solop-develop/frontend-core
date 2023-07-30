@@ -404,9 +404,9 @@ export default {
               })
             },
             loadData: ({ parentUuid: tabAssociatedUuid, containerUuid }) => {
-              const reportDefinition = rootGetters.getStoredProcess(process.uuid)
-              if (!isEmptyValue(reportDefinition)) {
-                return Promise.resolve(reportDefinition)
+              const processDefinition = rootGetters.getStoredProcess(process.uuid)
+              if (!isEmptyValue(processDefinition)) {
+                return Promise.resolve(processDefinition)
               }
 
               return dispatch('getProcessDefinitionFromServer', {

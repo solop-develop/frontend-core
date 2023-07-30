@@ -64,6 +64,61 @@ export default {
    * @param {Array<Object>} fieldsList
    * @returns {Array<Object>} [{ columnName: name key, value: value to send }]
    */
+  getBrowserQueryCriteriaElement: (state, getters, rootState, rootGetters) => ({
+    containerUuid,
+    fieldsList = []
+  }) => {
+    if (isEmptyValue(fieldsList)) {
+      fieldsList = getters.getStoredFieldsFromBrowser(containerUuid)
+    }
+
+    const queryParams = []
+    fieldsList.forEach(fieldItem => {
+      const { columnName, elementName } = fieldItem
+      const isMandatory = isMandatoryField(fieldItem)
+      // evaluate displayed fields
+      const isDisplayed = isDisplayedField(fieldItem) &&
+        (fieldItem.isShowedFromUser || isMandatory)
+
+      if (!isDisplayed) {
+        return
+      }
+
+      const value = rootGetters.getValueOfField({
+        containerUuid,
+        columnName
+      })
+
+      if (fieldItem.isRange && !isNumberField(fieldItem.displayType)) {
+        const valueTo = rootGetters.getValueOfField({
+          containerUuid,
+          columnName: fieldItem.columnNameTo
+        })
+        if (!isEmptyValue(valueTo)) {
+          queryParams.push({
+            columnName: fieldItem.elementNameTo,
+            value: valueTo
+          })
+        }
+      }
+
+      if (!isEmptyValue(value)) {
+        queryParams.push({
+          columnName: elementName,
+          value
+        })
+      }
+    })
+
+    return queryParams
+  },
+
+  /**
+   * Getter converter selection params with value format
+   * @param {String} containerUuid
+   * @param {Array<Object>} fieldsList
+   * @returns {Array<Object>} [{ columnName: name key, value: value to send }]
+   */
   getBrowserQueryCriteria: (state, getters, rootState, rootGetters) => ({
     containerUuid,
     fieldsList = []
