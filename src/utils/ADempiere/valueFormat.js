@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import {
   ACCOUNT_ELEMENT, LOCATION_ADDRESS, // Custom lookups
   LOCATOR_WAREHOUSE, PRODUCT_ATTRIBUTE, // Custom lookups of Producs
   LIST, TABLE, TABLE_DIRECT, SEARCH, // Standard lookups
+  IMAGE, // file lookups
   YES_NO
 } from '@/utils/ADempiere/references.js'
 
@@ -144,6 +145,14 @@ export function formatField({
     case TEXT.id:
     case TEXT_LONG.id:
       formattedValue = decodeHtmlEntities(value)
+      break
+
+    case IMAGE.id:
+      if (isEmptyValue(displayedValue)) {
+        formattedValue = undefined
+        break
+      }
+      formattedValue = displayedValue
       break
 
     default:
