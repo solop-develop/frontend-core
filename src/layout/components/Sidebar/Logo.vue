@@ -92,7 +92,8 @@ export default {
 .sidebar-logo-container {
   position: relative;
   width: 100%;
-  height: 70px;
+  min-height: 70px;
+  max-height: 90px;
   // line-height: 50px;
   background: #2b2f3a;
   text-align: center;

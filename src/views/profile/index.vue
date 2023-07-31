@@ -8,15 +8,20 @@
         </el-col>
 
         <el-col :span="16" :xs="24">
-          <el-card>
-            <el-tabs v-model="activeTab">
-              <el-tab-pane :label="$t('profile.role')" name="role">
-                <role />
-              </el-tab-pane>
-              <el-tab-pane :label="$t('page.settings.title')" :name="$t('page.settings.title')">
-                <settings />
-              </el-tab-pane>
-            </el-tabs>
+          <el-card shadow="always">
+            <el-col :span="16" style="padding-right:10px;margin-bottom:20px;">
+              <h1 style="margin-bottom: 5px;">{{ $t('component.dashboard.header.welcome') }} {{ userInfo.name }}</h1>
+              {{ userInfo.description }}
+            </el-col>
+
+            <el-col :span="8">
+              <br>
+              <b>{{ $t('component.dashboard.header.role') }}: </b> {{ currentRole.name }} <br>
+              <b>{{ $t('component.dashboard.header.client') }}: </b> {{ currentRole.clientName }} <br>
+              <b>{{ $t('component.dashboard.header.organization') }}: </b> {{ organization.name }} <br>
+              <b>{{ $t('component.dashboard.header.warehouse') }}: </b> {{ warehouse.name }} <br>
+              <br>
+            </el-col>
           </el-card>
         </el-col>
 
@@ -28,15 +33,11 @@
 <script>
 import { mapGetters, mapState } from 'vuex'
 import UserCard from './components/UserCard'
-import Role from '@/views/profile/components/role'
-import { Settings } from '@/layout/components'
 
 export default {
   name: 'Profile',
   components: {
-    UserCard,
-    Role,
-    Settings
+    UserCard
   },
   data() {
     return {
@@ -65,6 +66,20 @@ export default {
         openSidebar: this.sidebar.opened,
         withoutAnimation: this.sidebar.withoutAnimation,
         mobile: this.device === 'mobile'
+      }
+    },
+    currentRole() {
+      return this.$store.getters['user/getRole']
+    },
+    userInfo() {
+      return this.$store.getters['user/userInfo']
+    },
+    organization() {
+      return this.$store.getters['user/getOrganization']
+    },
+    warehouse() {
+      return this.$store.getters['user/getWarehouse'] || {
+        name: ''
       }
     }
   },
