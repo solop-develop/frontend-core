@@ -22,9 +22,12 @@
       <el-tabs type="border-card">
         <el-tab-pane style="padding: 0px !important;">
           <span slot="label">
-            <el-badge :value="getProcessLogSuccess.length" type="success" class="item" style="color: #67C23A">
+            <el-badge v-if="!isEmptyValue(getProcessLogSuccess)" :value="getProcessLogSuccess.length" type="success" class="item" style="color: #67C23A">
               {{ $t('page.processActivity.finished') }}
             </el-badge>
+            <span v-else style="color: #67C23A">
+              {{ $t('page.processActivity.finished') }}
+            </span>
           </span>
           <h1 v-if="isEmptyValue(getProcessLogSuccess)" class="text-center">
             {{ $t('views.noProcess') }}
@@ -132,9 +135,12 @@
         </el-tab-pane>
         <el-tab-pane>
           <span slot="label">
-            <el-badge :value="getProcessLogError.length" class="item" type="danger" style="color: #F56C6C">
+            <el-badge v-if="!isEmptyValue(getProcessLogError)" :value="getProcessLogError.length" class="item" type="danger" style="color: #F56C6C">
               {{ $t('page.processActivity.withErrors') }}
             </el-badge>
+            <span v-else style="color: #F56C6C">
+              {{ $t('page.processActivity.withErrors') }}
+            </span>
           </span>
           <h1 v-if="isEmptyValue(getProcessLogError)" class="text-center">
             {{ $t('views.noProcess') }}
@@ -228,9 +234,12 @@
         </el-tab-pane>
         <el-tab-pane>
           <span slot="label">
-            <el-badge :value="getProcessLogProcessing.length" class="item" type="info" style="color: #909399">
+            <el-badge v-if="!isEmptyValue(getProcessLogProcessing)" :value="getProcessLogProcessing.length" class="item" type="info" style="color: #909399">
               {{ $t('page.processActivity.inProcess') }}
             </el-badge>
+            <span v-else style="color: #909399">
+              {{ $t('page.processActivity.inProcess') }}
+            </span>
           </span>
           <h1 v-if="isEmptyValue(getProcessLogProcessing)" class="text-center">
             {{ $t('views.noProcess') }}
