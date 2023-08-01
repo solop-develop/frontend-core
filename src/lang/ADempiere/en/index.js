@@ -223,7 +223,8 @@ export default {
     description: 'Description',
     changeRole: 'Change role',
     changeLanguage: 'Change language',
-    changeLanguagePlaceholder: 'Choose a language'
+    changeLanguagePlaceholder: 'Choose a language',
+    activityLogs: 'Activity Logs'
   },
   window,
   data: {

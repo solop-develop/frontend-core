@@ -122,3 +122,16 @@ export function setSessionAttribute({
     }
   })
 }
+
+/**
+ * Get User Activity
+ */
+export function requestUserActivity() {
+  return request({
+    url: '/user/log/user-activities',
+    method: 'get'
+  })
+    .then(response => {
+      return response
+    })
+}

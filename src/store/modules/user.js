@@ -27,7 +27,8 @@ import {
   requestLogout,
   requestUserInfoFromSession,
   requestSessionInfo,
-  setSessionAttribute
+  setSessionAttribute,
+  requestUserActivity
 } from '@/api/user'
 import {
   requestRolesList,
@@ -56,6 +57,8 @@ import {
 import { resetRouter } from '@/router'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
+import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
 
 const state = {
   token: getToken(),
@@ -74,7 +77,8 @@ const state = {
   warehouse: {},
   isSession: false,
   sessionInfo: {},
-  corporateBrandingImage: ''
+  corporateBrandingImage: '',
+  activityLogs: []
 }
 
 const mutations = {
@@ -128,6 +132,9 @@ const mutations = {
   },
   setSessionInfo(state, payload) {
     state.sessionInfo = payload
+  },
+  setActivityLogs(state, logs) {
+    state.activityLogs = logs
   }
 }
 
@@ -561,6 +568,59 @@ const actions = {
         })
         location.href = '/'
       })
+  },
+
+  loadingActivitylogs({ commit }, list) {
+    return new Promise(resolve => {
+      requestUserActivity()
+        .then(response => {
+          const { records } = response
+          const activitylogs = response.records.map((logs, index) => {
+            const userActivityTypeName = logs.user_activity_type_name
+            let renderComponent, processLog, entityLog
+            switch (userActivityTypeName) {
+              case 'ENTITY_LOG':
+                entityLog = {
+                  ...camelizeObjectKeys(logs.entity_log),
+                  changeLogs: logs.entity_log.change_logs
+                }
+                processLog = {
+                  parameters: [],
+                  logsList: [],
+                  summary: '',
+                  isError: false
+                }
+                renderComponent = () => import('@/views/profile/components/UserActivity/WindowsLogs.vue')
+                break
+              case 'PROCESS_LOG':
+                processLog = {
+                  ...camelizeObjectKeys(logs.process_log),
+                  parameters: convertObjectToKeyValue(logs.process_log.parameters)
+                }
+                entityLog = {
+                  changeLogs: []
+                }
+                renderComponent = () => import('@/views/profile/components/UserActivity/ProcessLogs.vue')
+                break
+            }
+            return {
+              ...camelizeObjectKeys(logs),
+              entityLog,
+              processLog,
+              show: true,
+              index,
+              renderComponent
+            }
+          })
+          commit('setActivityLogs', activitylogs)
+          resolve(records)
+        })
+        .catch(error => {
+          resolve([])
+          commit('setActivityLogs', [])
+          console.warn(`Error getting List User Activity: ${error.message}. Code: ${error.code}.`)
+        })
+    })
   }
 }
 
@@ -600,6 +660,9 @@ const getters = {
   // TODO: Manage with vuex module to personal lock
   getIsPersonalLock: (state) => {
     return state.role.isPersonalLock
+  },
+  getActivityLogs: (state) => {
+    return state.activityLogs
   }
 }
 

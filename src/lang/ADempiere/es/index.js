@@ -224,7 +224,8 @@ export default {
     description: 'Descripción',
     changeRole: 'Cambiar Rol',
     changeLanguage: 'Cambiar idioma',
-    changeLanguagePlaceholder: 'Elija un idioma'
+    changeLanguagePlaceholder: 'Elija un idioma',
+    activityLogs: 'Registros de Actividades'
   },
   window,
   data: {

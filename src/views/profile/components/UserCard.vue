@@ -1,8 +1,8 @@
 <template>
-  <el-card style="margin-bottom:20px;">
-    <div slot="header" class="clearfix">
+  <el-card style="margin-bottom: 5px; padding: 0px;">
+    <!-- <div slot="header" class="clearfix">
       <span>{{ $t('profile.aboutMe') }}</span>
-    </div>
+    </div> -->
 
     <div class="user-profile">
       <div class="box-center">
@@ -94,13 +94,18 @@ export default {
   .user-name {
     font-weight: bold;
   }
+  .el-card {
+    .el-card__body {
+      padding: 0px !important;
+    }
+  }
 
   .box-center {
-    padding-top: 10px;
+    padding-bottom: 5px;
   }
 
   .user-role {
-    padding-top: 10px;
+    padding-top: 1px;
     font-weight: 400;
     font-size: 14px;
     .user-header {

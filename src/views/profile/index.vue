@@ -1,30 +1,36 @@
 <template>
   <div class="app-container">
     <div v-if="user">
-      <el-row :gutter="20">
-
+      <el-row :gutter="5" style="padding: 10px;padding-bottom: 0px;margin: 0px;">
+        <!-- Image User -->
         <el-col :span="8" :xs="24">
           <user-card :user="user" />
         </el-col>
-
         <el-col :span="16" :xs="24">
           <el-card shadow="always">
-            <el-col :span="16" style="padding-right:10px;margin-bottom:20px;">
-              <h1 style="margin-bottom: 5px;">{{ $t('component.dashboard.header.welcome') }} {{ userInfo.name }}</h1>
-              {{ userInfo.description }}
-            </el-col>
-
-            <el-col :span="8">
-              <br>
-              <b>{{ $t('component.dashboard.header.role') }}: </b> {{ currentRole.name }} <br>
-              <b>{{ $t('component.dashboard.header.client') }}: </b> {{ currentRole.clientName }} <br>
-              <b>{{ $t('component.dashboard.header.organization') }}: </b> {{ organization.name }} <br>
-              <b>{{ $t('component.dashboard.header.warehouse') }}: </b> {{ warehouse.name }} <br>
-              <br>
-            </el-col>
+            <el-tabs v-model="activeTab" class="tab-profile">
+              <el-tab-pane :label="$t('profile.role')" name="role">
+                <!-- Info User -->
+                <user-info />
+              </el-tab-pane>
+              <!-- Settings -->
+              <el-tab-pane :label="$t('page.settings.title')" :name="$t('page.settings.title')">
+                <settings />
+              </el-tab-pane>
+            </el-tabs>
           </el-card>
         </el-col>
-
+      </el-row>
+      <!-- Logs User -->
+      <el-row :gutter="0" style="padding: 0px 10px;margin: 0px;">
+        <el-card>
+          <div slot="header" class="clearfix">
+            <b style="font-size: 18px;">
+              <svg-icon icon-class="tree-table" /> {{ $t('profile.activityLogs') }}
+            </b>
+          </div>
+          <user-activity />
+        </el-card>
       </el-row>
     </div>
   </div>
@@ -32,12 +38,18 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex'
-import UserCard from './components/UserCard'
+import UserCard from './components/UserCard.vue'
+import UserInfo from '@/views/profile/components/InfoUser.vue'
+import UserActivity from '@/views/profile/components/UserActivity/index.vue'
+import { Settings } from '@/layout/components'
 
 export default {
   name: 'Profile',
   components: {
-    UserCard
+    UserCard,
+    Settings,
+    UserInfo,
+    UserActivity
   },
   data() {
     return {

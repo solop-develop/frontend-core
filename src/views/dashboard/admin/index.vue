@@ -18,41 +18,10 @@
 
 <template>
   <div class="dashboard-editor-container">
-    <el-row v-if="!isMobile" :gutter="12">
+    <el-row :gutter="12">
       <el-col :span="24" style="padding-right:10px;margin-bottom:20px;">
         <el-card shadow="always">
-          <el-col :span="16" style="padding-right:10px;margin-bottom:20px;">
-            <h1 style="margin-bottom: 5px;">{{ $t('component.dashboard.header.welcome') }} {{ userInfo.name }}</h1>
-            {{ userInfo.description }}
-          </el-col>
-
-          <el-col :span="8">
-            <br>
-            <b>{{ $t('component.dashboard.header.role') }}: </b> {{ currentRole.name }} <br>
-            <b>{{ $t('component.dashboard.header.client') }}: </b> {{ currentRole.clientName }} <br>
-            <b>{{ $t('component.dashboard.header.organization') }}: </b> {{ organization.name }} <br>
-            <b>{{ $t('component.dashboard.header.warehouse') }}: </b> {{ warehouse.name }} <br>
-            <br>
-          </el-col>
-        </el-card>
-      </el-col>
-    </el-row>
-    <el-row v-else :gutter="12">
-      <el-col :span="24" style="padding-right:10px;margin-bottom:20px;">
-        <el-card shadow="always">
-          <el-col :span="24" style="padding-right:10px;margin-bottom:20px;">
-            <h1 style="margin-bottom: 5px;">{{ $t('component.dashboard.header.welcome') }} {{ userInfo.name }}</h1>
-            {{ userInfo.description }}
-          </el-col>
-
-          <el-col :span="24">
-            <br>
-            <b>{{ $t('component.dashboard.header.role') }}: </b> {{ currentRole.name }} <br>
-            <b>{{ $t('component.dashboard.header.client') }}: </b> {{ currentRole.clientName }} <br>
-            <b>{{ $t('component.dashboard.header.organization') }}: </b> {{ organization.name }} <br>
-            <b>{{ $t('component.dashboard.header.warehouse') }}: </b> {{ warehouse.name }} <br>
-            <br>
-          </el-col>
+          <user-info />
         </el-card>
       </el-col>
     </el-row>
@@ -93,7 +62,7 @@ import store from '@/store'
 
 // Components and Mixins
 import DashboardDefinition from '@theme/components/ADempiere/Dashboard/index.vue'
-
+import UserInfo from '@/views/profile/components/InfoUser.vue'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
@@ -101,6 +70,7 @@ export default defineComponent({
   name: 'DashboardAdmin',
 
   components: {
+    UserInfo,
     DashboardDefinition
   },
 
@@ -111,10 +81,6 @@ export default defineComponent({
 
     const mainDashboard = computed(() => {
       return store.getters.getStoredMainDashboard
-    })
-
-    const isMobile = computed(() => {
-      return store.state.app.device === 'mobile'
     })
 
     const listDashboard = computed(() => {
@@ -134,20 +100,6 @@ export default defineComponent({
 
     const roleUuid = computed(() => {
       return store.getters.getRoleUuid
-    })
-
-    const userInfo = computed(() => {
-      return store.getters['user/userInfo']
-    })
-
-    const organization = computed(() => {
-      return store.getters['user/getOrganization']
-    })
-
-    const warehouse = computed(() => {
-      return store.getters['user/getWarehouse'] || {
-        name: ''
-      }
     })
 
     function loadDashboardsList() {
@@ -171,11 +123,7 @@ export default defineComponent({
       dashboardsList,
       mainDashboard,
       listDashboard,
-      userInfo,
-      currentRole,
-      organization,
-      warehouse,
-      isMobile
+      currentRole
     }
   }
 })

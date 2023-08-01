@@ -1,59 +1,69 @@
 <template>
   <div class="drawer-container">
-    <div>
-      <el-form label-position="top" :inline="true">
-        <el-form-item
-          :label="$t('page.settings.theme')"
-        >
-          <theme-picker @change="themeChange" />
-        </el-form-item>
-        <el-form-item
-          :label="$t('page.settings.fixedHeader')"
-        >
-          <el-switch v-model="fixedHeader" />
-        </el-form-item>
-        <el-form-item
-          :label="$t('page.settings.tagsView')"
-        >
-          <el-switch v-model="tagsView" />
-        </el-form-item>
-        <el-form-item
-          :label="$t('page.settings.fixedHeader')"
-        >
-          <el-switch v-model="showNavar" />
-        </el-form-item>
-        <el-form-item
-          :label="$t('page.settings.showContextMenu')"
-        >
-          <el-switch v-model="showContextMenu" />
-        </el-form-item>
-        <el-form-item
-          :label="$t('page.settings.isShowTitle')"
-        >
-          <el-switch v-model="isShowTitleForm" />
-        </el-form-item>
-        <el-form-item
-          :label="$t('page.settings.isShowMenu')"
-        >
-          <el-switch v-model="showMenu" />
-        </el-form-item>
-        <el-form-item
-          :label="$t('page.settings.sidebarLogo')"
-        >
-          <el-switch v-model="sidebarLogo" />
-        </el-form-item>
-        <el-form-item
-          :label="$t('page.settings.autoSave')"
-        >
-          <el-switch v-model="showAutoSave" />
-        </el-form-item>
-        <el-form-item
-          :label="$t('page.settings.fullGridMode')"
-        >
-          <el-switch v-model="showFullGridMode" />
-        </el-form-item>
-      </el-form>
-    </div>
+    <!-- <div> -->
+    <el-form label-position="top" :inline="true">
+      <el-form-item
+        :label="$t('page.settings.theme')"
+        class="drawer-title"
+      >
+        <theme-picker @change="themeChange" />
+      </el-form-item>
+      <el-form-item
+        :label="$t('page.settings.fixedHeader')"
+        class="drawer-title"
+      >
+        <el-switch v-model="fixedHeader" />
+      </el-form-item>
+      <el-form-item
+        :label="$t('page.settings.tagsView')"
+        class="drawer-title"
+      >
+        <el-switch v-model="tagsView" />
+      </el-form-item>
+      <el-form-item
+        :label="$t('page.settings.fixedHeader')"
+        class="drawer-title"
+      >
+        <el-switch v-model="showNavar" />
+      </el-form-item>
+      <el-form-item
+        :label="$t('page.settings.showContextMenu')"
+        class="drawer-title"
+      >
+        <el-switch v-model="showContextMenu" />
+      </el-form-item>
+      <el-form-item
+        :label="$t('page.settings.isShowTitle')"
+        class="drawer-title"
+      >
+        <el-switch v-model="isShowTitleForm" />
+      </el-form-item>
+      <el-form-item
+        :label="$t('page.settings.isShowMenu')"
+        class="drawer-title"
+      >
+        <el-switch v-model="showMenu" />
+      </el-form-item>
+      <el-form-item
+        :label="$t('page.settings.sidebarLogo')"
+        class="drawer-title"
+      >
+        <el-switch v-model="sidebarLogo" />
+      </el-form-item>
+      <el-form-item
+        :label="$t('page.settings.autoSave')"
+        class="drawer-title"
+      >
+        <el-switch v-model="showAutoSave" />
+      </el-form-item>
+      <el-form-item
+        :label="$t('page.settings.fullGridMode')"
+        class="drawer-title"
+      >
+        <el-switch v-model="showFullGridMode" />
+      </el-form-item>
+    </el-form>
+    <!-- </div> -->
   </div>
 </template>
 
@@ -268,16 +278,16 @@ export default {
 
 <style lang="scss" scoped>
 .drawer-container {
-  padding: 24px;
+  padding: 0px;
   font-size: 14px;
   line-height: 1.5;
   word-wrap: break-word;
 
   .drawer-title {
-    margin-bottom: 12px;
+    margin-bottom: 17px;
     color: rgba(0, 0, 0, .85);
     font-size: 14px;
-    line-height: 22px;
+    line-height: 18px;
   }
 
   .drawer-item {
