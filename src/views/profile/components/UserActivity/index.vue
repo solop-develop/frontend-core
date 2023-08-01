@@ -44,7 +44,7 @@
             <el-collapse-transition>
               <div
                 v-show="logsUser.show"
-                style="margin-top: 10px;padding-top: 10px;"
+                style="margin-top: 10px;"
               >
                 <process-logs
                   v-if="logsUser.userActivityTypeName === 'PROCESS_LOG'"
@@ -217,7 +217,7 @@ export default defineComponent({
 
     function styleShow(show) {
       if (show) return 'padding: 0px;padding-top: 10px'
-      return 'padding: 10px 0px;'
+      return 'padding: 0px;'
     }
 
     function nameLogs(log) {
