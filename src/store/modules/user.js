@@ -577,30 +577,19 @@ const actions = {
           const { records } = response
           const activitylogs = response.records.map((logs, index) => {
             const userActivityTypeName = logs.user_activity_type_name
-            let renderComponent, processLog, entityLog
+            let processLog, entityLog
             switch (userActivityTypeName) {
               case 'ENTITY_LOG':
                 entityLog = {
                   ...camelizeObjectKeys(logs.entity_log),
                   changeLogs: logs.entity_log.change_logs
                 }
-                processLog = {
-                  parameters: [],
-                  logsList: [],
-                  summary: '',
-                  isError: false
-                }
-                renderComponent = () => import('@/views/profile/components/UserActivity/WindowsLogs.vue')
                 break
               case 'PROCESS_LOG':
                 processLog = {
                   ...camelizeObjectKeys(logs.process_log),
                   parameters: convertObjectToKeyValue(logs.process_log.parameters)
                 }
-                entityLog = {
-                  changeLogs: []
-                }
-                renderComponent = () => import('@/views/profile/components/UserActivity/ProcessLogs.vue')
                 break
             }
             return {
@@ -608,8 +597,7 @@ const actions = {
               entityLog,
               processLog,
               show: true,
-              index,
-              renderComponent
+              index
             }
           })
           commit('setActivityLogs', activitylogs)

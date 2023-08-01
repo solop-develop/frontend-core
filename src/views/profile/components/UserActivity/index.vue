@@ -7,6 +7,7 @@
           v-for="(logsUser) in getActivityUser"
           :key="logsUser.id"
           :type="colorTypeLogs(logsUser)"
+          :timestamp="logTimesTamp(logsUser)"
           placement="top"
         >
           <el-card shadow="hover" style="padding: 0px !important;">
@@ -41,13 +42,19 @@
             </div>
 
             <el-collapse-transition>
-              <div v-show="logsUser.show" style="margin-top: 10px;padding-top: 10px;">
-                <component
-                  :is="logsUser.renderComponent"
+              <div
+                v-show="logsUser.show"
+                style="margin-top: 10px;padding-top: 10px;"
+              >
+                <process-logs
+                  v-if="logsUser.userActivityTypeName === 'PROCESS_LOG'"
                   :list-parameters="logsUser.processLog.parameters"
                   :list-logs="logsUser.processLog.logsList"
                   :summary="logsUser.processLog.summary"
                   :status="logsUser.processLog.isError"
+                />
+                <windows-logs
+                  v-else
                   :list-change-logs="logsUser.entityLog.changeLogs"
                   :entity-logs="logsUser.entityLog"
                 />
@@ -63,6 +70,12 @@
 <script>
 import lang from '@/lang'
 import store from '@/store'
+// Components and Mixins
+import WindowsLogs from '@/views/profile/components/UserActivity/WindowsLogs.vue'
+import ProcessLogs from '@/views/profile/components/UserActivity/ProcessLogs.vue'
+
+// Utils and Helper Methods
+import { translateDateByLong } from '@/utils/ADempiere/formatValue/dateFormat'
 
 import {
   defineComponent,
@@ -72,6 +85,10 @@ import {
 
 export default defineComponent({
   name: 'UserLog',
+  components: {
+    WindowsLogs,
+    ProcessLogs
+  },
   setup() {
     // Ref
     const currentKey = ref(0)
@@ -217,18 +234,19 @@ export default defineComponent({
       return name
     }
 
-    // function logTimesTamp() {
-    //   const { userActivityTypeName } = logs
-    //   let date = ''
-    //   switch (userActivityTypeName) {
-    //     case 'ENTITY_LOG':
-    //       date = 'primary'
-    //       break
-    //     case 'PROCESS_LOG':
-    //       date = 'success'
-    //       break
-    //   }
-    // }
+    function logTimesTamp(logs) {
+      const { userActivityTypeName, processLog, entityLog } = logs
+      let date = new Date()
+      switch (userActivityTypeName) {
+        case 'ENTITY_LOG':
+          date = entityLog.logDate
+          break
+        case 'PROCESS_LOG':
+          date = processLog.lastRun
+          break
+      }
+      return translateDateByLong(date)
+    }
 
     setUserLogs()
 
@@ -247,6 +265,7 @@ export default defineComponent({
       status,
       setUserLogs,
       iconTypelogs,
+      logTimesTamp,
       colorTypeLogs
     }
   }
