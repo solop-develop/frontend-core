@@ -28,6 +28,13 @@
             <b style="font-size: 18px;">
               <svg-icon icon-class="tree-table" /> {{ $t('profile.activityLogs') }}
             </b>
+            <span style="float: right;">
+              <el-date-picker
+                v-model="filterDate"
+                type="date"
+                :picker-options="pickerOptions"
+              />
+            </span>
           </div>
           <user-activity />
         </el-card>
@@ -54,7 +61,13 @@ export default {
   data() {
     return {
       user: {},
-      activeTab: 'role'
+      activeTab: 'role',
+      filterDate: new Date(),
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now()
+        }
+      }
     }
   },
   computed: {
@@ -93,6 +106,11 @@ export default {
       return this.$store.getters['user/getWarehouse'] || {
         name: ''
       }
+    }
+  },
+  watch: {
+    filterDate(date) {
+      this.$store.dispatch('user/loadingActivitylogs', date)
     }
   },
   created() {

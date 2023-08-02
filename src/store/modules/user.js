@@ -570,9 +570,11 @@ const actions = {
       })
   },
 
-  loadingActivitylogs({ commit }, list) {
+  loadingActivitylogs({ commit }, date) {
     return new Promise(resolve => {
-      requestUserActivity()
+      requestUserActivity({
+        date
+      })
         .then(response => {
           const { records } = response
           const activitylogs = response.records.map((logs, index) => {

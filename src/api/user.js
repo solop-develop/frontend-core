@@ -126,10 +126,15 @@ export function setSessionAttribute({
 /**
  * Get User Activity
  */
-export function requestUserActivity() {
+export function requestUserActivity({
+  date
+}) {
   return request({
     url: '/user/log/user-activities',
-    method: 'get'
+    method: 'get',
+    params: {
+      date
+    }
   })
     .then(response => {
       return response
