@@ -21,7 +21,8 @@ import {
   getImportFormats,
   getListImportTables,
   listImportProcess,
-  saveRecordImport
+  saveRecordImport,
+  requestListFilePreview
 } from '@/api/ADempiere/form/VFileImport.js'
 
 // Utils and Helper Methods
@@ -46,7 +47,8 @@ const VFileImport = {
   file: {
     data: [],
     header: [],
-    resource: {}
+    resource: {},
+    isLoading: false
   },
   infoFormat: {},
   navigationLine: {}
@@ -194,6 +196,64 @@ export default {
               message: error.message
             })
             resolve(true)
+          })
+      })
+    },
+    listFilePreview({ commit, getters }, resource) {
+      return new Promise(resolve => {
+        const {
+          charsets,
+          importFormats
+        } = getters.getAttribute
+        const { resource } = getters.getFile
+        commit('updateAttributeVFileImport', {
+          attribute: 'file',
+          criteria: 'isLoading',
+          value: true
+        })
+        requestListFilePreview({
+          resourceId: resource.id,
+          charset: charsets,
+          importFormatId: importFormats
+        })
+          .then(response => {
+            const { records } = response
+            const attributesList = records.map(list => list.attributes)
+            const dataTable = attributesList.map(list => {
+              const dataLine = {}
+              list.forEach(element => {
+                dataLine[element.key] = element.value
+              })
+              return dataLine
+            })
+            commit('updateAttributeVFileImport', {
+              attribute: 'file',
+              criteria: 'data',
+              value: dataTable
+            })
+            commit('updateAttributeVFileImport', {
+              attribute: 'file',
+              criteria: 'header',
+              value: attributesList[0]
+            })
+            commit('updateAttributeVFileImport', {
+              attribute: 'file',
+              criteria: 'isLoading',
+              value: false
+            })
+            resolve(dataTable)
+          })
+          .catch(error => {
+            showMessage({
+              type: 'error',
+              message: error.message
+            })
+            commit('updateAttributeVFileImport', {
+              attribute: 'file',
+              criteria: 'isLoading',
+              value: false
+            })
+            resolve([])
           })
       })
     }

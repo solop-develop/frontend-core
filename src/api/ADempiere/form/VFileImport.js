@@ -123,3 +123,22 @@ export function saveRecordImport({
       return camelizeObjectKeys(response)
     })
 }
+
+export function requestListFilePreview({
+  charset,
+  resourceId,
+  importFormatId
+}) {
+  return request({
+    url: '/form/addons/import-file-loader/list-file-preview',
+    method: 'get',
+    params: {
+      import_format_id: importFormatId,
+      resource_id: resourceId,
+      charset
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
