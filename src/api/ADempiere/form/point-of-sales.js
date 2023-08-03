@@ -280,8 +280,8 @@ export function deleteOrder({
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/delete-order`,
-    method: 'post',
-    data: {
+    method: 'delete',
+    params: {
       order_uuid: orderUuid,
       pos_uuid: posUuid
       // customer_uuid: customerUuid,
@@ -426,8 +426,8 @@ export function deleteOrderLine({
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/delete-order-line`,
-    method: 'post',
-    data: {
+    method: 'delete',
+    params: {
       pos_uuid: posUuid,
       order_line_uuid: orderLineUuid
     }
@@ -686,8 +686,8 @@ export function deletePayment({
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/delete-payment`,
-    method: 'post',
-    data: {
+    method: 'delete',
+    params: {
       pos_uuid: posUuid,
       payment_uuid: paymentUuid
     }
@@ -1098,8 +1098,8 @@ export function daleteCustomerBankAccounts({
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/delete-bank-account`,
-    method: 'post',
-    data: {
+    method: 'delete',
+    params: {
       pos_uuid: posUuid,
       customer_bank_account_uuid: customerBankAccountUuid
     }
@@ -1204,8 +1204,8 @@ export function deleteRefundReference({
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/delete-payment-reference`,
-    method: 'post',
-    data: {
+    method: 'delete',
+    params: {
       pos_uuid: posUuid,
       uuid
     }
@@ -1249,8 +1249,8 @@ export function deleteShipment({
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/delete-shipment-line`,
-    method: 'post',
-    data: {
+    method: 'delete',
+    params: {
       pos_uuid: posUuid,
       shipment_line_uuid: shipmentLineUuid
     }

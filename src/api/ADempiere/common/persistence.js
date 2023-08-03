@@ -70,7 +70,7 @@ export function updateEntity({
 
   return request({
     url: '/common/api/update',
-    method: 'post',
+    method: 'put',
     data: {
       table_name: tableName,
       id: recordId,
@@ -100,8 +100,8 @@ export function deleteEntity({
 }) {
   return request({
     url: '/common/api/delete',
-    method: 'post',
-    data: {
+    method: 'delete',
+    params: {
       table_name: tableName,
       id: recordId,
       uuid: recordUuid,

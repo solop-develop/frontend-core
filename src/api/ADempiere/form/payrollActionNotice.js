@@ -90,8 +90,8 @@ export function savePayrollMovement({
 }) {
   return request({
     url: `${config.payrollActionNotice.endpoint}/save-payroll-movement`,
-    method: 'get',
-    params: {
+    method: 'put',
+    data: {
       filters,
       id,
       uuid,
@@ -111,7 +111,7 @@ export function deletePayrollMovement({
 }) {
   return request({
     url: `${config.payrollActionNotice.endpoint}/delete-payroll-movements`,
-    method: 'get',
+    method: 'delete',
     params: {
       ids,
       uuids,

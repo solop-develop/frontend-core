@@ -243,7 +243,7 @@ export function deleteResourceReference({
 }) {
   return request({
     url: '/user-interface/component/resource/delete-resource-reference',
-    method: 'get',
+    method: 'delete',
     params: {
       resource_id: resourceId,
       resource_uuid: resourceUuid,

@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 import { request } from '@/utils/ADempiere/request'
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
-// constants
+// Constants
 // import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 export function requestCreateResource({
@@ -42,48 +42,6 @@ export function requestCreateResource({
       date,
       project_id: projectId,
       request_id: requestId
-    }
-  })
-    .then(response => {
-      // const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
-      return camelizeObjectKeys(response)
-    })
-}
-
-export function requestUpdateResource({
-  id,
-  uuid,
-  name,
-  description
-}) {
-  return request({
-    url: '/form/addons/time-control/update-resource-assignment',
-    method: 'get',
-    params: {
-      //  DSL Query
-      id,
-      uuid,
-      name,
-      description
-    }
-  })
-    .then(response => {
-      // const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
-      return camelizeObjectKeys(response)
-    })
-}
-
-export function requestDeleteResource({
-  id,
-  uuid
-}) {
-  return request({
-    url: '/form/addons/time-control/delete-resource-assignment',
-    method: 'get',
-    params: {
-      //  DSL Query
-      id,
-      uuid
     }
   })
     .then(response => {

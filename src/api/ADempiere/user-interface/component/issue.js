@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -202,7 +202,7 @@ export function updateIssue({
 }) {
   return request({
     url: '/user-interface/component/issue/update-issue',
-    method: 'post',
+    method: 'put',
     data: {
       id,
       uuid,
@@ -237,8 +237,8 @@ export function deleteIssue({
 }) {
   return request({
     url: '/user-interface/component/issue/delete-issue',
-    method: 'post',
-    data: {
+    method: 'delete',
+    params: {
       id,
       uuid
     }
@@ -319,7 +319,7 @@ export function updateIssueComment({
 }) {
   return request({
     url: '/user-interface/component/issue/update-issue-comment',
-    method: 'post',
+    method: 'put',
     data: {
       id: issueId,
       uuid: issueUuid,
@@ -345,8 +345,8 @@ export function deleteIssueComment({
 }) {
   return request({
     url: '/user-interface/component/issue/delete-issue-comment',
-    method: 'post',
-    data: {
+    method: 'delete',
+    params: {
       id: issueId,
       uuid: issueUuid
     }

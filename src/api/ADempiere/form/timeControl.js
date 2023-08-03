@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 import { request } from '@/utils/ADempiere/request'
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
-// constants
+// Constants
 import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/references.js'
 
 export function requestCreateResource({
@@ -31,8 +31,8 @@ export function requestCreateResource({
 }) {
   return request({
     url: '/form/addons/time-control/create-resource-assignment',
-    method: 'get',
-    params: {
+    method: 'post',
+    data: {
       //  DSL Query
       resource_type_id: resourceTypeId,
       resource_type_uuid: resourceTypeUuid,
@@ -54,8 +54,8 @@ export function requestUpdateResource({
 }) {
   return request({
     url: '/form/addons/time-control/update-resource-assignment',
-    method: 'get',
-    params: {
+    method: 'put',
+    data: {
       //  DSL Query
       id,
       uuid,
@@ -75,7 +75,7 @@ export function requestDeleteResource({
 }) {
   return request({
     url: '/form/addons/time-control/delete-resource-assignment',
-    method: 'get',
+    method: 'delete',
     params: {
       //  DSL Query
       id,
@@ -127,8 +127,8 @@ export function requestConfirmResourceAssignnment({
 }) {
   return request({
     url: '/form/addons/time-control/confirm-resource-assignment',
-    method: 'get',
-    params: {
+    method: 'put',
+    data: {
       //  DSL Query
       id,
       uuid
