@@ -462,6 +462,10 @@ const actions = {
       }
     }
 
+    if (isEmptyValue(field.dependentFieldsList)) {
+      return
+    }
+
     // Iterate for change logic
     field.dependentFieldsList.map(async fieldDependentDefinition => {
       let containerName, containerUuid, columnName

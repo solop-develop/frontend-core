@@ -273,6 +273,7 @@ const windowManager = {
 
         const {
           name,
+          isParentTab,
           isHasTree,
           fieldsList,
           linkColumnName,
@@ -461,7 +462,8 @@ const windowManager = {
               dispatch('updateValuesOfContainer', {
                 parentUuid,
                 containerUuid,
-                attributes
+                attributes,
+                isOverWriteParent: isParentTab
               })
 
               // TODO: Evaluate seek record on container manager

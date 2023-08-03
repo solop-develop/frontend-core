@@ -68,13 +68,16 @@ export default defineComponent({
           }
         }, () => {})
 
+        const tabDefinition = store.getters.getStoredTab(parentUuid, containerUuid)
+
         const attributes = convertObjectToKeyValue({
           object: row
         })
         store.dispatch('notifyPanelChange', {
           parentUuid,
           containerUuid,
-          attributes
+          attributes,
+          isOverWriteParent: tabDefinition.isParentTab
         })
       },
 

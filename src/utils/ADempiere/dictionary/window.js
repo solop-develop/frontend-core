@@ -20,6 +20,7 @@ import language from '@/lang'
 import router from '@/router'
 import store from '@/store'
 import nprogress from 'nprogress'
+
 // Constants
 import {
   IDENTIFIER_COLUMN_SUFFIX, DISPLAY_COLUMN_PREFIX
@@ -233,6 +234,7 @@ export function evaluateDefaultFieldShowed({
 
   // TODO: Evaluated window type
   const permissedDisplayedDefault = [
+    ACTIVE,
     VALUE, DOCUMENT_NO, CURRENCY,
     'DateInvoiced', 'DateOrdered', 'DatePromised',
     'DateTrx', 'MovementDate', 'M_Product_ID', 'QtyEntered'
@@ -1026,6 +1028,7 @@ export const openSequenceTab = {
  * @param {string} containerUuid
  * @param {number} recordId
  * @param {string} recordUuid
+ * @param {boolean} isRefreshChilds refresh records of childs tabs
  */
 export const refreshRecord = {
   name: language.t('actionMenu.refreshRecords'),
@@ -1036,7 +1039,7 @@ export const refreshRecord = {
   svg: false,
   icon: 'el-icon-refresh',
   actionName: 'refreshRecords',
-  refreshRecord: ({ parentUuid, containerUuid, recordId, recordUuid }) => {
+  refreshRecord: ({ parentUuid, containerUuid, recordId, recordUuid, isRefreshChilds = false }) => {
     if (isEmptyValue(recordUuid)) {
       recordUuid = store.getters.getUuidOfContainer(containerUuid)
     }
@@ -1068,14 +1071,35 @@ export const refreshRecord = {
           }
         })
 
+        const tabDefinition = store.getters.getStoredTab(parentUuid, containerUuid)
+
         // update fields values
         store.dispatch('updateValuesOfContainer', {
           parentUuid,
           containerUuid,
-          attributes: response.attributes
+          attributes: response.attributes,
+          isOverWriteParent: tabDefinition.isParentTab
         }, {
           root: true
         })
+
+        if (isRefreshChilds) {
+          // update records and logics on child tabs
+          tabDefinition.childTabs.filter(tabItem => {
+            // get loaded tabs with records
+            return store.getters.getIsLoadedTabRecord({
+              containerUuid: tabItem.uuid
+            })
+          }).forEach(tabItem => {
+            // if loaded data refresh this data
+            // TODO: Verify with get one entity, not get all list
+            store.dispatch('getEntities', {
+              parentUuid,
+              containerUuid: tabItem.uuid,
+              pageNumber: 1 // reload with first page
+            })
+          })
+        }
       })
       .finally(() => {
         store.dispatch('reloadTableData', {
