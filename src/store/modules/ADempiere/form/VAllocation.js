@@ -71,6 +71,7 @@ const VAllocation = {
       difference: []
     }
   },
+  listSelectAll: [],
   steps: 0
 }
 
@@ -163,6 +164,10 @@ export default {
     },
     setDiferenceTotal(state, list) {
       state.paymentAssignment.list.difference = list
+    },
+    setListSelectInvoceandPayment(state, list) {
+      console.log({ list })
+      state.listSelectAll = list
     }
   },
   actions: {
@@ -199,7 +204,8 @@ export default {
                 ...payments,
                 transaction_date: dateTimeFormats(payments.transaction_date, 'YYYY-MM-DD'),
                 applied: 0,
-                isSelect: false
+                isSelect: false,
+                type: 'isPayment'
               }
             })
             commit('setListPayments', list)
@@ -250,7 +256,8 @@ export default {
                 date_invoiced: dateTimeFormats(payments.date_invoiced, 'YYYY-MM-DD'),
                 applied: 0,
                 writeOff: 0,
-                isSelect: false
+                isSelect: false,
+                type: 'isInvoce'
               }
             })
             commit('setListInvoces', list)
@@ -321,6 +328,7 @@ export default {
       commit('setDiferenceTotal', filters)
       return
     }
+    // selectListAll({ commit, state }) {}
   },
   getters: {
     getSearchFilter(state) {
@@ -361,6 +369,9 @@ export default {
     },
     getAllDiference(state) {
       return state.paymentAssignment.list.difference
+    },
+    getListSelectInvoceandPayment(state) {
+      return state.listSelectAll
     }
   }
 }
