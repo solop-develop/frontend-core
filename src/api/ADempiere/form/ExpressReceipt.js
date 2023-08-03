@@ -132,7 +132,7 @@ export function deleteShipmentRequest({
   return request({
     url: '/form/addons/express-receipt/receipt',
     method: 'delete',
-    data: {
+    params: {
       order_id: id,
       order_uuid: uuid
     }
@@ -175,7 +175,7 @@ export function deleteReceiptLineRequest({
   return request({
     url: '/form/addons/express-receipt/receipt-line',
     method: 'delete',
-    data: {
+    params: {
       id,
       uuid
     }

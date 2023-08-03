@@ -103,7 +103,7 @@ export function deleteMovementRequest({
   return request({
     url: '/form/addons/express-movement/movement',
     method: 'delete',
-    data: {
+    params: {
       order_id: id,
       order_uuid: uuid
     }
@@ -150,7 +150,7 @@ export function deleteMovementLineRequest({
   return request({
     url: '/form/addons/express-movement/movement-line',
     method: 'delete',
-    data: {
+    params: {
       id,
       uuid
     }
