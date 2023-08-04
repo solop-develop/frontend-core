@@ -206,6 +206,25 @@ const defaultValueManager = {
             })
           })
           .catch(error => {
+            // clear default value if error
+            commit('updateValueOfField', {
+              parentUuid,
+              containerUuid,
+              columnName,
+              value: undefined
+            })
+            commit('updateValueOfField', {
+              parentUuid,
+              containerUuid,
+              columnName: DISPLAY_COLUMN_PREFIX + columnName,
+              value: undefined
+            })
+            commit('updateValueOfField', {
+              parentUuid,
+              containerUuid,
+              columnName: columnName + UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX,
+              value: undefined
+            })
             console.warn(`Error getting default value (${columnName}) from server. Error code ${error.code}: ${error.message}.`)
           })
           .finally(() => {

@@ -237,7 +237,9 @@ export function evaluateDefaultFieldShowed({
     ACTIVE,
     VALUE, DOCUMENT_NO, CURRENCY,
     'DateInvoiced', 'DateOrdered', 'DatePromised',
-    'DateTrx', 'MovementDate', 'M_Product_ID', 'QtyEntered'
+    'DateTrx', 'MovementDate', 'M_Product_ID', 'QtyEntered',
+    // TODO: Remove this columns with fixes default value
+    'UserLevel'
   ]
   if (permissedDisplayedDefault.includes(columnName)) {
     return true
