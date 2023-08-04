@@ -227,13 +227,15 @@ const processManager = {
                   if (!isEmptyValue(tabsListChild) && tabsListChild.at().uuid === tabItem.uuid) {
                     return true
                   }
+                  if (tabItem.hasBeenRendered) {
+                    return true
+                  }
                   // reloaded tabs with records
                   return rootGetters.getIsLoadedTabRecord({
                     containerUuid: tabItem.uuid
                   })
                 }).forEach(tabItem => {
                   // if loaded data refresh this data
-                  // TODO: Verify with get one entity, not get all list
                   dispatch('getEntities', {
                     parentUuid: windowsUuid,
                     containerUuid: tabItem.uuid

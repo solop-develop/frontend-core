@@ -287,13 +287,16 @@ export default {
                 })
                 // update records and logics on child tabs
                 tabDefinition.childTabs.filter(tabItem => {
+                  const { hasBeenRendered } = rootGetters.getStoredTab(windowUuid, tabItem.uuid)
+                  if (hasBeenRendered) {
+                    return true
+                  }
                   // get loaded tabs with records
                   return store.getters.getIsLoadedTabRecord({
                     containerUuid: tabItem.uuid
                   })
                 }).forEach(tabItem => {
                   // if loaded data refresh this data
-                  // TODO: Verify with get one entity, not get all list
                   store.dispatch('getEntities', {
                     parentUuid: windowUuid,
                     containerUuid: tabItem.uuid,
@@ -375,6 +378,10 @@ export default {
                 })
                 // update records and logics on child tabs
                 tabDefinition.childTabs.filter(tabItem => {
+                  const { hasBeenRendered } = rootGetters.getStoredTab(windowUuid, tabItem.uuid)
+                  if (hasBeenRendered) {
+                    return true
+                  }
                   // get loaded tabs with records
                   return store.getters.getIsLoadedTabRecord({
                     containerUuid: tabItem.uuid
@@ -866,6 +873,10 @@ export default {
       // update records and logics on child tabs
       tab.childTabs
         .filter(tabItem => {
+          const { hasBeenRendered } = rootGetters.getStoredTab(parentUuid, tabItem.uuid)
+          if (hasBeenRendered) {
+            return true
+          }
           // get loaded tabs with records
           return getters.getIsLoadedTabRecord({
             containerUuid: tabItem.uuid

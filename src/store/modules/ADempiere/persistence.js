@@ -24,6 +24,7 @@ import language from '@/lang'
 import { LOG_COLUMNS_NAME_LIST, UUID } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { DISPLAY_COLUMN_PREFIX, IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
+import { BUTTON, IMAGE } from '@/utils/ADempiere/references'
 
 // API Request Methods
 import {
@@ -35,7 +36,7 @@ import {
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import { getContextDefaultValue } from '@/utils/ADempiere/contextUtils/contextField'
-import { BUTTON, IMAGE, isSupportLookup } from '@/utils/ADempiere/references'
+import { isSupportLookup } from '@/utils/ADempiere/references'
 
 const persistence = {
   state: {
@@ -328,7 +329,7 @@ const persistence = {
                 const attributesRecord = response.attributes
 
                 // add display column to current record
-                const { identifierColumns } = rootGetters.getStoredTab(parentUuid, containerUuid)
+                const { identifierColumns } = tabDefinition
                 const displayedColumnName = DISPLAY_COLUMN_PREFIX + tableName + IDENTIFIER_COLUMN_SUFFIX
                 let displayedValue = ''
                 identifierColumns.forEach(identifier => {
@@ -358,7 +359,8 @@ const persistence = {
                 dispatch('updateValuesOfContainer', {
                   parentUuid,
                   containerUuid,
-                  attributes: attributesRecord
+                  attributes: attributesRecord,
+                  isOverWriteParent: tabDefinition.isParentTab
                 }, {
                   root: true
                 })
@@ -373,14 +375,18 @@ const persistence = {
 
                 // update records and logics on child tabs
                 tabDefinition.childTabs.filter(tabItem => {
+                  const { hasBeenRendered } = rootGetters.getStoredTab(parentUuid, tabItem.uuid)
+                  if (hasBeenRendered) {
+                    return true
+                  }
                   // get loaded tabs with records
                   return rootGetters.getIsLoadedTabRecord({
                     containerUuid: tabItem.uuid
                   })
                 }).forEach(tabItem => {
                   // if loaded data refresh this data
-                  // TODO: Verify with get one entity, not get all list
-                  dispatch('setTabDefaultValues', {
+                  // No set default values the `App Registration` create lines
+                  dispatch('getEntities', {
                     parentUuid,
                     containerUuid: tabItem.uuid
                   })

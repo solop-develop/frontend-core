@@ -1088,13 +1088,16 @@ export const refreshRecord = {
         if (isRefreshChilds) {
           // update records and logics on child tabs
           tabDefinition.childTabs.filter(tabItem => {
+            const { hasBeenRendered } = store.getters.getStoredTab(parentUuid, tabItem.uuid)
+            if (hasBeenRendered) {
+              return true
+            }
             // get loaded tabs with records
             return store.getters.getIsLoadedTabRecord({
               containerUuid: tabItem.uuid
             })
           }).forEach(tabItem => {
             // if loaded data refresh this data
-            // TODO: Verify with get one entity, not get all list
             store.dispatch('getEntities', {
               parentUuid,
               containerUuid: tabItem.uuid,
@@ -1351,7 +1354,8 @@ export function generateTabs({
       isShowedRecordNavigation: !(currentTab.isSingleRow || isParentTab), // TODO: @deprecated
       isShowedTableRecords: false, // !isParentTab, // @TODO: !(currentTab.isSingleRow || isParentTab),
       index, // this index is not related to the index in which the tabs are displayed
-      isSelected: false
+      isSelected: false,
+      hasBeenRendered: false
     }
 
     return generatePanelAndFields({
@@ -1570,6 +1574,10 @@ export const containerManager = {
 
     // update records and logics on child tabs
     tabDefinition.childTabs.filter(tabItem => {
+      const { hasBeenRendered } = store.getters.getStoredTab(parentUuid, tabItem.uuid)
+      if (hasBeenRendered) {
+        return true
+      }
       // get loaded tabs with records
       return store.getters.getIsLoadedTabRecord({
         containerUuid: tabItem.uuid
