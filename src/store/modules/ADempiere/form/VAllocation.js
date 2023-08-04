@@ -257,6 +257,7 @@ export default {
                 applied: 0,
                 writeOff: 0,
                 isSelect: false,
+                amountApplied: 0,
                 type: 'isInvoce'
               }
             })
