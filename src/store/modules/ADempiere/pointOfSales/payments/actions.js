@@ -425,6 +425,7 @@ export default {
     convertedAmount,
     paymentDate,
     tenderTypeCode,
+    customerBankAccountUuid,
     paymentMethodUuid,
     currencyUuid
   }) {
@@ -449,6 +450,7 @@ export default {
         tenderTypeCode,
         paymentMethodUuid,
         currencyUuid,
+        customerBankAccountUuid,
         isRefund: true
       })
         .then(response => {
@@ -546,41 +548,44 @@ export default {
     AccountNo,
     iban
   }) {
-    return createCustomerBankAccount({
-      customerUuid,
-      posUuid,
-      city,
-      country,
-      email,
-      driverLicense,
-      socialSecurityNumber,
-      name,
-      state,
-      street,
-      zip,
-      bankAccountType,
-      paymentMethodUuid,
-      bankUuid,
-      isAch,
-      AccountNo,
-      addressVerified,
-      zipVerified,
-      routingNo,
-      iban
-    })
-      .then(response => {
-        commit('setCurrentCustomerBankAccount', response)
-        dispatch('listCustomerBankAccounts', { customerUuid: response.customerUuid })
-        return response
+    return new Promise(resolve => {
+      createCustomerBankAccount({
+        customerUuid,
+        posUuid,
+        city,
+        country,
+        email,
+        driverLicense,
+        socialSecurityNumber,
+        name,
+        state,
+        street,
+        zip,
+        bankAccountType,
+        paymentMethodUuid,
+        bankUuid,
+        isAch,
+        AccountNo,
+        addressVerified,
+        zipVerified,
+        routingNo,
+        iban
       })
-      .catch(error => {
-        console.warn(`conversionDivideRate: ${error.message}. Code: ${error.code}.`)
-        showMessage({
-          type: 'error',
-          message: error.message,
-          showClose: true
+        .then(response => {
+          commit('setCurrentCustomerBankAccount', response)
+          dispatch('listCustomerBankAccounts', { customerUuid: response.customerUuid })
+          resolve(response)
         })
-      })
+        .catch(error => {
+          console.warn(`conversionDivideRate: ${error.message}. Code: ${error.code}.`)
+          showMessage({
+            type: 'error',
+            message: error.message,
+            showClose: true
+          })
+          resolve({})
+        })
+    })
   },
   listCustomerBankAccounts({ commit, dispatch }, {
     posUuid,

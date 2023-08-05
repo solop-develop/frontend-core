@@ -619,6 +619,7 @@ export function createPayment({
   isRefund,
   currencyUuid,
   collectingAgentUuid,
+  customerBankAccountUuid,
   referenceBankAccountUuid
 }) {
   return request({
@@ -639,7 +640,8 @@ export function createPayment({
       is_refund: isRefund,
       currency_uuid: currencyUuid,
       collecting_agent_uuid: collectingAgentUuid,
-      reference_bank_account_uuid: referenceBankAccountUuid
+      reference_bank_account_uuid: referenceBankAccountUuid,
+      customer_bank_account_uuid: customerBankAccountUuid
     }
   })
     .then(createPaymentResponse => {
