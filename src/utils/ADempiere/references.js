@@ -361,6 +361,8 @@ export function isSupportLookup(displayType) {
 
 export const FIELDS_IDENTIFIER = [
   ID.id,
+  IMAGE.id,
+  COLOR.id,
   TABLE.id,
   TABLE_DIRECT.id,
   SEARCH.id,

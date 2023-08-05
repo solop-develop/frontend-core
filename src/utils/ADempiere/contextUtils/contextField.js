@@ -21,12 +21,12 @@ import {
   ACCOUNTING_COLUMNS,
   READ_ONLY_FORM_COLUMNS
 } from '@/utils/ADempiere/constants/systemColumns'
-import { FIELDS_QUANTITY } from '@/utils/ADempiere/references'
 
 // Utils and Helper Methods
 import evaluator from '@/utils/ADempiere/evaluator'
 import { getContext, parseContext, getPreference } from '@/utils/ADempiere/contextUtils'
 import { arrayMatches, isEmptyValue, parsedValueComponent } from '@/utils/ADempiere/valueUtils'
+import { isNumberField, isIdentifier } from '@/utils/ADempiere/references'
 
 /**
  * Extracts the associated fields from the logics or default values
@@ -201,10 +201,14 @@ export function getContextDefaultValue({
     if (isEmptyValue(parsedDefaultValue)) {
       parsedDefaultValue = defaultValue
     }
-    if (isMandatory &&
-      isEmptyValue(parsedDefaultValue) &&
-      FIELDS_QUANTITY.includes(displayType)) {
-      parsedDefaultValue = 0
+    if (isEmptyValue(parsedDefaultValue)) {
+      if (isNumberField(displayType)) {
+        if (isMandatory) {
+          parsedDefaultValue = 0
+        }
+      } else if (isIdentifier(displayType)) {
+        parsedDefaultValue = -1
+      }
     }
   }
 
