@@ -238,6 +238,7 @@ export default {
     paymentDate,
     tenderTypeCode,
     paymentMethodUuid,
+    customerBankAccountUuid,
     currencyUuid
   }) {
     const listPayments = getters.getListPayments.payments.find(payment => {
@@ -259,6 +260,7 @@ export default {
         paymentDate,
         tenderTypeCode,
         paymentMethodUuid,
+        customerBankAccountUuid,
         isRefund: false,
         currencyUuid
       })
@@ -538,7 +540,7 @@ export default {
     state,
     street,
     zip,
-    bankAccountType,
+    bankAccountType = 'C',
     bankUuid,
     paymentMethodUuid,
     isAch,
