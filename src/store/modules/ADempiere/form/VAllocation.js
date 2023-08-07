@@ -72,6 +72,10 @@ const VAllocation = {
     }
   },
   listSelectAll: [],
+  isLoadTables: {
+    isLoadingInvoces: false,
+    isLoadingPayments: false
+  },
   steps: 0
 }
 
@@ -184,6 +188,11 @@ export default {
           transactionType,
           isAutomaticWriteOff
         } = state.searchCriteria
+        commit('updateAttributeCriteriaVallocation', {
+          attribute: 'isLoadingPayments',
+          criteria: 'isLoadTables',
+          value: true
+        })
         listPayments({
           businessPartnerId,
           businessPartnerUuid,
@@ -208,6 +217,11 @@ export default {
               }
             })
             commit('setListPayments', list)
+            commit('updateAttributeCriteriaVallocation', {
+              attribute: 'isLoadingPayments',
+              criteria: 'isLoadTables',
+              value: false
+            })
             resolve(list)
           })
           .catch(error => {
@@ -215,6 +229,11 @@ export default {
               type: 'error',
               message: error.message,
               showClose: true
+            })
+            commit('updateAttributeCriteriaVallocation', {
+              attribute: 'isLoadingPayments',
+              criteria: 'isLoadTables',
+              value: false
             })
             resolve([])
             console.warn(`Error getting List Product: ${error.message}. Code: ${error.code}.`)
@@ -235,6 +254,11 @@ export default {
           transactionType,
           isAutomaticWriteOff
         } = state.searchCriteria
+        commit('updateAttributeCriteriaVallocation', {
+          attribute: 'isLoadingInvoces',
+          criteria: 'isLoadTables',
+          value: true
+        })
         listInvoices({
           businessPartnerId,
           businessPartnerUuid,
@@ -260,17 +284,26 @@ export default {
                 type: 'isInvoce'
               }
             })
+            commit('updateAttributeCriteriaVallocation', {
+              attribute: 'isLoadingInvoces',
+              criteria: 'isLoadTables',
+              value: false
+            })
             commit('setListInvoces', list)
             resolve(list)
           })
           .catch(error => {
-            resolve([])
             showMessage({
               type: 'error',
               message: error.message,
               showClose: true
             })
-            // commit('setListProduct', [])
+            commit('updateAttributeCriteriaVallocation', {
+              attribute: 'isLoadingInvoces',
+              criteria: 'isLoadTables',
+              value: false
+            })
+            resolve([])
             console.warn(`Error getting List Product: ${error.message}. Code: ${error.code}.`)
           })
       })
@@ -328,7 +361,6 @@ export default {
       commit('setDiferenceTotal', filters)
       return
     }
-    // selectListAll({ commit, state }) {}
   },
   getters: {
     getSearchFilter(state) {
@@ -372,6 +404,9 @@ export default {
     },
     getListSelectInvoceandPayment(state) {
       return state.listSelectAll
+    },
+    getisLoadTables(state) {
+      return state.isLoadTables
     }
   }
 }
