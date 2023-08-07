@@ -166,7 +166,6 @@ export default {
       state.paymentAssignment.list.difference = list
     },
     setListSelectInvoceandPayment(state, list) {
-      console.log({ list })
       state.listSelectAll = list
     }
   },
