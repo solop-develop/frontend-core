@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -9,14 +9,14 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// utils and helper methods
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { isDisplayedField, isMandatoryField } from '@/utils/ADempiere/dictionary/process.js'
 import { isNumberField } from '@/utils/ADempiere/references.js'
@@ -110,12 +110,11 @@ export default {
     fieldsList.forEach(fieldItem => {
       const { columnName } = fieldItem
       const isMandatory = isMandatoryField(fieldItem)
-      // evaluate displayed fields
-      const isDisplayed = isDisplayedField(fieldItem) &&
-        (fieldItem.isShowedFromUser || isMandatory)
-
-      if (!isDisplayed) {
-        return
+      if (!isMandatory) {
+        // evaluate displayed fields
+        if (!fieldItem.isShowedFromUser) {
+          return
+        }
       }
 
       const value = rootGetters.getValueOfField({
