@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanchez@gmail.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -23,6 +23,11 @@ const VBankStatementMatch = {
     pendingMatch: 'Pending Matching',
     summaryAdjustment: 'Resume and Adjust'
   },
+  searchMode: {
+    title: 'Search Mode',
+    matched: 'Matched',
+    notMatched: 'Not Matched'
+  },
   field: {
     bankAccount: 'Bank Account',
     businessPartner: 'Business Partner',
@@ -32,43 +37,44 @@ const VBankStatementMatch = {
     selectNotMatched: 'No Match',
     selectMatched: 'Matches'
   },
-  AutomaticMatch: {
+  automaticMatch: {
     title: 'Automatic Matching',
-    headerTable: {
+    table: {
       transactionDate: 'Transaction Date',
       receipt: 'Receipts',
       documentNo: 'Document No.',
       businessPartner: 'Business Partner',
       tenderType: 'Payment Type',
       currency: 'Currency',
-      quantity: 'Quantity',
+      amount: 'Amount',
       description: 'Description',
       referenceNo: 'Reference No.',
       memo: 'Memo'
-    }
+    },
+    withoutAutomaticMatch: 'Without Automatic Matching'
   },
   importedMovements: {
     title: 'Imported Movements',
-    headerTable: {
+    table: {
       transactionDate: 'Transaction Date',
       receipt: 'Receipts',
       referenceNo: 'Reference No.',
       businessPartner: 'Business Partner',
       currency: 'Currency',
-      quantity: 'Quantity',
+      amount: 'Amount',
       memo: 'Memo'
     }
   },
   systemPayments: {
     title: 'System Payments',
-    headerTable: {
+    table: {
       transactionDate: 'Transaction Date',
       receipt: 'Receipts',
       documentNo: 'Document No.',
       businessPartner: 'Business Partner',
       tenderType: 'Payment Type',
       currency: 'Currency',
-      quantity: 'Quantity',
+      amount: 'Amount',
       description: 'Description'
     }
   }

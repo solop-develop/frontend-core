@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanchez@gmail.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -23,6 +23,11 @@ const VBankStatementMatch = {
     pendingMatch: 'Pendiente por Coincidencia',
     summaryAdjustment: 'Resume y Ajuste'
   },
+  searchMode: {
+    title: 'Modo de Búsqueda',
+    matched: 'Asignado',
+    notMatched: 'No Asignado'
+  },
   field: {
     bankAccount: 'Cuenta Bancaria',
     businessPartner: 'Socio de Negocio',
@@ -32,43 +37,44 @@ const VBankStatementMatch = {
     selectNotMatched: 'No Coincide',
     selectMatched: 'Coincidentes'
   },
-  AutomaticMatch: {
+  automaticMatch: {
     title: 'Coincidencia Automatica',
-    headerTable: {
+    table: {
       transactionDate: 'Fecha de la Transacción',
       receipt: 'Cobros',
       documentNo: 'Documento No.',
       businessPartner: 'Socio del Negocio',
       tenderType: 'Tipo de Pago',
       currency: 'Moneda',
-      quantity: 'Cantidad',
+      amount: 'Monto',
       description: 'Descripción',
       referenceNo: 'No. de Referencia',
       memo: 'Memo'
-    }
+    },
+    withoutAutomaticMatch: 'Sin Coincidencia Automática'
   },
   importedMovements: {
     title: 'Movimientos Importados',
-    headerTable: {
+    table: {
       transactionDate: 'Fecha de la Transacción',
       receipt: 'Cobros',
       referenceNo: 'No. de Referencia',
       businessPartner: 'Socio del Negocio',
       currency: 'Moneda',
-      quantity: 'Cantidad',
+      amount: 'Monto',
       memo: 'Memo'
     }
   },
   systemPayments: {
     title: 'Pagos del Sistema',
-    headerTable: {
+    table: {
       transactionDate: 'Fecha de la Transacción',
       receipt: 'Cobros',
       documentNo: 'Documento No.',
       businessPartner: 'Socio del Negocio',
       tenderType: 'Tipo de Pago',
       currency: 'Moneda',
-      quantity: 'Cantidad',
+      amount: 'Monto',
       description: 'Descripción'
     }
   }
