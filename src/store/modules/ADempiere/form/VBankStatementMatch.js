@@ -21,7 +21,7 @@ import {
   requestListBankAccounts,
   listBusinessPartners,
   // requestSearchModesList,
-  listImportedBankMovements,
+  requestImportedBankMovements,
   listPayments,
   listMatchingMovements
   // processMovements
@@ -33,6 +33,7 @@ import { dateTimeFormats } from '@/utils/ADempiere/formatValue/dateFormat'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 
 const bankStatementMatch = {
+  step: 1,
   matchMode: 0,
   bankAccount: {
     id: undefined,
@@ -56,6 +57,14 @@ const bankStatementMatch = {
     list: [],
     select: {}
   },
+  payments: {
+    records: [],
+    currentRow: {}
+  },
+  importedPayments: {
+    records: [],
+    currentRow: {}
+  },
   matchingMovements: {
     list: [],
     select: {},
@@ -67,6 +76,10 @@ export default {
   state: bankStatementMatch,
 
   mutations: {
+    bankStatementMatchStep(state, wizardStep) {
+      state.step = wizardStep
+    },
+
     /**
      * Update Attribute
      * Generic mutation that allows to change the state of the store
@@ -98,6 +111,14 @@ export default {
 
     setMatchMode(state, value) {
       state.matchMode = value
+    },
+
+    setImportedPayments(state, records) {
+      state.importedPayments.records = records
+    },
+
+    setPayments(state, records) {
+      state.payments.records = records
     }
   },
 
@@ -178,37 +199,6 @@ export default {
       })
     },
 
-    // /**
-    //  * Get Get List Search Modes
-    //  * @param {string} searchValue
-    //  * @param {number} pageSize
-    //  * @param {string} pageToken
-    //  */
-    // loadMatchModesList({ commit }) {
-    //   return new Promise(resolve => {
-    //     requestSearchModesList({
-    //       searchValue: ''
-    //     })
-    //       .then(response => {
-    //         const { records } = response
-    //         if (isEmptyValue(records)) return
-    //         list = records.map(list => {
-    //           return {
-    //             ...list,
-    //             ...list.values
-    //           }
-    //         })
-    //       })
-    //       .catch(error => {
-    //         showMessage({
-    //           type: 'error',
-    //           message: error.message,
-    //           showClose: true
-    //         })
-    //       })
-    //   })
-    // },
-
     /**
      * Get List Payments
      */
@@ -222,13 +212,8 @@ export default {
         const dateFrom = state.transactionDate.from
         const dateTo = state.transactionDate.to
 
-        let list = []
         // const {
-        //   matchMode,
-        //   bankAccounts,
         //   paymentAmount,
-        //   transactionDate,
-        //   businessPartner
         // } = getters.getCriteriaVBankStatement
         // const paymentAmountTo = (paymentAmount.to === 0) ? null : paymentAmount.to
         // const paymentAmountFrom = (paymentAmount.from === 0) ? null : paymentAmount.from
@@ -244,14 +229,8 @@ export default {
         })
           .then(response => {
             const { records } = response
-            if (isEmptyValue(records)) return
-            list = records.map(list => {
-              return {
-                ...list,
-                isSelection: false,
-                transactionDate: dateTimeFormats(list.transaction_date, 'YYYY-MM-DD')
-              }
-            })
+            commit('setPayments', records)
+            resolve(records)
           })
           .catch(error => {
             showMessage({
@@ -259,15 +238,6 @@ export default {
               message: error.message,
               showClose: true
             })
-            list = []
-          })
-          .finally(() => {
-            commit('updateAttributeCriteria', {
-              attribute: 'list',
-              criteria: 'paymentList',
-              value: list
-            })
-            resolve(list)
           })
       })
     },
@@ -285,18 +255,13 @@ export default {
         const dateFrom = state.transactionDate.from
         const dateTo = state.transactionDate.to
 
-        let list = []
         // const {
-        //   matchMode,
-        //   bankAccounts,
         //   paymentAmount,
-        //   transactionDate,
-        //   businessPartner
         // } = getters.getCriteriaVBankStatement
         // const paymentAmountTo = (paymentAmount.to === 0) ? null : paymentAmount.to
         // const paymentAmountFrom = (paymentAmount.from === 0) ? null : paymentAmount.from
 
-        listImportedBankMovements({
+        requestImportedBankMovements({
           matchMode: matchMode,
           searchValue,
           bankAccountId,
@@ -308,13 +273,8 @@ export default {
         })
           .then(response => {
             const { records } = response
-            if (isEmptyValue(records)) return
-            list = records.map(list => {
-              return {
-                ...list,
-                ...list.values
-              }
-            })
+            commit('setImportedPayments', records)
+            resolve(records)
           })
           .catch(error => {
             showMessage({
@@ -322,14 +282,6 @@ export default {
               message: error.message,
               showClose: true
             })
-          })
-          .finally(() => {
-            commit('updateAttributeCriteria', {
-              attribute: 'list',
-              criteria: 'matchMode',
-              value: list
-            })
-            resolve(list)
           })
       })
     },
@@ -355,11 +307,7 @@ export default {
         const dateTo = state.transactionDate.to
 
         // const {
-        //   matchMode,
-        //   bankAccounts,
         //   paymentAmount,
-        //   transactionDate,
-        //   businessPartner
         // } = getters.getCriteriaVBankStatement
         // const paymentAmountTo = (paymentAmount.to === 0) ? null : paymentAmount.to
         // const paymentAmountFrom = (paymentAmount.from === 0) ? null : paymentAmount.from
@@ -409,6 +357,10 @@ export default {
   },
 
   getters: {
+    getStatementMatchStep: (state) => {
+      return state.step || 1
+    },
+
     getBanksAccountsListStatementMatch: (state) => {
       return state.bankAccount.list
     },
@@ -426,14 +378,15 @@ export default {
     getMatchModeBankStatementMatch: (state) => {
       return state.matchMode
     },
-    getInvoiceBankStatementMatch: (state) => {
-      return state.invoices
-    },
     getCriteriaVBankStatement: (state) => {
       return state
     },
-    getListPaymentsVBankStatement: (state) => {
-      return state.paymentList
+
+    getPayments: (state) => {
+      return state.payments.records
+    },
+    getImportedPayments: (state) => {
+      return state.importedPayments.records
     },
     getListMatchingMovements: (state) => {
       return state.matchingMovements

@@ -32,14 +32,19 @@ const VBankStatementMatch = {
     bankAccount: 'Cuenta Bancaria',
     businessPartner: 'Socio de Negocio',
     searchMode: 'Modo de Búsqueda',
+    matchesPayment: 'Pagos Coindidentes',
     totalPayment: 'Total del Pago',
     transactionDate: 'Fecha de la Transacción',
     selectNotMatched: 'No Coincide',
-    selectMatched: 'Coincidentes'
+    selectMatched: 'Coincidentes',
+    simulateMatch: 'Simular Conciliación',
+    assignedMatch: 'Asignar Conciliación',
+    unassignedMatch: 'Desasignar Conciliación'
   },
   automaticMatch: {
     title: 'Coincidencia Automatica',
     table: {
+      date: 'Fecha',
       transactionDate: 'Fecha de la Transacción',
       receipt: 'Cobros',
       documentNo: 'Documento No.',
@@ -56,6 +61,7 @@ const VBankStatementMatch = {
   importedMovements: {
     title: 'Movimientos Importados',
     table: {
+      date: 'Fecha',
       transactionDate: 'Fecha de la Transacción',
       receipt: 'Cobros',
       referenceNo: 'No. de Referencia',
@@ -68,6 +74,7 @@ const VBankStatementMatch = {
   systemPayments: {
     title: 'Pagos del Sistema',
     table: {
+      date: 'Fecha',
       transactionDate: 'Fecha de la Transacción',
       receipt: 'Cobros',
       documentNo: 'Documento No.',

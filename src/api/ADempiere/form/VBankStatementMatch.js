@@ -76,18 +76,14 @@ export function requestSearchModesList({
 }
 
 // Import Movements
-
-export function listImportedBankMovements({
+export function requestImportedBankMovements({
   matchMode,
   searchValue,
   bankAccountId,
-  paymentAmountTo,
-  bankAccountUuid,
-  businessPartnerId,
-  transactionDateTo,
   paymentAmountFrom,
+  paymentAmountTo,
   transactionDateFrom,
-  businessPartnerUuid
+  transactionDateTo
 }) {
   return request({
     url: `${config.VBankStatementMatch.endpoint}/imported-bank-movements`,
@@ -96,13 +92,10 @@ export function listImportedBankMovements({
       match_mode: matchMode,
       search_value: searchValue,
       bank_account_id: bankAccountId,
-      payment_amount_to: paymentAmountTo,
-      bank_account_uuid: bankAccountUuid,
-      business_partner_id: businessPartnerId,
-      transaction_date_to: transactionDateTo,
       payment_amount_from: paymentAmountFrom,
+      payment_amount_to: paymentAmountTo,
       transaction_date_from: transactionDateFrom,
-      business_partner_uuid: businessPartnerUuid
+      transaction_date_to: transactionDateTo
     }
   })
     .then(response => {
