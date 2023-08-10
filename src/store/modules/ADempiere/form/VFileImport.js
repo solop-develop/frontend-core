@@ -36,7 +36,8 @@ const VFileImport = {
     tablaId: 0,
     isProcess: false,
     formatFields: [],
-    processDefinition: {}
+    processDefinition: {},
+    currentStep: 1
   },
   options: {
     listCharsets: [],
