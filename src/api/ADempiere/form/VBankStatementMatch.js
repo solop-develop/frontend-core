@@ -21,8 +21,25 @@ import { request } from '@/utils/ADempiere/request'
 import { config } from '@/utils/ADempiere/config'
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
-// Bank Accounts
+// Bank Statement
+export function requestGetBankStatement({
+  id,
+  uuid
+}) {
+  return request({
+    url: `${config.VBankStatementMatch.endpoint}/bank-statement`,
+    method: 'get',
+    params: {
+      id,
+      uuid
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
 
+// Bank Accounts
 export function requestListBankAccounts({
   searchValue,
   pageToken,
@@ -43,7 +60,6 @@ export function requestListBankAccounts({
 }
 
 // Business Partners
-
 export function listBusinessPartners({
   searchValue
 }) {
@@ -104,10 +120,10 @@ export function requestImportedBankMovements({
 }
 
 // Payments
-
-export function listPayments({
+export function requestPaymentsList({
   matchMode,
   searchValue,
+  bankStatementId,
   bankAccountId,
   paymentAmountTo,
   bankAccountUuid,
@@ -123,6 +139,7 @@ export function listPayments({
     params: {
       match_mode: matchMode,
       search_value: searchValue,
+      bank_statement_id: bankStatementId,
       bank_account_id: bankAccountId,
       payment_amount_to: paymentAmountTo,
       bank_account_uuid: bankAccountUuid,
@@ -139,10 +156,10 @@ export function listPayments({
 }
 
 // Matching Movements
-
-export function listMatchingMovements({
+export function requestMatchingMovementsList({
   matchMode,
   searchValue,
+  bankStatementId,
   bankAccountId,
   paymentAmountTo,
   bankAccountUuid,
@@ -158,6 +175,7 @@ export function listMatchingMovements({
     params: {
       match_mode: matchMode,
       search_value: searchValue,
+      bank_statement_id: bankStatementId,
       bank_account_id: bankAccountId,
       payment_amount_to: paymentAmountTo,
       bank_account_uuid: bankAccountUuid,
@@ -173,8 +191,36 @@ export function listMatchingMovements({
     })
 }
 
-// Process
+// List Bank Statements
+export function requestBankStatemensList({
+  bankAccountId,
+  searchValue,
+  pageToken,
+  pageSize
+}) {
+  return request({
+    url: `${config.VBankStatementMatch.endpoint}/bank-statements`,
+    method: 'get',
+    params: {
+      bank_account_id: bankAccountId,
+      search_value: searchValue,
+      page_token: pageToken,
+      page_size: pageSize
+    }
+  })
+    .then(response => {
+      // return camelizeObjectKeys(response)
+      return {
+        nextPageToken: response.next_page_token,
+        recordCount: response.record_count,
+        records: response.records.map(row => {
+          return camelizeObjectKeys(row)
+        })
+      }
+    })
+}
 
+// Process
 export function processMovements({
   matchMode,
   searchValue,
@@ -209,4 +255,3 @@ export function processMovements({
       return camelizeObjectKeys(response)
     })
 }
-

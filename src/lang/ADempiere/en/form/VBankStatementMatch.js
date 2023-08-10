@@ -21,7 +21,7 @@ const VBankStatementMatch = {
     searchCriteria: 'Search Criteria',
     automaticMatch: 'Automatic Matching',
     pendingMatch: 'Pending Matching',
-    summaryAdjustment: 'Resume and Adjust'
+    confirmImport: 'Confirm / Import'
   },
   searchMode: {
     title: 'Search Mode',
@@ -30,6 +30,7 @@ const VBankStatementMatch = {
   },
   field: {
     bankAccount: 'Bank Account',
+    bankStatement: 'Bank Statement',
     businessPartner: 'Business Partner',
     searchMode: 'Search Mode',
     matchesPayment: 'Matches Payment',

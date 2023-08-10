@@ -21,7 +21,7 @@ const VBankStatementMatch = {
     searchCriteria: 'Criterio de Busqueda',
     automaticMatch: 'Coincidencia Automatica',
     pendingMatch: 'Pendiente por Coincidencia',
-    summaryAdjustment: 'Resume y Ajuste'
+    confirmImport: 'Confirmar / Importar'
   },
   searchMode: {
     title: 'Modo de Búsqueda',
@@ -30,6 +30,7 @@ const VBankStatementMatch = {
   },
   field: {
     bankAccount: 'Cuenta Bancaria',
+    bankStatement: 'Estado de Cuenta Bancaria',
     businessPartner: 'Socio de Negocio',
     searchMode: 'Modo de Búsqueda',
     matchesPayment: 'Pagos Coindidentes',
