@@ -33,6 +33,7 @@
         :tabs-list="windowMetadata.tabsListParent"
         :all-tabs-list="allTabsList"
         :actions-manager="actionsManager"
+        style="min-height: 85vh !important;"
       />
       <modal-dialog
         v-if="!isEmptyValue(processUuid)"
