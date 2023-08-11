@@ -33,7 +33,7 @@
         :tabs-list="windowMetadata.tabsListParent"
         :all-tabs-list="allTabsList"
         :actions-manager="actionsManager"
-        style="min-height: 84vh !important;"
+        :style="styleScroll"
       />
       <modal-dialog
         v-if="!isEmptyValue(processUuid)"
@@ -209,6 +209,15 @@ export default defineComponent({
       return props.windowMetadata.currentTab.isParentTab && props.windowMetadata.currentTab.isShowedTableRecords
     })
 
+    const showFullGridMode = computed(() => {
+      return store.getters['settings/getFullGridMode']
+    })
+
+    const styleScroll = computed(() => {
+      if (showFullGridMode.value) return 'overflow: auto;'
+      return 'min-height: 84vh !important;'
+    })
+
     /**
      * Watch
      */
@@ -246,7 +255,8 @@ export default defineComponent({
       sizeTab,
       sizeTabChild,
       actionsManager,
-      isFullGrid
+      isFullGrid,
+      styleScroll
     }
   }
 
