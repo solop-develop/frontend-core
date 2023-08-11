@@ -27,13 +27,13 @@ import {
 } from '@/utils/ADempiere/dictionaryUtils'
 import {
   ACTIVE, CLIENT, DOCUMENT_ACTION,
-  DOCUMENT_NO, CURRENCY,
+  DOCUMENT_NO, DOCUMENT_STATUS, CURRENCY,
   PROCESSING, PROCESSED, UUID, VALUE, // READ_ONLY_FORM_COLUMNS
   RECORD_ID,
   LOG_COLUMNS_NAME_LIST
 } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
-import { ID, LOCATION_ADDRESS, YES_NO } from '@/utils/ADempiere/references'
+import { BUTTON, ID, LOCATION_ADDRESS, YES_NO } from '@/utils/ADempiere/references'
 import { containerManager as CONTAINER_MANAGER_BROWSER } from '@/utils/ADempiere/dictionary/browser'
 
 // API Request Methods
@@ -47,7 +47,7 @@ import { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableF
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
 import { generatePanelAndFields } from '@/utils/ADempiere/dictionary/panel.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import { BUTTON, isHiddenField } from '@/utils/ADempiere/references.js'
+import { isDecimalField, isHiddenField } from '@/utils/ADempiere/references'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import { zoomIn } from '@/utils/ADempiere/coreUtils'
 import { exportRecords, supportedTypes } from '@/utils/ADempiere/exportUtil.js'
@@ -177,7 +177,8 @@ export function isDisplayedField({ isDisplayed, displayLogic, isDisplayedFromLog
 export function evaluateDefaultFieldShowed({
   parentUuid, containerUuid,
   isKey, isParent, columnName,
-  defaultValue, displayType, isShowedFromUser, displayLogic,
+  defaultValue, parsedDefaultValue,
+  displayType, isShowedFromUser, displayLogic,
   isMandatory, mandatoryLogic, isMandatoryFromLogic
 }) {
   if (String(defaultValue).startsWith('@SQL=')) {
@@ -199,7 +200,8 @@ export function evaluateDefaultFieldShowed({
   const isMandatoryGenerated = isMandatoryField({
     isKey, columnName, displayType, isMandatory, mandatoryLogic, isMandatoryFromLogic
   })
-  if (isEmptyValue(defaultValue) && isMandatoryGenerated && !isParent) {
+  const isEmpty = isEmptyValue(parsedDefaultValue) || (isDecimalField(displayType) && parsedDefaultValue === 0)
+  if (isEmpty && isMandatoryGenerated && !isParent) {
     // Yes/No field always boolean value (as default value)
     if (displayType === YES_NO.id) {
       // Business Partner Window
@@ -259,7 +261,8 @@ export function evaluateDefaultFieldShowed({
 export function evaluateDefaultColumnShowed({
   parentUuid, containerUuid,
   isKey, isParent, columnName,
-  defaultValue, displayType, isShowedTableFromUser,
+  defaultValue, parsedDefaultValue,
+  displayType, isShowedTableFromUser,
   isMandatory, mandatoryLogic, isMandatoryFromLogic
 }) {
   if (String(defaultValue).startsWith('@SQL=')) {
@@ -278,7 +281,8 @@ export function evaluateDefaultColumnShowed({
   const isMandatoryGenerated = isMandatoryColumn({
     isKey, columnName, displayType, isMandatory, mandatoryLogic, isMandatoryFromLogic
   })
-  if (isEmptyValue(defaultValue) && isMandatoryGenerated && !isParent) {
+  const isEmpty = isEmptyValue(parsedDefaultValue) || (isDecimalField(displayType) && parsedDefaultValue === 0)
+  if (isEmpty && isMandatoryGenerated && !isParent) {
     // Yes/No field always boolean value (as default value)
     if (displayType === YES_NO.id) {
       return false
@@ -292,7 +296,7 @@ export function evaluateDefaultColumnShowed({
 
   // TODO: Evaluated window type
   const permissedDisplayedDefault = [
-    VALUE, DOCUMENT_NO, 'DocStatus', CURRENCY,
+    VALUE, DOCUMENT_NO, DOCUMENT_STATUS, CURRENCY,
     'DateInvoiced', 'DateOrdered', 'DatePromised',
     'DateTrx', 'M_Product_ID', 'QtyEntered',
     'TaskStatus'
