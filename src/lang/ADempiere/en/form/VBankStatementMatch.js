@@ -55,7 +55,8 @@ const VBankStatementMatch = {
       amount: 'Amount',
       description: 'Description',
       referenceNo: 'Reference No.',
-      memo: 'Memo'
+      memo: 'Memo',
+      match: 'Match'
     },
     withoutAutomaticMatch: 'Without Automatic Matching'
   },
@@ -69,7 +70,8 @@ const VBankStatementMatch = {
       businessPartner: 'Business Partner',
       currency: 'Currency',
       amount: 'Amount',
-      memo: 'Memo'
+      memo: 'Memo',
+      match: 'Match'
     }
   },
   systemPayments: {
@@ -83,7 +85,8 @@ const VBankStatementMatch = {
       tenderType: 'Payment Type',
       currency: 'Currency',
       amount: 'Amount',
-      description: 'Description'
+      description: 'Description',
+      match: 'Match'
     }
   }
 }

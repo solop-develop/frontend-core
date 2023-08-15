@@ -255,3 +255,68 @@ export function processMovements({
       return camelizeObjectKeys(response)
     })
 }
+
+export function requestListUnMatch({
+  listImportedMovements
+}) {
+  const listId = listImportedMovements.map(list => list.id)
+  return request({
+    url: `${config.VBankStatementMatch.endpoint}/unmatch`,
+    method: 'put',
+    data: {
+      imported_movements_ids: listId
+    }
+  })
+}
+
+export function requestResultMovements({
+  searchValue,
+  bankAccountId,
+  paymentAmountFrom,
+  paymentAmountTo,
+  transactionDateFrom,
+  transactionDateTo,
+  bankStatementId
+}) {
+  return request({
+    url: `${config.VBankStatementMatch.endpoint}/result-movements`,
+    method: 'get',
+    params: {
+      search_value: searchValue,
+      bank_account_id: bankAccountId,
+      payment_amount_to: paymentAmountTo,
+      bank_statement_id: bankStatementId,
+      transaction_date_to: transactionDateTo,
+      payment_amount_from: paymentAmountFrom,
+      transaction_date_from: transactionDateFrom
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+export function requestProcess({
+  bankAccountId,
+  paymentAmountFrom,
+  paymentAmountTo,
+  transactionDateFrom,
+  transactionDateTo,
+  bankStatementId
+}) {
+  return request({
+    url: `${config.VBankStatementMatch.endpoint}/process`,
+    method: 'post',
+    data: {
+      bank_account_id: bankAccountId,
+      payment_amount_to: paymentAmountTo,
+      bank_statement_id: bankStatementId,
+      transaction_date_to: transactionDateTo,
+      payment_amount_from: paymentAmountFrom,
+      transaction_date_from: transactionDateFrom
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}

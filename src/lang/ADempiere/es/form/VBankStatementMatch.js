@@ -55,7 +55,8 @@ const VBankStatementMatch = {
       amount: 'Monto',
       description: 'Descripción',
       referenceNo: 'No. de Referencia',
-      memo: 'Memo'
+      memo: 'Memo',
+      match: 'Coincidencia'
     },
     withoutAutomaticMatch: 'Sin Coincidencia Automática'
   },
@@ -69,7 +70,8 @@ const VBankStatementMatch = {
       businessPartner: 'Socio del Negocio',
       currency: 'Moneda',
       amount: 'Monto',
-      memo: 'Memo'
+      memo: 'Memo',
+      match: 'Coincidencia'
     }
   },
   systemPayments: {
@@ -83,7 +85,8 @@ const VBankStatementMatch = {
       tenderType: 'Tipo de Pago',
       currency: 'Moneda',
       amount: 'Monto',
-      description: 'Descripción'
+      description: 'Descripción',
+      match: 'Coincidencia'
     }
   }
 }
