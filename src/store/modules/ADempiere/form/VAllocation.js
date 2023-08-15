@@ -335,7 +335,7 @@ export default {
           .then(response => {
             showMessage({
               type: 'success',
-              message: response,
+              message: 'OK',
               showClose: true
             })
             dispatch('findListPayment')
