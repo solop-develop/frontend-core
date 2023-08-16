@@ -974,7 +974,7 @@ export const openBrowserAssociated = {
  * Open Form Associated in Process
  */
 export const openFormAssociated = {
-  name: language.t('actionMenu.openSmartBrowser'),
+  name: language.t('actionMenu.openSpecialForm'),
   enabled: ({ parentUuid, containerUuid }) => {
     const recordUuid = store.getters.getUuidOfContainer(containerUuid)
     return !isEmptyValue(recordUuid)
