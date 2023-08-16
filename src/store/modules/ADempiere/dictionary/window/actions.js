@@ -25,7 +25,6 @@ import { requestWindowMetadata } from '@/api/ADempiere/dictionary/window.js'
 
 // Constants
 import { CLIENT, DOCUMENT_ACTION, DOCUMENT_STATUS } from '@/utils/ADempiere/constants/systemColumns'
-import { containerManager } from '@/utils/ADempiere/dictionary/window'
 import { DISPLAY_COLUMN_PREFIX, IS_ADVANCED_QUERY } from '@/utils/ADempiere/dictionaryUtils'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 
@@ -33,6 +32,7 @@ import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertArrayKeyValueToObject } from '@/utils/ADempiere/formatValue/iterableFormat'
 import {
+  containerManager,
   isDisplayedField,
   generateWindow,
   createNewRecord,
@@ -42,12 +42,13 @@ import {
   generateReportOfWindow,
   openBrowserAssociated,
   openDocumentAction,
+  openFormAssociated,
   openSequenceTab,
   refreshRecord,
   refreshRecords,
   recordAccess,
   undoChange
-} from '@/utils/ADempiere/dictionary/window.js'
+} from '@/utils/ADempiere/dictionary/window'
 import { panelAdvanceQuery } from '@/utils/ADempiere/dictionary/panel.js'
 import {
   exportRecordsSelected,
@@ -241,6 +242,10 @@ export default {
         } else if (!isEmptyValue(process.browserUuid)) {
           defaultAction = {
             ...openBrowserAssociated
+          }
+        } else if (!isEmptyValue(process.formUuid)) {
+          defaultAction = {
+            ...openFormAssociated
           }
         } else if (!isEmptyValue(process.workflowUuid)) {
           // Add workflow icon

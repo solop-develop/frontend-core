@@ -971,6 +971,75 @@ export const openBrowserAssociated = {
 }
 
 /**
+ * Open Form Associated in Process
+ */
+export const openFormAssociated = {
+  name: language.t('actionMenu.openSmartBrowser'),
+  enabled: ({ parentUuid, containerUuid }) => {
+    const recordUuid = store.getters.getUuidOfContainer(containerUuid)
+    return !isEmptyValue(recordUuid)
+  },
+  isSvgIcon: true,
+  icon: 'form',
+  actionName: 'openFormAssociated',
+  openFormAssociated: function({ parentUuid, containerUuid, uuid, formUuid }) {
+    if (isEmptyValue(formUuid)) {
+      const process = store.getters.getStoredProcessFromTab({
+        windowUuid: parentUuid,
+        tabUuid: containerUuid,
+        processUuid: uuid
+      })
+      formUuid = process.formUuid
+    }
+
+    // set record id from window
+    const storedTab = store.getters.getStoredTab(parentUuid, containerUuid)
+    const { keyColumn } = storedTab
+
+    const recordId = store.getters.getValueOfField({
+      parentUuid,
+      containerUuid,
+      columnName: keyColumn
+    })
+
+    if (!isEmptyValue(recordId)) {
+      store.commit('updateValueOfField', {
+        containerUuid: formUuid,
+        columnName: RECORD_ID,
+        value: recordId
+      })
+    }
+
+    const inMenu = zoomIn({
+      uuid: formUuid,
+      params: {
+        formId: 0,
+        formUuid
+      },
+      query: {
+        [RECORD_ID]: recordId,
+        recordId
+      },
+      isShowMessage: false
+    })
+
+    if (!inMenu) {
+      router.push({
+        name: 'Form',
+        params: {
+          formId: 0,
+          formUuid
+        },
+        query: {
+          [RECORD_ID]: recordId,
+          recordId
+        }
+      }, () => {})
+    }
+  }
+}
+
+/**
  * Open Document Action to process workflow
  */
 export const openDocumentAction = {
