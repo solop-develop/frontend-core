@@ -56,7 +56,8 @@ const VBankStatementMatch = {
       description: 'Descripción',
       referenceNo: 'No. de Referencia',
       memo: 'Memo',
-      match: 'Coincidencia'
+      match: 'Coincidencia',
+      total: 'Total'
     },
     withoutAutomaticMatch: 'Sin Coincidencia Automática'
   },
@@ -71,7 +72,8 @@ const VBankStatementMatch = {
       currency: 'Moneda',
       amount: 'Monto',
       memo: 'Memo',
-      match: 'Coincidencia'
+      match: 'Coincidencia',
+      total: 'Total'
     }
   },
   systemPayments: {
@@ -86,9 +88,11 @@ const VBankStatementMatch = {
       currency: 'Moneda',
       amount: 'Monto',
       description: 'Descripción',
-      match: 'Coincidencia'
+      match: 'Coincidencia',
+      total: 'Total'
     }
-  }
+  },
+  result: 'Resultado'
 }
 
 export default VBankStatementMatch

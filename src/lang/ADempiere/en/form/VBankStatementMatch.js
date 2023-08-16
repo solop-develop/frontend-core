@@ -56,7 +56,8 @@ const VBankStatementMatch = {
       description: 'Description',
       referenceNo: 'Reference No.',
       memo: 'Memo',
-      match: 'Match'
+      match: 'Match',
+      total: 'Total'
     },
     withoutAutomaticMatch: 'Without Automatic Matching'
   },
@@ -71,7 +72,8 @@ const VBankStatementMatch = {
       currency: 'Currency',
       amount: 'Amount',
       memo: 'Memo',
-      match: 'Match'
+      match: 'Match',
+      total: 'Total'
     }
   },
   systemPayments: {
@@ -86,9 +88,11 @@ const VBankStatementMatch = {
       currency: 'Currency',
       amount: 'Amount',
       description: 'Description',
-      match: 'Match'
+      match: 'Match',
+      total: 'Total'
     }
-  }
+  },
+  result: 'Result'
 }
 
 export default VBankStatementMatch
