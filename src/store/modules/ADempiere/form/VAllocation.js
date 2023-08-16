@@ -321,6 +321,11 @@ export default {
           totalDifference,
           transactionOrganizationId
         } = state.process
+        let listInvoce, listPayments
+        if (!isEmptyValue(state.listSelectAll)) {
+          listInvoce = state.listSelectAll.filter(list => list.type === 'isInvoce')
+          listPayments = state.listSelectAll.filter(list => list.type === 'isPayment')
+        }
         process({
           date,
           chargeId,
@@ -328,8 +333,8 @@ export default {
           description,
           totalDifference,
           businessPartnerId,
-          invoiceSelectionList: state.list.invoces,
-          paymentSelectionsList: state.list.payments,
+          invoiceSelectionList: listInvoce,
+          paymentSelectionsList: listPayments,
           transactionOrganizationId
         })
           .then(response => {
