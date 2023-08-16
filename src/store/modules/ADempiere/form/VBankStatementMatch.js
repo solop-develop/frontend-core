@@ -429,9 +429,10 @@ export default {
             dispatch('getPaymentsListFromServer', {})
             dispatch('searchListImportedBankMovements', {})
             dispatch('getMatchingMovementsListFromServer', {})
+            const { message } = response
             showMessage({
               type: 'success',
-              message: 'OK',
+              message,
               showClose: true
             })
             resolve(response)
