@@ -84,9 +84,19 @@ export default {
             commit('setListIssues', [])
           }
           const list = records.map(issues => {
+            let date = ''
+            if (issues.date_next_action !== 0) {
+              date = formatDate(
+                {
+                  value: issues.date_next_action,
+                  isTime: true,
+                  format: 'YYYY-MM-DDTHH:MM:SS'
+                }
+              )
+            }
             return {
               ...issues,
-              dateNextAction: formatDate({ value: issues.date_next_action }),
+              dateNextAction: date,
               isEdit: false
             }
           })
@@ -169,7 +179,20 @@ export default {
           dateNextAction
         })
           .then(response => {
-            commit('setCurrentIssues', response)
+            let date = ''
+            if (response.date_next_action !== 0) {
+              date = formatDate(
+                {
+                  value: response.date_next_action,
+                  isTime: true,
+                  format: 'YYYY-MM-DDTHH:MM:SS'
+                }
+              )
+            }
+            commit('setCurrentIssues', {
+              ...response,
+              dateNextAction: date
+            })
             dispatch('listComments', {
               id,
               uuid
