@@ -34,7 +34,7 @@ import {
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'
-import { dateTimeFormats } from '@/utils/ADempiere/formatValue/dateFormat'
+import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 
 const bankStatementMatch = {
@@ -145,7 +145,7 @@ export default {
   },
 
   actions: {
-    getBankStatementFromServer({ commit, dispatch }, {
+    getBankStatementFromServer({ commit }, {
       id,
       uuid
     }) {
@@ -318,8 +318,25 @@ export default {
         })
           .then(response => {
             const { records } = response
-            commit('setImportedPayments', records)
-            resolve(records)
+
+            const recordsList = records.map(record => {
+              const { transaction_date } = record
+              let transactionDate = null
+              if (transaction_date > 0) {
+                transactionDate = formatDate({
+                  value: transaction_date,
+                  isDate: true
+                })
+              }
+
+              return {
+                ...record,
+                transactionDate
+              }
+            })
+
+            commit('setImportedPayments', recordsList)
+            resolve(recordsList)
           })
           .catch(error => {
             showMessage({
@@ -367,11 +384,23 @@ export default {
         })
           .then(response => {
             const { records } = response
-            if (isEmptyValue(records)) return
-            list = records.map(list => {
+            if (isEmptyValue(records)) {
+              return
+            }
+
+            list = records.map(record => {
+              const { transaction_date } = record
+              let transactionDate = null
+              if (transaction_date > 0) {
+                transactionDate = formatDate({
+                  value: transaction_date,
+                  isDate: true
+                })
+              }
+
               return {
-                ...list,
-                transactionDate: dateTimeFormats(list.transaction_date, 'YYYY-MM-DD')
+                ...record,
+                transactionDate
               }
             })
           })
@@ -420,7 +449,7 @@ export default {
       })
     },
 
-    listUnMatch({ commit, state, dispatch }) {
+    listUnMatch({ state, dispatch }) {
       return new Promise(resolve => {
         requestListUnMatch({
           listImportedMovements: state.matchingMovements.listUnMatch
@@ -448,8 +477,8 @@ export default {
       })
     },
 
-    process({ state, commit, getters }) {
-      return new Promise(resolve => {
+    processBankStatementMatch({ state, getters }) {
+      return new Promise((resolve, reject) => {
         const bankAccountId = state.bankAccount.id
         const dateFrom = state.transactionDate.from
         const dateTo = state.transactionDate.to
@@ -478,6 +507,7 @@ export default {
               message: error.message,
               showClose: true
             })
+            reject(error)
           })
       })
     },
@@ -507,12 +537,23 @@ export default {
               })
               resolve()
             }
-            const list = records.map(list => {
+
+            const list = records.map(record => {
+              const { transaction_date } = record
+              let transactionDate = null
+              if (transaction_date > 0) {
+                transactionDate = formatDate({
+                  value: transaction_date,
+                  isDate: true
+                })
+              }
+
               return {
-                ...list,
-                transactionDate: dateTimeFormats(list.transaction_date, 'YYYY-MM-DD')
+                ...record,
+                transactionDate
               }
             })
+
             commit('updateAttributeCriteria', {
               criteria: 'result',
               attribute: 'list',

@@ -42,6 +42,17 @@ const VBankStatementMatch = {
     assignedMatch: 'Assigned Match',
     unassignedMatch: 'Unassigned Match'
   },
+  bankStatement: {
+    name: 'Name',
+    documentNo: 'Document No.',
+    bankStatementDate: 'Bank Statement Date',
+    bank: 'Bank',
+    bankAccount: 'Bank Account',
+    currentBalance: 'Current Balance',
+    beginningBalance: 'Beginning Balance',
+    statementDifference: 'Statement Difference',
+    endingBalance: 'Ending Balance'
+  },
   automaticMatch: {
     title: 'Automatic Matching',
     table: {
@@ -61,8 +72,8 @@ const VBankStatementMatch = {
     },
     withoutAutomaticMatch: 'Without Automatic Matching'
   },
-  importedMovements: {
-    title: 'Imported Movements',
+  bankMovements: {
+    title: 'Bank Movements',
     table: {
       date: 'Date',
       transactionDate: 'Transaction Date',
@@ -81,6 +92,7 @@ const VBankStatementMatch = {
     table: {
       date: 'Date',
       transactionDate: 'Transaction Date',
+      paymentDate: 'Payment Date',
       receipt: 'Receipts',
       documentNo: 'Document No.',
       businessPartner: 'Business Partner',

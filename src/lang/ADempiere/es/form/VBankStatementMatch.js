@@ -42,6 +42,17 @@ const VBankStatementMatch = {
     assignedMatch: 'Asignar Conciliación',
     unassignedMatch: 'Desasignar Conciliación'
   },
+  bankStatement: {
+    name: 'Nombre',
+    documentNo: 'Nro. Documento',
+    bankStatementDate: 'Fecha de Estado de Cuenta',
+    bank: 'Banco',
+    bankAccount: 'Cuenta Bancaria',
+    currentBalance: 'Saldo Actual',
+    beginningBalance: 'Saldo Inicial',
+    statementDifference: 'Diferencia de Cuenta',
+    endingBalance: 'Saldo Final'
+  },
   automaticMatch: {
     title: 'Coincidencia Automatica',
     table: {
@@ -61,8 +72,8 @@ const VBankStatementMatch = {
     },
     withoutAutomaticMatch: 'Sin Coincidencia Automática'
   },
-  importedMovements: {
-    title: 'Movimientos Importados',
+  bankMovements: {
+    title: 'Movimientos Bancarios',
     table: {
       date: 'Fecha',
       transactionDate: 'Fecha de la Transacción',
@@ -81,6 +92,7 @@ const VBankStatementMatch = {
     table: {
       date: 'Fecha',
       transactionDate: 'Fecha de la Transacción',
+      paymentDate: 'Fecha del Pago',
       receipt: 'Cobros',
       documentNo: 'Documento No.',
       businessPartner: 'Socio del Negocio',
