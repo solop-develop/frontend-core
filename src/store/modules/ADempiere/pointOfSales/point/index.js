@@ -60,14 +60,6 @@ import statePayments from '../payments/state.js'
 import mutationsPayments from '../payments/mutations.js'
 
 /**
- * Get Product Price Vuex Module Store Data
- * Product List
- * Search Product
- */
-import stateProductPrice from '../productPrice/state.js'
-import mutationsProductPrice from '../productPrice/mutations.js'
-
-/**
  * Get keyLayout Vuex Module Store Data
  * List Catalog
  */
@@ -80,7 +72,6 @@ const pointOfSales = {
     ...stateOrder,
     ...stateOrderLine,
     ...statePayments,
-    ...stateProductPrice,
     ...stateKeyLayout
   },
   mutations: {
@@ -88,7 +79,6 @@ const pointOfSales = {
     ...mutationsOrder,
     ...mutationsOrderLine,
     ...mutationsPayments,
-    ...mutationsProductPrice,
     ...mutationsKeyLayout
   },
   actions,

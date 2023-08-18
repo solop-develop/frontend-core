@@ -72,23 +72,7 @@ export default {
   getListRefund: (state) => {
     return state.listRefund
   },
-  /**
-   * Product Price Getters
-   * List Product
-   * Search Product
-   */
-  getProductPrice: (state) => {
-    if (isEmptyValue(state.productPrice)) {
-      return {
-        ...withoutResponse,
-        productPricesList: []
-      }
-    }
-    return state.productPrice
-  },
-  getSearchProduct: (state) => {
-    return state.searchProduct
-  },
+
   /**
    * visibility of point of sale panels
    * Show Panel Options the Point Of Sales

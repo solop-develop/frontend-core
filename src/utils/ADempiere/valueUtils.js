@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -587,54 +587,6 @@ export function tableColumnDataType(column, currentOption) {
   }
   return false
 }
-
-// export function convertValuesToSendListOrders(values) {
-//   const valuesToSend = {}
-
-//   values.forEach(element => {
-//     const { value, columnName } = element
-//     if (isEmptyValue(value) || (typeof value === 'boolean' && !value)) {
-//       return
-//     }
-
-//     switch (columnName) {
-//       case 'DocumentNo':
-//         valuesToSend['documentNo'] = value
-//         break
-//       case 'C_BPartner_ID_UUID':
-//         valuesToSend['businessPartnerUuid'] = value
-//         break
-//       case 'GrandTotal':
-//         valuesToSend['grandTotal'] = value
-//         break
-//       case 'OpenAmt':
-//         valuesToSend['openAmount'] = value
-//         break
-//       case 'IsPaid':
-//         valuesToSend['isPaid'] = value
-//         break
-//       case 'Processed':
-//         valuesToSend['isProcessed'] = value
-//         break
-//       case 'IsAisleSeller':
-//         valuesToSend['isAisleSeller'] = value
-//         break
-//       case 'IsInvoiced':
-//         valuesToSend['isInvoiced'] = value
-//         break
-//       case 'DateOrderedFrom':
-//         valuesToSend['dateOrderedFrom'] = value
-//         break
-//       case 'DateOrderedTo':
-//         valuesToSend['dateOrderedTo'] = value
-//         break
-//       case 'SalesRep_ID_UUID':
-//         valuesToSend['salesRepresentativeUuid'] = value
-//         break
-//     }
-//   })
-//   return valuesToSend
-// }
 
 /**
  * Search in the currency lists for the current currency

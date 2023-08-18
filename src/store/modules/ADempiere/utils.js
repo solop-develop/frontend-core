@@ -26,7 +26,6 @@ const initStateUtils = {
   searchCompleteOrders: false,
   searchToDeliveOrders: false,
   isNewOrder: false,
-  showProductList: false,
   confirmDelivery: false,
   deliverAllProducts: false,
   showConfirmDelivery: false,
@@ -120,9 +119,6 @@ export default {
     },
     setCopyShippingAddress(state, payload) {
       state.copyShippingAddress = payload
-    },
-    setShowProductList(state, payload) {
-      state.showProductList = payload
     },
     setDeliverAllProducts(state, payload) {
       state.deliverAllProducts = payload
@@ -320,9 +316,6 @@ export default {
     },
     getFocusNewOrder: (state) => {
       return state.isNewOrder
-    },
-    getShowProductList: (state) => {
-      return state.showProductList
     },
     getDeliverAllProducts: (state) => {
       return state.deliverAllProducts
