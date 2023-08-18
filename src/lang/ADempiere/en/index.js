@@ -484,7 +484,7 @@ export default {
       aisleSales: 'Aisle Sales',
       label: 'To be invoiced',
       toDeliver: 'To be delivered',
-      toCollect: 'Receivable',
+      toCollect: 'On Credit',
       salesRepresentative: 'Sales Agent',
       onlyAllocated: 'Only allocated to current point of sales',
       businessPartner: 'Business Partner',

@@ -485,7 +485,7 @@ export default {
       aisleSales: 'Ventas de Pasillo',
       label: 'Por Facturar',
       toDeliver: 'Por Entregar',
-      toCollect: 'Por Cobrar',
+      toCollect: 'A Crédito',
       salesRepresentative: 'Agente Comercial',
       onlyAllocated: 'Solo asignado al punto de venta actual',
       businessPartner: 'Socio de Negocio',
