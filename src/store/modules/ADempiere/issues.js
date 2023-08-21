@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,13 +19,13 @@
 // API Request Methods
 import {
   requestListIssues,
-  createIssue,
-  updateIssue,
-  deleteIssue,
-  listIssueComments,
-  createIssueComment,
-  updateIssueComment,
-  deleteIssueComment
+  requestCreateIssue,
+  requestUpdateIssue,
+  requestDeleteIssue,
+  requestListIssueComments,
+  requestCreateIssueComment,
+  requestUpdateIssueComment,
+  requestDeleteIssueComment
 } from '@/api/ADempiere/user-interface/component/issue'
 
 // Utils and Helper Methods
@@ -124,7 +124,7 @@ export default {
       dateNextAction
     }) {
       return new Promise((resolve, reject) => {
-        return createIssue({
+        return requestCreateIssue({
           tableName,
           recordId,
           recordUuid,
@@ -164,7 +164,7 @@ export default {
       dateNextAction
     }) {
       return new Promise((resolve, reject) => {
-        return updateIssue({
+        return requestUpdateIssue({
           id,
           uuid,
           subject,
@@ -204,7 +204,7 @@ export default {
           })
       })
     },
-    deleteIssues({ commit, dispatch }, {
+    deleteIssue({ commit, dispatch }, {
       id,
       uuid,
       recordId,
@@ -212,7 +212,7 @@ export default {
       recordUuid
     }) {
       return new Promise((resolve, reject) => {
-        return deleteIssue({
+        return requestDeleteIssue({
           id,
           uuid,
           tableName,
@@ -247,7 +247,7 @@ export default {
         return
       }
       return new Promise((resolve, reject) => {
-        return listIssueComments({
+        return requestListIssueComments({
           issueId: id,
           issueUuid: uuid
         })
@@ -270,14 +270,14 @@ export default {
           })
       })
     },
-    newComments({ dispatch }, {
+    newIssueComment({ dispatch }, {
       id,
       uuid,
       result,
       dateNextAction
     }) {
       return new Promise((resolve, reject) => {
-        return createIssueComment({
+        return requestCreateIssueComment({
           issueId: id,
           issueUuid: uuid,
           result,
@@ -297,7 +297,7 @@ export default {
           })
       })
     },
-    updateComments({ dispatch }, {
+    updateIssueComment({ dispatch }, {
       id,
       uuid,
       result,
@@ -306,7 +306,7 @@ export default {
       dateNextAction
     }) {
       return new Promise((resolve, reject) => {
-        return updateIssueComment({
+        return requestUpdateIssueComment({
           issueId: id,
           issueUuid: uuid,
           result,
@@ -324,14 +324,14 @@ export default {
           })
       })
     },
-    deleteComments({ dispatch }, {
+    deleteIssueComment({ dispatch }, {
       id,
       uuid,
       issuesId,
       issuesUuid
     }) {
       return new Promise((resolve, reject) => {
-        return deleteIssueComment({
+        return requestDeleteIssueComment({
           issueId: id,
           issueUuid: uuid
         })

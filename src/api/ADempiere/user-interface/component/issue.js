@@ -49,19 +49,22 @@ export function requestExistsIssues({
  * @param {string}  tableName
  * @param {number}  recordId
  * @param {string}  recordUuid
+ * @param {string}  searchValue
  */
 export function requestListIssues({
   tableName,
   recordId,
-  recordUuid
+  recordUuid,
+  searchValue
 }) {
   return request({
     url: '/user-interface/component/issue/list-issues',
-    method: 'post',
-    data: {
+    method: 'get',
+    params: {
       record_id: recordId,
       record_uuid: recordUuid,
-      table_name: tableName
+      table_name: tableName,
+      search_value: searchValue
     }
   })
     .then(listExists => {
@@ -72,11 +75,15 @@ export function requestListIssues({
 /**
  * List Sales Representatives
  */
-export function listSalesRepresentatives() {
+export function requestListSalesRepresentatives({
+  searchValue
+}) {
   return request({
     url: '/user-interface/component/issue/list-sales-representatives',
-    method: 'post',
-    data: {}
+    method: 'get',
+    params: {
+      search_value: searchValue
+    }
   })
     .then(salesRepresentatives => {
       return salesRepresentatives
@@ -86,11 +93,15 @@ export function listSalesRepresentatives() {
 /**
  * List Request Types
  */
-export function listRequestTypes() {
+export function requestListRequestTypes({
+  searchValue
+}) {
   return request({
     url: '/user-interface/component/issue/list-request-types',
-    method: 'post',
-    data: {}
+    method: 'get',
+    params: {
+      search_value: searchValue
+    }
   })
     .then(requestTypes => {
       return requestTypes
@@ -100,14 +111,16 @@ export function listRequestTypes() {
 /**
  * List Statuses
  */
-export function listStatus({
-  requestTypeId
+export function requestListStatuses({
+  requestTypeId,
+  searchValue
 }) {
   return request({
     url: '/user-interface/component/issue/list-statuses',
-    method: 'post',
-    data: {
-      request_type_id: requestTypeId
+    method: 'get',
+    params: {
+      request_type_id: requestTypeId,
+      search_value: searchValue
     }
   })
     .then(listStatus => {
@@ -118,11 +131,15 @@ export function listStatus({
 /**
  * List Priorities
  */
-export function listPriorities() {
+export function requestListPriorities({
+  searchValue
+}) {
   return request({
     url: '/user-interface/component/issue/list-priorities',
-    method: 'post',
-    data: {}
+    method: 'get',
+    params: {
+      search_value: searchValue
+    }
   })
     .then(listPriorities => {
       return listPriorities
@@ -135,7 +152,7 @@ export function listPriorities() {
  * @param {number}  recordId
  * @param {string}  recordUuid
  */
-export function createIssue({
+export function requestCreateIssue({
   tableName,
   recordId,
   recordUuid,
@@ -175,7 +192,7 @@ export function createIssue({
 }
 
 /**
- * POST Update Issue
+ * PUT Update Issue
  *
  * req.query.token - user token
  * req.query.language - login language
@@ -186,7 +203,7 @@ export function createIssue({
  * req.body.requestTypeId - request type id
  * req.body.requestTypeUuid - request type uuid
  */
-export function updateIssue({
+export function requestUpdateIssue({
   id,
   uuid,
   subject,
@@ -224,14 +241,14 @@ export function updateIssue({
 }
 
 /**
- * POST Delete Issue
+ * DELETE Delete Issue
  *
  * req.query.token - user token
  * req.query.language - login language
  * req.body.id - id of record
  * req.body.uuid - uuid of record
  */
-export function deleteIssue({
+export function requestDeleteIssue({
   id,
   uuid
 }) {
@@ -249,25 +266,27 @@ export function deleteIssue({
 }
 
 /**
- * POST List Issue Comments
+ * GET List Issue Comments
  *
  * req.query.token - user token
  * req.query.language - login language
- * req.body.issue_id - id of record parent issue
- * req.body.issue_uuid - uuid of record parent issued
+ * req.query.issue_id - id of record parent issue
+ * req.query.issue_uuid - uuid of record parent issued
  * req.query.page_size - size of page (customized)
  * req.query.page_token - token of page (optional for get a specific page)
  */
-export function listIssueComments({
+export function requestListIssueComments({
   issueId,
-  issueUuid
+  issueUuid,
+  searchValue
 }) {
   return request({
     url: '/user-interface/component/issue/list-issue-comments',
-    method: 'post',
-    data: {
+    method: 'get',
+    params: {
       issue_id: issueId,
-      issue_uuid: issueUuid
+      issue_uuid: issueUuid,
+      search_value: searchValue
     }
   })
     .then(listComments => {
@@ -284,7 +303,7 @@ export function listIssueComments({
  * req.body.issue_uuid - uuid of record parent issued
  * req.body.result - result
  */
-export function createIssueComment({
+export function requestCreateIssueComment({
   issueId,
   issueUuid,
   result
@@ -304,7 +323,7 @@ export function createIssueComment({
 }
 
 /**
-  * POST Update Issue Comment
+  * PUT Update Issue Comment
   *
   * req.query.token - user token
   * req.query.language - login language
@@ -312,7 +331,7 @@ export function createIssueComment({
   * req.body.uuid - uuid of record
   * req.body.result - result
  */
-export function updateIssueComment({
+export function requestUpdateIssueComment({
   issueId,
   issueUuid,
   result
@@ -339,7 +358,7 @@ export function updateIssueComment({
   * req.body.id - id of record
   * req.body.uuid - uuid of record
  */
-export function deleteIssueComment({
+export function requestDeleteIssueComment({
   issueId,
   issueUuid
 }) {
