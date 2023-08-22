@@ -193,6 +193,7 @@ export class evaluator {
     }
     // Handling of ID compare (null => 0)
     if (first.endsWith('_ID') && isEmptyValue(firstEval)) {
+      // TODO: Evaluate with -1
       firstEval = '0'
     }
 
@@ -219,6 +220,7 @@ export class evaluator {
       secondEval = secondEval.replace(/['"]/g, '').trim() // strip ' and " for string values
     }
     if (second.endsWith('_ID') && isEmptyValue(secondEval)) {
+      // TODO: Evaluate with -1
       secondEval = '0'
     }
 

@@ -29,6 +29,7 @@ import { OPERATION_PATTERN } from '@/utils/ADempiere/formatValue/numberFormat.js
 // Utils and Helper Methods
 import { convertBooleanToString, convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat.js'
 import { removeQuotationMark } from '@/utils/ADempiere/formatValue/stringFormat'
+import { isIdentifier } from '@/utils/ADempiere/references.js'
 
 /**
  * Checks if value is empty. Deep-checks arrays and objects
@@ -365,7 +366,11 @@ export function parsedValueComponent({
       if (isEmpty) {
         returnValue = undefined
         if (isMandatory) {
-          returnValue = 0
+          if (isIdentifier(displayType)) {
+            returnValue = -1
+          } else {
+            returnValue = 0
+          }
         }
       } else if (typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'query')) {
         returnValue = value

@@ -53,7 +53,7 @@ export function getContextAttributes({
 
     // if identifier and empty, send value in zero
     if (isIdentifierEmpty({ columnName, value })) {
-      value = 0
+      value = -1
     }
 
     contextAttributesList.push({

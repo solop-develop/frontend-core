@@ -466,6 +466,31 @@ const windowManager = {
                 isOverWriteParent: isParentTab
               })
 
+              // Always overwrite key values on parent context
+              const relatedColumnsList = fieldsList
+                .filter(fieldItem => {
+                  return fieldItem.isParent || fieldItem.isKey
+                })
+                .map(fieldItem => {
+                  return fieldItem.columnName
+                })
+
+              if (!isEmptyValue(parentColumnName)) {
+                relatedColumnsList.push(parentColumnName)
+              }
+              // set context values
+              const parentValues = getContextAttributes({
+                containerUuid,
+                contextColumnNames: relatedColumnsList
+              })
+
+              dispatch('updateValuesOfContainer', {
+                parentUuid,
+                containerUuid,
+                attributes: parentValues,
+                isOverWriteParent: true
+              })
+
               // TODO: Evaluate seek record on container manager
               // active logics with set records values
               fieldsList.forEach(field => {
