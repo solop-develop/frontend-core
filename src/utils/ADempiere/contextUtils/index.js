@@ -331,15 +331,13 @@ export function parseContext({
  */
 export function isSalesTransaction({ parentUuid, containerUuid }) {
   // get value from container view
-  let isSOTrx = store.getters.getValueOfField({
+  let isSOTrx = isSalesTransactionContainer({
     parentUuid,
-    containerUuid,
-    columnName: IS_SO_TRX
+    containerUuid
   })
   if (isEmptyValue(isSOTrx)) {
     // get value from menu
-    const currentRoute = router.app._route
-    isSOTrx = currentRoute.meta.isSalesTransaction
+    isSOTrx = isSalesTransactionMenu()
   }
 
   return convertStringToBoolean(isSOTrx)
@@ -356,6 +354,24 @@ export function isSalesTransactionContainer({
   })
 
   return convertStringToBoolean(isSOTrx)
+}
+
+export function isSalesTransactionWindow({
+  parentUuid
+}) {
+  if (isEmptyValue(parentUuid)) {
+    return undefined
+  }
+  const currentRoute = router.app._route
+  if (currentRoute.meta.type !== 'window') {
+    return undefined
+  }
+  const storedWindow = store.getters.getStoredWindow(parentUuid)
+  if (isEmptyValue(storedWindow)) {
+    return undefined
+  }
+
+  return storedWindow.isSalesTransaction
 }
 
 export function isSalesTransactionMenu() {
