@@ -151,7 +151,8 @@ const calloutManager = {
             dispatch('updateValuesOfContainer', {
               parentUuid,
               containerUuid,
-              attributes: attributesList
+              attributes: attributesList,
+              isOverWriteParent: isParentTab
             })
 
             // set values on table

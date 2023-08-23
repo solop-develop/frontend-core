@@ -104,8 +104,7 @@ export const getContext = ({
 
   // get by menu sales transaction
   if (isEmptyValue(value) && SALES_TRANSACTION_COLUMNS.includes(columnName)) {
-    const currentRoute = router.app._route
-    value = currentRoute.meta.isSalesTransaction
+    value = isSalesTransactionMenu()
   }
 
   if (isBooleanToString) {
@@ -344,4 +343,24 @@ export function isSalesTransaction({ parentUuid, containerUuid }) {
   }
 
   return convertStringToBoolean(isSOTrx)
+}
+
+export function isSalesTransactionContainer({
+  parentUuid, containerUuid
+}) {
+  // get value from container view
+  const isSOTrx = store.getters.getValueOfField({
+    parentUuid,
+    containerUuid,
+    columnName: IS_SO_TRX
+  })
+
+  return convertStringToBoolean(isSOTrx)
+}
+
+export function isSalesTransactionMenu() {
+  // get value from menu
+  const currentRoute = router.app._route
+  const isSOTrx = currentRoute.meta.isSalesTransaction
+  return isSOTrx
 }

@@ -26,7 +26,7 @@ import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 // Utils and Helper Methods
-import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
+import { isSalesTransactionContainer } from '@/utils/ADempiere/contextUtils'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
@@ -136,9 +136,9 @@ const businessPartner = {
         const pageToken = generatePageToken({ pageNumber })
 
         if (!isForm) {
-          const isSOTrx = isSalesTransaction({
-            parentUuid,
-            containerUuid
+          const isSOTrx = isSalesTransactionContainer({
+            parentUuid
+            // containerUuid
           })
           if (!isEmptyValue(isSOTrx)) {
             let columnName = 'IsVendor'
