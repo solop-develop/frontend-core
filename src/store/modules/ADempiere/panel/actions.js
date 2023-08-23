@@ -394,7 +394,7 @@ const actions = {
         field,
         value
       })
-      if ((!containerManager && containerManager.actionPerformed)) {
+      if (!(containerManager && containerManager.actionPerformed)) {
         return
       }
       // Run specific action
