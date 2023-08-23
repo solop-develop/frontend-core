@@ -152,7 +152,7 @@ const generalInfoSearch = {
       tableName,
       columnName,
       //
-      isFrom = false,
+      isForm = false,
       filters,
       searchValue,
       pageNumber,
@@ -173,7 +173,7 @@ const generalInfoSearch = {
             tableName,
             columnName,
             //
-            isFrom,
+            isForm,
             filters,
             searchValue,
             pageNumber,

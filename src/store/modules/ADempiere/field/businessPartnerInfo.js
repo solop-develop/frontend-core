@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -119,7 +119,7 @@ const businessPartner = {
       tableName,
       columnName,
       //
-      isFrom = false,
+      isForm = false,
       filters = [],
       searchValue,
       pageNumber,
@@ -135,20 +135,21 @@ const businessPartner = {
         }
         const pageToken = generatePageToken({ pageNumber })
 
-        const isSOTrx = isSalesTransaction({
-          parentUuid,
-          containerUuid
-        })
-
-        if (!isEmptyValue(isSOTrx) && !isFrom) {
-          let columnName = 'IsVendor'
-          if (isSOTrx) {
-            columnName = 'IsCustomer'
-          }
-          filters.push({
-            columnName,
-            value: true
+        if (!isForm) {
+          const isSOTrx = isSalesTransaction({
+            parentUuid,
+            containerUuid
           })
+          if (!isEmptyValue(isSOTrx)) {
+            let columnName = 'IsVendor'
+            if (isSOTrx) {
+              columnName = 'IsCustomer'
+            }
+            filters.push({
+              columnName,
+              value: true
+            })
+          }
         }
 
         requestListBusinessPartner({
