@@ -167,5 +167,8 @@ export default {
   },
   getLoadingCashWithdrawal: (state) => {
     return state.isLoadingCashWithdrawal
+  },
+  getLoadingCashClosing: (state) => {
+    return state.isLoadingCashClosing
   }
 }

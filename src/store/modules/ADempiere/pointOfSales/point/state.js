@@ -47,5 +47,6 @@ export default {
   showPOSCollection: false,
   isLoadingProcess: false,
   isLoadingCashOpen: false,
-  isLoadingCashWithdrawal: false
+  isLoadingCashWithdrawal: false,
+  isLoadingCashClosing: false
 }

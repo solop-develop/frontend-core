@@ -90,5 +90,8 @@ export default {
   },
   setLoadingCashWithdrawal(state, loading) {
     state.isLoadingCashWithdrawal = loading
+  },
+  setLoadingCashClosing(state, loading) {
+    state.isLoadingCashClosing = loading
   }
 }
