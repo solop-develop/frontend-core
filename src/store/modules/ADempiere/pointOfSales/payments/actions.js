@@ -88,12 +88,14 @@ export default {
     }
   },
   // upload orders to theServer
-  uploadOrdersToServer({ dispatch }, {
+  uploadOrdersToServer({ dispatch, rootGetters }, {
     listPaymentsLocal,
     posUuid,
     orderUuid
   }) {
     listPaymentsLocal.forEach(payment => {
+      const isProcessLoading = rootGetters.getProcessLoading
+      if (isProcessLoading) return
       createPayment({
         posUuid,
         orderUuid,
@@ -241,6 +243,8 @@ export default {
     customerBankAccountUuid,
     currencyUuid
   }) {
+    const isProcessLoading = getters.getProcessLoading
+    if (isProcessLoading) return
     const listPayments = getters.getListPayments.payments.find(payment => {
       if ((payment.paymentMethod.uuid === paymentMethodUuid) && (payment.tenderTypeCode === 'X') && (currencyUuid === payment.currency.uuid)) {
         return payment

@@ -98,7 +98,8 @@ export default {
     salesRepresentativeUuid
   }) {
     const isCompleted = rootGetters.posAttributes.currentPointOfSales.currentOrder.isProcessed
-    if (isCompleted) {
+    const isProcessLoading = rootGetters.getProcessLoading
+    if (isCompleted || isProcessLoading) {
       return
     }
     const currentPriceList = isEmptyValue(priceListUuid) ? rootGetters.posAttributes.currentPointOfSales.currentPriceList.uuid : priceListUuid
@@ -152,6 +153,8 @@ export default {
     if (isEmptyValue(posUuid)) {
       posUuid = rootGetters.posAttributes.currentPointOfSales.uuid
     }
+    const isProcessLoading = rootGetters.getProcessLoading
+    if (isProcessLoading) return
     const { currentPriceList, currentWarehouse } = rootGetters.posAttributes.currentPointOfSales
     createOrderLine({
       posUuid,

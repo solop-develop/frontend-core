@@ -44,5 +44,6 @@ export default {
   currentPointOfSales: {},
   showPOSOptions: false,
   showPOSKeyLayout: false,
-  showPOSCollection: false
+  showPOSCollection: false,
+  isLoadingProcess: false
 }

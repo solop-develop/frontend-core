@@ -81,5 +81,8 @@ export default {
   },
   setShowPOSCollection(state, isShowedCollection) {
     state.showPOSCollection = isShowedCollection
+  },
+  setProcessLoading(state, loading) {
+    state.isLoadingProcess = loading
   }
 }

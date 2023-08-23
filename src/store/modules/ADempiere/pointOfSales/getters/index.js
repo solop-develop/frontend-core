@@ -158,5 +158,8 @@ export default {
   },
   getListWarehouseLine: (state) => {
     return state.listWarehouse
+  },
+  getProcessLoading: (state) => {
+    return state.isLoadingProcess
   }
 }

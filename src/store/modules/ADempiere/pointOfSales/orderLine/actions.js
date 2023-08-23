@@ -73,6 +73,8 @@ export default {
   updateOrderLines({ commit, state, getters, rootGetters }, params) {
     // const line = rootGetters.getListOrderLine
     const line = rootGetters.posAttributes.currentPointOfSales.currentOrder.lineOrder
+    const isProcessLoading = rootGetters.getProcessLoading
+    if (isProcessLoading) return
     const found = line.map(element => {
       if (element.uuid === params.uuid) {
         return {
