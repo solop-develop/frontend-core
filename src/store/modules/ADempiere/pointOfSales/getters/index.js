@@ -162,7 +162,10 @@ export default {
   getProcessLoading: (state) => {
     return state.isLoadingProcess
   },
-  getLoadingCash: (state) => {
-    return state.isLoadingCash
+  getLoadingCashOpen: (state) => {
+    return state.isLoadingCashOpen
+  },
+  getLoadingCashWithdrawal: (state) => {
+    return state.isLoadingCashWithdrawal
   }
 }

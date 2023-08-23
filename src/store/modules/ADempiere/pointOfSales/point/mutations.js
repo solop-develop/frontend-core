@@ -85,7 +85,10 @@ export default {
   setProcessLoading(state, loading) {
     state.isLoadingProcess = loading
   },
-  setLoadingCash(state, loading) {
-    state.isLoadingCash = loading
+  setLoadingCashOpen(state, loading) {
+    state.isLoadingCashOpen = loading
+  },
+  setLoadingCashWithdrawal(state, loading) {
+    state.isLoadingCashWithdrawal = loading
   }
 }
