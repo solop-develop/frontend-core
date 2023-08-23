@@ -84,5 +84,8 @@ export default {
   },
   setProcessLoading(state, loading) {
     state.isLoadingProcess = loading
+  },
+  setLoadingCash(state, loading) {
+    state.isLoadingCash = loading
   }
 }
