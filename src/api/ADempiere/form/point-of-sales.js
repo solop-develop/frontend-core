@@ -1644,3 +1644,37 @@ export function banks({
     })
 }
 
+/**
+ * GET List Banks
+ * req.query.token - user token
+ * req.query.pos_uuid - POS UUID
+ * req.query.search_value - search value
+ * req.query.page_size - custom page size for batch
+ * req.query.page_token - specific page token
+ */
+export function campaigns({
+  posUuid,
+  searchValue,
+  pageSize = 50,
+  pageToken
+}) {
+  return request({
+    url: `${config.pointOfSales.endpoint}/campaigns`,
+    method: 'get',
+    params: {
+      pos_uuid: posUuid,
+      search_value: searchValue,
+      page_size: pageSize,
+      page_token: pageToken
+    }
+  })
+    .then(response => {
+      return {
+        nextPageToken: response.next_page_token,
+        recordCount: response.record_count,
+        records: response.records.map(bank => {
+          return camelizeObjectKeys(bank)
+        })
+      }
+    })
+}
