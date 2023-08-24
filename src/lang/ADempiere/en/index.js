@@ -359,7 +359,8 @@ export default {
         taxAmount: 'Tax',
         taxRate: '% Imp',
         displayDiscountAmount: 'Discount',
-        empty: 'Enter the product name, code or UPC'
+        empty: 'Enter the product name, code or UPC',
+        movementQuantity: 'Movement Quantity'
       },
       order: {
         order: 'Order',

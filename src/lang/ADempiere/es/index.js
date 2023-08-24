@@ -360,7 +360,8 @@ export default {
         taxAmount: 'Impuesto',
         taxRate: '% Imp',
         displayDiscountAmount: 'Descuento',
-        empty: 'Ingrese el nombre del producto, código o UPC'
+        empty: 'Ingrese el nombre del producto, código o UPC',
+        movementQuantity: 'Cantidad de Movimiento'
       },
       order: {
         order: 'Orden',
