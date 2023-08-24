@@ -45,6 +45,7 @@ const bank = {
         })
           .then(response => {
             const { records } = response
+            commit('setListBanks', records)
             resolve(records)
           })
           .catch(error => {
@@ -57,6 +58,11 @@ const bank = {
             resolve([])
           })
       })
+    }
+  },
+  getters: {
+    getListBanks: (state) => {
+      return state.listBanks
     }
   }
 }
