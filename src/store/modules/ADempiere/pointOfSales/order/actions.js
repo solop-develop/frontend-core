@@ -51,7 +51,7 @@ export default {
     documentTypeUuid,
     warehouseUuid
   }) {
-    const { currentPriceList, currentWarehouse, priceList, defaultCampaignUuid } = rootGetters.posAttributes.currentPointOfSales
+    const { currentPriceList, currentWarehouse, priceList, defaultCampaign } = rootGetters.posAttributes.currentPointOfSales
     const priceListUuid = isEmptyValue(currentPriceList) ? priceList.uuid : currentPriceList.uuid
     return createOrder({
       posUuid,
@@ -60,7 +60,7 @@ export default {
       salesRepresentativeUuid: rootGetters['user/getUserUuid'],
       priceListUuid: priceListUuid,
       warehouseUuid: currentWarehouse.uuid,
-      campaignUuid: defaultCampaignUuid
+      campaignUuid: defaultCampaign.uuid
     })
       .then(order => {
         commit('setOrder', order)
