@@ -298,7 +298,7 @@ export default {
     /**
      * Get List Imported Bank Movements
      */
-    searchListImportedBankMovements({ commit, state }, {
+    searchListImportedBankMovements({ commit, state, getters }, {
       searchValue
     }) {
       return new Promise(resolve => {
@@ -307,10 +307,15 @@ export default {
         const businessPartnerId = state.businessPartner.id
         const dateFrom = state.transactionDate.from
         const dateTo = state.transactionDate.to
+        let bankStatementId = -1
+        if (!isEmptyValue(getters.getCurrentBankStatement)) {
+          bankStatementId = getters.getCurrentBankStatement.id
+        }
 
         requestImportedBankMovements({
           matchMode: matchMode,
           searchValue,
+          bankStatementId,
           bankAccountId,
           businessPartnerId,
           transactionDateFrom: dateFrom,

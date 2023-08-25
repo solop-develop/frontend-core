@@ -95,6 +95,7 @@ export function requestSearchModesList({
 export function requestImportedBankMovements({
   matchMode,
   searchValue,
+  bankStatementId,
   bankAccountId,
   paymentAmountFrom,
   paymentAmountTo,
@@ -107,6 +108,7 @@ export function requestImportedBankMovements({
     params: {
       match_mode: matchMode,
       search_value: searchValue,
+      bank_statement_id: bankStatementId,
       bank_account_id: bankAccountId,
       payment_amount_from: paymentAmountFrom,
       payment_amount_to: paymentAmountTo,
