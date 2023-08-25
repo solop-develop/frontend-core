@@ -423,6 +423,7 @@ export default {
         refund: 'Reembolso',
         bankAcount: 'Cuenta Bancaria',
         isCashWith: 'Usar Fondos de Caja',
+        collectionAgent: 'Agente Cobrador',
         paymentMethods: 'Métodos de Pago',
         transferFunds: 'Transferir Fondos',
         emptyRate: 'Sin tasa de conversión a la fecha',

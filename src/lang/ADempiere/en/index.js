@@ -422,6 +422,7 @@ export default {
         paymentMethods: 'Payment Methods',
         bankAcount: 'Bank Acount',
         isCashWith: 'Use Cash Funds',
+        collectionAgent: 'Collection Agent',
         transferFunds: 'Transfer Funds',
         emptyRate: 'No conversion rate to date',
         Currency: 'Currency',

@@ -170,5 +170,17 @@ export default {
   },
   getLoadingCashClosing: (state) => {
     return state.isLoadingCashClosing
+  },
+  getShowSummaryCashOpen: (state) => {
+    return state.isShowSummaryCashOpen
+  },
+  getSummaryCashOpen: (state) => {
+    return state.summaryCashOpen
+  },
+  getShowSummaryCashClose: (state) => {
+    return state.isShowSummaryCashClose
+  },
+  getSummaryCashClose: (state) => {
+    return state.summaryCashClose
   }
 }

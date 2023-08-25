@@ -48,5 +48,9 @@ export default {
   isLoadingProcess: false,
   isLoadingCashOpen: false,
   isLoadingCashWithdrawal: false,
-  isLoadingCashClosing: false
+  isLoadingCashClosing: false,
+  isShowSummaryCashOpen: false,
+  summaryCashOpen: {},
+  isShowSummaryCashClose: false,
+  summaryCashClose: {}
 }

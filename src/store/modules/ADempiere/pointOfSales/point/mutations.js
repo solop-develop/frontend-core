@@ -85,6 +85,18 @@ export default {
   setProcessLoading(state, loading) {
     state.isLoadingProcess = loading
   },
+  setShowSummaryCashOpen(state, show) {
+    state.isShowSummaryCashOpen = show
+  },
+  setSummaryCashOpen(state, attribute) {
+    state.summaryCashOpen = attribute
+  },
+  setShowSummaryCashClose(state, show) {
+    state.isShowSummaryCashClose = show
+  },
+  setSummaryCashClose(state, attribute) {
+    state.summaryCashClose = attribute
+  },
   setLoadingCashOpen(state, loading) {
     state.isLoadingCashOpen = loading
   },
