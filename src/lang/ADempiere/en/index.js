@@ -338,7 +338,8 @@ export default {
           changePriceList: 'Change Price List',
           dateTo: 'Date To',
           dateOrder: 'Date Order',
-          dateFrom: 'Date From'
+          dateFrom: 'Date From',
+          productSearch: 'Product Search'
         }
       },
       generalNotifications: {

@@ -339,7 +339,8 @@ export default {
           changePriceList: 'Cambiar Lista de Precio',
           dateTo: 'Fecha Hasta',
           dateOrder: 'Fecha Orden',
-          dateFrom: 'Fecha Desde'
+          dateFrom: 'Fecha Desde',
+          productSearch: 'Búsqueda de Producto'
         }
       },
       generalNotifications: {
