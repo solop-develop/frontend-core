@@ -30,6 +30,7 @@ const productInfo = {
   description: 'Description',
   price: 'Price',
   quantityOnHand: 'Quantity On Hand',
+  warehouseAvailability: 'Warehouse Availability',
   taxAmount: 'Tax Amount',
   totalIncludingTax: 'Total Including Tax',
   grandTotal: 'Grand Total',

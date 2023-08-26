@@ -105,10 +105,11 @@ export default {
     commit('setLine', currentLine)
   },
   findWarehouse({ commit, rootGetters }, {
+    posUuid,
     value,
     sku
   }) {
-    const posUuid = rootGetters.posAttributes.currentPointOfSales.uuid
+    if (isEmptyValue(posUuid)) posUuid = rootGetters.posAttributes.currentPointOfSales.uuid
     return listStocks({
       posUuid,
       value,
