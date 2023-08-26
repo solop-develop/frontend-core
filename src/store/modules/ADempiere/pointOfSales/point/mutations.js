@@ -105,5 +105,11 @@ export default {
   },
   setLoadingCashClosing(state, loading) {
     state.isLoadingCashClosing = loading
+  },
+  setShowSummaryReverseOrder(state, show) {
+    state.isShowSummaryReverseOrder = show
+  },
+  setSummaryReverseOrder(state, order) {
+    state.summaryReverseOrder = order
   }
 }

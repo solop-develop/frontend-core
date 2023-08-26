@@ -182,5 +182,11 @@ export default {
   },
   getSummaryCashClose: (state) => {
     return state.summaryCashClose
+  },
+  getShowSummaryReverseOrder: (state) => {
+    return state.isShowSummaryReverseOrder
+  },
+  getSummaryReverseOrder: (state) => {
+    return state.summaryReverseOrder
   }
 }

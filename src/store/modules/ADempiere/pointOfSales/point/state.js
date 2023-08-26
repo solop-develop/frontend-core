@@ -52,5 +52,7 @@ export default {
   isShowSummaryCashOpen: false,
   summaryCashOpen: {},
   isShowSummaryCashClose: false,
-  summaryCashClose: {}
+  summaryCashClose: {},
+  isShowSummaryReverseOrder: false,
+  summaryReverseOrder: {}
 }
