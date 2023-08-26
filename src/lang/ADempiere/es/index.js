@@ -340,7 +340,7 @@ export default {
           dateTo: 'Fecha Hasta',
           dateOrder: 'Fecha Orden',
           dateFrom: 'Fecha Desde',
-          productSearch: 'Búsqueda de Producto'
+          productQuery: 'Consulta de Producto'
         }
       },
       generalNotifications: {

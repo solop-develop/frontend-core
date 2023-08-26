@@ -339,7 +339,7 @@ export default {
           dateTo: 'Date To',
           dateOrder: 'Date Order',
           dateFrom: 'Date From',
-          productSearch: 'Product Search'
+          productQuery: 'Product Query'
         }
       },
       generalNotifications: {
