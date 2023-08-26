@@ -111,5 +111,11 @@ export default {
   },
   setSummaryReverseOrder(state, order) {
     state.summaryReverseOrder = order
+  },
+  setShowConfirmDelivery(state, show) {
+    state.isShowConfirmDelivery = show
+  },
+  setSummaryConfirmDelivery(state, summary) {
+    state.summaryConfirmDelivery = summary
   }
 }

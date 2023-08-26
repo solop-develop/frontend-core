@@ -54,5 +54,7 @@ export default {
   isShowSummaryCashClose: false,
   summaryCashClose: {},
   isShowSummaryReverseOrder: false,
-  summaryReverseOrder: {}
+  summaryReverseOrder: {},
+  isShowConfirmDelivery: false,
+  summaryConfirmDelivery: {}
 }
