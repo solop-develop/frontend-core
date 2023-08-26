@@ -328,6 +328,7 @@ export default {
           successfulCashWithdrawal: 'Retiro de caja exitoso',
           cashCloseBox: 'Caja Cerrada',
           closeBox: 'Cierre de Caja',
+          detailedCloseBox: 'Cierre de Caja Detallado',
           assignSeller: 'Asignar vendedor',
           unassignSeller: 'Desasignar vendedor'
         },
@@ -426,6 +427,11 @@ export default {
         isCashWith: 'Usar Fondos de Caja',
         collectionAgent: 'Agente Cobrador',
         paymentMethods: 'Métodos de Pago',
+        paymentMethod: 'Método de Pago',
+        customer: 'Cliente',
+        seller: 'Vendedor',
+        currency: 'Moneda',
+        amount: 'Monto',
         transferFunds: 'Transferir Fondos',
         emptyRate: 'Sin tasa de conversión a la fecha',
         TenderType: {

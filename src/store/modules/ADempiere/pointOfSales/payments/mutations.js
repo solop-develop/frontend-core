@@ -86,6 +86,12 @@ export default {
   setListCashSummary(state, list) {
     state.listCashSummary = list
   },
+  setListCashSummaryMovements(state, list) {
+    state.listCashSummaryMovements = list
+  },
+  setIsShowCashSummaryMovements(state, show) {
+    state.isShowCashSummaryMovements = show
+  },
   setListCastOpen(state, shipment) {
     state.listCastOpen = shipment
   },

@@ -73,6 +73,12 @@ export default {
   getListCashSummary: (state) => {
     return state.listCashSummary
   },
+  getListCashSummaryMovements: (state) => {
+    return state.listCashSummaryMovements
+  },
+  getIsShowCashSummaryMovements: (state) => {
+    return state.isShowCashSummaryMovements
+  },
   getCurrentCustomerBankAccount: (state) => {
     return state.currentCustomerBankAccount
   },

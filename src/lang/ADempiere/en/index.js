@@ -328,7 +328,8 @@ export default {
           cashOpenBox: 'Cashbox Opened',
           cashwithdrawal: 'Cash Withdrawal',
           successfulCashWithdrawal: 'Cash withdrawal successful',
-          cashCloseBox: 'Cashbox Closed'
+          cashCloseBox: 'Cashbox Closed',
+          detailedCloseBox: 'Detailed Cash Closing'
         },
         generalOptions: {
           title: 'General Options',
@@ -421,6 +422,11 @@ export default {
         noDayRate: 'No daily rate has been generated for the currency',
         refund: 'Refund',
         paymentMethods: 'Payment Methods',
+        paymentMethod: 'Payment Method',
+        customer: 'Customer',
+        seller: 'Seller',
+        currency: 'Currency',
+        amount: 'Amount',
         bankAcount: 'Bank Acount',
         isCashWith: 'Use Cash Funds',
         collectionAgent: 'Collection Agent',

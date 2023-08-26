@@ -1678,3 +1678,25 @@ export function campaigns({
       }
     })
 }
+
+/**
+ * GET List Cash Movements
+ */
+export function listCashMovements({
+  posUuid,
+  customerUuid,
+  salesRepresentativeUuid
+}) {
+  return request({
+    url: `${config.pointOfSales.endpoint}/cash-movements`,
+    method: 'get',
+    params: {
+      pos_uuid: posUuid,
+      cuatomer_uuid: customerUuid,
+      sales_representative_uuid: salesRepresentativeUuid
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}

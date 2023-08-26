@@ -147,6 +147,9 @@ export default {
     setShowCashSummaryMovements(state, payload) {
       state.showCashSummaryMovements = payload
     },
+    setShowCashClosedSummaryMovements(state, payload) {
+      state.isShowCashSummaryMovements = payload
+    },
     setShowAssignSeller(state, payload) {
       state.showAssignSeller = payload
     },

@@ -28,6 +28,7 @@ import {
   listCustomerBankAccounts,
   // Cash Summary Movements
   cashSummaryMovements,
+  listCashMovements,
   RefundReferenceRequest,
   listRefundReference,
   deleteRefundReference
@@ -719,6 +720,32 @@ export default {
     })
       .then(response => {
         commit('setListCashSummary', response)
+      })
+  },
+  listCashMovementsSummary({ commit, state, rootGetters }, {
+    posUuid,
+    customerUuid,
+    salesRepresentativeUuid
+  }) {
+    if (isEmptyValue(posUuid)) {
+      posUuid = rootGetters.posAttributes.currentPointOfSales.uuid
+    }
+    listCashMovements({
+      posUuid,
+      customerUuid,
+      salesRepresentativeUuid
+    })
+      .then(response => {
+        const records = response.records.map(list => {
+          return {
+            ...list,
+            payment_method_name: list.payment_method.name
+          }
+        })
+        commit('setListCashSummaryMovements', {
+          ...response,
+          records
+        })
       })
   },
   listPaymentOpen({ commit, state }, posUuid) {

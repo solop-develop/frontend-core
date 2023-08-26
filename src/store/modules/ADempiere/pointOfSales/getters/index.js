@@ -189,9 +189,9 @@ export default {
   getSummaryReverseOrder: (state) => {
     return state.summaryReverseOrder
   },
-  getShowConfirmDelivery: (state) => {
-    return state.isShowConfirmDelivery
-  },
+  // getShowConfirmDelivery: (state) => {
+  //   return state.isShowConfirmDelivery
+  // },
   getSummaryConfirmDelivery: (state) => {
     return state.summaryConfirmDelivery
   }
