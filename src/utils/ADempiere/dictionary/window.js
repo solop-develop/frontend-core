@@ -236,7 +236,7 @@ export function evaluateDefaultFieldShowed({
 
   // TODO: Evaluated window type
   const permissedDisplayedDefault = [
-    ACTIVE,
+    ACTIVE, 'Name',
     VALUE, DOCUMENT_NO, CURRENCY,
     'DateInvoiced', 'DateOrdered', 'DatePromised',
     'DateTrx', 'MovementDate', 'M_Product_ID', 'QtyEntered',
@@ -296,6 +296,7 @@ export function evaluateDefaultColumnShowed({
 
   // TODO: Evaluated window type
   const permissedDisplayedDefault = [
+    'Name',
     VALUE, DOCUMENT_NO, DOCUMENT_STATUS, CURRENCY,
     'DateInvoiced', 'DateOrdered', 'DatePromised',
     'DateTrx', 'M_Product_ID', 'QtyEntered',
