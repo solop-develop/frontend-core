@@ -27,6 +27,9 @@
     </el-row>
 
     <el-row v-if="!isEmptyValue(dashboardsList)" :gutter="8">
+      <el-col :span="24">
+        <panel-group />
+      </el-col>
       <el-col v-if="!isEmptyValue(mainDashboard)" :span="24" style="padding-right:8px;margin-bottom:2px;">
         <dashboard-definition
           :metadata="mainDashboard"
@@ -62,6 +65,7 @@ import store from '@/store'
 
 // Components and Mixins
 import DashboardDefinition from '@theme/components/ADempiere/Dashboard/index.vue'
+import PanelGroup from '@theme/components/ADempiere/Dashboard/PanelGroupCards'
 import UserInfo from '@/views/profile/components/InfoUser.vue'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -71,6 +75,7 @@ export default defineComponent({
 
   components: {
     UserInfo,
+    PanelGroup,
     DashboardDefinition
   },
 
@@ -83,13 +88,32 @@ export default defineComponent({
       return store.getters.getStoredMainDashboard
     })
 
+    const listDocumentTasks = computed(() => {
+      const list = dashboardsList.value
+      if (isEmptyValue(list)) {
+        return []
+      }
+      if (!isEmptyValue(mainDashboard.value)) {
+        return list.filter(dashboard => {
+          if (mainDashboard.value.id !== dashboard.id && dashboard.fileName === 'docstatus') {
+            return dashboard
+          }
+        })
+      }
+      return []
+    })
+
     const listDashboard = computed(() => {
       const list = dashboardsList.value
       if (isEmptyValue(list)) {
         return []
       }
       if (!isEmptyValue(mainDashboard.value)) {
-        return list.filter(dashboard => mainDashboard.value.id !== dashboard.id)
+        return list.filter(dashboard => {
+          if (mainDashboard.value.id !== dashboard.id && dashboard.fileName !== 'docstatus') {
+            return dashboard
+          }
+        })
       }
       return list
     })
@@ -123,6 +147,7 @@ export default defineComponent({
       dashboardsList,
       mainDashboard,
       listDashboard,
+      listDocumentTasks,
       currentRole
     }
   }
