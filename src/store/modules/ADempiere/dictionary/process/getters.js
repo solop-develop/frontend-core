@@ -149,7 +149,6 @@ export default {
    */
   getProcessParametersListToHidden: (state, getters) => ({
     containerUuid,
-    isTable = false,
     fieldsList = [],
     showedMethod = isDisplayedField,
     isEvaluateDefaultValue = false,
@@ -165,12 +164,14 @@ export default {
     // all optionals (not mandatory) fields
     return fieldsList
       .filter(fieldItem => {
-        const { defaultValue } = fieldItem
-
-        if (fieldItem.isMandatory && !isTable) {
+        if (!fieldItem.isActive) {
+          return
+        }
+        if (fieldItem.isMandatory) {
           return false
         }
 
+        const { defaultValue } = fieldItem
         if (isEvaluateDefaultValue && isEvaluateShowed) {
           return showedMethod(fieldItem) &&
             !isEmptyValue(defaultValue)

@@ -178,9 +178,13 @@ export function evaluateDefaultFieldShowed({
   parentUuid, containerUuid,
   isKey, isParent, columnName,
   defaultValue, parsedDefaultValue,
-  displayType, isShowedFromUser, displayLogic,
+  isShowedFromUser, isDisplayedAsPanel,
+  displayType, displayLogic,
   isMandatory, mandatoryLogic, isMandatoryFromLogic
 }) {
+  if (!isEmptyValue(isDisplayedAsPanel)) {
+    return convertStringToBoolean(isDisplayedAsPanel)
+  }
   if (String(defaultValue).startsWith('@SQL=')) {
     return true
   }
@@ -262,9 +266,12 @@ export function evaluateDefaultColumnShowed({
   parentUuid, containerUuid,
   isKey, isParent, columnName,
   defaultValue, parsedDefaultValue,
-  displayType, isShowedTableFromUser,
+  displayType, isShowedTableFromUser, isDisplayedAsTable,
   isMandatory, mandatoryLogic, isMandatoryFromLogic
 }) {
+  if (!isEmptyValue(isDisplayedAsTable)) {
+    return convertStringToBoolean(isDisplayedAsTable)
+  }
   if (String(defaultValue).startsWith('@SQL=')) {
     return true
   }
@@ -2209,14 +2216,14 @@ export const containerManager = {
 
   applyCustomization({
     containerUuid,
-    level,
+    levelType,
     levelId,
     levelUuid,
     fieldAttributes
   }) {
     return requestSaveWindowCustomization({
       tabUuid: containerUuid,
-      level,
+      levelType,
       levelId,
       levelUuid,
       fieldAttributes

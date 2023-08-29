@@ -25,6 +25,7 @@ import { generateField } from '@/utils/ADempiere/dictionaryUtils'
 import { sortFields } from '@/utils/ADempiere/dictionary/panel'
 import { BUTTON, isAddRangeField, isHiddenField } from '@/utils/ADempiere/references'
 import { requestSaveProcessCustomization } from '@/api/ADempiere/user-customization/process'
+import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
 
 /**
  * Is displayed field parameter in process/report panel
@@ -50,8 +51,12 @@ export function isDisplayedField({ displayType, isActive, isDisplayed, displayLo
  */
 export function evaluateDefaultFieldShowed({
   defaultValue, displayType, parsedDefaultValue,
-  isMandatory, isShowedFromUser, displayLogic
+  isShowedFromUser, isDisplayedAsPanel,
+  isMandatory, displayLogic
 }) {
+  if (!isEmptyValue(isDisplayedAsPanel)) {
+    return convertStringToBoolean(isDisplayedAsPanel)
+  }
   if (!isEmptyValue(displayLogic)) {
     return true
   }
@@ -367,14 +372,14 @@ export const containerManager = {
 
   applyCustomization({
     containerUuid,
-    level,
+    levelType,
     levelId,
     levelUuid,
     fieldAttributes
   }) {
     return requestSaveProcessCustomization({
       processUuid: containerUuid,
-      level,
+      levelType,
       levelId,
       levelUuid,
       fieldAttributes

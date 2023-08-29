@@ -34,6 +34,7 @@ import { isHiddenField } from '@/utils/ADempiere/references'
 import { showNotification } from '@/utils/ADempiere/notification.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
+import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
 
 /**
  * Is displayed field in panel query criteria
@@ -51,10 +52,14 @@ export function isDisplayedField({ displayType, isActive, isQueryCriteria, displ
  * Default showed field from user
  */
 export function evaluateDefaultFieldShowed({
-  displayType, isQueryCriteria, isShowedFromUser,
+  displayType, isQueryCriteria,
+  isShowedFromUser, isDisplayedAsPanel,
   defaultValue, parsedDefaultValue, displayLogic,
   isMandatory, isMandatoryFromLogic, mandatoryLogic
 }) {
+  if (!isEmptyValue(isDisplayedAsPanel)) {
+    return convertStringToBoolean(isDisplayedAsPanel)
+  }
   if (!isEmptyValue(displayLogic)) {
     return true
   }
@@ -87,9 +92,13 @@ export function isReadOnlyField({ isQueryCriteria, isReadOnlyFromLogic }) {
 }
 
 export function evaluateDefaultColumnShowed({
-  isKey, isActive, displayType, isDisplayed, isShowedTableFromUser,
+  isKey, isActive, displayType, isDisplayed,
+  isShowedTableFromUser, isDisplayedAsTable,
   isMandatory, isMandatoryFromLogic, mandatoryLogic
 }) {
+  if (!isEmptyValue(isDisplayedAsTable)) {
+    return convertStringToBoolean(isDisplayedAsTable)
+  }
   // const isDisplayedColumnGenerated = isDisplayedColumn({
   //   isKey,
   //   isActive,
@@ -594,14 +603,14 @@ export const containerManager = {
 
   applyCustomization({
     containerUuid,
-    level,
+    levelType,
     levelId,
     levelUuid,
     fieldAttributes
   }) {
     return requestSaveBrowseCustomization({
       browseUuid: containerUuid,
-      level,
+      levelType,
       levelId,
       levelUuid,
       fieldAttributes

@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ import { request } from '@/utils/ADempiere/request'
 /**
  * Apply customization to browser
  * @param {string} browseUuid
- * @param {number} level
+ * @param {number} levelType
  * @param {number} levelId
  * @param {string} levelUuid
  * @param {array}
@@ -30,7 +30,7 @@ import { request } from '@/utils/ADempiere/request'
  */
 export function requestSaveBrowseCustomization({
   browseUuid,
-  level,
+  levelType,
   levelId,
   levelUuid,
   fieldAttributes
@@ -40,7 +40,7 @@ export function requestSaveBrowseCustomization({
     method: 'post',
     data: {
       browse_uuid: browseUuid,
-      level,
+      level_type: levelType,
       level_id: levelId,
       level_uuid: levelUuid,
       field_attributes: fieldAttributes

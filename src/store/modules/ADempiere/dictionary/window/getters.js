@@ -368,6 +368,9 @@ export default {
     // all optionals (not mandatory) fields
     return fieldsList
       .filter(fieldItem => {
+        if (!fieldItem.isActive) {
+          return
+        }
         const isMandatory = mandatoryMethod(fieldItem)
 
         // parent column
@@ -378,7 +381,7 @@ export default {
         const { defaultValue } = fieldItem
         const isYesNo = fieldItem.displayType === YES_NO.id
         if (isMandatory && (isEmptyValue(defaultValue) && !isYesNo)) {
-          return true
+          return false
         }
 
         if (isEvaluateDefaultValue && isEvaluateShowed) {
