@@ -525,15 +525,15 @@ export function getProductPriceList({
 }
 
 export function printTicket({
-  posUuid,
-  orderUuid
+  posId,
+  orderId
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/print-ticket`,
     method: 'post',
     data: {
-      pos_uuid: posUuid,
-      order_uuid: orderUuid
+      pos_id: posId,
+      order_id: orderId
     }
   })
     .then(printTicketResponse => {
