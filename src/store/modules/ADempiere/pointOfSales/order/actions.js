@@ -60,7 +60,7 @@ export default {
       salesRepresentativeUuid: rootGetters['user/getUserUuid'],
       priceListUuid: priceListUuid,
       warehouseUuid: currentWarehouse.uuid,
-      campaignUuid: defaultCampaign.uuid
+      campaignUuid: isEmptyValue(defaultCampaign) ? '' : defaultCampaign.uuid
     })
       .then(order => {
         commit('setOrder', order)
