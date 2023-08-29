@@ -65,7 +65,7 @@ import store from '@/store'
 
 // Components and Mixins
 import DashboardDefinition from '@theme/components/ADempiere/Dashboard/index.vue'
-import PanelGroup from '@theme/components/ADempiere/Dashboard/PanelGroupCards'
+import PanelGroup from '@/views/dashboard/admin/components/PanelGroup.vue'
 import UserInfo from '@/views/profile/components/InfoUser.vue'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -88,21 +88,6 @@ export default defineComponent({
       return store.getters.getStoredMainDashboard
     })
 
-    const listDocumentTasks = computed(() => {
-      const list = dashboardsList.value
-      if (isEmptyValue(list)) {
-        return []
-      }
-      if (!isEmptyValue(mainDashboard.value)) {
-        return list.filter(dashboard => {
-          if (mainDashboard.value.id !== dashboard.id && dashboard.fileName === 'docstatus') {
-            return dashboard
-          }
-        })
-      }
-      return []
-    })
-
     const listDashboard = computed(() => {
       const list = dashboardsList.value
       if (isEmptyValue(list)) {
@@ -110,7 +95,7 @@ export default defineComponent({
       }
       if (!isEmptyValue(mainDashboard.value)) {
         return list.filter(dashboard => {
-          if (mainDashboard.value.id !== dashboard.id && dashboard.fileName !== 'docstatus') {
+          if (mainDashboard.value.id !== dashboard.id) {
             return dashboard
           }
         })
@@ -147,7 +132,6 @@ export default defineComponent({
       dashboardsList,
       mainDashboard,
       listDashboard,
-      listDocumentTasks,
       currentRole
     }
   }

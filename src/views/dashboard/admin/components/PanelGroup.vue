@@ -1,54 +1,28 @@
 <template>
   <el-row :gutter="40" class="panel-group">
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <el-col
+      v-for="taks in mainTaks"
+      :key="taks.id"
+      :xs="12"
+      :sm="12"
+      :lg="6"
+      class="card-panel-col"
+    >
       <div class="card-panel" @click="handleSetLineChartData('newVisitis')">
-        <div class="card-panel-icon-wrapper icon-people">
-          <svg-icon icon-class="peoples" class-name="card-panel-icon" />
+        <div :class="taks.classCard">
+          <svg-icon :icon-class="taks.svg" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            New Visits
+            {{ taks.name }}
           </div>
-          <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" />
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('messages')">
-        <div class="card-panel-icon-wrapper icon-message">
-          <svg-icon icon-class="message" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            Messages
-          </div>
-          <count-to :start-val="0" :end-val="81212" :duration="3000" class="card-panel-num" />
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('purchases')">
-        <div class="card-panel-icon-wrapper icon-money">
-          <svg-icon icon-class="money" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            Purchases
-          </div>
-          <count-to :start-val="0" :end-val="9280" :duration="3200" class="card-panel-num" />
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('shoppings')">
-        <div class="card-panel-icon-wrapper icon-shopping">
-          <svg-icon icon-class="shopping" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            Shoppings
-          </div>
-          <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num" />
+          <count-to
+            :start-val="0"
+            :end-val="taks.recordCount"
+            :duration="2600"
+            class="card-panel-num"
+            style="float: right;"
+          />
         </div>
       </div>
     </el-col>
@@ -56,18 +30,106 @@
 </template>
 
 <script>
+import { defineComponent, computed } from '@vue/composition-api'
 import CountTo from 'vue-count-to'
+import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
+import store from '@/store'
 
-export default {
+export default defineComponent({
   components: {
     CountTo
   },
-  methods: {
-    handleSetLineChartData(type) {
-      this.$emit('handleSetLineChartData', type)
+  setup(props) {
+    const documentList = computed(() => {
+      return store.getters.getListTaks.map(taks => {
+        iconClass(taks)
+        return {
+          ...taks,
+          svg: iconClass(taks)
+        }
+      })
+    })
+
+    const mainTaks = computed(() => {
+      const list = documentList.value.splice(0, 4)
+      return list.map((currentValue, index, array) => {
+        let classCard = 'card-panel-icon-wrapper icon-people'
+        switch (index) {
+          case 1:
+            classCard = 'card-panel-icon-wrapper icon-message'
+            break
+          case 2:
+            classCard = 'card-panel-icon-wrapper icon-money'
+            break
+          case 3:
+            classCard = 'card-panel-icon-wrapper icon-shopping'
+            break
+        }
+        return {
+          ...currentValue,
+          classCard
+        }
+      })
+    })
+
+    function loadPendingDocuments() {
+      store.dispatch('listPendingDocuments')
+    }
+
+    function handleClick(taks) {
+      let tabParent
+      if (taks.action === 'window') {
+        tabParent = 0
+      }
+
+      zoomIn({
+        uuid: taks.windowUuid,
+        params: {
+          ...taks.criteria
+        },
+        query: {
+          tabParent,
+          action: 'criteria'
+        }
+      })
+    }
+
+    function iconClass(taks) {
+      const { criteria } = taks
+      const { tableName } = criteria
+      let icon = ''
+      switch (tableName) {
+        case 'C_Order':
+          icon = 'order'
+          break
+        case 'C_BPartner':
+          icon = 'b-partner'
+          break
+        case 'C_Payment':
+          icon = 'shopping'
+          break
+        case 'M_InOut':
+          icon = 'local-shipping'
+          break
+        case 'HR_Process':
+          icon = 'peoples'
+          break
+      }
+      return icon
+    }
+
+    loadPendingDocuments()
+
+    return {
+      // Computed
+      mainTaks,
+      documentList,
+      // Methods
+      handleClick,
+      loadPendingDocuments
     }
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>
@@ -143,8 +205,9 @@ export default {
     .card-panel-description {
       float: right;
       font-weight: bold;
-      margin: 26px;
+      margin: 15px;
       margin-left: 0px;
+      margin-right: 10px;
 
       .card-panel-text {
         line-height: 18px;
