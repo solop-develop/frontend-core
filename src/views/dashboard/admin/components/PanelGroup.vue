@@ -8,7 +8,7 @@
       :lg="6"
       class="card-panel-col"
     >
-      <div class="card-panel" @click="handleSetLineChartData('newVisitis')">
+      <div class="card-panel" @click="handleClick(taks)">
         <div :class="taks.classCard">
           <svg-icon :icon-class="taks.svg" class-name="card-panel-icon" />
         </div>
