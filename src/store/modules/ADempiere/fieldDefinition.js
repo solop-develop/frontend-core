@@ -32,7 +32,8 @@ const initStateLookup = {
   referenceList: [],
   fieldsList: [],
   validationRuleList: [],
-  defaultSizeField: {}
+  defaultSizeField: {},
+  isShowNewSequence: false
 }
 
 const field = {
@@ -67,6 +68,9 @@ const field = {
     },
     setShowFieldOption(state, isShowed = false) {
       state.isShowFieldOption = isShowed
+    },
+    setShowNewSequence(state, isShowed = false) {
+      state.isShowNewSequence = isShowed
     }
   },
   actions: {
@@ -163,6 +167,9 @@ const field = {
     },
     getIsShowFieldOption(state) {
       return state.isShowFieldOption
+    },
+    getShowNewSequence(state) {
+      return state.isShowNewSequence
     }
   }
 }
