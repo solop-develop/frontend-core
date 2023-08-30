@@ -50,7 +50,8 @@ const listProductPrice = {
       isShowPopoverField: false, // with field
       isShowPopoverMenu: false // with menu
     },
-    searchProduct: ''
+    searchProduct: '',
+    showProductSearch: false
   },
 
   mutations: {
@@ -72,6 +73,9 @@ const listProductPrice = {
     },
     updtaeSearchProduct(state, searchProduct) {
       state.searchProduct = searchProduct
+    },
+    setShowProductSearch(state, show) {
+      state.showProductSearch = show
     }
   },
 
@@ -179,6 +183,9 @@ const listProductPrice = {
     },
     getShowProductPriceList: (state) => {
       return state.showedProductPriceList
+    },
+    getShowProductSearch: (state) => {
+      return state.showProductSearch
     }
   }
 
