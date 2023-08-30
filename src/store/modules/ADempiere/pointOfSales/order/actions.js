@@ -357,9 +357,12 @@ export default {
       orderId
     })
       .then(response => {
+        const { is_error, summary } = response
+        const type = is_error ? 'error' : 'success'
+        const message = isEmptyValue(summary) ? (is_error ? 'Error' : 'OK') : summary
         showMessage({
-          type: 'success',
-          message: response,
+          type,
+          message,
           showClose: true
         })
         return response
