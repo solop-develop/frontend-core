@@ -320,17 +320,17 @@ export default {
         },
         cashManagement: {
           title: 'Cash Management',
-          cashOpening: 'Cash Opening',
-          closeBox: 'Close the box',
+          cashOpening: 'Cash',
+          closeBox: 'Close',
           assignSeller: 'Assign seller',
           unassignSeller: 'Unassign Seller',
           transfer: 'Transfer',
-          moneyIncome: 'Money Income',
+          moneyIncome: 'Income',
           cashOpenBox: 'Cashbox Opened',
-          cashwithdrawal: 'Cash Withdrawal',
+          cashwithdrawal: 'Withdrawal',
           successfulCashWithdrawal: 'Cash withdrawal successful',
           cashCloseBox: 'Cashbox Closed',
-          detailedCloseBox: 'Detailed Cash Closing'
+          detailedCloseBox: 'Detailed Closing'
         },
         generalOptions: {
           title: 'General Options',
