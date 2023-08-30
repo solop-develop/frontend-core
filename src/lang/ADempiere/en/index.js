@@ -320,7 +320,7 @@ export default {
         },
         cashManagement: {
           title: 'Cash Management',
-          cashOpening: 'Cash',
+          cashOpening: 'Opening',
           closeBox: 'Close',
           assignSeller: 'Assign seller',
           unassignSeller: 'Unassign Seller',
