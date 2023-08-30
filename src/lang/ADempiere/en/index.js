@@ -293,6 +293,7 @@ export default {
       fieldDiscountAmount: 'Discount Amount',
       salesDiscountOff: 'Apply Discount on Sale',
       applyDiscountToAllLines: 'Apply Discount to All Lines',
+      returnProduct: 'Return Product',
       discountRate: '% Descuent',
       optionsPoinSales: {
         title: 'Quick Point of Sales Options',

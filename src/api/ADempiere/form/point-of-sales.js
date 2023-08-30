@@ -1700,3 +1700,215 @@ export function listCashMovements({
       return camelizeObjectKeys(response)
     })
 }
+
+/**
+ * CopyOrder
+ * Request for Copy a Order from Source Order
+ * req.query.source_order_id - Source Order ID
+ * req.query.pos_id - Pos ID
+ */
+
+export function copyOrder({
+  sourceOrderId,
+  posId
+}) {
+  return request({
+    url: `${config.pointOfSales.endpoint}/copy-order`,
+    method: 'get',
+    params: {
+      source_order_id: sourceOrderId,
+      pos_id: posId
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+/**
+ * Create RMA
+ * Request for create a Return from Order
+ * req.query.pos_id - Pos ID
+ * req.query.source_order_id - Source Order ID
+ * req.query.sales_representative_id - Sales Representative ID
+ * req.query.is_create_lines_from_order - Create Lines From Order
+ */
+
+export function createRMA({
+  isCreateLinesFromOrder,
+  salesRepresentativeId,
+  sourceOrderId,
+  posId
+}) {
+  return request({
+    url: `${config.pointOfSales.endpoint}/create-RMA`,
+    method: 'get',
+    params: {
+      is_create_lines_from_order: isCreateLinesFromOrder,
+      sales_representative_id: salesRepresentativeId,
+      source_order_id: sourceOrderId,
+      pos_id: posId
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+/**
+ * Delete RMA
+ * Request for create a Return from Order
+ * req.query.pos_id - Pos ID
+ * req.query.source_order_id - Source Order ID
+ * req.query.sales_representative_id - Sales Representative ID
+ * req.query.is_create_lines_from_order - Create Lines From Order
+ */
+
+export function deleteRMA({
+  rmaId,
+  posId
+}) {
+  return request({
+    url: `${config.pointOfSales.endpoint}/delete-RMA`,
+    method: 'get',
+    params: {
+      rma_id: rmaId,
+      pos_id: posId
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+/**
+ * Create Return Line
+ */
+export function createRMALine({
+  sourceOrderLineId,
+  description,
+  quantity,
+  rmaId,
+  posId
+}) {
+  return request({
+    url: `${config.pointOfSales.endpoint}/create-RMA-line`,
+    method: 'get',
+    params: {
+      source_order_line_id: sourceOrderLineId,
+      rma_id: rmaId,
+      pos_id: posId,
+      description,
+      quantity
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+/**
+ * Create Return Line
+ */
+export function deleteRMALine({
+  rmaId,
+  posId
+}) {
+  return request({
+    url: `${config.pointOfSales.endpoint}/delete-RMA-line`,
+    method: 'get',
+    params: {
+      rma_id: rmaId,
+      pos_id: posId
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+/**
+ * Update RMA Line
+ */
+export function updateRMALine({
+  description,
+  quantity,
+  rmaId,
+  posId
+}) {
+  return request({
+    url: `${config.pointOfSales.endpoint}/update-RMA-line`,
+    method: 'get',
+    params: {
+      rma_id: rmaId,
+      pos_id: posId,
+      description,
+      quantity
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+/**
+ * Get a Open Return
+ */
+export function getOpenRMA({
+  sourceOrderId,
+  posId
+}) {
+  return request({
+    url: `${config.pointOfSales.endpoint}/get-open-RMA`,
+    method: 'get',
+    params: {
+      source_order_id: sourceOrderId,
+      pos_id: posId
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+/**
+ * List Return Line
+ */
+
+export function listRMALines({
+  posId,
+  sourceOrderId
+}) {
+  return request({
+    url: `${config.pointOfSales.endpoint}/list-RMA-lines`,
+    method: 'get',
+    params: {
+      pos_id: posId,
+      source_order_id: sourceOrderId
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+/**
+ * Process Return
+ */
+
+export function processRMA({
+  posId,
+  sourceOrderId
+}) {
+  return request({
+    url: `${config.pointOfSales.endpoint}/process-RMA`,
+    method: 'get',
+    params: {
+      pos_id: posId,
+      source_order_id: sourceOrderId
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}

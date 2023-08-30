@@ -13,7 +13,7 @@ const initStateUtils = {
   isContainerInfo: false,
   documentAction: [],
   splitWidthRight: 3,
-  splitWidthLeft: 3,
+  splitWidthLeft: 2,
   parametersProcessPos: [],
   updateOrder: false,
   updatePayment: false,
