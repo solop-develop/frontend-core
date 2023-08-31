@@ -721,6 +721,15 @@ export default {
       .then(response => {
         commit('setListCashSummary', response)
       })
+      .catch(error => {
+        this.$message({
+          message: error.message,
+          isShowClose: true,
+          type: 'error'
+        })
+        commit('setListCashSummary', [])
+        console.warn(`Error: ${error.message}. Code: ${error.code}.`)
+      })
   },
   listCashMovementsSummary({ commit, state, rootGetters }, {
     posUuid,
@@ -746,6 +755,17 @@ export default {
           ...response,
           records
         })
+      })
+      .catch(error => {
+        this.$message({
+          message: error.message,
+          isShowClose: true,
+          type: 'error'
+        })
+        commit('setListCashSummaryMovements', {
+          records: []
+        })
+        console.warn(`Error: ${error.message}. Code: ${error.code}.`)
       })
   },
   listPaymentOpen({ commit, state }, posUuid) {
