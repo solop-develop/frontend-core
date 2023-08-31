@@ -1620,7 +1620,7 @@ export function listUom({
 export function banks({
   posUuid,
   searchValue,
-  pageSize = 50,
+  pageSize = 150,
   pageToken
 }) {
   return request({
