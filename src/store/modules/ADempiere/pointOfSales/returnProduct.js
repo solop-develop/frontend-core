@@ -18,18 +18,23 @@
 
 // API Request Methods
 import {
+  getOpenRMA,
   listRMALines
-} from '@/api/ADempiere/form/point-of-sales.js'
+} from '@/api/ADempiere/form/ReturnRMA.js'
 
 // utils and helper methods
 import { showMessage } from '@/utils/ADempiere/notification.js'
 const returnProduct = {
   state: {
     showPanelReturnProduct: false,
-    listProduct: []
+    listProduct: [],
+    orderReturnProduct: {}
   },
 
   mutations: {
+    setOrderReturn(state, RMA) {
+      state.orderReturnProduct = RMA
+    },
     setShowReturnProduct(state, value) {
       state.showPanelReturnProduct = value
     },
@@ -58,6 +63,30 @@ const returnProduct = {
             resolve([])
           })
       })
+    },
+    openRMA({ commit }, {
+      sourceOrderId,
+      posId
+    }) {
+      return new Promise(resolve => {
+        getOpenRMA({
+          sourceOrderId,
+          posId
+        })
+          .then(response => {
+            commit('setOrderReturn', response)
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Get Get Open RMA: ${error.message}. Code: ${error.code}.`)
+            showMessage({
+              type: 'error',
+              message: error.message,
+              showClose: true
+            })
+            resolve([])
+          })
+      })
     }
   },
   getters: {
@@ -66,6 +95,9 @@ const returnProduct = {
     },
     getListProduct: (state) => {
       return state.listProduct
+    },
+    getOrderReturn: (state) => {
+      return state.orderReturnProduct
     }
   }
 }
