@@ -22,7 +22,7 @@ const expressMovement = {
     warehouse: 'Base Warehouse',
     warehouseTo: 'Destination Warehouse',
     productcode: 'Product code',
-    documentNo: 'Document nr',
+    documentNo: 'Document No',
     dateMoviment: 'Movement Date'
   },
   movimentComplete: 'Moviment Completo'
