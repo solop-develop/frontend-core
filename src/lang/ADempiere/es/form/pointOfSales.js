@@ -28,7 +28,11 @@ const pointOfSales = {
   collection: {
     chargeAmount: 'Cargo',
     creditAmount: 'Abono',
-    others: 'Otros'
+    others: 'Otros',
+    customerAccount: 'Cuenta de Cliente',
+    recipientBank: 'Banco Receptor',
+    issuingBank: 'Banco Emisor',
+    bank: 'Banco'
   },
   conversionRate: {
     withoutConversionRate: 'No existe tasa de cambio registrada al día '
