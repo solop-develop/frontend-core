@@ -1711,7 +1711,7 @@ export function copyOrder({
     method: 'post',
     data: {
       pos_id: posId,
-      cuatomer_id: orderId,
+      source_order_id: orderId,
       sales_representative_id: salesRepresentativeId
     }
   })
