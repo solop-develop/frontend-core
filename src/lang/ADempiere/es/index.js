@@ -488,6 +488,12 @@ export default {
         addProduct: 'agregar producto',
         invoiceOpen: 'generar factura con un saldo abierto',
         newOrder: 'crear nueva orden'
+      },
+      orderRMA: {
+        addProduct: 'Producto Agregado',
+        deleteProduct: 'Producto Eliminado',
+        document: 'El Documento',
+        process: 'Fue Procesado'
       }
     },
     byInvoice: {

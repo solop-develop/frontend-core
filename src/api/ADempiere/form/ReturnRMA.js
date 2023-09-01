@@ -129,14 +129,14 @@ export function createRMALine({
  * Delete Return Line
  */
 export function deleteRMALine({
-  rmaId,
+  id,
   posId
 }) {
   return request({
-    url: `${config.pointOfSales.endpoint}/delete-RMA-line`,
-    method: 'get',
+    url: `${config.pointOfSales.endpoint}/return-material/line`,
+    method: 'DELETE',
     params: {
-      rma_id: rmaId,
+      id,
       pos_id: posId
     }
   })
@@ -215,15 +215,17 @@ export function listRMALines({
  * Process Return
  */
 export function processRMA({
+  documentAction = 'CO',
   posId,
-  sourceOrderId
+  id
 }) {
   return request({
-    url: `${config.pointOfSales.endpoint}/process-RMA`,
-    method: 'get',
-    params: {
+    url: `${config.pointOfSales.endpoint}/return-material/process-rma`,
+    method: 'post',
+    data: {
+      id,
       pos_id: posId,
-      source_order_id: sourceOrderId
+      document_action: documentAction
     }
   })
     .then(response => {

@@ -16,15 +16,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import lang from '@/lang'
+
 // API Request Methods
 import {
   createRMA,
+  processRMA,
   // Line
   createRMALine,
-  listRMALines
+  listRMALines,
+  deleteRMALine
 } from '@/api/ADempiere/form/ReturnRMA.js'
 
 // utils and helper methods
+import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 const returnProduct = {
   state: {
@@ -51,11 +56,13 @@ const returnProduct = {
     listReturnProduct({ commit, rootGetters }) {
       return new Promise(resolve => {
         listRMALines({
-          posUuid: rootGetters.posAttributes.currentPointOfSales.id,
+          posId: rootGetters.posAttributes.currentPointOfSales.id,
           rmaId: rootGetters.getOrderReturn.id
         })
           .then(response => {
-            commit('setListProduct', [])
+            const { records } = response
+            const list = records.map(line => camelizeObjectKeys(line))
+            commit('setListProduct', list)
             resolve([])
           })
           .catch(error => {
@@ -69,23 +76,21 @@ const returnProduct = {
           })
       })
     },
-    openRMA({ commit }, {
-      sourceOrderId,
-      posId
-    }) {
+    openRMA({ commit, dispatch, rootGetters }) {
       return new Promise(resolve => {
         commit('setOrderReturn', {
           isLoading: true
         })
         createRMA({
-          sourceOrderId,
-          posId
+          posId: rootGetters.posAttributes.currentPointOfSales.id,
+          sourceOrderId: rootGetters.posAttributes.currentPointOfSales.currentOrder.id
         })
           .then(response => {
             commit('setOrderReturn', {
               ...response,
               isLoading: false
             })
+            dispatch('listReturnProduct')
             resolve(response)
           })
           .catch(error => {
@@ -118,7 +123,13 @@ const returnProduct = {
           posId
         })
           .then(response => {
-            dispatch('listRMALines')
+            showMessage({
+              type: 'success',
+              message: `${lang.t('form.pos.orderRMA.addProduct')} - ${response.product.name}`,
+              showClose: true
+            })
+            dispatch('listReturnProduct')
+            dispatch('openRMA')
             resolve(response)
           })
           .catch(error => {
@@ -129,6 +140,67 @@ const returnProduct = {
               showClose: true
             })
             resolve(error)
+          })
+      })
+    },
+    deleteLineRMA({ dispatch }, {
+      id,
+      posId
+    }) {
+      return new Promise(resolve => {
+        deleteRMALine({
+          id,
+          posId
+        })
+          .then(response => {
+            showMessage({
+              type: 'success',
+              message: `${lang.t('form.pos.orderRMA.deleteProduct')}`,
+              showClose: true
+            })
+            dispatch('listReturnProduct')
+            dispatch('openRMA')
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Get Get Open RMA: ${error.message}. Code: ${error.code}.`)
+            showMessage({
+              type: 'error',
+              message: error.message,
+              showClose: true
+            })
+            resolve(error)
+          })
+      })
+    },
+    processRma({ commit, rootGetters }) {
+      return new Promise(resolve => {
+        commit('setShowReturnProduct', false)
+        processRMA({
+          posId: rootGetters.posAttributes.currentPointOfSales.id,
+          id: rootGetters.getOrderReturn.id
+        })
+          .then(response => {
+            showMessage({
+              type: 'success',
+              message: `${lang.t('form.pos.orderRMA.document')} ${response.documentNo} - ${lang.t('form.pos.orderRMA.process')}`,
+              showClose: true
+            })
+            commit('setOrderReturn', {
+              ...response,
+              isLoading: false
+            })
+            resolve([])
+          })
+          .catch(error => {
+            console.warn(`Get List Campaigns: ${error.message}. Code: ${error.code}.`)
+            showMessage({
+              type: 'error',
+              message: error.message,
+              showClose: true
+            })
+            commit('setShowReturnProduct', true)
+            resolve([])
           })
       })
     }

@@ -487,6 +487,12 @@ export default {
         addProduct: 'add product',
         invoiceOpen: 'generate invoice with an open balance',
         newOrder: 'create new order'
+      },
+      orderRMA: {
+        addProduct: 'Product Added',
+        deleteProduct: 'Deleted Product',
+        document: 'The Document',
+        process: 'Was Processed'
       }
     },
     byInvoice: {
