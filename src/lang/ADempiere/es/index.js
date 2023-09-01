@@ -430,6 +430,8 @@ export default {
         paymentMethods: 'Métodos de Pago',
         paymentMethod: 'Método de Pago',
         customer: 'Cliente',
+        invoceNr: 'Numero de Factura',
+        orderNr: 'Numero de Orden',
         seller: 'Vendedor',
         currency: 'Moneda',
         amount: 'Monto',

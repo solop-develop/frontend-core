@@ -425,6 +425,8 @@ export default {
         paymentMethods: 'Payment Methods',
         paymentMethod: 'Payment Method',
         customer: 'Customer',
+        invoceNr: 'Invoce',
+        orderNr: 'Document',
         seller: 'Seller',
         currency: 'Currency',
         amount: 'Amount',
