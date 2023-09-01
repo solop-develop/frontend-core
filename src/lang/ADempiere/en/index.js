@@ -495,7 +495,8 @@ export default {
         deleteProduct: 'Deleted Product',
         updateProduct: 'Update Product',
         document: 'The Document',
-        process: 'Was Processed'
+        process: 'Was Processed',
+        createNewSubstituteOrder: 'Create New Substitute Order'
       }
     },
     byInvoice: {

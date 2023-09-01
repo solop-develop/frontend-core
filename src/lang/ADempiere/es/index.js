@@ -496,7 +496,8 @@ export default {
         deleteProduct: 'Producto Eliminado',
         updateProduct: 'Producto Actualizado',
         document: 'El Documento',
-        process: 'Fue Procesado'
+        process: 'Fue Procesado',
+        createNewSubstituteOrder: 'Crear Nueva Orden Sustituta'
       }
     },
     byInvoice: {

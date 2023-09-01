@@ -32,13 +32,16 @@ import {
 // utils and helper methods
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
+
 const returnProduct = {
   state: {
     showPanelReturnProduct: false,
     listProduct: [],
     orderReturnProduct: {
       isLoading: false
-    }
+    },
+    isShowSummary: false,
+    summary: {}
   },
 
   mutations: {
@@ -50,6 +53,12 @@ const returnProduct = {
     },
     setListProduct(state, list) {
       state.listProduct = list
+    },
+    setShowSummaryRMA(state, show) {
+      state.isShowSummary = show
+    },
+    setSummaryRMA(state, summary) {
+      state.summary = summary
     }
   },
 
@@ -73,6 +82,7 @@ const returnProduct = {
               message: error.message,
               showClose: true
             })
+            commit('setListProduct', [])
             resolve([])
           })
       })
@@ -101,9 +111,9 @@ const returnProduct = {
               message: error.message,
               showClose: true
             })
-            commit('setOrderReturn', {
-              isLoading: false
-            })
+            commit('setListProduct', [])
+            commit('setOrderReturn', {})
+            dispatch('listReturnProduct')
             resolve([])
           })
       })
@@ -212,7 +222,7 @@ const returnProduct = {
           })
       })
     },
-    processRma({ commit, rootGetters }) {
+    processRma({ commit, rootGetters, dispatch }) {
       return new Promise(resolve => {
         commit('setShowReturnProduct', false)
         processRMA({
@@ -225,10 +235,24 @@ const returnProduct = {
               message: `${lang.t('form.pos.orderRMA.document')} ${response.documentNo} - ${lang.t('form.pos.orderRMA.process')}`,
               showClose: true
             })
+
+            commit('setSummaryRMA', {
+              label: `${lang.t('form.pos.orderRMA.document')} ${response.documentNo} - ${lang.t('form.pos.orderRMA.process')}`,
+              title: lang.t('form.pos.returnProduct'),
+              lines: rootGetters.getListProduct,
+              type: 'success',
+              order: response
+            })
             commit('setOrderReturn', {
               ...response,
               isLoading: false
             })
+            dispatch('printTicket', {
+              posId: rootGetters.posAttributes.currentPointOfSales.id,
+              orderId: response.id
+            })
+            commit('setShowSummaryRMA', true)
+            // const { IsAllowsPreviewDocument } = rootGetters.posAttributes.currentPointOfSales
             resolve([])
           })
           .catch(error => {
@@ -239,6 +263,14 @@ const returnProduct = {
               showClose: true
             })
             commit('setShowReturnProduct', true)
+            commit('setSummaryRMA', {
+              label: `${error.message} - ${rootGetters.getOrderReturn.documentNo}`,
+              title: lang.t('form.pos.returnProduct'),
+              lines: rootGetters.getListProduct,
+              type: 'success',
+              order: rootGetters.getOrderReturn
+            })
+            commit('setShowSummaryRMA', true)
             resolve([])
           })
       })
@@ -253,6 +285,12 @@ const returnProduct = {
     },
     getOrderReturn: (state) => {
       return state.orderReturnProduct
+    },
+    getShowSummaryRMA: (state) => {
+      return state.isShowSummary
+    },
+    getSummaryRMA: (state) => {
+      return state.summary
     }
   }
 }
