@@ -18,7 +18,9 @@
 
 // API Request Methods
 import {
-  getOpenRMA,
+  createRMA,
+  // Line
+  createRMALine,
   listRMALines
 } from '@/api/ADempiere/form/ReturnRMA.js'
 
@@ -28,12 +30,14 @@ const returnProduct = {
   state: {
     showPanelReturnProduct: false,
     listProduct: [],
-    orderReturnProduct: {}
+    orderReturnProduct: {
+      isLoading: false
+    }
   },
 
   mutations: {
-    setOrderReturn(state, RMA) {
-      state.orderReturnProduct = RMA
+    setOrderReturn(state, rma) {
+      state.orderReturnProduct = rma
     },
     setShowReturnProduct(state, value) {
       state.showPanelReturnProduct = value
@@ -47,7 +51,8 @@ const returnProduct = {
     listReturnProduct({ commit, rootGetters }) {
       return new Promise(resolve => {
         listRMALines({
-          posUuid: rootGetters.posAttributes.currentPointOfSales.id
+          posUuid: rootGetters.posAttributes.currentPointOfSales.id,
+          rmaId: rootGetters.getOrderReturn.id
         })
           .then(response => {
             commit('setListProduct', [])
@@ -69,12 +74,18 @@ const returnProduct = {
       posId
     }) {
       return new Promise(resolve => {
-        getOpenRMA({
+        commit('setOrderReturn', {
+          isLoading: true
+        })
+        createRMA({
           sourceOrderId,
           posId
         })
           .then(response => {
-            commit('setOrderReturn', response)
+            commit('setOrderReturn', {
+              ...response,
+              isLoading: false
+            })
             resolve(response)
           })
           .catch(error => {
@@ -84,7 +95,40 @@ const returnProduct = {
               message: error.message,
               showClose: true
             })
+            commit('setOrderReturn', {
+              isLoading: false
+            })
             resolve([])
+          })
+      })
+    },
+    createLineRMA({ dispatch }, {
+      sourceOrderLineId,
+      description,
+      quantity,
+      rmaId,
+      posId
+    }) {
+      return new Promise(resolve => {
+        createRMALine({
+          sourceOrderLineId,
+          description,
+          quantity,
+          rmaId,
+          posId
+        })
+          .then(response => {
+            dispatch('listRMALines')
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Get Get Open RMA: ${error.message}. Code: ${error.code}.`)
+            showMessage({
+              type: 'error',
+              message: error.message,
+              showClose: true
+            })
+            resolve(error)
           })
       })
     }

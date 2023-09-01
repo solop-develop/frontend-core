@@ -57,16 +57,18 @@ export function createRMA({
   isCreateLinesFromOrder,
   salesRepresentativeId,
   sourceOrderId,
-  posId
+  posId,
+  rmaId
 }) {
   return request({
-    url: `${config.pointOfSales.endpoint}/create-RMA`,
-    method: 'get',
-    params: {
+    url: `${config.pointOfSales.endpoint}/return-material`,
+    method: 'post',
+    data: {
       is_create_lines_from_order: isCreateLinesFromOrder,
       sales_representative_id: salesRepresentativeId,
       source_order_id: sourceOrderId,
-      pos_id: posId
+      pos_id: posId,
+      rma_id: rmaId
     }
   })
     .then(response => {
@@ -111,9 +113,9 @@ export function createRMALine({
   posId
 }) {
   return request({
-    url: `${config.pointOfSales.endpoint}/create-RMA-line`,
-    method: 'get',
-    params: {
+    url: `${config.pointOfSales.endpoint}/return-material/line`,
+    method: 'post',
+    data: {
       source_order_line_id: sourceOrderLineId,
       rma_id: rmaId,
       pos_id: posId,
@@ -196,13 +198,15 @@ export function getOpenRMA({
 
 export function listRMALines({
   posId,
+  rmaId,
   sourceOrderId
 }) {
   return request({
-    url: `${config.pointOfSales.endpoint}/list-RMA-lines`,
+    url: `${config.pointOfSales.endpoint}/return-material/line/list`,
     method: 'get',
     params: {
       pos_id: posId,
+      rma_id: rmaId,
       source_order_id: sourceOrderId
     }
   })
