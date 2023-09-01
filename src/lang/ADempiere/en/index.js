@@ -493,6 +493,7 @@ export default {
       orderRMA: {
         addProduct: 'Product Added',
         deleteProduct: 'Deleted Product',
+        updateProduct: 'Update Product',
         document: 'The Document',
         process: 'Was Processed'
       }

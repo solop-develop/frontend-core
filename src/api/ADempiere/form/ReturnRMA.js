@@ -151,17 +151,17 @@ export function deleteRMALine({
 export function updateRMALine({
   description,
   quantity,
-  rmaId,
-  posId
+  posId,
+  id
 }) {
   return request({
-    url: `${config.pointOfSales.endpoint}/update-RMA-line`,
-    method: 'get',
-    params: {
-      rma_id: rmaId,
+    url: `${config.pointOfSales.endpoint}/return-material/line`,
+    method: 'put',
+    data: {
       pos_id: posId,
       description,
-      quantity
+      quantity,
+      id
     }
   })
     .then(response => {

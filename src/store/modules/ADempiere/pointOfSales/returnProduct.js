@@ -25,6 +25,7 @@ import {
   // Line
   createRMALine,
   listRMALines,
+  updateRMALine,
   deleteRMALine
 } from '@/api/ADempiere/form/ReturnRMA.js'
 
@@ -128,8 +129,6 @@ const returnProduct = {
               message: `${lang.t('form.pos.orderRMA.addProduct')} - ${response.product.name}`,
               showClose: true
             })
-            dispatch('listReturnProduct')
-            dispatch('openRMA')
             resolve(response)
           })
           .catch(error => {
@@ -140,6 +139,44 @@ const returnProduct = {
               showClose: true
             })
             resolve(error)
+          })
+          .finally(() => {
+            dispatch('listReturnProduct')
+            dispatch('openRMA')
+          })
+      })
+    },
+    updateLineRMA({ dispatch }, {
+      id,
+      posId,
+      quantity
+    }) {
+      return new Promise(resolve => {
+        updateRMALine({
+          id,
+          posId,
+          quantity
+        })
+          .then(response => {
+            showMessage({
+              type: 'success',
+              message: `${lang.t('form.pos.orderRMA.updateProduct')}`,
+              showClose: true
+            })
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Get Get Open RMA: ${error.message}. Code: ${error.code}.`)
+            showMessage({
+              type: 'error',
+              message: error.message,
+              showClose: true
+            })
+            resolve(error)
+          })
+          .finally(() => {
+            dispatch('listReturnProduct')
+            dispatch('openRMA')
           })
       })
     },
@@ -158,8 +195,6 @@ const returnProduct = {
               message: `${lang.t('form.pos.orderRMA.deleteProduct')}`,
               showClose: true
             })
-            dispatch('listReturnProduct')
-            dispatch('openRMA')
             resolve(response)
           })
           .catch(error => {
@@ -170,6 +205,10 @@ const returnProduct = {
               showClose: true
             })
             resolve(error)
+          })
+          .finally(() => {
+            dispatch('listReturnProduct')
+            dispatch('openRMA')
           })
       })
     },

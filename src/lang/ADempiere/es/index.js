@@ -430,7 +430,7 @@ export default {
         paymentMethods: 'Métodos de Pago',
         paymentMethod: 'Método de Pago',
         customer: 'Cliente',
-        invoceNr: 'Numero de Factura',
+        invoceNr: 'Factura',
         orderNr: 'Numero de Orden',
         seller: 'Vendedor',
         currency: 'Moneda',
@@ -494,6 +494,7 @@ export default {
       orderRMA: {
         addProduct: 'Producto Agregado',
         deleteProduct: 'Producto Eliminado',
+        updateProduct: 'Producto Actualizado',
         document: 'El Documento',
         process: 'Fue Procesado'
       }

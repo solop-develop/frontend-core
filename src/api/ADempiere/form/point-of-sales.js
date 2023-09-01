@@ -1700,3 +1700,22 @@ export function listCashMovements({
       return camelizeObjectKeys(response)
     })
 }
+
+export function copyOrder({
+  posId,
+  orderId,
+  salesRepresentativeId
+}) {
+  return request({
+    url: `${config.pointOfSales.endpoint}/order/copy-order`,
+    method: 'post',
+    data: {
+      pos_id: posId,
+      cuatomer_id: orderId,
+      sales_representative_id: salesRepresentativeId
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
