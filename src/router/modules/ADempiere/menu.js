@@ -20,7 +20,6 @@ import Layout from '@/layout'
 
 // Constants
 import staticRoutes from '@/router/modules/ADempiere/staticRoutes.js'
-import testRoutes from '@/router/modules/ADempiere/testRoutes.js'
 
 // API Request Methods
 import { requestMenu } from '@/api/user.js'
@@ -82,7 +81,6 @@ export function loadMainMenu({
       })
       const menuRoutes = permiseStactiRoutes
         .concat(asyncRoutesMap)
-        .concat(testRoutes)
 
       resolve(menuRoutes)
     }).catch(error => {
