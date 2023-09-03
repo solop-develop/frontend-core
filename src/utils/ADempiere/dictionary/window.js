@@ -1432,8 +1432,7 @@ export function generateTabs({
       parentFieldsList,
       sequenceTabsList,
       // app properties
-      isShowedRecordNavigation: !(currentTab.isSingleRow || isParentTab), // TODO: @deprecated
-      isShowedTableRecords: false, // !isParentTab, // @TODO: !(currentTab.isSingleRow || isParentTab),
+      isShowedTableRecords: !currentTab.isSingleRow, // !isParentTab,
       index, // this index is not related to the index in which the tabs are displayed
       isSelected: false,
       hasBeenRendered: false
