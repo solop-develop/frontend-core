@@ -144,6 +144,7 @@ export default defineComponent({
     height: 108px;
     cursor: pointer;
     font-size: 12px;
+    display: flex;
     position: relative;
     overflow: hidden;
     color: #666;
@@ -207,12 +208,14 @@ export default defineComponent({
       font-weight: bold;
       margin: 15px;
       margin-left: 0px;
+      width: 100%;
       margin-right: 10px;
 
       .card-panel-text {
         line-height: 18px;
         color: rgba(0, 0, 0, 0.45);
         font-size: 16px;
+        text-align: end;
         margin-bottom: 12px;
       }
 

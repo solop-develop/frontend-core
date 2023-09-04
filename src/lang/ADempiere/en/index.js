@@ -222,7 +222,10 @@ export default {
     changeRole: 'Change role',
     changeLanguage: 'Change language',
     changeLanguagePlaceholder: 'Choose a language',
-    activityLogs: 'Activity Logs'
+    activityLogs: 'Activity Logs',
+    notice: 'Notice',
+    request: 'Request',
+    workflowActivities: 'Workflow Activities'
   },
   window,
   data: {

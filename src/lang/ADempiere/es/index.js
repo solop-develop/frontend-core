@@ -223,7 +223,10 @@ export default {
     changeRole: 'Cambiar Rol',
     changeLanguage: 'Cambiar idioma',
     changeLanguagePlaceholder: 'Elija un idioma',
-    activityLogs: 'Registros de Actividades'
+    activityLogs: 'Registros de Actividades',
+    notice: 'Aviso',
+    request: 'Solicitud',
+    workflowActivities: 'Actividades de Flujo de Trabajo'
   },
   window,
   data: {
