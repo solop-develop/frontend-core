@@ -863,8 +863,9 @@ export function overdrawnInvoice({
  * @returns {string}
  */
 export function validatePin({
-  posUuid,
   pin,
+  posUuid,
+  orderId,
   requestedAccess,
   requestedAmount
 }) {
@@ -872,8 +873,9 @@ export function validatePin({
     url: `${config.pointOfSales.endpoint}/validate-pin`,
     method: 'post',
     data: {
-      pos_uuid: posUuid,
       pin: pin,
+      pos_uuid: posUuid,
+      order_id: orderId,
       requested_access: requestedAccess,
       requested_amount: requestedAmount
     }
@@ -1712,6 +1714,25 @@ export function copyOrder({
     data: {
       pos_id: posId,
       source_order_id: orderId,
+      sales_representative_id: salesRepresentativeId
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+export function newOrderFromRMA({
+  posId,
+  sourceRmaId,
+  salesRepresentativeId
+}) {
+  return request({
+    url: `${config.pointOfSales.endpoint}/order/copy-order`,
+    method: 'post',
+    data: {
+      pos_id: posId,
+      source_rma_id: sourceRmaId,
       sales_representative_id: salesRepresentativeId
     }
   })

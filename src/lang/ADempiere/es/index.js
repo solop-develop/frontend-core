@@ -298,6 +298,7 @@ export default {
       salesDiscountOff: 'Aplicar Descuento en Venta',
       applyDiscountToAllLines: 'Aplicar Descuento a Todas las Lineas',
       returnProduct: 'Devolver Producto',
+      createNewOrderRMA: 'Crear Nueva Orden desde el RMA',
       discountRate: '% Discounto',
       optionsPoinSales: {
         title: 'Opciones Rápidas del Punto de Ventas',
