@@ -381,13 +381,16 @@ export default {
         const { defaultValue } = fieldItem
         const isYesNo = fieldItem.displayType === YES_NO.id
         if (isMandatory && (isEmptyValue(defaultValue) && !isYesNo)) {
+          if (isTable) {
+            return true
+          }
           return false
         }
 
         if (isEvaluateDefaultValue && isEvaluateShowed) {
           return showedMethod(fieldItem) &&
-            !isEmptyValue(defaultValue) &&
-            !isYesNo
+          !isEmptyValue(defaultValue) &&
+          !isYesNo
         }
 
         if (isEvaluateDefaultValue) {
