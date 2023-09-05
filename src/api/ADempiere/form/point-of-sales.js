@@ -312,6 +312,7 @@ export function listOrders({
   dateOrderedFrom,
   dateOrderedTo,
   salesRepresentativeUuid,
+  isOnlyRMA,
   pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
 }) {
@@ -332,6 +333,7 @@ export function listOrders({
       is_waiting_for_shipment: isWaitingForShipment,
       is_binding_offer: isBindingOffer,
       is_closed: isClosed,
+      is_only_rma: isOnlyRMA,
       is_nullified: isNullified,
       date_ordered_from: dateOrderedFrom,
       date_ordered_to: dateOrderedTo,
@@ -626,8 +628,7 @@ export function createPayment({
   currencyUuid,
   collectingAgentUuid,
   customerBankAccountUuid,
-  referenceBankAccountUuid,
-  invoiceReferenceId
+  referenceBankAccountUuid
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/create-payment`,
@@ -648,8 +649,7 @@ export function createPayment({
       currency_uuid: currencyUuid,
       collecting_agent_uuid: collectingAgentUuid,
       reference_bank_account_uuid: referenceBankAccountUuid,
-      customer_bank_account_uuid: customerBankAccountUuid,
-      invoice_reference_id: invoiceReferenceId
+      customer_bank_account_uuid: customerBankAccountUuid
     }
   })
     .then(createPaymentResponse => {
@@ -1716,25 +1716,6 @@ export function copyOrder({
     data: {
       pos_id: posId,
       source_order_id: orderId,
-      sales_representative_id: salesRepresentativeId
-    }
-  })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
-}
-
-export function newOrderFromRMA({
-  posId,
-  sourceRmaId,
-  salesRepresentativeId
-}) {
-  return request({
-    url: `${config.pointOfSales.endpoint}/order/copy-order`,
-    method: 'post',
-    data: {
-      pos_id: posId,
-      source_rma_id: sourceRmaId,
       sales_representative_id: salesRepresentativeId
     }
   })

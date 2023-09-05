@@ -232,3 +232,29 @@ export function processRMA({
       return camelizeObjectKeys(response)
     })
 }
+
+/**
+ * Create Order from RMA
+ * @param {number} posId
+ * @param {number} sourceRmaId
+ * @param {number} salesRepresentativeId
+ * @returns {Order}
+ */
+export function newOrderFromRMA({
+  posId,
+  sourceRmaId,
+  salesRepresentativeId
+}) {
+  return request({
+    url: `${config.pointOfSales.endpoint}/return-material/new-order-rma`,
+    method: 'post',
+    data: {
+      pos_id: posId,
+      source_rma_id: sourceRmaId,
+      sales_representative_id: salesRepresentativeId
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
