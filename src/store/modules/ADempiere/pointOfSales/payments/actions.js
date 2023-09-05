@@ -92,7 +92,8 @@ export default {
   uploadOrdersToServer({ dispatch, rootGetters }, {
     listPaymentsLocal,
     posUuid,
-    orderUuid
+    orderUuid,
+    invoiceReferenceId
   }) {
     listPaymentsLocal.forEach(payment => {
       const isProcessLoading = rootGetters.getProcessLoading
@@ -107,7 +108,9 @@ export default {
         paymentDate: payment.paymentDate,
         tenderTypeCode: payment.tenderTypeCode,
         isRefund: false,
+        invoiceReferenceId,
         currencyUuid: payment.currencyUuid
+
       })
         .then(response => {
           const orderUuid = response.orderUuid
@@ -242,7 +245,8 @@ export default {
     tenderTypeCode,
     paymentMethodUuid,
     customerBankAccountUuid,
-    currencyUuid
+    currencyUuid,
+    invoiceReferenceId
   }) {
     const isProcessLoading = getters.getProcessLoading
     if (isProcessLoading) return
@@ -267,6 +271,7 @@ export default {
         paymentMethodUuid,
         customerBankAccountUuid,
         isRefund: false,
+        invoiceReferenceId,
         currencyUuid
       })
         .then(response => {

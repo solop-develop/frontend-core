@@ -626,7 +626,8 @@ export function createPayment({
   currencyUuid,
   collectingAgentUuid,
   customerBankAccountUuid,
-  referenceBankAccountUuid
+  referenceBankAccountUuid,
+  invoiceReferenceId
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/create-payment`,
@@ -647,7 +648,8 @@ export function createPayment({
       currency_uuid: currencyUuid,
       collecting_agent_uuid: collectingAgentUuid,
       reference_bank_account_uuid: referenceBankAccountUuid,
-      customer_bank_account_uuid: customerBankAccountUuid
+      customer_bank_account_uuid: customerBankAccountUuid,
+      invoice_reference_id: invoiceReferenceId
     }
   })
     .then(createPaymentResponse => {
@@ -1713,6 +1715,25 @@ export function copyOrder({
       pos_id: posId,
       source_order_id: orderId,
       sales_representative_id: salesRepresentativeId
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+export function listCreditMemoRequest({
+  posId,
+  customerId,
+  pageSize = 100
+}) {
+  return request({
+    url: `${config.pointOfSales.endpoint}/credit-memo/list`,
+    method: 'get',
+    params: {
+      pos_id: posId,
+      customer_id: customerId,
+      page_size: pageSize
     }
   })
     .then(response => {

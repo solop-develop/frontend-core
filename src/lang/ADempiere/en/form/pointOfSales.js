@@ -32,7 +32,8 @@ const pointOfSales = {
     customerAccount: 'Customer Account',
     recipientBank: 'Recipient Bank',
     issuingBank: 'Issuing Bank',
-    bank: 'Bank'
+    bank: 'Bank',
+    creditMemo: 'Credit Note'
   },
   conversionRate: {
     withoutConversionRate: 'There is no current exchange rate '
