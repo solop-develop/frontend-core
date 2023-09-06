@@ -208,6 +208,9 @@ const value = {
           containerUuid,
           columnName
         })
+        if (!isEmptyValue(value)) {
+          return value
+        }
       }
 
       if (parentUuid) {
