@@ -318,7 +318,7 @@ export default {
           cancelOrder: 'Cancelar Orden',
           orderRemoved: 'Orden Borrada',
           copyOrder: 'Copiar Orden',
-          newOrderFromRMA: 'Crear Nueva Orden desde el RMA',
+          newOrderFromRMA: 'Crear Nueva Orden desde RMA',
           createNewReturnOrder: 'Crear una nueva orden de devolución',
           confirmDelivery: 'Confirmar Entrega',
           deliverAllProducts: 'Entregar Todo',
