@@ -1,12 +1,12 @@
 <template>
   <el-card v-if="!isMobile" shadow="always" :body-style="{ padding: '0px !important;' }" style="padding: 0px !important;">
-    <el-col :span="20">
+    <el-col :span="12">
       <h1 style="margin-bottom: 0px;">{{ $t('component.dashboard.header.welcome') }} {{ userInfo.name }}</h1>
       {{ userInfo.description }}
     </el-col>
 
     <el-col
-      :span="4"
+      :span="12"
       style="padding-left: 2.5px;padding-right: 2.5px;text-align: end;"
     >
       <span
