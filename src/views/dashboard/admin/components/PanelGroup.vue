@@ -192,7 +192,7 @@ export default defineComponent({
 
     .card-panel-icon-wrapper {
       float: left;
-      margin: 14px 0 0 14px;
+      margin: 5px 0px 5px 14px;
       padding: 16px;
       transition: all 0.38s ease-out;
       border-radius: 6px;
@@ -200,7 +200,7 @@ export default defineComponent({
 
     .card-panel-icon {
       float: left;
-      font-size: 48px;
+      font-size: 60px;
     }
 
     .card-panel-description {

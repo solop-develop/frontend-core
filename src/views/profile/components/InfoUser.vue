@@ -1,46 +1,101 @@
 <template>
-  <el-card v-if="!isMobile" shadow="always">
-    <el-col :span="16" style="padding-right:10px;margin-bottom:20px;">
+  <el-card v-if="!isMobile" shadow="always" :body-style="{ padding: '0px !important;' }" style="padding: 0px !important;">
+    <el-col :span="20">
       <h1 style="margin-bottom: 0px;">{{ $t('component.dashboard.header.welcome') }} {{ userInfo.name }}</h1>
       {{ userInfo.description }}
     </el-col>
 
-    <el-col :span="8" style="padding-left: 2.5px;padding-right: 2.5px;">
-      <el-descriptions
-        class="notificarion-table"
-        :border="true"
-        :column="1"
-        size="mini"
+    <el-col
+      :span="4"
+      style="padding-left: 2.5px;padding-right: 2.5px;text-align: end;"
+    >
+      <span
+        style="border: 0px solid #d3d4d6;border-radius: 10px;"
       >
-        <template
-          v-for="(list, key) in notifications"
+        <el-badge
+          :value="notice.quantity"
+          class="item"
+          type="primary"
+          :hidden="notice.quantity == 0"
+          style="margin-right: 10px"
         >
-          <el-descriptions-item
-            :key="key"
+          <el-button
+            round
+            plain
+            style="padding: 5px 0px 5px 15px;border: 0px;"
+            @click="zoomNotifications(notice)"
           >
-            <template slot="label">
-              <p
-                style="margin: 0px;cursor: pointer;"
-                @click="zoomNotifications(list)"
-              >
-                <svg-icon
-                  :icon-class="svgClass(list)"
-                  style="font-size: 15px !important"
-                />
-                <b>
-                  {{ list.name }}
-                </b>
-              </p>
-            </template>
-            <p
-              style="margin: 0px;text-align: center;cursor: pointer;"
-              @click="zoomNotifications(list)"
+            <el-button
+              type="primary"
+              plain
+              circle
+              @click="zoomNotifications(notice)"
             >
-              {{ list.quantity }}
-            </p>
-          </el-descriptions-item>
-        </template>
-      </el-descriptions>
+              <svg-icon
+                icon-class="notifications"
+                style="font-size: 15px !important"
+              />
+            </el-button>
+            {{ $t('profile.notice') }}
+          </el-button>
+        </el-badge>
+        <br>
+        <el-badge
+          :value="request.quantity"
+          class="item"
+          type="primary"
+          :hidden="request.quantity == 0"
+          style="margin-right: 10px"
+        >
+          <el-button
+            round
+            plain
+            style="padding: 5px 0px 5px 15px;border: 0px;"
+            @click="zoomNotifications(request)"
+          >
+            <el-button
+              type="primary"
+              plain
+              circle
+              @click="zoomNotifications(request)"
+            >
+              <svg-icon
+                icon-class="guide"
+                style="font-size: 15px !important"
+              />
+            </el-button>
+            {{ $t('profile.request') }}
+          </el-button>
+        </el-badge>
+        <br>
+        <el-badge
+          :value="workflow.quantity"
+          class="item"
+          type="primary"
+          :hidden="workflow.quantity == 0"
+          style="margin-right: 10px"
+        >
+          <el-button
+            round
+            plain
+            style="padding: 5px 0px 5px 15px;border: 0px;"
+            @click="zoomNotifications(workflow)"
+          >
+            <el-button
+              type="primary"
+              plain
+              circle
+              @click="zoomNotifications(workflow)"
+            >
+              <svg-icon
+                icon-class="workflow"
+                style="font-size: 15px !important"
+              />
+            </el-button>
+            {{ $t('profile.workflowActivities') }}
+          </el-button>
+        </el-badge>
+      </span>
     </el-col>
   </el-card>
   <el-card v-else shadow="always">
@@ -100,6 +155,7 @@ import language from '@/lang'
 import { defineComponent, computed } from '@vue/composition-api'
 // Utils and Helper Methods
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 export default defineComponent({
   name: 'UserInfo',
   setup() {
@@ -129,6 +185,27 @@ export default defineComponent({
       return store.getters.getListNotifiications
     })
 
+    const notice = computed(() => {
+      if (!isEmptyValue(notifications.value)) return notifications.value[0]
+      return {
+        quantity: 0
+      }
+    })
+
+    const request = computed(() => {
+      if (!isEmptyValue(notifications.value)) return notifications.value[1]
+      return {
+        quantity: 0
+      }
+    })
+
+    const workflow = computed(() => {
+      if (!isEmptyValue(notifications.value)) return notifications.value[2]
+      return {
+        quantity: 0
+      }
+    })
+
     function svgClass(notification) {
       let svg = 'default-notifications'
       switch (notification.name) {
@@ -138,7 +215,7 @@ export default defineComponent({
         case language.t('profile.request'):
           svg = 'guide'
           break
-        case language.t('profile.workflowActivities'):
+        case language.t('profile.workflowActivitiesguide'):
           svg = 'workflow'
           break
       }
@@ -167,7 +244,10 @@ export default defineComponent({
       currentRole,
       warehouse,
       userInfo,
-      isMobile
+      isMobile,
+      workflow,
+      request,
+      notice
     }
   }
 })

@@ -224,9 +224,9 @@ export default {
     changeLanguage: 'Cambiar idioma',
     changeLanguagePlaceholder: 'Elija un idioma',
     activityLogs: 'Registros de Actividades',
-    notice: 'Aviso',
-    request: 'Solicitud',
-    workflowActivities: 'Actividades de Flujo de Trabajo'
+    notice: 'Avisos',
+    request: 'Solicitudes',
+    workflowActivities: 'Flujos de Trabajo'
   },
   window,
   data: {
