@@ -52,7 +52,9 @@ import {
   requestOrganizationsList,
   requestWarehousesList
 } from '@/api/ADempiere/system-core'
-
+import {
+  loginAuthentication
+} from '@/api/ADempiere/open-id/services.js'
 // Utils and Helper Methods
 import { resetRouter } from '@/router'
 import { showMessage } from '@/utils/ADempiere/notification'
@@ -154,6 +156,22 @@ const actions = {
         roleUuid,
         organizationUuid,
         token
+      })
+        .then(token => {
+          commit('SET_TOKEN', token)
+          setToken(token)
+          resolve()
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  },
+
+  loginOpenId({ commit }, result) {
+    return new Promise((resolve, reject) => {
+      loginAuthentication({
+        search: result
       })
         .then(token => {
           commit('SET_TOKEN', token)

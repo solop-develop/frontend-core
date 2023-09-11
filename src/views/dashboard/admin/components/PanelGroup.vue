@@ -10,7 +10,17 @@
     >
       <div class="card-panel" @click="handleClick(taks)">
         <div :class="taks.classCard">
-          <svg-icon :icon-class="taks.svg" class-name="card-panel-icon" />
+          <i
+            v-if="taks.svg.type === 'i'"
+            :class="taks.svg.class"
+            style="font-size: 65px"
+          />
+          <svg-icon
+            v-else
+            :icon-class="taks.svg.class"
+            class-name="card-panel-icon"
+          />
+          <!-- <svg-icon :icon-class="taks.svg" class-name="card-panel-icon" /> -->
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
@@ -34,6 +44,7 @@ import { defineComponent, computed } from '@vue/composition-api'
 import CountTo from 'vue-count-to'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 import store from '@/store'
+import { setIconsTableName } from '@/utils/ADempiere'
 
 export default defineComponent({
   components: {
@@ -42,10 +53,10 @@ export default defineComponent({
   setup(props) {
     const documentList = computed(() => {
       return store.getters.getListTaks.map(taks => {
-        iconClass(taks)
+        const { criteria } = taks
         return {
           ...taks,
-          svg: iconClass(taks)
+          svg: setIconsTableName(criteria)
         }
       })
     })
@@ -94,29 +105,29 @@ export default defineComponent({
       })
     }
 
-    function iconClass(taks) {
-      const { criteria } = taks
-      const { tableName } = criteria
-      let icon = ''
-      switch (tableName) {
-        case 'C_Order':
-          icon = 'order'
-          break
-        case 'C_BPartner':
-          icon = 'b-partner'
-          break
-        case 'C_Payment':
-          icon = 'shopping'
-          break
-        case 'M_InOut':
-          icon = 'local-shipping'
-          break
-        case 'HR_Process':
-          icon = 'peoples'
-          break
-      }
-      return icon
-    }
+    // function iconClass(taks) {
+    //   const { criteria } = taks
+    //   const { tableName } = criteria
+    //   let icon = ''
+    //   switch (tableName) {
+    //     case 'C_Order':
+    //       icon = 'order'
+    //       break
+    //     case 'C_BPartner':
+    //       icon = 'b-partner'
+    //       break
+    //     case 'C_Payment':
+    //       icon = 'shopping'
+    //       break
+    //     case 'M_InOut':
+    //       icon = 'local-shipping'
+    //       break
+    //     case 'HR_Process':
+    //       icon = 'peoples'
+    //       break
+    //   }
+    //   return icon
+    // }
 
     loadPendingDocuments()
 

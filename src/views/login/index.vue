@@ -1,6 +1,15 @@
 <template>
-  <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
+  <div
+    class="login-container"
+  >
+    <el-form
+      ref="loginForm"
+      :model="loginForm"
+      :rules="loginRules"
+      class="login-form"
+      autocomplete="on"
+      label-position="left"
+    >
       <el-row>
         <el-col :span="3">
           <img src="https://avatars1.githubusercontent.com/u/1263359?s=200&v=4" class="image">
@@ -54,8 +63,31 @@
           </span>
         </el-form-item>
       </el-tooltip>
-      <el-button :loading="loading" type="primary" style="width:100%" @click.native.prevent="handleLogin">
+      <el-button
+        :loading="loading || isLoadingLogin"
+        type="primary"
+        style="width:100%;"
+        @click.native.prevent="handleLogin"
+      >
         {{ $t('login.logIn') }}
+      </el-button>
+      <el-button
+        v-for="(list, key) in listServices"
+        :key="key"
+        :loading="isLoadingLogin"
+        :disabled="isLoadingLogin"
+        style="width:100%;margin: 10px;display: flex;margin-left: 0px;"
+      >
+        <p style="width:400px;margin: 0px;">
+          <svg-icon :icon-class="list.svg" />
+          <el-link
+            :underline="false"
+            :href="list.authorizationUri"
+            style="margin-left: 5px;"
+          >
+            {{ list.displayName }}
+          </el-link>
+        </p>
       </el-button>
       <el-button
         type="text"
@@ -97,10 +129,15 @@
 <script>
 import loginMixin from './loginMixin.js'
 import SocialSign from './components/SocialSignin'
+import {
+  services
+} from '@/api/ADempiere/open-id/services.js'
 
 export default {
   name: 'Login',
-  components: { SocialSign },
+  components: {
+    SocialSign
+  },
   mixins: [loginMixin],
   data() {
     const validateUsername = (rule, value, callback) => {
@@ -134,6 +171,8 @@ export default {
       showDialog: false,
       redirect: undefined,
       otherQuery: {},
+      listServices: {},
+      isLoadingLogin: false,
       default: 'dashboard'
     }
   },
@@ -150,18 +189,25 @@ export default {
     }
   },
   created() {
-    // window.addEventListener('storage', this.afterQRScan)
-  },
-  mounted() {
-    if (this.loginForm.userName === '') {
-      this.$refs.userName.focus()
-    } else if (this.loginForm.password === '') {
-      this.$refs.password.focus()
+    const URLactual = window.location
+    const { search } = URLactual
+    if (!this.isEmptyValue(search)) {
+      const result = search.replace('?', '')
+      this.loginAuthentication(result)
     }
+    services()
+      .then(response => {
+        this.listServices = response.map(list => {
+          return {
+            ...list,
+            svg: this.svgService(list)
+          }
+        })
+      })
   },
-  destroyed() {
-    // window.removeEventListener('storage', this.afterQRScan)
-  },
+  // mounted() {
+  //   console.log({ isLoadingLogin: this.isLoadingLogin })
+  // },
   methods: {
     checkCapslock(e) {
       const { key } = e
@@ -228,6 +274,51 @@ export default {
     organizationIdRedirect(query, expr) {
       const redirect = query.split(expr)
       return redirect[2]
+    },
+    svgService(openId) {
+      const { authorizationUri } = openId
+      const searchInclude = authorizationUri.replace('https://', '')
+      const index = searchInclude.search('.com/')
+      let svg
+      switch (true) {
+        case searchInclude.slice(0, index).includes('microsoftonline'):
+          svg = 'microsoft'
+          break
+        case searchInclude.slice(0, index).includes('google'):
+          svg = 'google-gmail'
+          break
+        case searchInclude.slice(0, index).includes('github'):
+          svg = 'github'
+          break
+        case searchInclude.slice(0, index).includes('gitlab'):
+          svg = 'gitlab'
+          break
+        case searchInclude.slice(0, index).includes('discord'):
+          svg = 'discord'
+          break
+      }
+      return svg
+    },
+    loginAuthentication(result) {
+      this.isLoadingLogin = true
+      this.$store.dispatch('user/loginOpenId', result)
+        .then(() => {
+          const { origin } = window.location
+          window.location.pathname = ''
+          window.location.search = ''
+          window.location = origin
+        })
+        .catch(error => {
+          let message = this.$t('page.login.unexpectedError')
+          if ([13, 500].includes(error.code)) {
+            message = this.$t('page.login.invalidLogin')
+          }
+
+          this.$message.error(message)
+        })
+        .finally(() => {
+          this.isLoadingLogin = false
+        })
     }
   }
 }

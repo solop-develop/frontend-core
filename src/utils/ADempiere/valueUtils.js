@@ -704,3 +704,217 @@ export function convertValuesToSend(values) {
   })
   return valuesToSend
 }
+
+/**
+ * Set Icons to (SVG) based on Table Name
+ * @param {string} tableName
+ * @return {object} { class , type }
+ */
+export function setIconsTableName({
+  tableName
+}) {
+  let icon = {
+    type: 'svg',
+    class: 'search'
+  }
+  switch (tableName) {
+    case 'HR_Process':
+      icon = {
+        type: 'svg',
+        class: 'peoples'
+      }
+      break
+    case 'C_Payment':
+    case 'I_Payment':
+      icon = {
+        type: 'svg',
+        class: 'payments'
+      }
+      break
+    case 'C_Invoice':
+    case 'I_Invoice':
+      icon = {
+        type: 'i',
+        class: 'el-icon-office-building'
+      }
+      break
+    case 'I_BankStatement':
+      icon = {
+        type: 'svg',
+        class: 'account-balance'
+      }
+      break
+    case 'M_InOut':
+    case 'I_InOutLineConfirm':
+      icon = {
+        type: 'svg',
+        class: 'local-shipping'
+      }
+      break
+    case 'I_Inventory':
+      icon = {
+        type: 'svg',
+        class: 'inventory'
+      }
+      break
+    case 'C_Order':
+    case 'I_Order':
+      icon = {
+        type: 'svg',
+        class: 'clipboard'
+      }
+      break
+    case 'I_Conversion_Rate':
+      icon = {
+        type: 'svg',
+        class: 'conversion'
+      }
+      break
+    case 'I_Product':
+      icon = {
+        type: 'svg',
+        class: 'product'
+      }
+      break
+    case 'M_Product':
+      icon = {
+        type: 'svg',
+        class: 'product'
+      }
+      break
+    case 'C_BPartner':
+    case 'I_BPartner':
+      icon = {
+        type: 'i',
+        class: 'el-icon-user-solid'
+      }
+      break
+    case 'I_ElementValue':
+      icon = {
+        type: 'i',
+        class: 'el-icon-wallet'
+      }
+      break
+    case 'I_ReportLine':
+      icon = {
+        type: 'i',
+        class: 'el-icon-notebook-2'
+      }
+      break
+    case 'I_GLJournal':
+      icon = {
+        type: 'svg',
+        class: 'balance'
+      }
+      break
+    case 'I_FAJournal':
+      icon = {
+        type: 'svg',
+        class: 'accounting-note'
+      }
+      break
+    case 'I_Asset':
+      icon = {
+        type: 'i',
+        class: 'el-icon-coin'
+      }
+      break
+    case 'I_Movement':
+      icon = {
+        type: 'i',
+        class: 'el-icon-truck'
+      }
+      break
+    case 'I_ProductPlanning':
+      icon = {
+        type: 'svg',
+        class: 'product'
+      }
+      break
+    case 'I_PriceList':
+      icon = {
+        type: 'svg',
+        class: 'price_list'
+      }
+      break
+    case 'I_HR_Movement':
+      icon = {
+        type: 'svg',
+        class: 'import-movement'
+      }
+      break
+    case 'I_Product_BOM':
+      icon = {
+        type: 'svg',
+        class: 'product'
+      }
+      break
+    case 'I_FixedAsset':
+      icon = {
+        type: 'i',
+        class: 'el-icon-coin'
+      }
+      break
+    case 'I_HR_Attribute':
+      icon = {
+        type: 'svg',
+        class: 'atributo'
+      }
+      break
+    case 'I_Product_ASI':
+      icon = {
+        type: 'svg',
+        class: 'product-attribute'
+      }
+      break
+    case 'I_Workflow':
+      icon = {
+        type: 'svg',
+        class: 'workflow'
+      }
+      break
+    case 'I_SalesHistory':
+      icon = {
+        type: 'i',
+        class: 'el-icon-shopping-cart-full'
+      }
+      break
+    case 'I_Budget':
+      icon = {
+        type: 'svg',
+        class: 'budget'
+      }
+      break
+    case 'I_HR_Employee':
+      icon = {
+        type: 'svg',
+        class: 'employee'
+      }
+      break
+    case 'I_Project':
+      icon = {
+        type: 'svg',
+        class: 'project'
+      }
+      break
+    case 'I_Forecast':
+      icon = {
+        type: 'svg',
+        class: 'forecast'
+      }
+      break
+    case 'I_HR_AttendanceRecord':
+      icon = {
+        type: 'svg',
+        class: 'attendance-record'
+      }
+      break
+    case 'I_FM_Agreement':
+      icon = {
+        type: 'svg',
+        class: 'agreement'
+      }
+      break
+  }
+  return icon
+}
