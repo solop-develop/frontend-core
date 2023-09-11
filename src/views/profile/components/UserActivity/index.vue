@@ -1,8 +1,11 @@
 <template>
-  <el-card shadow="always">
+  <el-card
+    shadow="always"
+    :body-style="{ padding: '10px 5px' }"
+  >
     <el-empty v-if="isEmptyValue(getActivityUser)" :image-size="200" />
     <el-timeline v-else style="padding: 0px;">
-      <el-scrollbar wrap-class="scroll-logs-user">
+      <el-scrollbar :wrap-class="isMobile ? 'scroll-logs-user-mobile' : 'scroll-logs-user'">
         <el-timeline-item
           v-for="(logsUser) in getActivityUser"
           :key="logsUser.id"
@@ -10,7 +13,11 @@
           :timestamp="logTimesTamp(logsUser)"
           placement="top"
         >
-          <el-card shadow="hover" style="padding: 0px !important;">
+          <el-card
+            shadow="hover"
+            style="padding: 0px !important;"
+            :body-style="{ padding: '10px 5px' }"
+          >
             <div :style="styleShow(logsUser.show)">
               <span style="color: #606266; font-weight: bold;">
                 <svg-icon
@@ -106,6 +113,10 @@ export default defineComponent({
       set(newValue) {
         store.dispatch('user/loadingActivitylogs', newValue)
       }
+    })
+
+    const isMobile = computed(() => {
+      return store.getters.device === 'mobile'
     })
 
     // Methods
@@ -257,6 +268,7 @@ export default defineComponent({
       activeName,
       // Computeds
       getActivityUser,
+      isMobile,
       // Methods
       showkey,
       styleShow,
@@ -275,6 +287,14 @@ export default defineComponent({
 <style lang="scss">
 .scroll-logs-user {
   max-height: 50vh;
+}
+.scroll-logs-user-mobile {
+  max-height: 95vh;
+}
+.el-timeline-item__wrapper {
+  position: relative;
+  padding-left: 15px;
+  top: -3px;
 }
 .el-timeline-item__node--normal {
   left: 0px;

@@ -1,5 +1,7 @@
 <template>
-  <div class="app-container">
+  <div
+    class="class-profile"
+  >
     <div v-if="user">
       <el-row :gutter="5" style="padding: 10px;padding-bottom: 0px;margin: 0px;">
         <!-- Image User -->
@@ -22,8 +24,8 @@
         </el-col>
       </el-row>
       <!-- Logs User -->
-      <el-row :gutter="0" style="padding: 0px 10px;margin: 0px;">
-        <el-card>
+      <el-row id="qlq" ref="qlq" :gutter="0" style="padding: 0px 10px;margin: 0px;">
+        <el-card :body-style="{ padding: '10px 5px' }">
           <div slot="header" class="clearfix">
             <b style="font-size: 18px;">
               <svg-icon icon-class="tree-table" /> {{ $t('profile.activityLogs') }}
@@ -128,3 +130,11 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+.class-profile {
+  height: 100% !important;
+  width: 100% !important;
+  overflow: auto;
+  display: block !important;
+}
+</style>

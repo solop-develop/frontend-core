@@ -107,41 +107,93 @@
         </el-col>
 
         <el-col :span="24">
-          <el-descriptions
-            class="notificarion-table"
-            :border="true"
-            :column="1"
-            size="mini"
+          <span
+            style="border: 0px solid #d3d4d6;border-radius: 10px;"
           >
-            <template
-              v-for="(list, key) in notifications"
+            <el-badge
+              :value="notice.quantity"
+              class="item"
+              type="primary"
+              :hidden="notice.quantity == 0"
+              style="margin-right: 10px"
             >
-              <el-descriptions-item
-                :key="key"
+              <el-button
+                round
+                plain
+                style="padding: 5px 0px 5px 15px;border: 0px;"
+                @click="zoomNotifications(notice)"
               >
-                <template slot="label">
-                  <p
-                    style="margin: 0px;cursor: pointer;"
-                    @click="zoomNotifications(list)"
-                  >
-                    <svg-icon
-                      :icon-class="svgClass(list)"
-                      style="font-size: 15px !important"
-                    />
-                    <b>
-                      {{ list.name }}
-                    </b>
-                  </p>
-                </template>
-                <p
-                  style="margin: 0px;text-align: center;cursor: pointer;"
-                  @click="zoomNotifications(list)"
+                <el-button
+                  type="primary"
+                  plain
+                  circle
+                  @click="zoomNotifications(notice)"
                 >
-                  {{ list.quantity }}
-                </p>
-              </el-descriptions-item>
-            </template>
-          </el-descriptions>
+                  <svg-icon
+                    icon-class="notifications"
+                    style="font-size: 15px !important"
+                  />
+                </el-button>
+                {{ $t('profile.notice') }}
+              </el-button>
+            </el-badge>
+            <br>
+            <el-badge
+              :value="request.quantity"
+              class="item"
+              type="primary"
+              :hidden="request.quantity == 0"
+              style="margin-right: 10px"
+            >
+              <el-button
+                round
+                plain
+                style="padding: 5px 0px 5px 15px;border: 0px;"
+                @click="zoomNotifications(request)"
+              >
+                <el-button
+                  type="primary"
+                  plain
+                  circle
+                  @click="zoomNotifications(request)"
+                >
+                  <svg-icon
+                    icon-class="guide"
+                    style="font-size: 15px !important"
+                  />
+                </el-button>
+                {{ $t('profile.request') }}
+              </el-button>
+            </el-badge>
+            <br>
+            <el-badge
+              :value="workflow.quantity"
+              class="item"
+              type="primary"
+              :hidden="workflow.quantity == 0"
+              style="margin-right: 10px"
+            >
+              <el-button
+                round
+                plain
+                style="padding: 5px 0px 5px 15px;border: 0px;"
+                @click="zoomNotifications(workflow)"
+              >
+                <el-button
+                  type="primary"
+                  plain
+                  circle
+                  @click="zoomNotifications(workflow)"
+                >
+                  <svg-icon
+                    icon-class="workflow"
+                    style="font-size: 15px !important"
+                  />
+                </el-button>
+                {{ $t('profile.workflowActivities') }}
+              </el-button>
+            </el-badge>
+          </span>
         </el-col>
       </el-card>
     </el-col>
