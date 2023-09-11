@@ -115,6 +115,12 @@ export function formatField({
       break
 
     case DATE_PLUS_TIME.id:
+      formattedValue = formatDateTemp({
+        value,
+        isTime: true,
+        format: optionalFormat || 'yyyy-MM-dd hh:mm:ss A'
+      })
+      break
     case TIME.id:
       formattedValue = formatDateTemp({
         value,
