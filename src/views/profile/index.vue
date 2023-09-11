@@ -24,7 +24,7 @@
         </el-col>
       </el-row>
       <!-- Logs User -->
-      <el-row id="qlq" ref="qlq" :gutter="0" style="padding: 0px 10px;margin: 0px;">
+      <el-row :gutter="0" style="padding: 0px 10px;margin: 0px;">
         <el-card :body-style="{ padding: '10px 5px' }">
           <div slot="header" class="clearfix">
             <b style="font-size: 18px;">
