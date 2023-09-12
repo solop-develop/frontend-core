@@ -10,7 +10,7 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * GNU General Public License for more details.services
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
@@ -31,15 +31,22 @@ export function services() {
       }
       return response.map(list => camelizeObjectKeys(list))
     })
+    .catch(error => {
+      console.info(error)
+    })
 }
 
 export function loginAuthentication({
-  search
+  code,
+  state
 }) {
   return request({
     url: '/user/open-id/login',
     method: 'post',
-    data: search
+    data: {
+      code,
+      state
+    }
   })
     .then(response => {
       return response

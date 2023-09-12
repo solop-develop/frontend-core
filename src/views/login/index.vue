@@ -78,16 +78,16 @@
         :disabled="isLoadingLogin"
         style="width:100%;margin: 10px;display: flex;margin-left: 0px;"
       >
-        <p style="width:400px;margin: 0px;">
-          <svg-icon :icon-class="list.svg" />
-          <el-link
-            :underline="false"
-            :href="list.authorizationUri"
-            style="margin-left: 5px;"
-          >
+        <el-link
+          :underline="false"
+          :href="list.authorizationUri"
+          style="margin-left: 5px;"
+        >
+          <p style="width:400px;margin: 0px;">
+            <svg-icon :icon-class="list.svg" />
             {{ list.displayName }}
-          </el-link>
-        </p>
+          </p>
+        </el-link>
       </el-button>
       <el-button
         type="text"
@@ -127,18 +127,29 @@
 </template>
 
 <script>
+// Components and Mixins
 import loginMixin from './loginMixin.js'
 import SocialSign from './components/SocialSignin'
+
+// API Request Methods
 import {
   services
 } from '@/api/ADempiere/open-id/services.js'
 
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+
 export default {
   name: 'Login',
+
   components: {
     SocialSign
   },
-  mixins: [loginMixin],
+
+  mixins: [
+    loginMixin
+  ],
+
   data() {
     const validateUsername = (rule, value, callback) => {
       if ((value.trim()).length < 1) {
@@ -176,6 +187,7 @@ export default {
       default: 'dashboard'
     }
   },
+
   watch: {
     $route: {
       handler: function(route) {
@@ -188,13 +200,21 @@ export default {
       immediate: true
     }
   },
+
   created() {
-    const URLactual = window.location
-    const { search } = URLactual
-    if (!this.isEmptyValue(search)) {
-      const result = search.replace('?', '')
-      this.loginAuthentication(result)
+    const { search } = window.location
+    if (!isEmptyValue(search)) {
+      const urlParams = new URLSearchParams(search)
+      const state = urlParams.get('state')
+      const code = urlParams.get('code')
+      if (!isEmptyValue(state) && !isEmptyValue(code)) {
+        this.loginAuthentication({
+          state,
+          code
+        })
+      }
     }
+
     services()
       .then(response => {
         this.listServices = response.map(list => {
@@ -204,10 +224,15 @@ export default {
           }
         })
       })
+      .catch(error => {
+        console.info(error)
+      })
   },
+
   // mounted() {
   //   console.log({ isLoadingLogin: this.isLoadingLogin })
   // },
+
   methods: {
     checkCapslock(e) {
       const { key } = e
@@ -299,9 +324,12 @@ export default {
       }
       return svg
     },
-    loginAuthentication(result) {
+    loginAuthentication({ state, code }) {
       this.isLoadingLogin = true
-      this.$store.dispatch('user/loginOpenId', result)
+      this.$store.dispatch('user/loginOpenId', {
+        state,
+        code
+      })
         .then(() => {
           const { origin } = window.location
           window.location.pathname = ''
