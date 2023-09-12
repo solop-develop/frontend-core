@@ -1,5 +1,10 @@
 <template>
-  <el-card v-if="!isMobile" shadow="always" :body-style="{ padding: '0px !important;' }" style="padding: 0px !important;">
+  <el-card
+    v-if="!isMobile"
+    shadow="always"
+    :body-style="{ padding: '5px' }"
+    style="padding: 0px !important;"
+  >
     <el-col :span="12">
       <h1 style="margin-bottom: 0px;">{{ $t('component.dashboard.header.welcome') }} {{ userInfo.name }}</h1>
       {{ userInfo.description }}
@@ -7,7 +12,7 @@
 
     <el-col
       :span="12"
-      style="padding-left: 2.5px;padding-right: 2.5px;text-align: end;"
+      style="padding-left: 2.5px;padding-right: 5px;text-align: end;"
     >
       <span
         style="border: 0px solid #d3d4d6;border-radius: 10px;"
@@ -98,9 +103,16 @@
       </span>
     </el-col>
   </el-card>
-  <el-card v-else shadow="always">
+  <el-card
+    v-else
+    shadow="always"
+    :body-style="{ padding: '0px' }"
+  >
     <el-col :span="24" style="padding-right:10px;margin-bottom:20px;">
-      <el-card shadow="always">
+      <el-card
+        shadow="always"
+        :body-style="{ padding: '0px !important;' }"
+      >
         <el-col :span="24" style="padding-right:10px;margin-bottom:20px;">
           <h1 style="margin-bottom: 5px;">{{ $t('component.dashboard.header.welcome') }} {{ userInfo.name }}</h1>
           {{ userInfo.description }}

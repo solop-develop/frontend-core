@@ -20,7 +20,11 @@
   <div class="dashboard-editor-container">
     <el-row :gutter="12">
       <el-col :span="24" style="padding-right:10px;margin-bottom:20px;">
-        <el-card shadow="always" :body-style="{ padding: '0px !important;' }">
+        <el-card
+          shadow="hover"
+          :body-style="{ padding: '0px' }"
+          style="padding: 0px !important;"
+        >
           <user-info />
         </el-card>
       </el-col>
