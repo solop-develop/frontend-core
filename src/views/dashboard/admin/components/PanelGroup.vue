@@ -23,7 +23,7 @@
       :key="taks.id"
       :xs="12"
       :sm="12"
-      :lg="6"
+      :lg="spanSize"
       class="card-panel-col"
     >
       <div class="card-panel" @click="handleClick(taks)">
@@ -69,6 +69,14 @@ export default defineComponent({
     CountTo
   },
   setup(props) {
+    const spanSize = computed(() => {
+      const quantity = mainTaks.value.length
+      if (quantity === 1) return 24
+      if (quantity === 2) return 12
+      if (quantity === 3) return 8
+      return 6
+    })
+
     const documentList = computed(() => {
       return store.getters.getListTaks.map(taks => {
         const { criteria } = taks
@@ -128,6 +136,7 @@ export default defineComponent({
     return {
       // Computed
       mainTaks,
+      spanSize,
       documentList,
       // Methods
       handleClick,
