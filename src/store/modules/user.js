@@ -169,10 +169,14 @@ const actions = {
     })
   },
 
-  loginOpenId({ commit }, result) {
+  loginOpenId({ commit }, {
+    code,
+    state
+  }) {
     return new Promise((resolve, reject) => {
       loginAuthentication({
-        search: result
+        code,
+        state
       })
         .then(token => {
           commit('SET_TOKEN', token)
