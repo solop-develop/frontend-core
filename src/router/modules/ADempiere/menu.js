@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Leonel Matos lMatos@eroya.com
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,10 +22,15 @@ import Layout from '@/layout'
 import staticRoutes from '@/router/modules/ADempiere/staticRoutes.js'
 
 // API Request Methods
-import { requestMenu } from '@/api/user.js'
+// import { requestMenu } from '@/api/ADempiere/dictionary/menu'
+import { requestMenu } from '@/api/user'
 
 // Utils and Helper Methods
 import { convertAction } from '@/utils/ADempiere/dictionaryUtils.js'
+
+export const HIDDEN_ROUTES = [
+  '/ProductInfo'
+]
 
 /**
  * Get Menu from server
@@ -43,7 +48,7 @@ export function loadMainMenu({
     requestMenu().then(menuResponse => {
       const asyncRoutesMap = []
 
-      menuResponse.childs.forEach(menuElement => {
+      menuResponse.menus.forEach(menuElement => {
         const optionMenu = getRouteFromMenuItem({
           menu: menuElement,
           roleUuid,
@@ -51,7 +56,7 @@ export function loadMainMenu({
         })
 
         if (optionMenu.meta.isSummary) {
-          menuElement.childs.forEach(menu => {
+          menuElement.children.forEach(menu => {
             const childsSumaryConverted = getChildFromAction({
               menu,
               index: 0,
@@ -128,7 +133,7 @@ function getChildFromAction({ menu, index, roleUuid, organizationUuid }) {
   }
 
   if (isIndex) {
-    menu.childs.forEach(child => {
+    menu.children.forEach(child => {
       const menuConverted = getChildFromAction({
         menu: child,
         index: 1,
@@ -194,7 +199,7 @@ function hidenStactiRoutes({ staticRoutes, permiseRole }) {
   }
 
   return staticRoutes.map(route => {
-    if (route.path === '/ProductInfo') {
+    if (HIDDEN_ROUTES.includes(route.path)) {
       return {
         ...route,
         // is hidden by default, change to be visible

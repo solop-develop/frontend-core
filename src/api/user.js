@@ -80,6 +80,7 @@ export function requestSessionInfo() {
 
 /**
  * Get User menu from server
+ * @deprecated
  */
 export function requestMenu() {
   return request({
