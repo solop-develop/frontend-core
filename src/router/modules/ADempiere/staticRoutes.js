@@ -56,6 +56,31 @@ const staticRoutes = [
   },
 
   {
+    path: '/Charts',
+    component: Layout,
+    meta: {
+      title: language.t('route.charts'),
+      icon: 'chart',
+      noCache: true,
+      breadcrumb: false
+    },
+    redirect: '/Charts/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/ADempiere/Charts'),
+        name: 'Charts',
+        meta: {
+          title: language.t('route.charts'),
+          icon: 'chart',
+          noCache: true,
+          isIndex: true
+        }
+      }
+    ]
+  },
+
+  {
     path: '/report-viewer',
     component: Layout,
     hidden: true,

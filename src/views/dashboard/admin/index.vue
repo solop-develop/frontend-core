@@ -95,7 +95,10 @@ export default defineComponent({
       }
       if (!isEmptyValue(mainDashboard.value)) {
         return list.filter(dashboard => {
-          if (mainDashboard.value.id !== dashboard.id) {
+          if (
+            mainDashboard.value.id !== dashboard.id &&
+            isEmptyValue(dashboard.chartType)
+          ) {
             return dashboard
           }
         })

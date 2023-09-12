@@ -16,6 +16,7 @@
 
 const route = {
   dashboard: 'Panel de control',
+  charts: 'Gráficos',
   documentation: 'Documentación',
   calendar: 'Calendario',
   forgotPassword: '¿Olvidó su Contraseña?',

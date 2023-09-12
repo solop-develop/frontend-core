@@ -16,6 +16,7 @@
 
 const route = {
   dashboard: 'Dashboard',
+  charts: 'Charts',
   calendar: 'Calendar',
   documentation: 'Documentation',
   guide: 'Guide',
