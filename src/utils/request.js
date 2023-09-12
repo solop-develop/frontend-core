@@ -111,7 +111,6 @@ const dictionaryService = axios.create({
 // request interceptor
 dictionaryService.interceptors.request.use(
   config => {
-    console.log(config)
     // do something before request is sent
     // Add custom token and language
     if (!config.params) {
