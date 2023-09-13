@@ -23,7 +23,7 @@ import router from '@/router'
 import store from '@/store'
 
 // Components and Mixins
-import LoadingView from '@theme/components/ADempiere/LoadingView'
+import LoadingView from '@/components/ADempiere/LoadingView'
 
 // Constants
 import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'

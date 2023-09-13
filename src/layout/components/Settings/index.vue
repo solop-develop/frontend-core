@@ -73,7 +73,7 @@ import { computed, ref } from '@vue/composition-api'
 import store from '@/store'
 
 // components and mixins
-import ThemePicker from '@theme/components/ThemePicker'
+import ThemePicker from '@/components/ThemePicker'
 
 export default {
   name: 'GeneralSettings',

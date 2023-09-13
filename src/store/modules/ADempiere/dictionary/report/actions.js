@@ -104,7 +104,7 @@ export default {
                 })
               },
               // TODO: Change to string and import dynamic in component
-              componentPath: () => import('@theme/components/ADempiere/PanelDefinition/index.vue'),
+              componentPath: () => import('@/components/ADempiere/PanelDefinition/index.vue'),
               isShowed: false
             })
           }

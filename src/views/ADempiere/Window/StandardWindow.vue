@@ -38,7 +38,7 @@
 import { defineComponent, computed } from '@vue/composition-api'
 
 // Components and Mixins
-import TabManager from '@theme/components/ADempiere/TabManager/index.vue'
+import TabManager from '@/components/ADempiere/TabManager/index.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'

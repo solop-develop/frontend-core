@@ -90,14 +90,14 @@ import language from '@/lang'
 import store from '@/store'
 
 // Componets and Mixins
-import ActionMenu from '@theme/components/ADempiere/ActionMenu/index.vue'
-import CollapseCriteria from '@theme/components/ADempiere/CollapseCriteria/index.vue'
-import DefaultTable from '@theme/components/ADempiere/DataTable/index.vue'
-import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
+import ActionMenu from '@/components/ADempiere/ActionMenu/index.vue'
+import CollapseCriteria from '@/components/ADempiere/CollapseCriteria/index.vue'
+import DefaultTable from '@/components/ADempiere/DataTable/index.vue'
+import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 import mixinProcess from '@/views/ADempiere/Process/mixinProcess.js'
-import ModalDialog from '@theme/components/ADempiere/ModalDialog/index.vue'
-import PanelDefinition from '@theme/components/ADempiere/PanelDefinition/index.vue'
-import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp'
+import ModalDialog from '@/components/ADempiere/ModalDialog/index.vue'
+import PanelDefinition from '@/components/ADempiere/PanelDefinition/index.vue'
+import TitleAndHelp from '@/components/ADempiere/TitleAndHelp'
 
 // Utils and Helper Methods
 import {

@@ -35,7 +35,7 @@
 import { defineComponent, computed, onMounted, watch } from '@vue/composition-api'
 import store from '@/store'
 // Components and Mixins
-import DashboardDefinition from '@theme/components/ADempiere/Dashboard/index.vue'
+import DashboardDefinition from '@/components/ADempiere/Dashboard/index.vue'
 import PanelGroup from '@/views/dashboard/admin/components/PanelGroup.vue'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'

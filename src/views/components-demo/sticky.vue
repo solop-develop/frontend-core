@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import Sticky from '@theme/components/Sticky'
+import Sticky from '@/components/Sticky'
 
 export default {
   name: 'StickyDemo',

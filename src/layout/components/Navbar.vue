@@ -80,14 +80,14 @@
 <script>
 import ProfilePreview from '@/layout/components/ProfilePreview'
 import { mapGetters } from 'vuex'
-import Breadcrumb from '@theme/components/Breadcrumb'
-import Hamburger from '@theme/components/Hamburger'
-import ErrorLog from '@theme/components/ErrorLog'
-import Screenfull from '@theme/components/Screenfull'
-// import SizeSelect from '@theme/components/SizeSelect'
-import LangSelect from '@theme/components/LangSelect'
-import Search from '@theme/components/HeaderSearch'
-import HeaderNotification from '@theme/components/ADempiere/HeaderNotification'
+import Breadcrumb from '@/components/Breadcrumb'
+import Hamburger from '@/components/Hamburger'
+import ErrorLog from '@/components/ErrorLog'
+import Screenfull from '@/components/Screenfull'
+// import SizeSelect from '@/components/SizeSelect'
+import LangSelect from '@/components/LangSelect'
+import Search from '@/components/HeaderSearch'
+import HeaderNotification from '@/components/ADempiere/HeaderNotification'
 import { getImagePath } from '@/utils/ADempiere/resource.js'
 import Driver from 'driver.js' // import driver.js
 import 'driver.js/dist/driver.min.css' // import driver.js css
@@ -175,10 +175,10 @@ export default {
       let form
       switch (this.getForm.fileName) {
         case 'WFActivity':
-          form = require('@theme/components/ADempiere/Form/WorkflowActivity/Guide/steps')
+          form = require('@/components/ADempiere/Form/WorkflowActivity/Guide/steps')
           break
         case 'VPOS':
-          form = require('@theme/components/ADempiere/Form/VPOS/Guide/steps')
+          form = require('@/components/ADempiere/Form/VPOS/Guide/steps')
           break
         default:
           form = {

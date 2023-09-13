@@ -97,13 +97,13 @@ import store from '@/store'
 import router from '@/router'
 
 // components and mixins
-import ActionMenu from '@theme/components/ADempiere/ActionMenu/index.vue'
-import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
+import ActionMenu from '@/components/ADempiere/ActionMenu/index.vue'
+import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 import mixinReport from '@/views/ADempiere/Report/mixinReport.js'
-import PanelDefinition from '@theme/components/ADempiere/PanelDefinition/index.vue'
-import OptionsReport from '@theme/components/ADempiere/ReportManager/Setup/optionsReport.vue'
-import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp/index.vue'
-import PanelFooter from '@theme/components/ADempiere/PanelFooter/index.vue'
+import PanelDefinition from '@/components/ADempiere/PanelDefinition/index.vue'
+import OptionsReport from '@/components/ADempiere/ReportManager/Setup/optionsReport.vue'
+import TitleAndHelp from '@/components/ADempiere/TitleAndHelp/index.vue'
+import PanelFooter from '@/components/ADempiere/PanelFooter/index.vue'
 
 // utils and helper methods
 import { isEmptyValue, closeTagView } from '@/utils/ADempiere/valueUtils'
