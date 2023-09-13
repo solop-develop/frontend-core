@@ -229,10 +229,6 @@ export default {
       })
   },
 
-  // mounted() {
-  //   console.log({ isLoadingLogin: this.isLoadingLogin })
-  // },
-
   methods: {
     checkCapslock(e) {
       const { key } = e

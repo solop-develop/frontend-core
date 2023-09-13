@@ -74,7 +74,6 @@ export default {
         return -1
       },
       set(organizationToSet) {
-        console.log(organizationToSet)
         this.changeOrganization(organizationToSet)
       }
     },
@@ -132,7 +131,6 @@ export default {
         })
     },
     changeOrganization(organizationId) {
-      console.log('changeOrganization', organizationId)
       this.$message({
         message: this.$t('notifications.loading'),
         showClose: true,

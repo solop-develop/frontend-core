@@ -438,7 +438,6 @@ const actions = {
     organizationId,
     isCloseAllViews = true
   }) {
-    console.log({ organizationId })
     // TODO: Check if there are no tagViews in the new routes to close them, and
     // if they exist, reload with the new route using name (uuid)
     dispatch('tagsView/setCustomTagView', {
@@ -568,7 +567,6 @@ const actions = {
     warehouseId,
     isCloseAllViews = true
   }) {
-    console.log({ roleId, organizationId, warehouseId })
     dispatch('tagsView/setCustomTagView', {
       isCloseAllViews
     }, {
