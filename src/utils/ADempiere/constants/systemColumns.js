@@ -220,7 +220,7 @@ export function isReservedColumn(columnName) {
 export const SPECIAL_ZERO_ID_TABLES = [
   'AD_Client',
   'AD_Org',
-  'AD_Warehouse_ID',
+  'AD_Warehouse',
   'AD_ReportView',
   'AD_Role',
   'AD_System',
