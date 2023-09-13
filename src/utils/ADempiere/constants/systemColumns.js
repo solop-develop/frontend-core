@@ -216,3 +216,17 @@ export function isReservedColumn(columnName) {
     columnName === 'IsOverUnderPayment' ||
     (columnName.startsWith('Ref_') && columnName.endsWith('_ID'))
 }
+
+export const SPECIAL_ZERO_ID_TABLES = [
+  'AD_Client',
+  'AD_Org',
+  'AD_Warehouse_ID',
+  'AD_ReportView',
+  'AD_Role',
+  'AD_System',
+  'AD_User',
+  'C_DocType',
+  'GL_Category',
+  'M_AttributeSet',
+  'M_AttributeSetInstance'
+]

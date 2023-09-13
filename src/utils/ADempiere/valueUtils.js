@@ -21,7 +21,7 @@ import store from '@/store'
 import router from '@/router'
 
 // Constants
-import { CLIENT } from '@/utils/ADempiere//constants/systemColumns'
+import { SPECIAL_ZERO_ID_TABLES } from '@/utils/ADempiere//constants/systemColumns'
 import { LIST, TABLE, TABLE_DIRECT } from '@/utils/ADempiere/references.js'
 import { DISPLAY_COLUMN_PREFIX, IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
 import { OPERATION_PATTERN } from '@/utils/ADempiere/formatValue/numberFormat.js'
@@ -121,11 +121,19 @@ export function isIdentifierEmpty({
   if (isEmptyValue(value)) {
     return true
   }
+  columnName = columnName.replace(/\$|#/g, '')
+
+  const isSpecialZeroUpdate = SPECIAL_ZERO_ID_TABLES.some(tableName => {
+    return columnName.startsWith(tableName)
+  })
+  if (isSpecialZeroUpdate) {
+    return false
+  }
 
   if (!columnName.startsWith(DISPLAY_COLUMN_PREFIX) &&
     (columnName.endsWith(IDENTIFIER_COLUMN_SUFFIX) ||
     columnName.endsWith('_ID_To')) &&
-    columnName !== CLIENT && String(value).trim() === '0') {
+    String(value).trim() === '0') {
     return true
   }
 
