@@ -752,7 +752,6 @@ export default {
 
       // with copy values
       if (!isEmptyValue(overwriteValues)) {
-        console.log(overwriteValues)
         defaultAttributes = defaultAttributes.map(attribute => {
           const filterValue = overwriteValues[attribute.columnName]
           if (isEmptyValue(filterValue)) {

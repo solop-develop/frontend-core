@@ -27,6 +27,7 @@ import { requestMenu } from '@/api/user'
 
 // Utils and Helper Methods
 import { convertAction } from '@/utils/ADempiere/dictionaryUtils.js'
+import { getCurrentClient, getCurrentOrganization, getCurrentRole } from '@/utils/ADempiere/auth'
 
 export const HIDDEN_ROUTES = [
   '/ProductInfo'
@@ -40,10 +41,12 @@ export const HIDDEN_ROUTES = [
  * @param {string} organizationUuid
  */
 export function loadMainMenu({
-  roleUuid = 0,
-  organizationUuid = 0,
   role
 }) {
+  const clientId = getCurrentClient()
+  const roleId = getCurrentRole()
+  const organizationId = getCurrentOrganization()
+
   return new Promise(resolve => {
     requestMenu().then(menuResponse => {
       const asyncRoutesMap = []
@@ -51,32 +54,37 @@ export function loadMainMenu({
       menuResponse.menus.forEach(menuElement => {
         const optionMenu = getRouteFromMenuItem({
           menu: menuElement,
-          roleUuid,
-          organizationUuid
+          clientId,
+          roleId,
+          organizationId
         })
 
+        const children = []
         if (optionMenu.meta.isSummary) {
           menuElement.children.forEach(menu => {
             const childsSumaryConverted = getChildFromAction({
               menu,
               index: 0,
-              roleUuid,
-              organizationUuid
+              clientId,
+              roleId,
+              organizationId
             })
-            optionMenu.children.push(childsSumaryConverted)
-            optionMenu.meta.childs.push(childsSumaryConverted)
+            children.push(childsSumaryConverted)
           })
         } else {
           const childsConverted = getChildFromAction({
             menu: menuElement,
             index: undefined,
-            roleUuid,
-            organizationUuid
+            clientId,
+            roleId,
+            organizationId
           })
-
-          optionMenu.children.push(childsConverted)
-          optionMenu.meta.childs.push(childsConverted)
+          children.push(childsConverted)
         }
+
+        optionMenu.children = children
+        optionMenu.meta.childs = children
+
         asyncRoutesMap.push(optionMenu)
       })
 
@@ -100,15 +108,16 @@ export function loadMainMenu({
  * @author Edwin Betancourt <EdwinBetanc0urt@outlook.com>
  * @param {object} menu
  * @param {number} index
- * @param {string} roleUuid
- * @param {string} organizationUuid
+ * @param {number} clientId
+ * @param {number} roleId
+ * @param {number} organizationId
  */
-function getChildFromAction({ menu, index, roleUuid, organizationUuid }) {
+function getChildFromAction({ menu, index, clientId, roleId, organizationId }) {
   const { component, icon, name: type } = convertAction(menu.action)
-  const routeIdentifier = type + '/' + menu.id
+  const routeIdentifier = type + '/' + menu.reference_id
   const isIndex = menu.is_summary
   const option = {
-    path: '/' + roleUuid + '/' + organizationUuid + '/' + routeIdentifier,
+    path: '/' + clientId + '/' + roleId + '/' + organizationId + '/' + menu.id + '/' + routeIdentifier,
     component,
     name: menu.uuid,
     hidden: index > 0,
@@ -120,12 +129,15 @@ function getChildFromAction({ menu, index, roleUuid, organizationUuid }) {
       isReadOnly: menu.is_read_only,
       isSummary: menu.is_summary,
       isSalesTransaction: menu.is_sales_transaction,
+      parentId: menu.parent_id,
       parentUuid: menu.parent_uuid,
       noCache: false,
+      referenceId: menu.reference_id,
       referenceUuid: menu.reference_uuid,
       tabUuid: '',
       title: menu.name,
       type,
+      id: menu.reference_id,
       uuid: menu.reference_uuid,
       childs: []
     },
@@ -137,8 +149,9 @@ function getChildFromAction({ menu, index, roleUuid, organizationUuid }) {
       const menuConverted = getChildFromAction({
         menu: child,
         index: 1,
-        roleUuid,
-        organizationUuid
+        clientId,
+        roleId,
+        organizationId
       })
       option.children.push(menuConverted)
       option.meta.childs.push(menuConverted)
@@ -153,25 +166,30 @@ function getChildFromAction({ menu, index, roleUuid, organizationUuid }) {
  * @author elsiosanchez <elsiosanches@gmail.com>
  * @author Edwin Betancourt <EdwinBetanc0urt@outlook.com>
  * @param {object} menu
- * @param {string} roleUuid
- * @param {string} organizationUuid
+ * @param {number} clientId
+ * @param {number} roleId
+ * @param {number} organizationId
  */
-function getRouteFromMenuItem({ menu, roleUuid, organizationUuid }) {
+function getRouteFromMenuItem({ menu, clientId, roleId, organizationId }) {
   // use component of convertAction
   const { icon, name: type } = convertAction(menu.action)
   const isIndex = menu.is_summary
   const optionMenu = {
-    path: '/' + roleUuid + '/' + organizationUuid + '/' + menu.id,
+    path: '/' + clientId + '/' + roleId + '/' + organizationId + '/' + menu.id,
     redirect: '/' + menu.id,
     component: Layout,
     name: menu.uuid,
     meta: {
+      id: menu.reference_id,
+      uuid: menu.reference_uuid,
       description: menu.description,
       icon,
       isIndex,
       isReadOnly: menu.is_read_only,
       isSummary: menu.is_summary,
       isSalesTransaction: menu.is_sales_transaction,
+      parentId: menu.parent_id,
+      parentUuid: menu.parent_uuid,
       noCache: true,
       referenceId: menu.reference_id,
       referenceUuid: menu.reference_uuid,
