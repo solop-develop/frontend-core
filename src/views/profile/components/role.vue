@@ -8,7 +8,7 @@
     </el-form-item>
 
     <el-form-item :label="$t('profile.clientName')">
-      {{ currentRole.clientName }}
+      {{ currentRole.client.name }}
     </el-form-item>
 
     <el-form-item :label="$t('profile.description')">
@@ -26,7 +26,7 @@
           v-for="(rol, key) in rolesList"
           :key="key"
           :label="rol.name"
-          :value="rol.uuid"
+          :value="rol.id"
           :disabled="isEmptyValue(rol.uuid)"
         />
       </el-select>
@@ -34,7 +34,7 @@
 
     <el-form-item :label="$t('route.organization')">
       <el-select
-        v-model="currentOrganizationUuid"
+        v-model="currentOrganizationId"
         :filterable="!isMobile"
         value-key="key"
         @visible-change="showOrganizationsList"
@@ -43,7 +43,7 @@
           v-for="(organization, key) in organizationsList"
           :key="key"
           :label="organization.name"
-          :value="organization.uuid"
+          :value="organization.id"
           :disabled="isEmptyValue(organization.uuid)"
         />
       </el-select>
@@ -51,7 +51,7 @@
 
     <el-form-item :label="$t('route.warehouse')">
       <el-select
-        v-model="currentWarehouseUuid"
+        v-model="currentWarehouseId"
         :filterable="!isMobile"
         value-key="key"
         @visible-change="showWarehouseList"
@@ -60,7 +60,7 @@
           v-for="(warehouse, key) in warehousesList"
           :key="key"
           :label="warehouse.name"
-          :value="warehouse.uuid"
+          :value="warehouse.id"
           :disabled="isEmptyValue(warehouse.uuid)"
         />
       </el-select>
@@ -119,13 +119,13 @@ export default {
     rolesList() {
       return this.$store.getters['user/getRoles']
     },
-    currentOrganizationUuid: {
+    currentOrganizationI: {
       get() {
         const organization = this.$store.getters['user/getOrganization']
         if (organization) {
-          return organization.uuid
+          return organization.id
         }
-        return ''
+        return -1
       },
       set(organizationToSet) {
         this.changeOrganization(organizationToSet)
@@ -134,13 +134,13 @@ export default {
     organizationsList() {
       return this.$store.getters['user/getOrganizations']
     },
-    currentWarehouseUuid: {
+    currentWarehouseId: {
       get() {
         const warehouse = this.$store.getters['user/getWarehouse']
         if (warehouse) {
-          return warehouse.uuid
+          return warehouse.id
         }
-        return ''
+        return -1
       },
       set(warehouseToSet) {
         this.changeWarehouse(warehouseToSet)
@@ -158,13 +158,13 @@ export default {
   },
 
   watch: {
-    'currentRole.uuid'(uuidRol) {
-      this.valueRol = uuidRol
+    'currentRole.id'(roleId) {
+      this.valueRol = roleId
     }
   },
 
   created() {
-    this.valueRol = this.currentRole.uuid
+    this.valueRol = this.currentRole.id
   },
 
   methods: {
@@ -175,38 +175,38 @@ export default {
         iconClass: 'el-icon-loading'
       })
       this.$store.dispatch('user/changeRole', {
-        roleUuid: valueSelected,
+        roleId: valueSelected,
         isCloseAllViews: false
       })
     },
     showOrganizationsList(isShow) {
       if (isShow && this.isEmptyValue(this.organizationsList)) {
-        this.$store.dispatch('user/getOrganizationsListFromServer', this.currentRoleUuid)
+        this.$store.dispatch('user/getOrganizationsListFromServer', this.currentRoleId)
       }
     },
-    changeOrganization(organizationUuid) {
+    changeOrganization(organizationId) {
       this.$message({
         message: this.$t('notifications.loading'),
         showClose: true,
         iconClass: 'el-icon-loading'
       })
-      const currentOrganization = this.organizationsList.find(element => element.uuid === organizationUuid)
       this.$router.push({
         path: '/'
       }, () => {})
       this.$store.dispatch('user/changeOrganization', {
-        organizationUuid,
-        organizationId: currentOrganization.id
+        organizationId
       })
     },
     showWarehouseList(isShow) {
       if (isShow && this.isEmptyValue(this.warehousesList)) {
-        this.$store.dispatch('user/getWarehousesList', this.currentOrganizationUuid)
+        this.$store.dispatch('user/getWarehousesList', {
+          organizationId: this.currentOrganizationId
+        })
       }
     },
-    changeWarehouse(warehouseUuid) {
+    changeWarehouse(warehouseId) {
       this.$store.dispatch('user/changeWarehouse', {
-        warehouseUuid
+        warehouseId
       })
     },
     changeLanguage(languageValue) {

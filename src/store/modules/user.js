@@ -46,7 +46,8 @@ import {
   getCurrentWarehouse,
   setCurrentWarehouse,
   removeCurrentWarehouse,
-  removeCurrentOrganization
+  removeCurrentOrganization,
+  setCurrentClient
 } from '@/utils/auth'
 import {
   requestOrganizationsList,
@@ -146,16 +147,18 @@ const actions = {
   login({ commit }, {
     userName,
     password,
-    roleUuid,
-    organizationUuid,
+    roleId,
+    organizationId,
+    warehouseId,
     token
   }) {
     return new Promise((resolve, reject) => {
       requestLogin({
         userName,
         password,
-        roleUuid,
-        organizationUuid,
+        roleId,
+        organizationId,
+        warehouseId,
         token
       })
         .then(token => {
@@ -227,16 +230,18 @@ const actions = {
 
           const { role } = sessionInfo
           commit('SET_ROLE', role)
-          setCurrentRole(role.uuid)
+          setCurrentRole(role.id)
+          setCurrentClient(role.client.id)
           const currentOrganizationSession = sessionInfo.defaultContext.find(context => {
-            if (context.key === `#${ORGANIZATION}`) {
-              return context
-            }
+            return context.key === `#${ORGANIZATION}`
           })
           commit('SET_CURRENT_ORGANIZATION_ID', currentOrganizationSession.value)
 
           // wait to establish the client and organization to generate the menu
-          await dispatch('getOrganizationsListFromServer', role.uuid, currentOrganizationSession.value)
+          await dispatch('getOrganizationsListFromServer', {
+            roleId: role.id,
+            organizationId: currentOrganizationSession.value
+          })
 
           resolve(sessionResponse)
 
@@ -285,7 +290,7 @@ const actions = {
         }
         // if (isEmptyValue(state.role)) {
         //   const role = responseGetInfo.rolesList.find(itemRole => {
-        //     return itemRole.uuid === getCurrentRole()
+        //     return itemRole.id === getCurrentRole()
         //   })
         //   if (!isEmptyValue(role)) {
         //     commit('SET_ROLE', role)
@@ -363,7 +368,7 @@ const actions = {
             const roleSession = getCurrentRole()
             if (!isEmptyValue(roleSession)) {
               role = rolesList.find(itemRole => {
-                return itemRole.uuid === roleSession
+                return itemRole.id === roleSession
               })
             }
             if (isEmptyValue(role)) {
@@ -392,20 +397,25 @@ const actions = {
    * @param {string} roleUuid
    * @returns
    */
-  getOrganizationsListFromServer({ commit, dispatch, getters }, roleUuid) {
-    if (isEmptyValue(roleUuid)) {
-      roleUuid = getCurrentRole()
+  getOrganizationsListFromServer({ commit, dispatch, getters }, { roleId, organizationId }) {
+    if (isEmptyValue(roleId)) {
+      roleId = getCurrentRole()
+    }
+    if (isEmptyValue(organizationId)) {
+      organizationId = getters.getCurrentOrgId
     }
 
-    return requestOrganizationsList({ roleUuid })
+    return requestOrganizationsList({ roleId })
       .then(response => {
-        let organization = response.organizationsList.find(a => a.id === getters.getCurrentOrgId)
+        let organization = response.organizationsList.find(orgItem => {
+          return orgItem.id === organizationId
+        })
         if (isEmptyValue(organization)) {
           organization = response.organizationsList.at(0)
         }
         commit('SET_ORGANIZATIONS_LIST', response.organizationsList)
-        const { uuid, id } = organization
-        setCurrentOrganization(uuid)
+        const { id } = organization
+        setCurrentOrganization(id)
         commit('SET_ORGANIZATION', organization)
         commit('SET_CURRENT_ORGANIZATION_ID', id)
         // commit('setPreferenceContext', {
@@ -415,7 +425,9 @@ const actions = {
         //   root: true
         // })
 
-        dispatch('getWarehousesList', organization.uuid)
+        dispatch('getWarehousesList', {
+          organizationId: organization.id
+        })
       })
       .catch(error => {
         console.warn(`Error ${error.code} getting Organizations list: ${error.message}.`)
@@ -423,10 +435,10 @@ const actions = {
   },
 
   changeOrganization({ commit, dispatch, getters }, {
-    organizationUuid,
     organizationId,
     isCloseAllViews = true
   }) {
+    console.log({ organizationId })
     // TODO: Check if there are no tagViews in the new routes to close them, and
     // if they exist, reload with the new route using name (uuid)
     dispatch('tagsView/setCustomTagView', {
@@ -436,20 +448,27 @@ const actions = {
     })
 
     return requestChangeRole({
-      roleUuid: getCurrentRole(),
-      organizationUuid
+      roleId: getCurrentRole(),
+      organizationId
     })
       .then(tokenSession => {
         commit('SET_TOKEN', tokenSession)
         setToken(tokenSession)
+        const organizationsList = getters.getOrganizations
+        let organization = organizationsList.find(org => {
+          return org.id === organizationId
+        })
+        if (isEmptyValue(organization) && !isEmptyValue(organizationsList)) {
+          organization = organizationsList.at(0)
+        }
+        const { id } = organization
+        setCurrentOrganization(id)
 
-        setCurrentOrganization(organizationUuid)
-        const organization = getters.getOrganizations.find(org => org.uuid === organizationUuid)
         commit('SET_ORGANIZATION', organization)
-        commit('SET_CURRENT_ORGANIZATION_ID', organization.id)
+        commit('SET_CURRENT_ORGANIZATION_ID', id)
         commit('setPreferenceContext', {
           columnName: `#${ORGANIZATION}`,
-          value: organization.id
+          value: id
         }, {
           root: true
         })
@@ -457,7 +476,7 @@ const actions = {
         // Update user info and context associated with session
         // dispatch('getSessionInfo', tokenSession)
 
-        // dispatch('getWarehousesList', organizationUuid)
+        // dispatch('getWarehousesList', { organizationId: id })
 
         showMessage({
           message: language.t('notifications.successChangeRole'),
@@ -481,17 +500,19 @@ const actions = {
       })
   },
 
-  getWarehousesList({ commit }, organizationUuid) {
-    if (isEmptyValue(organizationUuid)) {
-      organizationUuid = getCurrentOrganization()
+  getWarehousesList({ commit }, { organizationId }) {
+    if (isEmptyValue(organizationId)) {
+      organizationId = getCurrentOrganization()
     }
 
     return requestWarehousesList({
-      organizationUuid
+      organizationId
     })
       .then(response => {
         commit('SET_WAREHOUSES_LIST', response.warehousesList)
-        let warehouse = response.warehousesList.find(item => item.uuid === getCurrentWarehouse())
+        let warehouse = response.warehousesList.find(warehouseItem => {
+          return warehouseItem.id === getCurrentWarehouse()
+        })
         if (isEmptyValue(warehouse)) {
           warehouse = response.warehousesList[0]
         }
@@ -499,7 +520,7 @@ const actions = {
           removeCurrentWarehouse()
           commit('SET_WAREHOUSE', undefined)
         } else {
-          setCurrentWarehouse(warehouse.uuid)
+          setCurrentWarehouse(warehouse.id)
           commit('SET_WAREHOUSE', warehouse)
           commit('setPreferenceContext', {
             columnName: `#${WAREHOUSE}`,
@@ -514,13 +535,14 @@ const actions = {
       })
   },
 
-  changeWarehouse({ commit, state, dispatch }, {
-    warehouseId,
-    warehouseUuid
+  changeWarehouse({ commit, state }, {
+    warehouseId
   }) {
-    setCurrentWarehouse(warehouseUuid)
+    setCurrentWarehouse(warehouseId)
 
-    const currentWarehouse = state.warehousesList.find(warehouse => warehouse.uuid === warehouseUuid)
+    const currentWarehouse = state.warehousesList.find(warehouseItem => {
+      return warehouseItem.uuid === warehouseId
+    })
     commit('SET_WAREHOUSE', currentWarehouse)
 
     commit('setPreferenceContext', {
@@ -541,11 +563,12 @@ const actions = {
 
   // dynamically modify permissions
   changeRole({ commit, dispatch }, {
-    roleUuid,
-    organizationUuid,
-    warehouseUuid,
+    roleId,
+    organizationId,
+    warehouseId,
     isCloseAllViews = true
   }) {
+    console.log({ roleId, organizationId, warehouseId })
     dispatch('tagsView/setCustomTagView', {
       isCloseAllViews
     }, {
@@ -553,16 +576,16 @@ const actions = {
     })
 
     return requestChangeRole({
-      roleUuid,
-      organizationUuid,
-      warehouseUuid
+      roleId,
+      organizationId,
+      warehouseId
     })
       .then(tokenSession => {
         commit('SET_TOKEN', tokenSession)
         setToken(tokenSession)
 
         // commit('SET_ROLE', role)
-        setCurrentRole(roleUuid)
+        setCurrentRole(roleId)
 
         removeCurrentOrganization()
         removeCurrentWarehouse()
@@ -575,7 +598,7 @@ const actions = {
           type: 'success',
           showClose: true
         })
-        return roleUuid
+        return roleId
       })
       .catch(error => {
         showMessage({

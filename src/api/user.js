@@ -26,12 +26,16 @@ import { getLanguage } from '@/lang/index'
  * Make login by UserName and password, this function can return user data for show
  * @param {string} userName
  * @param {string} password
+ * @param {number} roleId
+ * @param {number} organizationId
+ * @param {number} warehouseId
  */
 export function requestLogin({
   userName,
   password,
-  roleUuid,
-  organizationUuid,
+  roleId,
+  organizationId,
+  warehouseId,
   token
 }) {
   const language = getLanguage() || 'en_US'
@@ -45,8 +49,9 @@ export function requestLogin({
     data: {
       username: userName,
       password,
-      role_uuid: roleUuid,
-      organization_uuid: organizationUuid,
+      role_id: roleId,
+      organization_id: organizationId,
+      warehouse_id: warehouseId,
       token
     }
   })
@@ -54,7 +59,6 @@ export function requestLogin({
 
 /**
  * Get User Info
- * @param {string} token or session UUID
  */
 export function requestUserInfoFromSession() {
   return request({

@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -72,22 +72,22 @@ export function deleteRole(id) {
 
 /**
  * Change role of access
- * @param {string} roleUuid
- * @param {string} organizationUuid
- * @param {string} warehouseUuid
+ * @param {number} roleId
+ * @param {number} organizationId
+ * @param {number} warehouseId
  */
 export function requestChangeRole({
-  roleUuid,
-  organizationUuid,
-  warehouseUuid
+  roleId,
+  organizationId,
+  warehouseId
 }) {
   return request({
     url: 'user/change-role',
     method: 'post',
     data: {
-      role: roleUuid,
-      organization: organizationUuid,
-      warehouse: warehouseUuid
+      role_id: roleId,
+      organization_id: organizationId,
+      warehouse_id: warehouseId
     }
   })
 }

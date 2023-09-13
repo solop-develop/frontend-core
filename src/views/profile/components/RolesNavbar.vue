@@ -2,7 +2,7 @@
   <el-form>
     <label> <b> {{ $t('route.role') }} </b> </label>
     <el-select
-      v-model="currentRoleUuid"
+      v-model="currentRoleId"
       :filterable="isFiltrable"
       value-key="key"
     >
@@ -10,14 +10,14 @@
         v-for="(role, key) in rolesList"
         :key="key"
         :label="role.name"
-        :value="role.uuid"
+        :value="role.id"
         :disabled="isEmptyValue(role.uuid)"
       />
     </el-select>
 
     <label> <b> {{ $t('route.organization') }} </b> </label>
     <el-select
-      v-model="currentOrganizationUuid"
+      v-model="currentOrganizationId"
       :filterable="isFiltrable"
       value-key="key"
       @visible-change="showOrganizationsList"
@@ -26,14 +26,14 @@
         v-for="(organization, key) in organizationsList"
         :key="key"
         :label="organization.name"
-        :value="organization.uuid"
+        :value="organization.id"
         :disabled="isEmptyValue(organization.uuid)"
       />
     </el-select>
 
     <label> <b> {{ $t('route.warehouse') }} </b> </label>
     <el-select
-      v-model="currentWarehouseUuid"
+      v-model="currentWarehouseId"
       :filterable="isFiltrable"
       value-key="key"
       @visible-change="showWarehouseList"
@@ -42,7 +42,7 @@
         v-for="(warehouse, key) in warehousesList"
         :key="key"
         :label="warehouse.name"
-        :value="warehouse.uuid"
+        :value="warehouse.id"
         :disabled="isEmptyValue(warehouse.uuid)"
       />
     </el-select>
@@ -54,9 +54,9 @@ export default {
   name: 'RolesNavbar',
 
   computed: {
-    currentRoleUuid: {
+    currentRoleId: {
       get() {
-        return this.$store.getters['user/getRole'].uuid
+        return this.$store.getters['user/getRole'].id
       },
       set(roleToSet) {
         this.changeRole(roleToSet)
@@ -65,15 +65,16 @@ export default {
     rolesList() {
       return this.$store.getters['user/getRoles']
     },
-    currentOrganizationUuid: {
+    currentOrganizationId: {
       get() {
         const organization = this.$store.getters['user/getOrganization']
         if (organization) {
-          return organization.uuid
+          return organization.id
         }
-        return ''
+        return -1
       },
       set(organizationToSet) {
+        console.log(organizationToSet)
         this.changeOrganization(organizationToSet)
       }
     },
@@ -83,13 +84,13 @@ export default {
     organizationsList() {
       return this.$store.getters['user/getOrganizations']
     },
-    currentWarehouseUuid: {
+    currentWarehouseId: {
       get() {
         const warehouse = this.$store.getters['user/getWarehouse']
         if (warehouse) {
-          return warehouse.uuid
+          return warehouse.id
         }
-        return ''
+        return -1
       },
       set(warehouseToSet) {
         this.changeWarehouse(warehouseToSet)
@@ -108,15 +109,15 @@ export default {
   },
 
   methods: {
-    changeRole(roleUuid) {
+    changeRole(roleId) {
       this.$message({
         message: this.$t('notifications.loading'),
         iconClass: 'el-icon-loading'
       })
       this.$store.dispatch('user/changeRole', {
-        roleUuid,
-        organizationUuid: this.currentOrganizationUuid,
-        warehouseUuid: this.warehouseUuid
+        roleId,
+        organizationId: this.currentOrganizationId,
+        warehouseId: this.warehouseId
       })
         .then(response => {
           if (this.$route.name !== 'Dashboard') {
@@ -130,34 +131,35 @@ export default {
           // })
         })
     },
-    changeOrganization(organizationUuid) {
+    changeOrganization(organizationId) {
+      console.log('changeOrganization', organizationId)
       this.$message({
         message: this.$t('notifications.loading'),
         showClose: true,
         iconClass: 'el-icon-loading'
       })
-      const currentOrganization = this.organizationsList.find(element => element.uuid === organizationUuid)
       this.$router.push({
         path: '/'
       }, () => {})
       this.$store.dispatch('user/changeOrganization', {
-        organizationUuid,
-        organizationId: currentOrganization.id
+        organizationId
       })
     },
     showOrganizationsList(isShow) {
       if (isShow && this.isEmptyValue(this.organizationsList)) {
-        this.$store.dispatch('user/getOrganizationsListFromServer', this.currentRoleUuid)
+        this.$store.dispatch('user/getOrganizationsListFromServer', this.currentRoleId)
       }
     },
-    changeWarehouse(warehouseUuid) {
+    changeWarehouse(warehouseId) {
       this.$store.dispatch('user/changeWarehouse', {
-        warehouseUuid
+        warehouseId
       })
     },
     showWarehouseList(isShow) {
       if (isShow && this.isEmptyValue(this.warehousesList)) {
-        this.$store.dispatch('user/getWarehousesList', this.currentOrganizationUuid)
+        this.$store.dispatch('user/getWarehousesList', {
+          organizationId: this.currentOrganizationId
+        })
       }
     },
     getLanguages() {

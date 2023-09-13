@@ -3,7 +3,7 @@
     <transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link sidebar-logo-link-close" to="/">
         <el-tooltip placement="right">
-          <div slot="content">{{ getRole.name }} | {{ getRole.clientName }}</div>
+          <div slot="content">{{ getRole.name }} | {{ getRole.client.name }}</div>
           <img v-if="logo" :src="logo" class="sidebar-logo">
           <svg-icon v-else icon-class="AD" style="width: 2em !important;height: 2em !important;font-size: 25px;padding-left: 5px;padding-right: 0px;cursor: pointer;" />
           <b style="margin-left: 5px;">{{ title }}</b>
@@ -17,9 +17,9 @@
           <b style="color: white;font-size: 18px;padding-top: 15px;cursor: pointer; margin-left: 5px;" @click="dashboard()">{{ title }}</b><br>
         </p>
         <el-tooltip placement="right">
-          <div slot="content">{{ getRole.name }} | {{ getRole.clientName }}</div>
+          <div slot="content">{{ getRole.name }} | {{ getRole.client.name }}</div>
           <p class="sidebar-sub-title" style="color: white; font-size: 12px;margin: 0px;margin-top: 0px;" @click="profile()">
-            {{ getRole.name }} | {{ getRole.clientName }}
+            {{ getRole.name }} | {{ getRole.client.name }}
           </p>
         </el-tooltip>
       </span>
@@ -50,10 +50,11 @@ export default {
       return this.$store.getters['user/getRole']
     },
     logo() {
-      const { clientLogo } = this.getRole
-      if (clientLogo) {
+      const { client } = this.getRole
+      const { logo } = client
+      if (logo) {
         const { uri } = getImagePath({
-          file: clientLogo,
+          file: logo,
           width: 50,
           height: 50,
           operation: 'resize'

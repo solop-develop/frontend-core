@@ -16,46 +16,90 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Cookies from 'js-cookie'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
-const roleKey = 'roleUuid'
+// import Cookies from 'js-cookie'
+
+const CLIENT_KEY = 'clientId'
+
+export function setCurrentClient(currentClient) {
+  // Cookies.set(CLIENT_KEY, currentClient)
+  localStorage.setItem(CLIENT_KEY, currentClient)
+}
+
+export function getCurrentClient() {
+  // return Cookies.get(CLIENT_KEY)
+  const client = localStorage.getItem(CLIENT_KEY)
+  if (isEmptyValue(client)) {
+    return -1
+  }
+  return Number(client)
+}
+
+export function removeCurrentClient() {
+  // Cookies.remove(CLIENT_KEY)
+  localStorage.removeItem(CLIENT_KEY)
+}
+
+const ROLE_KEY = 'roleId'
 
 export function setCurrentRole(currentRole) {
-  return Cookies.set(roleKey, currentRole)
+  // Cookies.set(ROLE_KEY, currentRole)
+  localStorage.setItem(ROLE_KEY, currentRole)
 }
 
 export function getCurrentRole() {
-  return Cookies.get(roleKey)
+  // return Cookies.get(ROLE_KEY)
+  const role = localStorage.getItem(ROLE_KEY)
+  if (isEmptyValue(role)) {
+    return -1
+  }
+  return Number(role)
 }
 
 export function removeCurrentRole() {
-  return Cookies.remove(roleKey)
+  // Cookies.remove(ROLE_KEY)
+  localStorage.removeItem(ROLE_KEY)
 }
 
-const organizationKey = 'organizationUuid'
+const ORGANIZATION_KEY = 'organizationId'
 
 export function setCurrentOrganization(currentOrganization) {
-  return Cookies.set(organizationKey, currentOrganization)
+  // Cookies.set(ORGANIZATION_KEY, currentOrganization)
+  localStorage.setItem(ORGANIZATION_KEY, currentOrganization)
 }
 
 export function getCurrentOrganization() {
-  return Cookies.get(organizationKey)
+  // return Cookies.get(ORGANIZATION_KEY)
+  const organization = localStorage.getItem(ORGANIZATION_KEY)
+  if (isEmptyValue(organization)) {
+    return -1
+  }
+  return Number(organization)
 }
 
 export function removeCurrentOrganization() {
-  return Cookies.remove(organizationKey)
+  // Cookies.remove(ORGANIZATION_KEY)
+  localStorage.removeItem(ORGANIZATION_KEY)
 }
 
-const warehouseKey = 'warehouseUuid'
+const WAREHOUSE_KEY = 'warehouseId'
 
 export function setCurrentWarehouse(currentWarehouse) {
-  return Cookies.set(warehouseKey, currentWarehouse)
+  // Cookies.set(WAREHOUSE_KEY, currentWarehouse)
+  localStorage.setItem(WAREHOUSE_KEY, currentWarehouse)
 }
 
 export function getCurrentWarehouse() {
-  return Cookies.get(warehouseKey)
+  // return Cookies.get(WAREHOUSE_KEY)
+  const warehouse = localStorage.getItem(WAREHOUSE_KEY)
+  if (isEmptyValue(warehouse)) {
+    return -1
+  }
+  return Number(warehouse)
 }
 
 export function removeCurrentWarehouse() {
-  return Cookies.remove(warehouseKey)
+  // Cookies.remove(WAREHOUSE_KEY)
+  localStorage.removeItem(WAREHOUSE_KEY)
 }
