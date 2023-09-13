@@ -229,7 +229,6 @@ export default {
     },
     // load the component that is indicated in the attributes of received property
     componentRender() {
-      console.log({ componentPath: this.field.componentPath }, this.field.name)
       if (isEmptyValue(this.field.componentPath || !this.field.isSupported)) {
         return () => import('@/components/ADempiere/FieldDefinition/FieldText')
       }
