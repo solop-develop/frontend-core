@@ -183,7 +183,7 @@ import {
 import store from '@/store'
 // Components
 import { isEmptyValue } from '@/utils/ADempiere'
-import FieldDefinition from '@/themes/default/components/ADempiere/FieldDefinition/index.vue'
+import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
 
 export default defineComponent({
   name: 'SearchCriteria',

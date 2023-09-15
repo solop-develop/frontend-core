@@ -81,16 +81,13 @@
                   <el-dropdown-menu
                     slot="dropdown"
                   >
-                    <template
+                    <el-dropdown-item
                       v-for="(list, index) in optionsImportFormats"
+                      :key="index"
+                      :command="list.value"
                     >
-                      <el-dropdown-item
-                        :key="index"
-                        :command="list.value"
-                      >
-                        {{ list.label }}
-                      </el-dropdown-item>
-                    </template>
+                      {{ list.label }}
+                    </el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
               </el-form-item>
@@ -148,8 +145,8 @@ import {
 import store from '@/store'
 
 // Components and Mixins
-import UploadExcelComponent from '@/themes/default/components/UploadExcel/index.vue'
-import UploadResource from '@/themes/default/components/ADempiere/PanelInfo/Component/AttachmentManager/uploadResource.vue'
+import UploadExcelComponent from '@/components/UploadExcel/index.vue'
+import UploadResource from '@/components/ADempiere/PanelInfo/Component/AttachmentManager/uploadResource.vue'
 import TableRecords from './tableRecords.vue'
 import ImportFormatFields from './importFormatFields.vue'
 import SelectResource from './selectResource.vue'

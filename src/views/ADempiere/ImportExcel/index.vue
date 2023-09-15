@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import UploadExcelComponent from '@theme/components/UploadExcel/index.vue'
+import UploadExcelComponent from '@/components/UploadExcel/index.vue'
 import Carousel from '@/components/ADempiere/Carousel'
 
 export default {

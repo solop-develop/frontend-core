@@ -193,7 +193,7 @@ import store from '@/store'
 
 // Components and Mixins
 import Carousel from '@/components/ADempiere/Carousel'
-import FieldDefinition from '@/themes/default/components/ADempiere/FieldDefinition/index.vue'
+import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
 
 // API Request Methods
 import {

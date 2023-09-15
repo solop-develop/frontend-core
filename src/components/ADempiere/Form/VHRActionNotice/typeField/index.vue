@@ -42,13 +42,13 @@ export default defineComponent({
       let field
       switch (props.row.ColumnType) {
         case 'Texto':
-          field = 'text'
+          field = () => import('@/components/ADempiere/Form/VHRActionNotice/typeField/type/text')
           break
         default:
-          field = 'number'
+          field = () => import('@/components/ADempiere/Form/VHRActionNotice/typeField/type/number')
           break
       }
-      return () => import(`@/components/ADempiere/Form/VHRActionNotice/typeField/type/${field}`)
+      return field
     })
 
     const valueField = computed(() => {
