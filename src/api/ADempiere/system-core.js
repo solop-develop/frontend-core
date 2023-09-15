@@ -287,19 +287,3 @@ export function requestGetConversionRate({
       return convertConversionRate(conversionRateResponse)
     })
 }
-
-/**
- * Get System Info
- */
-export function systemInfo() {
-  return request({
-    url: '/core/system-info',
-    method: 'get'
-  })
-    .then(response => {
-      return response
-    })
-    .catch(error => {
-      console.info(error)
-    })
-}
