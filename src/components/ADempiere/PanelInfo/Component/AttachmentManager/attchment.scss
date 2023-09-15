@@ -1,0 +1,69 @@
+// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
+// Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+.scroll-attachment {
+  max-height: 80vh;
+}
+.el-card.is-current {
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  background-color: #eaf5fe;
+  border: 1px solid #36a3f7;
+}
+
+.el-upload--picture-card {
+  background-color: #fbfdff;
+  border: 1px dashed #c0ccda;
+  border-radius: 6px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 148px;
+  height: 148px;
+  cursor: pointer;
+  line-height: 146px;
+  vertical-align: top;
+  width: 100%;
+}
+.el-upload--picture-card {
+  background-color: #fbfdff;
+  border: 1px dashed #c0ccda;
+  border-radius: 6px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 148px;
+  height: 148px;
+  cursor: pointer;
+  line-height: 146px;
+  vertical-align: top;
+  display: none;
+  width: 100%;
+}
+.image-attachment {
+  .el-card__body {
+    padding-top: 0px !important;
+    padding-right: 0px;
+    padding-bottom: 0px!important;
+    padding-left: 0px;
+    text-align: center;
+  }text-align: center;
+  .el-card:hover {
+    background-color: #eaf5fe;
+    border: 1px solid #36a3f7;
+  }
+}
+.image-attachment:hover {
+  background-color: #eaf5fe;
+  border: 1px solid #36a3f7;
+}
