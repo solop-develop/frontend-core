@@ -51,8 +51,7 @@ import {
 } from '@/utils/auth'
 import {
   requestOrganizationsList,
-  requestWarehousesList,
-  systemInfo
+  requestWarehousesList
 } from '@/api/ADempiere/system-core'
 import {
   loginAuthentication
@@ -83,8 +82,7 @@ const state = {
   isSession: false,
   sessionInfo: {},
   corporateBrandingImage: '',
-  activityLogs: [],
-  systemInfo: {}
+  activityLogs: []
 }
 
 const mutations = {
@@ -141,9 +139,6 @@ const mutations = {
   },
   setActivityLogs(state, logs) {
     state.activityLogs = logs
-  },
-  setSystem(state, info) {
-    state.systemInfo = info
   }
 }
 
@@ -660,20 +655,6 @@ const actions = {
           console.warn(`Error getting List User Activity: ${error.message}. Code: ${error.code}.`)
         })
     })
-  },
-  system({ commit }) {
-    return new Promise(resolve => {
-      systemInfo()
-        .then(response => {
-          commit('setSystem', camelizeObjectKeys(response))
-          resolve(response)
-        })
-        .catch(error => {
-          commit('setSystem', {})
-          console.warn(`Error getting System Info: ${error.message}. Code: ${error.code}.`)
-          resolve({})
-        })
-    })
   }
 }
 
@@ -716,9 +697,6 @@ const getters = {
   },
   getActivityLogs: (state) => {
     return state.activityLogs
-  },
-  getSystem: (state) => {
-    return state.systemInfo
   }
 }
 
