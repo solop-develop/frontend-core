@@ -46,8 +46,8 @@ jobs:
       # - name: Install packages lerna
       #   run: yarn global add lerna
 
-      - name: Update sub module
-        run: git submodule update --init --remote
+      # - name: Update sub module
+      #   run: git submodule update --init --remote
 
       - name: Install packages
         run: yarn ci
