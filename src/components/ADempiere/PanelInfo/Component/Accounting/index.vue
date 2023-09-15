@@ -198,7 +198,7 @@ import store from '@/store'
 // components and mixins
 import fieldsList from './fieldsList'
 import heardList from './heardList'
-import FieldDefinition from '@theme/components/ADempiere/FieldDefinition/index.vue'
+import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
 import { containerManager as containerManagerForm } from '@/utils/ADempiere/dictionary/form/index.js'
 import { containerManager as containerManagerWindow } from '@/utils/ADempiere/dictionary/window'
 import {

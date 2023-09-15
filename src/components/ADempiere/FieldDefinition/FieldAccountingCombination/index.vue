@@ -50,8 +50,8 @@ import { TABLE_NAME } from '@/utils/ADempiere/dictionary/field/accoutingCombinat
 
 // Components and Mixins
 import ButtonToList from './buttonToList.vue'
-import fieldMixin from '@theme/components/ADempiere/FieldDefinition/mixin/mixinField.js'
-import fieldSearchMixin from '@theme/components/ADempiere/FieldDefinition/FieldSearch/mixinFieldSearch.js'
+import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
+import fieldSearchMixin from '@/components/ADempiere/FieldDefinition/FieldSearch/mixinFieldSearch.js'
 import mixinAccountingCombination from './mixinAccountingCombination.js'
 
 // Utils and Helper Methods

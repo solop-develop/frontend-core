@@ -426,9 +426,9 @@ import fieldsListCollection from './fieldsListCollection.js'
 import { FIELDS_DECIMALS } from '@/utils/ADempiere/references'
 
 // components and mixins
-import formMixin from '@theme/components/ADempiere/Form/formMixin'
-import posMixin from '@theme/components/ADempiere/Form/VPOS/posMixin.js'
-import typeCollection from '@theme/components/ADempiere/Form/VPOS/Collection/typeCollection'
+import formMixin from '@/components/ADempiere/Form/formMixin'
+import posMixin from '@/components/ADempiere/Form/VPOS/posMixin.js'
+import typeCollection from '@/components/ADempiere/Form/VPOS/Collection/typeCollection'
 import overdrawnInvoice from './overdrawnInvoice'
 
 // utils and helper methods
@@ -445,7 +445,7 @@ import {
   isMandatoryField,
   isReadOnlyField,
   changeFieldShowedFromUser
-} from '@theme/components/ADempiere/Form/VPOS/containerManagerPos.js'
+} from '@/components/ADempiere/Form/VPOS/containerManagerPos.js'
 
 // api request methods
 import { processOrder } from '@/api/ADempiere/form/point-of-sales.js'

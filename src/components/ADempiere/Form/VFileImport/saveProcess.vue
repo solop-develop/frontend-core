@@ -138,7 +138,7 @@ import {
 import store from '@/store'
 
 // Components and Mixins
-import PanelDefinition from '@theme/components/ADempiere/PanelDefinition/index.vue'
+import PanelDefinition from '@/components/ADempiere/PanelDefinition/index.vue'
 // Api Request Methods
 import {
   listCharsets,

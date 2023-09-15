@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import fieldMixin from '@theme/components/ADempiere/FieldDefinition/mixin/mixinField.js'
+import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
 import mixinLocation from './mixinLocation.js'
 import LocationAddressForm from './locationAddressForm'
 

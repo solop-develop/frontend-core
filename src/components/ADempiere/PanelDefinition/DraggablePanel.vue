@@ -92,8 +92,8 @@ import { defineComponent, computed, ref, watch } from '@vue/composition-api'
 import store from '@/store'
 
 // Components and Mixins
-import FieldDefinition from '@theme/components/ADempiere/FieldDefinition/index.vue'
-import FilterFields from '@theme/components/ADempiere/FilterFields/index.vue'
+import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
+import FilterFields from '@/components/ADempiere/FilterFields/index.vue'
 import draggable from 'vuedraggable'
 
 // Utils and Helper Methods

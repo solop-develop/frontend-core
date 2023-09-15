@@ -74,8 +74,8 @@ import { DOCUMENT_STATUS } from '@/utils/ADempiere/constants/systemColumns'
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 
 // Components and Mixins
-import DocumentStatusTag from '@theme/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
-import WorkflowStatusBar from '@theme/components/ADempiere/WorkflowManager/WorkflowStatusBar.vue'
+import DocumentStatusTag from '@/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
+import WorkflowStatusBar from '@/components/ADempiere/WorkflowManager/WorkflowStatusBar.vue'
 
 // Utils and Helper Methods
 import { tagRender } from '@/utils/ADempiere/dictionary/workflow'

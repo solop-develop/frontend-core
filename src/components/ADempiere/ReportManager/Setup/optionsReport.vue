@@ -131,7 +131,7 @@ import { defineComponent, computed, ref, watch } from '@vue/composition-api'
 import store from '@/store'
 
 // Components and Mixins
-import CollapseCriteria from '@theme/components/ADempiere/CollapseCriteria/index.vue'
+import CollapseCriteria from '@/components/ADempiere/CollapseCriteria/index.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'

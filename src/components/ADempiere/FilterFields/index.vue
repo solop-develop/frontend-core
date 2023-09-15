@@ -172,8 +172,8 @@ import store from '@/store'
 import router from '@/router'
 
 // Components and Mixins
-import AdvancedTabQuery from '@theme/components/ADempiere/TabManager/AdvancedTabQuery.vue'
-import ColumnsDisplayOption from '@theme/components/ADempiere/DataTable/Components/ColumnsDisplayOption.vue'
+import AdvancedTabQuery from '@/components/ADempiere/TabManager/AdvancedTabQuery.vue'
+import ColumnsDisplayOption from '@/components/ADempiere/DataTable/Components/ColumnsDisplayOption.vue'
 import FieldsDisplayOption from './fieldsDisplayOptions.vue'
 
 export default defineComponent({

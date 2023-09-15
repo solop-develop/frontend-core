@@ -91,8 +91,8 @@
 import fieldsList from './fieldsListBarCode.js'
 
 // components and mixins
-import formMixin from '@theme/components/ADempiere/Form/formMixin.js'
-import LoadingView from '@theme/components/ADempiere/LoadingView'
+import formMixin from '@/components/ADempiere/Form/formMixin.js'
+import LoadingView from '@/components/ADempiere/LoadingView'
 
 // api request methods
 import { requestImage } from '@/api/ADempiere/user-interface/component/resource.js'

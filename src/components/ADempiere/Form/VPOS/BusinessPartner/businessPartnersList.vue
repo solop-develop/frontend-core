@@ -138,9 +138,9 @@
 import fieldsList from './fieldsListSearch.js'
 
 // Components and Mixins
-import CustomPagination from '@theme/components/ADempiere/DataTable/Components/CustomPagination.vue'
+import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 import BParterMixin from './mixinBusinessPartner.js'
-import FieldDefinition from '@theme/components/ADempiere/FieldDefinition/index.vue'
+import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
 
 // Utils and Helper Methods
 import {
@@ -156,7 +156,7 @@ import {
   isMandatoryField,
   isReadOnlyField,
   changeFieldShowedFromUser
-} from '@theme/components/ADempiere/Form/VPOS/containerManagerPos.js'
+} from '@/components/ADempiere/Form/VPOS/containerManagerPos.js'
 
 export default {
   name: 'BusinessPartnersList',

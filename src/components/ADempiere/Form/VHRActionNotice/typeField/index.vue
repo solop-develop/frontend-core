@@ -48,7 +48,7 @@ export default defineComponent({
           field = 'number'
           break
       }
-      return () => import(`@theme/components/ADempiere/Form/VHRActionNotice/typeField/type/${field}`)
+      return () => import(`@/components/ADempiere/Form/VHRActionNotice/typeField/type/${field}`)
     })
 
     const valueField = computed(() => {

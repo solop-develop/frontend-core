@@ -132,10 +132,10 @@
 </template>
 
 <script>
-import Order from '@theme/components/ADempiere/Form/VPOS/Order'
-import KeyLayout from '@theme/components/ADempiere/Form/VPOS/KeyLayout'
-import Options from '@theme/components/ADempiere/Form/VPOS/Options'
-import Collection from '@theme/components/ADempiere/Form/VPOS/Collection'
+import Order from '@/components/ADempiere/Form/VPOS/Order'
+import KeyLayout from '@/components/ADempiere/Form/VPOS/KeyLayout'
+import Options from '@/components/ADempiere/Form/VPOS/Options'
+import Collection from '@/components/ADempiere/Form/VPOS/Collection'
 import { selectCommand } from '../Options/MnemonicCommand/mnemonicCommandAction.js'
 import ComponentDialgo from '../Options/MnemonicCommand/component.vue'
 import { validatePin } from '@/api/ADempiere/form/point-of-sales.js'

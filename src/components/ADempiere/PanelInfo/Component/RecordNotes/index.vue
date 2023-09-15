@@ -118,7 +118,7 @@ import lang from '@/lang'
 import store from '@/store'
 
 // Components
-import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
+import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'

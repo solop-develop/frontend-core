@@ -29,7 +29,7 @@ import { WAREHOUSE } from '@/utils/ADempiere/constants/systemColumns'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
-import useDisplayedColumn from '@theme/components/ADempiere/FieldDefinition/useDisplayedColumn.js'
+import useDisplayedColumn from '@/components/ADempiere/FieldDefinition/useDisplayedColumn.js'
 
 export default ({
   parentUuid,

@@ -152,8 +152,8 @@ import { defineComponent, computed, ref } from '@vue/composition-api'
 import store from '@/store'
 
 // Components and Mixins
-import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
-import DocumentStatusTag from '@theme/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
+import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
+import DocumentStatusTag from '@/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
 
 // Utils and Helper Methods
 import { isDocumentStatus } from '@/utils/ADempiere/constants/systemColumns'

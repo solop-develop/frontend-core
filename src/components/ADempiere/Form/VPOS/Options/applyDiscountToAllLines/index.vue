@@ -53,8 +53,8 @@ import {
   isMandatoryField,
   isReadOnlyField,
   changeFieldShowedFromUser
-} from '@theme/components/ADempiere/Form/VPOS/containerManagerPos.js'
-import formMixin from '@theme/components/ADempiere/Form/formMixin'
+} from '@/components/ADempiere/Form/VPOS/containerManagerPos.js'
+import formMixin from '@/components/ADempiere/Form/formMixin'
 
 export default {
   name: 'ApplyDiscountToAllLines',

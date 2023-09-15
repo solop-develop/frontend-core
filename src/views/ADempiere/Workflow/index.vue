@@ -46,8 +46,8 @@
 
 <script>
 // Components and Mixins
-import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp'
-import WorkflowDiagram from '@theme/components/ADempiere/WorkflowManager/WorkflowDiagram.vue'
+import TitleAndHelp from '@/components/ADempiere/TitleAndHelp'
+import WorkflowDiagram from '@/components/ADempiere/WorkflowManager/WorkflowDiagram.vue'
 
 // API Request Methods
 import { getWorkflow } from '@/api/ADempiere/workflow.js'

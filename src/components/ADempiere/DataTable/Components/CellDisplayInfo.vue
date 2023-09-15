@@ -129,9 +129,9 @@
 import { defineComponent, ref, computed } from '@vue/composition-api'
 
 // Components and Mixins
-import DocumentStatusTag from '@theme/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
-import FieldDefinition from '@theme/components/ADempiere/FieldDefinition/index.vue'
-import ProgressPercentage from '@theme/components/ADempiere/ContainerOptions/ProgressPercentage.vue'
+import DocumentStatusTag from '@/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
+import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
+import ProgressPercentage from '@/components/ADempiere/ContainerOptions/ProgressPercentage.vue'
 
 // Utils and helpers Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'

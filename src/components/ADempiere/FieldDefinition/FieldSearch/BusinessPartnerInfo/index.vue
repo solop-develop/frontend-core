@@ -60,8 +60,8 @@
 
 <script>
 // Components and Mixins
-import fieldMixin from '@theme/components/ADempiere/FieldDefinition/mixin/mixinField.js'
-import fieldSearchMixin from '@theme/components/ADempiere/FieldDefinition/FieldSearch/mixinFieldSearch.js'
+import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
+import fieldSearchMixin from '@/components/ADempiere/FieldDefinition/FieldSearch/mixinFieldSearch.js'
 import businessPartnerMixin from './mixinBusinessPartner'
 import ButtonBusinessPartnersList from './buttonBusinessPartnersList.vue'
 

@@ -236,7 +236,7 @@ export default {
               })
             },
             // TODO: Change to string and import dynamic in component
-            componentPath: () => import('@theme/components/ADempiere/PanelDefinition/index.vue'),
+            componentPath: () => import('@/components/ADempiere/PanelDefinition/index.vue'),
             isShowed: false
           })
         } else if (!isEmptyValue(process.browserUuid)) {
@@ -349,7 +349,7 @@ export default {
               })
             },
             // TODO: Change to string and import dynamic in component
-            componentPath: () => import('@theme/components/ADempiere/PanelDefinition/DocumentAction.vue'),
+            componentPath: () => import('@/components/ADempiere/PanelDefinition/DocumentAction.vue'),
             isShowed: false
           })
         } else {
@@ -426,7 +426,7 @@ export default {
               })
             },
             // TODO: Change to string and import dynamic in component
-            componentPath: () => import('@theme/components/ADempiere/PanelDefinition/index.vue'),
+            componentPath: () => import('@/components/ADempiere/PanelDefinition/index.vue'),
             isShowed: false
           })
         }
@@ -495,7 +495,7 @@ export default {
             }
           },
           // TODO: Change to string and import dynamic in component
-          componentPath: () => import('@theme/components/ADempiere/PanelDefinition/SortPanel.vue'),
+          componentPath: () => import('@/components/ADempiere/PanelDefinition/SortPanel.vue'),
           isShowed: false,
           beforeOpen: ({ parentUuid: tabAssociatedUuid, containerUuid }) => {
             // set context values

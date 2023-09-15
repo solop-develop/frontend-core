@@ -105,8 +105,8 @@ import { defineComponent, ref, computed } from '@vue/composition-api'
 import store from '@/store'
 
 // componets and mixins
-import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp'
-import FieldDefinition from '@theme/components/ADempiere/FieldDefinition/index.vue'
+import TitleAndHelp from '@/components/ADempiere/TitleAndHelp'
+import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
 
 // Constants
 import fieldsList from './fieldsList'

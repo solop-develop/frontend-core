@@ -93,13 +93,13 @@ import router from '@/router'
 import store from '@/store'
 
 // Components and Mixins
-import ActionMenu from '@theme/components/ADempiere/ActionMenu/index.vue'
-import FileRender from '@theme/components/ADempiere/FileRender/index.vue'
-import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
+import ActionMenu from '@/components/ADempiere/ActionMenu/index.vue'
+import FileRender from '@/components/ADempiere/FileRender/index.vue'
+import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 import mixinReport from '@/views/ADempiere/Report/mixinReport.js'
-import ModalDialog from '@theme/components/ADempiere/ModalDialog/index.vue'
-import OptionsReport from '@theme/components/ADempiere/ReportManager/Setup/optionsReportViewer.vue'
-import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp/index.vue'
+import ModalDialog from '@/components/ADempiere/ModalDialog/index.vue'
+import OptionsReport from '@/components/ADempiere/ReportManager/Setup/optionsReportViewer.vue'
+import TitleAndHelp from '@/components/ADempiere/TitleAndHelp/index.vue'
 
 // Constants
 import { DEFAULT_REPORT_TYPE } from '@/utils/ADempiere/dictionary/report.js'

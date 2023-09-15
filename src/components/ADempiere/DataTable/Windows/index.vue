@@ -105,10 +105,10 @@ import {
 import store from '@/store'
 
 // Components and Mixins
-import CellEditInfo from '@theme/components/ADempiere/DataTable/Components/CellEditInfo.vue'
-import FullScreenContainer from '@theme/components/ADempiere/ContainerOptions/FullScreenContainer/index.vue'
-import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
-import useFullScreenContainer from '@theme/components/ADempiere/ContainerOptions/FullScreenContainer/useFullScreenContainer'
+import CellEditInfo from '@/components/ADempiere/DataTable/Components/CellEditInfo.vue'
+import FullScreenContainer from '@/components/ADempiere/ContainerOptions/FullScreenContainer/index.vue'
+import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
+import useFullScreenContainer from '@/components/ADempiere/ContainerOptions/FullScreenContainer/useFullScreenContainer'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'

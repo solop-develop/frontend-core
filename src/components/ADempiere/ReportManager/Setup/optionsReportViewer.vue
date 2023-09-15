@@ -168,7 +168,7 @@ import store from '@/store'
 import lang from '@/lang'
 
 // Components adn Mixins
-import CollapseCriteria from '@theme/components/ADempiere/CollapseCriteria/index.vue'
+import CollapseCriteria from '@/components/ADempiere/CollapseCriteria/index.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -296,7 +296,7 @@ export default defineComponent({
     })
 
     const componentRender = computed(() => {
-      return () => import('@theme/components/ADempiere/PanelDefinition/index.vue')
+      return () => import('@/components/ADempiere/PanelDefinition/index.vue')
     })
 
     const findTagViwer = computed(() => {

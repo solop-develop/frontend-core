@@ -59,8 +59,8 @@
 import store from '@/store'
 
 // Components and Mixins
-import fieldMixin from '@theme/components/ADempiere/FieldDefinition/mixin/mixinField.js'
-import fieldWithDisplayColumn from '@theme/components/ADempiere/FieldDefinition/mixin/mixinWithDisplayColumn.js'
+import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
+import fieldWithDisplayColumn from '@/components/ADempiere/FieldDefinition/mixin/mixinWithDisplayColumn.js'
 import panelProductAttribute from './panelProductAttribute'
 
 // Utils and Helper Methods

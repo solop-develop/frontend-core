@@ -81,7 +81,7 @@
 
 <script>
 // components and mixins
-import DocumentStatusTag from '@theme/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
+import DocumentStatusTag from '@/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
 import MixinInfo from './mixinInfo.js'
 
 // constants

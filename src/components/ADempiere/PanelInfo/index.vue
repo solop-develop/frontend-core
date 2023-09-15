@@ -75,7 +75,7 @@ import RecordNotes from './Component/RecordNotes/index.vue'
 import ReferenceRecords from './Component/ReferenceRecords/index.vue'
 import StoreProduct from './Component/storeProduct/index.vue'
 import WorkflowLogs from './Component/workflowLogs/index.vue'
-import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
+import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 import RecordDashboard from './Component/RecordDashboard/index.vue'
 
 // API Request Methods

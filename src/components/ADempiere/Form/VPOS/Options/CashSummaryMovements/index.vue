@@ -100,7 +100,7 @@
 import {
   formatPrice
 } from '@/utils/ADempiere/valueFormat.js'
-import formMixin from '@theme/components/ADempiere/Form/formMixin'
+import formMixin from '@/components/ADempiere/Form/formMixin'
 import fieldsListCashOpen from './fieldsList.js'
 import {
   cashClosing

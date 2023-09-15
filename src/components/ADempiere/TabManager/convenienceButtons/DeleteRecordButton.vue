@@ -79,7 +79,7 @@ import store from '@/store'
 import language from '@/lang'
 
 // Components and Mixins
-import CellDisplayInfo from '@theme/components/ADempiere/DataTable/Components/CellDisplayInfo.vue'
+import CellDisplayInfo from '@/components/ADempiere/DataTable/Components/CellDisplayInfo.vue'
 
 // Utils and Melper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'

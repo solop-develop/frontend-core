@@ -112,7 +112,7 @@ import store from '@/store'
 import { PROCESSING } from '@/utils/ADempiere/constants/systemColumns'
 
 // Components and Mixins
-import DocumentStatusTag from '@theme/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
+import DocumentStatusTag from '@/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'

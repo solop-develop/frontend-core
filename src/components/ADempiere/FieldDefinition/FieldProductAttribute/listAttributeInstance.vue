@@ -126,7 +126,7 @@ import { defineComponent, computed, ref, onMounted } from '@vue/composition-api'
 import store from '@/store'
 
 // Components and Mixins
-import IndexColumn from '@theme/components/ADempiere/DataTable/Components/IndexColumn.vue'
+import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
 
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'

@@ -984,9 +984,9 @@
 
 <script>
 // Components and Mixins
-import OrdersList from '@theme/components/ADempiere/Form/VPOS/OrderList/index'
-import ConfirmDelivery from '@theme/components/ADempiere/Form/VPOS/ConfirmDelivery'
-import orderLineMixin from '@theme/components/ADempiere/Form/VPOS/Order/orderLineMixin.js'
+import OrdersList from '@/components/ADempiere/Form/VPOS/OrderList/index'
+import ConfirmDelivery from '@/components/ADempiere/Form/VPOS/ConfirmDelivery'
+import orderLineMixin from '@/components/ADempiere/Form/VPOS/Order/orderLineMixin.js'
 import CashOpening from './CashOpening'
 import ReturnProduct from './ReturnProduct'
 import ReturnProductPreviwer from './ReturnProduct/previwer'
@@ -997,10 +997,10 @@ import AssignSeller from './AssignSeller'
 import SalesDiscountOff from './SalesDiscountOff'
 import applyDiscountToAllLines from './applyDiscountToAllLines'
 import MnemonicCommand from './MnemonicCommand'
-import ModalDialog from '@theme/components/ADempiere/Dialog'
-import GeneralOptions from '@theme/components/ADempiere/Form/VPOS/Options/generalOptions.vue'
-import TableTimeControl from '@theme/components/ADempiere/Form/TimeControl/table.vue'
-import ComponentDialgo from '@theme/components/ADempiere/Form/VPOS/Options/MnemonicCommand/component.vue'
+import ModalDialog from '@/components/ADempiere/Dialog'
+import GeneralOptions from '@/components/ADempiere/Form/VPOS/Options/generalOptions.vue'
+import TableTimeControl from '@/components/ADempiere/Form/TimeControl/table.vue'
+import ComponentDialgo from '@/components/ADempiere/Form/VPOS/Options/MnemonicCommand/component.vue'
 
 // API Request Methods
 import {
@@ -1268,21 +1268,21 @@ export default {
       switch (true) {
         case this.showCashOpen:
         case this.showMoneyIncome:
-          component = () => import('@theme/components/ADempiere/Form/VPOS/Options/CashOpening')
+          component = () => import('@/components/ADempiere/Form/VPOS/Options/CashOpening')
           this.clearField('Cash-Opening')
           break
         case this.showCashWithdrawl:
         case this.showTransfer:
-          component = () => import('@theme/components/ADempiere/Form/VPOS/Options/Cashwithdrawal')
+          component = () => import('@/components/ADempiere/Form/VPOS/Options/Cashwithdrawal')
           this.clearField('Cash-Withdrawal')
           break
         case this.isShowCashSummaryMovements:
         case this.showCashSummaryMovements:
-          component = () => import('@theme/components/ADempiere/Form/VPOS/Options/CashSummaryMovements')
+          component = () => import('@/components/ADempiere/Form/VPOS/Options/CashSummaryMovements')
           break
         case this.showAssignSeller:
         case this.showUnassignSeller:
-          component = () => import('@theme/components/ADempiere/Form/VPOS/Options/AssignSeller')
+          component = () => import('@/components/ADempiere/Form/VPOS/Options/AssignSeller')
           break
       }
       return component

@@ -87,7 +87,7 @@ import Screenfull from '@theme/components/Screenfull'
 // import SizeSelect from '@theme/components/SizeSelect'
 import LangSelect from '@theme/components/LangSelect'
 import Search from '@theme/components/HeaderSearch'
-import HeaderNotification from '@theme/components/ADempiere/HeaderNotification'
+import HeaderNotification from '@/components/ADempiere/HeaderNotification'
 import { getImagePath } from '@/utils/ADempiere/resource.js'
 import Driver from 'driver.js' // import driver.js
 import 'driver.js/dist/driver.min.css' // import driver.js css
@@ -175,10 +175,10 @@ export default {
       let form
       switch (this.getForm.fileName) {
         case 'WFActivity':
-          form = require('@theme/components/ADempiere/Form/WorkflowActivity/Guide/steps')
+          form = require('@/components/ADempiere/Form/WorkflowActivity/Guide/steps')
           break
         case 'VPOS':
-          form = require('@theme/components/ADempiere/Form/VPOS/Guide/steps')
+          form = require('@/components/ADempiere/Form/VPOS/Guide/steps')
           break
         default:
           form = {

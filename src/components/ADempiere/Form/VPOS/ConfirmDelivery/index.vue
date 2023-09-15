@@ -262,7 +262,7 @@
 
 <script>
 // components and mixins
-import formMixin from '@theme/components/ADempiere/Form/formMixin.js'
+import formMixin from '@/components/ADempiere/Form/formMixin.js'
 
 // api request methods
 import {

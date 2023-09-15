@@ -35,7 +35,7 @@
 
 <script>
 // Components and Mixins
-import fieldMixin from '@theme/components/ADempiere/FieldDefinition/mixin/mixinField.js'
+import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
 
 /**
  * This component is a list type field, for IN and NOT IN search with advanced query

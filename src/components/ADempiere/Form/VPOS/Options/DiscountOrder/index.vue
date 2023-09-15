@@ -45,7 +45,7 @@
 // constants
 import fieldListDiscount from './fieldsList.js'
 
-import formMixin from '@theme/components/ADempiere/Form/formMixin'
+import formMixin from '@/components/ADempiere/Form/formMixin'
 import {
   getLookupList,
   isDisplayedDefault,
@@ -55,7 +55,7 @@ import {
   isMandatoryField,
   isReadOnlyField,
   changeFieldShowedFromUser
-} from '@theme/components/ADempiere/Form/VPOS/containerManagerPos.js'
+} from '@/components/ADempiere/Form/VPOS/containerManagerPos.js'
 
 export default {
   name: 'DiscountOrder',

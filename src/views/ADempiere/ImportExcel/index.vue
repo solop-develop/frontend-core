@@ -90,7 +90,7 @@
 
 <script>
 import UploadExcelComponent from '@theme/components/UploadExcel/index.vue'
-import Carousel from '@theme/components/ADempiere/Carousel'
+import Carousel from '@/components/ADempiere/Carousel'
 
 export default {
   name: 'UploadExcel',

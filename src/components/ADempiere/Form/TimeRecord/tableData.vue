@@ -88,8 +88,8 @@ import { defineComponent, ref, computed } from '@vue/composition-api'
 import store from '@/store'
 
 // Componets and Mixins
-import CustomPagination from '@theme/components/ADempiere/DataTable/Components/CustomPagination.vue'
-import IndexColumn from '@theme/components/ADempiere/DataTable/Components/IndexColumn.vue'
+import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
+import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
 
 // API Request Methods
 import {

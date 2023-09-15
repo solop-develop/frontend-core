@@ -77,10 +77,10 @@ import fieldsListDefinition from './fieldsList.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 // Components and Mixins
-import FieldDefinition from '@theme/components/ADempiere/FieldDefinition/index.vue'
-import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
-import useForm from '@theme/components/ADempiere/Form/useForm'
-import WorkflowDiagram from '@theme/components/ADempiere/WorkflowManager/WorkflowDiagram.vue'
+import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
+import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
+import useForm from '@/components/ADempiere/Form/useForm'
+import WorkflowDiagram from '@/components/ADempiere/WorkflowManager/WorkflowDiagram.vue'
 
 /**
  * TODO: Store workflow diagram on vuex to cache on client side.

@@ -152,9 +152,9 @@
 
 <script>
 // Components and Mixins
-import formMixin from '@theme/components/ADempiere/Form/formMixin.js'
-import CustomPagination from '@theme/components/ADempiere/DataTable/Components/CustomPagination.vue'
-import posMixin from '@theme/components/ADempiere/Form/VPOS/posMixin.js'
+import formMixin from '@/components/ADempiere/Form/formMixin.js'
+import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
+import posMixin from '@/components/ADempiere/Form/VPOS/posMixin.js'
 
 // Utils and Helper Methods
 // import fieldsListProductPrice from './fieldsList.js'

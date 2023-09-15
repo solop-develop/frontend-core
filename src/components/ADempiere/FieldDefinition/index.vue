@@ -92,8 +92,8 @@
 import store from '@/store'
 
 // Components and Mixins
-import FieldOptions from '@theme/components/ADempiere/FieldDefinition/FieldOptions/index.vue'
-import ComparisonOperator from '@theme/components/ADempiere/FieldDefinition/FieldOptions/ComparisonOperator'
+import FieldOptions from '@/components/ADempiere/FieldDefinition/FieldOptions/index.vue'
+import ComparisonOperator from '@/components/ADempiere/FieldDefinition/FieldOptions/ComparisonOperator'
 
 // Constants
 import { UUID } from '@/utils/ADempiere/constants/systemColumns'
@@ -234,14 +234,57 @@ export default {
     // load the component that is indicated in the attributes of received property
     componentRender() {
       if (isEmptyValue(this.field.componentPath || !this.field.isSupported)) {
-        return () => import('@theme/components/ADempiere/FieldDefinition/FieldText')
+        return () => import('@/components/ADempiere/FieldDefinition/FieldText')
       }
       if (this.isSelectCreated) {
-        return () => import('@theme/components/ADempiere/FieldDefinition/FieldSelectMultiple')
+        return () => import('@/components/ADempiere/FieldDefinition/FieldSelectMultiple')
       }
-
-      // return () => import('@theme/components/ADempiere/FieldDefinition/' + this.field.componentPath)
-      return () => import(`@theme/components/ADempiere/FieldDefinition/${this.field.componentPath}`)
+      let field
+      switch (this.field.componentPath) {
+        case 'FieldText':
+          field = () => import('@/components/ADempiere/FieldDefinition/FieldText')
+          break
+        case 'FieldDate':
+          field = () => import('@/components/ADempiere/FieldDefinition/FieldDate')
+          break
+        case 'FieldSearch':
+          field = () => import('@/components/ADempiere/FieldDefinition/FieldSearch')
+          break
+        case 'FieldNumber':
+          field = () => import('@/components/ADempiere/FieldDefinition/FieldNumber')
+          break
+        case 'FieldButton':
+          field = () => import('@/components/ADempiere/FieldDefinition/FieldButton')
+          break
+        case 'FieldYesNo':
+          field = () => import('@/components/ADempiere/FieldDefinition/FieldYesNo')
+          break
+        case 'FieldBinary':
+          field = () => import('@/components/ADempiere/FieldDefinition/FieldBinary')
+          break
+        case 'FieldAutocomplete':
+          field = () => import('@/components/ADempiere/FieldDefinition/FieldAutocomplete')
+          break
+        case 'FieldWarehouseLocator':
+          field = () => import('@/components/ADempiere/FieldDefinition/FieldWarehouseLocator')
+          break
+        case 'FieldSelect':
+          field = () => import('@/components/ADempiere/FieldDefinition/FieldSelect')
+          break
+        case 'FieldImage':
+          field = () => import('@/components/ADempiere/FieldDefinition/FieldImage')
+          break
+        case 'FieldLocationAddress':
+          field = () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress')
+          break
+        case 'FieldAccountingCombination':
+          field = () => import('@/components/ADempiere/FieldDefinition/FieldAccountingCombination')
+          break
+        case 'FieldTextLong':
+          field = () => import('@/components/ADempiere/FieldDefinition/FieldTextLong')
+          break
+      }
+      return field
     },
     fieldAttributes() {
       return {

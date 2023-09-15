@@ -554,19 +554,19 @@
 import fieldsListOrder from './fieldsListOrder.js'
 
 // Components and Mixins
-// import DocumentStatusTag from '@theme/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
-import formMixin from '@theme/components/ADempiere/Form/formMixin.js'
+// import DocumentStatusTag from '@/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
+import formMixin from '@/components/ADempiere/Form/formMixin.js'
 import orderLineMixin from './orderLineMixin.js'
-import posMixin from '@theme/components/ADempiere/Form/VPOS/posMixin.js'
-import BusinessPartner from '@theme/components/ADempiere/Form/VPOS/BusinessPartner/index.vue'
-import fieldLine from '@theme/components/ADempiere/Form/VPOS/Order/line/index'
-import EditLineMobile from '@theme/components/ADempiere/Form/VPOS/Order/line/editLineMobile'
-import InfoOrderLine from '@theme/components/ADempiere/Form/VPOS/Order/line/infoOrderLine/index.vue'
+import posMixin from '@/components/ADempiere/Form/VPOS/posMixin.js'
+import BusinessPartner from '@/components/ADempiere/Form/VPOS/BusinessPartner/index.vue'
+import fieldLine from '@/components/ADempiere/Form/VPOS/Order/line/index'
+import EditLineMobile from '@/components/ADempiere/Form/VPOS/Order/line/editLineMobile'
+import InfoOrderLine from '@/components/ADempiere/Form/VPOS/Order/line/infoOrderLine/index.vue'
 // src/themes/pos/components/ADempiere/Form/VPOS/Order/ImageProduct/index.vue
-import ProductInfo from '@theme/components/ADempiere/Form/VPOS/ProductInfo'
-import FastOrdesList from '@theme/components/ADempiere/Form/VPOS/OrderList/fastOrder'
-import DocumentStatusTag from '@theme/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
-import SalesRepresentative from '@theme/components/ADempiere/Form/VPOS/Order/SalesRepresentative.vue'
+import ProductInfo from '@/components/ADempiere/Form/VPOS/ProductInfo'
+import FastOrdesList from '@/components/ADempiere/Form/VPOS/OrderList/fastOrder'
+import DocumentStatusTag from '@/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
+import SalesRepresentative from '@/components/ADempiere/Form/VPOS/Order/SalesRepresentative.vue'
 
 // Utils and Helper Methods
 // Format of values ( Date, Price, Quantity )

@@ -39,7 +39,7 @@ export default {
       let form
       switch (this.metadata.fileName) {
         case 'PriceChecking':
-          form = import('@theme/components/ADempiere/Form/PriceChecking')
+          form = import('@/components/ADempiere/Form/PriceChecking')
           this.$store.dispatch('settings/changeSetting', {
             key: 'showMenu',
             value: false
@@ -51,69 +51,69 @@ export default {
           })
           break
         case 'BarcodeReader':
-          form = import('@theme/components/ADempiere/Form/BarcodeReader')
+          form = import('@/components/ADempiere/Form/BarcodeReader')
           break
         case 'ProductInfo':
-          form = import('@theme/components/ADempiere/Form/ProductInfo')
+          form = import('@/components/ADempiere/Form/ProductInfo')
           break
         case 'WFActivity':
-          form = import('@theme/components/ADempiere/Form/WorkflowActivity')
+          form = import('@/components/ADempiere/Form/WorkflowActivity')
           break
         case 'VMatch':
-          form = import('@theme/components/ADempiere/Form/VMatch')
+          form = import('@/components/ADempiere/Form/VMatch')
           break
         case 'VPOS':
           this.$store.dispatch('settings/changeSetting', {
             key: 'showContextMenu',
             value: false
           })
-          form = import('@theme/components/ADempiere/Form/VPOS')
+          form = import('@/components/ADempiere/Form/VPOS')
           break
         case 'VGetWeight':
-          form = import('@theme/components/ADempiere/Form/VGetWeight')
+          form = import('@/components/ADempiere/Form/VGetWeight')
           break
         case 'VHRActionNotice':
-          form = import('@theme/components/ADempiere/Form/VHRActionNotice')
+          form = import('@/components/ADempiere/Form/VHRActionNotice')
           break
         case 'WFPanel':
-          form = import('@theme/components/ADempiere/Form/WFPanel')
+          form = import('@/components/ADempiere/Form/WFPanel')
           break
         case 'TimeControl':
         case 'org.spin.tcs.form.TimeControl':
-          form = import('@theme/components/ADempiere/Form/TimeControl')
+          form = import('@/components/ADempiere/Form/TimeControl')
           break
         case 'TimeRecord':
-          form = import('@theme/components/ADempiere/Form/TimeRecord')
+          form = import('@/components/ADempiere/Form/TimeRecord')
           break
         case 'VPayPrint':
         case 'org.compiere.apps.form.VPayPrint':
-          form = import('@theme/components/ADempiere/Form/VPayPrint')
+          form = import('@/components/ADempiere/Form/VPayPrint')
           break
         case 'VBankStatementMatch':
         case 'org.spin.apps.form.VBankStatementMatch':
-          form = import('@theme/components/ADempiere/Form/VBankStatementMatch')
+          form = import('@/components/ADempiere/Form/VBankStatementMatch')
           break
         case 'Issues':
-          form = import('@theme/components/ADempiere/Form/Issues')
+          form = import('@/components/ADempiere/Form/Issues')
           break
         case 'ExpressReceipt':
-          form = import('@theme/components/ADempiere/Form/ExpressReceipt')
+          form = import('@/components/ADempiere/Form/ExpressReceipt')
           break
         case 'ExpressShipment':
-          form = import('@theme/components/ADempiere/Form/ExpressShipment')
+          form = import('@/components/ADempiere/Form/ExpressShipment')
           break
         case 'ExpressMovement':
-          form = import('@theme/components/ADempiere/Form/ExpressMovement')
+          form = import('@/components/ADempiere/Form/ExpressMovement')
           break
         case 'VAllocation':
-          form = import('@theme/components/ADempiere/Form/VAllocation')
+          form = import('@/components/ADempiere/Form/VAllocation')
           break
         case 'TaskManager':
         case 'org.spin.eca46.form.TaskManager':
-          form = import('@theme/components/ADempiere/Form/TaskManager')
+          form = import('@/components/ADempiere/Form/TaskManager')
           break
         case 'VFileImport':
-          form = import('@theme/components/ADempiere/Form/VFileImport')
+          form = import('@/components/ADempiere/Form/VFileImport')
           break
         default:
           form = import('@/views/ADempiere/Unsupported')

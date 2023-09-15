@@ -62,7 +62,7 @@
 import { defineComponent, computed } from '@vue/composition-api'
 
 // components and mixins
-// import FilterFields from '@theme/components/ADempiere/FilterFields/index.vue'
+// import FilterFields from '@/components/ADempiere/FilterFields/index.vue'
 
 export default defineComponent({
   name: 'CollapseCriteria',

@@ -536,10 +536,10 @@
 
 <script>
 import { formatPrice, formatDateToSend } from '@/utils/ADempiere/valueFormat.js'
-import formMixin from '@theme/components/ADempiere/Form/formMixin'
-import posMixin from '@theme/components/ADempiere/Form/VPOS/posMixin.js'
+import formMixin from '@/components/ADempiere/Form/formMixin'
+import posMixin from '@/components/ADempiere/Form/VPOS/posMixin.js'
 import fieldsListOverdrawnInvoice from './fieldsListOverdrawnInvoice.js'
-import typeCollection from '@theme/components/ADempiere/Form/VPOS/Collection/typeCollection'
+import typeCollection from '@/components/ADempiere/Form/VPOS/Collection/typeCollection'
 import { processOrder } from '@/api/ADempiere/form/point-of-sales.js'
 import { validatePin } from '@/api/ADempiere/form/point-of-sales.js'
 import {
@@ -551,7 +551,7 @@ import {
   searchTableHeader,
   isReadOnlyField,
   changeFieldShowedFromUser
-} from '@theme/components/ADempiere/Form/VPOS/containerManagerPos.js'
+} from '@/components/ADempiere/Form/VPOS/containerManagerPos.js'
 import {
   buildLinkHref
 } from '@/utils/ADempiere/resource.js'

@@ -102,9 +102,9 @@
 
 <script>
 // Components and Mixins
-import posMixin from '@theme/components/ADempiere/Form/VPOS/posMixin.js'
+import posMixin from '@/components/ADempiere/Form/VPOS/posMixin.js'
 import ProductInfoList from './productList'
-// import fieldMixin from '@theme/components/ADempiere/Field/mixin/mixinField.js'
+// import fieldMixin from '@/components/ADempiere/Field/mixin/mixinField.js'
 
 // Utils and Helper Methods
 import {

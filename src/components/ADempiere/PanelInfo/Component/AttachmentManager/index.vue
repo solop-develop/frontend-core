@@ -71,9 +71,9 @@ export default defineComponent({
 
     const templateDevice = computed(() => {
       if (isMobile.value) {
-        return () => import('@theme/components/ADempiere/PanelInfo/Component/AttachmentManager/modeMobile.vue')
+        return () => import('@/components/ADempiere/PanelInfo/Component/AttachmentManager/modeMobile.vue')
       }
-      return () => import('@theme/components/ADempiere/PanelInfo/Component/AttachmentManager/modeDesktop.vue')
+      return () => import('@/components/ADempiere/PanelInfo/Component/AttachmentManager/modeDesktop.vue')
     })
     return {
       // Computed

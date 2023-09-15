@@ -52,8 +52,8 @@
 import { defineComponent, computed } from '@vue/composition-api'
 
 // Components and Mixins
-import CellDisplayInfo from '@theme/components/ADempiere/DataTable/Components/CellDisplayInfo.vue'
-import FieldDefinition from '@theme/components/ADempiere/FieldDefinition/index.vue'
+import CellDisplayInfo from '@/components/ADempiere/DataTable/Components/CellDisplayInfo.vue'
+import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
 
 // Constants
 import { BINARY_DATA, IMAGE } from '@/utils/ADempiere/references'

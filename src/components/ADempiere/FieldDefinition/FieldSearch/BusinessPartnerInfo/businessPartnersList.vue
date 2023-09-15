@@ -154,10 +154,10 @@ import { IS_SO_TRX } from '@/utils/ADempiere/constants/systemColumns'
 // Components and Mixins
 import businessPartnerMixin from './mixinBusinessPartner'
 import fieldSearchMixin from '../mixinFieldSearch'
-import CellDisplayInfo from '@theme/components/ADempiere/DataTable/Components/CellDisplayInfo.vue'
-import CustomPagination from '@theme/components/ADempiere/DataTable/Components/CustomPagination.vue'
-import IndexColumn from '@theme/components/ADempiere/DataTable/Components/IndexColumn.vue'
-import FieldDefinition from '@theme/components/ADempiere/FieldDefinition/index.vue'
+import CellDisplayInfo from '@/components/ADempiere/DataTable/Components/CellDisplayInfo.vue'
+import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
+import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
+import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'

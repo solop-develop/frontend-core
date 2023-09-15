@@ -52,9 +52,9 @@
 
 <script>
 // Components and Mixins
-import ContextInfo from '@theme/components/ADempiere/FieldDefinition/FieldOptions/ContextInfo'
-import fieldMixin from '@theme/components/ADempiere/FieldDefinition/mixin/mixinField.js'
-import fieldMixinDisplayColumn from '@theme/components/ADempiere/FieldDefinition/mixin/mixinWithDisplayColumn.js'
+import ContextInfo from '@/components/ADempiere/FieldDefinition/FieldOptions/ContextInfo'
+import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
+import fieldMixinDisplayColumn from '@/components/ADempiere/FieldDefinition/mixin/mixinWithDisplayColumn.js'
 
 // Utils and Helpers Methods
 import {

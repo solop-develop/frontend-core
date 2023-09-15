@@ -34,7 +34,7 @@ import store from '@/store'
 import router from '@/router'
 
 // Components and Mixins
-import FieldDefinition from '@theme/components/ADempiere/FieldDefinition/index.vue'
+import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
 
 // Constants
 import { DEFAULT_SIZE, YES_NO } from '@/utils/ADempiere/references.js'

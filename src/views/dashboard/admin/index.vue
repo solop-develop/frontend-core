@@ -68,7 +68,7 @@ import { defineComponent, computed, onMounted, watch } from '@vue/composition-ap
 import store from '@/store'
 
 // Components and Mixins
-import DashboardDefinition from '@theme/components/ADempiere/Dashboard/index.vue'
+import DashboardDefinition from '@/components/ADempiere/Dashboard/index.vue'
 import PanelGroup from '@/views/dashboard/admin/components/PanelGroup.vue'
 import UserInfo from '@/views/profile/components/InfoUser.vue'
 // Utils and Helper Methods

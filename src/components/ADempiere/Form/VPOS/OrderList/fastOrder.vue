@@ -253,9 +253,9 @@ import fieldsListOrders from './fieldsListOrders.js'
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 
 // components and mixins
-import CustomPagination from '@theme/components/ADempiere/DataTable/Components/CustomPagination.vue'
-import DocumentStatusTag from '@theme/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
-import FieldDefinition from '@theme/components/ADempiere/FieldDefinition/index.vue'
+import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
+import DocumentStatusTag from '@/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
+import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
 import FindOrders from './FindOrders'
 
 // api request methods
@@ -277,7 +277,7 @@ import {
   isMandatoryField,
   isReadOnlyField,
   changeFieldShowedFromUser
-} from '@theme/components/ADempiere/Form/VPOS/containerManagerPos.js'
+} from '@/components/ADempiere/Form/VPOS/containerManagerPos.js'
 
 export default {
   name: 'FastOrder',

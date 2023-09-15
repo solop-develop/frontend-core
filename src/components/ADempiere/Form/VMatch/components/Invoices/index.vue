@@ -172,8 +172,8 @@ import {
 import store from '@/store'
 
 // Components and Utils
-import CustomPagination from '@theme/components/ADempiere/DataTable/Components/CustomPagination.vue'
-import labelTable from '@theme/components/ADempiere/Form/VMatch/labelTable.js'
+import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
+import labelTable from '@/components/ADempiere/Form/VMatch/labelTable.js'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'

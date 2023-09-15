@@ -85,8 +85,8 @@ import { getEntity } from '@/api/ADempiere/user-interface/persistence'
 import { UUID } from '@/utils/ADempiere/constants/systemColumns.js'
 
 // Components and Mixins
-import DraggablePanel from '@theme/components/ADempiere/PanelDefinition/DraggablePanel.vue'
-import StandardPanel from '@theme/components/ADempiere/PanelDefinition/StandardPanel.vue'
+import DraggablePanel from '@/components/ADempiere/PanelDefinition/DraggablePanel.vue'
+import StandardPanel from '@/components/ADempiere/PanelDefinition/StandardPanel.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'

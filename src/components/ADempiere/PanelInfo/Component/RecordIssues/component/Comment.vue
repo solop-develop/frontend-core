@@ -705,7 +705,7 @@ import store from '@/store'
 
 // Components and Mixins
 import 'simple-m-editor/dist/simple-m-editor.css'
-import RecordTime from '@theme/components/ADempiere/Form/Issues/recordTime.vue'
+import RecordTime from '@/components/ADempiere/Form/Issues/recordTime.vue'
 
 // Constants
 import { REQUEST_WINDOW_UUID } from '@/utils/ADempiere/dictionary/form/Issues.js'

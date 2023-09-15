@@ -167,7 +167,7 @@ import {
 import {
   requestGetConversionRate
 } from '@/api/ADempiere/form/point-of-sales.js'
-import posMixin from '@theme/components/ADempiere/Form/VPOS/posMixin.js'
+import posMixin from '@/components/ADempiere/Form/VPOS/posMixin.js'
 
 export default {
   name: 'TypeCollection',

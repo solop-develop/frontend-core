@@ -81,7 +81,7 @@
 
 <script>
 // Components and Mixins
-import formMixin from '@theme/components/ADempiere/Form/formMixin.js'
+import formMixin from '@/components/ADempiere/Form/formMixin.js'
 import mixinLocation from './mixinLocation.js'
 
 // Constants

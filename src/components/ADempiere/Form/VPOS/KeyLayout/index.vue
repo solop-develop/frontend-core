@@ -114,7 +114,7 @@ import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 import { showMessage } from '@/utils/ADempiere/notification'
 
 // components and mixins
-import posMixin from '@theme/components/ADempiere/Form/VPOS/posMixin.js'
+import posMixin from '@/components/ADempiere/Form/VPOS/posMixin.js'
 
 export default {
   name: 'KeyLayout',

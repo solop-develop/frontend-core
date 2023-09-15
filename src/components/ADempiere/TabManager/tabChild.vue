@@ -126,9 +126,9 @@ import router from '@/router'
 import store from '@/store'
 
 // components and mixins
-import DefaultTable from '@theme/components/ADempiere/DataTable/index.vue'
-import TabLabel from '@theme/components/ADempiere/TabManager/TabLabel.vue'
-import TabPanel from '@theme/components/ADempiere/TabManager/TabPanel/index.vue'
+import DefaultTable from '@/components/ADempiere/DataTable/index.vue'
+import TabLabel from '@/components/ADempiere/TabManager/TabLabel.vue'
+import TabPanel from '@/components/ADempiere/TabManager/TabPanel/index.vue'
 import TabOptions from './TabOptions.vue'
 
 // constants

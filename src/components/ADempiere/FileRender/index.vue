@@ -64,24 +64,24 @@ export default defineComponent({
       let viewer
       switch (props.format) {
         case 'html':
-          viewer = () => import('@theme/components/ADempiere/FileRender/HtmlFile')
+          viewer = () => import('@/components/ADempiere/FileRender/HtmlFile')
           break
         case 'pdf':
         case 'application/pdf':
-          viewer = () => import('@theme/components/ADempiere/FileRender/PdfFile')
+          viewer = () => import('@/components/ADempiere/FileRender/PdfFile')
           break
         case 'csv':
         case 'ssv':
         case 'xls':
         case 'xlsx':
         case 'txt':
-          viewer = () => import('@theme/components/ADempiere/FileRender/ExcelFile')
+          viewer = () => import('@/components/ADempiere/FileRender/ExcelFile')
           break
         case 'xml':
-          viewer = () => import('@theme/components/ADempiere/FileRender/XmlFile')
+          viewer = () => import('@/components/ADempiere/FileRender/XmlFile')
           break
         default:
-          viewer = () => import('@theme/components/ADempiere/FileRender/EmptyFile')
+          viewer = () => import('@/components/ADempiere/FileRender/EmptyFile')
           break
       }
       return viewer

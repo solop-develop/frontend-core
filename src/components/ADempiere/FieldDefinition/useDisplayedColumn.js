@@ -20,7 +20,7 @@ import { computed } from '@vue/composition-api'
 
 import store from '@/store'
 
-import useFieldDefinition from '@theme/components/ADempiere/FieldDefinition/useFieldDefinition.js'
+import useFieldDefinition from '@/components/ADempiere/FieldDefinition/useFieldDefinition.js'
 
 // Constants
 import {

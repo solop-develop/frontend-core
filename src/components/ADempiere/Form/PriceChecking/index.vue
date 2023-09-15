@@ -127,8 +127,8 @@
 import fieldsList from './fieldsList.js'
 
 // components and mixins
-import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
-import formMixin from '@theme/components/ADempiere/Form/formMixin.js'
+import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
+import formMixin from '@/components/ADempiere/Form/formMixin.js'
 
 // api request methods
 import {
@@ -140,7 +140,7 @@ import {
   isMandatoryField,
   isReadOnlyField,
   changeFieldShowedFromUser
-} from '@theme/components/ADempiere/Form/VPOS/containerManagerPos.js'
+} from '@/components/ADempiere/Form/VPOS/containerManagerPos.js'
 import { getProductPrice } from '@/api/ADempiere/form/price-checking.js'
 
 // methods and helpers

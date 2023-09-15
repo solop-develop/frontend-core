@@ -27,8 +27,8 @@
 
 <script>
 // components and mixins
-import fieldMixin from '@theme/components/ADempiere/FieldDefinition/mixin/mixinField.js'
-import fieldMixinText from '@theme/components/ADempiere/FieldDefinition/mixin/mixinFieldText.js'
+import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
+import fieldMixinText from '@/components/ADempiere/FieldDefinition/mixin/mixinFieldText.js'
 
 export default {
   name: 'FieldColor',

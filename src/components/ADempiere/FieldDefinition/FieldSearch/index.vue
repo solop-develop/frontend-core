@@ -71,19 +71,19 @@ export default {
   computed: {
     // load the component that is indicated in the attributes of received property
     componentRender() {
-      let fieldRender = () => import('@theme/components/ADempiere/FieldDefinition/FieldSearch/GeneralInfoSearch')
+      let fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/GeneralInfoSearch')
       if (isEmptyValue(this.metadata.reference)) {
         return fieldRender
       }
       switch (this.metadata.reference.tableName) {
         case 'C_BPartner':
-          fieldRender = () => import('@theme/components/ADempiere/FieldDefinition/FieldSearch/BusinessPartnerInfo')
+          fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/BusinessPartnerInfo')
           break
         // case 'C_Invoice':
         // case 'M_Product':
         // case 'A_Asset':
         // case 'C_Order':
-        //   fieldRender = () => import('@theme/components/ADempiere/FieldDefinition/FieldSearch/GeneralInfoSearch')
+        //   fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/GeneralInfoSearch')
         //   break
       }
 

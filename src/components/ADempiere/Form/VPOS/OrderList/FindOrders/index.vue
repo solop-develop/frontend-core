@@ -209,8 +209,8 @@
 
 <script>
 // Components and Mixins
-import DocumentStatusTag from '@theme/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
-import IndexColumn from '@theme/components/ADempiere/DataTable/Components/IndexColumn.vue'
+import DocumentStatusTag from '@/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
+import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
 
 // API Request Methods
 import { holdOrder } from '@/api/ADempiere/form/point-of-sales.js'

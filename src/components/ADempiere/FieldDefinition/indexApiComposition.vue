@@ -70,7 +70,7 @@ import { defineComponent, ref, computed, watch } from '@vue/composition-api'
 import store from '@/store'
 
 // Components and Mixins
-import FieldOptions from '@theme/components/ADempiere/FieldDefinition/FieldOptions/index.vue'
+import FieldOptions from '@/components/ADempiere/FieldDefinition/FieldOptions/index.vue'
 
 // Constants
 import { UUID } from '@/utils/ADempiere/constants/systemColumns'
@@ -186,13 +186,13 @@ export default defineComponent({
     // load the component that is indicated in the attributes of received property
     const componentRender = computed(() => {
       if (isEmptyValue(field.value) || isEmptyValue(field.value.componentPath) || !field.value.isSupported) {
-        return () => import('@theme/components/ADempiere/FieldDefinition/FieldText')
+        return () => import('@/components/ADempiere/FieldDefinition/FieldText')
       }
       if (isSelectCreated.value) {
-        return () => import('@theme/components/ADempiere/FieldDefinition/FieldSelectMultiple')
+        return () => import('@/components/ADempiere/FieldDefinition/FieldSelectMultiple')
       }
 
-      return () => import(`@theme/components/ADempiere/FieldDefinition/${this.field.componentPath}`)
+      return () => import(`@/components/ADempiere/FieldDefinition/${this.field.componentPath}`)
     })
 
     const fieldAttributes = computed(() => {

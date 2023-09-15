@@ -54,7 +54,7 @@
 <script>
 import { requestListRecentItems } from '@/api/ADempiere/dashboard/user'
 
-import mixinDashboard from '@theme/components/ADempiere/Dashboard/mixinDashboard.js'
+import mixinDashboard from '@/components/ADempiere/Dashboard/mixinDashboard.js'
 
 // utils and helper methods
 import { translateDateByLong } from '@/utils/ADempiere/formatValue/dateFormat'

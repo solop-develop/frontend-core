@@ -570,8 +570,8 @@ import lang from '@/lang'
 import store from '@/store'
 
 // Components and Mixins
-import IndexColumn from '@theme/components/ADempiere/DataTable/Components/IndexColumn.vue'
-import FileRender from '@theme/components/ADempiere/FileRender/index.vue'
+import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
+import FileRender from '@/components/ADempiere/FileRender/index.vue'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'

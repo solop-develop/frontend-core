@@ -209,8 +209,8 @@
 import fieldsListLine from './fieldsListLine.js'
 
 // Components and Mixins
-import FieldDefinition from '@theme/components/ADempiere/FieldDefinition/index.vue'
-import orderLineMixin from '@theme/components/ADempiere/Form/VPOS/Order/orderLineMixin.js'
+import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
+import orderLineMixin from '@/components/ADempiere/Form/VPOS/Order/orderLineMixin.js'
 
 // API Request Methods
 import { validatePin, updateOrderLine } from '@/api/ADempiere/form/point-of-sales.js'
@@ -233,7 +233,7 @@ import {
   searchTableHeader,
   isReadOnlyField,
   changeFieldShowedFromUser
-} from '@theme/components/ADempiere/Form/VPOS/containerManagerPos.js'
+} from '@/components/ADempiere/Form/VPOS/containerManagerPos.js'
 
 export default {
   name: 'FieldLine',

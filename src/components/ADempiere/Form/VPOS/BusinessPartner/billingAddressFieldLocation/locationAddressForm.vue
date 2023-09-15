@@ -51,11 +51,11 @@
 
 <script>
 // Components and Mixins
-import formMixin from '@theme/components/ADempiere/Form/formMixin.js'
+import formMixin from '@/components/ADempiere/Form/formMixin.js'
 import mixinLocation from './mixinLocation.js'
 
 // Constants
-import fieldsList from '@theme/components/ADempiere/FieldDefinition/FieldLocation/fieldsList.js'
+import fieldsList from '@/components/ADempiere/FieldDefinition/FieldLocation/fieldsList.js'
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 
 // API Request Methods

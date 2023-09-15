@@ -74,37 +74,37 @@ export default defineComponent({
       let component
       switch (currentCommand.value.command) {
         case 'ordersHistory':
-          component = () => import('@theme/components/ADempiere/Form/VPOS/OrderList/index')
+          component = () => import('@/components/ADempiere/Form/VPOS/OrderList/index')
           break
         case 'addResource':
-          component = () => import('@theme/components/ADempiere/Form/TimeControl/table.vue')
+          component = () => import('@/components/ADempiere/Form/TimeControl/table.vue')
           break
         case 'cancelSaleTransaction':
-          component = () => import('@theme/components/ADempiere/Form/VPOS/Options/reverseSalesTransaction/index.vue')
+          component = () => import('@/components/ADempiere/Form/VPOS/Options/reverseSalesTransaction/index.vue')
           break
         case 'confirmDelivery':
           isCompleteProducts.value = false
-          component = () => import('@theme/components/ADempiere/Form/VPOS/ConfirmDelivery')
+          component = () => import('@/components/ADempiere/Form/VPOS/ConfirmDelivery')
           break
         case 'deliverAllProducts':
           isCompleteProducts.value = true
-          component = () => import('@theme/components/ADempiere/Form/VPOS/ConfirmDelivery')
+          component = () => import('@/components/ADempiere/Form/VPOS/ConfirmDelivery')
           break
         case 'applyDiscountOnOrder':
           isCompleteProducts.value = true
-          component = () => import('@theme/components/ADempiere/Form/VPOS/Options/applyDiscount/index.vue')
+          component = () => import('@/components/ADempiere/Form/VPOS/Options/applyDiscount/index.vue')
           break
         case 'changePos':
-          component = () => import('@theme/components/ADempiere/Form/VPOS/Options/listGeneralOptions/index.vue')
+          component = () => import('@/components/ADempiere/Form/VPOS/Options/listGeneralOptions/index.vue')
           break
         case 'listProducts':
-          component = () => import('@theme/components/ADempiere/Form/VPOS/ProductInfo/productList')
+          component = () => import('@/components/ADempiere/Form/VPOS/ProductInfo/productList')
           break
         case 'changeWarehouseList':
-          component = () => import('@theme/components/ADempiere/Form/VPOS/Options/listGeneralOptions/index.vue')
+          component = () => import('@/components/ADempiere/Form/VPOS/Options/listGeneralOptions/index.vue')
           break
         case 'changePriceList':
-          component = () => import('@theme/components/ADempiere/Form/VPOS/Options/listGeneralOptions/index.vue')
+          component = () => import('@/components/ADempiere/Form/VPOS/Options/listGeneralOptions/index.vue')
           break
       }
       return component

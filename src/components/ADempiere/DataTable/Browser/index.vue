@@ -124,10 +124,10 @@ import router from '@/router'
 import store from '@/store'
 
 // Components and Mixins
-import CellEditInfo from '@theme/components/ADempiere/DataTable/Components/CellEditInfo.vue'
-import CustomPagination from '@theme/components/ADempiere/DataTable/Components/CustomPagination.vue'
-import FilterFields from '@theme/components/ADempiere/FilterFields/index.vue'
-import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
+import CellEditInfo from '@/components/ADempiere/DataTable/Components/CellEditInfo.vue'
+import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
+import FilterFields from '@/components/ADempiere/FilterFields/index.vue'
+import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'

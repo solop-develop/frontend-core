@@ -187,11 +187,11 @@ import router from '@/router'
 import store from '@/store'
 
 // Components and Mixins
-import DefaultTable from '@theme/components/ADempiere/DataTable/index.vue'
-import PanelDefinition from '@theme/components/ADempiere/PanelDefinition/index.vue'
-import TabLabel from '@theme/components/ADempiere/TabManager/TabLabel.vue'
+import DefaultTable from '@/components/ADempiere/DataTable/index.vue'
+import PanelDefinition from '@/components/ADempiere/PanelDefinition/index.vue'
+import TabLabel from '@/components/ADempiere/TabManager/TabLabel.vue'
 import PanelInfo from '../PanelInfo/index.vue'
-import TabPanel from '@theme/components/ADempiere/TabManager/TabPanel/index.vue'
+import TabPanel from '@/components/ADempiere/TabManager/TabPanel/index.vue'
 import TabOptions from './TabOptions.vue'
 
 // Constants

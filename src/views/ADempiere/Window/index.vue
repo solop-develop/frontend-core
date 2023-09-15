@@ -43,7 +43,7 @@ import { defineComponent, computed, ref } from '@vue/composition-api'
 import store from '@/store'
 
 // Components and Mixins
-import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
+import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 import mixinProcess from '@/views/ADempiere/Process/mixinProcess.js'
 
 // Utils and Helper Methods

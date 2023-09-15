@@ -238,11 +238,11 @@ import lang from '@/lang'
 import store from '@/store'
 
 // componets and mixins
-import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp'
-import FieldDefinition from '@theme/components/ADempiere/FieldDefinition/index.vue'
+import TitleAndHelp from '@/components/ADempiere/TitleAndHelp'
+import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
 import heardList from './headerTable'
 import fieldsList from './fieldsList'
-import CustomPagination from '@theme/components/ADempiere/DataTable/Components/CustomPagination.vue'
+import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 
 // api request methods
 import {

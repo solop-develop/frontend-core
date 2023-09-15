@@ -213,8 +213,8 @@ import store from '@/store'
 // Constants
 import { HEADER_TABLE, DATA_ATRIBUTES } from '@/utils/ADempiere/constants/form/VHRActionNotice.js'
 // Components
-import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp'
-import TypeField from '@theme/components/ADempiere/Form/VHRActionNotice/typeField'
+import TitleAndHelp from '@/components/ADempiere/TitleAndHelp'
+import TypeField from '@/components/ADempiere/Form/VHRActionNotice/typeField'
 
 // Utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'

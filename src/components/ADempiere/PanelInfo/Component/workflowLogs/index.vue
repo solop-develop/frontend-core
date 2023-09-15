@@ -85,7 +85,7 @@ import { defineComponent, computed, ref } from '@vue/composition-api'
 import store from '@/store'
 
 // Components and Mixins
-import WorkflowStatusBar from '@theme/components/ADempiere/WorkflowManager/WorkflowStatusBar.vue'
+import WorkflowStatusBar from '@/components/ADempiere/WorkflowManager/WorkflowStatusBar.vue'
 
 export default defineComponent({
   name: 'WorkflowLog',

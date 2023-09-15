@@ -146,7 +146,7 @@ import fieldsList from './fieldListUpdate.js'
 // Components and Mixins
 import AddAddress from './addAddress.vue'
 import BParterMixin from './mixinBusinessPartner.js'
-import formMixin from '@theme/components/ADempiere/Form/formMixin.js'
+import formMixin from '@/components/ADempiere/Form/formMixin.js'
 
 // API Request Methods
 import { updateCustomer, customer } from '@/api/ADempiere/form/point-of-sales.js'
@@ -163,7 +163,7 @@ import {
   searchTableHeader,
   isReadOnlyField,
   changeFieldShowedFromUser
-} from '@theme/components/ADempiere/Form/VPOS/containerManagerPos.js'
+} from '@/components/ADempiere/Form/VPOS/containerManagerPos.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default {

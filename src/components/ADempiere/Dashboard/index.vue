@@ -97,31 +97,31 @@ export default defineComponent({
       // if (UNSUPPORTED_DASHBOARDS.includes(props.metadata.fileName)) {
       //   return
       // }
-      let dashboard = () => import('@theme/components/ADempiere/Dashboard/UnsupportedDashboard')
+      let dashboard = () => import('@/components/ADempiere/Dashboard/UnsupportedDashboard')
       if (props.metadata.dashboardType === 'dashboard') {
         switch (props.metadata.fileName) {
           case 'activities':
-            dashboard = () => import('@theme/components/ADempiere/Dashboard/activities')
+            dashboard = () => import('@/components/ADempiere/Dashboard/activities')
             break
           case 'calendar':
-            dashboard = () => import('@theme/components/ADempiere/Dashboard/calendar')
+            dashboard = () => import('@/components/ADempiere/Dashboard/calendar')
             break
           case 'docstatus':
-            dashboard = () => import('@theme/components/ADempiere/Dashboard/docstatus')
+            dashboard = () => import('@/components/ADempiere/Dashboard/docstatus')
             break
           case 'recentItems':
-            dashboard = () => import('@theme/components/ADempiere/Dashboard/recentItems')
+            dashboard = () => import('@/components/ADempiere/Dashboard/recentItems')
             break
           case 'userfavorites':
-            dashboard = () => import('@theme/components/ADempiere/Dashboard/userfavorites')
+            dashboard = () => import('@/components/ADempiere/Dashboard/userfavorites')
             break
           default:
-            dashboard = () => import('@theme/components/ADempiere/Dashboard/UnsupportedDashboard')
+            dashboard = () => import('@/components/ADempiere/Dashboard/UnsupportedDashboard')
             break
         }
       } else if (!isEmptyValue(props.metadata.chartType)) {
         if (!isEmptyValue(props.metadata.transformation_script)) {
-          return () => import('@theme/components/ADempiere/Dashboard/charts/CustomerChart.vue')
+          return () => import('@/components/ADempiere/Dashboard/charts/CustomerChart.vue')
         }
         dashboard = getChartComponent(props.metadata)
       }

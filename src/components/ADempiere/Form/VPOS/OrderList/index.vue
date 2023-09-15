@@ -280,10 +280,10 @@
 import fieldsListOrders from './fieldsListOrders.js'
 
 // Components and Mixins
-import DocumentStatusTag from '@theme/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
-import CustomPagination from '@theme/components/ADempiere/DataTable/Components/CustomPagination.vue'
-import FieldDefinition from '@theme/components/ADempiere/FieldDefinition/index.vue'
-import posMixin from '@theme/components/ADempiere/Form/VPOS/posMixin.js'
+import DocumentStatusTag from '@/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
+import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
+import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
+import posMixin from '@/components/ADempiere/Form/VPOS/posMixin.js'
 
 // API Request Methods
 import { holdOrder } from '@/api/ADempiere/form/point-of-sales.js'
@@ -298,7 +298,7 @@ import {
   isMandatoryField,
   isReadOnlyField,
   changeFieldShowedFromUser
-} from '@theme/components/ADempiere/Form/VPOS/containerManagerPos.js'
+} from '@/components/ADempiere/Form/VPOS/containerManagerPos.js'
 import {
   createFieldFromDictionary
 } from '@/utils/ADempiere/lookupFactory'

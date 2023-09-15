@@ -34,42 +34,42 @@ export function getChartComponent(chart) {
   switch (chartType) {
     // Bar Chart
     case 'BC':
-      chartComponent = () => import('@theme/components/ADempiere/Dashboard/charts/BarChart')
+      chartComponent = () => import('@/components/ADempiere/Dashboard/charts/BarChart')
       break
     // Area Chart
     case 'AC':
-      chartComponent = () => import('@theme/components/ADempiere/Dashboard/charts/AreaChart')
+      chartComponent = () => import('@/components/ADempiere/Dashboard/charts/AreaChart')
       break
     // Line Chart
     case 'LC':
-      chartComponent = () => import('@theme/components/ADempiere/Dashboard/charts/LineChart')
+      chartComponent = () => import('@/components/ADempiere/Dashboard/charts/LineChart')
       break
     // Pie Chart
     case 'PC':
-      chartComponent = () => import('@theme/components/ADempiere/Dashboard/charts/PieChart')
+      chartComponent = () => import('@/components/ADempiere/Dashboard/charts/PieChart')
       break
     // Ring Chart
     case 'RC':
-      chartComponent = () => import('@theme/components/ADempiere/Dashboard/charts/PieChart')
+      chartComponent = () => import('@/components/ADempiere/Dashboard/charts/PieChart')
       break
     // Raddar Chart
     case 'RA':
-      chartComponent = () => import('@theme/components/ADempiere/Dashboard/charts/RaddarChart')
+      chartComponent = () => import('@/components/ADempiere/Dashboard/charts/RaddarChart')
       break
     // Waterfall Chart
     case 'WC':
-      chartComponent = () => import('@theme/components/ADempiere/Dashboard/charts/WaterfallChart')
+      chartComponent = () => import('@/components/ADempiere/Dashboard/charts/WaterfallChart')
       break
     // Basic Scatter Chart
     case 'SC':
-      chartComponent = () => import('@theme/components/ADempiere/Dashboard/charts/Scatter')
+      chartComponent = () => import('@/components/ADempiere/Dashboard/charts/Scatter')
       break
     // Gauge
     case 'GU':
-      chartComponent = () => import('@theme/components/ADempiere/Dashboard/charts/Gauge')
+      chartComponent = () => import('@/components/ADempiere/Dashboard/charts/Gauge')
       break
     default:
-      chartComponent = () => import('@theme/components/ADempiere/Dashboard/charts/LineChart')
+      chartComponent = () => import('@/components/ADempiere/Dashboard/charts/LineChart')
       break
   }
 

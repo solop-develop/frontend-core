@@ -19,7 +19,7 @@
 import store from '@/store'
 
 // Components and Mixins
-import fieldWithDisplayColumn from '@theme/components/ADempiere/FieldDefinition/mixin/mixinWithDisplayColumn.js'
+import fieldWithDisplayColumn from '@/components/ADempiere/FieldDefinition/mixin/mixinWithDisplayColumn.js'
 
 // Constants
 import { COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/accoutingCombination.js'

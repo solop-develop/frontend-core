@@ -82,7 +82,7 @@ import {
 } from '@vue/composition-api'
 
 import { isDocumentStatus } from '@/utils/ADempiere/constants/systemColumns'
-import DocumentStatusTag from '@theme/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
+import DocumentStatusTag from '@/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
 
 export default defineComponent({
   name: 'WindowsLogs',

@@ -53,7 +53,7 @@ import { defineComponent, ref } from '@vue/composition-api'
 
 // Components and Mixins
 import { read, utils } from 'xlsx'
-import DownloadFile from '@theme/components/ADempiere/FileRender/downloadFile.vue'
+import DownloadFile from '@/components/ADempiere/FileRender/downloadFile.vue'
 
 // Utils and Helper Methods
 import { buildBlobAndValues } from '@/utils/ADempiere/resource'

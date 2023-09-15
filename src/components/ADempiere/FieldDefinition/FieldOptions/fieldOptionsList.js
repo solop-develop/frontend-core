@@ -37,7 +37,7 @@ export const infoOptionItem = {
   icon: 'el-icon-info',
   index: 5,
   isRender: true,
-  componentRender: () => import('@theme/components/ADempiere/FieldDefinition/FieldOptions/ContextInfo'),
+  componentRender: () => import('@/components/ADempiere/FieldDefinition/FieldOptions/ContextInfo'),
   executeMethod: ({ containerManager, fieldAttributes }) => {}
 }
 
@@ -51,7 +51,7 @@ export const zoomInOptionItem = {
   icon: 'el-icon-files',
   index: 0,
   isRender: false,
-  componentRender: () => import('@theme/components/ADempiere/FieldDefinition/FieldOptions/EmptyOption'),
+  componentRender: () => import('@/components/ADempiere/FieldDefinition/FieldOptions/EmptyOption'),
   executeMethod: ({ containerManager, fieldAttributes, value }) => {
     const { parentUuid, containerUuid, reference } = fieldAttributes
     const { zoomWindows } = reference
@@ -120,7 +120,7 @@ export const operatorOptionItem = {
   svg: false,
   icon: 'el-icon-rank',
   isRender: true,
-  componentRender: () => import('@theme/components/ADempiere/FieldDefinition/FieldOptions/OperatorComparison'),
+  componentRender: () => import('@/components/ADempiere/FieldDefinition/FieldOptions/OperatorComparison'),
   executeMethod: ({ containerManager, fieldAttributes }) => {}
 }
 
@@ -134,7 +134,7 @@ export const translateOptionItem = {
   icon: 'language',
   index: 4,
   isRender: true,
-  componentRender: () => import('@theme/components/ADempiere/FieldDefinition/FieldOptions/TranslatedField'),
+  componentRender: () => import('@/components/ADempiere/FieldDefinition/FieldOptions/TranslatedField'),
   executeMethod: ({ containerManager, fieldAttributes }) => {}
 }
 
@@ -147,7 +147,7 @@ export const calculatorOptionItem = {
   svg: false,
   icon: 'el-icon-s-operation',
   isRender: true,
-  componentRender: () => import('@theme/components/ADempiere/FieldDefinition/FieldOptions/CalculatorField'),
+  componentRender: () => import('@/components/ADempiere/FieldDefinition/FieldOptions/CalculatorField'),
   executeMethod: ({ containerManager, fieldAttributes }) => {}
 }
 
@@ -157,7 +157,7 @@ export const preferenceValueOptionItem = {
   svg: false,
   icon: 'el-icon-notebook-2',
   isRender: true,
-  componentRender: () => import('@theme/components/ADempiere/FieldDefinition/FieldOptions/PreferenceValue'),
+  componentRender: () => import('@/components/ADempiere/FieldDefinition/FieldOptions/PreferenceValue'),
   executeMethod: ({ containerManager, fieldAttributes }) => {}
 }
 
@@ -168,7 +168,7 @@ export const logsOptionItem = {
   icon: 'tree-table',
   index: 2,
   isRender: true,
-  componentRender: () => import('@theme/components/ADempiere/FieldDefinition/FieldOptions/ChangeLogs'),
+  componentRender: () => import('@/components/ADempiere/FieldDefinition/FieldOptions/ChangeLogs'),
   executeMethod: ({ containerManager, fieldAttributes }) => {
     const { containerUuid, tabTableName, columnName } = fieldAttributes
 
@@ -193,7 +193,7 @@ export const documentStatusOptionItem = {
   svg: false,
   icon: 'el-icon-set-up',
   isRender: true,
-  componentRender: () => import('@theme/components/ADempiere/FieldDefinition/FieldOptions/DocumentStatus'),
+  componentRender: () => import('@/components/ADempiere/FieldDefinition/FieldOptions/DocumentStatus'),
   executeMethod: ({ containerManager, fieldAttributes }) => {}
 }
 
@@ -207,7 +207,7 @@ export const hideThisField = {
   icon: 'eye',
   index: 3,
   isRender: false,
-  componentRender: () => import('@theme/components/ADempiere/FieldDefinition/FieldOptions/EmptyOption'),
+  componentRender: () => import('@/components/ADempiere/FieldDefinition/FieldOptions/EmptyOption'),
   executeMethod: ({ containerManager, fieldAttributes }) => {
     const { parentUuid, containerUuid } = fieldAttributes
 
@@ -247,7 +247,7 @@ export const refreshLookup = {
   icon: 'el-icon-refresh',
   isRender: false,
   index: 1,
-  componentRender: () => import('@theme/components/ADempiere/FieldDefinition/FieldOptions/EmptyOption'),
+  componentRender: () => import('@/components/ADempiere/FieldDefinition/FieldOptions/EmptyOption'),
   executeMethod: ({ containerManager, fieldAttributes, value }) => {
     store.dispatch('deleteLookup', {
       parentUuid: fieldAttributes.parentUuid,

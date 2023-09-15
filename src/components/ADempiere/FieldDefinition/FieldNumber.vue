@@ -63,7 +63,7 @@
 import store from '@/store'
 
 // Components and Mixins
-import fieldMixin from '@theme/components/ADempiere/FieldDefinition/mixin/mixinField.js'
+import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
 
 // Constants
 import { INPUT_NUMBER_PATTERN } from '@/utils/ADempiere/formatValue/numberFormat.js'

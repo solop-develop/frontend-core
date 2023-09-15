@@ -76,7 +76,7 @@
 import fieldsList from './fieldsListCreate.js'
 
 // components and mixins
-import formMixin from '@theme/components/ADempiere/Form/formMixin.js'
+import formMixin from '@/components/ADempiere/Form/formMixin.js'
 import BillingAddress from './billingAddress.vue'
 import ShippingAddress from './shippingAddress.vue'
 import BParterMixin from './mixinBusinessPartner.js'
@@ -92,7 +92,7 @@ import {
   isMandatoryField,
   isReadOnlyField,
   changeFieldShowedFromUser
-} from '@theme/components/ADempiere/Form/VPOS/containerManagerPos.js'
+} from '@/components/ADempiere/Form/VPOS/containerManagerPos.js'
 
 export default {
   name: 'BusinessPartnerCreate',

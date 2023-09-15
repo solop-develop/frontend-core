@@ -153,10 +153,10 @@ import { DISPLAY_COLUMN_PREFIX, UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX } fr
 
 // Components and Mixins
 import mixinAccountingCombination from './mixinAccountingCombination.js'
-import CellDisplayInfo from '@theme/components/ADempiere/DataTable/Components/CellDisplayInfo.vue'
-import CustomPagination from '@theme/components/ADempiere/DataTable/Components/CustomPagination.vue'
-import FieldDefinition from '@theme/components/ADempiere/FieldDefinition/index.vue'
-import IndexColumn from '@theme/components/ADempiere/DataTable/Components/IndexColumn.vue'
+import CellDisplayInfo from '@/components/ADempiere/DataTable/Components/CellDisplayInfo.vue'
+import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
+import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
+import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'

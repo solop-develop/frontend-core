@@ -40,9 +40,9 @@ export default {
     },
     templateDevice() {
       if (this.isMobile) {
-        return () => import('@theme/components/ADempiere/Form/VPOS/templateDevice/mobile')
+        return () => import('@/components/ADempiere/Form/VPOS/templateDevice/mobile')
       }
-      return () => import('@theme/components/ADempiere/Form/VPOS/templateDevice/desktop')
+      return () => import('@/components/ADempiere/Form/VPOS/templateDevice/desktop')
     }
   }
 }

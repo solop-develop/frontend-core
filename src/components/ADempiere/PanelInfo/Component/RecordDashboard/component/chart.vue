@@ -101,9 +101,9 @@ export default defineComponent({
 
     // load the component that is indicated in the attributes of received property
     const renderDashboard = computed(() => {
-      let dashboard = () => import('@theme/components/ADempiere/Dashboard/UnsupportedDashboard')
+      let dashboard = () => import('@/components/ADempiere/Dashboard/UnsupportedDashboard')
       if (!isEmptyValue(props.metadata.chartType)) {
-        if (!isEmptyValue(props.metadata.transformation_script)) return () => import('@theme/components/ADempiere/Dashboard/charts/CustomerChart.vue')
+        if (!isEmptyValue(props.metadata.transformation_script)) return () => import('@/components/ADempiere/Dashboard/charts/CustomerChart.vue')
         dashboard = getChartComponent(props.metadata)
       }
       return dashboard

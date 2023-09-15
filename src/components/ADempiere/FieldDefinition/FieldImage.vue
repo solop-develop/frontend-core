@@ -158,9 +158,9 @@
 import lang from '@/lang'
 
 // Components and Mixins
-import fieldMixin from '@theme/components/ADempiere/FieldDefinition/mixin/mixinField.js'
-import fieldWithDisplayColumn from '@theme/components/ADempiere/FieldDefinition/mixin/mixinWithDisplayColumn.js'
-import FileInfo from '@theme/components/ADempiere/PanelInfo/Component/AttachmentManager/fileInfo'
+import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
+import fieldWithDisplayColumn from '@/components/ADempiere/FieldDefinition/mixin/mixinWithDisplayColumn.js'
+import FileInfo from '@/components/ADempiere/PanelInfo/Component/AttachmentManager/fileInfo'
 
 // Constants
 import { config } from '@/utils/ADempiere/config'

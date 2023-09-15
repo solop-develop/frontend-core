@@ -63,17 +63,17 @@ import language from '@/lang'
 import store from '@/store'
 
 // Components and Mixins
-import ActionMenu from '@theme/components/ADempiere/ActionMenu/index.vue'
-import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
-import Embedded from '@theme/components/ADempiere/Dialog/embedded'
-import RecordAccess from '@theme/components/ADempiere/RecordAccess'
-import ModalDialog from '@theme/components/ADempiere/ModalDialog/index.vue'
-import TabManager from '@theme/components/ADempiere/TabManager/index.vue'
-import TabManagerChild from '@theme/components/ADempiere/TabManager/tabChild.vue'
+import ActionMenu from '@/components/ADempiere/ActionMenu/index.vue'
+import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
+import Embedded from '@/components/ADempiere/Dialog/embedded'
+import RecordAccess from '@/components/ADempiere/RecordAccess'
+import ModalDialog from '@/components/ADempiere/ModalDialog/index.vue'
+import TabManager from '@/components/ADempiere/TabManager/index.vue'
+import TabManagerChild from '@/components/ADempiere/TabManager/tabChild.vue'
 
 // Utils and Helpers Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
-import useFullScreenContainer from '@theme/components/ADempiere/ContainerOptions/FullScreenContainer/useFullScreenContainer'
+import useFullScreenContainer from '@/components/ADempiere/ContainerOptions/FullScreenContainer/useFullScreenContainer'
 
 export default defineComponent({
   name: 'Finances',

@@ -96,7 +96,7 @@ import { defineComponent, computed, ref } from '@vue/composition-api'
 
 import store from '@/store'
 
-import ImageProduct from '@theme/components/ADempiere/Form/VPOS/Order/line/infoOrderLine/imageProduct.vue'
+import ImageProduct from '@/components/ADempiere/Form/VPOS/Order/line/infoOrderLine/imageProduct.vue'
 
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { formatPrice, formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'

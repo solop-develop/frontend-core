@@ -58,8 +58,8 @@ import { defineComponent, ref, computed } from '@vue/composition-api'
 import store from '@/store'
 
 // Components and Mixins
-import AttachmentManager from '@theme/components/ADempiere/PanelInfo/Component/AttachmentManager/index.vue'
-import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
+import AttachmentManager from '@/components/ADempiere/PanelInfo/Component/AttachmentManager/index.vue'
+import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'

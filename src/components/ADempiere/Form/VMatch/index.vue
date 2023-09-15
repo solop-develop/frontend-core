@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import formMixin from '@theme/components/ADempiere/Form/formMixin.js'
+import formMixin from '@/components/ADempiere/Form/formMixin.js'
 import fieldsList from './fieldList.js'
 import SearchCriteria from './components/SearchCriteria/'
 import Invoices from './components/Invoices/index'

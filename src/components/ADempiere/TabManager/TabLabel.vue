@@ -90,7 +90,7 @@ import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
 
 // Components and Mixins
-import LockRecord from '@theme/components/ADempiere/ContainerOptions/LockRecord/index.vue'
+import LockRecord from '@/components/ADempiere/ContainerOptions/LockRecord/index.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'

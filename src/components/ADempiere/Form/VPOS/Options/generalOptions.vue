@@ -157,8 +157,8 @@
 import { defineComponent, computed } from '@vue/composition-api'
 
 // components and mixins
-import ListProductPrice from '@theme/components/ADempiere/Form/VPOS/ProductInfo/productList'
-import ListProductSearch from '@theme/components/ADempiere/Form/ProductInfo/productList'
+import ListProductPrice from '@/components/ADempiere/Form/VPOS/ProductInfo/productList'
+import ListProductSearch from '@/components/ADempiere/Form/ProductInfo/productList'
 // /opt/Deveploment/frontend-core/src/themes/default/components/ADempiere/Form/ProductInfo/productList.vue
 
 export default defineComponent({

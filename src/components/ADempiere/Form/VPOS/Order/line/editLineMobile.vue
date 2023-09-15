@@ -164,12 +164,12 @@
 import fieldsListLine from './fieldsListLine.js'
 
 // components and mixins
-import FieldDefinition from '@theme/components/ADempiere/FieldDefinition/index.vue'
+import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
 
 // api request methods
 import { validatePin, updateOrderLine } from '@/api/ADempiere/form/point-of-sales.js'
 
-import orderLineMixin from '@theme/components/ADempiere/Form/VPOS/Order/orderLineMixin.js'
+import orderLineMixin from '@/components/ADempiere/Form/VPOS/Order/orderLineMixin.js'
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import {
@@ -191,7 +191,7 @@ import {
   searchTableHeader,
   isReadOnlyField,
   changeFieldShowedFromUser
-} from '@theme/components/ADempiere/Form/VPOS/containerManagerPos.js'
+} from '@/components/ADempiere/Form/VPOS/containerManagerPos.js'
 
 export default {
   name: 'EditLineMobile',

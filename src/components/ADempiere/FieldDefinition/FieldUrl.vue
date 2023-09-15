@@ -41,8 +41,8 @@
 
 <script>
 // Components and Mixins
-import fieldMixin from '@theme/components/ADempiere/FieldDefinition/mixin/mixinField.js'
-import fieldMixinText from '@theme/components/ADempiere/FieldDefinition/mixin/mixinFieldText.js'
+import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
+import fieldMixinText from '@/components/ADempiere/FieldDefinition/mixin/mixinFieldText.js'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'

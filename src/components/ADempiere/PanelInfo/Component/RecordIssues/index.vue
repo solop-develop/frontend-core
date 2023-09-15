@@ -272,8 +272,8 @@ import store from '@/store'
 
 // Components and Mixins
 import Comment from './component/Comment.vue'
-import RecordTime from '@theme/components/ADempiere/Form/Issues/recordTime.vue'
-import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
+import RecordTime from '@/components/ADempiere/Form/Issues/recordTime.vue'
+import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 
 // Constants
 import { REQUEST_WINDOW_UUID } from '@/utils/ADempiere/dictionary/form/Issues.js'

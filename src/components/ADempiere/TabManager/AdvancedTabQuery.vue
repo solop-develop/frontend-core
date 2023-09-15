@@ -172,8 +172,8 @@ import router from '@/router'
 import store from '@/store'
 
 // Components and Mixins
-import PanelDefinition from '@theme/components/ADempiere/PanelDefinition/index.vue'
-import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp/index.vue'
+import PanelDefinition from '@/components/ADempiere/PanelDefinition/index.vue'
+import TitleAndHelp from '@/components/ADempiere/TitleAndHelp/index.vue'
 
 // Constants
 import {

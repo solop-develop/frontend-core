@@ -29,10 +29,10 @@ import {
 } from '@/api/ADempiere/user-interface/component/resource'
 
 // Components and Mixins
-import FileRender from '@theme/components/ADempiere/FileRender/index.vue'
-import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
+import FileRender from '@/components/ADempiere/FileRender/index.vue'
+import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 import UploadResource from './uploadResource.vue'
-import PanelFooter from '@theme/components/ADempiere/PanelFooter/index.vue'
+import PanelFooter from '@/components/ADempiere/PanelFooter/index.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'

@@ -180,8 +180,8 @@ import store from '@/store'
 
 // Components and Mixins
 import useLocatorWarehouse from './useLocatorWarehouse.js'
-import CustomPagination from '@theme/components/ADempiere/DataTable/Components/CustomPagination.vue'
-import IndexColumn from '@theme/components/ADempiere/DataTable/Components/IndexColumn.vue'
+import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
+import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
 
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'

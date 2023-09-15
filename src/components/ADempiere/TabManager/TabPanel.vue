@@ -124,12 +124,12 @@ import router from '@/router'
 import store from '@/store'
 
 // Components and Mixins
-import BatchEntry from '@theme/components/ADempiere/DataTable/Components/BatchEntry.vue'
-import CustomPagination from '@theme/components/ADempiere/DataTable/Components/CustomPagination.vue'
-import DefaultTable from '@theme/components/ADempiere/DataTable/index.vue'
-import FilterFields from '@theme/components/ADempiere/FilterFields/index.vue'
-// import FullScreenContainer from '@theme/components/ADempiere/ContainerOptions/FullScreenContainer'
-import PanelDefinition from '@theme/components/ADempiere/PanelDefinition/index.vue'
+import BatchEntry from '@/components/ADempiere/DataTable/Components/BatchEntry.vue'
+import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
+import DefaultTable from '@/components/ADempiere/DataTable/index.vue'
+import FilterFields from '@/components/ADempiere/FilterFields/index.vue'
+// import FullScreenContainer from '@/components/ADempiere/ContainerOptions/FullScreenContainer'
+import PanelDefinition from '@/components/ADempiere/PanelDefinition/index.vue'
 import TabOptions from './TabOptions.vue'
 
 // Utils and Methods

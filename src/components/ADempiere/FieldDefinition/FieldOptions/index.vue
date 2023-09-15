@@ -136,7 +136,7 @@ import {
   optionsListStandad,
   documentStatusOptionItem, translateOptionItem,
   refreshLookup, zoomInOptionItem
-} from '@theme/components/ADempiere/FieldDefinition/FieldOptions/fieldOptionsList.js'
+} from '@/components/ADempiere/FieldDefinition/FieldOptions/fieldOptionsList.js'
 import { isSupportLookup } from '@/utils/ADempiere/references.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 

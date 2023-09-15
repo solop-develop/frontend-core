@@ -112,7 +112,7 @@ import { defineComponent, ref, computed, watch } from '@vue/composition-api'
 import store from '@/store'
 
 // Components and Mixins
-import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
+import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'

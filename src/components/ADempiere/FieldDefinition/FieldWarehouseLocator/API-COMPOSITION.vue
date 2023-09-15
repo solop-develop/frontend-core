@@ -63,8 +63,8 @@ import store from '@/store'
 
 // Components and Mixins
 import ButtonPopover from './button.vue'
-import useFieldDefinition from '@theme/components/ADempiere/FieldDefinition/useFieldDefinition.js'
-import useDisplayedColumn from '@theme/components/ADempiere/FieldDefinition/useDisplayedColumn.js'
+import useFieldDefinition from '@/components/ADempiere/FieldDefinition/useFieldDefinition.js'
+import useDisplayedColumn from '@/components/ADempiere/FieldDefinition/useDisplayedColumn.js'
 import useLocatorWarehouse from './useLocatorWarehouse.js'
 
 // Utils and Helper Methods

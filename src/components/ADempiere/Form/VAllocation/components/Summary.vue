@@ -37,8 +37,8 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 import { defineComponent, ref } from '@vue/composition-api'
 // import lang from '@/lang'
 // components and mixins
-import Carousel from '@theme/components/ADempiere/Carousel'
-// import formMixin from '@theme/components/ADempiere/Form/formMixin.js'
+import Carousel from '@/components/ADempiere/Carousel'
+// import formMixin from '@/components/ADempiere/Form/formMixin.js'
 // import fieldsList from './fieldList.js'
 // import SearchCriteria from './components/SearchCriteria/'
 // import Invoices from './components/Invoices/index'

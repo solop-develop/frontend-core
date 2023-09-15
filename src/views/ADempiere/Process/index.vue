@@ -70,12 +70,12 @@ import { defineComponent, computed, ref } from '@vue/composition-api'
 import store from '@/store'
 
 // components and mixins
-import ActionMenu from '@theme/components/ADempiere/ActionMenu/index.vue'
-import LoadingView from '@theme/components/ADempiere/LoadingView/index.vue'
+import ActionMenu from '@/components/ADempiere/ActionMenu/index.vue'
+import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 import mixinProcess from '@/views/ADempiere/Process/mixinProcess.js'
-import PanelDefinition from '@theme/components/ADempiere/PanelDefinition/index.vue'
-import TitleAndHelp from '@theme/components/ADempiere/TitleAndHelp/index.vue'
-import PanelFooter from '@theme/components/ADempiere/PanelFooter/index.vue'
+import PanelDefinition from '@/components/ADempiere/PanelDefinition/index.vue'
+import TitleAndHelp from '@/components/ADempiere/TitleAndHelp/index.vue'
+import PanelFooter from '@/components/ADempiere/PanelFooter/index.vue'
 
 import { convertProcess } from '@/utils/ADempiere/apiConverts/dictionary.js'
 import { generateProcess } from '@/utils/ADempiere/dictionary/process.js'

@@ -126,8 +126,8 @@ import { DOCUMENT_ACTION, DOCUMENT_STATUS } from '@/utils/ADempiere/constants/sy
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 
 // Components and Mixins
-import DocumentStatus from '@theme/components/ADempiere/TabManager/convenienceButtons/documentStatus.vue'
-import DocumentStatusTag from '@theme/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
+import DocumentStatus from '@/components/ADempiere/TabManager/convenienceButtons/documentStatus.vue'
+import DocumentStatusTag from '@/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'

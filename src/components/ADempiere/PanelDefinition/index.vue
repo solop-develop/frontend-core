@@ -94,17 +94,17 @@ export default defineComponent({
     // }
 
     const componentRender = computed(() => {
-      let panelComponent = () => import('@theme/components/ADempiere/PanelDefinition/StandardPanel.vue')
+      let panelComponent = () => import('@/components/ADempiere/PanelDefinition/StandardPanel.vue')
 
       if (!isEmptyValue(panelMetadata.value)) {
         // render panel with dragable fields
         if (panelMetadata.value.isEditSecuence) {
-          panelComponent = () => import('@theme/components/ADempiere/PanelDefinition/DraggablePanel.vue')
+          panelComponent = () => import('@/components/ADempiere/PanelDefinition/DraggablePanel.vue')
         }
         if (panelMetadata.value.isSortTab) {
-          panelComponent = () => import('@theme/components/ADempiere/PanelDefinition/SortPanel.vue')
+          panelComponent = () => import('@/components/ADempiere/PanelDefinition/SortPanel.vue')
         } else if (panelMetadata.value.isHasTree) {
-          panelComponent = () => import('@theme/components/ADempiere/PanelDefinition/TreePanel.vue')
+          panelComponent = () => import('@/components/ADempiere/PanelDefinition/TreePanel.vue')
         }
       }
 

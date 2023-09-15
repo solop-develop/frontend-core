@@ -40,7 +40,7 @@ import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
 
 // Components and Mixins
-import FieldDefinition from '@theme/components/ADempiere/FieldDefinition/index.vue'
+import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
 
 // Utils and Helpers Methods
 import {
@@ -48,7 +48,7 @@ import {
   isDisplayedField,
   isDisplayedDefault,
   isReadOnlyField
-} from '@theme/components/ADempiere/DataTable/Components/containerManagerBatchEntry'
+} from '@/components/ADempiere/DataTable/Components/containerManagerBatchEntry'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
 import { convertArrayKeyValueToObject } from '@/utils/ADempiere/formatValue/iterableFormat.js'

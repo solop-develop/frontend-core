@@ -76,14 +76,14 @@ import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
 
 // Components and Mixins
-import AdvancedTabQuery from '@theme/components/ADempiere/TabManager/AdvancedTabQuery.vue'
-import DocumentAction from '@theme/components/ADempiere/TabManager/convenienceButtons/documentAction.vue'
-import NewRecordButton from '@theme/components/ADempiere/TabManager/convenienceButtons/NewRecordButton.vue'
-import SaveRecordButton from '@theme/components/ADempiere/TabManager/convenienceButtons/SaveRecordButton.vue'
-import UndoChangeButton from '@theme/components/ADempiere/TabManager/convenienceButtons/UndoChangeButton.vue'
-import RefreshRecordButton from '@theme/components/ADempiere/TabManager/convenienceButtons/RefreshRecordButton.vue'
-import DeleteRecordButton from '@theme/components/ADempiere/TabManager/convenienceButtons/DeleteRecordButton.vue'
-import OptionsSecuence from '@theme/components/ADempiere/TabManager/convenienceButtons/OptionsSecuence.vue'
+import AdvancedTabQuery from '@/components/ADempiere/TabManager/AdvancedTabQuery.vue'
+import DocumentAction from '@/components/ADempiere/TabManager/convenienceButtons/documentAction.vue'
+import NewRecordButton from '@/components/ADempiere/TabManager/convenienceButtons/NewRecordButton.vue'
+import SaveRecordButton from '@/components/ADempiere/TabManager/convenienceButtons/SaveRecordButton.vue'
+import UndoChangeButton from '@/components/ADempiere/TabManager/convenienceButtons/UndoChangeButton.vue'
+import RefreshRecordButton from '@/components/ADempiere/TabManager/convenienceButtons/RefreshRecordButton.vue'
+import DeleteRecordButton from '@/components/ADempiere/TabManager/convenienceButtons/DeleteRecordButton.vue'
+import OptionsSecuence from '@/components/ADempiere/TabManager/convenienceButtons/OptionsSecuence.vue'
 export default defineComponent({
   name: 'ConvenienceButtons',
 

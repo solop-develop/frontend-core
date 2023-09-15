@@ -91,10 +91,10 @@ export default defineComponent({
       let dataTableCompenent
       switch (type) {
         case 'window':
-          dataTableCompenent = () => import('@theme/components/ADempiere/DataTable/Windows')
+          dataTableCompenent = () => import('@/components/ADempiere/DataTable/Windows')
           break
         case 'browser':
-          dataTableCompenent = () => import('@theme/components/ADempiere/DataTable/Browser')
+          dataTableCompenent = () => import('@/components/ADempiere/DataTable/Browser')
           break
       }
       return dataTableCompenent

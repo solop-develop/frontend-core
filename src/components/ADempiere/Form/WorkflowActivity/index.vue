@@ -326,9 +326,9 @@
 
 <script>
 // Components and Mixins
-import formMixin from '@theme/components/ADempiere/Form/formMixin.js'
-import CustomPagination from '@theme/components/ADempiere/DataTable/Components/CustomPagination.vue'
-import WorkflowDiagram from '@theme/components/ADempiere/WorkflowManager/WorkflowDiagram.vue'
+import formMixin from '@/components/ADempiere/Form/formMixin.js'
+import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
+import WorkflowDiagram from '@/components/ADempiere/WorkflowManager/WorkflowDiagram.vue'
 import 'simple-m-editor/dist/simple-m-editor.css'
 
 // Constants
