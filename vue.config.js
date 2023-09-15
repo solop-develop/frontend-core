@@ -2,10 +2,10 @@
 const path = require('path')
 // use fs to get certificates files
 // const fs = require('fs')
-const config = require('./config/default.json')
+// const config = require('./config/default.json')
 const defaultSettings = require('./src/settings.js')
-const theme = config.theme
-const themeComponents = theme + '/components'
+// const theme = config.theme
+// const themeComponents = theme + '/components'
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
@@ -55,8 +55,7 @@ module.exports = {
     devtool: "source-map",
     resolve: {
       alias: {
-        '@': resolve('src'),
-        '@theme': resolve(theme)
+        '@': resolve('src')
       }
     }
   },
@@ -121,7 +120,7 @@ module.exports = {
                 },
                 commons: {
                   name: 'chunk-commons',
-                  test: resolve(themeComponents), // can customize your rules
+                  test: resolve('src/components'), // can customize your rules
                   minChunks: 3, //  minimum common number
                   priority: 5,
                   reuseExistingChunk: true
