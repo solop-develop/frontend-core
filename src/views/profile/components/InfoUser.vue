@@ -6,11 +6,74 @@
     style="padding: 0px !important;"
   >
     <el-col :span="12">
-      <h1 style="margin-bottom: 0px;">{{ $t('component.dashboard.header.welcome') }} {{ userInfo.name }}</h1>
-      {{ userInfo.description }}
+      <h1 v-if="!showPanel" style="margin-bottom: 0px;">{{ $t('component.dashboard.header.welcome') }} {{ userInfo.name }}</h1>
+      <br>
+      <span v-if="showPanel">
+        <el-row>
+          <el-col :span="15">
+            <svg-icon icon-class="company" />
+            {{ 'Odoo' }}
+          </el-col>
+        </el-row>
+        <el-row style="margin-bottom: 2.5px;">
+          <el-col :span="12">
+            <p
+              class="label-system"
+            >
+              <svg-icon icon-class="status" />
+              {{ 'Nr de Release: ' }}
+            </p>
+          </el-col>
+          <el-col :span="12">
+            <el-tag>
+              <b>
+                <svg-icon icon-class="tag" />
+                {{ 'rc-3.9.4' }}
+              </b>
+            </el-tag>
+          </el-col>
+        </el-row>
+        <el-row style="margin-bottom: 2.5px;">
+          <el-col :span="12">
+            <p
+              class="label-system"
+            >
+              <svg-icon icon-class="backend" />
+              {{ 'Version de BackEnd: ' }}
+            </p>
+          </el-col>
+          <el-col :span="12">
+            <el-tag>
+              <b>
+                <svg-icon icon-class="tag" />
+                {{ '1.0.0-dev' }}
+              </b>
+            </el-tag>
+          </el-col>
+        </el-row>
+        <el-row style="margin-bottom: 10px;">
+          <el-col :span="12">
+            <p
+              class="label-system"
+            >
+              <svg-icon icon-class="proxy" />
+              {{ 'Version de Proxy: ' }}
+            </p>
+          </el-col>
+          <el-col :span="12">
+            <el-tag>
+              <b>
+                <svg-icon icon-class="tag" />
+                {{ '1.0.0-rc.3' }}
+              </b>
+            </el-tag>
+          </el-col>
+        </el-row>
+      </span>
     </el-col>
 
     <el-col
+      v-if="!showPanel"
       :span="12"
       style="padding-left: 2.5px;padding-right: 5px;text-align: end;"
     >
@@ -222,6 +285,12 @@ import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 export default defineComponent({
   name: 'UserInfo',
+  props: {
+    showPanel: {
+      type: Boolean,
+      default: false
+    }
+  },
   setup() {
     const currentRole = computed(() => {
       return store.getters['user/getRole']
@@ -243,6 +312,14 @@ export default defineComponent({
 
     const isMobile = computed(() => {
       return store.state.app.device === 'mobile'
+    })
+
+    const systemInfo = computed(() => {
+      const info = store.getters['user/getSystem']
+      if (!isEmptyValue(info)) return info
+      return {
+        name: 'ADempiere'
+      }
     })
 
     const notifications = computed(() => {
@@ -306,6 +383,7 @@ export default defineComponent({
       notifications,
       organization,
       currentRole,
+      systemInfo,
       warehouse,
       userInfo,
       isMobile,
@@ -320,5 +398,10 @@ export default defineComponent({
 <style lang="scss" scoped>
 .notificarion-table {
   padding: 5px;
+}
+
+.label-system {
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 </style>

@@ -13,11 +13,18 @@
             <el-tabs v-model="activeTab" class="tab-profile">
               <el-tab-pane :label="$t('profile.role')" name="role">
                 <!-- Info User -->
-                <user-info />
+                <user-info
+                  :show-panel="false"
+                />
               </el-tab-pane>
               <!-- Settings -->
               <el-tab-pane :label="$t('page.settings.title')" :name="$t('page.settings.title')">
                 <settings />
+              </el-tab-pane>
+              <el-tab-pane label="Información de Sistema" name="Información de Sistema">
+                <user-info
+                  :show-panel="true"
+                />
               </el-tab-pane>
             </el-tabs>
           </el-card>

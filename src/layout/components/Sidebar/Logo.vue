@@ -14,7 +14,7 @@
         <p key="expand" style="display: flex;text-align: center;width: 100%;padding: 0px 15px;margin-top: 0px;">
           <img v-if="logo" :src="logo" class="sidebar-logo" @click="dashboard()">
           <svg-icon v-else icon-class="AD" style="width: 2em !important;height: 2em !important;font-size: 25px;padding-left: 5px;padding-right: 0px;cursor: pointer;" />
-          <b style="color: white;font-size: 18px;padding-top: 15px;cursor: pointer; margin-left: 5px;" @click="dashboard()">{{ title }}</b><br>
+          <b style="color: white;font-size: 18px;padding-top: 15px;cursor: pointer; margin-left: 5px;" @click="dashboard()">{{ getName }}</b><br>
         </p>
         <el-tooltip placement="right">
           <div slot="content">{{ getRole.name }} | {{ getRole.client.name }}</div>
@@ -48,6 +48,11 @@ export default {
   computed: {
     getRole() {
       return this.$store.getters['user/getRole']
+    },
+    getName() {
+      const { name } = this.$store.getters['user/getSystem']
+      if (name) return name
+      return 'ADempiere'
     },
     logo() {
       const { client } = this.getRole
