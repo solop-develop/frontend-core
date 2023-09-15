@@ -12,7 +12,10 @@
     >
       <el-row>
         <el-col :span="3">
-          <img src="https://avatars1.githubusercontent.com/u/1263359?s=200&v=4" class="image">
+          <img
+            :src="logo"
+            class="image"
+          >
         </el-col>
         <el-col :span="20">
           <div class="title-container">
@@ -132,9 +135,7 @@ import loginMixin from './loginMixin.js'
 import SocialSign from './components/SocialSignin'
 
 // API Request Methods
-import {
-  services
-} from '@/api/ADempiere/open-id/services.js'
+import { services } from '@/api/ADempiere/open-id/services.js'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -188,6 +189,16 @@ export default {
     }
   },
 
+  computed: {
+    logo() {
+      const { logoUrl } = this.$store.getters['user/getSystem']
+      if (logoUrl) {
+        return logoUrl
+      }
+      return 'https://avatars1.githubusercontent.com/u/1263359?s=200&v=4'
+    }
+  },
+
   watch: {
     $route: {
       handler: function(route) {
@@ -202,6 +213,7 @@ export default {
   },
 
   created() {
+    this.initialBasicServices()
     const { search } = window.location
     if (!isEmptyValue(search)) {
       const urlParams = new URLSearchParams(search)
@@ -214,19 +226,6 @@ export default {
         })
       }
     }
-
-    services()
-      .then(response => {
-        this.listServices = response.map(list => {
-          return {
-            ...list,
-            svg: this.svgService(list)
-          }
-        })
-      })
-      .catch(error => {
-        console.info(error)
-      })
   },
 
   methods: {
@@ -343,6 +342,27 @@ export default {
         .finally(() => {
           this.isLoadingLogin = false
         })
+    },
+    initialBasicServices() {
+      this.listAuthorization()
+      this.info()
+    },
+    listAuthorization() {
+      services()
+        .then(response => {
+          this.listServices = response.map(list => {
+            return {
+              ...list,
+              svg: this.svgService(list)
+            }
+          })
+        })
+        .catch(error => {
+          console.info(error)
+        })
+    },
+    info() {
+      this.$store.dispatch('user/system')
     }
   }
 }

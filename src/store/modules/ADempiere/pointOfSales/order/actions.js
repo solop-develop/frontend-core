@@ -34,7 +34,10 @@ import {
 import { isEmptyValue, convertValuesToSendListOrders } from '@/utils/ADempiere/valueUtils.js'
 import { extractPagingToken, generatePageToken } from '@/utils/ADempiere/dataUtils'
 import { showMessage } from '@/utils/ADempiere/notification.js'
+import { buildLinkHref } from '@/utils/ADempiere/resource.js'
 
+// Constants
+import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
 /**
  * Order Actions
  */
@@ -358,7 +361,14 @@ export default {
       orderId
     })
       .then(response => {
-        const { is_error, summary } = response
+        const {
+          output_stream,
+          result_type,
+          mime_type,
+          file_name,
+          is_error,
+          summary
+        } = response
         const type = is_error ? 'error' : 'success'
         const message = isEmptyValue(summary) ? (is_error ? 'Error' : 'OK') : summary
         showMessage({
@@ -366,6 +376,48 @@ export default {
           message,
           showClose: true
         })
+        if (
+          !isEmptyValue(output_stream) &&
+          !isEmptyValue(mime_type) &&
+          !isEmptyValue(file_name)
+        ) {
+          const link = buildLinkHref({
+            fileName: file_name,
+            outputStream: output_stream,
+            mimeType: mime_type
+          })
+          // commit('addReportToList', reportResponse)
+          commit('setReportOutput', {
+            download: link.download,
+            format: result_type,
+            fileName: file_name,
+            link,
+            content: output_stream,
+            mimeType: mime_type,
+            name: file_name,
+            output: output_stream,
+            outputStream: output_stream,
+            reportType: result_type,
+            reportUuid: orderId.toString(),
+            reportViewUuid: orderId.toString(),
+            tableName: 'C_Order',
+            url: link.href,
+            uuid: orderId.toString(),
+            instanceUuid: orderId.toString()
+          })
+          router.push({
+            name: REPORT_VIEWER_NAME,
+            params: {
+              processId: orderId,
+              reportUuid: orderId.toString(),
+              tableName: 'C_Order',
+              instanceUuid: orderId.toString(),
+              fileName: file_name,
+              name: file_name,
+              mimeType: mime_type
+            }
+          }, () => {})
+        }
         return response
       })
       .catch(error => {

@@ -23,10 +23,10 @@
         <div class="content">
           <title-and-help
             style="margin: 0 !important;"
-            :name="storedReportDefinition.name"
-            :help="storedReportDefinition.help"
+            :name="name"
+            :help="help"
           />
-          <div style="float: right;padding-left: 1%;">
+          <div v-if="!isEmptyValue(storedReportDefinition)" style="float: right;padding-left: 1%;">
             <action-menu
               :container-manager="containerManager"
               :parent-uuid="reportUuid"
@@ -66,6 +66,7 @@
       />
     </el-drawer>
     <el-button
+      v-if="!isEmptyValue(storedReportDefinition)"
       type="primary"
       icon="el-icon-arrow-left"
       circle
@@ -127,6 +128,16 @@ export default defineComponent({
     const isLoading = ref(false)
     const reportType = ref(DEFAULT_REPORT_TYPE)
     const reportContent = ref('')
+
+    const name = computed(() => {
+      if (isEmptyValue(storedReportDefinition.value) && !isEmptyValue(storedReportOutput.value)) return storedReportOutput.value.name
+      return storedReportDefinition.value.name
+    })
+
+    const help = computed(() => {
+      if (isEmptyValue(storedReportDefinition.value) && !isEmptyValue(storedReportOutput.value)) return storedReportOutput.value.name
+      return storedReportDefinition.value.help
+    })
 
     const storedReportOutput = computed(() => {
       return store.getters.getReportOutput(root.$route.params.instanceUuid)
@@ -282,6 +293,8 @@ export default defineComponent({
       drawer,
       isShowPanelConfig,
       // Computeds
+      name,
+      help,
       link,
       isMobile,
       containerManager,
