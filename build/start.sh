@@ -5,7 +5,7 @@ cd /usr/share/nginx/html/static/js
 
 
 # Set API Proxy connection
-find -name 'app.*.js' -exec sed -i "s|http://localhost:8085|$API_URL|g" {} \;
+find -name 'app.*.js' -exec sed -i "s|http://localhost:8085/api/adempiere/|$API_URL|g" {} \;
 
 # Set Task Manager connection
 find -name 'app.*.js' -exec sed -i "s|http://localhost:8080|$TASK_MANAGER_URL|g" {} \;
