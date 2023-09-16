@@ -113,7 +113,7 @@ docker run -it \
 ```
 
 Or easy run container using `docker-compose` with follow command:
-```shebashll
+```bash
 docker-compose up
 ```
 
