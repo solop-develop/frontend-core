@@ -39,10 +39,10 @@ It is a great UI for [ADempiere ERP, CRM & SCM](https://github.com/adempiere/ade
 
 [adempiere-vue](https://github.com/adempiere/adempiere-vue) use the modern open source high performance RPC framework that can run in any environment [gRPC](https://grpc.io/) as [server](https://github.com/adempiere/adempiere-gRPC-Server).
 
-- [Preview](https://demo-ui.erpya.com/)
+- [Live Preview](https://vue-develop.solopcloud.com/)
 
-  - **User**: demo
-  - **Password**: demo
+  - **User**: `GardenAdmin`
+  - **Password**: `GardenAdmin`
 
 
 - [Documentation](https://adempiere.github.io/adempiere-vue-site/)
@@ -283,10 +283,10 @@ Detailed changes for each release are documented in the [release notes](https://
 
 ## Online Demo
 
-[Preview](https://demo-ui.erpya.com)
+[Live Preview](https://vue-develop.solopcloud.com/)
 
-- **User**: demo
-- **Password**: demo
+- **User**: `GardenAdmin`
+- **Password**: `GardenAdmin`
 
 ## Donate
 
