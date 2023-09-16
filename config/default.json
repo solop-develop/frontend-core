@@ -10,10 +10,10 @@
       "timeout": 99999999
     },
     "images": {
-      "url": "http://localhost:8085/adempiere-api/img/"
+      "url": "http://localhost:8085/api/adempiere/img"
     },
     "resource": {
-      "url": "http://localhost:8085/adempiere-api/"
+      "url": "http://localhost:8085/api/adempiere/resource"
     }
   },
   "repository": {
@@ -22,11 +22,11 @@
   },
   "taskManager": {
     "api": {
-      "url": "http://localhost:8080",
+      "url": "http://localhost:8080/v1",
       "endPoints": {
-        "jobs": "/v1/jobs",
-        "runJob": "/v1/jobs",
-        "restoreJob": "/v1/restore"
+        "jobs": "/jobs",
+        "runJob": "/jobs",
+        "restoreJob": "/restore"
       }
     }
   },

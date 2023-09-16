@@ -8,7 +8,7 @@ cd /usr/share/nginx/html/static/js
 find -name 'app.*.js' -exec sed -i "s|http://localhost:8085/api/adempiere/|$API_URL|g" {} \;
 
 # Set Task Manager connection
-find -name 'app.*.js' -exec sed -i "s|http://localhost:8080|$TASK_MANAGER_URL|g" {} \;
+find -name 'app.*.js' -exec sed -i "s|http://localhost:8080/v1|$TASK_MANAGER_URL|g" {} \;
 
 
 # Start nginx web server

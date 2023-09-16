@@ -119,7 +119,9 @@ docker-compose up
 
 ### Environment variables for the configuration
 
- * `API_URL`: It indicates the address of the server to which you will point the service [Proxy-Adempiere-Api](https://github.com/adempiere/proxy-adempiere-api), by default its value is `http://localhost:8085`.
+ * `API_URL`: It indicates the address of the server to which you will point the service [Proxy-Adempiere-Api](https://github.com/adempiere/proxy-adempiere-api), by default its value is `http://localhost:8085/api/adempiere/`.
+
+ * `TASK_MANAGER_URL`: It indicates the address of the API RESTFul to task manager [ADempiere-Business-Processors](https://github.com/adempiere/adempiere-business-processors) and [`dKron`](https://dkron.io/), by default its value is `http://localhost:8080/v1`.
 
  * `TZ`: (Time Zone) Indicates the time zone to set in the nginx-based container, the default value is `America/Caracas` (UTC -4:00).
 
@@ -270,12 +272,6 @@ yarn lint --fix
 
 Refer to [Documentation](https://adempiere.github.io/adempiere-vue/guide/essentials/deploy.html#build) for more information
 
-## Docker Container
-
-```bash
-# requires superuser permissions of the operating system ('su' or 'sudo')
-docker-compose up
-```
 
 ## Changelog
 

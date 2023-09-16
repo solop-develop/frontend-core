@@ -116,7 +116,7 @@ export function getImagePath({
   file,
   width,
   height,
-  operation = 'fit'
+  operation = 'resize'
 }) {
   const token = getToken()
   let bearerToken = token
@@ -126,7 +126,7 @@ export function getImagePath({
   }
 
   const url = config.adempiere.images.url
-  const urn = `img?&token=${bearerToken}&action=${operation}&width=${width}&height=${height}&url=${file}`
+  const urn = `?&token=${bearerToken}&action=${operation}&width=${width}&height=${height}&url=${file}`
   const uri = `${url}${urn}`
 
   return {
@@ -155,7 +155,7 @@ export function getResoursePath({
   }
 
   const url = config.adempiere.resource.url
-  const urn = `resource?token=${bearerToken}&resource_uuid=${resourceUuid}&resource_name=${resourceName}`
+  const urn = `?token=${bearerToken}&resource_uuid=${resourceUuid}&resource_name=${resourceName}`
   const uri = `${url}${urn}`
 
   return {

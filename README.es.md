@@ -102,7 +102,9 @@ docker-compose up
 
 ### Variables de entorno para la configuración
 
- * `API_URL`: Indica la dirección URL del servidor con el que se comunicará por defecto el cliente web [Proxy-Adempiere-Api](https://github.com/adempiere/proxy-adempiere-api), el valor por defecto es `http://localhost:8085`.
+ * `API_URL`: Indica la dirección URL del servidor con el que se comunicará por defecto el cliente web [Proxy-Adempiere-Api](https://github.com/adempiere/proxy-adempiere-api), el valor por defecto es `http://localhost:8085/api/adempiere/`.
+
+ * `TASK_MANAGER_URL`: Indica la dirección URL del API RESTFul para el mangejador de tareas [ADempiere-Business-Processors](https://github.com/adempiere/adempiere-business-processors) y [`dKron`](https://dkron.io/), el valor por defecto es `http://localhost:8085`.
 
  * `TZ`: (Time Zone) Indica el huso horario a establecer en el contenedor basado en nginx, el valor por defecto es `America/Caracas` (UTC -4:00).
 
@@ -253,12 +255,6 @@ yarn lint --fix
 
 Vaya a [Documentación](https://adempiere.github.io/adempiere-vue/es/guide/essentials/deploy.html#compilar) para mayor información.
 
-## Contenedor Docker
-
-```bash
-# requiere permisos de super usuario del sistema operativo ('su' o 'sudo')
-docker-componer up
-```
 
 ## Registro de Cambios
 
