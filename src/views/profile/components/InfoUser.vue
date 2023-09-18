@@ -113,93 +113,105 @@
       :span="12"
       style="padding-left: 2.5px;padding-right: 5px;text-align: end;"
     >
-      <span
-        style="border: 0px solid #d3d4d6;border-radius: 10px;"
-      >
-        <el-badge
-          :value="notice.quantity"
-          class="item"
-          type="primary"
-          :hidden="notice.quantity == 0"
-          style="margin-right: 10px"
-        >
+      <el-row>
+        <el-col :span="16">
           <el-button
-            round
+            type="primary"
             plain
-            style="padding: 5px 0px 5px 15px;border: 0px;"
+            circle
             @click="zoomNotifications(notice)"
           >
+            <svg-icon
+              icon-class="notifications"
+              style="font-size: 15px !important"
+            />
+          </el-button>
+        </el-col>
+        <el-col :span="8">
+          <el-badge
+            :value="notice.quantity"
+            class="item"
+            type="primary"
+            :hidden="notice.quantity == 0"
+            style="margin-right: 10px"
+          >
             <el-button
-              type="primary"
+              round
               plain
-              circle
+              style="padding: 15px 0px 5px 0px;border: 0px;"
               @click="zoomNotifications(notice)"
             >
-              <svg-icon
-                icon-class="notifications"
-                style="font-size: 15px !important"
-              />
+              {{ $t('profile.notice') }}
             </el-button>
-            {{ $t('profile.notice') }}
-          </el-button>
-        </el-badge>
-        <br>
-        <el-badge
-          :value="request.quantity"
-          class="item"
-          type="primary"
-          :hidden="request.quantity == 0"
-          style="margin-right: 10px"
-        >
+          </el-badge>
+        </el-col>
+      </el-row>
+      <el-row style="margin-top: 5px; margin-bottom: 5px;">
+        <el-col :span="16">
           <el-button
-            round
+            type="primary"
             plain
-            style="padding: 5px 0px 5px 15px;border: 0px;"
+            circle
             @click="zoomNotifications(request)"
           >
-            <el-button
-              type="primary"
-              plain
-              circle
-              @click="zoomNotifications(request)"
-            >
-              <svg-icon
-                icon-class="guide"
-                style="font-size: 15px !important"
-              />
-            </el-button>
-            {{ $t('profile.request') }}
+            <svg-icon
+              icon-class="guide"
+              style="font-size: 15px !important"
+            />
           </el-button>
-        </el-badge>
-        <br>
-        <el-badge
-          :value="workflow.quantity"
-          class="item"
-          type="primary"
-          :hidden="workflow.quantity == 0"
-          style="margin-right: 10px"
-        >
-          <el-button
-            round
-            plain
-            style="padding: 5px 0px 5px 15px;border: 0px;"
-            @click="zoomNotifications(workflow)"
+        </el-col>
+        <el-col :span="8">
+          <el-badge
+            :value="request.quantity"
+            class="item"
+            type="primary"
+            :hidden="request.quantity == 0"
+            style="margin-right: 10px"
           >
             <el-button
-              type="primary"
+              round
               plain
-              circle
+              style="padding: 15px 0px 5px 0px;border: 0px;"
+              @click="zoomNotifications(request)"
+            >
+              {{ $t('profile.request') }}
+            </el-button>
+          </el-badge>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="16">
+          <el-button
+            type="primary"
+            plain
+            circle
+            @click="zoomNotifications(workflow)"
+          >
+            <svg-icon
+              icon-class="workflow"
+              style="font-size: 15px !important"
+            />
+          </el-button>
+        </el-col>
+        <el-col :span="8">
+          <el-badge
+            :value="workflow.quantity"
+            class="item"
+            type="primary"
+            :hidden="workflow.quantity == 0"
+            style="margin-right: 10px"
+          >
+            <el-button
+              round
+              plain
+              style="padding: 15px 0px 5px 0px;border: 0px;"
               @click="zoomNotifications(workflow)"
             >
-              <svg-icon
-                icon-class="workflow"
-                style="font-size: 15px !important"
-              />
+              {{ $t('profile.workflowActivities') }}
             </el-button>
-            {{ $t('profile.workflowActivities') }}
-          </el-button>
-        </el-badge>
-      </span>
+          </el-badge>
+        </el-col>
+      </el-row>
     </el-col>
   </el-card>
   <el-card
