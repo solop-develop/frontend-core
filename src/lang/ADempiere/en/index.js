@@ -225,7 +225,15 @@ export default {
     activityLogs: 'Activity Logs',
     notice: 'Notice',
     request: 'Request',
-    workflowActivities: 'Workflow Activities'
+    workflowActivities: 'Workflow Activities',
+    systemInformation: {
+      tabLabel: 'System Information',
+      releaseNumber: 'Release',
+      backEndVersion: 'Back-End Version',
+      dateVersion: 'Date Versión',
+      proxyVersion: 'Proxy Version',
+      deploymentName: 'Deployment Name'
+    }
   },
   window,
   data: {

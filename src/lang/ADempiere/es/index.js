@@ -226,7 +226,15 @@ export default {
     activityLogs: 'Registros de Actividades',
     notice: 'Avisos',
     request: 'Solicitudes',
-    workflowActivities: 'Flujos de Trabajo'
+    workflowActivities: 'Flujos de Trabajo',
+    systemInformation: {
+      tabLabel: 'Información de Sistema',
+      releaseNumber: 'Número de versión',
+      backEndVersion: 'Versión del Back-End',
+      dateVersion: 'Fecha Versión',
+      proxyVersion: 'Versión del Proxy',
+      deploymentName: 'Nombre de Implementación'
+    }
   },
   window,
   data: {

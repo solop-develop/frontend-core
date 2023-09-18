@@ -204,6 +204,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       requestSessionInfo()
         .then(async sessionInfo => {
+          dispatch('system')
           commit('setIsSession', true)
           commit('setSessionInfo', {
             id: sessionInfo.id,
@@ -665,7 +666,11 @@ const actions = {
     return new Promise(resolve => {
       systemInfo()
         .then(response => {
-          commit('setSystem', camelizeObjectKeys(response))
+          const info = camelizeObjectKeys(response)
+          commit('setSystem', {
+            ...info,
+            name: isEmptyValue(info.name) ? 'ADempiere' : info.name
+          })
           resolve(response)
         })
         .catch(error => {

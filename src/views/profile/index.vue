@@ -22,11 +22,14 @@
                 <settings />
               </el-tab-pane>
               <!-- Info Company -->
-              <!-- <el-tab-pane label="Información de Sistema" name="Información de Sistema">
+              <el-tab-pane
+                :label="$t('profile.systemInformation.tabLabel')"
+                :name="$t('profile.systemInformation.tabLabel')"
+              >
                 <user-info
                   :show-panel="true"
                 />
-              </el-tab-pane> -->
+              </el-tab-pane>
             </el-tabs>
           </el-card>
         </el-col>

@@ -5,14 +5,50 @@
     :body-style="{ padding: '5px' }"
     style="padding: 0px !important;"
   >
-    <el-col :span="12">
+    <el-col :span="showPanel ? 15 : 12">
       <h1 v-if="!showPanel" style="margin-bottom: 0px;">{{ $t('component.dashboard.header.welcome') }} {{ userInfo.name }}</h1>
       <br>
       <span v-if="showPanel">
         <el-row>
           <el-col :span="15">
             <svg-icon icon-class="company" />
-            {{ 'Odoo' }}
+            {{ systemInfo.name }}
+          </el-col>
+        </el-row>
+        <el-row style="margin-bottom: 2.5px;">
+          <el-col :span="12">
+            <p
+              class="label-system"
+            >
+              <svg-icon icon-class="collections" />
+              {{ $t('profile.systemInformation.deploymentName') + ': ' }}
+            </p>
+          </el-col>
+          <el-col :span="12">
+            <el-tag>
+              <b>
+                <svg-icon icon-class="collections" />
+                {{ systemInfo.lastBuildInfo }}
+              </b>
+            </el-tag>
+          </el-col>
+        </el-row>
+        <el-row style="margin-bottom: 2.5px;">
+          <el-col :span="12">
+            <p
+              class="label-system"
+            >
+              <svg-icon icon-class="calendar" />
+              {{ $t('profile.systemInformation.dateVersion') + ': ' }}
+            </p>
+          </el-col>
+          <el-col :span="12">
+            <el-tag>
+              <b>
+                <svg-icon icon-class="calendar" />
+                {{ translateDateByLong(systemInfo.backendDateVersion) }}
+              </b>
+            </el-tag>
           </el-col>
         </el-row>
         <el-row style="margin-bottom: 2.5px;">
@@ -21,14 +57,14 @@
               class="label-system"
             >
               <svg-icon icon-class="status" />
-              {{ 'Nr de Release: ' }}
+              {{ $t('profile.systemInformation.releaseNumber') + ': ' }}
             </p>
           </el-col>
           <el-col :span="12">
             <el-tag>
               <b>
                 <svg-icon icon-class="tag" />
-                {{ 'rc-3.9.4' }}
+                {{ systemInfo.releaseNo }}
               </b>
             </el-tag>
           </el-col>
@@ -39,14 +75,14 @@
               class="label-system"
             >
               <svg-icon icon-class="backend" />
-              {{ 'Version de BackEnd: ' }}
+              {{ $t('profile.systemInformation.backEndVersion') + ': ' }}
             </p>
           </el-col>
           <el-col :span="12">
             <el-tag>
               <b>
                 <svg-icon icon-class="tag" />
-                {{ '1.0.0-dev' }}
+                {{ systemInfo.backendMainVersion }}
               </b>
             </el-tag>
           </el-col>
@@ -57,14 +93,14 @@
               class="label-system"
             >
               <svg-icon icon-class="proxy" />
-              {{ 'Version de Proxy: ' }}
+              {{ $t('profile.systemInformation.proxyVersion') + ': ' }}
             </p>
           </el-col>
           <el-col :span="12">
             <el-tag>
               <b>
                 <svg-icon icon-class="tag" />
-                {{ '1.0.0-rc.3' }}
+                {{ systemInfo.proxyVersion }}
               </b>
             </el-tag>
           </el-col>
@@ -283,6 +319,7 @@ import { defineComponent, computed } from '@vue/composition-api'
 // Utils and Helper Methods
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { translateDateByLong } from '@/utils/ADempiere/formatValue/dateFormat'
 export default defineComponent({
   name: 'UserInfo',
   props: {
@@ -378,6 +415,7 @@ export default defineComponent({
     return {
       // Methods
       zoomNotifications,
+      translateDateByLong,
       svgClass,
       // Computeds
       notifications,
