@@ -113,7 +113,7 @@
       :span="12"
       style="padding-left: 2.5px;padding-right: 5px;text-align: end;"
     >
-      <el-row>
+      <el-row style="margin-top: 5px; margin-bottom: 5px;">
         <el-col :span="16">
           <el-button
             type="primary"
@@ -179,7 +179,7 @@
           </el-badge>
         </el-col>
       </el-row>
-      <el-row>
+      <el-row style="margin-top: 5px; margin-bottom: 5px;">
         <el-col :span="16">
           <el-button
             type="primary"
