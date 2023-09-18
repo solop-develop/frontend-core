@@ -110,8 +110,8 @@
 
     <el-col
       v-if="!showPanel"
-      :span="12"
-      style="padding-left: 2.5px;padding-right: 5px;text-align: end;"
+      :span="showPanelNotifications ? 11 : 12"
+      style="text-align: end;"
     >
       <el-row style="margin-top: 5px; margin-bottom: 5px;">
         <el-col :span="18">
@@ -339,6 +339,10 @@ export default defineComponent({
 
   props: {
     showPanel: {
+      type: Boolean,
+      default: false
+    },
+    showPanelNotifications: {
       type: Boolean,
       default: false
     }

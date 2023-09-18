@@ -15,6 +15,7 @@
                 <!-- Info User -->
                 <user-info
                   :show-panel="false"
+                  :show-panel-notifications="true"
                 />
               </el-tab-pane>
               <!-- Settings -->

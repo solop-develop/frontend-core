@@ -18,7 +18,7 @@
 
 <template>
   <div class="dashboard-editor-container">
-    <el-row :gutter="12">
+    <el-row>
       <el-col :span="24" style="padding-right:10px;margin-bottom:20px;">
         <el-card
           shadow="hover"
@@ -30,7 +30,7 @@
       </el-col>
     </el-row>
 
-    <el-row v-if="!isEmptyValue(dashboardsList)" :gutter="8">
+    <el-row v-if="!isEmptyValue(dashboardsList)">
       <el-col :span="24">
         <panel-group />
       </el-col>
