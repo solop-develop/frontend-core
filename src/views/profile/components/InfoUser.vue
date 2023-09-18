@@ -316,18 +316,22 @@ import store from '@/store'
 import router from '@/router'
 import language from '@/lang'
 import { defineComponent, computed } from '@vue/composition-api'
+
 // Utils and Helper Methods
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { translateDateByLong } from '@/utils/ADempiere/formatValue/dateFormat'
+
 export default defineComponent({
   name: 'UserInfo',
+
   props: {
     showPanel: {
       type: Boolean,
       default: false
     }
   },
+
   setup() {
     const currentRole = computed(() => {
       return store.getters['user/getRole']
