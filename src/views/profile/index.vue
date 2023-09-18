@@ -21,11 +21,12 @@
               <el-tab-pane :label="$t('page.settings.title')" :name="$t('page.settings.title')">
                 <settings />
               </el-tab-pane>
-              <el-tab-pane label="Información de Sistema" name="Información de Sistema">
+              <!-- Info Company -->
+              <!-- <el-tab-pane label="Información de Sistema" name="Información de Sistema">
                 <user-info
                   :show-panel="true"
                 />
-              </el-tab-pane>
+              </el-tab-pane> -->
             </el-tabs>
           </el-card>
         </el-col>
