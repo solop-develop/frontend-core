@@ -114,7 +114,7 @@
       style="padding-left: 2.5px;padding-right: 5px;text-align: end;"
     >
       <el-row style="margin-top: 5px; margin-bottom: 5px;">
-        <el-col :span="16">
+        <el-col :span="18">
           <el-button
             type="primary"
             plain
@@ -127,7 +127,7 @@
             />
           </el-button>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6" style="text-align: start; padding-left: 1px;">
           <el-badge
             :value="notice.quantity"
             class="item"
@@ -147,7 +147,7 @@
         </el-col>
       </el-row>
       <el-row style="margin-top: 5px; margin-bottom: 5px;">
-        <el-col :span="16">
+        <el-col :span="18">
           <el-button
             type="primary"
             plain
@@ -160,7 +160,7 @@
             />
           </el-button>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6" style="text-align: start; padding-left: 1px;">
           <el-badge
             :value="request.quantity"
             class="item"
@@ -180,7 +180,7 @@
         </el-col>
       </el-row>
       <el-row style="margin-top: 5px; margin-bottom: 5px;">
-        <el-col :span="16">
+        <el-col :span="18">
           <el-button
             type="primary"
             plain
@@ -193,7 +193,7 @@
             />
           </el-button>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6" style="text-align: start; padding-left: 1px;">
           <el-badge
             :value="workflow.quantity"
             class="item"
