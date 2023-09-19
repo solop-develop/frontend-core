@@ -199,6 +199,9 @@
           height="60% !important"
           @current-change="handleCurrentChange"
         >
+          <index-column
+            :page-number="1"
+          />
           <el-table-column
             v-for="(workflowColumn) in workflowTableDefinition"
             :key="workflowColumn.columnName"
@@ -415,7 +418,7 @@ import formMixin from '@/components/ADempiere/Form/formMixin.js'
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 import WorkflowDiagram from '@/components/ADempiere/WorkflowManager/WorkflowDiagram.vue'
 import 'simple-m-editor/dist/simple-m-editor.css'
-
+import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
 // Constants
 import fieldsList from './fieldsList.js'
 
@@ -440,7 +443,8 @@ export default {
 
   components: {
     CustomPagination,
-    WorkflowDiagram
+    WorkflowDiagram,
+    IndexColumn
   },
 
   mixins: [
