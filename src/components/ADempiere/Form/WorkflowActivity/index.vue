@@ -179,10 +179,10 @@
     </div>
   </div>
   <el-container v-else style="height: 100% !important;">
-    <el-header id="WorkflowActivity" class="header" :style="!collapse ? 'height: 30% !important; width: 100% !important;' : 'height: 10%!important; width: 100% !important;'">
+    <el-header id="WorkflowActivity" class="header" :style="!collapse ? 'height: 70% !important; width: 100% !important;' : 'height: 10%!important; width: 100% !important;'">
       <el-card
         class="headerTable"
-        :style="!collapse ? 'height: 100% !important; width: 50% !important;float: left;' : 'height: 100%;width: 50% !important;float: left;'"
+        :style="!collapse ? 'height: 100% !important; width: 50% !important;float: left;' : 'height: 20%;width: 50% !important;float: left;'"
       >
         <div slot="header">
           <span> {{ $t('form.workflowActivity.title') }} </span>
@@ -194,7 +194,7 @@
           v-loading="isLoadActivity"
           :data="activityList"
           highlight-current-row
-          style="width: 100%;height: 80%"
+          style="width: 100%;height: 100%"
           border
           height="60% !important"
           @current-change="handleCurrentChange"
@@ -219,10 +219,18 @@
           :records-page="activityList.length"
         />
       </el-card>
-      <el-card id="logsWorkflow" class="headerLogs" :style="collapse2 ? 'height: 100%; width: 50% !important;float: right;' : 'height: 20%; width: 50% !important;float: right;'">
+      <el-card id="logsWorkflow" class="headerLogs" :style="true ? 'height: 100%; width: 50% !important;float: right;' : 'height: 20%; width: 100% !important;float: right;'">
         <div slot="header" class="clearfix">
           {{ $t('field.logsField') }}
-          <el-button style="float: right; padding: 3px 0" type="text" :icon="collapse2 ? 'el-icon-arrow-down' : 'el-icon-arrow-up'" @click="(collapse2 = !collapse2)" />
+          <el-button
+            style="float: right;"
+            round
+            @click="showWorkflow = !showWorkflow"
+          >
+            <svg-icon icon-class="workflow" />
+            {{ $t('form.workflowActivity.filtersSearch.seeFlowDiagram') }}
+          </el-button>
+          <!-- <el-button style="float: right; padding: 3px 0" type="text" :icon="collapse2 ? 'el-icon-arrow-down' : 'el-icon-arrow-up'" @click="(collapse2 = !collapse2)" /> -->
         </div>
         <el-timeline v-if="(!isEmptyValue(currentActivity) && collapse2)" class="info" style="overflow: auto;height: 80%; padding-top: 10px;">
           <el-timeline-item
@@ -235,15 +243,76 @@
           </el-timeline-item>
         </el-timeline>
       </el-card>
+      <el-card id="logsWorkflow" class="box-card" style="padding-left: 1%;padding-right: 1%;overflow: auto;">
+        <el-form v-show="!isEmptyValue(currentActivity)" :inline="true" class="demo-form-inline">
+          <el-row :gutter="24">
+            <el-col :span="8" style="text-align: center;">
+              <el-form-item label="Reenviar">
+                <el-switch v-model="chooseOption" @change="changeOption" />
+              </el-form-item>
+            </el-col>
+
+            <el-col v-show="isValidateUserChoice" :span="8" style="text-align: center;">
+              <el-form-item :label="$t('form.workflowActivity.filtersSearch.approve')">
+                <el-switch v-model="isProved" />
+              </el-form-item>
+            </el-col>
+
+            <el-col v-show="chooseOption" :span="8" style="text-align: center;">
+              <el-form-item :label="$t('form.workflowActivity.filtersSearch.user')">
+                <el-select
+                  v-if="chooseOption"
+                  v-model="userId"
+                  @visible-change="findSalesReps"
+                >
+                  <el-option
+                    v-for="item in listSalesReps"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+
+        <v-md-editor v-model="message" />
+
+        <el-button
+          type="primary"
+          class="button-base-icon"
+          icon="el-icon-check"
+          style="float: right;"
+          @click="sendOPeration()"
+        />
+        <el-button
+          type="primary"
+          icon="el-icon-zoom-in"
+          :alt="$t('page.processActivity.zoomIn')"
+          plain
+          style="float: right; margin-right: 5px; margin-left: 0px;"
+          class="button-base-icon"
+          @click="zoomRecord(currentActivity)"
+        />
+        <el-button
+          type="info"
+          class="button-base-icon"
+          plain
+          style="float: right; margin-right: 5px;"
+          @click="clearMessage()"
+        >
+          <svg-icon icon-class="layers-clear" />
+        </el-button>
+      </el-card>
     </el-header>
 
-    <el-main class="main" style="padding-left: 1%;padding-right: 1%;">
+    <!-- <el-main class="main" style="padding-left: 1%;padding-right: 1%;">
       <el-container style="height: 100%;">
         <el-main v-if="!isEmptyValue(currentActivity)" :style="isMobile ? 'overflow: auto;padding: 0px;' : 'overflow: auto;padding: 0px;'">
           <el-card id="logsWorkflow" class="box-card" :style="collapse3 ? 'height: 65%' : 'height: 10%'">
             <div slot="header" class="clearfix">
               {{ $t('form.workflowActivity.filtersSearch.workFlowDiagram') }}
-              <!-- {{ 'Diagrama del Flujo de Trabajo' }} -->
               <el-button style="float: right; padding: 3px 0" type="text" :icon="collapse3 ? 'el-icon-arrow-down' : 'el-icon-arrow-up'" @click="(collapse3 = !collapse3)" />
             </div>
             <workflow-diagram
@@ -320,7 +389,23 @@
           </el-card>
         </el-main>
       </el-container>
-    </el-main>
+    </el-main> -->
+    <el-drawer
+      :visible.sync="showWorkflow"
+    >
+      <h3 slot="title" style="text-align: center;margin: 0px;">
+        {{ $t('form.workflowActivity.filtersSearch.workFlowDiagram') }}
+      </h3>
+      <workflow-diagram
+        v-if="(!isEmptyValue(workflowStatesList) && !isEmptyValue(currentActivity) && collapse3)"
+        :node-transition-list="workflowTranstitionsList"
+        :node-list="workflowStatesList"
+        :current-node="currentNode"
+        :orientation="'vertical'"
+        :workflow-logs="listProcessWorkflow"
+        style="height: 100% !important;overflow: auto;"
+      />
+    </el-drawer>
   </el-container>
 </template>
 
@@ -435,6 +520,7 @@ export default {
       input: '',
       collapse2: false,
       collapse3: false,
+      showWorkflow: false,
       formInline: {
         user: '',
         region: ''
