@@ -889,6 +889,7 @@
       :append-to-body="true"
       :center="true"
       :title="$t('form.pos.returnProduct')"
+      width="80%"
     >
       <el-result
         v-if="!isEmptyValue(summaryReturnProduct)"
@@ -900,12 +901,13 @@
           :is-previwer="true"
         />
       </el-card>
-      <el-checkbox
-        v-model="checked1"
-        :label="$t('form.pos.orderRMA.createNewSubstituteOrder')"
-        :border="true"
-      />
       <span style="float: right;margin-top: 10px;">
+        <el-checkbox
+          v-model="isCreateNewSubstituteOrder"
+          :label="$t('form.pos.orderRMA.createNewSubstituteOrder')"
+          :border="true"
+          style="margin-right: 10px"
+        />
         <el-button
           type="danger"
           class="custom-button-create-bp"
@@ -916,7 +918,7 @@
           type="primary"
           class="custom-button-create-bp"
           icon="el-icon-check"
-          @click="showSummaryReturnProduct = !showSummaryReturnProduct"
+          @click="closeReturnProductPreviwer()"
         />
       </span>
     </el-dialog>
@@ -1067,7 +1069,7 @@ export default {
       activeName: '',
       processPos: '',
       pin: '',
-      checked1: true,
+      isCreateNewSubstituteOrder: true,
       isAction: false,
       attributePin: {},
       validatePin: true,
@@ -2139,6 +2141,31 @@ export default {
       //     containerUuid: action.uuid
       //   }
       // })
+    },
+    closeReturnProductPreviwer() {
+      if (this.isCreateNewSubstituteOrder) {
+        newOrderFromRMA({
+          posId: this.currentPointOfSales.id,
+          sourceRmaId: this.$store.getters.getSummaryRMA.order.id,
+          salesRepresentativeId: this.$store.getters.getSummaryRMA.order.salesRepresentative.id
+        })
+          .then(response => {
+            this.$store.dispatch('reloadOrder', { orderUuid: response.uuid })
+            this.$message({
+              type: 'success',
+              message: 'Ok',
+              showClose: true
+            })
+          })
+          .catch(error => {
+            this.$message({
+              type: 'error',
+              message: error.message,
+              showClose: true
+            })
+          })
+      }
+      this.showSummaryReturnProduct = false
     },
     newOrderRMA() {
       if (isEmptyValue(this.currentOrder.id)) {
