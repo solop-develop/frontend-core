@@ -1289,7 +1289,6 @@ export default {
     },
     isAllowsCashOpening() {
       const { isAllowsCashOpening } = this.currentPointOfSales
-      console.log({ ...this.currentPointOfSales }, { isAllowsCashOpening })
       return this.currentPointOfSales.isAllowsCashOpening
     },
     isAllowsCashClosing() {
