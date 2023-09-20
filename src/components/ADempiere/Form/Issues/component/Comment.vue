@@ -157,6 +157,7 @@
                     v-model="currentSalesReps"
                     remote
                     filterable
+                    :loading="loadingSales"
                     :remote-method="remoteMethodSales"
                     @visible-change="findSalesReps"
                     @change="exitPopover('')"
@@ -297,6 +298,7 @@
                     v-model="currentSalesReps"
                     remote
                     filterable
+                    :loading="loadingSales"
                     :remote-method="remoteMethodSales"
                     @visible-change="findSalesReps"
                     @change="updateIssuesSalesReps"
@@ -629,6 +631,7 @@
                     v-model="currentSalesReps"
                     remote
                     filterable
+                    :loading="loadingSales"
                     :remote-method="remoteMethodSales"
                     @visible-change="findSalesReps"
                     @change="exitPopover('')"
@@ -839,6 +842,7 @@
                     v-model="currentIssues.sales_representative.name"
                     remote
                     filterable
+                    :loading="loadingSales"
                     :remote-method="remoteMethodSales"
                     @visible-change="findSalesReps"
                     @change="updateIssuesSalesReps"
@@ -1379,6 +1383,7 @@ export default defineComponent({
         if (!isVisible) {
           resolve([])
         }
+        loadingSales.value = true
         requestListSalesRepresentatives({
           searchValue
         })
@@ -1394,22 +1399,17 @@ export default defineComponent({
             })
             resolve([])
           })
+          .finally(() => {
+            loadingSales.value = false
+          })
       })
     }
 
-    function remoteMethodSales(query) {
-      if (!isEmptyValue(query) && query.length > 2) {
-        const result = listSalesReps.value.filter(findFilter(query))
-        if (isEmptyValue(result)) {
-          findSalesReps(true, query)
-        }
-      }
-    }
+    const loadingSales = ref(false)
 
-    function findFilter(queryString) {
-      return (query) => {
-        const search = queryString.toLowerCase()
-        return query.name.toLowerCase().includes(search)
+    function remoteMethodSales(query) {
+      if (!isEmptyValue(query) && query.length > 1) {
+        findSalesReps(true, query)
       }
     }
 
@@ -1885,6 +1885,7 @@ export default defineComponent({
       isLoadingNewIssues,
       centerDialogVisible,
       cssStyleButton,
+      loadingSales,
       // list
       listSalesReps,
       listIssuesTypes,

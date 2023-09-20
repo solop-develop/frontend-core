@@ -176,6 +176,7 @@
                           v-model="currentSalesReps"
                           filterable
                           remote
+                          :loading="loadingSales"
                           :remote-method="remoteMethodSales"
                           @visible-change="findSalesReps"
                           @change="exitPopover('newSalesReps')"
@@ -406,6 +407,7 @@
                           :value="isEmptyValue(listSalesReps) ? currentIssues.sales_representative.name : currentIssues.sales_representative.id"
                           filterable
                           remote
+                          :loading="loadingSales"
                           :remote-method="remoteMethodSales"
                           @visible-change="findSalesReps"
                           @change="updateIssuesSalesReps"
@@ -877,6 +879,7 @@ export default defineComponent({
         if (!isVisible) {
           resolve([])
         }
+        loadingSales.value = true
         requestListSalesRepresentatives({})
           .then(response => {
             const { records } = response
@@ -890,22 +893,15 @@ export default defineComponent({
             })
             reject([])
           })
+          .finally(() => {
+            loadingSales.value = false
+          })
       })
     }
-
+    const loadingSales = ref(false)
     function remoteMethodSales(query) {
       if (!isEmptyValue(query) && query.length > 2) {
-        const result = listSalesReps.value.filter(findFilter(query))
-        if (isEmptyValue(result)) {
-          findSalesReps(true, query)
-        }
-      }
-    }
-
-    function findFilter(queryString) {
-      return (query) => {
-        const search = queryString.toLowerCase()
-        return query.name.toLowerCase().includes(search)
+        findSalesReps(true, query)
       }
     }
 
@@ -1395,6 +1391,7 @@ export default defineComponent({
       isCollapseComments,
       isLoadingNewIssues,
       centerDialogVisible,
+      loadingSales,
       // Computed
       isNewIssues,
       isDisabledSave,
