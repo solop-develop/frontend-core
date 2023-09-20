@@ -175,6 +175,8 @@
                         <el-select
                           v-model="currentSalesReps"
                           filterable
+                          remote
+                          :remote-method="remoteMethodSales"
                           @visible-change="findSalesReps"
                           @change="exitPopover('newSalesReps')"
                         >
@@ -403,6 +405,8 @@
                         <el-select
                           :value="isEmptyValue(listSalesReps) ? currentIssues.sales_representative.name : currentIssues.sales_representative.id"
                           filterable
+                          remote
+                          :remote-method="remoteMethodSales"
                           @visible-change="findSalesReps"
                           @change="updateIssuesSalesReps"
                         >
@@ -887,6 +891,22 @@ export default defineComponent({
             reject([])
           })
       })
+    }
+
+    function remoteMethodSales(query) {
+      if (!isEmptyValue(query) && query.length > 2) {
+        const result = listSalesReps.value.filter(findFilter(query))
+        if (isEmptyValue(result)) {
+          findSalesReps(true, query)
+        }
+      }
+    }
+
+    function findFilter(queryString) {
+      return (query) => {
+        const search = queryString.toLowerCase()
+        return query.name.toLowerCase().includes(search)
+      }
     }
 
     function findRequestTypes(isVisible) {
@@ -1419,6 +1439,7 @@ export default defineComponent({
       logDisplayLanguaje,
       zoomIssues,
       avatarResize,
+      remoteMethodSales,
       defaultValueNewIssues,
       markdownContent
     }

@@ -155,7 +155,9 @@
                 <el-form-item label="Agente Comercial" style="margin: 0px;">
                   <el-select
                     v-model="currentSalesReps"
+                    remote
                     filterable
+                    :remote-method="remoteMethodSales"
                     @visible-change="findSalesReps"
                     @change="exitPopover('')"
                   >
@@ -293,7 +295,9 @@
                 <el-form-item label="Agente Comercial">
                   <el-select
                     v-model="currentSalesReps"
+                    remote
                     filterable
+                    :remote-method="remoteMethodSales"
                     @visible-change="findSalesReps"
                     @change="updateIssuesSalesReps"
                   >
@@ -623,7 +627,9 @@
                 <el-form-item label="Agente Comercial" style="margin: 0px;">
                   <el-select
                     v-model="currentSalesReps"
+                    remote
                     filterable
+                    :remote-method="remoteMethodSales"
                     @visible-change="findSalesReps"
                     @change="exitPopover('')"
                   >
@@ -831,7 +837,9 @@
                 <el-form-item label="Agente Comercial" style="margin: 0px;">
                   <el-select
                     v-model="currentIssues.sales_representative.name"
+                    remote
                     filterable
+                    :remote-method="remoteMethodSales"
                     @visible-change="findSalesReps"
                     @change="updateIssuesSalesReps"
                   >
@@ -1366,12 +1374,14 @@ export default defineComponent({
       return store.getters['settings/getFixedHeader']
     })
 
-    function findSalesReps(isVisible) {
+    function findSalesReps(isVisible, searchValue) {
       return new Promise((resolve, reject) => {
         if (!isVisible) {
           resolve([])
         }
-        requestListSalesRepresentatives({})
+        requestListSalesRepresentatives({
+          searchValue
+        })
           .then(response => {
             const { records } = response
             listSalesReps.value = records
@@ -1385,6 +1395,22 @@ export default defineComponent({
             resolve([])
           })
       })
+    }
+
+    function remoteMethodSales(query) {
+      if (!isEmptyValue(query) && query.length > 2) {
+        const result = listSalesReps.value.filter(findFilter(query))
+        if (isEmptyValue(result)) {
+          findSalesReps(true, query)
+        }
+      }
+    }
+
+    function findFilter(queryString) {
+      return (query) => {
+        const search = queryString.toLowerCase()
+        return query.name.toLowerCase().includes(search)
+      }
     }
 
     function findRequestTypes(isVisible) {
@@ -1914,6 +1940,7 @@ export default defineComponent({
       loadListMail,
       zoomIssues,
       avatarResize,
+      remoteMethodSales,
       markdownContent
     }
   }
