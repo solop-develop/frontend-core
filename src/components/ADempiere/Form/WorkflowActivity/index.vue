@@ -37,6 +37,9 @@
               height="60% !important"
               @current-change="handleCurrentChange"
             >
+              <index-column
+                :page-number="currentPagePagination"
+              />
               <el-table-column
                 v-for="(workflowColumn) in workflowTableDefinition"
                 :key="workflowColumn.columnName"
@@ -57,10 +60,11 @@
             />
           </el-card>
         </el-header>
+
         <el-main class="main" style="padding-left: 1%;padding-right: 1%;">
           <el-container style="height: 100% !important;">
             <el-header :style="collapse2 ? 'padding: 0px;height: 40%;display: contents;' : 'padding: 0px;height: 10%;display: contents;'">
-              <el-card id="logsWorkflow" class="box-card">
+              <el-card id="logsWorkflow" class="box-card" style="overflow: auto;">
                 <div slot="header" class="clearfix">
                   {{ $t('field.logsField') }}
                   <el-button style="float: right; padding: 3px 0" type="text" :icon="collapse2 ? 'el-icon-arrow-down' : 'el-icon-arrow-up'" @click="(collapse2 = !collapse2)" />
@@ -72,12 +76,13 @@
                     :timestamp="translateDateByLong(nodes.log_date)"
                     placement="top"
                   >
-                    <b>  {{ nodes.node_name }} </b> {{ nodes.text_message }}
+                    <b>{{ nodes.node_name }}</b> {{ nodes.text_message }}
                   </el-timeline-item>
                 </el-timeline>
               </el-card>
             </el-header>
           </el-container>
+
           <el-button
             style="right: 0%;margin-right: 0px;position: absolute;top: 50%;"
             type="primary"
@@ -93,7 +98,7 @@
             :show-close="true"
             size="100%"
           >
-            <el-card id="logsWorkflow" class="box-card" :style="collapse3 ? 'height: 100%;display: contents;' : 'height: 20%'">
+            <el-card id="diagramWorkflow" class="box-card" :style="collapse3 ? 'height: 100%;display: contents;' : 'height: 20%'">
               <div slot="header" class="clearfix">
                 {{ $t('form.workflowActivity.filtersSearch.workFlowDiagram') }}
                 <el-button style="float: right; padding: 3px 0" type="text" @click="isDiagram = !isDiagram">
@@ -114,8 +119,9 @@
         </el-main>
       </el-container>
     </div>
-    <div style="height: 25% !important;text-align: end;">
-      <el-card id="logsWorkflow" class="box-card" style="padding: 0%;overflow: auto;overflow-x: hidden;">
+
+    <div style="position: fixed;left: 0;bottom: 0;width: 100%;">
+      <el-card id="workflowMessage" class="box-card" style="padding: 0%;overflow: auto;overflow-x: hidden;">
         <el-form v-show="!isEmptyValue(currentActivity)" :label-position="chooseOption ? 'top' : 'left'" :inline="true" class="demo-form-inline">
           <el-row :gutter="24" style="text-align: center;">
             <el-col :span="!chooseOption ? 12 : 6" style="text-align: center;margin: 0px;">
@@ -178,6 +184,7 @@
       </el-card>
     </div>
   </div>
+
   <el-container v-else style="height: 100% !important;">
     <el-header id="WorkflowActivity" class="header" :style="!collapse ? 'height: 70% !important; width: 100% !important;' : 'height: 10%!important; width: 100% !important;'">
       <el-card
@@ -222,6 +229,7 @@
           :records-page="activityList.length"
         />
       </el-card>
+
       <el-card id="logsWorkflow" class="headerLogs" :style="true ? 'height: 100%; width: 50% !important;float: right;' : 'height: 20%; width: 100% !important;float: right;'">
         <div slot="header" class="clearfix">
           {{ $t('field.logsField') }}
@@ -242,11 +250,12 @@
             :timestamp="translateDateByLong(nodes.log_date)"
             placement="top"
           >
-            <b>  {{ nodes.node_name }} </b> {{ nodes.text_message }}
+            <b>{{ nodes.node_name }}</b> {{ nodes.text_message }}
           </el-timeline-item>
         </el-timeline>
       </el-card>
-      <el-card id="logsWorkflow" class="box-card" style="padding-left: 1%;padding-right: 1%;overflow: auto;">
+
+      <el-card id="workflowMessage" class="box-card" style="padding-left: 1%;padding-right: 1%;overflow: auto;">
         <el-form v-show="!isEmptyValue(currentActivity)" :inline="true" class="demo-form-inline">
           <el-row :gutter="24">
             <el-col :span="8" style="text-align: center;">
@@ -310,89 +319,6 @@
       </el-card>
     </el-header>
 
-    <!-- <el-main class="main" style="padding-left: 1%;padding-right: 1%;">
-      <el-container style="height: 100%;">
-        <el-main v-if="!isEmptyValue(currentActivity)" :style="isMobile ? 'overflow: auto;padding: 0px;' : 'overflow: auto;padding: 0px;'">
-          <el-card id="logsWorkflow" class="box-card" :style="collapse3 ? 'height: 65%' : 'height: 10%'">
-            <div slot="header" class="clearfix">
-              {{ $t('form.workflowActivity.filtersSearch.workFlowDiagram') }}
-              <el-button style="float: right; padding: 3px 0" type="text" :icon="collapse3 ? 'el-icon-arrow-down' : 'el-icon-arrow-up'" @click="(collapse3 = !collapse3)" />
-            </div>
-            <workflow-diagram
-              v-if="(!isEmptyValue(workflowStatesList) && !isEmptyValue(currentActivity) && collapse3)"
-              :node-transition-list="workflowTranstitionsList"
-              :node-list="workflowStatesList"
-              :current-node="currentNode"
-              :orientation="isMobile ? 'vertical' : 'horizontal'"
-              :workflow-logs="listProcessWorkflow"
-              :style="isMobile ? 'height: 100% !important;overflow: auto;' : 'height: 100% !important;'"
-            />
-          </el-card>
-          <el-card id="logsWorkflow" class="box-card" style="padding-left: 1%;padding-right: 1%;overflow: auto;">
-            <el-form v-show="!isEmptyValue(currentActivity)" :inline="true" class="demo-form-inline">
-              <el-row :gutter="24">
-                <el-col :span="8" style="text-align: center;">
-                  <el-form-item label="Reenviar">
-                    <el-switch v-model="chooseOption" @change="changeOption" />
-                  </el-form-item>
-                </el-col>
-
-                <el-col v-show="isValidateUserChoice" :span="8" style="text-align: center;">
-                  <el-form-item :label="$t('form.workflowActivity.filtersSearch.approve')">
-                    <el-switch v-model="isProved" />
-                  </el-form-item>
-                </el-col>
-
-                <el-col v-show="chooseOption" :span="8" style="text-align: center;">
-                  <el-form-item :label="$t('form.workflowActivity.filtersSearch.user')">
-                    <el-select
-                      v-if="chooseOption"
-                      v-model="userId"
-                      @visible-change="findSalesReps"
-                    >
-                      <el-option
-                        v-for="item in listSalesReps"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id"
-                      />
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </el-form>
-
-            <v-md-editor v-model="message" />
-
-            <el-button
-              type="primary"
-              class="button-base-icon"
-              icon="el-icon-check"
-              style="float: right;"
-              @click="sendOPeration()"
-            />
-            <el-button
-              type="primary"
-              icon="el-icon-zoom-in"
-              :alt="$t('page.processActivity.zoomIn')"
-              plain
-              style="float: right; margin-right: 5px; margin-left: 0px;"
-              class="button-base-icon"
-              @click="zoomRecord(currentActivity)"
-            />
-            <el-button
-              type="info"
-              class="button-base-icon"
-              plain
-              style="float: right; margin-right: 5px;"
-              @click="clearMessage()"
-            >
-              <svg-icon icon-class="layers-clear" />
-            </el-button>
-          </el-card>
-        </el-main>
-      </el-container>
-    </el-main> -->
     <el-drawer
       :visible.sync="showWorkflow"
     >
@@ -531,6 +457,7 @@ export default {
       }
     }
   },
+
   computed: {
     isValidateUserChoice() {
       if (!this.isEmptyValue(this.currentActivity) && !this.isEmptyValue(this.currentActivity.node) && !this.isEmptyValue(this.currentActivity.node.action_name)) {
@@ -596,6 +523,7 @@ export default {
       return this.$store.getters.getCurrentPageNumber
     }
   },
+
   watch: {
     currentActivity(value) {
       this.generateWorkflow(value)
@@ -607,6 +535,7 @@ export default {
       }
     }
   },
+
   mounted() {
     this.$store.dispatch('serverListActivity', {})
     if (!this.isEmptyValue(this.currentActivity)) {
@@ -616,6 +545,7 @@ export default {
       this.handleCurrentChange(this.activityList[0])
     }
   },
+
   methods: {
     translateDateByLong,
     setCurrent(activity) {

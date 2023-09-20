@@ -36,7 +36,7 @@ const activity = {
   listActivity: [],
   currentActivity: {},
   recordCount: 0,
-  pageNumber: 0,
+  pageNumber: 1,
   isLoadActivity: false,
   workflowLogs: [],
   listNotifiications: []
@@ -44,6 +44,7 @@ const activity = {
 
 export default {
   state: activity,
+
   mutations: {
     setActivity(state, activity) {
       state.listActivity = activity
@@ -72,6 +73,7 @@ export default {
       state.listNotifiications = list
     }
   },
+
   actions: {
     serverListActivity({ commit, state, dispatch, rootGetters }, {
       pageNumber,
@@ -84,8 +86,8 @@ export default {
         return
       }
       if (!isEmptyValue(pageNumber)) {
-        commit('setCurrentPage', pageNumber)
         pageToken = generatePageToken({ pageNumber })
+        commit('setCurrentPage', pageNumber)
       }
       commit('setIsLoadActivity', true)
       workflowActivities({
@@ -166,6 +168,7 @@ export default {
         })
     }
   },
+
   getters: {
     getCurrentActivity: (state) => {
       return state.currentActivity

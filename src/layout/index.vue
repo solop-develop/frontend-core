@@ -56,8 +56,10 @@ export default {
       return false
     },
     styleContainer() {
-      if (this.$route.meta.title === 'dashboard') return 'height: 90%;overflow: auto;'
-      return 'height: 90%;overflow: hidden;'
+      if (this.$route.meta.title === 'dashboard') {
+        return 'height: 90%;overflow: auto;'
+      }
+      return 'height: 100%; overflow: hidden;'
     },
     isMobile() {
       return this.$store.state.app.device === 'mobile'
