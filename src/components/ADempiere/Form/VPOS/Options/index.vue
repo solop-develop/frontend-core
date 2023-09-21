@@ -1289,7 +1289,7 @@ export default {
     },
     isAllowsCashOpening() {
       const { isAllowsCashOpening } = this.currentPointOfSales
-      return this.currentPointOfSales.isAllowsCashOpening
+      return isAllowsCashOpening
     },
     isAllowsCashClosing() {
       return this.currentPointOfSales.isAllowsCashClosing
