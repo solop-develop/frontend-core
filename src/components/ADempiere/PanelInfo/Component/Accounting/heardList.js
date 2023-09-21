@@ -1,24 +1,27 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import language from '@/lang'
 
 export default [
   {
     // Organization
-    label: language.t('accounting.organization'),
+    label: language.t('form.accountingViewer.organization'),
     columnName: 'DisplayColumn_AD_Org_ID',
     align: 'center',
     default: true,
@@ -26,7 +29,7 @@ export default [
   },
   {
     // Account
-    label: language.t('accounting.account'),
+    label: language.t('form.accountingViewer.account'),
     columnName: 'DisplayColumn_Account_ID',
     align: 'center',
     default: true,
@@ -34,7 +37,7 @@ export default [
   },
   {
     // Posted Debit
-    label: language.t('accounting.debitPosted'),
+    label: language.t('form.accountingViewer.accountedDebit'),
     columnName: 'AmtAcctDr',
     align: 'right',
     default: true,
@@ -42,15 +45,15 @@ export default [
   },
   {
     // Posted Credit
-    label: language.t('accounting.PostedCredit'),
-    columnName: 'AmtSourceCr',
+    label: language.t('form.accountingViewer.postedCredit'),
+    columnName: 'AmtAcctCr',
     align: 'right',
     default: true,
     width: 168
   },
   {
     // Transaction Date
-    label: language.t('accounting.transactionDate'),
+    label: language.t('form.accountingViewer.transactionDate'),
     columnName: 'DateTrx',
     align: 'left',
     displaySourceInformation: true,
@@ -58,7 +61,7 @@ export default [
   },
   {
     // Currency
-    label: language.t('accounting.currency'),
+    label: language.t('form.accountingViewer.currency'),
     columnName: 'DisplayColumn_C_Currency_ID',
     align: 'left',
     displaySourceInformation: true,
@@ -66,7 +69,7 @@ export default [
   },
   {
     // Debit Source
-    label: language.t('accounting.debitSource'),
+    label: language.t('form.accountingViewer.debitSource'),
     columnName: 'AmtAcctDr',
     align: 'right',
     displaySourceInformation: true,
@@ -74,7 +77,7 @@ export default [
   },
   {
     // Debit Source
-    label: language.t('accounting.creditSource'),
+    label: language.t('form.accountingViewer.creditSource'),
     columnName: 'AmtSourceCr',
     align: 'right',
     displaySourceInformation: true,
@@ -82,7 +85,7 @@ export default [
   },
   {
     // Rate
-    label: language.t('accounting.rate'),
+    label: language.t('form.accountingViewer.rate'),
     columnName: 'C_Tax_ID',
     align: 'right',
     displaySourceInformation: true,
@@ -90,7 +93,7 @@ export default [
   },
   {
     // Product
-    label: language.t('accounting.product'),
+    label: language.t('form.accountingViewer.product'),
     columnName: 'DisplayColumn_M_Product_ID',
     align: 'center',
     default: true,
@@ -98,7 +101,7 @@ export default [
   },
   {
     // Business Partner
-    label: language.t('accounting.businessPartner'),
+    label: language.t('form.accountingViewer.businessPartner'),
     columnName: 'DisplayColumn_C_BPartner_ID',
     align: 'center',
     default: true,
@@ -106,7 +109,7 @@ export default [
   },
   {
     // Project
-    label: language.t('accounting.Project'),
+    label: language.t('form.accountingViewer.project'),
     columnName: 'DisplayColumn_C_Project_ID',
     align: 'center',
     default: true,
@@ -114,7 +117,7 @@ export default [
   },
   {
     // Campaing
-    label: language.t('accounting.Campaign'),
+    label: language.t('form.accountingViewer.campaign'),
     columnName: 'DisplayColumn_C_Campaign_ID',
     align: 'center',
     default: true,
@@ -122,7 +125,7 @@ export default [
   },
   {
     // Accounting date
-    label: language.t('accounting.accountingDate'),
+    label: language.t('form.accountingViewer.accountDate'),
     columnName: 'DateAcct',
     align: 'center',
     default: true,
@@ -130,21 +133,21 @@ export default [
   },
   {
     // Period
-    label: language.t('accounting.period'),
+    label: language.t('form.accountingViewer.period'),
     columnName: 'DisplayColumn_C_Period_ID',
     align: 'right',
     default: true,
     width: 80
   },
   {
-    label: language.t('accounting.um'),
+    label: language.t('form.accountingViewer.um'),
     columnName: 'DisplayColumn_C_UOM_ID',
     align: 'left',
     displayQuantity: true,
     width: 80
   },
   {
-    label: language.t('accounting.quantity'),
+    label: language.t('form.accountingViewer.quantity'),
     columnName: 'Qty',
     align: 'right',
     displayQuantity: true,
@@ -152,7 +155,7 @@ export default [
   },
   {
     // Table Name
-    label: language.t('accounting.table'),
+    label: language.t('form.accountingViewer.table'),
     columnName: 'DisplayColumn_AD_Table_ID',
     align: 'left',
     displayDocumentInformation: true,
@@ -160,7 +163,7 @@ export default [
   },
   {
     // Record ID
-    label: language.t('accounting.recordId'),
+    label: language.t('form.accountingViewer.recordId'),
     columnName: 'Record_ID',
     align: 'right',
     displayDocumentInformation: true,
@@ -168,7 +171,7 @@ export default [
   },
   {
     // Description
-    label: language.t('accounting.description'),
+    label: language.t('form.accountingViewer.description'),
     columnName: 'Description',
     align: 'left',
     displayDocumentInformation: true,
@@ -176,7 +179,7 @@ export default [
   },
   {
     // Type of application
-    label: language.t('accounting.typeApplication'),
+    label: language.t('form.accountingViewer.postingType'),
     columnName: 'DisplayColumn_PostingType',
     align: 'left',
     default: true,

@@ -40,7 +40,6 @@ import workflow from './workflow'
  */
 import actionNotice from './form/actionNotice'
 import payrollActionNotice from './form/payrollActionNotice'
-import accounting from './form/accounting'
 import pointOfSales from './form/pointOfSales'
 import listStoreProduct from './form/listStoreProduct'
 import timeControl from './form/timeControl'
@@ -65,7 +64,6 @@ export default {
   actionNotice,
   payrollActionNotice,
   pointOfSales,
-  accounting,
   listStoreProduct,
   report,
   workflow,
