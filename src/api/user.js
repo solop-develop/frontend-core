@@ -109,12 +109,10 @@ export function requestLogout() {
 /**
  * Change session attribute
  * @param {number} warehouseId
- * @param {string} warehouseUuid
  * @param {string} language
  */
 export function setSessionAttribute({
   warehouseId,
-  warehouseUuid,
   language
 }) {
   return request({
@@ -122,7 +120,6 @@ export function setSessionAttribute({
     method: 'put',
     data: {
       warehouse_id: warehouseId,
-      warehouse_uuid: warehouseUuid,
       language
     }
   })

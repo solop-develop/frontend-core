@@ -400,10 +400,14 @@ const actions = {
 
   /**
    * Get list of organizations
-   * @param {string} roleUuid
+   * @param {number} roleId
+   * @param {number} organizationId
    * @returns
    */
-  getOrganizationsListFromServer({ commit, dispatch, getters }, { roleId, organizationId }) {
+  getOrganizationsListFromServer({ commit, dispatch, getters }, {
+    roleId,
+    organizationId
+  }) {
     if (isEmptyValue(roleId)) {
       roleId = getCurrentRole()
     }
@@ -505,9 +509,25 @@ const actions = {
       })
   },
 
-  getWarehousesList({ commit }, { organizationId }) {
+  getWarehousesList({ commit, dispatch }, {
+    organizationId
+  }) {
     if (isEmptyValue(organizationId)) {
       organizationId = getCurrentOrganization()
+    }
+    if (isEmptyValue(organizationId)) {
+      dispatch('changeWarehouse', {
+        warehouseId: -1
+      })
+      commit('SET_WAREHOUSE', undefined)
+      commit('setPreferenceContext', {
+        columnName: `#${WAREHOUSE}`,
+        value: -1
+      }, {
+        root: true
+      })
+      removeCurrentWarehouse()
+      return
     }
 
     return requestWarehousesList({
@@ -518,22 +538,33 @@ const actions = {
         let warehouse = response.warehousesList.find(warehouseItem => {
           return warehouseItem.id === getCurrentWarehouse()
         })
-        if (isEmptyValue(warehouse)) {
-          warehouse = response.warehousesList[0]
+        if (isEmptyValue(warehouse) && !isEmptyValue(response.warehousesList)) {
+          warehouse = response.warehousesList.at(0)
         }
-        if (isEmptyValue(warehouse)) {
+
+        let warehouseId = -1
+        if (!isEmptyValue(warehouse)) {
+          warehouseId = warehouse.id
+        }
+
+        if (isEmptyValue(warehouseId)) {
           removeCurrentWarehouse()
-          commit('SET_WAREHOUSE', undefined)
-        } else {
-          setCurrentWarehouse(warehouse.id)
-          commit('SET_WAREHOUSE', warehouse)
-          commit('setPreferenceContext', {
-            columnName: `#${WAREHOUSE}`,
-            value: warehouse.id
-          }, {
-            root: true
+        }
+        const currentWarehouseId = getCurrentWarehouse()
+        if (warehouseId !== currentWarehouseId) {
+          dispatch('changeWarehouse', {
+            warehouseId
           })
         }
+
+        setCurrentWarehouse(warehouseId)
+        commit('SET_WAREHOUSE', warehouse)
+        commit('setPreferenceContext', {
+          columnName: `#${WAREHOUSE}`,
+          value: warehouseId
+        }, {
+          root: true
+        })
       })
       .catch(error => {
         console.warn(`Error ${error.code} getting Warehouses list: ${error.message}.`)
@@ -546,7 +577,7 @@ const actions = {
     setCurrentWarehouse(warehouseId)
 
     const currentWarehouse = state.warehousesList.find(warehouseItem => {
-      return warehouseItem.uuid === warehouseId
+      return warehouseItem.id === warehouseId
     })
     commit('SET_WAREHOUSE', currentWarehouse)
 
@@ -557,8 +588,7 @@ const actions = {
       root: true
     })
     setSessionAttribute({
-      warehouseId: currentWarehouse.id,
-      warehouseUuid: currentWarehouse.uuid
+      warehouseId: currentWarehouse.id
     })
       .then(token => {
         setToken(token)
