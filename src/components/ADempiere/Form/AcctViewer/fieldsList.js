@@ -16,7 +16,28 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@import './form.scss';
-@import './view.scss';
-@import './table.scss';
-@import './text.scss';
+export default [
+  // TODO: Add User1_ID, User2_ID, User3_ID, User4_ID to database translations
+  // // Accounting Schema
+  // {
+  //   fieldUuid: '8d3bc8b6-fb40-11e8-a479-7a0060f0aa01',
+  //   uuid: '8d3bc8b6-fb40-11e8-a479-7a0060f0aa01',
+  //   isFromDictionary: true,
+  //   overwriteDefinition: {
+  //     size: 8,
+  //     sequence: 10,
+  //     defaultValue: '$C_AcctSchema_ID'
+  //   }
+  // },
+  // // Posting Type
+  // {
+  //   fieldUuid: '8d37f330-fb40-11e8-a479-7a0060f0aa01',
+  //   uuid: '8d37f330-fb40-11e8-a479-7a0060f0aa01',
+  //   isFromDictionary: true,
+  //   overwriteDefinition: {
+  //     size: 8,
+  //     sequence: 20,
+  //     isMandatory: false
+  //   }
+  // }
+]

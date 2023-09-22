@@ -25,7 +25,7 @@
       :element-loading-text="$t('notifications.loading')"
       element-loading-background="rgba(255, 255, 255, 0.8)"
       border
-      style="height: 98%;"
+      style="height: 70%;"
     >
       <index-column
         :page-number="1"
@@ -67,6 +67,63 @@
         </span>
       </el-table-column>
 
+      <!-- <source-columns v-if="isShowSourceColumns" /> -->
+      <template v-if="isShowSourceColumns">
+        <el-table-column
+          :label="$t('form.accountingViewer.transactionDate')"
+          :min-width="110"
+        >
+          <template slot-scope="scope">
+            {{ scope.row.DateTrx }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          :label="$t('form.accountingViewer.currency')"
+          :min-width="110"
+        >
+          <template slot-scope="scope">
+            {{ scope.row.DisplayColumn_C_Currency_ID }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          :label="$t('form.accountingViewer.sourceDebit')"
+          :min-width="110"
+        >
+          <span slot-scope="scope" class="cell-align-right">
+            {{ scope.row.AmtSourceDr }}
+          </span>
+        </el-table-column>
+        <el-table-column
+          :label="$t('form.accountingViewer.sourceCredit')"
+          :min-width="110"
+        >
+          <span slot-scope="scope" class="cell-align-right">
+            {{ scope.row.AmtSourceCr }}
+          </span>
+        </el-table-column>
+        <el-table-column
+          :label="$t('form.accountingViewer.rate')"
+          :min-width="110"
+        >
+          <span slot-scope="scope" class="cell-align-right">
+            {{ scope.row.Rate }}
+          </span>
+        </el-table-column>
+      </template>
+
+      <!-- <accouting-element-columns /> -->
+      <el-table-column
+        v-for="(acctElement, key) in avaliableAccountingElements"
+        :key="key"
+        :label="acctElement.name || acctElement.elementType"
+        :min-width="100"
+        header-align="center"
+      >
+        <template slot-scope="scope">
+          {{ scope.row[DISPLAY_COLUMN_PREFIX + acctElement.columnName] }}
+        </template>
+      </el-table-column>
+
       <el-table-column
         :label="$t('form.accountingViewer.accountDate')"
         :min-width="110"
@@ -78,12 +135,59 @@
 
       <el-table-column
         :label="$t('form.accountingViewer.period')"
-        :min-width="110"
+        :min-width="80"
       >
         <template slot-scope="scope">
           {{ scope.row.DisplayColumn_C_Period_ID }}
         </template>
       </el-table-column>
+
+      <!-- <quantity-columns v-if="isShowQuantityColumns" /> -->
+      <template v-if="isShowQuantityColumns">
+        <el-table-column
+          :label="$t('form.accountingViewer.uom')"
+          :min-width="80"
+        >
+          <span slot-scope="scope">
+            {{ scope.row.DisplayColumn_C_UOM_ID }}
+          </span>
+        </el-table-column>
+        <el-table-column
+          :label="$t('form.accountingViewer.quantity')"
+          :min-width="85"
+        >
+          <span slot-scope="scope" class="cell-align-right">
+            {{ scope.row.Qty }}
+          </span>
+        </el-table-column>
+      </template>
+
+      <template v-if="isShowDocumentColumns">
+        <el-table-column
+          :label="$t('form.accountingViewer.table')"
+          :min-width="210"
+        >
+          <span slot-scope="scope">
+            {{ scope.row.DisplayColumn_AD_Table_ID }}
+          </span>
+        </el-table-column>
+        <el-table-column
+          :label="$t('form.accountingViewer.recordId')"
+          :min-width="90"
+        >
+          <span slot-scope="scope">
+            {{ scope.row.Record_ID }}
+          </span>
+        </el-table-column>
+        <el-table-column
+          :label="$t('form.accountingViewer.description')"
+          :min-width="310"
+        >
+          <span slot-scope="scope">
+            {{ scope.row.Description }}
+          </span>
+        </el-table-column>
+      </template>
 
       <el-table-column
         :label="$t('form.accountingViewer.postingType')"
@@ -93,39 +197,42 @@
           {{ scope.row.DisplayColumn_PostingType }}
         </template>
       </el-table-column>
-
-      <!-- <el-table-column
-        v-for="(head, key) in headerAccounting"
-        :key="key"
-        :label="head.label"
-        :align="head.align"
-        :min-width="head.width"
-        header-align="center"
-      >
-        <template slot-scope="scope">
-          {{ scope.row[head.columnName] }}
-        </template>
-      </el-table-column> -->
     </el-table>
   </div>
 </template>
 
 <script>
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed, ref } from '@vue/composition-api'
 
 import store from '@/store'
 
+// Constants
+import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
+
 // Components and Mixins
+// import AccountElementColumns from './accountElementColumns.vue'
 import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
+// import SourceColumns from './sourceColumns.vue'
+// import QuantityColumns from './quantityColumns.vue'
+
+// Utils and Helper Methods
+import { getAvaliableAccountingElements } from '@/utils/ADempiere/accoutingUtils'
 
 export default defineComponent({
   name: 'TableRecords',
 
   components: {
+    // AccountElementColumns,
     IndexColumn
+    // SourceColumns,
+    // QuantityColumns
   },
 
   setup() {
+    const isShowDocumentColumns = ref(false)
+    const isShowSourceColumns = ref(false)
+    const isShowQuantityColumns = ref(false)
+
     const isLoadingDataTable = computed(() => {
       return store.getters.getIsLoadingAccoutingRecords
     })
@@ -134,19 +241,19 @@ export default defineComponent({
       return store.getters.getAccoutingRecordsList
     })
 
+    const avaliableAccountingElements = getAvaliableAccountingElements()
+
     return {
+      avaliableAccountingElements,
+      DISPLAY_COLUMN_PREFIX,
+      // Refs
+      isShowDocumentColumns,
+      isShowSourceColumns,
+      isShowQuantityColumns,
+      // Computeds
       isLoadingDataTable,
       tableData
     }
   }
 })
 </script>
-
-<style lang="scss">
-// used in cell type number
-.cell-align-right {
-  text-align: right !important;
-  width: 100%;
-  display: inline-block;
-}
-</style>

@@ -166,17 +166,30 @@ const acctViewer = {
           .then(response => {
             const recordsList = response.recordsList.map(row => {
               const { id, uuid, tableName, attributes } = row
+
+              let rate = attributes.AmtSourceDr + attributes.AmtSourceCr
+              if (rate !== 0) {
+                rate = (attributes.AmtAcctDr + attributes.AmtAcctCr) / (attributes.AmtSourceDr + attributes.AmtSourceCr)
+              }
               return {
                 ...attributes,
-                DateAcct: formatDate({ value: attributes.DateAcct }),
                 AmtAcctDr: formatQuantity({
                   value: attributes.AmtAcctDr
                 }),
                 AmtAcctCr: formatQuantity({
                   value: attributes.AmtAcctCr
                 }),
+                DateAcct: formatDate({
+                  value: attributes.DateAcct
+                }),
+                DateTrx: formatDate({
+                  value: attributes.DateTrx
+                }),
                 Qty: formatQuantity({
                   value: attributes.Qty
+                }),
+                Rate: formatQuantity({
+                  value: rate
                 }),
                 id,
                 uuid,

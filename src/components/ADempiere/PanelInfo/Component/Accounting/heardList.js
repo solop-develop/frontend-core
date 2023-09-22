@@ -69,7 +69,7 @@ export default [
   },
   {
     // Debit Source
-    label: language.t('form.accountingViewer.debitSource'),
+    label: language.t('form.accountingViewer.sourceDebit'),
     columnName: 'AmtAcctDr',
     align: 'right',
     displaySourceInformation: true,
@@ -77,7 +77,7 @@ export default [
   },
   {
     // Debit Source
-    label: language.t('form.accountingViewer.creditSource'),
+    label: language.t('form.accountingViewer.sourceCredit'),
     columnName: 'AmtSourceCr',
     align: 'right',
     displaySourceInformation: true,
@@ -140,7 +140,7 @@ export default [
     width: 80
   },
   {
-    label: language.t('form.accountingViewer.um'),
+    label: language.t('form.accountingViewer.uom'),
     columnName: 'DisplayColumn_C_UOM_ID',
     align: 'left',
     displayQuantity: true,

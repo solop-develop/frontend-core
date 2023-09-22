@@ -18,13 +18,13 @@
 
 <template>
   <!-- <el-container> -->
-  <div style="height: 98% !important;overflow: auto;">
+  <div style="height: 84% !important;overflow: auto;">
     <query-criteria
       :table-name="tableName"
       :record-id="recordId"
     />
 
-    <div style="padding: 0px;height: 75% !important;">
+    <div style="padding: 0px;height: 60% !important;">
       <table-records />
     </div>
     <!-- <div style="height: 6% !important;">
