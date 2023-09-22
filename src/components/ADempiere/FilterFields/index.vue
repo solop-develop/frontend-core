@@ -104,6 +104,12 @@
         v-if="inTable"
         :parent-uuid="parentUuid"
         :container-uuid="containerUuid"
+        :filter-manager="filterManager"
+        :showed-fields="fieldsListShowed"
+        :available-fields="fieldsListAvailable"
+        :all-fields-list="fieldsList"
+        :fields-to-hidden="fieldsToHidden"
+        :available-fields-with-value="fieldsListAvailableWithValue"
       />
       <fields-display-option
         v-else

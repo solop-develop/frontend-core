@@ -50,7 +50,7 @@
           </span>
         </el-dropdown-item>
 
-        <el-scrollbar v-else key="withActions" wrap-class="scroll-child">
+        <el-scrollbar v-else key="withActions" wrap-class="scroll-child-menu">
           <el-dropdown-item
             v-for="(action, index) in allList"
             v-show="!action.displayed || (action.displayed && action.displayed({
@@ -378,9 +378,9 @@ export default defineComponent({
   top: 5px;
 }
 
-.scroll-child {
-  // max-height: 30px;
-  overflow-x: hidden;
+.scroll-child-menu {
+  max-height: 450px;
+  // overflow-x: hidden;
 }
 .el-dropdown .el-button-group {
   display: inline-flex !important;
