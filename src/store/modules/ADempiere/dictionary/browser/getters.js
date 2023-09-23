@@ -144,8 +144,8 @@ export default {
         containerUuid,
         columnName
       })
-      let valueTo
 
+      let valueTo
       if (fieldItem.isRange && !isNumberField(fieldItem.displayType)) {
         valueTo = rootGetters.getValueOfField({
           containerUuid,
