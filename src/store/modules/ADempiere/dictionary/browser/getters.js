@@ -144,24 +144,26 @@ export default {
         containerUuid,
         columnName
       })
+      let valueTo
 
       if (fieldItem.isRange && !isNumberField(fieldItem.displayType)) {
-        const valueTo = rootGetters.getValueOfField({
+        valueTo = rootGetters.getValueOfField({
           containerUuid,
           columnName: fieldItem.columnNameTo
         })
-        if (!isEmptyValue(valueTo)) {
-          queryParams.push({
-            columnName: fieldItem.columnNameTo,
-            value: valueTo
-          })
-        }
+        // if (!isEmptyValue(valueTo)) {
+        //   queryParams.push({
+        //     columnName: fieldItem.columnNameTo,
+        //     value: valueTo
+        //   })
+        // }
       }
 
       if (!isEmptyValue(value)) {
         queryParams.push({
           columnName,
           value,
+          valueTo,
           operator
         })
       }
