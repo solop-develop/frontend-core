@@ -24,12 +24,12 @@
       :record-id="recordId"
     />
 
-    <div style="padding: 0px;height: 60% !important;">
+    <div style="padding: 0px;height: fit-content !important;">
       <table-records />
     </div>
-    <!-- <div style="height: 6% !important;">
+    <div style="/*height: 6% !important;*/">
       <actions-footer />
-    </div> -->
+    </div>
   </div>
   <!-- </el-container> -->
 </template>
@@ -40,7 +40,7 @@ import { defineComponent, computed, watch, onUnmounted } from '@vue/composition-
 import store from '@/store'
 
 // Components and Mixins
-// import ActionsFooter from './ActionsFooter/index.vue'
+import ActionsFooter from './ActionsFooter'
 import QueryCriteria from './QueryCriteria'
 import TableRecords from './TableRecords'
 
@@ -55,7 +55,7 @@ export default defineComponent({
   name: 'AcctViewer',
 
   components: {
-    // ActionsFooter,
+    ActionsFooter,
     QueryCriteria,
     TableRecords
   },

@@ -45,7 +45,7 @@ export default [
   },
   {
     // Posted Credit
-    label: language.t('form.accountingViewer.postedCredit'),
+    label: language.t('form.accountingViewer.accountedCredit'),
     columnName: 'AmtAcctCr',
     align: 'right',
     default: true,
