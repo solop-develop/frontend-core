@@ -23,17 +23,28 @@ import { ORGANIZATION, WAREHOUSE } from '@/utils/ADempiere/constants/systemColum
 
 // API Request Methods
 import {
-  requestLogin,
-  requestLogout,
-  requestUserInfoFromSession,
-  requestSessionInfo,
-  setSessionAttribute,
+  // requestLogin,
+  // requestLogout,
+  // requestUserInfoFromSession,
+  // requestSessionInfo,
+  // setSessionAttribute,
   requestUserActivity
 } from '@/api/user'
+
 import {
+  requestLogin,
+  requestLogout,
   requestRolesList,
-  requestChangeRole
-} from '@/api/role.js'
+  requestChangeRole,
+  requestSessionInfo,
+  loginAuthentication,
+  setSessionAttribute,
+  requestUserInfoFromSession
+} from '@/api/ADempiere/Security/index.ts'
+// import {
+//   requestRolesList,
+//   requestChangeRole
+// } from '@/api/role.js'
 import {
   getToken,
   setToken,
@@ -54,9 +65,9 @@ import {
   requestWarehousesList,
   systemInfo
 } from '@/api/ADempiere/system-core'
-import {
-  loginAuthentication
-} from '@/api/ADempiere/open-id/services.js'
+// import {
+//   loginAuthentication
+// } from '@/api/ADempiere/open-id/services.js'
 
 // Utils and Helper Methods
 import { resetRouter } from '@/router'
@@ -204,19 +215,22 @@ const actions = {
     return new Promise((resolve, reject) => {
       requestSessionInfo()
         .then(async sessionInfo => {
+          const {
+            id,
+            name,
+            userInfo,
+            processed,
+            defaultContext
+          } = sessionInfo
           dispatch('system')
           commit('setIsSession', true)
           commit('setSessionInfo', {
-            id: sessionInfo.id,
-            uuid: sessionInfo.uuid,
-            name: sessionInfo.name,
-            processed: sessionInfo.processed
+            id,
+            name,
+            processed
           })
 
-          const { userInfo } = sessionInfo
-          commit('SET_NAME', sessionInfo.name)
-          commit('SET_INTRODUCTION', userInfo.description)
-          commit('SET_USER_UUID', userInfo.uuid)
+          commit('SET_NAME', name)
           commit('SET_USER', userInfo)
           const avatar = userInfo.image
           commit('SET_AVATAR', avatar)
@@ -224,45 +238,34 @@ const actions = {
           // TODO: Check decimals Number as String '0.123'
           // set multiple context
           dispatch('setMultiplePreference', {
-            values: sessionInfo.defaultContext
+            values: defaultContext
           }, {
             root: true
           })
 
           const sessionResponse = {
             name: sessionInfo.name,
-            defaultContext: sessionInfo.defaultContext
+            defaultContext: defaultContext
           }
 
           const { role } = sessionInfo
           commit('SET_ROLE', role)
           setCurrentRole(role.id)
           setCurrentClient(role.client.id)
-          const currentOrganizationSession = sessionInfo.defaultContext.find(context => {
-            return context.key === `#${ORGANIZATION}`
-          })
-          commit('SET_CURRENT_ORGANIZATION_ID', currentOrganizationSession.value)
+          // const currentOrganizationSession = defaultContext.find(context => {
+          //   return context.key === defaultContext[`#${ORGANIZATION}`]
+          // })
+          commit('SET_CURRENT_ORGANIZATION_ID', defaultContext[`#${ORGANIZATION}`])
 
           // wait to establish the client and organization to generate the menu
           await dispatch('getOrganizationsListFromServer', {
             roleId: role.id,
-            organizationId: currentOrganizationSession.value
+            organizationId: defaultContext[`#${ORGANIZATION}`]
           })
 
           resolve(sessionResponse)
 
-          commit('setSystemDefinition', {
-            countryId: sessionInfo.countryId,
-            costingPrecision: sessionInfo.costingPrecision,
-            countryCode: sessionInfo.countryCode,
-            countryName: sessionInfo.countryName,
-            currencyIsoCode: sessionInfo.currencyIsoCode,
-            currencyName: sessionInfo.currencyName,
-            currencySymbol: sessionInfo.currencySymbol,
-            displaySequence: sessionInfo.displaySequence,
-            language: sessionInfo.language,
-            standardPrecision: sessionInfo.standardPrecision
-          }, {
+          commit('setSystemDefinition', sessionInfo, {
             root: true
           })
 

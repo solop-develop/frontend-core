@@ -22,7 +22,7 @@ import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 export function services() {
   return request({
-    url: '/user/open-id/services',
+    url: '/security/services',
     method: 'get'
   })
     .then(response => {
