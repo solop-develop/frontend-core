@@ -130,6 +130,9 @@ export default {
     const queryParams = []
 
     fieldsList.forEach(fieldItem => {
+      if (fieldItem.isInfoOnly) {
+        return false
+      }
       const { columnName, operator } = fieldItem
       const isMandatory = isMandatoryField(fieldItem)
       // evaluate displayed fields
@@ -188,6 +191,9 @@ export default {
     }
 
     const fieldsEmpty = fieldsList.filter(fieldItem => {
+      if (fieldItem.isInfoOnly) {
+        return false
+      }
       const isMandatory = isMandatoryField(fieldItem)
       const isDisplayed = isDisplayedField(fieldItem)
 

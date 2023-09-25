@@ -119,6 +119,11 @@ const browserControl = {
           fieldsList,
           containerManager: containerManager
         }).then(() => {
+          if (field.isInfoOnly) {
+            // omit search
+            resolve()
+            return
+          }
           // Validate if a field is mandatory and visible
           dispatch('getBrowserSearch', {
             containerUuid,
