@@ -54,7 +54,7 @@ import {
   exportRecordsSelected,
   sharedLink
 } from '@/utils/ADempiere/constants/actionsMenuList.js'
-import evaluator from '@/utils/ADempiere/evaluator'
+import evaluator from '@/utils/ADempiere/contextUtils/evaluator'
 import { getContext } from '@/utils/ADempiere/contextUtils'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import { showMessage } from '@/utils/ADempiere/notification'
