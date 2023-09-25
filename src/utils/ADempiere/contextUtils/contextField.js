@@ -23,7 +23,7 @@ import {
 } from '@/utils/ADempiere/constants/systemColumns'
 
 // Utils and Helper Methods
-import evaluator from '@/utils/ADempiere/evaluator'
+import evaluator from '@/utils/ADempiere/contextUtils/evaluator'
 import { getContext, parseContext, getPreference } from '@/utils/ADempiere/contextUtils'
 import { arrayMatches, isEmptyValue, parsedValueComponent } from '@/utils/ADempiere/valueUtils'
 import { isNumberField, isIdentifier } from '@/utils/ADempiere/references'

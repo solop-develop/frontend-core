@@ -219,7 +219,8 @@ export class evaluator {
     if (typeof secondEval === 'string') {
       secondEval = secondEval.replace(/['"]/g, '').trim() // strip ' and " for string values
     }
-    if (second.endsWith('_ID') && isEmptyValue(secondEval)) {
+    if (isEmptyValue(secondEval) &&
+      (second.endsWith('_ID') || second.endsWith('ID_To') || second.endsWith('atedBy') || second.endsWith('_Acct'))) {
       // TODO: Evaluate with -1
       secondEval = '0'
     }

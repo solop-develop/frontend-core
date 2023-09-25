@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-export { default } from '@/utils/ADempiere/evaluator.js'
+export { default } from '@/utils/ADempiere/contextUtils/evaluator'
 export * from '@/utils/ADempiere/auth.js'
 export * from '@/utils/ADempiere/auth.js'
 export * from '@/utils/ADempiere/notification.js'
