@@ -40,7 +40,7 @@ import {
   loginAuthentication,
   setSessionAttribute,
   requestUserInfoFromSession
-} from '@/api/ADempiere/Security/index.ts'
+} from '@/api/ADempiere/security/index.ts'
 // import {
 //   requestRolesList,
 //   requestChangeRole
