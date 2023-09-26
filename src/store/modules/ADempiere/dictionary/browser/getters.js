@@ -130,6 +130,9 @@ export default {
     const queryParams = []
 
     fieldsList.forEach(fieldItem => {
+      if (fieldItem.isInfoOnly) {
+        return false
+      }
       const { columnName, operator } = fieldItem
       const isMandatory = isMandatoryField(fieldItem)
       // evaluate displayed fields
@@ -145,23 +148,25 @@ export default {
         columnName
       })
 
+      let valueTo
       if (fieldItem.isRange && !isNumberField(fieldItem.displayType)) {
-        const valueTo = rootGetters.getValueOfField({
+        valueTo = rootGetters.getValueOfField({
           containerUuid,
           columnName: fieldItem.columnNameTo
         })
-        if (!isEmptyValue(valueTo)) {
-          queryParams.push({
-            columnName: fieldItem.columnNameTo,
-            value: valueTo
-          })
-        }
+        // if (!isEmptyValue(valueTo)) {
+        //   queryParams.push({
+        //     columnName: fieldItem.columnNameTo,
+        //     value: valueTo
+        //   })
+        // }
       }
 
       if (!isEmptyValue(value)) {
         queryParams.push({
           columnName,
           value,
+          valueTo,
           operator
         })
       }
@@ -186,6 +191,9 @@ export default {
     }
 
     const fieldsEmpty = fieldsList.filter(fieldItem => {
+      if (fieldItem.isInfoOnly) {
+        return false
+      }
       const isMandatory = isMandatoryField(fieldItem)
       const isDisplayed = isDisplayedField(fieldItem)
 

@@ -21,7 +21,7 @@ import router from '@/router'
 // Utils and Helper Methods
 import { isEmptyValue, getTypeOfValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
-import evaluator from '@/utils/ADempiere/evaluator'
+import evaluator from '@/utils/ADempiere/contextUtils/evaluator'
 import { getContext, parseContext } from '@/utils/ADempiere/contextUtils'
 import { fieldIsDisplayed } from '@/utils/ADempiere/dictionaryUtils.js'
 import { assignedGroup } from '@/utils/ADempiere/dictionary/panel'
@@ -472,12 +472,14 @@ const actions = {
     // Iterate for change logic
     field.dependentFieldsList.map(async fieldDependentDefinition => {
       let containerName, containerUuid, columnName
+      let fieldId = -1
       // old implementation (used on forms)
       if (getTypeOfValue(fieldDependentDefinition) === 'String') {
         columnName = fieldDependentDefinition
         containerUuid = field.containerUuid
       } else {
         // new implementation
+        fieldId = fieldDependentDefinition.id
         columnName = fieldDependentDefinition.columnName
         containerUuid = fieldDependentDefinition.containerUuid
         containerName = fieldDependentDefinition.containerName
@@ -504,12 +506,15 @@ const actions = {
         return
       }
       // TODO: Improve peformance get field with key-value
-      const storedFieldDependent = currentFieldsList.find(fieldItem => {
+      const storedFieldDependentsList = currentFieldsList.filter(fieldItem => {
+        if (!isEmptyValue(fieldId)) {
+          return fieldId === fieldItem.id
+        }
         return columnName === fieldItem.columnName ||
           columnName === fieldItem.elementName
       })
 
-      if (isEmptyValue(storedFieldDependent)) {
+      if (isEmptyValue(storedFieldDependentsList)) {
         console.warn('field not found in vuex store', {
           parentUuid,
           parentColumnName: field.columnName,
@@ -520,7 +525,23 @@ const actions = {
           dependentContainerUuid: containerUuid
         })
         return
+      } else {
+        if (storedFieldDependentsList.length > 1) {
+          console.warn(
+            'multiple same column name field in vuex store',
+            field.columnName,
+            storedFieldDependentsList.map(i => {
+              return {
+                id: i.id,
+                columnName: i.columnName,
+                name: i.name
+              }
+            })
+          )
+        }
       }
+      // TODO: Each elements
+      const storedFieldDependent = storedFieldDependentsList.at(0)
 
       //  isDisplayed Logic
       let isDisplayedFromLogic, isMandatoryFromLogic, isReadOnlyFromLogic

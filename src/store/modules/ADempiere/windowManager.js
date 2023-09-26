@@ -130,7 +130,11 @@ const windowManager = {
     },
 
     setTabRow(state, { containerUuid, row, rowIndex }) {
-      let recordsList = state.tabData[containerUuid].recordsList
+      let recordsList = []
+      if (state.tabData[containerUuid] && state.tabData[containerUuid].recordsList) {
+        recordsList = state.tabData[containerUuid].recordsList
+      }
+
       if (!isEmptyValue(rowIndex)) {
         recordsList.splice(rowIndex, 1, {
           ...row,
@@ -151,7 +155,11 @@ const windowManager = {
     },
     removeTabRow(state, { containerUuid, index = 0 }) {
       // temporal record list
-      let recordsList = state.tabData[containerUuid].recordsList
+      let recordsList = []
+      if (state.tabData[containerUuid] && state.tabData[containerUuid].recordsList) {
+        recordsList = state.tabData[containerUuid].recordsList
+      }
+
       // delete an item
       recordsList.splice(index, 1)
       // to set index

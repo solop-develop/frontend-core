@@ -1727,7 +1727,8 @@ export function copyOrder({
 export function listCreditMemoRequest({
   posId,
   customerId,
-  pageSize = 100
+  pageSize = 100,
+  documentTypeId
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/credit-memo/list`,
@@ -1735,7 +1736,8 @@ export function listCreditMemoRequest({
     params: {
       pos_id: posId,
       customer_id: customerId,
-      page_size: pageSize
+      page_size: pageSize,
+      document_type_id: documentTypeId
     }
   })
     .then(response => {

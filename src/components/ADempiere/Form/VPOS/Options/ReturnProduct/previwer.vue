@@ -27,7 +27,7 @@ along with this program.  If not, see <https:www.gnu.org/licenses/>.
       fit
       :empty-text="$t('quickAccess.searchWithEnter')"
       :border="true"
-      height="350"
+      height="300"
       highlight-current-row
     >
       <template v-for="(valueOrder, item, key) in orderLineDefinition">

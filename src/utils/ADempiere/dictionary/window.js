@@ -41,7 +41,7 @@ import { getEntity } from '@/api/ADempiere/user-interface/persistence'
 import { requestSaveWindowCustomization } from '@/api/ADempiere/user-customization/window.js'
 
 // Utils and Helpers Methods
-import evaluator from '@/utils/ADempiere/evaluator'
+import evaluator from '@/utils/ADempiere/contextUtils/evaluator'
 import { getContext } from '@/utils/ADempiere/contextUtils'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'

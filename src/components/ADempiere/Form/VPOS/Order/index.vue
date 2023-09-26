@@ -345,10 +345,11 @@
             </div>
             <span style="float: right;">
               <div style="padding-left: 10px;padding-right: 10px;">
-                <sales-representative
-                  :sales-order="currentOrder"
-                  :point-of-sales="currentPointOfSales"
-                />
+                <i class="el-icon-s-custom" />
+                {{ $t('form.pos.order.seller') }}:
+                <b style="cursor: pointer">
+                  {{ currentOrder.salesRepresentative.name }}
+                </b>
 
                 <p class="total"> {{ $t('form.pos.order.subTotal') }}:<b v-if="!isEmptyValue(currentOrder.uuid)" class="order-info">{{ formatPrice(currentOrder.totalLines, currentOrder.priceList.currency.iso_code) }}</b></p>
                 <p class="total"> {{ $t('form.pos.tableProduct.displayDiscountAmount') }}:<b v-if="!isEmptyValue(currentOrder.uuid)" style="float: right;">{{ formatPrice(currentOrder.discountAmount, currentOrder.priceList.currency.iso_code) }}</b> </p>
@@ -566,7 +567,6 @@ import InfoOrderLine from '@/components/ADempiere/Form/VPOS/Order/line/infoOrder
 import ProductInfo from '@/components/ADempiere/Form/VPOS/ProductInfo'
 import FastOrdesList from '@/components/ADempiere/Form/VPOS/OrderList/fastOrder'
 import DocumentStatusTag from '@/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
-import SalesRepresentative from '@/components/ADempiere/Form/VPOS/Order/SalesRepresentative.vue'
 
 // Utils and Helper Methods
 // Format of values ( Date, Price, Quantity )
@@ -593,8 +593,7 @@ export default {
     InfoOrderLine,
     ProductInfo,
     FastOrdesList,
-    fieldLine,
-    SalesRepresentative
+    fieldLine
   },
 
   mixins: [

@@ -175,6 +175,9 @@
                         <el-select
                           v-model="currentSalesReps"
                           filterable
+                          remote
+                          :loading="loadingSales"
+                          :remote-method="remoteMethodSales"
                           @visible-change="findSalesReps"
                           @change="exitPopover('newSalesReps')"
                         >
@@ -403,6 +406,9 @@
                         <el-select
                           :value="isEmptyValue(listSalesReps) ? currentIssues.sales_representative.name : currentIssues.sales_representative.id"
                           filterable
+                          remote
+                          :loading="loadingSales"
+                          :remote-method="remoteMethodSales"
                           @visible-change="findSalesReps"
                           @change="updateIssuesSalesReps"
                         >
@@ -873,6 +879,7 @@ export default defineComponent({
         if (!isVisible) {
           resolve([])
         }
+        loadingSales.value = true
         requestListSalesRepresentatives({})
           .then(response => {
             const { records } = response
@@ -886,7 +893,16 @@ export default defineComponent({
             })
             reject([])
           })
+          .finally(() => {
+            loadingSales.value = false
+          })
       })
+    }
+    const loadingSales = ref(false)
+    function remoteMethodSales(query) {
+      if (!isEmptyValue(query) && query.length > 2) {
+        findSalesReps(true, query)
+      }
     }
 
     function findRequestTypes(isVisible) {
@@ -1375,6 +1391,7 @@ export default defineComponent({
       isCollapseComments,
       isLoadingNewIssues,
       centerDialogVisible,
+      loadingSales,
       // Computed
       isNewIssues,
       isDisabledSave,
@@ -1419,6 +1436,7 @@ export default defineComponent({
       logDisplayLanguaje,
       zoomIssues,
       avatarResize,
+      remoteMethodSales,
       defaultValueNewIssues,
       markdownContent
     }

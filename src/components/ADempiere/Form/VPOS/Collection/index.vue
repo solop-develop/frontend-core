@@ -1557,12 +1557,19 @@ export default {
     },
     showListCreditMemo(isShow) {
       if (!isShow) return
-      this.$store.dispatch('searchListCreditMemo')
+      const payment_method = this.availablePaymentMethods.find(list => list.uuid === this.currentFieldPaymentMethods)
+      let documentTypeId
+      if (!this.isEmptyValue(payment_method.document_type)) {
+        documentTypeId = payment_method.document_type.id
+      }
+      this.$store.dispatch('searchListCreditMemo', {
+        documentTypeId
+      })
         .then(response => {
           this.listCreditMemo = response.map(list => {
             return {
               ...list,
-              display: list.documentNo + ' - ' + formatPrice(list.openAmount, list.currency.iso_code)
+              display: list.documentNo + ' - ' + list.documentDate + ' - ' + formatPrice(list.openAmount, list.currency.iso_code)
             }
           })
         })

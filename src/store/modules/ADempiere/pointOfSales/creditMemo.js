@@ -36,7 +36,9 @@ const creditMemo = {
   },
 
   actions: {
-    searchListCreditMemo({ commit, rootGetters }) {
+    searchListCreditMemo({ commit, rootGetters }, {
+      documentTypeId
+    }) {
       return new Promise(resolve => {
         const { currentPointOfSales } = rootGetters.posAttributes
         const {
@@ -45,7 +47,8 @@ const creditMemo = {
         } = currentPointOfSales
         listCreditMemoRequest({
           posId: id,
-          customerId: currentOrder.customer.id
+          customerId: currentOrder.customer.id,
+          documentTypeId
         })
           .then(response => {
             const { records } = response

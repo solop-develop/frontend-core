@@ -199,7 +199,11 @@ export default defineComponent({
       const columnName = props.fieldListBatchEntry[0].columnName
       const index = fieldsList.value.findIndex(a => a.columnName === columnName)
       setTimeout(() => {
-        refs.fieldComponent[index].$refs[columnName].$refs[columnName].focus()
+        if (refs.fieldComponent[index] &&
+          refs.fieldComponent[index].$refs[columnName] &&
+          refs.fieldComponent[index].$refs[columnName].$refs[columnName]) {
+          refs.fieldComponent[index].$refs[columnName].$refs[columnName].focus()
+        }
       }, 500)
     }
 

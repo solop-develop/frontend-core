@@ -119,6 +119,11 @@ const browserControl = {
           fieldsList,
           containerManager: containerManager
         }).then(() => {
+          if (field.isInfoOnly) {
+            // omit search
+            resolve()
+            return
+          }
           // Validate if a field is mandatory and visible
           dispatch('getBrowserSearch', {
             containerUuid,
@@ -168,16 +173,16 @@ const browserControl = {
           contextColumnNames
         })
 
-        const isWithoutValues = contextAttributesList.find(attribute => isEmptyValue(attribute.value))
-        if (isWithoutValues) {
-          console.warn(`Without response, fill the ${isWithoutValues.columnName} field.`)
-          showMessage({
-            message: language.t('notifications.mandatoryFieldMissing') + isWithoutValues.columnName,
-            type: 'info'
-          })
-          resolve(currentRecordsList)
-          return
-        }
+        // const isWithoutValues = contextAttributesList.find(attribute => isEmptyValue(attribute.value))
+        // if (isWithoutValues) {
+        //   console.warn(`Without response, fill the ${isWithoutValues.columnName} field.`)
+        //   showMessage({
+        //     message: language.t('notifications.mandatoryFieldMissing') + isWithoutValues.columnName,
+        //     type: 'info'
+        //   })
+        //   resolve(currentRecordsList)
+        //   return
+        // }
         commit('setBrowserData', {
           containerUuid,
           isLoaded: false
