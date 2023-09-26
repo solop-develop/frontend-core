@@ -23,7 +23,7 @@ import staticRoutes from '@/router/modules/ADempiere/staticRoutes.js'
 
 // API Request Methods
 // import { requestMenu } from '@/api/ADempiere/dictionary/menu'
-import { requestMenu } from '@/api/ADempiere/security//index.ts'
+import { requestMenu } from '@/api/ADempiere/security/index.ts'
 
 // Utils and Helper Methods
 import { convertAction } from '@/utils/ADempiere/dictionaryUtils.js'
