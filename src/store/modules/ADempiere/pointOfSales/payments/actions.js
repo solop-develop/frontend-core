@@ -18,7 +18,7 @@ import lang from '@/lang'
 
 // api request methods
 import {
-  requestGetConversionRate,
+  // requestGetConversionRate,
   createPayment,
   deletePayment,
   updatePayment,
@@ -33,6 +33,10 @@ import {
   listRefundReference,
   deleteRefundReference
 } from '@/api/ADempiere/form/point-of-sales.js'
+
+import {
+  requestGetConversionRate
+} from '@/api/ADempiere/common/index.ts'
 
 // utils and helper methods
 import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'

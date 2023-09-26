@@ -21,7 +21,7 @@ import router from '@/router'
 import store from '@/store'
 
 // API Request Methods
-import { requestWindowMetadata } from '@/api/ADempiere/dictionary/window.js'
+import { requestWindowMetadata } from '@/api/ADempiere/dictionary/window.ts'
 
 // Constants
 import { CLIENT, DOCUMENT_ACTION, DOCUMENT_STATUS } from '@/utils/ADempiere/constants/systemColumns'
@@ -87,11 +87,11 @@ export default {
   },
 
   getWindowDefinitionFromServer({ dispatch, rootGetters }, {
-    uuid
+    id
   }) {
     return new Promise(resolve => {
       requestWindowMetadata({
-        uuid
+        id
       })
         .then(async windowResponse => {
           const window = generateWindow(windowResponse)

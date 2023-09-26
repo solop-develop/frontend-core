@@ -17,7 +17,7 @@
  */
 
 // api request methods
-import { requestListBusinessPartner } from '@/api/ADempiere/system-core.js'
+import { requestListBusinessPartner } from '@/api/ADempiere/common/index.ts'
 
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'

@@ -24,7 +24,7 @@ import language from '@/lang'
 import {
   workflowActivities
 } from '@/api/ADempiere/workflow.js'
-import { listNotifiications } from '@/api/ADempiere/dashboard/dashboard.js'
+// import { listNotifiications } from '@/api/ADempiere/dashboard/dashboard.js'
 import { requestListWorkflowsLogs } from '@/api/ADempiere/window'
 
 // Utils and Helper Methods
@@ -160,12 +160,12 @@ export default {
         })
     },
     findNotifications({ commit }) {
-      return listNotifiications()
-        .then(response => {
-          const { records } = response
-          commit('setListNotifiications', records)
-          return response
-        })
+      // return listNotifiications()
+      //   .then(response => {
+      //     const { records } = response
+      //     commit('setListNotifiications', records)
+      //     return response
+      //   })
     }
   },
 

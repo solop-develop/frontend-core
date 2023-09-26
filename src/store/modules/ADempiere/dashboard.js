@@ -24,11 +24,11 @@
 import { UNSUPPORTED_DASHBOARDS } from '@/utils/ADempiere/dictionary/dashboard'
 
 // API Request Methods
-import { requestLisDashboards } from '@/api/ADempiere/dashboard/dashboard'
+import { lisDashboards } from '@/api/ADempiere/dashboard/index.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import { getCurrentRole } from '@/utils/auth'
+// import { getCurrentRole } from '@/utils/auth'
 
 const dashboard = {
   state: {
@@ -56,20 +56,11 @@ const dashboard = {
       commit('notifyDashboardRefresh', parameters)
     },
     getDashboardListFromServer({ commit, dispatch, getters, rootGetters }, {
-      roleId,
-      roleUuid
+      roleId
     }) {
-      if (isEmptyValue(roleUuid)) {
-        roleUuid = rootGetters.getRoleUuid
-        if (isEmptyValue(roleUuid)) {
-          roleUuid = getCurrentRole()
-        }
-      }
-
       return new Promise(resolve => {
-        requestLisDashboards({
-          roleId,
-          roleUuid
+        lisDashboards({
+          roleId
         })
           .then(dashboardResponse => {
             const dashboardsList = dashboardResponse.dashboardsList
@@ -83,7 +74,6 @@ const dashboard = {
             // TODO: verify it with uuid
             const roleDashboards = {
               ...dashboardResponse,
-              roleUuid: roleUuid,
               dashboardsList
             }
             commit('setDashboardsList', dashboardsList)
