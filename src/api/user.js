@@ -41,14 +41,14 @@ export function requestLogin({
   const language = getLanguage() || 'en_US'
 
   return request({
-    url: '/user/login',
+    url: '/security/login',
     method: 'post',
     params: {
       language
     },
     data: {
-      username: userName,
-      password,
+      user_name: userName,
+      user_pass: password,
       role_id: roleId,
       organization_id: organizationId,
       warehouse_id: warehouseId,

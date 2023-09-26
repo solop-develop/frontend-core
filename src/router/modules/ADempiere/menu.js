@@ -23,7 +23,7 @@ import staticRoutes from '@/router/modules/ADempiere/staticRoutes.js'
 
 // API Request Methods
 // import { requestMenu } from '@/api/ADempiere/dictionary/menu'
-import { requestMenu } from '@/api/user'
+import { requestMenu } from '@/api/ADempiere/security/index.ts'
 
 // Utils and Helper Methods
 import { convertAction } from '@/utils/ADempiere/dictionaryUtils.js'
@@ -51,7 +51,7 @@ export function loadMainMenu({
     requestMenu().then(menuResponse => {
       const asyncRoutesMap = []
 
-      menuResponse.menus.forEach(menuElement => {
+      menuResponse.children.forEach(menuElement => {
         const optionMenu = getRouteFromMenuItem({
           menu: menuElement,
           clientId,
