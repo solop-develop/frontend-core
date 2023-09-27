@@ -626,6 +626,7 @@ export function createPayment({
   chargeUuid,
   isRefund,
   currencyUuid,
+  invoiceReferenceId,
   collectingAgentUuid,
   customerBankAccountUuid,
   referenceBankAccountUuid
@@ -646,6 +647,7 @@ export function createPayment({
       tender_type_code: tenderTypeCode,
       payment_method_uuid: paymentMethodUuid,
       is_refund: isRefund,
+      invoice_reference_id: invoiceReferenceId,
       currency_uuid: currencyUuid,
       collecting_agent_uuid: collectingAgentUuid,
       reference_bank_account_uuid: referenceBankAccountUuid,

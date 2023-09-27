@@ -1558,12 +1558,13 @@ export default {
     showListCreditMemo(isShow) {
       if (!isShow) return
       const payment_method = this.availablePaymentMethods.find(list => list.uuid === this.currentFieldPaymentMethods)
-      let documentTypeId
-      if (!this.isEmptyValue(payment_method.document_type)) {
-        documentTypeId = payment_method.document_type.id
-      }
+      // let documentTypeId
+      // console.log({ payment_method })
+      // if (!this.isEmptyValue(payment_method.document_type)) {
+      //   documentTypeId = payment_method.document_type.id
+      // }
       this.$store.dispatch('searchListCreditMemo', {
-        documentTypeId
+        documentTypeId: payment_method.document_type_id
       })
         .then(response => {
           this.listCreditMemo = response.map(list => {

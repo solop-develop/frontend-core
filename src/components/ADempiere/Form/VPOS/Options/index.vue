@@ -489,6 +489,7 @@
                   :center="true"
                   :modal="false"
                   :append-to-body="true"
+                  custom-class="dialogo-return-product"
                   width="90%"
                 >
                   <return-product />
@@ -890,6 +891,7 @@
       :center="true"
       :title="$t('form.pos.returnProduct')"
       width="80%"
+      custom-class="dialogo-return-product"
     >
       <el-result
         v-if="!isEmptyValue(summaryReturnProduct)"
@@ -2544,5 +2546,11 @@ export default {
 <style>
   .el-textarea__inner:hover {
     background-color: #FFFFFF!important;
+  }
+  .dialogo-return-product {
+    height: 70%;
+    .el-dialog__body {
+      height: -webkit-fill-available;
+    }
   }
 </style>
