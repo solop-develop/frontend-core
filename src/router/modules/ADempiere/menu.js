@@ -29,10 +29,6 @@ import { requestMenu } from '@/api/user'
 import { convertAction } from '@/utils/ADempiere/dictionaryUtils.js'
 import { getCurrentClient, getCurrentOrganization, getCurrentRole } from '@/utils/ADempiere/auth'
 
-export const HIDDEN_ROUTES = [
-  '/ProductInfo'
-]
-
 /**
  * Get Menu from server
  * @author Elsio Sanchez <elsiosanches@gmail.com>
