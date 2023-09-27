@@ -101,20 +101,16 @@ export function getFavoritesFromServer({
  */
 export function getPendingDocumentsFromServer({
   userId,
-  userUuid,
   roleId,
-  roleUuid,
   pageToken,
   pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
-    url: '/dashboard/addons/tasks/pending-documents',
+    url: '/dashboard/pending-documents',
     method: 'get',
     params: {
       user_id: userId,
-      user_uuid: userUuid,
       role_id: roleId,
-      role_uuid: roleUuid,
       // Page Data
       page_token: pageToken,
       page_size: pageSize
@@ -125,7 +121,7 @@ export function getPendingDocumentsFromServer({
 
       return {
         recordCount: pendingDocumentsListResponse.record_count,
-        pendingDocumentsList: pendingDocumentsListResponse.records.map(pendingDocument => {
+        pendingDocumentsList: pendingDocumentsListResponse.pending_documents.map(pendingDocument => {
           return convertPendingDocument(pendingDocument)
         }),
         nextPageToken: pendingDocumentsListResponse.next_page_token
@@ -133,3 +129,15 @@ export function getPendingDocumentsFromServer({
     })
 }
 
+/**
+ * GetNotifications
+ */
+export function listNotifiications() {
+  return request({
+    url: '/dashboard/notifications',
+    method: 'get'
+  })
+    .then(notificationsResponse => {
+      return notificationsResponse
+    })
+}

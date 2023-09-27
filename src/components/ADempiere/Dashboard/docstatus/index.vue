@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { getPendingDocumentsFromServer } from '@/api/ADempiere/dashboard/tasks'
+import { getPendingDocumentsFromServer } from '@/api/ADempiere/dashboard/index.ts'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 import mixinDashboard from '@/components/ADempiere/Dashboard/mixinDashboard.js'
 
@@ -74,10 +74,13 @@ export default {
   },
   methods: {
     getPendingDocuments() {
-      const userUuid = this.$store.getters['user/getUserUuid']
-      const roleUuid = this.$store.getters.getRoleUuid
+      const roleId = this.$store.getters['user/getRole'].id
+      const { id } = this.$store.getters['user/userInfo']
       return new Promise(resolve => {
-        getPendingDocumentsFromServer({ userUuid, roleUuid })
+        getPendingDocumentsFromServer({
+          roleId,
+          userId: id
+        })
           .then(response => {
             const documentsList = response.pendingDocumentsList.map(documentItem => {
               return {
