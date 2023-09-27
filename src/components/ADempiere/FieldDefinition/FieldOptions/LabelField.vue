@@ -41,7 +41,7 @@ export default defineComponent({
       default: false
     },
     label: {
-      type: String,
+      type: [String, Number],
       default: ''
     },
     isFieldOnly: {

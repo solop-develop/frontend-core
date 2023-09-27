@@ -125,7 +125,7 @@ export default {
       required: true
     },
     recordUuid: {
-      type: String,
+      type: [String, Number],
       default: undefined
     }
   },

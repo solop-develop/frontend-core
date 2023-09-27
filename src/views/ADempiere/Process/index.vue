@@ -97,7 +97,7 @@ export default defineComponent({
   props: {
     // implement by test view
     uuid: {
-      type: String,
+      type: [String, Number],
       default: ''
     }
   },

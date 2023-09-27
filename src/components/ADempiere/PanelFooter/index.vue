@@ -69,7 +69,7 @@ export default defineComponent({
 
   props: {
     containerUuid: {
-      type: String,
+      type: [String, Number],
       required: true
     },
     isButtonRun: {
