@@ -52,7 +52,7 @@
 
       <el-table-column
         :label="$t('form.accountingViewer.accountedDebit')"
-        :min-width="110"
+        :min-width="140"
       >
         <span slot-scope="scope" class="cell-align-right">
           {{ scope.row.AmtAcctDr }}
@@ -61,7 +61,7 @@
 
       <el-table-column
         :label="$t('form.accountingViewer.accountedCredit')"
-        :min-width="110"
+        :min-width="140"
       >
         <span slot-scope="scope" class="cell-align-right">
           {{ scope.row.AmtSourceCr }}
@@ -88,7 +88,7 @@
         </el-table-column>
         <el-table-column
           :label="$t('form.accountingViewer.sourceDebit')"
-          :min-width="110"
+          :min-width="130"
         >
           <span slot-scope="scope" class="cell-align-right">
             {{ scope.row.AmtSourceDr }}
@@ -96,7 +96,7 @@
         </el-table-column>
         <el-table-column
           :label="$t('form.accountingViewer.sourceCredit')"
-          :min-width="110"
+          :min-width="130"
         >
           <span slot-scope="scope" class="cell-align-right">
             {{ scope.row.AmtSourceCr }}
@@ -117,7 +117,7 @@
         v-for="(acctElement, key) in avaliableAccountingElements"
         :key="key"
         :label="acctElement.name || acctElement.elementType"
-        :min-width="100"
+        :min-width="140"
         header-align="center"
       >
         <template slot-scope="scope">
@@ -127,7 +127,7 @@
 
       <el-table-column
         :label="$t('form.accountingViewer.accountDate')"
-        :min-width="110"
+        :min-width="120"
       >
         <template slot-scope="scope">
           {{ scope.row.DateAcct }}
