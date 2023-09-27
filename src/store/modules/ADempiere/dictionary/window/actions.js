@@ -94,6 +94,7 @@ export default {
         id
       })
         .then(async windowResponse => {
+          console.log({ windowResponse })
           const window = generateWindow(windowResponse)
           dispatch('addWindow', window)
 
@@ -345,7 +346,7 @@ export default {
               }
 
               return dispatch('getProcessDefinitionFromServer', {
-                uuid: process.uuid
+                uuid: process.id
               })
             },
             // TODO: Change to string and import dynamic in component
@@ -422,7 +423,7 @@ export default {
               }
 
               return dispatch('getProcessDefinitionFromServer', {
-                uuid: process.uuid
+                uuid: process.id
               })
             },
             // TODO: Change to string and import dynamic in component

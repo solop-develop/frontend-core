@@ -61,7 +61,7 @@ export default {
       default: false
     },
     pattern: {
-      type: String,
+      type: [String, Number],
       default: undefined
     }
   },

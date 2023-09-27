@@ -22,7 +22,7 @@ import Vue from 'vue'
  */
 export default {
   addProcessToList(state, process) {
-    Vue.set(state.storedProcesses, process.uuid, process)
+    Vue.set(state.storedProcesses, process.id, process)
   },
 
   /**

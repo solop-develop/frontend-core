@@ -157,7 +157,7 @@ export default defineComponent({
       default: () => ({})
     },
     recordUuid: {
-      type: String,
+      type: [String, Number],
       default: undefined
     }
   },

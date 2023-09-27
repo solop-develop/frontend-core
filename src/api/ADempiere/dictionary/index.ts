@@ -21,18 +21,19 @@ import { request } from '@/utils/ADempiere/request'
  * Request dictionary Window metadata
  * @param {number} id, identifier
  */
-export function requestWindowMetadata({
+export function requestProcessMetadata({
   id
 }) {
   return request({
-    url: `/dictionary/windows/${id}`,
+    url: `/dictionary/processes/${id}`,
     method: 'get'
     // params: {
     //   id
     // }
   })
-    .then(windowResponse => {
-      const { convertWindow } = require('@/utils/ADempiere/apiConverts/dictionary.js')
-      return convertWindow(windowResponse)
+    .then(processResponse => {
+      const { convertProcess } = require('@/utils/ADempiere/apiConverts/dictionary.js')
+
+      return convertProcess(processResponse)
     })
 }

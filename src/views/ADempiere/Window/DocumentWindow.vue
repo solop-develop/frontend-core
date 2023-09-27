@@ -18,39 +18,40 @@
 
 <template>
   <div class="document-window" style="height: 90vh !important;width: 100% !important;overflow: auto;">
-    <div id="tab-manager" :style="sizeTab">
-      <embedded
+    <!-- <h1> {{ windowMetadata }} </h1> -->
+    <div id="tab-manager">
+      <!-- <embedded
         :visible="showRecordAccess"
       >
         <record-access />
-      </embedded>
+      </embedded> -->
       <tab-manager
         ref="tab-manager"
         class="tab-manager"
-        :parent-uuid="windowMetadata.uuid"
+        :parent-uuid="windowMetadata.id"
         :container-manager="containerManager"
         :tabs-list="windowMetadata.tabsListParent"
         :all-tabs-list="allTabsList"
         :actions-manager="actionsManager"
         :style="styleScroll"
       />
-      <modal-dialog
+      <!-- <modal-dialog
         v-if="!isEmptyValue(processUuid)"
         :container-manager="containerManagerProcess"
         :parent-uuid="currentTabUuid"
         :container-uuid="processUuid"
-      />
+      /> -->
     </div>
-    <div v-if="isWithChildsTab" id="tab-manager-child" :style="sizeTabChild">
+    <!-- <div v-if="isWithChildsTab" id="tab-manager-child" :style="sizeTabChild">
       <tab-manager-child
         class="tab-manager"
-        :parent-uuid="windowMetadata.uuid"
+        :parent-uuid="windowMetadata.id"
         :container-manager="containerManager"
         :tabs-list="windowMetadata.tabsListChild"
         :all-tabs-list="allTabsList"
         :actions-manager="actionsManager"
       />
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -143,10 +144,10 @@ export default defineComponent({
     })
 
     const currentTabUuid = computed(() => {
-      return store.getters.getCurrentTabUuid(props.windowMetadata.uuid)
+      return store.getters.getCurrentTabUuid(props.windowMetadata.id)
     })
 
-    const tableName = store.getters.getTableName(props.windowMetadata.uuid, currentTabUuid.value)
+    const tableName = store.getters.getTableName(props.windowMetadata.id, currentTabUuid.value)
 
     const styleFullScreen = computed(() => {
       if (!isWithChildsTab.value) {
@@ -158,7 +159,7 @@ export default defineComponent({
 
     const actionsManager = computed(() => {
       return {
-        parentUuid: props.windowMetadata.uuid,
+        parentUuid: props.windowMetadata.id,
         containerUuid: currentTabUuid.value,
         defaultActionName: language.t('actionMenu.createNewRecord'),
         tableName,
@@ -187,13 +188,13 @@ export default defineComponent({
     })
 
     const sizeTab = computed(() => {
-      if (!isWithChildsTab.value) {
-        return 'height: 100% !important'
-      }
-      if (isViewFullScreenParent.value) {
-        // return 'height: -webkit-fill-available'
-        return 'height: 100% !important'
-      }
+      // if (!isWithChildsTab.value) {
+      //   return 'height: 100% !important'
+      // }
+      // if (isViewFullScreenParent.value) {
+      //   // return 'height: -webkit-fill-available'
+      //   return 'height: 100% !important'
+      // }
       return ''
     })
 

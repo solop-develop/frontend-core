@@ -83,11 +83,11 @@ export default defineComponent({
 
   props: {
     parentUuid: {
-      type: String,
+      type: [String, Number],
       default: undefined
     },
     containerUuid: {
-      type: String,
+      type: [String, Number],
       required: true
     },
     containerManager: {
