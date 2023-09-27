@@ -32,7 +32,6 @@ export function requestWindowMetadata({
     // }
   })
     .then(windowResponse => {
-      // console.log({ windowResponse })
       const { convertWindow } = require('@/utils/ADempiere/apiConverts/dictionary.js')
       return convertWindow(windowResponse)
     })

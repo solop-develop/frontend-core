@@ -158,7 +158,6 @@ export default defineComponent({
     })
 
     const actionsManager = computed(() => {
-      console.log({ currentTabUuid: currentTabUuid.value })
       return {
         parentUuid: props.windowMetadata.id,
         containerUuid: currentTabUuid.value,

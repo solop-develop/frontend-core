@@ -38,10 +38,6 @@ export default {
   },
 
   getStoredWindow: (state) => (windowUuid) => {
-    console.log({
-      alo: state.storedWindows,
-      windowUuid
-    })
     return state.storedWindows[windowUuid]
   },
 
@@ -68,8 +64,14 @@ export default {
   },
 
   getStoredTab: (state) => (windowUuid, tabUuid) => {
+    console.log({
+      tabStored: state.storedWindows,
+      alo: state.storedWindows[windowUuid],
+      windowUuid,
+      tabUuid
+    })
     if (!isEmptyValue(state.storedWindows[windowUuid])) {
-      const tabStored = state.storedWindows[windowUuid].tabsList.find(tab => tab.uuid === tabUuid)
+      const tabStored = state.storedWindows[windowUuid].tabsList.find(tab => tab.id === tabUuid)
       if (tabStored) {
         return tabStored
       }
@@ -225,7 +227,7 @@ export default {
     const attributesObject = {}
     let attributesList = fieldsList
       .map(fieldItem => {
-        const { uuid, columnName, defaultValue, contextColumnNames } = fieldItem
+        const { id, columnName, defaultValue, contextColumnNames } = fieldItem
         const isSQL = String(defaultValue).startsWith('@SQL=') && isGetServer
         const isLinkColumn = !isEmptyValue(linkColumnName) && columnName === linkColumnName
         const isParentColumn = fieldItem.isParent || (!isEmptyValue(parentColumnName) && columnName === parentColumnName)
@@ -285,7 +287,7 @@ export default {
                   parentUuid,
                   containerUuid,
                   contextColumnNames: contextColumnNames,
-                  uuid,
+                  id,
                   value: parsedDefaultValue
                 })
                 if (!isEmptyValue(storedDefaultValue)) {
@@ -299,7 +301,7 @@ export default {
                   parentUuid,
                   containerUuid,
                   contextColumnNames: fieldItem.reference.contextColumnNames,
-                  uuid
+                  id
                 })
                 if (!isEmptyValue(storedLookupList)) {
                   const option = storedLookupList.find(item => item.value === parsedDefaultValue)

@@ -1307,7 +1307,6 @@ export const recordAccess = {
  * @returns {object}
  */
 export function generateWindow(responseWindow) {
-  console.log({ responseWindow })
   const {
     tabsList, tabsListParent, tabsListChild,
     firstTab, firstTabUuid
