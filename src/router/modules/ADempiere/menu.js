@@ -138,7 +138,7 @@ function getChildFromAction({ menu, index, clientId, roleId, organizationId }) {
       title: menu.name,
       type,
       id: menu.reference_id,
-      uuid: menu.reference_uuid,
+      uuid: menu.reference_id,
       childs: []
     },
     children: []
@@ -181,7 +181,7 @@ function getRouteFromMenuItem({ menu, clientId, roleId, organizationId }) {
     name: menu.uuid,
     meta: {
       id: menu.reference_id,
-      uuid: menu.reference_uuid,
+      uuid: menu.reference_id,
       description: menu.description,
       icon,
       isIndex,

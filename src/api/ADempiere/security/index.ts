@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { isEmptyValue } from '@/utils/ADempiere'
 import { request } from '@/utils/ADempiere/request'
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 import { getLanguage } from '@/lang/index'
@@ -156,7 +155,7 @@ export function services() {
     method: 'get'
   })
     .then(response => {
-      if (isEmptyValue(response)) {
+      if (!response) {
         return []
       }
       return response.map(list => camelizeObjectKeys(list))

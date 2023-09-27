@@ -1,6 +1,6 @@
 import {
   getPendingDocumentsFromServer
-} from '@/api/ADempiere/dashboard/tasks'
+} from '@/api/ADempiere/dashboard/index.ts'
 // import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 
@@ -18,11 +18,12 @@ export default {
   actions: {
     listPendingDocuments({ commit, getters }) {
       return new Promise(resolve => {
-        const userUuid = getters['user/getUserUuid']
-        const roleUuid = getters.getRoleUuid
+        // const userUuid = getters['user/getUserUuid']
+        const roleId = getters['user/getRole'].id
+        const { id } = getters['user/userInfo']
         getPendingDocumentsFromServer({
-          userUuid,
-          roleUuid
+          roleId,
+          userId: id
         })
           .then((response) => {
             const { pendingDocumentsList } = response

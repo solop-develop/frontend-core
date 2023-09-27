@@ -30,7 +30,7 @@ import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
  * @author elsiosanchez <elsiosanches@gmail.com>
  */
 export { getProductPrice as findProduct } from '@/api/ADempiere/form/price-checking.js'
-export { requestGetConversionRate } from '@/api/ADempiere/system-core.js'
+export { requestGetConversionRate } from '@/api/ADempiere/common/index.ts'
 
 // List Point of sales
 export function getPointOfSales({

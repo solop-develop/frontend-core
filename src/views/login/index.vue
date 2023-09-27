@@ -350,6 +350,7 @@ export default {
     listAuthorization() {
       services()
         .then(response => {
+          if (!response) return
           this.listServices = response.map(list => {
             return {
               ...list,

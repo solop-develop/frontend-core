@@ -23,6 +23,7 @@ import { config as globalConfig } from '@/utils/ADempiere/config'
 
 // Utils and Helper Methos
 import { MessageBox, Message } from 'element-ui'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 // create an axios instance
 const service = axios.create({
@@ -91,8 +92,9 @@ service.interceptors.response.use(
   },
   error => {
     console.log('err' + error) // for debug
+    const message = isEmptyValue(error.response.data.message) ? error.message : error.response.data.message
     Message({
-      message: error.message,
+      message: message,
       type: 'error',
       duration: 5 * 1000
     })

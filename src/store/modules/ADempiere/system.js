@@ -17,7 +17,7 @@
  */
 
 // API Request Methods
-import { requestLanguagesList } from '@/api/ADempiere/system-core.js'
+import { requestLanguagesList } from '@/api/ADempiere/common/index.ts'
 import {
   requestRunProcess as runResetCache
 } from '@/api/ADempiere/process'

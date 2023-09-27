@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { getFavoritesFromServer } from '@/api/ADempiere/dashboard/user.js'
+import { getFavoritesFromServer } from '@/api/ADempiere/dashboard/index.ts'
 import { convertAction } from '@/utils/ADempiere/dictionaryUtils.js'
 import mixinDashboard from '@/components/ADempiere/Dashboard/mixinDashboard.js'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
@@ -103,10 +103,10 @@ export default {
   },
   methods: {
     getFavoritesList() {
-      const userUuid = this.$store.getters['user/getUserUuid']
+      const { id } = this.$store.getters['user/userInfo']
       return new Promise(resolve => {
         getFavoritesFromServer({
-          userUuid
+          userId: id
         })
           .then(response => {
             const favorites = response.favoritesList.map(favoriteElement => {

@@ -64,7 +64,7 @@ import {
   requestOrganizationsList,
   requestWarehousesList,
   systemInfo
-} from '@/api/ADempiere/system-core'
+} from '@/api/ADempiere/common/index.ts'
 // import {
 //   loginAuthentication
 // } from '@/api/ADempiere/open-id/services.js'
