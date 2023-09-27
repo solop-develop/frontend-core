@@ -16,7 +16,7 @@
 
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
-
+// import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 /**
  * Request dictionary Window metadata
  * @param {number} id, identifier
@@ -25,13 +25,14 @@ export function requestWindowMetadata({
   id
 }) {
   return request({
-    url: '/dictionary/window',
-    method: 'get',
-    params: {
-      id
-    }
+    url: `/dictionary/windows/${id}`,
+    method: 'get'
+    // params: {
+    //   id
+    // }
   })
     .then(windowResponse => {
+      // console.log({ windowResponse })
       const { convertWindow } = require('@/utils/ADempiere/apiConverts/dictionary.js')
       return convertWindow(windowResponse)
     })

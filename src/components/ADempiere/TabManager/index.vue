@@ -53,7 +53,8 @@
           style="display: contents;"
           @click="selectTab(tabsList[parseInt(currentTab)])"
         >
-          <tab-panel
+          <h1> 46546546 </h1>
+          <!-- <tab-panel
             id="tab-panel"
             :parent-uuid="parentUuid"
             :container-manager="containerManager"
@@ -63,7 +64,7 @@
             :tab-attributes="tabAttributes"
             :actions-manager="actionsManager"
             :style="'height: 100% !important;'"
-          />
+          /> -->
         </div>
         <!-- </div> -->
       </el-tab-pane>
@@ -151,7 +152,7 @@
       </el-badge>
     </div>
 
-    <el-drawer
+    <!-- <el-drawer
       :visible.sync="showContainerInfo"
       :with-header="true"
       :before-close="openRecordLogs"
@@ -176,7 +177,7 @@
         :is-accounting-info="isAccountingInfo"
         :default-opened-tab="defaultNameTab"
       />
-    </el-drawer>
+    </el-drawer> -->
   </div>
 </template>
 

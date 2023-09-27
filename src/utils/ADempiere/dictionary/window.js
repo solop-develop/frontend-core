@@ -1307,12 +1307,13 @@ export const recordAccess = {
  * @returns {object}
  */
 export function generateWindow(responseWindow) {
+  console.log({ responseWindow })
   const {
     tabsList, tabsListParent, tabsListChild,
     firstTab, firstTabUuid
   } = generateTabs({
     tabs: responseWindow.tabs,
-    parentUuid: responseWindow.uuid
+    parentUuid: responseWindow.id
   })
 
   let currentTabChild = {}
@@ -1349,7 +1350,7 @@ export function generateTabs({
   parentUuid
 }) {
   const firstTabTableName = tabs[0].tableName
-  const firstTabUuid = tabs[0].uuid
+  const firstTabUuid = tabs[0].id
 
   const sequenceTabsListOnWindow = []
 
@@ -1360,7 +1361,7 @@ export function generateTabs({
         ...itemTab,
         firstTabUuid,
         parentUuid,
-        containerUuid: itemTab.uuid
+        containerUuid: itemTab.id
       })
       return false
     }
@@ -1374,7 +1375,7 @@ export function generateTabs({
       return {
         name: itemTab.name,
         id: itemTab.id,
-        uuid: itemTab.uuid,
+        // uuid: itemTab.uuid,
         tableName: itemTab.tableName,
         sequence: itemTab.sequence,
         tabLevel: itemTab.tabLevel
@@ -1383,7 +1384,7 @@ export function generateTabs({
 
     const parentTabs = listTabs
       .filter(itemTab => {
-        return itemTab.uuid !== currentTab.uuid &&
+        return itemTab.id !== currentTab.id &&
           itemTab.sequence < currentTab.sequence &&
           itemTab.tabLevel < currentTab.tabLevel
       })
@@ -1391,7 +1392,7 @@ export function generateTabs({
 
     const childTabs = listTabs
       .filter(itemTab => {
-        return itemTab.uuid !== currentTab.uuid &&
+        return itemTab.id !== currentTab.id &&
           itemTab.sequence > currentTab.sequence &&
           itemTab.tabLevel > currentTab.tabLevel
       })
@@ -1440,7 +1441,7 @@ export function generateTabs({
 
     return generatePanelAndFields({
       parentUuid,
-      containerUuid: currentTab.uuid,
+      containerUuid: currentTab.id.toString(),
       panelMetadata: tab,
       isAddFieldUuid: true,
       isAddLinkColumn: true,

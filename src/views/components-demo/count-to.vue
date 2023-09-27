@@ -19,7 +19,7 @@
       <label class="label" for="startValInput">startVal:
         <input v-model.number="setStartVal" type="number" name="startValInput">
       </label>
-      <label class="label" for="endValInput">endVal:
+      <label class="label" for="endValInput">:
         <input v-model.number="setEndVal" type="number" name="endVaInput">
       </label>
       <label class="label" for="durationInput">duration:

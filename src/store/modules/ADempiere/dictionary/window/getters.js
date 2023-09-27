@@ -38,6 +38,10 @@ export default {
   },
 
   getStoredWindow: (state) => (windowUuid) => {
+    console.log({
+      alo: state.storedWindows,
+      windowUuid
+    })
     return state.storedWindows[windowUuid]
   },
 
