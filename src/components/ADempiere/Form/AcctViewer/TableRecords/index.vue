@@ -18,6 +18,7 @@
 
 <template>
   <div style="padding: 10px;height: -webkit-fill-available;">
+    <filter-columns />
 
     <el-table
       v-loading="isLoadingDataTable"
@@ -164,7 +165,7 @@
 
       <template v-if="isShowDocumentColumns">
         <el-table-column
-          :label="$t('form.accountingViewer.table')"
+          :label="$t('form.accountingViewer.tableRecord')"
           :min-width="210"
         >
           <span slot-scope="scope">
@@ -202,7 +203,7 @@
 </template>
 
 <script>
-import { defineComponent, computed, ref } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
 
 import store from '@/store'
 
@@ -211,6 +212,7 @@ import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 
 // Components and Mixins
 // import AccountElementColumns from './accountElementColumns.vue'
+import FilterColumns from './filterColumns.vue'
 import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
 // import SourceColumns from './sourceColumns.vue'
 // import QuantityColumns from './quantityColumns.vue'
@@ -223,15 +225,24 @@ export default defineComponent({
 
   components: {
     // AccountElementColumns,
+    FilterColumns,
     IndexColumn
     // SourceColumns,
     // QuantityColumns
   },
 
   setup() {
-    const isShowDocumentColumns = ref(false)
-    const isShowSourceColumns = ref(false)
-    const isShowQuantityColumns = ref(false)
+    const isShowDocumentColumns = computed(() => {
+      return store.getters.getIsDisplayDocumentInfo
+    })
+
+    const isShowSourceColumns = computed(() => {
+      return store.getters.getIsDisplaySourceInfo
+    })
+
+    const isShowQuantityColumns = computed(() => {
+      return store.getters.getIsDisplayQuantity
+    })
 
     const isLoadingDataTable = computed(() => {
       return store.getters.getIsLoadingAccoutingRecords

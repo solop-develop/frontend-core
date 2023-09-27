@@ -37,7 +37,11 @@ const initState = {
   currentAccoutingOrganizationId: ' ',
   accountingOrganizationsList: [],
   isLoadingAccoutingRecords: false,
-  accoutingRecordsList: []
+  accoutingRecordsList: [],
+  // user interface
+  isDisplayDocumentInfo: false,
+  isDisplaySourceInfo: false,
+  isDisplayQuantity: false
 }
 
 const acctViewer = {
@@ -67,6 +71,15 @@ const acctViewer = {
     },
     setAccoutingRecordsList(state, records = []) {
       state.accoutingRecordsList = records
+    },
+    setIsDisplayDocumentInfo(state, isShow = false) {
+      state.isDisplayDocumentInfo = isShow
+    },
+    setIsDisplaySourceInfo(state, isShow = false) {
+      state.isDisplaySourceInfo = isShow
+    },
+    setIsDisplayQuantity(state, isShow = false) {
+      state.isDisplayQuantity = isShow
     }
   },
 
@@ -228,6 +241,16 @@ const acctViewer = {
     },
     getAccoutingRecordsList: (state) => {
       return state.accoutingRecordsList
+    },
+
+    getIsDisplayDocumentInfo: (state) => {
+      return state.isDisplayDocumentInfo
+    },
+    getIsDisplaySourceInfo: (state) => {
+      return state.isDisplaySourceInfo
+    },
+    getIsDisplayQuantity: (state) => {
+      return state.isDisplayQuantity
     }
   }
 }

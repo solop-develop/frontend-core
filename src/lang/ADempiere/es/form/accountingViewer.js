@@ -44,7 +44,12 @@ const accounting = {
   sourceCredit: 'Crédito Fuente',
   sourceDebit: 'Débito Fuente',
   subAccount: 'Sub Cuenta',
-  table: 'Tabla',
+  tableRecord: 'Tabla',
+  table: {
+    displayDocumentInfo: 'Mostrar Información de Documento',
+    displaySourceInfo: 'Mostrar Información Fuente',
+    displayQuantity: 'Mostrar Cantidad'
+  },
   transactionDate: 'Fecha de la Transacción',
   uom: 'UM',
   userElement1: 'Elemento de Usuario 1',
