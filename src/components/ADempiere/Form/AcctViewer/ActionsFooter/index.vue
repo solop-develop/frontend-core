@@ -129,7 +129,10 @@ export default defineComponent({
 
     function refreshAccount() {
       store.dispatch('getAccoutingFactsFromServer', {
-        searchValue: ''
+        searchValue: '',
+        tableName: props.tableName,
+        recordUuid: props.recordUuid,
+        recordId: props.recordId
       })
     }
 

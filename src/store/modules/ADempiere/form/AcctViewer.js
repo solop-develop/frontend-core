@@ -160,19 +160,24 @@ const acctViewer = {
     },
 
     getAccoutingFactsFromServer({ commit, getters }, {
-      searchValue
+      searchValue,
+      tableName,
+      recordUuid,
+      recordId
     }) {
       const accoutingSchemaId = getters.getCurrentStoredAccoutingSchemaId
       if (isEmptyValue(accoutingSchemaId)) {
         return
       }
       return new Promise(resolve => {
+        commit('setIsLoadingAccoutingRecords', true)
+
         requestAccountingFacts({
           accoutingSchemaId,
           postingType: getters.getCurrentStoredPostingTypeValue,
-          // tableName: props.tableName,
-          // recordId: props.recordId,
-          // recordUuid: props.recordUuid,
+          tableName,
+          recordId,
+          recordUuid,
           searchValue,
           filters: []
         })
@@ -212,6 +217,9 @@ const acctViewer = {
 
             commit('setAccoutingRecordsList', recordsList)
             resolve(recordsList)
+          })
+          .finally(() => {
+            commit('setIsLoadingAccoutingRecords', false)
           })
       })
     }

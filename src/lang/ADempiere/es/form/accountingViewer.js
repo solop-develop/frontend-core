@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-const accounting = {
+const accountingViewer = {
   account: 'Cuenta',
   accountDate: 'Fecha Contable',
   accountedCredit: 'Crédito Contabilizado',
@@ -60,4 +60,4 @@ const accounting = {
   userList4: 'Lista Usuario 4'
 }
 
-export default accounting
+export default accountingViewer

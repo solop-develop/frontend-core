@@ -28,7 +28,11 @@
       <table-records />
     </div>
     <div style="/*height: 6% !important;*/">
-      <actions-footer />
+      <actions-footer
+        :table-name="tableName"
+        :record-id="recordId"
+        :record-uuid="recordUuid"
+      />
     </div>
   </div>
   <!-- </el-container> -->
@@ -72,10 +76,10 @@ export default defineComponent({
     recordId: {
       type: Number,
       default: () => 0
-    // },
-    // recordUuid: {
-    //   type: String,
-    //   default: () => ''
+    },
+    recordUuid: {
+      type: String,
+      default: () => ''
     }
   },
 
@@ -112,7 +116,10 @@ export default defineComponent({
             return
           }
           store.dispatch('getAccoutingFactsFromServer', {
-            searchValue: ''
+            searchValue: '',
+            tableName: props.tableName,
+            recordUuid: props.recordUuid,
+            recordId: props.recordId
           })
         }
       })
