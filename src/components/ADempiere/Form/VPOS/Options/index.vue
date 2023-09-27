@@ -489,7 +489,7 @@
                   :center="true"
                   :modal="false"
                   :append-to-body="true"
-                  custom-class="dialogo-return-product"
+                  custom-class="dialog-return-product"
                   width="90%"
                 >
                   <return-product />
@@ -669,7 +669,7 @@
       close-on-press-escape
       width="70%"
       center
-      class="dialogo-seller"
+      class="dialog-seller"
     >
       <mnemonic-command />
     </el-dialog>
@@ -681,7 +681,7 @@
       close-on-press-escape
       width="80%"
       center
-      class="dialogo-seller"
+      class="dialog-seller"
       @shortkey.native="cashManagementModal"
     >
       <component
@@ -891,7 +891,7 @@
       :center="true"
       :title="$t('form.pos.returnProduct')"
       width="80%"
-      custom-class="dialogo-return-product"
+      custom-class="dialog-return-product"
     >
       <el-result
         v-if="!isEmptyValue(summaryReturnProduct)"
@@ -926,7 +926,7 @@
     </el-dialog>
     <el-dialog
       :title="$t('form.pos.optionsPoinSales.salesOrder.confirmDelivery')"
-      :visible.sync="showDialogoDelivery"
+      :visible.sync="showDialogDelivery"
       :center="true"
       :modal="false"
       :append-to-body="true"
@@ -970,13 +970,13 @@
                 type="danger"
                 class="custom-button-create-bp"
                 icon="el-icon-close"
-                @click="showDialogoDelivery = !showDialogoDelivery"
+                @click="showDialogDelivery = !showDialogDelivery"
               />
               <el-button
                 type="primary"
                 class="custom-button-create-bp"
                 icon="el-icon-check"
-                @click="showDialogoDelivery = !showDialogoDelivery"
+                @click="showDialogDelivery = !showDialogDelivery"
               />
             </samp>
           </el-col>
@@ -1104,7 +1104,7 @@ export default {
     summaryReturnProduct() {
       return this.$store.getters.getSummaryRMA
     },
-    showDialogoDelivery: {
+    showDialogDelivery: {
       get() {
         return this.$store.getters.getShowConfirmDelivery
       },
@@ -2539,7 +2539,7 @@ export default {
     background-color:white;
     background:white;
   }
-  .dialogo-seller {
+  .dialog-seller {
     overflow: hidden;
   }
 </style>
@@ -2547,7 +2547,7 @@ export default {
   .el-textarea__inner:hover {
     background-color: #FFFFFF!important;
   }
-  .dialogo-return-product {
+  .dialog-return-product {
     height: 70%;
     .el-dialog__body {
       height: -webkit-fill-available;
