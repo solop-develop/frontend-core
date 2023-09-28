@@ -39,7 +39,7 @@ export function requestWindowMetadata({
  * @param {String} id
  */
 export function requestFieldMetadata({
-  id,
+  id
 }) {
   return request({
     url: `/dictionary/fields/${id}`,
