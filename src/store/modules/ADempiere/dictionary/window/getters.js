@@ -64,12 +64,6 @@ export default {
   },
 
   getStoredTab: (state) => (windowUuid, tabUuid) => {
-    console.log({
-      tabStored: state.storedWindows,
-      alo: state.storedWindows[windowUuid],
-      windowUuid,
-      tabUuid
-    })
     if (!isEmptyValue(state.storedWindows[windowUuid])) {
       const tabStored = state.storedWindows[windowUuid].tabsList.find(tab => tab.id === tabUuid)
       if (tabStored) {

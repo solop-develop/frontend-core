@@ -94,7 +94,6 @@ export default {
         id
       })
         .then(async windowResponse => {
-          console.log({ windowResponse })
           const window = generateWindow(windowResponse)
           dispatch('addWindow', window)
 

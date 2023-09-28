@@ -27,22 +27,22 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
  */
 export default {
   addWindowToList(state, window) {
-    Vue.set(state.storedWindows, window.id, window)
+    Vue.set(state.storedWindows, window.uuid, window)
   },
 
   changeWindowAttribute(state, {
-    id,
+    uuid,
     attributeName,
     attributeValue,
     attributeNameControl
   }) {
     let value = attributeValue
     if (!isEmptyValue(attributeNameControl)) {
-      value = state.storedWindows[id][attributeNameControl]
+      value = state.storedWindows[uuid][attributeNameControl]
     }
 
-    Vue.set(state.storedWindows[id], attributeName, value)
-    // state.storedWindows[id][attributeName] = value
+    Vue.set(state.storedWindows[uuid], attributeName, value)
+    // state.storedWindows[uuid][attributeName] = value
   },
 
   changeTabAttribute(state, payload) {
@@ -57,11 +57,11 @@ export default {
   /**
    * Set Stored Table Name by Tab UUID
    * @param {*} state
-   * @param {string} id table id
+   * @param {string} uuid table uuid
    * @param {string} tableName
    */
-  setTableNameByTab(state, { id, tableName }) {
-    Vue.set(state.storedTableNames, id, tableName)
+  setTableNameByTab(state, { uuid, tableName }) {
+    Vue.set(state.storedTableNames, uuid, tableName)
   },
 
   /**
@@ -116,7 +116,7 @@ export default {
    * @param {string} parentUuid
    * @param {object} tab
    */
-  setSelectProcessWindows(state, id) {
-    state.selectProcessUuid = id
+  setSelectProcessWindows(state, uuid) {
+    state.selectProcessUuid = uuid
   }
 }

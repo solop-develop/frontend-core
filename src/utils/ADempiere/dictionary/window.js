@@ -1312,7 +1312,7 @@ export function generateWindow(responseWindow) {
     firstTab, firstTabUuid
   } = generateTabs({
     tabs: responseWindow.tabs,
-    parentUuid: responseWindow.id
+    parentUuid: responseWindow.uuid
   })
 
   let currentTabChild = {}
@@ -1349,7 +1349,7 @@ export function generateTabs({
   parentUuid
 }) {
   const firstTabTableName = tabs[0].tableName
-  const firstTabUuid = tabs[0].id
+  const firstTabUuid = tabs[0].uuid
 
   const sequenceTabsListOnWindow = []
 
@@ -1360,7 +1360,7 @@ export function generateTabs({
         ...itemTab,
         firstTabUuid,
         parentUuid,
-        containerUuid: itemTab.id
+        containerUuid: itemTab.uuid
       })
       return false
     }
@@ -1374,7 +1374,7 @@ export function generateTabs({
       return {
         name: itemTab.name,
         id: itemTab.id,
-        // uuid: itemTab.uuid,
+        uuid: itemTab.uuid,
         tableName: itemTab.tableName,
         sequence: itemTab.sequence,
         tabLevel: itemTab.tabLevel
@@ -1383,7 +1383,7 @@ export function generateTabs({
 
     const parentTabs = listTabs
       .filter(itemTab => {
-        return itemTab.id !== currentTab.id &&
+        return itemTab.uuid !== currentTab.uuid &&
           itemTab.sequence < currentTab.sequence &&
           itemTab.tabLevel < currentTab.tabLevel
       })
@@ -1391,7 +1391,7 @@ export function generateTabs({
 
     const childTabs = listTabs
       .filter(itemTab => {
-        return itemTab.id !== currentTab.id &&
+        return itemTab.uuid !== currentTab.uuid &&
           itemTab.sequence > currentTab.sequence &&
           itemTab.tabLevel > currentTab.tabLevel
       })
@@ -1440,7 +1440,7 @@ export function generateTabs({
 
     return generatePanelAndFields({
       parentUuid,
-      containerUuid: currentTab.id.toString(),
+      containerUuid: currentTab.uuid,
       panelMetadata: tab,
       isAddFieldUuid: true,
       isAddLinkColumn: true,
