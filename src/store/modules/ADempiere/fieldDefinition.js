@@ -19,7 +19,7 @@
 import Vue from 'vue'
 
 // API Request Methods
-import { requestFieldMetadata } from '@/api/ADempiere/dictionary/window'
+import { requestFieldMetadata } from '@/api/ADempiere/dictionary/index.ts'
 
 // Constants
 import { DEFAULT_COLUMNS_PER_ROW } from '@/utils/ADempiere/componentUtils'

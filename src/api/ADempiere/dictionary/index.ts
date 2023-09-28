@@ -21,6 +21,69 @@ import { request } from '@/utils/ADempiere/request'
  * Request dictionary Window metadata
  * @param {number} id, identifier
  */
+export function requestWindowMetadata({
+  id
+}) {
+  return request({
+    url: `/dictionary/windows/${id}`,
+    method: 'get'
+  })
+    .then(windowResponse => {
+      const { convertWindow } = require('@/utils/ADempiere/apiConverts/dictionary.js')
+      return convertWindow(windowResponse)
+    })
+}
+
+/**
+ * GET Fields
+ * @param {String} id
+ */
+export function requestFieldMetadata({
+  id,
+}) {
+  return request({
+    url: `/dictionary/fields/${id}`,
+    method: 'get'
+    // params: {
+    //   uuid,
+    //   column_uuid: columnUuid,
+    //   element_uuid: elementUuid,
+    //   field_uuid: fieldUuid,
+    //   // TableName + ColumnName
+    //   table_name: tableName,
+    //   column_name: columnName,
+    //   element_column_name: elementColumnName
+    // }
+  })
+    .then(fieldResponse => {
+      const { convertField } = require('@/utils/ADempiere/apiConverts/field.js')
+
+      return convertField(fieldResponse)
+    })
+}
+
+/**
+ * GET References
+ * @param {String} id
+ */
+export function requestReference({
+  id
+}) {
+  return request({
+    url: `/dictionary/references/${id}`,
+    method: 'get'
+    // params: {
+    //   uuid,
+    //   column_name: columnName
+    // }
+  })
+    .then(validationResponse => {
+      const { convertReference } = require('@/utils/ADempiere/apiConverts/field.js')
+
+      return convertReference(validationResponse)
+    })
+}
+
 export function requestProcessMetadata({
   id
 }) {

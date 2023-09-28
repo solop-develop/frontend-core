@@ -27,9 +27,6 @@ export function requestWindowMetadata({
   return request({
     url: `/dictionary/windows/${id}`,
     method: 'get'
-    // params: {
-    //   id
-    // }
   })
     .then(windowResponse => {
       const { convertWindow } = require('@/utils/ADempiere/apiConverts/dictionary.js')
