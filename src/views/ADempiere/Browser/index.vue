@@ -140,7 +140,8 @@ export default defineComponent({
     let browserUuid = ''
     // set uuid with linked menu
     if (!isEmptyValue(root.$route.meta) && !isEmptyValue(root.$route.meta.uuid)) {
-      browserUuid = root.$route.meta.uuid
+      const { uuid } = root.$route.meta
+      browserUuid = uuid.toString()
     }
     // set uuid from associated browser without menu
     if (!isEmptyValue(root.$route.params) && !isEmptyValue(root.$route.params.browserUuid)) {
@@ -256,7 +257,7 @@ export default defineComponent({
       }
 
       store.dispatch('getBrowserDefinitionFromServer', {
-        uuid: browserUuid,
+        id: browserUuid,
         parentUuid
       })
         .then(browserResponse => {

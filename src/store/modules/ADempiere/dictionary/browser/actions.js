@@ -47,16 +47,16 @@ import { isLookup } from '@/utils/ADempiere/references'
 
 export default {
   getBrowserDefinitionFromServer({ commit, dispatch, rootGetters }, {
-    uuid,
+    id,
     parentUuid = '' // context of associated
   }) {
     return new Promise(resolve => {
       requestBrowserMetadata({
-        uuid
+        id
       })
         .then(browserResponse => {
           const browserDefinition = generatePanelAndFields({
-            containerUuid: uuid,
+            containerUuid: String(id),
             panelMetadata: {
               ...browserResponse,
               isShowedCriteria: true
@@ -103,7 +103,7 @@ export default {
               parentUuid
             })
             dispatch('updateValuesOfContainer', {
-              containerUuid: uuid,
+              containerUuid: id,
               attributes: parentContext
             })
 
@@ -114,12 +114,12 @@ export default {
                 })
                 if (!isEmptyValue(currentValueElement) && !isEmptyValue(currentValueElement.value)) {
                   commit('updateValueOfField', {
-                    containerUuid: uuid,
+                    containerUuid: id,
                     columnName: itemField.elementName,
                     value: currentValueElement.value
                   })
                   commit('updateValueOfField', {
-                    containerUuid: uuid,
+                    containerUuid: id,
                     columnName: itemField.columnName,
                     value: currentValueElement.value
                   })

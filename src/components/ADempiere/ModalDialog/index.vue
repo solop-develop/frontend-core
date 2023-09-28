@@ -126,11 +126,11 @@ export default defineComponent({
 
   props: {
     parentUuid: {
-      type: String,
+      type: [String, Number],
       default: undefined
     },
     containerUuid: {
-      type: String,
+      type: [String, Number],
       required: true
     },
     containerManager: {
@@ -194,7 +194,7 @@ export default defineComponent({
     })
 
     const isDisabledDone = computed(() => {
-      if (storedModalDialog.value.isDisabledDone) {
+      if (!isEmptyValue(storedModalDialog.value) && storedModalDialog.value.isDisabledDone) {
         return Boolean(
           storedModalDialog.value.isDisabledDone({
             parentUuid: props.parentUuid,

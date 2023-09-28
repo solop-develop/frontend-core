@@ -23,16 +23,11 @@ import { request } from '@/utils/ADempiere/request'
  * @param {number} id, identifier
  */
 export function requestBrowserMetadata({
-  uuid,
   id
 }) {
   return request({
-    url: '/dictionary/browser',
-    method: 'get',
-    params: {
-      uuid,
-      id
-    }
+    url: `/dictionary/browsers/${id}`,
+    method: 'get'
   })
     .then(browserResponse => {
       const { convertBrowser } = require('@/utils/ADempiere/apiConverts/dictionary.js')

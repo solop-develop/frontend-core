@@ -100,3 +100,22 @@ export function requestProcessMetadata({
       return convertProcess(processResponse)
     })
 }
+
+/**
+ * Request dictionary Smart Browser metadata
+ * @param {string} uuid universally unique identifier
+ * @param {number} id, identifier
+ */
+export function requestBrowserMetadata({
+  id
+}) {
+  return request({
+    url: `/dictionary/browsers/${id}`,
+    method: 'get'
+  })
+    .then(browserResponse => {
+      const { convertBrowser } = require('@/utils/ADempiere/apiConverts/dictionary.js')
+
+      return convertBrowser(browserResponse)
+    })
+}
