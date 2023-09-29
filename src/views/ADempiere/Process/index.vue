@@ -106,7 +106,7 @@ export default defineComponent({
     const isLoadedMetadata = ref(false)
     const processMetadata = ref({})
 
-    let processUuid = root.$route.meta.uuid
+    let processUuid = root.$route.meta.uuid.toString()
     // set uuid from test
     if (!isEmptyValue(props.uuid)) {
       processUuid = props.uuid
@@ -154,7 +154,7 @@ export default defineComponent({
       }
 
       store.dispatch('getProcessDefinitionFromServer', {
-        uuid: processUuid
+        id: processUuid
       })
         .then(processResponse => {
           processMetadata.value = processResponse

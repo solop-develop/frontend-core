@@ -20,7 +20,7 @@ import router from '@/router'
 import store from '@/store'
 
 // API Request Methods
-import { requestProcessMetadata as requestReportMetadata } from '@/api/ADempiere/dictionary/process.js'
+import { requestProcessMetadata as requestReportMetadata } from '@/api/ADempiere/dictionary/index.ts'
 
 // Constants
 import {

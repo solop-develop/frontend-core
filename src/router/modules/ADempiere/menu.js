@@ -119,7 +119,7 @@ function getChildFromAction({ menu, index, clientId, roleId, organizationId }) {
   const option = {
     path: '/' + clientId + '/' + roleId + '/' + organizationId + '/' + menu.id + '/' + routeIdentifier,
     component,
-    name: menu.uuid,
+    name: menu.id.toString(),
     hidden: index > 0,
     meta: {
       alwaysShow: true,
@@ -178,7 +178,7 @@ function getRouteFromMenuItem({ menu, clientId, roleId, organizationId }) {
     path: '/' + clientId + '/' + roleId + '/' + organizationId + '/' + menu.id,
     redirect: '/' + menu.id,
     component: Layout,
-    name: menu.uuid,
+    name: menu.id.toString(),
     meta: {
       id: menu.reference_id,
       uuid: menu.reference_id,

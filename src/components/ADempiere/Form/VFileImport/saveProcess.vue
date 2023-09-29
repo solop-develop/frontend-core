@@ -144,7 +144,7 @@ import {
   listCharsets,
   listImportFormats
 } from '@/api/ADempiere/form/VFileImport.js'
-import { requestProcessMetadata } from '@/api/ADempiere/dictionary/process.js'
+import { requestProcessMetadata } from '@/api/ADempiere/dictionary/index.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'
@@ -442,7 +442,7 @@ export default defineComponent({
       })
         .then(response => {
           store.dispatch('getProcessDefinitionFromServer', {
-            uuid: response.uuid
+            id: response.id.toString()
           })
             .then(processResponse => {
               store.commit('updateAttributeVFileImport', {
