@@ -19,7 +19,7 @@
 import router from '@/router'
 
 // API Request Methods
-import { requestProcessMetadata } from '@/api/ADempiere/dictionary/process.js'
+import { requestProcessMetadata } from '@/api/ADempiere/dictionary/index.ts'
 
 // Constants
 import {
@@ -55,11 +55,11 @@ export default {
    * @param {string} uuid of dictionary
    */
   getProcessDefinitionFromServer({ dispatch }, {
-    uuid
+    id
   }) {
     return new Promise((resolve, reject) => {
       requestProcessMetadata({
-        uuid
+        id
       })
         .then(processResponse => {
           const { processDefinition } = generateProcess({

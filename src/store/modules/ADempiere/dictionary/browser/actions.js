@@ -188,7 +188,7 @@ export default {
                   return Promise.resolve(processDefinition)
                 }
                 return dispatch('getProcessDefinitionFromServer', {
-                  uuid: process.uuid
+                  id: process.id.toString()
                 })
               },
               ...process,

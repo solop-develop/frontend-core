@@ -345,7 +345,7 @@ export default {
               }
 
               return dispatch('getProcessDefinitionFromServer', {
-                uuid: process.uuid
+                id: process.id.toString()
               })
             },
             // TODO: Change to string and import dynamic in component
@@ -422,7 +422,7 @@ export default {
               }
 
               return dispatch('getProcessDefinitionFromServer', {
-                uuid: process.uuid
+                id: process.id.toString()
               })
             },
             // TODO: Change to string and import dynamic in component
