@@ -31,7 +31,7 @@
       <p style="text-align: end;">
         <action-menu
           :container-manager="containerManager"
-          :container-uuid="browserUuid"
+          :container-uuid="browserId"
           :actions-manager="actionsManager"
         />
       </p>
@@ -40,12 +40,12 @@
         <!-- Query Criteria -->
         <collapse-criteria
           :title="$t('views.searchCriteria')"
-          :container-uuid="browserUuid"
+          :container-uuid="browserId"
           :container-manager="containerManager"
         >
           <panel-definition
             class="browser-query-criteria"
-            :container-uuid="browserUuid"
+            :container-uuid="browserId"
             :panel-metadata="browserMetadata"
             :container-manager="containerManager"
             :is-tab-panel="true"
@@ -58,7 +58,7 @@
         <default-table
           id="mainBrowser"
           class="browser-table-result"
-          :container-uuid="browserUuid"
+          :container-uuid="browserId"
           :container-manager="containerManagerTable"
           :panel-metadata="browserMetadata"
           :header="tableHeader"
@@ -72,7 +72,7 @@
     <modal-dialog
       v-if="!isEmptyValue(processUuid)"
       :container-manager="containerManagerProcess"
-      :parent-uuid="browserUuid"
+      :parent-uuid="browserId"
       :container-uuid="processUuid"
     />
   </div>
@@ -137,26 +137,26 @@ export default defineComponent({
       parentUuid = root.$route.query.parentUuid
     }
 
-    let browserUuid = ''
+    let browserId = ''
     // set uuid with linked menu
     if (!isEmptyValue(root.$route.meta) && !isEmptyValue(root.$route.meta.uuid)) {
-      browserUuid = root.$route.meta.uuid
+      browserId = root.$route.meta.id.toString()
     }
     // set uuid from associated browser without menu
-    if (!isEmptyValue(root.$route.params) && !isEmptyValue(root.$route.params.browserUuid)) {
-      browserUuid = root.$route.params.browserUuid
+    if (!isEmptyValue(root.$route.params) && !isEmptyValue(root.$route.params.browserId)) {
+      browserId = root.$route.params.browserId
     }
     // set uuid from test
     if (!isEmptyValue(props.uuid)) {
-      browserUuid = props.uuid
+      browserId = props.uuid
     }
 
     const storedBrowser = computed(() => {
-      return store.getters.getStoredBrowser(browserUuid)
+      return store.getters.getStoredBrowser(browserId)
     })
 
     const isLoaded = computed(() => {
-      const browserData = store.state.browserManager.browserData[browserUuid]
+      const browserData = store.state.browserManager.browserData[browserId]
       if (isEmptyValue(browserData)) {
         return false
       }
@@ -188,7 +188,7 @@ export default defineComponent({
     const isReadyToSearch = computed(() => {
       return isEmptyValue(
         store.getters.getBrowserFieldsEmptyMandatory({
-          containerUuid: browserUuid
+          containerUuid: browserId
         })
       )
     })
@@ -213,7 +213,7 @@ export default defineComponent({
         }
 
         store.commit('changeBrowserAttribute', {
-          uuid: browserUuid,
+          uuid: browserId,
           attributeName: 'isShowedCriteria',
           attributeValue: showCriteria
         })
@@ -235,7 +235,7 @@ export default defineComponent({
       const { containerManager: containerManagerByProcess } = mixinProcess(processUuid)
       containerManagerProcess.value = containerManagerByProcess
 
-      if (!isEmptyValue(root.$route.params) && !isEmptyValue(root.$route.params.browserUuid)) {
+      if (!isEmptyValue(root.$route.params) && !isEmptyValue(root.$route.params.browserId)) {
         // update name in tag view
         store.dispatch('tagsView/updateVisitedView', {
           ...root.$route,
@@ -256,7 +256,7 @@ export default defineComponent({
       }
 
       store.dispatch('getBrowserDefinitionFromServer', {
-        uuid: browserUuid,
+        id: browserId,
         parentUuid
       })
         .then(browserResponse => {
@@ -274,12 +274,12 @@ export default defineComponent({
       if (isReadyToSearch.value) {
         // first search by default
         store.dispatch('getBrowserSearch', {
-          containerUuid: browserUuid
+          containerUuid: browserId
         })
 
         // hide showed criteria
         store.commit('changeBrowserAttribute', {
-          uuid: browserUuid,
+          uuid: browserId,
           attributeName: 'isShowedCriteria',
           attributeValue: false
         })
@@ -288,7 +288,7 @@ export default defineComponent({
 
       // set empty values into container data
       store.commit('setBrowserData', {
-        containerUuid: browserUuid
+        containerUuid: browserId
       })
     }
 
@@ -350,12 +350,12 @@ export default defineComponent({
 
     const actionsManager = computed(() => {
       return {
-        containerUuid: browserUuid,
+        containerUuid: browserId,
 
         defaultActionName: processName.value,
 
         getActionList: () => store.getters.getStoredActionsMenu({
-          containerUuid: browserUuid
+          containerUuid: browserId
         })
       }
     })
@@ -363,7 +363,7 @@ export default defineComponent({
     // get records list
     const recordsList = computed(() => {
       return store.getters.getBrowserRecordsList({
-        containerUuid: browserUuid
+        containerUuid: browserId
       })
     })
 
@@ -371,7 +371,7 @@ export default defineComponent({
 
     return {
       isLoadedMetadata,
-      browserUuid,
+      browserId,
       browserMetadata,
       containerManager,
       containerManagerProcess,
