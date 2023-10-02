@@ -683,10 +683,10 @@ export default {
       }
       this.$store.commit('setShowPOSCollection', false)
       const posUuid = this.currentPointOfSales.uuid
-      const documentTypeUuid = this.$store.getters.getValueOfField({
-        containerUuid: this.$route.meta.uuid,
-        columnName: 'C_DocTypeTarget_ID_UUID'
-      })
+      // const documentTypeUuid = this.$store.getters.getValueOfField({
+      //   containerUuid: this.$route.meta.uuid,
+      //   columnName: 'C_DocTypeTarget_ID_UUID'
+      // })
       const bpartner = this.$store.getters.getValueOfField({
         containerUuid: this.$route.meta.uuid,
         columnName: 'DisplayColumn_C_BPartner_UUID' // this.parentMetadata.columnName
@@ -701,7 +701,7 @@ export default {
         customerUuid: this.currentPointOfSales.templateCustomer.uuid,
         salesRepresentativeUuid: this.currentPointOfSales.salesRepresentative.uuid,
         priceListUuid: this.$store.getters.currentPriceList.uuid,
-        documentTypeUuid
+        documentTypeUuid: this.currentPointOfSales.documentType.uuid
       })
         .then(response => {
           this.$store.commit('setCurrentPriceList', response.priceList)

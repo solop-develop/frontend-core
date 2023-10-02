@@ -2386,10 +2386,10 @@ export default {
         containerUuid: this.$route.meta.uuid,
         columnName: 'C_BPartner_ID'
       })
-      const documentTypeUuid = this.$store.getters.getValueOfField({
-        containerUuid: this.$route.meta.uuid,
-        columnName: 'C_DocTypeTarget_ID_UUID'
-      })
+      // const documentTypeUuid = this.$store.getters.getValueOfField({
+      //   containerUuid: this.$route.meta.uuid,
+      //   columnName: 'C_DocTypeTarget_ID_UUID'
+      // })
       let customerUuid = isEmptyValue(bpartner) ? this.$store.getters.getNewCustomer.uuid : bpartner
       // TODO: Validate this static identifier
       if (isEmptyValue(customerUuid) || id === 1000006) {
@@ -2399,7 +2399,7 @@ export default {
         posUuid,
         customerUuid: this.currentPointOfSales.templateCustomer.uuid,
         salesRepresentativeUuid: this.currentPointOfSales.salesRepresentative.uuid,
-        documentTypeUuid
+        documentTypeUuid: this.currentPointOfSales.documentType.uuid
       })
         .then(response => {
           this.$store.dispatch('reloadOrder', { orderUuid: response.uuid })
