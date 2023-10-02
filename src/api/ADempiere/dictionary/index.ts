@@ -37,6 +37,21 @@ export function requestWindowMetadata({
 }
 
 /**
+ * Request Get Tabs
+ * @param {number} id
+ */
+export function requestTabsMetadata({
+  id
+}) {
+  return request({
+    url: `/dictionary/tabs/${id}`,
+    method: 'get'
+  })
+    .then(responde => {
+      return responde
+    })
+}
+/**
  * GET Fields
  * @param {String} id
  */
@@ -121,3 +136,96 @@ export function requestBrowserMetadata({
       return convertBrowser(browserResponse)
     })
 }
+
+/**
+ * Request dictionary Forms metadata
+ * @param {number} id, identifier
+ */
+export function requestForm({
+  id
+}) {
+  return request({
+    url: `/dictionary/forms/${id}`,
+    method: 'get'
+  })
+    .then(formResponse => {
+      const { convertForm } = require('@/utils/ADempiere/apiConverts/dictionary.js')
+      return convertForm(formResponse)
+    })
+}
+
+/**
+ * Reques GET Search Info Fields
+ */
+export function tableSearchFields({
+  tableName
+}) {
+  // const table_name = tableName
+  return request({
+    url: `/dictionary/forms/${tableName}`,
+    method: 'get'
+  })
+    .then(response => {
+      const { camelizeObjectKeys } = require('@/utils/ADempiere/transformObject.js')
+      return {
+        recordCount: response.record_count,
+        fieldsList: response.fields.map(field => {
+          return camelizeObjectKeys(field)
+        }),
+        nextPageToken: response.next_page_token
+      }
+    })
+}
+
+/**
+ * Reques GET Identifier Fields
+ */
+export function identifierFields({
+  tableName
+}) {
+  return request({
+    url: `/dictionary/identifier-fields/${tableName}`,
+    method: 'get'
+    // params: {
+    //   table_name: tableName
+    // }
+  })
+    .then(response => {
+      const { convertField } = require('@/utils/ADempiere/apiConverts/field.js')
+
+      return {
+        recordCount: response.record_count,
+        fieldsList: response.fields.map(field => {
+          return convertField(field)
+        }),
+        nextPageToken: response.next_page_token
+      }
+    })
+}
+
+/**
+ * Reques GET Search Fields
+ */
+export function requestSearchFields({
+  tableName
+}) {
+  return request({
+    url: `/dictionary/table-search-fields/${tableName}`,
+    method: 'get'
+    // params: {
+    //   table_name: tableName
+    // }
+  })
+    .then(response => {
+      const { convertField } = require('@/utils/ADempiere/apiConverts/field.js')
+
+      return {
+        recordCount: response.record_count,
+        fieldsList: response.fields.map(field => {
+          return convertField(field)
+        }),
+        nextPageToken: response.next_page_token
+      }
+    })
+}
+

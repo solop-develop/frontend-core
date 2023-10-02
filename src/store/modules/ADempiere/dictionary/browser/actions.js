@@ -89,12 +89,12 @@ export default {
 
           dispatch('setBrowserActionsMenu', {
             parentUuid,
-            containerUuid: browserDefinition.uuid
+            containerUuid: browserDefinition.id
           })
 
           // set default values into fields
           dispatch('setBrowserDefaultValues', {
-            containerUuid: browserDefinition.uuid,
+            containerUuid: browserDefinition.id,
             fieldsList: browserDefinition.fieldsList
           })
           // set parent context
@@ -157,7 +157,7 @@ export default {
                 }
 
                 store.dispatch('startProcessOfBrowser', {
-                  parentUuid: browserDefinition.uuid,
+                  parentUuid: browserDefinition.id,
                   containerUuid: process.uuid
                 }).then(processOutputResponse => {
                   // close current page
@@ -271,7 +271,7 @@ export default {
     actionsList.push(sharedLink)
 
     commit('setActionMenu', {
-      containerUuid: browserDefinition.uuid,
+      containerUuid: browserDefinition.id,
       actionsList
     })
   },
