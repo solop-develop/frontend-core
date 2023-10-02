@@ -972,7 +972,7 @@ export default {
   watch: {
     dateConvertions(value) {
       const currencyFromUuid = this.currentPointOfSales.priceList.currency.uuid
-      const currencyToUuid = this.isEmptyValue(this.selectCurrentFieldCurrency.uuid) ? '' : this.selectCurrentFieldCurrency.uuid
+      const currencyToUuid = this.isEmptyValue(this.selectCurrentFieldCurrency) ? '' : this.selectCurrentFieldCurrency.uuid
       if (!this.isEmptyValue(this.currentPointOfSales.conversionTypeUuid) &&
         !this.isEmptyValue(currencyFromUuid) && !this.isEmptyValue(currencyToUuid) &&
         !isSameValues(currencyFromUuid, currencyToUuid) &&
@@ -1611,11 +1611,14 @@ export default {
      * @param {Object} field
      */
     isDisabledLogiPos(field) {
+      const { columnName } = field
       if (this.isdisplayLogicBank) {
-        const { columnName } = field
         if (columnName === 'ReferenceNo' || columnName === 'DateTrx' || columnName === 'PayAmt') return false
         return !this.isEmptyValue(this.currentBankAccount)
       } else if (this.isdisplayLogicCreditMemo) {
+        if (columnName === 'PayAmt') {
+          return false
+        }
         return !this.isEmptyValue(this.currentCreditMemo)
       }
       return false
