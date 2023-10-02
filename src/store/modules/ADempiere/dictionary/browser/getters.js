@@ -27,20 +27,20 @@ import { isNumberField } from '@/utils/ADempiere/references'
  * Dictionary Browser Getters
  */
 export default {
-  getStoredBrowser: (state) => (browserUuid) => {
-    return state.storedBrowsers[browserUuid]
+  getStoredBrowser: (state) => (browserId) => {
+    return state.storedBrowsers[browserId]
   },
 
-  getStoredFieldsFromBrowser: (state, getters) => (browserUuid) => {
-    const browser = getters.getStoredBrowser(browserUuid)
+  getStoredFieldsFromBrowser: (state, getters) => (browserId) => {
+    const browser = getters.getStoredBrowser(browserId)
     if (!isEmptyValue(browser)) {
       return browser.fieldsList
     }
     return undefined
   },
 
-  getStoredColumnsFromBrowser: (state, getters) => (browserUuid) => {
-    const browser = getters.getStoredBrowser(browserUuid)
+  getStoredColumnsFromBrowser: (state, getters) => (browserId) => {
+    const browser = getters.getStoredBrowser(browserId)
     const columnsList = []
     if (!isEmptyValue(browser)) {
       browser.fieldsList.forEach(field => {
@@ -52,8 +52,8 @@ export default {
     return columnsList
   },
 
-  getProcessOfBrowser: (state, getters, rootState, rootGetters) => (browserUuid) => {
-    const { process } = getters.getStoredBrowser(browserUuid)
+  getProcessOfBrowser: (state, getters, rootState, rootGetters) => (browserId) => {
+    const { process } = getters.getStoredBrowser(browserId)
 
     return process
   },

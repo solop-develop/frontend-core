@@ -144,7 +144,7 @@ export default defineComponent({
     }
     // set uuid from associated browser without menu
     if (!isEmptyValue(root.$route.params) && !isEmptyValue(root.$route.params.browserId)) {
-      browserId = root.$route.params.browserId
+      browserId = root.$route.params.browserId.toString()
     }
     // set uuid from test
     if (!isEmptyValue(props.uuid)) {

@@ -74,7 +74,7 @@
           </div>
           <count-to
             :start-val="0"
-            :end-val="taks.recordCount"
+            :end-val="Number(taks.recordCount)"
             :duration="2600"
             class="card-panel-num"
             style="float: right;"

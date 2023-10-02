@@ -20,7 +20,7 @@ import router from '@/router'
 import language from '@/lang'
 
 // API Request Methods
-import { requestForm } from '@/api/ADempiere/dictionary/form'
+import { requestForm } from '@/api/ADempiere/dictionary/index.ts'
 
 // Utils and Helper Methods
 import { showMessage } from '@/utils/ADempiere/notification'
