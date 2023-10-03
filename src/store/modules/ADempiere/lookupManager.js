@@ -21,7 +21,7 @@ import Vue from 'vue'
 import lang from '@/lang'
 
 // API Request Methods
-import { requestLookupList } from '@/api/ADempiere/window.js'
+import { requestLookupList } from '@/api/ADempiere/userInterface/lookups.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -83,9 +83,9 @@ const lookupManager = {
       containerUuid,
       contextColumnNames = [],
       fieldUuid,
-      processParameterUuid,
-      browseFieldUuid,
-      id,
+      processParameterId,
+      browseFieldId,
+      fieldId,
       //
       referenceUuid,
       searchValue,
@@ -95,11 +95,11 @@ const lookupManager = {
       columnUuid
     }) {
       return new Promise(resolve => {
-        if (isEmptyValue(referenceUuid) && isEmptyValue(fieldUuid) && isEmptyValue(processParameterUuid) && isEmptyValue(browseFieldUuid) &&
-          (isEmptyValue(tableName) && isEmptyValue(columnName))) {
-          resolve([])
-          return
-        }
+        // if (isEmptyValue(referenceUuid) && isEmptyValue(fieldUuid) && isEmptyValue(processParameterUuid) && isEmptyValue(browseFieldUuid) &&
+        //   (isEmptyValue(tableName) && isEmptyValue(columnName))) {
+        //   resolve([])
+        //   return
+        // }
 
         const contextAttributesList = getContextAttributes({
           parentUuid,
@@ -110,14 +110,12 @@ const lookupManager = {
 
         requestLookupList({
           contextAttributesList,
-          fieldUuid,
-          processParameterUuid,
-          browseFieldUuid,
-          id,
+          browseFieldId,
+          processParameterId,
+          fieldId,
           //
           referenceUuid,
           searchValue,
-          //
           tableName,
           columnName,
           columnUuid
@@ -154,10 +152,10 @@ const lookupManager = {
             let key = clientId
             if (!isEmptyValue(fieldUuid)) {
               key += `|${fieldUuid}`
-            } else if (!isEmptyValue(processParameterUuid)) {
-              key += `|${processParameterUuid}`
-            } else if (!isEmptyValue(browseFieldUuid)) {
-              key += `|${browseFieldUuid}`
+            } else if (!isEmptyValue(processParameterId)) {
+              key += `|${processParameterId}`
+            } else if (!isEmptyValue(browseFieldId)) {
+              key += `|${browseFieldId}`
             }
 
             const contextKey = generateContextKey(contextAttributesList)
