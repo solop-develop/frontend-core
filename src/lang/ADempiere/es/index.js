@@ -34,6 +34,7 @@ import infoSearch from './fieldFormSearch'
 import report from './report.js'
 import window from './window'
 import workflow from './workflow'
+import operators from './operators.ts'
 
 /**
  * Translations of Forms
@@ -70,6 +71,7 @@ export default {
   report,
   workflow,
   issues,
+  operators,
 
   language: 'Idioma',
   timeControl,
@@ -271,24 +273,6 @@ export default {
     addNote: 'Agregar Nota',
     emptyNote: 'Este registro no posee ninguna nota',
     descriptionNote: 'Agregar Nota o Comentario al Registro'
-  },
-  operators: {
-    compareSearch: 'Comparar la Búsqueda',
-    operator: 'Operador de comparación',
-    EQUAL: 'Igual a "="',
-    NOT_EQUAL: 'Diferente a "<>"',
-    LIKE: 'Contiene "~"',
-    NOT_LIKE: 'No contiene "!~"',
-    GREATER: 'Mayor que ">"',
-    GREATER_EQUAL: 'Mayor o igual que ">="',
-    LESS: 'Menor que "<"',
-    LESS_EQUAL: 'Menor o igual que "<="',
-    BETWEEN: 'Dentro de ">-<"',
-    NOT_BETWEEN: 'Fuera de "<->"',
-    NULL: 'No tiene valor',
-    NOT_NULL: 'Tiene un valor',
-    IN: 'Incluye "()"',
-    NOT_IN: 'No incluye "!()"'
   },
   quickAccess: {
     newRecord: 'Acceso Rápido para Crear Registro Nuevo',

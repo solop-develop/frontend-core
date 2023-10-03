@@ -21,7 +21,7 @@
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export const OPERATOR_EQUAL = {
-  operator: 'EQUAL',
+  operator: 'equal',
   sqlOperators: [
     '='
   ],
@@ -29,7 +29,7 @@ export const OPERATOR_EQUAL = {
 }
 
 export const OPERATOR_NOT_EQUAL = {
-  operator: 'NOT_EQUAL',
+  operator: 'not_equal',
   sqlOperators: [
     '!=',
     '<>'
@@ -38,23 +38,23 @@ export const OPERATOR_NOT_EQUAL = {
 }
 
 export const OPERATOR_LIKE = {
-  operator: 'LIKE',
+  operator: 'like',
   sqlOperators: [
-    'LIKE'
+    'like'
   ],
   symbol: '%'
 }
 
 export const OPERATOR_NOT_LIKE = {
-  operator: 'NOT_LIKE',
+  operator: 'not_like',
   sqlOperators: [
-    'NOT LIKE'
+    'not_like'
   ],
   symbol: '!%'
 }
 
 export const OPERATOR_GREATER = {
-  operator: 'GREATER',
+  operator: 'greater',
   sqlOperators: [
     '>'
   ],
@@ -62,7 +62,7 @@ export const OPERATOR_GREATER = {
 }
 
 export const OPERATOR_GREATER_EQUAL = {
-  operator: 'GREATER_EQUAL',
+  operator: 'greater_equal',
   sqlOperators: [
     '>='
   ],
@@ -70,7 +70,7 @@ export const OPERATOR_GREATER_EQUAL = {
 }
 
 export const OPERATOR_LESS = {
-  operator: 'LESS',
+  operator: 'lesss',
   sqlOperators: [
     '<'
   ],
@@ -78,7 +78,7 @@ export const OPERATOR_LESS = {
 }
 
 export const OPERATOR_LESS_EQUAL = {
-  operator: 'LESS_EQUAL',
+  operator: 'less_equal',
   sqlOperators: [
     '<='
   ],
@@ -86,49 +86,49 @@ export const OPERATOR_LESS_EQUAL = {
 }
 
 export const OPERATOR_BETWEEN = {
-  operator: 'BETWEEN',
+  operator: 'between',
   sqlOperators: [
-    'BETWEEN'
+    'between'
   ],
   symbol: '>-<'
 }
 
 export const OPERATOR_NOT_BETWEEN = {
-  operator: 'NOT_BETWEEN',
+  operator: 'not_between',
   sqlOperators: [
-    'NOT_BETWEEN'
+    'not_between'
   ],
   symbol: '<->'
 }
 
 export const OPERATOR_NULL = {
-  operator: 'NULL',
+  operator: 'null',
   sqlOperators: [
-    'IS NULL'
+    'is null'
   ],
   symbol: ''
 }
 
 export const OPERATOR_NOT_NULL = {
-  operator: 'NOT_NULL',
+  operator: 'not_null',
   sqlOperators: [
-    'IS NOT NULL'
+    'is not null'
   ],
   symbol: ''
 }
 
 export const OPERATOR_IN = {
-  operator: 'IN',
+  operator: 'in',
   sqlOperators: [
-    'IN'
+    'in'
   ],
   symbol: '()'
 }
 
 export const OPERATOR_NOT_IN = {
-  operator: 'NOT_IN',
+  operator: 'not_in',
   sqlOperators: [
-    'NOT IN'
+    'not in'
   ],
   symbol: '!()'
 }
