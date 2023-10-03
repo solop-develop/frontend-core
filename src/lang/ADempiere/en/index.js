@@ -35,6 +35,7 @@ import report from './report.js'
 import window from './window'
 import workflow from './workflow'
 import issues from './form/issues'
+import operators from './operators.ts'
 /**
  * Translations of Forms
  */
@@ -71,6 +72,7 @@ export default {
   report,
   workflow,
   issues,
+  operators,
 
   language: 'Language',
   notifications: {
@@ -270,24 +272,6 @@ export default {
     addNote: 'Add Note',
     emptyNote: 'Este registro no posee ninguna nota',
     descriptionNote: 'Add Note or Comment to Record'
-  },
-  operators: {
-    compareSearch: 'Compare the Search',
-    operator: 'Comparison operator',
-    EQUAL: 'Equal to "="',
-    NOT_EQUAL: 'Not equal to "<>"',
-    LIKE: 'Like "~"',
-    NOT_LIKE: 'Not like "!~"',
-    GREATER: 'Greater than ">"',
-    GREATER_EQUAL: 'Greater than equal to ">="',
-    LESS: 'Less than "<"',
-    LESS_EQUAL: 'Less than equal to "<="',
-    BETWEEN: 'Between ">-<"',
-    NOT_BETWEEN: 'Not between "<->"',
-    NOT_NULL: 'Is not null',
-    NULL: 'Is null',
-    IN: 'Include "()"',
-    NOT_IN: 'Not include "!()"'
   },
   quickAccess: {
     newRecord: 'Quick Access to Create New Record',

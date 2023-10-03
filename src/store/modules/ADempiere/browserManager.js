@@ -20,7 +20,8 @@ import Vue from 'vue'
 import language from '@/lang'
 
 // API Request Methods
-import { requestBrowserSearch, updateBrowserEntity, requestDeleteBrowser } from '@/api/ADempiere/browser'
+import { updateBrowserEntity, requestDeleteBrowser } from '@/api/ADempiere/browser'
+import { requestBrowserSearch } from '@/api/ADempiere/userInterface/browserList.ts'
 
 // Constants
 import {
@@ -162,10 +163,22 @@ const browserControl = {
         }
 
         // parameters isQueryCriteria
-        const parametersList = rootGetters.getBrowserQueryCriteria({
+        const filters = rootGetters.getBrowserQueryCriteria({
           containerUuid,
           fieldsList
-        })
+        }).map(parameter => {
+          const {
+            columnName,
+            operator,
+            value,
+            valueTo
+          } = parameter
+          return JSON.stringify({
+            name: columnName,
+            operator,
+            values: !isEmptyValue(valueTo) ? [value, valueTo] : value
+          })
+        }).toString()
 
         // get context values
         const contextAttributesList = getContextAttributes({
@@ -205,16 +218,16 @@ const browserControl = {
         const pageToken = generatePageToken({ pageNumber })
 
         requestBrowserSearch({
-          uuid: containerUuid,
+          id: containerUuid,
           contextAttributesList,
-          parametersList,
+          filters: '[' + filters + ']',
           nextPageToken: pageToken,
           pageSize
         })
           .then(browserSearchResponse => {
-            const recordsList = browserSearchResponse.recordsList.map((record, rowIndex) => {
+            const recordsList = browserSearchResponse.records.map((record, rowIndex) => {
               return {
-                ...record.attributes,
+                ...record.values,
                 // datatables app attributes
                 ...ROW_ATTRIBUTES,
                 rowIndex
