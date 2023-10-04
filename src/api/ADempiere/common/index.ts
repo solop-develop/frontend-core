@@ -114,13 +114,6 @@ export function requestWarehousesList({
       page_size: pageSize
     }
   })
-    .then(warehousesListResponse => {
-      return {
-        nextPageToken: warehousesListResponse.next_page_token,
-        recordCount: warehousesListResponse.record_count,
-        warehousesList: warehousesListResponse.records
-      }
-    })
 }
 
 /**

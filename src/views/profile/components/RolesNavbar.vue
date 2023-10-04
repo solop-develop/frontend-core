@@ -11,7 +11,6 @@
         :key="key"
         :label="role.name"
         :value="role.id"
-        :disabled="isEmptyValue(role.uuid)"
       />
     </el-select>
 
@@ -27,7 +26,6 @@
         :key="key"
         :label="organization.name"
         :value="organization.id"
-        :disabled="isEmptyValue(organization.uuid)"
       />
     </el-select>
 
@@ -43,7 +41,6 @@
         :key="key"
         :label="warehouse.name"
         :value="warehouse.id"
-        :disabled="isEmptyValue(warehouse.uuid)"
       />
     </el-select>
   </el-form>
