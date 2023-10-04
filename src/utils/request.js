@@ -92,7 +92,12 @@ service.interceptors.response.use(
   },
   error => {
     console.log('err' + error) // for debug
-    const message = isEmptyValue(error.response.data.message) ? error.message : error.response.data.message
+    let message = error
+    if (error.response && error.response.data && isEmptyValue(error.response.data.message)) {
+      message = error
+    } else if (error.message) {
+      message = error.message
+    }
     Message({
       message: message,
       type: 'error',

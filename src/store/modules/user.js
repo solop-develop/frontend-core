@@ -497,12 +497,16 @@ const actions = {
         })
       })
       .catch(error => {
+        let messageError = error
+        if (error.message) {
+          messageError = error.message
+        }
         showMessage({
-          message: error.message,
+          message: messageError,
           type: 'error',
           showClose: true
         })
-        console.warn(`Error change role: ${error.message}. Code: ${error.code}.`)
+        console.warn(`Error change role: ${messageError}. Code: ${error.code}.`)
       })
       .finally(() => {
         dispatch('permission/sendRequestMenu', null, {
@@ -537,12 +541,13 @@ const actions = {
       organizationId
     })
       .then(response => {
-        commit('SET_WAREHOUSES_LIST', response.warehousesList)
-        let warehouse = response.warehousesList.find(warehouseItem => {
+        const { warehouses } = response
+        commit('SET_WAREHOUSES_LIST', warehouses)
+        let warehouse = warehouses.find(warehouseItem => {
           return warehouseItem.id === getCurrentWarehouse()
         })
-        if (isEmptyValue(warehouse) && !isEmptyValue(response.warehousesList)) {
-          warehouse = response.warehousesList.at(0)
+        if (isEmptyValue(warehouse) && !isEmptyValue(warehouses)) {
+          warehouse = warehouses.at(0)
         }
 
         let warehouseId = -1
