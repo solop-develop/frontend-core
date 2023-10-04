@@ -92,10 +92,10 @@ const defaultValueManager = {
         value: undefined
       }
       return new Promise(resolve => {
-        // if (isEmptyValue(id) && isEmptyValue(fieldUuid) && isEmptyValue(processParameterUuid) && isEmptyValue(browseFieldUuid)) {
-        //   resolve(defaultEmptyResponse)
-        //   return
-        // }
+        if (isEmptyValue(id) && isEmptyValue(uuid) && isEmptyValue(processParameterId) && isEmptyValue(browseFieldId)) {
+          resolve(defaultEmptyResponse)
+          return
+        }
 
         const contextAttributesList = getContextAttributes({
           parentUuid,
