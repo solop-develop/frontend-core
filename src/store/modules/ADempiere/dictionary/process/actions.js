@@ -82,14 +82,14 @@ export default {
   seProcessActionsMenu({ commit, getters }, {
     containerUuid
   }) {
-    const processDefinition = getters.getStoredProcess(containerUuid)
+    // const processDefinition = getters.getStoredProcess(containerUuid)
 
     const actionsList = []
 
     // execute process action
     const actionExecute = {
-      ...runProcess,
-      description: processDefinition.description
+      ...runProcess
+      // description: processDefinition.description
     }
     actionsList.push(actionExecute)
     actionsList.push(clearParameters)

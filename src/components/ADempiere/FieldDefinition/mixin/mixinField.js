@@ -238,6 +238,7 @@ export default {
     getDefaultValueFromServer() {
       if (this.containerManager && this.containerManager.getDefaultValue) {
         return this.containerManager.getDefaultValue({
+          ...this.metadata,
           parentUuid: this.metadata.parentUuid,
           containerUuid: this.metadata.containerUuid,
           contextColumnNames: this.metadata.contextColumnNames,

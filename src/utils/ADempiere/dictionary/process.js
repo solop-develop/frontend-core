@@ -279,31 +279,30 @@ export const containerManager = {
       parentUuid,
       containerUuid,
       contextColumnNames,
-      processParameterUuid: uuid,
-      id,
+      processParameterId: id,
       //
       columnName,
       value
     })
   },
-  getLookupList({ parentUuid, containerUuid, contextColumnNames, uuid, searchValue, isAddBlankValue = false, blankValue }) {
+  getLookupList({ parentUuid, containerUuid, contextColumnNames, id, searchValue, isAddBlankValue = false, blankValue }) {
     return store.dispatch('getLookupListFromServer', {
       parentUuid,
       containerUuid,
       contextColumnNames,
-      processParameterUuid: uuid,
+      processParameterId: id,
       searchValue,
       // app attributes
       isAddBlankValue,
       blankValue
     })
   },
-  getSearchInfoList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, uuid, filters, searchValue, pageNumber }) {
+  getSearchInfoList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, id, filters, searchValue, pageNumber }) {
     return store.dispatch('searchInfoList', {
       parentUuid,
       containerUuid,
       contextColumnNames,
-      processParameterUuid: uuid,
+      processParameterId: id,
       tableName,
       columnName,
       filters,
@@ -316,7 +315,7 @@ export const containerManager = {
     containerUuid,
     contextColumnNames,
     filters,
-    uuid,
+    id,
     searchValue,
     tableName,
     columnName,
@@ -326,7 +325,7 @@ export const containerManager = {
       containerUuid,
       contextColumnNames,
       filters,
-      processParameterUuid: uuid,
+      processParameterId: id,
       searchValue,
       tableName,
       columnName,
@@ -348,7 +347,7 @@ export const containerManager = {
     warehouseId,
     contextColumnNames,
     contextAttributesList,
-    uuid,
+    id,
     searchValue,
     // tableName,
     // columnName,
@@ -361,7 +360,7 @@ export const containerManager = {
       warehouseId,
       contextColumnNames,
       contextAttributesList,
-      processParameterUuid: uuid,
+      processParameterId: id,
       searchValue,
       // tableName,
       // columnName,

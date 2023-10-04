@@ -22,7 +22,7 @@ import Vue from 'vue'
  */
 export default {
   addProcessToList(state, process) {
-    Vue.set(state.storedProcesses, process.uuid, process)
+    Vue.set(state.storedProcesses, process.id, process)
   },
 
   /**
@@ -44,10 +44,10 @@ export default {
    * @param {string} attributeValue - Value of the Attribute to change
    */
   changeProcessAttribute(state, {
-    uuid,
+    id,
     attributeName,
     attributeValue
   }) {
-    Vue.set(state.storedProcesses[uuid], attributeName, attributeValue)
+    Vue.set(state.storedProcesses[id], attributeName, attributeValue)
   }
 }
