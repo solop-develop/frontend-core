@@ -180,6 +180,7 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
   function getDefaultValueFromServer() {
     if (containerManager && containerManager.getDefaultValue) {
       return containerManager.getDefaultValue({
+        ...fieldMetadata,
         parentUuid: fieldMetadata.parentUuid,
         containerUuid: fieldMetadata.containerUuid,
         contextColumnNames: fieldMetadata.contextColumnNames,
