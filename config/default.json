@@ -6,7 +6,7 @@
   "adempiere": {
     "api": {
       "dictionary": "http://localhost:7878/v1/",
-      "url": "http://192.168.5.102/api/",
+      "url": "http://localhost:8080/api/",
       "timeout": 99999999
     },
     "images": {
