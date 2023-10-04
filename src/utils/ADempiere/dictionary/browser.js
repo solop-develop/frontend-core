@@ -474,15 +474,16 @@ export const containerManager = {
   /**
    * @returns Promisse with value and displayedValue
    */
-  getDefaultValue({ parentUuid, containerUuid, uuid, id, contextColumnNames, columnName, value }) {
+  getDefaultValue({ parentUuid, containerUuid, name, uuid, id, contextColumnNames, columnName, value }) {
     return store.dispatch('getDefaultValueFromServer', {
       parentUuid,
       containerUuid,
       contextColumnNames,
-      browseFieldUuid: uuid,
-      id,
+      browseFieldId: id,
+      uuid,
+      // id,
       //
-      columnName,
+      // columnName,
       value
     }).then(response => {
       if (!isEmptyValue(response.value)) {
