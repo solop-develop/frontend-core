@@ -149,7 +149,8 @@ export default {
     searchRecord: 'Buscar Registro',
     fixedleItems: 'Columnas Fijas',
     switchActiveText: 'Si',
-    switchInactiveText: 'No'
+    switchInactiveText: 'No',
+    todoList: 'Por Hacer'
   },
   grid: {
     recordAccess: {

@@ -2,7 +2,7 @@
   <section class="todoapp">
     <!-- header -->
     <header class="header">
-      <input class="new-todo" autocomplete="off" placeholder="Por Hacer" @keyup.enter="addTodo">
+      <input class="new-todo" autocomplete="off" :placeholder="$t('components.todoList')" @keyup.enter="addTodo">
     </header>
     <!-- main section -->
     <section v-show="todos.length" class="main">

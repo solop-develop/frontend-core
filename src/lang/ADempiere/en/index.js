@@ -148,7 +148,8 @@ export default {
     searchRecord: 'Search Record',
     fixedleItems: 'Fixed Columns',
     switchActiveText: 'Yes',
-    switchInactiveText: 'Not'
+    switchInactiveText: 'Not',
+    todoList: 'Todo List'
   },
   grid: {
     recordAccess: {
