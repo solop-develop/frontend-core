@@ -489,6 +489,7 @@
                   :center="true"
                   :modal="false"
                   :append-to-body="true"
+                  custom-class="dialog-return-product"
                   width="90%"
                 >
                   <return-product />
@@ -668,7 +669,7 @@
       close-on-press-escape
       width="70%"
       center
-      class="dialogo-seller"
+      class="dialog-seller"
     >
       <mnemonic-command />
     </el-dialog>
@@ -680,7 +681,7 @@
       close-on-press-escape
       width="80%"
       center
-      class="dialogo-seller"
+      class="dialog-seller"
       @shortkey.native="cashManagementModal"
     >
       <component
@@ -890,6 +891,7 @@
       :center="true"
       :title="$t('form.pos.returnProduct')"
       width="80%"
+      custom-class="dialog-return-product"
     >
       <el-result
         v-if="!isEmptyValue(summaryReturnProduct)"
@@ -924,7 +926,7 @@
     </el-dialog>
     <el-dialog
       :title="$t('form.pos.optionsPoinSales.salesOrder.confirmDelivery')"
-      :visible.sync="showDialogoDelivery"
+      :visible.sync="showDialogDelivery"
       :center="true"
       :modal="false"
       :append-to-body="true"
@@ -968,13 +970,13 @@
                 type="danger"
                 class="custom-button-create-bp"
                 icon="el-icon-close"
-                @click="showDialogoDelivery = !showDialogoDelivery"
+                @click="showDialogDelivery = !showDialogDelivery"
               />
               <el-button
                 type="primary"
                 class="custom-button-create-bp"
                 icon="el-icon-check"
-                @click="showDialogoDelivery = !showDialogoDelivery"
+                @click="showDialogDelivery = !showDialogDelivery"
               />
             </samp>
           </el-col>
@@ -1102,7 +1104,7 @@ export default {
     summaryReturnProduct() {
       return this.$store.getters.getSummaryRMA
     },
-    showDialogoDelivery: {
+    showDialogDelivery: {
       get() {
         return this.$store.getters.getShowConfirmDelivery
       },
@@ -2384,10 +2386,10 @@ export default {
         containerUuid: this.$route.meta.uuid,
         columnName: 'C_BPartner_ID'
       })
-      const documentTypeUuid = this.$store.getters.getValueOfField({
-        containerUuid: this.$route.meta.uuid,
-        columnName: 'C_DocTypeTarget_ID_UUID'
-      })
+      // const documentTypeUuid = this.$store.getters.getValueOfField({
+      //   containerUuid: this.$route.meta.uuid,
+      //   columnName: 'C_DocTypeTarget_ID_UUID'
+      // })
       let customerUuid = isEmptyValue(bpartner) ? this.$store.getters.getNewCustomer.uuid : bpartner
       // TODO: Validate this static identifier
       if (isEmptyValue(customerUuid) || id === 1000006) {
@@ -2397,7 +2399,7 @@ export default {
         posUuid,
         customerUuid: this.currentPointOfSales.templateCustomer.uuid,
         salesRepresentativeUuid: this.currentPointOfSales.salesRepresentative.uuid,
-        documentTypeUuid
+        documentTypeUuid: this.currentPointOfSales.documentType.uuid
       })
         .then(response => {
           this.$store.dispatch('reloadOrder', { orderUuid: response.uuid })
@@ -2537,12 +2539,18 @@ export default {
     background-color:white;
     background:white;
   }
-  .dialogo-seller {
+  .dialog-seller {
     overflow: hidden;
   }
 </style>
 <style>
   .el-textarea__inner:hover {
     background-color: #FFFFFF!important;
+  }
+  .dialog-return-product {
+    height: 70%;
+    .el-dialog__body {
+      height: -webkit-fill-available;
+    }
   }
 </style>

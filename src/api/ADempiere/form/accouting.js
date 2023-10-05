@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,66 @@ import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+
+export function requestListAccoutingSchemas({
+  searchValue,
+  pageToken,
+  pageSize = 100
+}) {
+  return request({
+    url: '/general-ledger/accounting-schemas',
+    method: 'get',
+    params: {
+      page_size: pageSize,
+      page_token: pageToken,
+      //  DSL Query
+      search_value: searchValue
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+export function requestListOrganizations({
+  searchValue,
+  pageToken,
+  pageSize = 100
+}) {
+  return request({
+    url: '/general-ledger/organizations',
+    method: 'get',
+    params: {
+      page_size: pageSize,
+      page_token: pageToken,
+      //  DSL Query
+      search_value: searchValue
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+export function requestPostingTypesList({
+  searchValue,
+  pageToken,
+  pageSize = 100
+}) {
+  return request({
+    url: '/general-ledger/posting-types',
+    method: 'get',
+    params: {
+      page_size: pageSize,
+      page_token: pageToken,
+      //  DSL Query
+      search_value: searchValue
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
 
 export function requestAccountingFacts({
   tableName,
@@ -88,66 +148,6 @@ export function requestStartRePost({
       //  Page Data
       page_size: pageSize,
       page_token: pageToken
-    }
-  })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
-}
-
-export function listAccoutingSchemasRequest({
-  searchValue,
-  pageToken,
-  pageSize = 100
-}) {
-  return request({
-    url: '/general-ledger/accounting-schemas',
-    method: 'get',
-    params: {
-      page_size: pageSize,
-      page_token: pageToken,
-      //  DSL Query
-      search_value: searchValue
-    }
-  })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
-}
-
-export function listPostingTypesRequest({
-  searchValue,
-  pageToken,
-  pageSize = 100
-}) {
-  return request({
-    url: '/general-ledger/posting-types',
-    method: 'get',
-    params: {
-      page_size: pageSize,
-      page_token: pageToken,
-      //  DSL Query
-      search_value: searchValue
-    }
-  })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
-}
-
-export function listOrganizationsRequest({
-  searchValue,
-  pageToken,
-  pageSize = 100
-}) {
-  return request({
-    url: '/general-ledger/list-organizations',
-    method: 'get',
-    params: {
-      page_size: pageSize,
-      page_token: pageToken,
-      //  DSL Query
-      search_value: searchValue
     }
   })
     .then(response => {

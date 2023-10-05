@@ -201,6 +201,8 @@ const processManager = {
         requestRunProcess({
           uuid: containerUuid,
           parametersList,
+          // in browser
+          browserId: browserDefinition.id,
           // in window
           recordId,
           // TODO: Add support to tableSelectedId

@@ -31,6 +31,52 @@ const staticRoutes = [
   },
 
   {
+    path: '/calendar',
+    component: Layout,
+    hidden: false,
+    children: [
+      {
+        path: '/calendar',
+        component: () => import('@/views/ADempiere/CalendarView'),
+        name: 'calendar',
+        meta: {
+          title: language.t('component.calendar.calendar'),
+          fileName: 'AcctViewer',
+          icon: 'el-icon-date',
+          noCache: true,
+          isIndex: true
+        }
+      }
+    ]
+  },
+
+  {
+    path: '/acct-viewer',
+    component: Layout,
+    hidden: false,
+    validateToEnable: ({ role }) => {
+      if (!role) {
+        return false
+      }
+      return Boolean(role.isAllowInfoAccount)
+    },
+    children: [
+      {
+        path: '/acct-viewer',
+        component: () => import('@/views/ADempiere/Form'),
+        name: 'acct-viewer',
+        meta: {
+          title: 'Acctouting Viewer',
+          fileName: 'AcctViewer',
+          icon: 'balance',
+          noCache: true,
+          isIndex: true
+        }
+      }
+    ]
+  },
+
+  {
     path: '/ProcessActivity',
     component: Layout,
     meta: {
@@ -158,6 +204,12 @@ const staticRoutes = [
     path: '/ProductInfo',
     component: Layout,
     hidden: false,
+    validateToEnable: ({ role }) => {
+      if (!role) {
+        return false
+      }
+      return Boolean(role.isAllowInfoProduct)
+    },
     children: [
       {
         path: '/ProductInfo',

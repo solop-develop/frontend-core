@@ -1,7 +1,7 @@
 <template>
   <el-row class="item-wrapper">
     <el-col :span="3" :style="iconMargin">
-      <i v-if="icon.includes('el-icon')" class="icon sub-el-icon" />
+      <i v-if="icon.includes('el-icon')" :class="'icon sub-el-icon ' + icon" />
       <svg-icon v-else :icon-class="icon" />
     </el-col>
     <el-col :span="21">

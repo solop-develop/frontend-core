@@ -17,6 +17,7 @@
  */
 
 import attachment from './attachment'
+import calendar from './calendar'
 import dashboard from './dashboard'
 import date from './date'
 import sequenceSort from './sequenceSort'
@@ -24,6 +25,7 @@ import tree from './tree'
 
 export default {
   attachment,
+  calendar,
   dashboard,
   date,
   sequenceSort,

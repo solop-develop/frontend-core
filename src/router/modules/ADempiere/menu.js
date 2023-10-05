@@ -29,10 +29,6 @@ import { requestMenu } from '@/api/ADempiere/security/index.ts'
 import { convertAction } from '@/utils/ADempiere/dictionaryUtils.js'
 import { getCurrentClient, getCurrentOrganization, getCurrentRole } from '@/utils/ADempiere/auth'
 
-export const HIDDEN_ROUTES = [
-  '/ProductInfo'
-]
-
 /**
  * Get Menu from server
  * @author Elsio Sanchez <elsiosanches@gmail.com>
@@ -210,18 +206,19 @@ function getRouteFromMenuItem({ menu, clientId, roleId, organizationId }) {
  * @returns {object} routes with hidden/show
  */
 function hidenStactiRoutes({ staticRoutes, permiseRole }) {
-  const { isAllowInfoProduct } = permiseRole
-  if (!isAllowInfoProduct) {
-    // does not change the hidden visibility of ProductInfo
+  if (!permiseRole) {
     return staticRoutes
   }
 
   return staticRoutes.map(route => {
-    if (HIDDEN_ROUTES.includes(route.path)) {
+    if (route.validateToEnable) {
+      const isShow = route.validateToEnable({
+        role: permiseRole
+      })
       return {
         ...route,
         // is hidden by default, change to be visible
-        hidden: false
+        hidden: !isShow
       }
     }
     return {

@@ -117,11 +117,15 @@ const system = {
     getLanguagesList: (state) => {
       return state.languagesList
     },
-    getCurrentLanguageDefinition: (state) => {
+    getCurrentLanguage: (state) => {
       let { language } = state.systemDefinition
       if (isEmptyValue(language)) {
         language = 'en_US'
       }
+      return language
+    },
+    getCurrentLanguageDefinition: (state, getters) => {
+      const language = getters.getCurrentLanguage
       return state.languagesList.find(definition => {
         return definition.language === language
       })
