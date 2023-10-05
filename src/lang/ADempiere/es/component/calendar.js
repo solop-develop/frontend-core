@@ -16,18 +16,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import attachment from './attachment'
-import calendar from './calendar'
-import dashboard from './dashboard'
-import date from './date'
-import sequenceSort from './sequenceSort'
-import tree from './tree'
-
-export default {
-  attachment,
-  calendar,
-  dashboard,
-  date,
-  sequenceSort,
-  tree
+const calendar = {
+  allEvents: 'Todos los Eventos',
+  calendar: 'Calendario',
+  deleteEventConfirm: '¿Seguro de que quiere eliminar el evento?',
+  titleNewEvent: 'Por favor ingresa un nuevo título para tu evento'
 }
+
+export default calendar

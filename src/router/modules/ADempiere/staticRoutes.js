@@ -31,6 +31,26 @@ const staticRoutes = [
   },
 
   {
+    path: '/calendar',
+    component: Layout,
+    hidden: false,
+    children: [
+      {
+        path: '/calendar',
+        component: () => import('@/views/ADempiere/CalendarView'),
+        name: 'calendar',
+        meta: {
+          title: language.t('component.calendar.calendar'),
+          fileName: 'AcctViewer',
+          icon: 'el-icon-date',
+          noCache: true,
+          isIndex: true
+        }
+      }
+    ]
+  },
+
+  {
     path: '/acct-viewer',
     component: Layout,
     hidden: false,
