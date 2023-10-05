@@ -27,7 +27,7 @@
         />
       </el-steps>
     </div>
-    <div style="height: 80% !important;">
+    <div style="height: 79% !important;">
       <transition name="el-fade-in-linear">
         <search-criteria
           v-if="currentSetp === 1"
