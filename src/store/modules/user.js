@@ -20,6 +20,7 @@ import language from '@/lang'
 
 // Constants
 import { ORGANIZATION, WAREHOUSE } from '@/utils/ADempiere/constants/systemColumns'
+import { title } from '@/settings'
 
 // API Request Methods
 import {
@@ -696,12 +697,34 @@ const actions = {
     return new Promise(resolve => {
       systemInfo()
         .then(response => {
+          if (isEmptyValue(response)) {
+            resolve()
+            return
+          }
           const info = camelizeObjectKeys(response)
+          let systemName = title
+          if (!isEmptyValue(info.name)) {
+            systemName = info.name
+          }
           commit('setSystem', {
             ...info,
-            name: isEmptyValue(info.name) ? 'ADempiere' : info.name
+            name: systemName
           })
-          resolve(response)
+          // tab browser title
+          window.document.title = response.name
+
+          // tab browser favicon
+          if (isEmptyValue(info.logoUrl)) {
+            let link = document.querySelector("link[rel~='icon']")
+            if (!link) {
+              link = document.createElement('link')
+              link.rel = 'icon'
+              document.head.appendChild(link)
+            }
+            link.href = info.logoUrl
+          }
+
+          resolve(info)
         })
         .catch(error => {
           commit('setSystem', {})
