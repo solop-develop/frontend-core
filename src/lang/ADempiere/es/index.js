@@ -41,7 +41,6 @@ import operators from './operators.ts'
  */
 import actionNotice from './form/actionNotice'
 import payrollActionNotice from './form/payrollActionNotice'
-import accounting from './form/accounting'
 import pointOfSales from './form/pointOfSales'
 import listStoreProduct from './form/listStoreProduct'
 import timeControl from './form/timeControl'
@@ -66,7 +65,6 @@ export default {
   actionNotice,
   payrollActionNotice,
   pointOfSales,
-  accounting,
   listStoreProduct,
   report,
   workflow,
@@ -153,7 +151,8 @@ export default {
     searchRecord: 'Buscar Registro',
     fixedleItems: 'Columnas Fijas',
     switchActiveText: 'Si',
-    switchInactiveText: 'No'
+    switchInactiveText: 'No',
+    todoList: 'Por Hacer'
   },
   grid: {
     recordAccess: {

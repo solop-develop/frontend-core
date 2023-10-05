@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,12 +41,14 @@ import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 export function requestRunProcess({
   id,
   uuid,
+  parametersList = [],
+  // window
   tableName,
   recordId,
   recordUuid,
-  parametersList = [],
-  selectionsList = [],
-  tableSelectedId
+  // browse
+  browserId,
+  selectionsList = []
 }) {
   parametersList = parametersList.map(parameter => {
     return {
@@ -61,11 +63,13 @@ export function requestRunProcess({
     data: {
       id,
       uuid,
+      parameters: parametersList,
+      //
       table_name: tableName,
       record_id: recordId,
       record_uuid: recordUuid,
-      table_selected_id: tableSelectedId,
-      parameters: parametersList,
+      //
+      browser_id: browserId,
       selections: selectionsList
     }
   })

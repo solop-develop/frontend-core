@@ -16,6 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import accountingViewer from './accountingViewer'
 import mnemonicCommand from './mnemonicCommand.js'
 import expressShipment from './expressShipment.js'
 import expressMovement from './expressMovement.js'
@@ -31,6 +32,7 @@ import match from './match'
 import tasks from './tasks'
 
 export default {
+  accountingViewer,
   workflowActivity,
   mnemonicCommand,
   expressShipment,

@@ -41,7 +41,6 @@ import operators from './operators.ts'
  */
 import actionNotice from './form/actionNotice'
 import payrollActionNotice from './form/payrollActionNotice'
-import accounting from './form/accounting'
 import pointOfSales from './form/pointOfSales'
 import listStoreProduct from './form/listStoreProduct'
 import timeControl from './form/timeControl'
@@ -65,7 +64,6 @@ export default {
   actionNotice,
   payrollActionNotice,
   pointOfSales,
-  accounting,
   listStoreProduct,
   timeControl,
   VPayPrint,
@@ -152,7 +150,8 @@ export default {
     searchRecord: 'Search Record',
     fixedleItems: 'Fixed Columns',
     switchActiveText: 'Yes',
-    switchInactiveText: 'Not'
+    switchInactiveText: 'Not',
+    todoList: 'Todo List'
   },
   grid: {
     recordAccess: {

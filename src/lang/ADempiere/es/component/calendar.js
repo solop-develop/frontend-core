@@ -16,34 +16,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import accountingViewer from './accountingViewer'
-import mnemonicCommand from './mnemonicCommand.js'
-import expressShipment from './expressShipment.js'
-import expressMovement from './expressMovement.js'
-import workflowActivity from './workflowActivity'
-import expressReceipt from './expressReceipt.js'
-import priceChecking from './priceChecking'
-import productInfo from './productInfo'
-import VAllocation from './VAllocation'
-import VBankStatementMatch from './VBankStatementMatch'
-import VFileImport from './VFileImport'
-import timeRecord from './timeRecord'
-import match from './match'
-import tasks from './tasks'
-
-export default {
-  accountingViewer,
-  workflowActivity,
-  mnemonicCommand,
-  expressShipment,
-  expressMovement,
-  expressReceipt,
-  priceChecking,
-  productInfo,
-  VAllocation,
-  VBankStatementMatch,
-  VFileImport,
-  timeRecord,
-  match,
-  tasks
+const calendar = {
+  allEvents: 'Todos los Eventos',
+  calendar: 'Calendario',
+  deleteEventConfirm: '¿Seguro de que quiere eliminar el evento?',
+  titleNewEvent: 'Por favor ingresa un nuevo título para tu evento'
 }
+
+export default calendar

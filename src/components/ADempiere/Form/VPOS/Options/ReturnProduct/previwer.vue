@@ -27,7 +27,7 @@ along with this program.  If not, see <https:www.gnu.org/licenses/>.
       fit
       :empty-text="$t('quickAccess.searchWithEnter')"
       :border="true"
-      height="300"
+      style="height: 60% !important;"
       highlight-current-row
     >
       <template v-for="(valueOrder, item, key) in orderLineDefinition">
@@ -459,6 +459,7 @@ export default defineComponent({
 .return-product {
   padding: 0px;
   width: 100%;
+  height: -webkit-fill-available;
   overflow-x: hidden;
 }
 .order-info {

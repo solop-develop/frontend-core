@@ -67,7 +67,7 @@ import language from '@/lang'
 import store from '@/store'
 
 // Components and Mixins
-import Accounting from './Component/Accounting/index.vue'
+import AcctViewer from '@/components/ADempiere/Form/AcctViewer'
 import AttachmentManager from './Component/AttachmentManager/index.vue'
 import RecordLogs from './Component/RecordLogs/index.vue'
 import recordIssues from './Component/RecordIssues/index.vue'
@@ -90,7 +90,7 @@ export default defineComponent({
   name: 'ContainerInfo',
 
   components: {
-    Accounting,
+    AcctViewer,
     AttachmentManager,
     RecordLogs,
     RecordNotes,
@@ -210,7 +210,7 @@ export default defineComponent({
           svg: true,
           isLoading: false,
           iconClass: 'balance',
-          component: () => import('./Component/Accounting/index.vue')
+          component: AcctViewer // () => import('@/components/ADempiere/Form/AcctViewer')
         },
         {
           name: 'listProductStorage',
