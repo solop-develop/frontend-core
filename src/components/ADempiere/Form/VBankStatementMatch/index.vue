@@ -69,7 +69,7 @@
         type="primary"
         class="button-base-icon"
         icon="el-icon-document-delete"
-        :disabled="isxUnMatch"
+        :disabled="isUnMatch"
         style="margin-left: 10px;"
         @click="unMatch"
       />
