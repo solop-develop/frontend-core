@@ -714,7 +714,7 @@ const actions = {
           window.document.title = response.name
 
           // tab browser favicon
-          if (isEmptyValue(info.logoUrl)) {
+          if (!isEmptyValue(info.logoUrl)) {
             let link = document.querySelector("link[rel~='icon']")
             if (!link) {
               link = document.createElement('link')
