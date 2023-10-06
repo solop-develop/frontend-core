@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A.
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -34,7 +34,6 @@
             :container-uuid="processUuid"
             :container-manager="containerManager"
             :actions-manager="actionsManager"
-            :relations-manager="relationsManager"
           />
         </p>
         <!-- <br> -->
@@ -69,7 +68,7 @@ import { defineComponent, computed, ref } from '@vue/composition-api'
 
 import store from '@/store'
 
-// components and mixins
+// Components and Mixins
 import ActionMenu from '@/components/ADempiere/ActionMenu/index.vue'
 import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 import mixinProcess from '@/views/ADempiere/Process/mixinProcess.js'
@@ -77,11 +76,10 @@ import PanelDefinition from '@/components/ADempiere/PanelDefinition/index.vue'
 import TitleAndHelp from '@/components/ADempiere/TitleAndHelp/index.vue'
 import PanelFooter from '@/components/ADempiere/PanelFooter/index.vue'
 
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertProcess } from '@/utils/ADempiere/apiConverts/dictionary.js'
 import { generateProcess } from '@/utils/ADempiere/dictionary/process.js'
-
-// utils and helper methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 export default defineComponent({
   name: 'ProcessView',
@@ -94,32 +92,16 @@ export default defineComponent({
     PanelFooter
   },
 
-  props: {
-    // implement by test view
-    uuid: {
-      type: String,
-      default: ''
-    }
-  },
-
   setup(props, { root }) {
     const isLoadedMetadata = ref(false)
     const processMetadata = ref({})
 
-    let processUuid = root.$route.meta.uuid.toString()
-    // set uuid from test
-    if (!isEmptyValue(props.uuid)) {
-      processUuid = props.uuid
-    }
+    const processUuid = root.$route.meta.uuid.toString()
 
-    const { actionsManager, containerManager, relationsManager, storedProcessDefinition } = mixinProcess(processUuid)
+    const { actionsManager, containerManager, storedProcessDefinition } = mixinProcess(processUuid)
 
     const showContextMenu = computed(() => {
       return store.state.settings.showContextMenu
-    })
-
-    const isMobile = computed(() => {
-      return store.state.app.device === 'mobile'
     })
 
     store.dispatch('settings/changeSetting', {
@@ -183,17 +165,15 @@ export default defineComponent({
       processUuid,
       isLoadedMetadata,
       processMetadata,
-      // computeds
-      isMobile,
+      // Computeds
       showContextMenu,
-      // methods
+      // Methods
       runProcess,
       getProcess,
       clearParameters,
-      // common mixin
+      // Common Mixin
       actionsManager,
-      containerManager,
-      relationsManager
+      containerManager
     }
   }
 })

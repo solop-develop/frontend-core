@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,9 @@ import router from '@/router'
 import {
   requestRunProcess
 } from '@/api/ADempiere/process'
+import {
+  requestRunBusinessProcess
+} from '@/api/ADempiere/businessData/runBusinessProcess.ts'
 
 // Constants
 import { RECORD_ID } from '@/utils/ADempiere/constants/systemColumns'
@@ -91,7 +94,7 @@ const processManager = {
           return
         }
 
-        const parametersList = rootGetters.getProcessParameters({
+        const parameters = rootGetters.getProcessParameters({
           containerUuid,
           fieldsList
         })
@@ -122,9 +125,9 @@ const processManager = {
           path: oldRouter.path
         }, () => {})
 
-        requestRunProcess({
-          uuid: containerUuid,
-          parametersList
+        requestRunBusinessProcess({
+          id: processDefinition.id,
+          parameters
         })
           .then(runProcessRepsonse => {
             isProcessedError = runProcessRepsonse.isError

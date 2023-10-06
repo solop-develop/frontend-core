@@ -19,11 +19,11 @@
 // API Request Methods
 import { requestLanguagesList } from '@/api/ADempiere/common/index.ts'
 import {
-  requestRunProcess as runResetCache
-} from '@/api/ADempiere/process'
+  requestRunBusinessProcess as runResetCache
+} from '@/api/ADempiere/businessData/runBusinessProcess.ts'
 
 // Constants
-import { RESET_CACHE_PROCESS_UUID } from '@/utils/ADempiere/constants/process'
+import { RESET_CACHE_PROCESS_ID } from '@/utils/ADempiere/constants/process'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -78,9 +78,9 @@ const system = {
           })
       })
     },
-    runCacheReset({ commit, dispatch }) {
+    runCacheReset({ commit }) {
       runResetCache({
-        uuid: RESET_CACHE_PROCESS_UUID
+        id: RESET_CACHE_PROCESS_ID
       })
         .then(() => {
           location.reload(true)
