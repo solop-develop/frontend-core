@@ -59,7 +59,6 @@
         </el-col>
       </template>
       <el-col
-        :key="index"
         :xs="{ span: 24 }"
         :sm="{ span: 24 }"
         :md="{ span: 24 }"
