@@ -66,7 +66,6 @@ const processLog = {
       return new Promise(resolve => {
         listProcessLogsRequest({ pageToken, pageSize })
           .then(processActivityResponse => {
-            console.log(processActivityResponse)
             const { processLogsList } = processActivityResponse
 
             commit('setSessionProcess', processLogsList)

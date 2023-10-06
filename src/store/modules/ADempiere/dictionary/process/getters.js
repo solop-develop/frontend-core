@@ -97,7 +97,7 @@ export default {
       fieldsList = getters.getStoredFieldsFromProcess(containerUuid)
     }
 
-    const processParameters = []
+    const processParameters = {}
 
     fieldsList.forEach(fieldItem => {
       const { columnName } = fieldItem
@@ -120,18 +120,20 @@ export default {
           columnName: fieldItem.columnNameTo
         })
         if (!isEmptyValue(valueTo)) {
-          processParameters.push({
-            columnName: fieldItem.columnNameTo,
-            value: valueTo
-          })
+          // processParameters.push({
+          //   columnName: fieldItem.columnNameTo,
+          //   value: valueTo
+          // })
+          processParameters[fieldItem.columnNameTo] = valueTo
         }
       }
 
       if (!isEmptyValue(value)) {
-        processParameters.push({
-          columnName,
-          value
-        })
+        // processParameters.push({
+        //   columnName,
+        //   value
+        // })
+        processParameters[columnName] = value
       }
     })
 
