@@ -129,7 +129,7 @@ function getChildFromAction({ menu, index, clientId, roleId, organizationId }) {
       parentUuid: menu.parent_uuid,
       noCache: false,
       referenceId: menu.reference_id,
-      referenceUuid: menu.reference_uuid,
+      referenceUuid: type + '_' + menu.reference_id,
       tabUuid: '',
       title: menu.name,
       type,
@@ -188,7 +188,7 @@ function getRouteFromMenuItem({ menu, clientId, roleId, organizationId }) {
       parentUuid: menu.parent_uuid,
       noCache: true,
       referenceId: menu.reference_id,
-      referenceUuid: menu.reference_uuid,
+      referenceUuid: type + '_' + menu.reference_id,
       title: menu.name,
       type,
       childs: []
