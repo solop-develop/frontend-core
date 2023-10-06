@@ -19,9 +19,6 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
-// Constants
-import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
-
 /**
  * Request a process
  * This function allows follow structure:
@@ -77,42 +74,5 @@ export function requestRunProcess({
       const { convertProcessLog } = require('@/utils/ADempiere/apiConverts/process.js')
 
       return convertProcessLog(processRunResponse)
-    })
-}
-
-// Request a Process Activity list
-export function requestListProcessesLogs({
-  tableName,
-  instanceUuid,
-  userUuid,
-  recordId,
-  recordUuid,
-  pageSize = ROWS_OF_RECORDS_BY_PAGE,
-  pageToken
-}) {
-  //  Get Process Activity
-  return request({
-    url: '/user/log/process-logs',
-    method: 'get',
-    params: {
-      instance_uuid: instanceUuid,
-      user_uuid: userUuid,
-      table_name: tableName,
-      id: recordId,
-      uuid: recordUuid,
-      page_size: pageSize,
-      page_token: pageToken
-    }
-  })
-    .then(processLogResponse => {
-      const { convertProcessLog } = require('@/utils/ADempiere/apiConverts/process.js')
-
-      return {
-        recordCount: processLogResponse.record_count,
-        processLogsList: processLogResponse.records.map(itemProcess => {
-          return convertProcessLog(itemProcess)
-        }),
-        nextPageToken: processLogResponse.next_page_token
-      }
     })
 }
