@@ -16,39 +16,22 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { computed, ref } from '@vue/composition-api'
+// Get Instance for connection
+import { request } from '@/utils/ADempiere/request'
 
-import store from '@/store'
-import lang from '@/lang'
-
-// Utils and Helper Methods
-import { containerManager } from '@/utils/ADempiere/dictionary/process.js'
-
-export default (processId) => {
-  const storedProcessDefinition = computed(() => {
-    return store.getters.getStoredProcess(processId)
-  })
-
-  const actionsList = computed(() => {
-    if (!storedProcessDefinition.value) {
-      return []
+/**
+ * Get default value for a field, parameter or query criteria
+ * @param {integer} id, identifier of field
+ */
+export function generateReportRequest({
+  id,
+  parameters
+}) {
+  return request({
+    url: `/business-data/report/${id}`,
+    method: 'post',
+    data: {
+      parameters
     }
-    return store.getters.getStoredActionsMenu({
-      containerUuid: storedProcessDefinition.value.uuid
-    })
   })
-
-  const actionsManager = ref({
-    containerUuid: processId,
-
-    defaultActionName: lang.t('actionMenu.runProcess'),
-
-    getActionList: () => actionsList.value
-  })
-
-  return {
-    containerManager,
-    actionsManager,
-    storedProcessDefinition
-  }
 }

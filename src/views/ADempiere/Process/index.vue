@@ -30,8 +30,8 @@
         <p style="text-align: end;">
           <action-menu
             id="action-menu"
-            :parent-uuid="processUuid"
-            :container-uuid="processUuid"
+            :parent-uuid="processId"
+            :container-uuid="processId"
             :container-manager="containerManager"
             :actions-manager="actionsManager"
           />
@@ -40,14 +40,14 @@
         <!-- style="float: right;padding-left: 1%;z-index: 99;" -->
         <panel-definition
           id="panel-definition"
-          :container-uuid="processUuid"
+          :container-uuid="processId"
           :container-manager="containerManager"
           :is-tab-panel="true"
         />
         <br>
       </div>
       <panel-footer
-        :container-uuid="processUuid"
+        :container-uuid="processId"
         :is-button-run="true"
         :is-button-clear="true"
         :is-button-close="true"
@@ -66,6 +66,7 @@
 <script>
 import { defineComponent, computed, ref } from '@vue/composition-api'
 
+import router from '@/router'
 import store from '@/store'
 
 // Components and Mixins
@@ -77,9 +78,9 @@ import TitleAndHelp from '@/components/ADempiere/TitleAndHelp/index.vue'
 import PanelFooter from '@/components/ADempiere/PanelFooter/index.vue'
 
 // Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
-import { convertProcess } from '@/utils/ADempiere/apiConverts/dictionary.js'
-import { generateProcess } from '@/utils/ADempiere/dictionary/process.js'
+// import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+// import { convertProcess } from '@/utils/ADempiere/apiConverts/dictionary.js'
+// import { generateProcess } from '@/utils/ADempiere/dictionary/process.js'
 
 export default defineComponent({
   name: 'ProcessView',
@@ -92,13 +93,16 @@ export default defineComponent({
     PanelFooter
   },
 
-  setup(props, { root }) {
+  setup() {
     const isLoadedMetadata = ref(false)
     const processMetadata = ref({})
 
-    const processUuid = root.$route.meta.uuid.toString()
+    const currentRoute = router.app._route
+    const processId = currentRoute.meta.uuid.toString()
 
-    const { actionsManager, containerManager, storedProcessDefinition } = mixinProcess(processUuid)
+    const {
+      actionsManager, containerManager, storedProcessDefinition
+    } = mixinProcess(processId)
 
     const showContextMenu = computed(() => {
       return store.state.settings.showContextMenu
@@ -111,32 +115,32 @@ export default defineComponent({
 
     // get process/report from vuex store or request from server
     const getProcess = async() => {
-      let process = storedProcessDefinition.value
+      const process = storedProcessDefinition.value
       if (process) {
         processMetadata.value = process
         isLoadedMetadata.value = true
         return
       }
 
-      // metadata props use for test
-      if (!isEmptyValue(props.metadata)) {
-        // from server response
-        process = convertProcess(props.metadata)
-        // add apps properties
-        process = generateProcess(process)
-        // add into store
-        return store.dispatch('addProcess', process)
-          .then(processResponse => {
-            // to obtain the load effect
-            setTimeout(() => {
-              processMetadata.value = processResponse
-              isLoadedMetadata.value = true
-            }, 1000)
-          })
-      }
+      // // metadata props use for test
+      // if (!isEmptyValue(props.metadata)) {
+      //   // from server response
+      //   process = convertProcess(props.metadata)
+      //   // add apps properties
+      //   process = generateProcess(process)
+      //   // add into store
+      //   return store.dispatch('addProcess', process)
+      //     .then(processResponse => {
+      //       // to obtain the load effect
+      //       setTimeout(() => {
+      //         processMetadata.value = processResponse
+      //         isLoadedMetadata.value = true
+      //       }, 1000)
+      //     })
+      // }
 
       store.dispatch('getProcessDefinitionFromServer', {
-        id: processUuid
+        id: processId
       })
         .then(processResponse => {
           processMetadata.value = processResponse
@@ -149,20 +153,20 @@ export default defineComponent({
 
     function runProcess() {
       store.dispatch('startProcess', {
-        containerUuid: processUuid
+        containerUuid: processId
       })
     }
 
     function clearParameters() {
       store.dispatch('setProcessDefaultValues', {
-        containerUuid: processUuid
+        containerUuid: processId
       })
     }
 
     getProcess()
 
     return {
-      processUuid,
+      processId,
       isLoadedMetadata,
       processMetadata,
       // Computeds
@@ -192,7 +196,7 @@ export default defineComponent({
   }
 }
 </style>
-<style scoped >
+<style scoped>
   .el-card {
     width: 100% !important;
     height: 100% !important;

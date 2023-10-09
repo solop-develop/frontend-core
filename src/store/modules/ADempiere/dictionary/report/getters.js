@@ -25,20 +25,20 @@ import { isNumberField } from '@/utils/ADempiere/references.js'
  * Dictionary Report Getters
  */
 export default {
-  getStoredReport: (state) => (reportUuid) => {
-    return state.storedReports[reportUuid]
+  getStoredReport: (state) => (reportId) => {
+    return state.storedReports[reportId]
   },
 
-  getStoredFieldsFromReport: (state, getters) => (reportUuid) => {
-    const report = getters.getStoredReport(reportUuid)
+  getStoredFieldsFromReport: (state, getters) => (reportId) => {
+    const report = getters.getStoredReport(reportId)
     if (!isEmptyValue(report)) {
       return report.fieldsList
     }
     return undefined
   },
 
-  getStoredReportExportTypes: (state, getters) => (reportUuid) => {
-    const report = getters.getStoredReport(reportUuid)
+  getStoredReportExportTypes: (state, getters) => (reportId) => {
+    const report = getters.getStoredReport(reportId)
     if (!isEmptyValue(report)) {
       return report.reportExportTypes
     }
@@ -52,12 +52,13 @@ export default {
    * @returns {object}
    */
   getReportParametersEmptyMandatory: (state, getters, rootState, rootGetters) => ({
-    containerUuid,
+    containerUuid: reportId,
     fieldsList,
     formatReturn = 'name'
   }) => {
+    const reportDefinition = rootGetters.getStoredReport(reportId)
     if (isEmptyValue(fieldsList)) {
-      fieldsList = getters.getStoredFieldsFromReport(containerUuid)
+      fieldsList = reportDefinition.fieldsList // getters.getStoredFieldsFromReport(containerUuid)
     }
 
     const fieldsEmpty = fieldsList.filter(fieldItem => {
@@ -69,7 +70,7 @@ export default {
       }
 
       const value = rootGetters.getValueOfField({
-        containerUuid,
+        containerUuid: reportDefinition.uuid,
         columnName: fieldItem.columnName
       })
 
@@ -98,14 +99,16 @@ export default {
    * @returns {Array<Object>} [{ columnName: name key, value: value to send }]
    */
   getReportParameters: (state, getters, rootState, rootGetters) => ({
-    containerUuid,
+    containerUuid: reportId,
     fieldsList = []
   }) => {
+    const reportDefinition = rootGetters.getStoredReport(reportId)
     if (isEmptyValue(fieldsList)) {
-      fieldsList = getters.getStoredFieldsFromReport(containerUuid)
+      fieldsList = reportDefinition.fieldsList // getters.getStoredFieldsFromReport(containerUuid)
     }
+    const { uuid } = reportDefinition
 
-    const reportParameters = []
+    const reportParameters = {}
 
     fieldsList.forEach(fieldItem => {
       const { columnName } = fieldItem
@@ -118,28 +121,30 @@ export default {
       }
 
       const value = rootGetters.getValueOfField({
-        containerUuid,
+        containerUuid: uuid,
         columnName
       })
 
       if (fieldItem.isRange && !isNumberField(fieldItem.displayType)) {
         const valueTo = rootGetters.getValueOfField({
-          containerUuid,
+          containerUuid: uuid,
           columnName: fieldItem.columnNameTo
         })
         if (!isEmptyValue(valueTo)) {
-          reportParameters.push({
-            columnName: fieldItem.columnNameTo,
-            value: valueTo
-          })
+          // reportParameters.push({
+          //   columnName: fieldItem.columnNameTo,
+          //   value: valueTo
+          // })
+          reportParameters[fieldItem.columnNameTo] = valueTo
         }
       }
 
       if (!isEmptyValue(value)) {
-        reportParameters.push({
-          columnName,
-          value
-        })
+        // reportParameters.push({
+        //   columnName,
+        //   value
+        // })
+        reportParameters[columnName] = value
       }
     })
 
