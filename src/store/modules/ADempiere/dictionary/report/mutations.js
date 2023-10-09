@@ -22,7 +22,7 @@ import Vue from 'vue'
  */
 export default {
   addReportToList(state, report) {
-    Vue.set(state.storedReports, report.uuid, report)
+    Vue.set(state.storedReports, report.id, report)
   },
 
   /**

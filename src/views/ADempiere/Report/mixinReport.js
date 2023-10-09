@@ -28,23 +28,23 @@ import { DEFAULT_REPORT_TYPE } from '@/utils/ADempiere/dictionary/report'
 import { containerManager } from '@/utils/ADempiere/dictionary/report'
 import { isEmptyValue } from '@/utils/ADempiere'
 
-export default (reportUuid) => {
+export default (reportId) => {
   const storedReportDefinition = computed(() => {
-    return store.getters.getStoredReport(reportUuid)
+    return store.getters.getStoredReport(reportId)
   })
 
   const actionsList = computed(() => {
     return store.getters.getStoredActionsMenu({
-      containerUuid: reportUuid
+      containerUuid: reportId
     })
   })
 
   const actionsManager = ref({
-    containerUuid: reportUuid,
+    containerUuid: reportId,
 
     defaultActionName() {
       let reportType = DEFAULT_REPORT_TYPE
-      const storedReportGenerated = store.getters.getReportGenerated(reportUuid)
+      const storedReportGenerated = store.getters.getReportGenerated(reportId)
       if (!isEmptyValue(storedReportGenerated)) {
         if (!isEmptyValue(storedReportGenerated.reportType)) {
           reportType = storedReportGenerated.reportType

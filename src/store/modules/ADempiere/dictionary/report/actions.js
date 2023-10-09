@@ -63,11 +63,11 @@ export default {
    * @param {string} uuid of dictionary
    */
   getReportDefinitionFromServer({ dispatch, getters, rootGetters }, {
-    uuid
+    id
   }) {
     return new Promise((resolve, reject) => {
       requestReportMetadata({
-        uuid
+        id
       })
         .then(async reportResponse => {
           const { processDefinition: reportDefinition } = generateReport({
@@ -76,22 +76,22 @@ export default {
 
           dispatch('addReportToList', reportDefinition)
 
-          await dispatch('getListPrintFormats', {
-            uuid,
-            id: reportDefinition.id
-          })
+          // await dispatch('getListPrintFormats', {
+          //   uuid,
+          //   id: reportDefinition.id
+          // })
 
           resolve(reportDefinition)
 
           // exist dialog if is process associated
-          const storedModalDialog = getters.getModalDialogManager({ containerUuid: uuid })
+          const storedModalDialog = getters.getModalDialogManager({ containerUuid: id })
           if (isEmptyValue(storedModalDialog)) {
             dispatch('setModalDialog', {
-              containerUuid: uuid,
+              containerUuid: id,
               title: reportDefinition.name,
               doneMethod: () => {
                 dispatch('startReport', {
-                  containerUuid: uuid
+                  containerUuid: id
                 })
               },
               loadData: ({ containerUuid }) => {
@@ -100,7 +100,7 @@ export default {
                   return Promise.resolve(reportDefinition)
                 }
                 return dispatch('getReportDefinitionFromServer', {
-                  uuid: uuid
+                  id
                 })
               },
               // TODO: Change to string and import dynamic in component
