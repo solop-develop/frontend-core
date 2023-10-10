@@ -421,8 +421,8 @@ const windowManager = {
         requestGetEntities({
           windowUuid: parentUuid,
           tabId: id,
-          contextAttributes: JSON.stringify(contextAttributesList),
-          searchValue,
+          contextAttributes: !isEmptyValue(contextAttributesList) ? JSON.stringify(contextAttributesList) : undefined,
+          searchValue: !isEmptyValue(searchValue) ? encodeURI(searchValue) : searchValue,
           referenceUuid,
           filters,
           pageToken,
