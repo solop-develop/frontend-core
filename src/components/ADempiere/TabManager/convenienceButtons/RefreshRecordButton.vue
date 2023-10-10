@@ -91,7 +91,6 @@ export default defineComponent({
         option: language.t('actionMenu.refresh')
       }
       store.dispatch('fieldListInfo', { info })
-      console.log(4516561)
       if (tabAttributes.value.isShowedTableRecords) {
         refreshRecords.refreshRecords({
           parentUuid: props.parentUuid,
