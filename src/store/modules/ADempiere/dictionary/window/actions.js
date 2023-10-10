@@ -94,10 +94,7 @@ export default {
         id
       })
         .then(async windowResponse => {
-          const window = generateWindow({
-            ...windowResponse,
-            uuid: windowResponse.id.toString()
-          })
+          const window = generateWindow(windowResponse)
           dispatch('addWindow', window)
 
           resolve(window)

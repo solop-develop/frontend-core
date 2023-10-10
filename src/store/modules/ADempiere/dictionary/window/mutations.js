@@ -27,7 +27,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
  */
 export default {
   addWindowToList(state, window) {
-    Vue.set(state.storedWindows, window.id, window)
+    Vue.set(state.storedWindows, window.uuid, window)
   },
 
   changeWindowAttribute(state, {

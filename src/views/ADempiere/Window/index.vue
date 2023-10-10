@@ -93,7 +93,7 @@ export default defineComponent({
     const isLoaded = ref(false)
     const windowMetadata = ref({})
 
-    let windowUuid = root.$route.meta.uuid.toString()
+    let windowUuid = root.$route.meta.uuid
     // set uuid from test
     if (!isEmptyValue(props.uuid)) {
       windowUuid = props.uuid
@@ -123,10 +123,7 @@ export default defineComponent({
     })
 
     function setLoadWindow(window) {
-      windowMetadata.value = {
-        ...window,
-        uuid: window.id.toString()
-      }
+      windowMetadata.value = window
       isLoaded.value = true
     }
 
