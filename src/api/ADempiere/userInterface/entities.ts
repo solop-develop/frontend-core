@@ -19,7 +19,7 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/references.js'
-// import { isEmptyValue } from '@/utils/ADempiere'
+
 /**
  * Request Entities
  * @param {string} uuid universally unique identifier
@@ -34,9 +34,8 @@ export function requestGetEntities({
   contextAttributes,
   pageSize = RECORD_ROWS_BY_LIST
 }) {
-  const tab_id = tabId
   return request({
-    url: `/user-interface/entities/${tab_id}`,
+    url: `/user-interface/entities/${tabId}`,
     method: 'get',
     params: {
       filters,
@@ -47,7 +46,6 @@ export function requestGetEntities({
     }
   })
     .then(response => {
-      // const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
       return {
         nextPageToken: response.next_page_token,
         recordCount: response.record_count,
