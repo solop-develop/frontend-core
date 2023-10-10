@@ -35,7 +35,6 @@ export function requestGetEntities({
   pageSize = RECORD_ROWS_BY_LIST
 }) {
   const tab_id = tabId
-
   return request({
     url: `/user-interface/entities/${tab_id}`,
     method: 'get',

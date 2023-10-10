@@ -356,18 +356,9 @@ const windowManager = {
         const contextAttributesList = getContextAttributes({
           parentUuid,
           contextColumnNames,
-          keyName: 'key'
-        }).map(parameter => {
-          const {
-            key,
-            value
-          } = parameter
-          return JSON.stringify({
-            operator: 'equal',
-            name: key,
-            value
-          })
-        }).toString()
+          keyName: 'key',
+          format: 'object'
+        })
 
         // const isWithoutValues = contextColumnNames.find(columnName =>
         //   isEmptyValue(columnName) ||
@@ -430,7 +421,7 @@ const windowManager = {
         requestGetEntities({
           windowUuid: parentUuid,
           tabId: id,
-          contextAttributes: !isEmptyValue(contextAttributesList) ? '[' + contextAttributesList + ']' : undefined,
+          contextAttributes: JSON.stringify(contextAttributesList),
           searchValue,
           referenceUuid,
           filters,
