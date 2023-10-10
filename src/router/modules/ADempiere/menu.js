@@ -129,12 +129,12 @@ function getChildFromAction({ menu, index, clientId, roleId, organizationId }) {
       parentUuid: menu.parent_uuid,
       noCache: false,
       referenceId: menu.reference_id,
-      referenceUuid: type + '_' + menu.reference_id,
+      referenceUuid: menu.reference_uuid,
       tabUuid: '',
       title: menu.name,
       type,
       id: menu.reference_id,
-      uuid: menu.reference_id,
+      uuid: menu.reference_uuid,
       childs: []
     },
     children: []
@@ -177,7 +177,7 @@ function getRouteFromMenuItem({ menu, clientId, roleId, organizationId }) {
     name: menu.id.toString(),
     meta: {
       id: menu.reference_id,
-      uuid: menu.reference_id,
+      uuid: menu.reference_uuid,
       description: menu.description,
       icon,
       isIndex,
@@ -188,7 +188,7 @@ function getRouteFromMenuItem({ menu, clientId, roleId, organizationId }) {
       parentUuid: menu.parent_uuid,
       noCache: true,
       referenceId: menu.reference_id,
-      referenceUuid: type + '_' + menu.reference_id,
+      referenceUuid: menu.reference_uuid,
       title: menu.name,
       type,
       childs: []

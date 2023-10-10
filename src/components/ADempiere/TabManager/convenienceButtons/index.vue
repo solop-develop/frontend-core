@@ -31,7 +31,7 @@
 
       <refresh-record-button
         :parent-uuid="parentUuid"
-        :container-uuid="tabAttributes.uuid"
+        :container-uuid="tabAttributes.id"
       />
 
       <delete-record-button

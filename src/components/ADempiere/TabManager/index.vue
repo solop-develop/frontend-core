@@ -539,6 +539,7 @@ export default defineComponent({
         tabUuid: routerParams.containerUuid,
         containerUuid,
         filters,
+        tabId: currentTabMetadata.value.id,
         referenceUuid: query.referenceUuid,
         filtersRecord,
         pageNumber

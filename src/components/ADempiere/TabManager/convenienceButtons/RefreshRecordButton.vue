@@ -47,11 +47,11 @@ export default defineComponent({
 
   props: {
     parentUuid: {
-      type: String,
+      type: [String, Number],
       required: false
     },
     containerUuid: {
-      type: String,
+      type: [String, Number],
       required: true
     }
   },
@@ -91,7 +91,6 @@ export default defineComponent({
         option: language.t('actionMenu.refresh')
       }
       store.dispatch('fieldListInfo', { info })
-
       if (tabAttributes.value.isShowedTableRecords) {
         refreshRecords.refreshRecords({
           parentUuid: props.parentUuid,

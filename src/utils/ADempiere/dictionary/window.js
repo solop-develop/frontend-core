@@ -1205,12 +1205,13 @@ export const refreshRecords = {
   svg: false,
   icon: 'el-icon-refresh',
   actionName: 'refreshRecords',
-  refreshRecords: ({ parentUuid, containerUuid }) => {
+  refreshRecords: ({ parentUuid, containerUuid, tabId }) => {
     nprogress.start()
     // refresh records on current tab
     store.dispatch('getEntities', {
       parentUuid,
       containerUuid,
+      tabId,
       filters: []
     })
       .finally(() => {

@@ -314,8 +314,9 @@ export default defineComponent({
       action[actionName]({
         root,
         parentUuid: currentTab.value.parentUuid,
-        containerUuid: currentTab.value.containerUuid,
+        containerUuid: currentTab.value.uuid,
         tableName: currentTab.value.tableName,
+        tabId: currentTab.value.id,
         instanceUuid,
         containerManager: props.containerManager,
         recordUuid: recordUuid.value,

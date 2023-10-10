@@ -18,20 +18,38 @@
 
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
+import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/references.js'
 
 /**
- * Request dictionary Window metadata
+ * Request Entities
+ * @param {string} uuid universally unique identifier
  * @param {number} id, identifier
  */
-export function requestWindowMetadata({
-  id
+export function requestGetEntities({
+  id,
+  tabId,
+  filters,
+  pageToken,
+  searchValue,
+  contextAttributes,
+  pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
-    url: `/dictionary/windows/${id}`,
-    method: 'get'
+    url: `/user-interface/entities/${tabId}`,
+    method: 'get',
+    params: {
+      filters,
+      search_value: searchValue,
+      context_attributes: contextAttributes,
+      page_token: pageToken,
+      page_size: pageSize
+    }
   })
-    .then(windowResponse => {
-      const { convertWindow } = require('@/utils/ADempiere/apiConverts/dictionary.js')
-      return convertWindow(windowResponse)
+    .then(response => {
+      return {
+        nextPageToken: response.next_page_token,
+        recordCount: response.record_count,
+        records: response.records
+      }
     })
 }
