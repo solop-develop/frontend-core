@@ -48,7 +48,6 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
-// import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 const initState = {
   tabData: {},
@@ -281,6 +280,8 @@ const windowManager = {
           containerUuid
         })
 
+        let contextAttributes = encodeURI({})
+
         let pageToken
 
         const {
@@ -418,11 +419,15 @@ const windowManager = {
           tabUuid = containerUuid
         }
 
+        if (!isEmptyValue(searchValue)) searchValue = encodeURI(searchValue)
+
+        if (!isEmptyValue(contextAttributesList)) contextAttributes = JSON.stringify(contextAttributesList)
+
         requestGetEntities({
           windowUuid: parentUuid,
           tabId: id,
-          contextAttributes: !isEmptyValue(contextAttributesList) ? JSON.stringify(contextAttributesList) : undefined,
-          searchValue: !isEmptyValue(searchValue) ? encodeURI(searchValue) : searchValue,
+          contextAttributes,
+          searchValue,
           referenceUuid,
           filters,
           pageToken,
@@ -430,7 +435,6 @@ const windowManager = {
         })
           .then(dataResponse => {
             const dataToStored = dataResponse.records.map((record, rowIndex) => {
-              // const attributes = camelizeObjectKeys(record.values)
               return {
                 ...record.values,
                 // datatables app attributes
