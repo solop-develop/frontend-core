@@ -37,7 +37,6 @@ import { BUTTON, ID, LOCATION_ADDRESS, YES_NO } from '@/utils/ADempiere/referenc
 import { containerManager as CONTAINER_MANAGER_BROWSER } from '@/utils/ADempiere/dictionary/browser'
 
 // API Request Methods
-// import { getEntity } from '@/api/ADempiere/user-interface/persistence'
 import { getEntity } from '@/api/ADempiere/userInterface/entities.ts'
 import { requestSaveWindowCustomization } from '@/api/ADempiere/user-customization/window.js'
 
