@@ -18,7 +18,6 @@
 
 <template>
   <el-button
-    v-show="isRefreshRecord"
     plain
     size="small"
     type="primary"
@@ -69,6 +68,11 @@ export default defineComponent({
       return store.getters.getStoredTab(props.parentUuid, props.containerUuid)
     })
 
+    const currentTab = computed(() => {
+      const { currentTab } = store.getters.getContainerInfo
+      return currentTab
+    })
+
     const isExistsChanges = computed(() => {
       const persistenceValues = store.getters.getPersistenceAttributesChanges({
         parentUuid: props.parentUuid,
@@ -90,6 +94,10 @@ export default defineComponent({
         fieldsList: tabAttributes.value.fieldsList,
         option: language.t('actionMenu.refresh')
       }
+      const recordId = store.getters.getIdOfContainer({
+        containerUuid: currentTab.value.containerUuid,
+        tableName: currentTab.value.tableName
+      })
       store.dispatch('fieldListInfo', { info })
       if (tabAttributes.value.isShowedTableRecords) {
         refreshRecords.refreshRecords({
@@ -98,14 +106,18 @@ export default defineComponent({
         })
         return
       }
+
       refreshRecord.refreshRecord({
         parentUuid: props.parentUuid,
-        containerUuid: props.containerUuid
+        containerUuid: props.containerUuid,
+        tabId: currentTab.value.id,
+        recordId
       })
     }
 
     return {
       isMobile,
+      currentTab,
       isRefreshRecord,
       // Methods
       refreshCurrentRecord

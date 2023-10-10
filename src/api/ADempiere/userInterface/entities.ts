@@ -53,3 +53,98 @@ export function requestGetEntities({
       }
     })
 }
+
+/**
+ * Create Tab Entity
+ * @param {number} tabId
+ * @param {array} attributesList
+ */
+export function createEntity({
+  tabId,
+  attributesList
+}) {
+  const attributesObject = {}
+  attributesList.forEach(element => {
+    attributesObject[element.columnName] = element.value
+  })
+
+  return request({
+    url: `/user-interface/entities/${tabId}`,
+    method: 'post',
+    data: {
+      attributes: attributesObject
+    }
+  })
+    .then(entityCreateResponse => {
+      return entityCreateResponse
+    })
+}
+
+/**
+ * Update Tab Entity
+ * @param {number} tabId
+ * @param {array} attributesList
+ */
+export function updateEntity({
+  reccordId,
+  tabId,
+  attributesList
+}) {
+  const attributesObject = {}
+  attributesList.forEach(element => {
+    attributesObject[element.columnName] = element.value
+  })
+
+  return request({
+    url: `/user-interface/entities/${tabId}/${reccordId}`,
+    method: 'patch',
+    data: {
+      attributes: attributesObject
+    }
+  })
+    .then(entityCreateResponse => {
+      return entityCreateResponse
+    })
+}
+
+/**
+ * Delete Entity
+ * @param {string}  tableName
+ * @param {number}  recordId
+ */
+
+export function deleteEntity({
+  tableName,
+  recordId
+}) {
+  return request({
+    url: `/business-data/entities/${tableName}/${recordId}`,
+    method: 'delete'
+  }).then(response => {
+    return response
+  })
+}
+
+/**
+ * Request Entities
+ * @param {string} uuid universally unique identifier
+ * @param {number} ,
+  recordUuid,
+  listRecordIdid, identifier
+ */
+export function getEntity({
+  id,
+  tabId
+}) {
+  return request({
+    url: `/user-interface/entities/${tabId}/${id}`,
+    method: 'get'
+  })
+    .then(response => {
+      return {
+        nextPageToken: response.next_page_token,
+        recordCount: response.record_count,
+        records: response.records
+      }
+    })
+}

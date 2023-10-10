@@ -27,10 +27,11 @@ import { DISPLAY_COLUMN_PREFIX, IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempie
 import { BUTTON, IMAGE } from '@/utils/ADempiere/references'
 
 // API Request Methods
-import {
-  createEntity,
-  updateEntity
-} from '@/api/ADempiere/user-interface/persistence'
+// import {
+//   // createEntity,
+//   updateEntity
+// } from '@/api/ADempiere/user-interface/persistence'
+import { createEntity, updateEntity } from '@/api/ADempiere/userInterface/entities.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils.js'
@@ -227,6 +228,8 @@ const persistence = {
     flushPersistenceQueue({ commit, dispatch, getters, rootGetters }, {
       parentUuid,
       containerUuid,
+      tabId,
+      reccordId,
       tableName,
       recordUuid,
       attributesList
@@ -273,6 +276,8 @@ const persistence = {
             // Update existing entity
             return updateEntity({
               tabUuid: containerUuid,
+              reccordId,
+              tabId,
               recordUuid,
               attributesList
             })
@@ -286,9 +291,9 @@ const persistence = {
                 // add new row on table
                 commit('setTabRowWithRecord', {
                   containerUuid,
-                  recordUuid: response.attributes[UUID],
+                  recordUuid: response.values[UUID],
                   row: {
-                    ...response.attributes,
+                    ...response.values,
                     ...ROW_ATTRIBUTES
                   }
                 })
@@ -297,7 +302,7 @@ const persistence = {
                 dispatch('updateValuesOfContainer', {
                   parentUuid,
                   containerUuid,
-                  attributes: response.attributes
+                  attributes: response.values
                 }, {
                   root: true
                 })
@@ -307,7 +312,7 @@ const persistence = {
                 // clear old values
                 dispatch('clearPersistenceQueue', {
                   containerUuid,
-                  recordUuid: response.attributes[UUID]
+                  recordUuid: response.values[UUID]
                 })
               })
               .catch(error => reject(error))
@@ -317,6 +322,7 @@ const persistence = {
             // Create new entity
             return createEntity({
               tabUuid: containerUuid,
+              tabId,
               attributesList
             })
               .then(response => {
@@ -326,7 +332,7 @@ const persistence = {
                 })
                 response.type = 'createEntity'
 
-                const attributesRecord = response.attributes
+                const attributesRecord = response.values
 
                 // add display column to current record
                 const { identifierColumns } = tabDefinition
