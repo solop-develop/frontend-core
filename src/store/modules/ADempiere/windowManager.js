@@ -29,9 +29,6 @@ import {
   deleteEntity,
   requestGetEntities
 } from '@/api/ADempiere/userInterface/entities.ts'
-// import {
-//   deleteEntity
-// } from '@/api/ADempiere/common/persistence.js'
 
 // Constants
 import { UUID } from '@/utils/ADempiere/constants/systemColumns'
