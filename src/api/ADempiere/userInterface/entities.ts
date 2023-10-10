@@ -75,9 +75,6 @@ export function createEntity({
       attributes: attributesObject
     }
   })
-    .then(entityCreateResponse => {
-      return entityCreateResponse
-    })
 }
 
 /**
@@ -102,9 +99,6 @@ export function updateEntity({
       attributes: attributesObject
     }
   })
-    .then(entityCreateResponse => {
-      return entityCreateResponse
-    })
 }
 
 /**
@@ -120,8 +114,6 @@ export function deleteEntity({
   return request({
     url: `/business-data/entities/${tableName}/${recordId}`,
     method: 'delete'
-  }).then(response => {
-    return response
   })
 }
 
