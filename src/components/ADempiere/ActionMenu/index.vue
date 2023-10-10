@@ -311,7 +311,6 @@ export default defineComponent({
     function runAction(action) {
       const { actionName } = action
       if (actionName === 'Moreoptions') return store.commit('setShowMenuMobile', true)
-      console.log({ actionName, currentTab: currentTab.value })
       action[actionName]({
         root,
         parentUuid: currentTab.value.parentUuid,
