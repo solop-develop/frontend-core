@@ -62,7 +62,7 @@
 import { defineComponent } from '@vue/composition-api'
 
 // Utils and Helper Methods
-import { closeTagView } from '@/utils/ADempiere/valueUtils.js'
+import { closeTagView } from '@/utils/ADempiere/componentUtils.js'
 
 export default defineComponent({
   name: 'PanelFooter',

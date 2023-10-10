@@ -43,7 +43,7 @@ export default {
       })
 
       dispatch('seProcessActionsMenu', {
-        containerUuid: processResponse.uuid
+        processId: processResponse.id
       })
 
       resolve(processResponse)
@@ -80,16 +80,16 @@ export default {
    * @param {string} containerUuid
    */
   seProcessActionsMenu({ commit, getters }, {
-    containerUuid
+    processId
   }) {
-    // const processDefinition = getters.getStoredProcess(containerUuid)
+    const processDefinition = getters.getStoredProcess(processId)
 
     const actionsList = []
 
     // execute process action
     const actionExecute = {
-      ...runProcess
-      // description: processDefinition.description
+      ...runProcess,
+      description: processDefinition.description
     }
     actionsList.push(actionExecute)
     actionsList.push(clearParameters)
@@ -98,7 +98,7 @@ export default {
     actionsList.push(sharedLink)
 
     commit('setActionMenu', {
-      containerUuid,
+      containerUuid: processDefinition.uuid,
       actionsList
     })
   },

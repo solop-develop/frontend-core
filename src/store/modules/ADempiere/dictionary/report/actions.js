@@ -51,7 +51,7 @@ export default {
       })
 
       dispatch('setReportActionsMenu', {
-        containerUuid: reportResponse.uuid
+        reportId: reportResponse.id
       })
 
       resolve(reportResponse)
@@ -74,12 +74,11 @@ export default {
             processToGenerate: reportResponse
           })
 
-          dispatch('addReportToList', reportDefinition)
+          await dispatch('getListPrintFormatsFromServer', {
+            reportId: reportDefinition.id
+          })
 
-          // await dispatch('getListPrintFormats', {
-          //   uuid,
-          //   id: reportDefinition.id
-          // })
+          dispatch('addReportToList', reportDefinition)
 
           resolve(reportDefinition)
 
@@ -117,12 +116,13 @@ export default {
 
   /**
    * Set actions menu to report
-   * @param {string} containerUuid
+   * @param {number} reportId
    */
   setReportActionsMenu({ commit, getters, rootGetters }, {
-    containerUuid
+    reportId
   }) {
-    const reportDefinition = getters.getStoredReport(containerUuid)
+    const reportDefinition = getters.getStoredReport(reportId)
+    // const containerUuid = reportDefinition.uuid
 
     const actionsList = []
     actionsList.push(runReport)
@@ -159,7 +159,7 @@ export default {
 
     // destruct to avoid deleting the reference to the original variable and to avoid mutating
     const actionPrintFormat = { ...runReportAsPrintFormat }
-    const printFormats = rootGetters.getPrintFormatList(containerUuid)
+    const printFormats = rootGetters.getPrintFormatList(reportId)
     if (!isEmptyValue(printFormats)) {
       const printFormatChilds = []
       printFormats.forEach(printFormat => {
@@ -191,7 +191,7 @@ export default {
 
     // destruct to avoid deleting the reference to the original variable and to avoid mutating
     const actionView = { ...runReportAsView }
-    const reportsView = rootGetters.getReportViewList(containerUuid)
+    const reportsView = rootGetters.getReportViewList(reportId)
     if (!isEmptyValue(reportsView)) {
       const printFormatChilds = []
       reportsView.forEach(reportView => {

@@ -93,10 +93,10 @@
 <script>
 import { defineComponent, computed, ref } from '@vue/composition-api'
 
-import store from '@/store'
 import router from '@/router'
+import store from '@/store'
 
-// components and mixins
+// Components and Mixins
 import ActionMenu from '@/components/ADempiere/ActionMenu/index.vue'
 import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 import mixinReport from '@/views/ADempiere/Report/mixinReport.js'
@@ -105,10 +105,10 @@ import OptionsReport from '@/components/ADempiere/ReportManager/Setup/optionsRep
 import TitleAndHelp from '@/components/ADempiere/TitleAndHelp/index.vue'
 import PanelFooter from '@/components/ADempiere/PanelFooter/index.vue'
 
-// utils and helper methods
-import { isEmptyValue, closeTagView } from '@/utils/ADempiere/valueUtils'
-import { convertProcess as convertReport } from '@/utils/ADempiere/apiConverts/dictionary.js'
-import { generateProcess as generateReport } from '@/utils/ADempiere/dictionary/process.js'
+// Utils and Helper Methods
+import { closeTagView } from '@/utils/ADempiere/componentUtils'
+// import { convertProcess as convertReport } from '@/utils/ADempiere/apiConverts/dictionary.js'
+// import { generateProcess as generateReport } from '@/utils/ADempiere/dictionary/process.js'
 
 export default defineComponent({
   name: 'ReportView',
@@ -122,25 +122,16 @@ export default defineComponent({
     PanelFooter
   },
 
-  props: {
-    // implement by test view
-    uuid: {
-      type: String,
-      default: ''
-    }
-  },
-
-  setup(props, { root }) {
+  setup() {
     const isLoadedMetadata = ref(false)
     const reportMetadata = ref({})
 
-    let reportId = root.$route.meta.id.toString()
-    // set uuid from test
-    if (!isEmptyValue(props.uuid)) {
-      reportId = props.uuid
-    }
+    const currentRoute = router.app._route
+    const reportId = currentRoute.meta.id.toString()
 
-    const { containerManager, actionsManager, storedReportDefinition } = mixinReport(reportId)
+    const {
+      containerManager, actionsManager, storedReportDefinition
+    } = mixinReport(reportId)
 
     const showContextMenu = computed(() => {
       return store.state.settings.showContextMenu
@@ -170,29 +161,29 @@ export default defineComponent({
 
     // get report from vuex store or request from server
     const getReport = async() => {
-      let report = storedReportDefinition.value
+      const report = storedReportDefinition.value
       if (report) {
         reportMetadata.value = report
         isLoadedMetadata.value = true
         return
       }
 
-      // metadata props use for test
-      if (!isEmptyValue(props.metadata)) {
-        // from server response
-        report = convertReport(props.metadata)
-        // add apps properties
-        report = generateReport(report)
-        // add into store
-        return store.dispatch('addReport', report)
-          .then(reportResponse => {
-            // to obtain the load effect
-            setTimeout(() => {
-              reportMetadata.value = reportResponse
-              isLoadedMetadata.value = true
-            }, 1000)
-          })
-      }
+      // // metadata props use for test
+      // if (!isEmptyValue(props.metadata)) {
+      //   // from server response
+      //   report = convertReport(props.metadata)
+      //   // add apps properties
+      //   report = generateReport(report)
+      //   // add into store
+      //   return store.dispatch('addReport', report)
+      //     .then(reportResponse => {
+      //       // to obtain the load effect
+      //       setTimeout(() => {
+      //         reportMetadata.value = reportResponse
+      //         isLoadedMetadata.value = true
+      //       }, 1000)
+      //     })
+      // }
 
       store.dispatch('getReportDefinitionFromServer', {
         id: reportId
@@ -240,11 +231,11 @@ export default defineComponent({
       reportMetadata,
       containerManager,
       actionsManager,
-      // computeds
+      // Computeds
       isMobile,
       showContextMenu,
       isShowPanelConfig,
-      // methodos
+      // Methods
       showPanelConfigReport,
       clearParameters,
       closeTagView,
