@@ -91,11 +91,11 @@ export default defineComponent({
 
   props: {
     parentUuid: {
-      type: String,
+      type: [String, Number],
       required: false
     },
     containerUuid: {
-      type: String,
+      type: [String, Number],
       required: false
     },
     tableName: {

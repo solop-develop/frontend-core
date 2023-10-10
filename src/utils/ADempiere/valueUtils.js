@@ -926,3 +926,13 @@ export function setIconsTableName({
   }
   return icon
 }
+
+/**
+ * Get Valid Integer
+ * @param {string|numner} id
+ * @param {number}
+ */
+export function getValidInteger(id) {
+  if (!isEmptyValue(id) && !Number.isNaN(id)) return Number.parseInt(id, 10)
+  return 0
+}

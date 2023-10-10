@@ -93,7 +93,7 @@ export default defineComponent({
     const isLoaded = ref(false)
     const windowMetadata = ref({})
 
-    let windowUuid = root.$route.meta.uuid
+    let windowUuid = root.$route.meta.uuid.toString()
     // set uuid from test
     if (!isEmptyValue(props.uuid)) {
       windowUuid = props.uuid
@@ -123,7 +123,10 @@ export default defineComponent({
     })
 
     function setLoadWindow(window) {
-      windowMetadata.value = window
+      windowMetadata.value = {
+        ...window,
+        uuid: window.id.toString()
+      }
       isLoaded.value = true
     }
 
@@ -151,7 +154,7 @@ export default defineComponent({
           })
       }
       store.dispatch('getWindowDefinitionFromServer', {
-        id: windowUuid
+        id: root.$route.meta.id
       })
         .then(windowResponse => {
           // add apps properties

@@ -146,7 +146,7 @@ export default defineComponent({
 
   props: {
     parentUuid: {
-      type: String,
+      type: [String, Number],
       required: false
     },
     containerManager: {

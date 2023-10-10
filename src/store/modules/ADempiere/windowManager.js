@@ -22,9 +22,12 @@ import router from '@/router'
 
 // API Request Methods
 import {
-  requestGetEntities,
+  // requestGetEntities,
   updateEntity
 } from '@/api/ADempiere/user-interface/persistence.js'
+import {
+  requestGetEntities
+} from '@/api/ADempiere/userInterface/entities.ts'
 import {
   deleteEntity
 } from '@/api/ADempiere/common/persistence.js'
@@ -45,6 +48,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
+// import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 const initState = {
   tabData: {},
@@ -280,10 +284,10 @@ const windowManager = {
         let pageToken
 
         const {
-          name,
           isParentTab,
           isHasTree,
           fieldsList,
+          id,
           linkColumnName,
           parentColumnName,
           contextColumnNames
@@ -353,14 +357,27 @@ const windowManager = {
           parentUuid,
           contextColumnNames,
           keyName: 'key'
-        })
+        }).map(parameter => {
+          const {
+            key,
+            value
+          } = parameter
+          return JSON.stringify({
+            operator: 'equal',
+            name: key,
+            value
+          })
+        }).toString()
 
-        const isWithoutValues = contextAttributesList.find(attribute => isEmptyValue(attribute.value))
-        if (isWithoutValues) {
-          console.warn(`Get entites without response, fill the **${isWithoutValues.key}** field in **${name}** tab.`)
-          resolve([])
-          return
-        }
+        // const isWithoutValues = contextColumnNames.find(columnName =>
+        //   isEmptyValue(columnName) ||
+        //   isEmptyValue(contextAttributesList[columnName])
+        // )
+        // if (isWithoutValues) {
+        //   console.warn(`Get entites without response, fill the **${isWithoutValues.key}** field in **${name}** tab.`)
+        //   resolve([])
+        //   return
+        // }
 
         if (!isEmptyValue(filtersRecord) && isEmptyValue(filters)) {
           filters.map(list => {
@@ -382,14 +399,14 @@ const windowManager = {
           containerUuid,
           isLoading: true
         })
-
         if (
           !isEmptyValue(filters) &&
           !isEmptyValue(linkColumnName) &&
           !isEmptyValue(contextAttributesList)
         ) {
           const listFilters = filters.find(i => i.columnName === linkColumnName)
-          const listContextAttributes = contextAttributesList.find(i => i.key === linkColumnName)
+          // const listContextAttributes = contextAttributesList.find(i => i.key === linkColumnName)
+          const listContextAttributes = contextAttributesList[linkColumnName]
           if (
             !isEmptyValue(listFilters) &&
             !isEmptyValue(listFilters.value) &&
@@ -412,8 +429,8 @@ const windowManager = {
 
         requestGetEntities({
           windowUuid: parentUuid,
-          tabUuid: containerUuid,
-          contextAttributesList,
+          tabId: id,
+          contextAttributes: !isEmptyValue(contextAttributesList) ? '[' + contextAttributesList + ']' : undefined,
           searchValue,
           referenceUuid,
           filters,
@@ -421,9 +438,10 @@ const windowManager = {
           pageSize
         })
           .then(dataResponse => {
-            const dataToStored = dataResponse.recordsList.map((record, rowIndex) => {
+            const dataToStored = dataResponse.records.map((record, rowIndex) => {
+              // const attributes = camelizeObjectKeys(record.values)
               return {
-                ...record.attributes,
+                ...record.values,
                 // datatables app attributes
                 ...ROW_ATTRIBUTES,
                 rowIndex
@@ -489,7 +507,8 @@ const windowManager = {
               // set context values
               const parentValues = getContextAttributes({
                 containerUuid,
-                contextColumnNames: relatedColumnsList
+                contextColumnNames: relatedColumnsList,
+                format: 'array'
               })
 
               dispatch('updateValuesOfContainer', {

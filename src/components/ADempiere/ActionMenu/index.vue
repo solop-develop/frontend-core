@@ -311,11 +311,13 @@ export default defineComponent({
     function runAction(action) {
       const { actionName } = action
       if (actionName === 'Moreoptions') return store.commit('setShowMenuMobile', true)
+      console.log({ actionName, currentTab: currentTab.value })
       action[actionName]({
         root,
         parentUuid: currentTab.value.parentUuid,
-        containerUuid: currentTab.value.containerUuid,
+        containerUuid: currentTab.value.uuid,
         tableName: currentTab.value.tableName,
+        tabId: currentTab.value.id,
         instanceUuid,
         containerManager: props.containerManager,
         recordUuid: recordUuid.value,

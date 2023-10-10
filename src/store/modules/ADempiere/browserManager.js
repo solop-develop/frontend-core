@@ -216,7 +216,6 @@ const browserControl = {
           pageNumber = storedPage
         }
         const pageToken = generatePageToken({ pageNumber })
-
         requestBrowserSearch({
           id: containerUuid,
           contextAttributesList,

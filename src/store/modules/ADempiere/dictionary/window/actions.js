@@ -94,7 +94,10 @@ export default {
         id
       })
         .then(async windowResponse => {
-          const window = generateWindow(windowResponse)
+          const window = generateWindow({
+            ...windowResponse,
+            uuid: windowResponse.id.toString()
+          })
           dispatch('addWindow', window)
 
           resolve(window)
@@ -485,11 +488,12 @@ export default {
           containerManager: {
             ...containerManager,
             getPanel: ({ parentUuid }) => {
-              const tab = store.getters.getStoredTab(
-                tabDefinition.parentUuid,
-                tabDefinition.uuid
-              )
-              return tab.sequenceTabsList.find(itemTab => {
+              // TODO: Data Redundancy (call the tabDefinition defined above).
+              // const tab = store.getters.getStoredTab(
+              //   tabDefinition.parentUuid,
+              //   tabDefinition.uuid
+              // )
+              return tabDefinition.sequenceTabsList.find(itemTab => {
                 return itemTab.uuid === sequenceTab.uuid
               })
             }
