@@ -173,10 +173,17 @@ export default defineComponent({
         option: language.t('actionMenu.delete')
       }
       store.dispatch('fieldListInfo', { info })
+
+      const recordId = store.getters.getIdOfContainer({
+        containerUuid: tabAttributes.value.containerUuid,
+        tableName: tabAttributes.value.tableName
+      })
+
       deleteRecord.deleteRecord({
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid,
-        recordUuid: recordUuid.value
+        recordUuid: recordUuid.value,
+        recordId
       })
       isVisibleConfirmDelete.value = false
     }

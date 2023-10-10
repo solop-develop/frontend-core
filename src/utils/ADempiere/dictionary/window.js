@@ -37,7 +37,7 @@ import { BUTTON, ID, LOCATION_ADDRESS, YES_NO } from '@/utils/ADempiere/referenc
 import { containerManager as CONTAINER_MANAGER_BROWSER } from '@/utils/ADempiere/dictionary/browser'
 
 // API Request Methods
-import { getEntity } from '@/api/ADempiere/user-interface/persistence'
+import { getEntity } from '@/api/ADempiere/userInterface/entities.ts'
 import { requestSaveWindowCustomization } from '@/api/ADempiere/user-customization/window.js'
 
 // Utils and Helpers Methods
@@ -1122,7 +1122,7 @@ export const refreshRecord = {
   svg: false,
   icon: 'el-icon-refresh',
   actionName: 'refreshRecords',
-  refreshRecord: ({ parentUuid, containerUuid, recordId, recordUuid, isRefreshChilds = false }) => {
+  refreshRecord: ({ parentUuid, containerUuid, tabId, recordId, recordUuid, isRefreshChilds = false }) => {
     if (isEmptyValue(recordUuid)) {
       recordUuid = store.getters.getUuidOfContainer(containerUuid)
     }
@@ -1133,9 +1133,8 @@ export const refreshRecord = {
     })
     nprogress.start()
     return getEntity({
-      tabUuid: containerUuid,
-      recordId,
-      recordUuid
+      tabId,
+      id: recordId
     })
       .then(response => {
         const currentRow = store.getters.getTabRowData({
@@ -1150,7 +1149,7 @@ export const refreshRecord = {
           row: {
             ...ROW_ATTRIBUTES,
             ...currentRow,
-            ...response.attributes
+            ...response.values
           }
         })
 
@@ -1160,7 +1159,7 @@ export const refreshRecord = {
         store.dispatch('updateValuesOfContainer', {
           parentUuid,
           containerUuid,
-          attributes: response.attributes,
+          attributes: response.values,
           isOverWriteParent: tabDefinition.isParentTab
         }, {
           root: true
