@@ -21,7 +21,6 @@ import Vue from 'vue'
 
 // API Request Methods
 import {
-  // existsCharts,
   ListWindowCharts,
   getWindowMetrics
 } from '@/api/ADempiere/dashboard/panelWindows.js'

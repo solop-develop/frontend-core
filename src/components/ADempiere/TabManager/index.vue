@@ -200,9 +200,7 @@ import { UUID } from '@/utils/ADempiere/constants/systemColumns.js'
 // API Request Methods
 import { requestListEntityChats, requestExistsReferences } from '@/api/ADempiere/window'
 import { existsChatsEntries } from '@/api/ADempiere/logs/tabInfo/chatsEntries.ts'
-// import { requestExistsAttachment } from '@/api/ADempiere/user-interface/component/resource'
 import { requestExistsAttachment } from '@/api/ADempiere/logs/tabInfo/windowAttachment.ts'
-// import { requestExistsIssues } from '@/api/ADempiere/user-interface/component/issue'
 import { requestExistsIssues } from '@/api/ADempiere/logs/tabInfo/windowIssues.ts'
 
 // Utils and Helper Methods
