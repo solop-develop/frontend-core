@@ -21,10 +21,14 @@ import Vue from 'vue'
 
 // API Request Methods
 import {
-  existsCharts,
+  // existsCharts,
   ListWindowCharts,
   getWindowMetrics
 } from '@/api/ADempiere/dashboard/panelWindows.js'
+
+import {
+  existsCharts
+} from '@/api/ADempiere/logs/tabInfo/windowDashboards.ts'
 
 // Utils and Helper Methods
 // import { showMessage } from '@/utils/ADempiere/notification.js'

@@ -18,6 +18,7 @@
 
 <template>
   <el-button
+    v-show="isRefreshRecord"
     plain
     size="small"
     type="primary"
@@ -64,6 +65,13 @@ export default defineComponent({
       return store.getters.getUuidOfContainer(props.containerUuid)
     })
 
+    const recordId = computed(() => {
+      return store.getters.getIdOfContainer({
+        containerUuid: currentTab.value.containerUuid,
+        tableName: currentTab.value.tableName
+      })
+    })
+
     const tabAttributes = computed(() => {
       return store.getters.getStoredTab(props.parentUuid, props.containerUuid)
     })
@@ -83,7 +91,7 @@ export default defineComponent({
     })
 
     const isRefreshRecord = computed(() => {
-      if (isEmptyValue(recordUuid.value)) {
+      if (isEmptyValue(recordId.value)) {
         return false
       }
       return !isExistsChanges.value
@@ -94,10 +102,6 @@ export default defineComponent({
         fieldsList: tabAttributes.value.fieldsList,
         option: language.t('actionMenu.refresh')
       }
-      const recordId = store.getters.getIdOfContainer({
-        containerUuid: currentTab.value.containerUuid,
-        tableName: currentTab.value.tableName
-      })
       store.dispatch('fieldListInfo', { info })
       if (tabAttributes.value.isShowedTableRecords) {
         refreshRecords.refreshRecords({
@@ -117,6 +121,7 @@ export default defineComponent({
 
     return {
       isMobile,
+      recordId,
       currentTab,
       isRefreshRecord,
       // Methods
