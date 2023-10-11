@@ -444,9 +444,11 @@ const actions = {
       roleId: getCurrentRole(),
       organizationId
     })
-      .then(tokenSession => {
-        commit('SET_TOKEN', tokenSession)
-        setToken(tokenSession)
+      .then(response => {
+        const { token } = response
+        commit('SET_TOKEN', token)
+        setToken(token)
+
         const organizationsList = getters.getOrganizations
         let organization = organizationsList.find(org => {
           return org.id === organizationId
@@ -605,9 +607,10 @@ const actions = {
       organizationId,
       warehouseId
     })
-      .then(tokenSession => {
-        commit('SET_TOKEN', tokenSession)
-        setToken(tokenSession)
+      .then(response => {
+        const { token } = response
+        commit('SET_TOKEN', token)
+        setToken(token)
 
         // commit('SET_ROLE', role)
         setCurrentRole(roleId)
