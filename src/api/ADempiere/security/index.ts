@@ -16,9 +16,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
+
+// Utils and Helper Methods
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 import { getLanguage } from '@/lang/index'
+
 /**
  * Make login by UserName and password, this function can return user data for show
  * @param {string} userName
