@@ -25,16 +25,10 @@ import { request } from '@/utils/ADempiere/request'
 
 export function requestExistsAttachment({
   tableName,
-  recordId,
-  recordUuid
+  recordId
 }) {
   return request({
-    url: `/file-management/attachments/${recordId}/exists`,
-    method: 'get',
-    params: {
-      table_name: tableName,
-      record_id: recordId,
-      record_uuid: recordUuid
-    }
+    url: `/file-management/attachments/${tableName}/${recordId}/exists`,
+    method: 'get'
   })
 }
