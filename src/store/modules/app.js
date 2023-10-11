@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie'
 
 // API Request Methods
-import { setSessionAttribute } from '@/api/user'
+import { setSessionAttribute } from '@/api/ADempiere/security/index.ts'
 
 // Utils and Helper Methods
 import { getLanguage } from '@/lang/index'
@@ -58,7 +58,9 @@ const actions = {
   setLanguage({ commit }, language) {
     return new Promise(resolve => {
       setSessionAttribute({ language })
-        .then(token => {
+        .then(response => {
+          const { token } = response
+          commit('SET_TOKEN', token)
           setToken(token)
           resolve(language)
         })

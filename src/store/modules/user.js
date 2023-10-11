@@ -24,11 +24,6 @@ import { title } from '@/settings'
 
 // API Request Methods
 import {
-  // requestLogin,
-  // requestLogout,
-  // requestUserInfoFromSession,
-  // requestSessionInfo,
-  // setSessionAttribute,
   requestUserActivity
 } from '@/api/user'
 
@@ -42,33 +37,11 @@ import {
   setSessionAttribute,
   requestUserInfoFromSession
 } from '@/api/ADempiere/security/index.ts'
-// import {
-//   requestRolesList,
-//   requestChangeRole
-// } from '@/api/role.js'
-import {
-  getToken,
-  setToken,
-  removeToken,
-  getCurrentRole,
-  setCurrentRole,
-  removeCurrentRole,
-  getCurrentOrganization,
-  setCurrentOrganization,
-  getCurrentWarehouse,
-  setCurrentWarehouse,
-  removeCurrentWarehouse,
-  removeCurrentOrganization,
-  setCurrentClient
-} from '@/utils/auth'
 import {
   requestOrganizationsList,
   requestWarehousesList,
   systemInfo
 } from '@/api/ADempiere/common/index.ts'
-// import {
-//   loginAuthentication
-// } from '@/api/ADempiere/open-id/services.js'
 
 // Utils and Helper Methods
 import { resetRouter } from '@/router'
@@ -76,6 +49,13 @@ import { showMessage } from '@/utils/ADempiere/notification'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
+import {
+  getToken, setToken, removeToken,
+  setCurrentClient,
+  getCurrentRole, setCurrentRole, removeCurrentRole,
+  getCurrentOrganization, setCurrentOrganization, removeCurrentOrganization,
+  getCurrentWarehouse, setCurrentWarehouse, removeCurrentWarehouse
+} from '@/utils/auth'
 
 const state = {
   token: getToken(),
@@ -599,7 +579,9 @@ const actions = {
     setSessionAttribute({
       warehouseId: currentWarehouse.id
     })
-      .then(token => {
+      .then(response => {
+        const { token } = response
+        commit('SET_TOKEN', token)
         setToken(token)
         // location.reload()
       })
