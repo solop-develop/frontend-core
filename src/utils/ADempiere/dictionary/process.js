@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import language from '@/lang'
 import store from '@/store'
 
 // Utils and Helpers Methods
@@ -26,6 +25,8 @@ import { sortFields } from '@/utils/ADempiere/dictionary/panel'
 import { BUTTON, isAddRangeField, isHiddenField } from '@/utils/ADempiere/references'
 import { requestSaveProcessCustomization } from '@/api/ADempiere/user-customization/process'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
+
+export const CONTAINER_PROCESS_PREFIX = 'process_'
 
 /**
  * Is displayed field parameter in process/report panel
@@ -163,43 +164,6 @@ export function generateProcess({
 
   return {
     processDefinition
-  }
-}
-
-export const runProcess = {
-  name: language.t('actionMenu.runProcess'),
-  enabled: ({ containerUuid }) => {
-    const fieldsEmpty = store.getters.getProcessParametersEmptyMandatory({
-      containerUuid
-    })
-
-    return isEmptyValue(fieldsEmpty)
-  },
-  isSvgIcon: false,
-  icon: 'el-icon-setting',
-  actionName: 'runProcess',
-  uuid: null,
-  runProcess: ({ containerUuid }) => {
-    store.dispatch('startProcess', {
-      containerUuid
-    })
-  }
-}
-
-export const clearParameters = {
-  name: language.t('process.clearParameters.title'),
-  description: language.t('process.clearParameters.description'),
-  enabled: ({ containerUuid }) => {
-    return true
-  },
-  isSvgIcon: true,
-  icon: 'layers-clear',
-  actionName: 'clearParameters',
-  uuid: null,
-  clearParameters: ({ containerUuid }) => {
-    store.dispatch('setProcessDefaultValues', {
-      containerUuid
-    })
   }
 }
 

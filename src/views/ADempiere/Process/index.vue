@@ -1,7 +1,7 @@
 <!--
   ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A.
-  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com  https://github.com/EdwinBetanc0urt
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -26,12 +26,12 @@
         :name="processMetadata.name"
         :help="processMetadata.help"
       />
+
       <div id="process-loaded">
         <p style="text-align: end;">
           <action-menu
             id="action-menu"
-            :parent-uuid="processId"
-            :container-uuid="processId"
+            :container-uuid="processUuid"
             :container-manager="containerManager"
             :actions-manager="actionsManager"
           />
@@ -40,14 +40,15 @@
         <!-- style="float: right;padding-left: 1%;z-index: 99;" -->
         <panel-definition
           id="panel-definition"
-          :container-uuid="processId"
+          :container-uuid="processUuid"
           :container-manager="containerManager"
           :is-tab-panel="true"
         />
         <br>
       </div>
+
       <panel-footer
-        :container-uuid="processId"
+        :container-uuid="processUuid"
         :is-button-run="true"
         :is-button-clear="true"
         :is-button-close="true"
@@ -98,11 +99,15 @@ export default defineComponent({
     const processMetadata = ref({})
 
     const currentRoute = router.app._route
-    const processId = currentRoute.meta.uuid.toString()
+    const processId = currentRoute.meta.id
+    const processUuid = currentRoute.meta.uuid
 
     const {
       actionsManager, containerManager, storedProcessDefinition
-    } = mixinProcess(processId)
+    } = mixinProcess({
+      processId,
+      processUuid
+    })
 
     const showContextMenu = computed(() => {
       return store.state.settings.showContextMenu
@@ -159,7 +164,7 @@ export default defineComponent({
 
     function clearParameters() {
       store.dispatch('setProcessDefaultValues', {
-        containerUuid: processId
+        containerUuid: processUuid
       })
     }
 
@@ -167,6 +172,7 @@ export default defineComponent({
 
     return {
       processId,
+      processUuid,
       isLoadedMetadata,
       processMetadata,
       // Computeds

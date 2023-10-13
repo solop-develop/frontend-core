@@ -27,10 +27,13 @@ import {
 } from '@/utils/ADempiere/constants/actionsMenuList.js'
 
 // Utils and Helper Methods
-import {
-  containerManager, generateProcess, clearParameters, runProcess, isDisplayedField
-} from '@/utils/ADempiere/dictionary/process.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import {
+  containerManager, generateProcess, isDisplayedField
+} from '@/utils/ADempiere/dictionary/process.js'
+import {
+  clearParameters, runProcess
+} from '@/utils/ADempiere/dictionary/process/actionsMenu.ts'
 
 export default {
   addProcessToList({ commit, dispatch }, processResponse) {
@@ -43,7 +46,7 @@ export default {
       })
 
       dispatch('seProcessActionsMenu', {
-        processId: processResponse.id
+        processUuid: processResponse.uuid
       })
 
       resolve(processResponse)
@@ -80,16 +83,17 @@ export default {
    * @param {string} containerUuid
    */
   seProcessActionsMenu({ commit, getters }, {
-    processId
+    processUuid
   }) {
-    const processDefinition = getters.getStoredProcess(processId)
+    const processDefinition = getters.getStoredProcess(processUuid)
 
     const actionsList = []
 
     // execute process action
     const actionExecute = {
       ...runProcess,
-      description: processDefinition.description
+      description: processDefinition.description,
+      uuid: processDefinition.uuid
     }
     actionsList.push(actionExecute)
     actionsList.push(clearParameters)
