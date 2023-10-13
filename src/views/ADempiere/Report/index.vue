@@ -35,15 +35,14 @@
       <div id="report-view">
         <action-menu
           :container-manager="containerManager"
-          :parent-uuid="reportId"
-          :container-uuid="reportId"
+          :container-uuid="reportUuid"
           :actions-manager="actionsManager"
           style="float: right;padding-left: 1%;"
         />
         <br><br>
 
         <panel-definition
-          :container-uuid="reportId"
+          :container-uuid="reportUuid"
           :panel-metadata="reportMetadata"
           :container-manager="containerManager"
           :is-tab-panel="true"
@@ -61,7 +60,7 @@
       :size="isMobile ? '100%' : '50%'"
     >
       <options-report
-        :container-uuid="reportId"
+        :container-uuid="reportUuid"
         :container-manager="containerManager"
         :is-show-title="false"
       />
@@ -75,7 +74,7 @@
       @click="handleOpem()"
     />
     <panel-footer
-      :container-uuid="reportId"
+      :container-uuid="reportUuid"
       :is-button-run="true"
       :is-button-clear="true"
       :is-button-close="true"
@@ -107,8 +106,6 @@ import PanelFooter from '@/components/ADempiere/PanelFooter/index.vue'
 
 // Utils and Helper Methods
 import { closeTagView } from '@/utils/ADempiere/componentUtils'
-// import { convertProcess as convertReport } from '@/utils/ADempiere/apiConverts/dictionary.js'
-// import { generateProcess as generateReport } from '@/utils/ADempiere/dictionary/process.js'
 
 export default defineComponent({
   name: 'ReportView',
@@ -127,11 +124,15 @@ export default defineComponent({
     const reportMetadata = ref({})
 
     const currentRoute = router.app._route
-    const reportId = currentRoute.meta.id.toString()
+    const reportId = currentRoute.meta.id
+    const reportUuid = currentRoute.meta.uuid
 
     const {
       containerManager, actionsManager, storedReportDefinition
-    } = mixinReport(reportId)
+    } = mixinReport({
+      reportId,
+      reportUuid
+    })
 
     const showContextMenu = computed(() => {
       return store.state.settings.showContextMenu
@@ -143,13 +144,13 @@ export default defineComponent({
 
     const isShowPanelConfig = computed(() => {
       return store.getters.getShowPanelConfig({
-        containerUuid: reportId
+        containerUuid: reportUuid
       })
     })
 
     function showPanelConfigReport(value) {
       store.commit('setShowPanelConfig', {
-        containerUuid: reportId,
+        containerUuid: reportUuid,
         value
       })
     }
@@ -212,14 +213,14 @@ export default defineComponent({
 
     function runReport(params) {
       store.dispatch('buildReport', {
-        containerUuid: reportId,
+        containerUuid: reportUuid,
         isSummary: true
       })
     }
 
     function clearParameters() {
       store.dispatch('setReportDefaultValues', {
-        containerUuid: reportId
+        containerUuid: reportUuid
       })
     }
 
@@ -227,6 +228,7 @@ export default defineComponent({
 
     return {
       reportId,
+      reportUuid,
       isLoadedMetadata,
       reportMetadata,
       containerManager,

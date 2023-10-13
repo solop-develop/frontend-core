@@ -26,6 +26,9 @@ import { BUTTON, isAddRangeField, isHiddenField } from '@/utils/ADempiere/refere
 import { requestSaveProcessCustomization } from '@/api/ADempiere/user-customization/process'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
 
+/**
+ * Prefix to generate unique key
+ */
 export const CONTAINER_PROCESS_PREFIX = 'process_'
 
 /**
