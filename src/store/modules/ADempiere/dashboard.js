@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,11 +24,10 @@
 import { UNSUPPORTED_DASHBOARDS } from '@/utils/ADempiere/dictionary/dashboard'
 
 // API Request Methods
-import { lisDashboards } from '@/api/ADempiere/dashboard/index.ts'
+import { lisDashboardsRequest } from '@/api/ADempiere/dashboard/index.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-// import { getCurrentRole } from '@/utils/auth'
 
 const dashboard = {
   state: {
@@ -55,13 +54,9 @@ const dashboard = {
     refreshDashboard({ commit }, parameters) {
       commit('notifyDashboardRefresh', parameters)
     },
-    getDashboardListFromServer({ commit, dispatch, getters, rootGetters }, {
-      roleId
-    }) {
+    getDashboardListFromServer({ commit, dispatch, getters }) {
       return new Promise(resolve => {
-        lisDashboards({
-          roleId
-        })
+        lisDashboardsRequest({})
           .then(dashboardResponse => {
             const dashboardsList = dashboardResponse.dashboardsList
               .filter(item => {

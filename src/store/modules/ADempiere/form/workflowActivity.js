@@ -24,7 +24,7 @@ import language from '@/lang'
 import {
   workflowActivities
 } from '@/api/ADempiere/workflow.js'
-import { listNotifiications } from '@/api/ADempiere/dashboard/index.ts'
+import { listNotifiicationsRequest } from '@/api/ADempiere/dashboard/index.ts'
 import { requestListWorkflowsLogs } from '@/api/ADempiere/window'
 
 // Utils and Helper Methods
@@ -160,7 +160,7 @@ export default {
         })
     },
     findNotifications({ commit }) {
-      return listNotifiications()
+      return listNotifiicationsRequest()
         .then(response => {
           const { notifications } = response
           commit('setListNotifiications', notifications)

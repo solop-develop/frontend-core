@@ -1,20 +1,21 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
- Contributor(s): Elsio Sanchez esanchez@erpya.com www.erpya.com
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez esanchez@erpya.com https://github.com/Elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
+
 <template>
   <el-card class="box-card" :body-style="{ padding: '0px' }" shadow="never">
     <div class="recent-items">
@@ -44,13 +45,22 @@
 </template>
 
 <script>
-import { getPendingDocumentsFromServer } from '@/api/ADempiere/dashboard/index.ts'
-import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
+// Components and Mixins
 import mixinDashboard from '@/components/ADempiere/Dashboard/mixinDashboard.js'
+
+// API Request Methods
+import { getPendingDocumentsRequest } from '@/api/ADempiere/dashboard/index.ts'
+
+// Utils and Helper Methods
+import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 
 export default {
   name: 'PendingDocuments',
-  mixins: [mixinDashboard],
+
+  mixins: [
+    mixinDashboard
+  ],
+
   data() {
     return {
       documents: []
@@ -64,23 +74,21 @@ export default {
       return this.documents
     }
   },
+
   mounted() {
     this.getPendingDocuments()
 
     this.unsubscribe = this.subscribeChanges()
   },
+
   beforeDestroy() {
     this.unsubscribe()
   },
+
   methods: {
     getPendingDocuments() {
-      const roleId = this.$store.getters['user/getRole'].id
-      const { id } = this.$store.getters['user/userInfo']
       return new Promise(resolve => {
-        getPendingDocumentsFromServer({
-          roleId,
-          userId: id
-        })
+        getPendingDocumentsRequest({})
           .then(response => {
             const documentsList = response.pendingDocumentsList.map(documentItem => {
               return {
@@ -110,8 +118,10 @@ export default {
         tabParent = 0
       }
 
+      const containerIdentifier = 'window_' + row.windowId
       zoomIn({
-        uuid: row.windowUuid,
+        attributeValue: containerIdentifier,
+        attributeName: 'containerKey',
         params: {
           ...row.criteria
         },

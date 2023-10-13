@@ -16,7 +16,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Utils and Helper Methods
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default {
   name: 'MixinDashboard',
@@ -38,7 +40,7 @@ export default {
   methods: {
     handleClick(row) {
       let recordUuid
-      if (!this.isEmptyValue(row.uuidRecord)) {
+      if (!isEmptyValue(row.uuidRecord)) {
         recordUuid = row.uuidRecord
       }
       let tabParent
@@ -46,10 +48,10 @@ export default {
         tabParent = 0
       }
 
-      const referenceUuid = row.action + '_' + row.reference_id
+      const containerIdentifier = row.action + '_' + (row.reference_id || row.referenceId)
       zoomIn({
-        uuid: referenceUuid,
-        attributeName: 'referenceUuid',
+        attributeValue: containerIdentifier,
+        attributeName: 'containerKey',
         query: {
           tabParent,
           action: recordUuid
