@@ -121,10 +121,7 @@ export default {
               path: '/'
             }, () => {})
           }
-          // this.$store.dispatch('getDashboardListFromServer', {
-          //   roleId: response.id,
-          //   roleUuid: response.uuid
-          // })
+          // this.$store.dispatch('getDashboardListFromServer')
         })
     },
     changeOrganization(organizationId) {

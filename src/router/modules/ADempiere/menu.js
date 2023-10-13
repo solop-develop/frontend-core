@@ -22,7 +22,6 @@ import Layout from '@/layout'
 import staticRoutes from '@/router/modules/ADempiere/staticRoutes.js'
 
 // API Request Methods
-// import { requestMenu } from '@/api/ADempiere/dictionary/menu'
 import { requestMenu } from '@/api/ADempiere/security/index.ts'
 
 // Utils and Helper Methods
@@ -135,6 +134,7 @@ function getChildFromAction({ menu, index, clientId, roleId, organizationId }) {
       type,
       id: menu.reference_id,
       uuid: menu.reference_uuid,
+      containerKey: type + '_' + menu.reference_id,
       childs: []
     },
     children: []
@@ -189,6 +189,7 @@ function getRouteFromMenuItem({ menu, clientId, roleId, organizationId }) {
       noCache: true,
       referenceId: menu.reference_id,
       referenceUuid: menu.reference_uuid,
+      containerKey: type + '_' + menu.reference_id,
       title: menu.name,
       type,
       childs: []

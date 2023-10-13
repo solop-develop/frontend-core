@@ -17,15 +17,17 @@
  */
 
 import { request } from '@/utils/ADempiere/request'
-import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
+
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+
+// Utils and Helper Methods
+import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 /**
  * Conversion Rate
  */
-export function lisDashboards({
-  roleId,
+export function lisDashboardsRequest({
   pageToken,
   pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
@@ -33,7 +35,6 @@ export function lisDashboards({
     url: '/dashboard/dashboards',
     method: 'get',
     params: {
-      role_id: roleId,
       // Page Data
       page_token: pageToken,
       page_size: pageSize
@@ -53,7 +54,7 @@ export function lisDashboards({
 /**
  * Get Metrics for Charts
  */
-export function getMetrics({
+export function getMetricRequest({
   id
 }) {
   return request({
@@ -68,8 +69,7 @@ export function getMetrics({
 /**
  * Request Favorites List
  */
-export function getFavoritesFromServer({
-  userId,
+export function getFavoritesRequest({
   pageToken,
   pageSize
 }) {
@@ -77,7 +77,6 @@ export function getFavoritesFromServer({
     url: '/dashboard/favorites',
     method: 'get',
     params: {
-      user_id: userId,
       // Page Data
       page_token: pageToken,
       page_size: pageSize
@@ -99,9 +98,7 @@ export function getFavoritesFromServer({
 /**
  * Get pending documents
  */
-export function getPendingDocumentsFromServer({
-  userId,
-  roleId,
+export function getPendingDocumentsRequest({
   pageToken,
   pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
@@ -109,8 +106,6 @@ export function getPendingDocumentsFromServer({
     url: '/dashboard/pending-documents',
     method: 'get',
     params: {
-      user_id: userId,
-      role_id: roleId,
       // Page Data
       page_token: pageToken,
       page_size: pageSize
@@ -132,7 +127,7 @@ export function getPendingDocumentsFromServer({
 /**
  * GetNotifications
  */
-export function listNotifiications() {
+export function listNotifiicationsRequest() {
   return request({
     url: '/dashboard/notifications',
     method: 'get'
