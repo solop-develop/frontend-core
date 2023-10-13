@@ -247,9 +247,9 @@ export default {
         case 'FieldDate':
           field = () => import('@/components/ADempiere/FieldDefinition/FieldDate')
           break
-        case 'FieldSearch':
-          field = () => import('@/components/ADempiere/FieldDefinition/FieldSearch')
-          break
+        // case 'FieldSearch':
+        //   field = () => import('@/components/ADempiere/FieldDefinition/FieldSearch')
+        //   break
         case 'FieldNumber':
           field = () => import('@/components/ADempiere/FieldDefinition/FieldNumber')
           break
@@ -268,7 +268,9 @@ export default {
         case 'FieldWarehouseLocator':
           field = () => import('@/components/ADempiere/FieldDefinition/FieldWarehouseLocator')
           break
+        case 'FieldSearch':
         case 'FieldSelect':
+        case 'FieldAccountingCombination':
           field = () => import('@/components/ADempiere/FieldDefinition/FieldSelect')
           break
         case 'FieldImage':
@@ -277,9 +279,9 @@ export default {
         case 'FieldLocationAddress':
           field = () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress')
           break
-        case 'FieldAccountingCombination':
-          field = () => import('@/components/ADempiere/FieldDefinition/FieldAccountingCombination')
-          break
+        // case 'FieldAccountingCombination':
+        //   field = () => import('@/components/ADempiere/FieldDefinition/FieldAccountingCombination')
+        //   break
         case 'FieldTextLong':
           field = () => import('@/components/ADempiere/FieldDefinition/FieldTextLong')
           break

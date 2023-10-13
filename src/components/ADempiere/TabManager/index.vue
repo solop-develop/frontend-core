@@ -198,9 +198,10 @@ import TabOptions from './TabOptions.vue'
 import { UUID } from '@/utils/ADempiere/constants/systemColumns.js'
 
 // API Request Methods
-import { requestListEntityChats, existsChatsEntries, requestExistsReferences } from '@/api/ADempiere/window'
-import { requestExistsAttachment } from '@/api/ADempiere/user-interface/component/resource'
-import { requestExistsIssues } from '@/api/ADempiere/user-interface/component/issue'
+import { requestListEntityChats, requestExistsReferences } from '@/api/ADempiere/window'
+import { existsChatsEntries } from '@/api/ADempiere/logs/tabInfo/chatsEntries.ts'
+import { requestExistsAttachment } from '@/api/ADempiere/logs/tabInfo/windowAttachment.ts'
+import { requestExistsIssues } from '@/api/ADempiere/logs/tabInfo/windowIssues.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -333,6 +334,15 @@ export default defineComponent({
         return inf
       }
       return {}
+    })
+
+    const currentTabId = computed(() => {
+      const { currentTab } = store.getters.getContainerInfo
+      if (currentTab) {
+        const { id } = currentTab
+        return id
+      }
+      return undefined
     })
 
     // Current Tab the Panel Info
@@ -633,7 +643,7 @@ export default defineComponent({
       }
     })
 
-    watch(containerInfo, (newValue, oldValue) => {
+    watch(currentTabId, (newValue, oldValue) => {
       if (newValue !== oldValue && !isEmptyValue(newValue)) {
         getDashboard()
       }
@@ -658,7 +668,8 @@ export default defineComponent({
     const getReferences = () => {
       showReference.value = false
       if (isEmptyValue(currentTabTableName.value) ||
-        (isEmptyValue(currentRecordUuid.value) &&
+        !isEmptyValue(currentTabTableName.value) ||
+        (isEmptyValue(currentRecordUuid.value) ||
         (isEmptyValue(currentRecordId.value) || currentRecordId.value <= 0))) {
         return
       }
@@ -688,9 +699,10 @@ export default defineComponent({
 
     const getIssues = () => {
       showIssues.value = false
-      if (isEmptyValue(currentTabTableName.value) ||
-        (isEmptyValue(currentRecordUuid.value) &&
-        (isEmptyValue(currentRecordId.value) || currentRecordId.value <= 0))) {
+      if (
+        isEmptyValue(currentTabTableName.value) ||
+        isEmptyValue(currentRecordId.value)
+      ) {
         return
       }
       requestExistsIssues({
@@ -698,16 +710,15 @@ export default defineComponent({
         recordUuid: currentRecordUuid.value,
         recordId: currentRecordId.value
       })
-        .then(responseReferences => {
-          if (responseReferences > 0) {
+        .then(response => {
+          const recordCount = response.record_count
+          if (recordCount > 0) {
             showIssues.value = true
-            countIssues.value = responseReferences
+            countIssues.value = recordCount
             return
           }
           showIssues.value = false
           return
-          // const { referencesList } = responseReferences
-          // showReference.value = !isEmptyValue(referencesList)
         })
         .catch(() => {})
     }
@@ -718,20 +729,22 @@ export default defineComponent({
 
     const getIsNotes = () => {
       showIsNote.value = false
-      // if (isEmptyValue(currentTabTableName.value) ||
-      //   (isEmptyValue(currentRecordUuid.value) &&
-      //   (isEmptyValue(currentRecordId.value) || currentRecordId.value <= 0))) {
-      //   return
-      // }
+      if (
+        isEmptyValue(currentTabTableName.value) ||
+        isEmptyValue(currentRecordId.value)
+      ) {
+        return
+      }
       existsChatsEntries({
         tableName: currentTabTableName.value,
         recordUuid: currentRecordUuid.value,
         recordId: currentRecordId.value
       })
         .then(responseReferences => {
-          if (responseReferences > 0) {
+          const recordCount = responseReferences.record_count
+          if (recordCount > 0) {
             showIsNote.value = true
-            countIsNote.value = responseReferences
+            countIsNote.value = recordCount
             return
           }
           showIsNote.value = false
@@ -744,6 +757,12 @@ export default defineComponent({
      * Chat Available
      */
     const chatAvailable = () => {
+      if (
+        isEmptyValue(currentTabTableName.value) ||
+        isEmptyValue(currentRecordUuid.value)
+      ) {
+        return
+      }
       requestListEntityChats({
         tableName: currentTabTableName.value,
         recordId: currentRecordId.value,
@@ -864,6 +883,7 @@ export default defineComponent({
     return {
       tabUuid,
       currentTab,
+      currentTabId,
       tableHeaders,
       recordsList,
       drawer,

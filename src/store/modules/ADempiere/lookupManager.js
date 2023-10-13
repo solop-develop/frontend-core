@@ -86,6 +86,7 @@ const lookupManager = {
       processParameterId,
       browseFieldId,
       fieldId,
+      id,
       //
       referenceUuid,
       searchValue,
@@ -112,7 +113,7 @@ const lookupManager = {
           contextAttributesList,
           browseFieldId,
           processParameterId,
-          fieldId,
+          fieldId: id,
           //
           referenceUuid,
           searchValue,
