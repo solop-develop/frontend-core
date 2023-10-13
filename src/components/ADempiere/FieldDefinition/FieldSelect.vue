@@ -103,7 +103,8 @@ export default {
           parentUuid: this.metadata.parentUuid,
           containerUuid: this.metadata.containerUuid,
           contextColumnNames: this.metadata.contextColumnNames,
-          uuid: this.metadata.uuid
+          uuid: this.metadata.uuid,
+          id: this.metadata.id
         })
       )
     },
