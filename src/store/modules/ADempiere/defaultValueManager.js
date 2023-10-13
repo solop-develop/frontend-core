@@ -120,16 +120,16 @@ const defaultValueManager = {
 
         let key = clientId
         // TODO: generate with your fieldUuid, processParameterUuid, browseFieldUuid
-        if (!isEmptyValue(uuid)) {
-          key += `|${uuid}`
-        }
-        // if (!isEmptyValue(fieldUuid)) {
-        //   key += `|${fieldUuid}`
-        // } else if (!isEmptyValue(processParameterUuid)) {
-        //   key += `|${processParameterUuid}`
-        // } else if (!isEmptyValue(browseFieldUuid)) {
-        //   key += `|${browseFieldUuid}`
+        // if (!isEmptyValue(uuid)) {
+        //   key += `|${uuid}`
         // }
+        if (!isEmptyValue(fieldUuid)) {
+          key += `|${fieldUuid}`
+        } else if (!isEmptyValue(processParameterUuid)) {
+          key += `|${processParameterUuid}`
+        } else if (!isEmptyValue(browseFieldUuid)) {
+          key += `|${browseFieldUuid}`
+        }
 
         const contextKey = generateContextKey(contextAttributesList)
         key += contextKey

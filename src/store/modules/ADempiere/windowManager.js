@@ -22,10 +22,7 @@ import router from '@/router'
 
 // API Request Methods
 import {
-  // requestGetEntities,
-  updateEntity
-} from '@/api/ADempiere/user-interface/persistence.js'
-import {
+  updateEntity,
   deleteEntity,
   requestGetEntities
 } from '@/api/ADempiere/userInterface/entities.ts'
