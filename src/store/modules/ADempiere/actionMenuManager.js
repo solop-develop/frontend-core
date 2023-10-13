@@ -18,7 +18,7 @@
 
 import Vue from 'vue'
 
-// utils and helper methods
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 const initState = {

@@ -22,15 +22,20 @@ import lang from '@/lang'
 import store from '@/store'
 
 // Constants
-import { DEFAULT_REPORT_TYPE } from '@/utils/ADempiere/dictionary/report'
+import {
+  CONTAINER_REPORT_PREFIX,
+  DEFAULT_REPORT_TYPE
+} from '@/utils/ADempiere/dictionary/report'
 
 // Utils and Helper Methods
 import { containerManager } from '@/utils/ADempiere/dictionary/report'
 import { isEmptyValue } from '@/utils/ADempiere'
 
-export default (reportId) => {
+export default ({ reportId, reportUuid }) => {
+  const containerKey = CONTAINER_REPORT_PREFIX + reportId
+
   const storedReportDefinition = computed(() => {
-    return store.getters.getStoredReport(reportId)
+    return store.getters.getStoredReport(reportUuid)
   })
 
   const actionsList = computed(() => {
@@ -38,12 +43,14 @@ export default (reportId) => {
       return []
     }
     return store.getters.getStoredActionsMenu({
-      containerUuid: storedReportDefinition.value.uuid
+      containerUuid: reportUuid
     })
   })
 
   const actionsManager = ref({
-    containerUuid: reportId,
+    containerUuid: reportUuid,
+    containerId: reportId,
+    containerKey,
 
     defaultActionName() {
       let reportType = DEFAULT_REPORT_TYPE

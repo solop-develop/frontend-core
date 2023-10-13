@@ -26,7 +26,7 @@ import { BEARER_TYPE } from '@/utils/auth'
 
 // Utils and Helper Methods
 import { getToken } from '@/utils/auth'
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { getTypeOfValue, isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { mimeTypeOfReport } from '@/utils/ADempiere/dictionary/report'
 
 export const RESOURCE_TYPE_ATTACHMENT = 0
@@ -191,7 +191,14 @@ export function buildBlobAndValues({
   mimeType,
   outputStream
 }) {
-  const dataValues = Object.values(outputStream)
+  let dataValues = outputStream
+
+  if (getTypeOfValue(outputStream) === 'OBJECT') {
+    dataValues = Object.values(outputStream)
+  } else if (getTypeOfValue(outputStream) === 'STRING') {
+    dataValues = Buffer.from(outputStream, 'base64')
+  }
+
   const blobFile = new Blob([
     Uint8Array.from(dataValues)
   ], {

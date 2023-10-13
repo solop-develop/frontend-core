@@ -58,8 +58,8 @@ const reportManager = {
   state: initState,
 
   mutations: {
-    setPrintFormatsList(state, { containerUuid, printFormatList }) {
-      Vue.set(state.printFormatList, containerUuid, printFormatList)
+    setPrintFormatsList(state, { reportId, printFormatList }) {
+      Vue.set(state.printFormatList, reportId, printFormatList)
     },
     setReportViewsList(state, { containerUuid, reportViewsList }) {
       Vue.set(state.reportViewsList, containerUuid, reportViewsList)
@@ -206,6 +206,7 @@ const reportManager = {
               router.push({
                 name: REPORT_VIEWER_NAME,
                 params: {
+                  reportId: reportDefinition.id,
                   reportUuid: reportDefinition.uuid,
                   instanceUuid: instance_id,
                   fileName: output.file_name,
@@ -371,7 +372,7 @@ const reportManager = {
             )
 
             commit('setPrintFormatsList', {
-              containerUuid: reportId,
+              reportId,
               printFormatList
             })
 
@@ -649,12 +650,12 @@ const reportManager = {
       return state.reportsOutput[instanceUuid]
     },
 
-    getPrintFormatList: (state) => (containerUuid) => {
-      return state.printFormatList[containerUuid] || []
+    getPrintFormatList: (state) => (reportId) => {
+      return state.printFormatList[reportId] || []
     },
 
-    getDefaultPrintFormat: (state, getters) => (containerUuid) => {
-      const printFormatsList = getters.getPrintFormatList(containerUuid)
+    getDefaultPrintFormat: (state, getters) => (reportId) => {
+      const printFormatsList = getters.getPrintFormatList(reportId)
 
       if (isEmptyValue(printFormatsList)) {
         return undefined
@@ -665,23 +666,23 @@ const reportManager = {
       return defaultPrintFormat || printFormatsList.at()
     },
 
-    getReportViewList: (state) => (containerUuid) => {
-      return state.reportViewsList[containerUuid] || []
+    getReportViewList: (state) => (reportId) => {
+      return state.reportViewsList[reportId] || []
     },
 
-    getReportView: (state, getters) => ({ containerUuid, reportViewUuid }) => {
-      return getters.getReportViewList(containerUuid).find(reportView => {
+    getReportView: (state, getters) => ({ reportId, reportViewUuid }) => {
+      return getters.getReportViewList(reportId).find(reportView => {
         return reportView.reportViewUuid === reportViewUuid
       })
     },
 
-    getDefaultReportView: (state, getters) => (containerUuid) => {
-      const reportViewsList = getters.getReportViewList(containerUuid)
+    getDefaultReportView: (state, getters) => (reportId) => {
+      const reportViewsList = getters.getReportViewList(reportId)
 
       if (isEmptyValue(reportViewsList)) {
         return undefined
       }
-      const defaultReportView = reportViewsList.find(reportView => reportView.isDefault)
+      const defaultReportView = reportViewsList.find(reportView => reportView.is_default)
       return defaultReportView || reportViewsList.at()
     },
 

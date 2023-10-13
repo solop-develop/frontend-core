@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -29,7 +29,6 @@
           <div v-if="!isEmptyValue(storedReportDefinition)" style="float: right;padding-left: 1%;">
             <action-menu
               :container-manager="containerManager"
-              :parent-uuid="reportUuid"
               :container-uuid="reportUuid"
               :actions-manager="actionsManager"
               :relations-manager="relationsManager"
@@ -39,9 +38,9 @@
             :format="reportType"
             :content="reportContent"
             :src="link.href"
-            :mime-type="storedReportOutput.mimeType"
+            :mime-type="storedReportOutput.mime_type"
             :name="storedReportOutput.name"
-            :stream="storedReportOutput.outputStream"
+            :stream="storedReportOutput.output_stream"
           />
         </div>
       </el-col>
@@ -123,8 +122,14 @@ export default defineComponent({
   },
 
   setup(props, { root }) {
-    const reportUuid = root.$route.params.reportUuid
-    const { containerManager, actionsManager, storedReportDefinition } = mixinReport(reportUuid)
+    const { reportId, reportUuid } = root.$route.params
+
+    const {
+      containerManager, actionsManager, storedReportDefinition
+    } = mixinReport({
+      reportId,
+      reportUuid
+    })
     const isLoading = ref(false)
     const reportType = ref(DEFAULT_REPORT_TYPE)
     const reportContent = ref('')
@@ -159,7 +164,7 @@ export default defineComponent({
 
     function displayReport(reportOutput) {
       if (!reportOutput.isError) {
-        const { output, reportType: format } = reportOutput
+        const { output, report_type: format } = reportOutput
 
         reportType.value = format
         reportContent.value = output
@@ -177,13 +182,13 @@ export default defineComponent({
     // get report from vuex store or request from server
     function getReport() {
       if (!isEmptyValue(storedReportDefinition.value)) {
-        findActionsMenu()
+        // findActionsMenu()
         getCachedReport()
         return
       }
 
       store.dispatch('getReportDefinitionFromServer', {
-        uuid: reportUuid
+        id: reportId
       }).then(() => {
         getCachedReport()
       })
@@ -251,11 +256,11 @@ export default defineComponent({
         })
     }
 
-    function findActionsMenu() {
-      store.dispatch('setReportActionsMenu', {
-        containerUuid: reportUuid
-      })
-    }
+    // function findActionsMenu() {
+    //   store.dispatch('setReportActionsMenu', {
+    //     containerUuid: reportUuid
+    //   })
+    // }
 
     function handleClose() {
       showPanelConfigReport(false)

@@ -29,14 +29,16 @@ import {
 
 // Utils and Helper Methods
 import {
-  containerManager,
+  containerManager
+} from '@/utils/ADempiere/dictionary/report.js'
+import {
   runReport,
   runReportAs,
   changeParameters,
   clearParameters,
   runReportAsPrintFormat,
   runReportAsView
-} from '@/utils/ADempiere/dictionary/report.js'
+} from '@/utils/ADempiere/dictionary/report/actionsMenu.ts'
 import { generateProcess as generateReport, isDisplayedField } from '@/utils/ADempiere/dictionary/process.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
@@ -51,7 +53,7 @@ export default {
       })
 
       dispatch('setReportActionsMenu', {
-        reportId: reportResponse.id
+        reportUuid: reportResponse.uuid
       })
 
       resolve(reportResponse)
@@ -70,6 +72,7 @@ export default {
         id
       })
         .then(async reportResponse => {
+          const { uuid } = reportResponse
           const { processDefinition: reportDefinition } = generateReport({
             processToGenerate: reportResponse
           })
@@ -83,10 +86,12 @@ export default {
           resolve(reportDefinition)
 
           // exist dialog if is process associated
-          const storedModalDialog = getters.getModalDialogManager({ containerUuid: id })
+          const storedModalDialog = getters.getModalDialogManager({
+            containerUuid: uuid
+          })
           if (isEmptyValue(storedModalDialog)) {
             dispatch('setModalDialog', {
-              containerUuid: id,
+              containerUuid: uuid,
               title: reportDefinition.name,
               doneMethod: () => {
                 dispatch('startReport', {
@@ -119,13 +124,19 @@ export default {
    * @param {number} reportId
    */
   setReportActionsMenu({ commit, getters, rootGetters }, {
-    reportId
+    reportUuid
   }) {
-    const reportDefinition = getters.getStoredReport(reportId)
+    const reportDefinition = getters.getStoredReport(reportUuid)
+    const reportId = reportDefinition.id
     // const containerUuid = reportDefinition.uuid
 
     const actionsList = []
-    actionsList.push(runReport)
+
+    const actionGenerateReport = {
+      ...runReport
+      // containerId: reportId
+    }
+    actionsList.push(actionGenerateReport)
 
     // destruct to avoid deleting the reference to the original variable and to avoid mutating
     const actionExportType = { ...runReportAs }
@@ -158,7 +169,10 @@ export default {
     actionsList.push(clearParameters)
 
     // destruct to avoid deleting the reference to the original variable and to avoid mutating
-    const actionPrintFormat = { ...runReportAsPrintFormat }
+    const actionPrintFormat = {
+      ...runReportAsPrintFormat,
+      containerId: reportId
+    }
     const printFormats = rootGetters.getPrintFormatList(reportId)
     if (!isEmptyValue(printFormats)) {
       const printFormatChilds = []
@@ -190,7 +204,10 @@ export default {
     actionsList.push(actionPrintFormat)
 
     // destruct to avoid deleting the reference to the original variable and to avoid mutating
-    const actionView = { ...runReportAsView }
+    const actionView = {
+      ...runReportAsView,
+      containerId: reportId
+    }
     const reportsView = rootGetters.getReportViewList(reportId)
     if (!isEmptyValue(reportsView)) {
       const printFormatChilds = []

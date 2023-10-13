@@ -64,6 +64,7 @@
               parentUuid,
               containerUuid,
               uuid: action.uuid,
+              containerId: action.containerId,
               containerManager
             })"
             :divided="true"
@@ -315,7 +316,8 @@ export default defineComponent({
       action[actionName]({
         root,
         parentUuid: currentTab.value.parentUuid,
-        containerUuid: currentTab.value.uuid,
+        containerUuid: containerUuid, // currentTab.value.uuid,
+        containerId: action.containerId, // currentTab.value.uuid,
         tableName: currentTab.value.tableName,
         tabId: currentTab.value.id,
         instanceUuid,
