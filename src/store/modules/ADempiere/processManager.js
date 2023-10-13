@@ -23,10 +23,8 @@ import router from '@/router'
 
 // API Request Methods
 import {
-  requestRunProcess
-} from '@/api/ADempiere/process'
-import {
-  requestRunBusinessProcess
+  requestRunBusinessProcess,
+  requestRunBusinessProcessAsWindow
 } from '@/api/ADempiere/businessData/runBusinessProcess.ts'
 
 // Constants
@@ -201,7 +199,7 @@ const processManager = {
           columnName: RECORD_ID
         })
 
-        requestRunProcess({
+        requestRunBusinessProcess({
           uuid: containerUuid,
           parametersList,
           // in browser
@@ -294,7 +292,6 @@ const processManager = {
           containerUuid: containerUuid
         })
         const currentProcess = storedTab.processes.find(process => process.name === processModal.title)
-
         if (isEmptyValue(parametersList)) {
           const fieldsList = getters.getStoredFieldsFromProcess(containerUuid)
           parametersList = rootGetters.getProcessParameters({
@@ -318,11 +315,17 @@ const processManager = {
 
         let isProcessedError = false
         let summary = ''
-        requestRunProcess({
-          uuid: containerUuid,
+
+        const recordId = rootGetters.getIdOfContainer({
+          containerUuid,
+          tableName
+        })
+
+        requestRunBusinessProcessAsWindow({
+          id: currentProcess.id,
           parametersList,
           tableName,
-          recordUuid
+          recordId: recordId
         })
           .then(runProcessRepsonse => {
             isProcessedError = runProcessRepsonse.isError

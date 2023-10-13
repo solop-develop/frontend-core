@@ -158,7 +158,7 @@ export default defineComponent({
 
     function runProcess() {
       store.dispatch('startProcess', {
-        containerUuid: processId
+        containerUuid: processUuid
       })
     }
 
