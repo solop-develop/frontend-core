@@ -16,7 +16,7 @@
 
 import Vue from 'vue'
 
-import { updateEntity } from '@/api/ADempiere/common/persistence.js'
+import { updateEntity } from '@/api/ADempiere/userInterface/entities.ts'
 import { requestTranslations } from '@/api/ADempiere/actions/translation.js'
 
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'

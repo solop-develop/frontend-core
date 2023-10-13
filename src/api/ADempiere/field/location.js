@@ -60,7 +60,7 @@ export function updateLocationAddress({
   uuid,
   attributesList
 }) {
-  const { updateEntity } = require('@/api/ADempiere/common/persistence.js')
+  const { updateEntity } = require('@/api/ADempiere/userInterface/entities.ts')
 
   return updateEntity({
     tableName,

@@ -133,16 +133,16 @@ export default defineComponent({
       isGettingRecordAccess.value = true
 
       // get from server
-      store.dispatch('getPrivateAccessFromServer', {
-        tableName,
-        recordUuid: recordUuid.value
-      })
-        .then(privateAccessResponse => {
-          isLocked.value = privateAccessResponse
-        })
-        .finally(() => {
-          isGettingRecordAccess.value = false
-        })
+      // store.dispatch('getPrivateAccessFromServer', {
+      //   tableName,
+      //   recordUuid: recordUuid.value
+      // })
+      //   .then(privateAccessResponse => {
+      //     isLocked.value = privateAccessResponse
+      //   })
+      //   .finally(() => {
+      //     isGettingRecordAccess.value = false
+      //   })
     }
 
     // timer to execute the request between times

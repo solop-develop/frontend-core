@@ -480,6 +480,7 @@ export const containerManager = {
       containerUuid,
       contextColumnNames,
       browseFieldId: id,
+      browseFieldUuid: uuid,
       uuid,
       // id,
       //

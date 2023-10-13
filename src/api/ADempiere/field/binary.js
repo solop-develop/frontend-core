@@ -42,7 +42,7 @@ export function updateResource({
   tableName,
   binaryFile
 }) {
-  const { updateEntity } = require('@/api/ADempiere/common/persistence.js')
+  const { updateEntity } = require('@/api/ADempiere/userInterface/entities.ts')
 
   return updateEntity({
     recordUuid: uuid,
