@@ -85,6 +85,8 @@ const lookupManager = {
       fieldUuid,
       processParameterId,
       browseFieldId,
+      browseFieldUuid,
+      processParameterUuid,
       fieldId,
       id,
       //
@@ -154,9 +156,9 @@ const lookupManager = {
             if (!isEmptyValue(fieldUuid)) {
               key += `|${fieldUuid}`
             } else if (!isEmptyValue(processParameterId)) {
-              key += `|${processParameterId}`
+              key += `|${processParameterUuid}`
             } else if (!isEmptyValue(browseFieldId)) {
-              key += `|${browseFieldId}`
+              key += `|${browseFieldUuid}`
             }
 
             const contextKey = generateContextKey(contextAttributesList)

@@ -518,12 +518,13 @@ export const containerManager = {
       return response
     })
   },
-  getLookupList({ parentUuid, containerUuid, contextColumnNames, id, searchValue, isAddBlankValue = false, blankValue }) {
+  getLookupList({ parentUuid, containerUuid, contextColumnNames, uuid, id, searchValue, isAddBlankValue = false, blankValue }) {
     return store.dispatch('getLookupListFromServer', {
       parentUuid,
       containerUuid,
       contextColumnNames,
       browseFieldId: id,
+      browseFieldUuid: uuid,
       searchValue,
       // app attributes
       isAddBlankValue,
