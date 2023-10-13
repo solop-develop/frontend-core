@@ -263,6 +263,11 @@ export default {
               const storedTab = rootGetters.getStoredTab(windowUuid, tabAssociatedUuid)
               const { tableName } = storedTab
 
+              const recordId = rootGetters.getIdOfContainer({
+                containerUuid: storedTab.containerUuid,
+                tableName
+              })
+
               const documentAction = getters.getValueOfField({
                 containerUuid: process.uuid,
                 columnName: DOCUMENT_ACTION
@@ -287,8 +292,9 @@ export default {
                 // update current record
                 await refreshRecord.refreshRecord({
                   parentUuid: windowUuid,
-                  containerUuid: tabAssociatedUuid,
-                  recordUuid
+                  tabId: storedTab.id,
+                  recordUuid,
+                  recordId
                 })
                 // update records and logics on child tabs
                 tabDefinition.childTabs.filter(tabItem => {
@@ -366,6 +372,11 @@ export default {
               const storedTab = rootGetters.getStoredTab(windowUuid, tabAssociatedUuid)
               const { tableName } = storedTab
 
+              const recordId = rootGetters.getIdOfContainer({
+                containerUuid: storedTab.containerUuid,
+                tableName
+              })
+
               dispatch('startProcessOfWindows', {
                 parentUuid: tabAssociatedUuid,
                 containerUuid: process.uuid,
@@ -375,10 +386,11 @@ export default {
                 // if (processResponse.isError) {
                 //   return
                 // }
-
                 await refreshRecord.refreshRecord({
                   parentUuid: windowUuid,
                   containerUuid: tabAssociatedUuid,
+                  tabId: storedTab.id,
+                  recordId,
                   recordUuid
                 })
                 // update records and logics on child tabs
