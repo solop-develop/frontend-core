@@ -21,12 +21,17 @@ import { computed, ref } from '@vue/composition-api'
 import store from '@/store'
 import lang from '@/lang'
 
+// Constants
+import { CONTAINER_PROCESS_PREFIX } from '@/utils/ADempiere/dictionary/process.js'
+
 // Utils and Helper Methods
 import { containerManager } from '@/utils/ADempiere/dictionary/process.js'
 
-export default (processId) => {
+export default ({ processId, processUuid }) => {
+  const containerKey = CONTAINER_PROCESS_PREFIX + processId
+
   const storedProcessDefinition = computed(() => {
-    return store.getters.getStoredProcess(processId)
+    return store.getters.getStoredProcess(processUuid)
   })
 
   const actionsList = computed(() => {
@@ -34,12 +39,14 @@ export default (processId) => {
       return []
     }
     return store.getters.getStoredActionsMenu({
-      containerUuid: storedProcessDefinition.value.uuid
+      containerUuid: processUuid
     })
   })
 
   const actionsManager = ref({
-    containerUuid: processId,
+    containerUuid: processUuid,
+    containerId: processId,
+    containerKey,
 
     defaultActionName: lang.t('actionMenu.runProcess'),
 
@@ -47,6 +54,7 @@ export default (processId) => {
   })
 
   return {
+    containerKey,
     containerManager,
     actionsManager,
     storedProcessDefinition
