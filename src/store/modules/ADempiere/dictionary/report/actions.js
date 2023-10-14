@@ -193,7 +193,7 @@ export default {
               containerUuid,
               instanceUuid,
               action: printFormat,
-              printFormatUuid: printFormat.printFormatUuid
+              printFormatId: printFormat.id
             })
           }
         })
@@ -230,7 +230,7 @@ export default {
               containerUuid,
               action: reportView,
               instanceUuid,
-              reportViewUuid: reportView.reportViewUuid
+              reportViewId: reportView.id
             })
           }
         })

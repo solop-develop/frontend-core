@@ -21,17 +21,25 @@ import { request } from '@/utils/ADempiere/request'
 
 /**
  * Get default value for a field, parameter or query criteria
- * @param {integer} id, identifier of field
+ * @param {number} id, identifier of field
  */
 export function generateReportRequest({
   id,
-  parameters
+  parameters,
+  reportType,
+  printFormatId,
+  reportViewId,
+  isSummary
 }) {
   return request({
     url: `/business-data/report/${id}`,
     method: 'post',
     data: {
-      parameters
+      parameters,
+      report_type: reportType,
+      print_format_id: printFormatId,
+      report_view_id: reportViewId,
+      is_summary: isSummary
     }
   })
 }
