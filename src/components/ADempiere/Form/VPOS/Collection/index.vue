@@ -1559,7 +1559,6 @@ export default {
       if (!isShow) return
       const payment_method = this.availablePaymentMethods.find(list => list.uuid === this.currentFieldPaymentMethods)
       // let documentTypeId
-      // console.log({ payment_method })
       // if (!this.isEmptyValue(payment_method.document_type)) {
       //   documentTypeId = payment_method.document_type.id
       // }
@@ -1583,13 +1582,20 @@ export default {
         this.clearCollection()
         return
       }
+      let payAmt = current.openAmount
+      if (current.currency.iso_code === this.currentOrder.priceList.currency.iso_code) {
+        if (current.openAmount > this.currentOrder.grandTotal) {
+          payAmt = this.currentOrder.grandTotal
+        }
+      }
       this.currentFieldCurrency = current.currency.iso_code
       this.$store.commit('updateValuesOfContainer', {
         containerUuid: 'Collection',
         attributes: [
           {
             columnName: 'PayAmt',
-            value: current.openAmount
+            value: payAmt
+            // value: current.openAmount
           },
           {
             columnName: 'Description',

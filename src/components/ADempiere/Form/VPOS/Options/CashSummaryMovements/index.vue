@@ -92,6 +92,12 @@
         icon="el-icon-close"
         @click="close()"
       />
+      <el-button
+        style="float: right;margin-left: 10px;"
+        type="success"
+        icon="el-icon-download"
+        @click="cashDownload()"
+      />
     </el-footer>
   </el-container>
 </template>
@@ -105,6 +111,8 @@ import fieldsListCashOpen from './fieldsList.js'
 import {
   cashClosing
 } from '@/api/ADempiere/form/point-of-sales.js'
+import { exportFileFromJson } from '@/utils/ADempiere/exportUtil.js'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default {
   name: 'CashSummaryMovements',
@@ -193,6 +201,65 @@ export default {
         return
       }
       this.$store.commit('setShowCashSummaryMovements', false)
+    },
+    cashDownload() {
+      let headerList
+      if (this.isShowCashSummaryMovements) {
+        headerList = [
+          this.$t('form.expressMovement.field.documentNo'),
+          this.$t('form.pos.collect.invoceNr'),
+          this.$t('form.pos.collect.orderNr'),
+          this.$t('form.pos.collect.customer'),
+          this.$t('pointOfSales.collection.chargeAmount'),
+          this.$t('form.pos.collect.seller'),
+          this.$t('form.pos.collect.paymentMethod'),
+          this.$t('form.pos.collect.Currency'),
+          'Monto'
+        ]
+      } else {
+        headerList = [
+          this.$t('form.pos.collect.paymentMethod'),
+          this.$t('form.pos.collect.Currency'),
+          'Monto'
+        ]
+      }
+
+      const data = this.listCashSummary.records.map(list => {
+        const {
+          document_no,
+          invoice_document_no,
+          payment_method_name,
+          order_document_no,
+          collecting_agent,
+          currency,
+          customer,
+          charge
+        } = list
+        if (this.isShowCashSummaryMovements) {
+          return {
+            document_no,
+            invoice_document_no,
+            order_document_no,
+            customer: isEmptyValue(customer) ? '' : customer.name,
+            charge: isEmptyValue(charge) ? '' : charge.name,
+            collecting_agent: collecting_agent.name,
+            payment_method_name: payment_method_name,
+            currency: currency.iso_code,
+            amount: formatPrice(list.amount, list.currency.iso_code)
+          }
+        }
+        return {
+          payment_method_name: payment_method_name,
+          currency: currency.iso_code,
+          amount: formatPrice(list.amount, list.currency.iso_code)
+        }
+      })
+      exportFileFromJson({
+        header: headerList,
+        data,
+        fileName: this.isShowCashSummaryMovements ? this.$t('form.pos.optionsPoinSales.cashManagement.detailedCloseBox') : this.$t('form.pos.optionsPoinSales.cashManagement.closeBox'),
+        exportType: 'xls'
+      })
     },
     cashClose() {
       // this.$store.commit('setShowCashSummaryMovements', false)
