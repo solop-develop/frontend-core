@@ -230,6 +230,7 @@ const returnProduct = {
           id: rootGetters.getOrderReturn.id
         })
           .then(response => {
+            console.log({ response })
             showMessage({
               type: 'success',
               message: `${lang.t('form.pos.orderRMA.document')} ${response.documentNo} - ${lang.t('form.pos.orderRMA.process')}`,
@@ -267,7 +268,7 @@ const returnProduct = {
               label: `${error.message} - ${rootGetters.getOrderReturn.documentNo}`,
               title: lang.t('form.pos.returnProduct'),
               lines: rootGetters.getListProduct,
-              type: 'success',
+              type: 'error',
               order: rootGetters.getOrderReturn
             })
             commit('setShowSummaryRMA', true)
