@@ -29,7 +29,7 @@ import {
   deleteRMALine
 } from '@/api/ADempiere/form/ReturnRMA.js'
 
-// utils and helper methods
+// Utils and Helper Methods
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 
@@ -230,7 +230,6 @@ const returnProduct = {
           id: rootGetters.getOrderReturn.id
         })
           .then(response => {
-            console.log({ response })
             showMessage({
               type: 'success',
               message: `${lang.t('form.pos.orderRMA.document')} ${response.documentNo} - ${lang.t('form.pos.orderRMA.process')}`,
