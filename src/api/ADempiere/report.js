@@ -26,11 +26,10 @@ import { request } from '@/utils/ADempiere/request'
  * @param {string}  reportType, format to output report (pdf, html, csv, ...)
  * @param {string}  tableName, table name of tab, used only window
  * @param {number}  recordId, record identifier, used only window
- * @param {string}  recordUuid, record universal unique identifier, used only window
  * @param {array}   parametersList, parameters from process [{ columnName, value }]
- * @param {string}  printFormatUuid
+ * @param {string}  printFormatId
  * @param {boolean} isSummary
- * @param {string}  reportViewUuid
+ * @param {string}  reportViewId
  */
 export function requestGenerateReport({
   id,
@@ -38,13 +37,10 @@ export function requestGenerateReport({
   reportType,
   tableName,
   recordId,
-  recordUuid,
   parametersList = [],
   isSummary,
   printFormatId,
-  printFormatUuid,
-  reportViewId,
-  reportViewUuid
+  reportViewId
 }) {
   parametersList = parametersList.map(parameter => {
     return {
@@ -62,15 +58,12 @@ export function requestGenerateReport({
       // record
       table_name: tableName,
       record_id: recordId,
-      record_uuid: recordUuid,
       // report
       is_summary: isSummary,
       report_type: reportType,
       report_view_id: reportViewId,
-      report_view_uuid: reportViewUuid,
       parameters: parametersList,
-      print_format_id: printFormatId,
-      print_format_uuid: printFormatUuid
+      print_format_id: printFormatId
     }
   })
     .then(reportGeneratedResponse => {

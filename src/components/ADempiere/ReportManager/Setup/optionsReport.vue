@@ -44,11 +44,12 @@
                   v-for="(item, key) in reportAsPrintFormat.childs"
                   :key="key"
                   :label="item.name"
-                  :value="item.printFormatUuid"
+                  :value="item.id"
                 />
               </el-select>
             </el-form-item>
           </el-col>
+
           <el-col :span="8">
             <el-form-item
               :label="$t('report.reportViews')"
@@ -62,11 +63,12 @@
                   v-for="(item, key) in reportAsView.childs"
                   :key="key"
                   :label="item.name"
-                  :value="item.reportViewUuid"
+                  :value="item.id"
                 />
               </el-select>
             </el-form-item>
           </el-col>
+
           <el-col :span="8">
             <el-form-item
               :label="$t('report.typeReport')"
@@ -162,9 +164,10 @@ export default defineComponent({
     /**
      * Ref
      */
-    const reportAsViewValue = ref('')
-    const reportAsPrintFormatValue = ref('')
+    const reportAsViewValue = ref(undefined)
+    const reportAsPrintFormatValue = ref(undefined)
     const reportTypeFormatValue = ref('')
+
     const attributes = computed(() => {
       return store.getters.getConfigReport({
         containerUuid: props.containerUuid,
@@ -206,38 +209,43 @@ export default defineComponent({
       }
       return options
     })
+
     const icon = computed(() => {
-      if (show2.value) {
+      if (isShowSetupReport.value) {
         return 'el-icon-arrow-down'
       }
       return 'el-icon-arrow-right'
     })
-    const epale = ref('')
-    const show2 = ref(false)
+
+    const isShowSetupReport = computed(() => {
+      return store.getters.getShowPanelConfig({
+        containerUuid: props.containerUuid
+      })
+    })
 
     function updatePrintFormat(value) {
       store.commit('setReportGenerated', {
         containerUuid: props.containerUuid,
-        printFormatUuid: value,
+        printFormatId: value,
         reportType: reportTypeFormatValue.value,
-        reportViewUuid: reportAsViewValue.value
+        reportViewId: reportAsViewValue.value
       })
     }
 
     function updateReportView(value) {
       store.commit('setReportGenerated', {
         containerUuid: props.containerUuid,
-        printFormatUuid: reportAsPrintFormatValue.value,
+        printFormatId: reportAsPrintFormatValue.value,
         reportType: reportTypeFormatValue.value,
-        reportViewUuid: value
+        reportViewId: value
       })
     }
 
     function updateReportType(value) {
       store.commit('setReportGenerated', {
         containerUuid: props.containerUuid,
-        reportViewUuid: reportAsViewValue.value,
-        printFormatUuid: reportAsPrintFormatValue.value,
+        reportViewId: reportAsViewValue.value,
+        printFormatId: reportAsPrintFormatValue.value,
         reportType: value
       })
     }
@@ -262,8 +270,8 @@ export default defineComponent({
     }
 
     function actionClear(params) {
-      reportAsViewValue.value = ''
-      reportAsPrintFormatValue.value = ''
+      reportAsViewValue.value = undefined
+      reportAsPrintFormatValue.value = undefined
       reportTypeFormatValue.value = ''
     }
 
@@ -292,12 +300,11 @@ export default defineComponent({
       reportTypeFormatValue,
       attributes,
       icon,
-      epale,
       reportAsView,
       reportAsPrintFormat,
       reportTypeFormat,
       updatePrintFormat,
-      show2,
+      isShowSetupReport,
       // methods
       handleClose,
       actionClear,

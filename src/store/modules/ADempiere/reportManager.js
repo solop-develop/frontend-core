@@ -17,12 +17,12 @@
  */
 
 import Vue from 'vue'
+
 import router from '@/router'
 import language from '@/lang'
 
 // API Request Methods
 import {
-  requestGenerateReport,
   requestGetReportOutput
 } from '@/api/ADempiere/report'
 import { generateReportRequest } from '@/api/ADempiere/reportManagement/index.ts'
@@ -70,13 +70,13 @@ const reportManager = {
     setReportOutput(state, reportOutput) {
       Vue.set(state.reportsOutput, reportOutput.instanceUuid, reportOutput)
     },
-    setReportGenerated(state, { containerUuid, parametersList, reportType, printFormatUuid, reportViewUuid, isSummary }) {
+    setReportGenerated(state, { containerUuid, parametersList, reportType, printFormatId, reportViewId, isSummary }) {
       Vue.set(state.reportsGenerated, containerUuid, {
         containerUuid,
         parametersList,
         reportType,
-        printFormatUuid,
-        reportViewUuid,
+        printFormatId,
+        reportViewId,
         isSummary
       })
     },
@@ -110,8 +110,8 @@ const reportManager = {
     startReport({ commit, dispatch, rootGetters }, {
       containerUuid,
       reportType = DEFAULT_REPORT_TYPE,
-      printFormatUuid,
-      reportViewUuid,
+      printFormatId,
+      reportViewId,
       tableName,
       isSummary,
       recordUuid
@@ -167,9 +167,9 @@ const reportManager = {
         generateReportRequest({
           id: reportDefinition.id,
           reportType,
-          parameters
-          // printFormatUuid,
-          // reportViewUuid,
+          parameters,
+          printFormatId,
+          reportViewId
           // tableName,
           // isSummary,
           // recordUuid
@@ -248,8 +248,8 @@ const reportManager = {
               containerUuid,
               parameters,
               reportType,
-              printFormatUuid,
-              reportViewUuid
+              printFormatId,
+              reportViewId
             })
           })
       })
@@ -279,7 +279,7 @@ const reportManager = {
           })
         }
 
-        requestGenerateReport({
+        generateReportRequest({
           uuid: containerUuid,
           reportType,
           parametersList
@@ -301,11 +301,11 @@ const reportManager = {
               href: undefined,
               download: undefined
             }
-            if (output && output.outputStream) {
+            if (output && output.output_stream) {
               link = buildLinkHref({
-                fileName: output.fileName,
-                outputStream: output.outputStream,
-                type: output.mimeType
+                fileName: output.file_name,
+                outputStream: output.output_stream,
+                mimeType: output.mimeType
               })
 
               // donwload report file
@@ -466,18 +466,18 @@ const reportManager = {
       id,
       instanceUuid,
       tableName,
-      printFormatUuid,
-      reportViewUuid,
+      printFormatId,
+      reportViewId,
       isSummary,
       reportName,
       reportType,
       parametersList = []
     }) {
       return new Promise(resolve => {
-        if (isEmptyValue(printFormatUuid)) {
+        if (isEmptyValue(printFormatId) || printFormatId <= 0) {
           const printFormat = getters.getDefaultPrintFormat(uuid)
           if (!isEmptyValue(printFormat)) {
-            printFormatUuid = printFormat.printFormatUuid
+            printFormatId = printFormat.printFormatId
           }
         }
 
@@ -489,8 +489,8 @@ const reportManager = {
         requestGetReportOutput({
           processUuid: uuid,
           parametersList,
-          printFormatUuid,
-          reportViewUuid,
+          printFormatId,
+          reportViewId,
           isSummary,
           reportName,
           reportType,
@@ -537,8 +537,8 @@ const reportManager = {
       instanceUuid,
       uuid,
       tableName,
-      printFormatUuid,
-      reportViewUuid,
+      printFormatId,
+      reportViewId,
       reportName,
       reportType,
       isSummary,
@@ -565,11 +565,11 @@ const reportManager = {
         if (isEmptyValue(uuid) && !isEmptyValue(action)) {
           uuid = action.reportUuid
         }
-        if (isEmptyValue(printFormatUuid)) {
-          printFormatUuid = storedReportGenerated.printFormatUuid
+        if (isEmptyValue(printFormatId) || printFormatId <= 0) {
+          printFormatId = storedReportGenerated.printFormatId
         }
-        if (isEmptyValue(reportViewUuid)) {
-          reportViewUuid = storedReportGenerated.reportViewUuid
+        if (isEmptyValue(reportViewId) || reportViewId <= 0) {
+          reportViewId = storedReportGenerated.reportViewId
         }
       }
 
@@ -584,8 +584,8 @@ const reportManager = {
         dispatch('startReport', {
           containerUuid,
           reportType,
-          printFormatUuid,
-          reportViewUuid,
+          printFormatId,
+          reportViewId,
           isSummary
         })
         return
@@ -597,10 +597,10 @@ const reportManager = {
           reportType,
           reportName,
           tableName,
-          printFormatUuid,
+          printFormatId,
           parametersList,
           instanceUuid,
-          reportViewUuid,
+          reportViewId,
           isSummary
         })
           .then(reportOutput => {
@@ -618,11 +618,11 @@ const reportManager = {
               if (isEmptyValue(tableName)) {
                 tableName = reportOutput.tableName
               }
-              if (isEmptyValue(printFormatUuid)) {
-                printFormatUuid = reportOutput.printFormatUuid
+              if (isEmptyValue(printFormatId) || printFormatId <= 0) {
+                printFormatId = reportOutput.printFormatId
               }
-              if (isEmptyValue(reportViewUuid)) {
-                reportViewUuid = reportOutput.reportViewUuid
+              if (isEmptyValue(reportViewId) || reportViewId <= 0) {
+                reportViewId = reportOutput.reportViewId
               }
             }
 
@@ -633,8 +633,8 @@ const reportManager = {
               containerUuid,
               parametersList,
               reportType,
-              printFormatUuid,
-              reportViewUuid
+              printFormatId,
+              reportViewId
             })
           })
       })
@@ -653,7 +653,11 @@ const reportManager = {
     getPrintFormatList: (state) => (reportId) => {
       return state.printFormatList[reportId] || []
     },
-
+    getPrintFormat: (state, getters) => ({ reportId, printFormatId }) => {
+      return getters.getPrintFormatList(reportId).find(printFormat => {
+        return printFormat.id === printFormatId
+      })
+    },
     getDefaultPrintFormat: (state, getters) => (reportId) => {
       const printFormatsList = getters.getPrintFormatList(reportId)
 
@@ -669,13 +673,11 @@ const reportManager = {
     getReportViewList: (state) => (reportId) => {
       return state.reportViewsList[reportId] || []
     },
-
-    getReportView: (state, getters) => ({ reportId, reportViewUuid }) => {
+    getReportView: (state, getters) => ({ reportId, reportViewId }) => {
       return getters.getReportViewList(reportId).find(reportView => {
-        return reportView.reportViewUuid === reportViewUuid
+        return reportView.id === reportViewId
       })
     },
-
     getDefaultReportView: (state, getters) => (reportId) => {
       const reportViewsList = getters.getReportViewList(reportId)
 
