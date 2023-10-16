@@ -32,3 +32,74 @@ export function existsChatsEntries({
     method: 'get'
   })
 }
+
+export function requestListEntityChats({
+  recordId,
+  tableName
+}) {
+  return request({
+    url: `logs/chat-entries/${tableName}/${recordId}`,
+    method: 'get'
+  })
+}
+
+/**
+ * Add Chat Entry
+ * @param {string} tableName
+ * @param {string} recordId
+ * @param {string} recordUuid
+ * @param {string} comment
+ */
+export function requestCreateChatEntry({
+  tableName,
+  recordId,
+  comment
+}) {
+  return request({
+    url: `/user-interface/chat-entry/${tableName}`,
+    method: 'post',
+    data: {
+      id: recordId,
+      comment: comment
+    }
+  })
+    .then(chatEntryResponse => {
+      const { convertChatEntry } = require('@/utils/ADempiere/apiConverts/window.js')
+
+      return convertChatEntry(chatEntryResponse)
+    })
+}
+
+/**
+ * Record Chat List
+ * @param {string} uuid
+ * @param {string} pageToken
+ * @param {string} pageSize
+ */
+export function requestListChatsEntries({
+  id,
+  // tableName,
+  pageToken,
+  pageSize = 100
+}) {
+  return request({
+    url: `/logs/chat-entities/${id}`,
+    method: 'get',
+    params: {
+      // Page Data
+      page_token: pageToken,
+      page_size: pageSize
+    }
+  })
+    .then(chatEntriesListResponse => {
+      const { convertChatEntry } = require('@/utils/ADempiere/apiConverts/window.js')
+
+      return {
+        nextPageToken: chatEntriesListResponse.next_page_token,
+        recordCount: chatEntriesListResponse.record_count,
+        chatEntriesList: chatEntriesListResponse.records.map(chatEntry => {
+          return convertChatEntry(chatEntry)
+        })
+      }
+    })
+}

@@ -35,3 +35,22 @@ export function requestListRecentItems({
     }
   })
 }
+
+// Get list of log for a records
+export function requestListEntityLogs({
+  tableName,
+  recordId,
+  pageToken,
+  pageSize = 100
+}) {
+  return request({
+    url: `/logs/entities/${tableName}/${recordId}`,
+    method: 'get',
+    params: {
+      // Page Data
+      page_token: pageToken,
+      page_size: pageSize
+    }
+  })
+}
+

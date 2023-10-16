@@ -54,11 +54,13 @@ import { BEARER_TYPE } from '@/utils/auth'
 import { RESOURCE_TYPE_ATTACHMENT } from '@/utils/ADempiere/resource'
 
 // API Request Methods
+// import {
+//   // requestUploadAttachment,
+//   setResourceReference
+// } from '@/api/ADempiere/user-interface/component/resource'
 import {
-  // requestUploadAttachment,
   setResourceReference
-} from '@/api/ADempiere/user-interface/component/resource'
-
+} from '@/api/ADempiere/logs/tabInfo/windowAttachment.ts'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'

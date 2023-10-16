@@ -1,8 +1,11 @@
+// import {
+//   // requestListEntityChats,
+// } from '@/api/ADempiere/window'
 import {
-  requestListEntityChats,
   requestListChatsEntries,
-  requestCreateChatEntry
-} from '@/api/ADempiere/window'
+  requestCreateChatEntry,
+  requestListEntityChats
+} from '@/api/ADempiere/logs/tabInfo/chatsEntries.ts'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 
@@ -89,6 +92,8 @@ export default {
             const uuid = chat.chatUuid
 
             requestListChatsEntries({
+              tableName,
+              id: recordId,
               uuid,
               pageSize
             })

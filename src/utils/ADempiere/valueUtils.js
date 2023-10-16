@@ -28,6 +28,7 @@ import { OPERATION_PATTERN } from '@/utils/ADempiere/formatValue/numberFormat.js
 import { convertBooleanToString, convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat.js'
 import { removeQuotationMark } from '@/utils/ADempiere/formatValue/stringFormat'
 import { isIdentifier } from '@/utils/ADempiere/references.js'
+import store from '@/store'
 
 /**
  * Checks if value is empty. Deep-checks arrays and objects
@@ -921,4 +922,30 @@ export function setIconsTableName({
 export function getValidInteger(id) {
   if (!isEmptyValue(id) && !Number.isNaN(id)) return Number.parseInt(id, 10)
   return 0
+}
+
+/**
+ * Get a List with the values of the key Columns of the Tab
+ * @param {string} parentUuid
+ * @param {string} containerUuid
+ * @param {array} keyColumns
+ * return {object} keyColumnsList
+ */
+export function getListKeyColumnsTab({
+  parentUuid,
+  containerUuid,
+  keyColumns
+}) {
+  const keyColumnsList = {}
+  if (keyColumns) {
+    keyColumns.forEach(elementColumnName => {
+      const value = store.getters.getValueOfField({
+        parentUuid,
+        containerUuid,
+        columnName: elementColumnName
+      })
+      keyColumnsList[elementColumnName] = value
+    })
+  }
+  return keyColumnsList
 }
