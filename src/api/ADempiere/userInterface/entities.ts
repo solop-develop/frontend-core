@@ -85,7 +85,8 @@ export function createEntity({
 export function updateEntity({
   reccordId,
   tabId,
-  attributesList
+  attributesList,
+  keyColumnsList
 }) {
   const attributesObject = {}
   attributesList.forEach(element => {
@@ -96,7 +97,10 @@ export function updateEntity({
     url: `/user-interface/entities/${tabId}/${reccordId}`,
     method: 'patch',
     data: {
-      attributes: attributesObject
+      attributes: {
+        ...attributesObject,
+        ...keyColumnsList
+      }
     }
   })
 }

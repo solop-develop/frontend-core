@@ -32,7 +32,7 @@ import {
 } from '@/api/ADempiere/userInterface/entities.ts'
 
 // Utils and Helper Methods
-import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils.js'
+import { isEmptyValue, isSameValues, getListKeyColumnsTab } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import { getContextDefaultValue } from '@/utils/ADempiere/contextUtils/contextField'
 import { isSupportLookup } from '@/utils/ADempiere/references'
@@ -268,15 +268,25 @@ const persistence = {
               return true
             })
         }
+        const currentTab = getters.getStoredTab(parentUuid, containerUuid)
+        const keyColumnsList = getListKeyColumnsTab({
+          parentUuid,
+          containerUuid,
+          keyColumns: currentTab.keyColumns
+        })
 
         if (!isEmptyValue(attributesList)) {
           if (!isEmptyValue(recordUuid)) {
             // Update existing entity
+            if (currentTab.keyColumns.length > 1) {
+              reccordId = 0
+            }
             return updateEntity({
               tabUuid: containerUuid,
               reccordId,
               tabId,
               recordUuid,
+              keyColumnsList,
               attributesList
             })
               .then(response => {
@@ -333,20 +343,21 @@ const persistence = {
                 const attributesRecord = response.values
 
                 // add display column to current record
-                const { identifierColumns } = tabDefinition
-                const displayedColumnName = DISPLAY_COLUMN_PREFIX + tableName + IDENTIFIER_COLUMN_SUFFIX
-                let displayedValue = ''
-                identifierColumns.forEach(identifier => {
-                  const { columnName } = identifier
-                  const currentValue = attributesRecord[columnName]
-                  if (isEmptyValue(displayedValue)) {
-                    displayedValue = currentValue
-                    return
-                  }
-                  displayedValue += '_' + currentValue
-                })
-                attributesRecord[displayedColumnName] = displayedValue
-
+                const { identifierColumns, keyColumns } = tabDefinition
+                if (keyColumns.length === 1) {
+                  let displayedValue = ''
+                  const displayedColumnName = DISPLAY_COLUMN_PREFIX + tableName + IDENTIFIER_COLUMN_SUFFIX
+                  identifierColumns.forEach(identifier => {
+                    const { columnName } = identifier
+                    const currentValue = attributesRecord[columnName]
+                    if (isEmptyValue(displayedValue)) {
+                      displayedValue = currentValue
+                      return
+                    }
+                    displayedValue += '_' + currentValue
+                  })
+                  attributesRecord[displayedColumnName] = displayedValue
+                }
                 response.attributes = attributesRecord
 
                 // add new row on table

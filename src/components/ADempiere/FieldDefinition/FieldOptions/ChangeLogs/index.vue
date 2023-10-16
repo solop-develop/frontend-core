@@ -160,7 +160,7 @@ export default {
 
   computed: {
     listLogsField() {
-      const log = this.$store.getters.getRecordLogs.entityLogs
+      const log = this.$store.getters.getRecordLogs.entity_logs
       if (log) {
         const logsField = log.map(element => {
           let type

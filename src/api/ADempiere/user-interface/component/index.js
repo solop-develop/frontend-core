@@ -28,7 +28,7 @@ export function requestMailTemplates({
   pageToken
 }) {
   return request({
-    url: '/user-interface/component/list-mail-templates',
+    url: '/user-interface/mail-templates',
     method: 'post',
     data: {
       search_value: searchValue,

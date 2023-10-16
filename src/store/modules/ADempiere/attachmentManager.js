@@ -17,7 +17,7 @@
  */
 
 // api request methods
-import { requestAttachment } from '@/api/ADempiere/user-interface/component/resource'
+import { requestAttachment } from '@/api/ADempiere/logs/tabInfo/windowAttachment.ts'
 
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
