@@ -96,6 +96,7 @@ export default {
   data() {
     return {
       formUuid: this.$route.meta.uuid,
+      formId: this.$route.meta.id,
       formMetadata: {},
       isLoaded: false,
       panelType: 'form'
@@ -167,7 +168,7 @@ export default {
         this.isLoaded = true
       } else {
         this.$store.dispatch('getPanelAndFields', {
-          containerUuid: this.formUuid,
+          containerUuid: this.formId,
           panelType: this.panelType,
           routeToDelete: this.$route
         })

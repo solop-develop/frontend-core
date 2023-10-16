@@ -64,8 +64,7 @@ const form = {
     }) {
       return new Promise(resolve => {
         requestForm({
-          uuid: containerUuid,
-          id
+          id: containerUuid
         })
           .then(formResponse => {
             const panelType = 'form'
