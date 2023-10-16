@@ -6,7 +6,7 @@
     </span>
     <transition name="fade-transform" mode="out-in">
       <keep-alive :include="cachedViews">
-        <router-view :key="key" style="height: 100% !important;width: 100% !important;display: contents;" />
+        <router-view :key="key" style="/*height: 100% !important;*/width: 100% !important;display: contents;" />
       </keep-alive>
     </transition>
   </div>
@@ -80,7 +80,7 @@ export default {
 .hasTagsView {
   .app-main {
     /* 84 = navbar + tags-view = 50 + 34 */
-    min-height: calc(100vh - 84px);
+    min-height: calc(100vh - 85px);
   }
 
   .fixed-header+.app-main {

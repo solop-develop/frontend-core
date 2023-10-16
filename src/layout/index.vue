@@ -56,10 +56,11 @@ export default {
       return false
     },
     styleContainer() {
-      if (this.$route.meta.title === 'dashboard') {
+      if (this.$route.meta.title === 'dashboard' || this.$route.meta.isSummary) {
         return 'height: 90%;overflow: auto;'
       }
-      return 'height: 100%; overflow: hidden;'
+      // return 'height: 100%; overflow: hidden;'
+      return null
     },
     isMobile() {
       return this.$store.state.app.device === 'mobile'
