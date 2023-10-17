@@ -174,6 +174,10 @@ export default defineComponent({
                 productId: search.product.id
               })
             })
+        } else {
+          store.dispatch('newLine', {
+            productId: search.product.id
+          })
         }
       }
     }
