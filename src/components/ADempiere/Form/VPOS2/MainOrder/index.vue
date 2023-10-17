@@ -49,7 +49,11 @@ import { defineComponent, computed } from '@vue/composition-api'
 import lang from '@/lang'
 import store from '@/store'
 // Utils and Helper Methods
-import { displayLabel, displayValue } from './Lines.ts'
+// import { displayValue } from './Lines.ts'
+import {
+  displayLabel,
+  displayValue
+} from '@/utils/ADempiere/dictionary/form/VPOS'
 
 export default defineComponent({
   name: 'infoOrder',

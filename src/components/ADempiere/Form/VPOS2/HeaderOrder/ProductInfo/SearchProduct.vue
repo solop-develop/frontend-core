@@ -170,7 +170,9 @@ export default defineComponent({
         if (isEmptyValue(order.value)) {
           store.dispatch('newOrder')
             .then(() => {
-              store.dispatch('newLine', search)
+              store.dispatch('newLine', {
+                productId: search.product.id
+              })
             })
         }
       }

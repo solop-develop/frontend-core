@@ -16,6 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import router from '@/router'
 // API Request Methods
 // import {
 //   createOrder,
@@ -196,18 +197,56 @@ export default {
     //  * @param {String} orderUuid
     //  * @returns {Object} responseOrder
     //  */
-    overloadOrder({ commit, getters }, {
+    overloadOrder({
+      commit,
+      getters,
+      dispatch
+    }, {
       order
     }) {
       return new Promise(resolve => {
         const { id } = getters.getVPOS
-        if (isEmptyValue(order)) resolve({})
+        const currentOrder = getters.getCurrentOrder
+        const currentRouter = router.app.$route
+        const {
+          name,
+          query,
+          params
+        } = currentRouter
+        if (
+          isEmptyValue(order)
+        ) {
+          order = currentOrder
+        }
+        if (
+          isEmptyValue(currentOrder)
+        ) {
+          order = { id: query.orderId }
+        }
+        // const { orderId } = query
+        // if (
+        //   isEmptyValue(id) &&
+        //   isEmptyValue(order) &&
+        //   !isEmptyValue(query)
+        // ) {
+        //   const { orderId } = query
+        //   id = orderId
+        // }
         getOrder({
           orderId: order.id,
           posId: id
         })
           .then(responseOrder => {
+            router.push({
+              name,
+              params,
+              query: {
+                ...query,
+                orderId: responseOrder.id
+              }
+            }, () => {})
             commit('setOrder', responseOrder)
+            dispatch('listLines')
             resolve(responseOrder)
           })
           .catch(error => {

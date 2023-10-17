@@ -76,19 +76,6 @@ export default {
       return new Promise(resolve => {
         const currentPos = getters.getVPOS
         const currentOrder = getters.getCurrentOrder
-        console.log({ getters, currentPos, currentOrder })
-        console.log({
-          posId: currentPos.id,
-          orderId: currentOrder.id,
-          chargeId,
-          productId,
-          description,
-          quantity,
-          price,
-          discountRate,
-          warehouseId,
-          resourceAssignmentId
-        })
         createOrderLine({
           posId: currentPos.id,
           orderId: currentOrder.id,
@@ -102,9 +89,10 @@ export default {
           resourceAssignmentId
         })
           .then(responseOrder => {
-            // commit('setOrder', responseOrder)
+            const { order_lines } = responseOrder
+            // commit('setOrder', order_lines)
             dispatch('listLines')
-            resolve(responseOrder)
+            resolve(order_lines)
           })
           .catch(error => {
             console.warn(`Add New Line: ${error.message}. Code: ${error.code}.`)
@@ -133,13 +121,9 @@ export default {
       return new Promise(resolve => {
         const currentPos = getters.getVPOS
         const currentOrder = getters.getCurrentOrder
-        console.log({
-          currentOrder,
-          currentPos
-        })
-        dispatch('overloadOrder', {
-          order: currentOrder
-        })
+        // dispatch('overloadOrder', {
+        //   order: currentOrder
+        // })
         if (isEmptyValue(currentOrder)) resolve([])
         listOrderLines({
           posId: currentPos.id,
@@ -147,9 +131,9 @@ export default {
           pageSize: 50
         })
           .then(ListOrderLinesResponse => {
-            const { orderLineList } = ListOrderLinesResponse
-            commit('setListOrderLines', orderLineList)
-            resolve(orderLineList)
+            const { order_lines } = ListOrderLinesResponse
+            commit('setListOrderLines', order_lines)
+            resolve(order_lines)
           })
           .catch(error => {
             showMessage({
