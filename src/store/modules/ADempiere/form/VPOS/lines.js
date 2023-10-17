@@ -92,6 +92,9 @@ export default {
             const { order_lines } = responseOrder
             // commit('setOrder', order_lines)
             dispatch('listLines')
+            dispatch('overloadOrder', {
+              order: currentOrder
+            })
             resolve(order_lines)
           })
           .catch(error => {
