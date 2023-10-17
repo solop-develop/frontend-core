@@ -68,7 +68,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         min-width="200"
       />
       <el-table-column
-        prop="quantityOnHand"
+        prop="quantity_ordered.value"
         :label="$t('form.productInfo.quantityOnHand')"
         align="right"
       />
@@ -188,24 +188,23 @@ export default defineComponent({
 
     function displayAmount(row) {
       const {
-        priceStandard,
+        price_standard,
         currency
       } = row
-      return formatPrice({ value: priceStandard, currency: currency.iSOCode })
+      return formatPrice({ value: price_standard.value, currency: currency.iSOCode })
     }
 
     function addProduct(row) {
-      console.log(row, { selectProduct: selectProduct.value })
       if (isEmptyValue(order.value)) {
         store.dispatch('newOrder')
           .finally(() => {
             store.dispatch('newLine', {
-              productUuid: row.product.uuid
+              productId: row.product.id
             })
           })
       } else {
         store.dispatch('newLine', {
-          productUuid: row.product.uuid
+          productId: row.product.id
         })
       }
       close(false)

@@ -396,3 +396,200 @@ export function listProductPrice({
     })
 }
 
+/** ___________________
+ * |                   |
+ * | Orders Services   |
+ * |___________________|
+ */
+
+/**
+ * Create Order
+ * @param {int32} posId7
+ * @param {int32} customerId
+ * @param {int32} documentTypeId
+ * @param {int32} priceListId
+ * @param {int32} warehouseId
+ * @param {int32} salesRepresentativeId
+ * @param {int32} campaignId
+ */
+export function createOrder({
+  posId,
+  customerId,
+  documentTypeId,
+  priceListId,
+  warehouseId,
+  salesRepresentativeId,
+  campaignId
+}) {
+  return request({
+    url: `point-of-sales/${posId}/orders`,
+    method: 'post',
+    data: {
+      customer_id: customerId,
+      document_type_id: documentTypeId,
+      price_list_id: priceListId,
+      warehouse_id: warehouseId,
+      sales_representative_id: salesRepresentativeId,
+      campaign_id: campaignId
+    }
+  })
+    .then(response => {
+      return response
+    })
+}
+
+/**
+ * Get a Order
+ * @param {int32} posId
+ * @param {int32} orderId
+ */
+export function getOrder({
+  posId,
+  orderId
+}) {
+  return request({
+    url: `point-of-sales/${posId}/orders/${orderId}`,
+    method: 'get'
+  })
+    .then(response => {
+      return response
+    })
+}
+
+/**
+ * Delete Order
+ * @param {int32} posId
+ * @param {int32} orderId
+ */
+export function deleteOrder({
+  posId,
+  orderId
+}) {
+  return request({
+    url: `point-of-sales/${posId}/orders/${orderId}`,
+    method: 'delete'
+  })
+    .then(response => {
+      return response
+    })
+}
+
+/**
+ * List Orders
+ * @param {int32} posId
+ */
+
+export function listOrders({
+  posId
+}) {
+  return request({
+    url: `point-of-sales/${posId}/orders`,
+    method: 'get'
+  })
+    .then(response => {
+      return response
+    })
+}
+
+/** _________________________
+
+export function listOrders({
+  posId
+}) {
+  return request({
+    url: `point-of-sales/${posId}/orders`,
+    method: 'get'
+  })
+    .then(response => {
+      return response
+    })
+}
+ * |                         |
+ * |   Order Line Services   |
+ * |_________________________|
+ */
+
+/**
+ * Create Order
+ * @param {int32} posId
+ * @param {int32} orderId
+ * @param {int32} chargeId
+ * @param {string} description
+ * @param {google.protobuf.Value} quantity
+ * @param {google.protobuf.Value} price
+ * @param {google.protobuf.Value} discountRate
+ * @param {int32} warehouseId
+ * @param {int32} resourceAssignmentId
+ */
+export function createOrderLine({
+  posId,
+  orderId,
+  chargeId,
+  productId,
+  description,
+  quantity,
+  price,
+  discountRate,
+  warehouseId,
+  resourceAssignmentId
+}) {
+  return request({
+    url: `point-of-sales/${posId}/orders/${orderId}/lines`,
+    method: 'post',
+    data: {
+      product_id: productId,
+      charge_id: chargeId,
+      description,
+      quantity,
+      price,
+      discount_rate: discountRate,
+      warehouse_id: warehouseId,
+      resource_assignment_id: resourceAssignmentId
+    }
+  })
+    .then(response => {
+      return response
+    })
+}
+
+/**
+ * List Order Lines
+ * @param {string} filters
+ * @param {string} sortBy
+ * @param {repeated string} groupColumns
+ * @param {repeated string} selectColumns
+ * @param {int32} filters
+ * @param {int32} pageSize
+ * @param {string} pageToken
+ * @param {string} searchValue
+ * @param {int32} posId
+ * @param {int32} orderId
+ */
+export function listOrderLines({
+  posId,
+  sortBy,
+  orderId,
+  filters,
+  pageSize = 15,
+  pageToken,
+  searchValue,
+  groupColumns,
+  selectColumns
+}) {
+  return request({
+    url: `point-of-sales/${posId}/orders/${orderId}/lines`,
+    method: 'get',
+    params: {
+      filters,
+      sort_by: sortBy,
+      group_columns: groupColumns,
+      select_columns: selectColumns,
+      page_size: pageSize,
+      page_token: pageToken,
+      search_value: searchValue
+    }
+  })
+    .then(response => {
+      return response
+    })
+}

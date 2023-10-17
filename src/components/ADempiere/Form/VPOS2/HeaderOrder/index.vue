@@ -20,7 +20,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       <search-product />
     </el-col>
     <el-col :span="7">
-      <customer />
+      <!-- <customer /> -->
     </el-col>
     <el-col :span="4">
       <actions-order />
