@@ -21,7 +21,7 @@ import lang from '@/lang'
 // API Request Methods
 import {
   requestMailTemplates
-} from '@/api/ADempiere/user-interface/component/index.js'
+} from '@/api/ADempiere/user-interface/component/index.ts'
 
 const issues = {
   listMail: {
