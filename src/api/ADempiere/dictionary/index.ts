@@ -148,10 +148,6 @@ export function requestForm({
     url: `/dictionary/forms/${id}`,
     method: 'get'
   })
-    .then(formResponse => {
-      const { convertForm } = require('@/utils/ADempiere/apiConverts/dictionary.js')
-      return convertForm(formResponse)
-    })
 }
 
 /**

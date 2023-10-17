@@ -174,9 +174,10 @@ const staticRoutes = [
         component: () => import('@/views/ADempiere/Form'),
         name: 'PriceChecking',
         meta: {
+          fileName: 'PriceChecking',
           icon: 'shopping',
-          title: 'PriceChecking',
-          isIndex: true
+          isIndex: true,
+          title: language.t('route.PriceChecking')
         }
       }
     ]
@@ -216,9 +217,10 @@ const staticRoutes = [
         component: () => import('@/views/ADempiere/Form'),
         name: 'ProductInfo',
         meta: {
-          title: 'ProductInfo',
+          fileName: 'ProductInfo',
           icon: 'search',
-          isIndex: true
+          isIndex: true,
+          title: language.t('route.ProductInfo')
         }
       }
     ]
