@@ -35,7 +35,12 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           :align="valueOrder.isNumeric ? 'right' : 'left'"
         >
           <template slot-scope="scope">
-            <!-- {{ scope.row }} -->
+            <el-button
+              v-show="valueOrder.columnName === 'LineDescription'"
+              type="text"
+              icon="el-icon-document-copy"
+              @click="copyCode(scope.row)"
+            />
             {{ displayValue({ row: scope.row, columnName: valueOrder.columnName}) }}
           </template>
         </el-table-column>
@@ -49,11 +54,11 @@ import { defineComponent, computed } from '@vue/composition-api'
 import lang from '@/lang'
 import store from '@/store'
 // Utils and Helper Methods
-// import { displayValue } from './Lines.ts'
 import {
   displayLabel,
   displayValue
 } from '@/utils/ADempiere/dictionary/form/VPOS'
+import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 
 export default defineComponent({
   name: 'infoOrder',
@@ -127,12 +132,20 @@ export default defineComponent({
       return store.getters.getListOrderLines
     })
 
+    function copyCode(value) {
+      copyToClipboard({
+        text: value.product.value,
+        isShowMessage: true
+      })
+    }
+
     return {
       orderLineDefinition,
       lines,
       // Methods
       displayLabel,
-      displayValue
+      displayValue,
+      copyCode
     }
   }
 })
