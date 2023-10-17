@@ -145,17 +145,17 @@ export default defineComponent({
       const order = store.getters.getCurrentOrder
       if (
         !isEmptyValue(order) &&
-        !isEmptyValue(order.uuid)
+        !isEmptyValue(order.id)
       ) {
         return {
-          documentNo: order.documentNo,
-          salesRepresentative: order.salesRepresentative,
-          totalLines: order.totalLines,
-          discountAmount: order.discountAmount,
-          taxAmount: order.taxAmount,
-          grandTotal: order.grandTotal,
-          dateOrdered: order.dateOrdered,
-          documentType: order.documentType
+          documentNo: order.document_no,
+          salesRepresentative: order.sales_representative,
+          totalLines: order.total_lines.value,
+          discountAmount: order.discount_amount.value,
+          taxAmount: order.tax_amount.value,
+          grandTotal: order.grand_total.value,
+          dateOrdered: order.date_ordered,
+          documentType: order.document_type
         }
       }
       return {

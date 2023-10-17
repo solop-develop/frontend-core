@@ -91,6 +91,8 @@ export default {
         getPointOfSales({ id })
           .then(response => {
             dispatch('changeVPOS', { getPointOfSales: response })
+            // const currentRouter = router.app.$route
+            dispatch('overloadOrder', { order: {}})
             resolve(response)
           })
           .catch(error => {
