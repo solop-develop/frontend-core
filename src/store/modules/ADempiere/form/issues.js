@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanchez@gmail.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ import lang from '@/lang'
 // API Request Methods
 import {
   requestMailTemplates
-} from '@/api/ADempiere/user-interface/component/index.js'
+} from '@/api/ADempiere/user-interface/component/index.ts'
 
 const issues = {
   listMail: {
@@ -33,24 +33,27 @@ const issues = {
 
 export default {
   state: issues,
+
   mutations: {
     setListMailTemplates(state, list) {
       state.listMail = list
     }
   },
+
   actions: {
     findListMailTemplates({ commit }) {
       requestMailTemplates({})
         .then(response => {
           const { records } = response
-          const listOptions = records.map(listMail => {
-            const { name } = listMail
+          const listOptions = records.map(mailTemplate => {
+            const { name, subject, mail_text } = mailTemplate
+
             return {
               name,
-              text: listMail.subject,
+              text: subject,
               action(editor) {
-                editor.insert((selected) => {
-                  const placeholder = listMail.mail_text
+                editor.insert(selected => {
+                  const placeholder = mail_text
                   const content = selected || placeholder
                   return {
                     text: `${content}`,
@@ -60,6 +63,7 @@ export default {
               }
             }
           })
+
           commit('setListMailTemplates', {
             listMailTemplates: {
               title: lang.t('issues.emailTemplate'),
@@ -73,6 +77,7 @@ export default {
         })
     }
   },
+
   getters: {
     getListMailTemplates(state) {
       return state.listMail
