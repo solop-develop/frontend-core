@@ -18,11 +18,13 @@
 
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
+
+// Constants
 import { RESOURCE_TYPE_ATTACHMENT } from '@/utils/ADempiere/resource'
+
 /**
  * Exists Window Attachment
  */
-
 export function requestExistsAttachment({
   tableName,
   recordId
@@ -36,7 +38,6 @@ export function requestExistsAttachment({
 /**
  * Get List Window Attachment
  */
-
 export function requestAttachment({
   tableName,
   recordId

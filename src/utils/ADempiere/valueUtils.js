@@ -916,11 +916,17 @@ export function setIconsTableName({
 
 /**
  * Get Valid Integer
- * @param {string|numner} id
- * @param {number}
+ * @param {string|number} value
+ * @param {boolean} isIdentifier
+ * @returns {number}
  */
-export function getValidInteger(id) {
-  if (!isEmptyValue(id) && !Number.isNaN(id)) return Number.parseInt(id, 10)
+export function getValidInteger(value, isIdentifier = false) {
+  if (!isEmptyValue(value) && !Number.isNaN(value)) {
+    return Number.parseInt(value, 10)
+  }
+  if (isIdentifier) {
+    return -1
+  }
   return 0
 }
 
