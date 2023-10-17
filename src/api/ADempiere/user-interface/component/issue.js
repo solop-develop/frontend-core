@@ -46,30 +46,24 @@ export function requestExistsIssues({
 
 /**
  * Issues List from Window
- * @param {string}  tableName
- * @param {number}  recordId
- * @param {string}  recordUuid
- * @param {string}  searchValue
+ * @param {string} tableName
+ * @param {number} recordId
+ * @param {string} searchValue
  */
 export function requestListIssues({
   tableName,
   recordId,
-  recordUuid,
   searchValue
 }) {
   return request({
-    url: '/user-interface/component/issue/list-issues',
+    url: '/issue-management/issues',
     method: 'get',
     params: {
       record_id: recordId,
-      record_uuid: recordUuid,
       table_name: tableName,
       search_value: searchValue
     }
   })
-    .then(listExists => {
-      return listExists
-    })
 }
 
 /**

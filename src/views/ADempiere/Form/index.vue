@@ -81,6 +81,7 @@ import store from '@/store'
 // Components and Mixins
 import FormPanel from '@/components/ADempiere/Form'
 import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
+import TitleAndHelp from '@/components/ADempiere/TitleAndHelp'
 
 // Utils and Helper Methods
 import { isEmptyValue, getValidInteger } from '@/utils/ADempiere'
@@ -90,7 +91,8 @@ export default defineComponent({
 
   components: {
     FormPanel,
-    LoadingView
+    LoadingView,
+    TitleAndHelp
   },
 
   setup() {
@@ -184,3 +186,13 @@ export default defineComponent({
   }
 })
 </script>
+
+<style>
+  .el-card__body {
+    padding-top: 0px !important;
+    padding-right: 0px !important;
+    padding-bottom: 2px !important;
+    padding-left: 0px !important;
+    /* height: 100%!important; */
+  }
+</style>
