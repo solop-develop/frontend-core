@@ -47,10 +47,6 @@ export function convertBrowser(browser) {
   return convertedBrowser
 }
 
-export function convertForm(form) {
-  return camelizeObjectKeys(form)
-}
-
 export function convertWindow(windowToConvert) {
   const convertedWindow = camelizeObjectKeys(windowToConvert)
   convertedWindow.contextInfo = convertContextInfo(windowToConvert.context_info)

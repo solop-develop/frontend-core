@@ -169,7 +169,7 @@ export default {
       return []
     },
     getForm() {
-      return this.$store.getters.getForm(this.$route.meta.uuid)
+      return this.$store.getters.getStoredForm(this.$route.meta.uuid)
     },
     formSteps() {
       let form
