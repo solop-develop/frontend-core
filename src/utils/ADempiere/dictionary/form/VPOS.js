@@ -17,9 +17,12 @@
  */
 
 import store from '@/store'
+
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'
 import { formatPrice } from '@/utils/ADempiere/valueFormat.js'
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
+
 // Const
 const isMobile = store.getters.device === 'mobile'
 
