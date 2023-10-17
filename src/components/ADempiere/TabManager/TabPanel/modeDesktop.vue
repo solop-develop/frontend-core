@@ -100,6 +100,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
     <el-footer :style="styleFooterPanel" class="tab-panel-footer">
       <!-- pagination table, set custom or use default change page method -->
+      {{ currentPage }}
       <custom-pagination
         :container-manager="containerManager"
         :parent-uuid="parentUuid"
