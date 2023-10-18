@@ -21,21 +21,18 @@ import { request } from '@/utils/ADempiere/request'
 
 /**
  * Issues exist
- * @param {string}  tableName
- * @param {number}  recordId
- * @param {string}  recordUuid
+ * @param {string} tableName
+ * @param {number} recordId
  */
 export function requestExistsIssues({
   tableName,
-  recordId,
-  recordUuid
+  recordId
 }) {
   return request({
-    url: '/user-interface/component/issue/exists-issues',
+    url: `/issue-management/issues/${tableName}/${recordId}/exists`,
     method: 'get',
     params: {
       record_id: recordId,
-      record_uuid: recordUuid,
       table_name: tableName
     }
   })

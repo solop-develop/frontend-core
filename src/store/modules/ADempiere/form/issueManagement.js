@@ -31,9 +31,8 @@ import {
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
-// import { showMessage } from '@/utils/ADempiere/notification'
 
-const initStateChatEntries = {
+const initStateIssueManagement = {
   listIssues: [],
   isLoaded: false,
   isNewIssues: false,
@@ -42,7 +41,7 @@ const initStateChatEntries = {
 }
 
 export default {
-  state: initStateChatEntries,
+  state: initStateIssueManagement,
   mutations: {
     // new
     setListIssues(state, payload) {

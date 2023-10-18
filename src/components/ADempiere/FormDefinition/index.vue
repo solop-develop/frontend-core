@@ -1,8 +1,7 @@
 <!--
   ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A.
-  Contributor(s): Yamel Senih ysenih@erpya.com www.erpya.com
-  This program is free software: you can redistribute it and/or modify
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   (at your option) any later version.
@@ -15,6 +14,7 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
+
 <template>
   <component
     :is="componentRender"
@@ -23,32 +23,36 @@
 </template>
 
 <script>
-export default {
+import { defineComponent, computed } from '@vue/composition-api'
+
+import store from '@/store'
+
+export default defineComponent({
   name: 'FormDefinition',
 
   props: {
     metadata: {
       type: Object,
-      required: true
+      default: () => {}
     }
   },
 
-  computed: {
+  setup(props) {
     // load the component that is indicated in the attributes of received property
-    componentRender() {
+    const componentRender = computed(() => {
       let form
-      switch (this.metadata.fileName) {
+      switch (props.metadata.fileName) {
         case 'AcctViewer':
           form = import('@/components/ADempiere/Form/AcctViewer')
           break
         case 'PriceChecking':
           form = import('@/components/ADempiere/Form/PriceChecking')
-          this.$store.dispatch('settings/changeSetting', {
+          store.dispatch('settings/changeSetting', {
             key: 'showMenu',
             value: false
           })
-          this.$store.dispatch('app/toggleSideBar', false)
-          this.$store.dispatch('settings/changeSetting', {
+          store.dispatch('app/toggleSideBar', false)
+          store.dispatch('settings/changeSetting', {
             key: 'tagsView',
             value: false
           })
@@ -66,7 +70,7 @@ export default {
           form = import('@/components/ADempiere/Form/VMatch')
           break
         case 'VPOS':
-          this.$store.dispatch('settings/changeSetting', {
+          store.dispatch('settings/changeSetting', {
             key: 'showContextMenu',
             value: false
           })
@@ -96,7 +100,7 @@ export default {
         case 'org.spin.apps.form.VBankStatementMatch':
           form = import('@/components/ADempiere/Form/VBankStatementMatch')
           break
-        case 'Issues':
+        case 'IssueManagement':
           form = import('@/components/ADempiere/Form/Issues')
           break
         case 'ExpressReceipt':
@@ -137,7 +141,11 @@ export default {
             })
         })
       }
+    })
+
+    return {
+      componentRender
     }
   }
-}
+})
 </script>

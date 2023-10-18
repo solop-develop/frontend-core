@@ -23,7 +23,7 @@ import {
   requestMailTemplates
 } from '@/api/ADempiere/user-interface/component/index.ts'
 
-const issues = {
+const initStateMailTemplate = {
   listMail: {
     title: 'Plantilla de Correo',
     icon: 'v-md-icon-tip',
@@ -32,7 +32,7 @@ const issues = {
 }
 
 export default {
-  state: issues,
+  state: initStateMailTemplate,
 
   mutations: {
     setListMailTemplates(state, list) {
