@@ -1,0 +1,8 @@
+{
+	"editor.detectIndentation": false,
+	"editor.indentSize": "tabSize",
+	"editor.tabSize": 2,
+	"editor.autoIndent": "false",
+	"editor.insertSpaces": false,
+	"files.insertFinalNewline": true
+}

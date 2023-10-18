@@ -17,14 +17,15 @@
 -->
 
 <template>
-  <div>
+  <div class="form-view" :style="styleHeight">
     <el-container
       v-if="isLoadedMetadata"
       key="form-loaded"
+      class="form-loaded"
     >
       <el-main style="padding: 0px !important;">
-        <el-row>
-          <el-col :span="24">
+        <el-row class="row-content">
+          <el-col class="col-content" :span="24">
             <el-card
               class="content-collapse"
             >
@@ -51,7 +52,7 @@
                 @click="changeDisplatedTitle"
               />
               <div style="height: 100%">
-                <form-panel
+                <form-defintion
                   :metadata="{
                     ...formMetadata,
                     fileName: formFileName,
@@ -79,7 +80,7 @@ import router from '@/router'
 import store from '@/store'
 
 // Components and Mixins
-import FormPanel from '@/components/ADempiere/Form'
+import FormDefintion from '@/components/ADempiere/FormDefinition'
 import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 import TitleAndHelp from '@/components/ADempiere/TitleAndHelp'
 
@@ -90,7 +91,7 @@ export default defineComponent({
   name: 'FormView',
 
   components: {
-    FormPanel,
+    FormDefintion,
     LoadingView,
     TitleAndHelp
   },
@@ -142,6 +143,13 @@ export default defineComponent({
       return store.getters.getIsShowTitleForm
     })
 
+    const styleHeight = computed(() => {
+      if (formFileName.value === 'WFActivity') {
+        return 'height: 90vh;overflow: auto;'
+      }
+      return 'height: 100vh;overflow: auto;'
+    })
+
     function changeDisplatedTitle() {
       store.commit('changeShowTitleForm', !isShowTitleForm.value)
     }
@@ -180,6 +188,7 @@ export default defineComponent({
       formName,
       isShowTitleForm,
       isVisibleShowButton,
+      styleHeight,
       // Methods
       changeDisplatedTitle
     }
@@ -187,12 +196,24 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style lang="scss">
+.form-view {
+  .form-loaded {
+    height: inherit;
+  }
   .el-card__body {
     padding-top: 0px !important;
     padding-right: 0px !important;
     padding-bottom: 2px !important;
     padding-left: 0px !important;
     /* height: 100%!important; */
+  }
+}
+</style>
+
+<style scoped >
+  .content-collapse {
+    /* height: 100%!important; */
+    display: contents;
   }
 </style>

@@ -274,6 +274,7 @@ const staticRoutes = [
         meta: {
           title: 'Issues',
           icon: 'el-icon-s-promotion',
+          fileName: 'IssueManagement',
           isIndex: true,
           type: 'from'
         }
