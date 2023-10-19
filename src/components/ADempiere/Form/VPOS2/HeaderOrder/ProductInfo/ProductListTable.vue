@@ -195,7 +195,7 @@ export default defineComponent({
     }
 
     function addProduct(row) {
-      if (isEmptyValue(order.value)) {
+      if (isEmptyValue(order.value.id)) {
         store.dispatch('newOrder')
           .finally(() => {
             store.dispatch('newLine', {

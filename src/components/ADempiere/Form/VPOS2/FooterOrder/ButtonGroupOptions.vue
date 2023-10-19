@@ -42,6 +42,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         v-show="!isEmptyValue(order)"
         type="primary"
         icon="el-icon-document-checked"
+        @click="releaseOrder(order)"
       >
         {{ $t('form.pos.releaseOrder') }}
       </el-button>
@@ -67,8 +68,13 @@ export default defineComponent({
       return store.getters.getCurrentOrder
     })
 
+    function releaseOrder(order) {
+      store.dispatch('releaseCurrentOrder', { order })
+    }
+
     return {
-      order
+      order,
+      releaseOrder
     }
   }
 })

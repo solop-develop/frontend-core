@@ -18,51 +18,229 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
   <span>
     <el-collapse v-model="activeNames">
       <el-collapse-item title="Socio de Negocios (Punto de Venta)" name="1">
-        <div>Consistent with real life: in line with the process and logic of real life, and comply with languages and habits that the users are used to;</div>
-        <div>Consistent within interface: all elements should be consistent, such as: design style, icons and texts, position of elements, etc.</div>
+        <el-form
+          :inline="true"
+          label-position="top"
+          style="padding: 0px !important;margin: 0px;"
+        >
+          <el-row :gutter="20">
+            <el-col :span="8">
+              <el-form-item
+                label="Código"
+                class="form-item-criteria"
+                style="margin: 0px;width: 100%;"
+              >
+                <el-input
+                  v-model="value"
+                  style="margin: 0px;width: 100%;"
+                  @input="filterValue"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item
+                label="Nombre"
+                class="form-item-criteria"
+                style="margin: 0px;width: 100%;"
+              >
+                <el-input
+                  v-model="name"
+                  style="margin: 0px;width: 100%;"
+                  @input="filterName"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item
+                label="Valor de la Búsqueda"
+                class="form-item-criteria"
+                style="margin: 0px;width: 100%;"
+              >
+                <el-input
+                  v-model="searchValue"
+                  style="margin: 0px;width: 100%;"
+                  @input="filterSearchValue"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
       </el-collapse-item>
     </el-collapse>
     <el-table
-      :data="tableData"
+      v-loading="isLoading"
+      :data="list"
       style="width: 100%"
+      :border="true"
+      height="30vh"
     >
+      <index-column
+        :page-number="1"
+        :page-size="50"
+      />
       <el-table-column
-        prop="date"
+        prop="value"
         label="Código"
-        width="180"
+      />
+      <el-table-column
+        prop="tax_id"
+        label="Número Identificación"
       />
       <el-table-column
         prop="name"
-        label="Número Identificación"
-        width="180"
-      />
-      <el-table-column
-        prop="address"
         label="Nombre"
       />
     </el-table>
+    <p>
+      <custom-pagination
+        :total="recordCount"
+        style="float: left;"
+        :current-page="pageToken"
+        :records-page="list.length"
+        :handle-change-page="handleChangePage"
+        :handle-size-change="handleSizeChange"
+      />
+      <el-button
+        type="primary"
+        class="button-base-icon"
+        icon="el-icon-check"
+        style="float: right;margin-left: 5px;"
+      />
+      <el-button
+        type="danger"
+        class="button-base-icon"
+        icon="el-icon-close"
+        style="float: right;"
+      />
+    </p>
   </span>
 </template>
 
 <script>
 import {
   defineComponent,
-  ref
+  ref,
+  computed
 } from '@vue/composition-api'
+import store from '@/store'
+// Components and Mixins
+import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
+import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
 
 export default defineComponent({
   name: 'ListCostumer',
+  components: {
+    IndexColumn,
+    CustomPagination
+  },
   setup() {
+    const isLoading = ref(false)
     const activeNames = ref('')
-    const item = {
-      date: 'V-0000000000',
-      name: 'V-0000000000',
-      address: 'Cliente sin Asignar'
+    const value = ref('')
+    const name = ref('')
+    const searchValue = ref('')
+    const pageSizeNumber = ref(15)
+    const list = computed(() => {
+      return store.getters.getCustomersList
+    })
+    const recordCount = computed(() => {
+      return store.getters.getCustomerCount
+    })
+    const pageToken = computed(() => {
+      const page = store.getters.getCustomerPageToken
+      if (page) return (Number(page.slice(-1)) - 1)
+      return 0
+    })
+
+    function handleChangePage(pageNumber) {
+      isLoading.value = true
+      setTimeout(() => {
+        store.dispatch('searchCustomersList', {
+          pageSize: pageSizeNumber.value,
+          searchValue: searchValue.value,
+          name: name.value,
+          value: value.value,
+          pageToken: pageNumber
+        })
+          .finally(() => {
+            isLoading.value = false
+          })
+      }, 500)
+    }
+
+    function handleSizeChange(pageSize) {
+      isLoading.value = true
+      pageSizeNumber.value = pageSize
+      setTimeout(() => {
+        store.dispatch('searchCustomersList', {
+          pageSize: pageSize,
+          searchValue: searchValue.value,
+          name: name.value,
+          value: value.value
+        })
+          .finally(() => {
+            isLoading.value = false
+          })
+      }, 500)
+    }
+
+    function filterValue(value) {
+      setTimeout(() => {
+        store.dispatch('searchCustomersList', {
+          searchValue: searchValue.value,
+          name: name.value,
+          value: value
+        })
+          .finally(() => {
+            isLoading.value = false
+          })
+      }, 500)
+    }
+
+    function filterName(value) {
+      setTimeout(() => {
+        store.dispatch('searchCustomersList', {
+          searchValue: searchValue.value,
+          name: value,
+          value: value.value
+        })
+          .finally(() => {
+            isLoading.value = false
+          })
+      }, 500)
+    }
+
+    function filterSearchValue(value) {
+      setTimeout(() => {
+        store.dispatch('searchCustomersList', {
+          searchValue: value,
+          name: name.value,
+          value: value.value
+        })
+          .finally(() => {
+            isLoading.value = false
+          })
+      }, 500)
     }
 
     return {
+      // Ref
+      name,
+      value,
+      isLoading,
+      searchValue,
       activeNames,
-      tableData: Array(20).fill(item)
+      pageSizeNumber,
+      // Computed
+      recordCount,
+      pageToken,
+      list,
+      // Methods
+      filterName,
+      filterValue,
+      handleChangePage,
+      handleSizeChange,
+      filterSearchValue
     }
   }
 })

@@ -18,18 +18,14 @@
 
 import router from '@/router'
 // API Request Methods
-// import {
-//   createOrder,
-//   // updateOrder,
-//   deleteOrder,
-//   listOrders,
-//   getOrder
-// } from '@/api/ADempiere/form/point-of-sales.js'
 import {
   createOrder,
   deleteOrder,
   listOrders,
-  getOrder
+  getOrder,
+  releaseOrder,
+  holdOrder,
+  updateOrder
 } from '@/api/ADempiere/form/VPOS/index'
 // import { isEmptyValue } from '@/utils/ADempiere'
 
@@ -38,21 +34,43 @@ import { isEmptyValue } from '@/utils/ADempiere'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 
 const OrderVPOS = {
-  list: [],
-  order: {
-    lines: []
+  // list: [],
+  order: {},
+  orderList: {
+    list: [],
+    recordCount: 0,
+    pageToken: ''
   },
-  isShowOrder: false
+  isShowOrder: false,
+  isLoadingRecords: false,
+  isShowQuickOptions: false
 }
 
 export default {
   state: OrderVPOS,
   mutations: {
     setListOrders(state, list) {
-      state.list = list
+      state.orderList.list = list
     },
-    setOrder(state, order) {
+    setOrders(state, {
+      recordCount,
+      pageToken,
+      list
+    }) {
+      state.orderList = {
+        recordCount,
+        pageToken,
+        list
+      }
+    },
+    setCurrentOrder(state, order) {
       state.order = order
+    },
+    setShowQuickOptions(state, show) {
+      state.isShowQuickOptions = show
+    },
+    setLoadingRecord(state, load) {
+      state.isLoadingRecords = load
     }
   },
   actions: {
@@ -67,7 +85,7 @@ export default {
      * @param {String} salesRepresentativeUuid
      * @returns {Object} responseOrder
      */
-    newOrder({ commit, getters }) {
+    newOrder({ commit, getters, dispatch }) {
       return new Promise(resolve => {
         const currentPos = getters.getVPOS
         const {
@@ -78,6 +96,12 @@ export default {
           default_campaign,
           template_customer
         } = currentPos
+        const currentRouter = router.app.$route
+        const {
+          name,
+          query,
+          params
+        } = currentRouter
         createOrder({
           posId: id,
           customerId: template_customer.id,
@@ -88,7 +112,18 @@ export default {
           salesRepresentativeId: getters['user/userInfo'].id
         })
           .then(responseOrder => {
-            commit('setOrder', responseOrder)
+            commit('setCurrentOrder', responseOrder)
+            dispatch('overloadOrder', {
+              order: responseOrder
+            })
+            router.push({
+              name,
+              params,
+              query: {
+                ...query,
+                orderId: responseOrder.id
+              }
+            }, () => {})
             resolve(responseOrder)
           })
           .catch(error => {
@@ -128,57 +163,68 @@ export default {
     //  * @returns {Array} ListOrdersResponse
     //  */
     listOrder({ commit, getters }, {
-      documentNo,
-      documentStatus,
-      businessPartnerUuid,
-      grandTotal,
-      openAmount,
-      isWaitingForPay,
-      isOnlyProcessed,
-      isOnlyAisleSeller,
-      isWaitingForInvoice,
-      isWaitingForShipment,
-      isBindingOffer,
-      isClosed,
-      isNullified,
-      isOnlyRma,
-      dateOrderedFrom,
-      dateOrderedTo,
-      searchValue,
-      pageSize,
+      search_value,
+      document_no,
+      document_status,
+      business_partner_id,
+      grand_total,
+      open_amount,
+      is_waiting_for_pay,
+      is_only_processed,
+      is_only_aisle_seller,
+      is_waiting_for_invoice,
+      is_waiting_for_shipment,
+      is_binding_offer,
+      is_closed,
+      is_nullified,
+      is_only_rma,
+      date_ordered_from,
+      date_ordered_to,
+      // sales_representative_id,
+      pageSize = 15,
       pageToken
     }) {
       return new Promise(resolve => {
         const {
           id
-        } = getters.getPoint
+        } = getters.getVPOS
+        commit('setLoadingRecord', true)
         listOrders({
           posId: id,
-          documentNo,
-          documentStatus,
-          businessPartnerUuid,
-          grandTotal,
-          openAmount,
-          isWaitingForPay,
-          isOnlyProcessed,
-          isOnlyAisleSeller,
-          isWaitingForInvoice,
-          isWaitingForShipment,
-          isBindingOffer,
-          isClosed,
-          isNullified,
-          isOnlyRma,
-          dateOrderedFrom,
-          dateOrderedTo,
-          salesRepresentativeUuid: getters['user/getUserUuid'],
-          searchValue,
           pageSize,
-          pageToken
+          pageToken,
+          search_value,
+          document_no,
+          document_status,
+          business_partner_id,
+          grand_total,
+          open_amount,
+          is_waiting_for_pay,
+          is_only_processed,
+          is_only_aisle_seller,
+          is_waiting_for_invoice,
+          is_waiting_for_shipment,
+          is_binding_offer,
+          is_closed,
+          is_nullified,
+          is_only_rma,
+          date_ordered_from,
+          date_ordered_to,
+          sales_representative_id: getters['user/userInfo'].id
         })
           .then(response => {
-            const { ordersList } = response
-            commit('setListOrders', ordersList)
-            resolve(ordersList)
+            const {
+              orders,
+              record_count,
+              next_page_token
+            } = response
+            commit('setOrders', {
+              recordCount: record_count,
+              pageToken: next_page_token,
+              list: orders
+            })
+            commit('setListOrders', orders)
+            resolve(orders)
           })
           .catch(error => {
             showMessage({
@@ -188,6 +234,9 @@ export default {
             })
             resolve([])
             console.warn(`Error Getting List Order: ${error.message}. Code: ${error.code}.`)
+          })
+          .finally(() => {
+            commit('setLoadingRecord', false)
           })
       })
     },
@@ -223,15 +272,10 @@ export default {
         ) {
           order = { id: query.orderId }
         }
-        // const { orderId } = query
-        // if (
-        //   isEmptyValue(id) &&
-        //   isEmptyValue(order) &&
-        //   !isEmptyValue(query)
-        // ) {
-        //   const { orderId } = query
-        //   id = orderId
-        // }
+        if (isEmptyValue(order.id)) {
+          resolve()
+          return
+        }
         getOrder({
           orderId: order.id,
           posId: id
@@ -245,7 +289,7 @@ export default {
                 orderId: responseOrder.id
               }
             }, () => {})
-            commit('setOrder', responseOrder)
+            commit('setCurrentOrder', responseOrder)
             dispatch('listLines')
             resolve(responseOrder)
           })
@@ -268,7 +312,7 @@ export default {
     //  */
     deleteOrder({ commit, getters }) {
       return new Promise(resolve => {
-        const pos = getters.getPoint
+        const pos = getters.getVPOS
         const order = getters.getCurrentOrder
         if (isEmptyValue(order)) resolve({})
         deleteOrder({
@@ -276,7 +320,160 @@ export default {
           orderId: order.id
         })
           .then(() => {
-            commit('setOrder', {})
+            const currentRouter = router.app.$route
+            const {
+              name,
+              query,
+              params
+            } = currentRouter
+            router.push({
+              name,
+              params,
+              query: {
+                posId: query.posId
+              }
+            }, () => {})
+            commit('setCurrentOrder', {})
+            commit('setListOrderLines', [])
+            resolve({})
+          })
+          .catch(error => {
+            console.warn(`Delete Order: ${error.message}. Code: ${error.code}.`)
+            showMessage({
+              type: 'error',
+              message: error.message,
+              showClose: true
+            })
+            resolve({})
+          })
+      })
+    },
+
+    releaseCurrentOrder({ commit, getters }, {
+      order
+    }) {
+      return new Promise(resolve => {
+        const pos = getters.getVPOS
+        if (isEmptyValue(order)) resolve({})
+        releaseOrder({
+          posId: pos.id,
+          orderId: order.id
+        })
+          .then(() => {
+            const currentRouter = router.app.$route
+            const {
+              name,
+              query,
+              params
+            } = currentRouter
+            router.push({
+              name,
+              params,
+              query: {
+                posId: query.posId
+              }
+            }, () => {})
+            commit('setCurrentOrder', {})
+            commit('setListOrderLines', [])
+            resolve({})
+          })
+          .catch(error => {
+            console.warn(`Delete Order: ${error.message}. Code: ${error.code}.`)
+            showMessage({
+              type: 'error',
+              message: error.message,
+              showClose: true
+            })
+            resolve({})
+          })
+      })
+    },
+
+    holdCurrentOrder({ dispatch, getters }, {
+      order
+    }) {
+      return new Promise(resolve => {
+        const pos = getters.getVPOS
+        if (isEmptyValue(order)) resolve({})
+        holdOrder({
+          posId: pos.id,
+          orderId: order.id
+        })
+          .then((response) => {
+            const currentRouter = router.app.$route
+            const {
+              name,
+              query,
+              params
+            } = currentRouter
+            router.push({
+              name,
+              params,
+              query: {
+                posId: query.posId,
+                orderId: response.id
+              }
+            }, () => {})
+            // commit('setCurrentOrder', response)
+            dispatch('overloadOrder', { order: response })
+            resolve({})
+          })
+          .catch(error => {
+            console.warn(`Delete Order: ${error.message}. Code: ${error.code}.`)
+            showMessage({
+              type: 'error',
+              message: error.message,
+              showClose: true
+            })
+            resolve({})
+          })
+      })
+    },
+    updateCurrentOrder({ dispatch, getters }, {
+      customer_id,
+      document_type_id,
+      price_list_id,
+      warehouse_id,
+      campaign_id,
+      discount_rate,
+      discount_rate_off,
+      discount_amount_off,
+      sales_representative_id
+    }) {
+      return new Promise(resolve => {
+        const pos = getters.getVPOS
+        const order = getters.getCurrentOrder
+        if (isEmptyValue(order)) resolve({})
+        updateOrder({
+          posId: pos.id,
+          orderId: order.id,
+          customer_id,
+          document_type_id,
+          price_list_id,
+          warehouse_id,
+          campaign_id,
+          discount_rate,
+          discount_rate_off,
+          discount_amount_off,
+          sales_representative_id
+        })
+          .then((response) => {
+            const currentRouter = router.app.$route
+            const {
+              name,
+              query,
+              params
+            } = currentRouter
+            router.push({
+              name,
+              params,
+              query: {
+                posId: query.posId,
+                orderId: response.id
+              }
+            }, () => {})
+            // commit('setCurrentOrder', response)
+            dispatch('overloadOrder', { order: response })
             resolve({})
           })
           .catch(error => {
@@ -290,14 +487,22 @@ export default {
           })
       })
     }
-
   },
   getters: {
     getListOrder(state) {
-      return state.list
+      return state.orderList.list
     },
     getCurrentOrder(state) {
       return state.order
+    },
+    getShowQuickOptions(state) {
+      return state.isShowQuickOptions
+    },
+    getLoadingRecord(state) {
+      return state.isLoadingRecords
+    },
+    getOrderRecords(state) {
+      return state.orderList
     }
   }
 }

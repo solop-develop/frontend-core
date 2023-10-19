@@ -457,6 +457,43 @@ export function getOrder({
 }
 
 /**
+ * UpdateOrder
+ * @param {int32} posId
+ * @param {int32} orderId
+ */
+export function updateOrder({
+  posId,
+  orderId,
+  customer_id,
+  document_type_id,
+  price_list_id,
+  warehouse_id,
+  campaign_id,
+  discount_rate,
+  discount_rate_off,
+  discount_amount_off,
+  sales_representative_id
+}) {
+  return request({
+    url: `point-of-sales/${posId}/orders/${orderId}`,
+    method: 'put',
+    params: {
+      customer_id,
+      document_type_id,
+      price_list_id,
+      warehouse_id,
+      campaign_id,
+      discount_rate,
+      discount_rate_off,
+      discount_amount_off,
+      sales_representative_id
+    }
+  })
+    .then(response => {
+      return response
+    })
+}
+/**
  * Delete Order
  * @param {int32} posId
  * @param {int32} orderId
@@ -480,11 +517,91 @@ export function deleteOrder({
  */
 
 export function listOrders({
-  posId
+  posId,
+  pageSize,
+  pageToken,
+  search_value,
+  document_no,
+  document_status,
+  business_partner_id,
+  grand_total,
+  open_amount,
+  is_waiting_for_pay,
+  is_only_processed,
+  is_only_aisle_seller,
+  is_waiting_for_invoice,
+  is_waiting_for_shipment,
+  is_binding_offer,
+  is_closed,
+  is_nullified,
+  is_only_rma,
+  date_ordered_from,
+  date_ordered_to,
+  sales_representative_id
 }) {
   return request({
     url: `point-of-sales/${posId}/orders`,
-    method: 'get'
+    method: 'get',
+    params: {
+      page_size: pageSize,
+      page_token: pageToken,
+      search_value,
+      document_no,
+      document_status,
+      business_partner_id,
+      grand_total,
+      open_amount,
+      is_waiting_for_pay,
+      is_only_processed,
+      is_only_aisle_seller,
+      is_waiting_for_invoice,
+      is_waiting_for_shipment,
+      is_binding_offer,
+      is_closed,
+      is_nullified,
+      is_only_rma,
+      date_ordered_from,
+      date_ordered_to,
+      sales_representative_id
+    }
+  })
+    .then(response => {
+      return response
+    })
+}
+
+/**
+ * Release Order
+ * @param {int32} posId
+ * @param {int32} orderId
+ */
+
+export function releaseOrder({
+  posId,
+  orderId
+}) {
+  return request({
+    url: `point-of-sales/${posId}/orders/${orderId}/release`,
+    method: 'put'
+  })
+    .then(response => {
+      return response
+    })
+}
+
+/**
+ * Hold Order
+ * @param {int32} posId
+ * @param {int32} orderId
+ */
+
+export function holdOrder({
+  posId,
+  orderId
+}) {
+  return request({
+    url: `point-of-sales/${posId}/orders/${orderId}/hold`,
+    method: 'put'
   })
     .then(response => {
       return response
@@ -492,18 +609,6 @@ export function listOrders({
 }
 
 /** _________________________
-
-export function listOrders({
-  posId
-}) {
-  return request({
-    url: `point-of-sales/${posId}/orders`,
-    method: 'get'
-  })
-    .then(response => {
-      return response
-    })
-}
  * |                         |
  * |   Order Line Services   |
  * |_________________________|
@@ -587,6 +692,63 @@ export function listOrderLines({
       page_size: pageSize,
       page_token: pageToken,
       search_value: searchValue
+    }
+  })
+    .then(response => {
+      return response
+    })
+}
+
+/** _________________________
+ * |                         |
+ * |   Customers Services   |
+ * |_________________________|
+ */
+
+/**
+ * List Customers
+ * @param {string} filters
+ * @param {string} sortBy
+ * @param {repeated string} groupColumns
+ * @param {repeated string} selectColumns
+ * @param {int32} filters
+ * @param {int32} pageSize
+ * @param {string} pageToken
+ * @param {string} searchValue
+ * @param {string} name
+ * @param {string} value
+ * @param {string} email
+ * @param {int32} posId
+ */
+
+export function listCustomers({
+  name,
+  email,
+  value,
+  posId,
+  sortBy,
+  filters,
+  pageToken,
+  searchValue,
+  groupColumns,
+  selectColumns,
+  pageSize = 15
+}) {
+  return request({
+    url: `point-of-sales/customers`,
+    method: 'get',
+    params: {
+      filters,
+      pos_id: posId,
+      sort_by: sortBy,
+      group_columns: groupColumns,
+      select_columns: selectColumns,
+      page_size: pageSize,
+      page_token: pageToken,
+      search_value: searchValue,
+      name,
+      email,
+      value
     }
   })
     .then(response => {
