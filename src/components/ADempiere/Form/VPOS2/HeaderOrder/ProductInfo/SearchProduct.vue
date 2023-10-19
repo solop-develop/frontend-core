@@ -34,7 +34,6 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             width="1250"
             @show="showPopever"
           >
-            <!-- {{ 4545 }} -->
             <product-list-table />
             <el-button
               slot="reference"
@@ -167,7 +166,7 @@ export default defineComponent({
       ) {
         isTrigger.value = false
         // store.dispatch('Line' )
-        if (isEmptyValue(order.value)) {
+        if (isEmptyValue(order.value.id)) {
           store.dispatch('newOrder')
             .then(() => {
               store.dispatch('newLine', {

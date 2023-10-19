@@ -16,15 +16,16 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <template>
   <span>
-    <!-- {{ lines[0].quantityOrdered }} -->
     <el-table
       id="linesOrder"
       ref="linesTable"
       :data="lines"
-      border
+      :border="true"
+      height="60vh"
       fit
       highlight-current-row
       style="height: 100% !important;"
+      @current-change="handleCurrentChangeOrderLine"
     >
       <template v-for="(valueOrder, key) in orderLineDefinition">
         <el-table-column
@@ -50,7 +51,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 </template>
 
 <script>
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed, ref } from '@vue/composition-api'
 import lang from '@/lang'
 import store from '@/store'
 // Utils and Helper Methods
@@ -63,6 +64,7 @@ import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 export default defineComponent({
   name: 'infoOrder',
   setup() {
+    const currentLine = ref({})
     const orderLineDefinition = computed(() => {
       return {
         lineDescription: {
@@ -139,10 +141,16 @@ export default defineComponent({
       })
     }
 
+    function handleCurrentChangeOrderLine(line) {
+      currentLine.value = line
+    }
+
     return {
       orderLineDefinition,
+      currentLine,
       lines,
       // Methods
+      handleCurrentChangeOrderLine,
       displayLabel,
       displayValue,
       copyCode

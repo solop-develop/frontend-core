@@ -17,14 +17,6 @@
 import router from '@/router'
 
 // Api Request Methods
-// import {
-//   listDocumentTypes,
-//   // listPointOfSales,
-//   // getPointOfSales,
-//   // listTenderTypes,
-//   listWarehouses,
-//   listPrices
-// } from '@/api/ADempiere/form/point-of-sales.js'
 import {
   listPointOfSales,
   getPointOfSales,
@@ -77,19 +69,21 @@ export default {
      * @param {Number} posId
      */
     searchPointOfSaleData({
+      commit,
       dispatch
     }, id) {
       return new Promise(resolve => {
         const currentRouter = router.app.$route
         const { posId } = currentRouter.query
-        dispatch('listPointOfSale')
         if (!isEmptyValue(posId)) id = posId
         if (isEmptyValue(id)) {
+          dispatch('listPointOfSale')
           resolve({})
           return
         }
         getPointOfSales({ id })
           .then(response => {
+            commit('setVPOS', response)
             dispatch('changeVPOS', { getPointOfSales: response })
             // const currentRouter = router.app.$route
             dispatch('overloadOrder', { order: {}})
@@ -102,8 +96,10 @@ export default {
               message: error.message,
               showClose: true
             })
-            dispatch('listPointOfSale')
             resolve({})
+          })
+          .finally(() => {
+            dispatch('listPointOfSale')
           })
       })
     },

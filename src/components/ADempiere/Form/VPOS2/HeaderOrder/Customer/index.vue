@@ -30,6 +30,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             {{ $t('form.pos.order.BusinessPartnerCreate.businessPartner') }}
             <el-dropdown
               trigger="click"
+              @command="selectOptions"
             >
               <span class="el-dropdown-link">
                 <svg-icon icon-class="tree-table" />
@@ -82,19 +83,18 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         </el-autocomplete>
       </el-form-item>
     </el-form>
-    <!-- <el-dialog
-      :modal="false"
+    <el-dialog
       :title="currentOptions"
       :center="true"
+      :modal="false"
       :visible.sync="isShowCustomer"
       :custom-class="'option-customer'"
       width="75%"
     >
       <component
         :is="isComponentRender"
-        v-if="!isEmptyValue(isComponentRender)"
       />
-    </el-dialog> -->
+    </el-dialog>
   </span>
 </template>
 
@@ -105,7 +105,7 @@ import {
   watch,
   ref
 } from '@vue/composition-api'
-// import language from '@/lang'
+import language from '@/lang'
 import store from '@/store'
 // Components and Mixins
 import NewCustomer from './NewCustomer'
@@ -123,34 +123,33 @@ export default defineComponent({
     const listCustomer = ref([])
     const isLoading = ref(false)
     const isTrigger = ref(false)
-    const order = computed(() => {
-      // return store.getters.getPoint.order
-      return {}
+
+    const currentVPOS = computed(() => {
+      return store.getters.getVPOS
     })
 
-    const pos = computed(() => {
-      return store.getters.getVPOS
-      // return {}
+    const currentOrder = computed(() => {
+      return store.getters.getCurrentOrder
     })
 
     const isShowCustomer = computed({
       get() {
-        return store.getters.getShowCustomer
+        return store.getters.getShowCustomerList
       },
       // setter
       set(show) {
-        store.commit('setShowCustomer', show)
+        store.commit('setShowCustomerList', show)
       }
     })
 
-    // const isComponentRender = computed(() => {
-    //   // if (currentOptions.value === language.t('pointOfSales.customer.newBusinessPartner')) return () => import('@/components/ADempiere/Form/NewVPOS/HeaderOrder/Customer/NewCustomer.vue')
-    //   // if (currentOptions.value === language.t('pointOfSales.customer.listBusinessPartners')) return () => import('@/components/ADempiere/Form/NewVPOS/HeaderOrder/Customer/ListCustomer.vue')
-    //   // if (currentOptions.value === language.t('pointOfSales.customer.updateBusinessPartner')) return () => import('@/components/ADempiere/Form/NewVPOS/HeaderOrder/Customer/NewCustomer.vue')
-    //   // if (currentOptions.value === language.t('form.pos.order.BusinessPartnerCreate.address.addNewAddress')) return () => import('@/components/ADempiere/Form/NewVPOS/HeaderOrder/Customer/NewCustomer.vue')
-    //   // return () => import('@/components/ADempiere/Form/NewVPOS/HeaderOrder/Customer/ListCustomer.vue')
-    //   return () => import('../Customer/ListCostumer.vue')
-    // })
+    const isComponentRender = computed(() => {
+      // if (currentOptions.value === language.t('pointOfSales.customer.newBusinessPartner')) return () => import('@/components/ADempiere/Form/NewVPOS/HeaderOrder/Customer/NewCustomer.vue')
+      // if (currentOptions.value === language.t('pointOfSales.customer.listBusinessPartners')) return () => import('@/components/ADempiere/Form/NewVPOS/HeaderOrder/Customer/ListCustomer.vue')
+      // if (currentOptions.value === language.t('pointOfSales.customer.updateBusinessPartner')) return () => import('@/components/ADempiere/Form/NewVPOS/HeaderOrder/Customer/NewCustomer.vue')
+      // if (currentOptions.value === language.t('form.pos.order.BusinessPartnerCreate.address.addNewAddress')) return () => import('@/components/ADempiere/Form/NewVPOS/HeaderOrder/Customer/NewCustomer.vue')
+      // return () => import('@/components/ADempiere/Form/NewVPOS/HeaderOrder/Customer/ListCustomer.vue')
+      return () => import('../Customer/ListCostumer.vue')
+    })
 
     // Methods
 
@@ -159,7 +158,7 @@ export default defineComponent({
         isLoading.value = true
         setTimeout(() => {
           listCustomer.value = []
-          store.dispatch('listCustomer', {
+          store.dispatch('searchCustomersList', {
             searchValue: search
           })
             .then(response => {
@@ -175,50 +174,45 @@ export default defineComponent({
 
     function selectCustomer(search) {
       searchCustomer.value = search.name
+      if (!isEmptyValue(currentOrder.value.id)) {
+        store.dispatch('updateCurrentOrder', {
+          customer_id: search.id
+        })
+      }
     }
 
     function blurCustomer() {
-      if (!isEmptyValue(searchCustomer.value)) {
-        searchCustomer.value
+      if (!isEmptyValue(currentOrder.value.id)) {
+        const { customer } = currentOrder.value
+        searchCustomer.value = customer.value + ' - ' + customer.name
         return
       }
-      if (
-        !isEmptyValue(order.value) &&
-        !isEmptyValue(order.value.customer)
-      ) {
-        searchCustomer.value = order.value.customer.name
-        return
-      }
-      if (!isEmptyValue(pos.value)) {
-        searchCustomer.value = pos.value.templateCustomer.name
+      if (!isEmptyValue(currentVPOS.value.id)) {
+        const { template_customer } = currentVPOS.value
+        if (isEmptyValue(template_customer)) return
+        searchCustomer.value = template_customer.value + ' - ' + template_customer.name
         return
       }
     }
 
     function selectOptions(options) {
+      if (options === language.t('pointOfSales.customer.listBusinessPartners')) {
+        store.dispatch('searchCustomersList', {})
+        isShowCustomer.value = true
+      }
       currentOptions.value = options
-      store.commit('setShowCustomer', true)
     }
 
-    // function OptionCustomer() {
-    //   return 'option-customer'
-    // }
-
-    watch(listCustomer, (newValue, oldValue) => {
-      if (!isEmptyValue(newValue) && newValue.length === 1 && isTrigger.value) {
-        selectCustomer(newValue[0])
+    watch(currentOrder, (newValue) => {
+      if (!isEmptyValue(newValue)) {
+        blurCustomer()
       }
     })
-
-    if (
-      !isEmptyValue(order.value) &&
-      !isEmptyValue(order.value.customer)
-    ) {
-      searchCustomer.value = order.value.customer.name
-    }
-    if (!isEmptyValue(pos.value)) {
-      searchCustomer.value = pos.value.templateCustomer.name
-    }
+    watch(currentVPOS, (newValue) => {
+      if (!isEmptyValue(newValue)) {
+        blurCustomer()
+      }
+    })
 
     return {
       isTrigger,
@@ -227,15 +221,15 @@ export default defineComponent({
       searchCustomer,
       currentOptions,
       // Computed
-      // isComponentRender,
+      isComponentRender,
       isShowCustomer,
-      order,
-      pos,
+      currentOrder,
+      currentVPOS,
       // Methods
-      localSearch,
       blurCustomer,
       selectOptions,
-      selectCustomer
+      selectCustomer,
+      localSearch
       // OptionCustomer
     }
   }

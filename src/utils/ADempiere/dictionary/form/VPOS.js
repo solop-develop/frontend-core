@@ -37,9 +37,10 @@ export function displayValue({
   columnName
 }) {
   const { price_list } = store.getters.getCurrentOrder
-  const {
-    currency
-  } = price_list
+  let currency = {
+    iso_code: ''
+  }
+  if (!isEmptyValue(price_list)) currency = price_list.currency
   let value = ''
   switch (columnName) {
     case 'LineDescription':
@@ -147,9 +148,10 @@ function displayLinePrice({
     price_with_tax
   } = row
   const { price_list } = store.getters.getCurrentOrder
-  const {
-    currency
-  } = price_list
+  let currency = {
+    iso_code: ''
+  }
+  if (!isEmptyValue(price_list)) currency = price_list.currency
   if (!is_display_discount && is_display_tax_amount) return formatPrice(price_with_tax.value, currency.iso_code)
   return formatPrice(price.value, currency.iso_code)
 }
@@ -185,7 +187,10 @@ function displayLineGranTotal({
     is_tax_included,
     price_list
   } = store.getters.getCurrentOrder
-  const { currency } = price_list
+  let currency = {
+    iso_code: ''
+  }
+  if (!isEmptyValue(price_list)) currency = price_list.currency
   const {
     total_amount_with_tax,
     total_amount

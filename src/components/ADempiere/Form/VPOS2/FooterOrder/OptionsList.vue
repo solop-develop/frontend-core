@@ -122,6 +122,7 @@ import { defineComponent, computed, watch } from '@vue/composition-api'
 
 // import lang from '@/lang'
 import store from '@/store'
+import router from '@/router'
 // Utils and Helper Methods
 // import { Persona } from '@/utils/ADempiere/form/PonitOfSales/instructure.ts'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -132,6 +133,9 @@ export default defineComponent({
     // Computed
     const currentPointOfSales = computed(() => {
       return store.getters.getVPOS
+    })
+    const currentOrder = computed(() => {
+      return store.getters.getCurrentOrder
     })
     const pointUuid = computed(() => {
       if (isEmptyValue(currentPointOfSales.value)) return ''
@@ -151,6 +155,7 @@ export default defineComponent({
 
     const pointDocumentType = computed(() => {
       if (isEmptyValue(currentPointOfSales.value)) return ''
+      if (!isEmptyValue(currentOrder.value.id)) return currentOrder.value.document_type.name
       const { document_type } = currentPointOfSales.value
       return document_type.name
     })
@@ -161,6 +166,7 @@ export default defineComponent({
 
     const pointPrices = computed(() => {
       if (isEmptyValue(currentPointOfSales.value)) return ''
+      if (!isEmptyValue(currentOrder.value.id)) return currentOrder.value.price_list.name
       const { price_list } = currentPointOfSales.value
       return price_list.name
     })
@@ -171,6 +177,7 @@ export default defineComponent({
 
     const pointWarehouses = computed(() => {
       if (isEmptyValue(currentPointOfSales.value)) return ''
+      if (!isEmptyValue(currentOrder.value.id)) return currentOrder.value.warehouse.name
       const { warehouse } = currentPointOfSales.value
       return warehouse.name
     })
@@ -187,6 +194,20 @@ export default defineComponent({
      */
     function changePos(point) {
       updateListAvalibles(point)
+      store.commit('setVPOS', point)
+      const currentRouter = router.app.$route
+      const {
+        name,
+        params
+      } = currentRouter
+      router.push({
+        name,
+        params,
+        query: {
+          posId: point.id
+        }
+      }, () => {})
+      store.commit('setCurrentOrder', {})
     }
 
     function changeDocumentType(documentType) {
@@ -194,6 +215,11 @@ export default defineComponent({
         attribute: 'documentType',
         value: documentType
       })
+      if (!isEmptyValue(currentOrder.value.id)) {
+        store.dispatch('updateCurrentOrder', {
+          document_type_id: documentType.id
+        })
+      }
     }
 
     function changeWarehouses(warehouse) {
@@ -201,6 +227,11 @@ export default defineComponent({
         attribute: 'warehouse',
         value: warehouse
       })
+      if (!isEmptyValue(currentOrder.value.id)) {
+        store.dispatch('updateCurrentOrder', {
+          warehouse_id: warehouse.id
+        })
+      }
     }
 
     function changePrices(price) {
@@ -208,6 +239,11 @@ export default defineComponent({
         attribute: 'priceList',
         value: price
       })
+      if (!isEmptyValue(currentOrder.value.id)) {
+        store.dispatch('updateCurrentOrder', {
+          price_list_id: price.id
+        })
+      }
     }
 
     function updateListAvalibles(point) {
@@ -227,6 +263,7 @@ export default defineComponent({
       listPoint,
       pointPrices,
       listPrices,
+      currentOrder,
       currentPointOfSales,
       pointDocumentType,
       listDocumentTypes,

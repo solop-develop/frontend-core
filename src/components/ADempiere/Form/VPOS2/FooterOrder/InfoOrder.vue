@@ -15,7 +15,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
-  <el-row :gutter="20" style="margin-top: 10px;">
+  <el-row :gutter="10" style="margin-top: 10px;">
     <el-col
       :span="14"
       style="float: left"
@@ -57,6 +57,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           >
             {{ $t('form.pos.order.itemQuantity') + ':' }}
           </span>
+          <b style="float: right">
+            {{ formatQuantity({ value: getItemQuantity }) }}
+          </b>
         </el-col>
         <el-col :span="24" style="margin: 0px;">
           <span
@@ -64,6 +67,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           >
             {{ $t('form.pos.order.numberLines') + ':' }}
           </span>
+          <b style="float: right">
+            {{ lines.length }}
+          </b>
         </el-col>
       </el-row>
     </el-col>
@@ -90,7 +96,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             {{ $t('form.pos.order.subTotal') + ':' }}
           </span>
           <b style="float: right">
-            {{ infoOrder.totalLines }}
+            {{ displayAmount(infoOrder.totalLines) }}
           </b>
         </el-col>
         <el-col :span="24">
@@ -100,7 +106,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             {{ $t('form.pos.tableProduct.displayDiscountAmount') + ':' }}
           </span>
           <b style="float: right">
-            {{ infoOrder.discountAmount }}
+            {{ displayAmount(infoOrder.discountAmount) }}
           </b>
         </el-col>
         <el-col :span="24">
@@ -110,7 +116,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             {{ $t('form.pos.order.tax') + ':' }}
           </span>
           <b style="float: right">
-            {{ infoOrder.taxAmount }}
+            {{ displayAmount(infoOrder.taxAmount) }}
           </b>
         </el-col>
         <el-col
@@ -123,7 +129,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             {{ $t('form.pos.order.total') }}
           </span>
           <b style="float: right">
-            {{ infoOrder.grandTotal }}
+            {{ displayAmount(infoOrder.grandTotal) }}
           </b>
         </el-col>
       </el-row>
@@ -137,6 +143,7 @@ import store from '@/store'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'
+import { formatPrice, formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 
 export default defineComponent({
   name: 'infoOrder',
@@ -176,8 +183,32 @@ export default defineComponent({
       }
     })
 
+    const lines = computed(() => {
+      return store.getters.getListOrderLines
+    })
+
+    const getItemQuantity = computed(() => {
+      if (isEmptyValue(store.getters.getCurrentOrder.id)) return 0
+      const arrayQuantity = lines.value.map(line => line.quantity_ordered.value)
+      if (isEmptyValue(arrayQuantity)) return 0
+      return arrayQuantity.reduce((accumulator, currentValue) => {
+        return accumulator + currentValue
+      })
+    })
+
+    function displayAmount(amount) {
+      const { price_list } = store.getters.getCurrentOrder
+      if (isEmptyValue(price_list)) return amount
+      return formatPrice({ value: amount, currency: price_list.currency.iso_code })
+    }
+
     return {
-      infoOrder
+      lines,
+      infoOrder,
+      getItemQuantity,
+      formatPrice,
+      displayAmount,
+      formatQuantity
     }
   }
 })
