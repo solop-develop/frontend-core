@@ -352,6 +352,7 @@ export default {
         baseQuantity: 'Base Quantity',
         uom: 'UOM',
         unitOfMeasure: 'Unit of Measure',
+        baseMeasurementUnit: 'Base Measurement Unit',
         options: 'Options',
         editQuantities: 'Edit Quantities',
         pin: 'Insert Pin',

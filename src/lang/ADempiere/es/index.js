@@ -353,6 +353,7 @@ export default {
         isQuantityFromOrderLine: 'Cantidad Completa de la Línea',
         uom: 'UM',
         unitOfMeasure: 'Unidad de Medida',
+        baseMeasurementUnit: 'Unidad de Medida Base',
         options: 'Opciones',
         editQuantities: 'Editar Cantidades',
         pin: 'Ingrese Pin',

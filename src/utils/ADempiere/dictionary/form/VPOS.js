@@ -24,7 +24,7 @@ import { formatPrice } from '@/utils/ADempiere/valueFormat.js'
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 
 // Const
-const isMobile = store.getters.device === 'mobile'
+// const isMobile = store.getters.device === 'mobile'
 
 /**
  * Show the correct display format
@@ -85,7 +85,7 @@ export function displayLabel({
     is_display_discount,
     is_display_tax_amount
   } = store.getters.getVPOS
-  // const isMobile = store.getters.device === 'mobile'
+  const isMobile = store.getters.device === 'mobile'
   const { columnName } = row
   let display = false
   if (isMobile) return ['LineDescription', 'CurrentPrice', 'QtyEntered', 'GrandTotal'].includes(columnName)
@@ -126,6 +126,7 @@ function displayLineDescription({
     product,
     resource_assignment
   } = row
+  const isMobile = store.getters.device === 'mobile'
   if (isMobile) return product.name
   if (resource_assignment.id > 0) return product.name + ' - (' + resource_assignment.name + ')'
   if (charge.id > 0) return charge.name
@@ -135,7 +136,7 @@ function displayLineDescription({
 /**
  * Show Price according to the Product line
  */
-function displayLinePrice({
+export function displayLinePrice({
   row
 }) {
   const {
@@ -154,6 +155,26 @@ function displayLinePrice({
   if (!isEmptyValue(price_list)) currency = price_list.currency
   if (!is_display_discount && is_display_tax_amount) return formatPrice(price_with_tax.value, currency.iso_code)
   return formatPrice(price.value, currency.iso_code)
+}
+
+/**
+ * Show the Product Price Value
+ */
+export function displayLineProductPriceValue({
+  row
+}) {
+  const {
+    is_display_discount,
+    is_display_tax_amount
+  } = store.getters.getVPOS
+
+  const {
+    price,
+    price_with_tax
+  } = row
+
+  if (!is_display_discount && is_display_tax_amount) return Number(price_with_tax.value)
+  return Number(price.value)
 }
 
 /**
@@ -197,4 +218,25 @@ function displayLineGranTotal({
   } = row
   if (is_tax_included) return formatPrice(total_amount.value, currency.iso_code)
   return formatPrice(total_amount_with_tax.value, currency.iso_code)
+}
+
+/**
+ * Generate a Warehouse Array by Adding the Stocks
+ * @param {*} listWarehouse
+ * @param {*} uniqueStocks
+ * @returns uniqueStocks
+ */
+
+export function sumStocksByWarehouse(listWarehouse, uniqueStocks = []) {
+  for (let i = 0; i < listWarehouse.length; i++) {
+    const currentWharehouse = listWarehouse[i]
+    const isExiste = uniqueStocks.find(warehouse => warehouse.warehouse_id === currentWharehouse.warehouse_id)
+    const index = uniqueStocks.findIndex(warehouse => warehouse.warehouse_id === currentWharehouse.warehouse_id)
+    if (!isExiste) {
+      uniqueStocks.push(currentWharehouse)
+    } else {
+      uniqueStocks[index].quantity = currentWharehouse.quantity + isExiste.quantity
+    }
+  }
+  return uniqueStocks
 }

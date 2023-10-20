@@ -16,25 +16,28 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import Vue from 'vue'
 // API Request Methods
-// import {
-//   createOrderLine,
-//   // UpdateOrderLine,
-//   // DeleteOrderLine,
-//   listOrderLines
-// } from '@/api/ADempiere/form/point-of-sales.js'
 import {
+  listStocks,
+  listOrderLines,
   createOrderLine,
-  listOrderLines
+  updateOrderLine,
+  deleteOrderLine,
+  listProductConversion
 } from '@/api/ADempiere/form/VPOS/index'
 import { isEmptyValue } from '@/utils/ADempiere'
 
 // Utils and Helper Methods
 // import { isEmptyValue } from '@/utils/ADempiere'
 import { showMessage } from '@/utils/ADempiere/notification.js'
+import { sumStocksByWarehouse } from '@/utils/ADempiere/dictionary/form/VPOS'
 
 const OrderVPOS = {
-  lines: []
+  lines: [],
+  listUOM: [],
+  stocks: [],
+  currentLine: {}
 }
 
 export default {
@@ -42,6 +45,21 @@ export default {
   mutations: {
     setListOrderLines(state, list) {
       state.lines = list
+    },
+    setListUOM(state, {
+      productId,
+      list
+    }) {
+      Vue.set(state.listUOM, productId, list)
+    },
+    setListStocks(state, {
+      productId,
+      list
+    }) {
+      Vue.set(state.stocks, productId, list)
+    },
+    setCurrentLine(state, line) {
+      state.currentLine = line
     }
   },
   actions: {
@@ -135,8 +153,14 @@ export default {
         })
           .then(ListOrderLinesResponse => {
             const { order_lines } = ListOrderLinesResponse
-            commit('setListOrderLines', order_lines)
-            resolve(order_lines)
+            const list = order_lines.map(line => {
+              return {
+                ...line,
+                isLoading: false
+              }
+            })
+            commit('setListOrderLines', list)
+            resolve(list)
           })
           .catch(error => {
             showMessage({
@@ -148,44 +172,168 @@ export default {
             console.warn(`Error Getting List Order Lines: ${error.message}. Code: ${error.code}.`)
           })
       })
+    },
+    updateCurrentLine({
+      dispatch,
+      getters
+    }, {
+      lineId,
+      uom_id,
+      price,
+      quantity,
+      discount_rate,
+      warehouse_id
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        const currentOrder = getters.getCurrentOrder
+        // dispatch('overloadOrder', {
+        //   order: currentOrder
+        // })
+        if (isEmptyValue(currentOrder)) resolve([])
+        updateOrderLine({
+          posId: currentPos.id,
+          orderId: currentOrder.id,
+          lineId,
+          uom_id,
+          price,
+          quantity,
+          discount_rate,
+          warehouse_id
+        })
+          .then(updateLineResponse => {
+            dispatch('listLines')
+            resolve(updateLineResponse)
+          })
+          .catch(error => {
+            showMessage({
+              type: 'error',
+              message: error.message,
+              showClose: true
+            })
+            dispatch('listLines')
+            resolve([])
+            console.warn(`Error Getting List Order Lines: ${error.message}. Code: ${error.code}.`)
+          })
+      })
+    },
+
+    findListUOM({
+      commit
+    }, {
+      productId
+    }) {
+      return new Promise(resolve => {
+        if (isEmptyValue(productId)) resolve([])
+        listProductConversion({
+          id: productId
+        })
+          .then(response => {
+            const { product_conversion } = response
+            commit('setListUOM', {
+              productId,
+              list: product_conversion
+            })
+            resolve(response)
+          })
+          .catch(error => {
+            showMessage({
+              type: 'error',
+              message: error.message,
+              showClose: true
+            })
+            resolve([])
+            console.warn(`Error Getting List Product Conversion UOM: ${error.message}. Code: ${error.code}.`)
+          })
+      })
+    },
+    findListStocks({
+      commit,
+      getters
+    }, {
+      productId,
+      value,
+      sku
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        if (isEmptyValue(productId)) resolve([])
+        listStocks({
+          posId: currentPos.id,
+          value,
+          sku
+        })
+          .then(response => {
+            const { stocks } = response
+            const list = sumStocksByWarehouse(stocks)
+            commit('setListStocks', {
+              productId,
+              list
+            })
+            resolve(response)
+          })
+          .catch(error => {
+            showMessage({
+              type: 'error',
+              message: error.message,
+              showClose: true
+            })
+            resolve([])
+            console.warn(`Error Getting List Stocks: ${error.message}. Code: ${error.code}.`)
+          })
+      })
+    },
+    /**
+     * Delete Order
+     * @param {String} posUuid
+     * @param {String} orderUuid
+     * @returns (Empty) {}
+     */
+    deleteCurrentLine({
+      commit,
+      getters,
+      dispatch
+    }, {
+      lineId
+    }) {
+      return new Promise(resolve => {
+        const pos = getters.getVPOS
+        const order = getters.getCurrentOrder
+        if (isEmptyValue(lineId)) resolve({})
+        deleteOrderLine({
+          posId: pos.id,
+          orderId: order.id,
+          lineId
+        })
+          .then(() => {
+            commit('setOrder', {})
+            dispatch('listLines')
+            resolve({})
+          })
+          .catch(error => {
+            console.warn(`Delete Order: ${error.message}. Code: ${error.code}.`)
+            showMessage({
+              type: 'error',
+              message: error.message,
+              showClose: true
+            })
+            resolve({})
+          })
+      })
     }
-    // /**
-    //  * Delete Order
-    //  * @param {String} posUuid
-    //  * @param {String} orderUuid
-    //  * @returns (Empty) {}
-    //  */
-    // deleteOrder({ commit, getters }) {
-    //   return new Promise(resolve => {
-    //     const pos = getters.getPoint
-    //     const order = getters.getCurrentOrder
-    //     if (isEmptyValue(order)) resolve({})
-    //     deleteOrder({
-    //       posUuid: pos.uuid,
-    //       order: order.uuid
-    //     })
-    //       .then(() => {
-    //         commit('setOrder', {})
-    //         resolve({})
-    //       })
-    //       .catch(error => {
-    //         console.warn(`Delete Order: ${error.message}. Code: ${error.code}.`)
-    //         showMessage({
-    //           type: 'error',
-    //           message: error.message,
-    //           showClose: true
-    //         })
-    //         resolve({})
-    //       })
-    //   })
-    // }
   },
   getters: {
     getListOrderLines(state) {
       return state.lines
+    },
+    getListUOM: (state) => ({ productId }) => {
+      return state.listUOM[productId] || []
+    },
+    getListStocks: (state) => ({ productId }) => {
+      return state.stocks[productId] || []
+    },
+    getCurrentLine(state) {
+      return state.currentLine
     }
-    // getCurrentOrder(state) {
-    //   return state.order
-    // }
   }
 }

@@ -189,7 +189,7 @@ export default defineComponent({
 
     const getItemQuantity = computed(() => {
       if (isEmptyValue(store.getters.getCurrentOrder.id)) return 0
-      const arrayQuantity = lines.value.map(line => line.quantity_ordered.value)
+      const arrayQuantity = lines.value.map(line => Number(line.quantity_ordered.value))
       if (isEmptyValue(arrayQuantity)) return 0
       return arrayQuantity.reduce((accumulator, currentValue) => {
         return accumulator + currentValue

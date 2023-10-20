@@ -33,9 +33,6 @@ export function listPointOfSales() {
     url: '/point-of-sales/terminals',
     method: 'get'
   })
-    .then(response => {
-      return response
-    })
 }
 
 /**
@@ -50,9 +47,6 @@ export function getPointOfSales({
     url: `/point-of-sales/terminals/${id}`,
     method: 'get'
   })
-    .then(response => {
-      return response
-    })
 }
 
 /**
@@ -68,9 +62,6 @@ export function listAvailableWarehouses({
     url: `/point-of-sales/${posId}/warehouses`,
     method: 'get'
   })
-    .then(response => {
-      return response
-    })
 }
 
 /**
@@ -86,9 +77,6 @@ export function listAvailablePaymentMethods({
     url: `/point-of-sales/${posId}/payment-methods`,
     method: 'get'
   })
-    .then(response => {
-      return response
-    })
 }
 
 /**
@@ -104,9 +92,6 @@ export function listAvailablePriceList({
     url: `/point-of-sales/${posId}/price-lists`,
     method: 'get'
   })
-    .then(response => {
-      return response
-    })
 }
 
 /**
@@ -122,9 +107,6 @@ export function listAvailableCurrencies({
     url: `/point-of-sales/${posId}/currencies`,
     method: 'get'
   })
-    .then(response => {
-      return response
-    })
 }
 
 /**
@@ -140,9 +122,6 @@ export function listAvailableDocumentTypes({
     url: `/point-of-sales/${posId}/document-types`,
     method: 'get'
   })
-    .then(response => {
-      return response
-    })
 }
 
 /**
@@ -158,9 +137,6 @@ export function listAvailableDiscounts({
     url: `/point-of-sales/${posId}/discounts`,
     method: 'get'
   })
-    .then(response => {
-      return response
-    })
 }
 
 /**
@@ -176,9 +152,6 @@ export function listAvailableSellers({
     url: `/point-of-sales/${posId}/sellers`,
     method: 'get'
   })
-    .then(response => {
-      return response
-    })
 }
 
 /** __________________________________________
@@ -215,9 +188,6 @@ export function getProductPriceSearchValue({
       warehouse_id: warehouseId
     }
   })
-    .then(response => {
-      return response
-    })
 }
 
 /**
@@ -248,9 +218,6 @@ export function getProductPriceUPC({
       warehouse_id: warehouseId
     }
   })
-    .then(response => {
-      return response
-    })
 }
 
 /**
@@ -281,9 +248,6 @@ export function getProductPriceSKU({
       warehouse_id: warehouseId
     }
   })
-    .then(response => {
-      return response
-    })
 }
 
 /**
@@ -314,9 +278,6 @@ export function getProductPriceCode({
       warehouse_id: warehouseId
     }
   })
-    .then(response => {
-      return response
-    })
 }
 
 /**
@@ -347,9 +308,6 @@ export function getProductPriceName({
       warehouse_id: warehouseId
     }
   })
-    .then(response => {
-      return response
-    })
 }
 
 /**
@@ -391,9 +349,6 @@ export function listProductPrice({
       page_token: pageToken
     }
   })
-    .then(response => {
-      return response
-    })
 }
 
 /** ___________________
@@ -433,9 +388,6 @@ export function createOrder({
       campaign_id: campaignId
     }
   })
-    .then(response => {
-      return response
-    })
 }
 
 /**
@@ -451,9 +403,6 @@ export function getOrder({
     url: `point-of-sales/${posId}/orders/${orderId}`,
     method: 'get'
   })
-    .then(response => {
-      return response
-    })
 }
 
 /**
@@ -489,9 +438,6 @@ export function updateOrder({
       sales_representative_id
     }
   })
-    .then(response => {
-      return response
-    })
 }
 /**
  * Delete Order
@@ -506,9 +452,6 @@ export function deleteOrder({
     url: `point-of-sales/${posId}/orders/${orderId}`,
     method: 'delete'
   })
-    .then(response => {
-      return response
-    })
 }
 
 /**
@@ -565,9 +508,6 @@ export function listOrders({
       sales_representative_id
     }
   })
-    .then(response => {
-      return response
-    })
 }
 
 /**
@@ -584,9 +524,6 @@ export function releaseOrder({
     url: `point-of-sales/${posId}/orders/${orderId}/release`,
     method: 'put'
   })
-    .then(response => {
-      return response
-    })
 }
 
 /**
@@ -603,9 +540,6 @@ export function holdOrder({
     url: `point-of-sales/${posId}/orders/${orderId}/hold`,
     method: 'put'
   })
-    .then(response => {
-      return response
-    })
 }
 
 /** _________________________
@@ -652,9 +586,6 @@ export function createOrderLine({
       resource_assignment_id: resourceAssignmentId
     }
   })
-    .then(response => {
-      return response
-    })
 }
 
 /**
@@ -694,9 +625,56 @@ export function listOrderLines({
       search_value: searchValue
     }
   })
-    .then(response => {
-      return response
-    })
+}
+
+/**
+ * Update Order Line
+ * @param {int32} posId
+ * @param {int32} orderId
+ * @param {int32} lineId
+ * @param {int32} uom_id
+ * @param {int32} price
+ * @param {int32} quantity
+ * @param {int32} warehouse_id
+ */
+export function updateOrderLine({
+  posId,
+  orderId,
+  lineId,
+  uom_id,
+  price,
+  quantity,
+  discount_rate,
+  warehouse_id
+}) {
+  return request({
+    url: `point-of-sales/${posId}/orders/${orderId}/lines/${lineId}`,
+    method: 'put',
+    params: {
+      uom_id,
+      price,
+      quantity,
+      discount_rate,
+      warehouse_id
+    }
+  })
+}
+
+/**
+ * Delete Order Line
+ * @param {int32} posId
+ * @param {int32} orderId
+ * @param {int32} lineId
+ */
+export function deleteOrderLine({
+  posId,
+  orderId,
+  lineId
+}) {
+  return request({
+    url: `point-of-sales/${posId}/orders/${orderId}/lines/${lineId}`,
+    method: 'delete'
+  })
 }
 
 /** _________________________
@@ -754,4 +732,44 @@ export function listCustomers({
     .then(response => {
       return response
     })
+}
+
+/** ______________________________________
+ * |                                      |
+ * |  Additional Point of Sale Services   |
+ * |______________________________________|
+ */
+
+/**
+ * List Product Conversion UOM
+ */
+
+export function listProductConversion({
+  id
+}) {
+  return request({
+    url: `common/product-conversions/${id}`,
+    method: 'get'
+  })
+}
+
+/**
+ * List Stock: GET /api/stocks
+ * @param {int32} posId
+ * @param {string} value
+ * @param {string} sku
+ */
+export function listStocks({
+  posId,
+  value,
+  sku
+}) {
+  return request({
+    url: `point-of-sales/terminals/${posId}/stocks`,
+    method: 'get',
+    params: {
+      value,
+      sku
+    }
+  })
 }
