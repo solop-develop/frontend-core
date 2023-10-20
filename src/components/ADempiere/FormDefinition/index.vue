@@ -120,7 +120,7 @@ export default defineComponent({
           form = import('@/components/ADempiere/Form/TaskManager')
           break
         case 'VFileImport':
-          form = import('@/components/ADempiere/Form/VFileImport')
+          form = import('@/components/ADempiere/FormDefinition/VFileImport')
           break
         default:
           form = import('@/views/ADempiere/Unsupported')

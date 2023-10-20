@@ -151,12 +151,6 @@ import TableRecords from './tableRecords.vue'
 import ImportFormatFields from './importFormatFields.vue'
 import SelectResource from './selectResource.vue'
 
-// Api Request Methods
-import {
-  listCharsets,
-  listImportFormats
-} from '@/api/ADempiere/form/VFileImport.js'
-
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'
 
@@ -179,6 +173,10 @@ export default defineComponent({
       return store.getters.getInfoFormat
     })
 
+    const storedCharsetsList = computed(() => {
+      return store.getters.getStoredCharsetsList
+    })
+
     const formatFields = computed({
       // getter
       get() {
@@ -195,10 +193,11 @@ export default defineComponent({
       // getter
       get() {
         const { charsets } = store.getters.getAttribute
-        const { listCharsets } = store.getters.getOptions
-        const defautl = listCharsets.find(list => list.value === charsets)
-        if (!isEmptyValue(defautl)) {
-          return defautl
+        const defaultCharset = storedCharsetsList.value.find(list => {
+          return list.value === charsets
+        })
+        if (!isEmptyValue(defaultCharset)) {
+          return defaultCharset
         }
         return {
           label: '',
@@ -283,69 +282,6 @@ export default defineComponent({
     /**
      * Methods
      */
-    function remoteSearchCharsets(query) {
-      if (!isEmptyValue(query) && query.length > 2) {
-        const result = optionsCharsets.value.filter(findFilter(query))
-        if (isEmptyValue(result)) {
-          findCharsets(true, query)
-        }
-      }
-    }
-
-    function findCharsets(isFind, searchValue) {
-      if (!isFind) {
-        return
-      }
-      listCharsets({
-        searchValue
-      })
-        .then(response => {
-          const { records } = response
-          optionsCharsets.value = records.map(list => {
-            const { DisplayColumn, ValueColumn } = list.values
-            return {
-              value: ValueColumn,
-              label: DisplayColumn
-            }
-          })
-        })
-    }
-
-    function remoteSearchImportFormats(query) {
-      if (!isEmptyValue(query) && query.length > 2) {
-        const result = optionsImportFormats.value.filter(findFilter(query))
-        if (isEmptyValue(result)) {
-          findCharsets(true, query)
-        }
-      }
-    }
-
-    function findImportFormats(isFind, searchValue) {
-      if (!isFind) {
-        return
-      }
-      listImportFormats({
-        searchValue
-      })
-        .then(response => {
-          const { records } = response
-          optionsImportFormats.value = records.map(list => {
-            const { DisplayColumn } = list.values
-            return {
-              value: list.id,
-              label: DisplayColumn
-            }
-          })
-        })
-    }
-
-    function findFilter(queryString) {
-      return (query) => {
-        const search = queryString.toLowerCase()
-        return query.label.toLowerCase().includes(search)
-      }
-    }
-
     function infoImportFormats(id) {
       if (isEmptyValue(id)) return
       store.dispatch('importFormats', {
@@ -399,11 +335,7 @@ export default defineComponent({
       optionsImportFormats,
       currrentImportFormats,
       // Methods
-      findCharsets,
       infoImportFormats,
-      findImportFormats,
-      remoteSearchCharsets,
-      remoteSearchImportFormats,
       handleSuccess,
       handleCommand
     }

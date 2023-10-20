@@ -1,20 +1,20 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -28,6 +28,7 @@
         />
       </el-steps>
     </div>
+
     <div style="height: 90% !important;">
       <transition name="el-fade-in-linear">
         <selectTable
@@ -39,7 +40,7 @@
               class="button-base-icon"
               icon="el-icon-arrow-right"
               style="float: right;margin-right: 10px;margin-top: 10px;"
-              :disabled="!isDisableNextTable"
+              :disabled="isDisableNextTable"
               @click="nextStep"
             />
             <el-button
@@ -128,23 +129,30 @@ import { defineComponent, ref, computed } from '@vue/composition-api'
 import lang from '@/lang'
 import store from '@/store'
 
+// API Request Methods
+import { saveRecordImport } from '@/api/ADempiere/form/VFileImport.js'
+
 // Components and Mixins
-import selectTable from './selectTable.vue'
+import SelectTable from './SelectTable/index.vue'
 import SelectFile from './SelectFile'
-import saveProcess from './saveProcess.vue'
+import SaveProcess from './saveProcess.vue'
+
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'
 import { showMessage } from '@/utils/ADempiere/notification'
-// Api
-import { saveRecordImport } from '@/api/ADempiere/form/VFileImport.js'
 
+/**
+ * Based on:
+ * org.compiere.apps.form.VFileImport
+ * org.adempiere.webui.apps.form.WFileImport
+ */
 export default defineComponent({
   name: 'VFileImport',
 
   components: {
-    selectTable,
+    SelectTable,
     SelectFile,
-    saveProcess
+    SaveProcess
   },
 
   props: {
@@ -156,7 +164,7 @@ export default defineComponent({
     }
   },
 
-  setup(props, { root }) {
+  setup() {
     /**
     * Refs
     */
@@ -177,7 +185,10 @@ export default defineComponent({
 
     const isLoadSave = ref(false)
 
-    // const currentSetp = ref(1)
+    const storedTableName = computed(() => {
+      return store.getters.getStoredCurrentTableName
+    })
+
     const currentSetp = computed({
       // getter
       get() {
@@ -194,9 +205,6 @@ export default defineComponent({
       }
     })
 
-    /**
-    * Computed
-    */
     const isBack = computed(() => {
       return currentSetp.value === 1
     })
@@ -221,11 +229,12 @@ export default defineComponent({
 
     const isDisableNextTable = computed(() => {
       const {
-        tablaId,
         charsets,
-        importFormats
+        importFormatId
       } = store.getters.getAttribute
-      return !isEmptyValue(tablaId) && !isEmptyValue(charsets) && !isEmptyValue(importFormats)
+      return isEmptyValue(storedTableName.value) ||
+        isEmptyValue(charsets) ||
+        isEmptyValue(importFormatId)
     })
 
     const showNavegationTable = computed(() => {
@@ -240,8 +249,6 @@ export default defineComponent({
       const { resource } = store.getters.getFile
       return isEmptyValue(resource.id)
     })
-
-    // Computed
 
     function nextStep(steps) {
       currentSetp.value++
@@ -278,7 +285,9 @@ export default defineComponent({
     function changePrevLine() {
       const { data } = store.getters.getFile
       store.commit('setNavigationLine', data[index])
-      if (index === 0) return
+      if (index === 0) {
+        return
+      }
       index--
     }
 

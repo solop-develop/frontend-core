@@ -19,13 +19,13 @@
 import { request } from '@/utils/ADempiere/request'
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
-export function listCharsets({
+export function requestListCharsets({
   searchValue,
   pageToken,
   pageSize = 250
 }) {
   return request({
-    url: '/form/addons/import-file-loader/list-charsets',
+    url: '/import-file-loader/charsets',
     method: 'get',
     params: {
       page_size: pageSize,
@@ -34,71 +34,40 @@ export function listCharsets({
       search_value: searchValue
     }
   })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
 }
 
-export function listImportFormats({
-  searchValue,
-  pageToken,
-  id,
-  pageSize = 250
-}) {
+export function requestListImportTables() {
   return request({
-    url: '/form/addons/import-file-loader/list-import-formats',
-    method: 'get',
-    params: {
-      page_size: pageSize,
-      page_token: pageToken,
-      table_id: id,
-      //  DSL Query
-      search_value: searchValue
-    }
-  })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
-}
-
-export function getImportFormats({
-  id
-}) {
-  return request({
-    url: '/form/addons/import-file-loader/get-import-formats',
-    method: 'get',
-    params: {
-      id
-    }
-  })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
-}
-
-export function getListImportTables() {
-  return request({
-    url: '/form/addons/import-file-loader/list-import-tables',
+    url: '/import-file-loader/tables',
     method: 'get'
   })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
 }
 
-export function listImportProcess({
+export function requestImportFormatsList({
   tableName
 }) {
   return request({
-    url: '/form/addons/import-file-loader/list-import-processes',
-    method: 'get',
-    params: {
-      table_name: tableName
-    }
+    url: `/import-file-loader/formats/${tableName}`,
+    method: 'get'
   })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
+}
+
+export function requestGetImportFormat({
+  id
+}) {
+  return request({
+    url: `/import-file-loader/formats/${id}`,
+    method: 'get'
+  })
+}
+
+export function requestListImportProcesses({
+  tableName
+}) {
+  return request({
+    url: `/import-file-loader/processes/${tableName}`,
+    method: 'get'
+  })
 }
 
 export function saveRecordImport({

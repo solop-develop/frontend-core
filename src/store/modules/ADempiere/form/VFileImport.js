@@ -18,22 +18,28 @@
 
 // API Request Methods
 import {
-  getImportFormats,
-  getListImportTables,
-  listImportProcess,
+  requestListCharsets,
+  requestImportFormatsList,
+  requestListImportTables,
+  requestListImportProcesses,
   saveRecordImport,
   requestListFilePreview
 } from '@/api/ADempiere/form/VFileImport.js'
 
 // Utils and Helper Methods
-// import { isEmptyValue } from '@/utils/ADempiere'
+import { setIconsTableName } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 
 const VFileImport = {
+  tableName: null,
+  importTablesList: [],
+
+  importFormatId: -1,
+  importFormatsList: [],
+  charsetsList: [],
   attribute: {
     charsets: 'UTF-8',
-    importFormats: '',
-    tablaId: 0,
+    importFormatId: '',
     isProcess: false,
     formatFields: [],
     processDefinition: {},
@@ -57,7 +63,20 @@ const VFileImport = {
 
 export default {
   state: VFileImport,
+
   mutations: {
+    setTableName(state, tableName) {
+      state.tableName = tableName
+    },
+    setImportTablesList(state, list = []) {
+      state.importTablesList = list
+    },
+    setCharsetsList(state, list = []) {
+      state.charsetsList = list
+    },
+    setImportFromatsList(state, list = []) {
+      state.importFormatsList = list
+    },
     /**
      * Update Attribute
      * Generic mutation that allows to change the state of the store
@@ -82,21 +101,44 @@ export default {
       state.navigationLine = line
     }
   },
+
   actions: {
-    importFormats({ commit }, {
-      id
-    }) {
+
+    getCharsetsListFromServer({ commit }, searchValue = null) {
       return new Promise(resolve => {
-        getImportFormats({
-          id
+        requestListCharsets({
+          searchValue
         })
           .then(response => {
-            commit('updateAttributeVFileImport', {
-              attribute: 'attribute',
-              criteria: 'formatFields',
-              value: response.formatFields
-            })
-            commit('setInfoFormat', response)
+            const { records: charsetsList } = response
+            // const importTablesList = records.map(list => {
+            //   const { DisplayColumn, ValueColumn } = list.values
+            //   return {
+            //     value: ValueColumn,
+            //     label: DisplayColumn
+            //   }
+            // })
+
+            commit('setCharsetsList', charsetsList)
+            resolve(charsetsList)
+          })
+          .catch(error => {
+            console.warn(`Error getting Charsets List: ${error.message}. Code: ${error.code}.`)
+          })
+      })
+    },
+
+    getImportFormatsListFromServer({ commit }, {
+      tableName
+    }) {
+      return new Promise(resolve => {
+        requestImportFormatsList({
+          tableName
+        })
+          .then(response => {
+            const { records } = response
+            commit('setImportFromatsList', records)
+            // commit('setInfoFormat', response)
             resolve(response)
           })
           .catch(error => {
@@ -105,40 +147,34 @@ export default {
           })
       })
     },
-    findListTable({ commit }) {
-      getListImportTables()
-        .then(response => {
-          const { records } = response
-          commit('updateAttributeVFileImport', {
-            attribute: 'options',
-            criteria: 'listTables',
-            value: records
+
+    getImportTablesListFromServer({ commit }) {
+      return new Promise(resolve => {
+        requestListImportTables()
+          .then(response => {
+            const { records } = response
+            const importTablesList = records.map(tableImport => {
+              return {
+                ...tableImport,
+                icon: setIconsTableName({
+                  tableName: tableImport.table_name
+                })
+              }
+            })
+
+            commit('setImportTablesList', importTablesList)
+            resolve(importTablesList)
           })
-        })
-        .catch(error => {
-          console.warn(`Error getting Import Table: ${error.message}. Code: ${error.code}.`)
-          commit('updateAttributeVFileImport', {
-            attribute: 'options',
-            criteria: 'listTables',
-            value: []
+          .catch(error => {
+            console.warn(`Error getting Import Table: ${error.message}. Code: ${error.code}.`)
           })
-        })
-    },
-    changeTable({ commit }, {
-      id
-    }) {
-      commit('updateAttributeVFileImport', {
-        attribute: 'attribute',
-        criteria: 'tablaId',
-        value: id
       })
     },
-    listProcess({ commit }, {
-      table_name
-    }) {
+
+    getProcessesListFromServer({ commit }, tableName) {
       return new Promise(resolve => {
-        listImportProcess({
-          tableName: table_name
+        requestListImportProcesses({
+          tableName
         })
           .then(response => {
             const { records } = response
@@ -161,7 +197,7 @@ export default {
           })
       })
     },
-    saveRecords({ commit, getters }) {
+    saveRecords({ getters }) {
       return new Promise(resolve => {
         const {
           charsets,
@@ -259,7 +295,23 @@ export default {
       })
     }
   },
+
   getters: {
+    getStoredCurrentTableName(state) {
+      return state.tableName
+    },
+    getStoredImportTablesList(state) {
+      return state.importTablesList || []
+    },
+
+    getStoredCharsetsList(state) {
+      return state.charsetsList || []
+    },
+
+    getStoredImportFormatsList(state) {
+      return state.importFormatsList || []
+    },
+
     getAttribute(state) {
       return state.attribute
     },
