@@ -46,6 +46,16 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           </template>
         </el-table-column>
       </template>
+      <el-table-column
+        :label="$t('form.pos.tableProduct.options')"
+        width="175"
+      >
+        <template slot-scope="scope">
+          <option-line
+            :line="scope.row"
+          />
+        </template>
+      </el-table-column>
     </el-table>
   </span>
 </template>
@@ -54,6 +64,8 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 import { defineComponent, computed, ref } from '@vue/composition-api'
 import lang from '@/lang'
 import store from '@/store'
+// Components and Mixins
+import OptionLine from '@/components/ADempiere/Form/VPOS2/MainOrder/OptionLine'
 // Utils and Helper Methods
 import {
   displayLabel,
@@ -63,6 +75,9 @@ import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 
 export default defineComponent({
   name: 'infoOrder',
+  components: {
+    OptionLine
+  },
   setup() {
     const currentLine = ref({})
     const orderLineDefinition = computed(() => {
@@ -142,6 +157,7 @@ export default defineComponent({
     }
 
     function handleCurrentChangeOrderLine(line) {
+      store.commit('setCurrentLine', line)
       currentLine.value = line
     }
 
