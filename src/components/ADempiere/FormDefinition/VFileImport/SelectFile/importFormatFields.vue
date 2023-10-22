@@ -35,27 +35,30 @@
           style="margin-bottom: 0px !important;width: 100%;"
         >
           <el-input
-            v-if="field.dataType === 'S'"
+            v-if="field.data_type === 'S'"
             :value="displayValue(field, key)"
             disabled
             style="width: 100%;"
           />
+
           <el-input-number
-            v-else-if="field.dataType === 'N'"
+            v-else-if="field.data_type === 'N'"
             :value="displayValue(field, key)"
             controls-position="right"
             disabled
             style="width: 100%;"
           />
+
           <el-date-picker
-            v-else-if="field.dataType === 'D'"
+            v-else-if="field.data_type === 'D'"
             v-model="field.defaultValue"
             type="date"
             disabled
             style="width: 100%;"
           />
+
           <el-input
-            v-else-if="field.dataType === 'C'"
+            v-else-if="field.data_type === 'C'"
             :value="displayValue(field, key)"
             disabled
             style="width: 100%;"
@@ -79,8 +82,8 @@ export default defineComponent({
 
   setup() {
     const formatFields = computed(() => {
-      const { formatFields } = store.getters.getAttribute
-      return formatFields
+      const { format_fields } = store.getters.getImportFormat
+      return format_fields
     })
 
     const currentLine = computed(() => {
@@ -92,7 +95,10 @@ export default defineComponent({
       if (isEmptyValue(header)) {
         return
       }
-      return currentLine.value[field.columnName]
+      if (isEmptyValue(currentLine.value)) {
+        return
+      }
+      return currentLine.value[field.column_name]
     }
 
     return {

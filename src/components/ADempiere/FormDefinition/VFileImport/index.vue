@@ -168,8 +168,14 @@ export default defineComponent({
     /**
     * Refs
     */
-
-    let index = 0
+    const previewRowIndex = computed({
+      set(index) {
+        store.commit('setIndexRecordPreview', index)
+      },
+      get() {
+        return store.getters.getIndexRecordPreview
+      }
+    })
 
     const stepList = ref([
       {
@@ -218,7 +224,9 @@ export default defineComponent({
     })
 
     const label = computed(() => {
-      if (currentSetp.value === 3) return lang.t('VBankStatementMatch.steps.summaryAdjustment')
+      if (currentSetp.value === 3) {
+        return lang.t('VBankStatementMatch.steps.summaryAdjustment')
+      }
       return ''
     })
 
@@ -278,17 +286,22 @@ export default defineComponent({
 
     function changeNextLine() {
       const { data } = store.getters.getFile
-      store.commit('setNavigationLine', data[index])
-      index++
+      if (previewRowIndex.value === 99) {
+        // last record
+        return
+      }
+      previewRowIndex.value++
+      store.commit('setNavigationLine', data[previewRowIndex.value])
     }
 
     function changePrevLine() {
       const { data } = store.getters.getFile
-      store.commit('setNavigationLine', data[index])
-      if (index === 0) {
+      if (previewRowIndex.value === 0) {
+        // first record
         return
       }
-      index--
+      previewRowIndex.value--
+      store.commit('setNavigationLine', data[previewRowIndex.value])
     }
 
     function saveImport() {
@@ -322,7 +335,6 @@ export default defineComponent({
     }
 
     return {
-      index,
       isLoadSave,
       stepList,
       currentSetp,

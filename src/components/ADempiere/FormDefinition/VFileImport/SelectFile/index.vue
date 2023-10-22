@@ -200,7 +200,7 @@ export default defineComponent({
           fileLabel: file.name
         }
       })
-      store.dispatch('listFilePreview', resource)
+      store.dispatch('getPreviewRecordsFromServer', resource)
     }
 
     function changeImportFormat(command) {
@@ -209,7 +209,7 @@ export default defineComponent({
       })
         .then(response => {
           if (!isEmptyValue(resourceId.value)) {
-            store.dispatch('listFilePreview')
+            store.dispatch('getPreviewRecordsFromServer')
           }
         })
     }
@@ -221,7 +221,7 @@ export default defineComponent({
           criteria: 'resource',
           value: { id: newValue }
         })
-        store.dispatch('listFilePreview', newValue)
+        store.dispatch('getPreviewRecordsFromServer', newValue)
       }
     })
 
