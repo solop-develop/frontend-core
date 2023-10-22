@@ -20,6 +20,7 @@
 import {
   requestListCharsets,
   requestImportFormatsList,
+  requestGetImportFormat,
   requestListImportTables,
   requestListImportProcesses,
   saveRecordImport,
@@ -57,7 +58,7 @@ const VFileImport = {
     resource: {},
     isLoading: false
   },
-  infoFormat: {},
+  importFormat: {},
   navigationLine: {}
 }
 
@@ -74,7 +75,7 @@ export default {
     setCharsetsList(state, list = []) {
       state.charsetsList = list
     },
-    setImportFromatsList(state, list = []) {
+    setImportFormatsList(state, list = []) {
       state.importFormatsList = list
     },
     /**
@@ -94,8 +95,8 @@ export default {
     setFile(state, file) {
       state.file = file
     },
-    setInfoFormat(state, formats) {
-      state.infoFormat = formats
+    setImportFormat(state, formats) {
+      state.importFormat = formats
     },
     setNavigationLine(state, line) {
       state.navigationLine = line
@@ -111,19 +112,32 @@ export default {
         })
           .then(response => {
             const { records: charsetsList } = response
-            // const importTablesList = records.map(list => {
-            //   const { DisplayColumn, ValueColumn } = list.values
-            //   return {
-            //     value: ValueColumn,
-            //     label: DisplayColumn
-            //   }
-            // })
 
             commit('setCharsetsList', charsetsList)
             resolve(charsetsList)
           })
           .catch(error => {
             console.warn(`Error getting Charsets List: ${error.message}. Code: ${error.code}.`)
+          })
+      })
+    },
+
+    getImportFormatFromServer({ commit }, {
+      id
+    }) {
+      return new Promise(resolve => {
+        requestGetImportFormat({
+          id
+        })
+          .then(response => {
+            commit('updateAttributeVFileImport', {
+              attribute: 'attribute',
+              criteria: 'importFormatId',
+              value: id
+            })
+            commit('setImportFormat', response)
+
+            resolve(response)
           })
       })
     },
@@ -137,8 +151,8 @@ export default {
         })
           .then(response => {
             const { records } = response
-            commit('setImportFromatsList', records)
-            // commit('setInfoFormat', response)
+            commit('setImportFormatsList', records)
+
             resolve(response)
           })
           .catch(error => {
@@ -202,7 +216,7 @@ export default {
         const {
           charsets,
           isProcess,
-          importFormats,
+          importFormatId,
           processDefinition
         } = getters.getAttribute
         const { id } = getters.getFile
@@ -217,7 +231,7 @@ export default {
           parameters: parametersList,
           processId: processDefinition.id,
           charset: charsets,
-          importFormatId: importFormats
+          importFormatId: importFormatId
         })
           .then(response => {
             const { message } = response
@@ -240,7 +254,7 @@ export default {
       return new Promise(resolve => {
         const {
           charsets,
-          importFormats
+          importFormatId
         } = getters.getAttribute
         const { resource } = getters.getFile
         commit('updateAttributeVFileImport', {
@@ -251,7 +265,7 @@ export default {
         requestListFilePreview({
           resourceId: resource.id,
           charset: charsets,
-          importFormatId: importFormats
+          importFormatId: importFormatId
         })
           .then(response => {
             const { records } = response
@@ -308,6 +322,9 @@ export default {
       return state.charsetsList || []
     },
 
+    getImportFormat(state) {
+      return state.importFormat
+    },
     getStoredImportFormatsList(state) {
       return state.importFormatsList || []
     },
@@ -320,9 +337,6 @@ export default {
     },
     getFile(state) {
       return state.file
-    },
-    getInfoFormat(state) {
-      return state.infoFormat
     },
     getNavigationLine(state) {
       return state.navigationLine

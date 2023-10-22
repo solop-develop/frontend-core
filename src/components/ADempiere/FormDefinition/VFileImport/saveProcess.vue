@@ -210,7 +210,7 @@ export default defineComponent({
       },
       // setter
       set(value) {
-        store.commit('setInfoFormat', value)
+        store.commit('setImportFormat', value)
       }
     })
 
@@ -241,9 +241,9 @@ export default defineComponent({
     const currrentImportFormats = computed({
       // getter
       get() {
-        const { importFormats } = store.getters.getAttribute
+        const { importFormatId } = store.getters.getAttribute
         const { listImportFormats } = store.getters.getOptions
-        const defautl = listImportFormats.find(list => list.value === importFormats)
+        const defautl = listImportFormats.find(list => list.value === importFormatId)
         if (!isEmptyValue(defautl)) {
           return defautl
         }
@@ -256,7 +256,7 @@ export default defineComponent({
       set(value) {
         store.commit('updateAttributeVFileImport', {
           attribute: 'attribute',
-          criteria: 'importFormats',
+          criteria: 'importFormatId',
           value
         })
         infoImportFormats(value)
@@ -313,7 +313,7 @@ export default defineComponent({
      */
     function infoImportFormats(id) {
       if (isEmptyValue(id)) return
-      store.dispatch('importFormats', {
+      store.dispatch('importFormatId', {
         id
       })
         .then(response => {
