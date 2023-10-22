@@ -17,7 +17,6 @@
  */
 
 import { request } from '@/utils/ADempiere/request'
-import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 export function requestListCharsets({
   searchValue,
@@ -71,26 +70,23 @@ export function requestListImportProcesses({
 }
 
 export function saveRecordImport({
-  id,
+  id: resourceId,
   charset,
+  importFormatId,
   isProcess,
   processId,
-  importFormatId
+  parameters
 }) {
   return request({
-    url: '/form/addons/import-file-loader/save-records',
+    url: `/import-file-loader/imports/${importFormatId}/${resourceId}`,
     method: 'post',
     data: {
       charset,
-      resource_id: id,
       is_process: isProcess,
       process_id: processId,
-      import_format_id: importFormatId
+      parameters
     }
   })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
 }
 
 export function requestListFilePreview({
