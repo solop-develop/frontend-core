@@ -271,7 +271,7 @@ export default defineComponent({
       })
       store.commit('updateAttributeVFileImport', {
         attribute: 'attribute',
-        criteria: 'importFormats',
+        criteria: 'importFormatId',
         value: ''
       })
     }
@@ -294,14 +294,14 @@ export default defineComponent({
     function saveImport() {
       const {
         charsets,
-        importFormats
+        importFormatId
       } = store.getters.getAttribute
       const { resource } = store.getters.getFile
       isLoadSave.value = true
       saveRecordImport({
         id: resource.id,
         charset: charsets,
-        importFormatId: importFormats
+        importFormatId: importFormatId
       })
         .then(response => {
           const { message } = response

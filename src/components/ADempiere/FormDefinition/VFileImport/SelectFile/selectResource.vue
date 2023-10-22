@@ -43,7 +43,7 @@
 
       <attachment-manager
         table-name="AD_ImpFormat"
-        :record-id="printFormatId"
+        :record-id="importFormatId"
         :is-selectable="true"
       />
       <br>
@@ -73,7 +73,7 @@ export default defineComponent({
   },
 
   props: {
-    printFormatId: {
+    importFormatId: {
       type: Number,
       default: -1
     }
@@ -83,7 +83,7 @@ export default defineComponent({
     const isShowedFiles = ref(false)
 
     const isDisabledManageFile = computed(() => {
-      return isEmptyValue(props.printFormatId) || props.printFormatId <= 0
+      return isEmptyValue(props.importFormatId) || props.importFormatId <= 0
     })
 
     function openAttachments() {
@@ -91,9 +91,9 @@ export default defineComponent({
       if (isDisabledManageFile.value) {
         return
       }
-      store.dispatch('findAttachment', {
+      store.dispatch('getAttachmentFromServer', {
         tableName: 'AD_ImpFormat',
-        recordId: props.printFormatId
+        recordId: props.importFormatId
       })
         .then(response => {
           // isShowedFiles.value = true // Boolean(response)

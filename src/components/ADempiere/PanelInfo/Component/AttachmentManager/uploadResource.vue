@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -23,7 +23,7 @@
   >
     <el-upload
       ref="uploadComponent"
-      :action="endPointUploadResource"
+      :action="endPointUploadResource + fileResource.id"
       class="upload-demo"
       name="file"
       :file-list="filesList"
@@ -61,6 +61,7 @@ import { RESOURCE_TYPE_ATTACHMENT } from '@/utils/ADempiere/resource'
 import {
   setResourceReference
 } from '@/api/ADempiere/logs/tabInfo/windowAttachment.ts'
+
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
@@ -86,7 +87,7 @@ export default defineComponent({
   },
 
   setup(props) {
-    const endPointUploadResource = config.adempiere.api.url + 'user-interface/component/resource/save-attachment'
+    const endPointUploadResource = config.adempiere.api.url + 'file-management/resources/'
 
     const uploadComponent = ref(null)
     const filesList = ref([])
@@ -118,6 +119,7 @@ export default defineComponent({
           if (response.code >= 400) {
             reject(response)
           }
+          // endPointUploadResource += response.id
 
           fileResource.value = response
           additionalData.value = {
@@ -165,7 +167,7 @@ export default defineComponent({
       }
       additionalData.value = {}
 
-      store.dispatch('findAttachment', {
+      store.dispatch('getAttachmentFromServer', {
         tableName: props.tableName,
         recordId: props.recordId,
         recordUuid: props.recordUuid

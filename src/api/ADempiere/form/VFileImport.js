@@ -56,7 +56,7 @@ export function requestGetImportFormat({
   id
 }) {
   return request({
-    url: `/import-file-loader/formats/${id}`,
+    url: `/import-file-loader/formats/get/${id}`,
     method: 'get'
   })
 }
@@ -99,15 +99,10 @@ export function requestListFilePreview({
   importFormatId
 }) {
   return request({
-    url: '/form/addons/import-file-loader/list-file-preview',
+    url: `/import-file-loader/imports/${importFormatId}/${resourceId}/preview`,
     method: 'get',
     params: {
-      import_format_id: importFormatId,
-      resource_id: resourceId,
       charset
     }
   })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
 }

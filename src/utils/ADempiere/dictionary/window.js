@@ -2130,7 +2130,7 @@ export const containerManager = {
   },
 
   getAttachment({ tableName, recordId, recordUuid }) {
-    return store.dispatch('findAttachment', {
+    return store.dispatch('getAttachmentFromServer', {
       tableName,
       recordId,
       recordUuid

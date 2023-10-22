@@ -180,7 +180,7 @@ export default defineComponent({
         criteria: 'importFormatId',
         value: ''
       })
-      store.commit('setImportFromatsList', [])
+      store.commit('setImportFormatsList', [])
       store.dispatch('getProcessesListFromServer', table_name)
     }
 
@@ -192,7 +192,7 @@ export default defineComponent({
       if (newValue) {
         store.commit('updateAttributeVFileImport', {
           attribute: 'attribute',
-          criteria: 'importFormats',
+          criteria: 'importFormatId',
           value: ''
         })
         store.commit('updateAttributeVFileImport', {

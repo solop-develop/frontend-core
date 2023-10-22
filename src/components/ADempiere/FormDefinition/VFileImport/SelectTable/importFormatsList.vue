@@ -30,8 +30,8 @@
       style="width: 100%;"
       filterable
       clearable
-      :remote-method="remoteSearchCharsets"
-      @visible-change="loadCharsetList"
+      :remote-method="remoteSearchImportFormats"
+      @visible-change="loadImportFormatsList"
     >
       <el-option
         v-for="item in storedImportFormatsList"
@@ -54,7 +54,7 @@ import {
 } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
-  name: 'CharsetList',
+  name: 'ImportFormatsList',
 
   setup() {
     const storedTableName = computed(() => {
@@ -73,15 +73,13 @@ export default defineComponent({
       },
       // setter
       set(value) {
-        store.commit('updateAttributeVFileImport', {
-          attribute: 'attribute',
-          criteria: 'importFormatId',
-          value
+        store.dispatch('getImportFormatFromServer', {
+          id: value
         })
       }
     })
 
-    function loadCharsetList(isFind, searchValue) {
+    function loadImportFormatsList(isFind, searchValue) {
       if (!isFind) {
         return
       }
@@ -94,7 +92,7 @@ export default defineComponent({
       })
     }
 
-    function remoteSearchCharsets(query) {
+    function remoteSearchImportFormats(query) {
       if (!isEmptyValue(query) && query.length > 2) {
         const result = storedImportFormatsList.value.filter(findFilter(query))
         if (isEmptyValue(result)) {
@@ -114,8 +112,8 @@ export default defineComponent({
       currrentImportFormat,
       storedImportFormatsList,
       // Methids
-      loadCharsetList,
-      remoteSearchCharsets
+      loadImportFormatsList,
+      remoteSearchImportFormats
     }
   }
 })

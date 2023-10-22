@@ -1,20 +1,20 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -36,15 +36,16 @@
                 <upload-resource
                   style="display: inline-block; text-align: center;"
                   table-name="AD_ImpFormat"
-                  :record-id="currrentImportFormats.value"
+                  :record-id="importFormat.id"
                   :load-data="handleSuccess"
                 />
 
                 <select-resource
-                  :print-format-id="currrentImportFormats.value"
+                  :import-format-id="importFormat.id"
                 />
               </el-form-item>
             </el-col>
+
             <el-col :span="8" style="border: 1px solid #e6ebf5;">
               <el-form-item
                 :label="$t('form.VFileImport.selectTable.listOfCharacterSets')"
@@ -52,41 +53,43 @@
               >
                 <el-tag>
                   <b style="font-size: 16px;">
-                    {{ currrentCharsets.label }}
+                    {{ currentCharset }}
                   </b>
                 </el-tag>
               </el-form-item>
             </el-col>
+
             <el-col :span="8" style="border: 1px solid #e6ebf5;">
               <el-form-item
                 :label="$t('form.VFileImport.selectTable.importFormat')"
                 style="width: 100%;text-align: center;margin-bottom: 0px !important;"
               >
-                <el-tag v-if="optionsImportFormats.length <= 1">
+                <el-tag v-if="isEmptyValue(storedImportFormatsList)">
                   <b style="font-size: 16px;">
-                    {{ currrentImportFormats.label }}
+                    {{ importFormat.name }}
                   </b>
                 </el-tag>
+
                 <el-dropdown
                   v-else
                   plain
                   split-button
                   :hide-on-click="true"
                   :class="{ 'action-container': true, 'without-defualt-action': false }"
-                  @command="handleCommand"
+                  @command="changeImportFormat"
                 >
                   <span>
-                    {{ currrentImportFormats.label }}
+                    {{ importFormat.name }}
                   </span>
                   <el-dropdown-menu
                     slot="dropdown"
                   >
                     <el-dropdown-item
-                      v-for="(list, index) in optionsImportFormats"
+                      v-for="(list, index) in storedImportFormatsList"
                       :key="index"
-                      :command="list.value"
+                      :command="list.values.KeyColumn"
                     >
-                      {{ list.label }}
+                      {{ list.values.DisplayColumn }}
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
@@ -101,7 +104,7 @@
     </el-card>
 
     <el-card
-      v-if="!isEmptyValue(getInfoImportFormats)"
+      v-if="!isEmptyValue(importFormat)"
       shadow="never"
       style="padding: 0px 10px !important;"
     >
@@ -112,13 +115,13 @@
           style="font-size: 18px;text-align: center;margin: 5px;"
         >
           <b>
-            {{ getInfoImportFormats.name }}
+            {{ importFormat.name }}
           </b>
         </p>
         <p
           style="font-size: 14px;text-align: center;margin: 5px;"
         >
-          {{ getInfoImportFormats.description }}
+          {{ importFormat.description }}
         </p>
       </el-card>
 
@@ -145,7 +148,6 @@ import {
 import store from '@/store'
 
 // Components and Mixins
-import UploadExcelComponent from '@/components/UploadExcel/index.vue'
 import UploadResource from '@/components/ADempiere/PanelInfo/Component/AttachmentManager/uploadResource.vue'
 import TableRecords from './tableRecords.vue'
 import ImportFormatFields from './importFormatFields.vue'
@@ -161,7 +163,6 @@ export default defineComponent({
     TableRecords,
     ImportFormatFields,
     SelectResource,
-    UploadExcelComponent,
     UploadResource
   },
 
@@ -169,109 +170,17 @@ export default defineComponent({
     /**
      * Computed
      */
-    const getInfoImportFormats = computed(() => {
-      return store.getters.getInfoFormat
+    const currentCharset = computed(() => {
+      const { charsets } = store.getters.getAttribute
+      return charsets
     })
 
-    const storedCharsetsList = computed(() => {
-      return store.getters.getStoredCharsetsList
+    const importFormat = computed(() => {
+      return store.getters.getImportFormat
     })
 
-    const formatFields = computed({
-      // getter
-      get() {
-        const { formatFields } = store.getters.getAttribute
-        return formatFields
-      },
-      // setter
-      set(value) {
-        store.commit('setInfoFormat', value)
-      }
-    })
-
-    const currrentCharsets = computed({
-      // getter
-      get() {
-        const { charsets } = store.getters.getAttribute
-        const defaultCharset = storedCharsetsList.value.find(list => {
-          return list.value === charsets
-        })
-        if (!isEmptyValue(defaultCharset)) {
-          return defaultCharset
-        }
-        return {
-          label: '',
-          value: null
-        }
-      },
-      // setter
-      set(value) {
-        store.commit('updateAttributeVFileImport', {
-          attribute: 'attribute',
-          criteria: 'charsets',
-          value
-        })
-      }
-    })
-
-    const currrentImportFormats = computed({
-      // getter
-      get() {
-        const { importFormats } = store.getters.getAttribute
-        const { listImportFormats } = store.getters.getOptions
-        const defautl = listImportFormats.find(list => list.value === importFormats)
-        if (!isEmptyValue(defautl)) {
-          return defautl
-        }
-        return {
-          label: '',
-          value: null
-        }
-      },
-      // setter
-      set(value) {
-        store.commit('updateAttributeVFileImport', {
-          attribute: 'attribute',
-          criteria: 'importFormats',
-          value
-        })
-        infoImportFormats(value)
-      }
-    })
-
-    // List Options
-    const optionsCharsets = computed({
-      // getter
-      get() {
-        const { listCharsets } = store.getters.getOptions
-        return listCharsets
-        // return []
-      },
-      // setter
-      set(list) {
-        store.commit('updateAttributeVFileImport', {
-          attribute: 'options',
-          criteria: 'listCharsets',
-          value: list
-        })
-      }
-    })
-
-    const optionsImportFormats = computed({
-      // getter
-      get() {
-        const { listImportFormats } = store.getters.getOptions
-        return listImportFormats
-        // return []
-      },
-      // setter
-      set(list) {
-        store.commit('updateAttributeVFileImport', {
-          attribute: 'options',
-          criteria: 'listImportFormats',
-          value: list
-        })
-      }
+    const storedImportFormatsList = computed(() => {
+      return store.getters.getStoredImportFormatsList
     })
 
     const resourceId = computed(() => {
@@ -282,16 +191,6 @@ export default defineComponent({
     /**
      * Methods
      */
-    function infoImportFormats(id) {
-      if (isEmptyValue(id)) return
-      store.dispatch('importFormats', {
-        id
-      })
-        .then(response => {
-          formatFields.value = response.formatFields
-        })
-    }
-
     function handleSuccess({ resource, file }) {
       store.commit('updateAttributeVFileImport', {
         attribute: 'file',
@@ -304,13 +203,15 @@ export default defineComponent({
       store.dispatch('listFilePreview', resource)
     }
 
-    function handleCommand(command) {
-      store.commit('updateAttributeVFileImport', {
-        attribute: 'attribute',
-        criteria: 'importFormats',
-        value: command
+    function changeImportFormat(command) {
+      store.dispatch('getImportFormatFromServer', {
+        id: command
       })
-      store.dispatch('listFilePreview')
+        .then(response => {
+          if (!isEmptyValue(resourceId.value)) {
+            store.dispatch('listFilePreview')
+          }
+        })
     }
 
     watch(resourceId, (newValue, oldValue) => {
@@ -325,19 +226,14 @@ export default defineComponent({
     })
 
     return {
-      // Ref
-      formatFields,
       // Computed
       resourceId,
-      optionsCharsets,
-      currrentCharsets,
-      getInfoImportFormats,
-      optionsImportFormats,
-      currrentImportFormats,
+      storedImportFormatsList,
+      currentCharset,
+      importFormat,
       // Methods
-      infoImportFormats,
       handleSuccess,
-      handleCommand
+      changeImportFormat
     }
   }
 })
