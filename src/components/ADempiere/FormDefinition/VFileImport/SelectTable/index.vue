@@ -19,7 +19,7 @@
 
 <template>
   <div>
-    <el-row>
+    <el-row v-loading="isLoadingTablesList">
       <el-card
         id="panel-select-table"
         class="panel-select-table"
@@ -112,6 +112,7 @@
 import {
   defineComponent,
   computed,
+  ref,
   watch
   // ref
 } from '@vue/composition-api'
@@ -136,6 +137,8 @@ export default defineComponent({
   },
 
   setup() {
+    const isLoadingTablesList = ref(false)
+
     /**
     * Computed
     */
@@ -181,11 +184,14 @@ export default defineComponent({
         value: ''
       })
       store.commit('setImportFormatsList', [])
-      store.dispatch('getProcessesListFromServer', table_name)
     }
 
     if (isEmptyValue(storedImportTablesList.value)) {
+      isLoadingTablesList.value = true
       store.dispatch('getImportTablesListFromServer')
+        .finally(() => {
+          isLoadingTablesList.value = false
+        })
     }
 
     watch(storedTableName, (newValue, oldValue) => {
@@ -214,6 +220,7 @@ export default defineComponent({
     })
 
     return {
+      isLoadingTablesList,
       storedImportTablesList,
       storedTableName,
       currentTable,

@@ -34,11 +34,12 @@
               >
                 <el-tag>
                   <b style="font-size: 16px;">
-                    {{ currrentCharsets.label }}
+                    {{ currentCharset }}
                   </b>
                 </el-tag>
               </el-form-item>
             </el-col>
+
             <el-col :span="spanSize" style="border: 1px solid #e6ebf5;">
               <el-form-item
                 :label="$t('form.VFileImport.selectTable.importFormat')"
@@ -46,11 +47,12 @@
               >
                 <el-tag>
                   <b style="font-size: 16px;">
-                    {{ currrentImportFormats.label }}
+                    {{ importFormat.name }}
                   </b>
                 </el-tag>
               </el-form-item>
             </el-col>
+
             <el-col :span="spanSize" style="border: 1px solid #e6ebf5;">
               <el-form-item
                 :label="$t('form.VFileImport.step.saveAndProcess')"
@@ -61,44 +63,45 @@
                 />
               </el-form-item>
             </el-col>
+
             <el-col v-if="isProcess" :span="spanSize" style="border: 1px solid #e6ebf5;">
               <el-form-item
                 :label="$t('form.VFileImport.saveAndProcess.processes')"
                 style="width: 100%;text-align: center;margin-bottom: 0px !important;"
               >
                 <el-dropdown
-                  v-if="!isEmptyValue(listProcess) && listProcess.length > 1"
+                  v-if="!isEmptyValue(importProcessList) && importProcessList.length > 0"
                   plain
                   split-button
                   :hide-on-click="true"
                   :class="{ 'action-container': true, 'without-defualt-action': false }"
-                  @click="loadProcess(listProcess[0])"
+                  @click="loadProcess({ processId: importProcessList[0].id, processUuid: importProcessList[0].values.UUID })"
                   @command="handleCommand"
                 >
                   <span>
-                    {{ listProcess[0].DisplayColumn }}
+                    {{ importProcessList[0].values.DisplayColumn }}
                   </span>
                   <el-dropdown-menu
                     slot="dropdown"
                   >
                     <template
-                      v-for="(process, index) in listProcess"
+                      v-for="(process, index) in importProcessList"
                     >
                       <el-dropdown-item
                         :key="index"
-                        :command="process.uuid"
+                        :command="process.id + '|' + process.values.UUID"
                       >
-                        {{ process.DisplayColumn }}
+                        {{ process.values.DisplayColumn }}
                       </el-dropdown-item>
                     </template>
                   </el-dropdown-menu>
                 </el-dropdown>
                 <el-tag
-                  v-else-if="!isEmptyValue(listProcess) && listProcess.length === 1"
-                  @click="loadProcess(listProcess[0])"
+                  v-else-if="!isEmptyValue(importProcessList) && importProcessList.length === 1"
+                  @click="loadProcess(importProcessList[0].id)"
                 >
                   <b style="font-size: 16px;">
-                    {{ listProcess[0].DisplayColumn }}
+                    {{ importProcessList[0].values.DisplayColumn }}
                   </b>
                 </el-tag>
               </el-form-item>
@@ -108,8 +111,9 @@
       </el-card>
       <br>
     </el-card>
+
     <el-card
-      v-if="!isEmptyValue(getProcessDefinition)"
+      v-if="isProcess && !isEmptyValue(getProcessDefinition)"
       shadow="never"
       style="padding: 0px 10px !important;"
     >
@@ -133,8 +137,7 @@
 import {
   defineComponent,
   computed,
-  watch,
-  ref
+  watch
 } from '@vue/composition-api'
 
 import store from '@/store'
@@ -142,12 +145,9 @@ import store from '@/store'
 // Components and Mixins
 import PanelDefinition from '@/components/ADempiere/PanelDefinition/index.vue'
 
-// API Request Methods
-import { requestProcessMetadata } from '@/api/ADempiere/dictionary/index.ts'
-
 // Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere'
 import { containerManager } from '@/utils/ADempiere/dictionary/process.js'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'saveProcess',
@@ -160,25 +160,17 @@ export default defineComponent({
     /**
      * Computed
      */
-
-    const listField = ref([])
-
-    const dataTable = computed(() => {
-      const { data } = store.getters.getFile
-      return data
+    const storedTableName = computed(() => {
+      return store.getters.getStoredCurrentTableName
     })
 
-    const headerTable = computed(() => {
-      const { header } = store.getters.getFile
-      return header
+    const currentCharset = computed(() => {
+      const { charsets } = store.getters.getAttribute
+      return charsets
     })
 
-    const getInfoImportFormats = computed(() => {
-      return store.getters.getInfoFormat
-    })
-
-    const currentLine = computed(() => {
-      return store.getters.getNavigationLine
+    const importFormat = computed(() => {
+      return store.getters.getImportFormat
     })
 
     const spanSize = computed(() => {
@@ -199,106 +191,13 @@ export default defineComponent({
           criteria: 'isProcess',
           value: value
         })
-      }
-    })
-
-    const formatFields = computed({
-      // getter
-      get() {
-        const { formatFields } = store.getters.getAttribute
-        return formatFields
-      },
-      // setter
-      set(value) {
-        store.commit('setImportFormat', value)
-      }
-    })
-
-    const currrentCharsets = computed({
-      // getter
-      get() {
-        const { charsets } = store.getters.getAttribute
-        const { listCharsets } = store.getters.getOptions
-        const defautl = listCharsets.find(list => list.value === charsets)
-        if (!isEmptyValue(defautl)) {
-          return defautl
+        if (value) {
+          store.dispatch('getProcessesListFromServer', storedTableName.value)
         }
-        return {
-          label: '',
-          value: null
-        }
-      },
-      // setter
-      set(value) {
-        store.commit('updateAttributeVFileImport', {
-          attribute: 'attribute',
-          criteria: 'charsets',
-          value
-        })
       }
     })
 
-    const currrentImportFormats = computed({
-      // getter
-      get() {
-        const { importFormatId } = store.getters.getAttribute
-        const { listImportFormats } = store.getters.getOptions
-        const defautl = listImportFormats.find(list => list.value === importFormatId)
-        if (!isEmptyValue(defautl)) {
-          return defautl
-        }
-        return {
-          label: '',
-          value: null
-        }
-      },
-      // setter
-      set(value) {
-        store.commit('updateAttributeVFileImport', {
-          attribute: 'attribute',
-          criteria: 'importFormatId',
-          value
-        })
-        infoImportFormats(value)
-      }
-    })
-
-    // List Options
-    const optionsCharsets = computed({
-      // getter
-      get() {
-        const { listCharsets } = store.getters.getOptions
-        return listCharsets
-        // return []
-      },
-      // setter
-      set(list) {
-        store.commit('updateAttributeVFileImport', {
-          attribute: 'options',
-          criteria: 'listCharsets',
-          value: list
-        })
-      }
-    })
-
-    const optionsImportFormats = computed({
-      // getter
-      get() {
-        const { listImportFormats } = store.getters.getOptions
-        return listImportFormats
-        // return []
-      },
-      // setter
-      set(list) {
-        store.commit('updateAttributeVFileImport', {
-          attribute: 'options',
-          criteria: 'listImportFormats',
-          value: list
-        })
-      }
-    })
-
-    const listProcess = computed(() => {
+    const importProcessList = computed(() => {
       const { listProcess } = store.getters.getOptions
       return listProcess
     })
@@ -311,49 +210,42 @@ export default defineComponent({
     /**
      * Methods
      */
-    function infoImportFormats(id) {
-      if (isEmptyValue(id)) return
-      store.dispatch('importFormatId', {
-        id
-      })
-        .then(response => {
-          formatFields.value = response.formatFields
+    function loadProcess({ processId, processUuid }) {
+      const storedProcess = store.getters.getStoredProcess(processUuid)
+      if (!isEmptyValue(storedProcess)) {
+        store.commit('updateAttributeVFileImport', {
+          attribute: 'attribute',
+          criteria: 'processDefinition',
+          value: storedProcess
         })
-    }
-
-    const singleTable = ref(null)
-
-    function loadProcess(process) {
-      const { id } = process
-      requestProcessMetadata({
-        id
+        return
+      }
+      store.dispatch('getProcessDefinitionFromServer', {
+        id: processId
       })
-        .then(response => {
-          store.dispatch('getProcessDefinitionFromServer', {
-            id: response.id.toString()
+        .then(processResponse => {
+          store.commit('updateAttributeVFileImport', {
+            attribute: 'attribute',
+            criteria: 'processDefinition',
+            value: processResponse
           })
-            .then(processResponse => {
-              store.commit('updateAttributeVFileImport', {
-                attribute: 'attribute',
-                criteria: 'processDefinition',
-                value: processResponse
-              })
-            })
         })
     }
 
-    function handleCommand(uuid) {
-      const currentProcess = listProcess.value.find(list => list.uuid === uuid)
-      loadProcess(currentProcess)
+    function handleCommand(key) {
+      const values = key.split('|')
+      loadProcess({
+        processId: values.at(0),
+        processUuid: values.at(1)
+      })
     }
 
-    watch(isProcess, (newValue, oldValue) => {
-      if (newValue) {
-        const { tablaId } = store.getters.getAttribute
-        const { listTables } = store.getters.getOptions
-        const currentTable = listTables.find(list => list.id === tablaId)
-        store.dispatch('listProcess', {
-          tableName: currentTable.table_name
+    watch(importProcessList, (newValue, oldValue) => {
+      if (!isEmptyValue(newValue)) {
+        const currentProcess = newValue.at()
+        loadProcess({
+          processId: currentProcess.id,
+          processUuid: currentProcess.values.UUID
         })
       }
     })
@@ -362,23 +254,13 @@ export default defineComponent({
       // Ref
       isProcess,
       spanSize,
-      headerTable,
-      dataTable,
-      formatFields,
-      listField,
-      singleTable,
       // Computed
-      currentLine,
-      listProcess,
-      optionsCharsets,
-      currrentCharsets,
+      importProcessList,
       containerManager,
       getProcessDefinition,
-      getInfoImportFormats,
-      optionsImportFormats,
-      currrentImportFormats,
+      currentCharset,
+      importFormat,
       // Methods
-      infoImportFormats,
       loadProcess,
       handleCommand
     }

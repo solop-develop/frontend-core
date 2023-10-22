@@ -52,6 +52,7 @@ const VFileImport = {
     listTables: [],
     listProcess: []
   },
+  indexRecordPreview: 0,
   file: {
     data: [],
     header: [],
@@ -97,6 +98,9 @@ export default {
     },
     setImportFormat(state, formats) {
       state.importFormat = formats
+    },
+    setIndexRecordPreview(state, index) {
+      state.indexRecordPreview = index
     },
     setNavigationLine(state, line) {
       state.navigationLine = line
@@ -192,16 +196,11 @@ export default {
         })
           .then(response => {
             const { records } = response
-            const list = records.map(list => {
-              return {
-                ...list,
-                ...list.values
-              }
-            })
+
             commit('updateAttributeVFileImport', {
               attribute: 'options',
               criteria: 'listProcess',
-              value: list
+              value: records
             })
             resolve(response)
           })
@@ -250,7 +249,8 @@ export default {
           })
       })
     },
-    listFilePreview({ commit, getters }, resource) {
+
+    getPreviewRecordsFromServer({ commit, getters }, resource) {
       return new Promise(resolve => {
         const {
           charsets,
@@ -269,30 +269,29 @@ export default {
         })
           .then(response => {
             const { records } = response
-            const attributesList = records.map(list => list.attributes)
-            const dataTable = attributesList.map(list => {
-              const dataLine = {}
-              list.forEach(element => {
-                dataLine[element.key] = element.value
-              })
-              return dataLine
+            const recordsList = records.map((row, index) => {
+              return {
+                ...row.values,
+                rowIndex: index
+              }
             })
+
             commit('updateAttributeVFileImport', {
               attribute: 'file',
               criteria: 'data',
-              value: dataTable
+              value: recordsList
             })
             commit('updateAttributeVFileImport', {
               attribute: 'file',
               criteria: 'header',
-              value: attributesList[0]
+              value: recordsList[0]
             })
             commit('updateAttributeVFileImport', {
               attribute: 'file',
               criteria: 'isLoading',
               value: false
             })
-            resolve(dataTable)
+            resolve(recordsList)
           })
           .catch(error => {
             showMessage({
@@ -335,8 +334,12 @@ export default {
     getOptions(state) {
       return state.options
     },
+
     getFile(state) {
       return state.file
+    },
+    getIndexRecordPreview(state) {
+      return state.indexRecordPreview
     },
     getNavigationLine(state) {
       return state.navigationLine
