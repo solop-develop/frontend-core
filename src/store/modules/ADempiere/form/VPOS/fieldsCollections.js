@@ -22,7 +22,7 @@ import {
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification'
-import { getMainPaymentMethods } from '@/utils/ADempiere/dictionary/form/VPOS'
+import { getMainPaymentMethods, getCurrencyPayment } from '@/utils/ADempiere/dictionary/form/VPOS'
 
 const fieldsCollections = {
   paymentMethods: {
@@ -32,7 +32,8 @@ const fieldsCollections = {
   availableCurrencies: {
     currencie: {},
     listCurrencies: []
-  }
+  },
+  amount: null
 }
 
 export default {
@@ -49,11 +50,11 @@ export default {
     },
     setAvailableListCurrencies(state, list) {
       state.availableCurrencies.listCurrencies = list
+    },
+    setPayAmount(state, amount) {
+      state.amount = Number(amount)
     }
   },
-  /**
-   * Collection
-   */
   actions: {
     availablePaymentMethods({
       commit,
@@ -99,7 +100,10 @@ export default {
         })
           .then(response => {
             const { currencies } = response
-            if (!isEmptyValue(currentPaymentMethods.reference_currency)) commit('setAvailableCurrencies', currentPaymentMethods.reference_currency)
+            const currency = getCurrencyPayment({
+              paymentMethods: currentPaymentMethods
+            })
+            commit('setAvailableCurrencies', currency)
             commit('setAvailableListCurrencies', currencies)
             resolve(currencies)
           })
@@ -124,6 +128,9 @@ export default {
     },
     getAvailableCurrencies: (state) => {
       return state.availableCurrencies
+    },
+    getPayAmount: (state) => {
+      return state.amount
     }
   }
 }

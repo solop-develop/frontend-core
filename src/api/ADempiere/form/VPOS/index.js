@@ -854,12 +854,16 @@ export function deletePayment({
  * List Payments
  */
 
-export function ListPayments({
-  posId
+export function listPayments({
+  posId,
+  orderId
 }) {
   return request({
     url: `point-of-sales/${posId}/payments`,
-    method: 'get'
+    method: 'get',
+    params: {
+      order_id: orderId
+    }
   })
 }
 

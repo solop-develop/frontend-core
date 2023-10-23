@@ -35,6 +35,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             <field-amount
               :value-amount="amount"
               :value-display="amountDisplay"
+              :handle-change="updateAmount"
             />
           </el-form-item>
         </el-col>
@@ -81,6 +82,7 @@ import currencie from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { formatPrice } from '@/utils/ADempiere/formatValue/numberFormat'
+import { getCurrencyPayment } from '@/utils/ADempiere/dictionary/form/VPOS'
 
 export default defineComponent({
   name: 'Charge',
@@ -98,6 +100,8 @@ export default defineComponent({
       return store.getters.getAvailableCurrencies.currencie
     })
 
+    if (!isEmptyValue(currentOrder.value.open_amount)) store.commit('setPayAmount', currentOrder.value.open_amount.value)
+
     /**
      * Hangle Change Payment Methods
      * @param {Object} paymentMethods
@@ -105,34 +109,41 @@ export default defineComponent({
     function changePaymentMethods(paymentMethods) {
       if (isEmptyValue(paymentMethods)) return
       const currentPaymentMethod = store.getters.getListPaymentMethods.find(list => list.id === paymentMethods)
-      const { reference_currency } = currentPaymentMethod
-      store.commit('setAvailableCurrencies', reference_currency)
+      const currency = getCurrencyPayment({
+        paymentMethods: currentPaymentMethod
+      })
+      store.commit('setAvailableCurrencies', currency)
     }
 
     const amount = computed(() => {
       const {
-        grand_total
+        open_amount
       } = currentOrder.value
-      if (isEmptyValue(grand_total)) return 0.00
-      return Number(grand_total.value)
+      if (isEmptyValue(open_amount)) return 0.00
+      return Number(open_amount.value)
     })
 
     const amountDisplay = computed(() => {
       const {
-        grand_total,
+        open_amount,
         price_list
       } = currentOrder.value
       let currencyPayment = price_list.currency
-      if (isEmptyValue(grand_total)) return '0.00'
+      if (isEmptyValue(open_amount)) return '0.00'
       if (!isEmptyValue(currentCurrency.value)) currencyPayment = currentCurrency.value
-      return formatPrice({ value: Number(grand_total.value), currency: currencyPayment.iso_code })
+      return formatPrice({ value: Number(open_amount.value), currency: currencyPayment.iso_code })
     })
+
+    function updateAmount(amount) {
+      store.commit('setPayAmount', amount)
+    }
 
     return {
       currentOrder,
       amount,
       amountDisplay,
       formatPrice,
+      updateAmount,
       changePaymentMethods
     }
   }

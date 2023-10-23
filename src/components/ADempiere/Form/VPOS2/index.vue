@@ -43,7 +43,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 </template>
 
 <script>
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed, watch } from '@vue/composition-api'
 
 // import lang from '@/lang'
 import store from '@/store'
@@ -73,6 +73,9 @@ export default defineComponent({
       },
       // setter
       set(show) {
+        if (show) {
+          store.dispatch('getListPayments')
+        }
         store.commit('setShowCollection', show)
       }
     })
@@ -80,6 +83,10 @@ export default defineComponent({
     function handleClose() {
       showCollection.value = false
     }
+
+    watch(showCollection, (newValue, oldValue) => {
+      if (newValue) store.dispatch('getListPayments')
+    })
 
     return {
       showCollection,

@@ -37,7 +37,7 @@ import { defineComponent } from '@vue/composition-api'
 // import store from '@/store'
 // Component and Mixins
 import Charge from './Charge'
-import Payments from './Payments.vue'
+import Payments from './Payments'
 import ButtonGroupOptions from './ButtonGroupOptions'
 import InfoCollection from './InfoCollection.vue'
 // Utils and Helper Methods

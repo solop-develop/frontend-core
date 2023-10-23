@@ -38,12 +38,15 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 <script>
 import { defineComponent } from '@vue/composition-api'
 import store from '@/store'
+// Utils and Helper Methods
+import { getPaymentValues } from '@/utils/ADempiere/dictionary/form/VPOS'
 
 export default defineComponent({
   name: 'ButtonGroupOptions',
   setup() {
     function addPayment() {
-      store.commit('setShowCollection', false)
+      const params = getPaymentValues({})
+      store.dispatch('addPayment', params)
     }
 
     return {

@@ -65,7 +65,6 @@ export default defineComponent({
         if (paymentMethods) {
           paymentMethods = listPaymentMethods.value.find(list => list.id === paymentMethods)
         }
-        console.log({ paymentMethods })
         store.commit('setPaymentMethods', paymentMethods)
       }
     })

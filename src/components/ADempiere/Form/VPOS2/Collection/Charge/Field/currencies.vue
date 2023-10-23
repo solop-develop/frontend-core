@@ -22,6 +22,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
   >
     <el-select
       v-model="currencie"
+      :disabled="isDisabled"
     >
       <el-option
         v-for="item in listCurrencies"
@@ -37,10 +38,25 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 import { computed, defineComponent } from '@vue/composition-api'
 
 import store from '@/store'
+import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({
   name: 'FieldCurrencies',
-  setup() {
+  props: {
+    isRefund: {
+      type: Boolean,
+      default: false
+    }
+  },
+  setup(props) {
+    const isDisabled = computed(() => {
+      const {
+        reference_currency,
+        refund_reference_currency
+      } = store.getters.getPaymentMethods
+      if (props.isRefund) return !isEmptyValue(refund_reference_currency)
+      return !isEmptyValue(reference_currency)
+    })
     const listCurrencies = computed(() => {
       return store.getters.getAvailableCurrencies.listCurrencies
     })
@@ -56,6 +72,7 @@ export default defineComponent({
     })
     return {
       currencie,
+      isDisabled,
       listCurrencies
     }
   }

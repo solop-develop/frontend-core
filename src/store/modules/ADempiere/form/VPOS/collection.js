@@ -16,18 +16,20 @@
 
 // API Request Methods
 import {
-  createPayment
+  createPayment,
   // updatePayment,
-  // deletePayment,
-  // ListPayments,
+  deletePayment,
+  listPayments
   // processOrder
 } from '@/api/ADempiere/form/VPOS'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
-// import { showMessage } from '@/utils/ADempiere/notification'
+import { showMessage } from '@/utils/ADempiere/notification'
+import { defaultValueCollections } from '@/utils/ADempiere/dictionary/form/VPOS'
 
 const collection = {
-  showCollection: false
+  showCollection: false,
+  payments: []
 }
 
 export default {
@@ -35,6 +37,9 @@ export default {
   mutations: {
     setShowCollection(state, show) {
       state.showCollection = show
+    },
+    setListPayments(state, list) {
+      state.payments = list
     }
   },
   /**
@@ -42,7 +47,6 @@ export default {
    */
   actions: {
     addPayment({
-      commit,
       getters,
       dispatch
     }, {
@@ -52,6 +56,9 @@ export default {
       description,
       amount,
       payment_date,
+      tender_type_code,
+      currency_id,
+      payment_method_id,
       payment_account_date,
       is_refund,
       charge_id,
@@ -63,9 +70,6 @@ export default {
       return new Promise(resolve => {
         const currentPos = getters.getVPOS
         const currentOrder = getters.getCurrentOrder
-        const payment_method_id = getters.getPaymentMethods.id
-        const currency_id = getters.getAvailableCurrencies.currencie.id
-        const tender_type_code = getters.getPaymentMethods.payment_method.tender_type
         if (
           isEmptyValue(currentPos.id) ||
           isEmptyValue(currentOrder.id)
@@ -90,12 +94,106 @@ export default {
           customer_bank_account_id,
           invoice_reference_id
         })
+          .then(response => {
+            dispatch('getListPayments')
+            dispatch('overloadOrder', { order: currentOrder })
+            defaultValueCollections()
+            showMessage({
+              type: 'success',
+              message: 'Pago Agregado',
+              showClose: true
+            })
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Add Payment: ${error.message}. Code: ${error.code}.`)
+            showMessage({
+              type: 'error',
+              message: error.message,
+              showClose: true
+            })
+            resolve({})
+          })
+      })
+    },
+    getListPayments({
+      commit,
+      getters,
+      dispatch
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        const currentOrder = getters.getCurrentOrder
+        if (
+          isEmptyValue(currentPos.id) ||
+          isEmptyValue(currentOrder.id)
+        ) resolve({})
+        listPayments({
+          posId: currentPos.id,
+          orderId: currentOrder.id
+        })
+          .then(response => {
+            const { payments } = response
+            commit('setListPayments', payments)
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Add Payment: ${error.message}. Code: ${error.code}.`)
+            showMessage({
+              type: 'error',
+              message: error.message,
+              showClose: true
+            })
+            resolve({})
+          })
+      })
+    },
+    removePayment({
+      getters,
+      dispatch
+    }, {
+      payment_id
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        const currentOrder = getters.getCurrentOrder
+        if (
+          isEmptyValue(currentPos.id) ||
+          isEmptyValue(payment_id) ||
+          isEmptyValue(currentOrder.id)
+        ) resolve({})
+        deletePayment({
+          posId: currentPos.id,
+          payment_id
+        })
+          .then(response => {
+            dispatch('getListPayments')
+            dispatch('overloadOrder', { order: currentOrder })
+            showMessage({
+              type: 'success',
+              message: 'OK',
+              showClose: true
+            })
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Add Payment: ${error.message}. Code: ${error.code}.`)
+            showMessage({
+              type: 'error',
+              message: error.message,
+              showClose: true
+            })
+            resolve({})
+          })
       })
     }
   },
   getters: {
     getOpenCollection: (state) => {
       return state.showCollection
+    },
+    getListPayments: (state) => {
+      return state.payments
     }
   }
 }

@@ -17,20 +17,31 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 <template>
   <el-card
     shadow="never"
-    :body-style="{ padding: '5px' }"
+    :body-style="{ padding: '2px' }"
   >
-    <h2> {{ 'Payments' }} </h2>
+    <el-row :gutter="10">
+      <el-col
+        v-for="(payment, key) in listPayments"
+        :key="key"
+        :span="12"
+        style="margin: 10px 0px;"
+      >
+        <card-payments
+          :payment="payment"
+        />
+      </el-col>
+    </el-row>
   </el-card>
 </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
 
 // import lang from '@/lang'
-// import store from '@/store'
+import store from '@/store'
 // import router from '@/router'
 // Component and Mixins
-// import HeaderOrder from './HeaderOrder'
+import CardPayments from './CardPayments'
 // import MainOrder from './MainOrder'
 // import FooterOrder from './FooterOrder'
 // Utils and Helper Methods
@@ -38,8 +49,16 @@ import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'Payments',
+  components: {
+    CardPayments
+  },
   setup() {
-    return {}
+    const listPayments = computed(() => {
+      return store.getters.getListPayments
+    })
+    return {
+      listPayments
+    }
   }
 })
 </script>
