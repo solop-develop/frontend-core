@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,11 +18,11 @@
 
 import Vue from 'vue'
 
-// API Request Methods
-import { requestFieldMetadata } from '@/api/ADempiere/dictionary/window'
-
 // Constants
 import { DEFAULT_COLUMNS_PER_ROW } from '@/utils/ADempiere/componentUtils'
+
+// API Request Methods
+import { requestFieldMetadata } from '@/api/ADempiere/dictionary/field.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'
@@ -38,6 +38,7 @@ const initStateLookup = {
 
 const field = {
   state: initStateLookup,
+
   mutations: {
     addField(state, payload) {
       state.fieldsList.push(payload)
@@ -73,30 +74,31 @@ const field = {
       state.isShowNewSequence = isShowed
     }
   },
+
   actions: {
     // Get Reference from Server based on criteria
     getFieldFromServer({ commit }, {
-      uuid,
-      columnUuid,
-      elementUuid,
+      id,
+      columnId,
+      elementId,
       tableName,
       columnName,
       elementColumnName
     }) {
       return requestFieldMetadata({
-        uuid,
-        columnUuid,
-        elementUuid,
+        id,
+        columnId,
+        elementId,
         // TableName + ColumnName
         tableName,
         columnName,
         elementColumnName
       })
         .then(fieldResponse => {
-          if (columnUuid) {
-            fieldResponse.columnUuid = columnUuid
-          } else if (elementUuid) {
-            fieldResponse.elementUuid = elementUuid
+          if (columnId) {
+            fieldResponse.columnId = columnId
+          } else if (elementId) {
+            fieldResponse.elementId = elementId
           } else if (elementColumnName) {
             fieldResponse.elementColumnName = elementColumnName
           } else if (tableName && columnName) {
@@ -130,20 +132,21 @@ const field = {
       })
     }
   },
+
   getters: {
-    getFieldFromUuid: (state) => (uuid) => {
+    getFieldFromId: (state) => (id) => {
       return state.fieldsList.find(fieldItem => {
-        return fieldItem.uuid === uuid
+        return fieldItem.id === id
       })
     },
-    getFieldFromColumnUuid: (state) => (columnUuid) => {
+    getFieldFromColumnId: (state) => (columnId) => {
       return state.fieldsList.find(fieldItem => {
-        return fieldItem.columnUuid === columnUuid
+        return fieldItem.columnId === columnId
       })
     },
-    getFieldFromElementUuid: (state) => (elementUuid) => {
+    getFieldFromElementId: (state) => (elementId) => {
       return state.fieldsList.find(fieldItem => {
-        return fieldItem.elementUuid === elementUuid
+        return fieldItem.elementId === elementId
       })
     },
     getFieldFromElementColumnName: (state) => (elementColumnName) => {
@@ -156,7 +159,8 @@ const field = {
       columnName
     }) => {
       return state.fieldsList.find(fieldItem => {
-        return fieldItem.tableName === tableName && fieldItem.columnName === columnName
+        return fieldItem.tableName === tableName &&
+          fieldItem.columnName === columnName
       })
     },
     getSizeColumn: (state, getters) => ({ containerUuid }) => {

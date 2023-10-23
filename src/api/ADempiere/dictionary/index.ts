@@ -51,33 +51,6 @@ export function requestTabsMetadata({
       return responde
     })
 }
-/**
- * GET Fields
- * @param {String} id
- */
-export function requestFieldMetadata({
-  id
-}) {
-  return request({
-    url: `/dictionary/fields/${id}`,
-    method: 'get'
-    // params: {
-    //   uuid,
-    //   column_uuid: columnUuid,
-    //   element_uuid: elementUuid,
-    //   field_uuid: fieldUuid,
-    //   // TableName + ColumnName
-    //   table_name: tableName,
-    //   column_name: columnName,
-    //   element_column_name: elementColumnName
-    // }
-  })
-    .then(fieldResponse => {
-      const { convertField } = require('@/utils/ADempiere/apiConverts/field.js')
-
-      return convertField(fieldResponse)
-    })
-}
 
 /**
  * GET References
