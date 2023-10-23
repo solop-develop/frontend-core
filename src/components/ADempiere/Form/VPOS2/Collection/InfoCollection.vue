@@ -109,7 +109,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           {{ $t('form.pos.collect.dayRate') }}:
         </b>
         <b style="float: right">
-          {{ displayAmount(0.00) }}
+          {{ dayRate }}
         </b>
       </p>
     </el-col>
@@ -138,6 +138,18 @@ export default defineComponent({
       return store.getters.getVPOS.display_currency
     })
 
+    const dayRate = computed(() => {
+      const rate = store.getters.getRate({ date: currentOrder.value.date_ordered })
+      if (isEmptyValue(rate.multiply_rate)) return displayAmount(0.00)
+      const {
+        multiply_rate,
+        divide_rate,
+        currency_to
+      } = rate
+      if (multiply_rate.value > divide_rate.value) return formatPrice({ value: multiply_rate.value, currency: currency_to.iso_code })
+      return formatPrice({ value: divide_rate.value, currency: currency_to.iso_code })
+    })
+
     function displayAmount(amount) {
       const { price_list } = currentOrder.value
       if (isEmptyValue(price_list)) return amount
@@ -145,6 +157,7 @@ export default defineComponent({
     }
 
     return {
+      dayRate,
       currentOrder,
       displayCurrency,
       formatPrice,

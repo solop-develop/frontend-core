@@ -35,7 +35,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 </template>
 
 <script>
-import { computed, defineComponent } from '@vue/composition-api'
+import { computed, defineComponent, watch } from '@vue/composition-api'
 
 import store from '@/store'
 import { isEmptyValue } from '@/utils/ADempiere'
@@ -49,6 +49,21 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const currentOrder = computed(() => {
+      return store.getters.getCurrentOrder
+    })
+
+    const dayRate = computed(() => {
+      const rate = store.getters.getRate({ date: currentOrder.value.date_ordered })
+      if (isEmptyValue(rate.multiply_rate)) return 1
+      const {
+        multiply_rate,
+        divide_rate
+      } = rate
+      if (multiply_rate.value > divide_rate.value) return multiply_rate.value
+      return divide_rate.value
+    })
+
     const isDisabled = computed(() => {
       const {
         reference_currency,
@@ -67,13 +82,64 @@ export default defineComponent({
       },
       // setter
       set(currencie) {
-        store.commit('setAvailableCurrencies', currencie)
+        let currency
+        if (currencie) {
+          currency = listCurrencies.value.find(list => list.id === currencie)
+        }
+        store.commit('setAvailableCurrencies', currency)
       }
     })
+
+    function findConverRate(currency) {
+      const { price_list } = currentOrder.value
+      let amountConvert = Number(store.getters.getCurrentOrder.open_amount.value)
+      if (
+        isEmptyValue(currency) ||
+        !isEmptyValue(price_list) &&
+        currency.id === price_list.currency.id
+      ) {
+        store.commit('setPayAmount', amountConvert)
+      } else {
+        const rate = store.getters.getRate({ date: currentOrder.value.date_ordered })
+        if (!isEmptyValue(rate)) {
+          amountConvert = amountConvert / dayRate.value
+          store.commit('setPayAmount', amountConvert)
+        } else {
+          store.dispatch('findRate', {
+            currencyToId: currency.id
+          })
+            .then(response => {
+              const {
+                multiply_rate,
+                divide_rate
+              } = response
+              if (
+                !isEmptyValue(multiply_rate) &&
+                !isEmptyValue(divide_rate)
+              ) {
+                const amountRate = (multiply_rate.value > divide_rate.value) ? multiply_rate.value : divide_rate.value
+                amountConvert = amountConvert / amountRate.value
+                store.commit('setPayAmount', amountConvert)
+              }
+            })
+        }
+      }
+    }
+
+    watch(currencie, (newValue, oldValue) => {
+      if (!isEmptyValue(newValue) && newValue !== oldValue) {
+        const currency = listCurrencies.value.find(list => list.id === newValue)
+        findConverRate(currency)
+      }
+    })
+
     return {
+      dayRate,
       currencie,
       isDisabled,
-      listCurrencies
+      currentOrder,
+      listCurrencies,
+      findConverRate
     }
   }
 })
