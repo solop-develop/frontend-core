@@ -206,7 +206,7 @@ export default {
       commit,
       getters
     }, {
-      currency_to_id
+      currencyToId
     }) {
       return new Promise(resolve => {
         const {
@@ -219,14 +219,14 @@ export default {
         if (
           isEmptyValue(conversion_type_id) ||
           isEmptyValue(price_list.currency) ||
-          isEmptyValue(currency_to_id) ||
+          isEmptyValue(currencyToId) ||
           isEmptyValue(date_ordered)
         ) resolve([])
         getConversionRate({
-          conversion_type_id,
-          currency_from_id: price_list.currency.id,
-          currency_to_id,
-          conversion_date: date_ordered
+          conversionTypeId: conversion_type_id,
+          currencyFromId: price_list.currency.id,
+          currencyToId,
+          conversionDate: date_ordered
         })
           .then(response => {
             commit('setRate', {

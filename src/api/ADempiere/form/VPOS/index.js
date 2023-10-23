@@ -938,19 +938,19 @@ export function listStocks({
  */
 
 export function getConversionRate({
-  conversion_type_id,
-  currency_from_id,
-  currency_to_id,
-  conversion_date
+  conversionTypeId,
+  currencyFromId,
+  currencyToId,
+  conversionDate
 }) {
   return request({
     url: 'common/conversion-rates',
     method: 'get',
     params: {
-      conversion_type_id,
-      currency_from_id,
-      currency_to_id,
-      conversion_date
+      conversion_type_id: conversionTypeId,
+      currency_from_id: currencyFromId,
+      currency_to_id: currencyToId,
+      conversion_date: conversionDate
     }
   })
 }

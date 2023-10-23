@@ -106,7 +106,7 @@ export default defineComponent({
           store.commit('setPayAmount', amountConvert)
         } else {
           store.dispatch('findRate', {
-            currency_to_id: currency.id
+            currencyToId: currency.id
           })
             .then(response => {
               const {
