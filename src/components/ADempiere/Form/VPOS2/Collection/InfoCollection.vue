@@ -44,7 +44,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           {{ $t('form.pos.collect.convertedAmount') }}:
         </b>
         <b style="float: right">
-          {{ displayAmount(0.00) }}
+          {{ formatPrice({ value: currentOrder.grand_total_converted.value, currency: displayCurrency.iso_code}) }}
         </b>
       </p>
     </el-col>
@@ -134,6 +134,10 @@ export default defineComponent({
       return store.getters.getCurrentOrder
     })
 
+    const displayCurrency = computed(() => {
+      return store.getters.getVPOS.display_currency
+    })
+
     function displayAmount(amount) {
       const { price_list } = currentOrder.value
       if (isEmptyValue(price_list)) return amount
@@ -142,7 +146,8 @@ export default defineComponent({
 
     return {
       currentOrder,
-      // formatPrice,
+      displayCurrency,
+      formatPrice,
       displayAmount
     }
   }

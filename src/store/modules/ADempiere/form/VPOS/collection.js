@@ -97,7 +97,9 @@ export default {
           .then(response => {
             dispatch('getListPayments')
             dispatch('overloadOrder', { order: currentOrder })
-            defaultValueCollections()
+              .then(() => {
+                defaultValueCollections()
+              })
             showMessage({
               type: 'success',
               message: 'Pago Agregado',
@@ -169,6 +171,9 @@ export default {
           .then(response => {
             dispatch('getListPayments')
             dispatch('overloadOrder', { order: currentOrder })
+              .then(() => {
+                defaultValueCollections()
+              })
             showMessage({
               type: 'success',
               message: 'OK',

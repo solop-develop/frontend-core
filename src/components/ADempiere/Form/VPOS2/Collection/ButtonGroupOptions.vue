@@ -24,6 +24,8 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         type="success"
         icon="el-icon-plus"
         class="button-base-icon"
+        :disabled="isLoading"
+        :loading="isLoading"
         @click="addPayment"
       />
       <el-button
@@ -36,20 +38,28 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, ref } from '@vue/composition-api'
 import store from '@/store'
 // Utils and Helper Methods
 import { getPaymentValues } from '@/utils/ADempiere/dictionary/form/VPOS'
+// import { defaultValueCollections } from '@/utils/ADempiere/dictionary/form/VPOS'
 
 export default defineComponent({
   name: 'ButtonGroupOptions',
   setup() {
+    const isLoading = ref(false)
     function addPayment() {
+      isLoading.value = true
       const params = getPaymentValues({})
       store.dispatch('addPayment', params)
+        .then(() => {
+          isLoading.value = false
+          // defaultValueCollections()
+        })
     }
 
     return {
+      isLoading,
       addPayment
     }
   }

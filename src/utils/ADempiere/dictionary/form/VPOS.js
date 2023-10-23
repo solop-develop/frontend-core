@@ -37,6 +37,7 @@ export function displayValue({
   columnName
 }) {
   const { price_list } = store.getters.getCurrentOrder
+  const { display_currency } = store.getters.getVPOS
   let currency = {
     iso_code: ''
   }
@@ -69,6 +70,9 @@ export function displayValue({
       break
     case 'GrandTotal':
       value = displayLineGranTotal({ row })
+      break
+    case 'ConvertedAmount':
+      value = formatPrice(row.total_amount_converted.value, display_currency.iso_code)
       break
   }
   return value
@@ -335,5 +339,6 @@ export function defaultValueCollections() {
   store.commit('setAvailableCurrencies', getCurrencyPayment({
     paymentMethods: currentPaymentMethods
   }))
+  console.log(open_amount.value, store.getters.getCurrentOrder)
   store.commit('setPayAmount', open_amount.value)
 }

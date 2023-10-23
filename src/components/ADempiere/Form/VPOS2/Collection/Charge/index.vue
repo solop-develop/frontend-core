@@ -120,7 +120,7 @@ export default defineComponent({
         open_amount
       } = currentOrder.value
       if (isEmptyValue(open_amount)) return 0.00
-      return Number(open_amount.value)
+      return store.getters.getPayAmount
     })
 
     const amountDisplay = computed(() => {
@@ -131,7 +131,7 @@ export default defineComponent({
       let currencyPayment = price_list.currency
       if (isEmptyValue(open_amount)) return '0.00'
       if (!isEmptyValue(currentCurrency.value)) currencyPayment = currentCurrency.value
-      return formatPrice({ value: Number(open_amount.value), currency: currencyPayment.iso_code })
+      return formatPrice({ value: Number(amount.value), currency: currencyPayment.iso_code })
     })
 
     function updateAmount(amount) {
