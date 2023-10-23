@@ -24,17 +24,26 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     </el-header>
     <el-main style="padding: 0px 20px;">
       <main-order />
-      <!-- {{ 'Main Order' }} -->
+      <el-drawer
+        title="Cobranza"
+        :visible.sync="showCollection"
+        :with-header="false"
+        :before-close="handleClose"
+        size="50%"
+      >
+        <collection
+          key="collection-component"
+        />
+      </el-drawer>
     </el-main>
     <el-footer style="height: auto !important;padding-top: 5px;">
-      <!-- {{ 'Footer' }} -->
       <footer-order />
     </el-footer>
   </el-container>
 </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
 
 // import lang from '@/lang'
 import store from '@/store'
@@ -43,6 +52,7 @@ import store from '@/store'
 import HeaderOrder from './HeaderOrder'
 import MainOrder from './MainOrder'
 import FooterOrder from './FooterOrder'
+import Collection from './Collection'
 // Utils and Helper Methods
 // import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
@@ -51,10 +61,30 @@ export default defineComponent({
   components: {
     HeaderOrder,
     MainOrder,
-    FooterOrder
+    FooterOrder,
+    Collection
   },
   setup() {
     store.dispatch('searchPointOfSaleData')
+
+    const showCollection = computed({
+      get() {
+        return store.getters.getOpenCollection
+      },
+      // setter
+      set(show) {
+        store.commit('setShowCollection', show)
+      }
+    })
+
+    function handleClose() {
+      showCollection.value = false
+    }
+
+    return {
+      showCollection,
+      handleClose
+    }
   }
 })
 </script>

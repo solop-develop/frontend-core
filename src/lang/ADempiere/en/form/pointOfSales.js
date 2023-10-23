@@ -26,6 +26,25 @@ const pointOfSales = {
     updateBusinessPartner: 'Update Business Partner'
   },
   collection: {
+    field: {
+      fullPayment: 'Total Payment',
+      paymentMethods: 'Payment Methods',
+      currency: 'Currency',
+      bank: 'Bank',
+      receivingBank: 'Receiving Bank',
+      customerAccount: 'Customer Account',
+      issuingBank: 'Issuing Bank',
+      code: 'Cedula',
+      date: 'Date',
+      phone: 'Telephone',
+      referenceNo: 'Reference No.',
+      nameHolder: 'Name of Holder',
+      creditMemo: 'Credit Memo',
+      description: 'Description',
+      creditCard: 'Credit Card',
+      cardNumber: 'Card Number',
+      email: 'Mail'
+    },
     chargeAmount: 'Charge',
     creditAmount: 'Installment',
     others: 'Others',

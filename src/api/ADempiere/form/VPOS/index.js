@@ -729,9 +729,160 @@ export function listCustomers({
       value
     }
   })
-    .then(response => {
-      return response
-    })
+}
+
+/** ____________________________________
+ * |                                    |
+ * |  Payments Point of Sale Services   |
+ * |____________________________________|
+ */
+
+/**
+ * Create Payment
+ */
+
+export function createPayment({
+  posId,
+  order_id,
+  invoice_id,
+  bank_id,
+  reference_no,
+  description,
+  amount,
+  payment_date,
+  tender_type_code,
+  currency_id,
+  payment_method_id,
+  payment_account_date,
+  is_refund,
+  charge_id,
+  collecting_agent_id,
+  reference_bank_account_id,
+  customer_bank_account_id,
+  invoice_reference_id
+}) {
+  return request({
+    url: `point-of-sales/${posId}/payments`,
+    method: 'post',
+    data: {
+      order_id,
+      invoice_id,
+      bank_id,
+      reference_no,
+      description,
+      amount,
+      payment_date,
+      tender_type_code,
+      currency_id,
+      payment_method_id,
+      payment_account_date,
+      is_refund,
+      charge_id,
+      collecting_agent_id,
+      reference_bank_account_id,
+      customer_bank_account_id,
+      invoice_reference_id
+    }
+  })
+}
+
+/**
+ * Update Payment
+ */
+
+export function updatePayment({
+  posId,
+  payment_id,
+  order_id,
+  invoice_id,
+  bank_id,
+  reference_no,
+  description,
+  amount,
+  payment_date,
+  tender_type_code,
+  currency_id,
+  payment_method_id,
+  payment_account_date,
+  is_refund,
+  charge_id,
+  collecting_agent_id,
+  reference_bank_account_id,
+  customer_bank_account_id,
+  invoice_reference_id
+}) {
+  return request({
+    url: `point-of-sales/${posId}/payments/${payment_id}`,
+    method: 'put',
+    data: {
+      order_id,
+      invoice_id,
+      bank_id,
+      reference_no,
+      description,
+      amount,
+      payment_date,
+      tender_type_code,
+      currency_id,
+      payment_method_id,
+      payment_account_date,
+      is_refund,
+      charge_id,
+      collecting_agent_id,
+      reference_bank_account_id,
+      customer_bank_account_id,
+      invoice_reference_id
+    }
+  })
+}
+
+/**
+ * Delete Payment
+ */
+
+export function deletePayment({
+  posId,
+  payment_id
+}) {
+  return request({
+    url: `point-of-sales/${posId}/payments/${payment_id}`,
+    method: 'delete'
+  })
+}
+
+/**
+ * List Payments
+ */
+
+export function ListPayments({
+  posId
+}) {
+  return request({
+    url: `point-of-sales/${posId}/payments`,
+    method: 'get'
+  })
+}
+
+/**
+ * Process Order
+ */
+
+export function processOrder({
+  posId,
+  order_id,
+  create_payments,
+  is_open_refund,
+  payments
+}) {
+  return request({
+    url: `point-of-sales/${posId}/orders/${order_id}/process`,
+    method: 'put',
+    data: {
+      create_payments,
+      is_open_refund,
+      payments
+    }
+  })
 }
 
 /** ______________________________________

@@ -240,3 +240,19 @@ export function sumStocksByWarehouse(listWarehouse, uniqueStocks = []) {
   }
   return uniqueStocks
 }
+
+/**
+ * Get the required payment method from the list
+ * @param {array} listPaymentMethods
+ * @param {object} paymentMethods
+ * @returns paymentMethods
+ */
+
+export function getMainPaymentMethods({
+  listPaymentMethods,
+  tender_type = 'X'
+}) {
+  if (isEmptyValue(listPaymentMethods)) return {}
+  return listPaymentMethods.find(list => list.payment_method.tender_type === tender_type)
+}
+
