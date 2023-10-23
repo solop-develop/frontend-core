@@ -85,9 +85,9 @@ import {
  */
 export function createFieldFromDictionary({
   containerUuid,
-  uuid,
-  columnUuid,
-  elementUuid,
+  id,
+  columnId,
+  elementId,
   elementColumnName,
   tableName,
   columnName,
@@ -95,15 +95,15 @@ export function createFieldFromDictionary({
 }) {
   let field
   let valueToMatch
-  if (uuid) {
-    field = store.getters.getFieldFromUuid(uuid)
-    valueToMatch = uuid
-  } else if (columnUuid) {
-    field = store.getters.getFieldFromColumnUuid(columnUuid)
-    valueToMatch = columnUuid
-  } else if (elementUuid) {
-    field = store.getters.getFieldFromElementUuid(elementUuid)
-    valueToMatch = elementUuid
+  if (id) {
+    field = store.getters.getFieldFromId(id)
+    valueToMatch = id
+  } else if (columnId) {
+    field = store.getters.getFieldFromColumnId(columnId)
+    valueToMatch = columnId
+  } else if (elementId) {
+    field = store.getters.getFieldFromElementId(elementId)
+    valueToMatch = elementId
   } if (elementColumnName) {
     field = store.getters.getFieldFromElementColumnName(elementColumnName)
     valueToMatch = elementColumnName
@@ -118,9 +118,9 @@ export function createFieldFromDictionary({
   if (isEmptyValue(field)) {
     return new Promise(resolve => {
       store.dispatch('getFieldFromServer', {
-        uuid,
-        columnUuid,
-        elementUuid,
+        id,
+        columnId,
+        elementId,
         elementColumnName,
         tableName,
         columnName
@@ -140,9 +140,9 @@ export function createFieldFromDictionary({
             containerUuid,
             columnName,
             definition: {
-              uuid,
-              columnUuid,
-              elementUuid,
+              id,
+              columnId,
+              elementId,
               elementName: elementColumnName,
               tableName,
               columnName,

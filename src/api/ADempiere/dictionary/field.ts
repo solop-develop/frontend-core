@@ -19,45 +19,41 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
-/**
- * Request dictionary Window metadata
- * @param {string} uuid universally unique identifier
- * @param {number} id, identifier
- */
-export function requestWindowMetadata({
-  uuid,
-  id
+import { convertField } from '@/utils/ADempiere/apiConverts/field.js'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+
+// Utils and Helper Methods
+export function requestFieldMetadata({
+  id,
+  tableName,
+  columnName,
+  columnId,
+  elementId,
+  elementColumnName
 }) {
+  let url
+  switch (true) {
+    case !isEmptyValue(id):
+      url = `/dictionary/fields/${id}`
+      break
+    case (!isEmptyValue(tableName) && isEmptyValue(columnName)):
+      url = `/dictionary/fields/${tableName}/${columnName}`
+      break
+    case !isEmptyValue(columnName):
+      url = `/dictionary/fields/column/${columnId}`
+      break
+    case !isEmptyValue(elementId):
+      url = `/dictionary/fields/element/${elementId}`
+      break
+    case !isEmptyValue(elementColumnName):
+      url = `/dictionary/fields/element/column/${elementColumnName}`
+      break
+  }
   return request({
-    url: '/dictionary/window',
-    method: 'get',
-    params: {
-      uuid,
-      id
-    }
+    url,
+    method: 'get'
   })
-    .then(windowResponse => {
-      const { convertWindow } = require('@/utils/ADempiere/apiConverts/dictionary.js')
-
-      return convertWindow(windowResponse)
-    })
-}
-
-export function requestReference({
-  uuid,
-  columnName
-}) {
-  return request({
-    url: '/dictionary/reference',
-    method: 'get',
-    params: {
-      uuid,
-      column_name: columnName
-    }
-  })
-    .then(validationResponse => {
-      const { convertReference } = require('@/utils/ADempiere/apiConverts/field.js')
-
-      return convertReference(validationResponse)
+    .then(fieldResponse => {
+      return convertField(fieldResponse)
     })
 }
