@@ -928,3 +928,29 @@ export function listStocks({
     }
   })
 }
+
+/**
+ * Get Currency Rate
+ * @param {int32} conversion_type_id
+ * @param {int32} currency_from_id
+ * @param {int32} currency_to_id
+ * @param {google.protobuf.Timestamp} conversion_date
+ */
+
+export function getConversionRate({
+  conversion_type_id,
+  currency_from_id,
+  currency_to_id,
+  conversion_date
+}) {
+  return request({
+    url: 'common/conversion-rates',
+    method: 'get',
+    params: {
+      conversion_type_id,
+      currency_from_id,
+      currency_to_id,
+      conversion_date
+    }
+  })
+}

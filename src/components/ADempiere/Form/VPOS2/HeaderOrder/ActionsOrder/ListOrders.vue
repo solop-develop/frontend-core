@@ -24,6 +24,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       :border="true"
       :empty-text="$t('form.byInvoice.emptyList')"
       highlight-current-row
+      @row-dblclick="selectOrder"
       @current-change="handleCurrentChangeOrder"
     >
       <index-column
@@ -187,6 +188,11 @@ export default defineComponent({
       currentOrder.value = order
     }
 
+    function selectOrder(order) {
+      currentOrder.value = order
+      setSelectedOrder()
+    }
+
     /**
      * Set Select Order
      */
@@ -241,6 +247,7 @@ export default defineComponent({
       close,
       formatDate,
       formatPrice,
+      selectOrder,
       setSelectedOrder,
       handleSizeChange,
       handleChangePage,

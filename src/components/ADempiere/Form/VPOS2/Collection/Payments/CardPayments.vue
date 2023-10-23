@@ -19,9 +19,9 @@
     <el-row>
       <el-col :span="7">
         <el-image
-          src=""
+          :src="imageCard(payment)"
           fit="contain"
-          style="width: 95px; height: 110px"
+          style="width: 85px; height: 90px"
         />
       </el-col>
       <el-col
@@ -43,7 +43,7 @@
             <span style="float: left;">
               {{ payment.payment_method.name }}
             </span>
-            <span style="font-size: 14px;float: right;">
+            <span style="font-size: 14px;float: right;padding-right: 5px;">
               {{ payment.document_no }}
             </span>
           </b>
@@ -51,7 +51,7 @@
         <p style="margin: 1px 0px;font-size: 14px;">
           {{ formatDate(payment.payment_date) }}
         </p>
-        <p style="margin: 1px 0px;font-size: 16px;text-align: end;">
+        <p style="margin: 1px 0px;font-size: 16px;text-align: end;padding-right: 5px;">
           <b>
             {{ formatPrice({ value: payment.amount.value, currency: displayCurrency({}) }) }}
           </b>
@@ -115,10 +115,42 @@ export default defineComponent({
         })
     }
 
+    function imageCard(payment) {
+      const {
+        tender_type_code
+      } = payment
+      let image
+      switch (tender_type_code) {
+        case 'D':
+          image = 'MobilePayment.jpg'
+          break
+        case 'P':
+          image = 'Mobile.jpg'
+          break
+        case 'X':
+          image = 'Cash.jpg'
+          break
+        case 'A':
+          image = 'ACH.jpg'
+          break
+        case 'M':
+          image = 'GiftCard.jpg'
+          break
+        case 'Z':
+          image = 'Zelle.jpg'
+          break
+        default:
+          image = 'Default.jpg'
+          break
+      }
+      return require('@/image/ADempiere/pos/typePayment/' + image)
+    }
+
     return {
       isLoading,
       currentOrder,
       remove,
+      imageCard,
       formatDate,
       formatPrice,
       displayCurrency

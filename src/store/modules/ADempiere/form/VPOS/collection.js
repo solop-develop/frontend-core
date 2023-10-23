@@ -14,12 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import Vue from 'vue'
 // API Request Methods
 import {
   createPayment,
   // updatePayment,
   deletePayment,
-  listPayments
+  listPayments,
+  getConversionRate
   // processOrder
 } from '@/api/ADempiere/form/VPOS'
 // Utils and Helper Methods
@@ -29,7 +31,9 @@ import { defaultValueCollections } from '@/utils/ADempiere/dictionary/form/VPOS'
 
 const collection = {
   showCollection: false,
-  payments: []
+  payments: [],
+  listRate: [],
+  currentRate: {}
 }
 
 export default {
@@ -40,6 +44,12 @@ export default {
     },
     setListPayments(state, list) {
       state.payments = list
+    },
+    setRate(state, {
+      date,
+      rate
+    }) {
+      Vue.set(state.currentRate, date, rate)
     }
   },
   /**
@@ -191,6 +201,50 @@ export default {
             resolve({})
           })
       })
+    },
+    findRate({
+      commit,
+      getters
+    }, {
+      currency_to_id
+    }) {
+      return new Promise(resolve => {
+        const {
+          price_list,
+          date_ordered
+        } = getters.getCurrentOrder
+        const {
+          conversion_type_id
+        } = getters.getVPOS
+        if (
+          isEmptyValue(conversion_type_id) ||
+          isEmptyValue(price_list.currency) ||
+          isEmptyValue(currency_to_id) ||
+          isEmptyValue(date_ordered)
+        ) resolve([])
+        getConversionRate({
+          conversion_type_id,
+          currency_from_id: price_list.currency.id,
+          currency_to_id,
+          conversion_date: date_ordered
+        })
+          .then(response => {
+            commit('setRate', {
+              rate: response,
+              date: date_ordered
+            })
+            resolve(response)
+          })
+          .catch(error => {
+            showMessage({
+              type: 'error',
+              message: error.message,
+              showClose: true
+            })
+            resolve([])
+            console.warn(`Error Getting List Stocks: ${error.message}. Code: ${error.code}.`)
+          })
+      })
     }
   },
   getters: {
@@ -199,6 +253,9 @@ export default {
     },
     getListPayments: (state) => {
       return state.payments
+    },
+    getRate: (state) => ({ date }) => {
+      return state.currentRate[date] || {}
     }
   }
 }

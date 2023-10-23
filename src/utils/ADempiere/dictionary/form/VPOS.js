@@ -271,13 +271,13 @@ export function getCurrencyPayment({
   }
   const { price_list } = store.getters.getCurrentOrder
   if (isEmptyValue(price_list)) return currency
-  if (isEmptyValue(paymentMethods) && !isEmptyValue(price_list)) {
+  if (isEmptyValue(paymentMethods)) {
     return price_list.currency
   }
   const {
     reference_currency,
     refund_reference_currency
-  } = currency
+  } = paymentMethods
   if (isRefund) {
     if (!isEmptyValue(refund_reference_currency)) return refund_reference_currency
     return price_list.currency
