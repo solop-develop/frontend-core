@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,78 +18,9 @@
 
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
-import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/references.js'
-
-/**
- * Request a Lookup list data from Reference
- * The main attributes that function hope are:
- * @param {string} fieldUuid
- * @param {string} browseFieldUuid
- * @param {string} processParameterUuid
- * @param {array}  contextAttributesList
- * @param {string} pageToken
- * @param {number} pageSize
- */
-export function requestLookupList({
-  contextAttributesList,
-  fieldUuid,
-  processParameterUuid,
-  browseFieldUuid,
-  id,
-  //
-  referenceUuid,
-  searchValue,
-  //
-  tableName,
-  columnName,
-  columnUuid,
-  //
-  pageToken,
-  pageSize = RECORD_ROWS_BY_LIST
-}) {
-  let contextAttributes = []
-  if (!isEmptyValue(contextAttributesList)) {
-    contextAttributes = contextAttributesList.map(attribute => {
-      return {
-        key: attribute.columnName,
-        value: attribute.value
-      }
-    })
-  }
-
-  return request({
-    url: '/user-interface/window/lookup-items',
-    method: 'get',
-    params: {
-      context_attributes: contextAttributes,
-      field_uuid: fieldUuid,
-      process_parameter_uuid: processParameterUuid,
-      browse_field_uuid: browseFieldUuid,
-      id,
-      //
-      reference_uuid: referenceUuid,
-      search_value: searchValue,
-      //
-      table_name: tableName,
-      column_name: columnName,
-      column_uuid: columnUuid,
-      // Page Data
-      page_token: pageToken,
-      page_size: pageSize
-    }
-  })
-    .then(lookupListResponse => {
-      return {
-        nextPageToken: lookupListResponse.next_page_token,
-        recordCount: lookupListResponse.record_count,
-        recordsList: lookupListResponse.records
-      }
-    })
-}
 
 /**
  * Reference List from Window
