@@ -77,12 +77,10 @@ export default defineComponent({
     function customFocusGained(event) {
       isFocus.value = true
       amount.value = props.valueAmount
-      console.log({ event }, 'customFocusGained')
     }
 
     function customFocusLost(event) {
       isFocus.value = false
-      console.log({ event }, 'customFocusLost')
     }
     return {
       // Ref

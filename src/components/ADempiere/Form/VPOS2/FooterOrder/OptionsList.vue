@@ -208,6 +208,7 @@ export default defineComponent({
         }
       }, () => {})
       store.commit('setCurrentOrder', {})
+      store.commit('setListOrderLines', [])
     }
 
     function changeDocumentType(documentType) {

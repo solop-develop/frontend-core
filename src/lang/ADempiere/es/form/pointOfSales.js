@@ -26,6 +26,25 @@ const pointOfSales = {
     updateBusinessPartner: 'Actualizar Socio de Negocio'
   },
   collection: {
+    field: {
+      fullPayment: 'Total del Pago',
+      paymentMethods: 'Métodos de Pago',
+      currency: 'Moneda',
+      bank: 'Banco',
+      receivingBank: 'Banco Receptor',
+      customerAccount: 'Cuenta de Cliente',
+      issuingBank: 'Banco Emisor',
+      code: 'Cédula',
+      date: 'Fecha',
+      phone: 'Teléfono',
+      referenceNo: 'No. de Referencia',
+      nameHolder: 'Nombre del Titular',
+      creditMemo: 'Nota de crédito',
+      description: 'Descripción',
+      creditCard: 'Tarjeta de crédito',
+      cardNumber: 'Número de Tarjeta',
+      email: 'Correo'
+    },
     chargeAmount: 'Cargo',
     creditAmount: 'Abono',
     others: 'Otros',

@@ -444,6 +444,10 @@ export default {
         const pos = getters.getVPOS
         const order = getters.getCurrentOrder
         if (isEmptyValue(order)) resolve({})
+        if (order.document_status.value !== 'DR') {
+          dispatch('overloadOrder', { order })
+          resolve({})
+        }
         updateOrder({
           posId: pos.id,
           orderId: order.id,

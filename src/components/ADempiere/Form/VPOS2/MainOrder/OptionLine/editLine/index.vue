@@ -308,6 +308,7 @@ export default defineComponent({
     function showListUOM(isVisible) {
       if (!isVisible) return
       if (
+        isEmptyValue(currentLine.value) ||
         isEmptyValue(currentLine.value.id) ||
         isEmptyValue(props.editLine.id) ||
         currentLine.value.id !== props.editLine.id

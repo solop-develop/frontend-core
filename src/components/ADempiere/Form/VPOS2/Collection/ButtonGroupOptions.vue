@@ -18,69 +18,49 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
   <el-row>
     <el-col
       :span="24"
+      style="text-align: right;padding-top: 5px;"
     >
       <el-button
-        :disabled="true"
-        plain
-        type="info"
-        icon="el-icon-top"
-        style="font-size: 16px;"
-      />
-      <el-button
-        :disabled="true"
-        plain
-        type="info"
-        icon="el-icon-bottom"
-        style="font-size: 16px;"
-      />
-      <el-button
-        v-show="!isEmptyValue(order)"
-        type="danger"
-        icon="el-icon-delete"
-      />
-      <el-button
-        v-show="!isEmptyValue(order)"
-        type="primary"
-        icon="el-icon-document-checked"
-        @click="releaseOrder(order)"
-      >
-        {{ $t('form.pos.releaseOrder') }}
-      </el-button>
-      <el-button
-        v-show="!isEmptyValue(order)"
         type="success"
-        icon="el-icon-bank-card"
-        @click="openShowCollections"
-      >
-        {{ $t('form.pos.order.collect') }}
-      </el-button>
+        icon="el-icon-plus"
+        class="button-base-icon"
+        :disabled="isLoading"
+        :loading="isLoading"
+        @click="addPayment"
+      />
+      <el-button
+        type="primary"
+        icon="el-icon-shopping-cart-full"
+        class="button-base-icon"
+      />
     </el-col>
   </el-row>
 </template>
 
 <script>
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, ref } from '@vue/composition-api'
 import store from '@/store'
+// Utils and Helper Methods
+import { getPaymentValues } from '@/utils/ADempiere/dictionary/form/VPOS'
+// import { defaultValueCollections } from '@/utils/ADempiere/dictionary/form/VPOS'
 
 export default defineComponent({
   name: 'ButtonGroupOptions',
   setup() {
-    const order = computed(() => {
-      return store.getters.getCurrentOrder
-    })
-
-    function releaseOrder(order) {
-      store.dispatch('releaseCurrentOrder', { order })
-    }
-
-    function openShowCollections() {
-      store.commit('setShowCollection', true)
+    const isLoading = ref(false)
+    function addPayment() {
+      isLoading.value = true
+      const params = getPaymentValues({})
+      store.dispatch('addPayment', params)
+        .then(() => {
+          isLoading.value = false
+          // defaultValueCollections()
+        })
     }
 
     return {
-      order,
-      releaseOrder,
-      openShowCollections
+      isLoading,
+      addPayment
     }
   }
 })

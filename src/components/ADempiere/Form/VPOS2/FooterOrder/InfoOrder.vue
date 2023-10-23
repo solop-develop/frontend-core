@@ -132,6 +132,20 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             {{ displayAmount(infoOrder.grandTotal) }}
           </b>
         </el-col>
+        <el-col
+          v-if="!isEmptyValue(infoOrder.grand_total_converted)"
+          :span="24"
+          class="total"
+        >
+          <span
+            style="float: left"
+          >
+            {{ $t('form.pos.collect.convertedAmount') }}
+          </span>
+          <b style="float: right">
+            {{ formatPrice({ value: infoOrder.grand_total_converted.value, currency: displayCurrency.iso_code}) }}
+          </b>
+        </el-col>
       </el-row>
     </el-col>
   </el-row>
@@ -155,6 +169,7 @@ export default defineComponent({
         !isEmptyValue(order.id)
       ) {
         return {
+          ...order,
           documentNo: order.document_no,
           salesRepresentative: order.sales_representative,
           totalLines: order.total_lines.value,
@@ -187,6 +202,10 @@ export default defineComponent({
       return store.getters.getListOrderLines
     })
 
+    const displayCurrency = computed(() => {
+      return store.getters.getVPOS.display_currency
+    })
+
     const getItemQuantity = computed(() => {
       if (isEmptyValue(store.getters.getCurrentOrder.id)) return 0
       const arrayQuantity = lines.value.map(line => Number(line.quantity_ordered.value))
@@ -206,6 +225,7 @@ export default defineComponent({
       lines,
       infoOrder,
       getItemQuantity,
+      displayCurrency,
       formatPrice,
       displayAmount,
       formatQuantity

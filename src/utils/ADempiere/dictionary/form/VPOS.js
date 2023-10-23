@@ -31,12 +31,12 @@ import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
  * @param {object} row record
  * @param {object} orderLine or field definition
  */
-
 export function displayValue({
   row,
   columnName
 }) {
   const { price_list } = store.getters.getCurrentOrder
+  const { display_currency } = store.getters.getVPOS
   let currency = {
     iso_code: ''
   }
@@ -70,9 +70,13 @@ export function displayValue({
     case 'GrandTotal':
       value = displayLineGranTotal({ row })
       break
+    case 'ConvertedAmount':
+      value = formatPrice(row.total_amount_converted.value, display_currency.iso_code)
+      break
   }
   return value
 }
+
 /**
  * Show Table Label
  * @param {object} row record
@@ -226,7 +230,6 @@ function displayLineGranTotal({
  * @param {*} uniqueStocks
  * @returns uniqueStocks
  */
-
 export function sumStocksByWarehouse(listWarehouse, uniqueStocks = []) {
   for (let i = 0; i < listWarehouse.length; i++) {
     const currentWharehouse = listWarehouse[i]
@@ -239,4 +242,98 @@ export function sumStocksByWarehouse(listWarehouse, uniqueStocks = []) {
     }
   }
   return uniqueStocks
+}
+
+/**
+ * Get the required payment method from the list
+ * @param {array} listPaymentMethods
+ * @param {object} paymentMethods
+ * @returns paymentMethods
+ */
+export function getMainPaymentMethods({
+  listPaymentMethods,
+  tender_type = 'X'
+}) {
+  if (isEmptyValue(listPaymentMethods)) return {}
+  return listPaymentMethods.find(list => list.payment_method.tender_type === tender_type)
+}
+
+/**
+ * Currency Payment
+ */
+export function getCurrencyPayment({
+  isRefund = false,
+  paymentMethods
+}) {
+  const currency = {
+    iso_code: '',
+    id: null
+  }
+  const { price_list } = store.getters.getCurrentOrder
+  if (isEmptyValue(price_list)) return currency
+  if (isEmptyValue(paymentMethods) && !isEmptyValue(price_list)) {
+    return price_list.currency
+  }
+  const {
+    reference_currency,
+    refund_reference_currency
+  } = currency
+  if (isRefund) {
+    if (!isEmptyValue(refund_reference_currency)) return refund_reference_currency
+    return price_list.currency
+  }
+  if (!isEmptyValue(reference_currency)) return reference_currency
+  return price_list.currency
+}
+
+/**
+ * Get Payment Values Ready to Send
+ */
+export function getPaymentValues({
+  invoice_id,
+  bank_id,
+  reference_no,
+  description,
+  payment_date,
+  payment_account_date,
+  is_refund = false,
+  charge_id,
+  collecting_agent_id,
+  reference_bank_account_id,
+  customer_bank_account_id,
+  invoice_reference_id
+}) {
+  const { id, payment_method } = store.getters.getPaymentMethods
+  let amount = store.getters.getPayAmount
+  if (isEmptyValue(amount)) amount = store.getters.getCurrentOrder.open_amount.value
+  const currency = store.getters.getAvailableCurrencies.currencie
+  return {
+    invoice_id,
+    bank_id,
+    reference_no,
+    description,
+    amount,
+    payment_date,
+    tender_type_code: payment_method.tender_type,
+    currency_id: currency.id,
+    payment_method_id: id,
+    payment_account_date,
+    is_refund,
+    charge_id,
+    collecting_agent_id,
+    reference_bank_account_id,
+    customer_bank_account_id,
+    invoice_reference_id
+  }
+}
+
+export function defaultValueCollections() {
+  const listPayments = store.getters.getListPaymentMethods
+  const { open_amount } = store.getters.getCurrentOrder
+  store.commit('setPaymentMethods', getMainPaymentMethods({ listPaymentMethods: listPayments }))
+  const currentPaymentMethods = store.getters.getPaymentMethods
+  store.commit('setAvailableCurrencies', getCurrencyPayment({
+    paymentMethods: currentPaymentMethods
+  }))
+  store.commit('setPayAmount', open_amount.value)
 }
