@@ -31,7 +31,6 @@ import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
  * @param {object} row record
  * @param {object} orderLine or field definition
  */
-
 export function displayValue({
   row,
   columnName
@@ -77,6 +76,7 @@ export function displayValue({
   }
   return value
 }
+
 /**
  * Show Table Label
  * @param {object} row record
@@ -230,7 +230,6 @@ function displayLineGranTotal({
  * @param {*} uniqueStocks
  * @returns uniqueStocks
  */
-
 export function sumStocksByWarehouse(listWarehouse, uniqueStocks = []) {
   for (let i = 0; i < listWarehouse.length; i++) {
     const currentWharehouse = listWarehouse[i]
@@ -251,7 +250,6 @@ export function sumStocksByWarehouse(listWarehouse, uniqueStocks = []) {
  * @param {object} paymentMethods
  * @returns paymentMethods
  */
-
 export function getMainPaymentMethods({
   listPaymentMethods,
   tender_type = 'X'
@@ -263,7 +261,6 @@ export function getMainPaymentMethods({
 /**
  * Currency Payment
  */
-
 export function getCurrencyPayment({
   isRefund = false,
   paymentMethods
@@ -292,7 +289,6 @@ export function getCurrencyPayment({
 /**
  * Get Payment Values Ready to Send
  */
-
 export function getPaymentValues({
   invoice_id,
   bank_id,
@@ -339,6 +335,5 @@ export function defaultValueCollections() {
   store.commit('setAvailableCurrencies', getCurrencyPayment({
     paymentMethods: currentPaymentMethods
   }))
-  console.log(open_amount.value, store.getters.getCurrentOrder)
   store.commit('setPayAmount', open_amount.value)
 }
