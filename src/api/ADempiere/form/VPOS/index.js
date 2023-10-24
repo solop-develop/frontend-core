@@ -986,3 +986,29 @@ export function listBankAccounts({
     }
   })
 }
+
+/**
+ * Create Customer Account
+ */
+export function createCustomerBankAccount({
+  posId,
+  customerId,
+  accountNo,
+  driverLicense,
+  bankId,
+  bankAccountType = 'C',
+  isAch = true
+}) {
+  return request({
+    url: `point-of-sales/${posId}/customers/${customerId}/bank-accounts`,
+    method: 'post',
+    data: {
+      account_no: accountNo,
+      driver_license: driverLicense,
+      bank_id: bankId,
+      bank_account_type: bankAccountType,
+      social_security_number: driverLicense,
+      is_ach: isAch
+    }
+  })
+}

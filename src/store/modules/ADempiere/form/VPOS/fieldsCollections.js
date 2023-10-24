@@ -18,6 +18,7 @@
 import {
   listAvailablePaymentMethods,
   listAvailableCurrencies,
+  createCustomerBankAccount,
   listBankAccounts,
   listBanks
 } from '@/api/ADempiere/form/VPOS'
@@ -224,6 +225,61 @@ export default {
               attribute: 'list',
               value: records
             })
+          })
+          .catch(error => {
+            console.warn(`List Banks Accounts: ${error.message}. Code: ${error.code}`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            commit('setAttributeField', {
+              field: 'bankAccounts',
+              attribute: 'list',
+              value: []
+            })
+          })
+      })
+    },
+    newCustomerBankAccount({
+      commit,
+      getters
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        const currentOrder = getters.getCurrentOrder
+        const banck = getters.getAttributeField({
+          field: 'banks',
+          attribute: 'issuingBank'
+        })
+        const phone = getters.getAttributeField({
+          field: 'field',
+          attribute: 'phone'
+        })
+        const value = getters.getAttributeField({
+          field: 'field',
+          attribute: 'value'
+        })
+        if (isEmptyValue(currentPos.id)) resolve({})
+        createCustomerBankAccount({
+          posId: currentPos.id,
+          bankId: banck.id,
+          customerId: currentOrder.customer.id,
+          accountNo: phone,
+          driverLicense: value
+        })
+          .then(response => {
+            showMessage({
+              type: 'success',
+              message: 'OK',
+              showClose: true
+            })
+            resolve(response)
           })
           .catch(error => {
             console.warn(`List Banks Accounts: ${error.message}. Code: ${error.code}`)
