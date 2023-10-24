@@ -119,32 +119,32 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             {{ displayAmount(infoOrder.taxAmount) }}
           </b>
         </el-col>
-        <el-col
-          :span="24"
-          class="total"
-        >
-          <span
-            style="float: left"
+        <el-col :span="24" class="total">
+          <el-col
+            :span="24"
           >
-            {{ $t('form.pos.order.total') }}
-          </span>
-          <b style="float: right">
-            {{ displayAmount(infoOrder.grandTotal) }}
-          </b>
-        </el-col>
-        <el-col
-          v-if="!isEmptyValue(infoOrder.grand_total_converted)"
-          :span="24"
-          class="total"
-        >
-          <span
-            style="float: left"
+            <span
+              style="float: left"
+            >
+              {{ $t('form.pos.order.total') }}
+            </span>
+            <b style="float: right">
+              {{ displayAmount(infoOrder.grandTotal) }}
+            </b>
+          </el-col>
+          <el-col
+            v-if="!isEmptyValue(infoOrder.grand_total_converted)"
+            :span="24"
           >
-            {{ $t('form.pos.collect.convertedAmount') }}
-          </span>
-          <b style="float: right">
-            {{ formatPrice({ value: infoOrder.grand_total_converted.value, currency: displayCurrency.iso_code}) }}
-          </b>
+            <span
+              style="float: left"
+            >
+              {{ $t('form.pos.collect.convertedAmount') }}
+            </span>
+            <b style="float: right">
+              {{ formatPrice({ value: infoOrder.grand_total_converted.value, currency: displayCurrency.iso_code}) }}
+            </b>
+          </el-col>
         </el-col>
       </el-row>
     </el-col>

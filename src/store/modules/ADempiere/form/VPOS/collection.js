@@ -21,8 +21,8 @@ import {
   // updatePayment,
   deletePayment,
   listPayments,
-  getConversionRate
-  // processOrder
+  getConversionRate,
+  processOrder
 } from '@/api/ADempiere/form/VPOS'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -243,6 +243,54 @@ export default {
             })
             resolve([])
             console.warn(`Error Getting List Stocks: ${error.message}. Code: ${error.code}.`)
+          })
+      })
+    },
+    process({
+      commit,
+      getters,
+      dispatch
+    }, {
+      isOpenRefund
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        const currentOrder = getters.getCurrentOrder
+        const payments = getters.getListPayments
+        if (
+          isEmptyValue(currentPos.id) ||
+          isEmptyValue(currentOrder.id)
+        ) resolve({})
+        processOrder({
+          posId: currentPos.id,
+          orderId: currentOrder.id,
+          createPayments: !isEmptyValue(payments),
+          isOpenRefund,
+          payments
+        })
+          .then(response => {
+            dispatch('overloadOrder', { order: currentOrder })
+            commit('setShowCollection', false)
+            dispatch('setModalDialogVPOS', {
+              title: `Orden ${currentOrder.document_no} Procesada`,
+              doneMethod: () => {
+                commit('setListOrderLines', [])
+                dispatch('newOrder')
+              },
+              // TODO: Change to string and import dynamic in component
+              componentPath: () => import('@/components/ADempiere/Form/VPOS2/DialogInfo/infoOrder.vue'),
+              isShowed: true
+            })
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Process Orders: ${error.message}. Code: ${error.code}.`)
+            showMessage({
+              type: 'error',
+              message: error.message,
+              showClose: true
+            })
+            resolve({})
           })
       })
     }

@@ -24,6 +24,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     </el-header>
     <el-main style="padding: 0px 20px;">
       <main-order />
+      <dialog-info />
       <el-drawer
         title="Cobranza"
         :visible.sync="showCollection"
@@ -53,6 +54,7 @@ import HeaderOrder from './HeaderOrder'
 import MainOrder from './MainOrder'
 import FooterOrder from './FooterOrder'
 import Collection from './Collection'
+import DialogInfo from './DialogInfo'
 // Utils and Helper Methods
 // import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
@@ -62,7 +64,8 @@ export default defineComponent({
     HeaderOrder,
     MainOrder,
     FooterOrder,
-    Collection
+    Collection,
+    DialogInfo
   },
   setup() {
     store.dispatch('searchPointOfSaleData')
