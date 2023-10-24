@@ -873,17 +873,17 @@ export function listPayments({
 
 export function processOrder({
   posId,
-  order_id,
-  create_payments,
-  is_open_refund,
+  orderId,
+  createPayments,
+  isOpenRefund,
   payments
 }) {
   return request({
-    url: `point-of-sales/${posId}/orders/${order_id}/process`,
+    url: `point-of-sales/${posId}/orders/${orderId}/process`,
     method: 'put',
     data: {
-      create_payments,
-      is_open_refund,
+      create_payments: createPayments,
+      is_open_refund: isOpenRefund,
       payments
     }
   })

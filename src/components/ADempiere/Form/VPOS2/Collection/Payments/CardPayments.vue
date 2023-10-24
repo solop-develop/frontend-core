@@ -30,6 +30,7 @@
       >
         <p style="margin: 5px 0px;">
           <el-button
+            v-if="!readonly"
             type="text"
             icon="el-icon-close"
             style="float: right;color: red;padding: 0px;font-size: 18px;"
@@ -84,6 +85,10 @@ export default defineComponent({
     payment: {
       type: Object,
       default: {}
+    },
+    readonly: {
+      type: Boolean,
+      default: false
     }
   },
   setup() {

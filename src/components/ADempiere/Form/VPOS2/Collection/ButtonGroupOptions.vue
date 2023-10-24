@@ -32,6 +32,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         type="primary"
         icon="el-icon-shopping-cart-full"
         class="button-base-icon"
+        :disabled="isLoadingProcess"
+        :loading="isLoadingProcess"
+        @click="processOrdes"
       />
     </el-col>
   </el-row>
@@ -48,6 +51,7 @@ export default defineComponent({
   name: 'ButtonGroupOptions',
   setup() {
     const isLoading = ref(false)
+    const isLoadingProcess = ref(false)
     function addPayment() {
       isLoading.value = true
       const params = getPaymentValues({})
@@ -58,9 +62,19 @@ export default defineComponent({
         })
     }
 
+    function processOrdes() {
+      isLoadingProcess.value = true
+      store.dispatch('process', {})
+        .then(() => {
+          isLoadingProcess.value = false
+        })
+    }
+
     return {
       isLoading,
-      addPayment
+      isLoadingProcess,
+      addPayment,
+      processOrdes
     }
   }
 })
