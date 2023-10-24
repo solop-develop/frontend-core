@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -25,6 +25,7 @@
             <el-form
               :inline="true"
               label-position="top"
+              class="form-base"
             >
               <el-row :gutter="20">
                 <el-col :span="12">
@@ -45,12 +46,14 @@
                         isMandatoryField,
                         isReadOnlyField,
                         isDisplayedDefault,
-                        getSearchInfoList
+                        getSearchInfoList,
+                        getLookupList
                       }"
                       :in-table="true"
                     />
                   </el-form-item>
                 </el-col>
+
                 <el-col :span="12">
                   <el-form-item
                     :label="$t('form.VAllocation.searchCriteria.organization')"
@@ -75,6 +78,7 @@
                   </el-form-item>
                 </el-col>
               </el-row>
+
               <el-row :gutter="20">
                 <el-col :span="12">
                   <el-form-item
@@ -102,6 +106,7 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
+
                 <el-col :span="12">
                   <el-form-item
                     :label="$t('form.VAllocation.searchCriteria.date')"
@@ -118,6 +123,7 @@
             </el-form>
           </el-card>
         </div>
+
         <div style="width: 50%;">
           <el-card style="height: 100%;">
             <div slot="header" class="clearfix" style="text-align: center;">
@@ -150,6 +156,7 @@
           </el-card>
         </div>
       </el-card>
+
       <p style="text-align: center;">
         <el-radio
           v-model="radioPanel3"
@@ -197,10 +204,10 @@ import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
 
 // API Request Methods
 import {
-  listTransactionTypes,
+  requestListTransactionTypes,
   listBusinessPartners,
-  listOrganizations,
-  listCurrencies
+  requestListOrganizations,
+  requestListCurrencies
 } from '@/api/ADempiere/form/VAllocation.js'
 
 // Utils and Helper Methods
@@ -430,16 +437,15 @@ export default defineComponent({
       if (!isFind) {
         return
       }
-      listOrganizations({
+      requestListOrganizations({
         searchValue
       })
         .then(response => {
           const { records } = response
           optionsOrganizations.value = records.map(organizations => {
-            const { id, uuid, values } = organizations
+            const { id, values } = organizations
             return {
               id,
-              uuid,
               label: values.DisplayColumn
             }
           })
@@ -450,7 +456,7 @@ export default defineComponent({
       if (!isFind) {
         return
       }
-      listCurrencies({
+      requestListCurrencies({
         searchValue
       })
         .then(response => {
@@ -504,7 +510,7 @@ export default defineComponent({
       if (!isEmptyValue(listTypeTransaction.value)) {
         return
       }
-      listTransactionTypes()
+      requestListTransactionTypes()
         .then(response => {
           const { records } = response
           listTypeTransaction.value = records.map(type => {
@@ -530,15 +536,11 @@ export default defineComponent({
     function createField() {
       createFieldFromDictionary({
         containerUuid: props.metadata.containerUuid,
-        uuid: '',
-        elementUuid: '',
-        elementColumnName: 'C_BPartner_ID',
-        tableName: '',
-        columnName: '',
+        // elementColumnName: 'C_BPartner_ID',
+        columnId: 3499, // C_Invoice.C_BPartner_ID
         overwriteDefinition: {
           containerUuid: props.metadata.containerUuid
-        },
-        columnUuid: props.columnUuid
+        }
       })
         .then(response => {
           bPartner.value = response
@@ -584,6 +586,20 @@ export default defineComponent({
       return store.dispatch('searchTableHeader', {
         containerUuid,
         tableName
+      })
+    }
+
+    function getLookupList({ parentUuid, containerUuid, contextColumnNames, uuid, id, searchValue, isAddBlankValue = false, blankValue }) {
+      return store.dispatch('getLookupListFromServer', {
+        parentUuid,
+        containerUuid,
+        contextColumnNames,
+        columnId: id,
+        fieldUuid: uuid,
+        searchValue,
+        // app attributes
+        isAddBlankValue,
+        blankValue
       })
     }
 
@@ -682,6 +698,7 @@ export default defineComponent({
       isReadOnlyField,
       generalInfoSearch,
       searchTableHeader,
+      getLookupList,
       getSearchInfoList
     }
   }
