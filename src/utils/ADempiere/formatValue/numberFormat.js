@@ -27,7 +27,7 @@ import {
 import {
   isCurrencyField, isIntegerField
 } from '@/utils/ADempiere/references.js'
-import { charInText, isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { charInText, getTypeOfValue, isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 /**
  * Is Number Value
@@ -109,15 +109,22 @@ export function formatNumber({
 
 /**
  * Format Quantity
- * @param {number} value
- * @param {boolean} isInteger
+ * @param {Number} value
+ * @param {Boolean} isInteger
  */
 export function formatQuantity({ value, isInteger = false, precision }) {
+  const {
+    value: currentValue, precision: currentPrecision
+  } = getNumberFromGRPC({
+    value
+  })
+  value = currentValue
+  precision = currentPrecision
   if (isEmptyValue(value)) {
     value = 0
   }
 
-  if (isEmptyValue(precision)) {
+  if (isEmptyValue(precision) || precision === 0) {
     precision = getStandardPrecision()
   }
   // without decimals
@@ -195,6 +202,35 @@ export function formatPercent(value) {
     style: 'percent',
     minimumIntegerDigits: 1
   }).format(value)
+}
+
+/**
+ * Return number value and precision
+ * @param {Object} value { value, type }
+ * @returns {Object} { value, precision }
+ */
+export function getNumberFromGRPC({ value }) {
+  let numberValue = value
+  let scale = 0
+
+  if (getTypeOfValue(value) === 'OBJECT') {
+    numberValue = value.value
+    if (getTypeOfValue(numberValue) === 'STRING') {
+      const index = numberValue
+        .toString()
+        .indexOf('.')
+      if (index !== -1) {
+        scale = numberValue.toString().length - index - 1
+      }
+
+      numberValue = Number(numberValue)
+    }
+  }
+
+  return {
+    value: numberValue,
+    precision: scale
+  }
 }
 
 /**

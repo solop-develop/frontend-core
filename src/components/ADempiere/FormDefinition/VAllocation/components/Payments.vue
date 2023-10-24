@@ -442,9 +442,13 @@ export default defineComponent({
     })
 
     const maximumDefiniteDate = computed(() => {
-      if (isEmptyValue(selectListAll.value)) return new Date()
+      if (isEmptyValue(selectListAll.value)) {
+        return new Date()
+      }
       const date = selectListAll.value.map(date => {
-        if (date.type === 'isPayment') return date.transaction_date
+        if (date.type === 'isPayment') {
+          return date.transaction_date
+        }
         return date.date_invoiced
       })
       return date.sort((a, b) => {
@@ -457,7 +461,9 @@ export default defineComponent({
     })
 
     const sumApplied = computed(() => {
-      const sumInvoce = selectListAll.value.filter(list => list.type === 'isInvoce').map(list => {
+      const sumInvoce = selectListAll.value.filter(list => {
+        return list.type === 'isInvoce'
+      }).map(list => {
         const { transaction_type } = list
         if (list.type === 'isInvoce') {
           if (transaction_type.value === 'R') {
@@ -467,7 +473,11 @@ export default defineComponent({
         }
         return list.applied
       })
-      const sumPayment = selectListAll.value.filter(list => list.type !== 'isInvoce').map(list => list.applied)
+      const sumPayment = selectListAll.value.filter(list => {
+        return list.type !== 'isInvoce'
+      }).map(list => {
+        return list.applied
+      })
       const initialValue = 0
       const initialValuePayment = 0
       const initialValueAll = 0
