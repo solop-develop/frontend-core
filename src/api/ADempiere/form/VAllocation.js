@@ -80,13 +80,12 @@ export function requestListCurrencies({
   })
 }
 
-export function listPayments({
+export function requestListPayments({
   // DSL Query
   searchValue,
   businessPartnerId,
   date,
   organizationId,
-  organizationUuid,
   currencyId,
   isMultiCurrency,
   transactionType,
@@ -116,7 +115,7 @@ export function listPayments({
     })
 }
 
-export function listInvoices({
+export function requestListInvoices({
   // DSL Query
   searchValue,
   businessPartnerId,
@@ -187,7 +186,7 @@ export function requestListTransactionOrganizations({
 }
 
 // process
-export function process({
+export function requestProcess({
   date,
   chargeId,
   currencyId,
@@ -199,7 +198,7 @@ export function process({
   transactionOrganizationId
 }) {
   return request({
-    url: '/payment-allocation/process-receipt',
+    url: '/payment-allocation/process',
     method: 'post',
     data: {
       //  DSL Query

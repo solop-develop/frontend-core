@@ -94,7 +94,7 @@ import store from '@/store'
 import headersPayments from './headersPayments.js'
 
 // Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { isEmptyValue, getTypeOfValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'PaymentsTable',
@@ -110,15 +110,16 @@ export default defineComponent({
       const { isLoadingPayments } = store.getters.getisLoadTables
       return isLoadingPayments
     })
+
     /**
      * Refs
      */
     const listPaymentsTable = ref(null)
     const panelInvoce = ref(100)
+
     /**
      * computed
      */
-
     const listPayments = computed(() => {
       return store.getters.getListVAllocation.payments
     })
@@ -128,7 +129,9 @@ export default defineComponent({
     })
 
     const sumAppliedInvoce = computed(() => {
-      const sumInvoce = selectListAll.value.filter(list => list.type === 'isInvoce').map(list => {
+      const sumInvoce = selectListAll.value.filter(list => {
+        return list.type === 'isInvoce'
+      }).map(list => {
         const { transaction_type } = list
         if (list.type === 'isInvoce') {
           if (transaction_type.value === 'R') {
@@ -138,7 +141,9 @@ export default defineComponent({
         }
         return list.applied
       })
-      const sumPayment = selectListAll.value.filter(list => list.type !== 'isInvoce').map(list => list.applied)
+      const sumPayment = selectListAll.value.filter(list => {
+        return list.type !== 'isInvoce'
+      }).map(list => list.applied)
       const initialValue = 0
       const initialValuePayment = 0
       const initialValueAll = 0
@@ -235,24 +240,32 @@ export default defineComponent({
     }
 
     function applied(row) {
-      if (isEmptyValue(selectListAll.value)) return row.open_amount
-      if (num(sumAppliedInvoce.value) > 0) {
-        if (num(sumAppliedInvoce.value) > num(row.open_amount)) {
-          return row.open_amount
-        }
-        if (Math.sign(sumAppliedInvoce.value) === Math.sign(row.open_amount)) {
-          return row.open_amount
-        }
-        if (row.transaction_type.value === 'P') return -(sumAppliedInvoce.value)
-        return sumAppliedInvoce.value
-      } else {
-        return row.open_amount
+      if (isEmptyValue(selectListAll.value)) {
+        return row.open_amount.value
       }
+      if (num(sumAppliedInvoce.value) > 0) {
+        if (num(sumAppliedInvoce.value) > num(row.open_amount.value)) {
+          return row.open_amount.value
+        }
+        if (Math.sign(sumAppliedInvoce.value) === Math.sign(row.open_amount.value)) {
+          return row.open_amount.value
+        }
+        if (row.transaction_type.value === 'P') {
+          return -(sumAppliedInvoce.value)
+        }
+        return sumAppliedInvoce.value
+      }
+      return row.open_amount.value
     }
 
     function num(amount) {
+      if (getTypeOfValue(amount) === 'OBJECT') {
+        amount = Number(amount.value)
+      }
       const math = Math.sign(amount)
-      if (math > 0) return amount
+      if (math > 0) {
+        return amount
+      }
       return -(amount)
     }
 

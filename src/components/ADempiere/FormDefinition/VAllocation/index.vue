@@ -137,10 +137,15 @@ export default defineComponent({
     })
 
     function nextStep(step) {
-      if (currentSetp.value === 0) store.commit('setListSelectInvoceandPayment', [])
-      if (currentSetp.value === 1) store.dispatch('processSend')
-      if (currentSetp.value >= 1) return
-
+      if (currentSetp.value === 0) {
+        store.commit('setListSelectInvoceandPayment', [])
+      }
+      if (currentSetp.value === 1) {
+        store.dispatch('processSend')
+      }
+      if (currentSetp.value >= 1) {
+        return
+      }
       currentSetp.value++
       if (currentSetp.value === 1) {
         store.dispatch('findListPayment')

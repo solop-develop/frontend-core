@@ -54,7 +54,13 @@
         </span>
         <span v-else>
           <p
-            v-if="scope.row[header.columnName].length < 13 || (typeof scope.row[header.columnName] === 'number')"
+            v-if="typeof scope.row[header.columnName] === 'object'"
+            style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;line-height: 12px;margin: 0px;"
+          >
+            {{ scope.row[header.columnName].value }}
+          </p>
+          <p
+            v-else-if="scope.row[header.columnName].length < 13 || (typeof scope.row[header.columnName] === 'number')"
             style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;line-height: 12px;margin: 0px;"
           >
             {{ scope.row[header.columnName] }}
@@ -94,7 +100,7 @@ import store from '@/store'
 import headersInvoice from './headersInvoice.js'
 
 // Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { isEmptyValue, getTypeOfValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'InvocesTable',
@@ -103,7 +109,9 @@ export default defineComponent({
     const diference = ref(0)
     const sumApplied = computed(() => {
       const sumInvoce = selectListAll.value.map(list => {
-        if (list.type === 'isInvoce') return list.amountApplied
+        if (list.type === 'isInvoce') {
+          return list.amountApplied
+        }
         return list.applied
       })
       const initialValue = 0
@@ -118,10 +126,10 @@ export default defineComponent({
      */
     const listInvocesTable = ref(null)
     const panelInvoce = ref(300)
+
     /**
      * computed
      */
-
     const selectListAll = computed(() => {
       return store.getters.getListSelectInvoceandPayment
     })
@@ -133,7 +141,6 @@ export default defineComponent({
     /**
      * Methods
      */
-
     function isCellInput(cell) {
       const { columnName } = cell
       let isInput = false
@@ -186,17 +193,17 @@ export default defineComponent({
     function appliedPay(currentInvoce) {
       const { open_amount, discount_amount } = currentInvoce
       if (selectListAll.value.length < 1) {
-        return open_amount - discount_amount
+        return open_amount.value - discount_amount.value
       }
-      if (num(sumApplied.value) <= num(open_amount - discount_amount) && Math.sign(sumApplied.value) < 0) {
+      if (num(sumApplied.value) <= num(open_amount.value - discount_amount.value) && Math.sign(sumApplied.value) < 0) {
         if (num(sumApplied.value) === 0) {
           if (Math.sign(sumApplied.value) < 0) {
-            return open_amount - discount_amount
+            return open_amount.value - discount_amount.value
           }
         }
         return sumApplied.value
       }
-      return open_amount - discount_amount
+      return open_amount.value - discount_amount.value
     }
 
     function setToggleSelection() {
@@ -232,8 +239,13 @@ export default defineComponent({
     }
 
     function num(amount) {
+      if (getTypeOfValue(amount) === 'OBJECT') {
+        amount = Number(amount.value)
+      }
       const math = Math.sign(amount)
-      if (math >= 0) return amount
+      if (math >= 0) {
+        return amount
+      }
       return -(amount)
     }
 
