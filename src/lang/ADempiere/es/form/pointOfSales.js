@@ -31,6 +31,7 @@ const pointOfSales = {
       paymentMethods: 'Métodos de Pago',
       currency: 'Moneda',
       bank: 'Banco',
+      accountNo: 'No. De Cuenta',
       receivingBank: 'Banco Receptor',
       customerAccount: 'Cuenta de Cliente',
       issuingBank: 'Banco Emisor',

@@ -117,9 +117,14 @@ export default {
           })
           .catch(error => {
             console.warn(`Add New Line: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             resolve({})
@@ -163,9 +168,14 @@ export default {
             resolve(list)
           })
           .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             resolve([])
@@ -206,9 +216,14 @@ export default {
             resolve(updateLineResponse)
           })
           .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             dispatch('listLines')
@@ -237,9 +252,14 @@ export default {
             resolve(response)
           })
           .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             resolve([])
@@ -312,9 +332,14 @@ export default {
           })
           .catch(error => {
             console.warn(`Delete Order: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             resolve({})

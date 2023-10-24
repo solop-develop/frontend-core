@@ -68,6 +68,7 @@ const modalDialogManagerVPOS = {
       loadData = function() {},
       closeMethod = function() {},
       title,
+      type,
       isShowed = false
     }) {
       commit('setModalDialogVPOS', {
@@ -81,6 +82,7 @@ const modalDialogManagerVPOS = {
         cancelMethod,
         closeMethod,
         title,
+        type,
         isShowed
       })
     }

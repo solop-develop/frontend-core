@@ -75,6 +75,7 @@ export default defineComponent({
 
     function openShowCollections() {
       store.commit('setShowCollection', true)
+      store.dispatch('availablePaymentMethods')
       store.dispatch('findRate', {
         currencyToId: store.getters.getVPOS.display_currency.id
       })

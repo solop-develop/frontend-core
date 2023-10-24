@@ -337,3 +337,51 @@ export function defaultValueCollections() {
   }))
   store.commit('setPayAmount', open_amount.value)
 }
+
+/**
+ * Show fields based on the selected payment method
+ * @param {object} fieldColumnanme
+ */
+export function isDisplayFieldPayment(
+  fieldColumnanme
+  // paymentMethods
+) {
+  const { payment_method } = store.getters.getPaymentMethods
+  if (isEmptyValue(payment_method)) return false
+  let isShow
+  switch (fieldColumnanme) {
+    case 'Value':
+      isShow = ['D', 'K', 'T', 'A', 'P', 'C'].includes(payment_method.tender_type)
+      break
+    case 'recipientBank':
+    case 'issuingBank':
+    case 'banksAccounts':
+      isShow = ['P'].includes(payment_method.tender_type)
+      break
+    case 'Date':
+      isShow = ['M', 'Z', 'D', 'K', 'T', 'A', 'P'].includes(payment_method.tender_type)
+      break
+    case 'EMail':
+      isShow = ['Z'].includes(payment_method.tender_type)
+      break
+    case 'Bank':
+      isShow = ['T', 'A'].includes(payment_method.tender_type)
+      break
+    case 'Phone':
+      isShow = ['K', 'T', 'A', 'P', 'C'].includes(payment_method.tender_type)
+      break
+    case 'ReferenceNo':
+      isShow = ['M', 'Z', 'D', 'K', 'T', 'A', 'P'].includes(payment_method.tender_type)
+      break
+    case 'AccountNo':
+      isShow = ['A'].includes(payment_method.tender_type)
+      break
+    case 'creditMemo':
+      isShow = ['M'].includes(payment_method.tender_type)
+      break
+    default:
+      isShow = false
+      break
+  }
+  return isShow
+}

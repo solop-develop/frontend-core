@@ -41,9 +41,10 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 </template>
 
 <script>
-import { defineComponent, ref } from '@vue/composition-api'
+import { defineComponent, computed, ref } from '@vue/composition-api'
 import store from '@/store'
 // Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { getPaymentValues } from '@/utils/ADempiere/dictionary/form/VPOS'
 // import { defaultValueCollections } from '@/utils/ADempiere/dictionary/form/VPOS'
 
@@ -52,7 +53,23 @@ export default defineComponent({
   setup() {
     const isLoading = ref(false)
     const isLoadingProcess = ref(false)
+
+    const currentAccount = computed(() => {
+      return store.getters.getAttributeField({
+        field: 'bankAccounts',
+        attribute: 'currentAccount'
+      })
+    })
+
     function addPayment() {
+      const { payment_method } = store.getters.getPaymentMethods
+      if (
+        !isEmptyValue(payment_method) &&
+        isEmptyValue(currentAccount.value) &&
+        payment_method.tender_type === 'P'
+      ) {
+        store.dispatch('newCustomerBankAccount')
+      }
       isLoading.value = true
       const params = getPaymentValues({})
       store.dispatch('addPayment', params)
@@ -72,6 +89,7 @@ export default defineComponent({
 
     return {
       isLoading,
+      currentAccount,
       isLoadingProcess,
       addPayment,
       processOrdes

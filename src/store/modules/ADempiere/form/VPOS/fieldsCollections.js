@@ -17,7 +17,10 @@
 // API Request Methods
 import {
   listAvailablePaymentMethods,
-  listAvailableCurrencies
+  listAvailableCurrencies,
+  createCustomerBankAccount,
+  listBankAccounts,
+  listBanks
 } from '@/api/ADempiere/form/VPOS'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -32,6 +35,23 @@ const fieldsCollections = {
   availableCurrencies: {
     currencie: {},
     listCurrencies: []
+  },
+  banks: {
+    recipientBank: {},
+    issuingBank: {},
+    listBanks: []
+  },
+  bankAccounts: {
+    list: [],
+    currentAccount: {}
+  },
+  field: {
+    value: '',
+    bank: {},
+    date: '',
+    phone: '',
+    referenceNo: '',
+    description: ''
   },
   amount: null
 }
@@ -53,6 +73,23 @@ export default {
     },
     setPayAmount(state, amount) {
       state.amount = Number(amount)
+    },
+    // setPayAmount(state, amount) {
+    //   state.amount = Number(amount)
+    // },
+    /**
+     * Update Attribute
+     * Generic mutation that allows to change the state of the store
+     * @param {string} Field - Object Field
+     * @param {string} attribute - Attribute and which one to update - Requires it to be an Object
+     * @param {string} value - Value to Update
+     */
+    setAttributeField(state, {
+      field,
+      attribute,
+      value
+    }) {
+      state[field][attribute] = value
     }
   },
   actions: {
@@ -75,9 +112,14 @@ export default {
           })
           .catch(error => {
             console.warn(`List Available Payments Methods: ${error.message}. Code: ${error.code}`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             resolve([])
@@ -109,12 +151,153 @@ export default {
           })
           .catch(error => {
             console.warn(`List Available Currences: ${error.message}. Code: ${error.code}`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             resolve([])
+          })
+      })
+    },
+    banks({
+      commit,
+      getters
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        if (isEmptyValue(currentPos.id)) resolve({})
+        listBanks({
+          posId: currentPos.id
+        })
+          .then(response => {
+            const { records } = response
+            commit('setAttributeField', {
+              field: 'banks',
+              attribute: 'listBanks',
+              value: records
+            })
+          })
+          .catch(error => {
+            console.warn(`List Banks: ${error.message}. Code: ${error.code}`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            commit('setAttributeField', {
+              field: 'banks',
+              attribute: 'listBanks',
+              value: []
+            })
+          })
+      })
+    },
+    listAccounts({
+      commit,
+      getters
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        const banck = getters.getAttributeField({
+          field: 'banks',
+          attribute: 'recipientBank'
+        })
+        if (isEmptyValue(currentPos.id)) resolve({})
+        listBankAccounts({
+          posId: currentPos.id,
+          bankId: banck.id
+        })
+          .then(response => {
+            const { records } = response
+            commit('setAttributeField', {
+              field: 'bankAccounts',
+              attribute: 'list',
+              value: records
+            })
+          })
+          .catch(error => {
+            console.warn(`List Banks Accounts: ${error.message}. Code: ${error.code}`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            commit('setAttributeField', {
+              field: 'bankAccounts',
+              attribute: 'list',
+              value: []
+            })
+          })
+      })
+    },
+    newCustomerBankAccount({
+      commit,
+      getters
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        const currentOrder = getters.getCurrentOrder
+        const banck = getters.getAttributeField({
+          field: 'banks',
+          attribute: 'issuingBank'
+        })
+        const phone = getters.getAttributeField({
+          field: 'field',
+          attribute: 'phone'
+        })
+        const value = getters.getAttributeField({
+          field: 'field',
+          attribute: 'value'
+        })
+        if (isEmptyValue(currentPos.id)) resolve({})
+        createCustomerBankAccount({
+          posId: currentPos.id,
+          bankId: banck.id,
+          customerId: currentOrder.customer.id,
+          accountNo: phone,
+          driverLicense: value
+        })
+          .then(response => {
+            showMessage({
+              type: 'success',
+              message: 'OK',
+              showClose: true
+            })
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`List Banks Accounts: ${error.message}. Code: ${error.code}`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            commit('setAttributeField', {
+              field: 'bankAccounts',
+              attribute: 'list',
+              value: []
+            })
           })
       })
     }
@@ -131,6 +314,10 @@ export default {
     },
     getPayAmount: (state) => {
       return state.amount
+    },
+    getAttributeField: (state) => ({ field, attribute }) => {
+      if (isEmptyValue(field) || isEmptyValue(attribute)) return ''
+      return state[field][attribute]
     }
   }
 }

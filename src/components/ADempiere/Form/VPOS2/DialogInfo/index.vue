@@ -29,12 +29,13 @@
       </p>
     </span> -->
     <el-result
-      icon="success"
+      :icon="typeInfo"
       :title="title"
     />
     <span class="content-modal-dialog">
       <component
         :is="componentRender"
+        v-if="isEmptyValue(componentRender)"
       />
     </span>
 
@@ -108,6 +109,10 @@ export default defineComponent({
       return store.getters.getShowedModalDialogVPOS
     })
 
+    const typeInfo = computed(() => {
+      return store.getters.getModalDialogManagerVPOS.type
+    })
+
     const title = computed(() => {
       if (isEmptyValue(storedModalDialog.value)) {
         return ''
@@ -116,7 +121,8 @@ export default defineComponent({
     })
 
     const componentRender = computed(() => {
-      return storedModalDialog.value.componentPath
+      if (!isEmptyValue(storedModalDialog.value)) return storedModalDialog.value.componentPath
+      return ''
     })
 
     const isDisabledDone = computed(() => {
@@ -154,6 +160,7 @@ export default defineComponent({
       isDisabledDone,
       isShowed,
       title,
+      typeInfo,
       // methods
       closeDialog,
       doneButton

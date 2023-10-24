@@ -47,20 +47,66 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         <el-col :span="8">
           <currencie />
         </el-col>
-        <!-- <el-col :span="8">
+        <!-- Payment Methods (P) -->
+        <el-col v-if="isDisplayFieldPayment('recipientBank')" :span="8">
+          <recipient-bank />
+        </el-col>
+        <el-col v-if="isDisplayFieldPayment('banksAccounts')" :span="8">
+          <banks-accounts />
+        </el-col>
+        <el-col v-if="isDisplayFieldPayment('issuingBank')" :span="8">
+          <issuing-bank />
+        </el-col>
+        <el-col v-if="isDisplayFieldPayment('Bank')" :span="8">
+          <bank />
+        </el-col>
+        <el-col v-if="isDisplayFieldPayment('Value')" :span="8">
           <el-form-item
-            :label="$t('form.pos.tableProduct.quantity')"
+            :label="$t('pointOfSales.collection.field.code')"
             class="form-item-criteria"
             style="margin: 0px;width: 100%;"
           >
-            <field-amount
-              :value-amount="Number(editLine.quantity.value)"
-              :value-display="editLine.quantity.value"
-              :precision="editLine.uom.uom.starndard_precision"
-              :handle-change="updateQuantity"
+            <el-input
+              v-model="code"
+              :disabled="!isEmptyValue(currentAccount)"
             />
           </el-form-item>
-        </el-col> -->
+        </el-col>
+        <el-col v-if="isDisplayFieldPayment('Date')" :span="8">
+          <el-form-item
+            :label="$t('pointOfSales.collection.field.date')"
+            class="form-item-criteria"
+            style="margin: 0px;width: 100%;"
+          >
+            <el-date-picker
+              v-model="date"
+              type="date"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col v-if="isDisplayFieldPayment('Phone')" :span="8">
+          <el-form-item
+            :label="$t('pointOfSales.collection.field.phone')"
+            class="form-item-criteria"
+            style="margin: 0px;width: 100%;"
+          >
+            <el-input
+              v-model="phone"
+              :disabled="!isEmptyValue(currentAccount)"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col v-if="isDisplayFieldPayment('ReferenceNo')" :span="8">
+          <el-form-item
+            :label="$t('pointOfSales.collection.field.referenceNo')"
+            class="form-item-criteria"
+            style="margin: 0px;width: 100%;"
+          >
+            <el-input
+              v-model="referenceNo"
+            />
+          </el-form-item>
+        </el-col>
       </el-row>
     </el-form>
   </el-card>
@@ -76,25 +122,107 @@ import store from '@/store'
 import fieldAmount from '@/components/ADempiere/Form/VPOS2/MainOrder/OptionLine/editLine/fieldAmount.vue'
 import paymentMethods from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/paymentMethods'
 import currencie from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/currencies'
-// import HeaderOrder from './HeaderOrder'
-// import MainOrder from './MainOrder'
-// import FooterOrder from './FooterOrder'
+import recipientBank from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/recipientBank.vue'
+import banksAccounts from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/banksAccounts.vue'
+import issuingBank from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/issuingBank.vue'
+import bank from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/bank.vue'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { formatPrice } from '@/utils/ADempiere/formatValue/numberFormat'
-import { getCurrencyPayment } from '@/utils/ADempiere/dictionary/form/VPOS'
+import { getCurrencyPayment, isDisplayFieldPayment } from '@/utils/ADempiere/dictionary/form/VPOS'
 
 export default defineComponent({
   name: 'Charge',
   components: {
+    bank,
     currencie,
     fieldAmount,
-    paymentMethods
+    paymentMethods,
+    recipientBank,
+    banksAccounts,
+    issuingBank
   },
   setup() {
     const currentOrder = computed(() => {
       return store.getters.getCurrentOrder
     })
+
+    const currentAccount = computed(() => {
+      return store.getters.getAttributeField({
+        field: 'bankAccounts',
+        attribute: 'currentAccount'
+      })
+    })
+
+    const code = computed({
+      get() {
+        return store.getters.getAttributeField({
+          field: 'field',
+          attribute: 'value'
+        })
+      },
+      // setter
+      set(value) {
+        store.commit('setAttributeField', {
+          field: 'field',
+          attribute: 'value',
+          value
+        })
+      }
+    })
+
+    const date = computed({
+      get() {
+        return store.getters.getAttributeField({
+          field: 'field',
+          attribute: 'date'
+        })
+      },
+      // setter
+      set(value) {
+        store.commit('setAttributeField', {
+          field: 'field',
+          attribute: 'date',
+          value
+        })
+      }
+    })
+
+    const phone = computed({
+      get() {
+        return store.getters.getAttributeField({
+          field: 'field',
+          attribute: 'phone'
+        })
+      },
+      // setter
+      set(value) {
+        store.commit('setAttributeField', {
+          field: 'field',
+          attribute: 'phone',
+          value
+        })
+      }
+    })
+
+    const referenceNo = computed({
+      get() {
+        return store.getters.getAttributeField({
+          field: 'field',
+          attribute: 'referenceNo'
+        })
+      },
+      // setter
+      set(value) {
+        store.commit('setAttributeField', {
+          field: 'field',
+          attribute: 'referenceNo',
+          value
+        })
+      }
+    })
+
+    date.value = new Date()
 
     const currentCurrency = computed(() => {
       return store.getters.getAvailableCurrencies.currencie
@@ -142,9 +270,15 @@ export default defineComponent({
       currentOrder,
       amount,
       amountDisplay,
+      code,
+      date,
+      phone,
+      referenceNo,
+      currentAccount,
       formatPrice,
       updateAmount,
-      changePaymentMethods
+      changePaymentMethods,
+      isDisplayFieldPayment
     }
   }
 })
