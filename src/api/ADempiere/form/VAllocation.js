@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,13 +19,20 @@
 import { request } from '@/utils/ADempiere/request'
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
+export function requestListTransactionTypes() {
+  return request({
+    url: '/payment-allocation/transaction-types',
+    method: 'get'
+  })
+}
+
 export function listBusinessPartners({
   searchValue,
   pageToken,
   pageSize
 }) {
   return request({
-    url: '/form/addons/payment-allocation/business-partners',
+    url: '/payment-allocation/business-partners',
     method: 'get',
     params: {
       page_size: pageSize,
@@ -39,13 +46,13 @@ export function listBusinessPartners({
     })
 }
 
-export function listOrganizations({
+export function requestListOrganizations({
   searchValue,
   pageToken,
   pageSize = 250
 }) {
   return request({
-    url: '/form/addons/payment-allocation/organizations',
+    url: '/payment-allocation/organizations',
     method: 'get',
     params: {
       page_size: pageSize,
@@ -54,18 +61,15 @@ export function listOrganizations({
       search_value: searchValue
     }
   })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
 }
 
-export function listCurrencies({
+export function requestListCurrencies({
   searchValue,
   pageToken,
   pageSize = 250
 }) {
   return request({
-    url: '/form/addons/payment-allocation/currencies',
+    url: '/payment-allocation/currencies',
     method: 'get',
     params: {
       page_size: pageSize,
@@ -74,31 +78,16 @@ export function listCurrencies({
       search_value: searchValue
     }
   })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
-}
-
-export function listTransactionTypes() {
-  return request({
-    url: '/form/addons/payment-allocation/transaction-types',
-    method: 'get'
-  })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
 }
 
 export function listPayments({
   // DSL Query
   searchValue,
   businessPartnerId,
-  businessPartnerUuid,
   date,
   organizationId,
   organizationUuid,
   currencyId,
-  currencyUuid,
   isMultiCurrency,
   transactionType,
   isAutomaticWriteOff,
@@ -107,17 +96,13 @@ export function listPayments({
   pageToken
 }) {
   return request({
-    url: '/form/addons/payment-allocation/payments',
+    url: `/payment-allocation/payments/${businessPartnerId}`,
     method: 'get',
     params: {
       search_value: searchValue,
-      business_partner_id: businessPartnerId,
-      business_partner_uuid: businessPartnerUuid,
       date,
       organization_id: organizationId,
-      organization_uuid: organizationUuid,
       currency_id: currencyId,
-      currency_uuid: currencyUuid,
       is_multi_currency: isMultiCurrency,
       transaction_type: transactionType,
       is_automatic_write_off: isAutomaticWriteOff,
@@ -135,12 +120,9 @@ export function listInvoices({
   // DSL Query
   searchValue,
   businessPartnerId,
-  businessPartnerUuid,
   date,
   organizationId,
-  organizationUuid,
   currencyId,
-  currencyUuid,
   isMultiCurrency,
   transactionType,
   isAutomaticWriteOff,
@@ -149,17 +131,13 @@ export function listInvoices({
   pageToken
 }) {
   return request({
-    url: '/form/addons/payment-allocation/invoices',
+    url: `/payment-allocation/invoices/${businessPartnerId}`,
     method: 'get',
     params: {
       search_value: searchValue,
-      business_partner_id: businessPartnerId,
-      business_partner_uuid: businessPartnerUuid,
       date,
       organization_id: organizationId,
-      organization_uuid: organizationUuid,
       currency_id: currencyId,
-      currency_uuid: currencyUuid,
       is_multi_currency: isMultiCurrency,
       transaction_type: transactionType,
       is_automatic_write_off: isAutomaticWriteOff,
@@ -173,13 +151,13 @@ export function listInvoices({
     })
 }
 
-export function listCharges({
+export function requestListCharges({
   searchValue,
   pageToken,
   pageSize
 }) {
   return request({
-    url: '/form/addons/payment-allocation/charges',
+    url: '/payment-allocation/charges',
     method: 'get',
     params: {
       page_size: pageSize,
@@ -188,20 +166,16 @@ export function listCharges({
       search_value: searchValue
     }
   })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
 }
 
 // List Transaction Organizations
-
-export function listTransactionOrganizations({
+export function requestListTransactionOrganizations({
   searchValue,
   pageToken,
   pageSize
 }) {
   return request({
-    url: '/form/addons/payment-allocation/transaction-organizations',
+    url: '/payment-allocation/organizations/transactions',
     method: 'get',
     params: {
       page_size: pageSize,
@@ -210,10 +184,8 @@ export function listTransactionOrganizations({
       search_value: searchValue
     }
   })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
 }
+
 // process
 export function process({
   date,
@@ -227,7 +199,7 @@ export function process({
   transactionOrganizationId
 }) {
   return request({
-    url: '/form/addons/payment-allocation/process-receipt',
+    url: '/payment-allocation/process-receipt',
     method: 'post',
     data: {
       //  DSL Query
@@ -242,7 +214,4 @@ export function process({
       invoice_selections: invoiceSelectionList
     }
   })
-    .then(response => {
-      return response
-    })
 }
