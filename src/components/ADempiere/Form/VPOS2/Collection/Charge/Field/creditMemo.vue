@@ -16,20 +16,20 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <template>
   <el-form-item
-    :label="$t('pointOfSales.collection.customerAccount')"
+    :label="$t('pointOfSales.collection.creditMemo')"
     class="form-item-criteria"
     style="margin: 0px;width: 100%;"
   >
     <el-select
-      v-model="bankAccount"
+      v-model="creditMemo"
       filterable
       clearable
-      @visible-change="findBankAccounts"
+      @visible-change="findCreditMemo"
     >
       <el-option
-        v-for="item in listBankAccounts"
+        v-for="item in listCustomerCredits"
         :key="item.id"
-        :label="item.name"
+        :label="item.document_no + ' - ' + item.document_date + ' - ' + formatPrice(item.open_amount, item.currency.iso_code)"
         :value="item.id"
       />
     </el-select>
@@ -40,10 +40,12 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 import { computed, defineComponent, watch } from '@vue/composition-api'
 
 import store from '@/store'
+// utils and helper methods
+import { formatPrice } from '@/utils/ADempiere/valueFormat.js'
 import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({
-  name: 'banksAccounts',
+  name: 'creditMemo',
   props: {
     isRefund: {
       type: Boolean,
@@ -51,39 +53,39 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const listBankAccounts = computed(() => {
+    const listCustomerCredits = computed(() => {
       return store.getters.getAttributeField({
-        field: 'bankAccounts',
+        field: 'customerCredits',
         attribute: 'list'
       })
     })
 
-    const bankAccount = computed({
+    const creditMemo = computed({
       get() {
-        const banck = store.getters.getAttributeField({
-          field: 'bankAccounts',
-          attribute: 'currentAccount'
+        const currentAccount = store.getters.getAttributeField({
+          field: 'customerCredits',
+          attribute: 'currentCustomerCredist'
         })
-        if (banck) return banck.id
+        if (currentAccount) return currentAccount.id
         return ''
       },
       // setter
-      set(account) {
-        let currentAccount
-        if (!isEmptyValue(account)) {
-          currentAccount = listBankAccounts.value.find(list => list.id === account)
+      set(creditMemo) {
+        let currentCredit
+        if (!isEmptyValue(creditMemo)) {
+          currentCredit = listCustomerCredits.value.find(list => list.id === creditMemo)
         }
         store.commit('setAttributeField', {
-          field: 'bankAccounts',
-          attribute: 'currentAccount',
-          value: currentAccount
+          field: 'customerCredits',
+          attribute: 'currentCustomerCredist',
+          value: currentCredit
         })
       }
     })
 
-    function findBankAccounts(show) {
+    function findCreditMemo(show) {
       if (!show) return
-      store.dispatch('listAccounts')
+      store.dispatch('listCustomerCreditsMemo')
     }
 
     function setDataAccount(account) {
@@ -107,39 +109,41 @@ export default defineComponent({
       })
     }
 
-    function clearDataAccount(value = undefined) {
-      store.commit('setAttributeField', {
-        field: 'field',
-        attribute: 'phone',
-        value
-      })
-      store.commit('setAttributeField', {
-        field: 'field',
-        attribute: 'value',
-        value
-      })
-      store.commit('setAttributeField', {
-        field: 'banks',
-        attribute: 'issuingBank',
-        value
-      })
-    }
+    // function clearDataAccount(value = undefined) {
+    //   store.commit('setAttributeField', {
+    //     field: 'field',
+    //     attribute: 'phone',
+    //     value
+    //   })
+    //   store.commit('setAttributeField', {
+    //     field: 'field',
+    //     attribute: 'value',
+    //     value
+    //   })
+    //   store.commit('setAttributeField', {
+    //     field: 'banks',
+    //     attribute: 'issuingBank',
+    //     value
+    //   })
+    // }
 
-    watch(bankAccount, (newValue, oldValue) => {
+    watch(creditMemo, (newValue, oldValue) => {
       if (newValue !== oldValue) {
-        const account = listBankAccounts.value.find(list => list.id === newValue)
-        if (isEmptyValue(account)) {
-          clearDataAccount()
-        } else {
-          setDataAccount(account)
-        }
+        const creditMemo = listCustomerCredits.value.find(list => list.id === newValue)
+        console.log({ creditMemo })
+        // if (isEmptyValue(account)) {
+        //   clearDataAccount()
+        // } else {
+        //   setDataAccount(account)
+        // }
       }
     })
 
     return {
-      bankAccount,
-      listBankAccounts,
-      findBankAccounts,
+      creditMemo,
+      listCustomerCredits,
+      formatPrice,
+      findCreditMemo,
       setDataAccount
     }
   }

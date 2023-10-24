@@ -21,10 +21,18 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       style="text-align: right;padding-top: 5px;"
     >
       <el-button
+        type="danger"
+        icon="el-icon-close"
+        class="button-base-icon"
+        :disabled="isLoading"
+        :loading="isLoading"
+        @click="close"
+      />
+      <el-button
         type="success"
         icon="el-icon-plus"
         class="button-base-icon"
-        :disabled="isLoading"
+        :disabled="isLoading || payAmount <= 0"
         :loading="isLoading"
         @click="addPayment"
       />
@@ -43,6 +51,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 <script>
 import { defineComponent, computed, ref } from '@vue/composition-api'
 import store from '@/store'
+import lang from '@/lang'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { getPaymentValues } from '@/utils/ADempiere/dictionary/form/VPOS'
@@ -61,36 +70,98 @@ export default defineComponent({
       })
     })
 
+    const currentPos = computed(() => {
+      return store.getters.getVPOS
+    })
+
+    const payAmount = computed(() => {
+      return store.getters.getPayAmount
+    })
+
+    const currentOrder = computed(() => {
+      return store.getters.getCurrentOrder
+    })
+
     function addPayment() {
       const { payment_method } = store.getters.getPaymentMethods
+      isLoading.value = true
       if (
         !isEmptyValue(payment_method) &&
         isEmptyValue(currentAccount.value) &&
         payment_method.tender_type === 'P'
       ) {
         store.dispatch('newCustomerBankAccount')
+          .then((responseCutomer) => {
+            const { bank_id, customer_id } = responseCutomer
+            const params = getPaymentValues({
+              bank_id,
+              customer_bank_account_id: customer_id
+            })
+            store.dispatch('addPayment', params)
+              .then(() => {
+                isLoading.value = false
+              })
+          })
+        return
       }
-      isLoading.value = true
       const params = getPaymentValues({})
       store.dispatch('addPayment', params)
         .then(() => {
           isLoading.value = false
-          // defaultValueCollections()
         })
     }
 
     function processOrdes() {
-      isLoadingProcess.value = true
-      store.dispatch('process', {})
-        .then(() => {
-          isLoadingProcess.value = false
+      const {
+        grand_total,
+        charge_amount,
+        credit_amount,
+        payment_amount,
+        refund_amount
+      } = currentOrder.value
+      const total = Number(grand_total.value) + Number(charge_amount.value) - Number(credit_amount.value) - Number(payment_amount.value)
+      console.log({ total })
+      console.log({
+        grand_total,
+        charge_amount,
+        credit_amount,
+        payment_amount,
+        refund_amount
+      })
+      if (total === 0) {
+        isLoadingProcess.value = true
+        store.dispatch('process', {})
+          .then(() => {
+            isLoadingProcess.value = false
+          })
+      } else if (Number(refund_amount.value) > 0) {
+        store.dispatch('setModalDialogVPOS', {
+          title: lang.t('form.pos.collect.overdrawnInvoice.below'),
+          doneMethod: () => {
+            if (Number(refund_amount.value) > Number(currentPos.value.write_off_amount_tolerance.value)) {
+              console.log('Pedir Ping')
+              return
+            }
+            store.dispatch('process', {})
+          },
+          // TODO: Change to string and import dynamic in component
+          componentPath: () => import('@/components/ADempiere/Form/VPOS2/DialogInfo/openBalance.vue'),
+          isShowed: true
         })
+      }
+    }
+    function close() {
+      store.commit('setShowCollection', false)
     }
 
     return {
       isLoading,
+      payAmount,
+      currentOrder,
+      currentPos,
       currentAccount,
       isLoadingProcess,
+      close,
       addPayment,
       processOrdes
     }

@@ -47,7 +47,10 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         <el-col :span="8">
           <currencie />
         </el-col>
-        <!-- Payment Methods (P) -->
+        <!-- Payment Methods (Fields Display Logic) -->
+        <el-col v-if="isDisplayFieldPayment('creditMemo')" :span="8">
+          <credit-memo />
+        </el-col>
         <el-col v-if="isDisplayFieldPayment('recipientBank')" :span="8">
           <recipient-bank />
         </el-col>
@@ -124,12 +127,13 @@ import paymentMethods from '@/components/ADempiere/Form/VPOS2/Collection/Charge/
 import currencie from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/currencies'
 import recipientBank from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/recipientBank.vue'
 import banksAccounts from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/banksAccounts.vue'
+import creditMemo from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/creditMemo.vue'
 import issuingBank from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/issuingBank.vue'
 import bank from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/bank.vue'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { formatPrice } from '@/utils/ADempiere/formatValue/numberFormat'
-import { getCurrencyPayment, isDisplayFieldPayment } from '@/utils/ADempiere/dictionary/form/VPOS'
+import { getCurrencyPayment, clearFieldsCollections, isDisplayFieldPayment } from '@/utils/ADempiere/dictionary/form/VPOS'
 
 export default defineComponent({
   name: 'Charge',
@@ -140,6 +144,7 @@ export default defineComponent({
     paymentMethods,
     recipientBank,
     banksAccounts,
+    creditMemo,
     issuingBank
   },
   setup() {
@@ -241,6 +246,7 @@ export default defineComponent({
         paymentMethods: currentPaymentMethod
       })
       store.commit('setAvailableCurrencies', currency)
+      clearFieldsCollections()
     }
 
     const amount = computed(() => {

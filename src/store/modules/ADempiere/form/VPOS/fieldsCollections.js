@@ -19,6 +19,7 @@ import {
   listAvailablePaymentMethods,
   listAvailableCurrencies,
   createCustomerBankAccount,
+  listCustomerCredits,
   listBankAccounts,
   listBanks
 } from '@/api/ADempiere/form/VPOS'
@@ -52,6 +53,10 @@ const fieldsCollections = {
     phone: '',
     referenceNo: '',
     description: ''
+  },
+  customerCredits: {
+    list: [],
+    currentCustomerCredist: {}
   },
   amount: null
 }
@@ -209,21 +214,25 @@ export default {
     }) {
       return new Promise(resolve => {
         const currentPos = getters.getVPOS
+        const currentOrder = getters.getCurrentOrder
+        let bankId
         const banck = getters.getAttributeField({
           field: 'banks',
           attribute: 'recipientBank'
         })
+        if (banck) bankId = banck.id
         if (isEmptyValue(currentPos.id)) resolve({})
         listBankAccounts({
           posId: currentPos.id,
-          bankId: banck.id
+          bankId,
+          customersId: currentOrder.customer.id
         })
           .then(response => {
-            const { records } = response
+            const { customer_bank_accounts } = response
             commit('setAttributeField', {
               field: 'bankAccounts',
               attribute: 'list',
-              value: records
+              value: customer_bank_accounts
             })
           })
           .catch(error => {
@@ -295,6 +304,51 @@ export default {
             })
             commit('setAttributeField', {
               field: 'bankAccounts',
+              attribute: 'list',
+              value: []
+            })
+            resolve({})
+          })
+      })
+    },
+    listCustomerCreditsMemo({
+      commit,
+      getters
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        const currentOrder = getters.getCurrentOrder
+        let document_type_id
+        const currentPaymentMethods = getters.getPaymentMethods
+        if (currentPaymentMethods) document_type_id = currentPaymentMethods.document_type_id
+        if (isEmptyValue(currentPos.id)) resolve({})
+        listCustomerCredits({
+          posId: currentPos.id,
+          customersId: currentOrder.customer.id,
+          documentTypeId: document_type_id
+        })
+          .then(response => {
+            const { records } = response
+            commit('setAttributeField', {
+              field: 'customerCredits',
+              attribute: 'list',
+              value: records
+            })
+          })
+          .catch(error => {
+            console.warn(`List Customer Credit Memo: ${error.message}. Code: ${error.code}`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            commit('setAttributeField', {
+              field: 'customerCredits',
               attribute: 'list',
               value: []
             })
