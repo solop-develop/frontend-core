@@ -954,3 +954,35 @@ export function getConversionRate({
     }
   })
 }
+
+/**
+ * List Banks
+ */
+export function listBanks({
+  posId
+}) {
+  return request({
+    url: `point-of-sales/${posId}/banks`,
+    method: 'get',
+    params: {
+      page_size: 100
+    }
+  })
+}
+
+/**
+ * List Bank Accounts
+ */
+export function listBankAccounts({
+  posId,
+  bankId
+}) {
+  return request({
+    url: `point-of-sales/${posId}/bank-accounts`,
+    method: 'get',
+    params: {
+      page_size: 100,
+      bank_id: bankId
+    }
+  })
+}

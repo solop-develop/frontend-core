@@ -91,9 +91,14 @@ export default {
           })
           .catch(error => {
             console.warn(`Set PointOfSales: ${error.message}. Code: ${error.code}. ID: ${id}`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             resolve({})
@@ -122,9 +127,14 @@ export default {
           })
           .catch(error => {
             console.warn(`List All PointOfSales: ${error.message}. Code: ${error.code}`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             resolve([])
@@ -186,9 +196,14 @@ export default {
           })
           .catch(error => {
             console.warn(`List of Available Price: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             resolve([])
@@ -216,9 +231,14 @@ export default {
           })
           .catch(error => {
             console.warn(`List of Available Warehouses: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             resolve([])
@@ -246,9 +266,14 @@ export default {
           })
           .catch(error => {
             console.warn(`List of Available Document Types: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             resolve([])

@@ -119,9 +119,14 @@ export default {
           })
           .catch(error => {
             console.warn(`Add Payment: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             resolve({})
@@ -151,9 +156,14 @@ export default {
           })
           .catch(error => {
             console.warn(`Add Payment: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             resolve({})
@@ -193,9 +203,14 @@ export default {
           })
           .catch(error => {
             console.warn(`Add Payment: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             resolve({})
@@ -236,9 +251,14 @@ export default {
             resolve(response)
           })
           .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             resolve([])
@@ -273,6 +293,7 @@ export default {
             commit('setShowCollection', false)
             dispatch('setModalDialogVPOS', {
               title: `Orden ${currentOrder.document_no} Procesada`,
+              type: 'success',
               doneMethod: () => {
                 commit('setListOrderLines', [])
                 dispatch('newOrder')
@@ -285,9 +306,25 @@ export default {
           })
           .catch(error => {
             console.warn(`Process Orders: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            dispatch('setModalDialogVPOS', {
+              title: message,
+              type: 'error',
+              doneMethod: () => {
+                dispatch('process', {})
+              },
+              // TODO: Change to string and import dynamic in component
+              componentPath: () => import('@/components/ADempiere/Form/VPOS2/DialogInfo/infoOrder.vue'),
+              isShowed: true
+            })
+
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             resolve({})

@@ -128,9 +128,14 @@ export default {
           })
           .catch(error => {
             console.warn(`New Order: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             resolve({})
@@ -227,9 +232,14 @@ export default {
             resolve(orders)
           })
           .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             resolve([])
@@ -295,9 +305,14 @@ export default {
           })
           .catch(error => {
             console.warn(`Get Order: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             resolve({})
@@ -339,9 +354,14 @@ export default {
           })
           .catch(error => {
             console.warn(`Delete Order: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             resolve({})
@@ -379,9 +399,14 @@ export default {
           })
           .catch(error => {
             console.warn(`Delete Order: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             resolve({})
