@@ -41,32 +41,27 @@ export function requestLookupList({
   //
   tableName,
   columnName,
-  columnUuid,
+  columnId,
   //
   pageToken,
   pageSize = RECORD_ROWS_BY_LIST
 }) {
-  const column_name = columnName
-  const table_name = tableName
-  const process_parameter_id = processParameterId
-  const browse_field_id = browseFieldId
-  const id = fieldId
   let url
   switch (true) {
-    case (!isEmptyValue(columnName) && isEmptyValue(tableName)):
-      url = `/user-interface/lookups/column/${column_name}`
+    case (!isEmptyValue(columnId)):
+      url = `/user-interface/lookups/column/${columnId}`
       break
     case !isEmptyValue(fieldId):
-      url = `/user-interface/lookups/field/${id}`
+      url = `/user-interface/lookups/field/${fieldId}`
       break
     case !isEmptyValue(processParameterId):
-      url = `/user-interface/lookups/parameter/${process_parameter_id}`
+      url = `/user-interface/lookups/parameter/${processParameterId}`
       break
     case !isEmptyValue(browseFieldId):
-      url = `/user-interface/lookups/query-criteria/${browse_field_id}`
+      url = `/user-interface/lookups/query-criteria/${browseFieldId}`
       break
     default:
-      url = `/user-interface/lookups/${table_name}/${column_name}`
+      url = `/user-interface/lookups/${tableName}/${columnName}`
       break
   }
 
@@ -81,7 +76,7 @@ export function requestLookupList({
       //
       table_name: tableName,
       column_name: columnName,
-      column_uuid: columnUuid,
+      column_id: columnId,
       // Page Data
       page_token: pageToken,
       page_size: pageSize

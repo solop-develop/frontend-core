@@ -27,6 +27,7 @@ import { requestLookupList } from '@/api/ADempiere/userInterface/lookups.ts'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { getContextAttributes, generateContextKey } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import { showMessage } from '@/utils/ADempiere/notification'
+import { getOptionsList } from '@/utils/ADempiere/lookups.ts'
 
 const initStateLookup = {
   lookupList: {}
@@ -65,6 +66,51 @@ const lookupManager = {
   },
 
   actions: {
+    addLookupsList({ commit, rootGetters }, {
+      isAddBlankValue = true,
+      blankValue,
+      parentUuid,
+      containerUuid,
+      uuid,
+      contextColumnNames = [],
+      recordsList = []
+    }) {
+      return new Promise(resolve => {
+        const contextAttributesList = getContextAttributes({
+          parentUuid,
+          containerUuid,
+          contextColumnNames,
+          isBooleanToString: true
+        })
+
+        const clientId = rootGetters.getSessionContextClientId
+
+        let key = clientId
+        if (!isEmptyValue(uuid)) {
+          key += `|${uuid}`
+        }
+
+        const contextKey = generateContextKey(contextAttributesList)
+        key += contextKey
+
+        const optionsList = getOptionsList({
+          recordsList: recordsList,
+          isAddBlankValue,
+          blankValue
+        })
+
+        commit('setLookupList', {
+          clientId,
+          parentUuid, // used by suscription filter
+          containerUuid, // used by suscription filter
+          contextAttributesList,
+          optionsList,
+          key
+        })
+
+        resolve(optionsList)
+      })
+    },
 
     /**
      * Get display column from lookup
@@ -82,20 +128,19 @@ const lookupManager = {
       parentUuid,
       containerUuid,
       contextColumnNames = [],
+      fieldId,
       fieldUuid,
       processParameterId,
       browseFieldId,
       browseFieldUuid,
       processParameterUuid,
-      fieldId,
-      id,
       //
       referenceUuid,
       searchValue,
       //
       tableName,
       columnName,
-      columnUuid
+      columnId
     }) {
       return new Promise(resolve => {
         // if (isEmptyValue(referenceUuid) && isEmptyValue(fieldUuid) && isEmptyValue(processParameterUuid) && isEmptyValue(browseFieldUuid) &&
@@ -111,58 +156,42 @@ const lookupManager = {
           isBooleanToString: true
         })
 
+        const clientId = rootGetters.getSessionContextClientId
+
+        let key = clientId
+        if (!isEmptyValue(fieldId)) {
+          key += `|${fieldUuid}`
+        } else if (!isEmptyValue(processParameterId)) {
+          key += `|${processParameterUuid}`
+        } else if (!isEmptyValue(browseFieldId)) {
+          key += `|${browseFieldUuid}`
+        } else if (!isEmptyValue(columnId)) {
+          key += `|${columnId}`
+        } else if (!isEmptyValue(tableName) && !isEmptyValue(columnName)) {
+          key += `|${tableName}.${columnName}`
+        }
+
+        const contextKey = generateContextKey(contextAttributesList)
+        key += contextKey
+
         requestLookupList({
           contextAttributesList,
           browseFieldId,
           processParameterId,
-          fieldId: id,
+          fieldId,
           //
           referenceUuid,
           searchValue,
           tableName,
           columnName,
-          columnUuid
+          columnId
         })
           .then(lookupListResponse => {
-            const optionsList = []
-
-            lookupListResponse.recordsList.forEach(itemLookup => {
-              const {
-                KeyColumn: value,
-                DisplayColumn: displayedValue
-              } = itemLookup.values
-
-              if (!isEmptyValue(value)) {
-                optionsList.push({
-                  displayedValue,
-                  value,
-                  uuid: itemLookup.uuid
-                })
-              }
+            const optionsList = getOptionsList({
+              recordsList: lookupListResponse.recordsList,
+              isAddBlankValue,
+              blankValue
             })
-
-            // add blanck value option in fist element on list
-            if (isAddBlankValue) {
-              optionsList.unshift({
-                displayedValue: ' ',
-                value: blankValue,
-                uuid: undefined
-              })
-            }
-
-            const clientId = rootGetters.getSessionContextClientId
-
-            let key = clientId
-            if (!isEmptyValue(fieldUuid)) {
-              key += `|${fieldUuid}`
-            } else if (!isEmptyValue(processParameterId)) {
-              key += `|${processParameterUuid}`
-            } else if (!isEmptyValue(browseFieldId)) {
-              key += `|${browseFieldUuid}`
-            }
-
-            const contextKey = generateContextKey(contextAttributesList)
-            key += contextKey
 
             commit('setLookupList', {
               clientId,

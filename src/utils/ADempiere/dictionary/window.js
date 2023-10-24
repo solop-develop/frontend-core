@@ -2089,7 +2089,7 @@ export const containerManager = {
       containerUuid,
       contextColumnNames,
       fieldUuid: uuid,
-      id,
+      fieldId: id,
       columnName,
       searchValue,
       tableName,
