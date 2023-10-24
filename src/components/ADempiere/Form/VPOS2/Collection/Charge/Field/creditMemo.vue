@@ -29,7 +29,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       <el-option
         v-for="item in listCustomerCredits"
         :key="item.id"
-        :label="item.document_no + ' - ' + item.document_date + ' - ' + formatPrice(item.open_amount, item.currency.iso_code)"
+        :label="item.document_no + ' - ' + item.document_date + ' - ' + formatPrice(item.open_amount.value, item.currency.iso_code)"
         :value="item.id"
       />
     </el-select>
@@ -88,54 +88,52 @@ export default defineComponent({
       store.dispatch('listCustomerCreditsMemo')
     }
 
-    function setDataAccount(account) {
+    function setData(creditMemo) {
       store.commit('setAttributeField', {
         field: 'field',
-        attribute: 'phone',
-        value: account.account_no
+        attribute: 'referenceNo',
+        value: creditMemo.document_no
+      })
+      store.commit('setPayAmount', creditMemo.open_amount.value)
+      store.commit('setAttributeField', {
+        field: 'field',
+        attribute: 'description',
+        value: creditMemo.description
       })
       store.commit('setAttributeField', {
         field: 'field',
-        attribute: 'value',
-        value: account.driver_license
-      })
-      store.commit('setAttributeField', {
-        field: 'banks',
-        attribute: 'issuingBank',
-        value: {
-          ...account,
-          id: account.bank_id
-        }
+        attribute: 'date',
+        value: creditMemo.document_date
       })
     }
 
-    // function clearDataAccount(value = undefined) {
-    //   store.commit('setAttributeField', {
-    //     field: 'field',
-    //     attribute: 'phone',
-    //     value
-    //   })
-    //   store.commit('setAttributeField', {
-    //     field: 'field',
-    //     attribute: 'value',
-    //     value
-    //   })
-    //   store.commit('setAttributeField', {
-    //     field: 'banks',
-    //     attribute: 'issuingBank',
-    //     value
-    //   })
-    // }
+    function clearData(value = undefined) {
+      store.commit('setAttributeField', {
+        field: 'field',
+        attribute: 'referenceNo',
+        value
+      })
+      store.commit('setPayAmount', value)
+      store.commit('setAttributeField', {
+        field: 'field',
+        attribute: 'description',
+        value
+      })
+      store.commit('setAttributeField', {
+        field: 'field',
+        attribute: 'date',
+        value
+      })
+    }
 
     watch(creditMemo, (newValue, oldValue) => {
       if (newValue !== oldValue) {
         const creditMemo = listCustomerCredits.value.find(list => list.id === newValue)
-        console.log({ creditMemo })
-        // if (isEmptyValue(account)) {
-        //   clearDataAccount()
-        // } else {
-        //   setDataAccount(account)
-        // }
+        if (isEmptyValue(creditMemo)) {
+          clearData()
+        } else {
+          setData(creditMemo)
+        }
       }
     })
 
@@ -144,7 +142,7 @@ export default defineComponent({
       listCustomerCredits,
       formatPrice,
       findCreditMemo,
-      setDataAccount
+      setData
     }
   }
 })

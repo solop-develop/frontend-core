@@ -120,14 +120,6 @@ export default defineComponent({
         refund_amount
       } = currentOrder.value
       const total = Number(grand_total.value) + Number(charge_amount.value) - Number(credit_amount.value) - Number(payment_amount.value)
-      console.log({ total })
-      console.log({
-        grand_total,
-        charge_amount,
-        credit_amount,
-        payment_amount,
-        refund_amount
-      })
       if (total === 0) {
         isLoadingProcess.value = true
         store.dispatch('process', {})
@@ -139,7 +131,9 @@ export default defineComponent({
           title: lang.t('form.pos.collect.overdrawnInvoice.below'),
           doneMethod: () => {
             if (Number(refund_amount.value) > Number(currentPos.value.write_off_amount_tolerance.value)) {
-              console.log('Pedir Ping')
+              /**
+               * Request PIN
+               */
               return
             }
             store.dispatch('process', {})

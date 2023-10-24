@@ -328,11 +328,15 @@ export default {
           documentTypeId: document_type_id
         })
           .then(response => {
+            let validateRecords = []
             const { records } = response
+            if (!isEmptyValue(records)) {
+              validateRecords = records.filter(list => Number(list.open_amount.value) > 0)
+            }
             commit('setAttributeField', {
               field: 'customerCredits',
               attribute: 'list',
-              value: records
+              value: validateRecords
             })
           })
           .catch(error => {

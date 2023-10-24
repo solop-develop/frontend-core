@@ -393,6 +393,7 @@ export function isDisplayFieldPayment(
       isShow = ['A'].includes(payment_method.tender_type)
       break
     case 'creditMemo':
+    case 'Description':
       isShow = ['M'].includes(payment_method.tender_type)
       break
     default:
