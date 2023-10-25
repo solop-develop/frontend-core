@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
 
 // API Request Methods
 import {
-  process,
-  listPayments,
-  listInvoices
+  requestProcess,
+  requestListPayments,
+  requestListInvoices
 } from '@/api/ADempiere/form/VAllocation.js'
 
 // Utils and Helper Methods
@@ -81,6 +81,7 @@ const VAllocation = {
 
 export default {
   state: VAllocation,
+
   mutations: {
     setSearchCriteria(state, structure) {
       state.searchCriteria = structure
@@ -173,6 +174,7 @@ export default {
       state.listSelectAll = list
     }
   },
+
   actions: {
     findListPayment({ commit, state }) {
       return new Promise(resolve => {
@@ -193,7 +195,7 @@ export default {
           criteria: 'isLoadTables',
           value: true
         })
-        listPayments({
+        requestListPayments({
           businessPartnerId,
           businessPartnerUuid,
           date,
@@ -259,7 +261,7 @@ export default {
           criteria: 'isLoadTables',
           value: true
         })
-        listInvoices({
+        requestListInvoices({
           businessPartnerId,
           businessPartnerUuid,
           date,
@@ -326,7 +328,7 @@ export default {
           listInvoce = state.listSelectAll.filter(list => list.type === 'isInvoce')
           listPayments = state.listSelectAll.filter(list => list.type === 'isPayment')
         }
-        process({
+        requestProcess({
           date,
           chargeId,
           currencyId,
@@ -367,6 +369,7 @@ export default {
       return
     }
   },
+
   getters: {
     getSearchFilter(state) {
       return state.searchCriteria
