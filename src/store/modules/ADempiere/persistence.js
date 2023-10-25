@@ -179,7 +179,6 @@ const persistence = {
           field,
           callout: field.callout,
           columnName,
-          valueType: field.valueType,
           value,
           oldValue
         })
