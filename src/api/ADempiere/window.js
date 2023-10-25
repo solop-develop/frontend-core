@@ -113,52 +113,6 @@ export function requestGetContextInfoValue({
     })
 }
 
-/**
- * Run callout request
- * @param {string}  windowUuid
- * @param {number}  windowNo
- * @param {string}  tabUuid
- * @param {string}  tableName
- * @param {string}  columnName
- * @param {mixed}   value
- * @param {mixed}   oldValue
- * @param {string}  callout
- * @param {array}   attributesList
- * @returns {Map} Entity
- */
-export function runCallOutRequest({
-  windowUuid,
-  windowNo,
-  tabUuid,
-  tableName,
-  contextAttributesList = [],
-  columnName,
-  callout,
-  valueType,
-  value,
-  oldValue
-}) {
-  return request({
-    url: '/user-interface/window/run-callout',
-    method: 'post',
-    data: {
-      window_uuid: windowUuid,
-      window_no: windowNo,
-      tab_uuid: tabUuid,
-      table_name: tableName,
-      context_attributes: contextAttributesList,
-      column_name: columnName,
-      callout,
-      value_type: valueType,
-      value,
-      old_value: oldValue
-    }
-  })
-    .then(response => {
-      return response
-    })
-}
-
 // Get list of log for a records
 export function requestListEntityLogs({
   tableName,

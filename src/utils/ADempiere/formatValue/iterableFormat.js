@@ -16,7 +16,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+// Utils and Helper Methods
+import { getTypeOfValue, isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 /**
  * Convert array pairs of object to literal object { key: value }
@@ -56,7 +57,12 @@ export function convertObjectToKeyValue({
   return Object.keys(object).map(key => {
     const returnPairs = {}
     returnPairs[keyName] = key
-    returnPairs[valueName] = object[key]
+
+    let val = object[key]
+    if (getTypeOfValue(val) === 'OBJECT') {
+      val = val.value
+    }
+    returnPairs[valueName] = val
     return returnPairs
   })
 }
