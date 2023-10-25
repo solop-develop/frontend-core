@@ -19,11 +19,13 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
+// Constants
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+
 /**
  * Is Chats Entries
  */
-
-export function existsChatsEntries({
+export function requestExistsChatsEntries({
   recordId,
   tableName
 }) {
@@ -35,11 +37,17 @@ export function existsChatsEntries({
 
 export function requestListEntityChats({
   recordId,
-  tableName
+  tableName,
+  pageToken,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
-    url: `logs/chat-entries/${tableName}/${recordId}`,
-    method: 'get'
+    url: `logs/chat-entities/${tableName}/${recordId}`,
+    method: 'get',
+    params: {
+      page_token: pageToken,
+      page_sise: pageSize
+    }
   })
 }
 
