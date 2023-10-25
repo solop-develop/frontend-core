@@ -32,7 +32,6 @@ import { getTypeOfValue, isEmptyValue, isSameValues } from '@/utils/ADempiere/va
 import { showMessage } from '@/utils/ADempiere/notification'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
 import { isDateField, isDecimalField } from '@/utils/ADempiere/references'
-import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 
 const calloutManager = {
   actions: {
@@ -95,16 +94,9 @@ const calloutManager = {
                 value
               }
             } else if (isDecimalField(displayType)) {
-              let numberValue = value
-              if (Number.isInteger(value)) {
-                numberValue = formatQuantity({
-                  value,
-                  isInteger: false
-                })
-              }
               currentValue = {
                 type: 'decimal',
-                value: numberValue
+                value
               }
             }
           }
