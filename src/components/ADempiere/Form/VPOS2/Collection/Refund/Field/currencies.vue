@@ -142,10 +142,6 @@ export default defineComponent({
                 !isEmptyValue(divide_rate)
               ) {
                 const amountRate = (multiply_rate.value > divide_rate.value) ? multiply_rate.value : divide_rate.value
-                console.log({
-                  amountConvert,
-                  amountRate: amountRate
-                }, (amountConvert / amountRate))
                 amountConvert = amountConvert / Number(amountRate)
                 store.commit('setAttributeField', {
                   field: 'fieldsRefunds',
