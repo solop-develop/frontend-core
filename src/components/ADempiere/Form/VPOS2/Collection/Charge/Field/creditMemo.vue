@@ -29,7 +29,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       <el-option
         v-for="item in listCustomerCredits"
         :key="item.id"
-        :label="item.document_no + ' - ' + item.document_date + ' - ' + formatPrice(item.open_amount.value, item.currency.iso_code)"
+        :label="item.document_no + ' - ' + item.document_date + ' - ' + formatPrice({ value: item.open_amount.value, currency: item.currency.iso_code })"
         :value="item.id"
       />
     </el-select>
@@ -41,7 +41,7 @@ import { computed, defineComponent, watch } from '@vue/composition-api'
 
 import store from '@/store'
 // utils and helper methods
-import { formatPrice } from '@/utils/ADempiere/valueFormat.js'
+import { formatPrice } from '@/utils/ADempiere/formatValue/numberFormat'
 import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({

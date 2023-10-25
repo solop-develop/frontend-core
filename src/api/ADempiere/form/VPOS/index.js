@@ -975,11 +975,11 @@ export function listBanks({
  */
 export function listBankAccounts({
   posId,
-  customersId,
+  customerId,
   bankId
 }) {
   return request({
-    url: `point-of-sales/${posId}/customers/${customersId}/bank-accounts`,
+    url: `point-of-sales/${posId}/customers/${customerId}/bank-accounts`,
     method: 'get',
     params: {
       page_size: 100,
@@ -1019,11 +1019,11 @@ export function createCustomerBankAccount({
  */
 export function listCustomerCredits({
   posId,
-  customersId,
+  customerId,
   documentTypeId
 }) {
   return request({
-    url: `point-of-sales/${posId}/customers/${customersId}/credits`,
+    url: `point-of-sales/${posId}/customers/${customerId}/credits`,
     method: 'get',
     params: {
       page_size: 100,

@@ -225,7 +225,7 @@ export default {
         listBankAccounts({
           posId: currentPos.id,
           bankId,
-          customersId: currentOrder.customer.id
+          customerId: currentOrder.customer.id
         })
           .then(response => {
             const { customer_bank_accounts } = response
@@ -324,7 +324,7 @@ export default {
         if (isEmptyValue(currentPos.id)) resolve({})
         listCustomerCredits({
           posId: currentPos.id,
-          customersId: currentOrder.customer.id,
+          customerId: currentOrder.customer.id,
           documentTypeId: document_type_id
         })
           .then(response => {

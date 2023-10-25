@@ -22,18 +22,18 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     <div slot="header" class="clearfix">
       <span style="float: right;text-align: end">
         <b>
-          {{ $t('form.pos.collect.overdrawnInvoice.customerLimit') }}: {{ formatPrice(currentPos.write_off_amount_tolerance.value, currentPos.price_list.currency.iso_code) }}
+          {{ $t('form.pos.collect.overdrawnInvoice.customerLimit') }}: {{ formatPrice({ value: currentPos.write_off_amount_tolerance.value, currency: currentPos.price_list.currency.iso_code }) }}
         </b>
       </span>
     </div>
     <el-form label-width="120px">
       <el-form-item>
         <p>
-          <b> {{ $t('form.pos.collect.orderTotal') }} </b> {{ formatPrice(currentOrder.grand_total.value, currentOrder.price_list.currency.iso_codeCode) }}
+          <b> {{ $t('form.pos.collect.orderTotal') }} </b> {{ formatPrice({ value: currentOrder.grand_total.value, currency: currentOrder.price_list.currency.iso_codeCode }) }}
           <el-divider direction="vertical" />
-          <b> {{ $t('form.pos.collect.totalInvoiced') }} </b> {{ formatPrice(currentOrder.payment_amount.value, currentOrder.price_list.currency.iso_codeCode) }}
+          <b> {{ $t('form.pos.collect.totalInvoiced') }} </b> {{ formatPrice({ value: currentOrder.payment_amount.value, currency: currentOrder.price_list.currency.iso_codeCode }) }}
           <el-divider direction="vertical" />
-          <b> {{ $t('form.pos.collect.pending') }} </b> {{ formatPrice(currentOrder.refund_amount.value, currentOrder.price_list.currency.iso_codeCode) }}
+          <b> {{ $t('form.pos.collect.pending') }} </b> {{ formatPrice({ value: currentOrder.refund_amount.value, currency: currentOrder.price_list.currency.iso_codeCode }) }}
         </p>
       </el-form-item>
     </el-form>
@@ -48,7 +48,7 @@ import {
 
 import store from '@/store'
 // Utils and Helper Methods
-import { formatPrice } from '@/utils/ADempiere/valueFormat.js'
+import { formatPrice } from '@/utils/ADempiere/formatValue/numberFormat'
 
 export default defineComponent({
   name: 'OpenBalance',
