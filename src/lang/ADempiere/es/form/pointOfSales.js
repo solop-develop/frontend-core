@@ -35,6 +35,11 @@ const pointOfSales = {
       receivingBank: 'Banco Receptor',
       customerAccount: 'Cuenta de Cliente',
       issuingBank: 'Banco Emisor',
+      bankAccountType: {
+        label: 'Tipo de Cuenta Bancario',
+        currentAccount: 'Cuenta Corriente',
+        checking: 'Ahorros'
+      },
       code: 'Cédula',
       date: 'Fecha',
       phone: 'Teléfono',

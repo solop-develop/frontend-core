@@ -66,13 +66,16 @@ const fieldsCollections = {
     date: '',
     value: '',
     phone: '',
+    typeOptions: '1',
     amount: null,
     currencie: {},
     referenceNo: '',
     description: '',
+    accountNo: '',
     issuingBank: {},
-    paymentMethods: {},
+    bankAccountType: '',
     recipientBank: {},
+    paymentMethods: {},
     currentAccount: {},
     currentCustomerCredist: {}
   },
@@ -282,6 +285,11 @@ export default {
     newCustomerBankAccount({
       commit,
       getters
+    }, {
+      accountNo,
+      driverLicense,
+      bankId,
+      bankAccountType
     }) {
       return new Promise(resolve => {
         const currentPos = getters.getVPOS
@@ -298,13 +306,23 @@ export default {
           field: 'field',
           attribute: 'value'
         })
+        if (isEmptyValue(bankId)) {
+          bankId = banck.id
+        }
+        if (isEmptyValue(accountNo)) {
+          accountNo = phone
+        }
+        if (isEmptyValue(driverLicense)) {
+          driverLicense = value
+        }
         if (isEmptyValue(currentPos.id)) resolve({})
         createCustomerBankAccount({
           posId: currentPos.id,
-          bankId: banck.id,
+          bankId,
           customerId: currentOrder.customer.id,
-          accountNo: phone,
-          driverLicense: value
+          accountNo,
+          driverLicense,
+          bankAccountType
         })
           .then(response => {
             showMessage({
