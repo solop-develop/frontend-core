@@ -474,6 +474,7 @@ export default {
       },
       pinMessage: {
         pin: 'Ingrese Pin para ',
+        authorized: 'Pin Autorizado',
         documentType: 'cambiar tipo de documento',
         warehouse: 'cambiar almacén',
         price: 'cambiar precio',

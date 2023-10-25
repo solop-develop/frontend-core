@@ -115,11 +115,9 @@ export default defineComponent({
         charge_amount,
         credit_amount,
         payment_amount,
-        refund_amount,
         open_amount
       } = currentOrder.value
       const total = Number(grand_total.value) + Number(charge_amount.value) - Number(credit_amount.value) - Number(payment_amount.value)
-      console.log(Number(refund_amount.value), currentOrder.value)
       if (total === 0) {
         isLoadingProcess.value = true
         store.dispatch('process', {})

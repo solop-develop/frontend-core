@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import lang from '@/lang'
 // API Request Methods
 import {
   listAvailablePaymentMethods,
@@ -97,7 +98,6 @@ export default {
       state[field][attribute] = value
     },
     setDialogPin(state, modal) {
-      console.log({ modal })
       state.modalPinManager = modal
     },
     setShowedDialogPin(state, {
@@ -421,11 +421,10 @@ export default {
           requestedAccess,
           requestedAmount
         })
-          .then(response => {
-            console.log({ response })
+          .then(() => {
             showMessage({
               type: 'success',
-              message: 'Pin Autorizado',
+              message: lang.t('form.pos.pinMessage.authorized'),
               showClose: true
             })
             resolve(true)
