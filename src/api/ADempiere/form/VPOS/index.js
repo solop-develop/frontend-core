@@ -1032,6 +1032,27 @@ export function listCustomerCredits({
   })
 }
 
+/**
+ * Validate PIN
+ */
+export function validatePIN({
+  pin,
+  posId,
+  orderId,
+  requestedAccess,
+  requestedAmount
+}) {
+  return request({
+    url: `point-of-sales/${posId}/validate-pin`,
+    method: 'post',
+    data: {
+      pin,
+      order_id: orderId,
+      requested_access: requestedAccess,
+      requested_amount: requestedAmount
+    }
+  })
+}
 /** ___________________________________
  * |                                   |
  * |  Options Point of Sale Services   |
