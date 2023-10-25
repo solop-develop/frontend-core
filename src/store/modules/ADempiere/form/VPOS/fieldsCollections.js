@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import lang from '@/lang'
 // API Request Methods
 import {
   listAvailablePaymentMethods,
@@ -21,6 +22,7 @@ import {
   createCustomerBankAccount,
   listCustomerCredits,
   listBankAccounts,
+  validatePIN,
   listBanks
 } from '@/api/ADempiere/form/VPOS'
 // Utils and Helper Methods
@@ -52,13 +54,15 @@ const fieldsCollections = {
     date: '',
     phone: '',
     referenceNo: '',
-    description: ''
+    description: '',
+    pin: ''
   },
   customerCredits: {
     list: [],
     currentCustomerCredist: {}
   },
-  amount: null
+  amount: null,
+  modalPinManager: {}
 }
 
 export default {
@@ -79,9 +83,6 @@ export default {
     setPayAmount(state, amount) {
       state.amount = Number(amount)
     },
-    // setPayAmount(state, amount) {
-    //   state.amount = Number(amount)
-    // },
     /**
      * Update Attribute
      * Generic mutation that allows to change the state of the store
@@ -95,6 +96,14 @@ export default {
       value
     }) {
       state[field][attribute] = value
+    },
+    setDialogPin(state, modal) {
+      state.modalPinManager = modal
+    },
+    setShowedDialogPin(state, {
+      isShowed = false
+    }) {
+      state.modalPinManager.isShowed = isShowed
     }
   },
   actions: {
@@ -358,6 +367,90 @@ export default {
             })
           })
       })
+    },
+    setModalPin({ commit }, {
+      typePin,
+      componentPath,
+      containerManager = {},
+      beforeOpen = function() {},
+      doneMethod = function() {},
+      isDisabledDone = function() { return false },
+      cancelMethod = function() {},
+      loadData = function() {},
+      title,
+      requestedAmount,
+      requestedAccess,
+      isShowed = false
+    }) {
+      commit('setDialogPin', {
+        typePin,
+        componentPath,
+        containerManager,
+        beforeOpen,
+        doneMethod,
+        isDisabledDone,
+        loadData,
+        cancelMethod,
+        title,
+        requestedAmount,
+        requestedAccess,
+        isShowed
+      })
+    },
+    validatePIN({
+      commit,
+      getters
+    }, {
+      pin,
+      requestedAccess,
+      requestedAmount
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        const currentOrder = getters.getCurrentOrder
+        if (isEmptyValue(pin)) {
+          pin = getters.getAttributeField({
+            field: 'field',
+            attribute: 'pin'
+          })
+        }
+        validatePIN({
+          pin,
+          posId: currentPos.id,
+          orderId: currentOrder.id,
+          requestedAccess,
+          requestedAmount
+        })
+          .then(() => {
+            showMessage({
+              type: 'success',
+              message: lang.t('form.pos.pinMessage.authorized'),
+              showClose: true
+            })
+            resolve(true)
+          })
+          .catch(error => {
+            console.warn(`Validate Pin: ${error.message}. Code: ${error.code}`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve(false)
+          })
+          .finally(() => {
+            commit('setAttributeField', {
+              field: 'field',
+              attribute: 'pin',
+              value: ''
+            })
+          })
+      })
     }
   },
   getters: {
@@ -376,6 +469,28 @@ export default {
     getAttributeField: (state) => ({ field, attribute }) => {
       if (isEmptyValue(field) || isEmptyValue(attribute)) return ''
       return state[field][attribute]
+    },
+    getModalPin: (state) => {
+      return state.modalPinManager
+    },
+
+    getShowedModalPin: (state) => {
+      const modalDialog = state.modalPinManager
+      if (isEmptyValue(modalDialog)) {
+        return false
+      }
+      return Boolean(modalDialog.isShowed)
     }
+    // getModalPin: (state) => ({ typePin }) => {
+    //   return state.modalDialogManager[typePin]
+    // },
+
+    // getShowedModalPin: (state) => ({ typePin }) => {
+    //   const modalPin = state.modalPinManager[typePin]
+    //   if (isEmptyValue(modalPin)) {
+    //     return false
+    //   }
+    //   return Boolean(modalPin.isShowed)
+    // }
   }
 }

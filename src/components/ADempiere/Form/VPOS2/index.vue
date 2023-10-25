@@ -25,6 +25,8 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     <el-main style="padding: 0px 20px;">
       <main-order />
       <dialog-info />
+      {{ $store.getters.getShowedModalPin }}
+      <modal-pin />
       <el-drawer
         title="Cobranza"
         :visible.sync="showCollection"
@@ -55,6 +57,7 @@ import MainOrder from './MainOrder'
 import FooterOrder from './FooterOrder'
 import Collection from './Collection'
 import DialogInfo from './DialogInfo'
+import ModalPin from './DialogInfo/pin.vue'
 // Utils and Helper Methods
 // import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
@@ -63,6 +66,7 @@ export default defineComponent({
   components: {
     HeaderOrder,
     MainOrder,
+    ModalPin,
     FooterOrder,
     Collection,
     DialogInfo

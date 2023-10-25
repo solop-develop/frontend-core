@@ -29,20 +29,8 @@ const modalDialogManagerVPOS = {
   state: initState,
 
   mutations: {
-    setModalDialogVPOS(state, qlq) {
-      state.modalDialogManagerVPOS = qlq
-      // Vue.set(state.modalDialogManagerVPOS, actionsName, {
-      //   beforeOpen,
-      //   cancelMethod,
-      //   actionsName,
-      //   componentPath,
-      //   containerManager,
-      //   doneMethod,
-      //   isDisabledDone,
-      //   loadData,
-      //   title,
-      //   isShowed
-      // })
+    setModalDialogVPOS(state, modal) {
+      state.modalDialogManagerVPOS = modal
     },
 
     setShowedModalDialogVPOS(state, {

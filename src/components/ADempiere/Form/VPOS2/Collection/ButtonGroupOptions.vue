@@ -24,8 +24,6 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         type="danger"
         icon="el-icon-close"
         class="button-base-icon"
-        :disabled="isLoading"
-        :loading="isLoading"
         @click="close"
       />
       <el-button
@@ -117,7 +115,7 @@ export default defineComponent({
         charge_amount,
         credit_amount,
         payment_amount,
-        refund_amount
+        open_amount
       } = currentOrder.value
       const total = Number(grand_total.value) + Number(charge_amount.value) - Number(credit_amount.value) - Number(payment_amount.value)
       if (total === 0) {
@@ -126,19 +124,31 @@ export default defineComponent({
           .then(() => {
             isLoadingProcess.value = false
           })
-      } else if (Number(refund_amount.value) > 0) {
+      } else if (Number(open_amount.value) > 0) {
         store.dispatch('setModalDialogVPOS', {
           title: lang.t('form.pos.collect.overdrawnInvoice.below'),
           doneMethod: () => {
-            if (Number(refund_amount.value) > Number(currentPos.value.write_off_amount_tolerance.value)) {
+            if (Number(open_amount.value) > Number(currentPos.value.write_off_amount_tolerance.value)) {
               /**
                * Request PIN
                */
+              store.dispatch('setModalPin', {
+                title: lang.t('form.pos.pinMessage.pin') + lang.t('form.pos.pinMessage.invoiceOpen'),
+                doneMethod: () => {
+                  isLoadingProcess.value = true
+                  store.dispatch('process', {})
+                    .then(() => {
+                      isLoadingProcess.value = false
+                    })
+                },
+                requestedAccess: 'IsAllowsInvoiceOpen',
+                requestedAmount: Number(open_amount.value),
+                isShowed: true
+              })
               return
             }
             store.dispatch('process', {})
           },
-          // TODO: Change to string and import dynamic in component
           componentPath: () => import('@/components/ADempiere/Form/VPOS2/DialogInfo/openBalance.vue'),
           isShowed: true
         })

@@ -473,6 +473,7 @@ export default {
       },
       pinMessage: {
         pin: 'Enter Pin for ',
+        authorized: 'Authorized PIN',
         documentType: 'change document type',
         warehouse: 'change warehouse',
         price: 'change price',
