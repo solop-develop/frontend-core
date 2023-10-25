@@ -61,6 +61,21 @@ const fieldsCollections = {
     list: [],
     currentCustomerCredist: {}
   },
+  fieldsRefunds: {
+    bank: {},
+    date: '',
+    value: '',
+    phone: '',
+    amount: null,
+    currencie: {},
+    referenceNo: '',
+    description: '',
+    issuingBank: {},
+    paymentMethods: {},
+    recipientBank: {},
+    currentAccount: {},
+    currentCustomerCredist: {}
+  },
   amount: null,
   modalPinManager: {}
 }
@@ -424,7 +439,7 @@ export default {
           .then(() => {
             showMessage({
               type: 'success',
-              message: lang.t('form.pos.pinMessage.authorized'),
+              message: lang.t('pointOfSales.pin.validateSuccessfully'),
               showClose: true
             })
             resolve(true)

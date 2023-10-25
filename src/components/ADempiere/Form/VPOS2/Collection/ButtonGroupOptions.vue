@@ -115,6 +115,7 @@ export default defineComponent({
         charge_amount,
         credit_amount,
         payment_amount,
+        refund_amount,
         open_amount
       } = currentOrder.value
       const total = Number(grand_total.value) + Number(charge_amount.value) - Number(credit_amount.value) - Number(payment_amount.value)
@@ -150,6 +151,34 @@ export default defineComponent({
             store.dispatch('process', {})
           },
           componentPath: () => import('@/components/ADempiere/Form/VPOS2/DialogInfo/openBalance.vue'),
+          isShowed: true
+        })
+      } else {
+        store.dispatch('setModalDialogVPOS', {
+          title: lang.t('form.pos.collect.overdrawnInvoice.title'),
+          doneMethod: () => {
+            if (Number(open_amount.value) > Number(currentPos.value.write_off_amount_tolerance.value)) {
+              /**
+               * Request PIN
+               */
+              store.dispatch('setModalPin', {
+                title: lang.t('form.pos.pinMessage.pin') + lang.t('form.pos.pinMessage.invoiceOpen'),
+                doneMethod: () => {
+                  isLoadingProcess.value = true
+                  store.dispatch('process', {})
+                    .then(() => {
+                      isLoadingProcess.value = false
+                    })
+                },
+                requestedAccess: 'IsAllowsInvoiceOpen',
+                requestedAmount: Number(refund_amount.value),
+                isShowed: true
+              })
+              return
+            }
+            store.dispatch('process', {})
+          },
+          componentPath: () => import('@/components/ADempiere/Form/VPOS2/DialogInfo/overdrawnInvoice.vue'),
           isShowed: true
         })
       }

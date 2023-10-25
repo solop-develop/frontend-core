@@ -25,7 +25,6 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     <el-main style="padding: 0px 20px;">
       <main-order />
       <dialog-info />
-      {{ $store.getters.getShowedModalPin }}
       <modal-pin />
       <el-drawer
         title="Cobranza"

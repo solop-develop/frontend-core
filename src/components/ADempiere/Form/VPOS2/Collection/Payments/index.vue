@@ -31,6 +31,21 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         />
       </el-col>
     </el-row>
+    <el-divider v-if="!isEmptyValue(listPaymentsRefund)" content-position="center" style="padding: 10px;">
+      <h2> {{ $t('form.pos.collect.refund') }} / {{ $t('pointOfSales.collection.others') }} </h2>
+    </el-divider>
+    <el-row :gutter="10">
+      <el-col
+        v-for="(payment, key) in listPaymentsRefund"
+        :key="key"
+        :span="12"
+        style="margin: 10px 0px;"
+      >
+        <card-payments
+          :payment="payment"
+        />
+      </el-col>
+    </el-row>
   </el-card>
 </template>
 
@@ -54,10 +69,14 @@ export default defineComponent({
   },
   setup() {
     const listPayments = computed(() => {
-      return store.getters.getListPayments
+      return store.getters.getListPayments.filter(list => !list.is_refund)
+    })
+    const listPaymentsRefund = computed(() => {
+      return store.getters.getListPayments.filter(list => list.is_refund)
     })
     return {
-      listPayments
+      listPayments,
+      listPaymentsRefund
     }
   }
 })
