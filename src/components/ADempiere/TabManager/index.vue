@@ -199,7 +199,9 @@ import { UUID } from '@/utils/ADempiere/constants/systemColumns.js'
 
 // API Request Methods
 import { requestExistsReferences } from '@/api/ADempiere/window'
-import { existsChatsEntries, requestListEntityChats } from '@/api/ADempiere/logs/tabInfo/chatsEntries.ts'
+import {
+  requestExistsChatsEntries, requestListEntityChats
+} from '@/api/ADempiere/logs/tabInfo/chatsEntries.ts'
 import { requestExistsAttachment } from '@/api/ADempiere/logs/tabInfo/windowAttachment.ts'
 import { requestExistsIssues } from '@/api/ADempiere/logs/tabInfo/windowIssues.ts'
 
@@ -634,7 +636,7 @@ export default defineComponent({
 
     watch(currentRecordUuid, (newValue, oldValue) => {
       if (newValue !== oldValue && !isEmptyValue(newValue)) {
-        chatAvailable()
+        // chatAvailable()
         attachmentAvailable()
         getReferences()
         getIssues()
@@ -735,9 +737,8 @@ export default defineComponent({
       ) {
         return
       }
-      existsChatsEntries({
+      requestExistsChatsEntries({
         tableName: currentTabTableName.value,
-        recordUuid: currentRecordUuid.value,
         recordId: currentRecordId.value
       })
         .then(responseReferences => {
