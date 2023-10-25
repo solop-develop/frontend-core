@@ -35,6 +35,11 @@ const pointOfSales = {
       receivingBank: 'Receiving Bank',
       customerAccount: 'Customer Account',
       issuingBank: 'Issuing Bank',
+      bankAccountType: {
+        label: 'Bank Account Type',
+        currentAccount: 'Current Account',
+        checking: 'Savings'
+      },
       code: 'Cedula',
       date: 'Date',
       phone: 'Telephone',

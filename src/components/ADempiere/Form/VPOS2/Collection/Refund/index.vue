@@ -42,97 +42,50 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         <el-col :span="8">
           <payment-methods
             :handle-change="changePaymentMethods"
-            :is-refund="true"
           />
         </el-col>
         <el-col :span="8">
-          <currencie
-            :is-refund="true"
-          />
+          <currencie />
+        </el-col>
+        <el-col v-if="typeOptions === '2'" :span="8">
+          <banks-accounts />
         </el-col>
         <!-- Payment Methods (Fields Display Logic) -->
-        <el-col v-if="isDisplayFieldPayment('creditMemo', currentPaymentMethod)" :span="8">
+        <!-- <el-col v-if="isDisplayFieldPayment('creditMemo', currentPaymentMethod)" :span="8">
           <credit-memo />
-        </el-col>
-        <el-col v-if="isDisplayFieldPayment('recipientBank', currentPaymentMethod)" :span="8">
+        </el-col> -->
+        <!-- <el-col v-if="isDisplayFieldPayment('recipientBank', currentPaymentMethod)" :span="8">
           <recipient-bank />
-        </el-col>
-        <el-col v-if="isDisplayFieldPayment('banksAccounts', currentPaymentMethod)" :span="8">
-          <banks-accounts />
         </el-col>
         <el-col v-if="isDisplayFieldPayment('issuingBank', currentPaymentMethod)" :span="8">
           <issuing-bank />
-        </el-col>
-        <el-col v-if="isDisplayFieldPayment('Bank', currentPaymentMethod)" :span="8">
+        </el-col> -->
+        <el-col
+          v-if="typeOptions === '2'"
+          :span="8"
+        >
           <bank />
         </el-col>
+        <el-col v-if="typeOptions === '2'" :span="8">
+          <bankAccount-type />
+        </el-col>
         <el-col v-if="isDisplayFieldPayment('Value', currentPaymentMethod)" :span="8">
-          <el-form-item
-            :label="$t('pointOfSales.collection.field.code')"
-            class="form-item-criteria"
-            style="margin: 0px;width: 100%;"
-          >
-            <el-input
-              v-model="code"
-              :disabled="!isEmptyValue(currentAccount)"
-              style="width: 100%;"
-            />
-          </el-form-item>
+          <value />
         </el-col>
         <el-col v-if="isDisplayFieldPayment('Description', currentPaymentMethod)" :span="8">
-          <el-form-item
-            :label="$t('pointOfSales.collection.field.description')"
-            class="form-item-criteria"
-            style="margin: 0px;width: 100%;"
-          >
-            <el-input
-              v-model="description"
-              type="textarea"
-              :rows="2"
-              :disabled="!isEmptyValue(currentAccount) || !isEmptyValue(customerCredits)"
-              style="width: 100%;"
-            />
-          </el-form-item>
+          <description />
         </el-col>
         <el-col v-if="isDisplayFieldPayment('Date', currentPaymentMethod)" :span="8">
-          <el-form-item
-            :label="$t('pointOfSales.collection.field.date')"
-            class="form-item-criteria"
-            :disabled="!isEmptyValue(customerCredits)"
-            style="margin: 0px;width: 100%;"
-          >
-            <el-date-picker
-              v-model="date"
-              type="date"
-              style="width: 100%;"
-            />
-          </el-form-item>
+          <date />
         </el-col>
         <el-col v-if="isDisplayFieldPayment('Phone', currentPaymentMethod)" :span="8">
-          <el-form-item
-            :label="$t('pointOfSales.collection.field.phone')"
-            class="form-item-criteria"
-            style="margin: 0px;width: 100%;"
-          >
-            <el-input
-              v-model="phone"
-              :disabled="!isEmptyValue(currentAccount)"
-              style="width: 100%;"
-            />
-          </el-form-item>
+          <phone />
         </el-col>
-        <el-col v-if="isDisplayFieldPayment('ReferenceNo', currentPaymentMethod)" :span="8">
-          <el-form-item
-            :label="$t('pointOfSales.collection.field.referenceNo')"
-            class="form-item-criteria"
-            style="margin: 0px;width: 100%;"
-            :disabled="!isEmptyValue(customerCredits)"
-          >
-            <el-input
-              v-model="referenceNo"
-              style="width: 100%;"
-            />
-          </el-form-item>
+        <el-col
+          v-if="typeOptions === '2'"
+          :span="8"
+        >
+          <account-no />
         </el-col>
       </el-row>
     </el-form>
@@ -159,13 +112,19 @@ import store from '@/store'
 // import router from '@/router'
 // Component and Mixins
 import fieldAmount from '@/components/ADempiere/Form/VPOS2/MainOrder/OptionLine/editLine/fieldAmount.vue'
-import paymentMethods from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/paymentMethods'
-import currencie from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/currencies'
-import recipientBank from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/recipientBank.vue'
-import banksAccounts from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/banksAccounts.vue'
-import creditMemo from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/creditMemo.vue'
-import issuingBank from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/issuingBank.vue'
-import bank from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/bank.vue'
+import paymentMethods from '@/components/ADempiere/Form/VPOS2/Collection/Refund/Field/paymentMethods'
+import currencie from '@/components/ADempiere/Form/VPOS2/Collection/Refund/Field/currencies'
+import recipientBank from '@/components/ADempiere/Form/VPOS2/Collection/Refund/Field/recipientBank.vue'
+import banksAccounts from '@/components/ADempiere/Form/VPOS2/Collection/Refund/Field/banksAccounts.vue'
+import creditMemo from '@/components/ADempiere/Form/VPOS2/Collection/Refund/Field/creditMemo.vue'
+import issuingBank from '@/components/ADempiere/Form/VPOS2/Collection/Refund/Field/issuingBank.vue'
+import bankAccountType from '@/components/ADempiere/Form/VPOS2/Collection/Refund/Field/bankAccountType.vue'
+import bank from '@/components/ADempiere/Form/VPOS2/Collection/Refund/Field/bank.vue'
+import Value from '@/components/ADempiere/Form/VPOS2/Collection/Refund/Field/value'
+import description from '@/components/ADempiere/Form/VPOS2/Collection/Refund/Field/description'
+import date from '@/components/ADempiere/Form/VPOS2/Collection/Refund/Field/date'
+import phone from '@/components/ADempiere/Form/VPOS2/Collection/Refund/Field/phone'
+import accountNo from '@/components/ADempiere/Form/VPOS2/Collection/Refund/Field/accountNo'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { formatPrice } from '@/utils/ADempiere/formatValue/numberFormat'
@@ -181,7 +140,13 @@ export default defineComponent({
     recipientBank,
     banksAccounts,
     creditMemo,
-    issuingBank
+    issuingBank,
+    bankAccountType,
+    description,
+    accountNo,
+    date,
+    phone,
+    Value
   },
   props: {
     isRefund: {
@@ -213,6 +178,13 @@ export default defineComponent({
       return store.getters.getAttributeField({
         field: 'fieldsRefunds',
         attribute: 'currentCustomerCredist'
+      })
+    })
+
+    const typeOptions = computed(() => {
+      return store.getters.getAttributeField({
+        field: 'fieldsRefunds',
+        attribute: 'typeOptions'
       })
     })
 
@@ -309,11 +281,18 @@ export default defineComponent({
       })
     })
 
+    const currentAmount = computed(() => {
+      return Number(store.getters.getAttributeField({
+        field: 'fieldsRefunds',
+        attribute: 'amount'
+      }))
+    })
+
     if (!isEmptyValue(currentOrder.value.open_amount)) {
       store.commit('setAttributeField', {
         field: 'fieldsRefunds',
         attribute: 'amount',
-        value: currentOrder.value.refund_amount.value
+        value: Number(currentOrder.value.refund_amount.value)
       })
       // store.commit('setPayAmount', currentOrder.value.refund_amount.value)
     }
@@ -333,6 +312,11 @@ export default defineComponent({
         field: 'fieldsRefunds',
         attribute: 'currencie',
         value: currency
+      })
+      store.commit('setAttributeField', {
+        field: 'fieldsRefunds',
+        attribute: 'amount',
+        value: Number(currentOrder.value.refund_amount.value)
       })
       // store.commit('setAvailableCurrencies', currency)
       clearFieldsCollections()
@@ -357,7 +341,7 @@ export default defineComponent({
       let currencyPayment = price_list.currency
       if (isEmptyValue(refund_amount)) return '0.00'
       if (!isEmptyValue(currentCurrency.value)) currencyPayment = currentCurrency.value
-      return formatPrice({ value: Number(refund_amount.value), currency: currencyPayment.iso_code })
+      return formatPrice({ value: Number(amount.value), currency: currencyPayment.iso_code })
     })
 
     const currentPos = computed(() => {
@@ -408,6 +392,32 @@ export default defineComponent({
         field: 'fieldsRefunds',
         attribute: 'currencie'
       })
+      if (isEmptyValue(currentAccount.value) && typeOptions.value === '2') {
+        let accountNo
+        accountNo = store.getters.getAttributeField({
+          field: 'fieldsRefunds',
+          attribute: 'accountNo'
+        })
+        const driverLicense = store.getters.getAttributeField({
+          field: 'fieldsRefunds',
+          attribute: 'value'
+        })
+        const bankId = store.getters.getAttributeField({
+          field: 'fieldsRefunds',
+          attribute: 'bank'
+        })
+        const bankAccountType = store.getters.getAttributeField({
+          field: 'fieldsRefunds',
+          attribute: 'bankAccountType'
+        })
+        if (isEmptyValue(accountNo)) accountNo = phone.value
+        store.dispatch('newCustomerBankAccount', {
+          accountNo,
+          driverLicense,
+          bankId: bankId.id,
+          bankAccountType
+        })
+      }
       if (
         !isEmptyValue(currentPos.value.maximum_refund_allowed.value) &&
         Number(currentPos.value.maximum_refund_allowed.value) > 0 &&
@@ -439,6 +449,8 @@ export default defineComponent({
       code,
       date,
       phone,
+      currentAmount,
+      typeOptions,
       description,
       referenceNo,
       currentAccount,

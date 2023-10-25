@@ -68,8 +68,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         </span>
       </div>
       <charge-refund
-        v-if="typeOptions === '1'"
-        :is-refund="true"
+        v-if="typeOptions !== '3'"
       />
     </el-card>
     <el-card
@@ -96,8 +95,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 <script>
 import {
   defineComponent,
-  computed,
-  ref
+  computed
 } from '@vue/composition-api'
 
 import store from '@/store'
@@ -115,7 +113,23 @@ export default defineComponent({
     CardPayments
   },
   setup() {
-    const typeOptions = ref('1')
+    // const typeOptions = ref('1')
+    const typeOptions = computed({
+      get() {
+        return store.getters.getAttributeField({
+          field: 'fieldsRefunds',
+          attribute: 'typeOptions'
+        })
+      },
+      // setter
+      set(value) {
+        store.commit('setAttributeField', {
+          field: 'fieldsRefunds',
+          attribute: 'typeOptions',
+          value: value
+        })
+      }
+    })
 
     const currentPos = computed(() => {
       return store.getters.getVPOS
