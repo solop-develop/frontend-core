@@ -292,7 +292,6 @@ export function getCurrencyPayment({
 export function getPaymentValues({
   invoice_id,
   bank_id,
-  reference_no,
   description,
   payment_date,
   payment_account_date,
@@ -303,20 +302,37 @@ export function getPaymentValues({
   customer_bank_account_id,
   invoice_reference_id
 }) {
-  const { id, payment_method } = store.getters.getPaymentMethods
+  const { payment_method } = store.getters.getPaymentMethods
   let amount = store.getters.getPayAmount
   if (isEmptyValue(amount)) amount = store.getters.getCurrentOrder.open_amount.value
+  // Set Currency
   const currency = store.getters.getAvailableCurrencies.currencie
+  // Set Value referenceNo
+  const referenceNo = store.getters.getAttributeField({
+    field: 'field',
+    attribute: 'referenceNo'
+  })
+  const currentAccount = store.getters.getAttributeField({
+    field: 'bankAccounts',
+    attribute: 'currentAccount'
+  })
+
+  // Set bank Accounts ID
+  if (!isEmptyValue(currentAccount) && isEmptyValue(customer_bank_account_id)) {
+    bank_id = currentAccount.bank_id
+    customer_bank_account_id = currentAccount.customer_id
+  }
+
   return {
     invoice_id,
     bank_id,
-    reference_no,
+    reference_no: referenceNo,
     description,
     amount,
     payment_date,
     tender_type_code: payment_method.tender_type,
     currency_id: currency.id,
-    payment_method_id: id,
+    payment_method_id: payment_method.id,
     payment_account_date,
     is_refund,
     charge_id,
@@ -377,6 +393,7 @@ export function isDisplayFieldPayment(
       isShow = ['A'].includes(payment_method.tender_type)
       break
     case 'creditMemo':
+    case 'Description':
       isShow = ['M'].includes(payment_method.tender_type)
       break
     default:
@@ -384,4 +401,53 @@ export function isDisplayFieldPayment(
       break
   }
   return isShow
+}
+
+export function clearFieldsCollections() {
+  const value = undefined
+  store.commit('setAttributeField', {
+    field: 'bankAccounts',
+    attribute: 'currentAccount',
+    value
+  })
+  store.commit('setAttributeField', {
+    field: 'customerCredits',
+    attribute: 'currentCustomerCredist',
+    value
+  })
+  store.commit('setAttributeField', {
+    field: 'field',
+    attribute: 'value',
+    value
+  })
+  store.commit('setAttributeField', {
+    field: 'field',
+    attribute: 'date',
+    value
+  })
+  store.commit('setAttributeField', {
+    field: 'field',
+    attribute: 'phone',
+    value
+  })
+  store.commit('setAttributeField', {
+    field: 'field',
+    attribute: 'referenceNo',
+    value
+  })
+  store.commit('setAttributeField', {
+    field: 'field',
+    attribute: 'bank',
+    value
+  })
+  store.commit('setAttributeField', {
+    field: 'banks',
+    attribute: 'issuingBank',
+    value
+  })
+  store.commit('setAttributeField', {
+    field: 'banks',
+    attribute: 'recipientBank',
+    value
+  })
 }

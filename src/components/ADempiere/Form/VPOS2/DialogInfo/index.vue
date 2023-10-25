@@ -21,21 +21,24 @@
     width="80%"
     @close="closeDialog"
   >
-    <!-- <span slot="title">
+    <span
+      v-if="isEmptyValue(typeInfo)"
+      slot="title"
+    >
       <p style="text-align: center;">
         <b>
           {{ title }}
         </b>
       </p>
-    </span> -->
+    </span>
     <el-result
+      v-else
       :icon="typeInfo"
       :title="title"
     />
     <span class="content-modal-dialog">
       <component
         :is="componentRender"
-        v-if="isEmptyValue(componentRender)"
       />
     </span>
 

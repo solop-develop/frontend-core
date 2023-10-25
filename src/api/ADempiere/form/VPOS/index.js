@@ -975,10 +975,11 @@ export function listBanks({
  */
 export function listBankAccounts({
   posId,
+  customerId,
   bankId
 }) {
   return request({
-    url: `point-of-sales/${posId}/bank-accounts`,
+    url: `point-of-sales/${posId}/customers/${customerId}/bank-accounts`,
     method: 'get',
     params: {
       page_size: 100,
@@ -1009,6 +1010,54 @@ export function createCustomerBankAccount({
       bank_account_type: bankAccountType,
       social_security_number: driverLicense,
       is_ach: isAch
+    }
+  })
+}
+
+/**
+ * Credit Memo as Payment Method
+ */
+export function listCustomerCredits({
+  posId,
+  customerId,
+  documentTypeId
+}) {
+  return request({
+    url: `point-of-sales/${posId}/customers/${customerId}/credits`,
+    method: 'get',
+    params: {
+      page_size: 100,
+      document_type_id: documentTypeId
+    }
+  })
+}
+
+/** ___________________________________
+ * |                                   |
+ * |  Options Point of Sale Services   |
+ * |___________________________________|
+ */
+
+/**
+ * Print Ticket
+ */
+export function printTicket({
+  posId,
+  orderId,
+  invoiceId,
+  shipmentId,
+  recordId,
+  tableName
+}) {
+  return request({
+    url: `point-of-sales/${posId}/print-ticket`,
+    method: 'post',
+    data: {
+      order_id: orderId,
+      invoice_id: invoiceId,
+      shipment_id: shipmentId,
+      record_id: recordId,
+      table_name: tableName
     }
   })
 }

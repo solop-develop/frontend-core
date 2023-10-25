@@ -47,7 +47,10 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         <el-col :span="8">
           <currencie />
         </el-col>
-        <!-- Payment Methods (P) -->
+        <!-- Payment Methods (Fields Display Logic) -->
+        <el-col v-if="isDisplayFieldPayment('creditMemo')" :span="8">
+          <credit-memo />
+        </el-col>
         <el-col v-if="isDisplayFieldPayment('recipientBank')" :span="8">
           <recipient-bank />
         </el-col>
@@ -72,10 +75,25 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             />
           </el-form-item>
         </el-col>
+        <el-col v-if="isDisplayFieldPayment('Description')" :span="8">
+          <el-form-item
+            :label="$t('pointOfSales.collection.field.description')"
+            class="form-item-criteria"
+            style="margin: 0px;width: 100%;"
+          >
+            <el-input
+              v-model="description"
+              type="textarea"
+              :rows="2"
+              :disabled="!isEmptyValue(currentAccount) || !isEmptyValue(customerCredits)"
+            />
+          </el-form-item>
+        </el-col>
         <el-col v-if="isDisplayFieldPayment('Date')" :span="8">
           <el-form-item
             :label="$t('pointOfSales.collection.field.date')"
             class="form-item-criteria"
+            :disabled="!isEmptyValue(customerCredits)"
             style="margin: 0px;width: 100%;"
           >
             <el-date-picker
@@ -101,6 +119,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             :label="$t('pointOfSales.collection.field.referenceNo')"
             class="form-item-criteria"
             style="margin: 0px;width: 100%;"
+            :disabled="!isEmptyValue(customerCredits)"
           >
             <el-input
               v-model="referenceNo"
@@ -124,12 +143,13 @@ import paymentMethods from '@/components/ADempiere/Form/VPOS2/Collection/Charge/
 import currencie from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/currencies'
 import recipientBank from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/recipientBank.vue'
 import banksAccounts from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/banksAccounts.vue'
+import creditMemo from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/creditMemo.vue'
 import issuingBank from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/issuingBank.vue'
 import bank from '@/components/ADempiere/Form/VPOS2/Collection/Charge/Field/bank.vue'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { formatPrice } from '@/utils/ADempiere/formatValue/numberFormat'
-import { getCurrencyPayment, isDisplayFieldPayment } from '@/utils/ADempiere/dictionary/form/VPOS'
+import { getCurrencyPayment, clearFieldsCollections, isDisplayFieldPayment } from '@/utils/ADempiere/dictionary/form/VPOS'
 
 export default defineComponent({
   name: 'Charge',
@@ -140,6 +160,7 @@ export default defineComponent({
     paymentMethods,
     recipientBank,
     banksAccounts,
+    creditMemo,
     issuingBank
   },
   setup() {
@@ -151,6 +172,13 @@ export default defineComponent({
       return store.getters.getAttributeField({
         field: 'bankAccounts',
         attribute: 'currentAccount'
+      })
+    })
+
+    const customerCredits = computed(() => {
+      return store.getters.getAttributeField({
+        field: 'customerCredits',
+        attribute: 'currentCustomerCredist'
       })
     })
 
@@ -166,6 +194,22 @@ export default defineComponent({
         store.commit('setAttributeField', {
           field: 'field',
           attribute: 'value',
+          value
+        })
+      }
+    })
+    const description = computed({
+      get() {
+        return store.getters.getAttributeField({
+          field: 'field',
+          attribute: 'description'
+        })
+      },
+      // setter
+      set(value) {
+        store.commit('setAttributeField', {
+          field: 'field',
+          attribute: 'description',
           value
         })
       }
@@ -241,6 +285,7 @@ export default defineComponent({
         paymentMethods: currentPaymentMethod
       })
       store.commit('setAvailableCurrencies', currency)
+      clearFieldsCollections()
     }
 
     const amount = computed(() => {
@@ -273,8 +318,10 @@ export default defineComponent({
       code,
       date,
       phone,
+      description,
       referenceNo,
       currentAccount,
+      customerCredits,
       formatPrice,
       updateAmount,
       changePaymentMethods,
