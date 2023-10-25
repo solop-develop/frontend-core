@@ -359,10 +359,11 @@ export function defaultValueCollections() {
  * @param {object} fieldColumnanme
  */
 export function isDisplayFieldPayment(
-  fieldColumnanme
-  // paymentMethods
+  fieldColumnanme,
+  paymentMethods
 ) {
-  const { payment_method } = store.getters.getPaymentMethods
+  if (isEmptyValue(paymentMethods)) paymentMethods = store.getters.getPaymentMethods
+  const { payment_method } = paymentMethods
   if (isEmptyValue(payment_method)) return false
   let isShow
   switch (fieldColumnanme) {

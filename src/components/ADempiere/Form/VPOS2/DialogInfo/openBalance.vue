@@ -29,11 +29,11 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     <el-form label-width="120px">
       <el-form-item>
         <p>
-          <b> {{ $t('form.pos.collect.orderTotal') }} </b> {{ formatPrice({ value: currentOrder.grand_total.value, currency: currentOrder.price_list.currency.iso_codeCode }) }}
+          <b> {{ $t('form.pos.collect.orderTotal') }} </b> {{ formatPrice({ value: currentOrder.grand_total.value, currency: currentOrder.price_list.currency.iso_code }) }}
           <el-divider direction="vertical" />
-          <b> {{ $t('form.pos.collect.totalInvoiced') }} </b> {{ formatPrice({ value: currentOrder.payment_amount.value, currency: currentOrder.price_list.currency.iso_codeCode }) }}
+          <b> {{ $t('form.pos.collect.totalInvoiced') }} </b> {{ formatPrice({ value: currentOrder.payment_amount.value, currency: currentOrder.price_list.currency.iso_code }) }}
           <el-divider direction="vertical" />
-          <b> {{ $t('form.pos.collect.pending') }} </b> {{ formatPrice({ value: currentOrder.open_amount.value, currency: currentOrder.price_list.currency.iso_codeCode }) }}
+          <b> {{ $t('form.pos.collect.pending') }} </b> {{ formatPrice({ value: currentOrder.open_amount.value, currency: currentOrder.price_list.currency.iso_code }) }}
         </p>
       </el-form-item>
     </el-form>
