@@ -51,7 +51,6 @@ export default defineComponent({
     // Ref
     const qtyEntered = ref(props.qty)
     const qtyField = ref()
-    console.log({ qtyEntered, qtyField })
     if (qtyField.value) {
       qtyField.value.select()
     }
