@@ -23,10 +23,11 @@ import {
   listAvailableWarehouses,
   // listAvailablePaymentMethods,
   listAvailablePriceList,
+  listCampaigns,
+  listAvailableSellers,
   // listAvailableCurrencies,
   listAvailableDocumentTypes
   // listAvailableDiscounts,
-  // listAvailableSellers
 } from '@/api/ADempiere/form/VPOS'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -36,7 +37,9 @@ const VPOS = {
   listDocumentTypes: [],
   listWarehouses: [],
   listCurrencies: [],
+  listCampaigns: [],
   listPrices: [],
+  listSellers: [],
   currentPos: {},
   listPos: []
 }
@@ -55,6 +58,12 @@ export default {
     },
     setListPrices(state, list) {
       state.listPrices = list
+    },
+    setListCampaigns(state, list) {
+      state.listCampaigns = list
+    },
+    setListSellers(state, list) {
+      state.listSellers = list
     },
     setListDocumentTypes(state, list) {
       state.listDocumentTypes = list
@@ -211,6 +220,76 @@ export default {
       })
     },
     /**
+     * List of Campaigns
+     * @param {Number} posId
+     */
+    listCampaigns({ commit, getters }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        if (isEmptyValue(currentPos)) {
+          resolve([])
+          return
+        }
+        listCampaigns({
+          posId: currentPos.id
+        })
+          .then(response => {
+            const { records } = response
+            commit('setListCampaigns', records)
+            resolve(records)
+          })
+          .catch(error => {
+            console.warn(`List of Campaigns Price: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve([])
+          })
+      })
+    },
+    /**
+     * List of Available Sellers
+     * @param {Number} posId
+     */
+    listAvailableSellers({ commit, getters }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        if (isEmptyValue(currentPos)) {
+          resolve([])
+          return
+        }
+        listAvailableSellers({
+          posId: currentPos.id
+        })
+          .then(response => {
+            const { sellers } = response
+            commit('setListSellers', sellers)
+            resolve(sellers)
+          })
+          .catch(error => {
+            console.warn(`List of Sellers Price: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve([])
+          })
+      })
+    },
+    /**
      * List of Available Warehouses
      * @param {Number} posId
      */
@@ -293,6 +372,12 @@ export default {
     },
     getListPrices: (state) => {
       return state.listPrices
+    },
+    getListCampaigns: (state) => {
+      return state.listCampaigns
+    },
+    getListSellers: (state) => {
+      return state.listSellers
     },
     getListDocumentTypes: (state) => {
       return state.listDocumentTypes

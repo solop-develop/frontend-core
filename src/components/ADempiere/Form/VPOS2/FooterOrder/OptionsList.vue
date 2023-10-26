@@ -114,6 +114,30 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         </el-dropdown-menu>
       </el-dropdown>
     </el-col>
+    <el-col
+      :span="24"
+    >
+      <el-dropdown
+        trigger="click"
+        class="info-pos"
+        @command="changeCampaigns"
+      >
+        <span>
+          <i class="el-icon-guide" />
+          {{ $t('form.pos.order.campaign') }}:
+          <b style="cursor: pointer"> {{ pointCampaigns }} </b>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item
+            v-for="(item, index) in listCampaigns"
+            :key="index"
+            :command="item"
+          >
+            {{ item.name }}
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </el-col>
   </el-row>
 </template>
 
@@ -175,11 +199,22 @@ export default defineComponent({
       return store.getters.getListPrices
     })
 
+    const listCampaigns = computed(() => {
+      return store.getters.getListCampaigns
+    })
+
     const pointWarehouses = computed(() => {
       if (isEmptyValue(currentPointOfSales.value)) return ''
       if (!isEmptyValue(currentOrder.value.id)) return currentOrder.value.warehouse.name
       const { warehouse } = currentPointOfSales.value
       return warehouse.name
+    })
+
+    const pointCampaigns = computed(() => {
+      if (isEmptyValue(currentPointOfSales.value)) return ''
+      if (!isEmptyValue(currentOrder.value.id)) return currentOrder.value.campaign.name
+      const { default_campaign } = currentPointOfSales.value
+      return default_campaign.name
     })
 
     const listWarehouses = computed(() => {
@@ -223,6 +258,14 @@ export default defineComponent({
       }
     }
 
+    function changeCampaigns(campaign) {
+      if (!isEmptyValue(currentOrder.value.id)) {
+        store.dispatch('updateCurrentOrder', {
+          campaign_id: campaign.id
+        })
+      }
+    }
+
     function changeWarehouses(warehouse) {
       store.commit('setUpdatePointVPOS', {
         attribute: 'warehouse',
@@ -249,8 +292,10 @@ export default defineComponent({
 
     function updateListAvalibles(point) {
       store.dispatch('listAvailablePrices')
+      store.dispatch('listCampaigns')
       store.dispatch('listAvailableWarehouse')
       store.dispatch('listAvailableDocumentTypes')
+      store.dispatch('listAvailableSellers')
     }
 
     watch(pointUuid, (newValue, oldValue) => {
@@ -264,6 +309,8 @@ export default defineComponent({
       listPoint,
       pointPrices,
       listPrices,
+      pointCampaigns,
+      listCampaigns,
       currentOrder,
       currentPointOfSales,
       pointDocumentType,
@@ -272,6 +319,7 @@ export default defineComponent({
       listWarehouses,
       // Methods
       changePos,
+      changeCampaigns,
       changeDocumentType,
       changeWarehouses,
       changePrices

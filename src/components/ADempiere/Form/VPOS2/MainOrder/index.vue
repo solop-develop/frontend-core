@@ -25,6 +25,8 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       fit
       highlight-current-row
       style="height: 100% !important;"
+      @cell-click="editLine"
+      @cell-dblclick="editLineExit"
       @current-change="handleCurrentChangeOrderLine"
     >
       <template v-for="(valueOrder, key) in orderLineDefinition">
@@ -42,7 +44,25 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
               icon="el-icon-document-copy"
               @click="copyCode(scope.row)"
             />
-            {{ displayValue({ row: scope.row, columnName: valueOrder.columnName}) }}
+            <edit-amount
+              v-if="scope.row.isEditCurrentPrice && valueOrder.columnName === 'CurrentPrice'"
+              :value="Number(scope.row.price.value)"
+              :handle-change="updateCurrentPrice"
+            />
+            <edit-qty-entered
+              v-else-if="scope.row.isEditQtyEntered && valueOrder.columnName === 'QtyEntered'"
+              :qty="Number(scope.row.quantity_ordered.value)"
+              :handle-change="updateQuantity"
+            />
+            <edit-amount
+              v-else-if="scope.row.isEditDiscount && valueOrder.columnName === 'Discount'"
+              :value="Number(scope.row.discount_rate.value)"
+              :handle-change="updateDiscount"
+              :precision="0"
+            />
+            <span v-else>
+              {{ displayValue({ row: scope.row, columnName: valueOrder.columnName}) }}
+            </span>
           </template>
         </el-table-column>
       </template>
@@ -66,17 +86,22 @@ import lang from '@/lang'
 import store from '@/store'
 // Components and Mixins
 import OptionLine from '@/components/ADempiere/Form/VPOS2/MainOrder/OptionLine'
+import editQtyEntered from '@/components/ADempiere/Form/VPOS2/MainOrder/OptionLine/editLine/editQtyEntered.vue'
+import editAmount from '@/components/ADempiere/Form/VPOS2/MainOrder/OptionLine/editLine/editAmount.vue'
 // Utils and Helper Methods
 import {
   displayLabel,
-  displayValue
+  displayValue,
+  displayLineQtyEntered
 } from '@/utils/ADempiere/dictionary/form/VPOS'
 import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 
 export default defineComponent({
   name: 'infoOrder',
   components: {
-    OptionLine
+    OptionLine,
+    editAmount,
+    editQtyEntered
   },
   setup() {
     const currentLine = ref({})
@@ -149,6 +174,10 @@ export default defineComponent({
       return store.getters.getListOrderLines
     })
 
+    const currentPos = computed(() => {
+      return store.getters.getVPOS
+    })
+
     function copyCode(value) {
       copyToClipboard({
         text: value.product.value,
@@ -161,7 +190,112 @@ export default defineComponent({
       currentLine.value = line
     }
 
+    function editLine(row, column, cell) {
+      const { columnKey } = column
+      // const {
+      //   is_modify_price,
+      //   is_allows_modify_quantity,
+      //   is_allows_modify_discount
+      // } = currentPos.value
+      if (columnKey === 'CurrentPrice') row.isEditCurrentPrice = true
+      if (columnKey === 'QtyEntered') row.isEditQtyEntered = true
+      if (columnKey === 'Discount') row.isEditDiscount = true
+    }
+
+    function editLineExit(row, column, cell) {
+      const { columnKey } = column
+      if (columnKey === 'QtyEntered') row.isEditQtyEntered = false
+      if (columnKey === 'CurrentPrice') row.isEditCurrentPrice = false
+      if (columnKey === 'Discount') row.isEditDiscount = false
+    }
+
+    function updateCurrentPrice(price) {
+      const { is_modify_price } = currentPos.value
+      if (!is_modify_price) {
+        store.dispatch('setModalPin', {
+          title: lang.t('form.pos.pinMessage.pin') + lang.t('form.pos.pinMessage.price'),
+          doneMethod: () => {
+            store.dispatch('updateCurrentLine', {
+              lineId: currentLine.value.id,
+              price
+            })
+              .then(() => {
+                currentLine.value.isEditQtyEntered = false
+              })
+          },
+          requestedAccess: 'IsModifyPrice',
+          requestedAmount: price,
+          isShowed: true
+        })
+        return
+      }
+      store.dispatch('updateCurrentLine', {
+        lineId: currentLine.value.id,
+        price
+      })
+        .then(() => {
+          currentLine.value.isEditCurrentPrice = false
+        })
+    }
+    function updateQuantity(quantity) {
+      const { is_allows_modify_quantity } = currentPos.value
+      if (!is_allows_modify_quantity) {
+        store.dispatch('setModalPin', {
+          title: lang.t('form.pos.pinMessage.pin') + lang.t('form.pos.pinMessage.qtyEntered'),
+          doneMethod: () => {
+            store.dispatch('updateCurrentLine', {
+              lineId: currentLine.value.id,
+              quantity
+            })
+              .then(() => {
+                currentLine.value.isEditQtyEntered = false
+              })
+          },
+          requestedAccess: 'IsAllowsModifyQuantity',
+          requestedAmount: quantity,
+          isShowed: true
+        })
+        return
+      }
+      store.dispatch('updateCurrentLine', {
+        lineId: currentLine.value.id,
+        quantity
+      })
+        .then(() => {
+          currentLine.value.isEditQtyEntered = false
+        })
+    }
+    function updateDiscount(discount_rate) {
+      const { is_allows_modify_discount } = currentPos.value
+      if (!is_allows_modify_discount) {
+        store.dispatch('setModalPin', {
+          title: lang.t('form.pos.pinMessage.pin') + lang.t('form.pos.pinMessage.qtyEntered'),
+          doneMethod: () => {
+            store.dispatch('updateCurrentLine', {
+              lineId: currentLine.value.id,
+              discount_rate
+            })
+              .then(() => {
+                currentLine.value.isEditQtyEntered = false
+              })
+          },
+          requestedAccess: 'IsAllowsModifyDiscount',
+          requestedAmount: discount_rate,
+          isShowed: true
+        })
+        return
+      }
+      store.dispatch('updateCurrentLine', {
+        lineId: currentLine.value.id,
+        discount_rate
+      })
+        .then(() => {
+          currentLine.value.isEditDiscount = false
+        })
+    }
+
     return {
+      currentPos,
       orderLineDefinition,
       currentLine,
       lines,
@@ -169,6 +303,12 @@ export default defineComponent({
       handleCurrentChangeOrderLine,
       displayLabel,
       displayValue,
+      editLineExit,
+      updateQuantity,
+      updateDiscount,
+      updateCurrentPrice,
+      displayLineQtyEntered,
+      editLine,
       copyCode
     }
   }

@@ -130,7 +130,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           </el-col>
           <el-col :span="24">
             <el-form-item
-              :label="$t('form.pos.tableProduct.baseMeasurementUnit')"
+              :label="$t('form.pos.tableProduct.displayDiscountAmount')"
               class="form-item-criteria"
               style="margin: 0px;width: 100%;"
             >
@@ -193,7 +193,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <script>
 import { defineComponent, computed, ref } from '@vue/composition-api'
-// import lang from '@/lang'
+import lang from '@/lang'
 import store from '@/store'
 // Components and Mixins
 import fieldAmount from '@/components/ADempiere/Form/VPOS2/MainOrder/OptionLine/editLine/fieldAmount.vue'
@@ -224,6 +224,10 @@ export default defineComponent({
       return store.getters.getCurrentLine
     })
 
+    const currentPos = computed(() => {
+      return store.getters.getVPOS
+    })
+
     const listUOM = computed(() => {
       return store.getters.getListUOM({
         productId: props.editLine.product.id
@@ -235,11 +239,6 @@ export default defineComponent({
         productId: props.editLine.product.id
       })
     })
-
-    // const existListUOM = listUOM.value.find(uom => uom.id === props.editLine.uom.uom.id)
-    // if (isEmptyValue(existListUOM)) {
-    //   showListUOM(true)
-    // }
 
     valueUOM.value = props.editLine.uom.uom.id
 
@@ -280,6 +279,25 @@ export default defineComponent({
     }
 
     function updatePrice(value) {
+      const { is_modify_price } = currentPos.value
+      if (!is_modify_price) {
+        store.dispatch('setModalPin', {
+          title: lang.t('form.pos.pinMessage.pin') + lang.t('form.pos.pinMessage.price'),
+          doneMethod: () => {
+            store.dispatch('updateCurrentLine', {
+              lineId: currentLine.value.id,
+              price: value
+            })
+              .then(() => {
+                currentLine.value.isEditQtyEntered = false
+              })
+          },
+          requestedAccess: 'IsModifyPrice',
+          requestedAmount: value,
+          isShowed: true
+        })
+        return
+      }
       store.dispatch('updateCurrentLine', {
         lineId: props.editLine.id,
         price: value
@@ -289,6 +307,7 @@ export default defineComponent({
     function showListStock(isVisible) {
       if (!isVisible) return
       if (
+        isEmptyValue(currentLine.value) ||
         isEmptyValue(currentLine.value.id) ||
         isEmptyValue(props.editLine.id) ||
         currentLine.value.id !== props.editLine.id
@@ -326,6 +345,25 @@ export default defineComponent({
     }
 
     function updateQuantity(quantity) {
+      const { is_allows_modify_quantity } = currentPos.value
+      if (!is_allows_modify_quantity) {
+        store.dispatch('setModalPin', {
+          title: lang.t('form.pos.pinMessage.pin') + lang.t('form.pos.pinMessage.qtyEntered'),
+          doneMethod: () => {
+            store.dispatch('updateCurrentLine', {
+              lineId: currentLine.value.id,
+              quantity
+            })
+              .then(() => {
+                currentLine.value.isEditQtyEntered = false
+              })
+          },
+          requestedAccess: 'IsAllowsModifyQuantity',
+          requestedAmount: quantity,
+          isShowed: true
+        })
+        return
+      }
       store.dispatch('updateCurrentLine', {
         lineId: props.editLine.id,
         quantity
@@ -333,6 +371,25 @@ export default defineComponent({
     }
 
     function updateDiscount(discount_rate) {
+      const { is_allows_modify_discount } = currentPos.value
+      if (!is_allows_modify_discount) {
+        store.dispatch('setModalPin', {
+          title: lang.t('form.pos.pinMessage.pin') + lang.t('form.pos.pinMessage.qtyEntered'),
+          doneMethod: () => {
+            store.dispatch('updateCurrentLine', {
+              lineId: currentLine.value.id,
+              discount_rate
+            })
+              .then(() => {
+                currentLine.value.isEditQtyEntered = false
+              })
+          },
+          requestedAccess: 'IsAllowsModifyDiscount',
+          requestedAmount: discount_rate,
+          isShowed: true
+        })
+        return
+      }
       store.dispatch('updateCurrentLine', {
         lineId: props.editLine.id,
         discount_rate
@@ -355,6 +412,7 @@ export default defineComponent({
       currentUOM,
       valueStock,
       currentLine,
+      currentPos,
       qtyWarehouseLine,
       updateUOM,
       formatPrice,
