@@ -262,7 +262,6 @@ const windowManager = {
     }, {
       parentUuid,
       containerUuid,
-      tabUuid,
       searchValue = '',
       referenceUuid = '',
       filters = [],
@@ -410,16 +409,15 @@ const windowManager = {
           pageToken = ''
         }
 
-        if (isEmptyValue(tabUuid)) {
-          tabUuid = containerUuid
+        if (!isEmptyValue(searchValue)) {
+          searchValue = encodeURI(searchValue)
         }
 
-        if (!isEmptyValue(searchValue)) searchValue = encodeURI(searchValue)
-
-        if (!isEmptyValue(contextAttributesList)) contextAttributes = JSON.stringify(contextAttributesList)
+        if (!isEmptyValue(contextAttributesList)) {
+          contextAttributes = JSON.stringify(contextAttributesList)
+        }
 
         requestGetEntities({
-          windowUuid: parentUuid,
           tabId: id,
           contextAttributes,
           searchValue,

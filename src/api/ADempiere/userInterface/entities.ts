@@ -26,7 +26,6 @@ import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/references.js'
  * @param {number} id, identifier
  */
 export function requestGetEntities({
-  id,
   tabId,
   filters,
   pageToken,
