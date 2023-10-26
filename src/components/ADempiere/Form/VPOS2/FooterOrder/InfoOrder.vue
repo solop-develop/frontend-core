@@ -82,8 +82,34 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           <span
             style="float: left"
           >
-            <i class="el-icon-s-custom" />
-            {{ $t('form.pos.order.seller') + ':' }}
+            <el-dropdown
+              trigger="click"
+              class="info-pos"
+              @command="changeSeller"
+            >
+              <span>
+                <span
+                  style="float: left;color: black;font-size: 16px;"
+                >
+                  <i class="el-icon-s-custom" />
+                  {{ $t('form.pos.order.seller') + ':' }}
+                </span>
+                <!-- <b style="float: right">
+                  {{ infoOrder.salesRepresentative.name }}
+                </b> -->
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item
+                  v-for="(item, index) in listSellers"
+                  :key="index"
+                  :command="item"
+                >
+                  {{ item.name }}
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <!-- <i class="el-icon-s-custom" />
+            {{ $t('form.pos.order.seller') + ':' }} -->
           </span>
           <b style="float: right">
             {{ infoOrder.salesRepresentative.name }}
@@ -202,6 +228,10 @@ export default defineComponent({
       return store.getters.getListOrderLines
     })
 
+    const listSellers = computed(() => {
+      return store.getters.getListSellers
+    })
+
     const displayCurrency = computed(() => {
       return store.getters.getVPOS.display_currency
     })
@@ -221,12 +251,20 @@ export default defineComponent({
       return formatPrice({ value: amount, currency: price_list.currency.iso_code })
     }
 
+    function changeSeller(seller) {
+      store.dispatch('updateCurrentOrder', {
+        sales_representative_id: seller.id
+      })
+    }
+
     return {
       lines,
       infoOrder,
+      listSellers,
       getItemQuantity,
       displayCurrency,
       formatPrice,
+      changeSeller,
       displayAmount,
       formatQuantity
     }

@@ -22,6 +22,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       controls-position="right"
       :precision="precision"
       autofocus
+      :disabled="disabled"
       style="text-align-last: end !important;width: 100%;"
       @change="handleChange"
       @blur="customFocusLost"
@@ -31,6 +32,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       v-model="valueDisplay"
       readonly
       autofocus
+      :disabled="disabled"
       style="text-align-last: end !important;width: 100%;"
       @focus="customFocusGained"
     />
@@ -67,6 +69,10 @@ export default defineComponent({
       default: (changeValue) => {
         console.info('Triggers when input value changes (value: string | number)', changeValue)
       }
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props) {

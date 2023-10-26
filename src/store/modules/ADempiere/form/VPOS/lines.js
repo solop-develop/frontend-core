@@ -161,6 +161,9 @@ export default {
             const list = order_lines.map(line => {
               return {
                 ...line,
+                isEditQtyEntered: false,
+                isEditCurrentPrice: false,
+                isEditDiscount: false,
                 isLoading: false
               }
             })

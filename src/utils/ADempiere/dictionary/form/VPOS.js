@@ -184,7 +184,7 @@ export function displayLineProductPriceValue({
 /**
  * Show Qty Entered according to the Product line
  */
-function displayLineQtyEntered({
+export function displayLineQtyEntered({
   row
 }) {
   const {

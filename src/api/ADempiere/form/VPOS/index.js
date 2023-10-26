@@ -154,6 +154,21 @@ export function listAvailableSellers({
   })
 }
 
+/**
+ * List Campaigns
+ * @param {int32} posId
+ * @returns {array} ListCampaignsResponse
+ */
+
+export function listCampaigns({
+  posId
+}) {
+  return request({
+    url: `/point-of-sales/${posId}/campaigns`,
+    method: 'get'
+  })
+}
+
 /** __________________________________________
  * |                                          |
  * | List of Point of Sale Product Services   |
