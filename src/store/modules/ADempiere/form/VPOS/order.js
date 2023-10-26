@@ -278,7 +278,8 @@ export default {
           order = currentOrder
         }
         if (
-          isEmptyValue(currentOrder)
+          isEmptyValue(currentOrder) &&
+          isEmptyValue(order)
         ) {
           order = { id: query.orderId }
         }
@@ -420,6 +421,12 @@ export default {
       return new Promise(resolve => {
         const pos = getters.getVPOS
         if (isEmptyValue(order)) resolve({})
+        console.log({ ...order })
+        if (order.document_status.value === 'CO') {
+          dispatch('overloadOrder', { order })
+          resolve({})
+          return
+        }
         holdOrder({
           posId: pos.id,
           orderId: order.id

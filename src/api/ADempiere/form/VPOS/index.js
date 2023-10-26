@@ -1097,3 +1097,20 @@ export function printTicket({
     }
   })
 }
+
+/**
+ * Reverse Sales
+ */
+export function reverseSales({
+  posId,
+  orderId,
+  description
+}) {
+  return request({
+    url: `point-of-sales/${posId}/orders/${orderId}/reverse`,
+    method: 'put',
+    data: {
+      description
+    }
+  })
+}

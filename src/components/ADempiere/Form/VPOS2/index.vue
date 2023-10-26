@@ -18,29 +18,48 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
   <el-container
     class="v-pos"
   >
-    <el-header style="height: auto !important;margin-bottom: 10px;">
-      <header-order />
-      <!-- {{ 'Header Order' }} -->
-    </el-header>
-    <el-main style="padding: 0px 20px;">
-      <main-order />
-      <dialog-info />
-      <modal-pin />
-      <el-drawer
-        title="Cobranza"
-        :visible.sync="showCollection"
-        :with-header="false"
-        :before-close="handleClose"
-        size="50%"
+    <el-aside :width="widthAside" class="panel-options">
+      <el-card
+        shadow="never"
       >
-        <collection
-          key="collection-component"
+        <options
+          v-if="isShowOptions"
         />
-      </el-drawer>
+        <el-button
+          v-if="!isShowOptions"
+          circle
+          type="primary"
+          :icon="iconsButtons"
+          class="buttons-options"
+          @click="isShowOptions = !isShowOptions"
+        />
+      </el-card>
+    </el-aside>
+    <el-main class="panel-main">
+      <el-header style="height: auto !important;margin-bottom: 10px;">
+        <header-order />
+        <!-- {{ 'Header Order' }} -->
+      </el-header>
+      <el-main style="padding: 0px 20px;">
+        <main-order />
+        <dialog-info />
+        <modal-pin />
+        <el-drawer
+          title="Cobranza"
+          :visible.sync="showCollection"
+          :with-header="false"
+          :before-close="handleClose"
+          size="50%"
+        >
+          <collection
+            key="collection-component"
+          />
+        </el-drawer>
+      </el-main>
+      <el-footer style="height: auto !important;padding-top: 5px;">
+        <footer-order />
+      </el-footer>
     </el-main>
-    <el-footer style="height: auto !important;padding-top: 5px;">
-      <footer-order />
-    </el-footer>
   </el-container>
 </template>
 
@@ -57,6 +76,7 @@ import FooterOrder from './FooterOrder'
 import Collection from './Collection'
 import DialogInfo from './DialogInfo'
 import ModalPin from './DialogInfo/pin.vue'
+import Options from './Options'
 // Utils and Helper Methods
 // import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
@@ -68,6 +88,7 @@ export default defineComponent({
     ModalPin,
     FooterOrder,
     Collection,
+    Options,
     DialogInfo
   },
   setup() {
@@ -86,6 +107,26 @@ export default defineComponent({
       }
     })
 
+    const iconsButtons = computed(() => {
+      if (isShowOptions.value) return 'el-icon-arrow-left'
+      return 'el-icon-arrow-right'
+    })
+
+    const widthAside = computed(() => {
+      if (isShowOptions.value) return '40%'
+      return '2%'
+    })
+
+    const isShowOptions = computed({
+      get() {
+        return store.getters.getShowOptions
+      },
+      // setter
+      set(show) {
+        store.commit('setShowOptions', show)
+      }
+    })
+
     function handleClose() {
       showCollection.value = false
     }
@@ -96,6 +137,9 @@ export default defineComponent({
 
     return {
       showCollection,
+      isShowOptions,
+      iconsButtons,
+      widthAside,
       handleClose
     }
   }
@@ -111,5 +155,15 @@ export default defineComponent({
   .order-info {
     text-align: right;
   }
+}
+.buttons-options {
+  position: absolute;
+  top: 45%;
+}
+.panel-options {
+  padding: 0px;
+}
+.panel-main {
+  padding-left: 0px;
 }
 </style>
