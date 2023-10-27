@@ -61,6 +61,9 @@ export default {
     }
 
     const fieldsEmpty = fieldsList.filter(fieldItem => {
+      if (fieldItem.isInfoOnly) {
+        return false
+      }
       const isMandatory = isMandatoryField(fieldItem)
       const isDisplayed = isDisplayedField(fieldItem)
 
@@ -108,6 +111,9 @@ export default {
     const reportParameters = []
 
     fieldsList.forEach(fieldItem => {
+      if (fieldItem.isInfoOnly) {
+        return false
+      }
       const { columnName } = fieldItem
       const isMandatory = isMandatoryField(fieldItem)
       if (!isMandatory) {
