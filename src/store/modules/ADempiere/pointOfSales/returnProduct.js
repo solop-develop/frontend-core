@@ -29,7 +29,7 @@ import {
   deleteRMALine
 } from '@/api/ADempiere/form/ReturnRMA.js'
 
-// utils and helper methods
+// Utils and Helper Methods
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 
@@ -267,7 +267,7 @@ const returnProduct = {
               label: `${error.message} - ${rootGetters.getOrderReturn.documentNo}`,
               title: lang.t('form.pos.returnProduct'),
               lines: rootGetters.getListProduct,
-              type: 'success',
+              type: 'error',
               order: rootGetters.getOrderReturn
             })
             commit('setShowSummaryRMA', true)

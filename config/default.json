@@ -1,7 +1,8 @@
 {
   "server": {
     "host": "localhost",
-    "port": 9527
+    "port": 9527,
+    "publicPath": "/base-public-path/"
   },
   "adempiere": {
     "api": {

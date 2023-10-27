@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# Set Public Path to static assets *.html, *.css, *.img, *.js ("publicPath":"/")
+cd /usr/share/nginx/html
+find . -type f -exec sed -i "s|/base-public-path/|$PUBLIC_PATH|g" {} +
+# find -name 'app.*.js' -exec sed -i "s|/base-public-path/|$PUBLIC_PATH|g" {} \;
+
+
 # folder with dist app files
 cd /usr/share/nginx/html/static/js
 

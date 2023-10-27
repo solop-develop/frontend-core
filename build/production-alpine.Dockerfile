@@ -1,11 +1,12 @@
-FROM nginx:1.25.0-alpine3.17
+FROM nginx:1.25.3-alpine3.18
 
 LABEL maintainer="Elsiosanches@gmail.com; EdwinBetanc0urt@outlook.com;" \
 	description="ADempiere-Vue."
 
 
 # Init ENV with default values
-ENV API_URL="http://localhost:8085/api/adempiere/" \
+ENV PUBLIC_PATH="/" \
+	API_URL="http://localhost:8085/api/adempiere/" \
 	TASK_MANAGER_URL="http://localhost:8080/v1" \
 	TZ="America/Caracas"
 
