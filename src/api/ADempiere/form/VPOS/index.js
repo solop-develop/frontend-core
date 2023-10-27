@@ -1160,3 +1160,99 @@ export function copyOrder({
     }
   })
 }
+
+/**
+ * Shipment
+ * Create Shipment
+ */
+
+export function createShipment({
+  posId,
+  orderId,
+  salesRepresentativeId,
+  isCreateLinesFromOrder
+}) {
+  return request({
+    url: `point-of-sales/${posId}/shipments`,
+    method: 'post',
+    data: {
+      order_id: orderId,
+      sales_representative_id: salesRepresentativeId,
+      is_create_lines_from_order: isCreateLinesFromOrder
+    }
+  })
+}
+
+/**
+ * Create Shipment Line
+ */
+export function createShipmentLine({
+  posId,
+  quantity,
+  shipmentId,
+  description,
+  orderLineId
+}) {
+  return request({
+    url: `point-of-sales/${posId}/shipments/${shipmentId}/lines`,
+    method: 'post',
+    data: {
+      order_line_id: orderLineId,
+      description,
+      quantity
+    }
+  })
+}
+
+/**
+ * List Shipment Line
+ */
+export function listShipmentLines({
+  posId,
+  shipmentId
+}) {
+  return request({
+    url: `point-of-sales/${posId}/shipments/${shipmentId}/lines`,
+    method: 'get',
+    params: {
+      page_size: 100
+    }
+  })
+}
+
+/**
+ * Process Shipment
+ */
+export function processShipment({
+  id,
+  posId,
+  description,
+  documentAction = 'CO'
+}) {
+  return request({
+    url: `point-of-sales/${posId}/shipments/${id}/process`,
+    method: 'put',
+    data: {
+      document_action: documentAction,
+      description
+    }
+  })
+}
+
+/**
+ * Print Preview for Shipment
+ */
+export function printShipmentPreview({
+  posId,
+  shipmentId,
+  reportType = 'application/pdf'
+}) {
+  return request({
+    url: `point-of-sales/${posId}/shipments/${shipmentId}/print-preview`,
+    method: 'post',
+    data: {
+      report_type: reportType
+    }
+  })
+}
+

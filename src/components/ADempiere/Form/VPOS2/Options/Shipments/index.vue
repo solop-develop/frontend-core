@@ -20,61 +20,86 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
   <el-main
     class="product-list-content"
   >
-    <el-card
-      shadow="never"
+    <el-form
+      label-position="top"
+      label-width="10px"
+      @submit.native.prevent="notSubmitForm"
     >
-      <el-form
-        label-position="top"
-        label-width="10px"
-        @submit.native.prevent="notSubmitForm"
+      <el-form-item
+        :label="$t('form.productInfo.codeProduct')"
+        style="width: 100%"
       >
-        <el-form-item
-          :label="$t('form.productInfo.codeProduct')"
+        <el-autocomplete
+          v-model="searchProduct"
           style="width: 100%"
+          popper-class="my-autocomplete"
+          :fetch-suggestions="querySearch"
+          :placeholder="$t('quickAccess.searchWithEnter')"
+          @select="handleSelect"
         >
-          <el-autocomplete
-            v-model="searchProduct"
-            style="width: 100%"
-            popper-class="my-autocomplete"
-            :fetch-suggestions="querySearch"
-            :placeholder="$t('quickAccess.searchWithEnter')"
-            @select="handleSelect"
-          >
-            <template slot-scope="{ item }">
-              <div class="header" style="margin: 0px">
-                <b> {{ item.product.value }} - {{ item.product.name }} </b>
+          <template slot-scope="{ item }">
+            <div class="header" style="margin: 0px">
+              <b> {{ item.product.value }} - {{ item.product.name }} </b>
+            </div>
+            <div style="margin: 0px">
+              <div style="float: left;width: 70%;margin: 0px">
+                <p style="overflow: hidden;text-overflow: ellipsis;text-align: inherit;margin: 0px">
+                  {{ item.product.upc }} <br>
+                  {{ item.product.description }}
+                </p>
               </div>
-              <div style="margin: 0px">
-                <div style="float: left;width: 70%;margin: 0px">
-                  <p style="overflow: hidden;text-overflow: ellipsis;text-align: inherit;margin: 0px">
-                    {{ item.product.upc }} <br>
-                    {{ item.product.description }}
-                  </p>
-                </div>
-                <div style="width: 30%;float: right;margin: 0px">
-                  <p style="overflow: hidden;text-overflow: ellipsis;text-align: end;margin: 0px">
-                    {{ formatQuantity(item.quantity_ordered.value) }}
-                  </p>
-                </div>
+              <div style="width: 30%;float: right;margin: 0px">
+                <p style="overflow: hidden;text-overflow: ellipsis;text-align: end;margin: 0px">
+                  {{ formatQuantity({ value: item.quantity_ordered.value }) }}
+                  <!-- {{ item.quantity_ordered }} -->
+                </p>
               </div>
-            </template>
-          </el-autocomplete>
-        </el-form-item>
-      </el-form>
-      <!-- <el-table
-        ref="listProducto"
-        v-shortkey="shortsKey"
-        v-loading="isLoadedServer"
-        :data="productdeliveryList"
-        :empty-text="$t('quickAccess.searchWithEnter')"
-        border
-        fit
-        height="450"
-        highlight-current-row
-        @cell-dblclick="editDelivery"
-        @shortkey.native="keyAction"
-      > -->
-    </el-card>
+            </div>
+          </template>
+        </el-autocomplete>
+      </el-form-item>
+    </el-form>
+    <el-table
+      :data="shipmentLines"
+      :empty-text="$t('quickAccess.searchWithEnter')"
+      border
+      fit
+      highlight-current-row
+    >
+      <el-table-column
+        prop="product.value"
+        :label="$t('form.productInfo.code')"
+      />
+      <el-table-column
+        prop="product.name"
+        :label="$t('form.pos.tableProduct.product')"
+      />
+      <el-table-column
+        prop="quantity"
+        :label="$t('form.pos.tableProduct.quantity')"
+        align="right"
+      >
+        <template slot-scope="scope">
+          <span>
+            {{ formatQuantity({ value: scope.row.quantity }) }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="uom.uom.name"
+        :label="$t('form.pos.tableProduct.uom')"
+      />
+      <el-table-column
+        prop="quantity"
+        :label="$t('form.pos.tableProduct.movementQuantity')"
+        align="right"
+        width="200px"
+      >
+        <template slot-scope="scope">
+          {{ formatQuantity({ value: scope.row.movement_quantity }) }}
+        </template>
+      </el-table-column>
+    </el-table>
   </el-main>
 </template>
 
@@ -98,6 +123,10 @@ export default defineComponent({
       return store.getters.getListOrderLines
     })
 
+    const shipmentLines = computed(() => {
+      return store.getters.getShipmentList
+    })
+
     // Methods
 
     /**
@@ -116,7 +145,14 @@ export default defineComponent({
     }
 
     function handleSelect(item) {
-      console.log(item)
+      const {
+        id,
+        quantity_ordered
+      } = item
+      store.dispatch('createShipmentLine', {
+        quantity: quantity_ordered.value,
+        orderLineId: id
+      })
     }
 
     return {
@@ -124,6 +160,7 @@ export default defineComponent({
       searchProduct,
       // Computed
       lines,
+      shipmentLines,
       // Methods
       querySearch,
       handleSelect,

@@ -353,14 +353,14 @@ export default defineComponent({
     })
 
     const isConfirmShipment = computed(() => {
-      // const { is_allows_confirm_shipment } = currentPointOfSales.value
-      // if (is_allows_confirm_shipment) {
-      //   if (!isEmptyValue(currentOrder.value)) {
-      //     const { document_status } = currentOrder.value
-      //     return document_status.value === 'CO'
-      //   }
-      // }
-      return false
+      const { is_allows_confirm_shipment } = currentPointOfSales.value
+      if (is_allows_confirm_shipment) {
+        if (!isEmptyValue(currentOrder.value)) {
+          const { document_status } = currentOrder.value
+          return document_status.value === 'CO'
+        }
+      }
+      // return false
     })
 
     const isAllowsReturnOrder = computed(() => {
@@ -462,11 +462,26 @@ export default defineComponent({
     }
 
     function confirmShipment() {
-      // console.log('Shipments')
+      store.dispatch('newShipment', {})
       store.dispatch('setModalDialogVPOS', {
         title: lang.t('form.pos.optionsPoinSales.salesOrder.confirmDelivery'),
         doneMethod: () => {
-          console.log('Completar Entrega')
+          store.commit('setShowedModalDialogVPOS', {
+            isShowed: false
+          })
+          setTimeout(() => {
+            store.dispatch('setModalDialogVPOS', {
+              title: lang.t('form.pos.optionsPoinSales.salesOrder.confirmDelivery'),
+              doneMethod: () => {
+                store.dispatch('sendProcessShipment')
+              },
+              isDisabledDone: () => {
+                return isEmptyValue(store.getters.getCurrentShipment) || isEmptyValue(store.getters.getShipmentList)
+              },
+              componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/Shipments/info.vue'),
+              isShowed: true
+            })
+          })
         },
         componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/Shipments/index.vue'),
         isShowed: true

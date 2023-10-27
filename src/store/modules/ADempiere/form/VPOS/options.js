@@ -14,13 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import router from '@/router'
+import lang from '@/lang'
 // API Request Methods
 import {
   reverseSales,
   printTicket,
   printPreview,
   copyOrder,
-  deleteOrder
+  deleteOrder,
+  createShipment,
+  createShipmentLine,
+  listShipmentLines,
+  processShipment,
+  printShipmentPreview
 } from '@/api/ADempiere/form/VPOS'
 // // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -31,7 +37,11 @@ import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
 
 const options = {
   showOptions: false,
-  showShipment: false
+  showShipment: false,
+  shipment: {
+    list: [],
+    current: {}
+  }
 }
 
 export default {
@@ -42,6 +52,12 @@ export default {
     },
     setShowShipment(state, show) {
       state.showShipment = show
+    },
+    setShipmentList(state, list) {
+      state.shipment.list = list
+    },
+    setShipment(state, shipment) {
+      state.shipment.current = shipment
     }
   },
   actions: {
@@ -339,6 +355,236 @@ export default {
             resolve({})
           })
       })
+    },
+    newShipment({
+      getters,
+      commit,
+      dispatch
+    }, {
+      isCreateLinesFromOrder = false
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        const currentOrder = getters.getCurrentOrder
+        if (
+          isEmptyValue(currentPos.id) ||
+          isEmptyValue(currentOrder.id)
+        ) resolve({})
+        createShipment({
+          posId: currentPos.id,
+          isCreateLinesFromOrder,
+          orderId: currentOrder.id,
+          salesRepresentativeId: currentPos.sales_representative.id
+        })
+          .then(response => {
+            commit('setShipment', response)
+            dispatch('listShipmentLines')
+            resolve(response)
+          })
+          .catch(error => {
+            commit('setShipment', {})
+            commit('setShipmentList', [])
+            console.warn(`Create Shipment: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            commit('setShowedModalDialogVPOS', {
+              isShowed: false
+            })
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve({})
+          })
+      })
+    },
+    createShipmentLine({
+      getters,
+      dispatch
+    }, {
+      quantity,
+      description,
+      orderLineId
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        const currentShipment = getters.getCurrentShipment
+        if (
+          isEmptyValue(currentPos.id)
+        ) resolve({})
+        createShipmentLine({
+          posId: currentPos.id,
+          quantity,
+          shipmentId: currentShipment.id,
+          description,
+          orderLineId
+        })
+          .then(response => {
+            dispatch('listShipmentLines')
+            // dispatch('overloadOrder', { order: currentOrder })
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Process Orders: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve({})
+          })
+      })
+    },
+    listShipmentLines({
+      commit,
+      getters
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        const currentShipment = getters.getCurrentShipment
+        if (
+          isEmptyValue(currentPos.id)
+        ) resolve({})
+        listShipmentLines({
+          posId: currentPos.id,
+          shipmentId: currentShipment.id
+        })
+          .then(response => {
+            const { shipment_lines } = response
+            commit('setShipmentList', shipment_lines)
+            // dispatch('overloadOrder', { order: currentOrder })
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Process Orders: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve({})
+          })
+      })
+    },
+    sendProcessShipment({
+      getters,
+      commit,
+      dispatch
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        const { id } = getters.getCurrentShipment
+        if (
+          isEmptyValue(currentPos.id)
+        ) resolve({})
+        processShipment({
+          posId: currentPos.id,
+          id
+        })
+          .then(response => {
+            // commit('setShipmentList', shipment_lines)
+            commit('setShipment', {})
+            commit('setShipmentList', [])
+            // dispatch('overloadOrder', { order: currentOrder })
+            dispatch('printShipmentPreview')
+            dispatch('setModalDialogVPOS', {
+              title: lang.t('form.pos.optionsPoinSales.salesOrder.confirmDelivery'),
+              type: 'success',
+              doneMethod: () => {},
+              // TODO: Change to string and import dynamic in component
+              componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/Shipments/info.vue'),
+              isShowed: true
+            })
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Process Orders: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve({})
+          })
+      })
+    },
+    printShipmentPreview({
+      dispatch,
+      getters
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        const shipment = getters.getCurrentShipment
+        printShipmentPreview({
+          posId: currentPos.id,
+          shipmentId: shipment.id
+        })
+          .then(response => {
+            const {
+              output_stream,
+              result_type,
+              mime_type,
+              file_name,
+              is_error,
+              summary
+            } = response
+            const type = is_error ? 'error' : 'success'
+            const message = isEmptyValue(summary) ? (is_error ? 'Error' : 'OK') : summary
+            showMessage({
+              type,
+              message,
+              showClose: true
+            })
+            if (
+              !isEmptyValue(output_stream) &&
+              !isEmptyValue(mime_type) &&
+              !isEmptyValue(file_name)
+            ) {
+              dispatch('generateReportVPOS', {
+                orderId: shipment.id,
+                file_name,
+                mime_type,
+                result_type,
+                output_stream
+              })
+            }
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Prin Previwer: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve({})
+          })
+      })
     }
   },
   getters: {
@@ -347,6 +593,12 @@ export default {
     },
     getShowShipment: (state) => {
       return state.showShipment
+    },
+    getCurrentShipment: (state) => {
+      return state.shipment.current
+    },
+    getShipmentList: (state) => {
+      return state.shipment.list
     }
   }
 }
