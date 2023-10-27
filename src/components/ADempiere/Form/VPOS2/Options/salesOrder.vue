@@ -15,16 +15,16 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
-  <el-row :gutter="5">
+  <el-row :gutter="10">
     <el-col :span="8">
       <div @click="newOrder">
         <el-card
           shadow="never"
-          class="custom-card"
+          class="custom-card-options"
           :body-style="{ padding: '10px' }"
         >
           <p
-            style="cursor: pointer; text-align: center !important; color: black;min-height: 50px;"
+            class="card-options-buttons"
           >
             <i class="el-icon-news" />
             <br>
@@ -37,11 +37,11 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       <div @click="listOrders">
         <el-card
           shadow="never"
-          class="custom-card"
+          class="custom-card-options"
           :body-style="{ padding: '10px' }"
         >
           <p
-            style="cursor: pointer; text-align: center !important; color: black;min-height: 50px;"
+            class="card-options-buttons"
           >
             <i class="el-icon-news" />
             <br>
@@ -54,11 +54,11 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       <div @click="addResource">
         <el-card
           shadow="never"
-          class="custom-card"
+          class="custom-card-options"
           :body-style="{ padding: '10px' }"
         >
           <p
-            style="cursor: pointer; text-align: center !important; color: black;min-height: 50px;"
+            class="card-options-buttons"
           >
             <i class="el-icon-news" />
             <br>
@@ -72,11 +72,11 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       <div @click="completePreparedOrder">
         <el-card
           shadow="never"
-          class="custom-card"
+          class="custom-card-options"
           :body-style="{ padding: '10px' }"
         >
           <p
-            style="cursor: pointer; text-align: center !important; color: black;min-height: 50px;"
+            class="card-options-buttons"
           >
             <i class="el-icon-success" />
             <br>
@@ -141,11 +141,11 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         <div slot="reference">
           <el-card
             shadow="never"
-            class="custom-card"
+            class="custom-card-options"
             :body-style="{ padding: '10px' }"
           >
             <p
-              style="cursor: pointer; text-align: center !important; color: black;min-height: 50px;"
+              class="card-options-buttons"
             >
               <i class="el-icon-error" />
               <br>
@@ -155,6 +155,136 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         </div>
       </el-popover>
     </el-col>
+    <!-- printTicket -->
+    <el-col v-if="isAllowsPrintDocument" :span="8">
+      <div @click="printTicket">
+        <el-card
+          shadow="never"
+          class="custom-card-options"
+          :body-style="{ padding: '10px' }"
+        >
+          <p
+            v-if="!isLoadingPrintTicket"
+            class="card-options-buttons"
+          >
+            <i class="el-icon-printer" />
+            <br>
+            {{ $t('form.pos.optionsPoinSales.salesOrder.print') }}
+          </p>
+          <p
+            v-else
+            class="card-options-buttons"
+          >
+            <i class="el-icon-loading" />
+            <br>
+          </p>
+        </el-card>
+      </div>
+    </el-col>
+    <!-- printTicketPreviwer -->
+    <el-col v-if="IsAllowsPreviewDocument" :span="8">
+      <div @click="printPreview">
+        <el-card
+          shadow="never"
+          class="custom-card-options"
+          :body-style="{ padding: '10px' }"
+        >
+          <p
+            v-if="!isLoadingPreviewDocument"
+            class="card-options-buttons"
+          >
+            <i class="el-icon-printer" />
+            <br>
+            {{ $t('form.pos.optionsPoinSales.salesOrder.preview') }}
+          </p>
+          <p
+            v-else
+            class="card-options-buttons"
+          >
+            <i class="el-icon-loading" />
+            <br>
+          </p>
+        </el-card>
+      </div>
+    </el-col>
+    <!-- copyOrder -->
+    <el-col v-if="IsCopyOrder" :span="8">
+      <div @click="copyOrder">
+        <el-card
+          shadow="never"
+          class="custom-card-options"
+          :body-style="{ padding: '10px' }"
+        >
+          <p
+            v-if="!isLoadingCopyOrder"
+            class="card-options-buttons"
+          >
+            <i class="el-icon-document-copy" />
+            <br>
+            {{ $t('form.pos.optionsPoinSales.salesOrder.copyOrder') }}
+          </p>
+          <p
+            v-else
+            class="card-options-buttons"
+          >
+            <i class="el-icon-loading" />
+            <br>
+          </p>
+        </el-card>
+      </div>
+    </el-col>
+    <!-- cancelOrder -->
+    <el-col v-if="IsCancelOrder" :span="8">
+      <div @click="cancelOrder">
+        <el-card
+          shadow="never"
+          class="custom-card-options"
+          :body-style="{ padding: '10px' }"
+        >
+          <p
+            v-if="!isLoadingCancelOrder"
+            class="card-options-buttons"
+          >
+            <i class="el-icon-close" />
+            <br>
+            {{ $t('form.pos.optionsPoinSales.salesOrder.cancelOrder') }}
+          </p>
+          <p
+            v-else
+            class="card-options-buttons"
+          >
+            <i class="el-icon-loading" />
+            <br>
+          </p>
+        </el-card>
+      </div>
+    </el-col>
+    <!-- confirmShipment -->
+    <el-col v-if="isConfirmShipment" :span="8">
+      <div @click="confirmShipment">
+        <el-card
+          shadow="never"
+          class="custom-card-options"
+          :body-style="{ padding: '10px' }"
+        >
+          <p
+            v-if="!isLoadingCancelOrder"
+            class="card-options-buttons"
+          >
+            <svg-icon icon-class="shopping" />
+            <br>
+            {{ $t('form.pos.optionsPoinSales.salesOrder.confirmDelivery') }}
+          </p>
+          <p
+            v-else
+            class="card-options-buttons"
+          >
+            <i class="el-icon-loading" />
+            <br>
+          </p>
+        </el-card>
+      </div>
+    </el-col>
   </el-row>
 </template>
 
@@ -163,7 +293,7 @@ import { defineComponent, computed, ref } from '@vue/composition-api'
 import lang from '@/lang'
 import store from '@/store'
 // Components and Mixins
-// import ButtonGroupOptions from './ButtonGroupOptions.vue'
+// import Shipments from './Shipments.vue'
 // import OptionsList from './OptionsList.vue'
 // import InfoOrder from './InfoOrder.vue'
 // Utils and Helper Methods
@@ -174,7 +304,21 @@ export default defineComponent({
   setup() {
     const isShowCancelSaleTransaction = ref(false)
     const isLoadingCancelSaleTransaction = ref(false)
+    const isLoadingPrintTicket = ref(false)
+    const isLoadingPreviewDocument = ref(false)
+    const isLoadingCopyOrder = ref(false)
+    const isLoadingCancelOrder = ref(false)
     const messageReverseSales = ref('')
+
+    const isShowShipment = computed({
+      get() {
+        return store.getters.getShowShipment
+      },
+      // setter
+      set(show) {
+        store.commit('setShowShipment', show)
+      }
+    })
 
     const currentPointOfSales = computed(() => {
       return store.getters.getVPOS
@@ -182,6 +326,41 @@ export default defineComponent({
 
     const currentOrder = computed(() => {
       return store.getters.getCurrentOrder
+    })
+
+    const isAllowsPrintDocument = computed(() => {
+      const { is_allows_print_document } = currentPointOfSales.value
+      return is_allows_print_document
+    })
+
+    const IsAllowsPreviewDocument = computed(() => {
+      const { is_allows_preview_document } = currentPointOfSales.value
+      return is_allows_preview_document
+    })
+
+    const IsCopyOrder = computed(() => {
+      if (isEmptyValue(currentOrder.value)) return false
+      const { document_status } = currentOrder.value
+      return !['CL', 'VO', 'RE'].includes(document_status.value)
+    })
+
+    const IsCancelOrder = computed(() => {
+      if (!isEmptyValue(currentOrder.value)) {
+        const { document_status } = currentOrder.value
+        return document_status.value !== 'CO'
+      }
+      return false
+    })
+
+    const isConfirmShipment = computed(() => {
+      // const { is_allows_confirm_shipment } = currentPointOfSales.value
+      // if (is_allows_confirm_shipment) {
+      //   if (!isEmptyValue(currentOrder.value)) {
+      //     const { document_status } = currentOrder.value
+      //     return document_status.value === 'CO'
+      //   }
+      // }
+      return false
     })
 
     const isAllowsReturnOrder = computed(() => {
@@ -240,19 +419,88 @@ export default defineComponent({
       isShowCancelSaleTransaction.value = false
     }
 
+    function printTicket() {
+      if (isLoadingPrintTicket.value) return
+      isLoadingPrintTicket.value = true
+      store.dispatch('printTicketVPOS', {
+        orderId: currentOrder.value.id
+      })
+        .then(() => {
+          isLoadingPrintTicket.value = false
+        })
+    }
+
+    function printPreview() {
+      if (isLoadingPreviewDocument.value) return
+      isLoadingPreviewDocument.value = true
+      store.dispatch('printPreview', {
+        orderId: currentOrder.value.id
+      })
+        .then(() => {
+          isLoadingPreviewDocument.value = false
+        })
+    }
+
+    function copyOrder() {
+      if (isLoadingCopyOrder.value) return
+      isLoadingCopyOrder.value = true
+      store.dispatch('copyOrder', {
+        sourceOrderId: currentOrder.id
+      })
+        .then(() => {
+          isLoadingCopyOrder.value = false
+        })
+    }
+
+    function cancelOrder() {
+      if (isLoadingCancelOrder.value) return
+      isLoadingCancelOrder.value = true
+      store.dispatch('deleteOrder')
+        .then(() => {
+          isLoadingCancelOrder.value = false
+        })
+    }
+
+    function confirmShipment() {
+      // console.log('Shipments')
+      store.dispatch('setModalDialogVPOS', {
+        title: lang.t('form.pos.optionsPoinSales.salesOrder.confirmDelivery'),
+        doneMethod: () => {
+          console.log('Completar Entrega')
+        },
+        componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/Shipments/index.vue'),
+        isShowed: true
+      })
+    }
+
     return {
       // Ref
+      IsCopyOrder,
       messageReverseSales,
+      isLoadingCopyOrder,
+      isLoadingCancelOrder,
+      isLoadingPrintTicket,
+      isLoadingPreviewDocument,
       isShowCancelSaleTransaction,
       isLoadingCancelSaleTransaction,
       // Computed
       currentOrder,
-      currentPointOfSales,
+      IsCancelOrder,
+      isShowShipment,
+      isConfirmShipment,
       isAllowsReturnOrder,
+      currentPointOfSales,
+      isAllowsPrintDocument,
+      IsAllowsPreviewDocument,
       //  Methods
       newOrder,
+      copyOrder,
       listOrders,
+      cancelOrder,
       addResource,
+      printTicket,
+      printPreview,
+      confirmShipment,
       closeReverseSales,
       completePreparedOrder,
       cancelSaleTransaction
@@ -260,3 +508,22 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss" scoped>
+.card-options-buttons {
+  cursor: pointer;
+  text-align: center !important;
+  color: black;
+  min-height: 50px;
+}
+.custom-card-options {
+  margin: 1px;
+  min-height: 125px;
+  max-height: 125px;
+  cursor: pointer;
+}
+.custom-card-options:hover {
+  background-color: #eaf5fe;
+  border: 1px solid #36a3f7;
+}
+</style>

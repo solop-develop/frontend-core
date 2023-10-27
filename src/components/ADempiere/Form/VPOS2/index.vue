@@ -113,7 +113,7 @@ export default defineComponent({
     })
 
     const widthAside = computed(() => {
-      if (isShowOptions.value) return '40%'
+      if (isShowOptions.value) return '30%'
       return '2%'
     })
 

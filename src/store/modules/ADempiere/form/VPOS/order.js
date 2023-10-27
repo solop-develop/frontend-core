@@ -20,7 +20,6 @@ import router from '@/router'
 // API Request Methods
 import {
   createOrder,
-  deleteOrder,
   listOrders,
   getOrder,
   releaseOrder,
@@ -320,55 +319,6 @@ export default {
           })
       })
     },
-    // /**
-    //  * Delete Order
-    //  * @param {String} posUuid
-    //  * @param {String} orderUuid
-    //  * @returns (Empty) {}
-    //  */
-    deleteOrder({ commit, getters }) {
-      return new Promise(resolve => {
-        const pos = getters.getVPOS
-        const order = getters.getCurrentOrder
-        if (isEmptyValue(order)) resolve({})
-        deleteOrder({
-          posId: pos.id,
-          orderId: order.id
-        })
-          .then(() => {
-            const currentRouter = router.app.$route
-            const {
-              name,
-              query,
-              params
-            } = currentRouter
-            router.push({
-              name,
-              params,
-              query: {
-                posId: query.posId
-              }
-            }, () => {})
-            commit('setCurrentOrder', {})
-            commit('setListOrderLines', [])
-            resolve({})
-          })
-          .catch(error => {
-            console.warn(`Delete Order: ${error.message}. Code: ${error.code}.`)
-            let message = error.message
-            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
-              message = error.response.data.message
-            }
-
-            showMessage({
-              type: 'error',
-              message,
-              showClose: true
-            })
-            resolve({})
-          })
-      })
-    },
 
     releaseCurrentOrder({ commit, getters }, {
       order
@@ -421,7 +371,6 @@ export default {
       return new Promise(resolve => {
         const pos = getters.getVPOS
         if (isEmptyValue(order)) resolve({})
-        console.log({ ...order })
         if (order.document_status.value === 'CO') {
           dispatch('overloadOrder', { order })
           resolve({})
