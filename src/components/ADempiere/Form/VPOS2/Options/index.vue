@@ -33,21 +33,34 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       </el-card>
     </el-header>
     <el-main>
-      <el-collapse
-        accordion
-      >
-        <el-collapse-item :title="$t('form.pos.optionsPoinSales.salesOrder.title')" name="salesOrder">
-          <sales-order />
-        </el-collapse-item>
-        <el-collapse-item :title="$t('form.pos.optionsPoinSales.cashManagement.title')" name="cashManagement" />
-        <el-collapse-item :title="$t('form.pos.optionsPoinSales.generalOptions.title')" name="generalOptions" />
-      </el-collapse>
+      <div style="width: 97%;float: left;">
+        <el-collapse
+          accordion
+        >
+          <el-collapse-item :title="$t('form.pos.optionsPoinSales.salesOrder.title')" name="salesOrder">
+            <sales-order />
+          </el-collapse-item>
+          <el-collapse-item :title="$t('form.pos.optionsPoinSales.cashManagement.title')" name="cashManagement" />
+          <el-collapse-item :title="$t('form.pos.optionsPoinSales.generalOptions.title')" name="generalOptions" />
+        </el-collapse>
+      </div>
+      <div style="width: 3%;float: right;margin-top: 75%;">
+        <el-button
+          v-if="isShowOptions"
+          circle
+          type="primary"
+          :icon="iconsButtons"
+          class="buttons-options"
+          @click="isShowOptions = !isShowOptions"
+        />
+      </div>
     </el-main>
   </el-container>
 </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
+import store from '@/store'
 
 // Components and Mixins
 import SalesOrder from './salesOrder.vue'
@@ -60,6 +73,25 @@ export default defineComponent({
     SalesOrder
   //   OptionsList,
   //   InfoOrder
+  },
+  setup() {
+    const iconsButtons = computed(() => {
+      if (isShowOptions.value) return 'el-icon-arrow-left'
+      return 'el-icon-arrow-right'
+    })
+    const isShowOptions = computed({
+      get() {
+        return store.getters.getShowOptions
+      },
+      // setter
+      set(show) {
+        store.commit('setShowOptions', show)
+      }
+    })
+    return {
+      isShowOptions,
+      iconsButtons
+    }
   }
 })
 </script>

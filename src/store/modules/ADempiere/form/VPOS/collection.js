@@ -15,7 +15,6 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import Vue from 'vue'
-import router from '@/router'
 // API Request Methods
 import {
   createPayment,
@@ -23,16 +22,12 @@ import {
   deletePayment,
   listPayments,
   getConversionRate,
-  processOrder,
-  printTicket
+  processOrder
 } from '@/api/ADempiere/form/VPOS'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { defaultValueCollections } from '@/utils/ADempiere/dictionary/form/VPOS'
-import { buildLinkHref } from '@/utils/ADempiere/resource.js'
-// Constants
-import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
 
 const collection = {
   showCollection: false,
@@ -333,103 +328,6 @@ export default {
               componentPath: () => import('@/components/ADempiere/Form/VPOS2/DialogInfo/infoOrder.vue'),
               isShowed: true
             })
-
-            showMessage({
-              type: 'error',
-              message,
-              showClose: true
-            })
-            resolve({})
-          })
-      })
-    },
-    printTicketVPOS({
-      commit,
-      getters
-    }, {
-      orderId,
-      invoiceId,
-      shipmentId,
-      recordId,
-      tableName
-    }) {
-      return new Promise(resolve => {
-        const currentPos = getters.getVPOS
-        const currentOrder = getters.getCurrentOrder
-        if (isEmptyValue(orderId)) orderId = currentOrder.id
-        printTicket({
-          posId: currentPos.id,
-          orderId,
-          invoiceId,
-          shipmentId,
-          recordId,
-          tableName
-        })
-          .then(response => {
-            const {
-              output_stream,
-              result_type,
-              mime_type,
-              file_name,
-              is_error,
-              summary
-            } = response
-            const type = is_error ? 'error' : 'success'
-            const message = isEmptyValue(summary) ? (is_error ? 'Error' : 'OK') : summary
-            showMessage({
-              type,
-              message,
-              showClose: true
-            })
-            if (
-              !isEmptyValue(output_stream) &&
-              !isEmptyValue(mime_type) &&
-              !isEmptyValue(file_name)
-            ) {
-              const link = buildLinkHref({
-                fileName: file_name,
-                outputStream: output_stream,
-                mimeType: mime_type
-              })
-              // commit('addReportToList', reportResponse)
-              commit('setReportOutput', {
-                download: link.download,
-                format: result_type,
-                fileName: file_name,
-                link,
-                content: output_stream,
-                mimeType: mime_type,
-                name: file_name,
-                output: output_stream,
-                outputStream: output_stream,
-                reportType: result_type,
-                reportUuid: orderId.toString(),
-                reportViewUuid: orderId.toString(),
-                tableName: 'C_Order',
-                url: link.href,
-                uuid: orderId.toString(),
-                instanceUuid: orderId.toString()
-              })
-              router.push({
-                name: REPORT_VIEWER_NAME,
-                params: {
-                  processId: orderId,
-                  reportUuid: orderId.toString(),
-                  tableName: 'C_Order',
-                  instanceUuid: orderId.toString(),
-                  fileName: file_name,
-                  name: file_name,
-                  mimeType: mime_type
-                }
-              }, () => {})
-            }
-          })
-          .catch(error => {
-            console.warn(`Prin Ticket: ${error.message}. Code: ${error.code}.`)
-            let message = error.message
-            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
-              message = error.response.data.message
-            }
 
             showMessage({
               type: 'error',

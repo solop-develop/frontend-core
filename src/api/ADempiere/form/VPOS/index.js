@@ -164,7 +164,7 @@ export function listCampaigns({
   posId
 }) {
   return request({
-    url: `/point-of-sales/${posId}/campaigns`,
+    url: `/point-of-sales/terminals/${posId}/campaigns`,
     method: 'get'
   })
 }
@@ -1111,6 +1111,52 @@ export function reverseSales({
     method: 'put',
     data: {
       description
+    }
+  })
+}
+
+/**
+ * Print Preview
+ * @param {int32} posId
+ * @param {int32} orderId
+ * @param {string} reportType
+ * @returns
+ */
+
+export function printPreview({
+  posId,
+  orderId,
+  reportType
+}) {
+  return request({
+    url: `point-of-sales/${posId}/print-preview`,
+    method: 'post',
+    data: {
+      order_id: orderId,
+      report_type: reportType
+    }
+  })
+}
+
+/**
+ * Copy Order
+ * @param {int32} posId
+ * @param {int32} orderId
+ * @param {string} reportType
+ * @returns
+ */
+
+export function copyOrder({
+  posId,
+  sourceOrderId,
+  salesRepresentativeId
+}) {
+  return request({
+    url: `point-of-sales/orders/${sourceOrderId}/copy`,
+    method: 'post',
+    data: {
+      sales_representative_id: salesRepresentativeId,
+      pos_id: posId
     }
   })
 }

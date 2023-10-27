@@ -56,11 +56,11 @@ const campaign = {
           })
       })
     }
-  },
-  getters: {
-    getListCampaigns: (state) => {
-      return state.listCampaign
-    }
   }
+  // getters: {
+  //   getListCampaigns: (state) => {
+  //     return state.listCampaign
+  //   }
+  // }
 }
 export default campaign
