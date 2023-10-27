@@ -326,7 +326,6 @@ export default {
       return new Promise(resolve => {
         const pos = getters.getVPOS
         if (isEmptyValue(order)) resolve({})
-        console.log({ ...order })
         if (order.document_status.value === 'CO') {
           dispatch('overloadOrder', { order })
           resolve({})
