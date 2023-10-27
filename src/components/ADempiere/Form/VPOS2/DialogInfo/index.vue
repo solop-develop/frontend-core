@@ -126,7 +126,7 @@ export default defineComponent({
         storedModalDialog.value.isDisabledDone
       ) {
         return Boolean(
-          storedModalDialog.value.isDisabledDone
+          storedModalDialog.value.isDisabledDone()
         )
       }
       return false

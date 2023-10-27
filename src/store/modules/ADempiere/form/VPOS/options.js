@@ -497,11 +497,11 @@ export default {
           id
         })
           .then(response => {
-            // commit('setShipmentList', shipment_lines)
-            commit('setShipment', {})
-            commit('setShipmentList', [])
-            // dispatch('overloadOrder', { order: currentOrder })
             dispatch('printShipmentPreview')
+              .then(() => {
+                commit('setShipment', {})
+                commit('setShipmentList', [])
+              })
             dispatch('setModalDialogVPOS', {
               title: lang.t('form.pos.optionsPoinSales.salesOrder.confirmDelivery'),
               type: 'success',
