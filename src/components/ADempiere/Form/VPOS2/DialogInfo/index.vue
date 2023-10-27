@@ -126,10 +126,7 @@ export default defineComponent({
         storedModalDialog.value.isDisabledDone
       ) {
         return Boolean(
-          storedModalDialog.value.isDisabledDone({
-            parentUuid: props.parentUuid,
-            containerUuid: props.containerUuid
-          })
+          storedModalDialog.value.isDisabledDone()
         )
       }
       return false
@@ -140,7 +137,6 @@ export default defineComponent({
       store.commit('setShowedModalDialogVPOS', {
         isShowed: false
       })
-      // store.commit('resetStateModalDialogManagerVPOS')
     }
 
     const doneButton = () => {
