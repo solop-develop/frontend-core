@@ -102,6 +102,8 @@ docker-compose up
 
 ### Variables de entorno para la configuración
 
+ * `PUBLIC_PATH`: Tendrás que establecer publicPath si planeas desplegar tu sitio bajo una sub-ruta, por ejemplo GitHub Pages. Si planeas desplegar tu sitio en `https://adempiere-vue.github.io/bar/`, entonces publicPath debe establecerse en `/bar/`. En la mayoría de los casos, utilice `/`.
+ 
  * `API_URL`: Indica la dirección URL del servidor con el que se comunicará por defecto el cliente web [Proxy-Adempiere-Api](https://github.com/adempiere/proxy-adempiere-api), el valor por defecto es `http://localhost:8085/api/adempiere/`.
 
  * `TASK_MANAGER_URL`: Indica la dirección URL del API RESTFul para el mangejador de tareas [ADempiere-Business-Processors](https://github.com/adempiere/adempiere-business-processors) y [`dKron`](https://dkron.io/), el valor por defecto es `http://localhost:8085`.
