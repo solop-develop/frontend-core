@@ -269,7 +269,7 @@ export default defineComponent({
       store.dispatch('deleteRMALine', {
         lineId: line.id
       })
-        .then(() => {
+        .finally(() => {
           line.isLoading = false
         })
     }
