@@ -40,7 +40,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           <el-collapse-item :title="$t('form.pos.optionsPoinSales.salesOrder.title')" name="salesOrder">
             <sales-order />
           </el-collapse-item>
-          <el-collapse-item :title="$t('form.pos.optionsPoinSales.cashManagement.title')" name="cashManagement" />
+          <el-collapse-item :title="$t('form.pos.optionsPoinSales.cashManagement.title')" name="cashManagement">
+            <cash-management />
+          </el-collapse-item>
           <el-collapse-item :title="$t('form.pos.optionsPoinSales.generalOptions.title')" name="generalOptions" />
         </el-collapse>
       </div>
@@ -64,14 +66,14 @@ import store from '@/store'
 
 // Components and Mixins
 import SalesOrder from './salesOrder.vue'
-// import OptionsList from './OptionsList.vue'
+import CashManagement from './cashManagement'
 // import InfoOrder from './InfoOrder.vue'
 
 export default defineComponent({
   name: 'Options',
   components: {
-    SalesOrder
-  //   OptionsList,
+    SalesOrder,
+    CashManagement
   //   InfoOrder
   },
   setup() {
