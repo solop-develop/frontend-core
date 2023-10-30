@@ -150,17 +150,13 @@ export function requestListEntityLogs({
 export function requestListWorkflowsLogs({
   tableName,
   recordId,
-  recordUuid,
   pageToken,
   pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
-    url: '/user/log/workflow-logs',
+    url: `/logs/workflows/${tableName}/${recordId}`,
     method: 'get',
     params: {
-      table_name: tableName,
-      id: recordId,
-      uuid: recordUuid,
       // Page Data
       page_token: pageToken,
       page_size: pageSize

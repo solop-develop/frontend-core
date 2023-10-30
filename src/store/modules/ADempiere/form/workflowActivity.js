@@ -137,16 +137,15 @@ export default {
     selectedActivity({ commit }, activity) {
       commit('setCurrentActivity', activity)
     },
-    searchWorkflowHistory({ commit }, {
+
+    getWorkflowLogsListFromServer({ commit }, {
       containerUuid,
       tableName,
-      recordId,
-      recordUuid
+      recordId
     }) {
       return requestListWorkflowsLogs({
         tableName,
-        recordId,
-        recordUuid
+        recordId
       })
         .then(response => {
           const { workflowLogsList } = response

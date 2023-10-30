@@ -148,6 +148,12 @@ export default defineComponent({
     const recordUuid = computed(() => {
       return store.getters.getUuidOfContainer(props.fieldAttributes.containerUuid)
     })
+    const recordId = computed(() => {
+      return store.getters.getIdOfContainer({
+        containerUuid: props.fieldAttributes.containerUuid,
+        tableName: props.fieldAttributes.tabTableName
+      })
+    })
 
     const value = computed(() => {
       const { parentUuid, containerUuid, columnName } = props.fieldAttributes
@@ -247,6 +253,7 @@ export default defineComponent({
             store.dispatch('getDocumentActionsListFromServer', {
               tableName: tabTableName,
               recordUuid: recordUuid.value,
+              recordId: recordId.value,
               documentStatus: value.value
             })
           }, 200)
