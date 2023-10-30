@@ -1398,10 +1398,30 @@ export function processRMA({
 }) {
   return request({
     url: `point-of-sales/returns/${rmaId}/process`,
-    method: 'get',
+    method: 'put',
     params: {
       pos_id: posId,
+      rma_id: rmaId,
       document_action: documentAction
+    }
+  })
+}
+
+/**
+ * Create Order from RMA
+ */
+
+export function createOrderFromRMA({
+  posId,
+  salesRepresentativeId,
+  sourceRmaId
+}) {
+  return request({
+    url: `point-of-sales/returns/${sourceRmaId}/create-order`,
+    method: 'post',
+    params: {
+      pos_id: posId,
+      sales_representative_id: salesRepresentativeId
     }
   })
 }

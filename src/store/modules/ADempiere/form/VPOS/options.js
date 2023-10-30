@@ -34,7 +34,8 @@ import {
   createShipmentLine,
   updateShipmentLine,
   deleteShipmentLine,
-  printShipmentPreview
+  printShipmentPreview,
+  createOrderFromRMA
 } from '@/api/ADempiere/form/VPOS'
 // // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -53,7 +54,9 @@ const options = {
   rma: {
     list: [],
     current: {},
-    listLine: []
+    listLine: [],
+    isShowCheck: false,
+    isCreateNewSubstituteOrder: true
   }
 }
 
@@ -708,12 +711,12 @@ export default {
               attribute: 'current',
               value: response
             })
-            dispatch('listShipmentLines')
-            resolve(response)
+            dispatch('listRMALine')
+              .finally(() => {
+                resolve(response)
+              })
           })
           .catch(error => {
-            commit('setShipment', {})
-            commit('setShipmentList', [])
             console.warn(`Create RMA: ${error.message}. Code: ${error.code}.`)
             let message = error.message
             if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
@@ -756,7 +759,7 @@ export default {
           quantity
         })
           .then(response => {
-            dispatch('listRMALine')
+            dispatch('createRMA')
             resolve(response)
           })
           .catch(error => {
@@ -799,8 +802,10 @@ export default {
           quantity
         })
           .then(response => {
-            dispatch('listRMALine')
-            resolve(response)
+            dispatch('createRMA')
+              .finally(() => {
+                resolve(response)
+              })
           })
           .catch(error => {
             dispatch('listRMALine')
@@ -890,7 +895,7 @@ export default {
           lineId
         })
           .then(response => {
-            dispatch('listRMALine')
+            dispatch('createRMA')
             resolve(response)
           })
           .catch(error => {
@@ -911,13 +916,18 @@ export default {
       })
     },
     processRMA({
+      commit,
       getters,
       dispatch
     }) {
       return new Promise(resolve => {
         const currentPos = getters.getVPOS
+        const currentOrder = getters.getCurrentOrder
         const currentRMA = getters.getAttributeRMA({
           attribute: 'current'
+        })
+        const isCreateNewSubstituteOrder = getters.getAttributeRMA({
+          attribute: 'isCreateNewSubstituteOrder'
         })
         if (
           isEmptyValue(currentPos.id) ||
@@ -928,12 +938,86 @@ export default {
           rmaId: currentRMA.id
         })
           .then(response => {
+            commit('setAttributeRMA', {
+              attribute: 'isShowCheck',
+              value: true
+            })
             dispatch('listRMALine')
+            dispatch('overloadOrder', { order: currentOrder })
+            dispatch('setModalDialogVPOS', {
+              title: lang.t('form.pos.optionsPoinSales.salesOrder.newOrderFromRMA'),
+              type: 'success',
+              doneMethod: () => {
+                commit('setShowedModalDialogVPOS', {
+                  isShowed: false
+                })
+                commit('setAttributeRMA', {
+                  attribute: 'current',
+                  value: {}
+                })
+                commit('setAttributeRMA', {
+                  attribute: 'list',
+                  value: []
+                })
+                if (isCreateNewSubstituteOrder) {
+                  dispatch('createOrderFromRMA', {
+                    sourceRmaId: response.id,
+                    salesRepresentativeId: response.sales_representative.id
+                  })
+                }
+              },
+              componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/RMA/previwerRMA.vue'),
+              isShowed: true
+            })
             resolve(response)
           })
           .catch(error => {
             dispatch('listRMALine')
             console.warn(`Process RMA: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            dispatch('setModalDialogVPOS', {
+              title: message,
+              type: 'error',
+              doneMethod: () => {
+                dispatch('processRMA', {})
+              },
+              // TODO: Change to string and import dynamic in component
+              componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/RMA/previwerRMA.vue'),
+              isShowed: true
+            })
+            resolve({})
+          })
+      })
+    },
+    createOrderFromRMA({
+      dispatch,
+      getters
+    }, {
+      sourceRmaId,
+      salesRepresentativeId
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        createOrderFromRMA({
+          posId: currentPos.id,
+          sourceRmaId,
+          salesRepresentativeId
+        })
+          .then(response => {
+            dispatch('overloadOrder', { order: response })
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Create Order from RMA: ${error.message}. Code: ${error.code}.`)
             let message = error.message
             if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
               message = error.response.data.message
