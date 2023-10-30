@@ -1205,6 +1205,40 @@ export function createShipmentLine({
 }
 
 /**
+ * Update Order Line
+ */
+export function updateShipmentLine({
+  posId,
+  lineId,
+  quantity,
+  shipmentId,
+  description
+}) {
+  return request({
+    url: `point-of-sales/${posId}/shipments/${shipmentId}/lines/${lineId}`,
+    method: 'put',
+    data: {
+      description,
+      quantity
+    }
+  })
+}
+
+/**
+ * Delete Shipment Line
+ */
+export function deleteShipmentLine({
+  posId,
+  lineId,
+  shipmentId
+}) {
+  return request({
+    url: `point-of-sales/${posId}/shipments/${shipmentId}/lines/${lineId}`,
+    method: 'delete'
+  })
+}
+
+/**
  * List Shipment Line
  */
 export function listShipmentLines({
@@ -1256,3 +1290,118 @@ export function printShipmentPreview({
   })
 }
 
+/**
+ * Create Return
+ */
+export function createRMA({
+  posId,
+  sourceOrderId,
+  salesRepresentativeId,
+  isCreateLinesFromOrder
+}) {
+  return request({
+    url: 'point-of-sales/returns',
+    method: 'post',
+    data: {
+      pos_id: posId,
+      source_order_id: sourceOrderId,
+      sales_representative_id: salesRepresentativeId,
+      is_create_lines_from_order: isCreateLinesFromOrder
+    }
+  })
+}
+
+/**
+ * Create Return Line
+ */
+export function createRMALine({
+  posId,
+  rmaId,
+  sourceOrderLineId,
+  description,
+  quantity
+}) {
+  return request({
+    url: `point-of-sales/returns/${rmaId}/lines`,
+    method: 'post',
+    data: {
+      pos_id: posId,
+      source_order_line_id: sourceOrderLineId,
+      description,
+      quantity
+    }
+  })
+}
+
+/**
+ * Delete Return Line
+ */
+export function deleteRMALine({
+  posId,
+  rmaId,
+  lineId
+}) {
+  return request({
+    url: `point-of-sales/returns/${rmaId}/lines/${lineId}`,
+    method: 'delete',
+    data: {
+      pos_id: posId
+    }
+  })
+}
+
+/**
+ * Update RMA Line
+ */
+export function updateRMALine({
+  posId,
+  rmaId,
+  lineId,
+  description,
+  quantity
+}) {
+  return request({
+    url: `point-of-sales/returns/${rmaId}/lines/${lineId}`,
+    method: 'put',
+    data: {
+      pos_id: posId,
+      description,
+      quantity
+    }
+  })
+}
+
+/**
+ * List Return Line
+ */
+export function listRMALine({
+  posId,
+  rmaId
+}) {
+  return request({
+    url: `point-of-sales/returns/${rmaId}/lines`,
+    method: 'get',
+    params: {
+      pos_id: posId,
+      rma_id: rmaId
+    }
+  })
+}
+
+/**
+ * Process Return
+ */
+export function processRMA({
+  posId,
+  rmaId,
+  documentAction = 'CO'
+}) {
+  return request({
+    url: `point-of-sales/returns/${rmaId}/process`,
+    method: 'get',
+    params: {
+      pos_id: posId,
+      document_action: documentAction
+    }
+  })
+}
