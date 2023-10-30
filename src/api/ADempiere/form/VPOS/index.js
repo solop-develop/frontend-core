@@ -871,13 +871,17 @@ export function deletePayment({
 
 export function listPayments({
   posId,
-  orderId
+  orderId,
+  isOnlyRefund,
+  isOnlyReceipt
 }) {
   return request({
     url: `point-of-sales/${posId}/payments`,
     method: 'get',
     params: {
-      order_id: orderId
+      order_id: orderId,
+      is_only_refund: isOnlyRefund,
+      is_only_receipt: isOnlyReceipt
     }
   })
 }
@@ -1422,6 +1426,87 @@ export function createOrderFromRMA({
     params: {
       pos_id: posId,
       sales_representative_id: salesRepresentativeId
+    }
+  })
+}
+
+/**
+ * Cash Management (Opening Process)
+ */
+export function cashOpening({
+  posId,
+  payments,
+  description,
+  collectingAgentId
+}) {
+  return request({
+    url: `point-of-sales/${posId}/cash/process-opening`,
+    method: 'put',
+    data: {
+      collecting_agent_id: collectingAgentId,
+      description,
+      payments
+    }
+  })
+}
+
+/**
+ * Cash Withdrawal
+ */
+export function processCashWithdrawal({
+  posId,
+  payments,
+  description,
+  collectingAgentId
+}) {
+  return request({
+    url: `point-of-sales/cash/process-withdrawal`,
+    method: 'put',
+    data: {
+      collecting_agent_id: collectingAgentId,
+      pos_id: posId,
+      description,
+      payments
+    }
+  })
+}
+
+/**
+ * Cash Closing
+ */
+export function processCashClosing({
+  posId,
+  payments,
+  description,
+  collectingAgentId
+}) {
+  return request({
+    url: `point-of-sales/cash/closings/{id}/process`,
+    method: 'put',
+    data: {
+      collecting_agent_id: collectingAgentId,
+      pos_id: posId,
+      description,
+      payments
+    }
+  })
+}
+
+/**
+ * List Cash Summary
+ */
+export function listCashSummaryMovements({
+  posId,
+  isOnlyProcessed,
+  isOnlyRefund
+}) {
+  return request({
+    url: `point-of-sales/cash/summary-movements`,
+    method: 'get',
+    params: {
+      pos_id: posId,
+      is_only_processed: isOnlyProcessed,
+      is_only_refund: isOnlyRefund
     }
   })
 }
