@@ -254,7 +254,6 @@ export default defineComponent({
     }
 
     function updateQuantity(quantity) {
-      console.log(quantity, line.value.product.name)
       store.dispatch('updateRMALine', {
         lineId: line.value.id,
         quantity
