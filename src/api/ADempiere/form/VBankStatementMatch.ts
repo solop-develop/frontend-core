@@ -46,12 +46,12 @@ export function requestListBankAccounts({
   pageSize
 }) {
   return request({
-    url: `${config.VBankStatementMatch.endpoint}/bank-accounts`,
+    url: `${config.VBankStatementMatch.endpoint}/accounts`,
     method: 'get',
     params: {
       search_value: searchValue,
       page_token: pageToken,
-      page_size: pageSize
+      page_size: 10000
     }
   })
     .then(response => {
