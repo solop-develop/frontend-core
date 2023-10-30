@@ -511,12 +511,11 @@ export default defineComponent({
     })
 
     const isRMA = computed(() => {
-      // const { is_rma } = currentOrder.value
-      // if (!isEmptyValue(currentOrder.value.id)) {
-      //   return is_rma
-      // }
-      // return false
-      return true
+      const { is_rma } = currentOrder.value
+      if (!isEmptyValue(currentOrder.value.id)) {
+        return is_rma
+      }
+      return false
     })
 
     function newOrder() {
