@@ -17,15 +17,23 @@ import router from '@/router'
 import lang from '@/lang'
 // API Request Methods
 import {
-  reverseSales,
-  printTicket,
-  printPreview,
   copyOrder,
   deleteOrder,
+  printTicket,
+  createRMA,
+  listRMALine,
+  createRMALine,
+  deleteRMALine,
+  updateRMALine,
+  reverseSales,
+  printPreview,
+  processRMA,
   createShipment,
-  createShipmentLine,
-  listShipmentLines,
   processShipment,
+  listShipmentLines,
+  createShipmentLine,
+  updateShipmentLine,
+  deleteShipmentLine,
   printShipmentPreview
 } from '@/api/ADempiere/form/VPOS'
 // // Utils and Helper Methods
@@ -41,6 +49,11 @@ const options = {
   shipment: {
     list: [],
     current: {}
+  },
+  rma: {
+    list: [],
+    current: {},
+    listLine: []
   }
 }
 
@@ -58,6 +71,12 @@ export default {
     },
     setShipment(state, shipment) {
       state.shipment.current = shipment
+    },
+    setAttributeRMA(state, {
+      attribute,
+      value
+    }) {
+      state.rma[attribute] = value
     }
   },
   actions: {
@@ -426,11 +445,88 @@ export default {
         })
           .then(response => {
             dispatch('listShipmentLines')
-            // dispatch('overloadOrder', { order: currentOrder })
             resolve(response)
           })
           .catch(error => {
-            console.warn(`Process Orders: ${error.message}. Code: ${error.code}.`)
+            console.warn(`Create Shipment Line: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve({})
+          })
+      })
+    },
+    updateShipmentLine({
+      getters,
+      dispatch
+    }, {
+      lineId,
+      quantity
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        const currentShipment = getters.getCurrentShipment
+        if (
+          isEmptyValue(currentPos.id) ||
+          isEmptyValue(currentShipment.id)
+        ) resolve({})
+        updateShipmentLine({
+          posId: currentPos.id,
+          lineId,
+          quantity,
+          shipmentId: currentShipment.id
+        })
+          .then(response => {
+            dispatch('listShipmentLines')
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Update Shipment Line: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve({})
+          })
+      })
+    },
+    deleteShipmentLine({
+      getters,
+      dispatch
+    }, {
+      lineId
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        const currentShipment = getters.getCurrentShipment
+        if (
+          isEmptyValue(currentPos.id) ||
+          isEmptyValue(currentShipment.id)
+        ) resolve({})
+        deleteShipmentLine({
+          lineId,
+          posId: currentPos.id,
+          shipmentId: currentShipment.id
+        })
+          .then(response => {
+            dispatch('listShipmentLines')
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Delete Shipment Line: ${error.message}. Code: ${error.code}.`)
             let message = error.message
             if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
               message = error.response.data.message
@@ -461,12 +557,17 @@ export default {
         })
           .then(response => {
             const { shipment_lines } = response
-            commit('setShipmentList', shipment_lines)
-            // dispatch('overloadOrder', { order: currentOrder })
+            commit('setShipmentList', shipment_lines.map(list => {
+              return {
+                ...list,
+                isEditQty: false,
+                isLoading: false
+              }
+            }))
             resolve(response)
           })
           .catch(error => {
-            console.warn(`Process Orders: ${error.message}. Code: ${error.code}.`)
+            console.warn(`List Shipment Line: ${error.message}. Code: ${error.code}.`)
             let message = error.message
             if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
               message = error.response.data.message
@@ -513,7 +614,7 @@ export default {
             resolve(response)
           })
           .catch(error => {
-            console.warn(`Process Orders: ${error.message}. Code: ${error.code}.`)
+            console.warn(`Process Shipment: ${error.message}. Code: ${error.code}.`)
             let message = error.message
             if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
               message = error.response.data.message
@@ -585,6 +686,267 @@ export default {
             resolve({})
           })
       })
+    },
+    createRMA({
+      commit,
+      getters,
+      dispatch
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        const currentOrder = getters.getCurrentOrder
+        if (
+          isEmptyValue(currentPos.id) ||
+          isEmptyValue(currentOrder.id)
+        ) resolve({})
+        createRMA({
+          posId: currentPos.id,
+          sourceOrderId: currentOrder.id
+        })
+          .then(response => {
+            commit('setAttributeRMA', {
+              attribute: 'current',
+              value: response
+            })
+            dispatch('listShipmentLines')
+            resolve(response)
+          })
+          .catch(error => {
+            commit('setShipment', {})
+            commit('setShipmentList', [])
+            console.warn(`Create RMA: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            commit('setShowedModalDialogVPOS', {
+              isShowed: false
+            })
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve({})
+          })
+      })
+    },
+    createRMALine({
+      getters,
+      dispatch
+    }, {
+      quantity,
+      sourceOrderLineId
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        const currentRMA = getters.getAttributeRMA({
+          attribute: 'current'
+        })
+        if (
+          isEmptyValue(currentPos.id) ||
+          isEmptyValue(currentRMA.id)
+        ) resolve({})
+        createRMALine({
+          posId: currentPos.id,
+          rmaId: currentRMA.id,
+          sourceOrderLineId,
+          quantity
+        })
+          .then(response => {
+            dispatch('listRMALine')
+            resolve(response)
+          })
+          .catch(error => {
+            dispatch('listRMALine')
+            console.warn(`Create RMA Line: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve({})
+          })
+      })
+    },
+    updateRMALine({
+      getters,
+      dispatch
+    }, {
+      lineId,
+      quantity
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        const currentRMA = getters.getAttributeRMA({
+          attribute: 'current'
+        })
+        if (
+          isEmptyValue(currentPos.id) ||
+          isEmptyValue(currentRMA.id)
+        ) resolve({})
+        updateRMALine({
+          posId: currentPos.id,
+          rmaId: currentRMA.id,
+          lineId,
+          quantity
+        })
+          .then(response => {
+            dispatch('listRMALine')
+            resolve(response)
+          })
+          .catch(error => {
+            dispatch('listRMALine')
+            console.warn(`Update RMA Line: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve({})
+          })
+      })
+    },
+    listRMALine({
+      commit,
+      getters
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        const currentRMA = getters.getAttributeRMA({
+          attribute: 'current'
+        })
+        if (
+          isEmptyValue(currentPos.id)
+        ) resolve({})
+        listRMALine({
+          posId: currentPos.id,
+          rmaId: currentRMA.id
+        })
+          .then(response => {
+            const { rma_lines } = response
+            commit('setAttributeRMA', {
+              attribute: 'listLine',
+              value: rma_lines.map(list => {
+                return {
+                  ...list,
+                  isEditQty: false,
+                  isLoading: false
+                }
+              })
+            })
+            resolve(rma_lines)
+          })
+          .catch(error => {
+            commit('setAttributeRMA', {
+              attribute: 'listLine',
+              value: []
+            })
+            console.warn(`List RMA Line: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve({})
+          })
+      })
+    },
+    deleteRMALine({
+      getters,
+      dispatch
+    }, {
+      lineId
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        const currentRMA = getters.getAttributeRMA({
+          attribute: 'current'
+        })
+        if (
+          isEmptyValue(currentPos.id) ||
+          isEmptyValue(currentRMA.id)
+        ) resolve({})
+        deleteRMALine({
+          posId: currentPos.id,
+          rmaId: currentRMA.id,
+          lineId
+        })
+          .then(response => {
+            dispatch('listRMALine')
+            resolve(response)
+          })
+          .catch(error => {
+            dispatch('listRMALine')
+            console.warn(`Delete RMA Line: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve({})
+          })
+      })
+    },
+    processRMA({
+      getters,
+      dispatch
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        const currentRMA = getters.getAttributeRMA({
+          attribute: 'current'
+        })
+        if (
+          isEmptyValue(currentPos.id) ||
+          isEmptyValue(currentRMA.id)
+        ) resolve({})
+        processRMA({
+          posId: currentPos.id,
+          rmaId: currentRMA.id
+        })
+          .then(response => {
+            dispatch('listRMALine')
+            resolve(response)
+          })
+          .catch(error => {
+            dispatch('listRMALine')
+            console.warn(`Process RMA: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve({})
+          })
+      })
     }
   },
   getters: {
@@ -599,6 +961,10 @@ export default {
     },
     getShipmentList: (state) => {
       return state.shipment.list
+    },
+    getAttributeRMA: (state) => ({ attribute }) => {
+      if (isEmptyValue(attribute)) return ''
+      return state.rma[attribute]
     }
   }
 }

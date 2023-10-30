@@ -60,7 +60,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       </el-form-item>
     </el-form>
     <el-table
-      :data="shipmentLines"
+      :data="listLineRMA"
       :empty-text="$t('quickAccess.searchWithEnter')"
       border
       fit
@@ -69,52 +69,36 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       @row-dblclick="exitLine"
       @current-change="currentLine"
     >
-      <el-table-column
-        prop="product.value"
-        :label="$t('form.productInfo.code')"
-      />
-      <el-table-column
-        prop="product.name"
-        :label="$t('form.pos.tableProduct.product')"
-      />
-      <el-table-column
-        prop="quantity"
-        :label="$t('form.pos.tableProduct.quantity')"
-        align="right"
-      >
-        <template slot-scope="scope">
-          <edit-qty-entered
-            v-if="scope.row.isEditQty"
-            :qty="Number(scope.row.quantity.value)"
-            :handle-change="updateQuantity"
-          />
-          <span v-else>
-            {{ formatQuantity({ value: scope.row.quantity }) }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="uom.uom.name"
-        :label="$t('form.pos.tableProduct.uom')"
-      />
-      <el-table-column
-        prop="quantity"
-        :label="$t('form.pos.tableProduct.movementQuantity')"
-        align="right"
-        width="200px"
-      >
-        <template slot-scope="scope">
-          {{ formatQuantity({ value: scope.row.movement_quantity }) }}
-        </template>
-      </el-table-column>
+      <template v-for="(valueOrder, key) in orderLineDefinition">
+        <el-table-column
+          v-if="displayLabel({ row: valueOrder })"
+          :key="key"
+          :column-key="valueOrder.columnName"
+          :label="valueOrder.label"
+          :align="valueOrder.isNumeric ? 'right' : 'left'"
+        >
+          <template slot-scope="scope">
+            <el-button
+              v-show="valueOrder.columnName === 'LineDescription'"
+              type="text"
+              icon="el-icon-document-copy"
+              @click="copyCode(scope.row)"
+            />
+            <edit-qty-entered
+              v-if="scope.row.isEditQtyEntered && valueOrder.columnName === 'QtyEntered'"
+              :qty="Number(scope.row.quantity_ordered.value)"
+              :handle-change="updateQuantity"
+            />
+            <span v-else>
+              {{ displayValue({ row: scope.row, columnName: valueOrder.columnName}) }}
+            </span>
+          </template>
+        </el-table-column>
+      </template>
       <el-table-column
         :label="$t('form.pos.tableProduct.options')"
       >
         <template slot-scope="scope">
-          <shipping-line-info
-            :info-line="scope.row"
-          />
-
           <el-button
             size="mini"
             type="danger"
@@ -124,7 +108,6 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             :loading="scope.row.isLoading"
             @click="deleteLine(scope.row)"
           />
-
         </template>
       </el-table-column>
     </el-table>
@@ -134,27 +117,98 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 <script>
 import { defineComponent, computed, ref } from '@vue/composition-api'
 import store from '@/store'
+import lang from '@/lang'
 // // Components and Mixins
-import shippingLineInfo from '@/components/ADempiere/Form/VPOS2/Options/Shipments/lineInfo.vue'
+import infoRMA from '@/components/ADempiere/Form/VPOS2/Options/RMA/infoRMA.vue'
 import editQtyEntered from '@/components/ADempiere/Form/VPOS2/MainOrder/OptionLine/editLine/editQtyEntered.vue'
 // Utils and Helper Methods
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
+import {
+  displayLabel
+} from '@/utils/ADempiere/dictionary/form/VPOS'
 
 export default defineComponent({
   name: 'Shipments',
   components: {
-    shippingLineInfo,
+    infoRMA,
     editQtyEntered
   },
   setup() {
+    const orderLineDefinition = computed(() => {
+      return {
+        lineDescription: {
+          columnName: 'LineDescription',
+          label: lang.t('form.pos.tableProduct.product'),
+          isNumeric: false,
+          size: 'auto'
+        },
+        currentPrice: {
+          columnName: 'CurrentPrice',
+          label: lang.t('form.productInfo.price'),
+          isNumeric: true,
+          size: '150px'
+        },
+        quantityOrdered: {
+          columnName: 'QtyEntered',
+          label: lang.t('form.pos.tableProduct.quantity'),
+          isNumeric: true,
+          size: '125px'
+        },
+        uom: {
+          columnName: 'UOM',
+          label: lang.t('form.pos.tableProduct.uom'),
+          isNumeric: false,
+          size: '75px'
+        },
+        discount: {
+          columnName: 'Discount',
+          label: lang.t('form.pos.order.discount'),
+          isNumeric: true,
+          size: '100px'
+        },
+        discountTotal: {
+          columnName: 'DiscountTotal',
+          label: lang.t('form.pos.tableProduct.displayDiscountAmount'),
+          isNumeric: true,
+          size: '125px'
+        },
+        discounDisplayTaxIndicator: {
+          columnName: 'taxIndicator',
+          label: lang.t('form.pos.tableProduct.taxRate'),
+          isNumeric: true,
+          size: '80px'
+        },
+        discounDisplayTaxAmounttTotal: {
+          columnName: 'DisplayTaxAmount',
+          label: lang.t('form.pos.tableProduct.taxAmount'),
+          isNumeric: true,
+          size: '150px'
+        },
+        grandTotal: {
+          columnName: 'GrandTotal',
+          label: 'Total',
+          isNumeric: true,
+          isVisible: true,
+          size: '150px'
+        },
+        convertedAmount: {
+          columnName: 'ConvertedAmount',
+          label: lang.t('form.pos.collect.convertedAmount'),
+          isNumeric: true,
+          size: '150px'
+        }
+      }
+    })
     const searchProduct = ref('')
     const line = ref({})
     const lines = computed(() => {
       return store.getters.getListOrderLines
     })
 
-    const shipmentLines = computed(() => {
-      return store.getters.getShipmentList
+    const listLineRMA = computed(() => {
+      return store.getters.getAttributeRMA({
+        attribute: 'listLine'
+      })
     })
 
     // Methods
@@ -200,7 +254,7 @@ export default defineComponent({
     }
 
     function updateQuantity(quantity) {
-      store.dispatch('updateShipmentLine', {
+      store.dispatch('updateRMALine', {
         lineId: line.value.id,
         quantity
       })
@@ -212,10 +266,10 @@ export default defineComponent({
 
     function deleteLine(line) {
       line.isLoading = true
-      store.dispatch('deleteShipmentLine', {
+      store.dispatch('deleteRMALine', {
         lineId: line.id
       })
-        .then(() => {
+        .finally(() => {
           line.isLoading = false
         })
     }
@@ -225,7 +279,8 @@ export default defineComponent({
       searchProduct,
       // Computed
       lines,
-      shipmentLines,
+      listLineRMA,
+      orderLineDefinition,
       // Methods
       exitLine,
       selectLine,
@@ -235,6 +290,7 @@ export default defineComponent({
       handleSelect,
       productFilter,
       updateQuantity,
+      displayLabel,
       formatQuantity
     }
   }

@@ -285,6 +285,131 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         </el-card>
       </div>
     </el-col>
+    <!-- confirmShipmentAllProducts -->
+    <el-col v-if="isConfirmShipment" :span="8">
+      <div @click="confirmShipmentAllProducts">
+        <el-card
+          shadow="never"
+          class="custom-card-options"
+          :body-style="{ padding: '10px' }"
+        >
+          <p
+            v-if="!isLoadingCancelOrder"
+            class="card-options-buttons"
+          >
+            <svg-icon icon-class="shopping" />
+            <br>
+            {{ $t('form.pos.optionsPoinSales.salesOrder.deliverAllProducts') }}
+          </p>
+          <p
+            v-else
+            class="card-options-buttons"
+          >
+            <i class="el-icon-loading" />
+            <br>
+          </p>
+        </el-card>
+      </div>
+    </el-col>
+    <!-- applyDiscountOnOrder -->
+    <el-col v-if="isAllowsApplyDiscount" :span="8">
+      <el-popover
+        v-model="isShowApplyDiscount"
+        placement="bottom"
+        width="350"
+        :title="$t('form.pos.applyDiscountOnOrder')"
+        trigger="click"
+      >
+        <el-row v-if="!isLoadingApplyDiscountOnOrder" :gutter="24" class="container-reverse">
+          <el-col :span="24" class="container-reverse">
+            <p class="container-popover">
+              <b class="container-popover">
+                {{ $t('form.pos.tableProduct.displayDiscountAmount') }}
+              </b>
+            </p>
+          </el-col>
+          <el-col :span="24">
+            <el-input-number
+              ref="applyDiscountOnOrder"
+              v-model="applyDiscountAmount"
+              :placeholder="$t('form.pos.tableProduct.displayDiscountAmount')"
+              controls-position="right"
+              :precision="2"
+              autofocus
+              style="text-align-last: end !important;width: 100%;"
+            />
+          </el-col>
+          <el-col :span="24" style="text-align: end;">
+            <samp class="spam-button">
+              <el-button
+                type="danger"
+                icon="el-icon-close"
+                class="button-base-icon"
+                @click="closeApplyDiscount()"
+              />
+              <el-button
+                type="primary"
+                icon="el-icon-check"
+                class="button-base-icon"
+                :disabled="isLoadingCancelSaleTransaction"
+                :loading="isLoadingCancelSaleTransaction"
+                @click="applyDiscount()"
+              />
+            </samp>
+          </el-col>
+        </el-row>
+        <div
+          v-else
+          key="form-loading"
+          v-loading="isLoadingCancelSaleTransaction"
+          :element-loading-text="$t('notifications.loading')"
+          :element-loading-spinner="'el-icon-loading'"
+          element-loading-background="rgba(255, 255, 255, 0.8)"
+          class="view-loading"
+        />
+        <div slot="reference">
+          <el-card
+            shadow="never"
+            class="custom-card-options"
+            :body-style="{ padding: '10px' }"
+          >
+            <p
+              class="card-options-buttons"
+            >
+              <i class="el-icon-document-remove" />
+              <br>
+              {{ $t('form.pos.applyDiscountOnOrder') }}
+            </p>
+          </el-card>
+        </div>
+      </el-popover>
+    </el-col>
+    <!-- Create New Order RMA -->
+    <el-col v-if="isRMA" :span="8">
+      <div @click="newOrderRMA">
+        <el-card
+          shadow="never"
+          class="custom-card-options"
+          :body-style="{ padding: '10px' }"
+        >
+          <p
+            v-if="!isLoadingRMA"
+            class="card-options-buttons"
+          >
+            <i class="el-icon-document-copy" />
+            <br>
+            {{ $t('form.pos.optionsPoinSales.salesOrder.newOrderFromRMA') }}
+          </p>
+          <p
+            v-else
+            class="card-options-buttons"
+          >
+            <i class="el-icon-loading" />
+            <br>
+          </p>
+        </el-card>
+      </div>
+    </el-col>
   </el-row>
 </template>
 
@@ -303,12 +428,16 @@ export default defineComponent({
   name: 'SalesOrder',
   setup() {
     const isShowCancelSaleTransaction = ref(false)
+    const isShowApplyDiscount = ref(false)
     const isLoadingCancelSaleTransaction = ref(false)
     const isLoadingPrintTicket = ref(false)
     const isLoadingPreviewDocument = ref(false)
     const isLoadingCopyOrder = ref(false)
     const isLoadingCancelOrder = ref(false)
+    const isLoadingRMA = ref((false))
+    const isLoadingApplyDiscountOnOrder = ref(false)
     const messageReverseSales = ref('')
+    const applyDiscountAmount = ref(0)
 
     const isShowShipment = computed({
       get() {
@@ -372,6 +501,22 @@ export default defineComponent({
       }
       return is_allows_return_order
     })
+    const isAllowsApplyDiscount = computed(() => {
+      const { is_allows_apply_discount } = currentPointOfSales.value
+      if (is_allows_apply_discount) {
+        if (!isEmptyValue(currentOrder.value) && currentOrder.value.document_status.value === 'DR') return is_allows_apply_discount
+        return false
+      }
+      return is_allows_apply_discount
+    })
+
+    const isRMA = computed(() => {
+      const { is_rma } = currentOrder.value
+      if (!isEmptyValue(currentOrder.value.id)) {
+        return is_rma
+      }
+      return false
+    })
 
     function newOrder() {
       const {
@@ -417,6 +562,22 @@ export default defineComponent({
     function closeReverseSales() {
       messageReverseSales.value = ''
       isShowCancelSaleTransaction.value = false
+    }
+
+    function closeApplyDiscount() {
+      applyDiscountAmount.value = 0
+      isShowApplyDiscount.value = false
+    }
+
+    function applyDiscount() {
+      isLoadingApplyDiscountOnOrder.value = true
+      store.dispatch('updateCurrentOrder', {
+        discount_amount_off: applyDiscountAmount.value
+      })
+        .then(() => {
+          isLoadingApplyDiscountOnOrder.value = false
+          closeApplyDiscount()
+        })
     }
 
     function printTicket() {
@@ -488,17 +649,78 @@ export default defineComponent({
       })
     }
 
+    function confirmShipmentAllProducts(params) {
+      store.dispatch('newShipment', {
+        isCreateLinesFromOrder: true
+      })
+      store.dispatch('setModalDialogVPOS', {
+        title: lang.t('form.pos.optionsPoinSales.salesOrder.confirmDelivery'),
+        doneMethod: () => {
+          store.commit('setShowedModalDialogVPOS', {
+            isShowed: false
+          })
+          setTimeout(() => {
+            store.dispatch('setModalDialogVPOS', {
+              title: lang.t('form.pos.optionsPoinSales.salesOrder.confirmDelivery'),
+              doneMethod: () => {
+                store.dispatch('sendProcessShipment')
+              },
+              isDisabledDone: () => {
+                return isEmptyValue(store.getters.getCurrentShipment) || isEmptyValue(store.getters.getShipmentList)
+              },
+              componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/Shipments/info.vue'),
+              isShowed: true
+            })
+          })
+        },
+        componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/Shipments/index.vue'),
+        isShowed: true
+      })
+    }
+
+    function newOrderRMA() {
+      store.dispatch('createRMA')
+      store.dispatch('setModalDialogVPOS', {
+        title: lang.t('form.pos.optionsPoinSales.salesOrder.newOrderFromRMA'),
+        doneMethod: () => {
+          store.commit('setShowedModalDialogVPOS', {
+            isShowed: false
+          })
+          setTimeout(() => {
+            store.dispatch('setModalDialogVPOS', {
+              title: lang.t('form.pos.optionsPoinSales.salesOrder.newOrderFromRMA'),
+              doneMethod: () => {
+                store.dispatch('processRMA')
+              },
+              isDisabledDone: () => {
+                return isEmptyValue(store.getters.getCurrentShipment) || isEmptyValue(store.getters.getShipmentList)
+              },
+              componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/RMA/previwerRMA.vue'),
+              isShowed: true
+            })
+          })
+        },
+        componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/RMA'),
+        isShowed: true
+      })
+    }
+
     return {
       // Ref
       IsCopyOrder,
-      messageReverseSales,
+      isLoadingRMA,
       isLoadingCopyOrder,
-      isLoadingCancelOrder,
+      applyDiscountAmount,
+      messageReverseSales,
+      isShowApplyDiscount,
       isLoadingPrintTicket,
+      isLoadingCancelOrder,
       isLoadingPreviewDocument,
       isShowCancelSaleTransaction,
+      isLoadingApplyDiscountOnOrder,
       isLoadingCancelSaleTransaction,
       // Computed
+      isRMA,
       currentOrder,
       IsCancelOrder,
       isShowShipment,
@@ -506,19 +728,24 @@ export default defineComponent({
       isAllowsReturnOrder,
       currentPointOfSales,
       isAllowsPrintDocument,
+      isAllowsApplyDiscount,
       IsAllowsPreviewDocument,
       //  Methods
       newOrder,
       copyOrder,
       listOrders,
+      newOrderRMA,
       cancelOrder,
       addResource,
       printTicket,
       printPreview,
+      applyDiscount,
       confirmShipment,
       closeReverseSales,
+      closeApplyDiscount,
       completePreparedOrder,
-      cancelSaleTransaction
+      cancelSaleTransaction,
+      confirmShipmentAllProducts
     }
   }
 })
