@@ -2136,7 +2136,7 @@ export const containerManager = {
     })
   },
   searchWorkflowHistory({ tableName, recordId, recordUuid, containerUuid }) {
-    return store.dispatch('searchWorkflowHistory', {
+    return store.dispatch('getWorkflowLogsListFromServer', {
       tableName,
       containerUuid,
       recordId,
