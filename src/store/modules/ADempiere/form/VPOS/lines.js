@@ -109,7 +109,7 @@ export default {
           .then(responseOrder => {
             const { order_lines } = responseOrder
             // commit('setOrder', order_lines)
-            dispatch('listLines')
+            // dispatch('listLines')
             dispatch('overloadOrder', {
               order: currentOrder
             })
@@ -215,7 +215,9 @@ export default {
           warehouse_id
         })
           .then(updateLineResponse => {
-            dispatch('listLines')
+            dispatch('overloadOrder', {
+              order: currentOrder
+            })
             resolve(updateLineResponse)
           })
           .catch(error => {
@@ -330,7 +332,9 @@ export default {
         })
           .then(() => {
             commit('setOrder', {})
-            dispatch('listLines')
+            dispatch('overloadOrder', {
+              order
+            })
             resolve({})
           })
           .catch(error => {
