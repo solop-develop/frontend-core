@@ -45,11 +45,46 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
               icon="el-icon-document-copy"
               @click="copyCode(scope.row)"
             />
-            {{ displayValue({ row: scope.row, columnName: valueOrder.columnName}) }}
+            <span v-if="scope.row.isEditQty && valueOrder.columnName === 'QtyEntered'">
+              <el-button v-if="scope.row.isLoading" :loading="scope.row.isLoading" />
+              <edit-qty-entered
+                v-else
+                :qty="Number(scope.row.quantity_ordered.value)"
+                :handle-change="updateQuantity"
+              />
+            </span>
+            <span v-else>
+              {{ displayValue({ row: scope.row, columnName: valueOrder.columnName }) }}
+            </span>
           </template>
         </el-table-column>
       </template>
+      <el-table-column
+        :label="$t('form.pos.tableProduct.options')"
+      >
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="danger"
+            icon="el-icon-delete"
+            style="margin-left: 5px;"
+            :disabled="scope.row.isLoading"
+            :loading="scope.row.isLoading"
+            @click="deleteLine(scope.row)"
+          />
+        </template>
+      </el-table-column>
     </el-table>
+    <info-r-m-a />
+    <br>
+    <span v-if="isShowCheck" style="float: right;margin-top: 10px;">
+      <el-checkbox
+        v-model="isCreateNewSubstituteOrder"
+        :label="$t('form.pos.orderRMA.createNewSubstituteOrder')"
+        :border="true"
+        style="margin-right: 10px"
+      />
+    </span>
   </el-main>
 </template>
 
@@ -63,11 +98,13 @@ import editQtyEntered from '@/components/ADempiere/Form/VPOS2/MainOrder/OptionLi
 // Utils and Helper Methods
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 import {
-  displayLabel
+  displayLabel,
+  displayValue
 } from '@/utils/ADempiere/dictionary/form/VPOS'
+import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 
 export default defineComponent({
-  name: 'PreviwerRMA',
+  name: 'Shipments',
   components: {
     infoRMA,
     editQtyEntered
@@ -129,12 +166,6 @@ export default defineComponent({
           isNumeric: true,
           isVisible: true,
           size: '150px'
-        },
-        convertedAmount: {
-          columnName: 'ConvertedAmount',
-          label: lang.t('form.pos.collect.convertedAmount'),
-          isNumeric: true,
-          size: '150px'
         }
       }
     })
@@ -148,6 +179,33 @@ export default defineComponent({
       return store.getters.getAttributeRMA({
         attribute: 'listLine'
       })
+    })
+
+    const isShowCheck = computed(() => {
+      return store.getters.getAttributeRMA({
+        attribute: 'isShowCheck'
+      })
+    })
+
+    const currentRMA = computed(() => {
+      return store.getters.getAttributeRMA({
+        attribute: 'current'
+      })
+    })
+
+    const isCreateNewSubstituteOrder = computed({
+      get() {
+        return store.getters.getAttributeRMA({
+          attribute: 'isCreateNewSubstituteOrder'
+        })
+      },
+      // setter
+      set(show) {
+        store.commit('setAttributeRMA', {
+          attribute: 'isCreateNewSubstituteOrder',
+          value: show
+        })
+      }
     })
 
     // Methods
@@ -172,31 +230,36 @@ export default defineComponent({
         id,
         quantity_ordered
       } = item
-      store.dispatch('createShipmentLine', {
+      store.dispatch('createRMALine', {
         quantity: quantity_ordered.value,
-        orderLineId: id
+        sourceOrderLineId: id
       })
     }
 
     function selectLine(row, column, event) {
-      const { property } = column
-      if (property === 'quantity') {
+      const { columnKey } = column
+      if (columnKey === 'QtyEntered') {
         row.isEditQty = true
       }
     }
 
     function exitLine(row, column, event) {
-      const { property } = column
-      if (property === 'quantity') {
+      const { columnKey } = column
+      if (columnKey === 'QtyEntered') {
         row.isEditQty = false
       }
     }
 
     function updateQuantity(quantity) {
+      line.value.isLoading = true
       store.dispatch('updateRMALine', {
         lineId: line.value.id,
         quantity
       })
+        .finally(() => {
+          line.value.isEditQty = false
+          line.value.isLoading = false
+        })
     }
 
     function currentLine(currentRow, oldCurrentRow) {
@@ -208,9 +271,16 @@ export default defineComponent({
       store.dispatch('deleteRMALine', {
         lineId: line.id
       })
-        .then(() => {
+        .finally(() => {
           line.isLoading = false
         })
+    }
+
+    function copyCode(value) {
+      copyToClipboard({
+        text: value.product.value,
+        isShowMessage: true
+      })
     }
 
     return {
@@ -218,9 +288,13 @@ export default defineComponent({
       searchProduct,
       // Computed
       lines,
+      currentRMA,
       listLineRMA,
+      isShowCheck,
       orderLineDefinition,
+      isCreateNewSubstituteOrder,
       // Methods
+      copyCode,
       exitLine,
       selectLine,
       deleteLine,
@@ -230,6 +304,7 @@ export default defineComponent({
       productFilter,
       updateQuantity,
       displayLabel,
+      displayValue,
       formatQuantity
     }
   }

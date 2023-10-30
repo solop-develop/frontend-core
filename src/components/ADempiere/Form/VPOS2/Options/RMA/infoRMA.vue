@@ -125,6 +125,7 @@ import { defineComponent, computed } from '@vue/composition-api'
 import { formatPrice } from '@/utils/ADempiere/formatValue/numberFormat'
 import { formatDate } from '@/utils/ADempiere/valueFormat.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 
 export default defineComponent({
   name: 'infoRMA',
@@ -172,6 +173,7 @@ export default defineComponent({
       // Methods
       display,
       formatDate,
+      formatQuantity,
       displayAmount
     }
   }

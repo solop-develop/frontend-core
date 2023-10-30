@@ -18,6 +18,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <template>
   <el-main
+    v-if="!isEmptyValue(currentRMA)"
     class="product-list-content"
   >
     <el-form
@@ -84,13 +85,16 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
               icon="el-icon-document-copy"
               @click="copyCode(scope.row)"
             />
-            <edit-qty-entered
-              v-if="scope.row.isEditQtyEntered && valueOrder.columnName === 'QtyEntered'"
-              :qty="Number(scope.row.quantity_ordered.value)"
-              :handle-change="updateQuantity"
-            />
+            <span v-if="scope.row.isEditQty && valueOrder.columnName === 'QtyEntered'">
+              <el-button v-if="scope.row.isLoading" :loading="scope.row.isLoading" />
+              <edit-qty-entered
+                v-else
+                :qty="Number(scope.row.quantity_ordered.value)"
+                :handle-change="updateQuantity"
+              />
+            </span>
             <span v-else>
-              {{ displayValue({ row: scope.row, columnName: valueOrder.columnName}) }}
+              {{ displayValue({ row: scope.row, columnName: valueOrder.columnName }) }}
             </span>
           </template>
         </el-table-column>
@@ -111,7 +115,15 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         </template>
       </el-table-column>
     </el-table>
+    <info-r-m-a />
   </el-main>
+  <div
+    v-else
+    v-loading="true"
+    :element-loading-text="$t('notifications.loading')"
+    element-loading-background="rgba(255, 255, 255, 0.7)"
+    style="height: 350px;"
+  />
 </template>
 
 <script>
@@ -123,8 +135,10 @@ import infoRMA from '@/components/ADempiere/Form/VPOS2/Options/RMA/infoRMA.vue'
 import editQtyEntered from '@/components/ADempiere/Form/VPOS2/MainOrder/OptionLine/editLine/editQtyEntered.vue'
 // Utils and Helper Methods
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
+import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 import {
-  displayLabel
+  displayLabel,
+  displayValue
 } from '@/utils/ADempiere/dictionary/form/VPOS'
 
 export default defineComponent({
@@ -190,12 +204,6 @@ export default defineComponent({
           isNumeric: true,
           isVisible: true,
           size: '150px'
-        },
-        convertedAmount: {
-          columnName: 'ConvertedAmount',
-          label: lang.t('form.pos.collect.convertedAmount'),
-          isNumeric: true,
-          size: '150px'
         }
       }
     })
@@ -208,6 +216,12 @@ export default defineComponent({
     const listLineRMA = computed(() => {
       return store.getters.getAttributeRMA({
         attribute: 'listLine'
+      })
+    })
+
+    const currentRMA = computed(() => {
+      return store.getters.getAttributeRMA({
+        attribute: 'current'
       })
     })
 
@@ -233,31 +247,36 @@ export default defineComponent({
         id,
         quantity_ordered
       } = item
-      store.dispatch('createShipmentLine', {
+      store.dispatch('createRMALine', {
         quantity: quantity_ordered.value,
-        orderLineId: id
+        sourceOrderLineId: id
       })
     }
 
     function selectLine(row, column, event) {
-      const { property } = column
-      if (property === 'quantity') {
+      const { columnKey } = column
+      if (columnKey === 'QtyEntered') {
         row.isEditQty = true
       }
     }
 
     function exitLine(row, column, event) {
-      const { property } = column
-      if (property === 'quantity') {
+      const { columnKey } = column
+      if (columnKey === 'QtyEntered') {
         row.isEditQty = false
       }
     }
 
     function updateQuantity(quantity) {
+      line.value.isLoading = true
       store.dispatch('updateRMALine', {
         lineId: line.value.id,
         quantity
       })
+        .finally(() => {
+          line.value.isEditQty = false
+          line.value.isLoading = false
+        })
     }
 
     function currentLine(currentRow, oldCurrentRow) {
@@ -274,14 +293,23 @@ export default defineComponent({
         })
     }
 
+    function copyCode(value) {
+      copyToClipboard({
+        text: value.product.value,
+        isShowMessage: true
+      })
+    }
+
     return {
       // Ref
       searchProduct,
       // Computed
       lines,
+      currentRMA,
       listLineRMA,
       orderLineDefinition,
       // Methods
+      copyCode,
       exitLine,
       selectLine,
       deleteLine,
@@ -291,6 +319,7 @@ export default defineComponent({
       productFilter,
       updateQuantity,
       displayLabel,
+      displayValue,
       formatQuantity
     }
   }

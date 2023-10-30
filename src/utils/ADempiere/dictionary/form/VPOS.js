@@ -132,7 +132,7 @@ function displayLineDescription({
   } = row
   const isMobile = store.getters.device === 'mobile'
   if (isMobile) return product.name
-  if (resource_assignment.id > 0) return product.name + ' - (' + resource_assignment.name + ')'
+  if (!isEmptyValue(resource_assignment) && resource_assignment.id > 0) return product.name + ' - (' + resource_assignment.name + ')'
   if (charge.id > 0) return charge.name
   return product.value + ' - ' + product.name
 }

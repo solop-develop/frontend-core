@@ -327,7 +327,6 @@ export default {
         const pos = getters.getVPOS
         if (isEmptyValue(order)) resolve({})
         if (order.document_status.value === 'CO') {
-          dispatch('overloadOrder', { order })
           resolve({})
           return
         }

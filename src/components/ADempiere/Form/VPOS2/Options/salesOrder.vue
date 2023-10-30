@@ -511,11 +511,12 @@ export default defineComponent({
     })
 
     const isRMA = computed(() => {
+      const { is_allows_return_order } = currentPointOfSales.value
       const { is_rma } = currentOrder.value
       if (!isEmptyValue(currentOrder.value.id)) {
-        return is_rma
+        return !is_rma
       }
-      return false
+      return is_allows_return_order
     })
 
     function newOrder() {
@@ -691,9 +692,6 @@ export default defineComponent({
               title: lang.t('form.pos.optionsPoinSales.salesOrder.newOrderFromRMA'),
               doneMethod: () => {
                 store.dispatch('processRMA')
-              },
-              isDisabledDone: () => {
-                return isEmptyValue(store.getters.getCurrentShipment) || isEmptyValue(store.getters.getShipmentList)
               },
               componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/RMA/previwerRMA.vue'),
               isShowed: true
