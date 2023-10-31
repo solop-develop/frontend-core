@@ -55,16 +55,13 @@ export function requestAttachment({
  * @param {string} resourceName as fileName
  * @returns {promise}
  */
-export function setResourceReference({
+export function requestSetResourceReference({
   id,
-  uuid,
   //
   resourceType = RESOURCE_TYPE_ATTACHMENT,
-  resourceId,
   //
   tableName,
   recordId,
-  recordUuid,
   //
   textMessage,
   fileName,
@@ -74,15 +71,9 @@ export function setResourceReference({
     url: `/file-management/references/attachment/${tableName}/${recordId}`,
     method: 'put',
     data: {
-      id,
-      uuid,
       // parent values (attachment, image, archive)
       resource_type: resourceType,
-      // resource_id: resourceId,
-      // attachment values
-      // table_name: tableName,
-      record_id: recordId,
-      record_uuid: recordUuid,
+      id,
       // attachment reference values
       text_message: textMessage,
       file_name: fileName,

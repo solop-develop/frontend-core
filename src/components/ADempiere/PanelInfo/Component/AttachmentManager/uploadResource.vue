@@ -55,11 +55,10 @@ import { RESOURCE_TYPE_ATTACHMENT } from '@/utils/ADempiere/resource'
 
 // API Request Methods
 // import {
-//   // requestUploadAttachment,
-//   setResourceReference
+//   // requestUploadAttachment
 // } from '@/api/ADempiere/user-interface/component/resource'
 import {
-  setResourceReference
+  requestSetResourceReference
 } from '@/api/ADempiere/logs/tabInfo/windowAttachment.ts'
 
 // Utils and Helper Methods
@@ -108,11 +107,10 @@ export default defineComponent({
 
     function isValidUploadHandler(file) {
       return new Promise((resolve, reject) => {
-        setResourceReference({
+        requestSetResourceReference({
           resourceType: RESOURCE_TYPE_ATTACHMENT,
           tableName: props.tableName,
           recordId: props.recordId,
-          recordUuid: props.recordUuid,
           fileName: file.name,
           fileSize: file.size
         }).then(response => {
@@ -123,7 +121,8 @@ export default defineComponent({
 
           fileResource.value = response
           additionalData.value = {
-            resource_uuid: response.uuid,
+            // resource_uuid: response.uuid,
+            id: response.id,
             file_name: response.file_name
           }
           resolve(true)
