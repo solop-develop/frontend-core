@@ -384,6 +384,79 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         </div>
       </el-popover>
     </el-col>
+    <!-- applyDiscountToAllLines -->
+    <el-col v-if="isAllowsApplyDiscount" :span="8">
+      <el-popover
+        v-model="isShowApplyDiscount"
+        placement="bottom"
+        width="350"
+        :title="$t('form.pos.applyDiscountOnOrder')"
+        trigger="click"
+      >
+        <el-row v-if="!isLoadingApplyDiscountOnOrder" :gutter="24" class="container-reverse">
+          <el-col :span="24" class="container-reverse">
+            <p class="container-popover">
+              <b class="container-popover">
+                {{ $t('form.pos.tableProduct.displayDiscountAmount') }}
+              </b>
+            </p>
+          </el-col>
+          <el-col :span="24">
+            <el-input-number
+              ref="applyDiscountOnOrder"
+              v-model="applyDiscountAmount"
+              :placeholder="$t('form.pos.tableProduct.displayDiscountAmount')"
+              controls-position="right"
+              :precision="2"
+              autofocus
+              style="text-align-last: end !important;width: 100%;"
+            />
+          </el-col>
+          <el-col :span="24" style="text-align: end;">
+            <samp class="spam-button">
+              <el-button
+                type="danger"
+                icon="el-icon-close"
+                class="button-base-icon"
+                @click="closeApplyDiscount()"
+              />
+              <el-button
+                type="primary"
+                icon="el-icon-check"
+                class="button-base-icon"
+                :disabled="isLoadingCancelSaleTransaction"
+                :loading="isLoadingCancelSaleTransaction"
+                @click="applyDiscountAll()"
+              />
+            </samp>
+          </el-col>
+        </el-row>
+        <div
+          v-else
+          key="form-loading"
+          v-loading="isLoadingCancelSaleTransaction"
+          :element-loading-text="$t('notifications.loading')"
+          :element-loading-spinner="'el-icon-loading'"
+          element-loading-background="rgba(255, 255, 255, 0.8)"
+          class="view-loading"
+        />
+        <div slot="reference">
+          <el-card
+            shadow="never"
+            class="custom-card-options"
+            :body-style="{ padding: '10px' }"
+          >
+            <p
+              class="card-options-buttons"
+            >
+              <i class="el-icon-document-remove" />
+              <br>
+              {{ $t('form.pos.applyDiscountToAllLines') }}
+            </p>
+          </el-card>
+        </div>
+      </el-popover>
+    </el-col>
     <!-- Create New Order RMA -->
     <el-col v-if="isRMA" :span="8">
       <div @click="newOrderRMA">
@@ -581,6 +654,17 @@ export default defineComponent({
         })
     }
 
+    function applyDiscountAll() {
+      isLoadingApplyDiscountOnOrder.value = true
+      store.dispatch('updateCurrentOrder', {
+        discount_rate: applyDiscountAmount.value
+      })
+        .then(() => {
+          isLoadingApplyDiscountOnOrder.value = false
+          closeApplyDiscount()
+        })
+    }
+
     function printTicket() {
       if (isLoadingPrintTicket.value) return
       isLoadingPrintTicket.value = true
@@ -739,6 +823,7 @@ export default defineComponent({
       printPreview,
       applyDiscount,
       confirmShipment,
+      applyDiscountAll,
       closeReverseSales,
       closeApplyDiscount,
       completePreparedOrder,
