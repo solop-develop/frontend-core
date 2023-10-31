@@ -459,6 +459,32 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     </el-col>
     <!-- Create New Order RMA -->
     <el-col v-if="isRMA" :span="8">
+      <div @click="returnProduct">
+        <el-card
+          shadow="never"
+          class="custom-card-options"
+          :body-style="{ padding: '10px' }"
+        >
+          <p
+            v-if="!isLoadingRMA"
+            class="card-options-buttons"
+          >
+            <i class="el-icon-box" />
+            <svg-icon icon-class="undo" />
+            <br>
+            {{ $t('form.pos.optionsPoinSales.salesOrder.returnProduct') }}
+          </p>
+          <p
+            v-else
+            class="card-options-buttons"
+          >
+            <i class="el-icon-loading" />
+            <br>
+          </p>
+        </el-card>
+      </div>
+    </el-col>
+    <el-col v-if="isNewOrderFromRMA" :span="8">
       <div @click="newOrderRMA">
         <el-card
           shadow="never"
@@ -588,6 +614,15 @@ export default defineComponent({
       const { is_rma } = currentOrder.value
       if (!isEmptyValue(currentOrder.value.id)) {
         return !is_rma
+      }
+      return is_allows_return_order
+    })
+
+    const isNewOrderFromRMA = computed(() => {
+      const { is_allows_return_order } = currentPointOfSales.value
+      const { is_rma } = currentOrder.value
+      if (!isEmptyValue(currentOrder.value.id)) {
+        return is_rma
       }
       return is_allows_return_order
     })
@@ -763,7 +798,7 @@ export default defineComponent({
       })
     }
 
-    function newOrderRMA() {
+    function returnProduct() {
       store.dispatch('createRMA')
       store.dispatch('setModalDialogVPOS', {
         title: lang.t('form.pos.optionsPoinSales.salesOrder.newOrderFromRMA'),
@@ -787,6 +822,13 @@ export default defineComponent({
       })
     }
 
+    function newOrderRMA() {
+      store.dispatch('createOrderFromRMA', {
+        sourceRmaId: currentOrder.value.id,
+        salesRepresentativeId: currentOrder.value.sales_representative.id
+      })
+    }
+
     return {
       // Ref
       IsCopyOrder,
@@ -806,6 +848,7 @@ export default defineComponent({
       currentOrder,
       IsCancelOrder,
       isShowShipment,
+      isNewOrderFromRMA,
       isConfirmShipment,
       isAllowsReturnOrder,
       currentPointOfSales,
@@ -817,6 +860,7 @@ export default defineComponent({
       copyOrder,
       listOrders,
       newOrderRMA,
+      returnProduct,
       cancelOrder,
       addResource,
       printTicket,
