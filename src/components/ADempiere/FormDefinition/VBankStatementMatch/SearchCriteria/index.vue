@@ -1,19 +1,19 @@
 <!--
-ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
-Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -33,7 +33,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           </el-col>
 
           <el-col :span="8">
-            <business-partner />
+            <business-partners-list />
           </el-col>
 
           <el-col :span="8">
@@ -97,7 +97,7 @@ import store from '@/store'
 // Components and Mixins
 // import AutomaticMatch from '../AutomaticMatch.vue'
 import BankAccount from '../SearchCriteria/bankAccount.vue'
-import BusinessPartner from '../SearchCriteria/businessPartner.vue'
+import BusinessPartnersList from '../SearchCriteria/businessPartnersList.vue'
 import SearchMode from '../SearchCriteria/searchMode.vue'
 import BankStatement from '../SearchCriteria/bankStatement.vue'
 
@@ -108,7 +108,7 @@ export default defineComponent({
   name: 'SearchCriteria',
 
   components: {
-    BusinessPartner,
+    BusinessPartnersList,
     // AutomaticMatch,
     BankStatement,
     BankAccount,

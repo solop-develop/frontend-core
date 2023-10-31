@@ -99,7 +99,7 @@ export default defineComponent({
           break
         case 'VBankStatementMatch':
         case 'org.spin.apps.form.VBankStatementMatch':
-          form = import('@/components/ADempiere/Form/VBankStatementMatch')
+          form = import('@/components/ADempiere/FormDefinition/VBankStatementMatch')
           break
         case 'IssueManagement':
           form = import('@/components/ADempiere/Form/Issues')
