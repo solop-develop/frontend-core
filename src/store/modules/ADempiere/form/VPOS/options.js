@@ -35,7 +35,9 @@ import {
   updateShipmentLine,
   deleteShipmentLine,
   printShipmentPreview,
-  createOrderFromRMA
+  createOrderFromRMA,
+  listCashMovements,
+  processCashClosing
 } from '@/api/ADempiere/form/VPOS'
 // // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -57,6 +59,12 @@ const options = {
     listLine: [],
     isShowCheck: false,
     isCreateNewSubstituteOrder: true
+  },
+  cashClosings: {
+    isDetails: false,
+    isLoading: false,
+    listSummary: [],
+    summary: undefined
   }
 }
 
@@ -80,6 +88,12 @@ export default {
       value
     }) {
       state.rma[attribute] = value
+    },
+    setAttributeCashClosings(state, {
+      attribute,
+      value
+    }) {
+      state.cashClosings[attribute] = value
     }
   },
   actions: {
@@ -1031,6 +1045,125 @@ export default {
             resolve({})
           })
       })
+    },
+    listCashMovements({
+      commit,
+      getters
+    }, {
+      isOnlyProcessed,
+      isOnlyRefund
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        if (
+          isEmptyValue(currentPos.id)
+        ) resolve({})
+        commit('setAttributeCashClosings', {
+          attribute: 'isLoading',
+          value: true
+        })
+        listCashMovements({
+          posId: currentPos.id,
+          isOnlyProcessed,
+          isOnlyRefund
+        })
+          .then(response => {
+            const {
+              id,
+              cash_movements
+            } = response
+            commit('setAttributeCashClosings', {
+              attribute: 'listSummary',
+              value: cash_movements
+            })
+            commit('setAttributeCashClosings', {
+              attribute: 'summary',
+              value: id
+            })
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`List Summary Movements Line: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve({})
+          })
+          .finally(() => {
+            commit('setAttributeCashClosings', {
+              attribute: 'isLoading',
+              value: false
+            })
+          })
+      })
+    },
+    processCashClosing({
+      dispatch,
+      getters,
+      commit
+    }) {
+      return new Promise(resolve => {
+        const { summary } = getters.getCashClosings
+        const currentPos = getters.getVPOS
+        if (isEmptyValue(currentPos.id)) resolve({})
+        processCashClosing({
+          posId: currentPos.id,
+          id: summary
+        })
+          .then(response => {
+            dispatch('setModalDialogVPOS', {
+              title: lang.t('form.pos.optionsPoinSales.cashManagement.closeBox'),
+              type: 'success',
+              doneMethod: () => {
+                commit('setShowedModalDialogVPOS', {
+                  isShowed: false
+                })
+              },
+              componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/cashManagement/cashClosing/panel.vue'),
+              isShowed: true
+            })
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Process Cash Closing: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            dispatch('setModalDialogVPOS', {
+              title: lang.t('form.pos.optionsPoinSales.cashManagement.closeBox'),
+              type: 'error',
+              doneMethod: () => {
+                commit('setShowedModalDialogVPOS', {
+                  isShowed: false
+                })
+              },
+              componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/cashManagement/cashClosing/panel.vue'),
+              isShowed: true
+            })
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve({})
+          })
+          .finally(() => {
+            commit('setAttributeCashClosings', {
+              attribute: 'isLoading',
+              value: false
+            })
+          })
+      })
     }
   },
   getters: {
@@ -1049,6 +1182,13 @@ export default {
     getAttributeRMA: (state) => ({ attribute }) => {
       if (isEmptyValue(attribute)) return ''
       return state.rma[attribute]
+    },
+    getAttributeCashClosings: (state) => ({ attribute }) => {
+      if (isEmptyValue(attribute)) return ''
+      return state.cashClosings[attribute]
+    },
+    getCashClosings: (state) => {
+      return state.cashClosings
     }
   }
 }
