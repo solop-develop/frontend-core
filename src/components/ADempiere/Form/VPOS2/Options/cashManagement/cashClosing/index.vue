@@ -17,7 +17,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 <template>
   <el-row :gutter="10">
     <el-col :span="8" style="width: 100% !important;">
-      <div>
+      <div @click="closeBox">
         <el-card
           shadow="never"
           class="custom-card-options"
@@ -38,9 +38,26 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <script>
 import { defineComponent } from '@vue/composition-api'
-
+import store from '@/store'
+import lang from '@/lang'
 export default defineComponent({
-  name: 'cashClosing'
+  name: 'cashClosing',
+  setup() {
+    function closeBox() {
+      store.dispatch('listCashMovements', {})
+      store.dispatch('setModalDialogVPOS', {
+        title: lang.t('form.pos.optionsPoinSales.cashManagement.closeBox'),
+        doneMethod: () => {
+          store.dispatch('processCashClosing')
+        },
+        componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/cashManagement/cashClosing/panel.vue'),
+        isShowed: true
+      })
+    }
+    return {
+      closeBox
+    }
+  }
 })
 </script>
 

@@ -1475,8 +1475,8 @@ export function processCashWithdrawal({
  * Cash Closing
  */
 export function processCashClosing({
+  id,
   posId,
-  payments,
   description,
   collectingAgentId
 }) {
@@ -1487,7 +1487,7 @@ export function processCashClosing({
       collecting_agent_id: collectingAgentId,
       pos_id: posId,
       description,
-      payments
+      id
     }
   })
 }
@@ -1502,6 +1502,25 @@ export function listCashSummaryMovements({
 }) {
   return request({
     url: `point-of-sales/cash/summary-movements`,
+    method: 'get',
+    params: {
+      pos_id: posId,
+      is_only_processed: isOnlyProcessed,
+      is_only_refund: isOnlyRefund
+    }
+  })
+}
+
+/**
+ * List all cash movements
+ */
+export function listCashMovements({
+  posId,
+  isOnlyProcessed,
+  isOnlyRefund
+}) {
+  return request({
+    url: `point-of-sales/cash/movements`,
     method: 'get',
     params: {
       pos_id: posId,
