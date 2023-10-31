@@ -58,7 +58,8 @@ const pointOfSales = {
     recipientBank: 'Recipient Bank',
     issuingBank: 'Issuing Bank',
     bank: 'Bank',
-    creditMemo: 'Credit Note'
+    creditMemo: 'Credit Note',
+    addPayment: 'Payment Added Successfully'
   },
   conversionRate: {
     withoutConversionRate: 'There is no current exchange rate '
