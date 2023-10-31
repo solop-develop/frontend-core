@@ -256,7 +256,7 @@ const persistence = {
                   return true
                 }
                 // prevent `PO.set_Value: Column not updateable`
-                if (!isEmptyValue(recordUuid) && !field.isUpdateable) {
+                if (!isEmptyValue(recordUuid) && recordUuid !== 'create-new' && !field.isUpdateable) {
                   return false
                 }
                 if (LOG_COLUMNS_NAME_LIST.includes(columnName)) {
@@ -269,7 +269,7 @@ const persistence = {
         }
 
         if (!isEmptyValue(attributesList)) {
-          if (!isEmptyValue(recordUuid)) {
+          if (!isEmptyValue(recordUuid) && recordUuid !== 'create-new') {
             // Update existing entity
             return updateEntity({
               tabUuid: containerUuid,
@@ -449,7 +449,11 @@ const persistence = {
       const changes = state.persistence[key]
 
       if (!isEmptyValue(changes)) {
-        return Object.values(changes)
+        const valuesList = Object.values(changes)
+        if (isEmptyValue(recordUuid) || recordUuid === 'create-new') {
+          return valuesList
+        }
+        return valuesList
           // only changes
           .filter(attribute => {
             const { value, oldValue } = attribute
@@ -475,7 +479,8 @@ const persistence = {
       const changes = state.persistence[key]
 
       if (!isEmptyValue(changes)) {
-        if (isEmptyValue(recordUuid)) {
+        const valuesList = Object.values(changes)
+        if (isEmptyValue(recordUuid) || recordUuid === 'create-new') {
           const defaultRow = rootGetters.getTabParsedDefaultValue({
             parentUuid,
             containerUuid,
@@ -483,7 +488,7 @@ const persistence = {
             formatToReturn: 'object'
           })
 
-          return Object.values(changes)
+          return valuesList
             // only changes with default value
             .filter(attribute => {
               const { value, columnName } = attribute
@@ -491,7 +496,7 @@ const persistence = {
             })
         }
 
-        return Object.values(changes)
+        return valuesList
           // only changes
           .filter(attribute => {
             const { value, oldValue } = attribute

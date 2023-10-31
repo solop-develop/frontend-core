@@ -41,7 +41,7 @@ export function isNumber(value) {
   if (isNaN(value)) {
     return false
   }
-  true
+  return true
 }
 
 /**

@@ -244,6 +244,7 @@ export function evaluateDefaultFieldShowed({
     VALUE, DOCUMENT_NO, CURRENCY,
     'DateInvoiced', 'DateOrdered', 'DatePromised',
     'DateTrx', 'MovementDate', 'M_Product_ID', 'QtyEntered',
+    'ValidTo',
     // TODO: Remove this columns with fixes default value
     'UserLevel'
   ]
