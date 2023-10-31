@@ -159,10 +159,6 @@ export default {
           isEmptyValue(payment_id) ||
           isEmptyValue(currentOrder.id)
         ) resolve({})
-        console.log({
-          posId: currentPos.id,
-          payment_id
-        })
         deletePaymentsOpen({
           posId: currentPos.id,
           payment_id
