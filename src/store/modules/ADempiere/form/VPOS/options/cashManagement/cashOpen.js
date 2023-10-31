@@ -211,7 +211,7 @@ export default {
               isShowed: false
             })
             dispatch('setModalDialogVPOS', {
-              title: lang.t('form.pos.optionsPoinSales.cashManagement.cashOpening'),
+              title: lang.t('form.pos.optionsPoinSales.cashManagement.cashOpenBox'),
               type: 'success',
               doneMethod: () => {
                 commit('setShowedModalDialogVPOS', {
@@ -223,7 +223,7 @@ export default {
                 })
                 commit('setAttributeCashOpenFields', {
                   attribute: 'collectionAgent',
-                  value: ''
+                  value: undefined
                 })
               },
               // TODO: Change to string and import dynamic in component

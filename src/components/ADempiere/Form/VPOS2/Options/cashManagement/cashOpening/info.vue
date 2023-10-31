@@ -16,27 +16,14 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <template>
   <el-card
-    shadow="never"
-    :body-style="{ padding: '5px' }"
+    shadow="hover"
+    :body-style="{ padding: '20px' }"
+    class="border-info"
   >
-    <el-row v-if="!isEmptyValue(listPaymentsOpenst)" :gutter="10">
-      <el-col
-        v-for="(payment, key) in listPaymentsOpenst"
-        :key="key"
-        :span="12"
-        style="margin: 10px 0px;"
-      >
-        <card-payments
-          :payment="payment"
-          :readonly="true"
-        />
-      </el-col>
-    </el-row>
     <el-row>
       <el-col
         :span="24"
         style="margin-top: 0px;"
-        class="border-info"
       >
         <p class="line-info">
           <b
@@ -44,7 +31,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           >
             {{ $t('form.pos.collect.collectionAgent') }}:
           </b>
-          <b v-if="!isEmptyValue(collectionAgent)" style="float: right">
+          <b v-if="!isEmptyValue(collectionAgent)" style="float: left; padding-left: 10px;">
             {{ collectionAgent.name }}
           </b>
         </p>
@@ -54,10 +41,24 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           >
             {{ $t('pointOfSales.collection.field.description') }}:
           </b>
-          <b style="float: right">
+          <b style="float: left; padding-left: 10px;">
             {{ description }}
           </b>
         </p>
+      </el-col>
+    </el-row>
+    <el-divider />
+    <el-row v-if="!isEmptyValue(listPaymentsOpenst)" :gutter="10">
+      <el-col
+        v-for="(payment, key) in listPaymentsOpenst"
+        :key="key"
+        :span="8"
+        style="margin: 10px 0px;"
+      >
+        <card-payments
+          :payment="payment"
+          :readonly="true"
+        />
       </el-col>
     </el-row>
   </el-card>

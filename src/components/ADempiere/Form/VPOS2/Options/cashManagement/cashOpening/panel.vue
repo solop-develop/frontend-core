@@ -85,7 +85,7 @@
       <el-col
         v-for="(payment, key) in listPaymentsOpenst"
         :key="key"
-        :span="12"
+        :span="8"
         style="margin: 10px 0px;"
       >
         <card-payments

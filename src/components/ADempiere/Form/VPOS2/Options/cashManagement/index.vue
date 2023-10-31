@@ -45,7 +45,7 @@ import cashOpening from './cashOpening/index.vue'
 import cashWithdrawal from './cashWithdrawal'
 import cashClosing from './cashClosing/index.vue'
 import cashDetailClosing from './cashDetailClosing'
-import seller from './seller'
+import seller from '@/components/ADempiere/Form/VPOS2/Options/cashManagement/seller/index.vue'
 import unassignSeller from './unassignSeller'
 
 export default defineComponent({
