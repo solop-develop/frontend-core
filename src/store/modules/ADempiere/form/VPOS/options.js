@@ -37,7 +37,8 @@ import {
   printShipmentPreview,
   createOrderFromRMA,
   listCashMovements,
-  processCashClosing
+  processCashClosing,
+  listCashSummaryMovements
 } from '@/api/ADempiere/form/VPOS'
 // // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -1062,7 +1063,73 @@ export default {
           attribute: 'isLoading',
           value: true
         })
+        commit('setAttributeCashClosings', {
+          attribute: 'isDetails',
+          value: false
+        })
         listCashMovements({
+          posId: currentPos.id,
+          isOnlyProcessed,
+          isOnlyRefund
+        })
+          .then(response => {
+            const {
+              id,
+              cash_movements
+            } = response
+            commit('setAttributeCashClosings', {
+              attribute: 'listSummary',
+              value: cash_movements
+            })
+            commit('setAttributeCashClosings', {
+              attribute: 'summary',
+              value: id
+            })
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`List Summary Movements Line: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve({})
+          })
+          .finally(() => {
+            commit('setAttributeCashClosings', {
+              attribute: 'isLoading',
+              value: false
+            })
+          })
+      })
+    },
+    listCashSummaryMovements({
+      commit,
+      getters
+    }, {
+      isOnlyProcessed,
+      isOnlyRefund
+    }) {
+      return new Promise(resolve => {
+        const currentPos = getters.getVPOS
+        if (
+          isEmptyValue(currentPos.id)
+        ) resolve({})
+        commit('setAttributeCashClosings', {
+          attribute: 'isLoading',
+          value: true
+        })
+        commit('setAttributeCashClosings', {
+          attribute: 'isDetails',
+          value: true
+        })
+        listCashSummaryMovements({
           posId: currentPos.id,
           isOnlyProcessed,
           isOnlyRefund

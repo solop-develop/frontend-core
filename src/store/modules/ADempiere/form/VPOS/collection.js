@@ -15,6 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import Vue from 'vue'
+import lang from '@/lang'
 // API Request Methods
 import {
   createPayment,
@@ -112,7 +113,7 @@ export default {
               })
             showMessage({
               type: 'success',
-              message: 'Pago Agregado',
+              message: lang.t('pointOfSales.collection.addPayment'),
               showClose: true
             })
             resolve(response)

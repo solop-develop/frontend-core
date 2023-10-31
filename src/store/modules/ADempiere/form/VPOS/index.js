@@ -148,6 +148,9 @@ export default {
             })
             resolve([])
           })
+          .finally(() => {
+            dispatch('availablePaymentMethods')
+          })
       })
     },
     /**

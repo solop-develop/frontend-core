@@ -58,7 +58,8 @@ const pointOfSales = {
     recipientBank: 'Banco Receptor',
     issuingBank: 'Banco Emisor',
     bank: 'Banco',
-    creditMemo: 'Nota de crédito'
+    creditMemo: 'Nota de crédito',
+    addPayment: 'Pago Agregado Exitosamente'
   },
   conversionRate: {
     withoutConversionRate: 'No existe tasa de cambio registrada al día '

@@ -1529,3 +1529,17 @@ export function listCashMovements({
     }
   })
 }
+
+/**
+ * List Available Cash
+ * @param {int32} posId
+ */
+
+export function listAvailableCash({
+  posId
+}) {
+  return request({
+    url: `/point-of-sales/terminals/${posId}/cash`,
+    method: 'get'
+  })
+}

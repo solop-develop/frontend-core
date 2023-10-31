@@ -16,7 +16,7 @@
 
 <template>
   <el-card shadow="never" :body-style="{ padding: '5px' }">
-    <el-row>
+    <el-row v-if="!isEmptyValue(payment)">
       <el-col :span="7">
         <el-image
           :src="imageCard(payment)"
@@ -89,9 +89,15 @@ export default defineComponent({
     readonly: {
       type: Boolean,
       default: false
+    },
+    deletePayment: {
+      type: Function,
+      default: (payment) => {
+        console.info('delete Payments', payment)
+      }
     }
   },
-  setup() {
+  setup(props) {
     const isLoading = ref(false)
     const currentOrder = computed(() => {
       return store.getters.getCurrentOrder
@@ -110,14 +116,23 @@ export default defineComponent({
     }
 
     function remove(payment) {
+      if (props.deletePayment) {
+        isLoading.value = true
+        props.deletePayment(payment)
+        setTimeout(() => {
+          isLoading.value = false
+        }, 1000)
+        return payment
+      }
       const { id } = payment
       isLoading.value = true
       store.dispatch('removePayment', {
         payment_id: id
       })
-        .then(() => {
+        .finally(() => {
           isLoading.value = false
         })
+      return payment
     }
 
     function imageCard(payment) {

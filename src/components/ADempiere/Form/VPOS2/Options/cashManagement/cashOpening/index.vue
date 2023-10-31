@@ -39,16 +39,21 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 import { defineComponent } from '@vue/composition-api'
 import lang from '@/lang'
 import store from '@/store'
+import { isEmptyValue } from '@/utils/ADempiere'
 export default defineComponent({
   name: 'cashOpening',
   setup() {
     function openCahs() {
+      store.dispatch('listPaymentsOpen')
       store.dispatch('setModalDialogVPOS', {
         title: lang.t('form.pos.optionsPoinSales.cashManagement.cashOpening'),
         doneMethod: () => {
-          store.commit('setShowedModalDialogVPOS', {
-            isShowed: false
-          })
+          store.dispatch('cashOpening')
+        },
+        isDisabledDone: () => {
+          return isEmptyValue(store.getters.getAttributeCashOpenFields({
+            attribute: 'collectionAgent'
+          }))
         },
         componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/cashManagement/cashOpening/panel.vue'),
         isShowed: true
