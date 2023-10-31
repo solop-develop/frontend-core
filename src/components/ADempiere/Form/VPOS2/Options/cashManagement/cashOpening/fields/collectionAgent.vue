@@ -23,6 +23,10 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     <el-select
       v-model="collectionAgent"
       style="width: 100%;"
+      filterable
+      clearable
+      remote
+      :remote-method="remoteMethod"
       @visible-change="findSeller"
     >
       <el-option
@@ -96,11 +100,30 @@ export default defineComponent({
         })
     }
 
+    function remoteMethod(query) {
+      const currentPos = store.getters.getVPOS
+      listAvailableSellers({
+        posId: currentPos.id,
+        searchValue: query
+      })
+        .then(response => {
+          const { sellers } = response
+          listSellers.value = sellers
+        })
+        .catch(error => {
+          showMessage({
+            message: error.message,
+            type: 'error'
+          })
+        })
+    }
+
     return {
       collectionAgent,
       listSellers,
       // Methods
-      findSeller
+      findSeller,
+      remoteMethod
     }
   }
 })

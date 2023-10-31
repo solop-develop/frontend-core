@@ -146,11 +146,15 @@ export function listAvailableDiscounts({
  */
 
 export function listAvailableSellers({
-  posId
+  posId,
+  searchValue
 }) {
   return request({
     url: `/point-of-sales/${posId}/sellers`,
-    method: 'get'
+    method: 'get',
+    params: {
+      search_value: searchValue
+    }
   })
 }
 
@@ -1534,12 +1538,27 @@ export function listCashMovements({
  * List Available Cash
  * @param {int32} posId
  */
-
 export function listAvailableCash({
   posId
 }) {
   return request({
-    url: `/point-of-sales/terminals/${posId}/cash`,
+    url: `/point-of-sales/terminals/${posId}/cashs`,
     method: 'get'
+  })
+}
+
+/**
+ * Allocate Seller
+ */
+export function allocateSeller({
+  posId,
+  salesRepresentativeId
+}) {
+  return request({
+    url: `/point-of-sales/terminals/${posId}/allocate-seller`,
+    method: 'put',
+    data: {
+      sales_representative_id: salesRepresentativeId
+    }
   })
 }

@@ -27,9 +27,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             class="card-options-buttons"
           >
             <svg-icon icon-class="peoples" />
-            <i class="el-icon-top-right" />
+            <i class="el-icon-bottom-right" />
             <br>
-            {{ $t('form.pos.optionsPoinSales.cashManagement.unassignSeller') }}
+            {{ $t('form.pos.optionsPoinSales.cashManagement.assignSeller') }}
           </p>
         </el-card>
       </div>
@@ -42,7 +42,7 @@ import { defineComponent } from '@vue/composition-api'
 import lang from '@/lang'
 import store from '@/store'
 export default defineComponent({
-  name: 'cashClosing',
+  name: 'Seller',
   setup() {
     function openSeller() {
       store.dispatch('listAvailableSellers')
