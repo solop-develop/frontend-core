@@ -205,6 +205,20 @@ export default defineComponent({
     })
 
     const headerList = computed(() => {
+      const fieldsToHidden = props.containerManager.getFieldsToHidden({
+        parentUuid: props.parentUuid,
+        containerUuid: props.containerUuid,
+        fieldsList: props.containerManager.getFieldsList({
+          parentUuid: props.parentUuid,
+          containerUuid: props.containerUuid
+        }),
+        isTable: true
+      }).filter(itemField => {
+        return itemField.isShowedTableFromUser
+      })
+
+      if (fieldsToHidden) return fieldsToHidden
+
       return props.header.filter(fieldItem => {
         if (props.containerManager.isDisplayedColumn(fieldItem)) {
           // const isMandatoryGenerated = props.containerManager.isMandatoryColumn(fieldItem)
