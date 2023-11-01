@@ -117,6 +117,10 @@ export default defineComponent({
       default: (recordPrevious) => {
         console.info('implement method Change to Previous Record ', recordPrevious)
       }
+    },
+    isShowedSelected: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -152,6 +156,7 @@ export default defineComponent({
     })
 
     const isShowedTableRecords = computed(() => {
+      if (props.isShowedSelected) return props.isShowedSelected
       return store.getters.getStoredTab(
         parentUuid,
         containerUuid

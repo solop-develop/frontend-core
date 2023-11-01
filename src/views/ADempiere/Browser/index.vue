@@ -53,7 +53,7 @@
         </collapse-criteria>
         <br>
       </div>
-      <div id="browser-table" style="height: inherit;">
+      <div id="browser-table">
         <!-- Result of Records in the Table -->
         <default-table
           id="mainBrowser"
