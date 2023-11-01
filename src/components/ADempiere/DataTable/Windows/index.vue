@@ -216,21 +216,6 @@ export default defineComponent({
       }).filter(itemField => {
         return itemField.isShowedTableFromUser
       })
-
-      // return props.header.filter(fieldItem => {
-      //   if (props.containerManager.isDisplayedColumn(fieldItem)) {
-      //     // const isMandatoryGenerated = props.containerManager.isMandatoryColumn(fieldItem)
-      //     // const isDisplayedDefault = props.containerManager.isDisplayedDefaultTable({
-      //     //   ...fieldItem,
-      //     //   isMandatory: isMandatoryGenerated
-      //     // })
-      //     // if (isDisplayedDefault) {
-      //     //   return true
-      //     // }
-      //     return fieldItem.isShowedTableFromUser
-      //   }
-      //   return false
-      // })
     })
 
     const isMobile = computed(() => {
