@@ -205,19 +205,16 @@ export default defineComponent({
     })
 
     const headerList = computed(() => {
-      return props.header.filter(fieldItem => {
-        if (props.containerManager.isDisplayedColumn(fieldItem)) {
-          // const isMandatoryGenerated = props.containerManager.isMandatoryColumn(fieldItem)
-          // const isDisplayedDefault = props.containerManager.isDisplayedDefaultTable({
-          //   ...fieldItem,
-          //   isMandatory: isMandatoryGenerated
-          // })
-          // if (isDisplayedDefault) {
-          //   return true
-          // }
-          return fieldItem.isShowedTableFromUser
-        }
-        return false
+      return props.containerManager.getFieldsToHidden({
+        parentUuid: props.parentUuid,
+        containerUuid: props.containerUuid,
+        fieldsList: props.containerManager.getFieldsList({
+          parentUuid: props.parentUuid,
+          containerUuid: props.containerUuid
+        }),
+        isTable: true
+      }).filter(itemField => {
+        return itemField.isShowedTableFromUser
       })
     })
 
