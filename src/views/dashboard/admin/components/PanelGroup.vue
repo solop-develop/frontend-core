@@ -152,7 +152,8 @@ export default defineComponent({
       }
 
       zoomIn({
-        uuid: taks.windowUuid,
+        attributeValue: `window_${taks.windowId}`,
+        attributeName: 'containerKey',
         params: {
           ...taks.criteria
         },
