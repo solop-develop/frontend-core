@@ -94,11 +94,6 @@ export const zoomInOptionItem = {
       currentValue = reference.id
     }
 
-    // const filters = [{
-    //   columnName,
-    //   value: currentValue
-    // }]
-
     zoomIn({
       attributeValue: `window_${window.id}`,
       attributeName: 'containerKey',
