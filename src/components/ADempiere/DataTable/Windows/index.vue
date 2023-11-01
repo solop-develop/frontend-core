@@ -205,7 +205,7 @@ export default defineComponent({
     })
 
     const headerList = computed(() => {
-      const fieldsToHidden = props.containerManager.getFieldsToHidden({
+      return props.containerManager.getFieldsToHidden({
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid,
         fieldsList: props.containerManager.getFieldsList({
@@ -217,22 +217,20 @@ export default defineComponent({
         return itemField.isShowedTableFromUser
       })
 
-      if (fieldsToHidden) return fieldsToHidden
-
-      return props.header.filter(fieldItem => {
-        if (props.containerManager.isDisplayedColumn(fieldItem)) {
-          // const isMandatoryGenerated = props.containerManager.isMandatoryColumn(fieldItem)
-          // const isDisplayedDefault = props.containerManager.isDisplayedDefaultTable({
-          //   ...fieldItem,
-          //   isMandatory: isMandatoryGenerated
-          // })
-          // if (isDisplayedDefault) {
-          //   return true
-          // }
-          return fieldItem.isShowedTableFromUser
-        }
-        return false
-      })
+      // return props.header.filter(fieldItem => {
+      //   if (props.containerManager.isDisplayedColumn(fieldItem)) {
+      //     // const isMandatoryGenerated = props.containerManager.isMandatoryColumn(fieldItem)
+      //     // const isDisplayedDefault = props.containerManager.isDisplayedDefaultTable({
+      //     //   ...fieldItem,
+      //     //   isMandatory: isMandatoryGenerated
+      //     // })
+      //     // if (isDisplayedDefault) {
+      //     //   return true
+      //     // }
+      //     return fieldItem.isShowedTableFromUser
+      //   }
+      //   return false
+      // })
     })
 
     const isMobile = computed(() => {
