@@ -153,7 +153,8 @@ const lookupManager = {
           parentUuid,
           containerUuid,
           contextColumnNames,
-          isBooleanToString: true
+          isBooleanToString: true,
+          format: 'object'
         })
 
         const clientId = rootGetters.getSessionContextClientId
@@ -173,9 +174,14 @@ const lookupManager = {
 
         const contextKey = generateContextKey(contextAttributesList)
         key += contextKey
+        let contextAttributes
+
+        if (!isEmptyValue(contextAttributesList)) {
+          contextAttributes = JSON.stringify(contextAttributesList)
+        }
 
         requestLookupList({
-          contextAttributesList,
+          contextAttributesList: contextAttributes,
           browseFieldId,
           processParameterId,
           fieldId,
