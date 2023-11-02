@@ -28,10 +28,10 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           <b>{{ $t('form.pos.title') }}</b>
           <br>
           {{ $t('form.pos.optionsPoinSales.title') }}
+          <hr>
         </div>
       </el-card>
     </el-header>
-    <el-divider />
     <el-main>
       <div style="width: 97%;float: left;">
         <el-collapse
@@ -46,7 +46,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           <el-collapse-item :title="$t('form.pos.optionsPoinSales.generalOptions.title')" name="generalOptions" />
         </el-collapse>
       </div>
-      <div style="position: absolute;left: 27.5%;top: 42%;">
+      <div style="width: 3%;float: right;margin-top: 75%;">
         <el-button
           v-if="isShowOptions"
           circle

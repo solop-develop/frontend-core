@@ -76,7 +76,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           :body-style="{ padding: '10px' }"
         >
           <p
-            :class="isDisableClass"
+            class="card-options-buttons"
           >
             <i class="el-icon-success" />
             <br>
@@ -93,53 +93,51 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         width="400"
         trigger="click"
       >
-        <span v-if="isEmptyValue(currentOrder.id)">
-          <el-row v-if="!isLoadingCancelSaleTransaction" :gutter="24" class="container-reverse">
-            <el-col :span="24" class="container-reverse">
-              <p class="container-popover">
-                <b class="container-popover">
-                  {{ $t('data.addDescription') }}
-                </b>
-              </p>
-            </el-col>
-            <el-col :span="24">
-              <el-input
-                v-model="messageReverseSales"
-                type="textarea"
-                :rows="2"
-                :placeholder="$t('data.addDescription')"
-                style=""
+        <el-row v-if="!isLoadingCancelSaleTransaction" :gutter="24" class="container-reverse">
+          <el-col :span="24" class="container-reverse">
+            <p class="container-popover">
+              <b class="container-popover">
+                {{ $t('data.addDescription') }}
+              </b>
+            </p>
+          </el-col>
+          <el-col :span="24">
+            <el-input
+              v-model="messageReverseSales"
+              type="textarea"
+              :rows="2"
+              :placeholder="$t('data.addDescription')"
+              style=""
+            />
+          </el-col>
+          <el-col :span="24" style="text-align: end;">
+            <samp class="spam-button">
+              <el-button
+                type="danger"
+                icon="el-icon-close"
+                class="button-base-icon"
+                @click="closeReverseSales()"
               />
-            </el-col>
-            <el-col :span="24" style="text-align: end;">
-              <samp class="spam-button">
-                <el-button
-                  type="danger"
-                  icon="el-icon-close"
-                  class="button-base-icon"
-                  @click="closeReverseSales()"
-                />
-                <el-button
-                  type="primary"
-                  icon="el-icon-check"
-                  class="button-base-icon"
-                  :disabled="isLoadingCancelSaleTransaction"
-                  :loading="isLoadingCancelSaleTransaction"
-                  @click="cancelSaleTransaction()"
-                />
-              </samp>
-            </el-col>
-          </el-row>
-          <div
-            v-else
-            key="form-loading"
-            v-loading="isLoadingCancelSaleTransaction"
-            :element-loading-text="$t('notifications.loading')"
-            :element-loading-spinner="'el-icon-loading'"
-            element-loading-background="rgba(255, 255, 255, 0.8)"
-            class="view-loading"
-          />
-        </span>
+              <el-button
+                type="primary"
+                icon="el-icon-check"
+                class="button-base-icon"
+                :disabled="isLoadingCancelSaleTransaction"
+                :loading="isLoadingCancelSaleTransaction"
+                @click="cancelSaleTransaction()"
+              />
+            </samp>
+          </el-col>
+        </el-row>
+        <div
+          v-else
+          key="form-loading"
+          v-loading="isLoadingCancelSaleTransaction"
+          :element-loading-text="$t('notifications.loading')"
+          :element-loading-spinner="'el-icon-loading'"
+          element-loading-background="rgba(255, 255, 255, 0.8)"
+          class="view-loading"
+        />
         <div slot="reference">
           <el-card
             shadow="never"
@@ -147,7 +145,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             :body-style="{ padding: '10px' }"
           >
             <p
-              :class="isDisableClass"
+              class="card-options-buttons"
             >
               <i class="el-icon-error" />
               <br>
@@ -167,7 +165,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         >
           <p
             v-if="!isLoadingPrintTicket"
-            :class="isDisableClass"
+            class="card-options-buttons"
           >
             <i class="el-icon-printer" />
             <br>
@@ -193,7 +191,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         >
           <p
             v-if="!isLoadingPreviewDocument"
-            :class="isDisableClass"
+            class="card-options-buttons"
           >
             <i class="el-icon-printer" />
             <br>
@@ -219,7 +217,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         >
           <p
             v-if="!isLoadingCopyOrder"
-            :class="isDisableClass"
+            class="card-options-buttons"
           >
             <i class="el-icon-document-copy" />
             <br>
@@ -245,7 +243,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         >
           <p
             v-if="!isLoadingCancelOrder"
-            :class="isDisableClass"
+            class="card-options-buttons"
           >
             <i class="el-icon-close" />
             <br>
@@ -271,7 +269,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         >
           <p
             v-if="!isLoadingCancelOrder"
-            :class="isDisableClass"
+            class="card-options-buttons"
           >
             <svg-icon icon-class="shopping" />
             <br>
@@ -297,7 +295,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         >
           <p
             v-if="!isLoadingCancelOrder"
-            :class="isDisableClass"
+            class="card-options-buttons"
           >
             <svg-icon icon-class="shopping" />
             <br>
@@ -376,7 +374,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             :body-style="{ padding: '10px' }"
           >
             <p
-              :class="isDisableClass"
+              class="card-options-buttons"
             >
               <i class="el-icon-document-remove" />
               <br>
@@ -449,7 +447,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             :body-style="{ padding: '10px' }"
           >
             <p
-              :class="isDisableClass"
+              class="card-options-buttons"
             >
               <i class="el-icon-document-remove" />
               <br>
@@ -469,12 +467,12 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         >
           <p
             v-if="!isLoadingRMA"
-            :class="isDisableClass"
+            class="card-options-buttons"
           >
             <i class="el-icon-box" />
             <svg-icon icon-class="undo" />
             <br>
-            {{ $t('form.pos.returnProduct') }}
+            {{ $t('form.pos.optionsPoinSales.salesOrder.returnProduct') }}
           </p>
           <p
             v-else
@@ -495,7 +493,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         >
           <p
             v-if="!isLoadingRMA"
-            :class="isDisableClass"
+            class="card-options-buttons"
           >
             <i class="el-icon-document-copy" />
             <br>
@@ -629,11 +627,6 @@ export default defineComponent({
       return is_allows_return_order
     })
 
-    const isDisableClass = computed(() => {
-      if (isEmptyValue(currentOrder.value.id)) return 'is-disabled-option-card'
-      return 'card-options-buttons'
-    })
-
     function newOrder() {
       const {
         is_allows_create_order
@@ -661,7 +654,6 @@ export default defineComponent({
     }
 
     function completePreparedOrder() {
-      if (isEmptyValue(currentOrder.value.id)) return
       store.dispatch('process', {})
     }
 
@@ -709,7 +701,6 @@ export default defineComponent({
     }
 
     function printTicket() {
-      if (isEmptyValue(currentOrder.value.id)) return
       if (isLoadingPrintTicket.value) return
       isLoadingPrintTicket.value = true
       store.dispatch('printTicketVPOS', {
@@ -721,7 +712,6 @@ export default defineComponent({
     }
 
     function printPreview() {
-      if (isEmptyValue(currentOrder.value.id)) return
       if (isLoadingPreviewDocument.value) return
       isLoadingPreviewDocument.value = true
       store.dispatch('printPreview', {
@@ -733,7 +723,6 @@ export default defineComponent({
     }
 
     function copyOrder() {
-      if (isEmptyValue(currentOrder.value.id)) return
       if (isLoadingCopyOrder.value) return
       isLoadingCopyOrder.value = true
       store.dispatch('copyOrder', {
@@ -745,7 +734,6 @@ export default defineComponent({
     }
 
     function cancelOrder() {
-      if (isEmptyValue(currentOrder.value.id)) return
       if (isLoadingCancelOrder.value) return
       isLoadingCancelOrder.value = true
       store.dispatch('deleteOrder')
@@ -755,7 +743,6 @@ export default defineComponent({
     }
 
     function confirmShipment() {
-      if (isEmptyValue(currentOrder.value.id)) return
       store.dispatch('newShipment', {})
       store.dispatch('setModalDialogVPOS', {
         title: lang.t('form.pos.optionsPoinSales.salesOrder.confirmDelivery'),
@@ -783,7 +770,6 @@ export default defineComponent({
     }
 
     function confirmShipmentAllProducts(params) {
-      if (isEmptyValue(currentOrder.value.id)) return
       store.dispatch('newShipment', {
         isCreateLinesFromOrder: true
       })
@@ -813,7 +799,6 @@ export default defineComponent({
     }
 
     function returnProduct() {
-      if (isEmptyValue(currentOrder.value.id)) return
       store.dispatch('createRMA')
       store.dispatch('setModalDialogVPOS', {
         title: lang.t('form.pos.optionsPoinSales.salesOrder.newOrderFromRMA'),
@@ -838,7 +823,6 @@ export default defineComponent({
     }
 
     function newOrderRMA() {
-      if (isEmptyValue(currentOrder.value.id)) return
       store.dispatch('createOrderFromRMA', {
         sourceRmaId: currentOrder.value.id,
         salesRepresentativeId: currentOrder.value.sales_representative.id
@@ -863,7 +847,6 @@ export default defineComponent({
       isRMA,
       currentOrder,
       IsCancelOrder,
-      isDisableClass,
       isShowShipment,
       isNewOrderFromRMA,
       isConfirmShipment,
@@ -911,11 +894,5 @@ export default defineComponent({
 .custom-card-options:hover {
   background-color: #eaf5fe;
   border: 1px solid #36a3f7;
-}
-.is-disabled-option-card {
-  cursor: not-allowed;
-  text-align: center !important;
-  color: gray !important;
-  min-height: 50px;
 }
 </style>
