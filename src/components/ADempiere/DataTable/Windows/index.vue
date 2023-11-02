@@ -59,7 +59,7 @@
         :column-key="fieldAttributes.columnName"
         :prop="fieldAttributes.columnName"
         sortable
-        min-width="210"
+        :min-width="widthColumn(fieldAttributes)"
         :fixed="fieldAttributes.isFixedTableColumn"
       >
         <template slot="header">
@@ -549,6 +549,12 @@ export default defineComponent({
       }, 90)
     }
 
+    function widthColumn(fieldAttributes) {
+      const { componentPath } = fieldAttributes
+      if (['FieldSearch', 'FieldAccountingCombination'].includes(componentPath)) return '450'
+      return '210'
+    }
+
     /**
      * Watch - watch works directly on a ref
      * @param newValue - New Assessed Property value
@@ -644,6 +650,7 @@ export default defineComponent({
       handleSelection,
       handleCellClick,
       handleRowClick,
+      widthColumn,
       changeTable,
       adjustSize,
       loadHeight
