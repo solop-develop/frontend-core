@@ -183,7 +183,8 @@ const browserControl = {
         // get context values
         const contextAttributesList = getContextAttributes({
           containerUuid,
-          contextColumnNames
+          contextColumnNames,
+          format: 'object'
         })
 
         // const isWithoutValues = contextAttributesList.find(attribute => isEmptyValue(attribute.value))
@@ -219,7 +220,7 @@ const browserControl = {
 
         requestBrowserSearch({
           id: containerUuid,
-          contextAttributesList,
+          contextAttributes: JSON.stringify(contextAttributesList),
           filters: '[' + filters + ']',
           nextPageToken: pageToken,
           pageSize

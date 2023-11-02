@@ -28,6 +28,7 @@ export function requestBrowserSearch({
   id,
   filters,
   pageToken,
+  contextAttributes,
   pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
@@ -35,6 +36,7 @@ export function requestBrowserSearch({
     method: 'get',
     params: {
       filters,
+      context_attributes: contextAttributes,
       page_token: pageToken,
       page_size: pageSize
     }
