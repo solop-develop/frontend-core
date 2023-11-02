@@ -46,6 +46,8 @@ import * as globalMethods from '@/utils/ADempiere/globalMethods' // global metho
  */
 import VueMarkdownEditor from '@kangc/v-md-editor'
 import createEmojiPlugin from '@kangc/v-md-editor/lib/plugins/emoji/index'
+import createTodoListPlugin from '@kangc/v-md-editor/lib/plugins/todo-list/index'
+import '@kangc/v-md-editor/lib/plugins/todo-list/todo-list.css'
 import '@kangc/v-md-editor/lib/plugins/emoji/emoji.css'
 import '@kangc/v-md-editor/lib/style/base-editor.css'
 import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js'
@@ -91,11 +93,12 @@ if (process.env.NODE_ENV === 'production') {
  */
 VueMarkdownEditor.use(vuepressTheme)
 VueMarkdownEditor.use(createEmojiPlugin())
+VueMarkdownEditor.use(createTodoListPlugin())
 VMdPreview.use(githubTheme, {
   Hljs: hljs
 })
 VMdPreview.use(createEmojiPlugin())
-
+VMdPreview.use(createTodoListPlugin())
 Vue.use(VMdPreview)
 Vue.use(VueMarkdownEditor)
 Vue.use(VueCompositionApi)
