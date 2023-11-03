@@ -16,6 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import lang from '@/lang'
 import router from '@/router'
 import store from '@/store'
 
@@ -67,3 +68,93 @@ export const closeTagView = function(currentRoute) {
     }, () => {})
   }
 }
+
+export const SHORCUTS_DATE = [
+  {
+    text: lang.t('component.date.today'),
+    onClick(picker) {
+      picker.$emit('pick', new Date())
+    }
+  },
+  {
+    text: lang.t('component.date.yesterday'),
+    onClick(picker) {
+      const date = new Date()
+      date.setTime(date.getTime() - 3600 * 1000 * 24)
+      picker.$emit('pick', date)
+    }
+  },
+  {
+    text: lang.t('component.date.week'),
+    onClick(picker) {
+      const date = new Date()
+      const monthEndDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+      picker.$emit('pick', monthEndDay)
+    }
+  }
+]
+
+export const SHORCUTS_DATE_RANGE = [
+  {
+    text: lang.t('component.date.today'),
+    onClick(picker) {
+      const currentDay = new Date()
+      picker.$emit('pick', [currentDay, currentDay])
+    }
+  },
+  {
+    text: lang.t('component.date.yesterday'),
+    onClick(picker) {
+      const start = new Date()
+      start.setTime(start.getTime() - 3600 * 1000 * 24)
+      picker.$emit('pick', [start, start])
+    }
+  },
+  {
+    text: lang.t('component.date.week'),
+    onClick(picker) {
+      const start_date = new Date()
+      start_date.setHours(0, 0, 0, 0)
+      const end_date = new Date()
+      const date = null
+      const currenDate = date ? new Date(date) : new Date()
+      const first = currenDate.getDate() - currenDate.getDay('monday')
+      const last = first - 7
+      start_date.setDate(last)
+      end_date.setDate(first - 1)
+      picker.$emit('pick', [start_date, end_date])
+    }
+  }, {
+    text: lang.t('component.date.currentWeek'),
+    onClick(picker) {
+      const start_date = new Date()
+      start_date.setHours(0, 0, 0, 0)
+      const end_date = new Date()
+      const date = null
+      const currenDate = date ? new Date(date) : new Date()
+      const first = currenDate.getDate() - currenDate.getDay('monday')
+      const last = first
+      start_date.setDate(last)
+      end_date.setDate(first + 6)
+      picker.$emit('pick', [start_date, end_date])
+    }
+  },
+  {
+    text: lang.t('component.date.lastMonth'),
+    onClick(picker) {
+      const date = new Date()
+      const monthEndDay = new Date(date.getFullYear(), date.getMonth(), 0)
+      const monthStartDay = new Date(date.getFullYear(), date.getMonth() - 1, 1)
+      picker.$emit('pick', [monthStartDay, monthEndDay])
+    }
+  },
+  {
+    text: lang.t('component.date.currentMonth'),
+    onClick(picker) {
+      const date = new Date()
+      const monthEndDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+      const monthStartDay = new Date(date.getFullYear(), date.getMonth(), 1)
+      picker.$emit('pick', [monthStartDay, monthEndDay])
+    }
+  }
+]
