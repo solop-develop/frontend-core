@@ -1126,6 +1126,13 @@ export const refreshRecord = {
     if (isEmptyValue(recordUuid)) {
       recordUuid = store.getters.getUuidOfContainer(containerUuid)
     }
+    const tabDefinition = store.getters.getStoredTab(parentUuid, containerUuid)
+    if (isEmptyValue(recordId)) {
+      recordId = store.getters.getIdOfContainer({
+        containerUuid: containerUuid,
+        tableName: tabDefinition.tableName
+      })
+    }
 
     store.dispatch('reloadTableData', {
       isLoaded: false,
@@ -1152,8 +1159,6 @@ export const refreshRecord = {
             ...response.values
           }
         })
-
-        const tabDefinition = store.getters.getStoredTab(parentUuid, containerUuid)
 
         // update fields values
         store.dispatch('updateValuesOfContainer', {
