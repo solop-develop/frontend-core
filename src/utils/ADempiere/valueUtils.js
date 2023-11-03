@@ -141,18 +141,6 @@ export function isSameValues(valueA, valueB) {
 /**
  * Evaluates the type of data sent, useful with 'array' type data as the typeof
  * function returns 'object' in this and other cases.
- * @deprecated change by getTypeOfValue method
- * @author EdwinBetanc0urt <EdwinBetanc0urt@oulook.com>
- * @link https://gist.github.com/EdwinBetanc0urt/3fc02172ada073ded4b52e46543553ce
- * @param {boolean|array|object|number|string|date|map|set|function} value
- * @returns {string} value type in capital letters (STRING, NUMBER, BOOLEAN, ...)
- */
-export function typeValue(value) {
-  return getTypeOfValue(value)
-}
-/**
- * Evaluates the type of data sent, useful with 'array' type data as the typeof
- * function returns 'object' in this and other cases.
  * @author EdwinBetanc0urt <EdwinBetanc0urt@oulook.com>
  * @link https://gist.github.com/EdwinBetanc0urt/3fc02172ada073ded4b52e46543553ce
  * @param {boolean|array|object|number|string|date|map|set|function} value
@@ -345,6 +333,11 @@ export function parsedValueComponent({
   displayType,
   isMandatory = false
 }) {
+  // types `decimal` and `date` is a object struct
+  if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
+    value = value.value
+  }
+
   const isEmpty = isEmptyValue(value)
   if (isEmpty && !isMandatory) {
     if (componentPath === 'FieldYesNo') {
