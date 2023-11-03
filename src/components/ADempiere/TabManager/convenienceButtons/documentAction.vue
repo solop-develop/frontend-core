@@ -345,6 +345,8 @@ export default defineComponent({
       refreshRecord.refreshRecord({
         parentUuid: props.parentUuid,
         containerUuid,
+        tabId: props.tabAttributes.id,
+        recordId: recordId.value,
         isRefreshChilds: true
       })
 
@@ -361,8 +363,9 @@ export default defineComponent({
     function sendAction() {
       isVisibleDocAction.value = false
       isLoadingActions.value = true
-      store.dispatch('runDocumentAction', {
+      store.dispatch('runDocumentActionOnserver', {
         tableName: props.tabAttributes.tableName,
+        recordId: recordId.value,
         recordUuid: recordUuid.value,
         containerUuid,
         docAction: selectDocActions.value,

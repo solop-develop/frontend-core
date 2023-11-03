@@ -139,19 +139,21 @@ const documentManager = {
       })
     },
 
-    runDocumentAction({ commit, dispatch }, {
-      recordId,
+    /**
+     * TODO: Refres document status and document actions finally process
+     */
+    runDocumentActionOnserver({ commit, dispatch }, {
       tableName,
-      docAction,
+      recordId,
       recordUuid,
+      docAction,
       description
     }) {
       return new Promise(resolve => {
         requestRunDocumentAction({
           tableName,
-          docAction,
-          id: recordId,
-          uuid: recordUuid
+          recordId,
+          docAction
         })
           .then(response => {
             let text

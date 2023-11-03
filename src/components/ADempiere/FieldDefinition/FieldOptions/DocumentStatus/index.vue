@@ -269,8 +269,9 @@ export default defineComponent({
 
       store.commit('setShowFieldOption', false)
 
-      store.dispatch('runDocumentAction', {
+      store.dispatch('runDocumentActionOnserver', {
         tableName,
+        recordId: recordId.value,
         recordUuid: recordUuid.value,
         docAction: docActionValue,
         containerUuid

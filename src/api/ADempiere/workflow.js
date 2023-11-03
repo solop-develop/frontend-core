@@ -145,25 +145,17 @@ export function getWorkflow({
 /**
  * Request Document Status List
  * @param {string} tableName
- * @param {number} id
- * @param {string} uuid
+ * @param {number} recordId record identifier
  * @param {string} docAction
  */
 export function requestRunDocumentAction({
   tableName,
-  id,
-  uuid,
+  recordId,
   docAction
 }) {
   return request({
-    url: '/workflow/run-document-action',
-    method: 'get',
-    params: {
-      table_name: tableName,
-      id,
-      uuid,
-      document_action: docAction
-    }
+    url: `/workflow/workflows/run-action/${tableName}/${recordId}/${docAction}`,
+    method: 'post'
   })
 }
 
