@@ -159,9 +159,7 @@ export default defineComponent({
     })
 
     const recordUuid = computed(() => {
-      // TODO: Change query name 'action'
-      const { action } = root.$route.query
-      return action
+      return store.getters.getUuidOfContainer(props.containerUuid)
     })
 
     const shadowGroup = computed(() => {
