@@ -165,7 +165,6 @@ export default defineComponent({
      * @param {object} values
      */
     function setParentValues(rowData) {
-      console.log({ rowData })
       displayedValue.value = rowData.display_value
       store.dispatch('notifyFieldChange', {
         containerUuid,
