@@ -224,5 +224,11 @@ export default defineComponent({
   .el-form--inline .el-form-item {
     margin: 0px;
   }
+
+  .el-input-number {
+    .el-input__inner {
+      text-align-last: end !important;
+    }
+  }
 }
 </style>

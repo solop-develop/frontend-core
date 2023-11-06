@@ -18,10 +18,11 @@
 
 // API Request Methods
 import {
+  requestListTransactionTypes,
   requestProcess,
   requestListPayments,
   requestListInvoices
-} from '@/api/ADempiere/form/VAllocation.js'
+} from '@/api/ADempiere/form/VAllocation.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'
@@ -29,16 +30,17 @@ import { dateTimeFormats } from '@/utils/ADempiere/formatValue/dateFormat'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 
 const VAllocation = {
+  transactionTypes: {},
   searchCriteria: {
-    businessPartnerId: '',
-    organizationId: '',
-    currencyId: '',
+    businessPartnerId: -1,
+    organizationId: -1,
+    currencyId: -1,
     listOrganization: [],
     listCurrency: [],
     date: '',
     transactionType: '',
     description: '',
-    chargeId: ''
+    chargeId: -1
   },
   listRecord: {
     payments: [],
@@ -83,6 +85,9 @@ export default {
   state: VAllocation,
 
   mutations: {
+    setTransactionTypes(state, payload) {
+      state.transactionTypes = payload
+    },
     setSearchCriteria(state, structure) {
       state.searchCriteria = structure
     },
@@ -176,16 +181,33 @@ export default {
   },
 
   actions: {
+    loadTransactonsTypesFromServer({ commit, state }) {
+      return new Promise(resolve => {
+        requestListTransactionTypes()
+          .then(response => {
+            const { records } = response
+
+            const transactionTypes = {}
+            records.forEach(item => {
+              const { values } = item
+              const { KeyColumn, DisplayColumn } = values
+              transactionTypes[KeyColumn] = DisplayColumn
+            })
+
+            commit('setTransactionTypes', transactionTypes)
+
+            resolve(transactionTypes)
+          })
+      })
+    },
+
     findListPayment({ commit, state }) {
       return new Promise(resolve => {
         const {
           businessPartnerId,
-          businessPartnerUuid,
           date,
           organizationId,
-          organizationUuid,
           currencyId,
-          currencyUuid,
           isMultiCurrency,
           transactionType,
           isAutomaticWriteOff
@@ -197,12 +219,9 @@ export default {
         })
         requestListPayments({
           businessPartnerId,
-          businessPartnerUuid,
           date,
           organizationId,
-          organizationUuid,
           currencyId,
-          currencyUuid,
           isMultiCurrency,
           transactionType,
           isAutomaticWriteOff
@@ -371,6 +390,9 @@ export default {
   },
 
   getters: {
+    getStoredTransactionTypes(state) {
+      return state.transactionTypes
+    },
     getSearchFilter(state) {
       return state.searchCriteria
     },
