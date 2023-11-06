@@ -1,7 +1,7 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
  * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -16,25 +16,16 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import productAttribute from './productAttribute'
-import warehouseLocator from './warehouseLocator'
-import locationsAddress from './locationsAddress'
-
-export default {
-  field: 'Campo',
-  info: 'Información',
-  calculator: 'Calculadora',
-  preference: 'Preferencia',
-  logsField: 'Bitácora de Cambios',
-  contextInfo: 'Información del Contexto',
-  logsFieldEmpty: 'El campo no tiene cambios aún',
-  coordination: 'Coordenadas',
-  container: {
-    defaultValue: 'Valor Predeterminado',
-    help: 'Ayuda',
-    description: 'Descripción'
-  },
-  productAttribute,
-  warehouseLocator,
-  locationsAddress
+const locationsAddress = {
+  city: 'City',
+  country: 'Country',
+  region: 'Region',
+  address: 'Address 1',
+  address2: 'Address 2',
+  address3: 'Address 3',
+  address4: 'Address4',
+  postalCode: 'Postal Code',
+  additionalPostalCode: 'Additional Postal Code'
 }
+
+export default locationsAddress

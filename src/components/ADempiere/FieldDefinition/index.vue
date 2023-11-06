@@ -270,7 +270,7 @@ export default {
           break
         case 'FieldSearch':
         case 'FieldSelect':
-        case 'FieldAccountingCombination':
+        // case 'FieldAccountingCombination':
           field = () => import('@/components/ADempiere/FieldDefinition/FieldSelect')
           break
         case 'FieldImage':
@@ -279,9 +279,9 @@ export default {
         case 'FieldLocationAddress':
           field = () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress')
           break
-        // case 'FieldAccountingCombination':
-        //   field = () => import('@/components/ADempiere/FieldDefinition/FieldAccountingCombination')
-        //   break
+        case 'FieldAccountingCombination':
+          field = () => import('@/components/ADempiere/FieldDefinition/FieldAccountingCombination')
+          break
         case 'FieldTextLong':
           field = () => import('@/components/ADempiere/FieldDefinition/FieldTextLong')
           break
