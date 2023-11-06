@@ -44,10 +44,10 @@
     "form": false
   },
   "pointOfSales": {
-    "endpoint": "/form/addons/point-of-sales"
+    "endpoint": "/point-of-sales"
   },
   "priceChecking": {
-    "endpoint": "/form/addons/point-of-sales"
+    "endpoint": "/point-of-sales"
   },
   "match": {
     "endpoint": "/form/addons/match"
@@ -56,16 +56,16 @@
     "endpoint": "/form/addons/weight"
   },
   "payrollActionNotice": {
-    "endpoint": "/form/addons/payroll-action-notice"
+    "endpoint": "/payroll-action-notice"
   },
   "session": {
     "timeout": 300000
   },
   "vPayPrint": {
-    "endpoint": "form/addons/payment-print-export"
+    "endpoint": "/payment-print-export"
   },
   "VBankStatementMatch": {
-    "endpoint": "form/addons/bank-statement-match"
+    "endpoint": "/bank-statement-match"
   },
   "theme": "src/themes/default"
 }

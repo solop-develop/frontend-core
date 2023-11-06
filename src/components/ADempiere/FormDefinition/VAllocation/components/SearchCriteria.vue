@@ -68,6 +68,9 @@
                       :remote-method="remoteSearchOrganizations"
                       @visible-change="findOrganizations"
                     >
+                      <empty-option-select
+                        :current-value="organizationsId"
+                      />
                       <el-option
                         v-for="item in optionsOrganizations"
                         :key="item.id"
@@ -97,6 +100,9 @@
                       :remote-method="remoteSearchCurrencies"
                       @visible-change="findCurrencies"
                     >
+                      <empty-option-select
+                        :current-value="currencyId"
+                      />
                       <el-option
                         v-for="item in optionsCurrency"
                         :key="item.id"
@@ -201,14 +207,21 @@ import store from '@/store'
 // Components and Mixins
 import Carousel from '@/components/ADempiere/Carousel'
 import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
+import EmptyOptionSelect from '@/components/ADempiere/FieldDefinition/FieldSelect/emptyOptionSelect.vue'
+
+// Constants
+import {
+  ONLY_PAYABLES,
+  ONLY_RECEIVABLES,
+  RECEIVABLES_AND_PAYABLES
+} from '@/utils/ADempiere/dictionary/form/VAllocation'
 
 // API Request Methods
 import {
-  requestListTransactionTypes,
   listBusinessPartners,
   requestListOrganizations,
   requestListCurrencies
-} from '@/api/ADempiere/form/VAllocation.js'
+} from '@/api/ADempiere/form/VAllocation.ts'
 
 // Utils and Helper Methods
 import { createFieldFromDictionary } from '@/utils/ADempiere/lookupFactory'
@@ -219,7 +232,8 @@ export default defineComponent({
 
   components: {
     Carousel,
-    FieldDefinition
+    FieldDefinition,
+    EmptyOptionSelect
   },
 
   props: {
@@ -247,36 +261,39 @@ export default defineComponent({
 
     // List Option the Select
     const optionsBusinessPartners = ref([])
-    const listTypeTransaction = ref([])
 
     const bPartner = ref({})
+
+    const storedTransactionTypes = computed(() => {
+      return store.getters.getStoredTransactionTypes
+    })
 
     /**
      * Computed
      */
     const labelReceivablesOnly = computed(() => {
-      if (isEmptyValue(listTypeTransaction.value)) {
+      if (isEmptyValue(storedTransactionTypes.value)) {
         return ''
       }
-      return listTypeTransaction.value.find(transaction => transaction.KeyColumn === 'R').DisplayColumn
+      return storedTransactionTypes.value[ONLY_RECEIVABLES]
     })
 
     const labelPayablesOnly = computed(() => {
-      if (isEmptyValue(listTypeTransaction.value)) {
+      if (isEmptyValue(storedTransactionTypes.value)) {
         return ''
       }
-      return listTypeTransaction.value.find(transaction => transaction.KeyColumn === 'P').DisplayColumn
+      return storedTransactionTypes.value[ONLY_PAYABLES]
     })
 
     const receivablesPayables = computed(() => {
       if (receivablesOnly.value && payablesOnly.value) {
-        return 'A'
+        return RECEIVABLES_AND_PAYABLES
       }
       if (receivablesOnly.value) {
-        return 'R'
+        return ONLY_RECEIVABLES
       }
       if (payablesOnly.value) {
-        return 'P'
+        return ONLY_PAYABLES
       }
       return ''
     })
@@ -506,31 +523,11 @@ export default defineComponent({
       }
     }
 
-    function setListTransactionTypes() {
-      if (!isEmptyValue(listTypeTransaction.value)) {
+    function loadTransactonsTypes() {
+      if (!isEmptyValue(storedTransactionTypes.value)) {
         return
       }
-      requestListTransactionTypes()
-        .then(response => {
-          const { records } = response
-          listTypeTransaction.value = records.map(type => {
-            const { KeyColumn, ValueColumn, DisplayColumn } = type.values
-            return {
-              ...type,
-              KeyColumn,
-              ValueColumn,
-              DisplayColumn,
-              isSelect: false
-            }
-          })
-        })
-    }
-
-    function changeType(params) {
-      currentTypeTransaction.value = params.ValueColumn
-      listTypeTransaction.value.forEach(type => {
-        type.isSelect = currentTypeTransaction.value === type.ValueColumn
-      })
+      store.dispatch('loadTransactonsTypesFromServer')
     }
 
     function createField() {
@@ -655,9 +652,10 @@ export default defineComponent({
       businessPartnerId.value = newValue
     })
 
-    setListTransactionTypes()
+    loadTransactonsTypes()
 
     return {
+      storedTransactionTypes,
       // Refs
       receivablesOnly,
       payablesOnly,
@@ -669,7 +667,6 @@ export default defineComponent({
       optionsBusinessPartners,
       currentTypeTransaction,
       optionsOrganizations,
-      listTypeTransaction,
       optionsCurrency,
       // businessPartners,
       organizations,
@@ -684,13 +681,11 @@ export default defineComponent({
       // Methods,
       remoteSearchBusinessPartners,
       remoteSearchOrganizations,
-      setListTransactionTypes,
       remoteSearchCurrencies,
       findBusinessPartners,
       findOrganizations,
       findCurrencies,
       createField,
-      changeType,
       findFilter,
       //
       isMandatoryField,

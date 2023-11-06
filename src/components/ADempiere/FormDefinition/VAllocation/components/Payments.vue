@@ -189,7 +189,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import {
   requestListCharges,
   requestListTransactionOrganizations
-} from '@/api/ADempiere/form/VAllocation.js'
+} from '@/api/ADempiere/form/VAllocation.ts'
 
 export default defineComponent({
   name: 'Payments',
