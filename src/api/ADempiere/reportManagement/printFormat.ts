@@ -32,7 +32,7 @@ export function listPrintFormatsRequest({
   pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
-    url: `/user-interface/print-formats/${reportId}`,
+    url: `/report-management/print-formats/${reportId}`,
     method: 'get',
     params: {
       page_size: pageSize,

@@ -32,7 +32,7 @@ export function listDrillTablesRequest({
   pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
-    url: `/user-interface/drill-tables/${tableName}`,
+    url: `/report-management/drill-tables/${tableName}`,
     method: 'get',
     params: {
       page_size: pageSize,

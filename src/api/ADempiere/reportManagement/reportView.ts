@@ -40,7 +40,7 @@ export function listReportViewsRequest({
 }) {
   if (isEmptyValue(tableName)) {
     return request({
-      url: `/user-interface/report-views/${tableName}`,
+      url: `/report-management/report-views/${tableName}`,
       method: 'get',
       params: {
         page_size: pageSize,
@@ -49,7 +49,7 @@ export function listReportViewsRequest({
     })
   }
   return request({
-    url: `/user-interface/report-views/${reportId}`,
+    url: `/report-management/report-views/${reportId}`,
     method: 'get',
     params: {
       page_size: pageSize,

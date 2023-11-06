@@ -32,7 +32,7 @@ export function generateReportRequest({
   isSummary
 }) {
   return request({
-    url: `/business-data/report/${id}`,
+    url: `/report-management/report/${id}`,
     method: 'post',
     data: {
       parameters,
