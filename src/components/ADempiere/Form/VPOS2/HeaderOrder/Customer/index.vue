@@ -199,6 +199,17 @@ export default defineComponent({
       if (options === language.t('pointOfSales.customer.listBusinessPartners')) {
         store.dispatch('searchCustomersList', {})
         isShowCustomer.value = true
+      } else if (options === language.t('pointOfSales.customer.newBusinessPartner')) {
+        store.dispatch('setModalDialogVPOS', {
+          title: language.t('form.pos.optionsPoinSales.salesOrder.newOrderFromRMA'),
+          doneMethod: () => {
+            store.commit('setShowedModalDialogVPOS', {
+              isShowed: false
+            })
+          },
+          componentPath: () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer.vue'),
+          isShowed: true
+        })
       }
       currentOptions.value = options
     }
