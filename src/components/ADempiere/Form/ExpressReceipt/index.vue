@@ -28,17 +28,18 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             <el-col :span="8">
               <el-form-item class="front-item-receipt">
                 <template slot="label" style="width: 450px;">
-                  {{ $t('VBankStatementMatch.field.businessPartner') }}
+                  {{ $t('form.VBankStatementMatch.field.businessPartner') }}
                   <!-- <br>
                   <br> -->
                 </template>
                 <el-select
                   v-model="currentBusinessPartners"
                   placeholder="Please Select Business Partner"
-                  style="width: 100%;"
                   filterable
+                  remote
                   class="select-from"
-                  @visible-change="findBusinessPartners"
+                  style="width: 100%;"
+                  :remote-method="remoteMethod"
                 >
                   <el-option
                     v-for="item in listBusinessPartners"
@@ -64,6 +65,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
                   filterable
                   clearable
                   class="select-from"
+                  :disabled="isEmptyValue(currentBusinessPartners)"
                   @visible-change="findSalesOrder"
                   @change="selectSalesOrder"
                 >
@@ -374,10 +376,10 @@ export default defineComponent({
         })
     }
 
-    function findBusinessPartners(isFindOrder) {
+    function findBusinessPartners(isFindOrder, searchValue) {
       if (!isFindOrder) return
       listBusinessPartnersReceipt({
-        searchValue: currentBusinessPartners.value
+        searchValue
       })
         .then(response => {
           const { records } = response
@@ -397,6 +399,9 @@ export default defineComponent({
             type: 'error'
           })
         })
+    }
+    function remoteMethod(query) {
+      findBusinessPartners(true, query)
     }
 
     function selectSalesOrder(order) {
@@ -594,6 +599,7 @@ export default defineComponent({
       createFilter,
       querySearchAsync,
       editQuantity,
+      remoteMethod,
       // Shipment Line
       createShipmentLine,
       updateShipmentLine,

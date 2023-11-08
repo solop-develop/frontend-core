@@ -25,7 +25,7 @@ export function listBusinessPartnersReceipt({
   pageSize
 }) {
   return request({
-    url: '/form/addons/express-receipt/business-partners',
+    url: '/express-receipt/business-partners',
     method: 'get',
     params: {
       page_size: pageSize,
@@ -46,7 +46,7 @@ export function listOrders({
   pageSize
 }) {
   return request({
-    url: '/form/addons/express-receipt/purchase-orders',
+    url: '/express-receipt/orders',
     method: 'get',
     params: {
       page_size: pageSize,
@@ -72,7 +72,7 @@ export function listProductRequest({
   receiptId
 }) {
   return request({
-    url: '/form/addons/express-receipt/product',
+    url: '/express-receipt/product',
     method: 'get',
     params: {
       page_size: pageSize,
@@ -94,7 +94,7 @@ export function createReceiptRequest({
   uuid
 }) {
   return request({
-    url: '/form/addons/express-receipt/receipt',
+    url: '/express-receipt/receipt',
     method: 'post',
     data: {
       order_id: id,
@@ -111,7 +111,7 @@ export function processReceiptRequest({
   uuid
 }) {
   return request({
-    url: '/form/addons/express-receipt/process-receipt',
+    url: '/express-receipt/process-receipt',
     method: 'post',
     data: {
       // order_id: id,
@@ -130,7 +130,7 @@ export function deleteShipmentRequest({
   uuid
 }) {
   return request({
-    url: '/form/addons/express-receipt/receipt',
+    url: '/express-receipt/receipt',
     method: 'delete',
     params: {
       order_id: id,
@@ -152,7 +152,7 @@ export function createReceiptLineRequest({
   quantity
 }) {
   return request({
-    url: '/form/addons/express-receipt/receipt-line',
+    url: '/express-receipt/receipt-line',
     method: 'post',
     data: {
       receipt_id: receiptId,
@@ -173,7 +173,7 @@ export function deleteReceiptLineRequest({
   uuid
 }) {
   return request({
-    url: '/form/addons/express-receipt/receipt-line',
+    url: '/express-receipt/receipt-line',
     method: 'delete',
     params: {
       id,
@@ -191,7 +191,7 @@ export function updateReceiptLineRequest({
   quantity
 }) {
   return request({
-    url: '/form/addons/express-receipt/receipt-line',
+    url: '/express-receipt/receipt-line',
     method: 'put',
     data: {
       id,
@@ -210,7 +210,7 @@ export function listReceiptLinesRequest({
   receiptUuid
 }) {
   return request({
-    url: '/form/addons/express-receipt/receipt-line',
+    url: '/express-receipt/receipt-line',
     method: 'get',
     params: {
       receipt_id: receiptId,
