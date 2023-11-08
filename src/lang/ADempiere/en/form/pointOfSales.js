@@ -23,7 +23,18 @@ const pointOfSales = {
     newCustomer: 'New Customer',
     newBusinessPartner: 'New Business Partner',
     updateCustomer: 'Update Customer',
-    updateBusinessPartner: 'Update Business Partner'
+    updateBusinessPartner: 'Update Business Partner',
+    fieldCutomer: {
+      code: 'Cédula',
+      identificationNumber: 'Identification Number',
+      typePerson: 'Type of Person',
+      taxPayer: 'Taxpayer',
+      taxpayerType: 'Type of Taxpayer',
+      name: 'Name',
+      name2: 'Name 2',
+      email: 'Email',
+      phone: 'Phone'
+    }
   },
   collection: {
     field: {
