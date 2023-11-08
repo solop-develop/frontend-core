@@ -38,7 +38,8 @@ import { showMessage } from '@/utils/ADempiere/notification.js'
 const expressReceipt = {
   currentReceipt: {},
   listProduct: [],
-  listReceiptLines: []
+  listReceiptLines: [],
+  currentOrder: {}
 }
 
 export default {
@@ -52,6 +53,9 @@ export default {
     },
     setCurrentReceipt(state, current) {
       state.currentReceipt = current
+    },
+    setCurrentOrdersReceipt(state, order) {
+      state.currentOrder = order
     }
   },
   actions: {
@@ -150,11 +154,13 @@ export default {
       description,
       quantity
     }) {
+      const receiptId = getters.getCurrentReceipt.id
       updateReceiptLineRequest({
         id,
         uuid,
-        description,
-        quantity
+        quantity,
+        receiptId,
+        description
       })
         .then(response => {
           const { id, uuid } = getters.getCurrentReceipt
@@ -183,9 +189,11 @@ export default {
       id,
       uuid
     }) {
+      const receiptId = getters.getCurrentReceipt.id
       deleteReceiptLineRequest({
         id,
-        uuid
+        uuid,
+        receiptId
       })
         .then(response => {
           const { id, uuid } = getters.getCurrentReceipt
@@ -246,7 +254,7 @@ export default {
             resolve(response)
             showMessage({
               type: 'success',
-              message: lang.t('form.ExpressReceipt.receiptComplete'),
+              message: lang.t('form.ExpressReceipt.shipmentComplete'),
               showClose: true
             })
           })
@@ -270,6 +278,9 @@ export default {
     },
     getCurrentReceipt(state) {
       return state.currentReceipt
+    },
+    getCurrentOrdersReceipt(state) {
+      return state.currentOrder
     }
   }
 }

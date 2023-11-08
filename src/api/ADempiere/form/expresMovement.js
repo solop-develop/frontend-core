@@ -25,7 +25,7 @@ export function listWarehouses({
   pageSize
 }) {
   return request({
-    url: '/form/addons/express-movement/warehouses',
+    url: '/express-movement/warehouses',
     method: 'get',
     params: {
       page_size: pageSize,
@@ -51,7 +51,7 @@ export function listProductRequest({
   orderId
 }) {
   return request({
-    url: '/form/addons/express-movement/product',
+    url: '/express-movement/products',
     method: 'get',
     params: {
       page_size: pageSize,
@@ -68,10 +68,10 @@ export function listProductRequest({
     })
 }
 
-// Movement
+// Create Movement
 export function createMovementRequest() {
   return request({
-    url: '/form/addons/express-movement/movement',
+    url: '/express-movement/movements',
     method: 'post'
   })
     .then(response => {
@@ -80,33 +80,20 @@ export function createMovementRequest() {
 }
 
 export function processMovementRequest({
-  id,
-  uuid
+  id
 }) {
   return request({
-    url: '/form/addons/express-movement/process-movement',
-    method: 'post',
-    data: {
-      id,
-      uuid
-    }
+    url: `express-movement/movements/${id}/process`,
+    method: 'post'
   })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
 }
 
 export function deleteMovementRequest({
-  id,
-  uuid
+  id
 }) {
   return request({
-    url: '/form/addons/express-movement/movement',
-    method: 'delete',
-    params: {
-      order_id: id,
-      order_uuid: uuid
-    }
+    url: `express-movement/movements/${id}`,
+    method: 'delete'
   })
     .then(response => {
       return camelizeObjectKeys(response)
@@ -125,7 +112,7 @@ export function createMovementLineRequest({
   quantity
 }) {
   return request({
-    url: '/form/addons/express-movement/movement-line',
+    url: `express-movement/movements/${movementId}/lines`,
     method: 'post',
     data: {
       movement_id: movementId,
@@ -135,7 +122,7 @@ export function createMovementLineRequest({
       warehouse_id: warehouseId,
       warehouse_to_id: warehouseToId,
       description,
-      quantity
+      quantity: quantity.toString()
     }
   })
     .then(response => {
@@ -145,15 +132,11 @@ export function createMovementLineRequest({
 
 export function deleteMovementLineRequest({
   id,
-  uuid
+  movementId
 }) {
   return request({
-    url: '/form/addons/express-movement/movement-line',
-    method: 'delete',
-    params: {
-      id,
-      uuid
-    }
+    url: `express-movement/movement/${movementId}/lines/${id}`,
+    method: 'delete'
   })
     .then(response => {
       return camelizeObjectKeys(response)
@@ -163,17 +146,18 @@ export function deleteMovementLineRequest({
 export function updateMovementLineRequest({
   id,
   uuid,
+  movementId,
   description,
   quantity
 }) {
   return request({
-    url: '/form/addons/express-movement/movement-line',
-    method: 'put',
+    url: `express-movement/movement/${movementId}/lines/${id}`,
+    method: 'patch',
     data: {
       id,
       uuid,
       description,
-      quantity
+      quantity: quantity.toString()
     }
   })
     .then(response => {
@@ -186,7 +170,7 @@ export function listMovementLinesRequest({
   movementUuid
 }) {
   return request({
-    url: '/form/addons/express-movement/movement-lines',
+    url: `express-movement/${movementId}/movements/lines`,
     method: 'get',
     params: {
       movement_id: movementId,

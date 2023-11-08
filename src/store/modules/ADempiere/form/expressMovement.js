@@ -123,9 +123,13 @@ export default {
             })
           })
           .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             console.warn(`Error Getting Update Movement Line: ${error.message}. Code: ${error.code}.`)
@@ -198,9 +202,11 @@ export default {
       description,
       quantity
     }) {
+      const movementId = getters.getCurrentMovement.id
       updateMovementLineRequest({
         id,
         uuid,
+        movementId,
         description,
         quantity
       })
@@ -221,9 +227,11 @@ export default {
       id,
       uuid
     }) {
+      const movementId = getters.getCurrentMovement.id
       deleteMovementLineRequest({
         id,
-        uuid
+        uuid,
+        movementId
       })
         .then(response => {
           dispatch('listLineMovement')

@@ -340,12 +340,7 @@ export default defineComponent({
       return 0
     })
     const currentOrder = computed(() => {
-      if (isEmptyValue(listOrder.value) || isEmptyValue(salesOrder.value)) {
-        return {
-          document_no: ''
-        }
-      }
-      return listOrder.value.find(order => salesOrder.value === order.id)
+      return store.getters.getCurrentOrdersReceipt
     })
     /**
      * Methods
@@ -408,6 +403,9 @@ export default defineComponent({
       store.dispatch('createReceipt', {
         id: order
       })
+      console.log({ order })
+      const currentOrder = listOrder.value.find(list => list.id === order)
+      store.commit('setCurrentOrdersReceipt', currentOrder)
       if (!isEmptyValue(refs.searchValue)) {
         refs.searchValue.suggestions = []
       }
