@@ -550,7 +550,10 @@ export default defineComponent({
     function processMovement() {
       if (isEmptyValue(listMovementLines.value)) return
       store.dispatch('processMovement')
-      visible.value = false
+        .finally(() => {
+          clearForm()
+          visible.value = false
+        })
     }
 
     function refreshLine() {

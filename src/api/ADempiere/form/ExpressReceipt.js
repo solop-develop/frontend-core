@@ -72,7 +72,7 @@ export function listProductRequest({
   receiptId
 }) {
   return request({
-    url: '/express-receipt/product',
+    url: '/express-receipt/products',
     method: 'get',
     params: {
       page_size: pageSize,
@@ -88,13 +88,13 @@ export function listProductRequest({
       return camelizeObjectKeys(response)
     })
 }
-// Shipment
+// Create Receipt
 export function createReceiptRequest({
   id,
   uuid
 }) {
   return request({
-    url: '/express-receipt/receipt',
+    url: `express-receipt/receipts`,
     method: 'post',
     data: {
       order_id: id,
@@ -105,13 +105,13 @@ export function createReceiptRequest({
       return camelizeObjectKeys(response)
     })
 }
-
+// Precess Receipt
 export function processReceiptRequest({
   id,
   uuid
 }) {
   return request({
-    url: '/express-receipt/process-receipt',
+    url: `/express-receipt/receipts/${id}/process`,
     method: 'post',
     data: {
       // order_id: id,
@@ -124,13 +124,13 @@ export function processReceiptRequest({
       return camelizeObjectKeys(response)
     })
 }
-
+// Delete Receipt
 export function deleteShipmentRequest({
   id,
   uuid
 }) {
   return request({
-    url: '/express-receipt/receipt',
+    url: `/express-receipt/receipts/${id}`,
     method: 'delete',
     params: {
       order_id: id,
@@ -141,7 +141,7 @@ export function deleteShipmentRequest({
       return camelizeObjectKeys(response)
     })
 }
-//	Shipment Line
+//	Create Receipt Line
 export function createReceiptLineRequest({
   receiptId,
   receiptUuid,
@@ -152,7 +152,7 @@ export function createReceiptLineRequest({
   quantity
 }) {
   return request({
-    url: '/express-receipt/receipt-line',
+    url: `express-receipt/receipts/${receiptId}/lines`,
     method: 'post',
     data: {
       receipt_id: receiptId,
@@ -161,43 +161,7 @@ export function createReceiptLineRequest({
       product_uuid: productUuid,
       is_quantity_from_order_line: isQuantityFromOrderLine,
       description,
-      quantity
-    }
-  })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
-}
-export function deleteReceiptLineRequest({
-  id,
-  uuid
-}) {
-  return request({
-    url: '/express-receipt/receipt-line',
-    method: 'delete',
-    params: {
-      id,
-      uuid
-    }
-  })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
-}
-export function updateReceiptLineRequest({
-  id,
-  uuid,
-  description,
-  quantity
-}) {
-  return request({
-    url: '/express-receipt/receipt-line',
-    method: 'put',
-    data: {
-      id,
-      uuid,
-      description,
-      quantity
+      quantity: quantity.toString()
     }
   })
     .then(response => {
@@ -205,17 +169,51 @@ export function updateReceiptLineRequest({
     })
 }
 
-export function listReceiptLinesRequest({
-  receiptId,
-  receiptUuid
+// Delete Receipt Line
+export function deleteReceiptLineRequest({
+  id,
+  uuid,
+  receiptId
 }) {
   return request({
-    url: '/express-receipt/receipt-line',
-    method: 'get',
+    url: `/express-receipt/receipts/${receiptId}/lines/${id}`,
+    method: 'delete',
     params: {
-      receipt_id: receiptId,
-      receipt_uuid: receiptUuid
+      id,
+      uuid
     }
+  })
+}
+// Update Receipt Line
+export function updateReceiptLineRequest({
+  id,
+  uuid,
+  description,
+  receiptId,
+  quantity
+}) {
+  return request({
+    url: `/express-receipt/receipts/${receiptId}/lines/${id}`,
+    method: 'patch',
+    data: {
+      id,
+      uuid,
+      description,
+      quantity: quantity.toString()
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+// Lis tReceipt Lines
+export function listReceiptLinesRequest({
+  receiptId
+}) {
+  return request({
+    url: `/express-receipt/receipts/${receiptId}/lines`,
+    method: 'get'
   })
     .then(response => {
       return camelizeObjectKeys(response)
