@@ -368,9 +368,11 @@ export default defineComponent({
           value: root.$route.query.value
         })
       }
+
       store.dispatch('getEntities', {
         parentUuid: props.parentUuid,
         containerUuid,
+        tabId: currentTabMetadata.value.id,
         filters
       }).then(responseData => {
         if (isCreateNew.value || isEmptyValue(responseData)) {

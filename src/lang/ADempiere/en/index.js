@@ -35,6 +35,7 @@ import report from './report.js'
 import window from './window'
 import workflow from './workflow'
 import issues from './form/issues'
+import operators from './operators.ts'
 /**
  * Translations of Forms
  */
@@ -69,6 +70,7 @@ export default {
   report,
   workflow,
   issues,
+  operators,
 
   language: 'Language',
   notifications: {
@@ -270,24 +272,6 @@ export default {
     emptyNote: 'Este registro no posee ninguna nota',
     descriptionNote: 'Add Note or Comment to Record'
   },
-  operators: {
-    compareSearch: 'Compare the Search',
-    operator: 'Comparison operator',
-    EQUAL: 'Equal to "="',
-    NOT_EQUAL: 'Not equal to "<>"',
-    LIKE: 'Like "~"',
-    NOT_LIKE: 'Not like "!~"',
-    GREATER: 'Greater than ">"',
-    GREATER_EQUAL: 'Greater than equal to ">="',
-    LESS: 'Less than "<"',
-    LESS_EQUAL: 'Less than equal to "<="',
-    BETWEEN: 'Between ">-<"',
-    NOT_BETWEEN: 'Not between "<->"',
-    NOT_NULL: 'Is not null',
-    NULL: 'Is null',
-    IN: 'Include "()"',
-    NOT_IN: 'Not include "!()"'
-  },
   quickAccess: {
     newRecord: 'Quick Access to Create New Record',
     listRecords: 'Quick Access to List All Records',
@@ -368,6 +352,7 @@ export default {
         baseQuantity: 'Base Quantity',
         uom: 'UOM',
         unitOfMeasure: 'Unit of Measure',
+        baseMeasurementUnit: 'Base Measurement Unit',
         options: 'Options',
         editQuantities: 'Edit Quantities',
         pin: 'Insert Pin',
@@ -488,6 +473,7 @@ export default {
       },
       pinMessage: {
         pin: 'Enter Pin for ',
+        authorized: 'Authorized PIN',
         documentType: 'change document type',
         warehouse: 'change warehouse',
         price: 'change price',

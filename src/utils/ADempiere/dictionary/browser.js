@@ -474,15 +474,17 @@ export const containerManager = {
   /**
    * @returns Promisse with value and displayedValue
    */
-  getDefaultValue({ parentUuid, containerUuid, uuid, id, contextColumnNames, columnName, value }) {
+  getDefaultValue({ parentUuid, containerUuid, name, uuid, id, contextColumnNames, columnName, value }) {
     return store.dispatch('getDefaultValueFromServer', {
       parentUuid,
       containerUuid,
       contextColumnNames,
+      browseFieldId: id,
       browseFieldUuid: uuid,
-      id,
+      uuid,
+      // id,
       //
-      columnName,
+      // columnName,
       value
     }).then(response => {
       if (!isEmptyValue(response.value)) {
@@ -517,11 +519,12 @@ export const containerManager = {
       return response
     })
   },
-  getLookupList({ parentUuid, containerUuid, contextColumnNames, uuid, searchValue, isAddBlankValue = false, blankValue }) {
+  getLookupList({ parentUuid, containerUuid, contextColumnNames, uuid, id, searchValue, isAddBlankValue = false, blankValue }) {
     return store.dispatch('getLookupListFromServer', {
       parentUuid,
       containerUuid,
       contextColumnNames,
+      browseFieldId: id,
       browseFieldUuid: uuid,
       searchValue,
       // app attributes

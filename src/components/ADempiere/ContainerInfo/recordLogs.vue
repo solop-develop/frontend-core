@@ -123,7 +123,7 @@ export default {
       return 'panel'
     },
     gettersListRecordLogs() {
-      const log = this.$store.getters.getRecordLogs.entityLogs
+      const log = this.$store.getters.getRecordLogs.entity_logs
       if (log) {
         return log.map(element => {
           let type

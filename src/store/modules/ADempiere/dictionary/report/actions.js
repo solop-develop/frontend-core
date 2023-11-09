@@ -20,7 +20,7 @@ import router from '@/router'
 import store from '@/store'
 
 // API Request Methods
-import { requestProcessMetadata as requestReportMetadata } from '@/api/ADempiere/dictionary/process.js'
+import { requestProcessMetadata as requestReportMetadata } from '@/api/ADempiere/dictionary/index.ts'
 
 // Constants
 import {
@@ -29,14 +29,16 @@ import {
 
 // Utils and Helper Methods
 import {
-  containerManager,
+  containerManager
+} from '@/utils/ADempiere/dictionary/report.js'
+import {
   runReport,
   runReportAs,
   changeParameters,
   clearParameters,
   runReportAsPrintFormat,
   runReportAsView
-} from '@/utils/ADempiere/dictionary/report.js'
+} from '@/utils/ADempiere/dictionary/report/actionsMenu.ts'
 import { generateProcess as generateReport, isDisplayedField } from '@/utils/ADempiere/dictionary/process.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
@@ -51,7 +53,7 @@ export default {
       })
 
       dispatch('setReportActionsMenu', {
-        containerUuid: reportResponse.uuid
+        reportUuid: reportResponse.uuid
       })
 
       resolve(reportResponse)
@@ -63,35 +65,37 @@ export default {
    * @param {string} uuid of dictionary
    */
   getReportDefinitionFromServer({ dispatch, getters, rootGetters }, {
-    uuid
+    id
   }) {
     return new Promise((resolve, reject) => {
       requestReportMetadata({
-        uuid
+        id
       })
         .then(async reportResponse => {
+          const { uuid } = reportResponse
           const { processDefinition: reportDefinition } = generateReport({
             processToGenerate: reportResponse
           })
 
-          dispatch('addReportToList', reportDefinition)
-
-          await dispatch('getListPrintFormats', {
-            uuid,
-            id: reportDefinition.id
+          await dispatch('getListPrintFormatsFromServer', {
+            reportId: reportDefinition.id
           })
+
+          dispatch('addReportToList', reportDefinition)
 
           resolve(reportDefinition)
 
           // exist dialog if is process associated
-          const storedModalDialog = getters.getModalDialogManager({ containerUuid: uuid })
+          const storedModalDialog = getters.getModalDialogManager({
+            containerUuid: uuid
+          })
           if (isEmptyValue(storedModalDialog)) {
             dispatch('setModalDialog', {
               containerUuid: uuid,
               title: reportDefinition.name,
               doneMethod: () => {
                 dispatch('startReport', {
-                  containerUuid: uuid
+                  containerUuid: id
                 })
               },
               loadData: ({ containerUuid }) => {
@@ -100,7 +104,7 @@ export default {
                   return Promise.resolve(reportDefinition)
                 }
                 return dispatch('getReportDefinitionFromServer', {
-                  uuid: uuid
+                  id
                 })
               },
               // TODO: Change to string and import dynamic in component
@@ -117,15 +121,22 @@ export default {
 
   /**
    * Set actions menu to report
-   * @param {string} containerUuid
+   * @param {number} reportId
    */
   setReportActionsMenu({ commit, getters, rootGetters }, {
-    containerUuid
+    reportUuid
   }) {
-    const reportDefinition = getters.getStoredReport(containerUuid)
+    const reportDefinition = getters.getStoredReport(reportUuid)
+    const reportId = reportDefinition.id
+    // const containerUuid = reportDefinition.uuid
 
     const actionsList = []
-    actionsList.push(runReport)
+
+    const actionGenerateReport = {
+      ...runReport
+      // containerId: reportId
+    }
+    actionsList.push(actionGenerateReport)
 
     // destruct to avoid deleting the reference to the original variable and to avoid mutating
     const actionExportType = { ...runReportAs }
@@ -158,8 +169,11 @@ export default {
     actionsList.push(clearParameters)
 
     // destruct to avoid deleting the reference to the original variable and to avoid mutating
-    const actionPrintFormat = { ...runReportAsPrintFormat }
-    const printFormats = rootGetters.getPrintFormatList(containerUuid)
+    const actionPrintFormat = {
+      ...runReportAsPrintFormat,
+      containerId: reportId
+    }
+    const printFormats = rootGetters.getPrintFormatList(reportId)
     if (!isEmptyValue(printFormats)) {
       const printFormatChilds = []
       printFormats.forEach(printFormat => {
@@ -179,7 +193,7 @@ export default {
               containerUuid,
               instanceUuid,
               action: printFormat,
-              printFormatUuid: printFormat.printFormatUuid
+              printFormatId: printFormat.id
             })
           }
         })
@@ -190,8 +204,11 @@ export default {
     actionsList.push(actionPrintFormat)
 
     // destruct to avoid deleting the reference to the original variable and to avoid mutating
-    const actionView = { ...runReportAsView }
-    const reportsView = rootGetters.getReportViewList(containerUuid)
+    const actionView = {
+      ...runReportAsView,
+      containerId: reportId
+    }
+    const reportsView = rootGetters.getReportViewList(reportId)
     if (!isEmptyValue(reportsView)) {
       const printFormatChilds = []
       reportsView.forEach(reportView => {
@@ -213,7 +230,7 @@ export default {
               containerUuid,
               action: reportView,
               instanceUuid,
-              reportViewUuid: reportView.reportViewUuid
+              reportViewId: reportView.id
             })
           }
         })

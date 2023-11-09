@@ -263,9 +263,9 @@ export default {
     },
     getListShipmentLines(state) {
       return state.listShipmentLines
-    },
-    getCurrentShipment(state) {
-      return state.currentShipment
+    // },
+    // getCurrentShipment(state) {
+    //   return state.currentShipment
     }
   }
 }

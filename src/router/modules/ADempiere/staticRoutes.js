@@ -20,7 +20,7 @@
 import Layout from '@/layout'
 import language from '@/lang'
 
-// constants
+// Constants
 import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
 
 const staticRoutes = [
@@ -130,10 +130,10 @@ const staticRoutes = [
     path: '/report-viewer',
     component: Layout,
     hidden: true,
-    redirect: 'report-viewer/:reportUuid/:instanceUuid/:fileName/:tableName?',
+    redirect: 'report-viewer/:reportId/:reportUuid/:instanceUuid/:fileName/:tableName?',
     children: [
       {
-        path: ':reportUuid/:instanceUuid/:fileName/:tableName?',
+        path: ':reportId/:reportUuid/:instanceUuid/:fileName/:tableName?',
         component: () => import('@/views/ADempiere/ReportViewer'),
         name: REPORT_VIEWER_NAME,
         meta: {
@@ -174,9 +174,10 @@ const staticRoutes = [
         component: () => import('@/views/ADempiere/Form'),
         name: 'PriceChecking',
         meta: {
+          fileName: 'PriceChecking',
           icon: 'shopping',
-          title: 'PriceChecking',
-          isIndex: true
+          isIndex: true,
+          title: language.t('route.PriceChecking')
         }
       }
     ]
@@ -216,9 +217,10 @@ const staticRoutes = [
         component: () => import('@/views/ADempiere/Form'),
         name: 'ProductInfo',
         meta: {
-          title: 'ProductInfo',
+          fileName: 'ProductInfo',
           icon: 'search',
-          isIndex: true
+          isIndex: true,
+          title: language.t('route.ProductInfo')
         }
       }
     ]
@@ -272,6 +274,7 @@ const staticRoutes = [
         meta: {
           title: 'Issues',
           icon: 'el-icon-s-promotion',
+          fileName: 'IssueManagement',
           isIndex: true,
           type: 'from'
         }

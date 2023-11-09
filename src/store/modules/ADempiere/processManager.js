@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,8 +23,9 @@ import router from '@/router'
 
 // API Request Methods
 import {
-  requestRunProcess
-} from '@/api/ADempiere/process'
+  requestRunBusinessProcess,
+  requestRunBusinessProcessAsWindow
+} from '@/api/ADempiere/businessData/runBusinessProcess.ts'
 
 // Constants
 import { RECORD_ID } from '@/utils/ADempiere/constants/systemColumns'
@@ -91,7 +92,7 @@ const processManager = {
           return
         }
 
-        const parametersList = rootGetters.getProcessParameters({
+        const parameters = rootGetters.getProcessParameters({
           containerUuid,
           fieldsList
         })
@@ -122,9 +123,9 @@ const processManager = {
           path: oldRouter.path
         }, () => {})
 
-        requestRunProcess({
-          uuid: containerUuid,
-          parametersList
+        requestRunBusinessProcess({
+          id: processDefinition.id,
+          parameters
         })
           .then(runProcessRepsonse => {
             isProcessedError = runProcessRepsonse.isError
@@ -198,7 +199,7 @@ const processManager = {
           columnName: RECORD_ID
         })
 
-        requestRunProcess({
+        requestRunBusinessProcess({
           uuid: containerUuid,
           parametersList,
           // in browser
@@ -291,7 +292,6 @@ const processManager = {
           containerUuid: containerUuid
         })
         const currentProcess = storedTab.processes.find(process => process.name === processModal.title)
-
         if (isEmptyValue(parametersList)) {
           const fieldsList = getters.getStoredFieldsFromProcess(containerUuid)
           parametersList = rootGetters.getProcessParameters({
@@ -315,11 +315,17 @@ const processManager = {
 
         let isProcessedError = false
         let summary = ''
-        requestRunProcess({
-          uuid: containerUuid,
+
+        const recordId = rootGetters.getIdOfContainer({
+          containerUuid,
+          tableName
+        })
+
+        requestRunBusinessProcessAsWindow({
+          id: currentProcess.id,
           parametersList,
           tableName,
-          recordUuid
+          recordId: recordId
         })
           .then(runProcessRepsonse => {
             isProcessedError = runProcessRepsonse.isError

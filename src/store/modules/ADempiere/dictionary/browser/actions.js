@@ -21,7 +21,7 @@ import router from '@/router'
 import store from '@/store'
 
 // API Request Methods
-import { requestBrowserMetadata } from '@/api/ADempiere/dictionary/smart-browser.js'
+import { requestBrowserMetadata } from '@/api/ADempiere/dictionary/index.ts'
 
 // Constants
 import {
@@ -47,16 +47,16 @@ import { isLookup } from '@/utils/ADempiere/references'
 
 export default {
   getBrowserDefinitionFromServer({ commit, dispatch, rootGetters }, {
-    uuid,
+    id,
     parentUuid = '' // context of associated
   }) {
     return new Promise(resolve => {
       requestBrowserMetadata({
-        uuid
+        id
       })
         .then(browserResponse => {
           const browserDefinition = generatePanelAndFields({
-            containerUuid: uuid,
+            containerUuid: id,
             panelMetadata: {
               ...browserResponse,
               isShowedCriteria: true
@@ -89,12 +89,12 @@ export default {
 
           dispatch('setBrowserActionsMenu', {
             parentUuid,
-            containerUuid: browserDefinition.uuid
+            containerUuid: browserDefinition.id
           })
 
           // set default values into fields
           dispatch('setBrowserDefaultValues', {
-            containerUuid: browserDefinition.uuid,
+            containerUuid: browserDefinition.id,
             fieldsList: browserDefinition.fieldsList
           })
           // set parent context
@@ -103,7 +103,7 @@ export default {
               parentUuid
             })
             dispatch('updateValuesOfContainer', {
-              containerUuid: uuid,
+              containerUuid: id,
               attributes: parentContext
             })
 
@@ -114,12 +114,12 @@ export default {
                 })
                 if (!isEmptyValue(currentValueElement) && !isEmptyValue(currentValueElement.value)) {
                   commit('updateValueOfField', {
-                    containerUuid: uuid,
+                    containerUuid: id,
                     columnName: itemField.elementName,
                     value: currentValueElement.value
                   })
                   commit('updateValueOfField', {
-                    containerUuid: uuid,
+                    containerUuid: id,
                     columnName: itemField.columnName,
                     value: currentValueElement.value
                   })
@@ -157,7 +157,7 @@ export default {
                 }
 
                 store.dispatch('startProcessOfBrowser', {
-                  parentUuid: browserDefinition.uuid,
+                  parentUuid: browserDefinition.id,
                   containerUuid: process.uuid
                 }).then(processOutputResponse => {
                   // close current page
@@ -188,7 +188,7 @@ export default {
                   return Promise.resolve(processDefinition)
                 }
                 return dispatch('getProcessDefinitionFromServer', {
-                  uuid: process.uuid
+                  id: process.id.toString()
                 })
               },
               ...process,
@@ -271,7 +271,7 @@ export default {
     actionsList.push(sharedLink)
 
     commit('setActionMenu', {
-      containerUuid: browserDefinition.uuid,
+      containerUuid: browserDefinition.id,
       actionsList
     })
   },

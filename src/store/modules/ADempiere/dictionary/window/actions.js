@@ -21,7 +21,7 @@ import router from '@/router'
 import store from '@/store'
 
 // API Request Methods
-import { requestWindowMetadata } from '@/api/ADempiere/dictionary/window.js'
+import { requestWindowMetadata } from '@/api/ADempiere/dictionary/window.ts'
 
 // Constants
 import { CLIENT, DOCUMENT_ACTION, DOCUMENT_STATUS } from '@/utils/ADempiere/constants/systemColumns'
@@ -87,11 +87,11 @@ export default {
   },
 
   getWindowDefinitionFromServer({ dispatch, rootGetters }, {
-    uuid
+    id
   }) {
     return new Promise(resolve => {
       requestWindowMetadata({
-        uuid
+        id
       })
         .then(async windowResponse => {
           const window = generateWindow(windowResponse)
@@ -263,6 +263,11 @@ export default {
               const storedTab = rootGetters.getStoredTab(windowUuid, tabAssociatedUuid)
               const { tableName } = storedTab
 
+              const recordId = rootGetters.getIdOfContainer({
+                containerUuid: storedTab.containerUuid,
+                tableName
+              })
+
               const documentAction = getters.getValueOfField({
                 containerUuid: process.uuid,
                 columnName: DOCUMENT_ACTION
@@ -287,8 +292,9 @@ export default {
                 // update current record
                 await refreshRecord.refreshRecord({
                   parentUuid: windowUuid,
-                  containerUuid: tabAssociatedUuid,
-                  recordUuid
+                  tabId: storedTab.id,
+                  recordUuid,
+                  recordId
                 })
                 // update records and logics on child tabs
                 tabDefinition.childTabs.filter(tabItem => {
@@ -345,7 +351,7 @@ export default {
               }
 
               return dispatch('getProcessDefinitionFromServer', {
-                uuid: process.uuid
+                id: process.id.toString()
               })
             },
             // TODO: Change to string and import dynamic in component
@@ -366,6 +372,11 @@ export default {
               const storedTab = rootGetters.getStoredTab(windowUuid, tabAssociatedUuid)
               const { tableName } = storedTab
 
+              const recordId = rootGetters.getIdOfContainer({
+                containerUuid: storedTab.containerUuid,
+                tableName
+              })
+
               dispatch('startProcessOfWindows', {
                 parentUuid: tabAssociatedUuid,
                 containerUuid: process.uuid,
@@ -375,10 +386,11 @@ export default {
                 // if (processResponse.isError) {
                 //   return
                 // }
-
                 await refreshRecord.refreshRecord({
                   parentUuid: windowUuid,
                   containerUuid: tabAssociatedUuid,
+                  tabId: storedTab.id,
+                  recordId,
                   recordUuid
                 })
                 // update records and logics on child tabs
@@ -422,7 +434,7 @@ export default {
               }
 
               return dispatch('getProcessDefinitionFromServer', {
-                uuid: process.uuid
+                id: process.id.toString()
               })
             },
             // TODO: Change to string and import dynamic in component
@@ -485,11 +497,12 @@ export default {
           containerManager: {
             ...containerManager,
             getPanel: ({ parentUuid }) => {
-              const tab = store.getters.getStoredTab(
-                tabDefinition.parentUuid,
-                tabDefinition.uuid
-              )
-              return tab.sequenceTabsList.find(itemTab => {
+              // TODO: Data Redundancy (call the tabDefinition defined above).
+              // const tab = store.getters.getStoredTab(
+              //   tabDefinition.parentUuid,
+              //   tabDefinition.uuid
+              // )
+              return tabDefinition.sequenceTabsList.find(itemTab => {
                 return itemTab.uuid === sequenceTab.uuid
               })
             }

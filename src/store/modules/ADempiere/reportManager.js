@@ -17,17 +17,18 @@
  */
 
 import Vue from 'vue'
+
 import router from '@/router'
 import language from '@/lang'
 
 // API Request Methods
 import {
-  requestGenerateReport,
-  requestListPrintFormats,
-  requestListReportsViews,
-  requestListDrillTables,
   requestGetReportOutput
 } from '@/api/ADempiere/report'
+import { generateReportRequest } from '@/api/ADempiere/reportManagement/index.ts'
+import { listPrintFormatsRequest } from '@/api/ADempiere/reportManagement/printFormat.ts'
+import { listReportViewsRequest } from '@/api/ADempiere/reportManagement/reportView.ts'
+import { listDrillTablesRequest } from '@/api/ADempiere/reportManagement/drillTable.ts'
 
 // Constants
 import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
@@ -57,8 +58,8 @@ const reportManager = {
   state: initState,
 
   mutations: {
-    setPrintFormatsList(state, { containerUuid, printFormatList }) {
-      Vue.set(state.printFormatList, containerUuid, printFormatList)
+    setPrintFormatsList(state, { reportId, printFormatList }) {
+      Vue.set(state.printFormatList, reportId, printFormatList)
     },
     setReportViewsList(state, { containerUuid, reportViewsList }) {
       Vue.set(state.reportViewsList, containerUuid, reportViewsList)
@@ -69,13 +70,13 @@ const reportManager = {
     setReportOutput(state, reportOutput) {
       Vue.set(state.reportsOutput, reportOutput.instanceUuid, reportOutput)
     },
-    setReportGenerated(state, { containerUuid, parametersList, reportType, printFormatUuid, reportViewUuid, isSummary }) {
+    setReportGenerated(state, { containerUuid, parametersList, reportType, printFormatId, reportViewId, isSummary }) {
       Vue.set(state.reportsGenerated, containerUuid, {
         containerUuid,
         parametersList,
         reportType,
-        printFormatUuid,
-        reportViewUuid,
+        printFormatId,
+        reportViewId,
         isSummary
       })
     },
@@ -109,8 +110,8 @@ const reportManager = {
     startReport({ commit, dispatch, rootGetters }, {
       containerUuid,
       reportType = DEFAULT_REPORT_TYPE,
-      printFormatUuid,
-      reportViewUuid,
+      printFormatId,
+      reportViewId,
       tableName,
       isSummary,
       recordUuid
@@ -131,7 +132,7 @@ const reportManager = {
           return
         }
 
-        const parametersList = rootGetters.getReportParameters({
+        const parameters = rootGetters.getReportParameters({
           containerUuid,
           fieldsList
         })
@@ -163,18 +164,18 @@ const reportManager = {
           }
         }
 
-        requestGenerateReport({
-          uuid: containerUuid,
+        generateReportRequest({
+          id: reportDefinition.id,
           reportType,
-          parametersList,
-          printFormatUuid,
-          reportViewUuid,
-          tableName,
-          isSummary,
-          recordUuid
+          parameters,
+          printFormatId,
+          reportViewId
+          // tableName,
+          // isSummary,
+          // recordUuid
         })
           .then(runReportRepsonse => {
-            const { instanceUuid, output, isError } = runReportRepsonse
+            const { instance_id, output, isError } = runReportRepsonse
 
             if (isError) {
               showNotification({
@@ -190,10 +191,10 @@ const reportManager = {
               href: undefined,
               download: undefined
             }
-            if (output && output.outputStream) {
+            if (output && output.output_stream) {
               link = buildLinkHref({
-                fileName: output.fileName,
-                outputStream: output.outputStream,
+                fileName: output.file_name,
+                outputStream: output.output_stream,
                 mimeType: output.mimeType
               })
 
@@ -205,22 +206,23 @@ const reportManager = {
               router.push({
                 name: REPORT_VIEWER_NAME,
                 params: {
+                  reportId: reportDefinition.id,
                   reportUuid: reportDefinition.uuid,
-                  instanceUuid,
-                  fileName: output.fileName,
+                  instanceUuid: instance_id,
+                  fileName: output.file_name,
                   // menuParentUuid,
                   name: output.name,
-                  tableName: output.tableName
+                  tableName: output.table_name
                 }
               }, () => {})
             }
 
             commit('setReportOutput', {
               ...output,
-              instanceUuid,
+              instanceUuid: instance_id,
               reportUuid: containerUuid,
               link,
-              parametersList,
+              parameters,
               url: link.href,
               download: link.download
             })
@@ -244,10 +246,10 @@ const reportManager = {
             }
             commit('setReportGenerated', {
               containerUuid,
-              parametersList,
+              parameters,
               reportType,
-              printFormatUuid,
-              reportViewUuid
+              printFormatId,
+              reportViewId
             })
           })
       })
@@ -277,7 +279,7 @@ const reportManager = {
           })
         }
 
-        requestGenerateReport({
+        generateReportRequest({
           uuid: containerUuid,
           reportType,
           parametersList
@@ -299,11 +301,11 @@ const reportManager = {
               href: undefined,
               download: undefined
             }
-            if (output && output.outputStream) {
+            if (output && output.output_stream) {
               link = buildLinkHref({
-                fileName: output.fileName,
-                outputStream: output.outputStream,
-                type: output.mimeType
+                fileName: output.file_name,
+                outputStream: output.output_stream,
+                mimeType: output.mimeType
               })
 
               // donwload report file
@@ -339,40 +341,38 @@ const reportManager = {
     /**
      * Get list prints formats
      * @param {number} id report identifier
-     * @param {string} uuid report universal unique identifier
      * @returns
      */
-    getListPrintFormats({ commit, dispatch }, {
-      id,
-      uuid
+    getListPrintFormatsFromServer({ commit, dispatch }, {
+      reportId
     }) {
       return new Promise(resolve => {
-        requestListPrintFormats({ uuid })
+        listPrintFormatsRequest({ reportId })
           .then(async printFormatResponse => {
             const printFormatList = await Promise.all(
-              printFormatResponse.records.map(async printFormatItem => {
-                await dispatch('getReportViewsFromServer', {
-                  uuid,
-                  id,
-                  // TODO: Verify if table name is required
-                  tableName: printFormatItem.tableName
-                })
-                dispatch('getDrillTablesFromServer', {
-                  uuid,
-                  id,
-                  tableName: printFormatItem.tableName
-                })
+              printFormatResponse.print_formats.map(async printFormatItem => {
+                await Promise.allSettled([
+                  dispatch('getReportViewsFromServer', {
+                    reportId,
+                    // TODO: Verify if table name is required
+                    tableName: printFormatItem.table_name
+                  }),
+                  dispatch('getDrillTablesFromServer', {
+                    reportId,
+                    tableName: printFormatItem.table_name
+                  })
+                ])
 
                 return {
                   ...printFormatItem,
-                  reportUuid: uuid,
-                  reportId: id
+                  // reportUuid: reportDefinition.uuid,
+                  reportId: reportId
                 }
               })
             )
 
             commit('setPrintFormatsList', {
-              containerUuid: uuid,
+              reportId,
               printFormatList
             })
 
@@ -391,23 +391,22 @@ const reportManager = {
      * @returns
      */
     getReportViewsFromServer({ commit }, {
-      id,
-      uuid,
+      reportId,
       tableName
     }) {
       return new Promise(resolve => {
-        requestListReportsViews({ uuid, tableName })
+        listReportViewsRequest({ reportId, tableName })
           .then(reportViewResponse => {
-            const reportViewsList = reportViewResponse.reportViewsList.map(reportViewItem => {
+            const reportViewsList = reportViewResponse.report_views.map(reportViewItem => {
               return {
                 ...reportViewItem,
-                reportUuid: uuid,
-                reportId: id
+                // reportUuid: uuid,
+                reportId: reportId
               }
             })
 
             commit('setReportViewsList', {
-              containerUuid: uuid,
+              containerUuid: reportId,
               reportViewsList
             })
 
@@ -426,26 +425,25 @@ const reportManager = {
      * @returns
      */
     getDrillTablesFromServer({ commit }, {
-      id,
-      uuid,
+      reportId,
       tableName
     }) {
       return new Promise(resolve => {
-        requestListDrillTables({ tableName })
+        listDrillTablesRequest({ tableName })
           .then(responseDrillTables => {
-            const drillTablesList = responseDrillTables.drillTablesList.map(drillTableItem => {
+            const drillTablesList = responseDrillTables.drill_tables.map(drillTableItem => {
               return {
                 ...drillTableItem,
-                name: drillTableItem.printName,
+                name: drillTableItem.print_name,
                 // type: 'updateReport',
                 // option: 'drillTable',
-                reportUuid: uuid,
-                reportId: id
+                // reportUuid: uuid,
+                reportId: reportId
               }
             })
 
             commit('setDrillTablesList', {
-              containerUuid: uuid,
+              containerUuid: reportId,
               drillTablesList
             })
 
@@ -468,18 +466,18 @@ const reportManager = {
       id,
       instanceUuid,
       tableName,
-      printFormatUuid,
-      reportViewUuid,
+      printFormatId,
+      reportViewId,
       isSummary,
       reportName,
       reportType,
       parametersList = []
     }) {
       return new Promise(resolve => {
-        if (isEmptyValue(printFormatUuid)) {
+        if (isEmptyValue(printFormatId) || printFormatId <= 0) {
           const printFormat = getters.getDefaultPrintFormat(uuid)
           if (!isEmptyValue(printFormat)) {
-            printFormatUuid = printFormat.printFormatUuid
+            printFormatId = printFormat.printFormatId
           }
         }
 
@@ -491,8 +489,8 @@ const reportManager = {
         requestGetReportOutput({
           processUuid: uuid,
           parametersList,
-          printFormatUuid,
-          reportViewUuid,
+          printFormatId,
+          reportViewId,
           isSummary,
           reportName,
           reportType,
@@ -539,8 +537,8 @@ const reportManager = {
       instanceUuid,
       uuid,
       tableName,
-      printFormatUuid,
-      reportViewUuid,
+      printFormatId,
+      reportViewId,
       reportName,
       reportType,
       isSummary,
@@ -567,11 +565,11 @@ const reportManager = {
         if (isEmptyValue(uuid) && !isEmptyValue(action)) {
           uuid = action.reportUuid
         }
-        if (isEmptyValue(printFormatUuid)) {
-          printFormatUuid = storedReportGenerated.printFormatUuid
+        if (isEmptyValue(printFormatId) || printFormatId <= 0) {
+          printFormatId = storedReportGenerated.printFormatId
         }
-        if (isEmptyValue(reportViewUuid)) {
-          reportViewUuid = storedReportGenerated.reportViewUuid
+        if (isEmptyValue(reportViewId) || reportViewId <= 0) {
+          reportViewId = storedReportGenerated.reportViewId
         }
       }
 
@@ -586,8 +584,8 @@ const reportManager = {
         dispatch('startReport', {
           containerUuid,
           reportType,
-          printFormatUuid,
-          reportViewUuid,
+          printFormatId,
+          reportViewId,
           isSummary
         })
         return
@@ -599,10 +597,10 @@ const reportManager = {
           reportType,
           reportName,
           tableName,
-          printFormatUuid,
+          printFormatId,
           parametersList,
           instanceUuid,
-          reportViewUuid,
+          reportViewId,
           isSummary
         })
           .then(reportOutput => {
@@ -620,11 +618,11 @@ const reportManager = {
               if (isEmptyValue(tableName)) {
                 tableName = reportOutput.tableName
               }
-              if (isEmptyValue(printFormatUuid)) {
-                printFormatUuid = reportOutput.printFormatUuid
+              if (isEmptyValue(printFormatId) || printFormatId <= 0) {
+                printFormatId = reportOutput.printFormatId
               }
-              if (isEmptyValue(reportViewUuid)) {
-                reportViewUuid = reportOutput.reportViewUuid
+              if (isEmptyValue(reportViewId) || reportViewId <= 0) {
+                reportViewId = reportOutput.reportViewId
               }
             }
 
@@ -635,8 +633,8 @@ const reportManager = {
               containerUuid,
               parametersList,
               reportType,
-              printFormatUuid,
-              reportViewUuid
+              printFormatId,
+              reportViewId
             })
           })
       })
@@ -652,37 +650,41 @@ const reportManager = {
       return state.reportsOutput[instanceUuid]
     },
 
-    getPrintFormatList: (state) => (containerUuid) => {
-      return state.printFormatList[containerUuid] || []
+    getPrintFormatList: (state) => (reportId) => {
+      return state.printFormatList[reportId] || []
     },
-
-    getDefaultPrintFormat: (state, getters) => (containerUuid) => {
-      const printFormatsList = getters.getPrintFormatList(containerUuid)
+    getPrintFormat: (state, getters) => ({ reportId, printFormatId }) => {
+      return getters.getPrintFormatList(reportId).find(printFormat => {
+        return printFormat.id === printFormatId
+      })
+    },
+    getDefaultPrintFormat: (state, getters) => (reportId) => {
+      const printFormatsList = getters.getPrintFormatList(reportId)
 
       if (isEmptyValue(printFormatsList)) {
         return undefined
       }
-      const defaultPrintFormat = printFormatsList.find(printFormat => printFormat.isDefault)
+      const defaultPrintFormat = printFormatsList.find(printFormat => {
+        return printFormat.is_default
+      })
       return defaultPrintFormat || printFormatsList.at()
     },
 
-    getReportViewList: (state) => (containerUuid) => {
-      return state.reportViewsList[containerUuid] || []
+    getReportViewList: (state) => (reportId) => {
+      return state.reportViewsList[reportId] || []
     },
-
-    getReportView: (state, getters) => ({ containerUuid, reportViewUuid }) => {
-      return getters.getReportViewList(containerUuid).find(reportView => {
-        return reportView.reportViewUuid === reportViewUuid
+    getReportView: (state, getters) => ({ reportId, reportViewId }) => {
+      return getters.getReportViewList(reportId).find(reportView => {
+        return reportView.id === reportViewId
       })
     },
-
-    getDefaultReportView: (state, getters) => (containerUuid) => {
-      const reportViewsList = getters.getReportViewList(containerUuid)
+    getDefaultReportView: (state, getters) => (reportId) => {
+      const reportViewsList = getters.getReportViewList(reportId)
 
       if (isEmptyValue(reportViewsList)) {
         return undefined
       }
-      const defaultReportView = reportViewsList.find(reportView => reportView.isDefault)
+      const defaultReportView = reportViewsList.find(reportView => reportView.is_default)
       return defaultReportView || reportViewsList.at()
     },
 

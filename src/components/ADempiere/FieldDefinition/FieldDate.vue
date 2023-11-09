@@ -45,9 +45,12 @@ import { DATE_PLUS_TIME } from '@/utils/ADempiere/references'
 import {
   MULTIPLE_VALUES_OPERATORS_LIST, RANGE_VALUE_OPERATORS_LIST
 } from '@/utils/ADempiere/dataUtils'
+import {
+  SHORCUTS_DATE, SHORCUTS_DATE_RANGE
+} from '@/utils/ADempiere/componentUtils'
 
 // Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { getTypeOfValue, isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { changeTimeZone } from '@/utils/ADempiere/formatValue/dateFormat'
 
 /**
@@ -63,86 +66,10 @@ export default {
   data() {
     return {
       pickerOptionsDate: {
-        shortcuts: [{
-          text: this.$t('component.date.today'),
-          onClick(picker) {
-            picker.$emit('pick', new Date())
-          }
-        }, {
-          text: this.$t('component.date.yesterday'),
-          onClick(picker) {
-            const date = new Date()
-            date.setTime(date.getTime() - 3600 * 1000 * 24)
-            picker.$emit('pick', date)
-          }
-        }, {
-          text: this.$t('component.date.week'),
-          onClick(picker) {
-            const date = new Date()
-            const monthEndDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
-            picker.$emit('pick', monthEndDay)
-          }
-        }]
+        shortcuts: SHORCUTS_DATE
       },
       pickerOptionsDateRange: {
-        shortcuts: [{
-          text: this.$t('component.date.today'),
-          onClick(picker) {
-            const currentDay = new Date()
-            picker.$emit('pick', [currentDay, currentDay])
-          }
-        }, {
-          text: this.$t('component.date.yesterday'),
-          onClick(picker) {
-            const start = new Date()
-            start.setTime(start.getTime() - 3600 * 1000 * 24)
-            picker.$emit('pick', [start, start])
-          }
-        }, {
-          text: this.$t('component.date.week'),
-          onClick(picker) {
-            const start_date = new Date()
-            start_date.setHours(0, 0, 0, 0)
-            const end_date = new Date()
-            const date = null
-            const currenDate = date ? new Date(date) : new Date()
-            const first = currenDate.getDate() - currenDate.getDay('monday')
-            const last = first - 7
-            start_date.setDate(last)
-            end_date.setDate(first - 1)
-            picker.$emit('pick', [start_date, end_date])
-          }
-        }, {
-          text: this.$t('component.date.currentWeek'),
-          onClick(picker) {
-            const start_date = new Date()
-            start_date.setHours(0, 0, 0, 0)
-            const end_date = new Date()
-            const date = null
-            const currenDate = date ? new Date(date) : new Date()
-            const first = currenDate.getDate() - currenDate.getDay('monday')
-            const last = first
-            start_date.setDate(last)
-            end_date.setDate(first + 6)
-            picker.$emit('pick', [start_date, end_date])
-          }
-        }, {
-          text: this.$t('component.date.lastMonth'),
-          onClick(picker) {
-            const date = new Date()
-            const monthEndDay = new Date(date.getFullYear(), date.getMonth(), 0)
-            const monthStartDay = new Date(date.getFullYear(), date.getMonth() - 1, 1)
-            picker.$emit('pick', [monthStartDay, monthEndDay])
-          }
-        }, {
-          text: this.$t('component.date.currentMonth'),
-          onClick(picker) {
-            const date = new Date()
-            const monthEndDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
-            const monthStartDay = new Date(date.getFullYear(), date.getMonth(), 1)
-            picker.$emit('pick', [monthStartDay, monthEndDay])
-          }
-        }]
+        shortcuts: SHORCUTS_DATE_RANGE
       }
     }
   },
@@ -313,9 +240,15 @@ export default {
   },
 
   methods: {
-    parseValue(value) {
+    parseValue(valueToParse) {
+      let currentValue = valueToParse
+      // types `decimal` and `date` is a object struct
+      if ((getTypeOfValue(valueToParse) === 'OBJECT') && !isEmptyValue(valueToParse.type)) {
+        currentValue = valueToParse.value
+      }
+
       // not return undefined to v-model
-      if (isEmptyValue(value)) {
+      if (isEmptyValue(currentValue)) {
         if (this.isMultipleValues) {
           return []
         }
@@ -323,8 +256,8 @@ export default {
       }
 
       if (this.isMultipleValues) {
-        if (Array.isArray(value)) {
-          value = value.map(itemValue => {
+        if (Array.isArray(currentValue)) {
+          currentValue = currentValue.map(itemValue => {
             if (typeof itemValue === 'object') {
               return itemValue.toUTCString()
             }
@@ -332,22 +265,23 @@ export default {
           })
         } else {
           const tempValue = []
-          if (!isEmptyValue(value)) {
-            tempValue.push(value)
+          if (!isEmptyValue(currentValue)) {
+            tempValue.push(currentValue)
           }
-          value = tempValue
+          currentValue = tempValue
         }
-        return value
+        return currentValue
       }
 
       // instance date from long value
-      if (typeof value === 'number') {
-        value = new Date(value).toUTCString()
+      if (typeof currentValue === 'number') {
+        currentValue = new Date(currentValue).toUTCString()
       }
 
       // generate range value
       if (this.isRenderRange && !this.metadata.inTable) {
         let valueTo
+        let value = currentValue
         if (Array.isArray(value)) {
           valueTo = value.at(1)
           value = value.at(0)
@@ -358,13 +292,13 @@ export default {
         if (isEmptyValue(valueTo)) {
           valueTo = undefined
         }
-        value = [value, valueTo]
-        if (isEmptyValue(value.at(0)) || isEmptyValue(value.at(1))) {
-          value = []
+        currentValue = [value, valueTo]
+        if (isEmptyValue(currentValue.at(0)) || isEmptyValue(currentValue.at(1))) {
+          currentValue = []
         }
       }
 
-      return value
+      return currentValue
     },
     // validate values before send values to store or server
     preHandleChange(value) {

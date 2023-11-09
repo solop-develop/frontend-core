@@ -1,7 +1,7 @@
 <!--
   ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A.
-  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -15,20 +15,19 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
+
 <template>
-  <div :style="styleHeight">
-    <!-- {{ styleHeight }} -->
+  <div class="form-view" :style="styleHeight">
     <el-container
-      v-if="isLoaded"
+      v-if="isLoadedMetadata"
       key="form-loaded"
-      :class="showNavar ? 'view-base' : 'show-header-view-base'"
+      class="form-loaded"
     >
-      <el-main style="padding-right: 0px !important; padding-bottom: 0px !important;padding-top: 0px !important;padding-left: 0px !important;">
-        <el-row>
-          <el-col :span="24">
+      <el-main style="padding: 0px !important;">
+        <el-row class="row-content">
+          <el-col class="col-content" :span="24">
             <el-card
               class="content-collapse"
-              :style="isEmptyValue(formMetadata.fieldsList) ? 'height: 100% !important;' : ''"
             >
               <title-and-help
                 v-if="isShowTitleForm && !isVisibleShowButton"
@@ -43,6 +42,7 @@
                   @click="changeDisplatedTitle"
                 />
               </title-and-help>
+
               <el-button
                 v-if="!isShowTitleForm && !isVisibleShowButton"
                 type="text"
@@ -52,7 +52,7 @@
                 @click="changeDisplatedTitle"
               />
               <div style="height: 100%">
-                <form-panel
+                <form-defintion
                   :metadata="{
                     ...formMetadata,
                     fileName: formFileName,
@@ -74,157 +74,146 @@
 </template>
 
 <script>
+import { defineComponent, computed, ref } from '@vue/composition-api'
+
+import router from '@/router'
+import store from '@/store'
+
 // Components and Mixins
-import FormPanel from '@/components/ADempiere/Form'
+import FormDefintion from '@/components/ADempiere/FormDefinition'
 import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
-// import ModalDialog from '@/components/ADempiere/Dialog'
 import TitleAndHelp from '@/components/ADempiere/TitleAndHelp'
 
 // Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { isEmptyValue, getValidInteger } from '@/utils/ADempiere'
 
-export default {
+export default defineComponent({
   name: 'FormView',
 
   components: {
-    FormPanel,
+    FormDefintion,
     LoadingView,
-    // ModalDialog,
     TitleAndHelp
   },
 
-  data() {
-    return {
-      formUuid: this.$route.meta.uuid,
-      formMetadata: {},
-      isLoaded: false,
-      panelType: 'form'
-    }
-  },
+  setup() {
+    const currentRoute = router.app._route
 
-  computed: {
-    formName() {
-      if (this.$route.meta.title === 'PriceChecking') {
-        return this.$t('route.PriceChecking')
-      } else if (this.$route.meta.title === 'ProductInfo') {
-        return this.$t('route.ProductInfo')
+    const isLoadedMetadata = ref(false)
+    const formMetadata = ref({
+      id: -1,
+      uuid: '',
+      name: '',
+      description: '',
+      help: '',
+      access_level: 0,
+      file_name: '',
+      isActive: false
+    })
+
+    const formId = getValidInteger(currentRoute.meta.id, true)
+    const formUuid = currentRoute.meta.uuid
+
+    const storedForm = computed(() => {
+      return store.getters.getStoredForm(formUuid)
+    })
+
+    const formName = computed(() => {
+      if (!isEmptyValue(formMetadata.value) && !isEmptyValue(formMetadata.value.name)) {
+        return formMetadata.value.name
       }
-      return this.formMetadata.name
-    },
-    formFileName() {
-      if (!isEmptyValue(this.formMetadata.fileName)) {
-        return this.formMetadata.fileName
+      return currentRoute.meta.title
+    })
+
+    const formFileName = computed(() => {
+      if (!isEmptyValue(formMetadata.value) && !isEmptyValue(formMetadata.value.file_name)) {
+        return formMetadata.value.file_name
       }
-      if (!isEmptyValue(this.$route.meta.fileName)) {
-        return this.$route.meta.fileName
+      if (!isEmptyValue(currentRoute.meta.fileName)) {
+        return currentRoute.meta.fileName
       }
-      return this.$route.meta.title
-    },
-    getterForm() {
-      return this.$store.getters.getForm(this.formUuid)
-    },
-    showContextMenu: {
-      get() {
-        return this.$store.state.settings.showContextMenu
-      },
-      set(val) {
-        this.$store.dispatch('settings/changeSetting', {
-          key: 'showContextMenu',
-          value: val
-        })
+      return currentRoute.meta.title
+    })
+
+    const isVisibleShowButton = computed(() => {
+      return store.state.app.device === 'mobile'
+    })
+
+    const isShowTitleForm = computed(() => {
+      return store.getters.getIsShowTitleForm
+    })
+
+    const styleHeight = computed(() => {
+      if (formFileName.value === 'WFActivity') {
+        return 'height: 90vh;overflow: auto;'
       }
-    },
-    showNavar() {
-      return this.$store.state.settings.showNavar
-    },
-    isShowTitleForm() {
-      return this.$store.getters.getIsShowTitleForm
-    },
-    styleHeight() {
-      if (this.formFileName === 'WFActivity') return 'height: 90vh;overflow: auto;'
       return 'height: 100vh;overflow: auto;'
-    },
-    isMobile() {
-      return this.$store.state.app.device === 'mobile'
-    },
-    isVisibleShowButton() {
-      return this.isMobile
+    })
+
+    function changeDisplatedTitle() {
+      store.commit('changeShowTitleForm', !isShowTitleForm.value)
     }
-  },
 
-  created() {
-    this.getForm()
-  },
-
-  methods: {
-    changeDisplatedTitle() {
-      this.$store.commit('changeShowTitleForm', !this.isShowTitleForm)
-    },
-    getForm() {
-      const panel = this.getterForm
-      if (panel) {
-        this.formMetadata = panel
-        this.isLoaded = true
+    function getForm() {
+      const panel = storedForm.value
+      if (!isEmptyValue(panel)) {
+        formMetadata.value = panel
+        isLoadedMetadata.value = true
       } else {
-        this.$store.dispatch('getPanelAndFields', {
-          containerUuid: this.formUuid,
-          panelType: this.panelType,
-          routeToDelete: this.$route
+        if (formId <= 0) {
+          isLoadedMetadata.value = true
+          return
+        }
+        store.dispatch('getFormFromServer', {
+          id: formId,
+          routeToDelete: currentRoute
         })
           .then(responseForm => {
-            this.formMetadata = responseForm
+            formMetadata.value = responseForm
           })
           .finally(() => {
-            this.isLoaded = true
+            isLoadedMetadata.value = true
           })
       }
     }
+
+    getForm()
+
+    return {
+      isLoadedMetadata,
+      formId,
+      formMetadata,
+      // Computeds
+      formFileName,
+      formName,
+      isShowTitleForm,
+      isVisibleShowButton,
+      styleHeight,
+      // Methods
+      changeDisplatedTitle
+    }
   }
-}
+})
 </script>
 
-<style>
+<style lang="scss">
+.form-view {
+  .form-loaded {
+    height: inherit;
+  }
   .el-card__body {
     padding-top: 0px !important;
     padding-right: 0px !important;
     padding-bottom: 2px !important;
     padding-left: 0px !important;
-    height: 100%!important;
+    /* height: 100%!important; */
   }
+}
 </style>
+
 <style scoped >
-  .el-row {
-    position: relative;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    height: 100%!important;
-  }
-  .el-col-24 {
-    width: 100%;
-    height: 100%!important;
-  }
-
-  .view-base {
-    /** Add this rule to view base */
-    overflow: auto;
-  }
-  .show-header-view-base {
-    height: 100%;
-    /* min-height: calc(100vh - 26px); */
-    overflow: auto;
-  }
-
-  .w-33 {
-    width: 100%;
-    background-color: transparent;
-  }
-
-  .el-card {
-    width: 100% !important;
-    height: 100% !important;
-  }
-
-  .center{
-    text-align: center;
+  .content-collapse {
+    /* height: 100%!important; */
+    display: contents;
   }
 </style>

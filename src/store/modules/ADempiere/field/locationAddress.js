@@ -19,7 +19,7 @@
 import Vue from 'vue'
 
 // API Request Methods
-import { requestGetCountryDefinition } from '@/api/ADempiere/system-core.js'
+import { requestGetCountryDefinition } from '@/api/ADempiere/common/index.ts'
 
 // Utils and Helpers Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'

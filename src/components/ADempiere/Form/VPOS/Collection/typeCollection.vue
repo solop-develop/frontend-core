@@ -166,7 +166,7 @@ import {
 } from '@/utils/ADempiere/valueFormat.js'
 import {
   requestGetConversionRate
-} from '@/api/ADempiere/form/point-of-sales.js'
+} from '@/api/ADempiere/common/index.ts'
 import posMixin from '@/components/ADempiere/Form/VPOS/posMixin.js'
 
 export default {

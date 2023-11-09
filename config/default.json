@@ -7,7 +7,7 @@
   "adempiere": {
     "api": {
       "dictionary": "http://localhost:7878/v1/",
-      "url": "http://localhost:8085/api/adempiere/",
+      "url": "http://localhost:8080/api/",
       "timeout": 99999999
     },
     "images": {
@@ -44,10 +44,10 @@
     "form": false
   },
   "pointOfSales": {
-    "endpoint": "/form/addons/point-of-sales"
+    "endpoint": "/point-of-sales"
   },
   "priceChecking": {
-    "endpoint": "/form/addons/point-of-sales"
+    "endpoint": "/point-of-sales"
   },
   "match": {
     "endpoint": "/form/addons/match"
@@ -56,16 +56,16 @@
     "endpoint": "/form/addons/weight"
   },
   "payrollActionNotice": {
-    "endpoint": "/form/addons/payroll-action-notice"
+    "endpoint": "/payroll-action-notice"
   },
   "session": {
     "timeout": 300000
   },
   "vPayPrint": {
-    "endpoint": "form/addons/payment-print-export"
+    "endpoint": "/payment-print-export"
   },
   "VBankStatementMatch": {
-    "endpoint": "form/addons/bank-statement-match"
+    "endpoint": "/bank-statement-match"
   },
   "theme": "src/themes/default"
 }

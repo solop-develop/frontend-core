@@ -17,7 +17,9 @@
  */
 
 // Utils and Helper Methods
-import { isEmptyValue, isIdentifierEmpty } from '@/utils/ADempiere/valueUtils.js'
+import {
+  getTypeOfValue, isEmptyValue, isIdentifierEmpty
+} from '@/utils/ADempiere/valueUtils.js'
 import { getContext } from '@/utils/ADempiere/contextUtils'
 
 /**
@@ -35,8 +37,10 @@ export function getContextAttributes({
   contextColumnNames = [],
   isBooleanToString = false,
   isForceBoolean = false,
-  keyName = 'columnName'
+  keyName = 'columnName',
+  format = 'array'
 }) {
+  const contextAttributesObject = {}
   const contextAttributesList = []
   if (isEmptyValue(contextColumnNames)) {
     return contextAttributesList
@@ -55,13 +59,15 @@ export function getContextAttributes({
     if (isIdentifierEmpty({ columnName, value })) {
       value = -1
     }
-
+    contextAttributesObject[columnName] = value
     contextAttributesList.push({
       [keyName]: columnName,
       value
     })
   })
-
+  if (format === 'object') {
+    return contextAttributesObject
+  }
   return contextAttributesList
 }
 
@@ -75,6 +81,12 @@ export function generateContextKey(contextAttributes = [], keyName = 'columnName
   let contextKey = ''
   if (isEmptyValue(contextAttributes)) {
     return contextKey
+  }
+  if (getTypeOfValue(contextAttributes) === 'OBJECT') {
+    Object.keys(contextAttributes).forEach(key => {
+      contextKey += '|' + key + '|' + contextAttributes[key]
+    })
+    return '_' + contextKey
   }
 
   contextAttributes.forEach(attribute => {

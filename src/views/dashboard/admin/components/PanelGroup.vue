@@ -74,7 +74,7 @@
           </div>
           <count-to
             :start-val="0"
-            :end-val="taks.recordCount"
+            :end-val="Number(taks.recordCount)"
             :duration="2600"
             class="card-panel-num"
             style="float: right;"
@@ -152,7 +152,8 @@ export default defineComponent({
       }
 
       zoomIn({
-        uuid: taks.windowUuid,
+        attributeValue: `window_${taks.windowId}`,
+        attributeName: 'containerKey',
         params: {
           ...taks.criteria
         },

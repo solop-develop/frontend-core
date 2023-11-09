@@ -80,10 +80,11 @@ const documentManager = {
       return new Promise(resolve => {
         requestListDocumentStatuses({
           tableName,
-          recordId,
-          recordUuid
+          recordId
         }).then(response => {
-          const { documentStatusesList } = response
+          const {
+            document_statuses: documentStatusesList
+          } = response
 
           commit('setDocumentStatuses', {
             tableName,
@@ -112,10 +113,12 @@ const documentManager = {
       return new Promise(resolve => {
         requestListDocumentActions({
           tableName,
-          recordId,
-          recordUuid
+          recordId
         }).then(response => {
-          const { defaultDocumentAction, documentActionsList } = response
+          const {
+            default_document_action: defaultDocumentAction,
+            document_actions: documentActionsList
+          } = response
 
           commit('setDocumentActions', {
             tableName,
@@ -136,19 +139,21 @@ const documentManager = {
       })
     },
 
-    runDocumentAction({ commit, dispatch }, {
-      recordId,
+    /**
+     * TODO: Refres document status and document actions finally process
+     */
+    runDocumentActionOnserver({ commit, dispatch }, {
       tableName,
-      docAction,
+      recordId,
       recordUuid,
+      docAction,
       description
     }) {
       return new Promise(resolve => {
         requestRunDocumentAction({
           tableName,
-          docAction,
-          id: recordId,
-          uuid: recordUuid
+          recordId,
+          docAction
         })
           .then(response => {
             let text

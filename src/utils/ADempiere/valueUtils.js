@@ -17,8 +17,6 @@
  */
 
 import language from '@/lang'
-import store from '@/store'
-import router from '@/router'
 
 // Constants
 import { SPECIAL_ZERO_ID_TABLES } from '@/utils/ADempiere//constants/systemColumns'
@@ -30,6 +28,7 @@ import { OPERATION_PATTERN } from '@/utils/ADempiere/formatValue/numberFormat.js
 import { convertBooleanToString, convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat.js'
 import { removeQuotationMark } from '@/utils/ADempiere/formatValue/stringFormat'
 import { isIdentifier } from '@/utils/ADempiere/references.js'
+import store from '@/store'
 
 /**
  * Checks if value is empty. Deep-checks arrays and objects
@@ -96,18 +95,6 @@ export const isEmptyValue = function(value) {
   return isEmpty
 }
 
-export const closeTagView = function(currentRoute) {
-  if (isEmptyValue(currentRoute)) currentRoute = router.app._route
-  const tabViewsVisited = store.getters.visitedViews
-  store.dispatch('tagsView/delView', currentRoute)
-  const oldRouter = tabViewsVisited[tabViewsVisited.length - 1]
-  if (!isEmptyValue(oldRouter)) {
-    router.push({
-      path: oldRouter.path
-    }, () => {})
-  }
-}
-
 /**
  * Is identifier empty value
  * @param {string} columnName
@@ -151,18 +138,6 @@ export function isSameValues(valueA, valueB) {
     (isEmptyValue(valueA) && isEmptyValue(valueB))
 }
 
-/**
- * Evaluates the type of data sent, useful with 'array' type data as the typeof
- * function returns 'object' in this and other cases.
- * @deprecated change by getTypeOfValue method
- * @author EdwinBetanc0urt <EdwinBetanc0urt@oulook.com>
- * @link https://gist.github.com/EdwinBetanc0urt/3fc02172ada073ded4b52e46543553ce
- * @param {boolean|array|object|number|string|date|map|set|function} value
- * @returns {string} value type in capital letters (STRING, NUMBER, BOOLEAN, ...)
- */
-export function typeValue(value) {
-  return getTypeOfValue(value)
-}
 /**
  * Evaluates the type of data sent, useful with 'array' type data as the typeof
  * function returns 'object' in this and other cases.
@@ -358,6 +333,11 @@ export function parsedValueComponent({
   displayType,
   isMandatory = false
 }) {
+  // types `decimal` and `date` is a object struct
+  if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
+    value = value.value
+  }
+
   const isEmpty = isEmptyValue(value)
   if (isEmpty && !isMandatory) {
     if (componentPath === 'FieldYesNo') {
@@ -925,4 +905,46 @@ export function setIconsTableName({
       break
   }
   return icon
+}
+
+/**
+ * Get Valid Integer
+ * @param {string|number} value
+ * @param {boolean} isIdentifier
+ * @returns {number}
+ */
+export function getValidInteger(value, isIdentifier = false) {
+  if (!isEmptyValue(value) && !Number.isNaN(value)) {
+    return Number.parseInt(value, 10)
+  }
+  if (isIdentifier) {
+    return -1
+  }
+  return 0
+}
+
+/**
+ * Get a List with the values of the key Columns of the Tab
+ * @param {string} parentUuid
+ * @param {string} containerUuid
+ * @param {array} keyColumns
+ * return {object} keyColumnsList
+ */
+export function getListKeyColumnsTab({
+  parentUuid,
+  containerUuid,
+  keyColumns
+}) {
+  const keyColumnsList = {}
+  if (keyColumns) {
+    keyColumns.forEach(elementColumnName => {
+      const value = store.getters.getValueOfField({
+        parentUuid,
+        containerUuid,
+        columnName: elementColumnName
+      })
+      keyColumnsList[elementColumnName] = value
+    })
+  }
+  return keyColumnsList
 }

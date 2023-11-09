@@ -16,10 +16,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// api request methods
-import { requestAttachment } from '@/api/ADempiere/user-interface/component/resource'
+// API Request Methods
+import { requestAttachment } from '@/api/ADempiere/logs/tabInfo/windowAttachment.ts'
 
-// utils and helper methods
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 const initStateAttachment = {
@@ -48,7 +48,7 @@ const attachment = {
   },
 
   actions: {
-    findAttachment({ commit, getters }, {
+    getAttachmentFromServer({ commit, getters }, {
       tableName,
       recordId,
       recordUuid
@@ -64,7 +64,7 @@ const attachment = {
       })
         .then(response => {
           commit('setIsLoadListAttachment', false)
-          const resourceReferencesList = response.resourceReferencesList
+          const resourceReferencesList = response.resource_references
 
           commit('setListAttachment', resourceReferencesList)
           commit('setAttachment', {

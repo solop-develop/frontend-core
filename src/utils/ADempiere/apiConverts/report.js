@@ -16,27 +16,9 @@
 
 import { camelizeObjectKeys, renameObjectKey } from '../transformObject'
 
-export function convertListPrintFormats(printFormats) {
-  const convertedPrintFormats = camelizeObjectKeys(printFormats)
-  convertedPrintFormats.records = printFormats.records.map(record => convertPrintFormat(record))
-  return convertedPrintFormats
-}
-
-function convertPrintFormat(printFormat) {
-  return camelizeObjectKeys(printFormat)
-}
-
 export function convertReportOutput(reportOutput) {
   const convertedReportOutput = camelizeObjectKeys(reportOutput)
   renameObjectKey(convertedReportOutput, 'outputStreamAsB64', 'outputStream_asB64')
   renameObjectKey(convertedReportOutput, 'outputStreamAsU8', 'outputStream_asU8')
   return convertedReportOutput
-}
-
-export function convertDrillTables(drillTables) {
-  return camelizeObjectKeys(drillTables)
-}
-
-export function convertReportView(reportView) {
-  return camelizeObjectKeys(reportView)
 }

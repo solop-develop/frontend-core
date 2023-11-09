@@ -39,14 +39,11 @@
       class="button-location-show"
       type="text"
       style="width: 100%;"
-      :disabled="isDisabled"
       @click="setContextValues()"
     >
       <el-input
         v-model="displayedValueNotEdit"
-        :class="cssClassStyle"
         clearable
-        v-bind="commonsProperties"
         readonly
         style="width: 100%;"
         @clear="clearValues"
@@ -62,7 +59,7 @@
 import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
 import fieldWithDisplayColumn from '@/components/ADempiere/FieldDefinition/mixin/mixinWithDisplayColumn.js'
 import mixinLocation from './mixinLocationAddress.js'
-import LocationAddressForm from './locationAddressForm.vue'
+import LocationAddressForm from './locationAddressForm2.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -92,6 +89,10 @@ export default {
     containerManager: {
       type: Object,
       required: true
+    },
+    metadata: {
+      type: Object,
+      default: () => ({})
     }
   },
 
@@ -109,6 +110,14 @@ export default {
     },
     popoverPlacement() {
       return this.metadata.popoverPlacement || 'top'
+    },
+    isShowedLocationForm: {
+      get() {
+        return this.$store.getters.getIsShowedLocation
+      },
+      set(value) {
+        this.$store.commit('setShowedLocation', Boolean(value))
+      }
     }
   },
 
@@ -142,9 +151,9 @@ export default {
       })
     },
     setContextValues() {
-      if (this.isDisabled) {
-        return
-      }
+      // if (this.isDisabled) {
+      //   return
+      // }
       const value = this.value
       if (isEmptyValue(value) || value <= 0) {
         // this.$store.dispatch('clearValuesOnContainer', {

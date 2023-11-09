@@ -34,9 +34,9 @@ export default {
   getDivideRateCollection: (state) => {
     return state.divideRateCollection
   },
-  getListPayments: (state) => {
-    return state.listPayments
-  },
+  // getListPayments: (state) => {
+  //   return state.listPayments
+  // },
   getListCurrency: (state) => {
     return state.currency
   },

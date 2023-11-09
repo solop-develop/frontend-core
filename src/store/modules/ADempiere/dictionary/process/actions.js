@@ -19,7 +19,7 @@
 import router from '@/router'
 
 // API Request Methods
-import { requestProcessMetadata } from '@/api/ADempiere/dictionary/process.js'
+import { requestProcessMetadata } from '@/api/ADempiere/dictionary/index.ts'
 
 // Constants
 import {
@@ -27,10 +27,13 @@ import {
 } from '@/utils/ADempiere/constants/actionsMenuList.js'
 
 // Utils and Helper Methods
-import {
-  containerManager, generateProcess, clearParameters, runProcess, isDisplayedField
-} from '@/utils/ADempiere/dictionary/process.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import {
+  containerManager, generateProcess, isDisplayedField
+} from '@/utils/ADempiere/dictionary/process.js'
+import {
+  clearParameters, runProcess
+} from '@/utils/ADempiere/dictionary/process/actionsMenu.ts'
 
 export default {
   addProcessToList({ commit, dispatch }, processResponse) {
@@ -43,7 +46,7 @@ export default {
       })
 
       dispatch('seProcessActionsMenu', {
-        containerUuid: processResponse.uuid
+        processUuid: processResponse.uuid
       })
 
       resolve(processResponse)
@@ -55,11 +58,11 @@ export default {
    * @param {string} uuid of dictionary
    */
   getProcessDefinitionFromServer({ dispatch }, {
-    uuid
+    id
   }) {
     return new Promise((resolve, reject) => {
       requestProcessMetadata({
-        uuid
+        id
       })
         .then(processResponse => {
           const { processDefinition } = generateProcess({
@@ -80,16 +83,17 @@ export default {
    * @param {string} containerUuid
    */
   seProcessActionsMenu({ commit, getters }, {
-    containerUuid
+    processUuid
   }) {
-    const processDefinition = getters.getStoredProcess(containerUuid)
+    const processDefinition = getters.getStoredProcess(processUuid)
 
     const actionsList = []
 
     // execute process action
     const actionExecute = {
       ...runProcess,
-      description: processDefinition.description
+      description: processDefinition.description,
+      uuid: processDefinition.uuid
     }
     actionsList.push(actionExecute)
     actionsList.push(clearParameters)
@@ -98,7 +102,7 @@ export default {
     actionsList.push(sharedLink)
 
     commit('setActionMenu', {
-      containerUuid,
+      containerUuid: processDefinition.uuid,
       actionsList
     })
   },
