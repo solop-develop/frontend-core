@@ -124,7 +124,7 @@ export default {
   },
   watch: {
     filterDate(date) {
-      this.$store.dispatch('user/loadingActivitylogs', date)
+      this.$store.dispatch('user/loadingActivitylogsFromServer', date)
     }
   },
   created() {

@@ -54,9 +54,9 @@
                 style="margin-top: 10px;"
               >
                 <process-logs
-                  v-if="logsUser.userActivityTypeName === 'PROCESS_LOG'"
+                  v-if="logsUser.userActivityType === 'PROCESS_LOG'"
                   :list-parameters="logsUser.processLog.parameters"
-                  :list-logs="logsUser.processLog.logsList"
+                  :list-logs="logsUser.processLog.logs"
                   :summary="logsUser.processLog.summary"
                   :status="logsUser.processLog.isError"
                 />
@@ -111,7 +111,7 @@ export default defineComponent({
       },
       // setter
       set(newValue) {
-        store.dispatch('user/loadingActivitylogs', newValue)
+        store.dispatch('user/loadingActivitylogsFromServer', newValue)
       }
     })
 
@@ -127,9 +127,9 @@ export default defineComponent({
      */
 
     function colorTypeLogs(log) {
-      const { userActivityTypeName, processLog } = log
+      const { userActivityType, processLog } = log
       let color
-      switch (userActivityTypeName) {
+      switch (userActivityType) {
         case 'ENTITY_LOG':
           color = 'primary'
           break
@@ -145,9 +145,9 @@ export default defineComponent({
     }
 
     function status(log) {
-      const { userActivityTypeName, processLog } = log
+      const { userActivityType, processLog } = log
       let status
-      switch (userActivityTypeName) {
+      switch (userActivityType) {
         case 'ENTITY_LOG':
           status = {
             isShow: false,
@@ -187,9 +187,9 @@ export default defineComponent({
     }
 
     function iconTypelogs(log) {
-      const { userActivityTypeName, processLog } = log
+      const { userActivityType, processLog } = log
       let svg = 'info'
-      switch (userActivityTypeName) {
+      switch (userActivityType) {
         case 'ENTITY_LOG':
           svg = 'tab'
           break
@@ -205,9 +205,9 @@ export default defineComponent({
     }
 
     function typeLogs(log) {
-      const { userActivityTypeName, processLog } = log
+      const { userActivityType, processLog } = log
       let type
-      switch (userActivityTypeName) {
+      switch (userActivityType) {
         case 'ENTITY_LOG':
           type = lang.t('views.window')
           break
@@ -223,7 +223,7 @@ export default defineComponent({
     }
 
     function setUserLogs() {
-      store.dispatch('user/loadingActivitylogs')
+      store.dispatch('user/loadingActivitylogsFromServer')
     }
 
     function styleShow(show) {
@@ -232,9 +232,9 @@ export default defineComponent({
     }
 
     function nameLogs(log) {
-      const { userActivityTypeName, processLog, entityLog } = log
+      const { userActivityType, processLog, entityLog } = log
       let name
-      switch (userActivityTypeName) {
+      switch (userActivityType) {
         case 'ENTITY_LOG':
           name = entityLog.tableName
           break
@@ -246,9 +246,9 @@ export default defineComponent({
     }
 
     function logTimesTamp(logs) {
-      const { userActivityTypeName, processLog, entityLog } = logs
+      const { userActivityType, processLog, entityLog } = logs
       let date = new Date()
-      switch (userActivityTypeName) {
+      switch (userActivityType) {
         case 'ENTITY_LOG':
           date = entityLog.logDate
           break

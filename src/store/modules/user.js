@@ -25,8 +25,7 @@ import { title } from '@/settings'
 // API Request Methods
 import {
   requestUserActivity
-} from '@/api/user'
-
+} from '@/api/ADempiere/logs/index.ts'
 import {
   requestLogin,
   requestLogout,
@@ -644,7 +643,7 @@ const actions = {
       })
   },
 
-  loadingActivitylogs({ commit }, date) {
+  loadingActivitylogsFromServer({ commit }, date) {
     return new Promise(resolve => {
       requestUserActivity({
         date
@@ -652,9 +651,9 @@ const actions = {
         .then(response => {
           const { records } = response
           const activitylogs = response.records.map((logs, index) => {
-            const userActivityTypeName = logs.user_activity_type_name
+            const userActivityType = logs.user_activity_type
             let processLog, entityLog
-            switch (userActivityTypeName) {
+            switch (userActivityType) {
               case 'ENTITY_LOG':
                 entityLog = {
                   ...camelizeObjectKeys(logs.entity_log),
