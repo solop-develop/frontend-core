@@ -221,7 +221,7 @@ export default {
     const attributesObject = {}
     let attributesList = fieldsList
       .map(fieldItem => {
-        const { uuid, columnName, defaultValue, contextColumnNames } = fieldItem
+        const { uuid, id, columnName, defaultValue, contextColumnNames } = fieldItem
         const isSQL = String(defaultValue).startsWith('@SQL=') && isGetServer
         const isLinkColumn = !isEmptyValue(linkColumnName) && columnName === linkColumnName
         const isParentColumn = fieldItem.isParent || (!isEmptyValue(parentColumnName) && columnName === parentColumnName)
@@ -295,7 +295,8 @@ export default {
                   parentUuid,
                   containerUuid,
                   contextColumnNames: fieldItem.reference.contextColumnNames,
-                  uuid
+                  uuid,
+                  id
                 })
                 if (!isEmptyValue(storedLookupList)) {
                   const option = storedLookupList.find(item => item.value === parsedDefaultValue)

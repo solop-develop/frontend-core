@@ -150,7 +150,7 @@ import formMixin from '@/components/ADempiere/Form/formMixin.js'
 
 // API Request Methods
 import { updateCustomer, customer } from '@/api/ADempiere/form/point-of-sales.js'
-import { requestGetCountryDefinition } from '@/api/ADempiere/system-core.js'
+import { requestGetCountryDefinition } from '@/api/ADempiere/common/index.ts'
 import { requestLookupList } from '@/api/ADempiere/window.js'
 
 // Utils and Helper Methods

@@ -22,8 +22,7 @@ import Layout from '@/layout'
 import staticRoutes from '@/router/modules/ADempiere/staticRoutes.js'
 
 // API Request Methods
-// import { requestMenu } from '@/api/ADempiere/dictionary/menu'
-import { requestMenu } from '@/api/user'
+import { requestMenu } from '@/api/ADempiere/security/index.ts'
 
 // Utils and Helper Methods
 import { convertAction } from '@/utils/ADempiere/dictionaryUtils.js'
@@ -47,7 +46,7 @@ export function loadMainMenu({
     requestMenu().then(menuResponse => {
       const asyncRoutesMap = []
 
-      menuResponse.menus.forEach(menuElement => {
+      menuResponse.children.forEach(menuElement => {
         const optionMenu = getRouteFromMenuItem({
           menu: menuElement,
           clientId,
@@ -115,7 +114,7 @@ function getChildFromAction({ menu, index, clientId, roleId, organizationId }) {
   const option = {
     path: '/' + clientId + '/' + roleId + '/' + organizationId + '/' + menu.id + '/' + routeIdentifier,
     component,
-    name: menu.uuid,
+    name: menu.id.toString(),
     hidden: index > 0,
     meta: {
       alwaysShow: true,
@@ -135,6 +134,7 @@ function getChildFromAction({ menu, index, clientId, roleId, organizationId }) {
       type,
       id: menu.reference_id,
       uuid: menu.reference_uuid,
+      containerKey: type + '_' + menu.reference_id,
       childs: []
     },
     children: []
@@ -174,7 +174,7 @@ function getRouteFromMenuItem({ menu, clientId, roleId, organizationId }) {
     path: '/' + clientId + '/' + roleId + '/' + organizationId + '/' + menu.id,
     redirect: '/' + menu.id,
     component: Layout,
-    name: menu.uuid,
+    name: menu.id.toString(),
     meta: {
       id: menu.reference_id,
       uuid: menu.reference_uuid,
@@ -189,6 +189,7 @@ function getRouteFromMenuItem({ menu, clientId, roleId, organizationId }) {
       noCache: true,
       referenceId: menu.reference_id,
       referenceUuid: menu.reference_uuid,
+      containerKey: type + '_' + menu.reference_id,
       title: menu.name,
       type,
       childs: []

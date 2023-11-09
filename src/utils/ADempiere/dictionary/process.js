@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import language from '@/lang'
 import store from '@/store'
 
 // Utils and Helpers Methods
@@ -26,6 +25,11 @@ import { sortFields } from '@/utils/ADempiere/dictionary/panel'
 import { BUTTON, isAddRangeField, isHiddenField } from '@/utils/ADempiere/references'
 import { requestSaveProcessCustomization } from '@/api/ADempiere/user-customization/process'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
+
+/**
+ * Prefix to generate unique key
+ */
+export const CONTAINER_PROCESS_PREFIX = 'process_'
 
 /**
  * Is displayed field parameter in process/report panel
@@ -166,43 +170,6 @@ export function generateProcess({
   }
 }
 
-export const runProcess = {
-  name: language.t('actionMenu.runProcess'),
-  enabled: ({ containerUuid }) => {
-    const fieldsEmpty = store.getters.getProcessParametersEmptyMandatory({
-      containerUuid
-    })
-
-    return isEmptyValue(fieldsEmpty)
-  },
-  isSvgIcon: false,
-  icon: 'el-icon-setting',
-  actionName: 'runProcess',
-  uuid: null,
-  runProcess: ({ containerUuid }) => {
-    store.dispatch('startProcess', {
-      containerUuid
-    })
-  }
-}
-
-export const clearParameters = {
-  name: language.t('process.clearParameters.title'),
-  description: language.t('process.clearParameters.description'),
-  enabled: ({ containerUuid }) => {
-    return true
-  },
-  isSvgIcon: true,
-  icon: 'layers-clear',
-  actionName: 'clearParameters',
-  uuid: null,
-  clearParameters: ({ containerUuid }) => {
-    store.dispatch('setProcessDefaultValues', {
-      containerUuid
-    })
-  }
-}
-
 /**
  * Container manager to Process panel
  */
@@ -279,18 +246,19 @@ export const containerManager = {
       parentUuid,
       containerUuid,
       contextColumnNames,
+      processParameterId: id,
       processParameterUuid: uuid,
-      id,
       //
       columnName,
       value
     })
   },
-  getLookupList({ parentUuid, containerUuid, contextColumnNames, uuid, searchValue, isAddBlankValue = false, blankValue }) {
+  getLookupList({ parentUuid, containerUuid, contextColumnNames, id, uuid, searchValue, isAddBlankValue = false, blankValue }) {
     return store.dispatch('getLookupListFromServer', {
       parentUuid,
       containerUuid,
       contextColumnNames,
+      processParameterId: id,
       processParameterUuid: uuid,
       searchValue,
       // app attributes
@@ -298,12 +266,12 @@ export const containerManager = {
       blankValue
     })
   },
-  getSearchInfoList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, uuid, filters, searchValue, pageNumber }) {
+  getSearchInfoList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, id, filters, searchValue, pageNumber }) {
     return store.dispatch('searchInfoList', {
       parentUuid,
       containerUuid,
       contextColumnNames,
-      processParameterUuid: uuid,
+      processParameterId: id,
       tableName,
       columnName,
       filters,
@@ -316,7 +284,7 @@ export const containerManager = {
     containerUuid,
     contextColumnNames,
     filters,
-    uuid,
+    id,
     searchValue,
     tableName,
     columnName,
@@ -326,7 +294,7 @@ export const containerManager = {
       containerUuid,
       contextColumnNames,
       filters,
-      processParameterUuid: uuid,
+      processParameterId: id,
       searchValue,
       tableName,
       columnName,
@@ -348,7 +316,7 @@ export const containerManager = {
     warehouseId,
     contextColumnNames,
     contextAttributesList,
-    uuid,
+    id,
     searchValue,
     // tableName,
     // columnName,
@@ -361,7 +329,7 @@ export const containerManager = {
       warehouseId,
       contextColumnNames,
       contextAttributesList,
-      processParameterUuid: uuid,
+      processParameterId: id,
       searchValue,
       // tableName,
       // columnName,

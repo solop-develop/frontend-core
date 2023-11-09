@@ -35,7 +35,6 @@
       <div id="report-view">
         <action-menu
           :container-manager="containerManager"
-          :parent-uuid="reportUuid"
           :container-uuid="reportUuid"
           :actions-manager="actionsManager"
           style="float: right;padding-left: 1%;"
@@ -93,10 +92,10 @@
 <script>
 import { defineComponent, computed, ref } from '@vue/composition-api'
 
-import store from '@/store'
 import router from '@/router'
+import store from '@/store'
 
-// components and mixins
+// Components and Mixins
 import ActionMenu from '@/components/ADempiere/ActionMenu/index.vue'
 import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 import mixinReport from '@/views/ADempiere/Report/mixinReport.js'
@@ -105,10 +104,8 @@ import OptionsReport from '@/components/ADempiere/ReportManager/Setup/optionsRep
 import TitleAndHelp from '@/components/ADempiere/TitleAndHelp/index.vue'
 import PanelFooter from '@/components/ADempiere/PanelFooter/index.vue'
 
-// utils and helper methods
-import { isEmptyValue, closeTagView } from '@/utils/ADempiere/valueUtils'
-import { convertProcess as convertReport } from '@/utils/ADempiere/apiConverts/dictionary.js'
-import { generateProcess as generateReport } from '@/utils/ADempiere/dictionary/process.js'
+// Utils and Helper Methods
+import { closeTagView } from '@/utils/ADempiere/componentUtils'
 
 export default defineComponent({
   name: 'ReportView',
@@ -122,25 +119,20 @@ export default defineComponent({
     PanelFooter
   },
 
-  props: {
-    // implement by test view
-    uuid: {
-      type: String,
-      default: ''
-    }
-  },
-
-  setup(props, { root }) {
+  setup() {
     const isLoadedMetadata = ref(false)
     const reportMetadata = ref({})
 
-    let reportUuid = root.$route.meta.uuid
-    // set uuid from test
-    if (!isEmptyValue(props.uuid)) {
-      reportUuid = props.uuid
-    }
+    const currentRoute = router.app._route
+    const reportId = currentRoute.meta.id
+    const reportUuid = currentRoute.meta.uuid
 
-    const { containerManager, actionsManager, storedReportDefinition } = mixinReport(reportUuid)
+    const {
+      containerManager, actionsManager, storedReportDefinition
+    } = mixinReport({
+      reportId,
+      reportUuid
+    })
 
     const showContextMenu = computed(() => {
       return store.state.settings.showContextMenu
@@ -170,32 +162,32 @@ export default defineComponent({
 
     // get report from vuex store or request from server
     const getReport = async() => {
-      let report = storedReportDefinition.value
+      const report = storedReportDefinition.value
       if (report) {
         reportMetadata.value = report
         isLoadedMetadata.value = true
         return
       }
 
-      // metadata props use for test
-      if (!isEmptyValue(props.metadata)) {
-        // from server response
-        report = convertReport(props.metadata)
-        // add apps properties
-        report = generateReport(report)
-        // add into store
-        return store.dispatch('addReport', report)
-          .then(reportResponse => {
-            // to obtain the load effect
-            setTimeout(() => {
-              reportMetadata.value = reportResponse
-              isLoadedMetadata.value = true
-            }, 1000)
-          })
-      }
+      // // metadata props use for test
+      // if (!isEmptyValue(props.metadata)) {
+      //   // from server response
+      //   report = convertReport(props.metadata)
+      //   // add apps properties
+      //   report = generateReport(report)
+      //   // add into store
+      //   return store.dispatch('addReport', report)
+      //     .then(reportResponse => {
+      //       // to obtain the load effect
+      //       setTimeout(() => {
+      //         reportMetadata.value = reportResponse
+      //         isLoadedMetadata.value = true
+      //       }, 1000)
+      //     })
+      // }
 
       store.dispatch('getReportDefinitionFromServer', {
-        uuid: reportUuid
+        id: reportId
       })
         .then(reportResponse => {
           reportMetadata.value = reportResponse
@@ -235,16 +227,17 @@ export default defineComponent({
     getReport()
 
     return {
+      reportId,
       reportUuid,
       isLoadedMetadata,
       reportMetadata,
       containerManager,
       actionsManager,
-      // computeds
+      // Computeds
       isMobile,
       showContextMenu,
       isShowPanelConfig,
-      // methodos
+      // Methods
       showPanelConfigReport,
       clearParameters,
       closeTagView,

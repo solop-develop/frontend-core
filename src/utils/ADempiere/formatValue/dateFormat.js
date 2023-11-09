@@ -21,7 +21,7 @@ import store from '@/store'
 import moment from 'moment'
 
 // utils and helper methods
-import { isEmptyValue, typeValue } from '@/utils/ADempiere/valueUtils.js'
+import { isEmptyValue, getTypeOfValue } from '@/utils/ADempiere/valueUtils.js'
 import { zeroPad } from '@/utils/ADempiere/formatValue/numberFormat.js'
 
 /**
@@ -100,7 +100,7 @@ export function formatDate({ value, isTime = false, isDate = false, format }) {
   if (isEmptyValue(value)) {
     return undefined
   }
-  if (typeValue(value) === 'DATE') {
+  if (getTypeOfValue(value) === 'DATE') {
     value = value.getTime()
   }
 

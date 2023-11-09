@@ -32,21 +32,6 @@ export function getRoles() {
   })
 }
 
-export function requestRolesList() {
-  return request({
-    url: 'user/roles',
-    method: 'get'
-  })
-    .then(responseRoles => {
-      const { convertRole } = require('@/utils/ADempiere/apiConverts/user.js')
-      const rolesList = responseRoles.map(itemRol => {
-        return convertRole(itemRol)
-      })
-
-      return rolesList
-    })
-}
-
 export function addRole(data) {
   return request({
     url: '/vue-element-admin/role',
@@ -67,27 +52,5 @@ export function deleteRole(id) {
   return request({
     url: `/vue-element-admin/role/${id}`,
     method: 'delete'
-  })
-}
-
-/**
- * Change role of access
- * @param {number} roleId
- * @param {number} organizationId
- * @param {number} warehouseId
- */
-export function requestChangeRole({
-  roleId,
-  organizationId,
-  warehouseId
-}) {
-  return request({
-    url: 'user/change-role',
-    method: 'post',
-    data: {
-      role_id: roleId,
-      organization_id: organizationId,
-      warehouse_id: warehouseId
-    }
   })
 }

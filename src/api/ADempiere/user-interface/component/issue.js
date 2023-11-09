@@ -21,21 +21,18 @@ import { request } from '@/utils/ADempiere/request'
 
 /**
  * Issues exist
- * @param {string}  tableName
- * @param {number}  recordId
- * @param {string}  recordUuid
+ * @param {string} tableName
+ * @param {number} recordId
  */
 export function requestExistsIssues({
   tableName,
-  recordId,
-  recordUuid
+  recordId
 }) {
   return request({
-    url: '/user-interface/component/issue/exists-issues',
+    url: `/issue-management/issues/${tableName}/${recordId}/exists`,
     method: 'get',
     params: {
       record_id: recordId,
-      record_uuid: recordUuid,
       table_name: tableName
     }
   })
@@ -46,30 +43,24 @@ export function requestExistsIssues({
 
 /**
  * Issues List from Window
- * @param {string}  tableName
- * @param {number}  recordId
- * @param {string}  recordUuid
- * @param {string}  searchValue
+ * @param {string} tableName
+ * @param {number} recordId
+ * @param {string} searchValue
  */
 export function requestListIssues({
   tableName,
   recordId,
-  recordUuid,
   searchValue
 }) {
   return request({
-    url: '/user-interface/component/issue/list-issues',
+    url: '/issue-management/issues',
     method: 'get',
     params: {
       record_id: recordId,
-      record_uuid: recordUuid,
       table_name: tableName,
       search_value: searchValue
     }
   })
-    .then(listExists => {
-      return listExists
-    })
 }
 
 /**

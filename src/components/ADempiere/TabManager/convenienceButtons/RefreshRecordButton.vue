@@ -1,20 +1,20 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
--->
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
+  -->
 
 <template>
   <el-button
@@ -47,11 +47,11 @@ export default defineComponent({
 
   props: {
     parentUuid: {
-      type: String,
+      type: [String, Number],
       required: false
     },
     containerUuid: {
-      type: String,
+      type: [String, Number],
       required: true
     }
   },
@@ -65,8 +65,20 @@ export default defineComponent({
       return store.getters.getUuidOfContainer(props.containerUuid)
     })
 
+    const recordId = computed(() => {
+      return store.getters.getIdOfContainer({
+        containerUuid: currentTab.value.containerUuid,
+        tableName: currentTab.value.tableName
+      })
+    })
+
     const tabAttributes = computed(() => {
       return store.getters.getStoredTab(props.parentUuid, props.containerUuid)
+    })
+
+    const currentTab = computed(() => {
+      const { currentTab } = store.getters.getContainerInfo
+      return currentTab
     })
 
     const isExistsChanges = computed(() => {
@@ -79,7 +91,7 @@ export default defineComponent({
     })
 
     const isRefreshRecord = computed(() => {
-      if (isEmptyValue(recordUuid.value)) {
+      if (isEmptyValue(recordId.value)) {
         return false
       }
       return !isExistsChanges.value
@@ -91,7 +103,6 @@ export default defineComponent({
         option: language.t('actionMenu.refresh')
       }
       store.dispatch('fieldListInfo', { info })
-
       if (tabAttributes.value.isShowedTableRecords) {
         refreshRecords.refreshRecords({
           parentUuid: props.parentUuid,
@@ -99,14 +110,19 @@ export default defineComponent({
         })
         return
       }
+
       refreshRecord.refreshRecord({
         parentUuid: props.parentUuid,
-        containerUuid: props.containerUuid
+        containerUuid: props.containerUuid,
+        tabId: currentTab.value.id,
+        recordId
       })
     }
 
     return {
       isMobile,
+      recordId,
+      currentTab,
       isRefreshRecord,
       // Methods
       refreshCurrentRecord

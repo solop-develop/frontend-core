@@ -16,6 +16,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+
 export const TABLE_NAME = 'C_Location'
 
 export const COLUMN_NAME = 'C_Location_ID'
@@ -101,4 +103,97 @@ export function formatCoordinateByDecimal(coordenate) {
   return new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 6
   }).format(coordenate)
+}
+
+/**
+ * Get sequencing and set component
+ */
+export function setComponentSequence(country) {
+  const {
+    is_allow_cities_out_of_list,
+    capture_sequence
+  } = country
+  const captureSequence = capture_sequence.split(' ')
+  if (isEmptyValue(captureSequence)) return setDefaultComponentSequence
+  return captureSequence.map(sequence => {
+    let component
+    switch (true) {
+      case sequence.includes('@A1@'):
+        component = () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress/Fields/Address')
+        break
+      case sequence.includes('@A2@'):
+        component = () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress/Fields/Address2')
+        break
+      case sequence.includes('@A3@'):
+        component = () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress/Fields/Address3')
+        break
+      case sequence.includes('@A4@'):
+        component = () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress/Fields/Address4')
+        break
+      case sequence.includes('@C@'):
+        if (is_allow_cities_out_of_list) {
+          component = () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress/Fields/CityLabel')
+        } else {
+          component = () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress/Fields/City')
+        }
+        break
+      case sequence.includes('@R@'):
+        component = () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress/Fields/Regions')
+        break
+      case sequence.includes('@P@'):
+        component = () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress/Fields/PostalCode')
+        break
+      case sequence.includes('@A@'):
+        component = () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress/Fields/PosalCodeAdditional')
+        break
+      case sequence.includes('@CO@'):
+        component = () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress/Fields/Country')
+        break
+    }
+    return {
+      sequence,
+      component
+    }
+  })
+}
+
+export function setDefaultComponentSequence() {
+  return [
+    {
+      sequence: '@A1@',
+      component: () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress/Fields/Address')
+    },
+    {
+      sequence: '@A2@',
+      component: () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress/Fields/Address2')
+    },
+    {
+      sequence: '@A3@',
+      component: () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress/Fields/Address3')
+    },
+    {
+      sequence: '@A4@',
+      component: () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress/Fields/Address4')
+    },
+    {
+      sequence: '@C@',
+      component: () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress/Fields/City')
+    },
+    {
+      sequence: '@R@',
+      component: () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress/Fields/Regions')
+    },
+    {
+      sequence: '@P@',
+      component: () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress/Fields/PostalCode')
+    },
+    {
+      sequence: '@A@',
+      component: () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress/Fields/PosalCodeAdditional')
+    },
+    {
+      sequence: '@CO@',
+      component: () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress/Fields/Country')
+    }
+  ]
 }

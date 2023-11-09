@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,6 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
-// Constants
-import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
-
 /**
  * Request a Generate Report
  * This function allows follow structure:
@@ -29,11 +26,10 @@ import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
  * @param {string}  reportType, format to output report (pdf, html, csv, ...)
  * @param {string}  tableName, table name of tab, used only window
  * @param {number}  recordId, record identifier, used only window
- * @param {string}  recordUuid, record universal unique identifier, used only window
  * @param {array}   parametersList, parameters from process [{ columnName, value }]
- * @param {string}  printFormatUuid
+ * @param {string}  printFormatId
  * @param {boolean} isSummary
- * @param {string}  reportViewUuid
+ * @param {string}  reportViewId
  */
 export function requestGenerateReport({
   id,
@@ -41,13 +37,10 @@ export function requestGenerateReport({
   reportType,
   tableName,
   recordId,
-  recordUuid,
   parametersList = [],
   isSummary,
   printFormatId,
-  printFormatUuid,
-  reportViewId,
-  reportViewUuid
+  reportViewId
 }) {
   parametersList = parametersList.map(parameter => {
     return {
@@ -65,126 +58,18 @@ export function requestGenerateReport({
       // record
       table_name: tableName,
       record_id: recordId,
-      record_uuid: recordUuid,
       // report
       is_summary: isSummary,
       report_type: reportType,
       report_view_id: reportViewId,
-      report_view_uuid: reportViewUuid,
       parameters: parametersList,
-      print_format_id: printFormatId,
-      print_format_uuid: printFormatUuid
+      print_format_id: printFormatId
     }
   })
     .then(reportGeneratedResponse => {
       const { convertProcessLog } = require('@/utils/ADempiere/apiConverts/process.js')
 
       return convertProcessLog(reportGeneratedResponse)
-    })
-}
-
-/**
- * Request Pending Documents List
- * @param {string} tableName
- * @param {string} uuid report universally unique identifier
- * @param {string} pageToken token of pagination to number page
- * @param {number} pageSize limit of records to return
- * @returns {promise}
- */
-export function requestListReportsViews({
-  tableName,
-  uuid,
-  pageToken,
-  pageSize = ROWS_OF_RECORDS_BY_PAGE
-}) {
-  return request({
-    url: '/user-interface/process/report-views',
-    method: 'get',
-    params: {
-      table_name: tableName,
-      process_uuid: uuid,
-      page_token: pageToken,
-      page_size: pageSize
-    }
-  })
-    .then(reportViewResponse => {
-      const { convertReportView } = require('@/utils/ADempiere/apiConverts/report.js')
-
-      return {
-        nextPageToken: reportViewResponse.next_page_token,
-        recordCount: reportViewResponse.record_count,
-        reportViewsList: reportViewResponse.records.map(drill => {
-          return convertReportView(drill)
-        })
-      }
-    })
-}
-
-/**
- * Get print formats from table name, report view uuid or process uuid
- * @param {string} reportViewUuid report view universally unique identifier
- * @param {string} tableName
- * @param {string} uuid report universally unique identifier
- * @param {string} pageToken token of pagination to number page
- * @param {number} pageSize limit of records to return
- * @returns {promise}
- */
-export function requestListPrintFormats({
-  tableName,
-  reportViewUuid,
-  uuid,
-  pageToken,
-  pageSize = ROWS_OF_RECORDS_BY_PAGE
-}) {
-  return request({
-    url: '/user-interface/process/print-formats',
-    method: 'get',
-    params: {
-      table_name: tableName,
-      report_view_uuid: reportViewUuid,
-      process_uuid: uuid,
-      page_token: pageToken,
-      page_size: pageSize
-    }
-  })
-    .then(responseListPrintFormats => {
-      const { convertListPrintFormats } = require('@/utils/ADempiere/apiConverts/report.js')
-
-      return convertListPrintFormats(responseListPrintFormats)
-    })
-}
-
-/**
- * Get drill tables for a report
- * @param {string} tableName
- * @param {string} pageToken token of pagination to number page
- * @param {number} pageSize limit of records to return
- * @returns {promise}
- */
-export function requestListDrillTables({
-  tableName,
-  pageToken,
-  pageSize = ROWS_OF_RECORDS_BY_PAGE
-}) {
-  return request({
-    url: '/user-interface/process/drill-tables',
-    method: 'get',
-    params: {
-      table_name: tableName,
-      page_token: pageToken,
-      page_size: pageSize
-    }
-  })
-    .then(drillTablesResponse => {
-      const { convertDrillTables } = require('@/utils/ADempiere/apiConverts/report.js')
-
-      return {
-        drillTablesList: drillTablesResponse.records.map(drill => {
-          return convertDrillTables(drill)
-        }),
-        nextPageToken: drillTablesResponse.next_page_token,
-        recordCount: drillTablesResponse.record_count
-      }
     })
 }
 

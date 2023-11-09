@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -26,15 +26,14 @@
         :name="processMetadata.name"
         :help="processMetadata.help"
       />
+
       <div id="process-loaded">
         <p style="text-align: end;">
           <action-menu
             id="action-menu"
-            :parent-uuid="processUuid"
             :container-uuid="processUuid"
             :container-manager="containerManager"
             :actions-manager="actionsManager"
-            :relations-manager="relationsManager"
           />
         </p>
         <!-- <br> -->
@@ -47,6 +46,7 @@
         />
         <br>
       </div>
+
       <panel-footer
         :container-uuid="processUuid"
         :is-button-run="true"
@@ -67,9 +67,10 @@
 <script>
 import { defineComponent, computed, ref } from '@vue/composition-api'
 
+import router from '@/router'
 import store from '@/store'
 
-// components and mixins
+// Components and Mixins
 import ActionMenu from '@/components/ADempiere/ActionMenu/index.vue'
 import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 import mixinProcess from '@/views/ADempiere/Process/mixinProcess.js'
@@ -77,11 +78,10 @@ import PanelDefinition from '@/components/ADempiere/PanelDefinition/index.vue'
 import TitleAndHelp from '@/components/ADempiere/TitleAndHelp/index.vue'
 import PanelFooter from '@/components/ADempiere/PanelFooter/index.vue'
 
-import { convertProcess } from '@/utils/ADempiere/apiConverts/dictionary.js'
-import { generateProcess } from '@/utils/ADempiere/dictionary/process.js'
-
-// utils and helper methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+// Utils and Helper Methods
+// import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+// import { convertProcess } from '@/utils/ADempiere/apiConverts/dictionary.js'
+// import { generateProcess } from '@/utils/ADempiere/dictionary/process.js'
 
 export default defineComponent({
   name: 'ProcessView',
@@ -94,32 +94,23 @@ export default defineComponent({
     PanelFooter
   },
 
-  props: {
-    // implement by test view
-    uuid: {
-      type: String,
-      default: ''
-    }
-  },
-
-  setup(props, { root }) {
+  setup() {
     const isLoadedMetadata = ref(false)
     const processMetadata = ref({})
 
-    let processUuid = root.$route.meta.uuid
-    // set uuid from test
-    if (!isEmptyValue(props.uuid)) {
-      processUuid = props.uuid
-    }
+    const currentRoute = router.app._route
+    const processId = currentRoute.meta.id
+    const processUuid = currentRoute.meta.uuid
 
-    const { actionsManager, containerManager, relationsManager, storedProcessDefinition } = mixinProcess(processUuid)
+    const {
+      actionsManager, containerManager, storedProcessDefinition
+    } = mixinProcess({
+      processId,
+      processUuid
+    })
 
     const showContextMenu = computed(() => {
       return store.state.settings.showContextMenu
-    })
-
-    const isMobile = computed(() => {
-      return store.state.app.device === 'mobile'
     })
 
     store.dispatch('settings/changeSetting', {
@@ -129,32 +120,32 @@ export default defineComponent({
 
     // get process/report from vuex store or request from server
     const getProcess = async() => {
-      let process = storedProcessDefinition.value
+      const process = storedProcessDefinition.value
       if (process) {
         processMetadata.value = process
         isLoadedMetadata.value = true
         return
       }
 
-      // metadata props use for test
-      if (!isEmptyValue(props.metadata)) {
-        // from server response
-        process = convertProcess(props.metadata)
-        // add apps properties
-        process = generateProcess(process)
-        // add into store
-        return store.dispatch('addProcess', process)
-          .then(processResponse => {
-            // to obtain the load effect
-            setTimeout(() => {
-              processMetadata.value = processResponse
-              isLoadedMetadata.value = true
-            }, 1000)
-          })
-      }
+      // // metadata props use for test
+      // if (!isEmptyValue(props.metadata)) {
+      //   // from server response
+      //   process = convertProcess(props.metadata)
+      //   // add apps properties
+      //   process = generateProcess(process)
+      //   // add into store
+      //   return store.dispatch('addProcess', process)
+      //     .then(processResponse => {
+      //       // to obtain the load effect
+      //       setTimeout(() => {
+      //         processMetadata.value = processResponse
+      //         isLoadedMetadata.value = true
+      //       }, 1000)
+      //     })
+      // }
 
       store.dispatch('getProcessDefinitionFromServer', {
-        uuid: processUuid
+        id: processId
       })
         .then(processResponse => {
           processMetadata.value = processResponse
@@ -180,20 +171,19 @@ export default defineComponent({
     getProcess()
 
     return {
+      processId,
       processUuid,
       isLoadedMetadata,
       processMetadata,
-      // computeds
-      isMobile,
+      // Computeds
       showContextMenu,
-      // methods
+      // Methods
       runProcess,
       getProcess,
       clearParameters,
-      // common mixin
+      // Common Mixin
       actionsManager,
-      containerManager,
-      relationsManager
+      containerManager
     }
   }
 })
@@ -212,7 +202,7 @@ export default defineComponent({
   }
 }
 </style>
-<style scoped >
+<style scoped>
   .el-card {
     width: 100% !important;
     height: 100% !important;

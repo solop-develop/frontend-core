@@ -26,6 +26,31 @@ const pointOfSales = {
     updateBusinessPartner: 'Actualizar Socio de Negocio'
   },
   collection: {
+    field: {
+      fullPayment: 'Total del Pago',
+      paymentMethods: 'Métodos de Pago',
+      currency: 'Moneda',
+      bank: 'Banco',
+      accountNo: 'No. De Cuenta',
+      receivingBank: 'Banco Receptor',
+      customerAccount: 'Cuenta de Cliente',
+      issuingBank: 'Banco Emisor',
+      bankAccountType: {
+        label: 'Tipo de Cuenta Bancario',
+        currentAccount: 'Cuenta Corriente',
+        checking: 'Ahorros'
+      },
+      code: 'Cédula',
+      date: 'Fecha',
+      phone: 'Teléfono',
+      referenceNo: 'No. de Referencia',
+      nameHolder: 'Nombre del Titular',
+      creditMemo: 'Nota de crédito',
+      description: 'Descripción',
+      creditCard: 'Tarjeta de crédito',
+      cardNumber: 'Número de Tarjeta',
+      email: 'Correo'
+    },
     chargeAmount: 'Cargo',
     creditAmount: 'Abono',
     others: 'Otros',
@@ -33,7 +58,8 @@ const pointOfSales = {
     recipientBank: 'Banco Receptor',
     issuingBank: 'Banco Emisor',
     bank: 'Banco',
-    creditMemo: 'Nota de crédito'
+    creditMemo: 'Nota de crédito',
+    addPayment: 'Pago Agregado Exitosamente'
   },
   conversionRate: {
     withoutConversionRate: 'No existe tasa de cambio registrada al día '

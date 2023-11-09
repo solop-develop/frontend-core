@@ -1,20 +1,21 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
- Contributor(s): Leonel Matos lmatos@erpya.com www.erpya.com
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Leonel Matos lmatos@erpya.com
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
+
 <template>
   <el-card class="box-card" :body-style="{ padding: '0px' }" shadow="never">
     <div class="recent-items">
@@ -71,20 +72,30 @@
 </template>
 
 <script>
-import { getFavoritesFromServer } from '@/api/ADempiere/dashboard/user.js'
-import { convertAction } from '@/utils/ADempiere/dictionaryUtils.js'
+// Components and Mixins
 import mixinDashboard from '@/components/ADempiere/Dashboard/mixinDashboard.js'
+
+// API Request Methods
+import { getFavoritesRequest } from '@/api/ADempiere/dashboard/index.ts'
+
+// Utils and Helper Methods
+import { convertAction } from '@/utils/ADempiere/dictionaryUtils.js'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 
 export default {
   name: 'Favorites',
-  mixins: [mixinDashboard],
+
+  mixins: [
+    mixinDashboard
+  ],
+
   data() {
     return {
       favorites: [],
       isLoaded: true
     }
   },
+
   computed: {
     dataResult() {
       if (this.search.length > 0) {
@@ -93,21 +104,21 @@ export default {
       return this.favorites
     }
   },
+
   mounted() {
     this.getFavoritesList()
 
     this.unsubscribe = this.subscribeChanges()
   },
+
   beforeDestroy() {
     this.unsubscribe()
   },
+
   methods: {
     getFavoritesList() {
-      const userUuid = this.$store.getters['user/getUserUuid']
       return new Promise(resolve => {
-        getFavoritesFromServer({
-          userUuid
-        })
+        getFavoritesRequest({})
           .then(response => {
             const favorites = response.favoritesList.map(favoriteElement => {
               const actionConverted = convertAction(favoriteElement.action)
@@ -136,8 +147,10 @@ export default {
       })
     },
     windowAction(row, param) {
+      const containerIdentifier = row.action + '_' + row.referenceId
       zoomIn({
-        uuid: row.referenceUuid,
+        attributeValue: containerIdentifier,
+        attributeName: 'containerKey',
         query: {
           tabParent: 0,
           action: param

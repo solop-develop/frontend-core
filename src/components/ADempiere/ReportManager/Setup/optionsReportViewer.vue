@@ -53,7 +53,7 @@
                         v-for="(item, key) in reportAsPrintFormat.childs"
                         :key="key"
                         :label="item.name"
-                        :value="item.printFormatUuid"
+                        :value="item.id"
                       />
                     </el-select>
                   </el-form-item>
@@ -71,7 +71,7 @@
                         v-for="(item, key) in reportAsView.childs"
                         :key="key"
                         :label="item.name"
-                        :value="item.reportViewUuid"
+                        :value="item.id"
                       />
                     </el-select>
                   </el-form-item>
@@ -99,7 +99,7 @@
                     :label="$t('report.summary')"
                     style="display: grid;"
                   >
-                    <el-switch v-model="value1" />
+                    <el-switch v-model="isSummaryReport" />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -204,11 +204,11 @@ export default defineComponent({
      * @reportTypeFormatValue - @params - {String} - (Value the Report Type)
      * @activeCollapse - @params - {Array} - (Nodes activating collapse *Note: Cannot be used if the node is accordion mode*)
      */
-    const reportAsViewValue = ref('')
-    const reportAsPrintFormatValue = ref('')
+    const reportAsViewValue = ref(undefined)
+    const reportAsPrintFormatValue = ref(undefined)
     const reportTypeFormatValue = ref('')
     const activeCollapse = ref(['1', '2'])
-    const value1 = ref(true)
+    const isSummaryReport = ref(true)
 
     /**
      * Computed
@@ -250,7 +250,9 @@ export default defineComponent({
       if (!isEmptyValue(tableName)) {
         return tableName
       }
-      const currentPrintFormat = reportAsPrintFormat.value.childs.find(report => report.printFormatUuid === reportAsPrintFormatValue.value)
+      const currentPrintFormat = reportAsPrintFormat.value.childs.find(printFormat => {
+        return printFormat.id === reportAsPrintFormatValue.value
+      })
       if (isEmptyValue(currentPrintFormat)) {
         return ''
       }
@@ -316,26 +318,26 @@ export default defineComponent({
     function updatePrintFormat(value) {
       store.commit('setReportGenerated', {
         containerUuid: props.containerUuid,
-        printFormatUuid: value,
+        printFormatId: value,
         reportType: reportTypeFormatValue.value,
-        reportViewUuid: reportAsViewValue.value
+        reportViewId: reportAsViewValue.value
       })
     }
 
     function updateReportView(value) {
       store.commit('setReportGenerated', {
         containerUuid: props.containerUuid,
-        printFormatUuid: reportAsPrintFormatValue.value,
+        printFormatId: reportAsPrintFormatValue.value,
         reportType: reportTypeFormatValue.value,
-        reportViewUuid: value
+        reportViewId: value
       })
     }
 
     function updateReportType(value) {
       store.commit('setReportGenerated', {
         containerUuid: props.containerUuid,
-        reportViewUuid: reportAsViewValue.value,
-        printFormatUuid: reportAsPrintFormatValue.value,
+        reportViewId: reportAsViewValue.value,
+        printFormatId: reportAsPrintFormatValue.value,
         reportType: value
       })
     }
@@ -345,8 +347,8 @@ export default defineComponent({
         containerUuid: props.containerUuid,
         value: false
       })
-      reportAsViewValue.value = ''
-      reportAsPrintFormatValue.value = ''
+      reportAsViewValue.value = undefined
+      reportAsPrintFormatValue.value = undefined
       reportTypeFormatValue.value = ''
     }
 
@@ -366,7 +368,7 @@ export default defineComponent({
       store.dispatch('buildReport', {
         containerUuid: props.containerUuid || root.$route.params.processUuid,
         instanceUuid: root.$route.params.instanceUuid,
-        isSummary: value1.value,
+        isSummary: isSummaryReport.value,
         tableName: tableName.value,
         parametersList: reportOutputParams
       })
@@ -400,14 +402,14 @@ export default defineComponent({
     }
 
     function defaultReport(report) {
-      const { reportViewUuid, printFormatUuid, reportType } = report
-      reportAsViewValue.value = reportViewUuid
-      reportAsPrintFormatValue.value = printFormatUuid
+      const { reportViewId, printFormatId, reportType } = report
+      reportAsViewValue.value = reportViewId
+      reportAsPrintFormatValue.value = printFormatId
       reportTypeFormatValue.value = reportType
       store.commit('setReportGenerated', {
         containerUuid: props.containerUuid,
-        reportViewUuid,
-        printFormatUuid,
+        reportViewId,
+        printFormatId,
         reportType
       })
     }
@@ -416,9 +418,9 @@ export default defineComponent({
       store.dispatch('setReportDefaultValues', {
         containerUuid: props.containerUuid
       })
-      const { reportViewUuid, printFormatUuid, reportType } = defaultParams.value
-      reportAsViewValue.value = reportViewUuid
-      reportAsPrintFormatValue.value = printFormatUuid
+      const { reportViewId, printFormatId, reportType } = defaultParams.value
+      reportAsViewValue.value = reportViewId
+      reportAsPrintFormatValue.value = printFormatId
       reportTypeFormatValue.value = reportType
     }
 
@@ -444,13 +446,13 @@ export default defineComponent({
       }
     })
 
-    watch(value1, (newValue) => {
+    watch(isSummaryReport, (newValue) => {
       if (newValue) {
         store.commit('setReportGenerated', {
           containerUuid: props.containerUuid,
-          printFormatUuid: reportAsPrintFormatValue.value,
+          printFormatId: reportAsPrintFormatValue.value,
           reportType: reportTypeFormatValue.value,
-          reportViewUuid: reportAsPrintFormatValue.value,
+          reportViewId: reportAsPrintFormatValue.value,
           isSummary: newValue
         })
       }
@@ -474,7 +476,7 @@ export default defineComponent({
       reportAsPrintFormatValue,
       reportTypeFormatValue,
       activeCollapse,
-      value1,
+      isSummaryReport,
       // Components
       reportAsView,
       reportAsPrintFormat,

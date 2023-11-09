@@ -55,11 +55,11 @@ export default defineComponent({
 
   props: {
     parentUuid: {
-      type: String,
+      type: [String, Number],
       required: false
     },
     containerUuid: {
-      type: String,
+      type: [String, Number],
       required: true
     }
   },
@@ -132,12 +132,17 @@ export default defineComponent({
       isSaveRecordLoading.value = true
 
       const currentRoute = router.app._route
-
+      const reccordId = store.getters.getIdOfContainer({
+        containerUuid: tabAttributes.value.containerUuid,
+        tableName: tabAttributes.value.tableName
+      })
       store.dispatch('flushPersistenceQueue', {
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid,
+        tabId: tabAttributes.value.id,
         tableName: tabAttributes.value.tableName,
-        recordUuid: recordUuid.value
+        recordUuid: recordUuid.value,
+        reccordId
       })
         .then(response => {
           const {

@@ -82,7 +82,7 @@
 
 <script>
 // API Request Methods
-import { requestAttachment } from '@/api/ADempiere/user-interface/component/resource'
+import { requestAttachment } from '@/api/ADempiere/logs/tabInfo/windowAttachment.ts'
 
 // Utils and Helper Methods
 import { getImagePath } from '@/utils/ADempiere/resource.js'

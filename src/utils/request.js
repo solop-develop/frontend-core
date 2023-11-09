@@ -23,6 +23,7 @@ import { config as globalConfig } from '@/utils/ADempiere/config'
 
 // Utils and Helper Methos
 import { MessageBox, Message } from 'element-ui'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 // create an axios instance
 const service = axios.create({
@@ -64,7 +65,7 @@ service.interceptors.response.use(
   response => {
     const res = response.data
     // if the custom code is not 20000, it is judged as an error.
-    if (res.code >= 400) {
+    if (response.status >= 400) {
       // Message({
       //   message: res.result || 'Error',
       //   type: 'error',
@@ -91,8 +92,14 @@ service.interceptors.response.use(
   },
   error => {
     console.log('err' + error) // for debug
+    let message = error
+    if (error.response && error.response.data && isEmptyValue(error.response.data.message)) {
+      message = error
+    } else if (error.message) {
+      message = error.message
+    }
     Message({
-      message: error.message,
+      message: message,
       type: 'error',
       duration: 5 * 1000
     })

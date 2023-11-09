@@ -19,7 +19,7 @@
 import Vue from 'vue'
 
 // API Request Methods
-import { requestDefaultValue } from '@/api/ADempiere/user-interface/persistence.js'
+import { requestDefaultValue } from '@/api/ADempiere/userInterface/defaultValue.ts'
 
 // Constants
 import {
@@ -76,7 +76,10 @@ const defaultValueManager = {
       contextColumnNames,
       //
       id,
+      uuid,
       fieldUuid,
+      browseFieldId,
+      processParameterId,
       processParameterUuid,
       browseFieldUuid,
       columnUuid,
@@ -89,7 +92,7 @@ const defaultValueManager = {
         value: undefined
       }
       return new Promise(resolve => {
-        if (isEmptyValue(id) && isEmptyValue(fieldUuid) && isEmptyValue(processParameterUuid) && isEmptyValue(browseFieldUuid)) {
+        if (isEmptyValue(id) && isEmptyValue(uuid) && isEmptyValue(processParameterId) && isEmptyValue(browseFieldId)) {
           resolve(defaultEmptyResponse)
           return
         }
@@ -106,16 +109,20 @@ const defaultValueManager = {
           return
         }
 
-        const isWithoutValues = contextAttributesList.find(attribute => isEmptyValue(attribute.value))
-        if (isWithoutValues) {
-          console.warn(`Default value without response, fill the ${isWithoutValues.columnName} field.`)
-          resolve(defaultEmptyResponse)
-          return
-        }
+        // const isWithoutValues = contextAttributesList.find(attribute => isEmptyValue(attribute.value))
+        // if (isWithoutValues) {
+        //   console.warn(`Default value without response, fill the ${isWithoutValues.columnName} field.`)
+        //   resolve(defaultEmptyResponse)
+        //   return
+        // }
 
         const clientId = rootGetters.getSessionContextClientId
 
         let key = clientId
+        // TODO: generate with your fieldUuid, processParameterUuid, browseFieldUuid
+        // if (!isEmptyValue(uuid)) {
+        //   key += `|${uuid}`
+        // }
         if (!isEmptyValue(fieldUuid)) {
           key += `|${fieldUuid}`
         } else if (!isEmptyValue(processParameterUuid)) {
@@ -139,28 +146,31 @@ const defaultValueManager = {
           contextAttributesList,
           id,
           fieldUuid,
+          browseFieldId,
+          processParameterId,
           processParameterUuid,
           browseFieldUuid,
           columnUuid,
           value
         })
           .then(valueResponse => {
-            const values = {
-              KeyColumn: undefined,
-              DisplayColumn: undefined,
-              UUID: undefined
-            }
+            const { values } = valueResponse
+            // const values = {
+            //   KeyColumn: undefined,
+            //   DisplayColumn: undefined,
+            //   UUID: undefined
+            // }
 
             // do not use the convertArrayKeyValueToObject method to avoid losing a key with an empty value
-            if (valueResponse.attributes.length === 1) {
-              // number values (Line for example)
-              values.KeyColumn = valueResponse.attributes.at(0).value
-            } else {
-              valueResponse.attributes.forEach(attribute => {
-                const { key: column, value: attributeValue } = attribute
-                values[column] = attributeValue
-              })
-            }
+            // if (valueResponse.attributes.length === 1) {
+            //   // number values (Line for example)
+            //   values.KeyColumn = valueResponse.attributes.at(0).value
+            // } else {
+            //   valueResponse.attributes.forEach(attribute => {
+            //     const { key: column, value: attributeValue } = attribute
+            //     values[column] = attributeValue
+            //   })
+            // }
 
             const valueOfServer = values.KeyColumn
             const displayedValue = values.DisplayColumn

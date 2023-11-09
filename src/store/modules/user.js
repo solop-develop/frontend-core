@@ -24,40 +24,24 @@ import { title } from '@/settings'
 
 // API Request Methods
 import {
-  requestLogin,
-  requestLogout,
-  requestUserInfoFromSession,
-  requestSessionInfo,
-  setSessionAttribute,
   requestUserActivity
 } from '@/api/user'
+
 import {
+  requestLogin,
+  requestLogout,
   requestRolesList,
-  requestChangeRole
-} from '@/api/role.js'
-import {
-  getToken,
-  setToken,
-  removeToken,
-  getCurrentRole,
-  setCurrentRole,
-  removeCurrentRole,
-  getCurrentOrganization,
-  setCurrentOrganization,
-  getCurrentWarehouse,
-  setCurrentWarehouse,
-  removeCurrentWarehouse,
-  removeCurrentOrganization,
-  setCurrentClient
-} from '@/utils/auth'
+  requestChangeRole,
+  requestSessionInfo,
+  loginAuthentication,
+  setSessionAttribute,
+  requestUserInfoFromSession
+} from '@/api/ADempiere/security/index.ts'
 import {
   requestOrganizationsList,
   requestWarehousesList,
   systemInfo
-} from '@/api/ADempiere/system-core'
-import {
-  loginAuthentication
-} from '@/api/ADempiere/open-id/services.js'
+} from '@/api/ADempiere/common/index.ts'
 
 // Utils and Helper Methods
 import { resetRouter } from '@/router'
@@ -65,6 +49,13 @@ import { showMessage } from '@/utils/ADempiere/notification'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
+import {
+  getToken, setToken, removeToken,
+  setCurrentClient,
+  getCurrentRole, setCurrentRole, removeCurrentRole,
+  getCurrentOrganization, setCurrentOrganization, removeCurrentOrganization,
+  getCurrentWarehouse, setCurrentWarehouse, removeCurrentWarehouse
+} from '@/utils/auth'
 
 const state = {
   token: getToken(),
@@ -205,19 +196,22 @@ const actions = {
     return new Promise((resolve, reject) => {
       requestSessionInfo()
         .then(async sessionInfo => {
+          const {
+            id,
+            name,
+            userInfo,
+            processed,
+            defaultContext
+          } = sessionInfo
           dispatch('system')
           commit('setIsSession', true)
           commit('setSessionInfo', {
-            id: sessionInfo.id,
-            uuid: sessionInfo.uuid,
-            name: sessionInfo.name,
-            processed: sessionInfo.processed
+            id,
+            name,
+            processed
           })
 
-          const { userInfo } = sessionInfo
-          commit('SET_NAME', sessionInfo.name)
-          commit('SET_INTRODUCTION', userInfo.description)
-          commit('SET_USER_UUID', userInfo.uuid)
+          commit('SET_NAME', name)
           commit('SET_USER', userInfo)
           const avatar = userInfo.image
           commit('SET_AVATAR', avatar)
@@ -225,45 +219,34 @@ const actions = {
           // TODO: Check decimals Number as String '0.123'
           // set multiple context
           dispatch('setMultiplePreference', {
-            values: sessionInfo.defaultContext
+            values: defaultContext
           }, {
             root: true
           })
 
           const sessionResponse = {
             name: sessionInfo.name,
-            defaultContext: sessionInfo.defaultContext
+            defaultContext: defaultContext
           }
 
           const { role } = sessionInfo
           commit('SET_ROLE', role)
           setCurrentRole(role.id)
           setCurrentClient(role.client.id)
-          const currentOrganizationSession = sessionInfo.defaultContext.find(context => {
-            return context.key === `#${ORGANIZATION}`
-          })
-          commit('SET_CURRENT_ORGANIZATION_ID', currentOrganizationSession.value)
+          // const currentOrganizationSession = defaultContext.find(context => {
+          //   return context.key === defaultContext[`#${ORGANIZATION}`]
+          // })
+          commit('SET_CURRENT_ORGANIZATION_ID', defaultContext[`#${ORGANIZATION}`])
 
           // wait to establish the client and organization to generate the menu
           await dispatch('getOrganizationsListFromServer', {
             roleId: role.id,
-            organizationId: currentOrganizationSession.value
+            organizationId: defaultContext[`#${ORGANIZATION}`]
           })
 
           resolve(sessionResponse)
 
-          commit('setSystemDefinition', {
-            countryId: sessionInfo.countryId,
-            costingPrecision: sessionInfo.costingPrecision,
-            countryCode: sessionInfo.countryCode,
-            countryName: sessionInfo.countryName,
-            currencyIsoCode: sessionInfo.currencyIsoCode,
-            currencyName: sessionInfo.currencyName,
-            currencySymbol: sessionInfo.currencySymbol,
-            displaySequence: sessionInfo.displaySequence,
-            language: sessionInfo.language,
-            standardPrecision: sessionInfo.standardPrecision
-          }, {
+          commit('setSystemDefinition', sessionInfo, {
             root: true
           })
 
@@ -461,9 +444,11 @@ const actions = {
       roleId: getCurrentRole(),
       organizationId
     })
-      .then(tokenSession => {
-        commit('SET_TOKEN', tokenSession)
-        setToken(tokenSession)
+      .then(response => {
+        const { token } = response
+        commit('SET_TOKEN', token)
+        setToken(token)
+
         const organizationsList = getters.getOrganizations
         let organization = organizationsList.find(org => {
           return org.id === organizationId
@@ -495,12 +480,16 @@ const actions = {
         })
       })
       .catch(error => {
+        let messageError = error
+        if (error.message) {
+          messageError = error.message
+        }
         showMessage({
-          message: error.message,
+          message: messageError,
           type: 'error',
           showClose: true
         })
-        console.warn(`Error change role: ${error.message}. Code: ${error.code}.`)
+        console.warn(`Error change role: ${messageError}. Code: ${error.code}.`)
       })
       .finally(() => {
         dispatch('permission/sendRequestMenu', null, {
@@ -535,12 +524,13 @@ const actions = {
       organizationId
     })
       .then(response => {
-        commit('SET_WAREHOUSES_LIST', response.warehousesList)
-        let warehouse = response.warehousesList.find(warehouseItem => {
+        const { warehouses } = response
+        commit('SET_WAREHOUSES_LIST', warehouses)
+        let warehouse = warehouses.find(warehouseItem => {
           return warehouseItem.id === getCurrentWarehouse()
         })
-        if (isEmptyValue(warehouse) && !isEmptyValue(response.warehousesList)) {
-          warehouse = response.warehousesList.at(0)
+        if (isEmptyValue(warehouse) && !isEmptyValue(warehouses)) {
+          warehouse = warehouses.at(0)
         }
 
         let warehouseId = -1
@@ -591,7 +581,9 @@ const actions = {
     setSessionAttribute({
       warehouseId: currentWarehouse.id
     })
-      .then(token => {
+      .then(response => {
+        const { token } = response
+        commit('SET_TOKEN', token)
         setToken(token)
         // location.reload()
       })
@@ -615,9 +607,10 @@ const actions = {
       organizationId,
       warehouseId
     })
-      .then(tokenSession => {
-        commit('SET_TOKEN', tokenSession)
-        setToken(tokenSession)
+      .then(response => {
+        const { token } = response
+        commit('SET_TOKEN', token)
+        setToken(token)
 
         // commit('SET_ROLE', role)
         setCurrentRole(roleId)

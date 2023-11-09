@@ -135,7 +135,7 @@ import loginMixin from './loginMixin.js'
 import SocialSign from './components/SocialSignin'
 
 // API Request Methods
-import { services } from '@/api/ADempiere/open-id/services.js'
+import { services } from '@/api/ADempiere/security/index.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -350,6 +350,7 @@ export default {
     listAuthorization() {
       services()
         .then(response => {
+          if (!response) return
           this.listServices = response.map(list => {
             return {
               ...list,

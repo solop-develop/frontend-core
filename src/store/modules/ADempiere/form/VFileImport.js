@@ -18,22 +18,29 @@
 
 // API Request Methods
 import {
-  getImportFormats,
-  getListImportTables,
-  listImportProcess,
+  requestListCharsets,
+  requestImportFormatsList,
+  requestGetImportFormat,
+  requestListImportTables,
+  requestListImportProcesses,
   saveRecordImport,
   requestListFilePreview
 } from '@/api/ADempiere/form/VFileImport.js'
 
 // Utils and Helper Methods
-// import { isEmptyValue } from '@/utils/ADempiere'
+import { setIconsTableName } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 
 const VFileImport = {
+  tableName: null,
+  importTablesList: [],
+
+  importFormatId: -1,
+  importFormatsList: [],
+  charsetsList: [],
   attribute: {
     charsets: 'UTF-8',
-    importFormats: '',
-    tablaId: 0,
+    importFormatId: '',
     isProcess: false,
     formatFields: [],
     processDefinition: {},
@@ -45,19 +52,33 @@ const VFileImport = {
     listTables: [],
     listProcess: []
   },
+  indexRecordPreview: 0,
   file: {
     data: [],
     header: [],
     resource: {},
     isLoading: false
   },
-  infoFormat: {},
+  importFormat: {},
   navigationLine: {}
 }
 
 export default {
   state: VFileImport,
+
   mutations: {
+    setTableName(state, tableName) {
+      state.tableName = tableName
+    },
+    setImportTablesList(state, list = []) {
+      state.importTablesList = list
+    },
+    setCharsetsList(state, list = []) {
+      state.charsetsList = list
+    },
+    setImportFormatsList(state, list = []) {
+      state.importFormatsList = list
+    },
     /**
      * Update Attribute
      * Generic mutation that allows to change the state of the store
@@ -75,28 +96,67 @@ export default {
     setFile(state, file) {
       state.file = file
     },
-    setInfoFormat(state, formats) {
-      state.infoFormat = formats
+    setImportFormat(state, formats) {
+      state.importFormat = formats
+    },
+    setIndexRecordPreview(state, index) {
+      state.indexRecordPreview = index
     },
     setNavigationLine(state, line) {
       state.navigationLine = line
     }
   },
+
   actions: {
-    importFormats({ commit }, {
+
+    getCharsetsListFromServer({ commit }, searchValue = null) {
+      return new Promise(resolve => {
+        requestListCharsets({
+          searchValue
+        })
+          .then(response => {
+            const { records: charsetsList } = response
+
+            commit('setCharsetsList', charsetsList)
+            resolve(charsetsList)
+          })
+          .catch(error => {
+            console.warn(`Error getting Charsets List: ${error.message}. Code: ${error.code}.`)
+          })
+      })
+    },
+
+    getImportFormatFromServer({ commit }, {
       id
     }) {
       return new Promise(resolve => {
-        getImportFormats({
+        requestGetImportFormat({
           id
         })
           .then(response => {
             commit('updateAttributeVFileImport', {
               attribute: 'attribute',
-              criteria: 'formatFields',
-              value: response.formatFields
+              criteria: 'importFormatId',
+              value: id
             })
-            commit('setInfoFormat', response)
+            commit('setImportFormat', response)
+
+            resolve(response)
+          })
+      })
+    },
+
+    getImportFormatsListFromServer({ commit }, {
+      tableName
+    }) {
+      return new Promise(resolve => {
+        requestImportFormatsList({
+          tableName
+        })
+          .then(response => {
+            const { records } = response
+            commit('setImportFormatsList', records)
+
             resolve(response)
           })
           .catch(error => {
@@ -105,53 +165,42 @@ export default {
           })
       })
     },
-    findListTable({ commit }) {
-      getListImportTables()
-        .then(response => {
-          const { records } = response
-          commit('updateAttributeVFileImport', {
-            attribute: 'options',
-            criteria: 'listTables',
-            value: records
+
+    getImportTablesListFromServer({ commit }) {
+      return new Promise(resolve => {
+        requestListImportTables()
+          .then(response => {
+            const { records } = response
+            const importTablesList = records.map(tableImport => {
+              return {
+                ...tableImport,
+                icon: setIconsTableName({
+                  tableName: tableImport.table_name
+                })
+              }
+            })
+
+            commit('setImportTablesList', importTablesList)
+            resolve(importTablesList)
           })
-        })
-        .catch(error => {
-          console.warn(`Error getting Import Table: ${error.message}. Code: ${error.code}.`)
-          commit('updateAttributeVFileImport', {
-            attribute: 'options',
-            criteria: 'listTables',
-            value: []
+          .catch(error => {
+            console.warn(`Error getting Import Table: ${error.message}. Code: ${error.code}.`)
           })
-        })
-    },
-    changeTable({ commit }, {
-      id
-    }) {
-      commit('updateAttributeVFileImport', {
-        attribute: 'attribute',
-        criteria: 'tablaId',
-        value: id
       })
     },
-    listProcess({ commit }, {
-      table_name
-    }) {
+
+    getProcessesListFromServer({ commit }, tableName) {
       return new Promise(resolve => {
-        listImportProcess({
-          tableName: table_name
+        requestListImportProcesses({
+          tableName
         })
           .then(response => {
             const { records } = response
-            const list = records.map(list => {
-              return {
-                ...list,
-                ...list.values
-              }
-            })
+
             commit('updateAttributeVFileImport', {
               attribute: 'options',
               criteria: 'listProcess',
-              value: list
+              value: records
             })
             resolve(response)
           })
@@ -161,12 +210,12 @@ export default {
           })
       })
     },
-    saveRecords({ commit, getters }) {
+    saveRecords({ getters }) {
       return new Promise(resolve => {
         const {
           charsets,
           isProcess,
-          importFormats,
+          importFormatId,
           processDefinition
         } = getters.getAttribute
         const { id } = getters.getFile
@@ -181,7 +230,7 @@ export default {
           parameters: parametersList,
           processId: processDefinition.id,
           charset: charsets,
-          importFormatId: importFormats
+          importFormatId: importFormatId
         })
           .then(response => {
             const { message } = response
@@ -200,11 +249,12 @@ export default {
           })
       })
     },
-    listFilePreview({ commit, getters }, resource) {
+
+    getPreviewRecordsFromServer({ commit, getters }, resource) {
       return new Promise(resolve => {
         const {
           charsets,
-          importFormats
+          importFormatId
         } = getters.getAttribute
         const { resource } = getters.getFile
         commit('updateAttributeVFileImport', {
@@ -215,34 +265,33 @@ export default {
         requestListFilePreview({
           resourceId: resource.id,
           charset: charsets,
-          importFormatId: importFormats
+          importFormatId: importFormatId
         })
           .then(response => {
             const { records } = response
-            const attributesList = records.map(list => list.attributes)
-            const dataTable = attributesList.map(list => {
-              const dataLine = {}
-              list.forEach(element => {
-                dataLine[element.key] = element.value
-              })
-              return dataLine
+            const recordsList = records.map((row, index) => {
+              return {
+                ...row.values,
+                rowIndex: index
+              }
             })
+
             commit('updateAttributeVFileImport', {
               attribute: 'file',
               criteria: 'data',
-              value: dataTable
+              value: recordsList
             })
             commit('updateAttributeVFileImport', {
               attribute: 'file',
               criteria: 'header',
-              value: attributesList[0]
+              value: recordsList[0]
             })
             commit('updateAttributeVFileImport', {
               attribute: 'file',
               criteria: 'isLoading',
               value: false
             })
-            resolve(dataTable)
+            resolve(recordsList)
           })
           .catch(error => {
             showMessage({
@@ -259,18 +308,38 @@ export default {
       })
     }
   },
+
   getters: {
+    getStoredCurrentTableName(state) {
+      return state.tableName
+    },
+    getStoredImportTablesList(state) {
+      return state.importTablesList || []
+    },
+
+    getStoredCharsetsList(state) {
+      return state.charsetsList || []
+    },
+
+    getImportFormat(state) {
+      return state.importFormat
+    },
+    getStoredImportFormatsList(state) {
+      return state.importFormatsList || []
+    },
+
     getAttribute(state) {
       return state.attribute
     },
     getOptions(state) {
       return state.options
     },
+
     getFile(state) {
       return state.file
     },
-    getInfoFormat(state) {
-      return state.infoFormat
+    getIndexRecordPreview(state) {
+      return state.indexRecordPreview
     },
     getNavigationLine(state) {
       return state.navigationLine

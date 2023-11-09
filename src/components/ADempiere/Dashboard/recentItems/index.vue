@@ -1,20 +1,21 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
- Contributor(s): Leonel Matos lmatos@erpya.com www.erpya.com
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Leonel Matos lmatos@erpya.com
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
+
 <template>
   <el-card class="box-card" :body-style="{ padding: '0px' }" shadow="never">
     <div class="recent-items">
@@ -24,25 +25,31 @@
             <svg-icon :icon-class="row.icon" class="icon-window" />
           </template>
         </el-table-column>
+
         <el-table-column>
-          <template slot="header" slot-scope="scope" class="clearfix">
+          <template slot="header" slot-scope="scope">
             <el-input
               v-model="search"
               size="mini"
               :metadata="scope"
+              class="clearfix"
               :placeholder="$t('table.dataTable.search')"
             >
               <svg-icon slot="prefix" icon-class="search" />
             </el-input>
           </template>
+
           <template slot-scope="{row}">
-            <span>{{ row.displayName }}</span>
+            <span>{{ row.display_name }}</span>
             <el-tag class="action-tag">
               {{ $t(`views.${row.action}`) }}
             </el-tag>
             <br>
             <span class="time">
-              {{ translateDateByLong(row.updated) }}
+              {{ translateDate({
+                value: row.updated,
+                format: 'long'
+              }) }}
             </span>
           </template>
         </el-table-column>
@@ -52,59 +59,59 @@
 </template>
 
 <script>
-import { requestListRecentItems } from '@/api/ADempiere/dashboard/user'
+import { requestListRecentItems } from '@/api/ADempiere/logs/index.ts'
 
+// Components and Mixins
 import mixinDashboard from '@/components/ADempiere/Dashboard/mixinDashboard.js'
 
-// utils and helper methods
-import { translateDateByLong } from '@/utils/ADempiere/formatValue/dateFormat'
+// Utils and Helper Methods
+import { translateDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import { convertAction } from '@/utils/ADempiere/dictionaryUtils'
 
 export default {
   name: 'RecentItems',
+
   mixins: [
     mixinDashboard
   ],
+
   data() {
     return {
       recentItems: [],
       isLoaded: true
     }
   },
+
   computed: {
     dataResult() {
       if (this.search.length > 0) {
         return this.filterResult(this.search, this.recentItems)
       }
       return this.recentItems
-    },
-    userUuid() {
-      return this.$store.getters['user/getUserUuid']
-    },
-    roleUuid() {
-      return this.$store.getters['user/getRole'].uuid
     }
   },
+
   mounted() {
     this.getRecentItems({})
 
     this.unsubscribe = this.subscribeChanges()
   },
+
   beforeDestroy() {
     this.unsubscribe()
   },
+
   methods: {
-    translateDateByLong,
+    translateDate,
+
     getRecentItems({ pageToken, pageSize }) {
       return new Promise(resolve => {
         requestListRecentItems({
-          userUuid: this.userUuid,
-          roleUuid: this.roleUuid,
           pageToken,
           pageSize
         })
           .then(response => {
-            const recentItems = response.recentItemsList.map(item => {
+            const recentItems = response.recent_items.map(item => {
               const actionConverted = convertAction(item.action)
 
               return {
@@ -127,6 +134,7 @@ export default {
           })
       })
     },
+
     subscribeChanges() {
       return this.$store.subscribe((mutation, state) => {
         if (mutation.type === 'notifyDashboardRefresh') {

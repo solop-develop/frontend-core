@@ -19,19 +19,19 @@
 import lang from '@/lang'
 
 // API Request Methods
-import { runCallOutRequest } from '@/api/ADempiere/window'
+import { runCallOutRequest } from '@/api/ADempiere/userInterface/window.ts'
 
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
-import { DISPLAY_COLUMN_PREFIX, UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
-import { TABLE } from '@/utils/ADempiere/references'
+import {
+  DISPLAY_COLUMN_PREFIX, UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX
+} from '@/utils/ADempiere/dictionaryUtils'
 
 // Utils and Helper Methods
-import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
+import { getTypeOfValue, isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
-import { isNumber } from '@/utils/ADempiere/formatValue/numberFormat'
-// import { isIntegerDisplayType } from '@/utils/ADempiere/references'
+import { isDateField, isDecimalField } from '@/utils/ADempiere/references'
 
 const calloutManager = {
   actions: {
@@ -41,7 +41,6 @@ const calloutManager = {
       callout,
       tableName,
       columnName,
-      valueType,
       value,
       oldValue
     }) {
@@ -52,14 +51,17 @@ const calloutManager = {
           return
         }
 
-        const { fieldsList, isParentTab, firstTabUuid } = rootGetters.getStoredTab(parentUuid, containerUuid)
+        const {
+          id, fieldsList, isParentTab, firstTabUuid
+        } = rootGetters.getStoredTab(parentUuid, containerUuid)
         let fieldsListParent = []
         if (!isParentTab && !isEmptyValue(firstTabUuid)) {
           fieldsListParent = rootGetters.getStoredFieldsFromTab(parentUuid, firstTabUuid)
         }
 
         // const window = rootGetters.getStoredWindow(parentUuid)
-        const contextAttributesList = rootGetters.getValuesView({
+        const contextAttributesList = {}
+        rootGetters.getValuesView({
           parentUuid,
           containerUuid
         }).filter(attribute => {
@@ -68,50 +70,47 @@ const calloutManager = {
             !columnName.startsWith(DISPLAY_COLUMN_PREFIX) &&
             !columnName.endsWith(UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX) &&
             !Object.prototype.hasOwnProperty.call(ROW_ATTRIBUTES, columnName)
-        }).map(attribute => {
+        }).forEach(attribute => {
           const { columnName, value } = attribute
-          let valueType = 'UNKNOWN'
+          let currentValue = value
 
           const field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
           let displayType = null
           if (!isEmptyValue(field)) {
-            valueType = field.valueType
             displayType = field.displayType
           } else {
             // find on parent tab (first tab)
-            const parentField = fieldsListParent.find(fieldItem => fieldItem.columnName === columnName)
+            const parentField = fieldsListParent.find(fieldItem => {
+              return fieldItem.columnName === columnName
+            })
             if (!isEmptyValue(parentField)) {
-              valueType = parentField.valueType
               displayType = parentField.displayType
             }
           }
-          if (!isEmptyValue(displayType) && displayType === TABLE.id) {
-            // if (!isEmptyValue(displayType) && isIntegerDisplayType(displayType)) {
-            // AD_Language = 'en_US' and table
-            if (!isNumber(value)) {
-              valueType = 'STRING'
+          if (getTypeOfValue(currentValue) !== 'OBJECT') {
+            if (isDateField(displayType)) {
+              currentValue = {
+                type: 'date',
+                value
+              }
+            } else if (isDecimalField(displayType)) {
+              currentValue = {
+                type: 'decimal',
+                value
+              }
             }
           }
-
-          return {
-            key: columnName,
-            value: {
-              value,
-              valueType
-            }
-          }
+          contextAttributesList[columnName] = currentValue
         })
 
         runCallOutRequest({
-          windowUuid: parentUuid,
           // windowNo: window.windowIndex,
-          tabUuid: containerUuid,
+          tabId: id,
           callout,
           tableName,
           columnName,
           value,
           oldValue,
-          valueType,
           contextAttributesList
         })
           .then(calloutResponse => {

@@ -23,7 +23,7 @@
         small
         layout="slot, sizes, prev, pager, next"
         :current-page="currentPage"
-        :total="total"
+        :total="recordCount"
         :page-sizes="NUMBER_RECORDS_PER_PAGE"
         :page-size="currentPageSize"
         style="float: right;padding-left: 0px;padding-right: 0px;"
@@ -32,7 +32,7 @@
       >
         <span class="selections-number">
           <span style="padding-top: 3px;">
-            {{ currentIndex + ' / ' + total }}
+            {{ currentIndex + ' / ' + recordCount }}
           </span>
           <span :class="isMobile ? 'is-pagination-content-panel-mobile' : 'is-pagination-content-panel'">
             <span v-show="isShowedTableRecords">
@@ -52,18 +52,18 @@ import store from '@/store'
 import { ROWS_OF_RECORDS_BY_PAGE, NUMBER_RECORDS_PER_PAGE, totalRowByPage, indexRowByPage } from '@/utils/ADempiere/tableUtils'
 
 // utils and helper methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { isEmptyValue, getValidInteger } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'CustomPagination',
 
   props: {
     parentUuid: {
-      type: String,
+      type: [Number, String],
       default: ''
     },
     containerUuid: {
-      type: String,
+      type: [Number, String],
       default: ''
     },
     containerManager: {
@@ -87,8 +87,8 @@ export default defineComponent({
       default: 1
     },
     total: {
-      type: Number,
-      default: undefined
+      type: [Number, String],
+      default: 0
     },
     isChangeRecord: {
       type: Boolean,
@@ -117,6 +117,10 @@ export default defineComponent({
       default: (recordPrevious) => {
         console.info('implement method Change to Previous Record ', recordPrevious)
       }
+    },
+    isShowedSelected: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -124,6 +128,10 @@ export default defineComponent({
     const containerUuid = props.containerUuid
     const parentUuid = props.parentUuid
     const selection = props.selection
+
+    const recordCount = computed(() => {
+      return getValidInteger(props.total)
+    })
 
     const isSelection = computed(() => {
       if (isEmptyValue(selection)) {
@@ -148,6 +156,7 @@ export default defineComponent({
     })
 
     const isShowedTableRecords = computed(() => {
+      if (props.isShowedSelected) return props.isShowedSelected
       return store.getters.getStoredTab(
         parentUuid,
         containerUuid
@@ -193,6 +202,7 @@ export default defineComponent({
       // Computed
       isSelection,
       rowPage,
+      recordCount,
       currentPageSize,
       isMobile,
       isShowedTableRecords,

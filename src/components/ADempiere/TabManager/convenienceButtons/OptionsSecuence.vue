@@ -71,7 +71,7 @@ export default defineComponent({
 
   props: {
     parentUuid: {
-      type: String,
+      type: [String, Number],
       default: undefined
     },
     containerManager: {
@@ -79,7 +79,7 @@ export default defineComponent({
       required: false
     },
     currentTabUuid: {
-      type: String,
+      type: [String, Number],
       default: ''
     },
     tabAttributes: {

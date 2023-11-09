@@ -106,6 +106,7 @@
       :current-page="currentPage"
       :selection="selectionsLength"
       :records-page="recordsWithFilter.length"
+      :is-showed-selected="true"
       :handle-change-page="handleChangePage"
       :handle-size-change="handleChangeSizePage"
     />

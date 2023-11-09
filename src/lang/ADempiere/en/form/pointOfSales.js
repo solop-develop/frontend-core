@@ -26,6 +26,31 @@ const pointOfSales = {
     updateBusinessPartner: 'Update Business Partner'
   },
   collection: {
+    field: {
+      fullPayment: 'Total Payment',
+      paymentMethods: 'Payment Methods',
+      currency: 'Currency',
+      bank: 'Bank',
+      accountNo: 'Account No',
+      receivingBank: 'Receiving Bank',
+      customerAccount: 'Customer Account',
+      issuingBank: 'Issuing Bank',
+      bankAccountType: {
+        label: 'Bank Account Type',
+        currentAccount: 'Current Account',
+        checking: 'Savings'
+      },
+      code: 'Cedula',
+      date: 'Date',
+      phone: 'Telephone',
+      referenceNo: 'Reference No.',
+      nameHolder: 'Name of Holder',
+      creditMemo: 'Credit Memo',
+      description: 'Description',
+      creditCard: 'Credit Card',
+      cardNumber: 'Card Number',
+      email: 'Mail'
+    },
     chargeAmount: 'Charge',
     creditAmount: 'Installment',
     others: 'Others',
@@ -33,7 +58,8 @@ const pointOfSales = {
     recipientBank: 'Recipient Bank',
     issuingBank: 'Issuing Bank',
     bank: 'Bank',
-    creditMemo: 'Credit Note'
+    creditMemo: 'Credit Note',
+    addPayment: 'Payment Added Successfully'
   },
   conversionRate: {
     withoutConversionRate: 'There is no current exchange rate '

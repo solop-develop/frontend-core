@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,18 +22,26 @@ import lang from '@/lang'
 import store from '@/store'
 
 // Constants
-import { DEFAULT_REPORT_TYPE } from '@/utils/ADempiere/dictionary/report'
+import {
+  CONTAINER_REPORT_PREFIX,
+  DEFAULT_REPORT_TYPE
+} from '@/utils/ADempiere/dictionary/report'
 
 // Utils and Helper Methods
 import { containerManager } from '@/utils/ADempiere/dictionary/report'
 import { isEmptyValue } from '@/utils/ADempiere'
 
-export default (reportUuid) => {
+export default ({ reportId, reportUuid }) => {
+  const containerKey = CONTAINER_REPORT_PREFIX + reportId
+
   const storedReportDefinition = computed(() => {
     return store.getters.getStoredReport(reportUuid)
   })
 
   const actionsList = computed(() => {
+    if (!storedReportDefinition.value) {
+      return []
+    }
     return store.getters.getStoredActionsMenu({
       containerUuid: reportUuid
     })
@@ -41,10 +49,12 @@ export default (reportUuid) => {
 
   const actionsManager = ref({
     containerUuid: reportUuid,
+    containerId: reportId,
+    containerKey,
 
     defaultActionName() {
       let reportType = DEFAULT_REPORT_TYPE
-      const storedReportGenerated = store.getters.getReportGenerated(reportUuid)
+      const storedReportGenerated = store.getters.getReportGenerated(reportId)
       if (!isEmptyValue(storedReportGenerated)) {
         if (!isEmptyValue(storedReportGenerated.reportType)) {
           reportType = storedReportGenerated.reportType
@@ -57,14 +67,9 @@ export default (reportUuid) => {
     getActionList: () => actionsList.value
   })
 
-  const relationsManager = ref({
-    // menuParentUuid: getCurrentInstance().$route.meta.parentUuid
-  })
-
   return {
     containerManager,
     actionsManager,
-    relationsManager,
     storedReportDefinition
   }
 }

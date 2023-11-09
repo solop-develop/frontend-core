@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,10 +18,11 @@
 
 // API Request Methods
 import {
-  process,
-  listPayments,
-  listInvoices
-} from '@/api/ADempiere/form/VAllocation.js'
+  requestListTransactionTypes,
+  requestProcess,
+  requestListPayments,
+  requestListInvoices
+} from '@/api/ADempiere/form/VAllocation.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'
@@ -29,16 +30,17 @@ import { dateTimeFormats } from '@/utils/ADempiere/formatValue/dateFormat'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 
 const VAllocation = {
+  transactionTypes: {},
   searchCriteria: {
-    businessPartnerId: '',
-    organizationId: '',
-    currencyId: '',
+    businessPartnerId: -1,
+    organizationId: -1,
+    currencyId: -1,
     listOrganization: [],
     listCurrency: [],
     date: '',
     transactionType: '',
     description: '',
-    chargeId: ''
+    chargeId: -1
   },
   listRecord: {
     payments: [],
@@ -81,7 +83,11 @@ const VAllocation = {
 
 export default {
   state: VAllocation,
+
   mutations: {
+    setTransactionTypes(state, payload) {
+      state.transactionTypes = payload
+    },
     setSearchCriteria(state, structure) {
       state.searchCriteria = structure
     },
@@ -173,17 +179,35 @@ export default {
       state.listSelectAll = list
     }
   },
+
   actions: {
+    loadTransactonsTypesFromServer({ commit, state }) {
+      return new Promise(resolve => {
+        requestListTransactionTypes()
+          .then(response => {
+            const { records } = response
+
+            const transactionTypes = {}
+            records.forEach(item => {
+              const { values } = item
+              const { KeyColumn, DisplayColumn } = values
+              transactionTypes[KeyColumn] = DisplayColumn
+            })
+
+            commit('setTransactionTypes', transactionTypes)
+
+            resolve(transactionTypes)
+          })
+      })
+    },
+
     findListPayment({ commit, state }) {
       return new Promise(resolve => {
         const {
           businessPartnerId,
-          businessPartnerUuid,
           date,
           organizationId,
-          organizationUuid,
           currencyId,
-          currencyUuid,
           isMultiCurrency,
           transactionType,
           isAutomaticWriteOff
@@ -193,14 +217,11 @@ export default {
           criteria: 'isLoadTables',
           value: true
         })
-        listPayments({
+        requestListPayments({
           businessPartnerId,
-          businessPartnerUuid,
           date,
           organizationId,
-          organizationUuid,
           currencyId,
-          currencyUuid,
           isMultiCurrency,
           transactionType,
           isAutomaticWriteOff
@@ -259,7 +280,7 @@ export default {
           criteria: 'isLoadTables',
           value: true
         })
-        listInvoices({
+        requestListInvoices({
           businessPartnerId,
           businessPartnerUuid,
           date,
@@ -326,7 +347,7 @@ export default {
           listInvoce = state.listSelectAll.filter(list => list.type === 'isInvoce')
           listPayments = state.listSelectAll.filter(list => list.type === 'isPayment')
         }
-        process({
+        requestProcess({
           date,
           chargeId,
           currencyId,
@@ -367,7 +388,11 @@ export default {
       return
     }
   },
+
   getters: {
+    getStoredTransactionTypes(state) {
+      return state.transactionTypes
+    },
     getSearchFilter(state) {
       return state.searchCriteria
     },

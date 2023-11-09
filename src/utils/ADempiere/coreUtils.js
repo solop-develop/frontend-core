@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,22 +27,22 @@ import { isEmptyValue, recursiveTreeSearch } from '@/utils/ADempiere/valueUtils.
 /**
  * Zoom in view with uuid
  * @author Edwin Betancourt <EdwinBetanc0urt@outlook.com>
- * @param {string} uuid
+ * @param {string} attributeValue
+ * @param {string} attributeName
  * @param {object} params
  * @param {object} query
  * @param {boolean} isShowMessage
  * @returns {boolean} if find the view
  */
 export function zoomIn({
-  id,
   uuid,
+  attributeValue = uuid,
+  attributeName = 'uuid',
   params = {},
   query = {},
   isShowMessage = true
 }) {
-  let attributeValue = uuid
-  let secondAttribute = 'uuid'
-  if (isEmptyValue(uuid) && isEmptyValue(id)) {
+  if (isEmptyValue(attributeValue)) {
     if (isShowMessage) {
       showMessage({
         type: 'error',
@@ -52,10 +52,6 @@ export function zoomIn({
     }
     return false
   }
-  if (isEmptyValue(uuid) && !isEmptyValue(id)) {
-    attributeValue = id
-    secondAttribute = 'id'
-  }
 
   const menuTree = store.getters.permission_routes
 
@@ -63,7 +59,7 @@ export function zoomIn({
     treeData: menuTree,
     attributeValue: attributeValue,
     attributeName: 'meta',
-    secondAttribute: secondAttribute,
+    secondAttribute: attributeName,
     attributeChilds: 'children'
   })
   if (query.filters) {

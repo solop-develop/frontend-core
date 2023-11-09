@@ -30,7 +30,7 @@ import {
   requestResultMovements,
   requestProcess
   // processMovements
-} from '@/api/ADempiere/form/VBankStatementMatch.js'
+} from '@/api/ADempiere/form/VBankStatementMatch.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'

@@ -19,7 +19,7 @@
 // api request methods
 import {
   requestListEntityLogs
-} from '@/api/ADempiere/window'
+} from '@/api/ADempiere/logs/index.ts'
 
 // utils and helper methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -85,18 +85,12 @@ const containerInfo = {
   actions: {
     listRecordLogs({ commit }, {
       tableName,
-      recordId,
-      recordUuid
+      recordId
     }) {
-      const pageSize = 0
-      const pageToken = 0
       commit('setIsLoadtRecordLogs', true)
       return requestListEntityLogs({
         tableName,
-        recordId,
-        recordUuid,
-        pageSize,
-        pageToken
+        recordId
       })
         .then(response => {
           commit('addListRecordLogs', response)

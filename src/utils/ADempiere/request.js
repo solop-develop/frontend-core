@@ -58,12 +58,12 @@ export function request(requestValues) {
   // requestValues.params.language = getLanguage() || 'en_US'
 
   // TODO: Add expires data on headers request
-  requestValues.params.ts = (new Date()).getTime()
+  // requestValues.params.ts = (new Date()).getTime()
 
   return new Promise((resolve, reject) => {
     requestAPI(requestValues)
       .then(response => {
-        resolve(response.result)
+        resolve(response)
       })
       .catch(error => {
         reject(error)
