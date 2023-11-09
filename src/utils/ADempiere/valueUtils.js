@@ -705,6 +705,9 @@ export function setIconsTableName({
     type: 'svg',
     class: 'search'
   }
+  if (isEmptyValue(tableName)) {
+    return icon
+  }
   switch (tableName) {
     case 'HR_Process':
       icon = {
@@ -759,11 +762,6 @@ export function setIconsTableName({
       }
       break
     case 'I_Product':
-      icon = {
-        type: 'svg',
-        class: 'product'
-      }
-      break
     case 'M_Product':
       icon = {
         type: 'svg',
@@ -879,6 +877,7 @@ export function setIconsTableName({
         class: 'employee'
       }
       break
+    case 'C_Project':
     case 'I_Project':
       icon = {
         type: 'svg',
@@ -901,6 +900,13 @@ export function setIconsTableName({
       icon = {
         type: 'svg',
         class: 'agreement'
+      }
+      break
+    case 'I_Request':
+    case 'R_Request':
+      icon = {
+        type: 'svg',
+        class: 'guide'
       }
       break
   }
