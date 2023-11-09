@@ -1,3 +1,21 @@
+<!--
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
+-->
+
 <template>
   <div
     class="class-profile"
@@ -43,6 +61,12 @@
               <svg-icon icon-class="tree-table" /> {{ $t('profile.activityLogs') }}
             </b>
             <span style="float: right;">
+              <el-button
+                type="success"
+                style="padding: 4px 8px;font-size: 18px; margin-right: 10px;"
+                icon="el-icon-refresh-right"
+                @click="loadUserLogActivities();"
+              />
               <el-date-picker
                 v-model="filterDate"
                 type="date"
@@ -59,10 +83,15 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex'
+
+// Components and Mixins
 import UserCard from './components/UserCard.vue'
 import UserInfo from '@/views/profile/components/InfoUser.vue'
 import UserActivity from '@/views/profile/components/UserActivity/index.vue'
 import { Settings } from '@/layout/components'
+
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default {
   name: 'Profile',
@@ -124,7 +153,7 @@ export default {
   },
   watch: {
     filterDate(date) {
-      this.$store.dispatch('user/loadingActivitylogsFromServer', date)
+      this.loadUserLogActivities(date)
     }
   },
   created() {
@@ -138,6 +167,12 @@ export default {
         email: 'admin@test.com',
         avatar: this.avatar
       }
+    },
+    loadUserLogActivities(date = null) {
+      if (isEmptyValue(date)) {
+        date = this.filterDate
+      }
+      this.$store.dispatch('user/loadingActivitylogsFromServer', date)
     }
   }
 }
