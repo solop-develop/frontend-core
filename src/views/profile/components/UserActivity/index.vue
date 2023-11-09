@@ -1,3 +1,21 @@
+<!--
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
+-->
+
 <template>
   <el-card
     shadow="always"
@@ -54,9 +72,9 @@
                 style="margin-top: 10px;"
               >
                 <process-logs
-                  v-if="logsUser.userActivityTypeName === 'PROCESS_LOG'"
+                  v-if="logsUser.userActivityType === 'PROCESS_LOG'"
                   :list-parameters="logsUser.processLog.parameters"
-                  :list-logs="logsUser.processLog.logsList"
+                  :list-logs="logsUser.processLog.logs"
                   :summary="logsUser.processLog.summary"
                   :status="logsUser.processLog.isError"
                 />
@@ -77,6 +95,7 @@
 <script>
 import lang from '@/lang'
 import store from '@/store'
+
 // Components and Mixins
 import WindowsLogs from '@/views/profile/components/UserActivity/WindowsLogs.vue'
 import ProcessLogs from '@/views/profile/components/UserActivity/ProcessLogs.vue'
@@ -111,7 +130,7 @@ export default defineComponent({
       },
       // setter
       set(newValue) {
-        store.dispatch('user/loadingActivitylogs', newValue)
+        store.dispatch('user/loadingActivitylogsFromServer', newValue)
       }
     })
 
@@ -125,11 +144,10 @@ export default defineComponent({
      * Set Color according to log type
      * @param {objec} log
      */
-
     function colorTypeLogs(log) {
-      const { userActivityTypeName, processLog } = log
+      const { userActivityType, processLog } = log
       let color
-      switch (userActivityTypeName) {
+      switch (userActivityType) {
         case 'ENTITY_LOG':
           color = 'primary'
           break
@@ -145,9 +163,9 @@ export default defineComponent({
     }
 
     function status(log) {
-      const { userActivityTypeName, processLog } = log
+      const { userActivityType, processLog } = log
       let status
-      switch (userActivityTypeName) {
+      switch (userActivityType) {
         case 'ENTITY_LOG':
           status = {
             isShow: false,
@@ -187,9 +205,9 @@ export default defineComponent({
     }
 
     function iconTypelogs(log) {
-      const { userActivityTypeName, processLog } = log
+      const { userActivityType, processLog } = log
       let svg = 'info'
-      switch (userActivityTypeName) {
+      switch (userActivityType) {
         case 'ENTITY_LOG':
           svg = 'tab'
           break
@@ -205,9 +223,9 @@ export default defineComponent({
     }
 
     function typeLogs(log) {
-      const { userActivityTypeName, processLog } = log
+      const { userActivityType, processLog } = log
       let type
-      switch (userActivityTypeName) {
+      switch (userActivityType) {
         case 'ENTITY_LOG':
           type = lang.t('views.window')
           break
@@ -223,7 +241,7 @@ export default defineComponent({
     }
 
     function setUserLogs() {
-      store.dispatch('user/loadingActivitylogs')
+      store.dispatch('user/loadingActivitylogsFromServer')
     }
 
     function styleShow(show) {
@@ -232,9 +250,9 @@ export default defineComponent({
     }
 
     function nameLogs(log) {
-      const { userActivityTypeName, processLog, entityLog } = log
+      const { userActivityType, processLog, entityLog } = log
       let name
-      switch (userActivityTypeName) {
+      switch (userActivityType) {
         case 'ENTITY_LOG':
           name = entityLog.tableName
           break
@@ -246,9 +264,9 @@ export default defineComponent({
     }
 
     function logTimesTamp(logs) {
-      const { userActivityTypeName, processLog, entityLog } = logs
+      const { userActivityType, processLog, entityLog } = logs
       let date = new Date()
-      switch (userActivityTypeName) {
+      switch (userActivityType) {
         case 'ENTITY_LOG':
           date = entityLog.logDate
           break

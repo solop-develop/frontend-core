@@ -18,6 +18,8 @@
 
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
+
+// Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 // Get Recent Items based on selection option
@@ -54,3 +56,17 @@ export function requestListEntityLogs({
   })
 }
 
+/**
+ * Get User Activity
+ */
+export function requestUserActivity({
+  date
+}) {
+  return request({
+    url: '/logs/user-activities',
+    method: 'get',
+    params: {
+      date
+    }
+  })
+}
