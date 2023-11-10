@@ -48,16 +48,18 @@ const window = {
     },
     log: {
       changeHistory: 'Change History',
+      column: 'Column',
+      created: 'Created',
+      createdBy: 'Created By',
+      field: 'Field',
       updated: 'Updated',
       updatedBy: 'Updated By',
       newValue: 'New Value',
       oldValue: 'Old Value',
+      recordID: 'Record ID',
+      recordUUID: 'Record UUID',
       tab: 'Tab',
-      recordID: 'Log ID',
-      recordUUID: 'Log UUID',
-      tableName: 'Table Name',
-      field: 'Field',
-      column: 'Column'
+      tableName: 'Table Name'
     },
     referenceRecords: 'Document Reference'
   },
