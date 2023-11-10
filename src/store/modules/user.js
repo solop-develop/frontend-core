@@ -235,12 +235,18 @@ const actions = {
           // const currentOrganizationSession = defaultContext.find(context => {
           //   return context.key === defaultContext[`#${ORGANIZATION}`]
           // })
-          commit('SET_CURRENT_ORGANIZATION_ID', defaultContext[`#${ORGANIZATION}`])
+          const sessionOrganizationId = defaultContext[`#${ORGANIZATION}`]
+          commit('SET_CURRENT_ORGANIZATION_ID', sessionOrganizationId)
+          setCurrentOrganization(sessionOrganizationId)
+
+          const sessionWarehouseId = defaultContext[`#${WAREHOUSE}`]
+          // commit('SET_WAREHOUSE', sessionWarehouseId)
+          setCurrentWarehouse(sessionWarehouseId)
 
           // wait to establish the client and organization to generate the menu
           await dispatch('getOrganizationsListFromServer', {
             roleId: role.id,
-            organizationId: defaultContext[`#${ORGANIZATION}`]
+            organizationId: sessionOrganizationId
           })
 
           resolve(sessionResponse)
