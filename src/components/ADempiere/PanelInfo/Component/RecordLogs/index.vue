@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -32,7 +32,7 @@
       </el-descriptions-item>
       <el-descriptions-item label-style="{ color: #606266; font-weight: bold; }">
         <template slot="label">
-          <svg-icon icon-class="user" style="margin-right: 10px;" />
+          <i class="el-icon-star-on" style="margin-right: 10px;" />
           {{ $t('window.containerInfo.log.recordID') }}
         </template>
         <span style="color: #606266; font-weight: bold;">
@@ -41,27 +41,52 @@
       </el-descriptions-item>
       <el-descriptions-item label-style="{ color: #606266; font-weight: bold; }">
         <template slot="label">
-          <svg-icon icon-class="user" style="margin-right: 10px;" />
+          <i class="el-icon-star-on" style="margin-right: 10px;" />
           {{ $t('window.containerInfo.log.recordUUID') }}
         </template>
         <span style="color: #606266; font-weight: bold;">
           {{ recordUuid }}
         </span>
       </el-descriptions-item>
+
+      <template v-if="!isEmptyValue(listLogs.entity_logs)">
+        <el-descriptions-item label-style="{ color: #606266; font-weight: bold; }">
+          <template slot="label">
+            <svg-icon icon-class="user" style="margin-right: 10px;" />
+            {{ $t('window.containerInfo.log.createdBy') }}
+          </template>
+          <span style="color: #606266; font-weight: bold;">
+            {{ listLogs.entity_logs.at().created_by_name }}
+          </span>
+        </el-descriptions-item>
+
+        <el-descriptions-item label-style="{ color: #606266; font-weight: bold; }">
+          <template slot="label">
+            <svg-icon icon-class="user" style="margin-right: 10px;" />
+            {{ $t('window.containerInfo.log.updatedBy') }}
+          </template>
+          <span style="color: #606266; font-weight: bold;">
+            {{ listLogs.entity_logs.at(-1).updated_by_name }}
+          </span>
+        </el-descriptions-item>
+      </template>
     </el-descriptions>
-    <el-timeline v-if="!isEmptyValue(listLogs.entityLogsList)">
+
+    <el-timeline v-if="!isEmptyValue(listLogs.entity_logs)" :reverse="true">
       <el-timeline-item
-        v-for="(entityLogs, keys) in listLogs.entityLogsList"
+        v-for="(entityLogs, keys) in listLogs.entity_logs"
         :key="entityLogs.logId"
         :type="entityLogs.type"
         :color="'#0bbd87'"
-        :timestamp="translateDateByLong(entityLogs.logDate)"
+        :timestamp="translateDateByLong(entityLogs.log_date)"
         placement="top"
       >
         <el-card shadow="hover" class="clearfix" style="padding: 2%">
           <div>
             <span style="color: #606266; font-weight: bold;">
-              {{ $t('window.containerInfo.log.updatedBy') }} <b>: </b>{{ entityLogs.userName }} <i class="el-icon-user-solid" />
+              {{ $t('window.containerInfo.log.updatedBy') }} <b>:</b>
+              {{ entityLogs.updated_by_name }}
+              <i class="el-icon-user-solid" />
             </span>
 
             <el-link
@@ -75,18 +100,20 @@
 
           <el-collapse-transition>
             <div v-show="(currentKey === keys)">
-              <span v-for="(changeLog, index) in entityLogs.changeLogsList" :key="index">
-                <p v-if="isDocument(changeLog)">
-                  <b>{{ changeLog.displayColumnName }} :</b>
+              <span v-for="(changeLog, index) in entityLogs.change_logs" :key="index">
+                <hr v-if="index > 0" style="color: aliceblue;">
+
+                <p v-if="isDocumentStatus({ columnName: changeLog.column_name })">
+                  <b>{{ changeLog.display_column_name }} :</b>
                   <strike>
                     <document-status-tag
-                      :value="changeLog.oldValue"
-                      :displayed-value="changeLog.oldDisplayValue"
+                      :value="changeLog.old_value"
+                      :displayed-value="changeLog.old_display_value"
                     />
                   </strike>
                   <document-status-tag
-                    :value="changeLog.newValue"
-                    :displayed-value="changeLog.newDisplayValue"
+                    :value="changeLog.new_value"
+                    :displayed-value="changeLog.new_display_value"
                   />
                 </p>
 
@@ -96,7 +123,7 @@
                     label-style="{ color: #606266; font-weight: bold; }"
                   >
                     <span style="color: #606266; font-weight: bold;">
-                      {{ changeLog.displayColumnName }}
+                      {{ changeLog.display_column_name }}
                     </span>
                   </el-descriptions-item>
 
@@ -105,7 +132,7 @@
                     label-style="{ color: #606266; font-weight: bold; }"
                   >
                     <el-link type="success">
-                      {{ changeLog.newDisplayValue }}
+                      {{ changeLog.new_display_value }}
                     </el-link>
                   </el-descriptions-item>
 
@@ -115,7 +142,7 @@
                   >
                     <strike>
                       <el-link type="danger">
-                        {{ changeLog.oldDisplayValue }}
+                        {{ changeLog.old_display_value }}
                       </el-link>
                     </strike>
                   </el-descriptions-item>
@@ -125,7 +152,7 @@
                     label-style="{ color: #606266; font-weight: bold; }"
                   >
                     <span style="color: #606266; font-weight: bold;">
-                      {{ changeLog.columnName }}
+                      {{ changeLog.column_name }}
                     </span>
                   </el-descriptions-item>
                 </el-descriptions>
@@ -192,7 +219,7 @@ export default defineComponent({
 
   setup(props) {
     const currentRecordLogs = ref({ name: '' })
-    const currentKey = ref(0)
+    const currentKey = ref(-1)
     const typeAction = ref(0)
     const currentTabLogs = ref('0')
 
@@ -212,9 +239,6 @@ export default defineComponent({
         typeAction.value = index
       }
     }
-    const isDocument = (changeLog) => {
-      return isDocumentStatus({ columnName: changeLog.columnName })
-    }
 
     const getTableName = computed(() => {
       // const { currentTab } = store.getters.getContainerInfo
@@ -228,8 +252,8 @@ export default defineComponent({
       typeAction,
       currentKey,
       listLogs,
-      // methods
-      isDocument,
+      // Methods
+      isDocumentStatus,
       showkey,
       translateDateByLong
     }

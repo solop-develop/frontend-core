@@ -47,17 +47,19 @@ const window = {
       addNote: 'Agregar Nota'
     },
     log: {
+      changeHistory: 'Histórico de Cambios',
+      column: 'Columna',
+      created: 'Creado',
+      createdBy: 'Creado Por',
+      field: 'Campo',
       updated: 'Actualizado',
       updatedBy: 'Actualizado Por',
       newValue: 'Nuevo Valor',
       oldValue: 'Valor Antiguo',
-      changeHistory: 'Histórico de Cambios',
-      tab: 'Pestañá',
       recordID: 'ID del Registro',
       recordUUID: 'UUID del Registro',
-      tableName: 'Nombre de la Tabla',
-      field: 'Campo',
-      column: 'Columna'
+      tab: 'Pestaña',
+      tableName: 'Nombre de la Tabla'
     },
     referenceRecords: 'Documentos Relacionados'
   },
