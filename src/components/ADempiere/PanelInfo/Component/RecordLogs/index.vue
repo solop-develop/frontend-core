@@ -72,7 +72,7 @@
       </template>
     </el-descriptions>
 
-    <el-timeline v-if="!isEmptyValue(listLogs.entity_logs)">
+    <el-timeline v-if="!isEmptyValue(listLogs.entity_logs)" :reverse="true">
       <el-timeline-item
         v-for="(entityLogs, keys) in listLogs.entity_logs"
         :key="entityLogs.logId"
@@ -219,7 +219,7 @@ export default defineComponent({
 
   setup(props) {
     const currentRecordLogs = ref({ name: '' })
-    const currentKey = ref(0)
+    const currentKey = ref(-1)
     const typeAction = ref(0)
     const currentTabLogs = ref('0')
 
