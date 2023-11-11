@@ -97,14 +97,16 @@ const defaultValueManager = {
           return
         }
 
-        const contextAttributesList = getContextAttributes({
+        let contextAttributesList = getContextAttributes({
           parentUuid,
           containerUuid,
           contextColumnNames,
-          isBooleanToString: true
+          isBooleanToString: true,
+          format: 'object'
         })
+
         // fill context value to continue
-        if (!isSameSize(contextColumnNames, contextAttributesList)) {
+        if (!isSameSize(contextColumnNames, Object.values(contextAttributesList))) {
           resolve(defaultEmptyResponse)
           return
         }
@@ -142,8 +144,13 @@ const defaultValueManager = {
         }
         state.inRequest.set(key, true)
 
+        let contextAttributes
+        if (!isEmptyValue(contextAttributesList)) {
+          contextAttributesList = JSON.stringify(contextAttributesList)
+        }
+
         requestDefaultValue({
-          contextAttributesList,
+          contextAttributes,
           id,
           fieldUuid,
           browseFieldId,
