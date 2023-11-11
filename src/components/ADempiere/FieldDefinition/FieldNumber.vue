@@ -72,7 +72,7 @@ import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 // Utils and Helper Methods
 import { isDecimalField } from '@/utils/ADempiere/references.js'
 import { formatNumber } from '@/utils/ADempiere/formatValue/numberFormat.js'
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { getTypeOfValue, isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 export default {
   name: 'FieldNumber',
@@ -223,11 +223,17 @@ export default {
       //   this.preHandleChange(this.$refs[this.metadata.columnName].currentValue)
       // }
     },
-    parseValue(value) {
-      if (isEmptyValue(value)) {
+    parseValue(valueToParse) {
+      let currentValue = valueToParse
+      // types `decimal` and `date` is a object struct
+      if ((getTypeOfValue(valueToParse) === 'OBJECT') && !isEmptyValue(valueToParse.type)) {
+        currentValue = valueToParse.value
+      }
+
+      if (isEmptyValue(currentValue)) {
         return undefined
       }
-      return Number(value)
+      return Number(currentValue)
     },
     customFocusGained(event) {
       if (this.metadata.readonly) {

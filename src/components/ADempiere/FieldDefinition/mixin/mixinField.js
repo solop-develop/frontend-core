@@ -19,7 +19,7 @@
 import store from '@/store'
 
 // Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { getTypeOfValue, isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default {
   name: 'MixinField',
@@ -116,16 +116,25 @@ export default {
               columnName
             })
             if (!isEmptyValue(value)) {
+              // types `decimal` and `date` is a object struct
+              if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
+                return value.value
+              }
               return value
             }
           }
         }
 
-        return store.getters.getValueOfFieldOnContainer({
+        const value = store.getters.getValueOfFieldOnContainer({
           parentUuid: this.metadata.parentUuid,
           containerUuid,
           columnName
         })
+        // types `decimal` and `date` is a object struct
+        if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
+          return value.value
+        }
+        return value
       },
       set(newValue) {
         const { columnName, containerUuid, inTable } = this.metadata

@@ -33,8 +33,8 @@
   </div>
 
   <el-col
-    v-else-if="!inTable && (isDisplayedField || isAlwaysDisplayColumn)"
-    v-show="isDisplayedField"
+    v-else-if="!inTable && (isDisplayField || isAlwaysDisplayColumn)"
+    v-show="isDisplayField"
     key="is-panel-template"
     :xs="sizeField.xs"
     :sm="sizeField.sm"
@@ -296,14 +296,14 @@ export default {
         // DOM properties
         required: this.isMandatoryField,
         readonly: this.isReadOnlyField,
-        displayed: this.isDisplayedField,
+        displayed: this.isDisplayField,
         disabled: !this.field.isActive,
         isSelectCreated: this.isSelectCreated,
         placeholder: this.field.help ? this.field.help.slice(0, 40) + '...' : ''
       }
     },
 
-    isDisplayedField() {
+    isDisplayField() {
       // is in Table
       if (this.inTable) {
         return this.inTable
