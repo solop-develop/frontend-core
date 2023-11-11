@@ -1,11 +1,31 @@
+<!--
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
+-->
+
 <template>
   <div class="sidebar-logo-container" :class="{'collapse':collapse}">
     <transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link sidebar-logo-link-close" to="/">
         <el-tooltip placement="right">
-          <div slot="content">{{ getRole.name }} | {{ getRole.client.name }}</div>
+          <div slot="content">
+            {{ getRole.name }} | {{ getRole.client.name }} | {{ storedOrganization.name }}
+          </div>
           <img v-if="logo" :src="logo" class="sidebar-logo">
-          <svg-icon v-else icon-class="AD" style="width: 2em !important;height: 2em !important;font-size: 25px;padding-left: 5px;padding-right: 0px;cursor: pointer;" />
+          <svg-icon v-else icon-class="AD" class="standard-logo" />
           <b style="margin-left: 5px;">{{ title }}</b>
         </el-tooltip>
       </router-link>
@@ -13,30 +33,44 @@
       <span v-else>
         <p key="expand" style="display: flex;text-align: center;width: 100%;padding: 0px 15px;margin-top: 0px;">
           <img v-if="logo" :src="logo" class="sidebar-logo" @click="dashboard()">
-          <svg-icon v-else icon-class="AD" style="width: 2em !important;height: 2em !important;font-size: 25px;padding-left: 5px;padding-right: 0px;cursor: pointer;" />
-          <b style="color: white;font-size: 18px;padding-top: 15px;cursor: pointer; margin-left: 5px;" @click="dashboard()">{{ getName }}</b><br>
+          <svg-icon v-else icon-class="AD" class="standard-logo" />
+          <b style="color: white;font-size: 18px;padding-top: 15px;cursor: pointer; margin-left: 5px;" @click="dashboard()">
+            {{ systemName }}
+          </b>
+          <br>
         </p>
+        <!--
         <el-tooltip placement="right">
-          <div slot="content">{{ getRole.name }} | {{ getRole.client.name }}</div>
+          <div slot="content">
+            {{ getRole.name }} | {{ getRole.client.name }} | {{ storedOrganization.name }}
+          </div>
           <p class="sidebar-sub-title" style="color: white; font-size: 12px;margin: 0px;margin-top: 0px;" @click="profile()">
-            {{ getRole.name }} | {{ getRole.client.name }}
+            {{ getRole.name }} | {{ getRole.client.name }} | {{ storedOrganization.name }}
           </p>
         </el-tooltip>
+        -->
+        <p class="sidebar-sub-title" style="color: white; font-size: 12px;margin: 0px;margin-top: 0px;" @click="profile()">
+          {{ getRole.name }} | {{ getRole.client.name }} | {{ storedOrganization.name }}
+        </p>
       </span>
     </transition>
   </div>
 </template>
 
 <script>
+// Utils and Helper Methods
 import { getImagePath } from '@/utils/ADempiere/resource.js'
+
 export default {
   name: 'SidebarLogo',
+
   props: {
     collapse: {
       type: Boolean,
       required: true
     }
   },
+
   data() {
     return {
       // title: 'Vue Element Admin',
@@ -45,14 +79,18 @@ export default {
       // logo: 'https://avatars1.githubusercontent.com/u/1263359?s=200&v=4?imageView2/1/w/80/h/80'
     }
   },
+
   computed: {
     getRole() {
       return this.$store.getters['user/getRole']
     },
-    getName() {
+    systemName() {
       const { name } = this.$store.getters['user/getSystem']
       if (name) return name
       return 'ADempiere'
+    },
+    storedOrganization() {
+      return this.$store.getters['user/getOrganization']
     },
     logo() {
       const { client } = this.getRole
@@ -70,6 +108,7 @@ export default {
       return undefined
     }
   },
+
   methods: {
     profile() {
       this.$router.push({
@@ -104,6 +143,15 @@ export default {
   background: #2b2f3a;
   text-align: center;
   overflow: hidden;
+
+  .standard-logo {
+    width: 2em !important;
+    height: 2em !important;
+    font-size: 25px;
+    padding-left: 5px;
+    padding-right: 0px;
+    cursor: pointer;
+  }
 
   & .sidebar-logo-link {
     height: 100%;
