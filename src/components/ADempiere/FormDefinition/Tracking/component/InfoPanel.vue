@@ -112,8 +112,7 @@
 <script>
 import {
   defineComponent,
-  computed,
-  ref
+  computed
 } from '@vue/composition-api'
 
 // import lang from '@/lang'
@@ -122,12 +121,7 @@ import store from '@/store'
 // Components and Mixins
 import 'simple-m-editor/dist/simple-m-editor.css'
 
-// Utils and Helper Methods
-// import { isEmptyValue } from '@/utils/ADempiere'
-// import { showMessage } from '@/utils/ADempiere/notification'
-// import { translateDateByLong, formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
-// import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
-// import { getImagePath } from '@/utils/ADempiere/resource.js'
+// Utils and Helper Methods=
 
 export default defineComponent({
   name: 'InfoPanel',
@@ -141,17 +135,6 @@ export default defineComponent({
   },
 
   setup(props) {
-    const activities = ref([
-      {
-        content: 'Paquete Recibido en Perfectas Condiciones',
-        color: '#409eff',
-        timestamp: 'Lunes, 16 de octubre de 2023, 08:37:31 p. m.'
-      }, {
-        content: 'Embalado, Etiquetado y Almacenado',
-        color: '#0bbd87',
-        timestamp: 'Domingo, 12 de Noviembre de 2023, 10:15:56 a. m.'
-      }
-    ])
     const listStatuses = computed(() => {
       return store.getters.getListStatus.sort((itemA, itemB) => {
         return itemA.id - itemB.id
@@ -197,7 +180,6 @@ export default defineComponent({
     }
 
     return {
-      activities,
       listStatuses,
       activeSteps,
       historyTracking,
