@@ -23,6 +23,7 @@
         :inline="true"
         label-position="top"
         style="padding: 10px !important;"
+        class="form-base"
       >
         <el-row :gutter="4">
           <el-col :span="8">
@@ -66,7 +67,6 @@
             <el-form-item
               :label="$t('form.VBankStatementMatch.field.transactionDate')"
               class="form-item-criteria"
-              style="width: 100%;"
             >
               <el-date-picker
                 v-model="transactionDate"
@@ -108,8 +108,8 @@ export default defineComponent({
   name: 'SearchCriteria',
 
   components: {
-    BusinessPartnersList,
     // AutomaticMatch,
+    BusinessPartnersList,
     BankStatement,
     BankAccount,
     SearchMode
@@ -190,19 +190,12 @@ export default defineComponent({
       }
     })
 
-    function refreshSearch() {
-      // store.dispatch('getPaymentsListFromServer', {})
-      // store.dispatch('searchListImportedBankMovements', {})
-      store.dispatch('getMatchingMovementsListFromServer', {})
-    }
-
     return {
       isEnableSearch,
       isMatchModeValue,
       paymentAmountTo,
       paymentAmountFrom,
-      transactionDate,
-      refreshSearch
+      transactionDate
     }
   }
 })
@@ -215,6 +208,8 @@ export default defineComponent({
   margin-bottom: 0px;
   margin-right: 0px;
   padding-bottom: 0px;
+  width: 100%;
+
   .el-form-item__label {
     padding-bottom: 0px;
   }
