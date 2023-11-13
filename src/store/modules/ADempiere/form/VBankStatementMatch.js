@@ -28,8 +28,7 @@ import {
   requestBankStatemensList,
   requestListUnMatch,
   requestResultMovements,
-  requestProcess
-  // processMovements
+  requestProcessBankMovements
 } from '@/api/ADempiere/form/VBankStatementMatch.ts'
 
 // Utils and Helper Methods
@@ -58,7 +57,7 @@ const bankStatementMatch = {
     to: null
   },
   businessPartner: {
-    id: '',
+    id: undefined,
     uuid: '',
     list: []
   },
@@ -298,7 +297,7 @@ export default {
     /**
      * Get List Imported Bank Movements
      */
-    searchListImportedBankMovements({ commit, state, getters }, {
+    getImportedBankMovementsListFromServer({ commit, state, getters }, {
       searchValue
     }) {
       return new Promise(resolve => {
@@ -461,7 +460,7 @@ export default {
         })
           .then(response => {
             dispatch('getPaymentsListFromServer', {})
-            dispatch('searchListImportedBankMovements', {})
+            dispatch('getImportedBankMovementsListFromServer', {})
             dispatch('getMatchingMovementsListFromServer', {})
             const { message } = response
             showMessage({
@@ -477,7 +476,6 @@ export default {
               message: error.message,
               showClose: true
             })
-            resolve(error)
           })
       })
     },
@@ -491,7 +489,7 @@ export default {
         if (!isEmptyValue(getters.getCurrentBankStatement)) {
           bankStatementId = getters.getCurrentBankStatement.id
         }
-        requestProcess({
+        requestProcessBankMovements({
           bankStatementId,
           bankAccountId,
           transactionDateFrom: dateFrom,

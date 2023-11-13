@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -41,10 +41,15 @@
       <p slot="empty" style="width: 100%;">
         <el-empty :description="$t('form.VBankStatementMatch.automaticMatch.withoutAutomaticMatch')" />
       </p>
+
       <el-table-column
         type="selection"
         width="39"
       />
+      <index-column
+        :page-number="1"
+      />
+
       <el-table-column
         label="Automatico"
         width="99"
@@ -98,8 +103,15 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { convertBooleanToTranslationLang } from '@/utils/ADempiere/formatValue/booleanFormat'
 import { formatPrice } from '@/utils/ADempiere/formatValue/numberFormat'
 
+// Components and Mixins
+import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
+
 export default defineComponent({
   name: 'AutomaticMatch',
+
+  components: {
+    IndexColumn
+  },
 
   props: {
     title: {

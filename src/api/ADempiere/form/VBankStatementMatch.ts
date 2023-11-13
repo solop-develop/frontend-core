@@ -23,16 +23,11 @@ import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 // Bank Statement
 export function requestGetBankStatement({
-  id,
-  uuid
+  id
 }) {
   return request({
-    url: `${config.VBankStatementMatch.endpoint}/bank-statement`,
-    method: 'get',
-    params: {
-      id,
-      uuid
-    }
+    url: `${config.VBankStatementMatch.endpoint}/bank-statements/${id}`,
+    method: 'get'
   })
     .then(response => {
       return camelizeObjectKeys(response)
@@ -103,7 +98,7 @@ export function requestImportedBankMovements({
   transactionDateTo
 }) {
   return request({
-    url: `${config.VBankStatementMatch.endpoint}/imported-bank-movements`,
+    url: `${config.VBankStatementMatch.endpoint}/imported-movements`,
     method: 'get',
     params: {
       match_mode: matchMode,
@@ -128,12 +123,10 @@ export function requestPaymentsList({
   bankStatementId,
   bankAccountId,
   paymentAmountTo,
-  bankAccountUuid,
   businessPartnerId,
   transactionDateTo,
   paymentAmountFrom,
-  transactionDateFrom,
-  businessPartnerUuid
+  transactionDateFrom
 }) {
   return request({
     url: `${config.VBankStatementMatch.endpoint}/payments`,
@@ -144,12 +137,10 @@ export function requestPaymentsList({
       bank_statement_id: bankStatementId,
       bank_account_id: bankAccountId,
       payment_amount_to: paymentAmountTo,
-      bank_account_uuid: bankAccountUuid,
       business_partner_id: businessPartnerId,
       transaction_date_to: transactionDateTo,
       payment_amount_from: paymentAmountFrom,
-      transaction_date_from: transactionDateFrom,
-      business_partner_uuid: businessPartnerUuid
+      transaction_date_from: transactionDateFrom
     }
   })
     .then(response => {
@@ -164,12 +155,10 @@ export function requestMatchingMovementsList({
   bankStatementId,
   bankAccountId,
   paymentAmountTo,
-  bankAccountUuid,
   businessPartnerId,
   transactionDateTo,
   paymentAmountFrom,
-  transactionDateFrom,
-  businessPartnerUuid
+  transactionDateFrom
 }) {
   return request({
     url: `${config.VBankStatementMatch.endpoint}/matching-movements`,
@@ -180,12 +169,10 @@ export function requestMatchingMovementsList({
       bank_statement_id: bankStatementId,
       bank_account_id: bankAccountId,
       payment_amount_to: paymentAmountTo,
-      bank_account_uuid: bankAccountUuid,
       business_partner_id: businessPartnerId,
       transaction_date_to: transactionDateTo,
       payment_amount_from: paymentAmountFrom,
-      transaction_date_from: transactionDateFrom,
-      business_partner_uuid: businessPartnerUuid
+      transaction_date_from: transactionDateFrom
     }
   })
     .then(response => {
@@ -222,42 +209,6 @@ export function requestBankStatemensList({
     })
 }
 
-// Process
-export function processMovements({
-  matchMode,
-  searchValue,
-  bankAccountId,
-  bankAccountUuid,
-  paymentAmountTo,
-  paymentAmountFrom,
-  transactionDateTo,
-  businessPartnerId,
-  businessPartnerUuid,
-  transactionDateFrom,
-  macthingSelectionsList
-}) {
-  return request({
-    url: `${config.VBankStatementMatch.endpoint}/process`,
-    method: 'post',
-    params: {
-      match_mode: matchMode,
-      search_value: searchValue,
-      bank_account_id: bankAccountId,
-      payment_amount_to: paymentAmountTo,
-      bank_account_uuid: bankAccountUuid,
-      business_partner_id: businessPartnerId,
-      transaction_date_to: transactionDateTo,
-      payment_amount_from: paymentAmountFrom,
-      transaction_date_from: transactionDateFrom,
-      business_partner_uuid: businessPartnerUuid,
-      matching_selections_list: macthingSelectionsList
-    }
-  })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
-}
-
 export function requestListUnMatch({
   listImportedMovements
 }) {
@@ -281,7 +232,7 @@ export function requestResultMovements({
   bankStatementId
 }) {
   return request({
-    url: `${config.VBankStatementMatch.endpoint}/result-movements`,
+    url: `${config.VBankStatementMatch.endpoint}/movements`,
     method: 'get',
     params: {
       search_value: searchValue,
@@ -298,7 +249,7 @@ export function requestResultMovements({
     })
 }
 
-export function requestProcess({
+export function requestProcessBankMovements({
   bankAccountId,
   paymentAmountFrom,
   paymentAmountTo,
@@ -307,7 +258,7 @@ export function requestProcess({
   bankStatementId
 }) {
   return request({
-    url: `${config.VBankStatementMatch.endpoint}/process`,
+    url: `${config.VBankStatementMatch.endpoint}/process-movements`,
     method: 'post',
     data: {
       bank_account_id: bankAccountId,
