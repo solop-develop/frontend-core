@@ -70,7 +70,7 @@ export function requestListSalesRepresentatives({
   searchValue
 }) {
   return request({
-    url: '/user-interface/component/issue/list-sales-representatives',
+    url: '/issue-management/sales-representatives',
     method: 'get',
     params: {
       search_value: searchValue
@@ -88,7 +88,7 @@ export function requestListRequestTypes({
   searchValue
 }) {
   return request({
-    url: '/user-interface/component/issue/list-request-types',
+    url: '/issue-management/request-types',
     method: 'get',
     params: {
       search_value: searchValue
@@ -107,7 +107,7 @@ export function requestListStatuses({
   searchValue
 }) {
   return request({
-    url: '/user-interface/component/issue/list-statuses',
+    url: '/issue-management/statuses',
     method: 'get',
     params: {
       request_type_id: requestTypeId,
@@ -126,7 +126,7 @@ export function requestListPriorities({
   searchValue
 }) {
   return request({
-    url: '/user-interface/component/issue/list-priorities',
+    url: '/issue-management/priorities',
     method: 'get',
     params: {
       search_value: searchValue
@@ -159,7 +159,7 @@ export function requestCreateIssue({
   dateNextAction
 }) {
   return request({
-    url: '/user-interface/component/issue/create-issue',
+    url: '/issue-management/issues',
     method: 'post',
     data: {
       record_id: recordId,
@@ -209,7 +209,7 @@ export function requestUpdateIssue({
   dateNextAction
 }) {
   return request({
-    url: '/user-interface/component/issue/update-issue',
+    url: `/issue-management/issues/${id}`,
     method: 'put',
     data: {
       id,
@@ -244,7 +244,7 @@ export function requestDeleteIssue({
   uuid
 }) {
   return request({
-    url: '/user-interface/component/issue/delete-issue',
+    url: `/issue-management/issues/${id}`,
     method: 'delete',
     params: {
       id,
@@ -272,7 +272,7 @@ export function requestListIssueComments({
   searchValue
 }) {
   return request({
-    url: '/user-interface/component/issue/list-issue-comments',
+    url: `/issue-management/issues/${issueId}/comments`,
     method: 'get',
     params: {
       issue_id: issueId,
@@ -300,7 +300,7 @@ export function requestCreateIssueComment({
   result
 }) {
   return request({
-    url: '/user-interface/component/issue/create-issue-comment',
+    url: `/issue-management/issues/${issueId}/comments`,
     method: 'post',
     data: {
       issue_id: issueId,
@@ -328,7 +328,7 @@ export function requestUpdateIssueComment({
   result
 }) {
   return request({
-    url: '/user-interface/component/issue/update-issue-comment',
+    url: `/issue-management/issues/${issueId}/comments`,
     method: 'put',
     data: {
       id: issueId,
@@ -354,7 +354,7 @@ export function requestDeleteIssueComment({
   issueUuid
 }) {
   return request({
-    url: '/user-interface/component/issue/delete-issue-comment',
+    url: `/issue-management/issues/${issueId}/comments`,
     method: 'delete',
     params: {
       id: issueId,

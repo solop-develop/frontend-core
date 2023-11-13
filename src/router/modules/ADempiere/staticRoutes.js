@@ -354,6 +354,24 @@ const staticRoutes = [
         }
       }
     ]
+  },
+  {
+    path: '/tracking',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/tracking',
+        component: () => import('@/views/ADempiere/Form'),
+        name: 'Tracking',
+        meta: {
+          title: 'Tracking',
+          icon: 'tree-table',
+          isIndex: true,
+          type: 'from'
+        }
+      }
+    ]
   }
 ]
 

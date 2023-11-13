@@ -123,6 +123,9 @@ export default defineComponent({
         case 'VFileImport':
           form = import('@/components/ADempiere/FormDefinition/VFileImport')
           break
+        case 'Tracking':
+          form = import('@/components/ADempiere/FormDefinition/Tracking')
+          break
         default:
           form = import('@/views/ADempiere/Unsupported')
           break
