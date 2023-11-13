@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <el-card style="height: 100% !important;padding: 0px 10px;">
+  <el-card class="el-current-payments" style="padding: 0px 10px;">
     <div slot="header" class="clearfix" style="text-align: center;">
       <b>
         {{ $t('form.VBankStatementMatch.bankMovements.title') }}
@@ -29,7 +29,7 @@
       v-loading="isLoading"
       :data="recorsList"
       class="table-import"
-      max-height="313"
+      max-height="95%"
       :border="true"
       :row-class-name="tableRowClassName"
       :cell-class-name="cellRow"

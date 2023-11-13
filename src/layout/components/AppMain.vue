@@ -1,5 +1,5 @@
 <template>
-  <div id="appMain" :class="styleForm">
+  <div :class="styleForm">
     <span v-if="isMobile">
       <navbar />
       <tags-view />
@@ -34,6 +34,9 @@ export default {
       return this.$route.path
     },
     styleForm() {
+      if (this.$route.meta.type === 'form') {
+        return 'app-main-from'
+      }
       if (this.$route.meta.uuid === '8e4265c6-fb40-11e8-a479-7a0060f0aa01') {
         return 'app-main-from'
       }
@@ -72,7 +75,8 @@ export default {
 
 .app-main-from {
   width: 100%;
-  position: relative;
+  // position: relative;
+  height: 100%;
   overflow: auto;
 }
 

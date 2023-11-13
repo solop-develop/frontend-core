@@ -17,54 +17,41 @@
 -->
 
 <template>
-  <div class="form-view" :style="styleHeight">
-    <el-container
-      v-if="isLoadedMetadata"
-      key="form-loaded"
-      class="form-loaded"
-    >
-      <el-main style="padding: 0px !important;">
-        <el-row class="row-content">
-          <el-col class="col-content" :span="24">
-            <el-card
-              class="content-collapse"
-            >
-              <title-and-help
-                v-if="isShowTitleForm && !isVisibleShowButton"
-                :name="formName"
-                :help="formMetadata.help"
-              >
-                <el-button
-                  type="text"
-                  style="float: right; z-index: 5"
-                  :circle="true"
-                  icon="el-icon-arrow-up"
-                  @click="changeDisplatedTitle"
-                />
-              </title-and-help>
-
-              <el-button
-                v-if="!isShowTitleForm && !isVisibleShowButton"
-                type="text"
-                style="position: absolute; right: 10px;z-index: 5;"
-                :circle="true"
-                icon="el-icon-arrow-down"
-                @click="changeDisplatedTitle"
-              />
-              <div style="height: 100%">
-                <form-defintion
-                  :metadata="{
-                    ...formMetadata,
-                    fileName: formFileName,
-                    title: formName
-                  }"
-                />
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
-      </el-main>
-    </el-container>
+  <div style="height: 100%;">
+    <div v-if="isLoadedMetadata" class="panel-forms">
+      <div :class="classTitle">
+        <title-and-help
+          v-if="isShowTitleForm && !isVisibleShowButton"
+          :name="formName"
+          :help="formMetadata.help"
+        >
+          <el-button
+            type="text"
+            style="float: right; z-index: 5"
+            :circle="true"
+            icon="el-icon-arrow-up"
+            @click="changeDisplatedTitle"
+          />
+        </title-and-help>
+        <el-button
+          v-if="!isShowTitleForm && !isVisibleShowButton"
+          type="text"
+          style="position: absolute; right: 10px;z-index: 5;"
+          :circle="true"
+          icon="el-icon-arrow-down"
+          @click="changeDisplatedTitle"
+        />
+      </div>
+      <div class="panel">
+        <form-defintion
+          :metadata="{
+            ...formMetadata,
+            fileName: formFileName,
+            title: formName
+          }"
+        />
+      </div>
+    </div>
 
     <loading-view
       v-else
@@ -144,10 +131,15 @@ export default defineComponent({
     })
 
     const styleHeight = computed(() => {
-      if (formFileName.value === 'WFActivity') {
-        return 'height: 90vh;overflow: auto;'
-      }
-      return 'height: 100vh;overflow: auto;'
+      // if (formFileName.value === 'WFActivity') {
+      //   return 'height: 90vh;overflow: auto;'
+      // }
+      return 'height: 100% !important;overflow: auto;'
+    })
+
+    const classTitle = computed(() => {
+      if (isShowTitleForm.value && !isVisibleShowButton.value) return 'title-form'
+      return 'title-form-hidden'
     })
 
     function changeDisplatedTitle() {
@@ -187,6 +179,7 @@ export default defineComponent({
       formFileName,
       formName,
       isShowTitleForm,
+      classTitle,
       isVisibleShowButton,
       styleHeight,
       // Methods
@@ -209,11 +202,28 @@ export default defineComponent({
     /* height: 100%!important; */
   }
 }
+.panel-forms {
+  height: 100%;
+  .title-form {
+    height: 5%;
+  }
+  .title-form-hidden {
+    height: 2%;
+  }
+  .panel {
+    height: 95%;
+  }
+}
 </style>
 
-<style scoped >
+<style lang="scss" scoped>
   .content-collapse {
     /* height: 100%!important; */
     display: contents;
+    .el-card{
+      .el-card__body{
+         height: 100%;
+      }
+    }
   }
 </style>

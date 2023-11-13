@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <el-card style="height: 100% !important;padding: 0px 10px;">
+  <el-card class="el-current-payments" style="padding: 0px 10px;">
     <div slot="header" class="clearfix" style="text-align: center;">
       <b>
         {{ $t('form.VBankStatementMatch.systemPayments.title') }}
@@ -29,7 +29,7 @@
       v-loading="isLoading"
       :data="recorsList"
       :border="true"
-      max-height="313"
+      max-height="95%"
       :row-class-name="tableRowClassName"
       :cell-class-name="cellRow"
       style="width: 100%;"
@@ -244,5 +244,23 @@ export default defineComponent({
 }
 .el-table .cell-column-invoce {
   padding: 0px !important;
+}
+.el-current-payments {
+  height: 100% !important;
+  .el-card {
+    height: 100% !important;
+    .el-card__header {
+      padding: 18px 20px;
+      border-bottom: 1px solid #e6ebf5;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      padding-bottom: 5px;
+    }
+  }
+}
+.el-current-payments .el-card__body {
+  height: 90% !important;
+  padding: 30px 10px;
+  padding-top: 10px;
 }
 </style>

@@ -17,19 +17,16 @@
 -->
 
 <template>
-  <div style="height: 100% !important;">
-    <el-card id="panel-top-search-criteria" class="panel-top-search-criteria" style="height: 50% !important;">
-      <div style="width: 50% !important;float: left;padding-left: 5px;padding-right: 2px;height: 100% !important;">
-        <imported-payments />
-      </div>
-
-      <div style="width: 50% !important;float: right;padding-left: 2px;padding-right: 5px;height: 100% !important;">
-        <current-payments />
-      </div>
-    </el-card>
-    <el-card style="height: 50% !important;">
-      <automatic-match style="padding-left: 5px;padding-right: 5px;" />
-    </el-card>
+  <div class="manual-match">
+    <div class="payments">
+      <imported-payments />
+    </div>
+    <div class="payments-current">
+      <current-payments />
+    </div>
+    <div class="automatic-match">
+      <automatic-match />
+    </div>
   </div>
 </template>
 
@@ -81,6 +78,23 @@ export default defineComponent({
   }
   .el-table__body-wrapper {
     height: 85% !important;
+  }
+}
+.manual-match {
+  height: inherit;
+  .payments {
+    height: 60%;
+    width: 50%;
+    float: left;
+  }
+  .payments-current {
+    height: 60%;
+    width: 50%;
+    float: right;
+  }
+  .automatic-match {
+    height: 60%;
+    width: 100%;
   }
 }
 </style>

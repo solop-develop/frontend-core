@@ -17,8 +17,8 @@
 -->
 
 <template>
-  <div style="height: -webkit-fill-available;">
-    <div style="height: 5% !important;">
+  <div style="height: inherit;">
+    <div style="height: 8% !important;">
       <el-steps :active="currentSetp" finish-status="success">
         <el-step
           v-for="(list, key) in stepList"
@@ -28,7 +28,7 @@
       </el-steps>
     </div>
 
-    <div style="height: 79% !important;">
+    <div style="height: 82% !important;">
       <transition name="el-fade-in-linear">
         <search-criteria
           v-if="currentSetp === 1"
@@ -44,7 +44,7 @@
       </transition>
     </div>
 
-    <div style="height: 5% !important;text-align: end;">
+    <div style="height: 10% !important;text-align: end;">
       <el-button
         v-if="!isNext"
         type="info"

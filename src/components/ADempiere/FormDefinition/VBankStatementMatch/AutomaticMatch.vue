@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <el-card id="panel-top-search-criteria" class="panel-top-search-criteria">
+  <el-card class="el-current-payments" style="padding: 0px 10px;">
     <div slot="header" class="clearfix" style="text-align: center;">
       <b>
         {{ $t('form.VBankStatementMatch.systemPayments.table.match') }}
@@ -29,6 +29,7 @@
       :data="matchingMovements.list"
       :empty-text="$t('form.VBankStatementMatch.automaticMatch.withoutAutomaticMatch')"
       :border="true"
+      max-height="95%"
       :element-loading-text="$t('notifications.loading') + '...'"
       element-loading-spinner="el-icon-loading"
       element-loading-background="rgba(0, 0, 0, 0.2)"
