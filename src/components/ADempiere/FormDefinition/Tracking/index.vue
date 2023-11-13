@@ -38,7 +38,7 @@
             <p style="margin: 0px;">
               <b>
                 <svg-icon
-                  v-if="'AÉREO' === tracking.category"
+                  v-if="tracking.request_type.name.includes('aereo')"
                   icon-class="airplane"
                   style="font-size: 35px;"
                 />
@@ -94,9 +94,6 @@ import store from '@/store'
 import InfoPanel from './component/InfoPanel.vue'
 
 // // Utils and Helper Methods
-// import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
-// import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
-// import { getImagePath } from '@/utils/ADempiere/resource.js'
 
 export default defineComponent({
   name: 'Tracking',
@@ -107,32 +104,6 @@ export default defineComponent({
     // Computeds
     const listTracking = computed(() => {
       return store.getters.getListTracking
-      // return [
-      //   {
-      //     document_no: 4434720953,
-      //     category: 'AÉREO',
-      //     subject: '5 WIRELESS DATATERMINAL',
-      //     id: 1000066,
-      //     dateNextAction: 'sábado, 14 de octubre de 2023, 08:37:31 p. m.',
-      //     status: {
-      //       name: 'En Tránsito',
-      //       id: 1000007
-      //     },
-      //     summary: 'Terminal desde eBay'
-      //   },
-      //   {
-      //     document_no: 1253906916,
-      //     category: 'MARÍTIMO',
-      //     id: 1000065,
-      //     subject: 'INTELLIGENT TOUCH TERMINAL',
-      //     dateNextAction: 'domingo, 21 de septiembre de 2023, 10:15:56 a. m.',
-      //     status: {
-      //       name: 'Recibido en Almacén',
-      //       id: 1000005
-      //     },
-      //     summary: 'INTELLIGENT TOUCH TERMINAL desde Amazon'
-      //   }
-      // ]
     })
     const currentTracking = computed(() => {
       return store.getters.getCurrentTracking

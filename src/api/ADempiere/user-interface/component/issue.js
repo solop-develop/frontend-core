@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+// CONST
+import { config } from '@/utils/ADempiere/config'
 
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
@@ -29,7 +31,8 @@ export function requestExistsIssues({
   recordId
 }) {
   return request({
-    url: `/issue-management/issues/${tableName}/${recordId}/exists`,
+    url: `${config.issuesManagement.endpoint}/issues/${tableName}/${recordId}/exists`,
+    // url: `/issue-management/issues/${tableName}/${recordId}/exists`,
     method: 'get',
     params: {
       record_id: recordId,
@@ -53,7 +56,7 @@ export function requestListIssues({
   searchValue
 }) {
   return request({
-    url: '/issue-management/issues',
+    url: `${config.issuesManagement.endpoint}/issues`,
     method: 'get',
     params: {
       record_id: recordId,
@@ -70,7 +73,8 @@ export function requestListSalesRepresentatives({
   searchValue
 }) {
   return request({
-    url: '/issue-management/sales-representatives',
+    url: `${config.issuesManagement.endpoint}/sales-representatives`,
+    // url: '/issue-management/sales-representatives',
     method: 'get',
     params: {
       search_value: searchValue
@@ -88,7 +92,8 @@ export function requestListRequestTypes({
   searchValue
 }) {
   return request({
-    url: '/issue-management/request-types',
+    // url: '/issue-management/request-types',
+    url: `${config.issuesManagement.endpoint}/request-types`,
     method: 'get',
     params: {
       search_value: searchValue
@@ -107,7 +112,8 @@ export function requestListStatuses({
   searchValue
 }) {
   return request({
-    url: '/issue-management/statuses',
+    // url: '/issue-management/statuses',
+    url: `${config.issuesManagement.endpoint}/statuses`,
     method: 'get',
     params: {
       request_type_id: requestTypeId,
@@ -126,7 +132,8 @@ export function requestListPriorities({
   searchValue
 }) {
   return request({
-    url: '/issue-management/priorities',
+    // url: '/issue-management/priorities',
+    url: `${config.issuesManagement.endpoint}/priorities`,
     method: 'get',
     params: {
       search_value: searchValue
@@ -159,7 +166,8 @@ export function requestCreateIssue({
   dateNextAction
 }) {
   return request({
-    url: '/issue-management/issues',
+    // url: '/issue-management/issues',
+    url: `${config.issuesManagement.endpoint}/issues`,
     method: 'post',
     data: {
       record_id: recordId,
@@ -209,7 +217,7 @@ export function requestUpdateIssue({
   dateNextAction
 }) {
   return request({
-    url: `/issue-management/issues/${id}`,
+    url: `${config.issuesManagement.endpoint}/issues/${id}`,
     method: 'put',
     data: {
       id,
@@ -244,7 +252,7 @@ export function requestDeleteIssue({
   uuid
 }) {
   return request({
-    url: `/issue-management/issues/${id}`,
+    url: `${config.issuesManagement.endpoint}/issues/${id}`,
     method: 'delete',
     params: {
       id,
@@ -272,7 +280,8 @@ export function requestListIssueComments({
   searchValue
 }) {
   return request({
-    url: `/issue-management/issues/${issueId}/comments`,
+    // url: `/issue-management/issues/${issueId}/comments`,
+    url: `${config.issuesManagement.endpoint}/issues/${issueId}/comments`,
     method: 'get',
     params: {
       issue_id: issueId,
@@ -300,7 +309,7 @@ export function requestCreateIssueComment({
   result
 }) {
   return request({
-    url: `/issue-management/issues/${issueId}/comments`,
+    url: `${config.issuesManagement.endpoint}/issues/${issueId}/comments`,
     method: 'post',
     data: {
       issue_id: issueId,
@@ -328,7 +337,7 @@ export function requestUpdateIssueComment({
   result
 }) {
   return request({
-    url: `/issue-management/issues/${issueId}/comments`,
+    url: `${config.issuesManagement.endpoint}/issues/${issueId}/comments`,
     method: 'put',
     data: {
       id: issueId,
@@ -354,7 +363,7 @@ export function requestDeleteIssueComment({
   issueUuid
 }) {
   return request({
-    url: `/issue-management/issues/${issueId}/comments`,
+    url: `${config.issuesManagement.endpoint}/issues/${issueId}/comments`,
     method: 'delete',
     params: {
       id: issueId,

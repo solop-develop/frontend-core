@@ -67,5 +67,8 @@
   "VBankStatementMatch": {
     "endpoint": "/bank-statement-match"
   },
+  "issuesManagement": {
+    "endpoint": "/issue-management"
+  },
   "theme": "src/themes/default"
 }
