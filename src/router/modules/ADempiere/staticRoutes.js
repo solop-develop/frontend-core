@@ -281,17 +281,18 @@ const staticRoutes = [
       }
     ]
   },
+
   {
-    path: '/expressReceipt',
+    path: '/express-receipt',
     component: Layout,
     hidden: true,
     children: [
       {
         path: '/express-receipt',
         component: () => import('@/views/ADempiere/Form'),
-        name: 'expressReceipt',
+        name: 'ExpressReceipt',
         meta: {
-          title: 'expressReceipt',
+          title: 'Express Receipt',
           icon: 'el-icon-receiving',
           isIndex: true,
           type: 'from'
@@ -300,17 +301,17 @@ const staticRoutes = [
     ]
   },
   {
-    path: '/expressShipment',
+    path: '/ExpressShipment',
     component: Layout,
     hidden: true,
     children: [
       {
         path: '/express-shipment',
         component: () => import('@/views/ADempiere/Form'),
-        name: 'expressShipment',
+        name: 'ExpressShipment',
         meta: {
           // title: language.t('route.expressShipment'),
-          title: 'expressShipment',
+          title: 'Express Shipment',
           // title: language.t('route.reportViewer'),
           icon: 'shopping',
           isIndex: true,
@@ -320,16 +321,16 @@ const staticRoutes = [
     ]
   },
   {
-    path: '/expressMovement',
+    path: '/express-movement',
     component: Layout,
     hidden: true,
     children: [
       {
         path: '/express-movement',
         component: () => import('@/views/ADempiere/Form'),
-        name: 'expressMovement',
+        name: 'ExpressMovement',
         meta: {
-          title: 'expressMovement',
+          title: 'Express Movement',
           icon: 'tree-table',
           isIndex: true,
           type: 'from'
@@ -337,6 +338,7 @@ const staticRoutes = [
       }
     ]
   },
+
   {
     path: '/VFileImport',
     component: Layout,
