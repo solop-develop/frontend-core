@@ -79,7 +79,6 @@ export default defineComponent({
       },
       // setter
       set(value) {
-        console.log({ value })
         store.commit('setAttributeFieldLocationsCustomers', {
           typeLocations: fieldsLocation.value,
           attribute: 'countryId',
@@ -90,10 +89,6 @@ export default defineComponent({
 
     function changeCountry(countryId) {
       if (isEmptyValue(countryId)) return
-      console.log({
-        countryId,
-        typeLocations: fieldsLocation.value
-      })
       store.dispatch('countrieCustomers', { countryId, typeLocations: fieldsLocation.value })
     }
 

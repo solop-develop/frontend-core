@@ -211,7 +211,6 @@ export default defineComponent({
     }
 
     function createBusinessParter() {
-      console.log('Create New Customer')
       isLoading.value = true
       store.dispatch('createCustomer', {
         addresses: addresses.value
