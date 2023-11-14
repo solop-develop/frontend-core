@@ -23,69 +23,6 @@ import { request } from '@/utils/ADempiere/request'
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 /**
- * Reference List from Window
- * @param {string}  tableName
- * @param {string}  windowUuid
- * @param {string}  recordUuid
- * @param {number}  recordId
- */
-export function requestReferencesList({
-  windowUuid,
-  tableName,
-  recordId,
-  recordUuid,
-  pageToken,
-  pageSize = ROWS_OF_RECORDS_BY_PAGE
-}) {
-  return request({
-    url: '/user-interface/window/references',
-    method: 'get',
-    params: {
-      id: recordId,
-      uuid: recordUuid,
-      window_uuid: windowUuid,
-      table_name: tableName,
-      // Page Data
-      page_token: pageToken,
-      page_size: pageSize
-    }
-  })
-    .then(referencesListResposnse => {
-      const { convertReferencesList } = require('@/utils/ADempiere/apiConverts/values.js')
-
-      return convertReferencesList(referencesListResposnse)
-    })
-}
-
-/**
- * Reference List from Window
- * @param {number}  tabId
- * @param {string}  tabUuid
- * @param {number}  recordId
- * @param {string}  recordUuid
- */
-export function requestExistsReferences({
-  tabId,
-  tabUuid,
-  recordId,
-  recordUuid
-}) {
-  return request({
-    url: '/user-interface/window/exists-references',
-    method: 'get',
-    params: {
-      record_id: recordId,
-      record_uuid: recordUuid,
-      tab_id: tabId,
-      tab_uuid: tabUuid
-    }
-  })
-    .then(referencesListResposnse => {
-      return referencesListResposnse
-    })
-}
-
-/**
  * Get context information for a window, tab or field
  * @param {string} query
  * @param {string} uuid

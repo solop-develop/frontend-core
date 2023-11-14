@@ -1,19 +1,19 @@
 <!--
-ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -28,7 +28,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         <el-descriptions-item
           v-for="(reference, key) in getterReferences.referencesList"
           :key="key"
-          :label="reference.displayName"
+          :label="reference.display_name"
           content-class-name="zoom-reference"
         >
           <el-button
@@ -57,10 +57,11 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 import { defineComponent, computed } from '@vue/composition-api'
 
 import store from '@/store'
+
 // Component and Mixins
 import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
+
 // Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 
 export default defineComponent({
@@ -111,19 +112,23 @@ export default defineComponent({
      */
 
     function openReference(referenceElement) {
-      if (isEmptyValue(referenceElement.windowUuid)) {
+      if (referenceElement.window_id <= 0) {
         return
       }
 
+      const tabParent = 0
+
+      const containerIdentifier = 'window_' + referenceElement.window_id
       zoomIn({
-        uuid: referenceElement.windowUuid,
-        params: {
-          containerUuid: props.tabUuid
-        },
+        attributeValue: containerIdentifier,
+        attributeName: 'containerKey',
         query: {
-          referenceUuid: referenceElement.uuid
+          tabParent,
+          recordId: referenceElement.value
+          // action: 'criteria'
         }
       })
+
       store.commit('setShowLogs', false)
     }
 

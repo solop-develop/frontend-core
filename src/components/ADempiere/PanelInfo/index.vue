@@ -429,6 +429,7 @@ export default defineComponent({
         store.dispatch('getReferencesFromServer', {
           tableName: currentTab.value.tableName,
           containerUuid: currentTab.value.containerUuid,
+          tabId: currentTab.value.id,
           parentUuid: currentTab.value.parentUuid,
           recordId: currentRecordId.value,
           recordUuid: currentRecordUuid.value
