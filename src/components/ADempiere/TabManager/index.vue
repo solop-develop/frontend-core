@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -198,7 +198,7 @@ import TabOptions from './TabOptions.vue'
 import { UUID } from '@/utils/ADempiere/constants/systemColumns.js'
 
 // API Request Methods
-import { requestExistsReferences } from '@/api/ADempiere/window'
+import { requestExistsReferences } from '@/api/ADempiere/recordManagement/referencesRecord.ts'
 import {
   requestExistsChatsEntries, requestListEntityChats
 } from '@/api/ADempiere/logs/tabInfo/chatsEntries.ts'
@@ -419,7 +419,7 @@ export default defineComponent({
       setTabNumber(tabindex)
       // chatAvailable()
       // attachmentAvailable()
-      // getReferences()
+      getReferences()
 
       // set metadata tab
       if (tabUuid.value !== tabuuid) {
@@ -666,29 +666,23 @@ export default defineComponent({
     /**
      * Reference
      */
-
     const getReferences = () => {
       showReference.value = false
-      if (isEmptyValue(currentTabTableName.value) ||
-        !isEmptyValue(currentTabTableName.value) ||
-        (isEmptyValue(currentRecordUuid.value) ||
-        (isEmptyValue(currentRecordId.value) || currentRecordId.value <= 0))) {
+      const tab = currentTabMetadata.value
+      const recordId = currentRecordId.value
+      if (isEmptyValue(tab) || isEmptyValue(recordId)) {
         return
       }
       requestExistsReferences({
-        tabId: currentTabMetadata.value.id,
-        tabUuid: currentTabMetadata.value.uuid,
-        recordUuid: currentRecordUuid.value,
-        recordId: currentRecordId.value
+        tabId: tab.id,
+        recordId: recordId
       })
         .then(responseReferences => {
-          if (responseReferences > 0) {
+          const { record_count } = responseReferences
+          if (record_count > 0) {
             showReference.value = true
-            countReference.value = responseReferences
-            return
+            countReference.value = record_count
           }
-          showReference.value = false
-          return
           // const { referencesList } = responseReferences
           // showReference.value = !isEmptyValue(referencesList)
         })
@@ -698,7 +692,6 @@ export default defineComponent({
     /**
      * Issuess
      */
-
     const getIssues = () => {
       showIssues.value = false
       if (
@@ -728,7 +721,6 @@ export default defineComponent({
     /**
      * Notes
      */
-
     const getIsNotes = () => {
       showIsNote.value = false
       if (
