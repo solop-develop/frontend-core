@@ -38,7 +38,7 @@
             <p style="margin: 0px;">
               <b>
                 <svg-icon
-                  v-if="traking.request_type.name.toLowerCase().includes('aereo')"
+                  v-if="traking.request_type.name[0].toLowerCase().includes('a')"
                   icon-class="airplane"
                   style="font-size: 35px;"
                 />
