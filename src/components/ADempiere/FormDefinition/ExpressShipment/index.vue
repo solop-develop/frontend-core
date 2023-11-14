@@ -28,15 +28,16 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             <el-col :span="8">
               <el-form-item class="front-item-receipt">
                 <template slot="label" style="width: 450px;">
-                  {{ $t('VBankStatementMatch.field.businessPartner') }}
-                  <!-- <br>
-                  <br> -->
+                  {{ $t('form.VBankStatementMatch.field.businessPartner') }}
                 </template>
                 <el-select
                   v-model="currentBusinessPartners"
+                  filterable
+                  remote
+                  reserve-keyword
                   placeholder="Please Select Business Partner"
                   style="width: 100%;"
-                  filterable
+                  :remote-method="remoteMethod"
                   @visible-change="findBusinessPartners"
                 >
                   <el-option
@@ -52,14 +53,14 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
               <el-form-item class="front-item-receipt">
                 <template slot="label" style="width: 450px;">
                   {{ $t('form.expressShipment.field.salesOrder') }}
-                  <!-- <br>
-                  <br> -->
                 </template>
                 <el-select
                   v-model="salesOrder"
-                  placeholder="Please Select Purchase Order"
-                  style="width: 100%;"
+                  clearable
                   filterable
+                  style="width: 100%;"
+                  placeholder="Please Select Purchase Order"
+                  :disabled="isEmptyValue(currentBusinessPartners)"
                   @visible-change="findSalesOrder"
                   @change="selectSalesOrder"
                 >
@@ -216,7 +217,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       <p class="total">
         {{ $t('form.expressShipment.modal.nrOrder') }}:
         <b class="order-info">
-          {{ currentOrder.document_no }}
+          {{ currentOrder }}
         </b>
       </p>
       <p class="total">
@@ -293,7 +294,7 @@ export default defineComponent({
     const findProduct = ref('')
     const isQuantityFromOrderLine = ref(false)
     const timeOut = ref(null)
-    const listOrder = ref([])
+    // const listOrder = ref([])
     const listBusinessPartners = ref([])
     const isLoadedServer = ref(false)
     const isEditQuantity = ref(false)
@@ -302,6 +303,9 @@ export default defineComponent({
     /**
    * Computed
    */
+    const listOrder = computed(() => {
+      return store.getters.getListOrdersShipment
+    })
     const listProdcut = computed(() => {
       return store.getters.getListProductShipment
     })
@@ -309,11 +313,11 @@ export default defineComponent({
       return store.getters.getListShipmentLines
     })
     const currentShipment = computed(() => {
-      return store.getters.getCurrentShipment
+      return store.getters.getCurrentExpressShipment
     })
     const isComplete = computed(() => {
-      const { isCompleted } = store.getters.getCurrentShipment
-      if (!isEmptyValue(store.getters.getCurrentShipment)) {
+      const { isCompleted } = store.getters.getCurrentExpressShipment
+      if (!isEmptyValue(store.getters.getCurrentExpressShipment)) {
         return isCompleted
       }
       return false
@@ -333,12 +337,13 @@ export default defineComponent({
       return 0
     })
     const currentOrder = computed(() => {
-      if (isEmptyValue(listOrder.value) || isEmptyValue(salesOrder.value)) {
+      const order = store.getters.getCurrentOrdersShipment
+      if (isEmptyValue(order)) {
         return {
           document_no: ''
         }
       }
-      return listOrder.value.find(order => salesOrder.value === order.id)
+      return order
     })
     /**
      * Methods
@@ -352,7 +357,7 @@ export default defineComponent({
       })
         .then(response => {
           const { records } = response
-          listOrder.value = records.map(order => {
+          const list = records.map(order => {
             const { id, uuid, document_no, date_ordered } = order
             return {
               id,
@@ -361,6 +366,7 @@ export default defineComponent({
               uuid
             }
           })
+          store.commit('setListOrdersShipment', list)
         })
         .catch(error => {
           showMessage({
@@ -370,10 +376,14 @@ export default defineComponent({
         })
     }
 
-    function findBusinessPartners(isFindOrder) {
+    function remoteMethod(query) {
+      findBusinessPartners(true, query)
+    }
+
+    function findBusinessPartners(isFindOrder, searchValue) {
       if (!isFindOrder) return
       listBusinessPartnersShipment({
-        searchValue: currentBusinessPartners.value
+        searchValue
       })
         .then(response => {
           const { records } = response
@@ -399,6 +409,7 @@ export default defineComponent({
       store.dispatch('createShipment', {
         id: order
       })
+      store.commit('setCurrentOrdersShipment', order)
       if (!isEmptyValue(refs.searchValue)) {
         refs.searchValue.suggestions = []
       }
@@ -588,6 +599,7 @@ export default defineComponent({
       isQuantityFromOrderLine,
       // Methods
       findSalesOrder,
+      remoteMethod,
       findBusinessPartners,
       selectSalesOrder,
       handleSelect,

@@ -17,6 +17,7 @@
  */
 
 import { request } from '@/utils/ADempiere/request'
+import { config } from '@/utils/ADempiere/config'
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 export function listBusinessPartnersShipment({
@@ -25,7 +26,7 @@ export function listBusinessPartnersShipment({
   pageSize
 }) {
   return request({
-    url: '/form/addons/express-shipment/business-partners',
+    url: `${config.express.shipment}/business-partners`,
     method: 'get',
     params: {
       page_size: pageSize,
@@ -46,7 +47,7 @@ export function listOrders({
   pageSize
 }) {
   return request({
-    url: '/form/addons/express-shipment/sales-orders',
+    url: `${config.express.shipment}/orders`,
     method: 'get',
     params: {
       page_size: pageSize,
@@ -67,12 +68,11 @@ export function listProductRequest({
   searchValue,
   sku,
   value,
-  pageToken,
   pageSize,
   shipmentId
 }) {
   return request({
-    url: '/form/addons/express-shipment/product',
+    url: `${config.express.shipment}/products`,
     method: 'get',
     params: {
       page_size: pageSize,
@@ -94,7 +94,7 @@ export function createShipmentRequest({
   uuid
 }) {
   return request({
-    url: '/form/addons/express-shipment/shipment',
+    url: `${config.express.shipment}/shipments`,
     method: 'post',
     data: {
       order_id: id,
@@ -111,11 +111,9 @@ export function processShipmentRequest({
   uuid
 }) {
   return request({
-    url: '/form/addons/express-shipment/process-shipment',
+    url: `${config.express.shipment}/${id}/process`,
     method: 'post',
     data: {
-      // order_id: id,
-      // order_uuid: uuid
       id,
       uuid
     }
@@ -130,7 +128,7 @@ export function deleteShipmentRequest({
   uuid
 }) {
   return request({
-    url: '/form/addons/express-shipment/shipment',
+    url: `${config.express.shipment}/shipments`,
     method: 'delete',
     params: {
       order_id: id,
@@ -152,7 +150,7 @@ export function createShipmentLineRequest({
   quantity
 }) {
   return request({
-    url: '/form/addons/express-shipment/shipment-line',
+    url: `${config.express.shipment}/shipments/${shipmentId}/lines`,
     method: 'post',
     data: {
       shipment_id: shipmentId,
@@ -161,7 +159,7 @@ export function createShipmentLineRequest({
       product_uuid: productUuid,
       is_quantity_from_order_line: isQuantityFromOrderLine,
       description,
-      quantity
+      quantity: quantity.toString()
     }
   })
     .then(response => {
@@ -170,15 +168,11 @@ export function createShipmentLineRequest({
 }
 export function deleteShipmentLineRequest({
   id,
-  uuid
+  shipmentId
 }) {
   return request({
-    url: '/form/addons/express-shipment/shipment-line',
-    method: 'delete',
-    params: {
-      id,
-      uuid
-    }
+    url: `${config.express.shipment}/shipments/${shipmentId}/lines/${id}`,
+    method: 'delete'
   })
     .then(response => {
       return camelizeObjectKeys(response)
@@ -187,17 +181,18 @@ export function deleteShipmentLineRequest({
 export function updateShipmentLineRequest({
   id,
   uuid,
+  shipmentId,
   description,
   quantity
 }) {
   return request({
-    url: '/form/addons/express-shipment/shipment-line',
-    method: 'put',
+    url: `${config.express.shipment}/shipments/${shipmentId}/lines/${id}`,
+    method: 'patch',
     data: {
       id,
       uuid,
       description,
-      quantity
+      quantity: quantity.toString()
     }
   })
     .then(response => {
@@ -210,7 +205,7 @@ export function listShipmentLinesRequest({
   shipmentUuid
 }) {
   return request({
-    url: '/form/addons/express-shipment/shipment-line',
+    url: `${config.express.shipment}/shipments`,
     method: 'get',
     params: {
       shipment_id: shipmentId,
