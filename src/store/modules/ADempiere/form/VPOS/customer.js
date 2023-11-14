@@ -16,18 +16,82 @@
 
 // API Request Methods
 import {
-  listCustomers
+  listCustomers,
+  updateOrder as changeCustomerOrder,
+  // UpdateCustomer,
+  createCustomer
 } from '@/api/ADempiere/form/VPOS'
+import {
+  listCountries,
+  getCountries,
+  listRegion,
+  listCities
+} from '@/api/ADempiere/field/locations'
 // Utils and Helper Methods
-// import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification'
+import { setComponentSequencePOSV } from '@/utils/ADempiere/dictionary/field/locationAddress'
 
 const customers = {
   showCustomer: false,
   customers: [],
   recordCount: 0,
   currentCustomer: {},
-  pageToken: ''
+  pageToken: '',
+  fields: {
+    code: '',
+    identificationNumber: '',
+    typePerson: '',
+    taxPayer: false,
+    taxpayerType: '',
+    name: '',
+    name2: '',
+    email: '',
+    phone: '',
+    listCountries: [],
+    listRegions: [],
+    listCities: []
+  },
+  billingAddress: {
+    posalCodeAdditional: '',
+    countryId: undefined,
+    regionId: undefined,
+    cityId: undefined,
+    locationName: '',
+    postalCode: '',
+    countries: {},
+    cityLabel: '',
+    longitude: '',
+    reference: '',
+    address1: '',
+    address2: '',
+    address3: '',
+    address4: '',
+    latitude: '',
+    altitude: '',
+    email: '',
+    phono: ''
+  },
+  shippingAddress: {
+    posalCodeAdditional: '',
+    countryId: undefined,
+    regionId: undefined,
+    cityId: undefined,
+    locationName: '',
+    postalCode: '',
+    countries: {},
+    cityLabel: '',
+    longitude: '',
+    reference: '',
+    address1: '',
+    address2: '',
+    address3: '',
+    address4: '',
+    latitude: '',
+    altitude: '',
+    email: '',
+    phono: ''
+  }
 }
 
 export default {
@@ -44,10 +108,23 @@ export default {
     },
     setCustomersList(state, list) {
       state.customers = list
+    },
+    setAttributeFieldCustomer(state, {
+      attribute,
+      value
+    }) {
+      state.fields[attribute] = value
+    },
+    setAttributeFieldLocationsCustomers(state, {
+      typeLocations,
+      attribute,
+      value
+    }) {
+      state[typeLocations][attribute] = value
     }
   },
   /**
-   * Customers List
+   * Customers
    */
   actions: {
     /**
@@ -95,6 +172,287 @@ export default {
             resolve([])
           })
       })
+    },
+    /**
+     * Fields Locations Customer
+     * countriesCustomers -> List All Countris
+     * citiesCustomers -> List All cities
+     * regionsCustomers -> List All Countris
+     * countrieCustomers -> Get Countrie the Fields Customers
+     */
+    countriesCustomers({
+      commit
+    }, typeLocations) {
+      return new Promise(resolve => {
+        listCountries({})
+          .then(response => {
+            const { countries } = response
+            commit('setAttributeFieldCustomer', {
+              attribute: 'listCountries',
+              value: countries
+            })
+            resolve(countries)
+          })
+          .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve(error)
+          })
+      })
+    },
+    citiesCustomers({
+      commit,
+      getters
+    }, typeLocations) {
+      return new Promise(resolve => {
+        const countryId = getters.getAttributeFieldLocationsCustomers({
+          typeLocations: typeLocations,
+          attribute: 'countryId'
+        })
+        const regionId = getters.getAttributeFieldLocationsCustomers({
+          typeLocations: typeLocations,
+          attribute: 'regionId'
+        })
+        listCities({
+          countryId,
+          regionId
+        })
+          .then(response => {
+            const { cities } = response
+            commit('setAttributeFieldCustomer', {
+              attribute: 'listCities',
+              value: cities
+            })
+            resolve(cities)
+          })
+          .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve(error)
+          })
+      })
+    },
+    countrieCustomers({
+      commit
+    }, {
+      countryId,
+      typeLocations
+    }) {
+      return new Promise(resolve => {
+        getCountries({
+          id: countryId
+        })
+          .then(response => {
+            commit('setAttributeFieldLocationsCustomers', {
+              typeLocations,
+              attribute: 'countries',
+              value: {
+                ...response,
+                secuenceComponent: setComponentSequencePOSV(response)
+              }
+            })
+            resolve(response)
+          })
+          .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve(error)
+          })
+      })
+    },
+    regionsCustomers({
+      commit,
+      getters
+    }, typeLocations) {
+      return new Promise(resolve => {
+        const countryId = getters.getAttributeFieldLocationsCustomers({
+          typeLocations: typeLocations,
+          attribute: 'countryId'
+        })
+        listRegion({
+          countryId
+        })
+          .then(response => {
+            const { regions } = response
+            commit('setAttributeFieldCustomer', {
+              attribute: 'listRegions',
+              value: regions
+            })
+            resolve(regions)
+          })
+          .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve(error)
+          })
+      })
+    },
+    /**
+     * Change Business Partner in Order
+     */
+    changeCustomerOrder({
+      getters,
+      dispatch
+    }, customerId) {
+      return new Promise(resolve => {
+        const pos = getters.getVPOS
+        const order = getters.getCurrentOrder
+        if (isEmptyValue(order)) resolve({})
+        if (order.document_status.value !== 'DR') {
+          resolve({})
+        }
+        changeCustomerOrder({
+          posId: pos.id,
+          orderId: order.id,
+          customer_id: customerId
+        })
+          .then(response => {
+            dispatch('overloadOrder', { order: response })
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Change Business Partner in Order: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve(error)
+          })
+      })
+    },
+    /**
+     * Create New Business Partner
+     */
+    createCustomer({
+      getters,
+      dispatch
+    }, {
+      additionalAttributes,
+      addresses
+    }) {
+      return new Promise(resolve => {
+        const pos = getters.getVPOS
+        const order = getters.getCurrentOrder
+        const value = getters.getAttributeFieldCustomer({
+          attribute: 'code'
+        })
+        const name = getters.getAttributeFieldCustomer({
+          attribute: 'name'
+        })
+        const lastName = getters.getAttributeFieldCustomer({
+          attribute: 'name2'
+        })
+        createCustomer({
+          additionalAttributes,
+          addresses,
+          name,
+          posId: pos.id,
+          value,
+          lastName
+        })
+          .then(response => {
+            if (!isEmptyValue(order)) {
+              dispatch('changeCustomerOrder', response.id)
+            }
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Change Business Partner in Order: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve(error)
+          })
+      })
+    },
+    /**
+     * Clear Data Form Business Partner
+     */
+    clearDataFormCustomer({
+      state
+    }) {
+      return new Promise(resolve => {
+        const address = {
+          posalCodeAdditional: '',
+          countryId: undefined,
+          regionId: undefined,
+          cityId: undefined,
+          locationName: '',
+          postalCode: '',
+          countries: {},
+          cityLabel: '',
+          longitude: '',
+          address1: '',
+          address2: '',
+          address3: '',
+          address4: '',
+          latitude: '',
+          altitude: '',
+          reference: ''
+        }
+        state.fields = {
+          code: '',
+          identificationNumber: '',
+          typePerson: '',
+          taxPayer: false,
+          taxpayerType: '',
+          name: '',
+          name2: '',
+          email: '',
+          phone: '',
+          listCountries: [],
+          listRegions: [],
+          listCities: []
+        }
+        state.billingAddress = address
+        state.shippingAddress = address
+        resolve()
+      })
     }
   },
   getters: {
@@ -109,6 +467,18 @@ export default {
     },
     getShowCustomerList: (state) => {
       return state.showCustomer
+    },
+    getAttributeFieldCustomer: (state) => ({ attribute }) => {
+      return state.fields[attribute]
+    },
+    getAttributeFieldLocationsCustomers: (state) => ({ typeLocations, attribute }) => {
+      return state[typeLocations][attribute]
+    },
+    getAttributeBillingAddress(state) {
+      return state.billingAddress
+    },
+    getAttributeShippingAddress(state) {
+      return state.shippingAddress
     }
   }
 }

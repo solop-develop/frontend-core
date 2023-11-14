@@ -70,9 +70,11 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     <el-table
       v-loading="isLoading"
       :data="list"
-      style="width: 100%"
-      :border="true"
       height="30vh"
+      :border="true"
+      style="width: 100%"
+      highlight-current-row
+      @current-change="handleCurrentChange"
     >
       <index-column
         :page-number="1"
@@ -105,12 +107,15 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         class="button-base-icon"
         icon="el-icon-check"
         style="float: right;margin-left: 5px;"
+        :disabled="isEmptyValue(customer)"
+        @click="changeCustomerOrder"
       />
       <el-button
         type="danger"
         class="button-base-icon"
         icon="el-icon-close"
         style="float: right;"
+        @click="close()"
       />
     </p>
   </span>
@@ -124,6 +129,7 @@ import {
 } from '@vue/composition-api'
 import store from '@/store'
 // Components and Mixins
+import { isEmptyValue } from '@/utils/ADempiere'
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
 
@@ -140,6 +146,7 @@ export default defineComponent({
     const name = ref('')
     const searchValue = ref('')
     const pageSizeNumber = ref(15)
+    const customer = ref({})
     const list = computed(() => {
       return store.getters.getCustomersList
     })
@@ -152,6 +159,19 @@ export default defineComponent({
       return 0
     })
 
+    /**
+     * Handle Current Change
+     * @param {object} row
+     */
+    function handleCurrentChange(row) {
+      if (isEmptyValue(row)) return
+      customer.value = row
+    }
+
+    /**
+     * Handle Page Change
+     * @param {number} pageNumber
+     */
     function handleChangePage(pageNumber) {
       isLoading.value = true
       setTimeout(() => {
@@ -168,6 +188,10 @@ export default defineComponent({
       }, 500)
     }
 
+    /**
+     * Handle Size Change
+     * @param {number} pageSize
+     */
     function handleSizeChange(pageSize) {
       isLoading.value = true
       pageSizeNumber.value = pageSize
@@ -184,6 +208,10 @@ export default defineComponent({
       }, 500)
     }
 
+    /**
+     * Filter Value
+     * @param {string} value
+     */
     function filterValue(value) {
       setTimeout(() => {
         store.dispatch('searchCustomersList', {
@@ -197,6 +225,10 @@ export default defineComponent({
       }, 500)
     }
 
+    /**
+     * Filter Name
+     * @param {string} value
+     */
     function filterName(value) {
       setTimeout(() => {
         store.dispatch('searchCustomersList', {
@@ -210,6 +242,10 @@ export default defineComponent({
       }, 500)
     }
 
+    /**
+     * Filter for Search Value
+     * @param {string} value
+     */
     function filterSearchValue(value) {
       setTimeout(() => {
         store.dispatch('searchCustomersList', {
@@ -223,10 +259,28 @@ export default defineComponent({
       }, 500)
     }
 
+    /**
+     * Close Panel Create New Customer
+     */
+    function close() {
+      store.commit('setShowCustomerList', false)
+    }
+
+    /**
+     * Change Business Partner in Order
+     */
+    function changeCustomerOrder() {
+      store.dispatch('changeCustomerOrder', customer.value.id)
+        .finally(() => {
+          close()
+        })
+    }
+
     return {
       // Ref
       name,
       value,
+      customer,
       isLoading,
       searchValue,
       activeNames,
@@ -236,11 +290,14 @@ export default defineComponent({
       pageToken,
       list,
       // Methods
+      close,
       filterName,
       filterValue,
       handleChangePage,
       handleSizeChange,
-      filterSearchValue
+      filterSearchValue,
+      handleCurrentChange,
+      changeCustomerOrder
     }
   }
 })
