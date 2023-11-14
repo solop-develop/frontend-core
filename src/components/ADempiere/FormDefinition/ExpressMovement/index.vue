@@ -16,80 +16,86 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <template>
   <div class="main-express-receipt">
-    <el-card class="box-card" style="margin: 0px;">
+    <el-card class="box-card">
       <div slot="header" class="clearfix-express-receipt">
-        <el-form
-          ref="form-express-receipt"
-          label-position="top"
-          class="field-from"
-          inline
-        >
-          <el-row :gutter="10">
-            <el-col :span="8">
+        <el-form ref="form-express-receipt" class="field-from" inline label-position="top">
+          <el-row :gutter="20">
+            <el-col v-if="!isEmptyValue(currentMovement)" :span="3">
               <el-form-item class="front-item-receipt">
                 <template slot="label" style="width: 450px;">
-                  {{ $t('VBankStatementMatch.field.businessPartner') }}
-                  <!-- <br>
-                  <br> -->
+                  {{ $t('form.expressMovement.field.documentNo') }}
                 </template>
+                <b>
+                  <el-tag style="width: 100%;font-size: 16px;">
+                    <i class="el-icon-tickets" />
+                    {{ currentMovement.documentNo }}
+                  </el-tag>
+                </b>
+              </el-form-item>
+            </el-col>
+            <el-col v-if="!isEmptyValue(currentMovement)" :span="3">
+              <el-form-item
+                :label="$t('form.expressMovement.field.dateMoviment')"
+                class="front-item-receipt"
+              >
+                <b>
+                  <el-tag style="width: 100%;font-size: 15px;">
+                    <i class="el-icon-date" />
+                    {{ dateTimeFormats(currentMovement.movementDate, 'YYYY-MM-DD \ HH:MM:SS') }}
+                  </el-tag>
+                </b>
+              </el-form-item>
+            </el-col>
+            <el-col :span="9">
+              <el-form-item
+                :label="$t('form.expressMovement.field.warehouse')"
+                class="front-item-receipt"
+              >
                 <el-select
-                  v-model="currentBusinessPartners"
-                  placeholder="Please Select Business Partner"
+                  v-model="warehouseBase"
+                  placeholder="Please Select Warehouse Base"
                   style="width: 100%;"
                   filterable
-                  class="select-from"
-                  @visible-change="findBusinessPartners"
+                  @visible-change="listBaseWarehouse"
                 >
                   <el-option
-                    v-for="item in listBusinessPartners"
+                    v-for="item in baseWarehouseOptionsList"
                     :key="item.id"
                     :label="item.label"
                     :value="item.id"
-                    popper-class="select-from"
                   />
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
-              <el-form-item class="front-item-receipt">
-                <template slot="label" style="width: 450px;">
-                  {{ $t('form.expressReceipt.field.salesOrder') }}
-                  <!-- <br>
-                  <br> -->
-                </template>
-                <el-select
-                  v-model="salesOrder"
-                  placeholder="Please Select Purchase Order"
-                  style="width: 100%;"
-                  filterable
-                  clearable
-                  class="select-from"
-                  @visible-change="findSalesOrder"
-                  @change="selectSalesOrder"
-                >
-                  <el-option
-                    v-for="item in listOrder"
-                    :key="item.id"
-                    :label="item.label"
-                    :value="item.id"
-                    class="select-from"
-                  />
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col v-if="!isEmptyValue(salesOrder)" :span="8">
+            <el-col :span="9">
               <el-form-item
                 class="front-item-receipt"
-                style="width: 450px;"
               >
                 <template slot="label" style="width: 450px;">
-                  {{ $t('form.expressReceipt.field.productcode') }}
-                  <!-- <p style="margin: 0px;">
-                    <el-checkbox v-model="isQuantityFromOrderLine">
-                      Cantidad Completa de la Linea
-                    </el-checkbox>
-                  </p> -->
+                  {{ $t('form.expressMovement.field.warehouseTo') }}
                 </template>
+                <el-select
+                  v-model="warehouseDestination"
+                  placeholder="Please Select Warehouse Destination"
+                  style="width: 100%;"
+                  filterable
+                  @visible-change="listDestinationWarehouse"
+                >
+                  <el-option
+                    v-for="item in destinationWarehouseOptionsList"
+                    :key="item.id"
+                    :label="item.label"
+                    :value="item.id"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item
+                v-if="!isEmptyValue(warehouseBase) && !isEmptyValue(warehouseDestination)"
+                :label="$t('form.expressMovement.field.productcode')"
+                class="front-item-receipt"
+              >
                 <el-autocomplete
                   ref="searchValue"
                   v-model="findProduct"
@@ -98,8 +104,8 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
                   :highlight-first-item="true"
                   :placeholder="$t('quickAccess.searchWithEnter')"
                   :fetch-suggestions="querySearchAsync"
-                  style="width: 100%;"
                   :disabled="isComplete"
+                  style="width: 100%;"
                   @focus="focusSuggestions"
                   @select="handleSelect"
                 >
@@ -111,25 +117,21 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
                   </template>
 
                   <template slot-scope="props">
-                    <div class="header" style="margin: 0px;">
+                    <div class="header" style="margin: 0px">
                       <b> {{ props.item.value }} - {{ props.item.name }} </b>
                     </div>
                   </template>
                 </el-autocomplete>
-                <el-checkbox v-model="isQuantityFromOrderLine" class="add-qauntity">
-                  {{ $t('form.expressReceipt.field.isQuantityFromOrderLine') }}
-                </el-checkbox>
               </el-form-item>
             </el-col>
           </el-row>
         </el-form>
       </div>
     </el-card>
-    <el-card v-if="!isEmptyValue(salesOrder)" class="box-card">
+    <el-card v-if="!isEmptyValue(currentMovement)" class="box-card">
       <el-table
         ref="listProducto"
-        v-loading="isLoadedServer"
-        :data="productdeliveryList"
+        :data="listMovementLines"
         :empty-text="$t('quickAccess.searchWithEnter')"
         :border="true"
         fit
@@ -158,7 +160,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
                 v-model="scope.row.quantity"
                 controls-position="right"
                 :min="1"
-                @change="updateShipmentLine(scope.row)"
+                @change="updateMovementLine(scope.row)"
               />
             </span>
             <span v-else>
@@ -170,9 +172,16 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           :label="$t('form.pos.tableProduct.options')"
           column-key="value"
           width="160"
+          :align="'center'"
         >
           <template slot-scope="scope">
-            <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteShipmentLine(scope.row)" />
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              size="mini"
+              :disabled="isEmptyValue(currentMovement) || isComplete"
+              @click="deleteMovementLine(scope.row)"
+            />
           </template>
         </el-table-column>
       </el-table>
@@ -184,7 +193,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             icon="el-icon-check"
             class="button-base-icon"
             style="float: right; margin-top: 10px;font-size: 28px;"
-            :disabled="isEmptyValue(salesOrder) || isComplete"
+            :disabled="isEmptyValue(currentMovement) || isComplete"
             @click="visible = true"
           />
           <el-button
@@ -214,24 +223,18 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       </el-row>
     </el-card>
     <el-dialog
-      :title="$t('form.expressReceipt.title')"
+      :title="$t('form.expressMovement.title')"
       :visible.sync="visible"
     >
       <p class="total">
-        {{ $t('form.expressReceipt.modal.nrOrder') }}:
+        {{ $t('form.expressMovement.field.documentNo') }}:
         <b class="order-info">
-          {{ currentOrder.document_no }}
-        </b>
-      </p>
-      <p class="total">
-        {{ $t('form.expressReceipt.modal.nrShipments') }}:
-        <b class="order-info">
-          {{ currentShipment.documentNo }}
+          {{ currentMovement.documentNo }}
         </b>
       </p>
       <p class="total">
         {{ $t('form.pos.order.itemQuantity') }}:
-        <b v-if="!isEmptyValue(productdeliveryList)" class="order-info">
+        <b v-if="!isEmptyValue(listMovementLines)" class="order-info">
           {{ quantityProduct }}
         </b>
         <b v-else>
@@ -241,7 +244,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       <p class="total">
         {{ $t('form.pos.order.numberLines') }}:
         <b class="order-info">
-          {{ productdeliveryList.length }}
+          {{ listMovementLines.length }}
         </b>
       </p>
       <!-- <div slot="footer"> -->
@@ -250,8 +253,8 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         icon="el-icon-check"
         class="button-base-icon"
         style="float: right; margin: 10px;"
-        :disabled="isEmptyValue(salesOrder)"
-        @click="processShipment"
+        :disabled="isEmptyValue(currentMovement)"
+        @click="processMovement"
       />
       <el-button
         type="danger"
@@ -266,7 +269,11 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 </template>
 
 <script>
-import { defineComponent, ref, computed, watch } from '@vue/composition-api'
+import {
+  defineComponent,
+  ref,
+  computed
+} from '@vue/composition-api'
 
 import lang from '@/lang'
 import store from '@/store'
@@ -274,10 +281,9 @@ import router from '@/router'
 
 // Api Request Methods
 import {
-  listOrders,
-  listBusinessPartnersReceipt
+  listWarehouses
   // Shipment
-} from '@/api/ADempiere/form/ExpressReceipt.js'
+} from '@/api/ADempiere/form/expresMovement.js'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'
@@ -285,48 +291,45 @@ import { showMessage } from '@/utils/ADempiere/notification'
 import { dateTimeFormats } from '@/utils/ADempiere/formatValue/dateFormat'
 
 export default defineComponent({
-  name: 'ExpressShipment',
+  name: 'ExpressMovement',
 
   setup(props, { root, refs }) {
     /**
-   * Ref
-   */
+     * Ref
+     */
+    const destinationWarehouseOptionsList = ref([])
+    const baseWarehouseOptionsList = ref([])
+    const warehouseDestination = ref('')
     const editQuantityField = ref(null)
-    const timeOut = ref(null)
-    const currentBusinessPartners = ref('')
-    const findProduct = ref('')
-    const salesOrder = ref('')
-    const quantity = ref(0)
-    const isQuantityFromOrderLine = ref(false)
-    const isLoadedServer = ref(false)
     const isEditQuantity = ref(false)
-    const isLoadingLine = ref(false)
+    const warehouseBase = ref('')
+    const findProduct = ref('')
     const visible = ref(false)
-    const listBusinessPartners = ref([])
-    const listOrder = ref([])
+    const timeOut = ref(null)
+    const quantity = ref(0)
     /**
      * Computed
      */
     const listProdcut = computed(() => {
-      return store.getters.getListProductReceipt
+      return store.getters.getListProduct
     })
-    const productdeliveryList = computed(() => {
-      return store.getters.getListReceipt
+    const listMovementLines = computed(() => {
+      return store.getters.getListMovementLines
     })
-    const currentShipment = computed(() => {
-      return store.getters.getCurrentReceipt
+    const currentMovement = computed(() => {
+      return store.getters.getCurrentMovement
     })
     const isComplete = computed(() => {
-      const { isCompleted } = store.getters.getCurrentReceipt
-      if (!isEmptyValue(store.getters.getCurrentReceipt)) {
+      const { isCompleted } = store.getters.getCurrentMovement
+      if (!isEmptyValue(store.getters.getCurrentMovement)) {
         return isCompleted
       }
       return false
     })
     const quantityProduct = computed(() => {
-      if (isEmptyValue(productdeliveryList)) return 0
+      if (isEmptyValue(listMovementLines)) return 0
 
-      const result = productdeliveryList.value.map(line => {
+      const result = listMovementLines.value.map(line => {
         return line.quantity
       })
 
@@ -337,52 +340,23 @@ export default defineComponent({
       }
       return 0
     })
-    const currentOrder = computed(() => {
-      if (isEmptyValue(listOrder.value) || isEmptyValue(salesOrder.value)) {
-        return {
-          document_no: ''
-        }
-      }
-      return listOrder.value.find(order => salesOrder.value === order.id)
-    })
     /**
      * Methods
      */
-    function findSalesOrder(isFindOrder) {
-      if (!isFindOrder) return
-      listOrders({
-        searchValue: salesOrder.value,
-        businessPartnerId: currentBusinessPartners.value
-      })
-        .then(response => {
-          const { records } = response
-          listOrder.value = records.map(order => {
-            const { id, uuid, document_no, date_ordered } = order
-            return {
-              id,
-              label: document_no + '_' + dateTimeFormats(date_ordered, 'YYYY-MM-DD \ HH:MM:SS'),
-              document_no,
-              uuid
-            }
-          })
-        })
-        .catch(error => {
-          showMessage({
-            message: error.message,
-            type: 'error'
-          })
-        })
-    }
 
-    function findBusinessPartners(isFindOrder) {
-      if (!isFindOrder) return
-      listBusinessPartnersReceipt({
-        searchValue: currentBusinessPartners.value
+    function listBaseWarehouse(isFind) {
+      if (!isFind) return
+      listWarehouses({
+        searchValue: warehouseBase.value
       })
         .then(response => {
           const { records } = response
-          listBusinessPartners.value = records.map(order => {
-            const { id, uuid, document_no, name } = order
+          let list = records
+          if (!isEmptyValue(warehouseDestination.value)) {
+            list = records.filter(warehouse => warehouse.id !== warehouseDestination.value)
+          }
+          baseWarehouseOptionsList.value = list.map(warehouse => {
+            const { id, uuid, document_no, name } = warehouse
             return {
               id,
               label: name,
@@ -391,31 +365,36 @@ export default defineComponent({
             }
           })
         })
-        .catch(error => {
-          showMessage({
-            message: error.message,
-            type: 'error'
-          })
-        })
     }
 
-    function selectSalesOrder(order) {
-      store.dispatch('createReceipt', {
-        id: order
+    function listDestinationWarehouse(isFind) {
+      if (!isFind) return
+      listWarehouses({
+        searchValue: warehouseDestination.value
       })
-      if (!isEmptyValue(refs.searchValue)) {
-        refs.searchValue.suggestions = []
-      }
-      store.commit('setListProductReceipt', [])
-      findProduct.value = null
+        .then(response => {
+          const { records } = response
+          let list = records
+          if (!isEmptyValue(warehouseBase.value)) {
+            list = records.filter(warehouse => warehouse.id !== warehouseBase.value)
+          }
+          destinationWarehouseOptionsList.value = list.map(warehouse => {
+            const { id, uuid, document_no, name } = warehouse
+            return {
+              id,
+              label: name,
+              document_no,
+              uuid
+            }
+          })
+        })
     }
 
     function querySearchAsync(queryString, callBack) {
       let results = listProdcut.value.filter(createFilter(queryString))
       if (isEmptyValue(results)) {
-        store.dispatch('findListProductReceipt', {
-          searchValue: queryString,
-          receiptId: salesOrder.value
+        store.dispatch('findListProductWarehouses', {
+          searchValue: queryString
         })
           .then(response => {
             results = response
@@ -456,15 +435,19 @@ export default defineComponent({
 
     function handleSelect(product) {
       if (typeof product === 'object' && !isEmptyValue(product.id)) {
-        // if (!isEmptyValue(productdeliveryList.value)) {
-        const isProductExists = productdeliveryList.value.find(list => list.product.value === product.value)
+        // if (!isEmptyValue(listMovementLines.value)) {
+        const isProductExists = listMovementLines.value.find(list => list.product.value === product.value)
         if (isEmptyValue(isProductExists)) {
-          createShipmentLine(product)
+          createMovementLine(product)
           findProduct.value = null
           return
         }
+        const getCurrentMovement = store.getters.getCurrentMovement
+        if (isEmptyValue(getCurrentMovement)) {
+          createMovementLine(product)
+        }
         const { id, uuid, quantity } = isProductExists
-        updateShipmentLine({
+        updateMovementLine({
           id,
           uuid,
           quantity: quantity + 1
@@ -474,9 +457,14 @@ export default defineComponent({
       }
     }
 
+    /**
+     * Action the Table
+     */
+
     function editQuantity(row) {
+      if (isComplete.value) return
       isEditQuantity.value = !row.isEditQuantity
-      const list = productdeliveryList.value.filter(line => line.id !== row.id)
+      const list = listMovementLines.value.filter(line => line.id !== row.id)
       list.forEach(element => {
         element.isEditQuantity = false
       })
@@ -488,42 +476,60 @@ export default defineComponent({
         }
       }, 500)
     }
-    /**
-     * Shipment Line
-     */
-    function createShipmentLine(product) {
-      store.dispatch('createLineReceipt', {
-        receiptId: 0,
-        productId: product.id,
-        productUuid: product.uuid,
-        isQuantityFromOrderLine: isQuantityFromOrderLine.value
+
+    function deleteMovementLine(line) {
+      const { id, uuid } = line
+      store.dispatch('deleteMovementLine', {
+        id,
+        uuid
       })
     }
 
-    function updateShipmentLine({
+    /**
+     *  Line
+     */
+    function createMovementLine(product) {
+      const getCurrentMovement = store.getters.getCurrentMovement
+      if (isEmptyValue(getCurrentMovement)) {
+        store.dispatch('createMovement', {})
+          .then(response => {
+            store.dispatch('createLineMovement', {
+              productId: product.id,
+              productUuid: product.uuid,
+              warehouseId: warehouseBase.value,
+              warehouseToId: warehouseDestination.value
+            })
+          })
+      }
+      store.dispatch('createLineMovement', {
+        productId: product.id,
+        productUuid: product.uuid,
+        warehouseId: warehouseBase.value,
+        warehouseToId: warehouseDestination.value
+      })
+    }
+
+    function updateMovementLine({
       id,
       uuid,
       quantity
     }) {
       isEditQuantity.value = false
-      store.dispatch('updateLineReceipt', {
+      store.dispatch('updateMovementLine', {
         id,
         uuid,
         quantity
       })
     }
 
-    function deleteShipmentLine(line) {
-      const { id, uuid } = line
-      store.dispatch('deleteLineReceipt', {
-        id,
-        uuid,
-        shipmentId: currentShipment.value.id
-      })
-    }
     /**
      * Action Panel Footer
      */
+
+    /**
+     * Watch
+     */
+
     function closeForm() {
       const currentRoute = router.app._route
       const tabViewsVisited = store.getters.visitedViews
@@ -532,25 +538,26 @@ export default defineComponent({
       router.push({
         path: oldRouter.path
       }, () => {})
+      store.commit('setCurrentMovement', {})
     }
 
     function clearForm(params) {
-      salesOrder.value = ''
-      findProduct.value = ''
+      warehouseDestination.value = ''
+      warehouseBase.value = ''
+      store.commit('setCurrentMovement', {})
     }
 
-    function processShipment() {
-      if (isEmptyValue(salesOrder.value)) return
-      store.dispatch('processReceipt')
-      visible.value = false
+    function processMovement() {
+      if (isEmptyValue(listMovementLines.value)) return
+      store.dispatch('processMovement')
+        .finally(() => {
+          clearForm()
+          visible.value = false
+        })
     }
 
     function refreshLine() {
-      const { id, uuid } = store.getters.getCurrentReceipt
-      store.dispatch('listLineReceipt', {
-        receiptId: id,
-        receiptUuid: uuid
-      })
+      store.dispatch('listLineMovement')
     }
 
     function focusSuggestions(params) {
@@ -559,51 +566,42 @@ export default defineComponent({
         return
       }
     }
-    /**
-   * Watch
-   */
-    watch(salesOrder, (newValue, oldValue) => {
-      if (!isEmptyValue(newValue) && newValue !== oldValue) {
-        findSalesOrder(true)
-      }
-    })
 
     return {
+      destinationWarehouseOptionsList,
+      baseWarehouseOptionsList,
+      warehouseDestination,
       editQuantityField,
-      salesOrder,
-      listOrder,
-      currentBusinessPartners,
-      listBusinessPartners,
-      findProduct,
-      productdeliveryList,
-      isLoadedServer,
       isEditQuantity,
+      warehouseBase,
+      findProduct,
       quantity,
-      isComplete,
-      currentOrder,
-      currentShipment,
-      quantityProduct,
       visible,
-      isQuantityFromOrderLine,
-      isLoadingLine,
+      // Computed
+      listMovementLines,
+      currentMovement,
+      quantityProduct,
+      listProdcut,
+      isComplete,
       // Methods
-      findSalesOrder,
-      findBusinessPartners,
-      selectSalesOrder,
-      handleSelect,
-      createFilter,
+      dateTimeFormats,
+      listDestinationWarehouse,
+      listBaseWarehouse,
       querySearchAsync,
+      createFilter,
+      handleSelect,
+      focusSuggestions,
+      // Action Table
+      deleteMovementLine,
       editQuantity,
-      // Shipment Line
-      createShipmentLine,
-      updateShipmentLine,
-      deleteShipmentLine,
+      // Line
+      createMovementLine,
+      updateMovementLine,
       // Action Panel Footer
-      processShipment,
-      closeForm,
-      clearForm,
+      processMovement,
       refreshLine,
-      focusSuggestions
+      clearForm,
+      closeForm
     }
   }
 })
@@ -655,13 +653,4 @@ export default defineComponent({
     line-height: 22px;
   }
 }
-.add-qauntity {
-  .el-checkbox__label {
-    display: inline-block;
-    padding-left: 10px;
-    line-height: 19px;
-    font-size: 16px;
-  }
-}
 </style>
-

@@ -70,5 +70,10 @@
   "issuesManagement": {
     "endpoint": "/issue-management"
   },
+  "express":{
+    "receipt": "/express-receipt",
+    "movement": "/express-movement",
+    "shipment": "/express-shipment"
+  },
   "theme": "src/themes/default"
 }

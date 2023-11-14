@@ -105,13 +105,13 @@ export default defineComponent({
           form = import('@/components/ADempiere/Form/Issues')
           break
         case 'ExpressReceipt':
-          form = import('@/components/ADempiere/Form/ExpressReceipt')
+          form = import('@/components/ADempiere/FormDefinition/ExpressReceipt')
           break
         case 'ExpressShipment':
-          form = import('@/components/ADempiere/Form/ExpressShipment')
+          form = import('@/components/ADempiere/FormDefinition/ExpressShipment')
           break
         case 'ExpressMovement':
-          form = import('@/components/ADempiere/Form/ExpressMovement')
+          form = import('@/components/ADempiere/FormDefinition/ExpressMovement')
           break
         case 'VAllocation':
           form = import('@/components/ADempiere/FormDefinition/VAllocation')

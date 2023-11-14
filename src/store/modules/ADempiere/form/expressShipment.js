@@ -38,7 +38,9 @@ import { showMessage } from '@/utils/ADempiere/notification.js'
 const expressShipment = {
   currentShipment: {},
   listProduct: [],
-  listShipmentLines: []
+  listShipmentLines: [],
+  listOrdes: [],
+  currentOrder: {}
 }
 
 export default {
@@ -52,6 +54,12 @@ export default {
     },
     setCurrentShipment(state, current) {
       state.currentShipment = current
+    },
+    setListOrdersShipment(state, list) {
+      state.listOrdes = list
+    },
+    setCurrentOrdersShipment(state, list) {
+      state.currentOrder = list
     }
   },
   actions: {
@@ -117,7 +125,7 @@ export default {
       isQuantityFromOrderLine,
       quantity = 1
     }) {
-      const { id, uuid } = getters.getCurrentShipment
+      const { id, uuid } = getters.getCurrentExpressShipment
       createShipmentLineRequest({
         shipmentId: id,
         shipmentUuid: uuid,
@@ -155,20 +163,24 @@ export default {
         quantity
       })
         .then(response => {
-          const { id, uuid } = getters.getCurrentShipment
+          const { id, uuid } = getters.getCurrentExpressShipment
           dispatch('listLine', {
             shipmentId: id,
             shipmentUuid: uuid
           })
         })
         .catch(error => {
+          let message = error.message
+          if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+            message = error.response.data.message
+          }
           showMessage({
             type: 'error',
-            message: error.message,
+            message,
             showClose: true
           })
           console.warn(`Error Getting Update Shipment Line: ${error.message}. Code: ${error.code}.`)
-          const { id, uuid } = getters.getCurrentShipment
+          const { id, uuid } = getters.getCurrentExpressShipment
           dispatch('listLine', {
             shipmentId: id,
             shipmentUuid: uuid
@@ -179,12 +191,14 @@ export default {
       id,
       uuid
     }) {
+      // const { id, uuid } = getters.getCurrentExpressShipment
       deleteShipmentLineRequest({
+        shipmentId: getters.getCurrentExpressShipment.id,
         id,
         uuid
       })
         .then(response => {
-          const { id, uuid } = getters.getCurrentShipment
+          const { id, uuid } = getters.getCurrentExpressShipment
           dispatch('listLine', {
             shipmentId: id,
             shipmentUuid: uuid
@@ -226,7 +240,7 @@ export default {
         })
     },
     processShipment({ commit, dispatch, getters }) {
-      const { id, uuid } = getters.getCurrentShipment
+      const { id, uuid } = getters.getCurrentExpressShipment
       return new Promise(resolve => {
         processShipmentRequest({
           id,
@@ -247,9 +261,13 @@ export default {
             })
           })
           .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             console.warn(`Error Getting Update Shipment Line: ${error.message}. Code: ${error.code}.`)
@@ -263,9 +281,15 @@ export default {
     },
     getListShipmentLines(state) {
       return state.listShipmentLines
-    // },
-    // getCurrentShipment(state) {
-    //   return state.currentShipment
+    },
+    getCurrentExpressShipment(state) {
+      return state.currentShipment
+    },
+    getListOrdersShipment(state) {
+      return state.listOrdes
+    },
+    getCurrentOrdersShipment(state) {
+      return state.currentOrder
     }
   }
 }
