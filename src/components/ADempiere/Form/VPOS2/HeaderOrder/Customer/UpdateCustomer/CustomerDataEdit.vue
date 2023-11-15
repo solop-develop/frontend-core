@@ -93,27 +93,17 @@ export default defineComponent({
         name
       } = props.customer
       let email, phone
-      if (!isEmptyValue(addresses[0].email)) {
+      if (!isEmptyValue(addresses[0]) && !isEmptyValue(addresses[0].email)) {
         email = addresses[0].email
-      } else if (!isEmptyValue(addresses[1].email)) {
+      } else if (!isEmptyValue(addresses[1]) && !isEmptyValue(addresses[1].email)) {
         email = addresses[1].email
       }
 
-      if (!isEmptyValue(addresses[0].phone)) {
+      if (!isEmptyValue(addresses[0]) && !isEmptyValue(addresses[0].phone)) {
         phone = addresses[0].phone
-      } else if (!isEmptyValue(addresses[1].phone)) {
+      } else if (!isEmptyValue(addresses[1]) && !isEmptyValue(addresses[1].phone)) {
         phone = addresses[1].phone
       }
-
-      console.log({
-        name,
-        email,
-        phone,
-        code: value,
-        name2: last_name,
-        customer: props.customer,
-        identificationNumber: value
-      })
 
       store.commit('setFieldCustomerEdit', {
         code: value,
