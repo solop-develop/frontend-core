@@ -698,7 +698,7 @@ export function deleteOrderLine({
 
 /** _________________________
  * |                         |
- * |   Customers Services   |
+ * |   Customers Services    |
  * |_________________________|
  */
 
@@ -746,6 +746,97 @@ export function listCustomers({
       name,
       email,
       value
+    }
+  })
+}
+
+/**
+ * Create Customer
+ * @param {string} value
+ * @param {string} tax_id
+ * @param {string} duns
+ * @param {string} naics
+ * @param {string} name
+ * @param {string} last_name
+ * @param {string} description
+ * @param {array} addresses
+ * @param {google.protobuf.Struct} additional_attributes
+ * @param {int32} pos_id
+ */
+
+export function createCustomer({
+  additionalAttributes,
+  addresses,
+  description,
+  duns,
+  name,
+  naics,
+  posId,
+  value,
+  taxId,
+  lastName
+}) {
+  return request({
+    url: `point-of-sales/customers`,
+    method: 'post',
+    data: {
+      duns,
+      name,
+      naics,
+      pos_id: posId,
+      value,
+      tax_id: taxId,
+      last_name: lastName,
+      addresses,
+      description,
+      additional_attributes: additionalAttributes
+    }
+  })
+}
+
+/**
+ * Update Customer
+ * @param {int32} id
+ * @param {string} value
+ * @param {string} tax_id
+ * @param {string} duns
+ * @param {string} naics
+ * @param {string} name
+ * @param {string} last_name
+ * @param {string} description
+ * @param {array} addresses
+ * @param {google.protobuf.Struct} additional_attributes
+ * @param {int32} pos_id
+ */
+
+export function UpdateCustomer({
+  additionalAttributes,
+  addresses,
+  description,
+  duns,
+  id,
+  name,
+  naics,
+  posId,
+  value,
+  taxId,
+  lastName
+}) {
+  return request({
+    url: `point-of-sales/customers/{id}`,
+    method: 'put',
+    data: {
+      id,
+      duns,
+      name,
+      naics,
+      pos_id: posId,
+      value,
+      tax_id: taxId,
+      last_name: lastName,
+      addresses,
+      description,
+      additional_attributes: additionalAttributes
     }
   })
 }

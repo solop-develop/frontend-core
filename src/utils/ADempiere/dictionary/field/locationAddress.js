@@ -197,3 +197,55 @@ export function setDefaultComponentSequence() {
     }
   ]
 }
+
+/**
+ * Get sequencing and set component
+ */
+export function setComponentSequencePOSV(country) {
+  const {
+    is_allow_cities_out_of_list,
+    capture_sequence
+  } = country
+  const captureSequence = capture_sequence.split(' ')
+  if (isEmptyValue(captureSequence)) return setDefaultComponentSequence
+  return captureSequence.map(sequence => {
+    let component
+    switch (true) {
+      case sequence.includes('@A1@'):
+        component = () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/Address')
+        break
+      case sequence.includes('@A2@'):
+        component = () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/Address2')
+        break
+      case sequence.includes('@A3@'):
+        component = () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/Address3')
+        break
+      case sequence.includes('@A4@'):
+        component = () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/Address4')
+        break
+      case sequence.includes('@C@'):
+        if (is_allow_cities_out_of_list) {
+          component = () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/CityLabel')
+        } else {
+          component = () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/City')
+        }
+        break
+      case sequence.includes('@R@'):
+        component = () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/Regions')
+        break
+      case sequence.includes('@P@'):
+        component = () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/PostalCode')
+        break
+      case sequence.includes('@A@'):
+        component = () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/PostalCodeAdditional')
+        break
+      case sequence.includes('@CO@'):
+        component = () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/Country')
+        break
+    }
+    return {
+      sequence,
+      component
+    }
+  })
+}

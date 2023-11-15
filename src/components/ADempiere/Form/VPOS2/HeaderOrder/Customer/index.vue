@@ -39,12 +39,29 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
                 <el-dropdown-item
                   :command="$t('pointOfSales.customer.newBusinessPartner')"
                 >
+                  <i
+                    class="el-icon-plus"
+                    style="font-size: 20px"
+                  />
                   {{ $t('pointOfSales.customer.newBusinessPartner') }}
                 </el-dropdown-item>
                 <el-dropdown-item
                   :command="$t('pointOfSales.customer.listBusinessPartners')"
                 >
+                  <i
+                    class="el-icon-search"
+                    style="font-size: 20px"
+                  />
                   {{ $t('pointOfSales.customer.listBusinessPartners') }}
+                </el-dropdown-item>
+                <el-dropdown-item
+                  :command="$t('pointOfSales.customer.updateBusinessPartner')"
+                >
+                  <i
+                    class="el-icon-edit"
+                    style="font-size: 22px"
+                  />
+                  {{ $t('pointOfSales.customer.updateBusinessPartner') }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -89,6 +106,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       :modal="false"
       :visible.sync="isShowCustomer"
       :custom-class="'option-customer'"
+      class="panel-customer-new"
       width="75%"
     >
       <component
@@ -118,11 +136,16 @@ export default defineComponent({
     NewCustomer
   },
   setup() {
+    // Ref
+
     const searchCustomer = ref('')
     const currentOptions = ref('')
     const listCustomer = ref([])
     const isLoading = ref(false)
     const isTrigger = ref(false)
+    const componentDialog = ref()
+
+    // Computed
 
     const currentVPOS = computed(() => {
       return store.getters.getVPOS
@@ -143,12 +166,7 @@ export default defineComponent({
     })
 
     const isComponentRender = computed(() => {
-      // if (currentOptions.value === language.t('pointOfSales.customer.newBusinessPartner')) return () => import('@/components/ADempiere/Form/NewVPOS/HeaderOrder/Customer/NewCustomer.vue')
-      // if (currentOptions.value === language.t('pointOfSales.customer.listBusinessPartners')) return () => import('@/components/ADempiere/Form/NewVPOS/HeaderOrder/Customer/ListCustomer.vue')
-      // if (currentOptions.value === language.t('pointOfSales.customer.updateBusinessPartner')) return () => import('@/components/ADempiere/Form/NewVPOS/HeaderOrder/Customer/NewCustomer.vue')
-      // if (currentOptions.value === language.t('form.pos.order.BusinessPartnerCreate.address.addNewAddress')) return () => import('@/components/ADempiere/Form/NewVPOS/HeaderOrder/Customer/NewCustomer.vue')
-      // return () => import('@/components/ADempiere/Form/NewVPOS/HeaderOrder/Customer/ListCustomer.vue')
-      return () => import('../Customer/ListCostumer.vue')
+      return componentDialog.value
     })
 
     // Methods
@@ -198,18 +216,14 @@ export default defineComponent({
     function selectOptions(options) {
       if (options === language.t('pointOfSales.customer.listBusinessPartners')) {
         store.dispatch('searchCustomersList', {})
+        componentDialog.value = () => import('../Customer/ListCostumer')
         isShowCustomer.value = true
       } else if (options === language.t('pointOfSales.customer.newBusinessPartner')) {
-        store.dispatch('setModalDialogVPOS', {
-          title: language.t('form.pos.optionsPoinSales.salesOrder.newOrderFromRMA'),
-          doneMethod: () => {
-            store.commit('setShowedModalDialogVPOS', {
-              isShowed: false
-            })
-          },
-          componentPath: () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer.vue'),
-          isShowed: true
-        })
+        componentDialog.value = () => import('../Customer/NewCustomer')
+        isShowCustomer.value = true
+      } else if (options === language.t('pointOfSales.customer.updateBusinessPartner')) {
+        componentDialog.value = () => import('../Customer/UpdateCustomer')
+        isShowCustomer.value = true
       }
       currentOptions.value = options
     }
@@ -231,6 +245,7 @@ export default defineComponent({
       listCustomer,
       searchCustomer,
       currentOptions,
+      componentDialog,
       // Computed
       isComponentRender,
       isShowCustomer,
@@ -251,15 +266,21 @@ export default defineComponent({
 .label {
   display: contents;
 }
-.el-dialog {
-  .el-dialog__header {
-    border: 1px solid #d3d4d6;
-    background: #FFFFFF;
-    padding: 0px;
-    font-weight: bold;
-    padding-top: 25px;
-    border-bottom: 0px;
-    padding-bottom: 5px;
+
+.panel-customer-new {
+  .el-dialog {
+    .el-dialog__header {
+      border: 1px solid #d3d4d6;
+      background: #FFFFFF;
+      padding: 0px;
+      font-weight: bold;
+      padding-top: 25px;
+      border-bottom: 0px;
+      padding-bottom: 5px;
+    }
+  }
+  .el-dialog--center .el-dialog__body {
+    padding: 5px 15px 10px 15px !important;
   }
 }
 </style>

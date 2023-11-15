@@ -159,7 +159,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             </b>
           </el-col>
           <el-col
-            v-if="!isEmptyValue(infoOrder.grand_total_converted)"
+            v-if="!isEmptyValue(infoOrder)"
             :span="24"
           >
             <span
@@ -168,7 +168,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
               {{ $t('form.pos.collect.convertedAmount') }}
             </span>
             <b style="float: right">
-              {{ formatPrice({ value: infoOrder.grand_total_converted.value, currency: displayCurrency.iso_code}) }}
+              {{ formatPrice({ value: Number(infoOrder.grand_total_converted), currency: displayCurrency.iso_code}) }}
             </b>
           </el-col>
         </el-col>
@@ -233,7 +233,9 @@ export default defineComponent({
     })
 
     const displayCurrency = computed(() => {
-      return store.getters.getVPOS.display_currency
+      const { display_currency } = store.getters.getVPOS
+      if (display_currency) return displayCurrency.iso_code
+      return ''
     })
 
     const getItemQuantity = computed(() => {

@@ -25,6 +25,7 @@ const locationsAddress = {
   address3: 'Dirección 3',
   address4: 'Dirección 4',
   postalCode: 'Código Postal',
+  locationName: 'Nombre de la Dirección',
   additionalPostalCode: 'Código Postal Adicional'
 }
 
