@@ -105,6 +105,26 @@ const customers = {
     altitude: '',
     email: '',
     phone: ''
+  },
+  addressEdit: {
+    posalCodeAdditional: '',
+    countryId: undefined,
+    regionId: undefined,
+    cityId: undefined,
+    locationName: '',
+    postalCode: '',
+    countries: {},
+    cityLabel: '',
+    longitude: '',
+    reference: '',
+    address1: '',
+    address2: '',
+    address3: '',
+    address4: '',
+    latitude: '',
+    altitude: '',
+    email: '',
+    phone: ''
   }
 }
 
@@ -147,6 +167,15 @@ export default {
       value
     }) {
       state[typeLocations][attribute] = value
+    },
+    setAttributeEditAddress(state, {
+      attribute,
+      value
+    }) {
+      state.addressEdit[attribute] = value
+    },
+    setValuesEditAddress(state, editAddress) {
+      state.addressEdit = editAddress
     }
   },
   /**
@@ -569,6 +598,12 @@ export default {
     },
     getAttributeShippingAddress(state) {
       return state.shippingAddress
+    },
+    getAttributeEditAddress(state) {
+      return state.addressEdit
+    },
+    getAttributeAddressEdit: (state) => ({ attribute }) => {
+      return state.addressEdit[attribute]
     }
   }
 }

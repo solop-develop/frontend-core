@@ -30,6 +30,13 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           <b style="font-size: 15px;">
             {{ address.location_name }}
           </b>
+          <el-button
+            style="float: right; padding: 3px 0"
+            type="text"
+            @click="openEditAddress(address)"
+          >
+            {{ $t('businessPartner.edit') }}
+          </el-button>
         </div>
         <el-scrollbar wrap-class="scroll-customer-description">
           <el-descriptions class="margin-top" :title="$t('form.pos.order.BusinessPartnerCreate.address.managementDescription')" :column="1">
@@ -54,17 +61,59 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         </el-scrollbar>
       </el-card>
     </el-col>
+    <el-dialog
+      :center="true"
+      :modal="true"
+      :visible.sync="showEditAddress"
+      :modal-append-to-body="false"
+      :custom-class="'option-customer'"
+      class="panel-customer-new"
+      width="75%"
+    >
+      <address-edti-constumers
+        :type-locations="labelDirecction(currentAddress)"
+        :address-edti="currentAddress"
+      />
+      <el-row :gutter="24">
+        <el-col :span="24">
+          <samp style="float: right; padding-right: 10px;">
+            <el-button
+              type="danger"
+              class="button-base-icon"
+              icon="el-icon-close"
+              @click="close()"
+            />
+            <el-button
+              type="primary"
+              class="button-base-icon"
+              icon="el-icon-check"
+              :disabled="isLoading"
+              :loading="isLoading"
+              @click="updateAddress()"
+            />
+          </samp>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </el-row>
 </template>
 
 <script>
 import {
-  defineComponent
+  defineComponent,
+  computed,
+  ref
 } from '@vue/composition-api'
 import language from '@/lang'
+import store from '@/store'
+import AddressEdtiConstumers from '@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/UpdateCustomer/Fields/AddressEdit/index.vue'
+import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({
   name: 'Panel',
+  components: {
+    AddressEdtiConstumers
+  },
   props: {
     allCustomerAddresses: {
       type: Array,
@@ -72,11 +121,29 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const showEditAddress = ref(false)
+    const isLoading = ref(false)
+    const currentAddress = ref({})
     function displayCountries(address) {
       const { contries } = address
       if (contries && contries.name) return contries.name
       return ''
     }
+
+    const addressEdti = computed(() => {
+      return [store.getters.getAttributeEditAddress].map(list => {
+        return {
+          ...list,
+          city_id: list.cityId,
+          region_id: list.regionId,
+          city_name: list.cityLabel,
+          country_id: list.countryId,
+          postal_code: list.postalCode,
+          location_name: list.locationName,
+          postal_code_additional: list.posalCodeAdditional
+        }
+      })
+    })
 
     function labelDirecction(address) {
       const {
@@ -114,11 +181,76 @@ export default defineComponent({
       return ''
     }
 
+    function openEditAddress(address) {
+      currentAddress.value = address
+      showEditAddress.value = true
+      const {
+        postal_code_additional,
+        country_id,
+        region,
+        city,
+        location_name,
+        postal_code,
+        address1,
+        address2,
+        address3,
+        address4,
+        email,
+        phone
+      } = address
+      store.commit('setValuesEditAddress', {
+        address1,
+        address2,
+        address3,
+        address4,
+        email,
+        phone,
+        countryId: country_id,
+        regionId: isEmptyValue(region) ? undefined : region.id,
+        cityId: isEmptyValue(city) ? undefined : city.id,
+        cityLabel: isEmptyValue(city) ? undefined : city.name,
+        postalCode: postal_code,
+        locationName: location_name,
+        posalCodeAdditional: postal_code_additional
+      })
+    }
+
+    function close() {
+      showEditAddress.value = false
+    }
+
+    function updateAddress() {
+      isLoading.value = true
+      store.dispatch('UpdateCustomer', {
+        addresses: props.allCustomerAddresses.map(list => {
+          if (list.id === currentAddress.value.id) {
+            return {
+              ...list,
+              ...addressEdti.value[0]
+            }
+          }
+          return list
+        })
+      })
+        .finally(() => {
+          isLoading.value = false
+          store.commit('setShowCustomerList', false)
+          close()
+        })
+    }
+
     return {
+      isLoading,
+      currentAddress,
+      showEditAddress,
+      addressEdti,
       // Methdos
+      close,
       typeTag,
       labelCity,
+      updateAddress,
       labelDirecction,
+      openEditAddress,
       displayCountries
     }
   }
