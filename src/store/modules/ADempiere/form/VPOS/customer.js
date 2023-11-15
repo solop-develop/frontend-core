@@ -18,7 +18,7 @@
 import {
   listCustomers,
   updateOrder as changeCustomerOrder,
-  // UpdateCustomer,
+  UpdateCustomer,
   createCustomer
 } from '@/api/ADempiere/form/VPOS'
 import {
@@ -52,6 +52,20 @@ const customers = {
     listRegions: [],
     listCities: []
   },
+  fieldsEdit: {
+    code: '',
+    identificationNumber: '',
+    typePerson: '',
+    taxPayer: false,
+    taxpayerType: '',
+    name: '',
+    name2: '',
+    email: '',
+    phone: '',
+    listCountries: [],
+    listRegions: [],
+    listCities: []
+  },
   billingAddress: {
     posalCodeAdditional: '',
     countryId: undefined,
@@ -70,7 +84,7 @@ const customers = {
     latitude: '',
     altitude: '',
     email: '',
-    phono: ''
+    phone: ''
   },
   shippingAddress: {
     posalCodeAdditional: '',
@@ -90,7 +104,7 @@ const customers = {
     latitude: '',
     altitude: '',
     email: '',
-    phono: ''
+    phone: ''
   }
 }
 
@@ -114,6 +128,18 @@ export default {
       value
     }) {
       state.fields[attribute] = value
+    },
+    setAttributeFieldCustomerEdit(state, {
+      attribute,
+      value
+    }) {
+      state.fieldsEdit[attribute] = value
+    },
+    setFieldCustomerEdit(state, editCustomer) {
+      state.fieldsEdit = {
+        ...state.fieldsEdit,
+        ...editCustomer
+      }
     },
     setAttributeFieldLocationsCustomers(state, {
       typeLocations,
@@ -453,6 +479,67 @@ export default {
         state.shippingAddress = address
         resolve()
       })
+    },
+    UpdateCustomer({ getters, dispatch }, {
+      additionalAttributes,
+      addresses
+    }) {
+      return new Promise(resolve => {
+        const pos = getters.getVPOS
+        const value = getters.getAttributeFieldCustomerEdit({
+          attribute: 'code'
+        })
+        const name = getters.getAttributeFieldCustomerEdit({
+          attribute: 'name'
+        })
+        const lastName = getters.getAttributeFieldCustomerEdit({
+          attribute: 'name2'
+        })
+        const email = getters.getAttributeFieldCustomerEdit({
+          attribute: 'email'
+        })
+        const phone = getters.getAttributeFieldCustomerEdit({
+          attribute: 'phone'
+        })
+        const listAddresses = addresses.map(list => {
+          return {
+            ...list,
+            email,
+            phone
+          }
+        })
+        const order = getters.getCurrentOrder
+        UpdateCustomer({
+          additionalAttributes,
+          addresses: listAddresses,
+          name,
+          posId: pos.id,
+          id: order.customer.id,
+          value,
+          lastName
+        })
+          .then(response => {
+            // if (!isEmptyValue(order)) {
+            //   dispatch('changeCustomerOrder', response.id)
+            // }
+            dispatch('overloadOrder', { order })
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Update Business Partner in Order: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve(error)
+          })
+      })
     }
   },
   getters: {
@@ -470,6 +557,9 @@ export default {
     },
     getAttributeFieldCustomer: (state) => ({ attribute }) => {
       return state.fields[attribute]
+    },
+    getAttributeFieldCustomerEdit: (state) => ({ attribute }) => {
+      return state.fieldsEdit[attribute]
     },
     getAttributeFieldLocationsCustomers: (state) => ({ typeLocations, attribute }) => {
       return state[typeLocations][attribute]

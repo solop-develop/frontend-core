@@ -16,7 +16,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <template>
   <el-form-item
-    :label="$t('field.locationsAddress.addrlocationNameess')"
+    :label="$t('field.locationsAddress.reference')"
     class="field-standard"
     style="margin: 0px;width: 100%;"
   >

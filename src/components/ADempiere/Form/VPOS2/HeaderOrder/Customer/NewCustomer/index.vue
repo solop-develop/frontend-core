@@ -81,14 +81,7 @@ import store from '@/store'
 import CustomerData from './CustomerData.vue'
 import AddAddress from './AddAddress/index.vue'
 // utils and helper methods
-// import {lan
-//   formatPrice,
-//   formatQuantity
-// } from '@/utils/ADempiere/formatValue/numberFormat'
 import { isEmptyValue } from '@/utils/ADempiere'
-// /AddAddress/index.vue
-// API Request Methods
-// import { requestLookupList } from '@/api/ADempiere/userInterface/lookups.ts'
 
 export default defineComponent({
   name: 'NewCustomer',
@@ -146,19 +139,18 @@ export default defineComponent({
       if (isVisibleAddress.value && copyShippingAddress.value) {
         return [
           {
+            ...billingAddress,
             phone,
             email,
-            ...billingAddress,
             is_default_billing: true,
             is_default_shipping: false,
-            city_name: billingAddress.cityLabel,
             location_name: billingAddress.locationName
           },
           {
+            ...billingAddress,
             phone,
             email,
-            ...shippingAddress,
-            is_default_billing: false,
+            is_default_billing: true,
             is_default_shipping: true,
             location_name: shippingAddress.locationName
           }
@@ -167,17 +159,17 @@ export default defineComponent({
       if (isVisibleAddress.value) {
         return [
           {
+            ...billingAddress,
             phone,
             email,
-            ...billingAddress,
             is_default_billing: true,
             is_default_shipping: false,
             location_name: billingAddress.locationName
           },
           {
+            ...shippingAddress,
             phone,
             email,
-            ...shippingAddress,
             is_default_billing: true,
             is_default_shipping: true,
             location_name: shippingAddress.locationName
@@ -186,16 +178,21 @@ export default defineComponent({
       }
       return [
         {
+          ...billingAddress,
           phone,
           email,
           is_default_billing: true,
-          is_default_shipping: false
+          is_default_shipping: false,
+          city_name: billingAddress.cityLabel,
+          location_name: billingAddress.locationName
         },
         {
+          ...shippingAddress,
           phone,
           email,
           is_default_billing: false,
-          is_default_shipping: true
+          is_default_shipping: true,
+          location_name: shippingAddress.locationName
         }
       ]
     })
@@ -213,7 +210,18 @@ export default defineComponent({
     function createBusinessParter() {
       isLoading.value = true
       store.dispatch('createCustomer', {
-        addresses: addresses.value
+        addresses: addresses.value.map(list => {
+          return {
+            ...list,
+            city_id: list.cityId,
+            region_id: list.regionId,
+            city_name: list.cityLabel,
+            country_id: list.countryId,
+            postal_code: list.postalCode,
+            location_name: list.locationName,
+            postal_code_additional: list.posalCodeAdditional
+          }
+        })
       })
         .finally(() => {
           isLoading.value = false

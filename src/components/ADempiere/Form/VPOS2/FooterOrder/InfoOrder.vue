@@ -168,7 +168,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
               {{ $t('form.pos.collect.convertedAmount') }}
             </span>
             <b style="float: right">
-              {{ formatPrice({ value: Number(infoOrder.grand_total_converted), currency: displayCurrency.iso_code}) }}
+              {{ formatPrice({ value: Number(infoOrder.grand_total_converted), currency: displayCurrency}) }}
             </b>
           </el-col>
         </el-col>

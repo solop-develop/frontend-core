@@ -769,6 +769,7 @@ export function createCustomer({
   addresses,
   description,
   duns,
+  id,
   name,
   naics,
   posId,
@@ -777,7 +778,7 @@ export function createCustomer({
   lastName
 }) {
   return request({
-    url: `point-of-sales/customers`,
+    url: `point-of-sales/customers/${id}`,
     method: 'post',
     data: {
       duns,
@@ -823,7 +824,7 @@ export function UpdateCustomer({
   lastName
 }) {
   return request({
-    url: `point-of-sales/customers/{id}`,
+    url: `point-of-sales/customers/${id}`,
     method: 'put',
     data: {
       id,

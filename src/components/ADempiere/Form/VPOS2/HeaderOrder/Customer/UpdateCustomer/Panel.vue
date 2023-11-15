@@ -27,11 +27,31 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         class="customer-data"
       >
         <div slot="header" class="clearfix">
-          <span style="font-size: 15px;">
-            {{ $t('form.pos.order.BusinessPartnerCreate.customerData') }}
-          </span>
+          <b style="font-size: 15px;">
+            {{ address.location_name }}
+          </b>
         </div>
-        {{ address.phone }}
+        <el-scrollbar wrap-class="scroll-customer-description">
+          <el-descriptions class="margin-top" :title="$t('form.pos.order.BusinessPartnerCreate.address.managementDescription')" :column="1">
+            <el-descriptions-item :label="$t('form.pos.order.BusinessPartnerCreate.address.addressType')">
+              <el-tag size="small" :type="typeTag(address)">
+                {{ labelDirecction(address) }}
+              </el-tag>
+            </el-descriptions-item>
+            <el-descriptions-item :label="$t('form.pos.order.BusinessPartnerCreate.address.region')">
+              {{ displayCountries(address) }}
+            </el-descriptions-item>
+            <el-descriptions-item :label="$t('form.pos.order.BusinessPartnerCreate.address.city')">
+              {{ labelCity(address) }}
+            </el-descriptions-item>
+            <el-descriptions-item :label="$t('form.pos.order.BusinessPartnerCreate.address.address')">
+              {{ address.display_value }}
+            </el-descriptions-item>
+            <el-descriptions-item :label="$t('form.pos.order.BusinessPartnerCreate.address.postCode')">
+              {{ address.postal_code }}
+            </el-descriptions-item>
+          </el-descriptions>
+        </el-scrollbar>
       </el-card>
     </el-col>
   </el-row>
@@ -39,9 +59,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <script>
 import {
-  defineComponent,
-  computed
+  defineComponent
 } from '@vue/composition-api'
+import language from '@/lang'
 
 export default defineComponent({
   name: 'Panel',
@@ -52,31 +72,54 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const listComponents = computed(() => {
-      return [
-        {
-          component: () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/Fields/Code.vue')
-        },
-        {
-          component: () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/Fields/IdentificationNumber.vue')
-        },
-        {
-          component: () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/Fields/Name.vue')
-        },
-        {
-          component: () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/Fields/Name2.vue')
-        },
-        {
-          component: () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/Fields/Email.vue')
-        },
-        {
-          component: () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/Fields/Phone.vue')
-        }
-      ]
-    })
+    function displayCountries(address) {
+      const { contries } = address
+      if (contries && contries.name) return contries.name
+      return ''
+    }
+
+    function labelDirecction(address) {
+      const {
+        is_default_billing,
+        is_default_shipping
+      } = address
+      if (is_default_billing && !is_default_shipping) {
+        return language.t('form.pos.order.BusinessPartnerCreate.billingAddress')
+      } else if (is_default_shipping) {
+        return language.t('form.pos.order.BusinessPartnerCreate.shippingAddress')
+      }
+      return language.t('form.pos.order.BusinessPartnerCreate.withoutSetting')
+    }
+
+    function typeTag(address) {
+      const {
+        is_default_billing,
+        is_default_shipping
+      } = address
+      if (is_default_shipping) {
+        return 'warning'
+      } else if (is_default_billing) {
+        return 'success'
+      }
+      return ''
+    }
+
+    function labelCity(address) {
+      const { cityLabel, city } = address
+      if (cityLabel) {
+        return cityLabel
+      } else if (city) {
+        return city.name
+      }
+      return ''
+    }
 
     return {
-      listComponents
+      // Methdos
+      typeTag,
+      labelCity,
+      labelDirecction,
+      displayCountries
     }
   }
 })

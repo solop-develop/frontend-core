@@ -19,7 +19,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     shadow="never"
     :body-style="{ padding: '5px' }"
   >
-    <customer-data />
+    <customer-data-edit
+      :customer="currentCustomer"
+    />
     <br>
     <panel
       :all-customer-addresses="currentCustomer.addresses"
@@ -39,7 +41,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             icon="el-icon-check"
             :disabled="isLoading"
             :loading="isLoading"
-            @click="createBusinessParter"
+            @click="updateBusinessParter"
           />
         </samp>
       </el-col>
@@ -58,7 +60,7 @@ import {
 import store from '@/store'
 
 // Components and Mixins
-import CustomerData from '../NewCustomer/CustomerData.vue'
+import CustomerDataEdit from './CustomerDataEdit.vue'
 import Panel from './Panel.vue'
 // Utils and Helper Methods
 // import { isEmptyValue } from '@/utils/ADempiere'
@@ -69,7 +71,7 @@ import Panel from './Panel.vue'
 export default defineComponent({
   name: 'UpdateCustomer',
   components: {
-    CustomerData,
+    CustomerDataEdit,
     Panel
   },
   setup() {
@@ -114,16 +116,15 @@ export default defineComponent({
      * Send Create New Business Parter
      */
 
-    function createBusinessParter() {
-      close()
-      // isLoading.value = true
-      // store.dispatch('createCustomer', {
-      //   addresses: addresses.value
-      // })
-      //   .finally(() => {
-      //     isLoading.value = false
-      //     close()
-      //   })
+    function updateBusinessParter() {
+      isLoading.value = true
+      store.dispatch('UpdateCustomer', {
+        addresses: currentCustomer.value.addresses
+      })
+        .finally(() => {
+          isLoading.value = false
+          close()
+        })
     }
 
     return {
@@ -134,7 +135,7 @@ export default defineComponent({
       currentCustomer,
       // Methods
       close,
-      createBusinessParter
+      updateBusinessParter
     }
   }
 })

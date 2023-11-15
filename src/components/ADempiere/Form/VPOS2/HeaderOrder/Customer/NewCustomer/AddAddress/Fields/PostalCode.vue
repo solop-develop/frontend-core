@@ -39,16 +39,28 @@ import store from '@/store'
 
 export default defineComponent({
   name: 'PostalCode',
-  setup() {
+  props: {
+    isShipping: {
+      type: Boolean,
+      default: false
+    }
+  },
+  setup(props) {
+    const fieldsLocation = computed(() => {
+      if (props.isShipping) return 'shippingAddress'
+      return 'billingAddress'
+    })
     const postalCode = computed({
       get() {
-        return store.getters.getAttributeFieldLocations({
+        return store.getters.getAttributeFieldLocationsCustomers({
+          typeLocations: fieldsLocation.value,
           attribute: 'postalCode'
         })
       },
       // setter
       set(value) {
-        store.commit('setAttributeFieldLocations', {
+        store.commit('setAttributeFieldLocationsCustomers', {
+          typeLocations: fieldsLocation.value,
           attribute: 'postalCode',
           value
         })
@@ -57,7 +69,8 @@ export default defineComponent({
 
     return {
       // Computed
-      postalCode
+      postalCode,
+      fieldsLocation
     }
   }
 })
