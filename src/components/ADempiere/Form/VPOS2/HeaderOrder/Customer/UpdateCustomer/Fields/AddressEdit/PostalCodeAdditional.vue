@@ -52,15 +52,13 @@ export default defineComponent({
     })
     const posalCodeAdditional = computed({
       get() {
-        return store.getters.getAttributeFieldLocationsCustomers({
-          typeLocations: fieldsLocation.value,
+        return store.getters.getAttributeAddressEdit({
           attribute: 'posalCodeAdditional'
         })
       },
       // setter
       set(value) {
-        store.commit('setAttributeFieldLocationsCustomers', {
-          typeLocations: fieldsLocation.value,
+        store.commit('setAttributeEditAddress', {
           attribute: 'posalCodeAdditional',
           value
         })

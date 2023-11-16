@@ -219,9 +219,37 @@ export default defineComponent({
         componentDialog.value = () => import('../Customer/ListCostumer')
         isShowCustomer.value = true
       } else if (options === language.t('pointOfSales.customer.newBusinessPartner')) {
+        const {
+          is_allows_create_customer
+        } = currentVPOS.value
+        if (!is_allows_create_customer) {
+          store.dispatch('setModalPin', {
+            title: language.t('form.pos.pinMessage.pin') + language.t('pointOfSales.customer.newBusinessPartner'),
+            doneMethod: () => {
+              store.dispatch('newOrder')
+            },
+            requestedAccess: 'isAllowsCreateCustomer',
+            isShowed: true
+          })
+          return
+        }
         componentDialog.value = () => import('../Customer/NewCustomer')
         isShowCustomer.value = true
       } else if (options === language.t('pointOfSales.customer.updateBusinessPartner')) {
+        const {
+          is_allows_modify_customer
+        } = currentVPOS.value
+        if (!is_allows_modify_customer) {
+          store.dispatch('setModalPin', {
+            title: language.t('form.pos.pinMessage.pin') + language.t('pointOfSales.customer.updateBusinessPartner'),
+            doneMethod: () => {
+              store.dispatch('newOrder')
+            },
+            requestedAccess: 'isAllowsModifyCustomer',
+            isShowed: true
+          })
+          return
+        }
         componentDialog.value = () => import('../Customer/UpdateCustomer')
         isShowCustomer.value = true
       }

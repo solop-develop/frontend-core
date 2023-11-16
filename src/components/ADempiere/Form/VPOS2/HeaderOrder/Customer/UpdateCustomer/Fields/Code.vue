@@ -17,16 +17,17 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 <template>
   <el-form-item
     class="field-standard"
-    style="margin: 0px;width: 100%;"
+    style="margin: 0px;width: 100%;padding: 0px"
   >
     <template slot="label">
       <span class="field-title-name">
-        {{ $t('field.locationsAddress.additionalPostalCode') }}
+        {{ $t('form.pointOfSales.customer.fieldCutomer.code') }}
       </span>
+      <span style="color: #f34b4b"> * </span>
     </template>
     <el-input
-      v-model="posalCodeAdditional"
-      size="mini"
+      v-model="code"
+      size="medium"
     />
   </el-form-item>
 </template>
@@ -38,30 +39,22 @@ import store from '@/store'
 // import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({
-  name: 'PostalCodeAdditional',
-  props: {
-    isShipping: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const fieldsLocation = computed(() => {
-      if (props.isShipping) return 'shippingAddress'
-      return 'billingAddress'
-    })
-    const posalCodeAdditional = computed({
+  name: 'CodeCustomer',
+  setup() {
+    const code = computed({
       get() {
-        return store.getters.getAttributeFieldLocationsCustomers({
-          typeLocations: fieldsLocation.value,
-          attribute: 'posalCodeAdditional'
+        return store.getters.getAttributeFieldCustomerEdit({
+          attribute: 'code'
         })
       },
       // setter
       set(value) {
-        store.commit('setAttributeFieldLocationsCustomers', {
-          typeLocations: fieldsLocation.value,
-          attribute: 'posalCodeAdditional',
+        store.commit('setAttributeFieldCustomerEdit', {
+          attribute: 'code',
+          value
+        })
+        store.commit('setAttributeFieldCustomerEdit', {
+          attribute: 'identificationNumber',
           value
         })
       }
@@ -69,9 +62,14 @@ export default defineComponent({
 
     return {
       // Computed
-      posalCodeAdditional,
-      fieldsLocation
+      code
     }
   }
 })
 </script>
+
+<style>
+.el-form--inline .el-form-item__label {
+  padding: 0px;
+}
+</style>

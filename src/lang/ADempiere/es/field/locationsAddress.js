@@ -26,7 +26,8 @@ const locationsAddress = {
   address4: 'Dirección 4',
   postalCode: 'Código Postal',
   locationName: 'Nombre de la Dirección',
-  additionalPostalCode: 'Código Postal Adicional'
+  additionalPostalCode: 'Código Postal Adicional',
+  reference: 'Nombre de Referencia'
 }
 
 export default locationsAddress

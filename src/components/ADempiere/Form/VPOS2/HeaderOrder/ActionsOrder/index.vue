@@ -310,6 +310,18 @@ export default defineComponent({
     })
     //  Methods
     function newOrder() {
+      const { is_allows_create_order } = store.getters.getVPOS
+      if (!is_allows_create_order) {
+        store.dispatch('setModalPin', {
+          title: language.t('form.pos.pinMessage.pin') + language.t('form.pos.pinMessage.newOrder'),
+          doneMethod: () => {
+            store.dispatch('newOrder')
+          },
+          requestedAccess: 'IsAllowsCreateOrder',
+          isShowed: true
+        })
+        return
+      }
       store.dispatch('newOrder')
     }
 

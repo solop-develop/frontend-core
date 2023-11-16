@@ -16,16 +16,12 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <template>
   <el-form-item
+    :label="$t('field.locationsAddress.address')"
     class="field-standard"
     style="margin: 0px;width: 100%;"
   >
-    <template slot="label">
-      <span class="field-title-name">
-        {{ $t('field.locationsAddress.additionalPostalCode') }}
-      </span>
-    </template>
     <el-input
-      v-model="posalCodeAdditional"
+      v-model="address"
       size="mini"
     />
   </el-form-item>
@@ -38,7 +34,7 @@ import store from '@/store'
 // import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({
-  name: 'PostalCodeAdditional',
+  name: 'Address',
   props: {
     isShipping: {
       type: Boolean,
@@ -50,18 +46,16 @@ export default defineComponent({
       if (props.isShipping) return 'shippingAddress'
       return 'billingAddress'
     })
-    const posalCodeAdditional = computed({
+    const address = computed({
       get() {
-        return store.getters.getAttributeFieldLocationsCustomers({
-          typeLocations: fieldsLocation.value,
-          attribute: 'posalCodeAdditional'
+        return store.getters.getAttributeAddressEdit({
+          attribute: 'address1'
         })
       },
       // setter
       set(value) {
-        store.commit('setAttributeFieldLocationsCustomers', {
-          typeLocations: fieldsLocation.value,
-          attribute: 'posalCodeAdditional',
+        store.commit('setAttributeEditAddress', {
+          attribute: 'address1',
           value
         })
       }
@@ -69,7 +63,7 @@ export default defineComponent({
 
     return {
       // Computed
-      posalCodeAdditional,
+      address,
       fieldsLocation
     }
   }

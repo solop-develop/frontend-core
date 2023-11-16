@@ -16,17 +16,13 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <template>
   <el-form-item
+    :label="$t('form.pointOfSales.customer.fieldCutomer.email')"
     class="field-standard"
     style="margin: 0px;width: 100%;"
   >
-    <template slot="label">
-      <span class="field-title-name">
-        {{ $t('field.locationsAddress.additionalPostalCode') }}
-      </span>
-    </template>
     <el-input
-      v-model="posalCodeAdditional"
-      size="mini"
+      v-model="email"
+      size="medium"
     />
   </el-form-item>
 </template>
@@ -38,30 +34,18 @@ import store from '@/store'
 // import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({
-  name: 'PostalCodeAdditional',
-  props: {
-    isShipping: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const fieldsLocation = computed(() => {
-      if (props.isShipping) return 'shippingAddress'
-      return 'billingAddress'
-    })
-    const posalCodeAdditional = computed({
+  name: 'EmailCustomer',
+  setup() {
+    const email = computed({
       get() {
-        return store.getters.getAttributeFieldLocationsCustomers({
-          typeLocations: fieldsLocation.value,
-          attribute: 'posalCodeAdditional'
+        return store.getters.getAttributeFieldCustomerEdit({
+          attribute: 'email'
         })
       },
       // setter
       set(value) {
-        store.commit('setAttributeFieldLocationsCustomers', {
-          typeLocations: fieldsLocation.value,
-          attribute: 'posalCodeAdditional',
+        store.commit('setAttributeFieldCustomerEdit', {
+          attribute: 'email',
           value
         })
       }
@@ -69,8 +53,7 @@ export default defineComponent({
 
     return {
       // Computed
-      posalCodeAdditional,
-      fieldsLocation
+      email
     }
   }
 })

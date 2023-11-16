@@ -20,14 +20,29 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     style="margin: 0px;width: 100%;"
   >
     <template slot="label">
-      <span class="field-title-name">
-        {{ $t('field.locationsAddress.additionalPostalCode') }}
+      <span v-if="!isEmptyValue(regionName)" class="field-title-name">
+        {{ regionName }}
+      </span>
+      <span v-else class="field-title-name">
+        {{ $t('field.locationsAddress.region') }}
       </span>
     </template>
-    <el-input
-      v-model="posalCodeAdditional"
+    <el-select
+      v-model="region"
+      style="width: 100%;"
+      filterable
+      clearable
       size="mini"
-    />
+      :default-first-option="true"
+      @visible-change="showRegions"
+    >
+      <el-option
+        v-for="(item, key) in listRegions"
+        :key="key"
+        :label="item.name"
+        :value="item.id"
+      />
+    </el-select>
   </el-form-item>
 </template>
 
@@ -35,10 +50,10 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 import { computed, defineComponent } from '@vue/composition-api'
 
 import store from '@/store'
-// import { isEmptyValue } from '@/utils/ADempiere'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 export default defineComponent({
-  name: 'PostalCodeAdditional',
+  name: 'Regions',
   props: {
     isShipping: {
       type: Boolean,
@@ -50,27 +65,48 @@ export default defineComponent({
       if (props.isShipping) return 'shippingAddress'
       return 'billingAddress'
     })
-    const posalCodeAdditional = computed({
+    const listRegions = computed(() => {
+      return store.getters.getAttributeFieldCustomer({
+        attribute: 'listRegions'
+      })
+    })
+
+    const regionName = computed(() => {
+      const countries = store.getters.getAttributeAddressEdit({
+        attribute: 'countries'
+      })
+      if (countries) return countries.region_name
+      return ''
+    })
+
+    const region = computed({
       get() {
-        return store.getters.getAttributeFieldLocationsCustomers({
-          typeLocations: fieldsLocation.value,
-          attribute: 'posalCodeAdditional'
+        return store.getters.getAttributeAddressEdit({
+          attribute: 'regionId'
         })
       },
       // setter
       set(value) {
-        store.commit('setAttributeFieldLocationsCustomers', {
-          typeLocations: fieldsLocation.value,
-          attribute: 'posalCodeAdditional',
+        store.commit('setAttributeEditAddress', {
+          attribute: 'regionId',
           value
         })
       }
     })
 
+    function showRegions(show) {
+      if (!show || !isEmptyValue(listRegions.value)) return
+      store.dispatch('regionsCustomers', 'addressEdit')
+    }
+
     return {
       // Computed
-      posalCodeAdditional,
-      fieldsLocation
+      region,
+      regionName,
+      listRegions,
+      fieldsLocation,
+      // Methods
+      showRegions
     }
   }
 })

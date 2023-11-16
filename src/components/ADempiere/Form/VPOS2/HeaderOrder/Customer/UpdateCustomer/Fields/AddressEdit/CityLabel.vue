@@ -21,11 +21,11 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
   >
     <template slot="label">
       <span class="field-title-name">
-        {{ $t('field.locationsAddress.additionalPostalCode') }}
+        {{ $t('field.locationsAddress.city') }}
       </span>
     </template>
     <el-input
-      v-model="posalCodeAdditional"
+      v-model="cityLabel"
       size="mini"
     />
   </el-form-item>
@@ -38,7 +38,7 @@ import store from '@/store'
 // import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({
-  name: 'PostalCodeAdditional',
+  name: 'CityLabel',
   props: {
     isShipping: {
       type: Boolean,
@@ -50,18 +50,16 @@ export default defineComponent({
       if (props.isShipping) return 'shippingAddress'
       return 'billingAddress'
     })
-    const posalCodeAdditional = computed({
+    const cityLabel = computed({
       get() {
-        return store.getters.getAttributeFieldLocationsCustomers({
-          typeLocations: fieldsLocation.value,
-          attribute: 'posalCodeAdditional'
+        return store.getters.getAttributeAddressEdit({
+          attribute: 'cityLabel'
         })
       },
       // setter
       set(value) {
-        store.commit('setAttributeFieldLocationsCustomers', {
-          typeLocations: fieldsLocation.value,
-          attribute: 'posalCodeAdditional',
+        store.commit('setAttributeEditAddress', {
+          attribute: 'cityLabel',
           value
         })
       }
@@ -69,9 +67,17 @@ export default defineComponent({
 
     return {
       // Computed
-      posalCodeAdditional,
+      cityLabel,
       fieldsLocation
     }
   }
 })
 </script>
+<style>
+.field-title-name {
+    color: #909399 !important;
+    &:hover {
+      color: #303133 !important;
+    }
+  }
+</style>

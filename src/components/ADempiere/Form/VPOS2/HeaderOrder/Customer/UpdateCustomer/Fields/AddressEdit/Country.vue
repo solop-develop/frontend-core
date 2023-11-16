@@ -21,13 +21,27 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
   >
     <template slot="label">
       <span class="field-title-name">
-        {{ $t('field.locationsAddress.additionalPostalCode') }}
+        {{ $t('field.locationsAddress.country') }}
       </span>
+      <span style="color: #f34b4b"> * </span>
     </template>
-    <el-input
-      v-model="posalCodeAdditional"
+    <el-select
+      v-model="country"
+      style="width: 100%;"
+      filterable
+      clearable
       size="mini"
-    />
+      :default-first-option="true"
+      @visible-change="showCountry"
+      @change="changeCountry"
+    >
+      <el-option
+        v-for="(item, key) in listCountry"
+        :key="key"
+        :label="item.name"
+        :value="item.id"
+      />
+    </el-select>
   </el-form-item>
 </template>
 
@@ -35,10 +49,10 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 import { computed, defineComponent } from '@vue/composition-api'
 
 import store from '@/store'
-// import { isEmptyValue } from '@/utils/ADempiere'
+import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({
-  name: 'PostalCodeAdditional',
+  name: 'Country',
   props: {
     isShipping: {
       type: Boolean,
@@ -50,27 +64,45 @@ export default defineComponent({
       if (props.isShipping) return 'shippingAddress'
       return 'billingAddress'
     })
-    const posalCodeAdditional = computed({
+    const listCountry = computed(() => {
+      return store.getters.getAttributeFieldCustomer({
+        attribute: 'listCountries'
+      })
+    })
+
+    const country = computed({
       get() {
-        return store.getters.getAttributeFieldLocationsCustomers({
-          typeLocations: fieldsLocation.value,
-          attribute: 'posalCodeAdditional'
+        return store.getters.getAttributeAddressEdit({
+          attribute: 'countryId'
         })
       },
       // setter
       set(value) {
-        store.commit('setAttributeFieldLocationsCustomers', {
-          typeLocations: fieldsLocation.value,
-          attribute: 'posalCodeAdditional',
+        store.commit('setAttributeEditAddress', {
+          attribute: 'countryId',
           value
         })
       }
     })
 
+    function changeCountry(countryId) {
+      if (isEmptyValue(countryId)) return
+      store.dispatch('countrieCustomers', { countryId, typeLocations: fieldsLocation.value })
+    }
+
+    function showCountry(show) {
+      if (!show || !isEmptyValue(listCountry.value)) return
+      store.dispatch('countriesCustomers')
+    }
+
     return {
       // Computed
-      posalCodeAdditional,
-      fieldsLocation
+      country,
+      listCountry,
+      fieldsLocation,
+      // Methods
+      showCountry,
+      changeCountry
     }
   }
 })

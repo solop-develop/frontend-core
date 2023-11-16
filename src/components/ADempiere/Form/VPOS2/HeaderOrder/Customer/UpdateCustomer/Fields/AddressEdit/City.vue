@@ -21,13 +21,25 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
   >
     <template slot="label">
       <span class="field-title-name">
-        {{ $t('field.locationsAddress.additionalPostalCode') }}
+        {{ $t('field.locationsAddress.city') }}
       </span>
     </template>
-    <el-input
-      v-model="posalCodeAdditional"
+    <el-select
+      v-model="city"
+      style="width: 100%;"
+      filterable
+      clearable
       size="mini"
-    />
+      :default-first-option="true"
+      @visible-change="showCity"
+    >
+      <el-option
+        v-for="(item, key) in listCities"
+        :key="key"
+        :label="item.name"
+        :value="item.id"
+      />
+    </el-select>
   </el-form-item>
 </template>
 
@@ -35,10 +47,10 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 import { computed, defineComponent } from '@vue/composition-api'
 
 import store from '@/store'
-// import { isEmptyValue } from '@/utils/ADempiere'
+import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({
-  name: 'PostalCodeAdditional',
+  name: 'City',
   props: {
     isShipping: {
       type: Boolean,
@@ -50,27 +62,40 @@ export default defineComponent({
       if (props.isShipping) return 'shippingAddress'
       return 'billingAddress'
     })
-    const posalCodeAdditional = computed({
+
+    const listCities = computed(() => {
+      return store.getters.getAttributeFieldCustomer({
+        attribute: 'listCities'
+      })
+    })
+
+    const city = computed({
       get() {
-        return store.getters.getAttributeFieldLocationsCustomers({
-          typeLocations: fieldsLocation.value,
-          attribute: 'posalCodeAdditional'
+        return store.getters.getAttributeAddressEdit({
+          attribute: 'cityId'
         })
       },
       // setter
       set(value) {
-        store.commit('setAttributeFieldLocationsCustomers', {
-          typeLocations: fieldsLocation.value,
-          attribute: 'posalCodeAdditional',
+        store.commit('setAttributeEditAddress', {
+          attribute: 'cityId',
           value
         })
       }
     })
 
+    function showCity(show) {
+      if (!show || !isEmptyValue(listCities.value)) return
+      store.dispatch('citiesCustomers', fieldsLocation.value)
+    }
+
     return {
       // Computed
-      posalCodeAdditional,
-      fieldsLocation
+      city,
+      listCities,
+      fieldsLocation,
+      // Methods
+      showCity
     }
   }
 })

@@ -53,14 +53,14 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             </el-col>
           </el-card>
         </el-col>
-        <el-col v-if="isCopyShippingAddress" :span="12">
+        <el-col v-if="!isCopyShippingAddress" :span="12">
           <el-card
             shadow="never"
             :body-style="{ padding: '5px' }"
             class="customer-data"
           >
             <el-col :span="12">
-              <location-name />
+              <location-name :is-shipping="true" />
             </el-col>
             <el-col
               v-for="(fieldAttributes, key) in shippingLocationField"
@@ -106,7 +106,7 @@ export default defineComponent({
     })
 
     const spanCol = computed(() => {
-      if (props.isCopyShippingAddress) return 12
+      if (!props.isCopyShippingAddress) return 12
       return 24
     })
 

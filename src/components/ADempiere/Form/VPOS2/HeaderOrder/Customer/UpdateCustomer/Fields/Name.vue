@@ -21,12 +21,13 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
   >
     <template slot="label">
       <span class="field-title-name">
-        {{ $t('field.locationsAddress.additionalPostalCode') }}
+        {{ $t('form.pointOfSales.customer.fieldCutomer.name') }}
       </span>
+      <span style="color: #f34b4b"> * </span>
     </template>
     <el-input
-      v-model="posalCodeAdditional"
-      size="mini"
+      v-model="name"
+      size="medium"
     />
   </el-form-item>
 </template>
@@ -38,30 +39,18 @@ import store from '@/store'
 // import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({
-  name: 'PostalCodeAdditional',
-  props: {
-    isShipping: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props) {
-    const fieldsLocation = computed(() => {
-      if (props.isShipping) return 'shippingAddress'
-      return 'billingAddress'
-    })
-    const posalCodeAdditional = computed({
+  name: 'NameCustomer',
+  setup() {
+    const name = computed({
       get() {
-        return store.getters.getAttributeFieldLocationsCustomers({
-          typeLocations: fieldsLocation.value,
-          attribute: 'posalCodeAdditional'
+        return store.getters.getAttributeFieldCustomerEdit({
+          attribute: 'name'
         })
       },
       // setter
       set(value) {
-        store.commit('setAttributeFieldLocationsCustomers', {
-          typeLocations: fieldsLocation.value,
-          attribute: 'posalCodeAdditional',
+        store.commit('setAttributeFieldCustomerEdit', {
+          attribute: 'name',
           value
         })
       }
@@ -69,8 +58,7 @@ export default defineComponent({
 
     return {
       // Computed
-      posalCodeAdditional,
-      fieldsLocation
+      name
     }
   }
 })
