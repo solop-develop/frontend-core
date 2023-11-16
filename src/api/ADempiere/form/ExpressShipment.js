@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -88,6 +88,7 @@ export function listProductRequest({
       return camelizeObjectKeys(response)
     })
 }
+
 // Shipment
 export function createShipmentRequest({
   id,
@@ -139,6 +140,7 @@ export function deleteShipmentRequest({
       return camelizeObjectKeys(response)
     })
 }
+
 //	Shipment Line
 export function createShipmentLineRequest({
   shipmentId,
@@ -166,6 +168,7 @@ export function createShipmentLineRequest({
       return camelizeObjectKeys(response)
     })
 }
+
 export function deleteShipmentLineRequest({
   id,
   shipmentId
@@ -178,6 +181,7 @@ export function deleteShipmentLineRequest({
       return camelizeObjectKeys(response)
     })
 }
+
 export function updateShipmentLineRequest({
   id,
   uuid,
@@ -201,16 +205,11 @@ export function updateShipmentLineRequest({
 }
 
 export function listShipmentLinesRequest({
-  shipmentId,
-  shipmentUuid
+  shipmentId
 }) {
   return request({
-    url: `${config.express.shipment}/shipments`,
-    method: 'get',
-    params: {
-      shipment_id: shipmentId,
-      shipment_uuid: shipmentUuid
-    }
+    url: `${config.express.shipment}/shipments/${shipmentId}/lines`,
+    method: 'get'
   })
     .then(response => {
       return camelizeObjectKeys(response)
