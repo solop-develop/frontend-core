@@ -1,17 +1,19 @@
 <!--
-ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https:www.gnu.org/licenses/>.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -27,7 +29,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           <el-row :gutter="10">
             <el-col :span="8">
               <el-form-item class="front-item-receipt">
-                <template slot="label" style="width: 450px;">
+                <template slot="label">
                   {{ $t('form.VBankStatementMatch.field.businessPartner') }}
                   <!-- <br>
                   <br> -->
@@ -53,8 +55,8 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             </el-col>
             <el-col :span="8">
               <el-form-item class="front-item-receipt">
-                <template slot="label" style="width: 450px;">
-                  {{ $t('form.expressReceipt.field.salesOrder') }}
+                <template slot="label">
+                  {{ $t('form.expressReceipt.field.purchaseOrder') }}
                   <!-- <br>
                   <br> -->
                 </template>
@@ -84,7 +86,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
                 class="front-item-receipt"
                 style="width: 450px;"
               >
-                <template slot="label" style="width: 450px;">
+                <template slot="label">
                   {{ $t('form.expressReceipt.field.productcode') }}
                   <!-- <p style="margin: 0px;">
                     <el-checkbox v-model="isQuantityFromOrderLine">
@@ -278,7 +280,6 @@ import router from '@/router'
 import {
   listOrders,
   listBusinessPartnersReceipt
-  // Shipment
 } from '@/api/ADempiere/form/ExpressReceipt.js'
 
 // Utils and Helper Methods
@@ -287,9 +288,9 @@ import { showMessage } from '@/utils/ADempiere/notification'
 import { dateTimeFormats } from '@/utils/ADempiere/formatValue/dateFormat'
 
 export default defineComponent({
-  name: 'ExpressShipment',
+  name: 'ExpressReceipt',
 
-  setup(props, { root, refs }) {
+  setup(props, { refs }) {
     /**
    * Ref
    */

@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -17,7 +17,7 @@
  */
 
 const expressMovement = {
-  title: 'Moviment Express',
+  title: 'Express Movement',
   field: {
     warehouse: 'Base Warehouse',
     warehouseTo: 'Destination Warehouse',
@@ -25,7 +25,7 @@ const expressMovement = {
     documentNo: 'Document No',
     dateMoviment: 'Movement Date'
   },
-  movimentComplete: 'Moviment Completo'
+  movementComplete: 'Movement Completo'
 }
 
 export default expressMovement

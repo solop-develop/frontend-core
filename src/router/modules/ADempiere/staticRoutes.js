@@ -292,7 +292,8 @@ const staticRoutes = [
         component: () => import('@/views/ADempiere/Form'),
         name: 'ExpressReceipt',
         meta: {
-          title: 'Express Receipt',
+          title: language.t('form.expressReceipt.title'),
+          fileName: 'ExpressReceipt',
           icon: 'el-icon-receiving',
           isIndex: true,
           type: 'from'
@@ -310,9 +311,8 @@ const staticRoutes = [
         component: () => import('@/views/ADempiere/Form'),
         name: 'ExpressShipment',
         meta: {
-          // title: language.t('route.expressShipment'),
-          title: 'Express Shipment',
-          // title: language.t('route.reportViewer'),
+          title: language.t('form.expressShipment.title'),
+          fileName: 'ExpressShipment',
           icon: 'shopping',
           isIndex: true,
           type: 'from'
@@ -330,7 +330,8 @@ const staticRoutes = [
         component: () => import('@/views/ADempiere/Form'),
         name: 'ExpressMovement',
         meta: {
-          title: 'Express Movement',
+          title: language.t('form.expressMovement.title'),
+          fileName: 'ExpressMovement',
           icon: 'tree-table',
           isIndex: true,
           type: 'from'
