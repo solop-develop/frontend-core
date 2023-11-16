@@ -212,35 +212,35 @@ export function setComponentSequencePOSV(country) {
     let component
     switch (true) {
       case sequence.includes('@A1@'):
-        component = () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/Address')
+        component = () => import('@/components/ADempiere/FormDefinition/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/Address')
         break
       case sequence.includes('@A2@'):
-        component = () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/Address2')
+        component = () => import('@/components/ADempiere/FormDefinition/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/Address2')
         break
       case sequence.includes('@A3@'):
-        component = () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/Address3')
+        component = () => import('@/components/ADempiere/FormDefinition/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/Address3')
         break
       case sequence.includes('@A4@'):
-        component = () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/Address4')
+        component = () => import('@/components/ADempiere/FormDefinition/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/Address4')
         break
       case sequence.includes('@C@'):
         if (is_allow_cities_out_of_list) {
-          component = () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/CityLabel')
+          component = () => import('@/components/ADempiere/FormDefinition/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/CityLabel')
         } else {
-          component = () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/City')
+          component = () => import('@/components/ADempiere/FormDefinition/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/City')
         }
         break
       case sequence.includes('@R@'):
-        component = () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/Regions')
+        component = () => import('@/components/ADempiere/FormDefinition/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/Regions')
         break
       case sequence.includes('@P@'):
-        component = () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/PostalCode')
+        component = () => import('@/components/ADempiere/FormDefinition/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/PostalCode')
         break
       case sequence.includes('@A@'):
-        component = () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/PostalCodeAdditional')
+        component = () => import('@/components/ADempiere/FormDefinition/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/PostalCodeAdditional')
         break
       case sequence.includes('@CO@'):
-        component = () => import('@/components/ADempiere/Form/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/Country')
+        component = () => import('@/components/ADempiere/FormDefinition/VPOS2/HeaderOrder/Customer/NewCustomer/AddAddress/Fields/Country')
         break
     }
     return {

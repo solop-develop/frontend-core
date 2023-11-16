@@ -227,7 +227,7 @@ export default {
                 })
               },
               // TODO: Change to string and import dynamic in component
-              componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/cashManagement/cashOpening/info.vue'),
+              componentPath: () => import('@/components/ADempiere/FormDefinition/VPOS2/Options/cashManagement/cashOpening/info.vue'),
               isShowed: true
             })
           })
@@ -245,7 +245,7 @@ export default {
                 dispatch('cashOpening')
               },
               // TODO: Change to string and import dynamic in component
-              componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/cashManagement/cashOpening/info.vue'),
+              componentPath: () => import('@/components/ADempiere/FormDefinition/VPOS2/Options/cashManagement/cashOpening/info.vue'),
               isShowed: true
             })
 

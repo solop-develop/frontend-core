@@ -75,7 +75,7 @@ export default defineComponent({
             key: 'showContextMenu',
             value: false
           })
-          form = import('@/components/ADempiere/Form/VPOS2')
+          form = import('@/components/ADempiere/FormDefinition/VPOS2')
           break
         case 'VGetWeight':
           form = import('@/components/ADempiere/Form/VGetWeight')

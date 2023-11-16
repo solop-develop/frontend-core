@@ -626,7 +626,7 @@ export default {
               type: 'success',
               doneMethod: () => {},
               // TODO: Change to string and import dynamic in component
-              componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/Shipments/info.vue'),
+              componentPath: () => import('@/components/ADempiere/FormDefinition/VPOS2/Options/Shipments/info.vue'),
               isShowed: true
             })
             resolve(response)
@@ -981,7 +981,7 @@ export default {
                   })
                 }
               },
-              componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/RMA/previwerRMA.vue'),
+              componentPath: () => import('@/components/ADempiere/FormDefinition/VPOS2/Options/RMA/previwerRMA.vue'),
               isShowed: true
             })
             resolve(response)
@@ -1006,7 +1006,7 @@ export default {
                 dispatch('processRMA', {})
               },
               // TODO: Change to string and import dynamic in component
-              componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/RMA/previwerRMA.vue'),
+              componentPath: () => import('@/components/ADempiere/FormDefinition/VPOS2/Options/RMA/previwerRMA.vue'),
               isShowed: true
             })
             resolve({})
@@ -1193,7 +1193,7 @@ export default {
                   isShowed: false
                 })
               },
-              componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/cashManagement/cashClosing/panel.vue'),
+              componentPath: () => import('@/components/ADempiere/FormDefinition/VPOS2/Options/cashManagement/cashClosing/panel.vue'),
               isShowed: true
             })
             resolve(response)
@@ -1213,7 +1213,7 @@ export default {
                   isShowed: false
                 })
               },
-              componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/cashManagement/cashClosing/panel.vue'),
+              componentPath: () => import('@/components/ADempiere/FormDefinition/VPOS2/Options/cashManagement/cashClosing/panel.vue'),
               isShowed: true
             })
 

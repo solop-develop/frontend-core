@@ -307,7 +307,7 @@ export default {
                 dispatch('newOrder')
               },
               // TODO: Change to string and import dynamic in component
-              componentPath: () => import('@/components/ADempiere/Form/VPOS2/DialogInfo/infoOrder.vue'),
+              componentPath: () => import('@/components/ADempiere/FormDefinition/VPOS2/DialogInfo/infoOrder.vue'),
               isShowed: true
             })
             resolve(response)
@@ -326,7 +326,7 @@ export default {
                 dispatch('process', {})
               },
               // TODO: Change to string and import dynamic in component
-              componentPath: () => import('@/components/ADempiere/Form/VPOS2/DialogInfo/infoOrder.vue'),
+              componentPath: () => import('@/components/ADempiere/FormDefinition/VPOS2/DialogInfo/infoOrder.vue'),
               isShowed: true
             })
 
