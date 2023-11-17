@@ -221,7 +221,7 @@ const browserControl = {
         if (!isEmptyValue(contextAttributes)) {
           contextAttributes = JSON.stringify(contextAttributesList)
         }
-        if (!isEmptyValue(listFilters)) {
+        if (!isEmptyValue(filters)) {
           listFilters = '[' + filters + ']'
         }
 
