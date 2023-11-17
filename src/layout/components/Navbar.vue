@@ -109,6 +109,7 @@ export default {
       user: {},
       isMenuMobile: false,
       driver: null,
+      avatarResize: this.imageDefault,
       isProfilePreview: false
     }
   },
@@ -131,16 +132,6 @@ export default {
       'avatar',
       'device'
     ]),
-    avatarResize() {
-      const { uri } = getImagePath({
-        file: this.$store.getters['user/userInfo'].image,
-        width: 40,
-        height: 40,
-        operation: 'resize'
-      })
-
-      return uri
-    },
     fieldPanel() {
       if (this.$route.meta.type === 'browser') return this.$store.getters.getStoredBrowser(this.$route.meta.uuid).fieldsList.filter(field => field.isMandatory || field.isShowedFromUser)
       if (this.$route.meta.type === 'report') return this.$store.getters.getStoredReport(this.$route.meta.uuid).fieldsList.filter(field => field.isMandatory || field.isShowedFromUser)
@@ -196,6 +187,7 @@ export default {
     }
   },
   mounted() {
+    this.loadImage()
     this.driver = new Driver()
   },
   methods: {
@@ -303,6 +295,16 @@ export default {
           break
       }
       return field
+    },
+    async loadImage() {
+      const { image } = this.$store.getters['user/userInfo']
+      if (image) {
+        this.avatarResize = await getImagePath({
+          file: image,
+          width: 200,
+          height: 200
+        })
+      }
     }
   }
 }

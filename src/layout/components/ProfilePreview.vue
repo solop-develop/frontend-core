@@ -20,10 +20,13 @@
 </template>
 
 <script>
+import { defineComponent, computed, ref } from '@vue/composition-api'
+import router from '@/router'
+import store from '@/store'
 import RolesNavbar from '@/views/profile/components/RolesNavbar'
 import { getImagePath } from '@/utils/ADempiere/resource.js'
 
-export default {
+export default defineComponent({
   name: 'ProfilePreview',
   components: {
     RolesNavbar
@@ -48,42 +51,57 @@ export default {
       default: () => ['fill', 'contain', 'cover', 'none', 'scale-down']
     }
   },
-  computed: {
-    userInfo() {
-      return this.$store.getters['user/userInfo']
-    },
-    userName() {
-      if (this.isEmptyValue(this.userInfo)) {
-        return ''
-      }
-      return this.userInfo.name
-    },
-    currentRole() {
-      return this.$store.getters['user/getRole']
-    },
-    avatarResize() {
-      if (this.isEmptyValue(this.userInfo.image)) {
-        return require('@/image/ADempiere/avatar/no-avatar.png')
-      }
+  setup() {
+    // Computed
+    const userInfo = computed(() => {
+      return store.getters['user/userInfo']
+    })
 
-      const { uri } = getImagePath({
-        file: this.userInfo.image,
-        width: 200,
-        height: 200,
-        operation: 'resize'
-      })
+    const userName = computed(() => {
+      if (userInfo.value) return userInfo.value.name
+      return ''
+    })
 
-      return uri
+    const currentRole = computed(() => {
+      return store.getters['user/getRole']
+    })
+
+    const avatarResize = ref('')
+
+    avatarResize.value = require('@/image/ADempiere/avatar/no-avatar.png')
+
+    async function loadImage() {
+      const { image } = userInfo.value
+      if (image) {
+        avatarResize.value = await getImagePath({
+          file: image,
+          width: 200,
+          height: 200
+        })
+      }
     }
-  },
-  methods: {
-    handleClick() {
-      this.$router.push({
+
+    function handleClick() {
+      router.push({
         name: 'Profile'
       }, () => {})
     }
+
+    loadImage()
+
+    return {
+      // Ref
+      avatarResize,
+      // Computed
+      userInfo,
+      userName,
+      currentRole,
+      // Methods
+      handleClick,
+      loadImage
+    }
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>

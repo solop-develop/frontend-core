@@ -20,7 +20,7 @@
 // related to upload to server side and downdload from server side to client side.
 // Please add the necessary functions here:
 import { config } from '@/utils/ADempiere/config'
-
+import { request } from '@/utils/ADempiere/request'
 // Constants
 import { BEARER_TYPE } from '@/utils/auth'
 
@@ -112,28 +112,46 @@ export function buildImageFromArrayBuffer({
  * @param {string} operation fit, resize
  * @returns {object} url, urn and uri with path to request
  */
-export function getImagePath({
+export async function getImagePath({
   file,
   width,
   height,
   operation = 'resize'
 }) {
-  const token = getToken()
-  let bearerToken = token
-  // Json Web Token
-  if (!isEmptyValue(bearerToken) && !bearerToken.startsWith(BEARER_TYPE)) {
-    bearerToken = `${BEARER_TYPE} ${token}`
-  }
+  return new Promise(resolve => {
+    let image
+    getImageUrl({
+      file,
+      width,
+      height,
+      operation
+    })
+      .then(async response => {
+        const { data } = response[0]
+        image = await buildLinkHref({
+          fileName: file,
+          mimeType: file.split('.').pop(),
+          outputStream: data
+        })
+        resolve(image)
+        return image
+      })
+  })
+}
 
-  const url = config.adempiere.images.url
-  const urn = `?&token=${bearerToken}&action=${operation}&width=${width}&height=${height}&url=${file}`
-  const uri = `${url}${urn}`
-
-  return {
-    url,
-    urn,
-    uri
-  }
+function getImageUrl({
+  file,
+  width,
+  height
+}) {
+  return request({
+    url: `${config.adempiere.images.url}/resources/file-name/${file}`,
+    method: 'get',
+    params: {
+      width,
+      height
+    }
+  })
 }
 
 /**
@@ -232,28 +250,30 @@ export function buildLinkHref({
   outputStream,
   isDownload = false
 }) {
-  if (isEmptyValue(mimeType)) {
-    if (isEmptyValue(extension)) {
-      extension = getExtensionFromFile(fileName)
+  return new Promise((resolve) => {
+    if (isEmptyValue(mimeType)) {
+      if (isEmptyValue(extension)) {
+        extension = getExtensionFromFile(fileName)
+      }
+      mimeType = mimeTypeOfReport[extension]
     }
-    mimeType = mimeTypeOfReport[extension]
-  }
 
-  const { blobFile } = buildBlobAndValues({
-    mimeType,
-    outputStream
+    const { blobFile } = buildBlobAndValues({
+      mimeType,
+      outputStream
+    })
+
+    const link = document.createElement('a')
+    link.href = window.URL.createObjectURL(blobFile)
+    link.download = fileName
+
+    // download report file
+    if (isDownload) {
+      link.click()
+    }
+
+    return resolve(link)
   })
-
-  const link = document.createElement('a')
-  link.href = window.URL.createObjectURL(blobFile)
-  link.download = fileName
-
-  // download report file
-  if (isDownload) {
-    link.click()
-  }
-
-  return link
 }
 
 /**
