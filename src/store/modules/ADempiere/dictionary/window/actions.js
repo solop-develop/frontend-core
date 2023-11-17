@@ -154,12 +154,8 @@ export default {
           }
 
           const doneMethodByReport = ({ parentUuid: tabAssociatedUuid, containerUuid }) => {
-            const fieldsList = rootGetters.getReportParameters({
-              containerUuid: process.uuid
-            })
             const emptyMandatory = rootGetters.getFieldsListEmptyMandatory({
-              containerUuid: process.uuid,
-              fieldsList
+              containerUuid: process.uuid
             })
             if (!isEmptyValue(emptyMandatory)) {
               showMessage({
@@ -219,7 +215,7 @@ export default {
               }
 
               return dispatch('getReportDefinitionFromServer', {
-                uuid: process.uuid
+                id: process.id
               }).then(reportDefinitionResponse => {
                 // auto run report if without parameters
                 if (isEmptyValue(reportDefinitionResponse.fieldsList)) {
