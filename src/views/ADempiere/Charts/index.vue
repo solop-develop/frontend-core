@@ -21,7 +21,7 @@
     <el-card
       shadow="never"
       :body-style="{ padding: '20px !important;'}"
-      style="height: 99% !important; overflow: auto !important;"
+      style="height: 90% !important; overflow: auto !important;"
     >
       <el-col v-if="!isEmptyValue(mainDashboard)" :span="24" style="padding-right:8px;margin-bottom:2px;">
         <dashboard-definition
