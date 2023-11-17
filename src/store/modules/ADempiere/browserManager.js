@@ -217,11 +217,18 @@ const browserControl = {
           pageNumber = storedPage
         }
         const pageToken = generatePageToken({ pageNumber })
+        let contextAttributes, listFilters
+        if (!isEmptyValue(contextAttributes)) {
+          contextAttributes = JSON.stringify(contextAttributesList)
+        }
+        if (!isEmptyValue(filters)) {
+          listFilters = '[' + filters + ']'
+        }
 
         requestBrowserSearch({
           id: containerUuid,
-          contextAttributes: JSON.stringify(contextAttributesList),
-          filters: '[' + filters + ']',
+          contextAttributes,
+          filters: listFilters,
           nextPageToken: pageToken,
           pageSize
         })

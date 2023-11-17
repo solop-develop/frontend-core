@@ -175,9 +175,9 @@ const reportManager = {
           // recordUuid
         })
           .then(runReportRepsonse => {
-            const { instance_id, output, isError } = runReportRepsonse
+            const { instance_id, output, is_error } = runReportRepsonse
 
-            if (isError) {
+            if (is_error) {
               showNotification({
                 title: language.t('notifications.error'),
                 message: reportDefinition.name,

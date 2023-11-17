@@ -24,6 +24,7 @@ import router from '@/router'
 // API Request Methods
 import {
   requestRunBusinessProcess,
+  requestRunBusinessProcessAsBrowser,
   requestRunBusinessProcessAsWindow
 } from '@/api/ADempiere/businessData/runBusinessProcess.ts'
 
@@ -199,15 +200,14 @@ const processManager = {
           columnName: RECORD_ID
         })
 
-        requestRunBusinessProcess({
+        requestRunBusinessProcessAsBrowser({
           uuid: containerUuid,
           parametersList,
           // in browser
+          id: browserDefinition.process.id,
           browserId: browserDefinition.id,
           // in window
           recordId,
-          // TODO: Add support to tableSelectedId
-          tableSelectedId: null,
           selectionsList
         })
           .then(runProcessRepsonse => {
