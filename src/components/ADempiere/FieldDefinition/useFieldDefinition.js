@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ import { computed, onMounted } from '@vue/composition-api'
 import store from '@/store'
 
 // Utils and Helpers Methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { getTypeOfValue, isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default function useFieldDefinition({ fieldMetadata, containerManager }) {
   const isMobile = computed(() => {
@@ -91,20 +91,30 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
       if (inTable) {
         // implement container manager row
         if (containerManager && containerManager.getCell) {
-          return containerManager.getCell({
+          const value = containerManager.getCell({
             containerUuid,
             rowIndex: fieldMetadata.rowIndex,
             columnName
           })
+          // types `decimal` and `date` is a object struct
+          if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
+            return value.value
+          }
+          return value
         }
       }
 
       // main panel values
-      return store.getters.getValueOfFieldOnContainer({
+      const value = store.getters.getValueOfFieldOnContainer({
         parentUuid: fieldMetadata.parentUuid,
         containerUuid,
         columnName
       })
+      // types `decimal` and `date` is a object struct
+      if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
+        return value.value
+      }
+      return value
     },
     set(newValue) {
       const { columnName, containerUuid, inTable } = fieldMetadata

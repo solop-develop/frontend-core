@@ -144,11 +144,16 @@ export default {
         if (inTable) {
           // implement container manager row
           if (this.containerManager && this.containerManager.getCell) {
-            return this.containerManager.getCell({
+            const value = this.containerManager.getCell({
               containerUuid,
               rowIndex: this.metadata.rowIndex,
               columnName
             })
+            // types `decimal` and `date` is a object struct
+            if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
+              return value.value
+            }
+            return value
           }
         }
 
@@ -163,6 +168,10 @@ export default {
           // if (!isEmptyValue(value)) {
           //   return value.map(val => new Date(val))
           // }
+          // types `decimal` and `date` is a object struct
+          if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
+            return value.value
+          }
           return value
         }
         if (!this.isRenderRange) {
