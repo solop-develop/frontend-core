@@ -6,7 +6,10 @@
 
     <div class="user-profile">
       <div class="box-center">
-        <pan-thumb :image="avatarResize" :hoverable="true">
+        <pan-thumb
+          :image="avatarResize"
+          :hoverable="true"
+        >
           {{ currentRole.name }}
         </pan-thumb>
       </div>
@@ -31,9 +34,10 @@
 
 <script>
 import PanThumb from '@/components/PanThumb'
-import { getImagePath } from '@/utils/ADempiere/resource.js'
-
-export default {
+import { getImagePath, buildLinkHref } from '@/utils/ADempiere/resource.js'
+import { defineComponent, computed, ref } from '@vue/composition-api'
+import store from '@/store'
+export default defineComponent({
   components: {
     PanThumb
   },
@@ -50,34 +54,50 @@ export default {
       }
     }
   },
-  computed: {
-    currentRole() {
-      return this.$store.getters['user/getRole']
-    },
-    rolesList() {
-      return this.$store.getters['user/getRoles']
-    },
-    avatarResize() {
-      // const defaultAvatar = 'https://avatars1.githubusercontent.com/u/1263359?s=200&v=4?imageView2/1/w/80/h/80'
-      const { image } = this.$store.getters['user/userInfo']
-      if (this.isEmptyValue(image)) {
-        return require('@/image/ADempiere/avatar/no-avatar.png')
+  setup() {
+    const currentRole = computed(() => {
+      return store.getters['user/getRole']
+    })
+
+    const rolesList = computed(() => {
+      return store.getters['user/getRoles']
+    })
+
+    const userInfo = computed(() => {
+      return store.getters['user/userInfo']
+    })
+
+    const avatarResize = ref('')
+
+    avatarResize.value = require('@/image/ADempiere/avatar/no-avatar.png')
+
+    async function loadImage() {
+      const { image } = userInfo.value
+      if (image) {
+        avatarResize.value = await getImagePath({
+          file: image,
+          width: 200,
+          height: 200
+        })
       }
+    }
 
-      const { uri } = getImagePath({
-        file: image,
-        width: 294,
-        height: 294,
-        operation: 'resize'
-      })
+    loadImage()
 
-      return uri
-    },
-    userInfo() {
-      return this.$store.getters['user/userInfo']
+    return {
+      // Ref
+      avatarResize,
+      // Computed
+      currentRole,
+      rolesList,
+      userInfo,
+      // Methods
+      loadImage,
+      getImagePath,
+      buildLinkHref
     }
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>
