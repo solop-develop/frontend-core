@@ -115,13 +115,11 @@ export default {
               rowIndex: this.metadata.rowIndex,
               columnName
             })
-            if (!isEmptyValue(value)) {
-              // types `decimal` and `date` is a object struct
-              if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
-                return value.value
-              }
-              return value
+            // types `decimal` and `date` is a object struct
+            if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
+              return value.value
             }
+            return value
           }
         }
 
