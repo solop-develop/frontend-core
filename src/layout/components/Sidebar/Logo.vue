@@ -24,7 +24,7 @@
           <div slot="content">
             {{ getRole.name }} | {{ getRole.client.name }} | {{ storedOrganization.name }}
           </div>
-          <img v-if="logo" :src="logo" class="sidebar-logo">
+          <img v-if="logo" :src="logo" class="sidebar-logo" style="height: 50px;width: 50px;">
           <svg-icon v-else icon-class="AD" class="standard-logo" />
           <b style="margin-left: 5px;">{{ title }}</b>
         </el-tooltip>
@@ -32,23 +32,13 @@
 
       <span v-else>
         <p key="expand" style="display: flex;text-align: center;width: 100%;padding: 0px 15px;margin-top: 0px;">
-          <img v-if="logo" :src="logo" class="sidebar-logo" @click="dashboard()">
+          <img v-if="logo" :src="logo" class="sidebar-logo" style="height: 50px;width: 50px;" @click="dashboard()">
           <svg-icon v-else icon-class="AD" class="standard-logo" />
           <b style="color: white;font-size: 18px;padding-top: 15px;cursor: pointer; margin-left: 5px;" @click="dashboard()">
             {{ systemName }}
           </b>
           <br>
         </p>
-        <!--
-        <el-tooltip placement="right">
-          <div slot="content">
-            {{ getRole.name }} | {{ getRole.client.name }} | {{ storedOrganization.name }}
-          </div>
-          <p class="sidebar-sub-title" style="color: white; font-size: 12px;margin: 0px;margin-top: 0px;" @click="profile()">
-            {{ getRole.name }} | {{ getRole.client.name }} | {{ storedOrganization.name }}
-          </p>
-        </el-tooltip>
-        -->
         <p class="sidebar-sub-title" style="color: white; font-size: 12px;margin: 0px;margin-top: 0px;" @click="profile()">
           {{ getRole.name }} | {{ getRole.client.name }} | {{ storedOrganization.name }}
         </p>
@@ -58,10 +48,13 @@
 </template>
 
 <script>
+import { defineComponent, computed, ref } from '@vue/composition-api'
+import router from '@/router'
+import store from '@/store'
 // Utils and Helper Methods
 import { getImagePath } from '@/utils/ADempiere/resource.js'
 
-export default {
+export default defineComponent({
   name: 'SidebarLogo',
 
   props: {
@@ -70,58 +63,66 @@ export default {
       required: true
     }
   },
+  setup() {
+    // Ref
+    const title = ref('ADempiere')
+    const logo = ref('')
+    // Computed
+    const getRole = computed(() => {
+      return store.getters['user/getRole']
+    })
 
-  data() {
-    return {
-      // title: 'Vue Element Admin',
-      title: 'ADempiere'
-      // logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
-      // logo: 'https://avatars1.githubusercontent.com/u/1263359?s=200&v=4?imageView2/1/w/80/h/80'
-    }
-  },
-
-  computed: {
-    getRole() {
-      return this.$store.getters['user/getRole']
-    },
-    systemName() {
-      const { name } = this.$store.getters['user/getSystem']
+    const systemName = computed(() => {
+      const { name } = store.getters['user/getSystem']
       if (name) return name
       return 'ADempiere'
-    },
-    storedOrganization() {
-      return this.$store.getters['user/getOrganization']
-    },
-    logo() {
-      const { client } = this.getRole
-      const { logo } = client
-      if (logo) {
-        const { uri } = getImagePath({
-          file: logo,
+    })
+
+    const storedOrganization = computed(() => {
+      return store.getters['user/getOrganization']
+    })
+    // Methods
+
+    async function loadImage() {
+      const { client } = getRole.value
+      if (client.logo) {
+        logo.value = await getImagePath({
+          file: client.logo,
           width: 50,
-          height: 50,
-          operation: 'resize'
+          height: 50
         })
-
-        return uri
       }
-      return undefined
     }
-  },
 
-  methods: {
-    profile() {
-      this.$router.push({
+    function profile() {
+      router.push({
         path: '/profile/index?'
       }, () => {})
-    },
-    dashboard() {
-      this.$router.push({
+    }
+
+    function dashboard() {
+      router.push({
         path: '/'
       }, () => {})
     }
+
+    loadImage()
+
+    return {
+      // Ref
+      title,
+      logo,
+      // Computed
+      getRole,
+      systemName,
+      storedOrganization,
+      // Methods
+      dashboard,
+      loadImage,
+      profile
+    }
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>
