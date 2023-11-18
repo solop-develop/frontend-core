@@ -363,11 +363,12 @@ export default defineComponent({
     function sendAction() {
       isVisibleDocAction.value = false
       isLoadingActions.value = true
-      store.dispatch('runDocumentActionOnserver', {
+      store.dispatch('runDocumentActionOnServer', {
+        parentUuid: props.parentUuid,
+        containerUuid,
         tableName: props.tabAttributes.tableName,
         recordId: recordId.value,
         recordUuid: recordUuid.value,
-        containerUuid,
         docAction: selectDocActions.value,
         description: message()
       })
@@ -414,13 +415,13 @@ export default defineComponent({
       }
     })
 
-    watch(currentDocStatusValue, (newValue, oldValue) => {
-      if (newValue !== oldValue) {
-        if (isEmptyValue(defaultDocumentAction.value)) {
-          loadDocumentActions()
-        }
-      }
-    })
+    // watch(currentDocStatusValue, (newValue, oldValue) => {
+    //   if (newValue !== oldValue) {
+    //     if (isEmptyValue(defaultDocumentAction.value)) {
+    //       loadDocumentActions()
+    //     }
+    //   }
+    // })
 
     // if (isEmptyValue(defaultDocumentAction.value)) {
     //   loadDocumentActions()

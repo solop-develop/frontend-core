@@ -105,7 +105,7 @@ export function requestListWorkflowsLogs({
       return {
         nextPageToken: workflowLogsListResponse.next_page_token,
         recordCount: workflowLogsListResponse.record_count,
-        workflowLogsList: workflowLogsListResponse.records.map(workflowLog => {
+        workflowLogsList: workflowLogsListResponse.workflow_logs.map(workflowLog => {
           return convertWorkflowProcess(workflowLog)
         })
       }

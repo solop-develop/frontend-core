@@ -22,9 +22,9 @@
       :container-uuid="containerUuid"
     />
 
-    <el-timeline v-if="!isEmptyValue(listLogs.list)">
+    <el-timeline v-if="!isEmptyValue(storedWorkflowLogs.list)">
       <el-timeline-item
-        v-for="(worrkflow, keys) in listLogs.list"
+        v-for="(worrkflow, keys) in storedWorkflowLogs.list"
         :key="worrkflow.logId"
         :type="worrkflow.type"
         :color="'#0bbd87'"
@@ -107,7 +107,7 @@ export default defineComponent({
     const currentTabLogs = ref('0')
 
     // use getter to reactive properties
-    const listLogs = computed(() => {
+    const storedWorkflowLogs = computed(() => {
       return store.getters.getWorkFlowLogs({
         containerUuid: props.containerUuid
       })
@@ -129,7 +129,7 @@ export default defineComponent({
       currentTabLogs,
       typeAction,
       currentKey,
-      listLogs,
+      storedWorkflowLogs,
       // Methods
       showkey
     }

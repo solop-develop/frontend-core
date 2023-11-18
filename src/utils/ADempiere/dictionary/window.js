@@ -1123,7 +1123,7 @@ export const refreshRecord = {
   svg: false,
   icon: 'el-icon-refresh',
   actionName: 'refreshRecords',
-  refreshRecord: ({ parentUuid, containerUuid, tabId, recordId, recordUuid, isRefreshChilds = false }) => {
+  refreshRecord: ({ parentUuid, containerUuid, recordId, recordUuid, isRefreshChilds = false }) => {
     if (isEmptyValue(recordUuid)) {
       recordUuid = store.getters.getUuidOfContainer(containerUuid)
     }
@@ -1141,7 +1141,7 @@ export const refreshRecord = {
     })
     nprogress.start()
     return getEntity({
-      tabId,
+      tabId: tabDefinition.id,
       id: recordId
     })
       .then(response => {
@@ -1150,15 +1150,17 @@ export const refreshRecord = {
           recordUuid
         })
 
+        const newRow = {
+          ...ROW_ATTRIBUTES,
+          ...currentRow,
+          ...response.values
+        }
+
         // add new row on table
         store.commit('setTabRowWithRecord', {
           containerUuid,
           recordUuid,
-          row: {
-            ...ROW_ATTRIBUTES,
-            ...currentRow,
-            ...response.values
-          }
+          row: newRow
         })
 
         // update fields values

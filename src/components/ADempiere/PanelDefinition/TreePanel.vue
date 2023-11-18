@@ -237,7 +237,7 @@ export default defineComponent({
           tabUuid: containerUuid,
           recordUuid
         }).then(response => {
-          return response.attributes
+          return response.values
         })
       }
 
