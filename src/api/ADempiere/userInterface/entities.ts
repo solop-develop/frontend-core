@@ -135,11 +135,4 @@ export function getEntity({
     url: `/user-interface/entities/${tabId}/${id}`,
     method: 'get'
   })
-    .then(response => {
-      return {
-        nextPageToken: response.next_page_token,
-        recordCount: response.record_count,
-        records: response.records
-      }
-    })
 }

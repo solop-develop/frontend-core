@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -117,9 +117,6 @@ import DocumentStatusTag from '@/components/ADempiere/ContainerOptions/DocumentS
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat.js'
-import {
-  refreshRecord
-} from '@/utils/ADempiere/dictionary/window'
 
 export default defineComponent({
   name: 'DocumentStatus',
@@ -135,7 +132,7 @@ export default defineComponent({
     }
   },
 
-  setup(props, { root }) {
+  setup(props) {
     const displayedValue = computed(() => {
       const { parentUuid, containerUuid, displayColumnName } = props.fieldAttributes
       return store.getters.getValueOfFieldOnContainer({
@@ -234,7 +231,7 @@ export default defineComponent({
     })
 
     const labelDocumentActions = computed(() => {
-      if (root.isEmptyValue(currentActionNode.value)) {
+      if (isEmptyValue(currentActionNode.value)) {
         return displayedValue.value
       }
       return currentActionNode.value.name
@@ -265,21 +262,20 @@ export default defineComponent({
       if (docActionValue === value.value) {
         return
       }
-      const { tabTableName: tableName, containerUuid } = props.fieldAttributes
+      const {
+        parentUuid, containerUuid,
+        tabTableName: tableName
+      } = props.fieldAttributes
 
       store.commit('setShowFieldOption', false)
 
-      store.dispatch('runDocumentActionOnserver', {
+      store.dispatch('runDocumentActionOnServer', {
+        parentUuid,
+        containerUuid,
         tableName,
         recordId: recordId.value,
         recordUuid: recordUuid.value,
-        docAction: docActionValue,
-        containerUuid
-      }).finally(() => {
-        refreshRecord.refreshRecord({
-          parentUuid: props.fieldAttributes.parentUuid,
-          containerUuid
-        })
+        docAction: docActionValue
       })
     }
 

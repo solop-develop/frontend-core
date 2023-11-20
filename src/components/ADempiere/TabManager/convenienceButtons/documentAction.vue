@@ -55,12 +55,21 @@
       </el-dropdown-menu>
     </el-dropdown>
 
+    <!-- <document-status-tag
+      v-else
+      size="medium"
+      :style="isMobile ? 'padding-left: 0px;' : 'padding-left: 5px;'"
+      :value="currentRecordDocumentAction"
+      :displayed-value="currentRecordDocumentActionDisplayValue"
+    /> -->
+
     <el-popover
       ref="popoverDocAction"
       v-model="isVisibleDocAction"
       trigger="click"
       placement="top"
     >
+      <!-- TODO: Validate if DocumentActionPanel embedded on this content -->
       <h3> {{ $t('workflow.changeDocumentAction') }} </h3>
       {{ displayDocumentActions(selectDocActions).description }}
       <br><br>
@@ -71,7 +80,7 @@
             <document-status-tag
               key="document-status"
               size="small"
-              :value="currentDocStatusValue"
+              :value="currentRecordDocumentStatus"
               :displayed-value="currentDocStatusDisplayedValue"
             />
           </template>
@@ -191,11 +200,27 @@ export default defineComponent({
       })
     })
 
-    const currentDocStatusValue = computed(() => {
+    const currentRecordDocumentStatus = computed(() => {
       return store.getters.getValueOfFieldOnContainer({
         parentUuid: props.parentUuid,
         containerUuid,
         columnName: DOCUMENT_STATUS
+      })
+    })
+
+    const currentRecordDocumentAction = computed(() => {
+      return store.getters.getValueOfFieldOnContainer({
+        parentUuid: props.parentUuid,
+        containerUuid,
+        columnName: DOCUMENT_ACTION
+      })
+    })
+
+    const currentRecordDocumentActionDisplayValue = computed(() => {
+      return store.getters.getValueOfFieldOnContainer({
+        containerUuid: props.parentUuid, // tab uuid
+        // containerUuid,
+        columnName: DISPLAY_COLUMN_PREFIX + DOCUMENT_ACTION
       })
     })
 
@@ -214,7 +239,7 @@ export default defineComponent({
       return store.getters.getStoredDefaultDocumentAction({
         tableName: props.tabAttributes.tableName,
         recordUuid: recordUuid.value,
-        documentStatus: currentDocStatusValue.value
+        documentStatus: currentRecordDocumentStatus.value
       })
     })
 
@@ -239,7 +264,7 @@ export default defineComponent({
       return store.getters.getStoredDocumentStatusesList({
         tableName: props.tabAttributes.tableName,
         recordUuid: recordUuid.value,
-        documentStatus: currentDocStatusValue.value
+        documentStatus: currentRecordDocumentStatus.value
       })
     })
 
@@ -247,7 +272,7 @@ export default defineComponent({
       return store.getters.getStoredDocumentActionsList({
         tableName: props.tabAttributes.tableName,
         recordUuid: recordUuid.value,
-        documentStatus: currentDocStatusValue.value
+        documentStatus: currentRecordDocumentStatus.value
       })
     })
 
@@ -259,7 +284,7 @@ export default defineComponent({
       if (!isEmptyValue(displayedValue)) {
         return displayedValue
       }
-      const value = currentDocStatusValue.value
+      const value = currentRecordDocumentStatus.value
       if (!isEmptyValue(documentActionsList.value)) {
         const documentAction = documentActionsList.value.find(docAction => {
           return docAction.value === value
@@ -363,11 +388,12 @@ export default defineComponent({
     function sendAction() {
       isVisibleDocAction.value = false
       isLoadingActions.value = true
-      store.dispatch('runDocumentActionOnserver', {
+      store.dispatch('runDocumentActionOnServer', {
+        parentUuid: props.parentUuid,
+        containerUuid,
         tableName: props.tabAttributes.tableName,
         recordId: recordId.value,
         recordUuid: recordUuid.value,
-        containerUuid,
         docAction: selectDocActions.value,
         description: message()
       })
@@ -401,7 +427,7 @@ export default defineComponent({
           tableName: props.tabAttributes.tableName,
           recordUuid: recordUuid.value,
           recordId: recordId.value,
-          documentStatus: currentDocStatusValue.value
+          documentStatus: currentRecordDocumentStatus.value
         })
       }, 200)
     }
@@ -414,13 +440,13 @@ export default defineComponent({
       }
     })
 
-    watch(currentDocStatusValue, (newValue, oldValue) => {
-      if (newValue !== oldValue) {
-        if (isEmptyValue(defaultDocumentAction.value)) {
-          loadDocumentActions()
-        }
-      }
-    })
+    // watch(currentRecordDocumentStatus, (newValue, oldValue) => {
+    //   if (newValue !== oldValue) {
+    //     if (isEmptyValue(defaultDocumentAction.value)) {
+    //       loadDocumentActions()
+    //     }
+    //   }
+    // })
 
     // if (isEmptyValue(defaultDocumentAction.value)) {
     //   loadDocumentActions()
@@ -438,8 +464,11 @@ export default defineComponent({
       recordUuid,
       getCurrentTab,
       isEnableRunDocumentAction,
-      currentDocStatusValue,
+      isRunableDocumentAction,
+      currentRecordDocumentStatus,
       currentDocStatusDisplayedValue,
+      currentRecordDocumentAction,
+      currentRecordDocumentActionDisplayValue,
       documentActionsList,
       defaultDocumentAction,
       defaultName,

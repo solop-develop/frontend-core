@@ -115,7 +115,7 @@ export default defineComponent({
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid,
         tabId: currentTab.value.id,
-        recordId
+        recordId: recordId.value
       })
     }
 

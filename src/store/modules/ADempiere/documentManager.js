@@ -18,6 +18,9 @@
 
 import Vue from 'vue'
 
+// Constants
+import { DOCUMENT_STATUS } from '@/utils/ADempiere/constants/systemColumns'
+
 // API Request Methods
 import {
   requestListDocumentActions,
@@ -28,6 +31,9 @@ import {
 // Utils and Helper Methods
 import { isEmptyValue, getTypeOfValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage, showNotification } from '@/utils/ADempiere/notification.js'
+import {
+  refreshRecord
+} from '@/utils/ADempiere/dictionary/window'
 
 const initState = {
   documentStatusesList: {},
@@ -139,10 +145,9 @@ const documentManager = {
       })
     },
 
-    /**
-     * TODO: Refres document status and document actions finally process
-     */
-    runDocumentActionOnserver({ commit, dispatch }, {
+    runDocumentActionOnServer({ dispatch, getters }, {
+      parentUuid,
+      containerUuid,
       tableName,
       recordId,
       recordUuid,
@@ -155,7 +160,7 @@ const documentManager = {
           recordId,
           docAction
         })
-          .then(response => {
+          .then(async response => {
             let text
             let isError
             let type = 'success'
@@ -178,6 +183,14 @@ const documentManager = {
               message: text,
               type
             })
+
+            await refreshRecord.refreshRecord({
+              parentUuid,
+              containerUuid,
+              recordId,
+              isRefreshChilds: true
+            })
+
             resolve(response)
           })
           .catch(error => {
@@ -186,6 +199,28 @@ const documentManager = {
               type: 'error'
             })
             console.warn(`Error Run Doc Action: ${error.message}. Code: ${error.code}.`)
+          })
+          .finally(() => {
+            const documentStatus = getters.getValueOfFieldOnContainer({
+              // parentUuid: parentUuid,
+              containerUuid: containerUuid,
+              columnName: DOCUMENT_STATUS
+            })
+
+            if (!isEmptyValue(documentStatus)) {
+              dispatch('getDocumentStatusesListFromServer', {
+                tableName,
+                recordId,
+                recordUuid,
+                documentStatus
+              })
+              dispatch('getDocumentActionsListFromServer', {
+                tableName,
+                recordId,
+                recordUuid,
+                documentStatus
+              })
+            }
           })
       })
     }
