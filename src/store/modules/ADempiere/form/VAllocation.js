@@ -233,6 +233,7 @@ export default {
                 ...payments,
                 transaction_date: dateTimeFormats(payments.transaction_date, 'YYYY-MM-DD'),
                 applied: 0,
+                open_amount: Number(payments.open_amount),
                 isSelect: false,
                 type: 'isPayment'
               }
@@ -301,6 +302,8 @@ export default {
                 applied: 0,
                 writeOff: 0,
                 isSelect: false,
+                discount_amount: Number(payments.discount_amount),
+                open_amount: Number(payments.open_amount),
                 amountApplied: 0,
                 type: 'isInvoce'
               }

@@ -18,154 +18,148 @@
 
 <template>
   <div style="display: contents;height: 100% !important;">
-    <div style="height: 89% !important;">
-      <el-card id="panel-top-search-criteria" class="panel-top-search-criteria" style="height: 100%;display: block;">
-        <div style="width: 100%;">
-          <el-card style="padding: 5px 10px 5px 10px;height: 100%;">
-            <div slot="header" class="clearfix" style="text-align: center;">
-              <b> {{ $t('form.VAllocation.payment.title') }} </b>
-            </div>
-            <payments-table />
-          </el-card>
-        </div>
-        <div id="panelInvoce" style="width: 100%;">
-          <el-card class="panel-invoce" style="padding: 5px 10px 5px 10px;height: 100%;">
-            <div slot="header" class="clearfix-panel-invoce" style="text-align: center;">
-              <b> {{ $t('form.VAllocation.invoice.title') }} </b>
-            </div>
-            <invoce-table />
-          </el-card>
-        </div>
-      </el-card>
+    <div style="height: 90% !important;">
+      <div style="height: 49%;margin-bottom: 5px;border: solid 1px lightgrey;border-radius: 10px;padding: 10px;">
+        <p style="text-align: center;font-size: 20px;margin: 0px 0px 7px 0px;">
+          <b> {{ $t('form.VAllocation.payment.title') }} </b>
+        </p>
+        <payments-table />
+      </div>
+      <div style="height: 50%;margin-bottom: 5px;border: solid 1px lightgrey;border-radius: 10px;padding: 10px;">
+        <p style="text-align: center;font-size: 20px;margin: 0px 0px 7px 0px;">
+          <b> {{ $t('form.VAllocation.invoice.title') }} </b>
+        </p>
+        <invoce-table />
+      </div>
     </div>
-    <div>
-      <el-card class="box-card" style="margin-bottom: 20px;">
-        <div id="description-payment" class="description-payment">
-          <el-card
-            class="box-card"
+    <div style="height: 10%;margin-top: 5px;border: solid 1px lightgrey;border-radius: 10px;padding: 0px;">
+      <div id="description-payment" class="description-payment">
+        <div>
+          <el-form
+            :inline="true"
+            label-position="top"
+            class="field-payments"
           >
-            <div>
-              <el-form
-                :inline="true"
-                label-position="top"
-                style="padding: 10px !important;"
+            <el-row :gutter="20">
+              <el-col
+                :span="2"
+                style="text-align: center;"
               >
-                <el-row :gutter="20">
-                  <el-col
-                    :span="2"
-                    style="text-align: center;"
+                <el-form-item
+                  :label="$t('form.VAllocation.description.difference')"
+                  label-width="120px"
+                  style="margin: 0px;padding: 0px;"
+                >
+                  <el-tag>
+                    <b style="text-align: right; font-size: 19px">
+                      {{ sumApplied }}
+                    </b>
+                  </el-tag>
+                </el-form-item>
+              </el-col>
+              <el-col
+                :span="4"
+                style="text-align: center;"
+              >
+                <el-form-item
+                  :label="$t('form.VAllocation.searchCriteria.date')"
+                  label-width="120px"
+                  style="margin: 0px;padding: 0px;"
+                >
+                  <el-date-picker
+                    v-model="currentDateProcess"
+                    type="date"
+                    format="yyyy-MM-dd"
+                    style="width: 100%;"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col
+                :span="5"
+                style="text-align: center;"
+              >
+                <el-form-item
+                  :label="$t('form.VAllocation.description.charge')"
+                  label-width="120px"
+                  style="margin: 0px;padding: 0px;"
+                >
+                  <el-select
+                    v-model="charges"
+                    style="width: 100%;"
+                    filterable
+                    clearable
+                    :filter-method="remoteSearchCharges"
+                    @visible-change="findCharges"
                   >
-                    <el-form-item
-                      :label="$t('form.VAllocation.description.difference')"
-                      label-width="120px"
-                    >
-                      <el-tag>
-                        <b style="text-align: right; font-size: 19px">
-                          {{ sumApplied }}
-                        </b>
-                      </el-tag>
-                    </el-form-item>
-                  </el-col>
-                  <el-col
-                    :span="4"
-                    style="text-align: center;"
+                    <el-option
+                      v-for="item in optionsCharges"
+                      :key="item.id"
+                      :label="item.label"
+                      :value="item.id"
+                    />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col
+                :span="5"
+                style="text-align: center;"
+              >
+                <el-form-item
+                  :label="$t('form.VAllocation.description.organization')"
+                  label-width="120px"
+                  style="margin: 0px;padding: 0px;"
+                >
+                  <el-select
+                    v-model="transactionOrganizationId"
+                    style="width: 100%;"
+                    filterable
+                    clearable
+                    :filter-method="remoteSearchOrganizations"
+                    @visible-change="findOrganizations"
                   >
-                    <el-form-item
-                      :label="$t('form.VAllocation.searchCriteria.date')"
-                      label-width="120px"
-                    >
-                      <el-date-picker
-                        v-model="currentDateProcess"
-                        type="date"
-                        format="yyyy-MM-dd"
-                        style="width: 100%;"
-                      />
-                    </el-form-item>
-                  </el-col>
-                  <el-col
-                    :span="5"
-                    style="text-align: center;"
-                  >
-                    <el-form-item
-                      :label="$t('form.VAllocation.description.charge')"
-                      label-width="120px"
-                    >
-                      <el-select
-                        v-model="charges"
-                        style="width: 100%;"
-                        filterable
-                        clearable
-                        :filter-method="remoteSearchCharges"
-                        @visible-change="findCharges"
-                      >
-                        <el-option
-                          v-for="item in optionsCharges"
-                          :key="item.id"
-                          :label="item.label"
-                          :value="item.id"
-                        />
-                      </el-select>
-                    </el-form-item>
-                  </el-col>
-                  <el-col
-                    :span="5"
-                    style="text-align: center;"
-                  >
-                    <el-form-item
-                      :label="$t('form.VAllocation.description.organization')"
-                      label-width="120px"
-                    >
-                      <el-select
-                        v-model="transactionOrganizationId"
-                        style="width: 100%;"
-                        filterable
-                        clearable
-                        :filter-method="remoteSearchOrganizations"
-                        @visible-change="findOrganizations"
-                      >
-                        <el-option
-                          v-for="item in optionsOrganizations"
-                          :key="item.id"
-                          :label="item.label"
-                          :value="item.id"
-                        />
-                      </el-select>
-                    </el-form-item>
-                  </el-col>
-                  <el-col
-                    :span="5"
-                    style="text-align: center;"
-                  >
-                    <el-form-item
-                      :label="$t('form.VAllocation.description.description')"
-                      label-width="120px"
-                    >
-                      <el-input
-                        v-model="description"
-                        type="textarea"
-                        :autosize="{ minRows: 1, maxRows: 2}"
-                      />
-                    </el-form-item>
-                  </el-col>
-                  <el-col
-                    :span="3"
-                    style="text-align: center;"
-                  >
-                    <el-form-item
-                      label-width="120px"
-                    >
-                      <template slot="label">
-                        <i style="color: transparent !important;"> {{ 'Buttons Actions' }}</i>
-                      </template>
-                      <slot name="footer" />
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-              </el-form>
-            </div>
-          </el-card>
+                    <el-option
+                      v-for="item in optionsOrganizations"
+                      :key="item.id"
+                      :label="item.label"
+                      :value="item.id"
+                    />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col
+                :span="5"
+                style="text-align: center;"
+              >
+                <el-form-item
+                  :label="$t('form.VAllocation.description.description')"
+                  label-width="120px"
+                  style="margin: 0px;padding: 0px;"
+                >
+                  <el-input
+                    v-model="description"
+                    type="textarea"
+                    :autosize="{ minRows: 1, maxRows: 2}"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col
+                :span="3"
+                style="text-align: center;"
+              >
+                <el-form-item
+                  label-width="120px"
+                  style="margin: 0px;padding: 0px;"
+                >
+                  <template slot="label">
+                    <i style="color: transparent !important;"> {{ 'Buttons Actions' }}</i>
+                  </template>
+                  <slot name="footer" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form>
         </div>
-      </el-card>
+      </div>
     </div>
   </div>
 </template>
@@ -854,6 +848,34 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+  .panel-card-payments {
+    .el-card {
+      display: contents;
+      .el-card__header {
+        padding: 8px 20px;
+      }
+      .el-card__body {
+        padding: 10px;
+      }
+    }
+  }
+  .panel-footer-option {
+    .el-card__body{
+      padding: 10px;
+    }
+  }
+  .el-form-item__label {
+    padding: 0px !important;
+  }
+  .field-payments {
+    padding: 0px !important;
+    .el-form {
+      padding: 0px !important;
+      .el-form--label-top .el-form-item__label{
+        padding: 0px !important;
+      }
+    }
+  }
   .from-wf-panel {
     padding-top: 10px;
     padding-left: 20px;
