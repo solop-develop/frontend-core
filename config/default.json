@@ -11,10 +11,10 @@
       "timeout": 99999999
     },
     "images": {
-      "url": "http://localhost:8085/api/adempiere/img"
+      "url": "http://localhost:8085/api/file-management"
     },
     "resource": {
-      "url": "http://localhost:8085/api/adempiere/resource"
+      "url": "http://localhost:8085/api/file-management"
     }
   },
   "repository": {
