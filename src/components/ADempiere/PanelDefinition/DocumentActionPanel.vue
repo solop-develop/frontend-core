@@ -31,18 +31,18 @@
           <document-status-tag
             size="medium"
             class="tag-status"
-            :value="documentStatusValue"
+            :value="currentRecordDocumentStatus"
             :displayed-value="documentStatusDisplayedValue"
           />
         </template>
       </el-step>
 
-      <el-step icon="el-icon-d-arrow-right">
+      <el-step v-if="isEnableRunDocumentAction" icon="el-icon-d-arrow-right">
         <template slot="title">
           <!-- <document-status-tag
             size="medium"
             class="tag-status"
-            :value="documentStatusValue"
+            :value="currentRecordDocumentStatus"
             :displayed-value="documentStatusDisplayedValue"
           /> -->
           <el-select
@@ -78,6 +78,17 @@
           </el-select>
         </template>
       </el-step>
+
+      <el-step v-else icon="el-icon-d-arrow-right">
+        <template slot="title">
+          <document-status-tag
+            size="medium"
+            class="tag-status"
+            :value="currentRecordDocumentAction"
+            :displayed-value="currentRecordDocumentActionDisplayValue"
+          />
+        </template>
+      </el-step>
     </el-steps>
   </div>
 </template>
@@ -92,13 +103,23 @@ import DocumentStatusTag from '@/components/ADempiere/ContainerOptions/DocumentS
 
 // Constants
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
-import { DOCUMENT_STATUS } from '@/utils/ADempiere/constants/systemColumns'
+import {
+  DOCUMENT_ACTION, DOCUMENT_STATUS
+} from '@/utils/ADempiere/constants/systemColumns'
 
 // Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import {
+  isRunableDocumentAction
+} from '@/utils/ADempiere/dictionary/workflow'
 
+/**
+ * Based on:
+ * org.compiere.grid.ed.VDocAction
+ * org.adempiere.webui.panel.WDocActionPanel
+ */
 export default defineComponent({
-  name: 'DocumentAction',
+  name: 'DocumentActionPanel',
 
   components: {
     DocumentStatusTag
@@ -129,11 +150,27 @@ export default defineComponent({
       return store.getters.getStoredTableNameByTab(props.parentUuid)
     })
 
-    const documentStatusValue = computed(() => {
+    const currentRecordDocumentStatus = computed(() => {
       return store.getters.getValueOfFieldOnContainer({
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid,
-        columnName: 'DocStatus'
+        columnName: DOCUMENT_STATUS
+      })
+    })
+
+    const currentRecordDocumentAction = computed(() => {
+      return store.getters.getValueOfFieldOnContainer({
+        containerUuid: props.parentUuid, // tab uuid
+        // containerUuid,
+        columnName: DOCUMENT_ACTION
+      })
+    })
+
+    const currentRecordDocumentActionDisplayValue = computed(() => {
+      return store.getters.getValueOfFieldOnContainer({
+        containerUuid: props.parentUuid, // tab uuid
+        // containerUuid,
+        columnName: DISPLAY_COLUMN_PREFIX + DOCUMENT_ACTION
       })
     })
 
@@ -148,7 +185,7 @@ export default defineComponent({
         return displayValue
       }
 
-      const currentValue = documentStatusValue.value
+      const currentValue = currentRecordDocumentStatus.value
       // find form document statuese list
       const documentStatusesList = store.getters.getStoredDocumentStatusesList({
         tableName: props.tableName,
@@ -187,7 +224,7 @@ export default defineComponent({
       return store.getters.getStoredDocumentActionsList({
         tableName: tableName.value,
         recordUuid: recordUuid.value,
-        documentStatus: documentStatusValue.value
+        documentStatus: currentRecordDocumentStatus.value
       })
     })
 
@@ -201,6 +238,12 @@ export default defineComponent({
       })
     })
 
+    const isEnableRunDocumentAction = computed(() => {
+      return isRunableDocumentAction({
+        containerUuid: props.parentUuid // tab uuid
+      })
+    })
+
     return {
       // Computed
       tableName,
@@ -208,8 +251,11 @@ export default defineComponent({
       nextDocumentAction,
       documentAction,
       documentActionsList,
-      documentStatusValue,
-      documentStatusDisplayedValue
+      isEnableRunDocumentAction,
+      currentRecordDocumentStatus,
+      documentStatusDisplayedValue,
+      currentRecordDocumentAction,
+      currentRecordDocumentActionDisplayValue
     }
   }
 })

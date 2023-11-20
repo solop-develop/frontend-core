@@ -26,6 +26,28 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { getContext } from '@/utils/ADempiere/contextUtils'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
 
+/**
+ * <None> = --
+ */
+export const ACTION_None = '--'
+
+/**
+ * Document Status is Unknown
+ */
+export const STATUS_Unknown = '??'
+
+/**
+ * If is end docuemnt status not change with document action
+ * @param {String} documentStatus
+ * @returns {Boolean}
+ */
+export function isEndDocumentAction(documentStatus) {
+  if (['CL', 'VO', 'RE'].includes(documentStatus)) {
+    return true
+  }
+  return false
+}
+
 export function getDocumentStatusValue({
   parentUuid,
   containerUuid
@@ -114,7 +136,8 @@ export function isRunableDocumentAction({ parentUuid, containerUuid }) {
     containerUuid,
     columnName: DOCUMENT_STATUS
   })
-  if (documentStatus === 'CL') {
+  // Closed, Voided, Reversed
+  if (isEndDocumentAction(documentStatus)) {
     return false
   }
 

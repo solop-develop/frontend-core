@@ -27,6 +27,7 @@ import { requestWindowMetadata } from '@/api/ADempiere/dictionary/window.ts'
 import { CLIENT, DOCUMENT_ACTION, DOCUMENT_STATUS } from '@/utils/ADempiere/constants/systemColumns'
 import { DISPLAY_COLUMN_PREFIX, IS_ADVANCED_QUERY } from '@/utils/ADempiere/dictionaryUtils'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
+import { ACTION_None } from '@/utils/ADempiere/dictionary/workflow'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -59,7 +60,9 @@ import { getContext } from '@/utils/ADempiere/contextUtils'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { containerManager as containerManagerReport } from '@/utils/ADempiere/dictionary/report'
-import { getDocumentStatusValue, getCurrentDocumentDisplayedValue } from '@/utils/ADempiere/dictionary/workflow'
+import {
+  getDocumentStatusValue, getCurrentDocumentDisplayedValue, isRunableDocumentAction, isEndDocumentAction
+} from '@/utils/ADempiere/dictionary/workflow'
 
 export default {
   addWindow({ commit, dispatch }, windowResponse) {
@@ -253,6 +256,13 @@ export default {
             containerUuid: process.uuid,
             title: process.name,
             containerManager: containerManager,
+            isDisabledDone() {
+              // validate document status and Processing flag
+              return !isRunableDocumentAction({
+                parentUuid: windowUuid,
+                containerUuid: tabDefinition.uuid
+              })
+            },
             doneMethod: ({ parentUuid: tabAssociatedUuid, containerUuid }) => {
               const recordUuid = rootGetters.getUuidOfContainer(tabAssociatedUuid)
 
@@ -327,9 +337,14 @@ export default {
                 containerUuid: tabAssociatedUuid,
                 columnName: DOCUMENT_ACTION
               })
+
               if (!isEmptyValue(documentAction)) {
+                const documentStatus = store.getters.getValueOfFieldOnContainer({
+                  containerUuid: tabAssociatedUuid,
+                  columnName: DOCUMENT_STATUS
+                })
                 // If None, suggest closing
-                if (documentAction === '--') {
+                if (!isEndDocumentAction(documentStatus) && documentAction === ACTION_None) {
                   documentAction = 'CL'
                   parentValues.push({
                     columnName: DOCUMENT_ACTION,
@@ -354,7 +369,7 @@ export default {
               })
             },
             // TODO: Change to string and import dynamic in component
-            componentPath: () => import('@/components/ADempiere/PanelDefinition/DocumentAction.vue'),
+            componentPath: () => import('@/components/ADempiere/PanelDefinition/DocumentActionPanel.vue'),
             isShowed: false
           })
         } else {
