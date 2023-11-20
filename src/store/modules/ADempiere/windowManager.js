@@ -417,12 +417,30 @@ const windowManager = {
           contextAttributes = JSON.stringify(contextAttributesList)
         }
 
+        let listFilters
+
+        if (!isEmptyValue(filters)) {
+          listFilters = '[' + filters.map(parameter => {
+            const {
+              columnName,
+              operator,
+              value,
+              valueTo
+            } = parameter
+            return JSON.stringify({
+              name: columnName,
+              operator,
+              values: !isEmptyValue(valueTo) ? [value, valueTo] : value
+            })
+          }).toString() + ']'
+        }
+
         requestGetEntities({
           tabId: id,
           contextAttributes,
           searchValue,
           referenceUuid,
-          filters,
+          filters: listFilters,
           pageToken,
           pageSize
         })
