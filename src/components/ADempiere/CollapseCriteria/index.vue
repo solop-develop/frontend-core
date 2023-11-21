@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
- Contributor(s): Elsio Sanchez elsiosanches@gmail.com www.erpya.com
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/Elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -61,8 +61,13 @@
 <script>
 import { defineComponent, computed } from '@vue/composition-api'
 
-// components and mixins
+import store from '@/store'
+
+// Components and Mixins
 // import FilterFields from '@/components/ADempiere/FilterFields/index.vue'
+
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 export default defineComponent({
   name: 'CollapseCriteria',
@@ -94,7 +99,7 @@ export default defineComponent({
     }
   },
 
-  setup(props, { root }) {
+  setup(props) {
     const storedPanel = computed(() => {
       return props.containerManager.getPanel({
         parentUuid: props.parentUuid,
@@ -102,17 +107,17 @@ export default defineComponent({
       })
     })
 
-    const fieldsList = computed(() => {
-      return props.containerManager.getFieldsList({
-        parentUuid: props.parentUuid,
-        containerUuid: props.containerUuid
-      })
-    })
+    // const fieldsList = computed(() => {
+    //   return props.containerManager.getFieldsList({
+    //     parentUuid: props.parentUuid,
+    //     containerUuid: props.containerUuid
+    //   })
+    // })
 
     const isCollapse = computed({
       get() {
         const panel = storedPanel.value
-        if (!root.isEmptyValue(panel)) {
+        if (!isEmptyValue(panel)) {
           if (panel[props.showedAttribute]) {
             // open criteria
             return true
@@ -122,7 +127,7 @@ export default defineComponent({
         return false
       },
       set(isShowed) {
-        root.$store.commit('changeBrowserAttribute', {
+        store.commit('changeBrowserAttribute', {
           uuid: props.containerUuid,
           attributeName: props.showedAttribute,
           attributeValue: isShowed
@@ -142,11 +147,11 @@ export default defineComponent({
     }
 
     return {
-      // computeds
-      fieldsList,
+      // Computeds
+      // fieldsList,
       isCollapse,
       icon,
-      // methods
+      // Methods
       handlePanel
     }
   }
