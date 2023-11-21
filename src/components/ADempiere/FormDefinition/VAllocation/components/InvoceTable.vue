@@ -23,7 +23,7 @@
     v-loading="isLoadingInvoces"
     :data="listInvoces"
     border
-    style="width: 100%;height: 100%;overflow: auto"
+    style="width: 100%;height: 85%;"
     :element-loading-text="$t('notifications.loading')"
     element-loading-background="rgba(255, 255, 255, 0.8)"
     @select="selectionInvoces"
@@ -31,7 +31,6 @@
   >
     <el-table-column
       type="selection"
-      fixed
       width="40"
     />
     <el-table-column
@@ -166,6 +165,7 @@ export default defineComponent({
       }
       row.isSelect = !isSelect
       row.applied = appliedPay(row)
+      console.log({ qlq: appliedPay(row) }, num(appliedPay(row)))
       row.amountApplied = num(appliedPay(row))
       addRowSelect(row)
     }
@@ -193,17 +193,17 @@ export default defineComponent({
     function appliedPay(currentInvoce) {
       const { open_amount, discount_amount } = currentInvoce
       if (selectListAll.value.length < 1) {
-        return open_amount.value - discount_amount.value
+        return open_amount - discount_amount
       }
-      if (num(sumApplied.value) <= num(open_amount.value - discount_amount.value) && Math.sign(sumApplied.value) < 0) {
+      if (num(sumApplied.value) <= num(open_amount - discount_amount)) {
         if (num(sumApplied.value) === 0) {
           if (Math.sign(sumApplied.value) < 0) {
-            return open_amount.value - discount_amount.value
+            return open_amount - discount_amount
           }
         }
         return sumApplied.value
       }
-      return open_amount.value - discount_amount.value
+      return open_amount - discount_amount
     }
 
     function setToggleSelection() {

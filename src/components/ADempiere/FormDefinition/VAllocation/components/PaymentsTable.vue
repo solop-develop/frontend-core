@@ -23,7 +23,7 @@
     v-loading="isLoadingPayments"
     :data="listPayments"
     border
-    style="width: 100%;height: 100%;"
+    style="width: 100%;height: 85%;"
     :element-loading-text="$t('notifications.loading')"
     element-loading-background="rgba(255, 255, 255, 0.8)"
     @select="selectionsPayments"
@@ -31,7 +31,6 @@
   >
     <el-table-column
       type="selection"
-      fixed
       width="40"
     />
     <el-table-column
@@ -241,21 +240,21 @@ export default defineComponent({
 
     function applied(row) {
       if (isEmptyValue(selectListAll.value)) {
-        return row.open_amount.value
+        return row.open_amount
       }
       if (num(sumAppliedInvoce.value) > 0) {
-        if (num(sumAppliedInvoce.value) > num(row.open_amount.value)) {
-          return row.open_amount.value
+        if (num(sumAppliedInvoce.value) > num(row.open_amount)) {
+          return row.open_amount
         }
-        if (Math.sign(sumAppliedInvoce.value) === Math.sign(row.open_amount.value)) {
-          return row.open_amount.value
+        if (Math.sign(sumAppliedInvoce.value) === Math.sign(row.open_amount)) {
+          return row.open_amount
         }
         if (row.transaction_type.value === 'P') {
           return -(sumAppliedInvoce.value)
         }
         return sumAppliedInvoce.value
       }
-      return row.open_amount.value
+      return row.open_amount
     }
 
     function num(amount) {

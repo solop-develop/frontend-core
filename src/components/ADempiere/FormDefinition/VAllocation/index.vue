@@ -18,7 +18,7 @@
 
 <template>
   <div style="display: contents;">
-    <div style="height: 10% !important;padding: 0px 15px;">
+    <div style="height: 6% !important;padding: 0px 15px;">
       <el-steps :active="currentSetp" finish-status="success">
         <el-step
           v-for="(list, key) in stepList"
@@ -28,7 +28,7 @@
       </el-steps>
     </div>
 
-    <div style="height: 80% !important;padding: 0px 15px;">
+    <div style="height: 84% !important;padding: 0px 15px;">
       <search-criteria
         v-show="'searchCriteria' === stepList[currentSetp].key"
         :metadata="metadata"
