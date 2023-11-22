@@ -18,7 +18,8 @@ const actionNotice = {
   payrollProcess: 'Proceso Nómina',
   select: 'Seleccione un ',
   businessPartner: 'Socio del Negocio',
-  payrollConcept: 'Concepto Nómina'
+  payrollConcept: 'Concepto Nómina',
+  description: 'Descripción'
 }
 
 export default actionNotice

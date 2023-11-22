@@ -100,12 +100,7 @@ export default {
 
     findEmployee({ commit, dispatch, state }) {
       listEmployeeValid({
-        contextAttributes: [
-          {
-            key: 'HR_Process_ID',
-            value: state.payrollProcess.value
-          }
-        ]
+        payrollProcessId: state.payrollProcess.value
       })
         .then(response => {
           const { records } = response
@@ -114,7 +109,7 @@ export default {
             value: state.employee.value
           })
           dispatch('findListConcepts')
-          dispatch('findPayrollConcepts')
+          // dispatch('findPayrollConcepts')
         })
         .catch(error => {
           console.warn(`Error getting listEmployee: ${error.message}. Code: ${error.code}.`)
@@ -122,17 +117,10 @@ export default {
     },
 
     findPayrollConcepts({ commit, dispatch, state }) {
+      if (isEmptyValue(state.payrollProcess.value) || isEmptyValue(state.employee.value)) return
       listPayrollConcepts({
-        contextAttributes: [
-          {
-            key: 'HR_Process_ID',
-            value: state.payrollProcess.value
-          },
-          {
-            key: 'C_BPartner_ID',
-            value: state.employee.value
-          }
-        ]
+        payrollProcessId: state.payrollProcess.value,
+        businessPartnerId: state.employee.value
       })
         .then(response => {
           const { records } = response
@@ -152,20 +140,8 @@ export default {
         return
       }
       listPayrollMovements({
-        contextAttributes: [
-          {
-            key: 'HR_Process_ID',
-            value: state.payrollProcess.value
-          },
-          {
-            key: 'C_BPartner_ID',
-            value: state.employee.value
-          },
-          {
-            key: 'HR_Concept_ID',
-            value: state.payrollConcept.value
-          }
-        ]
+        payrollProcessId: state.payrollProcess.value,
+        businessPartnerId: state.employee.value
       })
         .then(response => {
           const { records } = response
@@ -184,29 +160,17 @@ export default {
     },
 
     saveMovement({ state, dispatch }, {
-      id = -1,
+      id = 0,
       uuid,
       attributes
     }) {
+      if (isEmptyValue(state.payrollProcess.value) || isEmptyValue(state.employee.value)) {
+        return
+      }
       savePayrollMovement({
-        contextAttributes: [
-          {
-            key: 'HR_Process_ID',
-            value: state.payrollProcess.value
-          },
-          {
-            key: 'C_BPartner_ID',
-            value: state.employee.value
-          },
-          {
-            key: 'HR_Concept_ID',
-            value: state.payrollConcept.value
-          },
-          {
-            key: 'HR_Movement_ID',
-            value: id
-          }
-        ],
+        payrollProcessId: state.payrollProcess.value,
+        payrollConcept: state.payrollConcept.value,
+        businessPartnerId: state.employee.value,
         id,
         uuid,
         attributes
@@ -235,11 +199,12 @@ export default {
         })
     },
 
-    conceptDefinition({ commit }, {
+    conceptDefinition({ commit, state }, {
       id
     }) {
       conceptDefinition({
-        id
+        id,
+        payrollProcessId: state.payrollProcess.value
       })
         .then(response => {
           const { attributes } = response
