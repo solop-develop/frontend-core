@@ -32,9 +32,12 @@ import {
 } from '@/api/ADempiere/userInterface/entities.ts'
 
 // Utils and Helper Methods
-import { isEmptyValue, isSameValues, getListKeyColumnsTab } from '@/utils/ADempiere/valueUtils.js'
+import {
+  getTypeOfValue, isEmptyValue, isSameValues, getListKeyColumnsTab
+} from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import { getContextDefaultValue } from '@/utils/ADempiere/contextUtils/contextField'
+import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import { isSupportLookup } from '@/utils/ADempiere/references'
 
 const persistence = {
@@ -268,11 +271,6 @@ const persistence = {
             })
         }
         const currentTab = getters.getStoredTab(parentUuid, containerUuid)
-        const keyColumnsList = getListKeyColumnsTab({
-          parentUuid,
-          containerUuid,
-          keyColumns: currentTab.keyColumns
-        })
 
         if (!isEmptyValue(attributesList)) {
           if (!isEmptyValue(recordUuid) && recordUuid !== 'create-new') {
@@ -280,6 +278,11 @@ const persistence = {
             if (currentTab.keyColumns.length > 1) {
               reccordId = 0
             }
+            const keyColumnsList = getListKeyColumnsTab({
+              parentUuid,
+              containerUuid,
+              keyColumns: currentTab.keyColumns
+            })
             return updateEntity({
               tabUuid: containerUuid,
               reccordId,
@@ -348,7 +351,12 @@ const persistence = {
                   const displayedColumnName = DISPLAY_COLUMN_PREFIX + tableName + IDENTIFIER_COLUMN_SUFFIX
                   identifierColumns.forEach(identifier => {
                     const { columnName } = identifier
-                    const currentValue = attributesRecord[columnName]
+                    let currentValue = attributesRecord[columnName]
+                    // types `decimal` and `date` is a object struct
+                    if ((getTypeOfValue(currentValue) === 'OBJECT') && !isEmptyValue(currentValue.type)) {
+                      currentValue = currentValue.value
+                    }
+
                     if (isEmptyValue(displayedValue)) {
                       displayedValue = currentValue
                       return
@@ -398,6 +406,16 @@ const persistence = {
                     containerUuid: tabItem.uuid
                   })
                 }).forEach(tabItem => {
+                  const parentValues = getContextAttributes({
+                    parentUuid,
+                    containerUuid,
+                    contextColumnNames: tabItem.contextColumnNames
+                  })
+                  dispatch('updateValuesOfContainer', {
+                    containerUuid: tabItem.uuid,
+                    attributes: parentValues
+                  })
+
                   // if loaded data refresh this data
                   // No set default values the `App Registration` create lines
                   dispatch('getEntities', {

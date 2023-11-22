@@ -137,7 +137,6 @@ const windowManager = {
         if (!isEmptyValue(recordsList)) {
           const recordUuid = row[UUID]
           const firstRow = recordsList.at()
-          console.log('recordUuid', recordUuid, { ...firstRow })
           if (recordUuid === firstRow[UUID]) {
             rowIndex = 0
           } else {
