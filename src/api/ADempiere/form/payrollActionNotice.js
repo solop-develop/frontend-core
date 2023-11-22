@@ -117,7 +117,7 @@ export function deletePayrollMovement({
   contextAttributes
 }) {
   return request({
-    url: `${config.payrollActionNotice.endpoint}/delete-movements/`,
+    url: `${config.payrollActionNotice.endpoint}/delete-movements`,
     method: 'delete',
     params: {
       ids,
