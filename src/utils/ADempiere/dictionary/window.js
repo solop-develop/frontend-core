@@ -1384,7 +1384,8 @@ export function generateTabs({
         uuid: itemTab.uuid,
         tableName: itemTab.tableName,
         sequence: itemTab.sequence,
-        tabLevel: itemTab.tabLevel
+        tabLevel: itemTab.tabLevel,
+        contextColumnNames: itemTab.contextColumnNames
       }
     }
 
