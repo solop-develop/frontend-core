@@ -39,6 +39,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 v-model="displayValuePrecess"
                 :placeholder="$t('actionNotice.select') + $t('actionNotice.payrollProcess')"
                 style="display: contents;"
+                :clearable="true"
                 @visible-change="findPayrollProcess"
               >
                 <el-option
@@ -57,6 +58,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 v-model="displayValueEmployee"
                 :placeholder="$t('actionNotice.select') + $t('actionNotice.businessPartner')"
                 style="display: contents;"
+                :clearable="true"
                 :disabled="isEmptyValue(displayValuePrecess)"
                 @visible-change="findOptionsEmployee"
               >
@@ -76,7 +78,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 v-model="displayValueConcept"
                 :placeholder="$t('actionNotice.select') + $t('actionNotice.payrollConcept')"
                 style="display: contents;"
-                :disabled="isEmptyValue(displayValuePrecess) && isEmptyValue(displayValueConcept)"
+                :clearable="true"
+                :disabled="isEmptyValue(displayValuePrecess) || isEmptyValue(displayValueEmployee)"
                 @visible-change="findPayrollConcept"
               >
                 <el-option
