@@ -32,7 +32,7 @@ export function paymentSelection({
   uuid
 }) {
   return request({
-    url: `${config.vPayPrint.endpoint}/payment-selection`,
+    url: `${config.vPayPrint.endpoint}/payment-selections/${id}`,
     method: 'get',
     params: {
       id,
@@ -49,8 +49,8 @@ export function paymentSelection({
  */
 export function paymentSelections() {
   return request({
-    url: `${config.vPayPrint.endpoint}/list-payment-selections`,
-    method: 'post'
+    url: `${config.vPayPrint.endpoint}/payment-selections`,
+    method: 'get'
   })
     .then(response => {
       return response
@@ -73,9 +73,9 @@ export function paymentRules({
   pageToken
 }) {
   return request({
-    url: `${config.vPayPrint.endpoint}/list-payment-rules`,
-    method: 'post',
-    data: {
+    url: `${config.vPayPrint.endpoint}/payment-selections/${paymentSelectionId}/payment-rules`,
+    method: 'get',
+    params: {
       search_value: searchValue,
       payment_selection_id: paymentSelectionId,
       page_size: pageSize,
@@ -105,9 +105,9 @@ export function listPaymentTable({
   pageToken
 }) {
   return request({
-    url: `${config.vPayPrint.endpoint}/list-payments`,
-    method: 'post',
-    data: {
+    url: `${config.vPayPrint.endpoint}/payment-selections/${paymentSelectionId}/${paymentRuleId}/payments`,
+    method: 'get',
+    params: {
       search_value: searchValue,
       payment_selection_id: paymentSelectionId,
       payment_rule_id: paymentRuleId,
@@ -133,13 +133,8 @@ export function documentSequence({
   banckAccountId
 }) {
   return request({
-    url: `${config.vPayPrint.endpoint}/document-no`,
-    method: 'get',
-    params: {
-      payment_selection_id: paymentSelectionId,
-      payment_rule_id: paymentRuleId,
-      bank_account_id: banckAccountId
-    }
+    url: `${config.vPayPrint.endpoint}/document-no/${paymentRuleId}/${banckAccountId}`,
+    method: 'get'
   })
     .then(response => {
       return response
@@ -164,7 +159,7 @@ export function process({
   bankAccountId
 }) {
   return request({
-    url: `${config.vPayPrint.endpoint}/process`,
+    url: `${config.vPayPrint.endpoint}/payment-selections/${paymentSelectionId}/${paymentRuleId}/process/${bankAccountId}`,
     method: 'post',
     data: {
       payment_selection_id: paymentSelectionId,
@@ -186,7 +181,7 @@ export function exportPayment({
   bankAccountId
 }) {
   return request({
-    url: `${config.vPayPrint.endpoint}/export`,
+    url: `${config.vPayPrint.endpoint}/payment-selections/${paymentSelectionId}/${paymentRuleId}/export`,
     method: 'post',
     data: {
       payment_selection_id: paymentSelectionId,
@@ -207,7 +202,7 @@ export function print({
   documentNo
 }) {
   return request({
-    url: `${config.vPayPrint.endpoint}/print`,
+    url: `${config.vPayPrint.endpoint}/payment-selections/${paymentSelectionId}/${paymentRuleId}/print`,
     method: 'post',
     data: {
       payment_selection_id: paymentSelectionId,
@@ -228,7 +223,7 @@ export function confirmPrint({
   bankAccountId
 }) {
   return request({
-    url: `${config.vPayPrint.endpoint}/confirm-print`,
+    url: `${config.vPayPrint.endpoint}/payment-selections/${paymentSelectionId}/${paymentRuleId}/confirm-print/${bankAccountId}`,
     method: 'post',
     data: {
       payment_selection_id: paymentSelectionId,
@@ -249,7 +244,7 @@ export function printRemittance({
   documentNo
 }) {
   return request({
-    url: `${config.vPayPrint.endpoint}/print-remittance`,
+    url: `${config.vPayPrint.endpoint}/payment-selections/${paymentSelectionId}/${paymentRuleId}/print-remittance`,
     method: 'post',
     data: {
       payment_selection_id: paymentSelectionId,

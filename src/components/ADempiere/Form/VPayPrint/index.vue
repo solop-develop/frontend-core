@@ -581,6 +581,13 @@ import {
 } from '@/utils/ADempiere/formatValue/numberFormat'
 
 // API Request Methods
+
+/**
+ * The Payment Print/Export form service definition.
+ * org.compiere.apps.form.PayPrint
+ * org.compiere.apps.form.VPayPrint
+ * org.adempiere.webui.apps.form.WPayPrint
+ */
 import {
   // Set
   paymentSelection,
