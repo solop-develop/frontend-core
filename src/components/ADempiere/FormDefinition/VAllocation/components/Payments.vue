@@ -128,7 +128,7 @@
               </el-col>
               <el-col
                 :span="5"
-                style="text-align: center;"
+                style="padding-left: 0px;padding-right: 0px;text-align: center;"
               >
                 <el-form-item
                   :label="$t('form.VAllocation.description.description')"
@@ -144,7 +144,7 @@
               </el-col>
               <el-col
                 :span="3"
-                style="text-align: center;"
+                style="padding-left: 0px;padding-right: 0px;text-align: center;"
               >
                 <el-form-item
                   label-width="120px"
