@@ -36,10 +36,10 @@ export function requestSaveBrowseCustomization({
   fieldAttributes
 }) {
   return request({
-    url: '/user-customization/browse/save-browse-customization',
+    url: '/user-customization/brosers',
     method: 'post',
     data: {
-      browse_uuid: browseUuid,
+      browse_id: browseUuid,
       level_type: levelType,
       level_id: levelId,
       level_uuid: levelUuid,

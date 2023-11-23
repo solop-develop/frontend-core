@@ -2230,7 +2230,7 @@ export const containerManager = {
     fieldAttributes
   }) {
     return requestSaveWindowCustomization({
-      tabUuid: containerUuid,
+      tabId: containerUuid,
       levelType,
       levelId,
       levelUuid,
