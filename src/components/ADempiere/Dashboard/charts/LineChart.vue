@@ -148,7 +148,12 @@ export default {
             name: serie.name,
             stack: 'vistors',
             barWidth: '60%',
-            data: serie.data_set.map(set => set.value),
+            data: xAxisValues.map(x => {
+              let value = 0
+              const findValue = serie.data_set.find(a => a.name === x)
+              if (findValue) value = findValue.value
+              return value
+            }),
             animationDuration,
             smooth: true,
             type: 'line',
