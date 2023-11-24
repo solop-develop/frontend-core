@@ -46,9 +46,6 @@ export function requestExistsAttachment({
       record_uuid: recordUuid
     }
   })
-    .then(response => {
-      return response
-    })
 }
 
 // Download a resource from file name

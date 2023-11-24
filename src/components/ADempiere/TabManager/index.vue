@@ -92,16 +92,19 @@
         <svg-icon icon-class="tree-table" />
       </el-button>
 
-      <el-button
-        v-show="showAttachmentAvailable && !isMobile"
-        type="primary"
-        size="mini"
-        circle
-        style="margin: 0px"
-        @click="openRecordLogs('recordAttachmentTab')"
-      >
-        <i class="el-icon-paperclip" />
-      </el-button>
+      <el-badge v-show="showAttachmentAvailable && !isMobile" :value="countReference" class="item" type="primary">
+        <el-button
+          v-show="showAttachmentAvailable"
+          type="primary"
+          size="mini"
+          circle
+          style="margin: 0px"
+          @click="openRecordLogs('recordAttachmentTab')"
+        >
+          <i class="el-icon-paperclip" />
+        </el-button>
+      </el-badge>
+
       <el-badge v-show="showReference && !isMobile" :value="countReference" class="item" type="primary">
         <el-button
           v-show="showReference"
@@ -314,6 +317,8 @@ export default defineComponent({
     const countIsNote = ref(0)
 
     const countReference = ref(0)
+
+    const countAttachment = ref(0)
 
     // use getter to reactive properties
     const currentTabMetadata = computed(() => {
@@ -786,7 +791,8 @@ export default defineComponent({
         recordUuid: currentRecordUuid.value
       })
         .then(response => {
-          showAttachmentAvailable.value = Boolean(response)
+          countAttachment.value = response.record_count
+          showAttachmentAvailable.value = Boolean(response.record_count)
         })
         .catch(error => {
           console.warn(`Error getting Count Attachment: ${error.message}. Code: ${error.code}.`)
@@ -888,6 +894,7 @@ export default defineComponent({
       showIssues,
       showIsNote,
       showDashboard,
+      countAttachment,
       countIssues,
       countDashboard,
       countReference,
