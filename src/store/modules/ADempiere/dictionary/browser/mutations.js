@@ -29,6 +29,9 @@ export default {
   addBrowserToList(state, browser) {
     Vue.set(state.storedBrowsers, browser.id, browser)
   },
+  addBrowserUuidToList(state, { id, uuid }) {
+    Vue.set(state.storedBrowsersUuid, id, uuid)
+  },
 
   changeBrowserAttribute(state, {
     uuid,

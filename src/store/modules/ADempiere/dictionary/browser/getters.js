@@ -27,20 +27,24 @@ import { isNumberField } from '@/utils/ADempiere/references'
  * Dictionary Browser Getters
  */
 export default {
-  getStoredBrowser: (state) => (browserId) => {
-    return state.storedBrowsers[browserId]
+  getStoredBrowser: (state) => (browserUuid) => {
+    return state.storedBrowsers[browserUuid]
   },
 
-  getStoredFieldsFromBrowser: (state, getters) => (browserId) => {
-    const browser = getters.getStoredBrowser(browserId)
+  getStoredBrowserUuidById: (state) => (browserId) => {
+    return state.storedBrowsersUuid[browserId]
+  },
+
+  getStoredFieldsFromBrowser: (state, getters) => (browserUuid) => {
+    const browser = getters.getStoredBrowser(browserUuid)
     if (!isEmptyValue(browser)) {
       return browser.fieldsList
     }
     return undefined
   },
 
-  getStoredColumnsFromBrowser: (state, getters) => (browserId) => {
-    const browser = getters.getStoredBrowser(browserId)
+  getStoredColumnsFromBrowser: (state, getters) => (browserUuid) => {
+    const browser = getters.getStoredBrowser(browserUuid)
     const columnsList = []
     if (!isEmptyValue(browser)) {
       browser.fieldsList.forEach(field => {
@@ -52,8 +56,8 @@ export default {
     return columnsList
   },
 
-  getProcessOfBrowser: (state, getters, rootState, rootGetters) => (browserId) => {
-    const { process } = getters.getStoredBrowser(browserId)
+  getProcessOfBrowser: (state, getters, rootState, rootGetters) => (browserUuid) => {
+    const { process } = getters.getStoredBrowser(browserUuid)
 
     return process
   },
