@@ -875,16 +875,17 @@ export const openBrowserAssociated = {
   isSvgIcon: true,
   icon: 'search',
   actionName: 'openBrowserAssociated',
-  openBrowserAssociated: function({ parentUuid, containerUuid, uuid, browserUuid }) {
-    if (isEmptyValue(browserUuid)) {
+  openBrowserAssociated: function({ parentUuid, containerUuid, uuid, browserId }) {
+    if (isEmptyValue(browserId)) {
       const process = store.getters.getStoredProcessFromTab({
         windowUuid: parentUuid,
         tabUuid: containerUuid,
         processUuid: uuid
       })
-      browserUuid = process.browserUuid
+      browserId = process.browserId
     }
 
+    const browserUuid = store.getters.getStoredBrowserUuidById(browserId)
     const storedBrowser = store.getters.getStoredBrowser(browserUuid)
     if (!isEmptyValue(storedBrowser)) {
       // overwrite values
@@ -948,12 +949,10 @@ export const openBrowserAssociated = {
       })
     }
 
+    const containerIdentifier = 'browser_' + browserId
     const inMenu = zoomIn({
-      uuid: browserUuid,
-      params: {
-        browserId: 0,
-        browserUuid
-      },
+      attributeValue: containerIdentifier,
+      attributeName: 'containerKey',
       query: {
         parentUuid,
         containerUuid,
@@ -966,8 +965,8 @@ export const openBrowserAssociated = {
       router.push({
         name: 'Smart Browser',
         params: {
-          browserId: 0,
-          browserUuid
+          browserId: browserId
+          // browserUuid
         },
         query: {
           parentUuid,

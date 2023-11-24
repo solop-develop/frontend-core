@@ -86,6 +86,10 @@ export default {
           })
 
           commit('addBrowserToList', browserDefinition)
+          commit('addBrowserUuidToList', {
+            id: browserDefinition.id,
+            uuid: browserDefinition.uuid
+          })
 
           dispatch('setBrowserActionsMenu', {
             parentUuid,
