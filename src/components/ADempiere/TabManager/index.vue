@@ -92,7 +92,7 @@
         <svg-icon icon-class="tree-table" />
       </el-button>
 
-      <el-badge v-show="showAttachmentAvailable && !isMobile" :value="countReference" class="item" type="primary">
+      <el-badge v-show="showAttachmentAvailable && !isMobile" :value="countAttachment" class="item" type="primary">
         <el-button
           v-show="showAttachmentAvailable"
           type="primary"
