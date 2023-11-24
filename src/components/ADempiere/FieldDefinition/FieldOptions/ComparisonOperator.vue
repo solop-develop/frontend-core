@@ -36,7 +36,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         :class="{ 'is-current': operator === currentOperatorValue}"
         :disabled="isDisableOperator(operator)"
       >
-        {{ $t('operators.' + operator) }} a
+        {{ $t('operators.' + operator) }}
       </el-dropdown-item>
     </el-dropdown-menu>
   </el-dropdown>
