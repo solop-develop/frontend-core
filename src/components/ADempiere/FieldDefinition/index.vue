@@ -69,7 +69,7 @@
           <comparison-operator
             :metadata-field="field"
             :container-manager="containerManager"
-            :readonly="fieldAttributes.readonly"
+            :readonly="fieldAttributes.readonly && !fieldAttributes.isAdvancedQuery"
             :style="styleOperator"
           />
         </div>
