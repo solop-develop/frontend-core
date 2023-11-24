@@ -33,7 +33,7 @@ export function requestListUsers({
   pageSize = 100
 }) {
   return request({
-    url: '/user-customization/list-users',
+    url: '/user-customization/users',
     method: 'get',
     params: {
       search_value: searchValue,
@@ -55,7 +55,7 @@ export function requestListRoles({
   pageSize = 100
 }) {
   return request({
-    url: '/user-customization/list-roles',
+    url: '/user-customization/roles',
     method: 'get',
     params: {
       search_value: searchValue,
@@ -77,7 +77,7 @@ export function requestListCustomizationsLevel({
   pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
-    url: '/user-customization/list-customizations-level',
+    url: '/user-customization/levels',
     method: 'get',
     params: {
       search_value: searchValue,

@@ -36,10 +36,10 @@ export function requestSaveProcessCustomization({
   fieldAttributes
 }) {
   return request({
-    url: '/user-customization/process/save-process-customization',
+    url: '/user-customization/process',
     method: 'post',
     data: {
-      process_uuid: processUuid,
+      process_id: processUuid,
       level_type: levelType,
       level_id: levelId,
       level_uuid: levelUuid,

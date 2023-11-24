@@ -29,17 +29,17 @@ import { request } from '@/utils/ADempiere/request'
  * @returns
  */
 export function requestSaveWindowCustomization({
-  tabUuid,
+  tabId,
   levelType,
   levelId,
   levelUuid,
   fieldAttributes
 }) {
   return request({
-    url: '/user-customization/window/save-window-customization',
+    url: '/user-customization/windows',
     method: 'post',
     data: {
-      tab_uuid: tabUuid,
+      tab_id: tabId,
       level_type: levelType,
       level_id: levelId,
       level_uuid: levelUuid,

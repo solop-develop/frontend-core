@@ -84,9 +84,14 @@
     </el-dropdown>
     <!-- Panel User Customization -->
     <el-dialog
-      :title="$t('component.sequenceSort.saveNewSequence')"
       :visible.sync="isSaveNewSequence"
     >
+      <p
+        slot="title"
+        style="margin: 0px;font-weight: bold;text-align: center;font-size: 18px;"
+      >
+        {{ $t('component.sequenceSort.saveNewSequence') }}
+      </p>
       <el-form :inline="true" label-position="top">
         <el-row :gutter="20">
           <el-col :span="8">
@@ -555,7 +560,7 @@ export default defineComponent({
 
       isLoadingSaveCustomization.value = true
       props.containerManager.applyCustomization({
-        containerUuid: props.containerUuid,
+        containerUuid: panel.value.id,
         levelType: levelType.value,
         levelId,
         // levelUuid,
@@ -569,7 +574,7 @@ export default defineComponent({
             attributeValue: props.newFieldsListSecuence
           })
           showMessage({
-            message: response,
+            message: 'OK',
             type: 'success'
           })
 
