@@ -22,7 +22,7 @@ import { config } from '@/utils/ADempiere/config'
 // List Scale
 export function listPayrollProcess() {
   return request({
-    url: `${config.payrollActionNotice.endpoint}/list-payroll-process`,
+    url: `${config.payrollActionNotice.endpoint}/process`,
     method: 'get'
   })
     .then(response => {
@@ -31,10 +31,11 @@ export function listPayrollProcess() {
 }
 
 export function listEmployeeValid({
-  contextAttributes
+  contextAttributes,
+  payrollProcessId
 }) {
   return request({
-    url: `${config.payrollActionNotice.endpoint}/list-employee-valid`,
+    url: `${config.payrollActionNotice.endpoint}/process/${payrollProcessId}/employees`,
     method: 'get',
     params: {
       context_attributes: contextAttributes
@@ -46,16 +47,17 @@ export function listEmployeeValid({
 }
 
 export function listPayrollConcepts({
-  contextAttributes,
+  payrollProcessId,
+  businessPartnerId,
   searchValue
 }) {
   return request({
-    url: `${config.payrollActionNotice.endpoint}/list-payroll-concepts`,
-    method: 'get',
-    params: {
-      context_attributes: contextAttributes,
-      search_value: searchValue
-    }
+    url: `${config.payrollActionNotice.endpoint}/process/${payrollProcessId}/concepts/employees/${businessPartnerId}`,
+    method: 'get'
+    // params: {
+    //   context_attributes: contextAttributes,
+    //   search_value: searchValue
+    // }
   })
     .then(response => {
       return response
@@ -64,11 +66,13 @@ export function listPayrollConcepts({
 
 export function listPayrollMovements({
   contextAttributes,
-  filters,
-  searchValue
+  payrollProcessId,
+  businessPartnerId,
+  searchValue,
+  filters
 }) {
   return request({
-    url: `${config.payrollActionNotice.endpoint}/list-payroll-movements`,
+    url: `${config.payrollActionNotice.endpoint}/process/${payrollProcessId}/employees/${businessPartnerId}/movements`,
     method: 'get',
     params: {
       filters,
@@ -86,11 +90,14 @@ export function savePayrollMovement({
   uuid,
   contextAttributes,
   filters,
-  attributes
+  attributes,
+  payrollProcessId,
+  payrollConcept,
+  businessPartnerId
 }) {
   return request({
-    url: `${config.payrollActionNotice.endpoint}/save-payroll-movement`,
-    method: 'put',
+    url: `${config.payrollActionNotice.endpoint}/process/${payrollProcessId}/employees/${businessPartnerId}/movements/concepts/${payrollConcept}`,
+    method: 'post',
     data: {
       filters,
       id,
@@ -110,7 +117,7 @@ export function deletePayrollMovement({
   contextAttributes
 }) {
   return request({
-    url: `${config.payrollActionNotice.endpoint}/delete-payroll-movements`,
+    url: `${config.payrollActionNotice.endpoint}/delete-movements`,
     method: 'delete',
     params: {
       ids,
@@ -124,10 +131,11 @@ export function deletePayrollMovement({
 }
 
 export function conceptDefinition({
-  id
+  id,
+  payrollProcessId
 }) {
   return request({
-    url: `${config.payrollActionNotice.endpoint}/get-payroll-concept-definition`,
+    url: `${config.payrollActionNotice.endpoint}/process/${payrollProcessId}/concepts/${id}`,
     method: 'get',
     params: {
       id

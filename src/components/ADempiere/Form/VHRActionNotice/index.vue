@@ -18,10 +18,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   <el-card class="box-card">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <p style="text-align: center;">
+        <p style="text-align: center;margin: 0px;">
           <title-and-help
             :name="metadata.title"
             :help="metadata.description"
+            style="padding: 0px;"
           />
         </p>
       </div>
@@ -38,6 +39,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 v-model="displayValuePrecess"
                 :placeholder="$t('actionNotice.select') + $t('actionNotice.payrollProcess')"
                 style="display: contents;"
+                :clearable="true"
                 @visible-change="findPayrollProcess"
               >
                 <el-option
@@ -56,6 +58,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 v-model="displayValueEmployee"
                 :placeholder="$t('actionNotice.select') + $t('actionNotice.businessPartner')"
                 style="display: contents;"
+                :clearable="true"
+                :disabled="isEmptyValue(displayValuePrecess)"
                 @visible-change="findOptionsEmployee"
               >
                 <el-option
@@ -74,6 +78,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 v-model="displayValueConcept"
                 :placeholder="$t('actionNotice.select') + $t('actionNotice.payrollConcept')"
                 style="display: contents;"
+                :clearable="true"
+                :disabled="isEmptyValue(displayValuePrecess) || isEmptyValue(displayValueEmployee)"
                 @visible-change="findPayrollConcept"
               >
                 <el-option
@@ -155,29 +161,33 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
       <br>
       <el-button-group style="float: right;margin-right: 1.5%;">
         <el-button
+          plain
           type="success"
           icon="el-icon-refresh"
-          plain
+          class="button-base-icon"
           @click="refresh"
         />
         <el-button
+          plain
           type="danger"
           icon="el-icon-delete"
+          class="button-base-icon"
           :disabled="validateDelete"
-          plain
           @click="deleteConcepts"
         />
         <el-button
+          plain
           type="info"
           icon="el-icon-edit"
+          class="button-base-icon"
           :disabled="isEmptyValue(currentRow.uuid)"
-          plain
           @click="updateMovements(currentRow)"
         />
         <el-button
+          plain
           type="primary"
           icon="el-icon-document-add"
-          plain
+          class="button-base-icon"
           @click="sendAtribute"
         />
       </el-button-group>
@@ -397,6 +407,11 @@ export default defineComponent({
         listAattributes: DATA_ATRIBUTES,
         setData: selectvalue.value,
         ColumnType
+      }).map(list => {
+        const { key, value } = list
+        return {
+          [key]: value
+        }
       })
 
       store.dispatch('saveMovement', {
