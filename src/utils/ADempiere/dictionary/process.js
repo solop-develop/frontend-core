@@ -18,12 +18,14 @@
 
 import store from '@/store'
 
+// API Request Methods
+import { requestSaveProcessCustomization } from '@/api/ADempiere/user-customization/processes'
+
 // Utils and Helpers Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { generateField } from '@/utils/ADempiere/dictionaryUtils'
 import { sortFields } from '@/utils/ADempiere/dictionary/panel'
 import { BUTTON, isAddRangeField, isHiddenField } from '@/utils/ADempiere/references'
-import { requestSaveProcessCustomization } from '@/api/ADempiere/user-customization/process'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
 
 /**
@@ -341,15 +343,13 @@ export const containerManager = {
   applyCustomization({
     containerUuid,
     levelType,
-    levelId,
-    levelUuid,
+    levelValue,
     fieldAttributes
   }) {
     return requestSaveProcessCustomization({
-      processUuid: containerUuid,
+      processId: containerUuid,
       levelType,
-      levelId,
-      levelUuid,
+      levelValue,
       fieldAttributes
     })
   }

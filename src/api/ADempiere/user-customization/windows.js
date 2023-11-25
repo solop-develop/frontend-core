@@ -21,28 +21,22 @@ import { request } from '@/utils/ADempiere/request'
 
 /**
  * Apply customization to window
- * @param {string} tabUuid
+ * @param {number} tabId
  * @param {number} levelType
- * @param {number} levelId
- * @param {string} levelUuid
+ * @param {number} levelValue
  * @param {array}
  * @returns
  */
 export function requestSaveWindowCustomization({
   tabId,
   levelType,
-  levelId,
-  levelUuid,
+  levelValue,
   fieldAttributes
 }) {
   return request({
-    url: '/user-customization/windows',
+    url: `/user-customization/windows/${tabId}/${levelType}/${levelValue}`,
     method: 'post',
     data: {
-      tab_id: tabId,
-      level_type: levelType,
-      level_id: levelId,
-      level_uuid: levelUuid,
       field_attributes: fieldAttributes
     }
   })

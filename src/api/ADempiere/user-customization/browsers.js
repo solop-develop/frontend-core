@@ -21,28 +21,22 @@ import { request } from '@/utils/ADempiere/request'
 
 /**
  * Apply customization to browser
- * @param {string} browseUuid
+ * @param {number} browseId
  * @param {number} levelType
- * @param {number} levelId
- * @param {string} levelUuid
+ * @param {number} levelValue
  * @param {array}
  * @returns
  */
 export function requestSaveBrowseCustomization({
-  browseUuid,
+  browseId,
   levelType,
-  levelId,
-  levelUuid,
+  levelValue,
   fieldAttributes
 }) {
   return request({
-    url: '/user-customization/brosers',
+    url: `/user-customization/browsers/${browseId}/${levelType}/${levelValue}`,
     method: 'post',
     data: {
-      browse_id: browseUuid,
-      level_type: levelType,
-      level_id: levelId,
-      level_uuid: levelUuid,
       field_attributes: fieldAttributes
     }
   })

@@ -82,6 +82,8 @@
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
+
+    <!-- TODO: Separate on single component -->
     <!-- Panel User Customization -->
     <el-dialog
       :visible.sync="isSaveNewSequence"
@@ -97,14 +99,14 @@
           <el-col :span="8">
             <el-form-item>
               <template slot="label">
-                <el-radio v-model="levelType" :label="0" :border="true" @change="getAvailableUsersList(true)">
+                <el-radio v-model="levelType" :label="LEVEL_TYPE_USER" :border="true" @change="getAvailableUsersList(true)">
                   {{ $t('form.workflowActivity.filtersSearch.user') }}
                 </el-radio>
               </template>
               <el-select
                 v-model="currentUser"
                 :placeholder="$t('form.workflowActivity.filtersSearch.user')"
-                :disabled="levelType !== 0"
+                :disabled="levelType !== LEVEL_TYPE_USER"
                 filterable
                 @visible-change="getAvailableUsersList"
               >
@@ -122,17 +124,18 @@
               </el-select>
             </el-form-item>
           </el-col>
+
           <el-col :span="8">
             <el-form-item>
               <template slot="label">
-                <el-radio v-model="levelType" :label="1" :border="true" @change="getAvailableRolesList(true)">
+                <el-radio v-model="levelType" :label="LEVEL_TYPE_ROLE" :border="true" @change="getAvailableRolesList(true)">
                   {{ $t('profile.role') }}
                 </el-radio>
               </template>
               <el-select
                 v-model="currentRole"
                 :placeholder="$t('profile.role')"
-                :disabled="levelType !== 1"
+                :disabled="levelType !== LEVEL_TYPE_ROLE"
                 filterable
                 @visible-change="getAvailableRolesList"
               >
@@ -150,17 +153,18 @@
               </el-select>
             </el-form-item>
           </el-col>
+
           <el-col :span="8">
             <el-form-item>
               <template slot="label">
-                <el-radio v-model="levelType" :label="2" :border="true" @change="getAvailableCustomizationsList(true)">
+                <el-radio v-model="levelType" :label="LEVEL_TYPE_CLIENT" :border="true" @change="getAvailableCustomizationsList(true)">
                   {{ $t('component.sequenceSort.customizationlevel') }}
                 </el-radio>
               </template>
               <el-select
                 v-model="customizationLevel"
                 :placeholder="$t('component.sequenceSort.customizationlevel')"
-                :disabled="levelType !== 2 "
+                :disabled="levelType !== LEVEL_TYPE_CLIENT"
                 filterable
                 @visible-change="getAvailableCustomizationsList"
               >
@@ -209,15 +213,14 @@ import {
   ref
 } from '@vue/composition-api'
 
-import store from '@/store'
-import router from '@/router'
 import language from '@/lang'
+import router from '@/router'
+import store from '@/store'
 
-// Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import { showMessage } from '@/utils/ADempiere/notification'
-import { evaluateDefaultFieldShowed } from '@/utils/ADempiere/dictionary/window.js'
-import { generatePanelAndFields } from '@/utils/ADempiere/dictionary/panel.js'
+// Constants
+import {
+  LEVEL_TYPE_CLIENT, LEVEL_TYPE_ROLE, LEVEL_TYPE_USER
+} from '@/utils/ADempiere/userCustomization.ts'
 
 // API Request Methods
 import {
@@ -225,6 +228,12 @@ import {
   requestListRoles,
   requestListCustomizationsLevel
 } from '@/api/ADempiere/user-customization'
+
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { showMessage } from '@/utils/ADempiere/notification'
+import { evaluateDefaultFieldShowed } from '@/utils/ADempiere/dictionary/window.js'
+import { generatePanelAndFields } from '@/utils/ADempiere/dictionary/panel.js'
 
 export default defineComponent({
   name: 'FieldsDisplayOption',
@@ -549,21 +558,20 @@ export default defineComponent({
      * Save Customization
      */
     function saveCustomization() {
-      let levelId
-      if (levelType.value === 0) {
-        levelId = currentUser.value
-      } else if (levelType.value === 1) {
-        levelId = currentRole.value
-      } else if (levelType.value === 2) {
-        levelId = customizationLevel.value
+      let levelValue = 0
+      if (levelType.value === LEVEL_TYPE_USER) {
+        levelValue = currentUser.value
+      } else if (levelType.value === LEVEL_TYPE_ROLE) {
+        levelValue = currentRole.value
+      } else if (levelType.value === LEVEL_TYPE_CLIENT) {
+        levelValue = customizationLevel.value
       }
 
       isLoadingSaveCustomization.value = true
       props.containerManager.applyCustomization({
         containerUuid: panel.value.id,
         levelType: levelType.value,
-        levelId,
-        // levelUuid,
+        levelValue,
         fieldAttributes: props.fieldsCustomization
       })
         .then(response => {
@@ -655,11 +663,11 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      if (levelType === 0) {
+      if (levelType.value === LEVEL_TYPE_USER) {
         getAvailableUsersList(true)
-      } else if (levelType === 1) {
+      } else if (levelType === LEVEL_TYPE_ROLE) {
         getAvailableRolesList(true)
-      } else if (levelType === 2) {
+      } else if (levelType === LEVEL_TYPE_CLIENT) {
         getAvailableCustomizationsList(true)
       }
     })
@@ -672,6 +680,9 @@ export default defineComponent({
     })
 
     return {
+      LEVEL_TYPE_CLIENT,
+      LEVEL_TYPE_ROLE,
+      LEVEL_TYPE_USER,
       // Ref
       levelType,
       currentUser,
