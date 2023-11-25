@@ -38,7 +38,7 @@ import { containerManager as CONTAINER_MANAGER_BROWSER } from '@/utils/ADempiere
 
 // API Request Methods
 import { getEntity } from '@/api/ADempiere/userInterface/entities.ts'
-import { requestSaveWindowCustomization } from '@/api/ADempiere/user-customization/window.js'
+import { requestSaveWindowCustomization } from '@/api/ADempiere/user-customization/windows.js'
 
 // Utils and Helpers Methods
 import evaluator from '@/utils/ADempiere/contextUtils/evaluator'
@@ -2224,15 +2224,13 @@ export const containerManager = {
   applyCustomization({
     containerUuid,
     levelType,
-    levelId,
-    levelUuid,
+    levelValue,
     fieldAttributes
   }) {
     return requestSaveWindowCustomization({
       tabId: containerUuid,
       levelType,
-      levelId,
-      levelUuid,
+      levelValue,
       fieldAttributes
     })
   }

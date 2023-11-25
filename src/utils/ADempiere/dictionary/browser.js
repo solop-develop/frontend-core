@@ -27,7 +27,7 @@ import { BUTTON } from '@/utils/ADempiere/references'
 import { OPERATOR_IN } from '@/utils/ADempiere/dataUtils.js'
 
 // API Request Methods
-import { requestSaveBrowseCustomization } from '@/api/ADempiere/user-customization/browse'
+import { requestSaveBrowseCustomization } from '@/api/ADempiere/user-customization/browsers'
 
 // Utils and Helpers Methods
 import { isHiddenField } from '@/utils/ADempiere/references'
@@ -607,15 +607,13 @@ export const containerManager = {
   applyCustomization({
     containerUuid,
     levelType,
-    levelId,
-    levelUuid,
+    levelValue,
     fieldAttributes
   }) {
     return requestSaveBrowseCustomization({
-      browseUuid: containerUuid,
+      browseId: containerUuid,
       levelType,
-      levelId,
-      levelUuid,
+      levelValue,
       fieldAttributes
     })
   }

@@ -21,28 +21,22 @@ import { request } from '@/utils/ADempiere/request'
 
 /**
  * Apply customization to process/report
- * @param {string} browseUuid
+ * @param {number} processId
  * @param {number} levelType
  * @param {number} levelId
- * @param {string} levelUuid
  * @param {array}
  * @returns
  */
 export function requestSaveProcessCustomization({
-  processUuid,
+  processId,
   levelType,
-  levelId,
-  levelUuid,
+  levelValue,
   fieldAttributes
 }) {
   return request({
-    url: '/user-customization/process',
+    url: `/user-customization/processes/${processId}/${levelType}/${levelValue}`,
     method: 'post',
     data: {
-      process_id: processUuid,
-      level_type: levelType,
-      level_id: levelId,
-      level_uuid: levelUuid,
       field_attributes: fieldAttributes
     }
   })
