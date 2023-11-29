@@ -43,17 +43,27 @@
     "smartBrowser": false,
     "form": false
   },
+  "express":{
+    "receipt": "/express-receipt",
+    "movement": "/express-movement",
+    "shipment": "/express-shipment"
+  },
+  "issuesManagement": {
+    "endpoint": "/issue-management"
+  },
+  "generalGedger": {
+    "accounts": "/general-ledger/accounts",
+    "organizations": "/general-ledger/organizations",
+    "rePost": "/general-ledger/re-post"
+  },
+  "match": {
+    "endpoint": "/form/addons/match"
+  },
   "pointOfSales": {
     "endpoint": "/point-of-sales"
   },
   "priceChecking": {
     "endpoint": "/point-of-sales"
-  },
-  "match": {
-    "endpoint": "/form/addons/match"
-  },
-  "weight": {
-    "endpoint": "/form/addons/weight"
   },
   "payrollActionNotice": {
     "endpoint": "/payroll-action-notice"
@@ -67,13 +77,8 @@
   "VBankStatementMatch": {
     "endpoint": "/bank-statement-match"
   },
-  "issuesManagement": {
-    "endpoint": "/issue-management"
-  },
-  "express":{
-    "receipt": "/express-receipt",
-    "movement": "/express-movement",
-    "shipment": "/express-shipment"
+  "weight": {
+    "endpoint": "/form/addons/weight"
   },
   "theme": "src/themes/default"
 }
