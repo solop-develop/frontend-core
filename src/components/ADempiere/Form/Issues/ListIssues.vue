@@ -163,7 +163,7 @@
                               {{ $t('issues.priority') }}
                             </b>
                           </template>
-                          <el-button type="primary" size="medium" plain style="float: right;margin-right: 10px;">
+                          <el-button type="primary" size="mini" plain style="float: right;margin-right: 10px;">
                             <svg-icon icon-class="collections" />
                             {{ scope.row.priority.name }}
                           </el-button>
@@ -174,7 +174,7 @@
                               {{ $t('issues.typeOfRequest') }}
                             </b>
                           </template>
-                          <el-button size="medium" plain type="info" style="float: right;margin-right: 10px;">
+                          <el-button size="mini" plain type="info" style="float: right;margin-right: 10px;">
                             <svg-icon icon-class="label" />
                             {{ scope.row.request_type.name }}
                           </el-button>
@@ -272,6 +272,7 @@
                     placement="left"
                     :title="$t('form.timeRecord.timeRecord') + ' (' + scope.row.id + ')'"
                     trigger="click"
+                    size="mini"
                     width="450"
                   >
                     <record-time
@@ -280,6 +281,7 @@
                     <el-button
                       slot="reference"
                       type="primary"
+                      size="mini"
                       plain
                       class="button-base-icon"
                       style="float: right; margin-right: 5px; margin-left: 0px;margin-top: 5px;"
@@ -289,14 +291,14 @@
                     </el-button>
                   </el-popover>
 
-                  <el-button type="primary" size="medium" plain style="float: right;margin-right: 10px;">
+                  <el-button type="primary" size="mini" plain style="float: right;margin-right: 10px;">
                     <b>
                       <svg-icon icon-class="collections" style="font-size: 20px;" />
                       {{ $t('issues.priority') + ': ' }}
                     </b>
                     {{ scope.row.priority.name }}
                   </el-button>
-                  <el-button size="medium" type="info" plain style="float: right;margin-right: 10px;">
+                  <el-button size="mini" type="info" plain style="float: right;margin-right: 10px;">
                     <b>
                       <svg-icon icon-class="label" style="font-size: 20px;" />
                       {{ $t('issues.typeOfRequest') + ': ' }}
