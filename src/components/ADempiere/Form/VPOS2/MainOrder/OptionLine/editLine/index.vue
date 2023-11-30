@@ -83,7 +83,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             >
               <field-amount
                 :value-amount="Number(editLine.quantity.value)"
-                :value-display="editLine.quantity.value"
+                :value-display="editLine.quantity"
                 :precision="editLine.uom.uom.starndard_precision"
                 :handle-change="updateQuantity"
               />
@@ -136,7 +136,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             >
               <field-amount
                 :value-amount="Number(editLine.discount_rate.value)"
-                :value-display="editLine.discount_rate.value"
+                :value-display="editLine.discount_rate"
                 :handle-change="updateDiscount"
               />
             </el-form-item>
@@ -248,7 +248,7 @@ export default defineComponent({
       return ''
     })
 
-    basePrice.value = formatPrice(Number(props.editLine.price_base.value), currency.value)
+    basePrice.value = formatPrice(Number(props.editLine.price_base), currency.value)
 
     const currentUOM = computed(() => {
       // const existListUOM = listUOM.value.find(uom => uom.id === valueUOM.value)

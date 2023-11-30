@@ -66,13 +66,13 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
               <p style="text-align: right;">
                 {{ $t('form.pos.tableProduct.basePrice') }}:
                 <b class="info-value-right">
-                  {{ formatPrice({ value: infoLine.price_base.value, currency }) }}
+                  {{ formatPrice({ value: infoLine.price_base, currency }) }}
                 </b>
               </p>
               <p style="text-align: right;">
                 {{ $t('form.productInfo.price') }}:
                 <b class="info-value-right">
-                  {{ formatPrice({ value: infoLine.price.value, currency }) }}
+                  {{ formatPrice({ value: infoLine.price, currency }) }}
                 </b>
               </p>
               <p style="text-align: right;">
@@ -84,7 +84,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
               <p style="text-align: right;">
                 {{ $t('form.productInfo.grandTotal') }}:
                 <b class="info-value-right">
-                  {{ formatPrice({ value: infoLine.total_amount_with_tax.value, currency }) }}
+                  {{ formatPrice({ value: infoLine.total_amount_with_tax, currency }) }}
                 </b>
               </p>
             </el-col>

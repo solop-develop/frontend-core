@@ -103,6 +103,7 @@ export default defineComponent({
         return
       }
       const params = getPaymentValues({})
+      console.log({ ...params })
       store.dispatch('addPayment', params)
         .then(() => {
           isLoading.value = false

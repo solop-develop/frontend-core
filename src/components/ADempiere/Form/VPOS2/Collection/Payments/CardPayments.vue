@@ -42,7 +42,8 @@
         <p style="margin: 1px 0px;">
           <b>
             <span style="float: left;">
-              {{ payment.payment_method.name }}
+              {{ labelPaymentMethods(payment) }}
+              <!-- {{ payment.payment_method.name }} -->
             </span>
             <span style="font-size: 14px;float: right;padding-right: 5px;">
               {{ payment.document_no }}
@@ -54,11 +55,11 @@
         </p>
         <p style="margin: 1px 0px;font-size: 16px;text-align: end;padding-right: 5px;">
           <b>
-            {{ formatPrice({ value: payment.amount.value, currency: displayCurrency({}) }) }}
+            {{ formatPrice({ value: payment.amount, currency: displayCurrency({ currencyConvert: payment.currency }) }) }}
           </b>
           <br>
           <b>
-            {{ formatPrice({ value: payment.converted_amount.value, currency: displayCurrency({isConver: true, currencyConvert: payment.currency }) }) }}
+            {{ formatPrice({ value: payment.converted_amount, currency: displayCurrency({isConver: true, currencyConvert: payment.currency }) }) }}
           </b>
         </p>
       </el-col>
@@ -92,9 +93,11 @@ export default defineComponent({
     },
     deletePayment: {
       type: Function,
-      default: (payment) => {
-        console.info('delete Payments', payment)
-      }
+      default: (payment) => {}
+    },
+    isDeletePaymentMethods: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props) {
@@ -109,14 +112,15 @@ export default defineComponent({
     }) {
       if (!isConver) {
         const { price_list } = currentOrder.value
-        if (isEmptyValue(price_list)) return ''
-        return price_list.currency.iso_code
+        if (!isEmptyValue(price_list)) return price_list.currency.iso_code
+        return ''
       }
       return currencyConvert.iso_code
     }
 
     function remove(payment) {
-      if (props.deletePayment) {
+      console.log(props.deletePayment, isEmptyValue(props.deletePayment))
+      if (props.isDeletePaymentMethods) {
         isLoading.value = true
         props.deletePayment(payment)
         setTimeout(() => {
@@ -166,6 +170,14 @@ export default defineComponent({
       return require('@/image/ADempiere/pos/typePayment/' + image)
     }
 
+    function labelPaymentMethods(payment) {
+      const { payment_method } = payment
+      if (!isEmptyValue(payment_method)) {
+        return payment_method.name
+      }
+      return ''
+    }
+
     return {
       isLoading,
       currentOrder,
@@ -173,7 +185,8 @@ export default defineComponent({
       imageCard,
       formatDate,
       formatPrice,
-      displayCurrency
+      displayCurrency,
+      labelPaymentMethods
     }
   }
 })

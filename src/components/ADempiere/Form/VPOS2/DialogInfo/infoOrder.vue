@@ -34,7 +34,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           {{ $t('form.pos.collect.orderTotal') }} {{ '(' + currentOrder.document_no + ')' }}:
         </b>
         <b style="float: right">
-          {{ displayAmount(currentOrder.grand_total.value) }}
+          {{ displayAmount(currentOrder.grand_total) }}
         </b>
       </p>
       <p class="line-info">
@@ -44,7 +44,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           {{ $t('form.pos.collect.convertedAmount') }}:
         </b>
         <b style="float: right">
-          {{ formatPrice({ value: currentOrder.grand_total_converted.value, currency: displayCurrency.iso_code}) }}
+          {{ formatPrice({ value: currentOrder.grand_total_converted, currency: displayCurrency.iso_code}) }}
         </b>
       </p>
     </el-col>
@@ -102,8 +102,8 @@ export default defineComponent({
         divide_rate,
         currency_to
       } = rate
-      if (multiply_rate.value > divide_rate.value) return formatPrice({ value: multiply_rate.value, currency: currency_to.iso_code })
-      return formatPrice({ value: divide_rate.value, currency: currency_to.iso_code })
+      if (multiply_rate.value > divide_rate.value) return formatPrice({ value: multiply_rate, currency: currency_to.iso_code })
+      return formatPrice({ value: divide_rate, currency: currency_to.iso_code })
     })
 
     function displayAmount(amount) {

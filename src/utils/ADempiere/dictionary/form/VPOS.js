@@ -53,25 +53,25 @@ export function displayValue({
       value = displayLineQtyEntered({ row })
       break
     case 'DiscountTotal':
-      value = formatQuantity({ value: row.discount_amount.value })
+      value = formatQuantity({ value: row.discount_amount })
       break
     case 'UOM':
       value = row.uom.uom.symbol
       break
     case 'Discount':
-      value = formatQuantity({ value: row.discount_rate.value }) + ' %'
+      value = formatQuantity({ value: row.discount_rate }) + ' %'
       break
     case 'taxIndicator':
       value = row.tax_rate.tax_indicator
       break
     case 'DisplayTaxAmount':
-      value = formatPrice(row.total_tax_amount.value, currency.iso_code)
+      value = formatPrice(Number(row.total_tax_amount), currency.iso_code)
       break
     case 'GrandTotal':
       value = displayLineGranTotal({ row })
       break
     case 'ConvertedAmount':
-      value = formatPrice(row.total_amount_converted.value, display_currency.iso_code)
+      value = formatPrice(Number(row.total_amount_converted), display_currency.iso_code)
       break
   }
   return value
@@ -157,8 +157,8 @@ export function displayLinePrice({
     iso_code: ''
   }
   if (!isEmptyValue(price_list)) currency = price_list.currency
-  if (!is_display_discount && is_display_tax_amount) return formatPrice(price_with_tax.value, currency.iso_code)
-  return formatPrice(price.value, currency.iso_code)
+  if (!is_display_discount && is_display_tax_amount) return formatPrice(Number(price_with_tax), currency.iso_code)
+  return formatPrice(Number(price), currency.iso_code)
 }
 
 /**
@@ -177,8 +177,8 @@ export function displayLineProductPriceValue({
     price_with_tax
   } = row
 
-  if (!is_display_discount && is_display_tax_amount) return Number(price_with_tax.value)
-  return Number(price.value)
+  if (!is_display_discount && is_display_tax_amount) return Number(price_with_tax)
+  return Number(price)
 }
 
 /**
@@ -192,12 +192,12 @@ export function displayLineQtyEntered({
     quantity_ordered
   } = row
   let precision = 0
-  if (isEmptyValue(uom.uom)) return formatQuantity({ value: quantity_ordered.value })
+  if (isEmptyValue(uom.uom)) return formatQuantity({ value: quantity_ordered })
   if (!isEmptyValue(row.uom.uom.standard_precision)) {
     precision = row.uom.uom.standard_precision
   }
   return formatQuantity({
-    value: quantity_ordered.value,
+    value: quantity_ordered,
     precision
   })
 }
@@ -220,8 +220,8 @@ function displayLineGranTotal({
     total_amount_with_tax,
     total_amount
   } = row
-  if (is_tax_included) return formatPrice(total_amount.value, currency.iso_code)
-  return formatPrice(total_amount_with_tax.value, currency.iso_code)
+  if (is_tax_included) return formatPrice(Number(total_amount), currency.iso_code)
+  return formatPrice(Number(total_amount_with_tax), currency.iso_code)
 }
 
 /**
@@ -304,8 +304,9 @@ export function getPaymentValues({
 }) {
   const { payment_method } = store.getters.getPaymentMethods
   let amount = store.getters.getPayAmount
-  if (isEmptyValue(amount)) amount = store.getters.getCurrentOrder.open_amount.value
+  if (isEmptyValue(amount)) amount = store.getters.getCurrentOrder.open_amount
   // Set Currency
+  console.log({ ...store.getters.getAvailableCurrencies })
   const currency = store.getters.getAvailableCurrencies.currencie
   // Set Value referenceNo
   const referenceNo = store.getters.getAttributeField({
@@ -351,7 +352,7 @@ export function defaultValueCollections() {
   store.commit('setAvailableCurrencies', getCurrencyPayment({
     paymentMethods: currentPaymentMethods
   }))
-  store.commit('setPayAmount', open_amount.value)
+  store.commit('setPayAmount', open_amount)
 }
 
 /**

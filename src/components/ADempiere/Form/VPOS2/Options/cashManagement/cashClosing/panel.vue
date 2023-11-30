@@ -67,7 +67,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       align="right"
     >
       <template slot-scope="scope">
-        {{ formatPrice({ value: scope.row.amount.value, currency: scope.row.currency.iso_code}) }}
+        {{ formatPrice({ value: scope.row.amount, currency: scope.row.currency.iso_code}) }}
       </template>
     </el-table-column>
   </el-table>

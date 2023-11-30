@@ -77,7 +77,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         :label="$t('form.productInfo.grandTotal')"
       >
         <template slot-scope="scope">
-          {{ formatPrice({ value: scope.row.grand_total.value, currency: scope.row.price_list.currency.iso_code }) }}
+          {{ formatPrice({ value: scope.row.grand_total, currency: scope.row.price_list.currency.iso_code }) }}
         </template>
       </el-table-column>
     </el-table>
