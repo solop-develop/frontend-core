@@ -305,7 +305,12 @@ export default {
           orderId: currentOrder.id,
           createPayments: !isEmptyValue(payments),
           isOpenRefund,
-          payments
+          payments: payments.map(pay => {
+            return {
+              ...pay,
+              amount: pay.amount.toString()
+            }
+          })
         })
           .then(response => {
             dispatch('overloadOrder', { order: currentOrder })

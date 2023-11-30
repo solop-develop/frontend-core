@@ -306,7 +306,6 @@ export function getPaymentValues({
   let amount = store.getters.getPayAmount
   if (isEmptyValue(amount)) amount = store.getters.getCurrentOrder.open_amount
   // Set Currency
-  console.log({ ...store.getters.getAvailableCurrencies })
   const currency = store.getters.getAvailableCurrencies.currencie
   // Set Value referenceNo
   const referenceNo = store.getters.getAttributeField({
