@@ -45,7 +45,7 @@
 import store from '@/store'
 
 // Components and Mixins
-import TableQueryCriteria from './tableQueryCriteria.vue'
+import TableQueryCriteria from './tableQueryCriteria2.vue'
 
 export default {
   name: 'ButtonToList',

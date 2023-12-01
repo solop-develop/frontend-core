@@ -161,10 +161,10 @@ import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn
 // Utils and Helper Methods
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat'
-import {
-  // createFieldFromDefinition,
-  createFieldFromDictionary
-} from '@/utils/ADempiere/lookupFactory'
+// import {
+//   // createFieldFromDefinition,
+//   createFieldFromDictionary
+// } from '@/utils/ADempiere/lookupFactory'
 import { containerManager as containerManagerForm } from '@/utils/ADempiere/dictionary/form'
 
 export default {
@@ -209,7 +209,7 @@ export default {
     return {
       activeAccordion: 'query-criteria',
       fieldsList,
-      metadataList: [],
+      // metadataList: [],
       timeOutRecords: null,
       timeOutUpdate: null,
       isLoadingRecords: false,
@@ -301,6 +301,9 @@ export default {
           columnName: field.columnName
         }
       })
+    },
+    metadataList() {
+      return this.$store.getters.getFieldsListAccount
     },
     recordData() {
       return this.$store.getters.getAccountCombinationsData({
@@ -485,28 +488,28 @@ export default {
         }
       })
     },
-    getFieldsList() {
-      const list = []
-      this.isLoadingFields = true
-      this.fieldsList.forEach(element => {
-        createFieldFromDictionary(element)
-          .then(responseField => {
-            list.push({
-              ...responseField,
-              parentUuid: this.metadata.parentUuid,
-              containerUuid: this.uuidForm
-            })
-          }).catch(error => {
-            console.warn(`LookupFactory: Get Field From Server (State) - Error ${error.code}: ${error.message}.`)
-          })
-          .finally(() => {
-            if (list.length === this.fieldsList.length) {
-              this.metadataList = list
-              this.isLoadingFields = false
-            }
-          })
-      })
-    },
+    // getFieldsList() {
+    //   const list = []
+    //   this.isLoadingFields = true
+    //   this.fieldsList.forEach(element => {
+    //     createFieldFromDictionary(element)
+    //       .then(responseField => {
+    //         list.push({
+    //           ...responseField,
+    //           parentUuid: this.metadata.parentUuid,
+    //           containerUuid: this.uuidForm
+    //         })
+    //       }).catch(error => {
+    //         console.warn(`LookupFactory: Get Field From Server (State) - Error ${error.code}: ${error.message}.`)
+    //       })
+    //       .finally(() => {
+    //         if (list.length === this.fieldsList.length) {
+    //           this.metadataList = list
+    //           this.isLoadingFields = false
+    //         }
+    //       })
+    //   })
+    // },
     searchRecordsList(pageNumber = 0, isConvert = true) {
       let parentUuid = this.metadata.parentUuid
       if (isEmptyValue(parentUuid)) {
