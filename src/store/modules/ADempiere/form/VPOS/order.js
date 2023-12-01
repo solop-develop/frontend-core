@@ -101,14 +101,6 @@ export default {
           query,
           params
         } = currentRouter
-        console.log({
-          id,
-          price_list,
-          warehouse,
-          document_type,
-          default_campaign,
-          template_customer
-        })
         createOrder({
           posId: id,
           customerId: template_customer.id,

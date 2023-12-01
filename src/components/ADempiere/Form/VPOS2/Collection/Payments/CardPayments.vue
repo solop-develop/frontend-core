@@ -119,7 +119,6 @@ export default defineComponent({
     }
 
     function remove(payment) {
-      console.log(props.deletePayment, isEmptyValue(props.deletePayment))
       if (props.isDeletePaymentMethods) {
         isLoading.value = true
         props.deletePayment(payment)
