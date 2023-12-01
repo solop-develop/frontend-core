@@ -118,18 +118,18 @@ export default defineComponent({
         refund_amount,
         open_amount
       } = currentOrder.value
-      const total = Number(grand_total.value) + Number(charge_amount.value) - Number(credit_amount.value) - Number(payment_amount.value)
+      const total = Number(grand_total) + Number(charge_amount) - Number(credit_amount) - Number(payment_amount)
       if (total === 0) {
         isLoadingProcess.value = true
         store.dispatch('process', {})
           .then(() => {
             isLoadingProcess.value = false
           })
-      } else if (Number(open_amount.value) > 0) {
+      } else if (Number(open_amount) > 0) {
         store.dispatch('setModalDialogVPOS', {
           title: lang.t('form.pos.collect.overdrawnInvoice.below'),
           doneMethod: () => {
-            if (Number(open_amount.value) > Number(currentPos.value.write_off_amount_tolerance.value)) {
+            if (Number(open_amount) > Number(currentPos.value.write_off_amount_tolerance)) {
               /**
                * Request PIN
                */
@@ -143,7 +143,7 @@ export default defineComponent({
                     })
                 },
                 requestedAccess: 'IsAllowsInvoiceOpen',
-                requestedAmount: Number(open_amount.value),
+                requestedAmount: Number(open_amount),
                 isShowed: true
               })
               return
@@ -157,7 +157,7 @@ export default defineComponent({
         store.dispatch('setModalDialogVPOS', {
           title: lang.t('form.pos.collect.overdrawnInvoice.title'),
           doneMethod: () => {
-            if (Number(open_amount.value) > Number(currentPos.value.write_off_amount_tolerance.value)) {
+            if (Number(open_amount) > Number(currentPos.value.write_off_amount_tolerance)) {
               /**
                * Request PIN
                */
@@ -171,7 +171,7 @@ export default defineComponent({
                     })
                 },
                 requestedAccess: 'IsAllowsInvoiceOpen',
-                requestedAmount: Number(refund_amount.value),
+                requestedAmount: Number(refund_amount),
                 isShowed: true
               })
               return

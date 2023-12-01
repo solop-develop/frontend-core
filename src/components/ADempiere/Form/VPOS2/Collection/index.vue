@@ -23,7 +23,13 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       <button-group-options />
     </el-header>
     <el-main style="padding: 0px 10px;">
-      <payments />
+      <payments
+        v-if="!isLoadingPayment"
+      />
+      <loading-view
+        v-else
+        key="form-loading"
+      />
     </el-main>
     <el-footer style="height: auto !important;padding: 0px 10px;">
       <info-collection />
@@ -32,7 +38,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
 
 // import store from '@/store'
 // Component and Mixins
@@ -40,6 +46,7 @@ import Charge from './Charge'
 import Payments from './Payments'
 import ButtonGroupOptions from './ButtonGroupOptions'
 import InfoCollection from './InfoCollection.vue'
+import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 // Utils and Helper Methods
 // import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
@@ -49,7 +56,16 @@ export default defineComponent({
     Charge,
     Payments,
     InfoCollection,
+    LoadingView,
     ButtonGroupOptions
+  },
+  setup() {
+    const isLoadingPayment = computed(() => {
+      return
+    })
+    return {
+      isLoadingPayment
+    }
   }
 })
 </script>

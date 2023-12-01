@@ -214,6 +214,7 @@ export default defineComponent({
       if (isEmptyValue(currentPointOfSales.value)) return ''
       if (!isEmptyValue(currentOrder.value.id)) return currentOrder.value.campaign.name
       const { default_campaign } = currentPointOfSales.value
+      if (isEmptyValue(default_campaign)) return ''
       return default_campaign.name
     })
 

@@ -107,7 +107,7 @@ export default {
           documentTypeId: document_type.id,
           priceListId: price_list.id,
           warehouseId: warehouse.id,
-          campaignId: default_campaign.id,
+          campaignId: !isEmptyValue(default_campaign) ? default_campaign.id : null,
           salesRepresentativeId: getters['user/userInfo'].id
         })
           .then(responseOrder => {

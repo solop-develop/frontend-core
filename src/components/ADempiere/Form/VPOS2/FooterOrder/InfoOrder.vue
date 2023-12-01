@@ -198,10 +198,10 @@ export default defineComponent({
           ...order,
           documentNo: order.document_no,
           salesRepresentative: order.sales_representative,
-          totalLines: order.total_lines.value,
-          discountAmount: order.discount_amount.value,
-          taxAmount: order.tax_amount.value,
-          grandTotal: order.grand_total.value,
+          totalLines: order.total_lines,
+          discountAmount: order.discount_amount,
+          taxAmount: order.tax_amount,
+          grandTotal: order.grand_total,
           dateOrdered: order.date_ordered,
           documentType: order.document_type
         }
@@ -234,13 +234,13 @@ export default defineComponent({
 
     const displayCurrency = computed(() => {
       const { display_currency } = store.getters.getVPOS
-      if (display_currency) return displayCurrency.iso_code
+      if (display_currency) return display_currency.iso_code
       return ''
     })
 
     const getItemQuantity = computed(() => {
       if (isEmptyValue(store.getters.getCurrentOrder.id)) return 0
-      const arrayQuantity = lines.value.map(line => Number(line.quantity_ordered.value))
+      const arrayQuantity = lines.value.map(line => Number(line.quantity_ordered))
       if (isEmptyValue(arrayQuantity)) return 0
       return arrayQuantity.reduce((accumulator, currentValue) => {
         return accumulator + currentValue

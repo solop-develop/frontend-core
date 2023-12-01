@@ -44,7 +44,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           {{ $t('form.pos.collect.convertedAmount') }}:
         </b>
         <b style="float: right">
-          {{ formatPrice({ value: currentOrder.grand_total_converted.value, currency: displayCurrency.iso_code}) }}
+          {{ formatPrice({ value: currentOrder.grand_total_converted, currency: displayCurrency.iso_code}) }}
         </b>
       </p>
     </el-col>
@@ -59,7 +59,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           {{ $t('pointOfSales.collection.creditAmount') }}:
         </b>
         <b style="float: right">
-          {{ displayAmount(currentOrder.credit_amount.value) }}
+          {{ displayAmount(currentOrder.credit_amount) }}
         </b>
       </p>
       <p class="line-info">
@@ -69,7 +69,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           {{ $t('pointOfSales.collection.chargeAmount') }}:
         </b>
         <b style="float: right">
-          {{ displayAmount(currentOrder.charge_amount.value) }}
+          {{ displayAmount(currentOrder.charge_amount) }}
         </b>
       </p>
       <p class="line-info">
@@ -79,7 +79,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           {{ $t('form.pos.collect.payment') }}:
         </b>
         <b style="float: right">
-          {{ displayAmount(currentOrder.payment_amount.value) }}
+          {{ displayAmount(currentOrder.payment_amount) }}
         </b>
       </p>
       <p class="line-info">
@@ -89,7 +89,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           {{ $t('form.pos.collect.pending') }}:
         </b>
         <b style="float: right">
-          {{ displayAmount(currentOrder.open_amount.value) }}
+          {{ displayAmount(currentOrder.open_amount) }}
         </b>
       </p>
       <p class="line-info">
@@ -99,7 +99,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           {{ $t('form.pos.collect.change') }}:
         </b>
         <b style="float: right">
-          {{ displayAmount(currentOrder.refund_amount.value) }}
+          {{ displayAmount(currentOrder.refund_amount) }}
         </b>
       </p>
       <p class="line-info">
@@ -146,8 +146,8 @@ export default defineComponent({
         divide_rate,
         currency_to
       } = rate
-      if (multiply_rate.value > divide_rate.value) return formatPrice({ value: multiply_rate.value, currency: currency_to.iso_code })
-      return formatPrice({ value: divide_rate.value, currency: currency_to.iso_code })
+      if (multiply_rate.value > divide_rate.value) return formatPrice({ value: multiply_rate, currency: currency_to.iso_code })
+      return formatPrice({ value: divide_rate, currency: currency_to.iso_code })
     })
 
     function displayAmount(amount) {

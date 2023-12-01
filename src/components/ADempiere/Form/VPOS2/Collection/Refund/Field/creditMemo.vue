@@ -30,7 +30,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       <el-option
         v-for="item in listCustomerCredits"
         :key="item.id"
-        :label="item.document_no + ' - ' + item.document_date + ' - ' + formatPrice({ value: item.open_amount.value, currency: item.currency.iso_code })"
+        :label="item.document_no + ' - ' + item.document_date + ' - ' + formatPrice({ value: item.open_amount, currency: item.currency.iso_code })"
         :value="item.id"
       />
     </el-select>

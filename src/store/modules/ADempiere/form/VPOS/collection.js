@@ -34,7 +34,8 @@ const collection = {
   showCollection: false,
   payments: [],
   listRate: [],
-  currentRate: {}
+  currentRate: {},
+  isLoadingPayment: false
 }
 
 export default {
@@ -51,6 +52,9 @@ export default {
       rate
     }) {
       Vue.set(state.currentRate, date, rate)
+    },
+    setPaymentLoading(state, loading) {
+      state.isLoadingPayment = loading
     }
   },
   /**
@@ -142,6 +146,7 @@ export default {
       return new Promise(resolve => {
         const currentPos = getters.getVPOS
         const currentOrder = getters.getCurrentOrder
+        commit('setPaymentLoading', true)
         if (
           isEmptyValue(currentPos.id) ||
           isEmptyValue(currentOrder.id)
@@ -152,11 +157,20 @@ export default {
         })
           .then(response => {
             const { payments } = response
-            commit('setListPayments', payments)
+            const list = payments.map(list => {
+              return {
+                ...list,
+                amount: Number(list.amount),
+                converted_amount: Number(list.converted_amount)
+              }
+            })
+            commit('setPaymentLoading', false)
+            commit('setListPayments', list)
             resolve(response)
           })
           .catch(error => {
-            console.warn(`Add Payment: ${error.message}. Code: ${error.code}.`)
+            commit('setPaymentLoading', false)
+            console.warn(`List Payment: ${error.message}. Code: ${error.code}.`)
             let message = error.message
             if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
               message = error.response.data.message
@@ -291,7 +305,12 @@ export default {
           orderId: currentOrder.id,
           createPayments: !isEmptyValue(payments),
           isOpenRefund,
-          payments
+          payments: payments.map(pay => {
+            return {
+              ...pay,
+              amount: pay.amount.toString()
+            }
+          })
         })
           .then(response => {
             dispatch('overloadOrder', { order: currentOrder })

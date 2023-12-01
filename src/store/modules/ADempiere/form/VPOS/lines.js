@@ -85,7 +85,7 @@ export default {
       chargeId,
       productId,
       description,
-      quantity,
+      quantity = 1,
       price,
       discountRate,
       warehouseId,

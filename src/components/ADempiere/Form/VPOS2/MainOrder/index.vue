@@ -46,17 +46,17 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             />
             <edit-amount
               v-if="scope.row.isEditCurrentPrice && valueOrder.columnName === 'CurrentPrice'"
-              :value="Number(scope.row.price.value)"
+              :value="Number(scope.row.price)"
               :handle-change="updateCurrentPrice"
             />
             <edit-qty-entered
               v-else-if="scope.row.isEditQtyEntered && valueOrder.columnName === 'QtyEntered'"
-              :qty="Number(scope.row.quantity_ordered.value)"
+              :qty="Number(scope.row.quantity_ordered)"
               :handle-change="updateQuantity"
             />
             <edit-amount
               v-else-if="scope.row.isEditDiscount && valueOrder.columnName === 'Discount'"
-              :value="Number(scope.row.discount_rate.value)"
+              :value="Number(scope.row.discount_rate)"
               :handle-change="updateDiscount"
               :precision="0"
             />

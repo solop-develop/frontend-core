@@ -127,7 +127,14 @@ export default {
         })
           .then(response => {
             const { payments } = response
-            commit('setCashOpeningPayments', payments)
+            const list = payments.map(list => {
+              return {
+                ...list,
+                amount: Number(list.amount),
+                converted_amount: Number(list.converted_amount)
+              }
+            })
+            commit('setCashOpeningPayments', list)
           })
           .catch(error => {
             console.warn(`List Payments: ${error.message}. Code: ${error.code}.`)

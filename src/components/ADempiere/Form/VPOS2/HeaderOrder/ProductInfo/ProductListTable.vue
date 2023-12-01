@@ -191,7 +191,7 @@ export default defineComponent({
         price_standard,
         currency
       } = row
-      return formatPrice({ value: price_standard.value, currency: currency.iSOCode })
+      return formatPrice({ value: price_standard, currency: currency.iSOCode })
     }
 
     function addProduct(row) {

@@ -91,6 +91,7 @@
         <card-payments
           :payment="payment"
           :delete-payment="deletePaymentsOpen"
+          :is-delete-payment-methods="true"
         />
       </el-col>
     </el-row>
@@ -187,7 +188,7 @@ export default defineComponent({
     })
 
     const amountDisplay = computed(() => {
-      return formatPrice({ value: Number(amount.value), currency: currencyPayment.iso_code })
+      return formatPrice({ value: Number(amount), currency: currencyPayment.iso_code })
     })
 
     const listPaymentsOpenst = computed(() => {

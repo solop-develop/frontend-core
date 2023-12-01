@@ -341,7 +341,7 @@ export default defineComponent({
       let currencyPayment = price_list.currency
       if (isEmptyValue(refund_amount)) return '0.00'
       if (!isEmptyValue(currentCurrency.value)) currencyPayment = currentCurrency.value
-      return formatPrice({ value: Number(amount.value), currency: currencyPayment.iso_code })
+      return formatPrice({ value: Number(amount), currency: currencyPayment.iso_code })
     })
 
     const currentPos = computed(() => {

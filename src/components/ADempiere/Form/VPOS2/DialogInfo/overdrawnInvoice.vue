@@ -25,7 +25,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           v-model="typeOptions"
           label="1"
         >
-          {{ $t('form.pos.collect.overdrawnInvoice.returned') }} {{ formatPrice({ value: currentOrder.refund_amount.value, currency: currentOrder.price_list.currency.iso_code }) }}
+          {{ $t('form.pos.collect.overdrawnInvoice.returned') }} {{ formatPrice({ value: currentOrder.refund_amount, currency: currentOrder.price_list.currency.iso_code }) }}
         </el-radio>
       </el-col>
       <el-col
@@ -62,8 +62,8 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         </span>
         <span style="float: right;text-align: end">
           <b>
-            {{ $t('form.pos.collect.overdrawnInvoice.dailyLimit') }}: {{ formatPrice({ value: currentPos.maximum_daily_refund_allowed.value, currency: currentPos.refund_reference_currency.iso_code }) }}
-            {{ $t('form.pos.collect.overdrawnInvoice.customerLimit') }}: {{ formatPrice({ value: currentPos.maximum_refund_allowed.value, currency: currentPos.refund_reference_currency.iso_code }) }}
+            {{ $t('form.pos.collect.overdrawnInvoice.dailyLimit') }}: {{ formatPrice({ value: currentPos.maximum_daily_refund_allowed, currency: currentPos.refund_reference_currency.iso_code }) }}
+            {{ $t('form.pos.collect.overdrawnInvoice.customerLimit') }}: {{ formatPrice({ value: currentPos.maximum_refund_allowed, currency: currentPos.refund_reference_currency.iso_code }) }}
           </b>
         </span>
       </div>

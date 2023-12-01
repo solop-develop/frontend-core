@@ -598,7 +598,7 @@ export function createOrderLine({
       product_id: productId,
       charge_id: chargeId,
       description,
-      quantity,
+      quantity: quantity.toString(),
       price,
       discount_rate: discountRate,
       warehouse_id: warehouseId,
@@ -672,7 +672,7 @@ export function updateOrderLine({
     params: {
       uom_id,
       price,
-      quantity,
+      quantity: quantity.toString(),
       discount_rate,
       warehouse_id
     }
@@ -881,7 +881,7 @@ export function createPayment({
       bank_id,
       reference_no,
       description,
-      amount,
+      amount: amount.toString(),
       payment_date,
       tender_type_code,
       currency_id,
@@ -931,7 +931,7 @@ export function updatePayment({
       bank_id,
       reference_no,
       description,
-      amount,
+      amount: amount.toString(),
       payment_date,
       tender_type_code,
       currency_id,
@@ -1297,9 +1297,9 @@ export function createShipmentLine({
     url: `point-of-sales/${posId}/shipments/${shipmentId}/lines`,
     method: 'post',
     data: {
-      order_line_id: orderLineId,
       description,
-      quantity
+      order_line_id: orderLineId,
+      quantity: quantity.toString()
     }
   })
 }
@@ -1319,7 +1319,7 @@ export function updateShipmentLine({
     method: 'put',
     data: {
       description,
-      quantity
+      quantity: quantity.toString()
     }
   })
 }
@@ -1428,7 +1428,7 @@ export function createRMALine({
       pos_id: posId,
       source_order_line_id: sourceOrderLineId,
       description,
-      quantity
+      quantity: quantity.toString()
     }
   })
 }
@@ -1466,7 +1466,7 @@ export function updateRMALine({
     data: {
       pos_id: posId,
       description,
-      quantity
+      quantity: quantity.toString()
     }
   })
 }

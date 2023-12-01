@@ -162,7 +162,7 @@ export default defineComponent({
 
     function displayAmount(attribute) {
       if (isEmptyValue(currentRMA.value[attribute])) return formatPrice({ value: 0.00 })
-      return formatPrice({ value: currentRMA.value[attribute].value, currency: currentRMA.value.price_list.currency.iso_code })
+      return formatPrice({ value: currentRMA.value[attribute], currency: currentRMA.value.price_list.currency.iso_code })
     }
 
     return {
