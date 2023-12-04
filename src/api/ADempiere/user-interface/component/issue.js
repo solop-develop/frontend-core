@@ -39,9 +39,6 @@ export function requestExistsIssues({
       table_name: tableName
     }
   })
-    .then(existsIssues => {
-      return existsIssues
-    })
 }
 
 /**
@@ -80,9 +77,6 @@ export function requestListSalesRepresentatives({
       search_value: searchValue
     }
   })
-    .then(salesRepresentatives => {
-      return salesRepresentatives
-    })
 }
 
 /**
@@ -99,9 +93,6 @@ export function requestListRequestTypes({
       search_value: searchValue
     }
   })
-    .then(requestTypes => {
-      return requestTypes
-    })
 }
 
 /**
@@ -120,9 +111,6 @@ export function requestListStatuses({
       search_value: searchValue
     }
   })
-    .then(listStatus => {
-      return listStatus
-    })
 }
 
 /**
@@ -139,9 +127,6 @@ export function requestListPriorities({
       search_value: searchValue
     }
   })
-    .then(listPriorities => {
-      return listPriorities
-    })
 }
 
 /**
@@ -170,9 +155,6 @@ export function listCategoriesRequest({
       request_type_id: requestTypeId
     }
   })
-    .then(listCategories => {
-      return listCategories
-    })
 }
 
 /**
@@ -201,9 +183,6 @@ export function listGroupsRequest({
       request_type_id: requestTypeId
     }
   })
-    .then(listGroups => {
-      return listGroups
-    })
 }
 
 /**
@@ -232,10 +211,8 @@ export function listBusinessPartners({
       request_type_id: requestTypeId
     }
   })
-    .then(listBusinessPartners => {
-      return listBusinessPartners
-    })
 }
+
 /**
  * Business Partner
  * @param {string}  filters
@@ -262,15 +239,11 @@ export function listProjects({
       request_type_id: requestTypeId
     }
   })
-    .then(listProjects => {
-      return listProjects
-    })
 }
 
 /**
  * Task Status
  */
-
 export function listTaskStatuses({
   searchValue,
   requestTypeId,
@@ -285,9 +258,6 @@ export function listTaskStatuses({
       request_type_id: requestTypeId
     }
   })
-    .then(listProjects => {
-      return listProjects
-    })
 }
 
 /**
@@ -341,9 +311,6 @@ export function requestCreateIssue({
       date_next_action: dateNextAction
     }
   })
-    .then(listExists => {
-      return listExists
-    })
 }
 
 /**
@@ -404,9 +371,6 @@ export function requestUpdateIssue({
       date_next_action: dateNextAction
     }
   })
-    .then(listComments => {
-      return listComments
-    })
 }
 
 /**
@@ -429,9 +393,6 @@ export function requestDeleteIssue({
       uuid
     }
   })
-    .then(listComments => {
-      return listComments
-    })
 }
 
 /**
@@ -459,9 +420,6 @@ export function requestListIssueComments({
       search_value: searchValue
     }
   })
-    .then(listComments => {
-      return listComments
-    })
 }
 
 /**
@@ -487,9 +445,6 @@ export function requestCreateIssueComment({
       result
     }
   })
-    .then(listComments => {
-      return listComments
-    })
 }
 
 /**
@@ -515,9 +470,6 @@ export function requestUpdateIssueComment({
       result
     }
   })
-    .then(listComments => {
-      return listComments
-    })
 }
 
 /**
@@ -540,7 +492,4 @@ export function requestDeleteIssueComment({
       uuid: issueUuid
     }
   })
-    .then(listComments => {
-      return listComments
-    })
 }
