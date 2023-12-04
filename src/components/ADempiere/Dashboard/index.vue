@@ -115,6 +115,9 @@ export default defineComponent({
           case 'userfavorites':
             dashboard = () => import('@/components/ADempiere/Dashboard/userfavorites')
             break
+          case 'notices':
+            dashboard = () => import('@/components/ADempiere/Dashboard/notices')
+            break
           default:
             dashboard = () => import('@/components/ADempiere/Dashboard/UnsupportedDashboard')
             break
