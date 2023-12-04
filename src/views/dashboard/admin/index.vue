@@ -79,12 +79,13 @@
 import { defineComponent, computed, onMounted, watch } from '@vue/composition-api'
 
 import store from '@/store'
-
+import language from '@/lang'
 // Components and Mixins
 import DashboardDefinition from '@/components/ADempiere/Dashboard/index.vue'
 import PanelGroup from '@/views/dashboard/admin/components/PanelGroup.vue'
 import UserInfo from '@/views/profile/components/InfoUser.vue'
 import Todo from '@/views/dashboard/admin/components/TodoList/index.vue'
+import notices from '@/components/ADempiere/Dashboard/notices'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -94,6 +95,7 @@ export default defineComponent({
 
   components: {
     Todo,
+    notices,
     UserInfo,
     PanelGroup,
     DashboardDefinition
@@ -108,13 +110,22 @@ export default defineComponent({
       return store.getters.getStoredMainDashboard
     })
 
+    const panelNotice = computed(() => {
+      return {
+        dashboardType: 'dashboard',
+        fileName: 'notices',
+        isCollapsible: true,
+        name: language.t('profile.notice')
+      }
+    })
+
     const listDashboard = computed(() => {
       const list = dashboardsList.value
       if (isEmptyValue(list)) {
         return []
       }
       if (!isEmptyValue(mainDashboard.value)) {
-        return list.filter(dashboard => {
+        const listDashboardPanel = list.filter(dashboard => {
           if (
             mainDashboard.value.id !== dashboard.id &&
             isEmptyValue(dashboard.chartType)
@@ -122,6 +133,10 @@ export default defineComponent({
             return dashboard
           }
         })
+        if (isEmptyValue(listDashboardPanel.find(list => list.name === 'notices'))) {
+          listDashboardPanel.push(panelNotice.value)
+        }
+        return listDashboardPanel
       }
       return list
     })
@@ -152,6 +167,7 @@ export default defineComponent({
       dashboardsList,
       mainDashboard,
       listDashboard,
+      panelNotice,
       currentRole
     }
   }

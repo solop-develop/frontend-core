@@ -80,5 +80,8 @@
   "weight": {
     "endpoint": "/form/addons/weight"
   },
+  "noticeManagement": {
+    "endpoint": "/notice-management"
+  },
   "theme": "src/themes/default"
 }
