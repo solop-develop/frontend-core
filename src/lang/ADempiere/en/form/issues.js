@@ -43,7 +43,14 @@ const issues = {
   emailTemplate: 'Email Template',
   nextActionDate: 'Next Action Date',
   expirationType: 'Expiration Type',
-  timeRecord: 'Time Record'
+  timeRecord: 'Time Record',
+  businessPartner: 'Business Partner',
+  salesAgent: 'Sales Agent',
+  category: 'Category',
+  project: 'Project',
+  group: 'Group',
+  nextDate: 'Next Date',
+  taskStatus: 'Task Status'
 }
 
 export default issues

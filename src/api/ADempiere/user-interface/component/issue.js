@@ -39,9 +39,6 @@ export function requestExistsIssues({
       table_name: tableName
     }
   })
-    .then(existsIssues => {
-      return existsIssues
-    })
 }
 
 /**
@@ -80,9 +77,6 @@ export function requestListSalesRepresentatives({
       search_value: searchValue
     }
   })
-    .then(salesRepresentatives => {
-      return salesRepresentatives
-    })
 }
 
 /**
@@ -99,9 +93,6 @@ export function requestListRequestTypes({
       search_value: searchValue
     }
   })
-    .then(requestTypes => {
-      return requestTypes
-    })
 }
 
 /**
@@ -120,9 +111,6 @@ export function requestListStatuses({
       search_value: searchValue
     }
   })
-    .then(listStatus => {
-      return listStatus
-    })
 }
 
 /**
@@ -139,9 +127,137 @@ export function requestListPriorities({
       search_value: searchValue
     }
   })
-    .then(listPriorities => {
-      return listPriorities
-    })
+}
+
+/**
+ * Category
+ * @param {string}  filters
+ * @param {string}  sort_by
+ * @param {string}  group_columns
+ * @param {string}  select_columns
+ * @param {int32}  page_size
+ * @param {string}  page_token
+ * @param {string}  search_value
+ * @param {int32}  request_type_id
+ * @returns {Object} ListCategoriesResponse
+ */
+export function listCategoriesRequest({
+  searchValue,
+  requestTypeId,
+  pageSize = 200
+}) {
+  return request({
+    url: `${config.issuesManagement.endpoint}/categories`,
+    method: 'get',
+    params: {
+      page_size: pageSize,
+      search_value: searchValue,
+      request_type_id: requestTypeId
+    }
+  })
+}
+
+/**
+ * Group
+ * @param {string}  filters
+ * @param {string}  sort_by
+ * @param {string}  group_columns
+ * @param {string}  select_columns
+ * @param {int32}  page_size
+ * @param {string}  page_token
+ * @param {string}  search_value
+ * @param {int32}  request_type_id
+ * @returns {Object} ListGroupsResponse
+ */
+export function listGroupsRequest({
+  searchValue,
+  requestTypeId,
+  pageSize = 200
+}) {
+  return request({
+    url: `${config.issuesManagement.endpoint}/groups`,
+    method: 'get',
+    params: {
+      page_size: pageSize,
+      search_value: searchValue,
+      request_type_id: requestTypeId
+    }
+  })
+}
+
+/**
+ * Business Partner
+ * @param {string}  filters
+ * @param {string}  sort_by
+ * @param {string}  group_columns
+ * @param {string}  select_columns
+ * @param {int32}  page_size
+ * @param {string}  page_token
+ * @param {string}  search_value
+ * @param {int32}  request_type_id
+ * @returns {Object} ListBusinessPartnersResponse
+ */
+export function listBusinessPartners({
+  searchValue,
+  requestTypeId,
+  pageSize = 200
+}) {
+  return request({
+    url: `${config.issuesManagement.endpoint}/business-partners`,
+    method: 'get',
+    params: {
+      page_size: pageSize,
+      search_value: searchValue,
+      request_type_id: requestTypeId
+    }
+  })
+}
+
+/**
+ * Business Partner
+ * @param {string}  filters
+ * @param {string}  sort_by
+ * @param {string}  group_columns
+ * @param {string}  select_columns
+ * @param {int32}  page_size
+ * @param {string}  page_token
+ * @param {string}  search_value
+ * @param {int32}  request_type_id
+ * @returns {Object} ListProjectsResponse
+ */
+export function listProjects({
+  searchValue,
+  requestTypeId,
+  pageSize = 200
+}) {
+  return request({
+    url: `${config.issuesManagement.endpoint}/projects`,
+    method: 'get',
+    params: {
+      page_size: pageSize,
+      search_value: searchValue,
+      request_type_id: requestTypeId
+    }
+  })
+}
+
+/**
+ * Task Status
+ */
+export function listTaskStatuses({
+  searchValue,
+  requestTypeId,
+  pageSize = 200
+}) {
+  return request({
+    url: `${config.issuesManagement.endpoint}/task-statuses`,
+    method: 'get',
+    params: {
+      page_size: pageSize,
+      search_value: searchValue,
+      request_type_id: requestTypeId
+    }
+  })
 }
 
 /**
@@ -160,10 +276,15 @@ export function requestCreateIssue({
   requestTypeUuid,
   salesRepresentativeId,
   salesRepresentativeUuid,
-  statusId,
-  statusUuid,
+  businessPartnerId,
+  taskStatusValue,
+  dateNextAction,
   priorityValue,
-  dateNextAction
+  categoryId,
+  statusUuid,
+  projectId,
+  statusId,
+  groupId
 }) {
   return request({
     // url: '/issue-management/issues',
@@ -180,14 +301,16 @@ export function requestCreateIssue({
       sales_representative_id: salesRepresentativeId,
       sales_representative_uuid: salesRepresentativeUuid,
       status_id: statusId,
+      business_partner_id: businessPartnerId,
+      category_id: categoryId,
+      group_id: groupId,
+      task_status_value: taskStatusValue,
+      project_id: projectId,
       status_uuid: statusUuid,
       priority_value: priorityValue,
       date_next_action: dateNextAction
     }
   })
-    .then(listExists => {
-      return listExists
-    })
 }
 
 /**
@@ -207,11 +330,19 @@ export function requestUpdateIssue({
   uuid,
   subject,
   summary,
+  tableName,
+  recordId,
+  recordUuid,
   requestTypeId,
   requestTypeUuid,
   salesRepresentativeId,
   salesRepresentativeUuid,
   statusId,
+  businessPartnerId,
+  taskStatusValue,
+  categoryId,
+  projectId,
+  groupId,
   statusUuid,
   priorityValue,
   dateNextAction
@@ -220,8 +351,9 @@ export function requestUpdateIssue({
     url: `${config.issuesManagement.endpoint}/issues/${id}`,
     method: 'put',
     data: {
-      id,
-      uuid,
+      record_id: recordId,
+      record_uuid: recordUuid,
+      table_name: tableName,
       subject,
       summary,
       request_type_id: requestTypeId,
@@ -229,14 +361,16 @@ export function requestUpdateIssue({
       sales_representative_id: salesRepresentativeId,
       sales_representative_uuid: salesRepresentativeUuid,
       status_id: statusId,
+      business_partner_id: businessPartnerId,
+      category_id: categoryId,
+      group_id: groupId,
+      task_status_value: taskStatusValue,
+      project_id: projectId,
       status_uuid: statusUuid,
       priority_value: priorityValue,
       date_next_action: dateNextAction
     }
   })
-    .then(listComments => {
-      return listComments
-    })
 }
 
 /**
@@ -259,9 +393,6 @@ export function requestDeleteIssue({
       uuid
     }
   })
-    .then(listComments => {
-      return listComments
-    })
 }
 
 /**
@@ -289,9 +420,6 @@ export function requestListIssueComments({
       search_value: searchValue
     }
   })
-    .then(listComments => {
-      return listComments
-    })
 }
 
 /**
@@ -317,9 +445,6 @@ export function requestCreateIssueComment({
       result
     }
   })
-    .then(listComments => {
-      return listComments
-    })
 }
 
 /**
@@ -345,9 +470,6 @@ export function requestUpdateIssueComment({
       result
     }
   })
-    .then(listComments => {
-      return listComments
-    })
 }
 
 /**
@@ -370,7 +492,4 @@ export function requestDeleteIssueComment({
       uuid: issueUuid
     }
   })
-    .then(listComments => {
-      return listComments
-    })
 }

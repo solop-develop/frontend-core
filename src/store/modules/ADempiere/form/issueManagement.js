@@ -108,38 +108,61 @@ export default {
         })
     },
     newIssues({ commit, dispatch }, {
-      tableName,
-      recordId,
-      recordUuid,
+      groupId,
       subject,
       summary,
-      requestTypeId,
-      requestTypeUuid,
-      salesRepresentativeId,
-      salesRepresentativeUuid,
       statusId,
+      recordId,
+      projectId,
+      tableName,
+      categoryId,
       statusUuid,
+      recordUuid,
+      requestTypeId,
       priorityValue,
-      dateNextAction
+      dateNextAction,
+      requestTypeUuid,
+      taskStatusValue,
+      businessPartnerId,
+      salesRepresentativeId,
+      salesRepresentativeUuid
     }) {
       return new Promise((resolve, reject) => {
         return requestCreateIssue({
-          tableName,
-          recordId,
-          recordUuid,
+          groupId,
           subject,
           summary,
-          requestTypeId,
-          requestTypeUuid,
-          salesRepresentativeId,
-          salesRepresentativeUuid,
           statusId,
+          recordId,
+          projectId,
+          tableName,
+          categoryId,
           statusUuid,
+          recordUuid,
+          requestTypeId,
           priorityValue,
-          dateNextAction
+          dateNextAction,
+          requestTypeUuid,
+          taskStatusValue,
+          businessPartnerId,
+          salesRepresentativeId,
+          salesRepresentativeUuid
         })
           .then(response => {
-            commit('setCurrentIssues', response)
+            let date = ''
+            if (response.date_next_action !== 0) {
+              date = formatDate(
+                {
+                  value: response.date_next_action,
+                  isTime: true,
+                  format: 'YYYY-MM-DDTHH:MM:SS'
+                }
+              )
+            }
+            commit('setCurrentIssues', {
+              ...response,
+              dateNextAction: date
+            })
             dispatch('listComments', response)
             resolve(response)
           })
@@ -153,14 +176,19 @@ export default {
       uuid,
       subject,
       summary,
-      requestTypeId,
-      requestTypeUuid,
-      salesRepresentativeId,
-      salesRepresentativeUuid,
+      groupId,
       statusId,
+      projectId,
       statusUuid,
+      categoryId,
       priorityValue,
-      dateNextAction
+      requestTypeId,
+      dateNextAction,
+      requestTypeUuid,
+      taskStatusValue,
+      businessPartnerId,
+      salesRepresentativeId,
+      salesRepresentativeUuid
     }) {
       return new Promise((resolve, reject) => {
         return requestUpdateIssue({
@@ -168,14 +196,19 @@ export default {
           uuid,
           subject,
           summary,
-          requestTypeId,
-          requestTypeUuid,
-          salesRepresentativeId,
-          salesRepresentativeUuid,
+          groupId,
           statusId,
+          projectId,
           statusUuid,
+          categoryId,
           priorityValue,
-          dateNextAction
+          requestTypeId,
+          dateNextAction,
+          requestTypeUuid,
+          taskStatusValue,
+          businessPartnerId,
+          salesRepresentativeId,
+          salesRepresentativeUuid
         })
           .then(response => {
             let date = ''
