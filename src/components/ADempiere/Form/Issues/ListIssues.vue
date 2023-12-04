@@ -740,10 +740,6 @@ export default defineComponent({
       data,
       column
     }) {
-      console.log({
-        data,
-        column
-      })
       return data.filter(list => list.request_type.id === column)
     }
 

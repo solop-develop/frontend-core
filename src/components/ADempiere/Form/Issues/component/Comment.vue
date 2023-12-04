@@ -106,78 +106,153 @@
             </div>
             <div style="padding: 0px 15px;border: 1px solid #e6ebf5;">
               <el-form label-position="top" class="form-min-label">
-                <el-form-item :label="$t('issues.typeOfRequest')" style="margin: 0px;">
-                  <el-select
-                    v-model="currentRequestTypes"
-                    filterable
-                    @visible-change="findRequestTypes"
-                    @change="exitPopover('newtypeOfRequest')"
-                  >
-                    <el-option
-                      v-for="item in listIssuesTypes"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item :label="$t('issues.status')" style="margin: 0px;">
-                  <el-select
-                    v-model="currentStatus"
-                    filterable
-                    :disabled="isEmptyValue(currentRequestTypes)"
-                    @visible-change="findStatus"
-                    @change="exitPopover('')"
-                  >
-                    <el-option
-                      v-for="item in listStatuses"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item :label="$t('issues.priority')" style="margin: 0px;">
-                  <el-select
-                    v-model="currentPriority"
-                    filterable
-                    @visible-change="findPriority"
-                    @change="exitPopover('')"
-                  >
-                    <el-option
-                      v-for="item in listPriority"
-                      :key="item.value"
-                      :label="item.name"
-                      :value="item.value"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="Agente Comercial" style="margin: 0px;">
-                  <el-select
-                    v-model="currentSalesReps"
-                    remote
-                    filterable
-                    :loading="loadingSales"
-                    :remote-method="remoteMethodSales"
-                    @visible-change="findSalesReps"
-                    @change="exitPopover('')"
-                  >
-                    <el-option
-                      v-for="item in listSalesReps"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="Proxima Fecha" style="margin: 0px;">
-                  <el-date-picker
-                    v-model="newDateNextAction"
-                    clearable
-                    type="datetime"
-                    placeholder="Proxima Fecha"
-                  />
-                </el-form-item>
+                <el-row :gutter="20">
+                  <el-col :span="12">
+                    <el-form-item :label="$t('issues.typeOfRequest')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentRequestTypes"
+                        filterable
+                        @visible-change="findRequestTypes"
+                        @change="exitPopover('newtypeOfRequest')"
+                      >
+                        <el-option
+                          v-for="item in listIssuesTypes"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.status')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentStatus"
+                        filterable
+                        :disabled="isEmptyValue(currentRequestTypes)"
+                        @visible-change="findStatus"
+                        @change="exitPopover('')"
+                      >
+                        <el-option
+                          v-for="item in listStatuses"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.priority')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentPriority"
+                        filterable
+                        @visible-change="findPriority"
+                        @change="exitPopover('')"
+                      >
+                        <el-option
+                          v-for="item in listPriority"
+                          :key="item.value"
+                          :label="item.name"
+                          :value="item.value"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.salesAgent')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentSalesReps"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodSales"
+                        @visible-change="findSalesReps"
+                        @change="exitPopover('')"
+                      >
+                        <el-option
+                          v-for="item in listSalesReps"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item :label="$t('issues.businessPartner')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentBusinessPartner"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodBusinessPartner"
+                        @visible-change="findBusinessPartner"
+                      >
+                        <el-option
+                          v-for="item in listBusinessPartner"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.category')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentCategory"
+                        remote
+                        filterable
+                        :remote-method="remoteMethodCategory"
+                        @visible-change="findCategory"
+                      >
+                        <el-option
+                          v-for="item in listCategory"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.project')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentProject"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodProject"
+                        @visible-change="findProject"
+                      >
+                        <el-option
+                          v-for="item in listProject"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.group')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentGroup"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodGroup"
+                        @visible-change="findGroup"
+                      >
+                        <el-option
+                          v-for="item in listGroup"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <!-- <el-col :span="24">
+                    <el-form-item :label="$t('issues.nextDate')" style="margin: 0px;">
+                      <el-date-picker
+                        v-model="newDateNextAction"
+                        clearable
+                        type="datetime"
+                        placeholder="Proxima Fecha"
+                      />
+                    </el-form-item>
+                  </el-col> -->
+                </el-row>
               </el-form>
             </div>
           </div>
@@ -247,78 +322,153 @@
           <div id="panel-issues" style="display: flex;width: -webkit-fill-available;overflow: auto;">
             <div id="panel-rigth" style="padding: 0px 15px;border: 1px solid #e6ebf5;">
               <el-form label-position="top" class="form-comments">
-                <el-form-item :label="$t('issues.typeOfRequest')">
-                  <el-select
-                    v-model="currentRequestTypes"
-                    filterable
-                    @visible-change="findRequestTypes"
-                    @change="updateIssuesTypeRequest"
-                  >
-                    <el-option
-                      v-for="item in listIssuesTypes"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item :label="$t('issues.status')">
-                  <el-select
-                    v-model="currentStatus"
-                    filterable
-                    :disabled="isEmptyValue(currentRequestTypes)"
-                    @visible-change="findStatus"
-                    @change="updateIssuesStatus"
-                  >
-                    <el-option
-                      v-for="item in listStatuses"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item :label="$t('issues.priority')">
-                  <el-select
-                    v-model="currentPriority"
-                    filterable
-                    @visible-change="findPriority"
-                    @change="updateIssuesPriority"
-                  >
-                    <el-option
-                      v-for="item in listPriority"
-                      :key="item.value"
-                      :label="item.name"
-                      :value="item.value"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="Agente Comercial">
-                  <el-select
-                    v-model="currentSalesReps"
-                    remote
-                    filterable
-                    :loading="loadingSales"
-                    :remote-method="remoteMethodSales"
-                    @visible-change="findSalesReps"
-                    @change="updateIssuesSalesReps"
-                  >
-                    <el-option
-                      v-for="item in listSalesReps"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="Proxima Fecha">
-                  <el-date-picker
-                    v-model="currentDateNextAction"
-                    type="datetime"
-                    placeholder="Proxima Fecha"
-                    @change="updateIssuesDateNextAction"
-                  />
-                </el-form-item>
+                <el-row :gutter="20">
+                  <el-col :span="12">
+                    <el-form-item :label="$t('issues.typeOfRequest')">
+                      <el-select
+                        v-model="currentRequestTypes"
+                        filterable
+                        @visible-change="findRequestTypes"
+                        @change="updateIssuesTypeRequest"
+                      >
+                        <el-option
+                          v-for="item in listIssuesTypes"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.status')">
+                      <el-select
+                        v-model="currentStatus"
+                        filterable
+                        :disabled="isEmptyValue(currentRequestTypes)"
+                        @visible-change="findStatus"
+                        @change="updateIssuesStatus"
+                      >
+                        <el-option
+                          v-for="item in listStatuses"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.priority')">
+                      <el-select
+                        v-model="currentPriority"
+                        filterable
+                        @visible-change="findPriority"
+                        @change="updateIssuesPriority"
+                      >
+                        <el-option
+                          v-for="item in listPriority"
+                          :key="item.value"
+                          :label="item.name"
+                          :value="item.value"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.salesAgent')">
+                      <el-select
+                        v-model="currentSalesReps"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodSales"
+                        @visible-change="findSalesReps"
+                        @change="updateIssuesSalesReps"
+                      >
+                        <el-option
+                          v-for="item in listSalesReps"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item :label="$t('issues.businessPartner')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentBusinessPartner"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodBusinessPartner"
+                        @visible-change="findBusinessPartner"
+                      >
+                        <el-option
+                          v-for="item in listBusinessPartner"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.category')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentCategory"
+                        remote
+                        filterable
+                        :remote-method="remoteMethodCategory"
+                        @visible-change="findCategory"
+                      >
+                        <el-option
+                          v-for="item in listCategory"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.project')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentProject"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodProject"
+                        @visible-change="findProject"
+                      >
+                        <el-option
+                          v-for="item in listProject"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.group')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentGroup"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodGroup"
+                        @visible-change="findGroup"
+                      >
+                        <el-option
+                          v-for="item in listGroup"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <!-- <el-col :span="24">
+                    <el-form-item :label="$t('issues.nextDate')">
+                      <el-date-picker
+                        v-model="currentDateNextAction"
+                        type="datetime"
+                        placeholder="Proxima Fecha"
+                        @change="updateIssuesDateNextAction"
+                      />
+                    </el-form-item>
+                  </el-col> -->
+                </el-row>
               </el-form>
             </div>
             <div id="panel-left" style="padding: 0px;width: 100%;">
@@ -400,7 +550,7 @@
             style="margin-left: 10px;"
           >
             <span v-if="comment.issue_comment_type === 1">
-              <svg-icon v-if="isEmptyValue(comment.user.avatar)" icon-class="user" />
+              <svg-icon v-if="!isEmptyValue(comment.user.avatar)" icon-class="user" />
               <el-image
                 :src="avatarResize(comment.user)"
                 fit="contain"
@@ -580,78 +730,180 @@
             </div>
             <div style="padding: 0px 15px;border: 1px solid #e6ebf5;">
               <el-form label-position="top" class="form-min-label">
-                <el-form-item :label="$t('issues.typeOfRequest')" style="margin: 0px;">
-                  <el-select
-                    v-model="currentRequestTypes"
-                    filterable
-                    @visible-change="findRequestTypes"
-                    @change="exitPopover('newtypeOfRequest')"
-                  >
-                    <el-option
-                      v-for="item in listIssuesTypes"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item :label="$t('issues.status')" style="margin: 0px;">
-                  <el-select
-                    v-model="currentStatus"
-                    filterable
-                    :disabled="isEmptyValue(currentRequestTypes)"
-                    @visible-change="findStatus"
-                    @change="exitPopover('')"
-                  >
-                    <el-option
-                      v-for="item in listStatuses"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item :label="$t('issues.priority')" style="margin: 0px;">
-                  <el-select
-                    v-model="currentPriority"
-                    filterable
-                    @visible-change="findPriority"
-                    @change="exitPopover('')"
-                  >
-                    <el-option
-                      v-for="item in listPriority"
-                      :key="item.value"
-                      :label="item.name"
-                      :value="item.value"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="Agente Comercial" style="margin: 0px;">
-                  <el-select
-                    v-model="currentSalesReps"
-                    remote
-                    filterable
-                    :loading="loadingSales"
-                    :remote-method="remoteMethodSales"
-                    @visible-change="findSalesReps"
-                    @change="exitPopover('')"
-                  >
-                    <el-option
-                      v-for="item in listSalesReps"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="Proxima Fecha" style="margin: 0px;">
-                  <el-date-picker
-                    v-model="newDateNextAction"
-                    type="datetime"
-                    placeholder="Proxima Fecha"
-                    @change="exitPopover('')"
-                  />
-                </el-form-item>
+                <el-row :gutter="20">
+                  <el-col :span="12">
+                    <el-form-item :label="$t('issues.typeOfRequest')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentRequestTypes"
+                        filterable
+                        @visible-change="findRequestTypes"
+                        @change="exitPopover('newtypeOfRequest')"
+                      >
+                        <el-option
+                          v-for="item in listIssuesTypes"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.status')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentStatus"
+                        filterable
+                        :disabled="isEmptyValue(currentRequestTypes)"
+                        @visible-change="findStatus"
+                        @change="exitPopover('')"
+                      >
+                        <el-option
+                          v-for="item in listStatuses"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.priority')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentPriority"
+                        filterable
+                        @visible-change="findPriority"
+                        @change="exitPopover('')"
+                      >
+                        <el-option
+                          v-for="item in listPriority"
+                          :key="item.value"
+                          :label="item.name"
+                          :value="item.value"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.salesAgent')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentSalesReps"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodSales"
+                        @visible-change="findSalesReps"
+                        @change="exitPopover('')"
+                      >
+                        <el-option
+                          v-for="item in listSalesReps"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.nextDate')" style="margin: 0px;">
+                      <el-date-picker
+                        v-model="newDateNextAction"
+                        type="datetime"
+                        format="dd-MM-yyyy HH:mm:ss"
+                        placeholder="Proxima Fecha"
+                        style="display: contents"
+                        @change="updateIssuesDateNextAction"
+                      />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item :label="$t('issues.businessPartner')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentBusinessPartner"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodBusinessPartner"
+                        @visible-change="findBusinessPartner"
+                      >
+                        <el-option
+                          v-for="item in listBusinessPartner"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.category')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentCategory"
+                        remote
+                        filterable
+                        :remote-method="remoteMethodCategory"
+                        @visible-change="findCategory"
+                      >
+                        <el-option
+                          v-for="item in listCategory"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.project')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentProject"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodProject"
+                        @visible-change="findProject"
+                      >
+                        <el-option
+                          v-for="item in listProject"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.group')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentGroup"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodGroup"
+                        @visible-change="findGroup"
+                      >
+                        <el-option
+                          v-for="item in listGroup"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.taskStatus')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentTask"
+                        remote
+                        filterable
+                        :remote-method="remoteMethodTaskStatus"
+                        @visible-change="findTaskStatus"
+                      >
+                        <el-option
+                          v-for="item in listTaskStatus"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.value"
+                        />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <!-- <el-col :span="24">
+                    <el-form-item :label="$t('issues.nextDate')" style="margin: 0px;width: 100%;">
+                      <el-date-picker
+                        v-model="newDateNextAction"
+                        type="datetime"
+                        placeholder="Proxima Fecha"
+                        style="width: 100%;"
+                        @change="exitPopover('')"
+                      />
+                    </el-form-item>
+                  </el-col> -->
+                </el-row>
               </el-form>
             </div>
           </div>
@@ -724,7 +976,7 @@
             </el-button>
           </div>
           <div id="panel-issues" style="display: flex;width: -webkit-fill-available;">
-            <div id="panel-left" style="padding: 0px;width: 100%;">
+            <div id="panel-left" style="padding: 0px;width: 75%;">
               <el-card class="card-summary" shadow="never" style="height: 100% !important">
                 <el-row v-if="isPanelEditRequest" style="height: 100% !important">
                   <el-form label-position="top">
@@ -791,86 +1043,183 @@
             </div>
             <div id="panel-rigth" style="padding: 0px 15px;border: 1px solid #e6ebf5;">
               <el-form label-position="top" class="form-min-label">
-                <el-form-item :label="$t('issues.typeOfRequest')" style="margin: 0px;">
-                  <el-select
-                    v-model="currentIssues.request_type.name"
-                    filterable
-                    @visible-change="findRequestTypes"
-                    @change="updateIssuesTypeRequest"
-                  >
-                    <el-option
-                      v-for="item in listIssuesTypes"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item :label="$t('issues.status')" style="margin: 0px;">
-                  <el-select
-                    v-model="currentIssues.status.name"
-                    filterable
-                    :disabled="isEmptyValue(currentRequestTypes)"
-                    @visible-change="findStatus"
-                    @change="updateIssuesStatus"
-                  >
-                    <el-option
-                      v-for="item in listStatuses"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item :label="$t('issues.priority')" style="margin: 0px;">
-                  <el-select
-                    v-model="currentIssues.priority.name"
-                    filterable
-                    @visible-change="findPriority"
-                    @change="updateIssuesPriority"
-                  >
-                    <el-option
-                      v-for="item in listPriority"
-                      :key="item.value"
-                      :label="item.name"
-                      :value="item.value"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="Agente Comercial" style="margin: 0px;">
-                  <el-select
-                    v-model="currentIssues.sales_representative.name"
-                    remote
-                    filterable
-                    :loading="loadingSales"
-                    :remote-method="remoteMethodSales"
-                    @visible-change="findSalesReps"
-                    @change="updateIssuesSalesReps"
-                  >
-                    <el-option
-                      v-for="item in listSalesReps"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="Proxima Fecha" style="margin: 0px;">
-                  <el-date-picker
-                    v-model="currentIssues.dateNextAction"
-                    type="datetime"
-                    format="dd-MM-yyyy HH:mm:ss"
-                    placeholder="Proxima Fecha"
-                    @change="updateIssuesDateNextAction"
-                  />
-                </el-form-item>
+                <el-row :gutter="20">
+                  <el-col :span="12">
+                    <el-form-item :label="$t('issues.typeOfRequest')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentIssues.request_type.name"
+                        filterable
+                        @visible-change="findRequestTypes"
+                        @change="updateIssuesTypeRequest"
+                      >
+                        <el-option
+                          v-for="item in listIssuesTypes"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.status')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentIssues.status.name"
+                        filterable
+                        :disabled="isEmptyValue(currentRequestTypes)"
+                        @visible-change="findStatus"
+                        @change="updateIssuesStatus"
+                      >
+                        <el-option
+                          v-for="item in listStatuses"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.priority')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentIssues.priority.name"
+                        filterable
+                        @visible-change="findPriority"
+                        @change="updateIssuesPriority"
+                      >
+                        <el-option
+                          v-for="item in listPriority"
+                          :key="item.value"
+                          :label="item.name"
+                          :value="item.value"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.salesAgent')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentIssues.sales_representative.name"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodSales"
+                        @visible-change="findSalesReps"
+                        @change="updateIssuesSalesReps"
+                      >
+                        <el-option
+                          v-for="item in listSalesReps"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.nextDate')" style="margin: 0px;">
+                      {{ currentIssues.dateNextAction }}
+                      <!-- <el-date-picker
+                        v-model="currentIssues.dateNextAction"
+                        type="datetime"
+                        format="dd-MM-yyyy HH:mm:ss"
+                        placeholder="Proxima Fecha"
+                        style="display: contents"
+                        @change="updateIssuesDateNextAction"
+                      /> -->
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item :label="$t('issues.businessPartner')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentIssues.business_partner.name"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodBusinessPartner"
+                        @visible-change="findBusinessPartner"
+                        @change="updateIssuesBusinessPartner"
+                      >
+                        <el-option
+                          v-for="item in listBusinessPartner"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.category')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentIssues.category.name"
+                        remote
+                        filterable
+                        :remote-method="remoteMethodCategory"
+                        @visible-change="findCategory"
+                        @change="updateIssuesCategory"
+                      >
+                        <el-option
+                          v-for="item in listCategory"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.project')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentIssues.project.name"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodProject"
+                        @visible-change="findProject"
+                        @change="updateIssuesProyect"
+                      >
+                        <el-option
+                          v-for="item in listProject"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.group')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentIssues.group.name"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodGroup"
+                        @visible-change="findGroup"
+                        @change="updateIssuesGroup"
+                      >
+                        <el-option
+                          v-for="item in listGroup"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.taskStatus')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentIssues.task_status.name"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodTaskStatus"
+                        @visible-change="findTaskStatus"
+                        @change="updateIssuesTaskStatus"
+                      >
+                        <el-option
+                          v-for="item in listTaskStatus"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.value"
+                        />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
               </el-form>
             </div>
           </div>
           <i style="font-size: 12px;color: #82848a;">
             {{ $t('issues.isCreated') }} {{ translateDateByLong(currentIssues.created) }} {{ $t('issues.by') }}
             <svg-icon
-              v-if="isEmptyValue(currentIssues.user.avatar)"
+              v-if="!isEmptyValue(currentIssues.user.avatar)"
               icon-class="user"
             />
             <el-image
@@ -900,7 +1249,7 @@
               style="margin-left: 10px;"
             >
               <span v-if="comment.issue_comment_type === 1">
-                <svg-icon v-if="isEmptyValue(comment.user.avatar)" icon-class="user" />
+                <svg-icon v-if="!isEmptyValue(comment.user.avatar)" icon-class="user" />
                 <el-image
                   :src="avatarResize(comment.user)"
                   fit="contain"
@@ -931,7 +1280,7 @@
               <el-card v-else class="list-comments">
                 <div slot="header" class="list-comments-clearfix">
                   <span>
-                    <svg-icon v-if="isEmptyValue(comment.user.avatar)" icon-class="user" />
+                    <svg-icon v-if="!isEmptyValue(comment.user.avatar)" icon-class="user" />
                     <el-image
                       :src="avatarResize(comment.user)"
                       fit="contain"
@@ -1029,7 +1378,7 @@
               style="margin-left: 10px;"
             >
               <span v-if="comment.issue_comment_type === 1">
-                <svg-icon v-if="isEmptyValue(comment.user.avatar)" icon-class="user" />
+                <svg-icon v-if="!isEmptyValue(comment.user.avatar)" icon-class="user" />
                 <el-image
                   :src="avatarResize(comment.user)"
                   fit="contain"
@@ -1085,7 +1434,7 @@
                         <v-md-preview :text="commentUpdate" class="previwer-disable" style="padding: 0px" height="150px" />
                       </el-scrollbar>
                       <!-- <v-md-preview v-if="commentUpdate" :text="comment.result" class="previwer-disable" style="padding: 0px" /> -->
-                      <!-- <div v-markdown="commentUpdate" class="output" /> -->
+                      <!-- <div v-markdown="commentUpdate"remoteMethodTask class="output" /> -->
                     </el-card>
                     <!-- <div v-if="commentUpdatePreview" v-markdown="comment.result" class="output" /> -->
                     <v-md-editor
@@ -1222,14 +1571,19 @@ import { isEmptyValue } from '@/utils/ADempiere'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { translateDateByLong, formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
-import { getImagePath } from '@/utils/ADempiere/resource.js'
+// import { getImagePath } from '@/utils/ADempiere/resource.js'
 
 // Api Request Methods
 import {
   requestListSalesRepresentatives,
   requestListRequestTypes,
+  requestListPriorities,
+  listCategoriesRequest,
+  listBusinessPartners,
   requestListStatuses,
-  requestListPriorities
+  listGroupsRequest,
+  listTaskStatuses,
+  listProjects
 } from '@/api/ADempiere/user-interface/component/issue'
 
 export default defineComponent({
@@ -1393,8 +1747,12 @@ export default defineComponent({
             resolve(records)
           })
           .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
             showMessage({
-              message: error.message,
+              message,
               type: 'warning'
             })
             resolve([])
@@ -1423,8 +1781,12 @@ export default defineComponent({
           listIssuesTypes.value = records
         })
         .catch(error => {
+          let message = error.message
+          if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+            message = error.response.data.message
+          }
           showMessage({
-            message: error.message,
+            message,
             type: 'warning'
           })
         })
@@ -1446,8 +1808,12 @@ export default defineComponent({
           listStatuses.value = records
         })
         .catch(error => {
+          let message = error.message
+          if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+            message = error.response.data.message
+          }
           showMessage({
-            message: error.message,
+            message,
             type: 'warning'
           })
         })
@@ -1463,8 +1829,12 @@ export default defineComponent({
           listPriority.value = records
         })
         .catch(error => {
+          let message = error.message
+          if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+            message = error.response.data.message
+          }
           showMessage({
-            message: error.message,
+            message,
             type: 'warning'
           })
         })
@@ -1476,6 +1846,11 @@ export default defineComponent({
       store.dispatch('newIssues', {
         tableName,
         recordId,
+        businessPartnerId: currentBusinessPartner.value,
+        categoryId: currentCategory.value,
+        projectId: currentProject.value,
+        groupId: currentGroup.value,
+        taskStatusValue: currentTask.value,
         subject: subject.value,
         summary: summary.value,
         requestTypeId: currentRequestTypes.value,
@@ -1498,8 +1873,12 @@ export default defineComponent({
         })
         .catch(error => {
           isLoadingNewIssues.value = false
+          let message = error.message
+          if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+            message = error.response.data.message
+          }
           showMessage({
-            message: error.message,
+            message,
             type: 'warning'
           })
         })
@@ -1543,8 +1922,166 @@ export default defineComponent({
         priorityValue: currentIssues.value.priority.value,
         statusId: currentIssues.value.status.id
       })
-      // refs.typeOfRequest.showPopper = false
-      // refs.typeOfRequest.activated = false
+    }
+    function updateIssuesBusinessPartner(newValue) {
+      const {
+        id,
+        uuid,
+        subject,
+        summary,
+        priority,
+        status,
+        group,
+        category,
+        project,
+        task_status,
+        request_type,
+        sales_representative
+      } = currentIssues.value
+      store.dispatch('editIssues', {
+        id,
+        uuid,
+        subject,
+        summary,
+        requestTypeId: request_type.id,
+        salesRepresentativeId: sales_representative.id,
+        salesRepresentativeUuid: sales_representative.uuid,
+        priorityValue: priority.value,
+        statusId: status.id,
+        groupId: group.id,
+        categoryId: category.id,
+        projectId: project.id,
+        taskStatusValue: task_status.value,
+        businessPartnerId: newValue
+      })
+    }
+    function updateIssuesCategory(newValue) {
+      const {
+        id,
+        uuid,
+        subject,
+        summary,
+        priority,
+        status,
+        group,
+        project,
+        request_type,
+        task_status,
+        business_partner,
+        sales_representative
+      } = currentIssues.value
+      store.dispatch('editIssues', {
+        id,
+        uuid,
+        subject,
+        summary,
+        requestTypeId: request_type.id,
+        salesRepresentativeId: sales_representative.id,
+        salesRepresentativeUuid: sales_representative.uuid,
+        priorityValue: priority.value,
+        statusId: status.id,
+        groupId: group.id,
+        categoryId: newValue,
+        projectId: project.id,
+        taskStatusValue: task_status.value,
+        businessPartnerId: business_partner.id
+      })
+    }
+    function updateIssuesProyect(newValue) {
+      const {
+        id,
+        uuid,
+        subject,
+        summary,
+        priority,
+        status,
+        group,
+        category,
+        request_type,
+        task_status,
+        business_partner,
+        sales_representative
+      } = currentIssues.value
+      store.dispatch('editIssues', {
+        id,
+        uuid,
+        subject,
+        summary,
+        requestTypeId: request_type.id,
+        salesRepresentativeId: sales_representative.id,
+        salesRepresentativeUuid: sales_representative.uuid,
+        priorityValue: priority.value,
+        statusId: status.id,
+        groupId: group.id,
+        categoryId: category.id,
+        projectId: newValue,
+        taskStatusValue: task_status.value,
+        businessPartnerId: business_partner.id
+      })
+    }
+    function updateIssuesGroup(newValue) {
+      const {
+        id,
+        uuid,
+        subject,
+        summary,
+        priority,
+        status,
+        category,
+        project,
+        request_type,
+        task_status,
+        business_partner,
+        sales_representative
+      } = currentIssues.value
+      store.dispatch('editIssues', {
+        id,
+        uuid,
+        subject,
+        summary,
+        requestTypeId: request_type.id,
+        salesRepresentativeId: sales_representative.id,
+        salesRepresentativeUuid: sales_representative.uuid,
+        priorityValue: priority.value,
+        statusId: status.id,
+        groupId: newValue,
+        categoryId: category.id,
+        projectId: project.id,
+        taskStatusValue: task_status.value,
+        businessPartnerId: business_partner.id
+      })
+    }
+    function updateIssuesTaskStatus(newValue) {
+      const {
+        id,
+        uuid,
+        subject,
+        summary,
+        priority,
+        status,
+        group,
+        category,
+        project,
+        request_type,
+        business_partner,
+        sales_representative
+      } = currentIssues.value
+      store.dispatch('editIssues', {
+        id,
+        uuid,
+        subject,
+        summary,
+        requestTypeId: request_type.id,
+        salesRepresentativeId: sales_representative.id,
+        salesRepresentativeUuid: sales_representative.uuid,
+        priorityValue: priority.value,
+        statusId: status.id,
+        groupId: group.id,
+        categoryId: category.id,
+        projectId: project.id,
+        taskStatusValue: newValue,
+        businessPartnerId: business_partner.id
+      })
     }
     function updateIssuesSummary(issues) {
       const {
@@ -1834,14 +2371,14 @@ export default defineComponent({
     loadListMail()
 
     function avatarResize(user) {
-      const { avatar } = user
-      const { uri } = getImagePath({
-        file: avatar,
-        width: 20,
-        height: 20,
-        operation: 'resize'
-      })
-      return uri
+      // const { avatar } = user
+      // const { uri } = getImagePath({
+      //   file: avatar,
+      //   width: 20,
+      //   height: 20,
+      //   operation: 'resize'
+      // })
+      return ''
     }
 
     function defaultValueNewIssues() {
@@ -1850,6 +2387,211 @@ export default defineComponent({
           currentSalesReps.value = userId.value
         })
       newDateNextAction.value = new Date()
+    }
+
+    /**
+     * New Fields Business Partners
+     */
+
+    const currentBusinessPartner = ref('')
+    const listBusinessPartner = ref([])
+
+    function findBusinessPartner(isVisible, searchValue) {
+      return new Promise((resolve, reject) => {
+        if (!isVisible) {
+          resolve([])
+        }
+
+        listBusinessPartners({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listBusinessPartner.value = records
+            resolve(records)
+          })
+          .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+            showMessage({
+              message,
+              type: 'warning'
+            })
+            resolve([])
+          })
+      })
+    }
+
+    function remoteMethodBusinessPartner(query) {
+      if (!isEmptyValue(query) && query.length > 1) {
+        findBusinessPartner(true, query)
+      }
+    }
+
+    /**
+     * New Fields Category
+     */
+
+    const currentCategory = ref('')
+    const listCategory = ref([])
+
+    function findCategory(isVisible, searchValue) {
+      return new Promise((resolve, reject) => {
+        if (!isVisible) {
+          resolve([])
+        }
+
+        listCategoriesRequest({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listCategory.value = records
+            resolve(records)
+          })
+          .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+            showMessage({
+              message,
+              type: 'warning'
+            })
+            resolve([])
+          })
+      })
+    }
+
+    function remoteMethodCategory(query) {
+      if (!isEmptyValue(query) && query.length > 1) {
+        findCategory(true, query)
+      }
+    }
+
+    /**
+     * New Fields Project
+     */
+
+    const currentProject = ref('')
+    const listProject = ref([])
+
+    function findProject(isVisible, searchValue) {
+      return new Promise((resolve, reject) => {
+        if (!isVisible) {
+          resolve([])
+        }
+
+        listProjects({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listProject.value = records
+            resolve(records)
+          })
+          .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+            showMessage({
+              message,
+              type: 'warning'
+            })
+            resolve([])
+          })
+      })
+    }
+
+    function remoteMethodProject(query) {
+      if (!isEmptyValue(query) && query.length > 1) {
+        findProject(true, query)
+      }
+    }
+
+    /**
+     * New Fields Group
+     */
+
+    const currentGroup = ref('')
+    const listGroup = ref([])
+
+    function findGroup(isVisible, searchValue) {
+      return new Promise((resolve, reject) => {
+        if (!isVisible) {
+          resolve([])
+        }
+
+        listGroupsRequest({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listGroup.value = records
+            resolve(records)
+          })
+          .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+            showMessage({
+              message,
+              type: 'warning'
+            })
+            resolve([])
+          })
+      })
+    }
+
+    function remoteMethodGroup(query) {
+      if (!isEmptyValue(query) && query.length > 1) {
+        findGroup(true, query)
+      }
+    }
+
+    /**
+     * New Field List Task Statuses
+     */
+
+    const currentTask = ref('')
+    const listTaskStatus = ref([])
+
+    function findTaskStatus(isVisible, searchValue) {
+      return new Promise((resolve, reject) => {
+        if (!isVisible) {
+          resolve([])
+        }
+
+        listTaskStatuses({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listTaskStatus.value = records
+            resolve(records)
+          })
+          .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+            showMessage({
+              message,
+              type: 'warning'
+            })
+            resolve([])
+          })
+      })
+    }
+
+    function remoteMethodTaskStatus(query) {
+      if (!isEmptyValue(query) && query.length > 1) {
+        findTaskStatus(true, query)
+      }
     }
 
     watch(isPanelEditIssues, (newValue, oldValue) => {
@@ -1886,11 +2628,21 @@ export default defineComponent({
       centerDialogVisible,
       cssStyleButton,
       loadingSales,
+      currentCategory,
+      currentBusinessPartner,
+      currentProject,
+      currentGroup,
+      currentTask,
       // list
       listSalesReps,
       listIssuesTypes,
       listStatuses,
       listPriority,
+      listBusinessPartner,
+      listCategory,
+      listProject,
+      listGroup,
+      listTaskStatus,
       // Computed
       isNewIssues,
       isDisabledSave,
@@ -1908,6 +2660,8 @@ export default defineComponent({
       isMobile,
       userId,
       // Methodos
+      findTaskStatus,
+      remoteMethodTaskStatus,
       validateUser,
       findSalesReps,
       newIssues,
@@ -1942,6 +2696,21 @@ export default defineComponent({
       zoomIssues,
       avatarResize,
       remoteMethodSales,
+      //
+      findBusinessPartner,
+      remoteMethodBusinessPartner,
+      updateIssuesBusinessPartner,
+      findCategory,
+      remoteMethodCategory,
+      findProject,
+      remoteMethodProject,
+      findGroup,
+      remoteMethodGroup,
+      updateIssuesTaskStatus,
+      updateIssuesCategory,
+      updateIssuesProyect,
+      updateIssuesGroup,
+      //
       markdownContent
     }
   }
