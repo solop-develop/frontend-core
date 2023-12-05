@@ -79,7 +79,7 @@
                   :status="logsUser.processLog.isError"
                 />
                 <windows-logs
-                  v-else
+                  v-else-if="logsUser.userActivityType === 'ENTITY_LOG'"
                   :list-change-logs="logsUser.entityLog.changeLogs"
                   :entity-logs="logsUser.entityLog"
                 />
@@ -110,7 +110,8 @@ import {
 } from '@vue/composition-api'
 
 export default defineComponent({
-  name: 'UserLog',
+  name: 'UserActivity',
+
   components: {
     WindowsLogs,
     ProcessLogs
