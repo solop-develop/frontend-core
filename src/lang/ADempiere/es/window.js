@@ -61,6 +61,9 @@ const window = {
       tab: 'Pestaña',
       tableName: 'Nombre de la Tabla'
     },
+    notices: {
+      user: 'Usurio'
+    },
     referenceRecords: 'Documentos Relacionados'
   },
   documentStatus: 'Estatus del Documento',

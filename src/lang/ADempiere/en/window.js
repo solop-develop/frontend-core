@@ -61,6 +61,9 @@ const window = {
       tab: 'Tab',
       tableName: 'Table Name'
     },
+    notices: {
+      user: 'User'
+    },
     referenceRecords: 'Document Reference'
   },
   documentStatus: 'Document Status',

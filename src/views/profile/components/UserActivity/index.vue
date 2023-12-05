@@ -83,6 +83,75 @@
                   :list-change-logs="logsUser.entityLog.changeLogs"
                   :entity-logs="logsUser.entityLog"
                 />
+                <el-descriptions
+                  v-else-if="logsUser.userActivityType === 'NOTICE'"
+                  direction="horizontal"
+                  :column="1"
+                  border
+                >
+                  <el-descriptions-item>
+                    <template slot="label">
+                      <svg-icon
+                        icon-class="user"
+                        class="icon-window"
+                        style="font-size: 16px;"
+                      />
+                      {{ $t('window.containerInfo.notices.user') }}
+                    </template>
+                    <el-tag class="action-tag">
+                      <svg-icon
+                        icon-class="user"
+                        class="icon-window"
+                        style="font-size: 16px;"
+                      />
+                      {{ logsUser.notice.user.name }}
+                    </el-tag>
+                  </el-descriptions-item>
+                  <el-descriptions-item label="Username">
+                    <template slot="label">
+                      <svg-icon
+                        icon-class="calendar"
+                        class="icon-window"
+                        style="font-size: 16px;"
+                      />
+                      {{ $t('window.containerInfo.log.created') }}
+                    </template>
+                    {{ translateDate( {value: logsUser.notice.created, format: 'long' }) }}
+                  </el-descriptions-item>
+                  <el-descriptions-item
+                    :label="$t('page.processActivity.logs')"
+                    label-style="{ color: #606266; font-weight: bold; }"
+                  >
+                    {{ logsUser.notice.text_message }}
+                  </el-descriptions-item>
+                  <el-descriptions-item
+                    label="Referencia"
+                    label-style="{ color: #606266; font-weight: bold; }"
+                  >
+                    {{ logsUser.notice.reference }}
+                  </el-descriptions-item>
+                  <el-descriptions-item
+                    :label="$t('window.containerInfo.log.recordID')"
+                    label-style="{ color: #606266; font-weight: bold; }"
+                  >
+                    <span style="color: #606266; font-weight: bold;">
+                      {{ logsUser.notice.record_id }}
+                    </span>
+                  </el-descriptions-item>
+                  <el-descriptions-item>
+                    <template slot="label">
+                      <svg-icon
+                        icon-class="table"
+                        class="icon-window"
+                        style="font-size: 16px;"
+                      />
+                      {{ $t('window.containerInfo.log.tableName') }}
+                    </template>
+                    <span style="color: #606266; font-weight: bold;">
+                      {{ logsUser.notice.table_name }}
+                    </span>
+                  </el-descriptions-item>
+                </el-descriptions>
               </div>
             </el-collapse-transition>
           </el-card>
@@ -101,6 +170,7 @@ import WindowsLogs from '@/views/profile/components/UserActivity/WindowsLogs.vue
 import ProcessLogs from '@/views/profile/components/UserActivity/ProcessLogs.vue'
 
 // Utils and Helper Methods
+import { translateDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import { translateDateByLong } from '@/utils/ADempiere/formatValue/dateFormat'
 
 import {
@@ -212,6 +282,9 @@ export default defineComponent({
         case 'ENTITY_LOG':
           svg = 'tab'
           break
+        case 'NOTICE':
+          svg = 'notifications'
+          break
         case 'PROCESS_LOG':
           if (processLog.output) {
             svg = 'skill'
@@ -229,6 +302,9 @@ export default defineComponent({
       switch (userActivityType) {
         case 'ENTITY_LOG':
           type = lang.t('views.window')
+          break
+        case 'NOTICE':
+          type = lang.t('profile.notice')
           break
         case 'PROCESS_LOG':
           if (processLog.output) {
@@ -251,7 +327,12 @@ export default defineComponent({
     }
 
     function nameLogs(log) {
-      const { userActivityType, processLog, entityLog } = log
+      const {
+        userActivityType,
+        processLog,
+        entityLog,
+        notice
+      } = log
       let name
       switch (userActivityType) {
         case 'ENTITY_LOG':
@@ -259,6 +340,9 @@ export default defineComponent({
           break
         case 'PROCESS_LOG':
           name = processLog.name
+          break
+        case 'NOTICE':
+          name = notice.message
           break
       }
       return name
@@ -297,7 +381,8 @@ export default defineComponent({
       setUserLogs,
       iconTypelogs,
       logTimesTamp,
-      colorTypeLogs
+      colorTypeLogs,
+      translateDate
     }
   }
 })
