@@ -28,6 +28,7 @@ import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/references.js'
 export function requestGetEntities({
   tabId,
   filters,
+  referenceUuid,
   pageToken,
   searchValue,
   contextAttributes,
@@ -38,6 +39,7 @@ export function requestGetEntities({
     method: 'get',
     params: {
       filters,
+      record_reference_uuid: referenceUuid,
       search_value: searchValue,
       context_attributes: contextAttributes,
       page_token: pageToken,
