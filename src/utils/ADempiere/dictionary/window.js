@@ -1524,7 +1524,7 @@ export const containerManager = {
   },
 
   actionPerformed: ({ field, columnName, value }) => {
-    return store.dispatch('actionPerformed', {
+    return store.dispatch('windowActionPerformed', {
       field,
       columnName,
       value
