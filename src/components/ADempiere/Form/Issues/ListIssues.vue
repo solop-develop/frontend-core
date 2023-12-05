@@ -42,62 +42,276 @@
           />
         </el-button>
       </div>
-      <!-- <el-card
-        v-if="isEdit"
-        shadow="never"
-        class="list-card-issues-filter"
-        :body-style="{ padding: '10px', marginBottom: '10px' }"
-      >
-        <el-row :gutter="20">
-          <el-form label-position="top" class="form-min-label">
-            <el-col :span="8">
-              <el-form-item :label="$t('issues.typeOfRequest')" style="margin: 0px;width: 100%;">
-                <el-select
-                  v-model="requestTypes"
-                  filterable
-                  clearable
-                  :placeholder="$t('issues.typeOfRequest')"
-                  style="width: 100%;"
-                  @visible-change="findRequestTypes"
-                >
-                  <el-option
-                    v-for="item in listIssuesTypes"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id"
-                  />
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item :label="$t('issues.priority')" style="margin: 0px;width: 100%;">
-                <el-select
-                  v-model="currentPriority"
-                  filterable
-                  clearable
-                  :placeholder="$t('issues.priority')"
-                  style="width: 100%;"
-                  @visible-change="findPriority"
-                >
-                  <el-option
-                    v-for="item in listPriority"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id"
-                  />
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-form>
-        </el-row>
-      </el-card> -->
       <div v-if="!isEdit" class="table-list-request" :style="isEdit ? 'max-height: 78vh;' : 'max-height: 85vh;'">
         <el-empty v-if="isEmptyValue(listIssues)" />
-        <el-table
+        <span
+          v-else
+        >
+          <el-row
+            v-for="(data, index) in listIssues"
+            :key="index"
+            :gutter="20"
+          >
+            <el-col
+              :span="1"
+              style="padding-right: 0px;"
+            >
+              <el-popover
+                placement="top-start"
+                trigger="hover"
+              >
+                <b>
+                  {{ $t('issues.expirationType') }}
+                </b>
+                <el-tag :style="{ color: dueTypeColor(data), margin: '0px' }">
+                  {{ data.due_type.name }}
+                </el-tag>
+                <b slot="reference" style="font-size: 30px;padding-top: 10px;padding-left: 5px;padding-right: 5px;">
+                  <svg-icon
+                    icon-class="issues"
+                    :style="{ color: dueTypeColor(data), margin: '20px 0px 0px 0px' }"
+                  />
+                </b>
+              </el-popover>
+            </el-col>
+            <el-col
+              :span="7"
+              style="padding: 0px;"
+            >
+              <b>
+                <el-popover
+                  placement="top-start"
+                  trigger="hover"
+                  width="650"
+                >
+                  <el-descriptions :column="2">
+                    <template slot="title">
+                      <b>
+                        <svg-icon icon-class="guide" />
+                        {{ data.subject }}
+                      </b>
+                    </template>
+                    <template slot="extra">
+                      <b>
+                        {{ '#' }}
+                        {{ data.document_no }}
+                      </b>
+                    </template>
+                    <el-descriptions-item :span="4">
+                      <template slot="label">
+                        <b>
+                          {{ $t('issues.summary') }}
+                        </b>
+                      </template>
+                      <el-scrollbar wrap-class="scroll-previwer-disable" style="width: 100%; overflow: hidden;">
+                        <v-md-preview :text="data.summary" class="previwer-disable" style="padding: 0px" height="150px" />
+                      </el-scrollbar>
+                    </el-descriptions-item>
+                    <el-descriptions-item :span="4">
+                      <template slot="label">
+                        <b>
+                          {{ $t('issues.created') }}
+                        </b>
+                      </template>
+                      {{ data.user_name }}
+                    </el-descriptions-item>
+                    <el-descriptions-item style="float: right;">
+                      <template slot="label">
+                        <b style="padding-top: 10px !important;">
+                          {{ $t('issues.priority') }}
+                        </b>
+                      </template>
+                      <el-button type="primary" size="medium" plain style="float: right;margin-right: 10px;">
+                        <svg-icon icon-class="collections" />
+                        {{ data.priority.name }}
+                      </el-button>
+                    </el-descriptions-item>
+                    <el-descriptions-item>
+                      <template slot="label">
+                        <b style="padding-top: 10px !important;">
+                          {{ $t('issues.typeOfRequest') }}
+                        </b>
+                      </template>
+                      <el-button size="medium" plain type="info" style="float: right;margin-right: 10px;">
+                        <svg-icon icon-class="label" />
+                        {{ data.request_type.name }}
+                      </el-button>
+                    </el-descriptions-item>
+                    <el-descriptions-item>
+                      <template slot="label">
+                        <b style="padding-top: 5px !important;">
+                          {{ $t('issues.assigned') }}
+                        </b>
+                      </template>
+                      <el-avatar
+                        v-if="isEmptyValue(data.sales_representative.avatar)"
+                        icon="el-icon-user-solid"
+                        size="small"
+                        style="margin-left: 10px;"
+                      />
+                      <el-image
+                        v-else
+                        :src="avatarResize(data.sales_representative)"
+                        fit="contain"
+                        style="
+                          width: 20px;
+                          height: 20px;
+                          border-radius: 50%;
+                          display: inline-block;
+                          position: relative;
+                          cursor: default;
+                          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+                        "
+                      />
+                      {{ data.sales_representative.name }}
+                    </el-descriptions-item>
+                    <el-descriptions-item>
+                      <template slot="label">
+                        <b>
+                          {{ $t('issues.expirationType') }}
+                        </b>
+                      </template>
+                      <el-tag :style="{ color: dueTypeColor(data), margin: '0px' }">
+                        {{ data.due_type.name }}
+                      </el-tag>
+                    </el-descriptions-item>
+                    <el-descriptions-item :span="4" style="float: right;">
+                      <template slot="label">
+                        <b>
+                          <svg-icon icon-class="calendar" style="font-size: 18px;" />
+                          {{ $t('issues.nextActionDate') }}
+                        </b>
+                      </template>
+                      <span v-if="!isEmptyValue(data.dateNextAction)">
+                        {{ formatDate({
+                          value: data.dateNextAction
+                        }) }}
+                      </span>
+                    </el-descriptions-item>
+                  </el-descriptions>
+                  <el-button
+                    slot="reference"
+                    style="color: black;padding: 0px;"
+                    type="text"
+                    @click="selectIssue(data)"
+                  >
+                    <p style="margin: 0px;font-size: 16px;text-align: left;margin-top: 5px;margin-bottom: 5px;">
+                      {{ '#' + data.document_no + '  ' + data.subject }}
+                    </p>
+                    <p style="margin: 0px;text-align: initial;">
+                      <span
+                        v-if="!isEmptyValue(data.project.name)"
+                        effect="plain"
+                      >
+                        <i style="font-size: 12px;color: #82848a;">
+                          <b
+                            style="font-weight: bolder;"
+                          >
+                            <svg-icon
+                              icon-class="project"
+                              style="font-weight: bolder;"
+                            />
+                            {{ $t('issues.project') }}:
+                          </b>
+                          {{ data.project.name }}
+                        </i>
+                      </span>
+                      <span
+                        v-if="!isEmptyValue(data.business_partner.name)"
+                        effect="plain"
+                      >
+                        <i style="font-size: 12px;color: #82848a;">
+                          <b>
+                            <svg-icon icon-class="user" />
+                            {{ $t('window.containerInfo.notices.user') }} :
+                          </b>
+                          {{ data.business_partner.name }}
+                        </i>
+                      </span>
+                    </p>
+                  </el-button>
+                </el-popover>
+              </b>
+            </el-col>
+            <el-col
+              :span="4"
+              style="padding: 0px;"
+            >
+              <progress-percentage
+                :value="data.task_status.value"
+                :displayed-value="data.task_status.name"
+              />
+            </el-col>
+            <el-col
+              :span="12"
+              style="padding: 0px;"
+            >
+              <el-button
+                type="primary"
+                size="mini"
+                icon="el-icon-zoom-in"
+                :alt="$t('page.processActivity.zoomIn')"
+                plain
+                style="float: right; margin-right: 5px; margin-left: 0px;margin-top: 5px;"
+                class="button-base-icon"
+                @click="zoomIssues(data)"
+              />
+
+              <el-popover
+                ref="timeRecord"
+                placement="left"
+                :title="$t('form.timeRecord.timeRecord') + ' (' + data.id + ')'"
+                trigger="click"
+                width="450"
+              >
+                <record-time
+                  :issue-id="data.id"
+                />
+                <el-button
+                  slot="reference"
+                  type="primary"
+                  size="mini"
+                  plain
+                  class="button-base-icon"
+                  style="float: right; margin-right: 5px; margin-left: 0px;margin-top: 5px;"
+                  :alt="$t('form.timeRecord.timeRecord')"
+                >
+                  <i class="el-icon-time" />
+                </el-button>
+              </el-popover>
+
+              <el-button type="primary" size="mini" plain style="float: right;margin-right: 10px;">
+                <b>
+                  <svg-icon icon-class="collections" style="font-size: 20px;" />
+                  {{ $t('issues.priority') + ': ' }}
+                </b>
+                {{ data.priority.name }}
+              </el-button>
+              <el-button size="mini" type="info" plain style="float: right;margin-right: 10px;">
+                <b>
+                  <svg-icon icon-class="label" style="font-size: 20px;" />
+                  {{ $t('issues.taskStatus') + ': ' }}
+                </b>
+                {{ data.status.name }}
+              </el-button>
+              <el-button size="mini" plain style="float: right;margin-right: 10px;">
+                <b>
+                  <svg-icon icon-class="calendar" style="font-size: 20px;" />
+                  {{ $t('issues.nextActionDate') + ': ' }}
+                </b>
+                <span v-if="!isEmptyValue(data.dateNextAction)">
+                  {{ formatDate({
+                    value: data.dateNextAction
+                  }) }}
+                </span>
+              </el-button>
+            </el-col>
+          </el-row>
+        </span>
+        <!-- <el-table
           v-else
           :data="listIssues"
         >
-          <!-- @row-click="selectIssue" -->
           <el-table-column style="display: flex;" :label="$t('issues.allRequest')">
             <template slot-scope="scope">
               <el-popover
@@ -309,11 +523,11 @@
               </div>
             </template>
           </el-table-column>
-        </el-table>
+        </el-table> -->
       </div>
       <div
         v-else
-        style="overflow: auto;height: 85vh;"
+        style="overflow: auto;"
       >
         <el-card
           shadow="never"
@@ -365,7 +579,7 @@
                   </el-popover>
                 </el-col>
                 <el-col
-                  :span="11"
+                  :span="7"
                   style="padding: 0px;"
                 >
                   <b>
@@ -489,21 +703,48 @@
                           {{ '#' + data.document_no + '  ' + data.subject }}
                         </p>
                         <p style="margin: 0px;text-align: initial;">
-                          <i style="font-size: 12px;color: #82848a;">
-                            <b>
-                              <svg-icon icon-class="calendar" style="font-size: 15px;" />
-                              {{ $t('issues.nextActionDate') + ': ' }}
-                            </b>
-                            <span v-if="!isEmptyValue(data.dateNextAction)">
-                              {{ formatDate({
-                                value: data.dateNextAction
-                              }) }}
-                            </span>
-                          </i>
+                          <span
+                            v-if="!isEmptyValue(data.project.name)"
+                            effect="plain"
+                          >
+                            <i style="font-size: 12px;color: #82848a;">
+                              <b
+                                style="font-weight: bolder;"
+                              >
+                                <svg-icon
+                                  icon-class="project"
+                                  style="font-weight: bolder;"
+                                />
+                                {{ $t('issues.project') }}:
+                              </b>
+                              {{ data.project.name }}
+                            </i>
+                          </span>
+                          <span
+                            v-if="!isEmptyValue(data.business_partner.name)"
+                            effect="plain"
+                          >
+                            <i style="font-size: 12px;color: #82848a;">
+                              <b>
+                                <svg-icon icon-class="user" />
+                                {{ $t('window.containerInfo.notices.user') }} :
+                              </b>
+                              {{ data.business_partner.name }}
+                            </i>
+                          </span>
                         </p>
                       </el-button>
                     </el-popover>
                   </b>
+                </el-col>
+                <el-col
+                  :span="4"
+                  style="padding: 0px;"
+                >
+                  <progress-percentage
+                    :value="data.task_status.value"
+                    :displayed-value="data.task_status.name"
+                  />
                 </el-col>
                 <el-col
                   :span="12"
@@ -553,9 +794,20 @@
                   <el-button size="mini" type="info" plain style="float: right;margin-right: 10px;">
                     <b>
                       <svg-icon icon-class="label" style="font-size: 20px;" />
-                      {{ $t('issues.typeOfRequest') + ': ' }}
+                      {{ $t('issues.taskStatus') + ': ' }}
                     </b>
-                    {{ data.request_type.name }}
+                    {{ data.status.name }}
+                  </el-button>
+                  <el-button size="mini" plain style="float: right;margin-right: 10px;">
+                    <b>
+                      <svg-icon icon-class="calendar" style="font-size: 20px;" />
+                      {{ $t('issues.nextActionDate') + ': ' }}
+                    </b>
+                    <span v-if="!isEmptyValue(data.dateNextAction)">
+                      {{ formatDate({
+                        value: data.dateNextAction
+                      }) }}
+                    </span>
                   </el-button>
                 </el-col>
               </el-row>
@@ -576,12 +828,12 @@ import store from '@/store'
 // Components and Mixins
 import Comment from './component/Comment.vue'
 import RecordTime from './recordTime.vue'
-
+import ProgressPercentage from '@/components/ADempiere/ContainerOptions/ProgressPercentage.vue'
 // Constants
 import { REQUEST_WINDOW_UUID } from '@/utils/ADempiere/dictionary/form/Issues.js'
 
 // Utils and Helper Methods
-import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
+import { formatDate, translateDateByLong } from '@/utils/ADempiere/formatValue/dateFormat'
 import { getImagePath } from '@/utils/ADempiere/resource.js'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
@@ -598,7 +850,8 @@ export default defineComponent({
   components: {
     // Editor
     Comment,
-    RecordTime
+    RecordTime,
+    ProgressPercentage
   },
 
   props: {
@@ -747,6 +1000,10 @@ export default defineComponent({
 
     loadIssues()
 
+    function percentageFormat(display) {
+      return display
+    }
+
     return {
       isEdit,
       message,
@@ -773,7 +1030,9 @@ export default defineComponent({
       newIssues,
       loadIssues,
       zoomIssues,
-      filterData
+      filterData,
+      percentageFormat,
+      translateDateByLong
     }
   }
 })

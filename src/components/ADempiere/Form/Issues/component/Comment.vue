@@ -1110,15 +1110,15 @@
                       </el-select>
                     </el-form-item>
                     <el-form-item :label="$t('issues.nextDate')" style="margin: 0px;">
-                      {{ currentIssues.dateNextAction }}
-                      <!-- <el-date-picker
+                      <!-- {{ currentIssues.dateNextAction }} -->
+                      <el-date-picker
                         v-model="currentIssues.dateNextAction"
                         type="datetime"
                         format="dd-MM-yyyy HH:mm:ss"
                         placeholder="Proxima Fecha"
                         style="display: contents"
                         @change="updateIssuesDateNextAction"
-                      /> -->
+                      />
                     </el-form-item>
                   </el-col>
                   <el-col :span="12">

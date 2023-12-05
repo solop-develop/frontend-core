@@ -62,7 +62,7 @@ const window = {
       tableName: 'Nombre de la Tabla'
     },
     notices: {
-      user: 'Usurio'
+      user: 'Usuario'
     },
     referenceRecords: 'Documentos Relacionados'
   },
