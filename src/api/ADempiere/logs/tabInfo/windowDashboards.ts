@@ -19,19 +19,62 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
+import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
+
 /**
  * Exists Window Dashboards
  */
-
-export function existsCharts({
+export function requestExistsWindowDashboards({
   tabId,
   windowId
 }) {
   return request({
-    url: `/dashboard/exists-window-dashboards/${windowId}`,
+    url: `/dashboard/dashboards/windows/${windowId}/exists`,
     method: 'get',
     params: {
       tab_id: tabId
     }
   })
+}
+
+export function requestListWindowDashboards({
+  tabId,
+  windowId,
+  pageSize,
+  pageToken
+}) {
+  return request({
+    url: `/dashboard/dashboards/windows/${windowId}`,
+    method: 'get',
+    params: {
+      tab_id: tabId,
+      //  DSL Query
+      page_size: pageSize,
+      page_token: pageToken
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
+export function requestGetWindowMetrics({
+  id,
+  tableName,
+  recordId,
+  contextAttributes,
+  filters
+}) {
+  return request({
+    url: `/dashboard/dashboards/windows/metrics/${id}/${tableName}/${recordId}`,
+    method: 'get',
+    params: {
+      //  DSL Query
+      context_attributes: contextAttributes,
+      filters
+    }
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
 }

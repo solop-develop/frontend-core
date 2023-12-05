@@ -16,21 +16,16 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// import lang from '@/lang'
 import Vue from 'vue'
 
 // API Request Methods
 import {
-  ListWindowCharts,
-  getWindowMetrics
-} from '@/api/ADempiere/dashboard/panelWindows.js'
-
-import {
-  existsCharts
+  requestExistsWindowDashboards,
+  requestListWindowDashboards,
+  requestGetWindowMetrics
 } from '@/api/ADempiere/logs/tabInfo/windowDashboards.ts'
 
 // Utils and Helper Methods
-// import { showMessage } from '@/utils/ADempiere/notification.js'
 import { isEmptyValue } from '@/utils/ADempiere'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 
@@ -63,8 +58,9 @@ export default {
       Vue.set(state.dashboardTab, tabId, num)
     }
   },
+
   actions: {
-    isDashboard({ commit, state }, {
+    isWindowDashboard({ commit, state }, {
       tabId,
       windowId
     }) {
@@ -75,18 +71,19 @@ export default {
           resolve(num)
           return num
         }
-        existsCharts({
+        requestExistsWindowDashboards({
           tabId,
           windowId
         })
           .then(response => {
+            const recordCount = response.record_count
             const dashboard = {
               tabId,
-              num: response
+              num: recordCount
             }
             commit('setExistsDashboardTab', dashboard)
-            commit('setNumberDashboard', response)
-            resolve(response)
+            commit('setNumberDashboard', recordCount)
+            resolve(recordCount)
           })
           .catch(error => {
             resolve(0)
@@ -98,17 +95,15 @@ export default {
     listWindowDashboard({ commit, getters }, {
       tabId,
       windowId,
-      recordId,
+      //
       tableName,
+      recordId,
       recordUuid
     }) {
       return new Promise(resolve => {
-        ListWindowCharts({
+        requestListWindowDashboards({
           tabId,
-          windowId,
-          id: recordId,
-          tableName,
-          recordUuid
+          windowId
         })
           .then(response => {
             const { records } = response
@@ -151,21 +146,17 @@ export default {
     },
     metrics({ commit }, {
       id,
-      uuid,
       filters,
       recordId,
       tableName,
-      recordUuid,
       contextAttributes
     }) {
       return new Promise(resolve => {
-        getWindowMetrics({
+        requestGetWindowMetrics({
           id,
-          uuid,
-          filters,
           recordId,
           tableName,
-          recordUuid,
+          filters,
           contextAttributes
         })
           .then(response => {
@@ -178,6 +169,7 @@ export default {
       })
     }
   },
+
   getters: {
     getListDashboard(state) {
       return state.listDashboard
