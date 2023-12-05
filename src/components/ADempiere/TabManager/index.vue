@@ -825,7 +825,7 @@ export default defineComponent({
         (isEmptyValue(currentTab))) {
         return
       }
-      store.dispatch('isDashboard', {
+      store.dispatch('isWindowDashboard', {
         tabId: currentTab.id,
         windowId: storedWindow.id
       })

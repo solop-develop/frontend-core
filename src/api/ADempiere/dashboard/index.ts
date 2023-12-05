@@ -58,7 +58,7 @@ export function getMetricRequest({
   id
 }) {
   return request({
-    url: `/dashboard/metrics/${id}`,
+    url: `/dashboard/dashboards/${id}/metrics`,
     method: 'get'
   })
     .then(chart => {
