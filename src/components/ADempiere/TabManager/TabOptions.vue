@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Elsio Sanchez elsiosanches@gmail.com www.erpya.com https://github.com/elsiosanchez
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com www.erpya.com https://github.com/elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -44,7 +44,7 @@
 
     <convenience-buttons
       :parent-uuid="parentUuid"
-      :container-uuid="currentTabUuid"
+      :container-uuid="tabAttributes.uuid"
       :container-manager="containerManager"
       :tab-attributes="tabAttributes"
       style="display: contents;"
@@ -58,7 +58,7 @@
 
     <action-menu
       :parent-uuid="parentUuid"
-      :container-uuid="$store.getters.getContainerInfo.currentTab.containerUuid"
+      :container-uuid="tabAttributes.uuid"
       :container-manager="containerManager"
       :actions-manager="listAction"
       style="float: right;"
@@ -71,12 +71,12 @@
     >
       <span slot="title">
         <span style="color: #606266; font-weight: bold;">
-          {{ $t('actionMenu.menu') }} {{ $store.getters.getContainerInfo.currentTab.name }}
+          {{ $t('actionMenu.menu') }} {{ tabAttributes.name }}
         </span>
       </span>
       <menu-mobile
         :parent-uuid="parentUuid"
-        :container-uuid="$store.getters.getContainerInfo.currentTab.containerUuid"
+        :container-uuid="tabAttributes.containerUuid"
         :container-manager="containerManager"
         :actions-manager="listAction"
       />
@@ -141,7 +141,7 @@ export default defineComponent({
 
   setup(props) {
     const listAction = computed(() => {
-      const tab = store.getters.getContainerInfo.currentTab
+      const tab = props.tabAttributes
       return {
         parentUuid: props.parentUuid,
         containerUuid: isEmptyValue(tab) ? props.tabAttributes.uuid : tab.containerUuid,

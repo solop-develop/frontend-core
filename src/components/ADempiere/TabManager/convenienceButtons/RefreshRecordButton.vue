@@ -65,20 +65,15 @@ export default defineComponent({
       return store.getters.getUuidOfContainer(props.containerUuid)
     })
 
-    const recordId = computed(() => {
-      return store.getters.getIdOfContainer({
-        containerUuid: currentTab.value.containerUuid,
-        tableName: currentTab.value.tableName
-      })
-    })
-
     const tabAttributes = computed(() => {
       return store.getters.getStoredTab(props.parentUuid, props.containerUuid)
     })
 
-    const currentTab = computed(() => {
-      const { currentTab } = store.getters.getContainerInfo
-      return currentTab
+    const recordId = computed(() => {
+      return store.getters.getIdOfContainer({
+        containerUuid: tabAttributes.value.containerUuid,
+        tableName: tabAttributes.value.tableName
+      })
     })
 
     const isExistsChanges = computed(() => {
@@ -114,7 +109,7 @@ export default defineComponent({
       refreshRecord.refreshRecord({
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid,
-        tabId: currentTab.value.id,
+        tabId: tabAttributes.value.id,
         recordId: recordId.value
       })
     }
@@ -122,8 +117,8 @@ export default defineComponent({
     return {
       isMobile,
       recordId,
-      currentTab,
       isRefreshRecord,
+      tabAttributes,
       // Methods
       refreshCurrentRecord
     }
