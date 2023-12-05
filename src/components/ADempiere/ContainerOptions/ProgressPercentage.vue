@@ -24,6 +24,7 @@
     status="success"
     :format="percentageFormat"
     :percentage="percentageValue"
+    :text-color="'#FFFFFF'"
   />
 </template>
 
@@ -43,6 +44,10 @@ export default defineComponent({
     },
     displayedValue: {
       type: [String, Number],
+      default: ''
+    },
+    textColor: {
+      type: String,
       default: ''
     }
   },
