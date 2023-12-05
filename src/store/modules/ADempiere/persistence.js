@@ -23,7 +23,9 @@ import language from '@/lang'
 // Constants
 import { LOG_COLUMNS_NAME_LIST, UUID } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
-import { DISPLAY_COLUMN_PREFIX, IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
+import {
+  DISPLAY_COLUMN_PREFIX, IDENTIFIER_COLUMN_SUFFIX, IS_ADVANCED_QUERY
+} from '@/utils/ADempiere/dictionaryUtils'
 import { BUTTON, IMAGE } from '@/utils/ADempiere/references'
 
 // API Request Methods
@@ -112,7 +114,7 @@ const persistence = {
   },
 
   actions: {
-    actionPerformed({ commit, getters, rootState, dispatch }, {
+    windowActionPerformed({ commit, getters, rootState, dispatch }, {
       field,
       columnName,
       recordUuid,
@@ -176,15 +178,17 @@ const persistence = {
         })
 
         // start callout on server
-        dispatch('startCallout', {
-          parentUuid,
-          containerUuid,
-          field,
-          callout: field.callout,
-          columnName,
-          value,
-          oldValue
-        })
+        if (!containerUuid.endsWith(IS_ADVANCED_QUERY)) {
+          dispatch('startCallout', {
+            parentUuid,
+            containerUuid,
+            field,
+            callout: field.callout,
+            columnName,
+            value,
+            oldValue
+          })
+        }
 
         const isAutosave = rootState.settings.autoSave
         if (isAutosave) {
