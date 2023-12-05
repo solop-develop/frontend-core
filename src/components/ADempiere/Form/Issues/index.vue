@@ -18,7 +18,7 @@
 
 <template>
   <el-container :style="isNewIssues ? 'height: 90vh;padding: 0px;display: contents' : 'height: 90vh;padding: 0px;'">
-    <el-main style="padding: 0px;">
+    <el-main style="padding: 0px;overflow: hidden;">
       <list-issues v-if="!isNewIssues" />
     </el-main>
     <el-footer v-if="isNewIssues" height="20%">
