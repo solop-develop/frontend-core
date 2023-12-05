@@ -124,7 +124,8 @@ export default defineComponent({
         attributeName: 'containerKey',
         query: {
           tabParent,
-          recordId: referenceElement.value
+          // recordId: referenceElement.value
+          referenceUuid: referenceElement.uuid
           // action: 'criteria'
         }
       })
