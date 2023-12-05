@@ -97,7 +97,7 @@ const defaultValueManager = {
           return
         }
 
-        let contextAttributesList = getContextAttributes({
+        const contextAttributesList = getContextAttributes({
           parentUuid,
           containerUuid,
           contextColumnNames,
@@ -146,7 +146,7 @@ const defaultValueManager = {
 
         let contextAttributes
         if (!isEmptyValue(contextAttributesList)) {
-          contextAttributesList = JSON.stringify(contextAttributesList)
+          contextAttributes = JSON.stringify(contextAttributesList)
         }
 
         requestDefaultValue({
@@ -168,10 +168,12 @@ const defaultValueManager = {
             //   UUID: undefined
             // }
 
+            let valueOfServer = values.KeyColumn
             // do not use the convertArrayKeyValueToObject method to avoid losing a key with an empty value
-            // if (valueResponse.attributes.length === 1) {
-            //   // number values (Line for example)
-            //   values.KeyColumn = valueResponse.attributes.at(0).value
+            if (isEmptyValue(valueOfServer) && Object.keys(values).length === 1) {
+              // number values (`Line` for example)
+              valueOfServer = values[columnName]
+            }
             // } else {
             //   valueResponse.attributes.forEach(attribute => {
             //     const { key: column, value: attributeValue } = attribute
@@ -179,15 +181,14 @@ const defaultValueManager = {
             //   })
             // }
 
-            const valueOfServer = values.KeyColumn
-            const displayedValue = values.DisplayColumn
+            const displayValue = values.DisplayColumn
 
             commit('setDefaultValue', {
               key,
               clientId,
               contextAttributesList,
               id,
-              displayedValue,
+              displayedValue: displayValue,
               // set value of server to parsed if is number as string "101" -> 101
               value: valueOfServer,
               uuid: values.UUID
@@ -199,12 +200,12 @@ const defaultValueManager = {
               columnName,
               value: valueOfServer
             })
-            if (!isEmptyValue(values.DisplayColumn)) {
+            if (!isEmptyValue(displayValue)) {
               commit('updateValueOfField', {
                 parentUuid,
                 containerUuid,
                 columnName: DISPLAY_COLUMN_PREFIX + columnName,
-                value: displayedValue
+                value: displayValue
               })
             }
             if (!isEmptyValue(values.UUID)) {
@@ -217,7 +218,7 @@ const defaultValueManager = {
             }
 
             resolve({
-              displayedValue,
+              displayedValue: displayValue,
               value: valueOfServer,
               uuid: values.UUID
             })
