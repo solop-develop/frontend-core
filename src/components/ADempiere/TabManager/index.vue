@@ -540,11 +540,17 @@ export default defineComponent({
           value: query.action
         }
       }
+
+      const { keyColumn } = store.getters.getStoredTab(props.parentUuid, containerUuid)
       if (!isEmptyValue(query.recordId)) {
-        const storedTab = store.getters.getStoredTab(props.parentUuid, containerUuid)
         filtersRecord = {
-          columnName: storedTab.keyColumn,
+          columnName: keyColumn,
           value: Number(query.recordId)
+        }
+      } else if (!isEmptyValue(query[keyColumn])) {
+        filtersRecord = {
+          columnName: keyColumn,
+          value: Number(query[keyColumn])
         }
       }
       if (!isEmptyValue(routerParams.filters)) {

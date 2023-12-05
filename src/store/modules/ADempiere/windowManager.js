@@ -380,12 +380,16 @@ const windowManager = {
         // }
 
         if (!isEmptyValue(filtersRecord) && isEmptyValue(filters)) {
-          filters.map(list => {
-            const { columnName } = list
-            if (filtersRecord.columnName === columnName) {
-              return filtersRecord
-            }
-            return list
+          // filters.map(list => {
+          //   const { columnName } = list
+          //   if (filtersRecord.columnName === columnName) {
+          //     return filtersRecord
+          //   }
+          //   return list
+          // })
+          filters.push({
+            columnName: filtersRecord.columnName,
+            value: filtersRecord.value
           })
         }
 
@@ -432,7 +436,6 @@ const windowManager = {
         }
 
         let listFilters
-
         if (!isEmptyValue(filters)) {
           listFilters = '[' + filters.map(parameter => {
             const {
