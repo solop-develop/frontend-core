@@ -206,6 +206,8 @@ export default {
       endPointUploadResource: config.adempiere.api.url + 'user-interface/component/resource/save-attachment',
       additionalData: {},
       fileResource: {},
+      imageSourceSmall: '',
+      isLoadImage: false,
       valuesImage: [{
         identifier: 'undefined',
         value: '',
@@ -229,19 +231,21 @@ export default {
     isDownload() {
       return !isEmptyValue(this.displayedValue)
     },
-    imageSourceSmall() {
-      const displayedAlt = this.displayedValue
-      if (isEmptyValue(displayedAlt)) {
-        return undefined
-      }
-      const { uri } = getImagePath({
-        file: displayedAlt,
-        width: 200,
-        height: 200,
-        operation: 'resize'
-      })
-      return uri
-    },
+    // imageSourceSmall() {
+    //   const displayedAlt = this.displayedValue
+    //   if (isEmptyValue(displayedAlt)) {
+    //     return undefined
+    //   }
+    //   const uri = this.loadImage(displayedAlt)
+    //   // getImagePath({
+    //   //   file: displayedAlt,
+    //   //   width: 200,
+    //   //   height: 200,
+    //   //   operation: 'resize'
+    //   // })
+    //   console.log({ uri })
+    //   return uri
+    // },
     imageSourceLarge() {
       const displayedAlt = this.displayedValue
       if (isEmptyValue(displayedAlt)) {
@@ -267,8 +271,25 @@ export default {
       }
     }
   },
+  updated() {
+    if (!this.isEmptyValue(this.displayedValue) && isEmptyValue(this.imageSourceSmall) && !this.isLoadImage) {
+      this.loadImage(this.displayedValue)
+    }
+  },
 
   methods: {
+    async loadImage(file) {
+      this.isLoadImage = true
+      if (file) {
+        this.imageSourceSmall = await getImagePath({
+          file,
+          width: 50,
+          height: 50
+        })
+        this.isLoadImage = false
+      }
+      return ''
+    },
     isValidUploadHandler(file) {
       return new Promise((resolve, reject) => {
         if (this.isDisabled) {
