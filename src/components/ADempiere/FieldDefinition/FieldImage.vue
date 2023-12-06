@@ -207,6 +207,7 @@ export default {
       additionalData: {},
       fileResource: {},
       imageSourceSmall: '',
+      isLoadImage: false,
       valuesImage: [{
         identifier: 'undefined',
         value: '',
@@ -270,20 +271,22 @@ export default {
       }
     }
   },
-  mounted() {
-    if (!this.isEmptyValue(this.displayedValue)) {
+  updated() {
+    if (!this.isEmptyValue(this.displayedValue) && isEmptyValue(this.imageSourceSmall) && !this.isLoadImage) {
       this.loadImage(this.displayedValue)
     }
   },
 
   methods: {
     async loadImage(file) {
+      this.isLoadImage = true
       if (file) {
         this.imageSourceSmall = await getImagePath({
           file,
           width: 50,
           height: 50
         })
+        this.isLoadImage = false
       }
       return ''
     },
