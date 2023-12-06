@@ -86,11 +86,12 @@ export default defineComponent({
     async function loadImage() {
       const { client } = getRole.value
       if (client.logo) {
-        logo.value = await getImagePath({
+        const blobImage = await getImagePath({
           file: client.logo,
           width: 50,
           height: 50
         })
+        logo.value = blobImage.href
       }
     }
 

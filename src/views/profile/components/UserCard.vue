@@ -74,11 +74,12 @@ export default defineComponent({
     async function loadImage() {
       const { image } = userInfo.value
       if (image) {
-        avatarResize.value = await getImagePath({
+        const blobImage = await getImagePath({
           file: image,
           width: 200,
           height: 200
         })
+        avatarResize.value = blobImage.href
       }
     }
 

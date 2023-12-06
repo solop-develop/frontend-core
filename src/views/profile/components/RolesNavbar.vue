@@ -18,6 +18,12 @@
 
 <template>
   <el-form>
+    <label> <b> {{ $t('route.client') }} </b> </label>
+    <el-input
+      v-model="storedRole.client.name"
+      disabled
+    />
+
     <label> <b> {{ $t('route.role') }} </b> </label>
     <el-select
       v-model="currentRoleId"
@@ -31,12 +37,6 @@
         :value="role.id"
       />
     </el-select>
-
-    <label> <b> {{ $t('route.client') }} </b> </label>
-    <el-input
-      v-model="storedRole.client.name"
-      disabled
-    />
 
     <label> <b> {{ $t('route.organization') }} </b> </label>
     <el-select
