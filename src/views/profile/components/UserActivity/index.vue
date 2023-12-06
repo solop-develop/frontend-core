@@ -83,75 +83,10 @@
                   :list-change-logs="logsUser.entityLog.changeLogs"
                   :entity-logs="logsUser.entityLog"
                 />
-                <el-descriptions
+                <notices-logs
                   v-else-if="logsUser.userActivityType === 'NOTICE'"
-                  direction="horizontal"
-                  :column="1"
-                  border
-                >
-                  <el-descriptions-item>
-                    <template slot="label">
-                      <svg-icon
-                        icon-class="user"
-                        class="icon-window"
-                        style="font-size: 16px;"
-                      />
-                      {{ $t('window.containerInfo.notices.user') }}
-                    </template>
-                    <el-tag class="action-tag">
-                      <svg-icon
-                        icon-class="user"
-                        class="icon-window"
-                        style="font-size: 16px;"
-                      />
-                      {{ logsUser.notice.user.name }}
-                    </el-tag>
-                  </el-descriptions-item>
-                  <el-descriptions-item label="Username">
-                    <template slot="label">
-                      <svg-icon
-                        icon-class="calendar"
-                        class="icon-window"
-                        style="font-size: 16px;"
-                      />
-                      {{ $t('window.containerInfo.log.created') }}
-                    </template>
-                    {{ translateDate( {value: logsUser.notice.created, format: 'long' }) }}
-                  </el-descriptions-item>
-                  <el-descriptions-item
-                    :label="$t('page.processActivity.logs')"
-                    label-style="{ color: #606266; font-weight: bold; }"
-                  >
-                    {{ logsUser.notice.text_message }}
-                  </el-descriptions-item>
-                  <el-descriptions-item
-                    label="Referencia"
-                    label-style="{ color: #606266; font-weight: bold; }"
-                  >
-                    {{ logsUser.notice.reference }}
-                  </el-descriptions-item>
-                  <el-descriptions-item
-                    :label="$t('window.containerInfo.log.recordID')"
-                    label-style="{ color: #606266; font-weight: bold; }"
-                  >
-                    <span style="color: #606266; font-weight: bold;">
-                      {{ logsUser.notice.record_id }}
-                    </span>
-                  </el-descriptions-item>
-                  <el-descriptions-item>
-                    <template slot="label">
-                      <svg-icon
-                        icon-class="table"
-                        class="icon-window"
-                        style="font-size: 16px;"
-                      />
-                      {{ $t('window.containerInfo.log.tableName') }}
-                    </template>
-                    <span style="color: #606266; font-weight: bold;">
-                      {{ logsUser.notice.table_name }}
-                    </span>
-                  </el-descriptions-item>
-                </el-descriptions>
+                  :metadata="logsUser.notice"
+                />
               </div>
             </el-collapse-transition>
           </el-card>
@@ -168,6 +103,7 @@ import store from '@/store'
 // Components and Mixins
 import WindowsLogs from '@/views/profile/components/UserActivity/WindowsLogs.vue'
 import ProcessLogs from '@/views/profile/components/UserActivity/ProcessLogs.vue'
+import NoticesLogs from '@/components/ADempiere/Dashboard/notices/itemsNotices.vue'
 
 // Utils and Helper Methods
 import { translateDate } from '@/utils/ADempiere/formatValue/dateFormat'
@@ -184,7 +120,8 @@ export default defineComponent({
 
   components: {
     WindowsLogs,
-    ProcessLogs
+    ProcessLogs,
+    NoticesLogs
   },
   setup() {
     // Ref
