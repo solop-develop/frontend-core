@@ -91,19 +91,22 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error) // for debug
+    // console.log('err' + error) // for debug
     let message = error
-    if (error.response && error.response.data && isEmptyValue(error.response.data.message)) {
-      message = error
+    if (error.response && error.response.data && !isEmptyValue(error.response.data.message)) {
+      message = new Error(error.response.data.message)
     } else if (error.message) {
-      message = error.message
+      message = new Error(error.message)
+    } else if (error.request) {
+      message = new Error(error.request.message)
     }
-    Message({
-      message: message,
-      type: 'error',
-      duration: 5 * 1000
-    })
-    return Promise.reject(error)
+
+    // Message({
+    //   message: message,
+    //   type: 'error',
+    //   duration: 5 * 1000
+    // })
+    return Promise.reject(message)
   }
 )
 
