@@ -141,8 +141,11 @@ export default defineComponent({
 
     function sendMain(dashboard) {
       store.dispatch('mainDashboard', dashboard)
-      // this.$forceUpdate()
     }
+
+    if (props.metadata.fileName === 'notices') sendMain(props.metadata)
+
+    // loadMainPanelNotice()
 
     return {
       UNSUPPORTED_DASHBOARDS,

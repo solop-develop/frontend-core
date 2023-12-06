@@ -19,53 +19,25 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 <template>
   <el-card class="box-card" :body-style="{ padding: '0px' }" shadow="never">
     <div class="recent-items">
-      <el-table :data="listAllNotices" max-height="455">
-        <el-table-column width="40">
-          <svg-icon
-            icon-class="notifications"
-            class="icon-window"
-            style="font-size: 30px !important;"
-          />
-        </el-table-column>
-
-        <el-table-column>
-          <template slot="header" slot-scope="scope">
-            <el-input
-              v-model="search"
-              size="mini"
-              :metadata="scope"
-              class="clearfix"
-              :placeholder="$t('table.dataTable.search')"
+      <el-card
+        v-for="notices in listAllNotices"
+        :key="notices.id"
+        :body-style="{ padding: '5px' }"
+      >
+        <div
+          style="margin-top: 10px;"
+        >
+          <el-row>
+            <el-col
+              :span="24"
             >
-              <svg-icon slot="prefix" icon-class="search" />
-            </el-input>
-          </template>
-
-          <template slot-scope="{row}">
-            <el-tooltip
-              effect="dark"
-              :content="row.text_message"
-            >
-              <span>{{ row.message }}</span>
-            </el-tooltip>
-            <el-tag class="action-tag">
-              <svg-icon
-                icon-class="user"
-                class="icon-window"
-                style="font-size: 16px;"
+              <notices-logs
+                :metadata="notices"
               />
-              {{ row.user.name }}
-            </el-tag>
-            <br>
-            <span class="time">
-              {{ translateDate({
-                value: row.created,
-                format: 'long'
-              }) }}
-            </span>
-          </template>
-        </el-table-column>
-      </el-table>
+            </el-col>
+          </el-row>
+        </div>
+      </el-card>
     </div>
   </el-card>
 </template>
@@ -76,11 +48,10 @@ import {
 } from '@vue/composition-api'
 // Api Request Methods
 import {
-  // listUsers,
   listNotices
-  // deleteNotices,
-  // acknowledgeNotice
 } from '@/api/ADempiere/form/notice'
+// Components and Mixins
+import NoticesLogs from '@/components/ADempiere/Dashboard/notices/itemsNotices.vue'
 // Utils and Helper Methods
 import { showMessage } from '@/utils/ADempiere/notification'
 import { translateDate } from '@/utils/ADempiere/formatValue/dateFormat'
@@ -88,7 +59,9 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'noticeManagement',
-
+  components: {
+    NoticesLogs
+  },
   setup() {
     const listAllNotices = ref([])
     const search = ref('')
@@ -96,7 +69,12 @@ export default defineComponent({
       listNotices()
         .then(response => {
           const { records } = response
-          listAllNotices.value = records
+          listAllNotices.value = records.map(list => {
+            return {
+              ...list,
+              show: false
+            }
+          })
         })
         .catch(error => {
           let message = error.message
