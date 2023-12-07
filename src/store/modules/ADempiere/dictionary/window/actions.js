@@ -291,7 +291,7 @@ export default {
                 recordUuid,
                 parametersList
               }).then(async processResponse => {
-                // if (processResponse.isError) {
+                // if (processResponse.is_error) {
                 //   return
                 // }
 
@@ -397,7 +397,7 @@ export default {
                 tableName,
                 recordUuid
               }).then(async processResponse => {
-                // if (processResponse.isError) {
+                // if (processResponse.is_error) {
                 //   return
                 // }
                 await refreshRecord.refreshRecord({

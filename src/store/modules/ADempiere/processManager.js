@@ -129,7 +129,7 @@ const processManager = {
           parameters
         })
           .then(runProcessRepsonse => {
-            isProcessedError = runProcessRepsonse.isError
+            isProcessedError = runProcessRepsonse.is_error
             summary = runProcessRepsonse.summary
 
             resolve(runProcessRepsonse)
@@ -211,7 +211,7 @@ const processManager = {
           selectionsList
         })
           .then(runProcessRepsonse => {
-            isProcessedError = runProcessRepsonse.isError
+            isProcessedError = runProcessRepsonse.is_error
             summary = runProcessRepsonse.summary
 
             // window refresh data
@@ -328,7 +328,7 @@ const processManager = {
           recordId: recordId
         })
           .then(runProcessRepsonse => {
-            isProcessedError = runProcessRepsonse.isError
+            isProcessedError = runProcessRepsonse.is_error
             summary = runProcessRepsonse.summary
 
             // TODO: Update record on window
