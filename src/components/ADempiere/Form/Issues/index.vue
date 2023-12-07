@@ -40,7 +40,7 @@ import store from '@/store'
 // Components and Mixins
 import Comment from './component/Comment.vue'
 import RecordTime from './recordTime.vue'
-import ListIssues from './ListIssues.vue'
+import ListIssues from './ListIssues'
 
 // Constants
 import { REQUEST_WINDOW_UUID } from '@/utils/ADempiere/dictionary/form/Issues.js'
