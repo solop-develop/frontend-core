@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -170,10 +170,9 @@ import { RESOURCE_TYPE_IMAGE } from '@/utils/ADempiere/resource'
 
 // API Request Methods
 import {
-  // requestUploadAttachment,
-  deleteResourceReference,
-  setResourceReference
-} from '@/api/ADempiere/user-interface/component/resource'
+  requestSetResourceReference,
+  requestDeleteResourceReference
+} from '@/api/ADempiere/file-management/resource-reference.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -231,33 +230,39 @@ export default {
     isDownload() {
       return !isEmptyValue(this.displayedValue)
     },
-    // imageSourceSmall() {
+    // async imageSourceSmall() {
     //   const displayedAlt = this.displayedValue
     //   if (isEmptyValue(displayedAlt)) {
     //     return undefined
     //   }
-    //   const uri = this.loadImage(displayedAlt)
+
+    //   const blobImage = await getImagePath({
+    //     file: displayedAlt,
+    //     width: 50,
+    //     height: 50
+    //   })
+    //   // const uri = this.loadImage(displayedAlt)
     //   // getImagePath({
     //   //   file: displayedAlt,
     //   //   width: 200,
     //   //   height: 200,
     //   //   operation: 'resize'
     //   // })
-    //   console.log({ uri })
-    //   return uri
+    //   console.log(blobImage)
+    //   return blobImage.href
     // },
     imageSourceLarge() {
       const displayedAlt = this.displayedValue
       if (isEmptyValue(displayedAlt)) {
         return undefined
       }
-      const { uri } = getImagePath({
+      const blobImage = getImagePath({
         file: displayedAlt,
         width: 1024,
         height: 1024,
         operation: 'resize'
       })
-      return uri
+      return blobImage.href
     },
     additionalHeaders() {
       const token = getToken()
@@ -271,8 +276,24 @@ export default {
       }
     }
   },
+
+  watch: {
+    displayedValue(newValue) {
+      if (isEmptyValue(newValue)) {
+        this.imageSourceSmall = undefined
+      } else {
+        this.loadImage(this.displayedValue)
+      }
+    }
+  },
+
+  mounted() {
+    if (!isEmptyValue(this.displayedValue) && isEmptyValue(this.imageSourceSmall) && !this.isLoadImage) {
+      this.loadImage(this.displayedValue)
+    }
+  },
   updated() {
-    if (!this.isEmptyValue(this.displayedValue) && isEmptyValue(this.imageSourceSmall) && !this.isLoadImage) {
+    if (!isEmptyValue(this.displayedValue) && isEmptyValue(this.imageSourceSmall) && !this.isLoadImage) {
       this.loadImage(this.displayedValue)
     }
   },
@@ -281,11 +302,12 @@ export default {
     async loadImage(file) {
       this.isLoadImage = true
       if (file) {
-        this.imageSourceSmall = await getImagePath({
+        const blobImage = await getImagePath({
           file,
           width: 50,
           height: 50
         })
+        this.imageSourceSmall = blobImage.href
         this.isLoadImage = false
       }
       return ''
@@ -296,7 +318,7 @@ export default {
           reject(false)
           return
         }
-        setResourceReference({
+        requestSetResourceReference({
           resourceType: RESOURCE_TYPE_IMAGE,
           resourceId: this.value,
           fileName: file.name,
@@ -367,12 +389,16 @@ export default {
       if (!this.isDownload) {
         return
       }
-      const imagen = await fetch(this.imageSourceLarge)
-      const imagenblob = await imagen.blob()
-      const imageURL = URL.createObjectURL(imagenblob)
-      const link = document.createElement('a')
-      link.href = imageURL
-      link.download = this.altImage
+
+      const link = await getImagePath({
+        file: this.displayedValue
+      })
+      // const imagen = await fetch(this.imageSourceSmall)
+      // const imagenblob = await imagen.blob()
+      // const imageURL = URL.createObjectURL(imagenblob)
+      // const link = document.createElement('a')
+      // link.href = imageURL
+      // link.download = this.altImage
       link.click()
     },
 
@@ -387,8 +413,9 @@ export default {
       if (isEmptyValue(resourceName)) {
         return
       }
-      deleteResourceReference({
-        resourceName
+      requestDeleteResourceReference({
+        resourceName,
+        imageId: this.value
       }).then(() => {
         this.clearValues()
       })

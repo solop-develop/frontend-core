@@ -23,10 +23,12 @@ import store from '@/store'
 // API Request Methods
 import {
   requestResource,
-  deleteResourceReference,
   sendAttachmentDescription,
   sendAttachmentDescriptionHeader
 } from '@/api/ADempiere/user-interface/component/resource'
+import {
+  requestDeleteResourceReference
+} from '@/api/ADempiere/file-management/resource-reference.ts'
 
 // Components and Mixins
 import FileRender from '@/components/ADempiere/FileRender/index.vue'
@@ -146,8 +148,8 @@ export default defineComponent({
      * @param {Object} file
      */
     const handleRemove = (file) => {
-      deleteResourceReference({
-        resourceUuid: file.uuid,
+      requestDeleteResourceReference({
+        id: file.id,
         resourceName: file.file_name
       }).then(() => {
         const resourceReferencesList = attachmentList.value.filter(resourceReference => {
