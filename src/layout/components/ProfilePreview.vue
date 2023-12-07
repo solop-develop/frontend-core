@@ -21,16 +21,23 @@
 
 <script>
 import { defineComponent, computed, ref } from '@vue/composition-api'
+
 import router from '@/router'
 import store from '@/store'
+
+// Components and Mixins
 import RolesNavbar from '@/views/profile/components/RolesNavbar'
+
+// Utils and Helper Methods
 import { getImagePath } from '@/utils/ADempiere/resource.js'
 
 export default defineComponent({
   name: 'ProfilePreview',
+
   components: {
     RolesNavbar
   },
+
   props: {
     user: {
       type: Object,
@@ -73,11 +80,12 @@ export default defineComponent({
     async function loadImage() {
       const { image } = userInfo.value
       if (image) {
-        avatarResize.value = await getImagePath({
+        const blobImage = await getImagePath({
           file: image,
           width: 200,
           height: 200
         })
+        avatarResize.value = blobImage.href
       }
     }
 

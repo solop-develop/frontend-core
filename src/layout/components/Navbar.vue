@@ -299,11 +299,12 @@ export default {
     async loadImage() {
       const { image } = this.$store.getters['user/userInfo']
       if (image) {
-        this.avatarResize = await getImagePath({
+        const blobImage = await getImagePath({
           file: image,
           width: 200,
           height: 200
         })
+        this.avatarResize = blobImage.href
       }
     }
   }

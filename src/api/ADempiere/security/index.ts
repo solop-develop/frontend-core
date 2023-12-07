@@ -154,17 +154,11 @@ export function requestMenu() {
 /**
  * GET Services
  */
-export function services() {
+export function requestServices() {
   return request({
     url: '/security/services',
     method: 'get'
   })
-    .then(response => {
-      if (!response) {
-        return []
-      }
-      return response.map(list => camelizeObjectKeys(list))
-    })
 }
 
 /**

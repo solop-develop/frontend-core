@@ -75,7 +75,7 @@
         {{ $t('login.logIn') }}
       </el-button>
       <el-button
-        v-for="(list, key) in listServices"
+        v-for="(serviceItem, key) in listServices"
         :key="key"
         :loading="isLoadingLogin"
         :disabled="isLoadingLogin"
@@ -83,12 +83,12 @@
       >
         <el-link
           :underline="false"
-          :href="list.authorizationUri"
+          :href="serviceItem.authorization_uri"
           style="margin-left: 5px;"
         >
           <p style="width:400px;margin: 0px;">
-            <svg-icon :icon-class="list.svg" />
-            {{ list.displayName }}
+            <svg-icon :icon-class="serviceItem.svg" />
+            {{ serviceItem.display_name }}
           </p>
         </el-link>
       </el-button>
@@ -135,7 +135,7 @@ import loginMixin from './loginMixin.js'
 import SocialSign from './components/SocialSignin'
 
 // API Request Methods
-import { services } from '@/api/ADempiere/security/index.ts'
+import { requestServices } from '@/api/ADempiere/security/index.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -296,8 +296,8 @@ export default {
       return redirect[2]
     },
     svgService(openId) {
-      const { authorizationUri } = openId
-      const searchInclude = authorizationUri.replace('https://', '')
+      const { authorization_uri } = openId
+      const searchInclude = authorization_uri.replace('https://', '')
       const index = searchInclude.search('.com/')
       let svg
       switch (true) {
@@ -348,13 +348,16 @@ export default {
       this.info()
     },
     listAuthorization() {
-      services()
+      requestServices()
         .then(response => {
-          if (!response) return
-          this.listServices = response.map(list => {
+          if (!response) {
+            return
+          }
+          const { services } = response
+          this.listServices = services.map(serviceItem => {
             return {
-              ...list,
-              svg: this.svgService(list)
+              ...serviceItem,
+              svg: this.svgService(serviceItem)
             }
           })
         })
