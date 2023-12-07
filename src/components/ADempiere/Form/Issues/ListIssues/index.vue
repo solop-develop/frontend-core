@@ -53,6 +53,32 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           />
         </el-button>
       </div>
+      <el-card
+        v-if="isKanban || isEdit"
+        shadow="never"
+        :body-style="{ padding: '20px' }"
+      >
+        <el-form label-position="top" class="form-min-label">
+          <el-form-item :label="$t('issues.typeOfRequest')" style="margin: 0px;">
+            <el-select
+              v-model="requestTypes"
+              filterable
+              clearable
+              @visible-change="findRequestTypes"
+              @change="findStatus"
+            >
+              <el-option
+                v-for="item in listIssuesTypes"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <br>
+        <br>
+      </el-card>
       <div v-if="!isEdit && !isKanban" class="table-list-request" :style="isEdit ? 'max-height: 78vh;' : 'max-height: 85vh;'">
         <el-empty v-if="isEmptyValue(listIssues)" />
         <span
@@ -76,11 +102,13 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           shadow="never"
           :body-style="{ padding: '10px' }"
         >
+          <el-empty v-if="isEmptyValue(requestTypes)" :description="$t('issues.selectTypeOfRequest')" />
           <div
+            v-else
             style="display: flex;overflow: auto;"
           >
             <div
-              v-for="(issues, index) in listIssuesTypes"
+              v-for="(issues, index) in listStatuses"
               :key="index"
               style="height: 85vh;padding: 0px 10px;width: 35vw;"
             >
@@ -129,9 +157,12 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           shadow="never"
           :body-style="{ padding: '10px' }"
         >
-          <el-collapse>
+          <el-empty v-if="isEmptyValue(requestTypes)" :description="$t('issues.selectTypeOfRequest')" />
+          <el-collapse
+            v-else
+          >
             <el-collapse-item
-              v-for="item in listIssuesTypes"
+              v-for="item in listStatuses"
               :key="item.id"
               :title="item.name"
               :name="item.id"
@@ -187,7 +218,8 @@ import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 // Api Request Methods
 import {
   requestListRequestTypes,
-  requestListPriorities
+  requestListPriorities,
+  requestListStatuses
 } from '@/api/ADempiere/user-interface/component/issue'
 
 export default defineComponent({
@@ -224,6 +256,7 @@ export default defineComponent({
     const currentPriority = ref('')
     const listIssuesTypes = ref([])
     const listPriority = ref([])
+    const listStatuses = ref([])
 
     const listIssues = computed(() => {
       return store.getters.getListIssues
@@ -342,7 +375,7 @@ export default defineComponent({
       data,
       column
     }) {
-      return data.filter(list => list.request_type.id === column)
+      return data.filter(list => list.status.id === column)
     }
 
     findRequestTypes(true)
@@ -363,6 +396,23 @@ export default defineComponent({
       isKanban.value = !isKanban.value
     }
 
+    function findStatus(request) {
+      if (!request) return
+      requestListStatuses({
+        requestTypeId: request
+      })
+        .then(response => {
+          const { records } = response
+          listStatuses.value = records
+        })
+        .catch(error => {
+          showMessage({
+            message: error.message,
+            type: 'warning'
+          })
+        })
+    }
+
     return {
       isEdit,
       isKanban,
@@ -372,6 +422,7 @@ export default defineComponent({
       listIssuesTypes,
       currentPriority,
       listPriority,
+      listStatuses,
       //
       priority,
       typeRequest,
@@ -383,6 +434,7 @@ export default defineComponent({
       // methods
       findRequestTypes,
       findPriority,
+      findStatus,
       dueTypeColor,
       formatDate,
       avatarResize,
