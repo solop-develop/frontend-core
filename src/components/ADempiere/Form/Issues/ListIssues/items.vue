@@ -221,7 +221,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             />
           </el-col>
           <el-col
-            :span="3"
+            :span="2"
             style="padding: 0px;text-align: center"
           >
             <el-button size="mini" plain>
@@ -236,7 +236,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             </el-button>
           </el-col>
           <el-col
-            :span="3"
+            :span="2"
             style="padding: 0px;text-align: center"
           >
             <el-button type="primary" size="mini" plain>
@@ -247,7 +247,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             </el-button>
           </el-col>
           <el-col
-            :span="3"
+            :span="2"
             style="padding: 0px;text-align: center"
           >
             <el-button size="mini" type="info" plain>
@@ -255,6 +255,17 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
                 <svg-icon icon-class="label" style="font-size: 20px;" />
               </b>
               {{ metadata.status.name }}
+            </el-button>
+          </el-col>
+          <el-col
+            :span="3"
+            style="padding: 0px;text-align: center"
+          >
+            <el-button size="mini" type="info" plain>
+              <b>
+                <svg-icon icon-class="label" style="font-size: 20px;" />
+              </b>
+              {{ metadata.request_type.name }}
             </el-button>
           </el-col>
           <el-col
