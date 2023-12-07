@@ -59,7 +59,7 @@ import { RESOURCE_TYPE_ATTACHMENT } from '@/utils/ADempiere/resource'
 // } from '@/api/ADempiere/user-interface/component/resource'
 import {
   requestSetResourceReference
-} from '@/api/ADempiere/logs/tabInfo/windowAttachment.ts'
+} from '@/api/ADempiere/file-management/resource-reference.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'

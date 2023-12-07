@@ -205,7 +205,7 @@ import { requestExistsReferences } from '@/api/ADempiere/recordManagement/refere
 import {
   requestExistsChatsEntries, requestListEntityChats
 } from '@/api/ADempiere/logs/tabInfo/chatsEntries.ts'
-import { requestExistsAttachment } from '@/api/ADempiere/logs/tabInfo/windowAttachment.ts'
+import { requestExistsAttachment } from '@/api/ADempiere/file-management/attachment.ts'
 import { requestExistsIssues } from '@/api/ADempiere/logs/tabInfo/windowIssues.ts'
 
 // Utils and Helper Methods

@@ -19,22 +19,6 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
-// Constants
-import { RESOURCE_TYPE_ATTACHMENT } from '@/utils/ADempiere/resource'
-
-/**
- * Exists Window Attachment
- */
-export function requestExistsAttachment({
-  tableName,
-  recordId
-}) {
-  return request({
-    url: `/file-management/attachments/${tableName}/${recordId}/exists`,
-    method: 'get'
-  })
-}
-
 /**
  * Get List Window Attachment
  */
@@ -49,35 +33,14 @@ export function requestAttachment({
 }
 
 /**
- * Set resource reference
- * @param {number} resourceId
- * @param {string} recordUuid
- * @param {string} resourceName as fileName
- * @returns {promise}
+ * Exists Window Attachment
  */
-export function requestSetResourceReference({
-  id,
-  //
-  resourceType = RESOURCE_TYPE_ATTACHMENT,
-  //
+export function requestExistsAttachment({
   tableName,
-  recordId,
-  //
-  textMessage,
-  fileName,
-  fileSize
+  recordId
 }) {
   return request({
-    url: `/file-management/references/attachment/${tableName}/${recordId}`,
-    method: 'put',
-    data: {
-      // parent values (attachment, image, archive)
-      resource_type: resourceType,
-      id,
-      // attachment reference values
-      text_message: textMessage,
-      file_name: fileName,
-      file_size: fileSize
-    }
+    url: `/file-management/attachments/${tableName}/${recordId}/exists`,
+    method: 'get'
   })
 }

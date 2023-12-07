@@ -21,32 +21,6 @@ import { request } from '@/utils/ADempiere/request'
 
 // Constants
 import { config } from '@/utils/ADempiere/config'
-import { RESOURCE_TYPE_ATTACHMENT } from '@/utils/ADempiere/resource'
-
-// Utils and Helper Methods
-import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
-
-/**
- * Attachment Existents on Record
- * @param {string}  tableName
- * @param {number}  recordId
- * @param {string}  recordUuid
- */
-export function requestExistsAttachment({
-  tableName,
-  recordId,
-  recordUuid
-}) {
-  return request({
-    url: '/user-interface/component/resource/exists-attachment',
-    method: 'get',
-    params: {
-      table_name: tableName,
-      record_id: recordId,
-      record_uuid: recordUuid
-    }
-  })
-}
 
 // Download a resource from file name
 export function requestResource({ resourceUuid, resourceName }, callBack = {
@@ -108,105 +82,6 @@ export function requestImage({
     baseURL: config.adempiere.images.url
   })
 }
-/**
- * Get Attachment
- * @param {number}  resourceId
- * @param {string}  resourceUuid // TODO: Add suppport to resource uuid on backend
- */
-export function requestGetResourceReference({
-  id,
-  uuid,
-  resourceName,
-  imageId,
-  imageUuid,
-  archiveId,
-  archiveUuid
-}) {
-  return request({
-    url: '/user-interface/component/resource/resource-reference',
-    method: 'get',
-    params: {
-      id,
-      uuid,
-      resource_name: resourceName,
-      image_id: imageId,
-      image_uuid: imageUuid,
-      archive_id: archiveId,
-      archive_uud: archiveUuid
-    }
-  })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
-}
-
-/**
- * Get Attachment
- * @param {string}  tableName
- * @param {number}  recordId
- * @param {string}  recordUuid
- */
-export function requestAttachment({
-  tableName,
-  recordId,
-  recordUuid
-}) {
-  return request({
-    url: '/user-interface/component/resource/attachment',
-    method: 'get',
-    params: {
-      table_name: tableName,
-      id: recordId,
-      uuid: recordUuid
-    }
-  })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
-}
-
-/**
- * Set resource reference
- * @param {number} resourceId
- * @param {string} recordUuid
- * @param {string} resourceName as fileName
- * @returns {promise}
- */
-export function setResourceReference({
-  id,
-  uuid,
-  //
-  resourceType = RESOURCE_TYPE_ATTACHMENT,
-  resourceId,
-  //
-  tableName,
-  recordId,
-  recordUuid,
-  //
-  textMessage,
-  fileName,
-  fileSize
-}) {
-  return request({
-    url: '/user-interface/component/resource/set-resource-reference',
-    method: 'post',
-    data: {
-      id,
-      uuid,
-      // parent values (attachment, image, archive)
-      resource_type: resourceType,
-      resource_id: resourceId,
-      // attachment values
-      table_name: tableName,
-      record_id: recordId,
-      record_uuid: recordUuid,
-      // attachment reference values
-      text_message: textMessage,
-      file_name: fileName,
-      file_size: fileSize
-    }
-  })
-}
 
 export function requestUploadAttachment({
   resourceId,
@@ -222,29 +97,6 @@ export function requestUploadAttachment({
       resource_uuid: resourceUuid,
       file_name: fileName,
       file
-    }
-  })
-}
-
-/**
- * Delete resource and file
- * @param {number} resourceId
- * @param {string} recordUuid
- * @param {string} resourceName as fileName
- * @returns {promise}
- */
-export function deleteResourceReference({
-  resourceId,
-  resourceUuid,
-  resourceName
-}) {
-  return request({
-    url: '/user-interface/component/resource/delete-resource-reference',
-    method: 'delete',
-    params: {
-      resource_id: resourceId,
-      resource_uuid: resourceUuid,
-      resource_name: resourceName
     }
   })
 }
