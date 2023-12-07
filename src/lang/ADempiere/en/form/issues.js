@@ -24,6 +24,7 @@ const issues = {
   created: 'Created',
   priority: 'Priority',
   status: 'Status',
+  emptyStatus: 'Empty Status',
   typeOfRequest: 'Type of Request',
   selectTypeOfRequest: 'Select Type of Request',
   assigned: 'Assigned',

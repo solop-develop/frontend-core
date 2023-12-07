@@ -250,11 +250,17 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             :span="2"
             style="padding: 0px;text-align: center"
           >
-            <el-button size="mini" type="info" plain>
+            <el-button v-if="!isEmptyValue(metadata.status.id) && metadata.status.id > 0" size="mini" type="info" plain>
               <b>
                 <svg-icon icon-class="label" style="font-size: 20px;" />
               </b>
               {{ metadata.status.name }}
+            </el-button>
+            <el-button v-else size="mini" type="info" plain>
+              <b>
+                <svg-icon icon-class="label" style="font-size: 20px;" />
+              </b>
+              {{ $t('issues.emptyStatus') }}
             </el-button>
           </el-col>
           <el-col
