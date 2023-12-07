@@ -25,6 +25,7 @@ const issues = {
   status: 'Estatus',
   subject: 'Asunto',
   typeOfRequest: 'Tipo de Solicitud',
+  selectTypeOfRequest: 'Seleccione un Tipo de Solicitud',
   assigned: 'Asignado',
   request: 'Solicitud',
   isCreated: 'Creado el',
