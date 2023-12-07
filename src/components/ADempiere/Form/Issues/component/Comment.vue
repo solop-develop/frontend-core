@@ -1064,7 +1064,7 @@
                       <el-select
                         v-model="currentIssues.status.name"
                         filterable
-                        :disabled="isEmptyValue(currentRequestTypes)"
+                        :disabled="isEmptyValue(currentIssues.request_type.id)"
                         @visible-change="findStatus"
                         @change="updateIssuesStatus"
                       >

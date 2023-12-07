@@ -23,6 +23,7 @@ const issues = {
   created: 'Creado Por',
   priority: 'Prioridad',
   status: 'Estatus',
+  emptyStatus: 'Sin Estatus',
   subject: 'Asunto',
   typeOfRequest: 'Tipo de Solicitud',
   selectTypeOfRequest: 'Seleccione un Tipo de Solicitud',

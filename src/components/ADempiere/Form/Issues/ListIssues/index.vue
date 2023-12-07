@@ -53,7 +53,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           />
         </el-button>
       </div>
-      <!-- <el-card
+      <el-card
         v-if="isKanban || isEdit"
         shadow="never"
         :body-style="{ padding: '20px' }"
@@ -77,8 +77,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           </el-form-item>
         </el-form>
         <br>
-        <br>
-      </el-card> -->
+      </el-card>
       <div v-if="!isEdit && !isKanban" class="table-list-request" :style="isEdit ? 'max-height: 78vh;' : 'max-height: 85vh;'">
         <el-empty v-if="isEmptyValue(listIssues)" />
         <span
@@ -110,7 +109,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             <div
               v-for="(issues, index) in listStatuses"
               :key="index"
-              style="height: 85vh;padding: 0px 10px;width: 35vw;"
+              style="height: 80vh;padding: 0px 10px;min-width: 270px;"
             >
               <el-card
                 shadow="never"
@@ -199,7 +198,7 @@ import {
 } from '@vue/composition-api'
 
 import store from '@/store'
-
+import lang from '@/lang'
 // Components and Mixins
 import Comment from '@/components/ADempiere/Form/Issues/component/Comment.vue'
 import RecordTime from '@/components/ADempiere/Form/Issues/recordTime.vue'
@@ -257,6 +256,7 @@ export default defineComponent({
     const listIssuesTypes = ref([])
     const listPriority = ref([])
     const listStatuses = ref([])
+    const listStatusesKanban = ref([])
 
     const listIssues = computed(() => {
       return store.getters.getListIssues
@@ -347,6 +347,7 @@ export default defineComponent({
           const { records } = response
           listIssuesTypes.value = records
           findStatus(records[0].id)
+          requestTypes.value = records[0].id
         })
         .catch(error => {
           showMessage({
@@ -404,7 +405,12 @@ export default defineComponent({
       })
         .then(response => {
           const { records } = response
-          listStatuses.value = records
+          listStatuses.value = records.sort((a, b) => a.sequence - b.sequence)
+          listStatuses.value.push({
+            name: lang.t('issues.emptyStatus'),
+            id: 0,
+            sequence: 99
+          })
         })
         .catch(error => {
           showMessage({
@@ -424,6 +430,7 @@ export default defineComponent({
       currentPriority,
       listPriority,
       listStatuses,
+      listStatusesKanban,
       //
       priority,
       typeRequest,
