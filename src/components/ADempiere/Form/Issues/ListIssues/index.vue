@@ -53,7 +53,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           />
         </el-button>
       </div>
-      <el-card
+      <!-- <el-card
         v-if="isKanban || isEdit"
         shadow="never"
         :body-style="{ padding: '20px' }"
@@ -78,7 +78,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         </el-form>
         <br>
         <br>
-      </el-card>
+      </el-card> -->
       <div v-if="!isEdit && !isKanban" class="table-list-request" :style="isEdit ? 'max-height: 78vh;' : 'max-height: 85vh;'">
         <el-empty v-if="isEmptyValue(listIssues)" />
         <span
@@ -102,7 +102,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           shadow="never"
           :body-style="{ padding: '10px' }"
         >
-          <el-empty v-if="isEmptyValue(requestTypes)" :description="$t('issues.selectTypeOfRequest')" />
+          <el-empty v-if="isEmptyValue(listStatuses)" :description="$t('issues.selectTypeOfRequest')" />
           <div
             v-else
             style="display: flex;overflow: auto;"
@@ -157,7 +157,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           shadow="never"
           :body-style="{ padding: '10px' }"
         >
-          <el-empty v-if="isEmptyValue(requestTypes)" :description="$t('issues.selectTypeOfRequest')" />
+          <el-empty v-if="isEmptyValue(listStatuses)" :description="$t('issues.selectTypeOfRequest')" />
           <el-collapse
             v-else
           >
@@ -346,6 +346,7 @@ export default defineComponent({
         .then(response => {
           const { records } = response
           listIssuesTypes.value = records
+          findStatus(records[0].id)
         })
         .catch(error => {
           showMessage({
