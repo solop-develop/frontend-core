@@ -285,9 +285,9 @@ const reportManager = {
           parametersList
         })
           .then(runReportRepsonse => {
-            const { instanceUuid, output, isError } = runReportRepsonse
+            const { instanceUuid, output, is_error } = runReportRepsonse
 
-            if (isError) {
+            if (is_error) {
               showNotification({
                 title: language.t('notifications.error'),
                 message: reportDefinition.name,
@@ -305,7 +305,7 @@ const reportManager = {
               link = buildLinkHref({
                 fileName: output.file_name,
                 outputStream: output.output_stream,
-                mimeType: output.mimeType
+                mimeType: output.mime_type
               })
 
               // donwload report file
