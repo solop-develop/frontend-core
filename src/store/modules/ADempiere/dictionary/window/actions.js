@@ -278,11 +278,8 @@ export default {
                 containerUuid: process.uuid,
                 columnName: DOCUMENT_ACTION
               })
-              const parametersList = []
-              parametersList.push({
-                columnName: DOCUMENT_ACTION,
-                value: documentAction
-              })
+              const parametersList = {}
+              parametersList[DOCUMENT_ACTION] = documentAction
 
               dispatch('startProcessOfWindows', {
                 parentUuid: tabAssociatedUuid,
