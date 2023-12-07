@@ -14,7 +14,7 @@
       "url": "http://localhost:8080/api/file-management"
     },
     "resource": {
-      "url": "http://localhost:8080/api/adempiere/resource"
+      "url": "http://localhost:8080/api/file-management"
     }
   },
   "repository": {
