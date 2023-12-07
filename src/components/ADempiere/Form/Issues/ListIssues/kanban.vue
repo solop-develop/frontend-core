@@ -57,8 +57,23 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         <p style="margin: 0px;">
           {{ metadata.subject }}
           <br>
-          {{ metadata.summary }}
-          <br>
+          <span
+            v-if="!isEmptyValue(metadata.sales_representative.name)"
+            effect="plain"
+          >
+            <i style="font-size: 12px;color: #82848a;">
+              <b
+                style="font-weight: bolder;"
+              >
+                <svg-icon
+                  icon-class="project"
+                  style="font-weight: bolder;"
+                />
+                {{ $t('issues.assigned') }}:
+              </b>
+              {{ metadata.sales_representative.name }}
+            </i>
+          </span>
           <span
             v-if="!isEmptyValue(metadata.project.name)"
             effect="plain"

@@ -109,7 +109,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             <div
               v-for="(issues, index) in listStatuses"
               :key="index"
-              style="height: 80vh;padding: 0px 10px;min-width: 270px;"
+              style="height: 80vh;padding: 0px 10px;width: 550px;"
             >
               <el-card
                 shadow="never"
@@ -128,19 +128,33 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
                         </i>
                       </b>
                     </template>
-                    <span v-if="isEmptyValue(filterData({ data: listIssues, column: issues.id }))">
-                      <el-empty :image-size="90" />
-                    </span>
-                    <el-card
-                      v-for="data in filterData({ data: listIssues, column: issues.id })"
-                      :key="data.id"
-                      shadow="never"
-                      :body-style="{ padding: '0px' }"
+                    <draggable
+                      :id="issues.id"
+                      :ref="issues.id"
+                      :list="listKanbanGroup[issues.id]"
+                      :group="{ name: 'people', pull: replace }"
+                      @change="updateStatus"
                     >
-                      <kanban
-                        :metadata="data"
-                      />
-                    </el-card>
+                      <el-card
+                        v-for="data in listKanbanGroup[issues.id]"
+                        :key="data.id"
+                        shadow="never"
+                        :body-style="{ padding: '0px' }"
+                      >
+                        <kanban
+                          :metadata="data"
+                        />
+                        <!-- <div
+                          v-else
+                          key="form-loading"
+                          v-loading="true"
+                          :element-loading-text="$t('notifications.loading')"
+                          element-loading-spinner="el-icon-loading"
+                          element-loading-background="rgba(255, 255, 255, 0.8)"
+                          class="view-loading"
+                        /> -->
+                      </el-card>
+                    </draggable>
                   </el-collapse-item>
                 </el-collapse>
               </el-card>
@@ -200,10 +214,11 @@ import {
 import store from '@/store'
 import lang from '@/lang'
 // Components and Mixins
-import Comment from '@/components/ADempiere/Form/Issues/component/Comment.vue'
+import draggable from 'vuedraggable'
 import RecordTime from '@/components/ADempiere/Form/Issues/recordTime.vue'
 import Items from '@/components/ADempiere/Form/Issues/ListIssues/items.vue'
 import Kanban from '@/components/ADempiere/Form/Issues/ListIssues/kanban.vue'
+import Comment from '@/components/ADempiere/Form/Issues/component/Comment.vue'
 import ProgressPercentage from '@/components/ADempiere/ContainerOptions/ProgressPercentage.vue'
 // Constants
 import { REQUEST_WINDOW_UUID } from '@/utils/ADempiere/dictionary/form/Issues.js'
@@ -220,6 +235,7 @@ import {
   requestListPriorities,
   requestListStatuses
 } from '@/api/ADempiere/user-interface/component/issue'
+import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({
   name: 'Issues',
@@ -229,6 +245,7 @@ export default defineComponent({
     Items,
     Kanban,
     Comment,
+    draggable,
     RecordTime,
     ProgressPercentage
   },
@@ -245,6 +262,7 @@ export default defineComponent({
   },
 
   setup(props) {
+    const updateDragStatus = ref('')
     const message = ref('')
     const filter = ref('')
     const priority = ref('')
@@ -286,6 +304,9 @@ export default defineComponent({
       return 'height: 90%;overflow: auto;'
     })
 
+    const listKanbanGroup = computed(() => {
+      return store.getters.getListKanbanGroup
+    })
     function dueTypeColor(issue) {
       const { due_type } = issue
       const { value } = due_type
@@ -405,6 +426,11 @@ export default defineComponent({
       })
         .then(response => {
           const { records } = response
+          const list = []
+          records.forEach(element => {
+            list[element.id] = listIssues.value.filter(list => list.status.id === element.id)
+          })
+          store.commit('setListKanbanGroup', list)
           listStatuses.value = records.sort((a, b) => a.sequence - b.sequence)
           listStatuses.value.push({
             name: lang.t('issues.emptyStatus'),
@@ -420,7 +446,62 @@ export default defineComponent({
         })
     }
 
+    function replace(params) {
+      updateDragStatus.value = params.options.id
+    }
+    const isloadinUpdateKanban = ref(false)
+
+    function updateStatus(params, events) {
+      if (isEmptyValue(params) && isEmptyValue(params.removed.element) && isEmptyValue(params.add.element)) return
+      const element = !isEmptyValue(params.removed) ? params.removed.element : params.add.element
+      if (isEmptyValue(element)) return
+      const {
+        id,
+        uuid,
+        group,
+        status,
+        subject,
+        summary,
+        project,
+        priority,
+        category,
+        task_status,
+        request_type,
+        parent_issue,
+        business_partner,
+        date_next_action,
+        sales_representative
+      } = element
+      if (status.id === updateDragStatus.value) return
+      isloadinUpdateKanban.value = true
+      store.dispatch('editIssues', {
+        id,
+        uuid,
+        subject,
+        summary,
+        requestTypeId: request_type.id,
+        salesRepresentativeId: sales_representative.id,
+        priorityValue: priority.value,
+        statusId: updateDragStatus.value,
+        categoryId: category.id,
+        groupId: group.id,
+        businessPartnerId: business_partner.id,
+        projectId: project.id,
+        taskStatusValue: task_status.value,
+        dateNextAction: date_next_action,
+        parentIssueId: parent_issue.id
+      })
+        .finally(() => {
+          isloadinUpdateKanban.value = false
+          loadIssues()
+        })
+    }
+
     return {
+      listKanbanGroup,
+      isloadinUpdateKanban,
+      updateDragStatus,
+      //
       isEdit,
       isKanban,
       message,
@@ -454,7 +535,9 @@ export default defineComponent({
       percentageFormat,
       activeGruop,
       activeKanban,
-      translateDateByLong
+      translateDateByLong,
+      updateStatus,
+      replace
     }
   }
 })

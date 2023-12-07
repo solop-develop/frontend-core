@@ -52,7 +52,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             </el-popover>
           </el-col>
           <el-col
-            :span="8"
+            :span="6"
             style="padding: 0px;"
           >
             <b>
@@ -215,8 +215,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             style="padding: 0px;text-align: center"
           >
             <progress-percentage
-              :value="metadata.task_status.value"
               :displayed-value="metadata.task_status.name"
+              :value="metadata.task_status.value"
+              style="margin: 10px 0px;"
               :text-color="'white'"
             />
           </el-col>
@@ -224,7 +225,25 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             :span="2"
             style="padding: 0px;text-align: center"
           >
-            <el-button size="mini" plain>
+            <el-button
+              style="margin: 10px 0px;"
+              type="primary"
+              size="mini"
+              round
+              plain
+            >
+              {{ metadata.sales_representative.name }}
+            </el-button>
+          </el-col>
+          <el-col
+            :span="2"
+            style="padding: 0px;text-align: center"
+          >
+            <el-button
+              style="margin: 10px 0px;"
+              size="mini"
+              plain
+            >
               <b>
                 <svg-icon icon-class="calendar" style="font-size: 20px;" />
               </b>
@@ -239,7 +258,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             :span="2"
             style="padding: 0px;text-align: center"
           >
-            <el-button type="primary" size="mini" plain>
+            <el-button type="primary" size="mini" plain style="margin: 10px 0px;">
               <b>
                 <svg-icon icon-class="collections" style="font-size: 20px;" />
               </b>
@@ -250,13 +269,13 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             :span="2"
             style="padding: 0px;text-align: center"
           >
-            <el-button v-if="!isEmptyValue(metadata.status.id) && metadata.status.id > 0" size="mini" type="info" plain>
+            <el-button v-if="!isEmptyValue(metadata.status.id) && metadata.status.id > 0" size="mini" type="info" plain style="margin: 10px 0px;">
               <b>
                 <svg-icon icon-class="label" style="font-size: 20px;" />
               </b>
               {{ metadata.status.name }}
             </el-button>
-            <el-button v-else size="mini" type="info" plain>
+            <el-button v-else size="mini" type="info" plain style="margin: 10px 0px;">
               <b>
                 <svg-icon icon-class="label" style="font-size: 20px;" />
               </b>
@@ -267,7 +286,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             :span="3"
             style="padding: 0px;text-align: center"
           >
-            <el-button size="mini" type="info" plain>
+            <el-button size="mini" type="info" plain style="margin: 10px 0px;">
               <b>
                 <svg-icon icon-class="label" style="font-size: 20px;" />
               </b>
