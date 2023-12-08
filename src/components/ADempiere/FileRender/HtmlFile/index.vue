@@ -94,7 +94,7 @@ export default defineComponent({
       default: undefined
     },
     stream: {
-      type: [Object, Array],
+      type: [Object, Array, String],
       required: true
     }
   },
