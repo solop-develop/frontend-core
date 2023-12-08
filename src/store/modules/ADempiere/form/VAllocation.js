@@ -32,7 +32,7 @@ import { showMessage } from '@/utils/ADempiere/notification.js'
 const VAllocation = {
   transactionTypes: {},
   searchCriteria: {
-    businessPartnerId: -1,
+    businessPartnerId: '',
     organizationId: -1,
     currencyId: -1,
     listOrganization: [],
@@ -61,7 +61,7 @@ const VAllocation = {
   },
   process: {
     date: '',
-    chargeId: '',
+    chargeId: 0,
     description: '',
     totalDifference: 0,
     transactionOrganizationId: ''
@@ -374,7 +374,7 @@ export default {
           })
         }
         requestProcess({
-          date,
+          date: new Date(date),
           chargeId,
           currencyId,
           description,
