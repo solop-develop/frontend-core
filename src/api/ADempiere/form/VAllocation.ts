@@ -188,7 +188,7 @@ export function requestListTransactionOrganizations({
 // process
 export function requestProcess({
   date,
-  chargeId = null,
+  chargeId = -1,
   currencyId,
   description,
   totalDifference,
