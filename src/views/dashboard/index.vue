@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-container">
+  <div class="dashboard-container" style="overflow: auto;height: 100%;">
     <component :is="currentRole" />
   </div>
 </template>

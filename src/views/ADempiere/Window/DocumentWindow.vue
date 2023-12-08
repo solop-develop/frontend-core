@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <div class="document-window" style="height: 90vh !important;width: 100% !important;overflow: auto;">
+  <div class="document-window" style="width: 100% !important;overflow: auto;">
     <div id="tab-manager" :style="sizeTab">
       <embedded
         :visible="showRecordAccess"
