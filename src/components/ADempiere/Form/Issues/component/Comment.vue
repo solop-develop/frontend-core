@@ -2501,7 +2501,7 @@ export default defineComponent({
      * New Fields Business Partners
      */
 
-    const currentBusinessPartner = ref('')
+    const currentBusinessPartner = ref(0)
     const listBusinessPartner = ref([])
 
     function findBusinessPartner(isVisible, searchValue) {
@@ -2542,7 +2542,7 @@ export default defineComponent({
      * New Fields Category
      */
 
-    const currentCategory = ref('')
+    const currentCategory = ref(0)
     const listCategory = ref([])
 
     function findCategory(isVisible, searchValue) {
@@ -2583,7 +2583,7 @@ export default defineComponent({
      * New Fields Project
      */
 
-    const currentProject = ref('')
+    const currentProject = ref(0)
     const listProject = ref([])
 
     function findProject(isVisible, searchValue) {
@@ -2624,7 +2624,7 @@ export default defineComponent({
      * New Fields Group
      */
 
-    const currentGroup = ref('')
+    const currentGroup = ref(0)
     const listGroup = ref([])
 
     function findGroup(isVisible, searchValue) {

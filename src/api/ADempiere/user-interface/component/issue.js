@@ -272,19 +272,19 @@ export function requestCreateIssue({
   recordUuid,
   subject,
   summary,
-  requestTypeId,
+  requestTypeId = -0,
   requestTypeUuid,
-  salesRepresentativeId,
+  salesRepresentativeId = -0,
   salesRepresentativeUuid,
-  businessPartnerId,
+  businessPartnerId = -0,
   taskStatusValue,
   dateNextAction,
   priorityValue,
-  categoryId,
+  categoryId = -0,
   statusUuid,
-  projectId,
-  statusId,
-  groupId
+  projectId = -0,
+  statusId = -0,
+  groupId = -1
 }) {
   return request({
     // url: '/issue-management/issues',

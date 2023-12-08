@@ -18,8 +18,9 @@
 
 <template>
   <span>
-    <el-container style="height: 95% !important;">
-      <el-main ref="scrollIssues" style="overflow: auto;padding: 0px;">
+    <el-container style="height: 90vh">
+      <!-- {{ $store.getters['settings/getFixedHeader'] }} -->
+      <el-header v-if="isMobile" ref="scrollIssues" height="70%" style="overflow: auto;padding: 0px;">
         <el-card v-if="isEmptyValue(currentIssues) || isPanelNewRequest" class="comments-card" style="height: auto;padding: 0px;">
           <div slot="header" class="clearfix">
             <el-button style="float: left; margin-right: 10px;" size="mini" plain type="info" @click="SelectionIssue">
@@ -30,16 +31,13 @@
             </b>
           </div>
           <div style="display: flex;width: -webkit-fill-available;">
-            <div style="padding: 0px;width: 80%;">
+            <div style="padding: 0px;width: 100%;">
               <el-card class="card-summary" shadow="never">
                 <el-row>
                   <el-form label-position="top">
                     <el-col :span="24">
-                      <el-form-item style="margin-bottom: 0px;">
-                        <el-input
-                          v-model="subject"
-                          :placeholder="$t('issues.issues')"
-                        />
+                      <el-form-item>
+                        <el-input v-model="subject" :placeholder="$t('issues.issues')" />
                       </el-form-item>
                     </el-col>
                   </el-form>
@@ -49,12 +47,12 @@
                     <el-col :span="24">
                       <el-form-item style="margin-bottom: 0px;">
                         <el-card v-if="summaryNewPreview" shadow="never">
-                          <el-scrollbar wrap-class="scroll-previwer-disable-new">
+                          <el-scrollbar wrap-class="scroll-previwer-disable">
                             <v-md-preview
                               :text="summary"
+                              height="150px"
                               class="previwer-disable"
                               style="padding: 0px"
-                              height="320px"
                             />
                           </el-scrollbar>
                         </el-card>
@@ -62,7 +60,7 @@
                           v-else
                           v-model="summary"
                           :placeholder="$t('issues.summary')"
-                          height="310px"
+                          height="360px"
                           left-toolbar="undo redo clear h bold italic strikethrough quote ul ol table hr link image code save | emoji listMailTemplates"
                           :toolbar="listOption"
                           right-toolbar="sync-scroll fullscreen"
@@ -106,115 +104,166 @@
                 />
               </el-card>
             </div>
-            <div style="padding: 0px 0px;width: 25%;border: 1px solid #e6ebf5;">
-              <el-card class="card-options" shadow="never">
-                <el-row class="epale">
-                  <el-scrollbar
-                    wrap-class="scroll-option-from"
-                    style="padding-right: 20px;padding-left: 5px;"
-                  >
-                    <el-form label-position="top" class="form-comments">
-                      <el-form-item
-                        :label="$t('issues.typeOfRequest')"
-                        style="margin-top: 10px;margin-bottom: 10px;"
+            <div style="padding: 0px 15px;border: 1px solid #e6ebf5;">
+              <el-form label-position="top" class="form-min-label">
+                <el-row :gutter="20">
+                  <el-col :span="12">
+                    <el-form-item :label="$t('issues.typeOfRequest')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentRequestTypes"
+                        filterable
+                        @visible-change="findRequestTypes"
+                        @change="exitPopover('newtypeOfRequest')"
                       >
-                        <el-select
-                          v-model="currentRequestTypes"
-                          filterable
-                          @visible-change="findRequestTypes"
-                          @change="exitPopover('newtypeOfRequest')"
-                        >
-                          <el-option
-                            v-for="item in listIssuesTypes"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id"
-                          />
-                        </el-select>
-                      </el-form-item>
-                      <el-form-item
-                        :label="$t('issues.status')"
-                        style="margin-bottom: 10px;"
-                      >
-                        <el-select
-                          v-model="currentStatus"
-                          filterable
-                          @visible-change="findStatus"
-                          @change="exitPopover('newStatus')"
-                        >
-                          <el-option
-                            v-for="item in listStatuses"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id"
-                          />
-                        </el-select>
-                      </el-form-item>
-                      <el-form-item
-                        :label="$t('issues.priority')"
-                        style="margin-bottom: 10px;"
-                      >
-                        <el-select
-                          v-model="currentPriority"
-                          filterable
-                          @visible-change="findPriority"
-                          @change="exitPopover('newPriority')"
-                        >
-                          <el-option
-                            v-for="item in listPriority"
-                            :key="item.value"
-                            :label="item.name"
-                            :value="item.value"
-                          />
-                        </el-select>
-                      </el-form-item>
-                      <el-form-item
-                        label="Agente Comercial"
-                        style="margin-bottom: 10px;"
-                      >
-                        <el-select
-                          v-model="currentSalesReps"
-                          filterable
-                          remote
-                          :loading="loadingSales"
-                          :remote-method="remoteMethodSales"
-                          @visible-change="findSalesReps"
-                          @change="exitPopover('newSalesReps')"
-                        >
-                          <el-option
-                            v-for="item in listSalesReps"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id"
-                          />
-                        </el-select>
-                      </el-form-item>
-                      <el-form-item
-                        label="Proxima Fecha"
-                        style="margin-bottom: 0px;"
-                      >
-                        <el-date-picker
-                          v-model="newDateNextAction"
-                          type="datetime"
-                          placeholder="Proxima Fecha"
-                          @change="exitPopover('updateDate')"
+                        <el-option
+                          v-for="item in listIssuesTypes"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
                         />
-                      </el-form-item>
-                    </el-form>
-                  </el-scrollbar>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.status')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentStatus"
+                        filterable
+                        :disabled="isEmptyValue(currentRequestTypes)"
+                        @visible-change="findStatus"
+                        @change="exitPopover('')"
+                      >
+                        <el-option
+                          v-for="item in listStatuses"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.priority')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentPriority"
+                        filterable
+                        @visible-change="findPriority"
+                        @change="exitPopover('')"
+                      >
+                        <el-option
+                          v-for="item in listPriority"
+                          :key="item.value"
+                          :label="item.name"
+                          :value="item.value"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.salesAgent')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentSalesReps"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodSales"
+                        @visible-change="findSalesReps"
+                        @change="exitPopover('')"
+                      >
+                        <el-option
+                          v-for="item in listSalesReps"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item :label="$t('issues.businessPartner')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentBusinessPartner"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodBusinessPartner"
+                        @visible-change="findBusinessPartner"
+                      >
+                        <el-option
+                          v-for="item in listBusinessPartner"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.category')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentCategory"
+                        remote
+                        filterable
+                        :remote-method="remoteMethodCategory"
+                        @visible-change="findCategory"
+                      >
+                        <el-option
+                          v-for="item in listCategory"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.project')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentProject"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodProject"
+                        @visible-change="findProject"
+                      >
+                        <el-option
+                          v-for="item in listProject"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.group')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentGroup"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodGroup"
+                        @visible-change="findGroup"
+                      >
+                        <el-option
+                          v-for="item in listGroup"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <!-- <el-col :span="24">
+                    <el-form-item :label="$t('issues.nextDate')" style="margin: 0px;">
+                      <el-date-picker
+                        v-model="newDateNextAction"
+                        clearable
+                        type="datetime"
+                        placeholder="Proxima Fecha"
+                      />
+                    </el-form-item>
+                  </el-col> -->
                 </el-row>
-              </el-card>
+              </el-form>
             </div>
           </div>
         </el-card>
         <el-card v-else class="comments-card" style="padding: 0px;height: auto;">
-          <div slot="header" class="comments-card-clearfix" :style="!isPanelEditRequest ? 'height: auto;' : 'height: auto;display: flex;'">
-            <!-- <span v-if="!isPanelEditRequest"> -->
+          <div slot="header" class="comments-card-clearfix" style="height: auto;">
             <el-button
+              style="margin-right: 10px;"
               class="button-base-icon"
               plain
               type="info"
-              style="margin-top: 1px;"
               @click="cancelEdit(currentIssues)"
             >
               <i class="el-icon-arrow-left" style="font-size: 18px;" />
@@ -223,20 +272,13 @@
               {{ '#' + currentIssues.document_no }}
               {{ currentIssues.subject }}
             </span>
-            <!-- </span> -->
-            <el-row
-              v-else
-              style="width: 100%;float: right;"
-            >
+            <el-row v-else :gutter="20">
               <el-form label-position="top">
                 <el-col :span="4">
                   <el-form-item style="padding: 0px;margin-bottom: 0px;">
-                    <el-tag
-                      effect="plain"
-                      style="color: black;font-size: 16px;width: 100%;height: 100%;line-height: 33px;font-weight: bolder;"
-                    >
+                    <span style="color: black; font-size: 16px;">
                       {{ '#' + currentIssues.document_no }}
-                    </el-tag>
+                    </span>
                   </el-form-item>
                 </el-col>
                 <el-col :span="20">
@@ -274,24 +316,169 @@
                     </el-button>
                   </el-popover>
                 </el-dropdown-item>
-                <!-- <el-dropdown-item :command="{currentIssues, option:'fullscreen'}"> <svg-icon icon-class="fullscreen" style="margin-right: 3px;" /> {{ 'Pantalla Completa' }} </el-dropdown-item> -->
               </el-dropdown-menu>
             </el-dropdown>
-            <!-- style="margin-right: 3px;" -->
-            <el-button v-if="!isPanelEditRequest" style="float: right;margin-right: 10px;" plain type="success" @click="newIssues()">
-              {{ $t('issues.createNewRequest') }}
-              <i class="el-icon-plus" />
-            </el-button>
           </div>
-          <div id="panel-issues" style="display: flex;width: -webkit-fill-available;">
-            <div id="panel-left" style="padding: 0px;width: 80%;">
+          <div id="panel-issues" style="display: flex;width: -webkit-fill-available;overflow: auto;">
+            <div id="panel-rigth" style="padding: 0px 15px;border: 1px solid #e6ebf5;">
+              <el-form label-position="top" class="form-comments">
+                <el-row :gutter="20">
+                  <el-col :span="12">
+                    <el-form-item :label="$t('issues.typeOfRequest')">
+                      <el-select
+                        v-model="currentRequestTypes"
+                        filterable
+                        @visible-change="findRequestTypes"
+                        @change="updateIssuesTypeRequest"
+                      >
+                        <el-option
+                          v-for="item in listIssuesTypes"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.status')">
+                      <el-select
+                        v-model="currentStatus"
+                        filterable
+                        :disabled="isEmptyValue(currentRequestTypes)"
+                        @visible-change="findStatus"
+                        @change="updateIssuesStatus"
+                      >
+                        <el-option
+                          v-for="item in listStatuses"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.priority')">
+                      <el-select
+                        v-model="currentPriority"
+                        filterable
+                        @visible-change="findPriority"
+                        @change="updateIssuesPriority"
+                      >
+                        <el-option
+                          v-for="item in listPriority"
+                          :key="item.value"
+                          :label="item.name"
+                          :value="item.value"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.salesAgent')">
+                      <el-select
+                        v-model="currentSalesReps"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodSales"
+                        @visible-change="findSalesReps"
+                        @change="updateIssuesSalesReps"
+                      >
+                        <el-option
+                          v-for="item in listSalesReps"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item :label="$t('issues.businessPartner')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentBusinessPartner"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodBusinessPartner"
+                        @visible-change="findBusinessPartner"
+                      >
+                        <el-option
+                          v-for="item in listBusinessPartner"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.category')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentCategory"
+                        remote
+                        filterable
+                        :remote-method="remoteMethodCategory"
+                        @visible-change="findCategory"
+                      >
+                        <el-option
+                          v-for="item in listCategory"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.project')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentProject"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodProject"
+                        @visible-change="findProject"
+                      >
+                        <el-option
+                          v-for="item in listProject"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.group')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentGroup"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodGroup"
+                        @visible-change="findGroup"
+                      >
+                        <el-option
+                          v-for="item in listGroup"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <!-- <el-col :span="24">
+                    <el-form-item :label="$t('issues.nextDate')">
+                      <el-date-picker
+                        v-model="currentDateNextAction"
+                        type="datetime"
+                        placeholder="Proxima Fecha"
+                        @change="updateIssuesDateNextAction"
+                      />
+                    </el-form-item>
+                  </el-col> -->
+                </el-row>
+              </el-form>
+            </div>
+            <div id="panel-left" style="padding: 0px;width: 100%;">
               <el-card class="card-summary" shadow="never" style="height: 100% !important">
                 <el-row v-if="isPanelEditRequest" style="height: 100% !important">
                   <el-form label-position="top">
                     <el-col :span="24">
                       <el-form-item :label="$t('issues.summary')">
                         <el-card v-if="summaryUpdatePreview" shadow="never">
-                          <el-scrollbar wrap-class="scroll-previwer-disable-tab">
+                          <el-scrollbar wrap-class="scroll-previwer-disable">
                             <v-md-preview :text="updateSummary" class="previwer-disable" style="padding: 0px" height="150px" />
                           </el-scrollbar>
                         </el-card>
@@ -348,119 +535,12 @@
                 </p>
               </el-card>
             </div>
-            <div id="panel-rigth" style="width: 25%;padding: 0px 5px;border: 1px solid #e6ebf5;">
-              <el-card class="card-options" shadow="never">
-                <el-row>
-                  <el-scrollbar wrap-class="scroll-option-from">
-                    <el-form
-                      label-position="top"
-                      class="form-comments"
-                      style="margin-left: 5px"
-                    >
-                      <el-form-item :label="$t('issues.typeOfRequest')">
-                        <el-select
-                          :value="isEmptyValue(listIssuesTypes) ? currentIssues.request_type.name : currentIssues.request_type.id"
-                          filterable
-                          @visible-change="findRequestTypes"
-                          @change="updateIssuesTypeRequest"
-                        >
-                          <el-option
-                            v-for="item in listIssuesTypes"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id"
-                          />
-                        </el-select>
-                      </el-form-item>
-                      <el-form-item :label="$t('issues.status')">
-                        <el-select
-                          :value="isEmptyValue(listStatuses) ? currentIssues.status.name : currentIssues.status.id"
-                          filterable
-                          @visible-change="findStatus"
-                          @change="updateIssuesStatus"
-                        >
-                          <el-option
-                            v-for="item in listStatuses"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id"
-                          />
-                        </el-select>
-                      </el-form-item>
-                      <el-form-item :label="$t('issues.priority')">
-                        <el-select
-                          :value="isEmptyValue(listPriority) ? currentIssues.priority.name : currentIssues.priority.value"
-                          filterable
-                          @visible-change="findPriority"
-                          @change="updateIssuesPriority"
-                        >
-                          <el-option
-                            v-for="item in listPriority"
-                            :key="item.value"
-                            :label="item.name"
-                            :value="item.value"
-                          />
-                        </el-select>
-                      </el-form-item>
-                      <el-form-item label="Agente Comercial">
-                        <el-select
-                          :value="isEmptyValue(listSalesReps) ? currentIssues.sales_representative.name : currentIssues.sales_representative.id"
-                          filterable
-                          remote
-                          :loading="loadingSales"
-                          :remote-method="remoteMethodSales"
-                          @visible-change="findSalesReps"
-                          @change="updateIssuesSalesReps"
-                        >
-                          <el-option
-                            v-for="item in listSalesReps"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id"
-                          />
-                        </el-select>
-                      </el-form-item>
-                      <el-form-item label="Proxima Fecha">
-                        <el-date-picker
-                          v-model="currentIssues.dateNextAction"
-                          type="datetime"
-                          placeholder="Proxima Fecha"
-                          style="width: 90%;"
-                          @change="updateIssuesDateNextAction"
-                        />
-                      </el-form-item>
-                    </el-form>
-                  </el-scrollbar>
-                </el-row>
-              </el-card>
-            </div>
           </div>
           <i style="font-size: 12px;color: #82848a;">
-            {{ $t('issues.isCreated') }} {{ translateDateByLong(currentIssues.created) }} {{ $t('issues.by') }}
-            <svg-icon
-              v-if="isEmptyValue(currentIssues.user.avatar)"
-              icon-class="user"
-            />
-            <el-image
-              :src="avatarResize(currentIssues.user)"
-              fit="contain"
-              style="
-                width: 20px;
-                height: 20px;
-                border-radius: 50%;
-                display: inline-block;
-                position: relative;
-                cursor: default;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-              "
-            />
-            <b>
-              {{ currentIssues.user.name }}
-            </b>
+            {{ $t('issues.isCreated') }} {{ translateDateByLong(currentIssues.created) }} {{ $t('issues.by') }} {{ currentIssues.user_name }} <svg-icon icon-class="user" />
           </i>
         </el-card>
         <br>
-        <!-- <el-scrollbar ref="scrollTimeLineTabComments" wrap-class="scroll-timeline-tab"> -->
         <el-timeline v-if="!isEmptyValue(currentIssues) && !isPanelNewRequest" style="padding-left: 15px;padding-right: 15px;">
           <el-timeline-item
             v-for="(comment, index) in listComments"
@@ -470,7 +550,7 @@
             style="margin-left: 10px;"
           >
             <span v-if="comment.issue_comment_type === 1">
-              <svg-icon v-if="isEmptyValue(comment.user.avatar)" icon-class="user" />
+              <svg-icon v-if="!isEmptyValue(comment.user.avatar)" icon-class="user" />
               <el-image
                 :src="avatarResize(comment.user)"
                 fit="contain"
@@ -501,23 +581,7 @@
             <el-card v-else class="list-comments">
               <div slot="header" class="list-comments-clearfix">
                 <span>
-                  <svg-icon v-if="isEmptyValue(comment.user.avatar)" icon-class="user" />
-                  <el-image
-                    :src="avatarResize(comment.user)"
-                    fit="contain"
-                    style="
-                      width: 20px;
-                      height: 20px;
-                      border-radius: 50%;
-                      display: inline-block;
-                      position: relative;
-                      cursor: default;
-                      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-                    "
-                  />
-                  <b>
-                    {{ comment.user.name }}
-                  </b>
+                  <svg-icon icon-class="user" /> {{ comment.user_name }}
                 </span>
                 <el-dropdown trigger="click" style="float: right" @command="handleCommand">
                   <span class="el-dropdown-link">
@@ -540,10 +604,7 @@
                     <el-scrollbar wrap-class="scroll-previwer-disable">
                       <v-md-preview :text="commentUpdate" class="previwer-disable" style="padding: 0px" height="150px" />
                     </el-scrollbar>
-                    <!-- <v-md-preview v-if="commentUpdate" :text="comment.result" class="previwer-disable" style="padding: 0px" /> -->
-                    <!-- <div v-markdown="commentUpdate" class="output" /> -->
                   </el-card>
-                  <!-- <div v-if="commentUpdatePreview" v-markdown="comment.result" class="output" /> -->
                   <v-md-editor
                     v-else
                     v-model="commentUpdate"
@@ -587,12 +648,845 @@
             </el-card>
           </el-timeline-item>
         </el-timeline>
-        <!-- </el-scrollbar> -->
-      </el-main>
-      <el-footer style="height: auto%;padding: 0px;">
-        <span v-if="!isEmptyValue(currentIssues) && !isPanelNewRequest">
+      </el-header>
+      <el-header v-else ref="scrollIssues" height="70%" style="overflow: auto;padding: 0px;">
+        <el-card v-if="isEmptyValue(currentIssues) || isPanelNewRequest" class="comments-card" style="height: auto;padding: 0px;">
+          <div slot="header" class="clearfix">
+            <el-button style="float: left; margin-right: 10px;" size="mini" plain type="info" @click="SelectionIssue">
+              <i class="el-icon-arrow-left" style="font-size: 18px;" />
+            </el-button>
+            <b style="color: black; font-size: 19px;">
+              {{ $t('issues.newRequest') }}
+            </b>
+          </div>
+          <div style="display: flex;width: -webkit-fill-available;">
+            <div style="padding: 0px;width: 100%;">
+              <el-card class="card-summary" shadow="never">
+                <el-row>
+                  <el-form label-position="top">
+                    <el-col :span="24">
+                      <el-form-item>
+                        <el-input v-model="subject" :placeholder="$t('issues.issues')" />
+                      </el-form-item>
+                    </el-col>
+                  </el-form>
+                </el-row>
+                <el-row>
+                  <el-form label-position="top">
+                    <el-col :span="24">
+                      <el-form-item style="margin-bottom: 0px;">
+                        <el-card v-if="summaryNewPreview" shadow="never">
+                          <el-scrollbar wrap-class="scroll-previwer-disable">
+                            <v-md-preview :text="summary" class="previwer-disable" style="padding: 0px" height="150px" />
+                          </el-scrollbar>
+                        </el-card>
+                        <v-md-editor
+                          v-else
+                          v-model="summary"
+                          :placeholder="$t('issues.summary')"
+                          height="250px"
+                          left-toolbar="undo redo clear h bold italic strikethrough quote ul ol table hr link image code save | emoji listMailTemplates"
+                          :toolbar="listOption"
+                          right-toolbar="sync-scroll fullscreen"
+                          mode="edit"
+                        />
+                      </el-form-item>
+                    </el-col>
+                  </el-form>
+                </el-row>
+                <el-button
+                  style="float: right;margin: 10px;"
+                  :disabled="isDisabledSave"
+                  type="primary"
+                  icon="el-icon-check"
+                  class="button-base-icon"
+                  :loading="isLoadingNewIssues"
+                  @click="saveIssues()"
+                />
+                <el-button
+                  type="danger"
+                  icon="el-icon-close"
+                  style="float: right;margin-top: 10px;"
+                  class="button-base-icon"
+                  @click="SelectionIssue"
+                />
+                <el-button
+                  type="info"
+                  plain
+                  style="float: right; margin-top: 10px;"
+                  class="button-base-icon"
+                  :disabled="isEmptyValue(summary)"
+                  @click="summary = ''"
+                >
+                  <svg-icon icon-class="layers-clear" />
+                </el-button>
+                <el-checkbox
+                  v-model="summaryNewPreview"
+                  :label="$t('issues.preview')"
+                  :border="true"
+                  style="float: right;margin-top: 10px"
+                />
+              </el-card>
+            </div>
+            <div style="padding: 0px 15px;border: 1px solid #e6ebf5;">
+              <el-form label-position="top" class="form-min-label">
+                <el-row :gutter="20">
+                  <el-col :span="12">
+                    <el-form-item :label="$t('issues.typeOfRequest')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentRequestTypes"
+                        filterable
+                        @visible-change="findRequestTypes"
+                        @change="exitPopover('newtypeOfRequest')"
+                      >
+                        <el-option
+                          v-for="item in listIssuesTypes"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.status')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentStatus"
+                        filterable
+                        :disabled="isEmptyValue(currentRequestTypes)"
+                        @visible-change="findStatus"
+                        @change="exitPopover('')"
+                      >
+                        <el-option
+                          v-for="item in listStatuses"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.priority')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentPriority"
+                        filterable
+                        @visible-change="findPriority"
+                        @change="exitPopover('')"
+                      >
+                        <el-option
+                          v-for="item in listPriority"
+                          :key="item.value"
+                          :label="item.name"
+                          :value="item.value"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.salesAgent')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentSalesReps"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodSales"
+                        @visible-change="findSalesReps"
+                        @change="exitPopover('')"
+                      >
+                        <el-option
+                          v-for="item in listSalesReps"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.nextDate')" style="margin: 0px;">
+                      <el-date-picker
+                        v-model="newDateNextAction"
+                        type="datetime"
+                        format="dd-MM-yyyy HH:mm:ss"
+                        placeholder="Proxima Fecha"
+                        style="display: contents"
+                        @change="updateIssuesDateNextAction"
+                      />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item :label="$t('issues.businessPartner')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentBusinessPartner"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodBusinessPartner"
+                        @visible-change="findBusinessPartner"
+                      >
+                        <el-option
+                          v-for="item in listBusinessPartner"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.category')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentCategory"
+                        remote
+                        filterable
+                        :remote-method="remoteMethodCategory"
+                        @visible-change="findCategory"
+                      >
+                        <el-option
+                          v-for="item in listCategory"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.project')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentProject"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodProject"
+                        @visible-change="findProject"
+                      >
+                        <el-option
+                          v-for="item in listProject"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.group')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentGroup"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodGroup"
+                        @visible-change="findGroup"
+                      >
+                        <el-option
+                          v-for="item in listGroup"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.taskStatus')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentTask"
+                        remote
+                        filterable
+                        :remote-method="remoteMethodTaskStatus"
+                        @visible-change="findTaskStatus"
+                      >
+                        <el-option
+                          v-for="item in listTaskStatus"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.value"
+                        />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <!-- <el-col :span="24">
+                    <el-form-item :label="$t('issues.nextDate')" style="margin: 0px;width: 100%;">
+                      <el-date-picker
+                        v-model="newDateNextAction"
+                        type="datetime"
+                        placeholder="Proxima Fecha"
+                        style="width: 100%;"
+                        @change="exitPopover('')"
+                      />
+                    </el-form-item>
+                  </el-col> -->
+                </el-row>
+              </el-form>
+            </div>
+          </div>
+        </el-card>
+        <el-card v-else class="comments-card" style="padding: 0px;height: auto;">
+          <div slot="header" class="comments-card-clearfix" style="height: auto;">
+            <el-button
+              style="margin-right: 10px;"
+              class="button-base-icon"
+              plain
+              type="info"
+              @click="cancelEdit(currentIssues)"
+            >
+              <i class="el-icon-arrow-left" style="font-size: 18px;" />
+            </el-button>
+            <span v-if="!isPanelEditRequest" style="color: black; font-size: 18px;">
+              {{ '#' + currentIssues.document_no }}
+              {{ currentIssues.subject }}
+            </span>
+            <!-- </span> -->
+            <el-row v-else :gutter="20">
+              <el-form label-position="top">
+                <el-col :span="4">
+                  <el-form-item style="padding: 0px;margin-bottom: 0px;">
+                    <span style="color: black; font-size: 16px;">
+                      {{ '#' + currentIssues.document_no }}
+                    </span>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="20">
+                  <el-form-item style="padding: 0px;margin-bottom: 0px;">
+                    <el-input v-model="currentIssues.subject" placeholder="Asunto" />
+                  </el-form-item>
+                </el-col>
+              </el-form>
+            </el-row>
+            <el-dropdown v-if="!isPanelEditRequest" trigger="click" style="float: right" @command="handleCommandIssues">
+              <span class="el-dropdown-link">
+                <el-button type="text" size="mini" style="color: black;">
+                  <b>
+                    <svg-icon icon-class="more-vertical" style="font-size: 15px;" />
+                  </b>
+                </el-button>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item icon="el-icon-edit" :command="{currentIssues, option:'edit'}"> {{ $t('issues.edit') }} </el-dropdown-item>
+                <el-dropdown-item icon="el-icon-delete" :command="{currentIssues, option:'delete'}"> {{ $t('issues.delete') }} </el-dropdown-item>
+                <el-dropdown-item icon="el-icon-zoom-in" :command="{currentIssues, option:$t('page.processActivity.zoomIn')}"> {{ $t('page.processActivity.zoomIn') }} </el-dropdown-item>
+                <el-dropdown-item icon="el-icon-time" :command="{currentIssues, option: 'timeRecord'}">
+                  <el-popover
+                    ref="timeRecord"
+                    placement="left"
+                    :title="$t('form.timeRecord.timeRecord') + ' (' + currentIssues.id + ')'"
+                    trigger="click"
+                    width="450"
+                  >
+                    <record-time
+                      :issue-id="currentIssues.id"
+                    />
+                    <el-button slot="reference" type="text">
+                      {{ $t('form.timeRecord.timeRecord') }}
+                    </el-button>
+                  </el-popover>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <el-button v-if="!isPanelEditRequest" style="float: right;margin-right: 10px;" plain type="success" @click="newIssues()">
+              {{ $t('issues.createNewRequest') }}
+              <i class="el-icon-plus" />
+            </el-button>
+          </div>
+          <div id="panel-issues" style="display: flex;width: -webkit-fill-available;">
+            <div id="panel-left" style="padding: 0px;width: 75%;">
+              <el-card class="card-summary" shadow="never" style="height: 100% !important">
+                <el-row v-if="isPanelEditRequest" style="height: 100% !important">
+                  <el-form label-position="top">
+                    <el-col :span="24">
+                      <el-form-item :label="$t('issues.summary')">
+                        <el-card v-if="summaryUpdatePreview" shadow="never">
+                          <el-scrollbar wrap-class="scroll-previwer-disable">
+                            <v-md-preview :text="updateSummary" class="previwer-disable" style="padding: 0px" height="150px" />
+                          </el-scrollbar>
+                          <!-- <div v-markdown="updateSummary" class="output" /> -->
+                        </el-card>
+                        <v-md-editor
+                          v-else
+                          v-model="updateSummary"
+                          height="250px"
+                          left-toolbar="undo redo clear h bold italic strikethrough quote ul ol table hr link image code save | emoji listMailTemplates"
+                          :toolbar="listOption"
+                          right-toolbar="sync-scroll fullscreen"
+                          mode="edit"
+                        />
+                      </el-form-item>
+                      <span v-if="isPanelEditRequest">
+                        <el-button
+                          type="primary"
+                          icon="el-icon-check"
+                          class="button-base-icon"
+                          style="float: right;margin: 10px;"
+                          @click="updateIssuesSummary(currentIssues)"
+                        />
+                        <el-button
+                          type="danger"
+                          icon="el-icon-close"
+                          class="button-base-icon"
+                          style="float: right;margin-top: 10px;"
+                          @click="editIssues(currentIssues)"
+                        />
+                        <el-button
+                          type="info"
+                          plain
+                          style="float: right; margin-top: 10px;"
+                          class="button-base-icon"
+                          :disabled="isEmptyValue(summary)"
+                          @click="updateSummary = ''"
+                        >
+                          <svg-icon icon-class="layers-clear" />
+                        </el-button>
+                        <el-checkbox
+                          v-model="summaryUpdatePreview"
+                          :label="$t('issues.preview')"
+                          class="button-base-icon"
+                          :border="true"
+                          style="float: right;margin-top: 10px;"
+                        />
+                      </span>
+                    </el-col>
+                  </el-form>
+                </el-row>
+                <p v-else style="font-size: 14px;margin: 0px;height: 100% !important">
+                  <el-scrollbar wrap-class="scroll-comments">
+                    <v-md-preview :text="currentIssues.summary" class="previwer-disable" height="200px" style="padding: 0px" />
+                  </el-scrollbar>
+                </p>
+              </el-card>
+            </div>
+            <div id="panel-rigth" style="padding: 0px 15px;border: 1px solid #e6ebf5;">
+              <el-form label-position="top" class="form-min-label">
+                <el-row :gutter="20">
+                  <el-col :span="12">
+                    <el-form-item :label="$t('issues.typeOfRequest')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentIssues.request_type.name"
+                        filterable
+                        @visible-change="findRequestTypes"
+                        @change="updateIssuesTypeRequest"
+                      >
+                        <el-option
+                          v-for="item in listIssuesTypes"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.status')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentIssues.status.name"
+                        filterable
+                        :disabled="isEmptyValue(currentIssues.request_type.id)"
+                        @visible-change="findStatus"
+                        @change="updateIssuesStatus"
+                      >
+                        <el-option
+                          v-for="item in listStatuses"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.priority')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentIssues.priority.name"
+                        filterable
+                        @visible-change="findPriority"
+                        @change="updateIssuesPriority"
+                      >
+                        <el-option
+                          v-for="item in listPriority"
+                          :key="item.value"
+                          :label="item.name"
+                          :value="item.value"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.salesAgent')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentIssues.sales_representative.name"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodSales"
+                        @visible-change="findSalesReps"
+                        @change="updateIssuesSalesReps"
+                      >
+                        <el-option
+                          v-for="item in listSalesReps"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.nextDate')" style="margin: 0px;">
+                      <!-- {{ currentIssues.dateNextAction }} -->
+                      <el-date-picker
+                        v-model="currentIssues.dateNextAction"
+                        type="datetime"
+                        format="dd-MM-yyyy HH:mm:ss"
+                        placeholder="Proxima Fecha"
+                        style="display: contents"
+                        @change="updateIssuesDateNextAction"
+                      />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item :label="$t('issues.businessPartner')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentIssues.business_partner.name"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodBusinessPartner"
+                        @visible-change="findBusinessPartner"
+                        @change="updateIssuesBusinessPartner"
+                      >
+                        <el-option
+                          v-for="item in listBusinessPartner"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.category')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentIssues.category.name"
+                        remote
+                        filterable
+                        :remote-method="remoteMethodCategory"
+                        @visible-change="findCategory"
+                        @change="updateIssuesCategory"
+                      >
+                        <el-option
+                          v-for="item in listCategory"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.project')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentIssues.project.name"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodProject"
+                        @visible-change="findProject"
+                        @change="updateIssuesProyect"
+                      >
+                        <el-option
+                          v-for="item in listProject"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.group')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentIssues.group.name"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodGroup"
+                        @visible-change="findGroup"
+                        @change="updateIssuesGroup"
+                      >
+                        <el-option
+                          v-for="item in listGroup"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('issues.taskStatus')" style="margin: 0px;">
+                      <el-select
+                        v-model="currentIssues.task_status.name"
+                        remote
+                        filterable
+                        :loading="loadingSales"
+                        :remote-method="remoteMethodTaskStatus"
+                        @visible-change="findTaskStatus"
+                        @change="updateIssuesTaskStatus"
+                      >
+                        <el-option
+                          v-for="item in listTaskStatus"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.value"
+                        />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-form>
+            </div>
+          </div>
+          <i style="font-size: 12px;color: #82848a;">
+            {{ $t('issues.isCreated') }} {{ translateDateByLong(currentIssues.created) }} {{ $t('issues.by') }}
+            <svg-icon
+              v-if="!isEmptyValue(currentIssues.user.avatar)"
+              icon-class="user"
+            />
+            <el-image
+              :src="avatarResize(currentIssues.user)"
+              fit="contain"
+              style="
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                display: inline-block;
+                position: relative;
+                cursor: default;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+              "
+            />
+            <b> {{ currentIssues.user.name }} </b>
+          </i>
+        </el-card>
+        <br>
+        <el-scrollbar v-if="getFixedHeader" ref="scrollTimeLineTabComments" wrap-class="scroll-timeline-from">
+          <el-timeline v-if="!isEmptyValue(currentIssues) && !isPanelNewRequest" style="padding-left: 15px;padding-right: 15px;">
+            <el-timeline-item
+              v-for="(comment, index) in listComments"
+              :key="index"
+              type="primary"
+              :timestamp="translateDateByLong(comment.created)"
+              style="margin-left: 10px;"
+            >
+              <span v-if="comment.issue_comment_type === 1">
+                <svg-icon v-if="!isEmptyValue(comment.user.avatar)" icon-class="user" />
+                <el-image
+                  :src="avatarResize(comment.user)"
+                  fit="contain"
+                  style="
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    display: inline-block;
+                    position: relative;
+                    cursor: default;
+                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+                  "
+                />
+                <b>
+                  {{ comment.user.name }}
+                </b>
+                {{ logDisplayLanguaje(true, false) }}
+                <b>
+                  {{ labelDisplayChange(comment, true) }}
+                </b>
+                <span v-show="!isEmptyValue(labelDisplayChange(comment, false, true))">
+                  {{ logDisplayLanguaje(false, true) }}
+                </span>
+                <b>
+                  {{ labelDisplayChange(comment, false, true) }}
+                </b>
+              </span>
+              <el-card v-else class="list-comments">
+                <div slot="header" class="list-comments-clearfix">
+                  <span>
+                    <svg-icon v-if="!isEmptyValue(comment.user.avatar)" icon-class="user" />
+                    <el-image
+                      :src="avatarResize(comment.user)"
+                      fit="contain"
+                      style="
+                        width: 20px;
+                        height: 20px;
+                        border-radius: 50%;
+                        display: inline-block;
+                        position: relative;
+                        cursor: default;
+                        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+                      "
+                    />
+                    <b>
+                      {{ comment.user.name }}
+                    </b>
+                  </span>
+                  <el-dropdown trigger="click" style="float: right" @command="handleCommand">
+                    <span class="el-dropdown-link">
+                      <el-button type="text" size="mini" style="color: black;">
+                        <b>
+                          <svg-icon icon-class="more-vertical" />
+                        </b>
+                      </el-button>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item icon="el-icon-edit" :disabled="validateUser(comment)" :command="{comment, option:'edit'}"> {{ $t('issues.edit') }} </el-dropdown-item>
+                      <el-dropdown-item icon="el-icon-delete" :disabled="validateUser(comment)" :command="{comment, option:'delete'}"> {{ $t('issues.delete') }} </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </div>
+                <div>
+                  <!-- <div v-if="!comment.isEdit" v-markdown="comment.result" class="output" /> -->
+                  <v-md-preview v-if="!comment.isEdit" :text="comment.result" class="previwer-disable" style="padding: 0px" />
+                  <span v-else>
+                    <el-card v-if="commentUpdatePreview" shadow="never">
+                      <el-scrollbar wrap-class="scroll-previwer-disable">
+                        <v-md-preview :text="commentUpdate" class="previwer-disable" style="padding: 0px" height="150px" />
+                      </el-scrollbar>
+                      <!-- <v-md-preview v-if="commentUpdate" :text="comment.result" class="previwer-disable" style="padding: 0px" /> -->
+                      <!-- <div v-markdown="commentUpdate" class="output" /> -->
+                    </el-card>
+                    <!-- <div v-if="commentUpdatePreview" v-markdown="comment.result" class="output" /> -->
+                    <v-md-editor
+                      v-else
+                      v-model="commentUpdate"
+                      height="150px"
+                      left-toolbar="undo redo clear h bold italic strikethrough quote ul ol table hr link image code save | emoji listMailTemplates"
+                      :toolbar="listOption"
+                      right-toolbar="sync-scroll fullscreen"
+                      mode="edit"
+                    />
+                    <el-button
+                      type="primary"
+                      icon="el-icon-check"
+                      class="button-base-icon"
+                      style="float: right; margin: 10px;"
+                      @click="updateComment(comment)"
+                    />
+                    <el-button
+                      type="danger"
+                      icon="el-icon-close"
+                      class="button-base-icon"
+                      style="float: right; margin-top: 10px;"
+                      @click="comment.isEdit = !comment.isEdit"
+                    />
+                    <el-button
+                      type="info"
+                      plain
+                      class="button-base-icon"
+                      style="float: right; margin-top: 10px;"
+                      @click="commentUpdate = ''"
+                    >
+                      <svg-icon icon-class="layers-clear" />
+                    </el-button>
+                    <el-checkbox
+                      v-model="commentUpdatePreview"
+                      :label="$t('issues.preview')"
+                      :border="true"
+                      style="float: right; margin-top: 10px;"
+                    />
+                  </span>
+                </div>
+              </el-card>
+            </el-timeline-item>
+          </el-timeline>
+        </el-scrollbar>
+        <span v-else>
+          <el-timeline v-if="!isEmptyValue(currentIssues) && !isPanelNewRequest" style="padding-left: 15px;padding-right: 15px;">
+            <el-timeline-item
+              v-for="(comment, index) in listComments"
+              :key="index"
+              type="primary"
+              :timestamp="translateDateByLong(comment.created)"
+              style="margin-left: 10px;"
+            >
+              <span v-if="comment.issue_comment_type === 1">
+                <svg-icon v-if="!isEmptyValue(comment.user.avatar)" icon-class="user" />
+                <el-image
+                  :src="avatarResize(comment.user)"
+                  fit="contain"
+                  style="
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    display: inline-block;
+                    position: relative;
+                    cursor: default;
+                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+                  "
+                />
+                <b>
+                  {{ comment.user.name }}
+                </b>
+                {{ logDisplayLanguaje(true, false) }}
+                <b>
+                  {{ labelDisplayChange(comment, true) }}
+                </b>
+                <span v-show="!isEmptyValue(labelDisplayChange(comment, false, true))">
+                  {{ logDisplayLanguaje(false, true) }}
+                </span>
+                <b>
+                  {{ labelDisplayChange(comment, false, true) }}
+                </b>
+              </span>
+              <el-card v-else class="list-comments">
+                <div slot="header" class="list-comments-clearfix">
+                  <span>
+                    <svg-icon icon-class="user" /> {{ comment.user_name }}
+                  </span>
+                  <el-dropdown trigger="click" style="float: right" @command="handleCommand">
+                    <span class="el-dropdown-link">
+                      <el-button type="text" size="mini" style="color: black;">
+                        <b>
+                          <svg-icon icon-class="more-vertical" />
+                        </b>
+                      </el-button>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item icon="el-icon-edit" :disabled="validateUser(comment)" :command="{comment, option:'edit'}"> {{ $t('issues.edit') }} </el-dropdown-item>
+                      <el-dropdown-item icon="el-icon-delete" :disabled="validateUser(comment)" :command="{comment, option:'delete'}"> {{ $t('issues.delete') }} </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </div>
+                <div>
+                  <!-- <div v-if="!comment.isEdit" v-markdown="comment.result" class="output" /> -->
+                  <v-md-preview v-if="!comment.isEdit" :text="comment.result" class="previwer-disable" style="padding: 0px" />
+                  <span v-else>
+                    <el-card v-if="commentUpdatePreview" shadow="never">
+                      <el-scrollbar wrap-class="scroll-previwer-disable">
+                        <v-md-preview :text="commentUpdate" class="previwer-disable" style="padding: 0px" height="150px" />
+                      </el-scrollbar>
+                      <!-- <v-md-preview v-if="commentUpdate" :text="comment.result" class="previwer-disable" style="padding: 0px" /> -->
+                      <!-- <div v-markdown="commentUpdate"remoteMethodTask class="output" /> -->
+                    </el-card>
+                    <!-- <div v-if="commentUpdatePreview" v-markdown="comment.result" class="output" /> -->
+                    <v-md-editor
+                      v-else
+                      v-model="commentUpdate"
+                      height="150px"
+                      left-toolbar="undo redo clear h bold italic strikethrough quote ul ol table hr link image code save | emoji listMailTemplates"
+                      :toolbar="listOption"
+                      right-toolbar="sync-scroll fullscreen"
+                      mode="edit"
+                    />
+                    <el-button
+                      type="primary"
+                      icon="el-icon-check"
+                      class="button-base-icon"
+                      style="float: right; margin: 10px;"
+                      @click="updateComment(comment)"
+                    />
+                    <el-button
+                      type="danger"
+                      icon="el-icon-close"
+                      class="button-base-icon"
+                      style="float: right; margin-top: 10px;"
+                      @click="comment.isEdit = !comment.isEdit"
+                    />
+                    <el-button
+                      type="info"
+                      plain
+                      class="button-base-icon"
+                      style="float: right; margin-top: 10px;"
+                      @click="commentUpdate = ''"
+                    >
+                      <svg-icon icon-class="layers-clear" />
+                    </el-button>
+                    <el-checkbox
+                      v-model="commentUpdatePreview"
+                      :label="$t('issues.preview')"
+                      :border="true"
+                      style="float: right; margin-top: 10px;"
+                    />
+                  </span>
+                </div>
+              </el-card>
+            </el-timeline-item>
+          </el-timeline>
+        </span>
+      </el-header>
+      <el-main height="auto" style="height: auto;overflow: auto;padding: 0px 0px 30px !important;">
+        <div v-if="!isEmptyValue(currentIssues) && !isPanelNewRequest">
           <el-card v-if="commentPreview" shadow="never" class="is-add-new-comments">
             <!-- <v-md-preview :text="comments" height="200px" /> -->
+            <!-- <div v-markdown="comments" class="output" /> -->
             <div slot="header">
               <b>
                 {{ $t('issues.preview') }}
@@ -601,39 +1495,6 @@
             <el-scrollbar wrap-class="scroll-previwer-disable">
               <v-md-preview :text="comments" class="previwer-disable" style="padding: 0px" height="150px" />
             </el-scrollbar>
-            <el-button
-              type="primary"
-              icon="el-icon-check"
-              class="button-base-icon"
-              style="float: right; margin: 10px;"
-              :disabled="isEmptyValue(comments)"
-              @click="addNewComments()"
-            />
-            <el-button
-              type="danger"
-              icon="el-icon-close"
-              style="float: right;margin-top: 10px;"
-              class="button-base-icon"
-              @click="cancelEdit(currentIssues)"
-            />
-            <el-button
-              type="info"
-              plain
-              style="float: right; margin-top: 10px;"
-              class="button-base-icon"
-              :disabled="isEmptyValue(comments)"
-              @click="clearComments()"
-            >
-              <svg-icon icon-class="layers-clear" />
-            </el-button>
-            <el-checkbox
-              v-model="commentPreview"
-              :label="$t('issues.preview')"
-              :border="true"
-              style="float: right; margin-top: 10px;"
-              class="button-base-icon"
-              :disabled="isEmptyValue(comments)"
-            />
           </el-card>
           <el-card v-else shadow="never" class="is-add-new-comments" style="padding: 0px;">
             <div slot="header">
@@ -642,61 +1503,50 @@
               </b>
             </div>
             <v-md-editor
-              v-if="isCollapseComments"
-              v-model="comments"
-              :placeholder="$t('issues.addNewCommentary')"
-              height="50px"
-              left-toolbar="undo redo clear h bold italic strikethrough quote ul ol table hr link image code save | emoji listMailTemplates"
-              :toolbar="listOption"
-              right-toolbar="isCollapseUp sync-scroll fullscreen"
-              mode="edit"
-            />
-            <v-md-editor
-              v-else
               v-model="comments"
               :placeholder="$t('issues.addNewCommentary')"
               height="150px"
               left-toolbar="undo redo clear h bold italic strikethrough quote ul ol table hr link image code save | emoji listMailTemplates"
-              :toolbar="listOption"
-              right-toolbar="isCollapseDown sync-scroll fullscreen"
+              right-toolbar="isCollapseUp sync-scroll fullscreen"
               mode="edit"
-            />
-            <el-button
-              type="primary"
-              icon="el-icon-check"
-              class="button-base-icon"
-              style="float: right; margin: 10px;"
-              :disabled="isEmptyValue(comments)"
-              @click="addNewComments()"
-            />
-            <el-button
-              type="danger"
-              icon="el-icon-close"
-              style="float: right;margin-top: 10px;"
-              class="button-base-icon"
-              @click="cancelEdit(currentIssues)"
-            />
-            <el-button
-              type="info"
-              plain
-              style="float: right; margin-top: 10px;"
-              class="button-base-icon"
-              :disabled="isEmptyValue(comments)"
-              @click="clearComments()"
-            >
-              <svg-icon icon-class="layers-clear" />
-            </el-button>
-            <el-checkbox
-              v-model="commentPreview"
-              :label="$t('issues.preview')"
-              :border="true"
-              style="float: right; margin-top: 10px;"
-              class="button-base-icon"
-              :disabled="isEmptyValue(comments)"
+              :toolbar="listOption"
             />
           </el-card>
-        </span>
-      </el-footer>
+          <el-button
+            type="primary"
+            icon="el-icon-check"
+            class="button-base-icon"
+            style="float: right; margin: 10px;"
+            :disabled="isEmptyValue(comments)"
+            @click="addNewComments()"
+          />
+          <el-button
+            type="danger"
+            icon="el-icon-close"
+            style="float: right;margin-top: 10px;"
+            class="button-base-icon"
+            @click="cancelEdit(currentIssues)"
+          />
+          <el-button
+            type="info"
+            plain
+            style="float: right; margin-top: 10px;"
+            class="button-base-icon"
+            :disabled="isEmptyValue(comments)"
+            @click="clearComments()"
+          >
+            <svg-icon icon-class="layers-clear" />
+          </el-button>
+          <el-checkbox
+            v-model="commentPreview"
+            :label="$t('issues.preview')"
+            :border="true"
+            style="float: right; margin-top: 10px;"
+            class="button-base-icon"
+            :disabled="isEmptyValue(comments)"
+          />
+        </div>
+      </el-main>
     </el-container>
   </span>
 </template>
@@ -721,14 +1571,19 @@ import { isEmptyValue } from '@/utils/ADempiere'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { translateDateByLong, formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
-import { getImagePath } from '@/utils/ADempiere/resource.js'
+// import { getImagePath } from '@/utils/ADempiere/resource.js'
 
 // Api Request Methods
 import {
   requestListSalesRepresentatives,
   requestListRequestTypes,
+  requestListPriorities,
+  listCategoriesRequest,
+  listBusinessPartners,
   requestListStatuses,
-  requestListPriorities
+  listGroupsRequest,
+  listTaskStatuses,
+  listProjects
 } from '@/api/ADempiere/user-interface/component/issue'
 
 export default defineComponent({
@@ -762,8 +1617,8 @@ export default defineComponent({
     const currentDateNextAction = ref('')
     const newDateNextAction = ref(new Date())
     const summary = ref('')
-    const comments = ref('')
     const updateSummary = ref('')
+    const comments = ref('')
     const commentUpdate = ref('')
     const markdownContent = ref('')
     const commentUpdatePreview = ref(false)
@@ -774,7 +1629,6 @@ export default defineComponent({
     const isPanelEditRequest = ref(false)
     const scrollTimeLineTabComments = ref(null)
     const scrollIssues = ref(null)
-
     // List
     const listSalesReps = ref([])
     const listIssuesTypes = ref([])
@@ -825,12 +1679,16 @@ export default defineComponent({
       isEmptyValue(summary.value)
     })
 
-    const isShowTitleForm = computed(() => {
-      return store.getters.getIsShowTitleForm
-    })
-
     const currentIssues = computed(() => {
       return store.getters.getCurrentIssues
+    })
+
+    const userId = computed(() => {
+      return store.getters['user/userInfo'].id
+    })
+
+    const isShowTitleForm = computed(() => {
+      return store.getters.getIsShowTitleForm
     })
 
     const isPanelEditIssues = computed(() => {
@@ -840,10 +1698,6 @@ export default defineComponent({
 
     const listComments = computed(() => {
       return store.getters.getListComments
-    })
-
-    const userId = computed(() => {
-      return store.getters['user/userInfo'].id
     })
 
     const currentRequestTypesLabel = computed(() => {
@@ -874,33 +1728,45 @@ export default defineComponent({
       return ''
     })
 
-    function findSalesReps(isVisible) {
+    const getFixedHeader = computed(() => {
+      return store.getters['settings/getFixedHeader']
+    })
+
+    function findSalesReps(isVisible, searchValue) {
       return new Promise((resolve, reject) => {
         if (!isVisible) {
           resolve([])
         }
         loadingSales.value = true
-        requestListSalesRepresentatives({})
+        requestListSalesRepresentatives({
+          searchValue
+        })
           .then(response => {
             const { records } = response
             listSalesReps.value = records
             resolve(records)
           })
           .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
             showMessage({
-              message: error.message,
+              message,
               type: 'warning'
             })
-            reject([])
+            resolve([])
           })
           .finally(() => {
             loadingSales.value = false
           })
       })
     }
+
     const loadingSales = ref(false)
+
     function remoteMethodSales(query) {
-      if (!isEmptyValue(query) && query.length > 2) {
+      if (!isEmptyValue(query) && query.length > 1) {
         findSalesReps(true, query)
       }
     }
@@ -915,8 +1781,12 @@ export default defineComponent({
           listIssuesTypes.value = records
         })
         .catch(error => {
+          let message = error.message
+          if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+            message = error.response.data.message
+          }
           showMessage({
-            message: error.message,
+            message,
             type: 'warning'
           })
         })
@@ -927,13 +1797,9 @@ export default defineComponent({
       if (!isVisible) {
         return
       }
-
       if (!isEmptyValue(currentIssues.value) && !isPanelNewRequest.value) {
         requestTypeId = currentIssues.value.request_type.id
       }
-
-      if (isEmptyValue(requestTypeId)) return
-
       requestListStatuses({
         requestTypeId
       })
@@ -942,8 +1808,12 @@ export default defineComponent({
           listStatuses.value = records
         })
         .catch(error => {
+          let message = error.message
+          if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+            message = error.response.data.message
+          }
           showMessage({
-            message: error.message,
+            message,
             type: 'warning'
           })
         })
@@ -959,8 +1829,12 @@ export default defineComponent({
           listPriority.value = records
         })
         .catch(error => {
+          let message = error.message
+          if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+            message = error.response.data.message
+          }
           showMessage({
-            message: error.message,
+            message,
             type: 'warning'
           })
         })
@@ -972,6 +1846,11 @@ export default defineComponent({
       store.dispatch('newIssues', {
         tableName,
         recordId,
+        businessPartnerId: currentBusinessPartner.value,
+        categoryId: currentCategory.value,
+        projectId: currentProject.value,
+        groupId: currentGroup.value,
+        taskStatusValue: currentTask.value,
         subject: subject.value,
         summary: summary.value,
         requestTypeId: currentRequestTypes.value,
@@ -994,8 +1873,12 @@ export default defineComponent({
         })
         .catch(error => {
           isLoadingNewIssues.value = false
+          let message = error.message
+          if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+            message = error.response.data.message
+          }
           showMessage({
-            message: error.message,
+            message,
             type: 'warning'
           })
         })
@@ -1005,70 +1888,282 @@ export default defineComponent({
       const {
         id,
         uuid,
+        status,
+        summary,
         subject,
-        summary
+        group,
+        project,
+        priority,
+        business_partner,
+        task_status,
+        parent_issue,
+        category,
+        date_next_action,
+        request_type
       } = currentIssues.value
       store.dispatch('editIssues', {
         id,
         uuid,
         subject,
-        summary,
-        requestTypeId: currentIssues.value.request_type.id,
-        requestTypeUuid: currentIssues.value.request_type.uuid,
+        summary: summary,
+        requestTypeId: request_type.id,
         salesRepresentativeId: newValue,
-        priorityValue: currentIssues.value.priority.value,
-        statusId: currentIssues.value.status.id
+        priorityValue: priority.value,
+        statusId: status.id,
+        categoryId: category.id,
+        groupId: group.id,
+        businessPartnerId: business_partner.id,
+        projectId: project.id,
+        taskStatusValue: task_status.value,
+        dateNextAction: date_next_action,
+        parentIssueId: parent_issue.id
       })
       // refs.updateSalesReps.showPopper = false
     }
 
     function updateIssuesTypeRequest(newValue) {
-      findStatus(true)
       const {
         id,
         uuid,
+        status,
+        summary,
         subject,
-        summary
+        group,
+        project,
+        priority,
+        business_partner,
+        task_status,
+        parent_issue,
+        category,
+        date_next_action,
+        sales_representative
       } = currentIssues.value
       store.dispatch('editIssues', {
         id,
         uuid,
         subject,
-        summary,
+        summary: summary,
         requestTypeId: newValue,
-        salesRepresentativeId: currentIssues.value.sales_representative.id,
-        salesRepresentativeUuid: currentIssues.value.sales_representative.uuid,
-        priorityValue: currentIssues.value.priority.value,
-        statusId: currentIssues.value.status.id
+        salesRepresentativeId: sales_representative.id,
+        priorityValue: priority.value,
+        statusId: status.id,
+        categoryId: category.id,
+        groupId: group.id,
+        businessPartnerId: business_partner.id,
+        projectId: project.id,
+        taskStatusValue: task_status.value,
+        dateNextAction: date_next_action,
+        parentIssueId: parent_issue.id
       })
-        .then(() => {
-          findStatus(true)
-          const requestType = this.listIssuesTypes.find(list => list.id === newValue)
-          const { default_status } = requestType
-          if (default_status.id === 0) {
-            this.currentStatus = ''
-            return
-          }
-          this.currentStatus = default_status.id
-        })
+    }
+    function updateIssuesBusinessPartner(newValue) {
+      const {
+        id,
+        uuid,
+        status,
+        summary,
+        subject,
+        group,
+        project,
+        priority,
+        request_type,
+        task_status,
+        parent_issue,
+        category,
+        date_next_action,
+        sales_representative
+      } = currentIssues.value
+      store.dispatch('editIssues', {
+        id,
+        uuid,
+        subject,
+        summary: summary,
+        requestTypeId: request_type.id,
+        salesRepresentativeId: sales_representative.id,
+        priorityValue: priority.value,
+        statusId: status.id,
+        categoryId: category.id,
+        groupId: group.id,
+        businessPartnerId: newValue,
+        projectId: project.id,
+        taskStatusValue: task_status.value,
+        dateNextAction: date_next_action,
+        parentIssueId: parent_issue.id
+      })
+    }
+    function updateIssuesCategory(newValue) {
+      const {
+        id,
+        uuid,
+        status,
+        summary,
+        subject,
+        group,
+        project,
+        priority,
+        request_type,
+        task_status,
+        parent_issue,
+        business_partner,
+        date_next_action,
+        sales_representative
+      } = currentIssues.value
+      store.dispatch('editIssues', {
+        id,
+        uuid,
+        subject,
+        summary: summary,
+        requestTypeId: request_type.id,
+        salesRepresentativeId: sales_representative.id,
+        priorityValue: priority.value,
+        statusId: status.id,
+        categoryId: newValue,
+        groupId: group.id,
+        businessPartnerId: business_partner.id,
+        projectId: project.id,
+        taskStatusValue: task_status.value,
+        dateNextAction: date_next_action,
+        parentIssueId: parent_issue.id
+      })
+    }
+    function updateIssuesProyect(newValue) {
+      const {
+        id,
+        uuid,
+        status,
+        summary,
+        subject,
+        group,
+        priority,
+        category,
+        request_type,
+        task_status,
+        parent_issue,
+        business_partner,
+        date_next_action,
+        sales_representative
+      } = currentIssues.value
+      store.dispatch('editIssues', {
+        id,
+        uuid,
+        subject,
+        summary: summary,
+        requestTypeId: request_type.id,
+        salesRepresentativeId: sales_representative.id,
+        priorityValue: priority.value,
+        statusId: status.id,
+        categoryId: category.id,
+        groupId: group.id,
+        businessPartnerId: business_partner.id,
+        projectId: newValue,
+        taskStatusValue: task_status.value,
+        dateNextAction: date_next_action,
+        parentIssueId: parent_issue.id
+      })
+    }
+    function updateIssuesGroup(newValue) {
+      const {
+        id,
+        uuid,
+        status,
+        summary,
+        subject,
+        project,
+        priority,
+        category,
+        request_type,
+        task_status,
+        parent_issue,
+        business_partner,
+        date_next_action,
+        sales_representative
+      } = currentIssues.value
+      store.dispatch('editIssues', {
+        id,
+        uuid,
+        subject,
+        summary: summary,
+        requestTypeId: request_type.id,
+        salesRepresentativeId: sales_representative.id,
+        priorityValue: priority.value,
+        statusId: status.id,
+        categoryId: category.id,
+        groupId: newValue,
+        businessPartnerId: business_partner.id,
+        projectId: project.id,
+        taskStatusValue: task_status.value,
+        dateNextAction: date_next_action,
+        parentIssueId: parent_issue.id
+      })
+    }
+    function updateIssuesTaskStatus(newValue) {
+      const {
+        id,
+        uuid,
+        group,
+        status,
+        summary,
+        subject,
+        project,
+        priority,
+        category,
+        request_type,
+        parent_issue,
+        business_partner,
+        date_next_action,
+        sales_representative
+      } = currentIssues.value
+      store.dispatch('editIssues', {
+        id,
+        uuid,
+        subject,
+        summary: summary,
+        requestTypeId: request_type.id,
+        salesRepresentativeId: sales_representative.id,
+        priorityValue: priority.value,
+        statusId: status.id,
+        categoryId: category.id,
+        groupId: group.id,
+        businessPartnerId: business_partner.id,
+        projectId: project.id,
+        taskStatusValue: newValue,
+        dateNextAction: date_next_action,
+        parentIssueId: parent_issue.id
+      })
     }
     function updateIssuesSummary(issues) {
       const {
         id,
         uuid,
-        subject
+        group,
+        status,
+        subject,
+        project,
+        priority,
+        category,
+        task_status,
+        request_type,
+        parent_issue,
+        business_partner,
+        date_next_action,
+        sales_representative
       } = currentIssues.value
       store.dispatch('editIssues', {
         id,
         uuid,
         subject,
-        summary: updateSummary.value,
-        requestTypeId: currentIssues.value.request_type.id,
-        requestTypeUuid: currentIssues.value.request_type.uuid,
-        salesRepresentativeId: currentIssues.value.sales_representative.id,
-        salesRepresentativeUuid: currentIssues.value.sales_representative.uuid,
-        priorityValue: currentIssues.value.priority.value,
-        statusId: currentIssues.value.status.id
+        summary: issues,
+        requestTypeId: request_type.id,
+        salesRepresentativeId: sales_representative.id,
+        priorityValue: priority.value,
+        statusId: status.id,
+        categoryId: category.id,
+        groupId: group.id,
+        businessPartnerId: business_partner.id,
+        projectId: project.id,
+        taskStatusValue: task_status.value,
+        dateNextAction: date_next_action,
+        parentIssueId: parent_issue.id
       })
       editIssues(issues)
     }
@@ -1077,20 +2172,35 @@ export default defineComponent({
       const {
         id,
         uuid,
+        group,
         subject,
-        summary
+        summary,
+        project,
+        status,
+        category,
+        task_status,
+        request_type,
+        parent_issue,
+        business_partner,
+        date_next_action,
+        sales_representative
       } = currentIssues.value
       store.dispatch('editIssues', {
         id,
         uuid,
         subject,
         summary,
-        requestTypeId: currentIssues.value.request_type.id,
-        requestTypeUuid: currentIssues.value.request_type.uuid,
-        salesRepresentativeId: currentIssues.value.sales_representative.id,
-        salesRepresentativeUuid: currentIssues.value.sales_representative.uuid,
-        priorityValue: newValue,
-        statusId: currentIssues.value.status.id
+        requestTypeId: request_type.id,
+        salesRepresentativeId: sales_representative.id,
+        categoryId: category.id,
+        groupId: group.id,
+        businessPartnerId: business_partner.id,
+        projectId: project.id,
+        taskStatusValue: task_status.value,
+        dateNextAction: date_next_action,
+        parentIssueId: parent_issue.id,
+        statusId: status.id,
+        priorityValue: newValue
       })
       // refs.updatePriority.showPopper = false
     }
@@ -1099,20 +2209,35 @@ export default defineComponent({
       const {
         id,
         uuid,
+        group,
         subject,
-        summary
+        summary,
+        project,
+        priority,
+        category,
+        task_status,
+        request_type,
+        parent_issue,
+        business_partner,
+        date_next_action,
+        sales_representative
       } = currentIssues.value
       store.dispatch('editIssues', {
         id,
         uuid,
         subject,
         summary,
-        requestTypeId: currentIssues.value.request_type.id,
-        requestTypeUuid: currentIssues.value.request_type.uuid,
-        salesRepresentativeId: currentIssues.value.sales_representative.id,
-        salesRepresentativeUuid: currentIssues.value.sales_representative.uuid,
-        priorityValue: currentIssues.value.priority.value,
-        statusId: currentStatus.value
+        requestTypeId: request_type.id,
+        salesRepresentativeId: sales_representative.id,
+        priorityValue: priority.value,
+        categoryId: category.id,
+        groupId: group.id,
+        businessPartnerId: business_partner.id,
+        projectId: project.id,
+        taskStatusValue: task_status.value,
+        dateNextAction: date_next_action,
+        parentIssueId: parent_issue.id,
+        statusId: newValue
       })
       // refs.newStatus.showPopper = false
     }
@@ -1121,31 +2246,47 @@ export default defineComponent({
       const {
         id,
         uuid,
+        group,
+        status,
         subject,
-        summary
+        summary,
+        project,
+        priority,
+        category,
+        task_status,
+        request_type,
+        parent_issue,
+        business_partner,
+        sales_representative
       } = currentIssues.value
       store.dispatch('editIssues', {
         id,
         uuid,
         subject,
         summary,
-        requestTypeId: currentIssues.value.request_type.id,
-        requestTypeUuid: currentIssues.value.request_type.uuid,
-        salesRepresentativeId: currentIssues.value.sales_representative.id,
-        salesRepresentativeUuid: currentIssues.value.sales_representative.uuid,
-        priorityValue: currentIssues.value.priority.value,
-        statusId: currentIssues.value.status.id,
-        dateNextAction: newValue
+        requestTypeId: request_type.id,
+        salesRepresentativeId: sales_representative.id,
+        priorityValue: priority.value,
+        statusId: status.id,
+        categoryId: category.id,
+        groupId: group.id,
+        businessPartnerId: business_partner.id,
+        projectId: project.id,
+        taskStatusValue: task_status.value,
+        dateNextAction: newValue,
+        parentIssueId: parent_issue.id
       })
+      // refs.updateDate.showPopper = false
     }
 
     function exitPopover(popoverOption) {
       if (popoverOption === 'newtypeOfRequest') {
-        const requestType = this.listIssuesTypes.find(list => list.id === this.currentIssues.value.request_type.id)
+        findStatus(true)
+        const requestType = this.listIssuesTypes.find(list => list.id === this.currentRequestTypes)
         const { default_status } = requestType
-        currentStatus.value = default_status.id
+        // if (isEmptyValue(default_status.name)) return this.currentStatus = ''
+        this.currentStatus = default_status.id
       }
-      findStatus(true)
       if (isEmptyValue(popoverOption)) return
     }
 
@@ -1159,15 +2300,12 @@ export default defineComponent({
         tableName,
         recordId
       })
+      // store.dispatch('changeCurrentIssues', issues)
     }
 
     function editIssues(issues) {
       issues.isEdit = !issues.isEdit
-      updateSummary.value = issues.summary
-      if (!isPanelEditRequest.value) {
-        isPanelEditRequest.value = !isPanelEditRequest.value
-        return
-      }
+      isPanelEditRequest.value = !isPanelEditRequest.value
       updateSummary.value = issues.summary
       store.dispatch('listRequest', {
         tableName,
@@ -1193,7 +2331,7 @@ export default defineComponent({
       })
     }
 
-    function addNewComments() {
+    function addNewComments(params) {
       const { id, uuid } = currentIssues.value
       store.dispatch('newIssueComment', {
         id,
@@ -1206,8 +2344,8 @@ export default defineComponent({
             // scrollTimeLineTabComments.value.$refs.wrap.scrollTop = 9999999
           })
         })
-      commentPreview.value = false
       clearComments()
+      commentPreview.value = false
     }
 
     function clearComments() {
@@ -1230,10 +2368,6 @@ export default defineComponent({
       }
       if (option === 'delete') {
         removeIssues(currentIssues)
-        return
-      }
-      if (option === 'fullscreen') {
-        centerDialogVisible.value = !centerDialogVisible.value
         return
       }
       if (option === lang.t('page.processActivity.zoomIn')) {
@@ -1301,18 +2435,8 @@ export default defineComponent({
       }
       return
     }
-
     function newIssues(issues) {
-      defaultValueNewIssues()
       isPanelNewRequest.value = !isPanelNewRequest.value
-    }
-
-    function defaultValueNewIssues() {
-      findSalesReps(true)
-        .then(() => {
-          currentSalesReps.value = userId.value
-        })
-      newDateNextAction.value = new Date()
     }
 
     function loadListMail() {
@@ -1337,22 +2461,245 @@ export default defineComponent({
       })
     }
 
-    findStatus(true)
-    findPriority(true)
-    findSalesReps(true)
-    findRequestTypes(true)
+    /**
+     * Record TIme
+     */
+
+    const isMobile = computed(() => {
+      return store.state.app.device === 'mobile'
+    })
+
+    const cssStyleButton = computed(() => {
+      if (isMobile.value) {
+        return 'padding-top: 20px;padding-bottom: 10px;text-align: center;margin-bottom: 0px !important;'
+      }
+      return 'padding-top: 35px;'
+    })
 
     loadListMail()
 
     function avatarResize(user) {
-      const { avatar } = user
-      const { uri } = getImagePath({
-        file: avatar,
-        width: 20,
-        height: 20,
-        operation: 'resize'
+      // const { avatar } = user
+      // const { uri } = getImagePath({
+      //   file: avatar,
+      //   width: 20,
+      //   height: 20,
+      //   operation: 'resize'
+      // })
+      return ''
+    }
+
+    function defaultValueNewIssues() {
+      findSalesReps(true)
+        .then(() => {
+          currentSalesReps.value = userId.value
+        })
+      newDateNextAction.value = new Date()
+    }
+
+    /**
+     * New Fields Business Partners
+     */
+
+    const currentBusinessPartner = ref(0)
+    const listBusinessPartner = ref([])
+
+    function findBusinessPartner(isVisible, searchValue) {
+      return new Promise((resolve, reject) => {
+        if (!isVisible) {
+          resolve([])
+        }
+
+        listBusinessPartners({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listBusinessPartner.value = records
+            resolve(records)
+          })
+          .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+            showMessage({
+              message,
+              type: 'warning'
+            })
+            resolve([])
+          })
       })
-      return uri
+    }
+
+    function remoteMethodBusinessPartner(query) {
+      if (!isEmptyValue(query) && query.length > 1) {
+        findBusinessPartner(true, query)
+      }
+    }
+
+    /**
+     * New Fields Category
+     */
+
+    const currentCategory = ref(0)
+    const listCategory = ref([])
+
+    function findCategory(isVisible, searchValue) {
+      return new Promise((resolve, reject) => {
+        if (!isVisible) {
+          resolve([])
+        }
+
+        listCategoriesRequest({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listCategory.value = records
+            resolve(records)
+          })
+          .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+            showMessage({
+              message,
+              type: 'warning'
+            })
+            resolve([])
+          })
+      })
+    }
+
+    function remoteMethodCategory(query) {
+      if (!isEmptyValue(query) && query.length > 1) {
+        findCategory(true, query)
+      }
+    }
+
+    /**
+     * New Fields Project
+     */
+
+    const currentProject = ref(0)
+    const listProject = ref([])
+
+    function findProject(isVisible, searchValue) {
+      return new Promise((resolve, reject) => {
+        if (!isVisible) {
+          resolve([])
+        }
+
+        listProjects({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listProject.value = records
+            resolve(records)
+          })
+          .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+            showMessage({
+              message,
+              type: 'warning'
+            })
+            resolve([])
+          })
+      })
+    }
+
+    function remoteMethodProject(query) {
+      if (!isEmptyValue(query) && query.length > 1) {
+        findProject(true, query)
+      }
+    }
+
+    /**
+     * New Fields Group
+     */
+
+    const currentGroup = ref(0)
+    const listGroup = ref([])
+
+    function findGroup(isVisible, searchValue) {
+      return new Promise((resolve, reject) => {
+        if (!isVisible) {
+          resolve([])
+        }
+
+        listGroupsRequest({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listGroup.value = records
+            resolve(records)
+          })
+          .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+            showMessage({
+              message,
+              type: 'warning'
+            })
+            resolve([])
+          })
+      })
+    }
+
+    function remoteMethodGroup(query) {
+      if (!isEmptyValue(query) && query.length > 1) {
+        findGroup(true, query)
+      }
+    }
+
+    /**
+     * New Field List Task Statuses
+     */
+
+    const currentTask = ref('')
+    const listTaskStatus = ref([])
+
+    function findTaskStatus(isVisible, searchValue) {
+      return new Promise((resolve, reject) => {
+        if (!isVisible) {
+          resolve([])
+        }
+
+        listTaskStatuses({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listTaskStatus.value = records
+            resolve(records)
+          })
+          .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+            showMessage({
+              message,
+              type: 'warning'
+            })
+            resolve([])
+          })
+      })
+    }
+
+    function remoteMethodTaskStatus(query) {
+      if (!isEmptyValue(query) && query.length > 1) {
+        findTaskStatus(true, query)
+      }
     }
 
     watch(isPanelEditIssues, (newValue, oldValue) => {
@@ -1362,6 +2709,7 @@ export default defineComponent({
         findPriority(true)
       }
     })
+    findSalesReps(true)
 
     return {
       // Ref
@@ -1381,17 +2729,28 @@ export default defineComponent({
       summaryNewPreview,
       updateSummary,
       isPanelEditRequest,
-      listOption,
-      listSalesReps,
-      listIssuesTypes,
-      listStatuses,
-      listPriority,
       scrollTimeLineTabComments,
       scrollIssues,
       isCollapseComments,
       isLoadingNewIssues,
       centerDialogVisible,
+      cssStyleButton,
       loadingSales,
+      currentCategory,
+      currentBusinessPartner,
+      currentProject,
+      currentGroup,
+      currentTask,
+      // list
+      listSalesReps,
+      listIssuesTypes,
+      listStatuses,
+      listPriority,
+      listBusinessPartner,
+      listCategory,
+      listProject,
+      listGroup,
+      listTaskStatus,
       // Computed
       isNewIssues,
       isDisabledSave,
@@ -1404,7 +2763,13 @@ export default defineComponent({
       currentStatusLabel,
       isShowTitleForm,
       isPanelNewRequest,
+      getFixedHeader,
+      listOption,
+      isMobile,
+      userId,
       // Methodos
+      findTaskStatus,
+      remoteMethodTaskStatus,
       validateUser,
       findSalesReps,
       newIssues,
@@ -1419,6 +2784,7 @@ export default defineComponent({
       updateIssuesPriority,
       updateIssuesStatus,
       updateIssuesDateNextAction,
+      defaultValueNewIssues,
       addNewComments,
       clearComments,
       translateDateByLong,
@@ -1434,10 +2800,25 @@ export default defineComponent({
       exitPopover,
       labelDisplayChange,
       logDisplayLanguaje,
+      loadListMail,
       zoomIssues,
       avatarResize,
       remoteMethodSales,
-      defaultValueNewIssues,
+      //
+      findBusinessPartner,
+      remoteMethodBusinessPartner,
+      updateIssuesBusinessPartner,
+      findCategory,
+      remoteMethodCategory,
+      findProject,
+      remoteMethodProject,
+      findGroup,
+      remoteMethodGroup,
+      updateIssuesTaskStatus,
+      updateIssuesCategory,
+      updateIssuesProyect,
+      updateIssuesGroup,
+      //
       markdownContent
     }
   }
@@ -1479,26 +2860,21 @@ export default defineComponent({
     padding: 0px 10px;
   }
 }
-.scroll-timeline-tab {
-  max-height: 280px;
+.scroll-option-from-issues {
+  overflow-y: hidden;
+  max-width: 545px;
 }
-.scroll-previwer-disable {
-  max-height: 160px;
-}
-.scroll-previwer-disable-new {
-  max-height: 320px;
-  min-height: 320px;
-}
-
 .scroll-comments {
   max-height: 320px;
 }
-.scroll-timeline {
-  max-height: 380px;
+.scroll-comments-fixed-header {
+  max-height: 320px;
 }
-.scroll-option-from {
-  overflow-y: hidden;
-  max-width: 350px;
+.scroll-timeline-from {
+  max-height: 240px;
+}
+.scroll-previwer-disable {
+  max-height: 160px;
 }
 .divider-vertical {
   height: auto !important;
@@ -1527,8 +2903,11 @@ export default defineComponent({
   }
   .el-card__body {
     padding: 0px;
-    height: 100% !important;
   }
+}
+.v-md-editor__menu--list {
+  max-height: 110px;
+  overflow: auto;
 }
 .comments-card {
   .comments-card .el-card__header {
@@ -1557,17 +2936,10 @@ export default defineComponent({
     border-radius: 4px;
   }
 }
-.v-md-editor__menu--list {
-  max-height: 110px;
-  overflow: auto;
-}
 .form-comments {
   .el-form-item--medium .el-form-item__label {
     line-height: 20px;
     padding: 0px;
-  }
-  .el-form-item {
-    margin-bottom: 10px
   }
 }
 .el-card .card-summary .is-hover-shadow {
@@ -1620,8 +2992,10 @@ export default defineComponent({
   border: 1px solid #36a3f7;
 }
 .previwer-disable {
+  width: 100%;
   .github-markdown-body {
     padding: 10px;
+    width: 100%;
   }
 }
 </style>
