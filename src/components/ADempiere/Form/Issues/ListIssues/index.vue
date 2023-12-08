@@ -109,7 +109,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             <div
               v-for="(issues, index) in listStatuses"
               :key="index"
-              style="height: 80vh;padding: 0px 10px;width: 550px;"
+              style="height: 80vh;padding: 0px 10px;min-width: 450px;max-width: 450px;"
             >
               <el-card
                 shadow="never"

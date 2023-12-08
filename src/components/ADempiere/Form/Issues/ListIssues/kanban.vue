@@ -48,15 +48,21 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
                   icon-class="issues"
                   :style="{ color: dueTypeColor(metadata), margin: '20px 0px 0px 0px' }"
                 />
-                {{ '#' + metadata.document_no }}
+                <span style="font-size: 12px;">
+                  {{ '#' + metadata.document_no }}
+                </span>
+                <!-- <br> -->
+                <b style="font-size: 18px;float: right;">
+                  {{ metadata.subject }}
+                </b>
               </b>
             </el-popover>
           </b>
         </p>
         <!-- <hr> -->
         <p style="margin: 0px;">
-          {{ metadata.subject }}
-          <br>
+          <!-- {{ metadata.subject }} -->
+          <!-- <br> -->
           <span
             v-if="!isEmptyValue(metadata.sales_representative.name)"
             effect="plain"
@@ -74,6 +80,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
               {{ metadata.sales_representative.name }}
             </i>
           </span>
+          <br>
           <span
             v-if="!isEmptyValue(metadata.project.name)"
             effect="plain"
@@ -163,7 +170,7 @@ export default defineComponent({
     },
     metadata: {
       type: Object,
-      required: true
+      default: {}
     }
   },
 
