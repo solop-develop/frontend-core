@@ -28,7 +28,7 @@
       </el-steps>
     </div>
 
-    <div style="height: 84% !important;padding: 0px 15px;">
+    <div style="height: 80% !important;padding: 0px 15px;">
       <search-criteria
         v-show="'searchCriteria' === stepList[currentSetp].key"
         :metadata="metadata"
@@ -54,7 +54,7 @@
       </payments>
     </div>
 
-    <div v-show="currentSetp <= 0" style="height: 10% !important;text-align: end;padding: 0px 15px;">
+    <div v-show="currentSetp <= 0" style="height: 14% !important;text-align: end;padding: 0px 15px;">
       <el-button
         type="success"
         class="button-base-icon"
