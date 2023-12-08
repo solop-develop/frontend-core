@@ -334,6 +334,8 @@ export default {
     },
     processSend({ dispatch, state }) {
       return new Promise(resolve => {
+        let invoiceSelectionList = []
+        let paymentSelectionsList = []
         const {
           currencyId,
           businessPartnerId
@@ -350,15 +352,36 @@ export default {
           listInvoce = state.listSelectAll.filter(list => list.type === 'isInvoce')
           listPayments = state.listSelectAll.filter(list => list.type === 'isPayment')
         }
+        if (!isEmptyValue(listInvoce)) {
+          invoiceSelectionList = listInvoce.map(list => {
+            return {
+              ...list,
+              date_invoiced: new Date(list.date_invoiced),
+              discount_amount: list.discount_amount.toString(),
+              write_off_amount: list.writeOff.toString(),
+              applied_amount: list.amountApplied.toString(),
+              open_amount: list.open_amount.toString()
+            }
+          })
+        }
+        if (!isEmptyValue(listPayments)) {
+          paymentSelectionsList = listPayments.map(list => {
+            return {
+              ...list,
+              transaction_date: new Date(list.transaction_date),
+              applied_amount: list.applied.toString()
+            }
+          })
+        }
         requestProcess({
           date,
           chargeId,
           currencyId,
           description,
-          totalDifference,
+          totalDifference: totalDifference.toString(),
           businessPartnerId,
-          invoiceSelectionList: listInvoce,
-          paymentSelectionsList: listPayments,
+          invoiceSelectionList,
+          paymentSelectionsList,
           transactionOrganizationId
         })
           .then(response => {
@@ -372,9 +395,13 @@ export default {
             resolve(response)
           })
           .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
             showMessage({
               type: 'error',
-              message: error.message,
+              message,
               showClose: true
             })
             resolve([])
