@@ -1888,18 +1888,35 @@ export default defineComponent({
       const {
         id,
         uuid,
+        status,
+        summary,
         subject,
-        summary
+        group,
+        project,
+        priority,
+        business_partner,
+        task_status,
+        parent_issue,
+        category,
+        date_next_action,
+        request_type
       } = currentIssues.value
       store.dispatch('editIssues', {
         id,
         uuid,
         subject,
-        summary,
-        requestTypeId: currentIssues.value.request_type.id,
-        requestTypeUuid: currentIssues.value.request_type.uuid,
+        summary: summary,
+        requestTypeId: request_type.id,
         salesRepresentativeId: newValue,
-        priorityValue: currentIssues.value.priority.value
+        priorityValue: priority.value,
+        statusId: status.id,
+        categoryId: category.id,
+        groupId: group.id,
+        businessPartnerId: business_partner.id,
+        projectId: project.id,
+        taskStatusValue: task_status.value,
+        dateNextAction: date_next_action,
+        parentIssueId: parent_issue.id
       })
       // refs.updateSalesReps.showPopper = false
     }
@@ -1908,198 +1925,245 @@ export default defineComponent({
       const {
         id,
         uuid,
+        status,
+        summary,
         subject,
-        summary
+        group,
+        project,
+        priority,
+        business_partner,
+        task_status,
+        parent_issue,
+        category,
+        date_next_action,
+        sales_representative
       } = currentIssues.value
       store.dispatch('editIssues', {
         id,
         uuid,
         subject,
-        summary,
+        summary: summary,
         requestTypeId: newValue,
-        salesRepresentativeId: currentIssues.value.sales_representative.id,
-        salesRepresentativeUuid: currentIssues.value.sales_representative.uuid,
-        priorityValue: currentIssues.value.priority.value,
-        statusId: currentIssues.value.status.id
+        salesRepresentativeId: sales_representative.id,
+        priorityValue: priority.value,
+        statusId: status.id,
+        categoryId: category.id,
+        groupId: group.id,
+        businessPartnerId: business_partner.id,
+        projectId: project.id,
+        taskStatusValue: task_status.value,
+        dateNextAction: date_next_action,
+        parentIssueId: parent_issue.id
       })
     }
     function updateIssuesBusinessPartner(newValue) {
       const {
         id,
         uuid,
-        subject,
-        summary,
-        priority,
         status,
+        summary,
+        subject,
         group,
-        category,
         project,
-        task_status,
+        priority,
         request_type,
+        task_status,
+        parent_issue,
+        category,
+        date_next_action,
         sales_representative
       } = currentIssues.value
       store.dispatch('editIssues', {
         id,
         uuid,
         subject,
-        summary,
+        summary: summary,
         requestTypeId: request_type.id,
         salesRepresentativeId: sales_representative.id,
-        salesRepresentativeUuid: sales_representative.uuid,
         priorityValue: priority.value,
         statusId: status.id,
-        groupId: group.id,
         categoryId: category.id,
+        groupId: group.id,
+        businessPartnerId: newValue,
         projectId: project.id,
         taskStatusValue: task_status.value,
-        businessPartnerId: newValue
+        dateNextAction: date_next_action,
+        parentIssueId: parent_issue.id
       })
     }
     function updateIssuesCategory(newValue) {
       const {
         id,
         uuid,
-        subject,
-        summary,
-        priority,
         status,
+        summary,
+        subject,
         group,
         project,
+        priority,
         request_type,
         task_status,
+        parent_issue,
         business_partner,
+        date_next_action,
         sales_representative
       } = currentIssues.value
       store.dispatch('editIssues', {
         id,
         uuid,
         subject,
-        summary,
+        summary: summary,
         requestTypeId: request_type.id,
         salesRepresentativeId: sales_representative.id,
-        salesRepresentativeUuid: sales_representative.uuid,
         priorityValue: priority.value,
         statusId: status.id,
-        groupId: group.id,
         categoryId: newValue,
+        groupId: group.id,
+        businessPartnerId: business_partner.id,
         projectId: project.id,
         taskStatusValue: task_status.value,
-        businessPartnerId: business_partner.id
+        dateNextAction: date_next_action,
+        parentIssueId: parent_issue.id
       })
     }
     function updateIssuesProyect(newValue) {
       const {
         id,
         uuid,
-        subject,
-        summary,
-        priority,
         status,
+        summary,
+        subject,
         group,
+        priority,
         category,
         request_type,
         task_status,
+        parent_issue,
         business_partner,
+        date_next_action,
         sales_representative
       } = currentIssues.value
       store.dispatch('editIssues', {
         id,
         uuid,
         subject,
-        summary,
+        summary: summary,
         requestTypeId: request_type.id,
         salesRepresentativeId: sales_representative.id,
-        salesRepresentativeUuid: sales_representative.uuid,
         priorityValue: priority.value,
         statusId: status.id,
-        groupId: group.id,
         categoryId: category.id,
+        groupId: group.id,
+        businessPartnerId: business_partner.id,
         projectId: newValue,
         taskStatusValue: task_status.value,
-        businessPartnerId: business_partner.id
+        dateNextAction: date_next_action,
+        parentIssueId: parent_issue.id
       })
     }
     function updateIssuesGroup(newValue) {
       const {
         id,
         uuid,
-        subject,
-        summary,
-        priority,
         status,
-        category,
+        summary,
+        subject,
         project,
+        priority,
+        category,
         request_type,
         task_status,
+        parent_issue,
         business_partner,
+        date_next_action,
         sales_representative
       } = currentIssues.value
       store.dispatch('editIssues', {
         id,
         uuid,
         subject,
-        summary,
+        summary: summary,
         requestTypeId: request_type.id,
         salesRepresentativeId: sales_representative.id,
-        salesRepresentativeUuid: sales_representative.uuid,
         priorityValue: priority.value,
         statusId: status.id,
-        groupId: newValue,
         categoryId: category.id,
+        groupId: newValue,
+        businessPartnerId: business_partner.id,
         projectId: project.id,
         taskStatusValue: task_status.value,
-        businessPartnerId: business_partner.id
+        dateNextAction: date_next_action,
+        parentIssueId: parent_issue.id
       })
     }
     function updateIssuesTaskStatus(newValue) {
       const {
         id,
         uuid,
-        subject,
-        summary,
-        priority,
-        status,
         group,
-        category,
+        status,
+        summary,
+        subject,
         project,
+        priority,
+        category,
         request_type,
+        parent_issue,
         business_partner,
+        date_next_action,
         sales_representative
       } = currentIssues.value
       store.dispatch('editIssues', {
         id,
         uuid,
         subject,
-        summary,
+        summary: summary,
         requestTypeId: request_type.id,
         salesRepresentativeId: sales_representative.id,
-        salesRepresentativeUuid: sales_representative.uuid,
         priorityValue: priority.value,
         statusId: status.id,
-        groupId: group.id,
         categoryId: category.id,
+        groupId: group.id,
+        businessPartnerId: business_partner.id,
         projectId: project.id,
         taskStatusValue: newValue,
-        businessPartnerId: business_partner.id
+        dateNextAction: date_next_action,
+        parentIssueId: parent_issue.id
       })
     }
     function updateIssuesSummary(issues) {
       const {
         id,
         uuid,
-        subject
+        group,
+        status,
+        subject,
+        project,
+        priority,
+        category,
+        task_status,
+        request_type,
+        parent_issue,
+        business_partner,
+        date_next_action,
+        sales_representative
       } = currentIssues.value
       store.dispatch('editIssues', {
         id,
         uuid,
         subject,
-        summary: updateSummary.value,
-        requestTypeId: currentIssues.value.request_type.id,
-        requestTypeUuid: currentIssues.value.request_type.uuid,
-        salesRepresentativeId: currentIssues.value.sales_representative.id,
-        salesRepresentativeUuid: currentIssues.value.sales_representative.uuid,
-        priorityValue: currentIssues.value.priority.value,
-        statusId: currentIssues.value.status.id
+        summary: issues,
+        requestTypeId: request_type.id,
+        salesRepresentativeId: sales_representative.id,
+        priorityValue: priority.value,
+        statusId: status.id,
+        categoryId: category.id,
+        groupId: group.id,
+        businessPartnerId: business_partner.id,
+        projectId: project.id,
+        taskStatusValue: task_status.value,
+        dateNextAction: date_next_action,
+        parentIssueId: parent_issue.id
       })
       editIssues(issues)
     }
@@ -2108,20 +2172,35 @@ export default defineComponent({
       const {
         id,
         uuid,
+        group,
         subject,
-        summary
+        summary,
+        project,
+        status,
+        category,
+        task_status,
+        request_type,
+        parent_issue,
+        business_partner,
+        date_next_action,
+        sales_representative
       } = currentIssues.value
       store.dispatch('editIssues', {
         id,
         uuid,
         subject,
         summary,
-        requestTypeId: currentIssues.value.request_type.id,
-        requestTypeUuid: currentIssues.value.request_type.uuid,
-        salesRepresentativeId: currentIssues.value.sales_representative.id,
-        salesRepresentativeUuid: currentIssues.value.sales_representative.uuid,
-        priorityValue: newValue,
-        statusId: currentIssues.value.status.id
+        requestTypeId: request_type.id,
+        salesRepresentativeId: sales_representative.id,
+        categoryId: category.id,
+        groupId: group.id,
+        businessPartnerId: business_partner.id,
+        projectId: project.id,
+        taskStatusValue: task_status.value,
+        dateNextAction: date_next_action,
+        parentIssueId: parent_issue.id,
+        statusId: status.id,
+        priorityValue: newValue
       })
       // refs.updatePriority.showPopper = false
     }
@@ -2130,20 +2209,35 @@ export default defineComponent({
       const {
         id,
         uuid,
+        group,
         subject,
-        summary
+        summary,
+        project,
+        priority,
+        category,
+        task_status,
+        request_type,
+        parent_issue,
+        business_partner,
+        date_next_action,
+        sales_representative
       } = currentIssues.value
       store.dispatch('editIssues', {
         id,
         uuid,
         subject,
         summary,
-        requestTypeId: currentIssues.value.request_type.id,
-        requestTypeUuid: currentIssues.value.request_type.uuid,
-        salesRepresentativeId: currentIssues.value.sales_representative.id,
-        salesRepresentativeUuid: currentIssues.value.sales_representative.uuid,
-        priorityValue: currentIssues.value.priority.value,
-        statusId: currentStatus.value
+        requestTypeId: request_type.id,
+        salesRepresentativeId: sales_representative.id,
+        priorityValue: priority.value,
+        categoryId: category.id,
+        groupId: group.id,
+        businessPartnerId: business_partner.id,
+        projectId: project.id,
+        taskStatusValue: task_status.value,
+        dateNextAction: date_next_action,
+        parentIssueId: parent_issue.id,
+        statusId: newValue
       })
       // refs.newStatus.showPopper = false
     }
@@ -2152,21 +2246,35 @@ export default defineComponent({
       const {
         id,
         uuid,
+        group,
+        status,
         subject,
-        summary
+        summary,
+        project,
+        priority,
+        category,
+        task_status,
+        request_type,
+        parent_issue,
+        business_partner,
+        sales_representative
       } = currentIssues.value
       store.dispatch('editIssues', {
         id,
         uuid,
         subject,
         summary,
-        requestTypeId: currentIssues.value.request_type.id,
-        requestTypeUuid: currentIssues.value.request_type.uuid,
-        salesRepresentativeId: currentIssues.value.sales_representative.id,
-        salesRepresentativeUuid: currentIssues.value.sales_representative.uuid,
-        priorityValue: currentIssues.value.priority.value,
-        statusId: currentIssues.value.status.id,
-        dateNextAction: newValue
+        requestTypeId: request_type.id,
+        salesRepresentativeId: sales_representative.id,
+        priorityValue: priority.value,
+        statusId: status.id,
+        categoryId: category.id,
+        groupId: group.id,
+        businessPartnerId: business_partner.id,
+        projectId: project.id,
+        taskStatusValue: task_status.value,
+        dateNextAction: newValue,
+        parentIssueId: parent_issue.id
       })
       // refs.updateDate.showPopper = false
     }

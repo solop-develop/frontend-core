@@ -37,7 +37,8 @@ const initStateIssueManagement = {
   isLoaded: false,
   isNewIssues: false,
   currentIssues: {},
-  listComments: []
+  listComments: [],
+  listKanbanGroup: []
 }
 
 export default {
@@ -58,6 +59,9 @@ export default {
     },
     setListComments(state, comments) {
       state.listComments = comments
+    },
+    setListKanbanGroup(state, list) {
+      state.listKanbanGroup = list
     }
   },
   actions: {
@@ -181,6 +185,7 @@ export default {
       projectId,
       statusUuid,
       categoryId,
+      parentIssueId,
       priorityValue,
       requestTypeId,
       dateNextAction,
@@ -201,6 +206,7 @@ export default {
           projectId,
           statusUuid,
           categoryId,
+          parentIssueId,
           priorityValue,
           requestTypeId,
           dateNextAction,
@@ -396,6 +402,9 @@ export default {
     },
     getListComments: (state) => {
       return state.listComments
+    },
+    getListKanbanGroup: (state) => {
+      return state.listKanbanGroup
     }
   }
 }

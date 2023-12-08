@@ -48,16 +48,38 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
                   icon-class="issues"
                   :style="{ color: dueTypeColor(metadata), margin: '20px 0px 0px 0px' }"
                 />
-                {{ '#' + metadata.document_no }}
+                <span style="font-size: 12px;">
+                  {{ '#' + metadata.document_no }}
+                </span>
+                <!-- <br> -->
+                <b style="font-size: 18px;float: right;">
+                  {{ metadata.subject }}
+                </b>
               </b>
             </el-popover>
           </b>
         </p>
         <!-- <hr> -->
         <p style="margin: 0px;">
-          {{ metadata.subject }}
-          <br>
-          {{ metadata.summary }}
+          <!-- {{ metadata.subject }} -->
+          <!-- <br> -->
+          <span
+            v-if="!isEmptyValue(metadata.sales_representative.name)"
+            effect="plain"
+          >
+            <i style="font-size: 12px;color: #82848a;">
+              <b
+                style="font-weight: bolder;"
+              >
+                <svg-icon
+                  icon-class="project"
+                  style="font-weight: bolder;"
+                />
+                {{ $t('issues.assigned') }}:
+              </b>
+              {{ metadata.sales_representative.name }}
+            </i>
+          </span>
           <br>
           <span
             v-if="!isEmptyValue(metadata.project.name)"
@@ -148,7 +170,7 @@ export default defineComponent({
     },
     metadata: {
       type: Object,
-      required: true
+      default: {}
     }
   },
 
