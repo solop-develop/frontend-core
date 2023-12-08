@@ -72,54 +72,58 @@ export default {
       pageSize,
       pageToken
     }) {
-      commit('setIsLoadListIssues', true)
-      return requestListIssues({
-        tableName,
-        recordId,
-        recordUuid,
-        pageSize,
-        pageToken
-      })
-        .then(responseList => {
-          const { records } = responseList
+      return new Promise((resolve, reject) => {
+        commit('setIsLoadListIssues', true)
+        return requestListIssues({
+          tableName,
+          recordId,
+          recordUuid,
+          pageSize,
+          pageToken
+        })
+          .then(responseList => {
+            const { records } = responseList
 
-          if (isEmptyValue(records)) {
-            commit('setListIssues', [])
-          }
-          const list = records.map(issues => {
-            let date = ''
-            if (issues.date_next_action !== 0) {
-              date = formatDate(
-                {
-                  value: issues.date_next_action,
-                  isTime: true,
-                  format: 'YYYY-MM-DDTHH:MM:SS'
-                }
-              )
+            if (isEmptyValue(records)) {
+              commit('setListIssues', [])
             }
-            return {
-              ...issues,
-              dateNextAction: date,
-              isEdit: false
-            }
+            const list = records.map(issues => {
+              let date = ''
+              if (issues.date_next_action !== 0) {
+                date = formatDate(
+                  {
+                    value: issues.date_next_action,
+                    isTime: true,
+                    format: 'YYYY-MM-DDTHH:MM:SS'
+                  }
+                )
+              }
+              return {
+                ...issues,
+                dateNextAction: date,
+                isEdit: false
+              }
+            })
+            commit('setListIssues', list)
+            commit('setIsLoadListIssues', false)
+            resolve(list)
           })
-          commit('setListIssues', list)
-          commit('setIsLoadListIssues', false)
-        })
-        .catch(error => {
-          commit('setIsLoadListIssues', false)
-          console.warn(`Error getting List Issues: ${error.message}. Code: ${error.code}.`)
-        })
+          .catch(error => {
+            commit('setIsLoadListIssues', false)
+            console.warn(`Error getting List Issues: ${error.message}. Code: ${error.code}.`)
+            reject(error)
+          })
+      })
     },
     newIssues({ commit, dispatch }, {
-      groupId,
+      groupId = 0,
       subject,
       summary,
-      statusId,
+      statusId = 0,
       recordId,
-      projectId,
+      projectId = 0,
       tableName,
-      categoryId,
+      categoryId = 0,
       statusUuid,
       recordUuid,
       requestTypeId,
@@ -127,7 +131,7 @@ export default {
       dateNextAction,
       requestTypeUuid,
       taskStatusValue,
-      businessPartnerId,
+      businessPartnerId = 0,
       salesRepresentativeId,
       salesRepresentativeUuid
     }) {
@@ -165,7 +169,8 @@ export default {
             }
             commit('setCurrentIssues', {
               ...response,
-              dateNextAction: date
+              dateNextAction: date,
+              date_next_action: date
             })
             dispatch('listComments', response)
             resolve(response)

@@ -30,9 +30,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       >
         <p
           slot="header"
-          style="font-size: 16px;margin: 0px;border: 1px solid rgb(230, 235, 245);border-right: 0px;border-left: 0px;"
+          style="font-size: 16px;width: 100%;margin: 0px;border: 1px solid rgb(230, 235, 245);border-right: 0px;border-left: 0px;"
         >
-          <b>
+          <b style="text-align: left;">
             <el-popover
               placement="top-start"
               trigger="hover"
@@ -52,10 +52,133 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
                   {{ '#' + metadata.document_no }}
                 </span>
                 <!-- <br> -->
-                <b style="font-size: 18px;float: right;">
+                <!-- <b style="font-size: 18px;float: right;">
                   {{ metadata.subject }}
-                </b>
+                </b> -->
               </b>
+            </el-popover>
+          </b>
+          <b style="float: right;">
+            <el-popover
+              placement="top-start"
+              trigger="hover"
+              width="650"
+            >
+              <el-descriptions :column="2">
+                <template slot="title">
+                  <b>
+                    <svg-icon icon-class="guide" />
+                    {{ metadata.subject }}
+                  </b>
+                </template>
+                <template slot="extra">
+                  <b>
+                    {{ '#' }}
+                    {{ metadata.document_no }}
+                  </b>
+                </template>
+                <el-descriptions-item :span="4">
+                  <template slot="label">
+                    <b>
+                      {{ $t('issues.summary') }}
+                    </b>
+                  </template>
+                  <el-scrollbar wrap-class="scroll-previwer-disable" style="width: 100%; overflow: hidden;">
+                    <v-md-preview :text="metadata.summary" class="previwer-disable" style="padding: 0px" height="150px" />
+                  </el-scrollbar>
+                </el-descriptions-item>
+                <el-descriptions-item :span="4">
+                  <template slot="label">
+                    <b>
+                      {{ $t('issues.created') }}
+                    </b>
+                  </template>
+                  {{ metadata.user_name }}
+                </el-descriptions-item>
+                <el-descriptions-item style="float: right;">
+                  <template slot="label">
+                    <b style="padding-top: 10px !important;">
+                      {{ $t('issues.priority') }}
+                    </b>
+                  </template>
+                  <el-button type="primary" size="medium" plain style="float: right;margin-right: 10px;">
+                    <svg-icon icon-class="collections" />
+                    {{ metadata.priority.name }}
+                  </el-button>
+                </el-descriptions-item>
+                <el-descriptions-item>
+                  <template slot="label">
+                    <b style="padding-top: 10px !important;">
+                      {{ $t('issues.typeOfRequest') }}
+                    </b>
+                  </template>
+                  <el-button size="medium" plain type="info" style="float: right;margin-right: 10px;">
+                    <svg-icon icon-class="label" />
+                    {{ metadata.request_type.name }}
+                  </el-button>
+                </el-descriptions-item>
+                <el-descriptions-item>
+                  <template slot="label">
+                    <b style="padding-top: 5px !important;">
+                      {{ $t('issues.assigned') }}
+                    </b>
+                  </template>
+                  <el-avatar
+                    v-if="isEmptyValue(metadata.sales_representative.avatar)"
+                    icon="el-icon-user-solid"
+                    size="small"
+                    style="margin-left: 10px;"
+                  />
+                  <!-- <el-image
+                    v-else
+                    :src="avatarResize(metadata.sales_representative)"
+                    fit="contain"
+                    style="
+                      width: 20px;
+                      height: 20px;
+                      border-radius: 50%;
+                      display: inline-block;
+                      position: relative;
+                      cursor: default;
+                      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+                    "
+                  /> -->
+                  {{ metadata.sales_representative.name }}
+                </el-descriptions-item>
+                <el-descriptions-item>
+                  <template slot="label">
+                    <b>
+                      {{ $t('issues.expirationType') }}
+                    </b>
+                  </template>
+                  <el-tag :style="{ color: dueTypeColor(metadata), margin: '0px' }">
+                    {{ metadata.due_type.name }}
+                  </el-tag>
+                </el-descriptions-item>
+                <el-descriptions-item :span="4" style="float: right;">
+                  <template slot="label">
+                    <b>
+                      <svg-icon icon-class="calendar" style="font-size: 18px;" />
+                      {{ $t('issues.nextActionDate') }}
+                    </b>
+                  </template>
+                  <span v-if="!isEmptyValue(metadata.dateNextAction)">
+                    {{ formatDate({
+                      value: metadata.dateNextAction
+                    }) }}
+                  </span>
+                </el-descriptions-item>
+              </el-descriptions>
+              <el-button
+                slot="reference"
+                style="color: black;padding: 0px;"
+                type="text"
+                @click="selectIssue(metadata)"
+              >
+                <p style="margin: 0px;font-size: 18px;font-weight: bold;">
+                  {{ metadata.subject }}
+                </p>
+              </el-button>
             </el-popover>
           </b>
         </p>
@@ -79,8 +202,8 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
               </b>
               {{ metadata.sales_representative.name }}
             </i>
+            <br>
           </span>
-          <br>
           <span
             v-if="!isEmptyValue(metadata.project.name)"
             effect="plain"
@@ -97,8 +220,8 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
               </b>
               {{ metadata.project.name }}
             </i>
+            <br>
           </span>
-          <br>
           <span
             v-if="!isEmptyValue(metadata.business_partner.name)"
             effect="plain"
@@ -110,8 +233,8 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
               </b>
               {{ metadata.business_partner.name }}
             </i>
+            <br>
           </span>
-          <br>
           <span>
             <i style="font-size: 12px;color: #82848a;">
               <b>
@@ -120,8 +243,8 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
               </b>
               {{ metadata.status.name }}
             </i>
+            <br>
           </span>
-          <br>
           <span type="primary" size="mini" plain>
             <i style="font-size: 12px;color: #82848a;">
               <b>
@@ -130,6 +253,15 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
               </b>
               {{ metadata.priority.name }}
             </i>
+            <br>
+          </span>
+          <span type="primary" size="mini" plain>
+            <progress-percentage
+              :displayed-value="metadata.task_status.name"
+              :value="metadata.task_status.value"
+              style="margin: 10px 0px;"
+              :text-color="'white'"
+            />
           </span>
         </p>
       </span>
@@ -146,7 +278,7 @@ import store from '@/store'
 
 // Components and Mixins
 // import RecordTime from '@/components/ADempiere/Form/Issues/recordTime.vue'
-// import ProgressPercentage from '@/components/ADempiere/ContainerOptions/ProgressPercentage.vue'
+import ProgressPercentage from '@/components/ADempiere/ContainerOptions/ProgressPercentage.vue'
 
 // Utils and Helper Methods
 import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
@@ -154,10 +286,10 @@ import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
 export default defineComponent({
   name: 'kanban',
 
-  // components: {
+  components: {
   //   RecordTime,
-  //   ProgressPercentage
-  // },
+    ProgressPercentage
+  },
 
   props: {
     tableName: {

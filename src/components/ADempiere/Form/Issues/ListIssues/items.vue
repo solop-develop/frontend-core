@@ -126,7 +126,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
                       size="small"
                       style="margin-left: 10px;"
                     />
-                    <el-image
+                    <!-- <el-image
                       v-else
                       :src="avatarResize(metadata.sales_representative)"
                       fit="contain"
@@ -139,7 +139,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
                         cursor: default;
                         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
                       "
-                    />
+                    /> -->
                     {{ metadata.sales_representative.name }}
                   </el-descriptions-item>
                   <el-descriptions-item>

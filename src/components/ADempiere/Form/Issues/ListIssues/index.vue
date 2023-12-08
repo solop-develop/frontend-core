@@ -128,7 +128,12 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
                         </i>
                       </b>
                     </template>
+                    <span v-if="isEmptyValue(listKanbanGroup[issues.id])">
+                      <el-empty :image-size="90" />
+                    </span>
+                    <!-- {{ listKanbanGroup[0] }} -->
                     <draggable
+                      v-if="!isloadinUpdateKanban"
                       :id="issues.id"
                       :ref="issues.id"
                       :list="listKanbanGroup[issues.id]"
@@ -331,6 +336,25 @@ export default defineComponent({
 
     function loadIssues() {
       store.dispatch('listRequest', {})
+        .then(response => {
+          if (!isEmptyValue(response)) {
+            let list
+            const isEmptuStatus = listStatuses.value.find(list => list.id === 0)
+            if (isEmptyValue(isEmptuStatus)) {
+              listStatuses.value.push({
+                name: lang.t('issues.emptyStatus'),
+                id: 0,
+                sequence: 99
+              })
+            }
+            listStatuses.value.forEach(elementStatus => {
+              list[elementStatus.id] = response.filter(list => {
+                return list.status.id === elementStatus.id
+              })
+            })
+            store.commit('setListKanbanGroup', list)
+          }
+        })
       store.dispatch('findListMailTemplates')
     }
 
@@ -367,8 +391,10 @@ export default defineComponent({
         .then(response => {
           const { records } = response
           listIssuesTypes.value = records
-          findStatus(records[0].id)
-          requestTypes.value = records[0].id
+          if (listStatuses.value.length <= 1 && isEmptyValue(requestTypes.value)) {
+            findStatus(records[0].id)
+            requestTypes.value = records[0].id
+          }
         })
         .catch(error => {
           showMessage({
@@ -401,7 +427,7 @@ export default defineComponent({
       return data.filter(list => list.status.id === column)
     }
 
-    findRequestTypes(true)
+    // findRequestTypes(true)
 
     loadIssues()
 
@@ -412,11 +438,15 @@ export default defineComponent({
     function activeGruop() {
       isEdit.value = !isEdit.value
       isKanban.value = false
+      findRequestTypes(true)
+      // findStatus(listIssuesTypes.value[0].id)
     }
 
     function activeKanban() {
       isEdit.value = false
       isKanban.value = !isKanban.value
+      findRequestTypes(true)
+      // findStatus(listIssuesTypes.value[0].id)
     }
 
     function findStatus(request) {
@@ -426,17 +456,18 @@ export default defineComponent({
       })
         .then(response => {
           const { records } = response
+          const listAll = records
           const list = []
-          records.forEach(element => {
-            list[element.id] = listIssues.value.filter(list => list.status.id === element.id)
-          })
-          store.commit('setListKanbanGroup', list)
-          listStatuses.value = records.sort((a, b) => a.sequence - b.sequence)
-          listStatuses.value.push({
+          listAll.push({
             name: lang.t('issues.emptyStatus'),
             id: 0,
             sequence: 99
           })
+          listAll.forEach(element => {
+            list[element.id] = listIssues.value.filter(list => list.status.id === element.id)
+          })
+          store.commit('setListKanbanGroup', list)
+          listStatuses.value = records.sort((a, b) => a.sequence - b.sequence)
         })
         .catch(error => {
           showMessage({
@@ -451,9 +482,10 @@ export default defineComponent({
     }
     const isloadinUpdateKanban = ref(false)
 
-    function updateStatus(params, events) {
+    function updateStatus(params) {
+      let element = {}
       if (isEmptyValue(params) && isEmptyValue(params.removed.element) && isEmptyValue(params.add.element)) return
-      const element = !isEmptyValue(params.removed) ? params.removed.element : params.add.element
+      element = !isEmptyValue(params.removed) ? params.removed.element : params.add.element
       if (isEmptyValue(element)) return
       const {
         id,
