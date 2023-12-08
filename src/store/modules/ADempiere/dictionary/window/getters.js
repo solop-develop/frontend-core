@@ -369,7 +369,7 @@ export default {
     // all optionals (not mandatory) fields
     return fieldsList
       .filter(fieldItem => {
-        if (!fieldItem.isActive) {
+        if (!fieldItem.isActive || !fieldItem.isDisplayed) {
           return
         }
         const isMandatory = mandatoryMethod(fieldItem)
