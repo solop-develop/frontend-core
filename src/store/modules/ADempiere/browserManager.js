@@ -147,7 +147,9 @@ const browserControl = {
           containerUuid
         })
 
-        const { fieldsList, contextColumnNames } = rootGetters.getStoredBrowser(containerUuid)
+        const {
+          id: browserId, fieldsList, contextColumnNames
+        } = rootGetters.getStoredBrowser(containerUuid)
 
         const fieldsEmpty = rootGetters.getBrowserFieldsEmptyMandatory({
           containerUuid,
@@ -163,7 +165,7 @@ const browserControl = {
         }
 
         // parameters isQueryCriteria
-        const filters = rootGetters.getBrowserQueryCriteria({
+        const filtersList = rootGetters.getBrowserQueryCriteria({
           containerUuid,
           fieldsList
         }).map(parameter => {
@@ -179,6 +181,10 @@ const browserControl = {
             values: !isEmptyValue(valueTo) ? [value, valueTo] : value
           })
         }).toString()
+        let filters
+        if (!isEmptyValue(filtersList)) {
+          filters = '[' + filtersList + ']'
+        }
 
         // get context values
         const contextAttributesList = getContextAttributes({
@@ -186,6 +192,10 @@ const browserControl = {
           contextColumnNames,
           format: 'object'
         })
+        let contextAttributes = '{}'
+        if (!isEmptyValue(contextAttributesList)) {
+          contextAttributes = JSON.stringify(contextAttributesList)
+        }
 
         // const isWithoutValues = contextAttributesList.find(attribute => isEmptyValue(attribute.value))
         // if (isWithoutValues) {
@@ -217,18 +227,11 @@ const browserControl = {
           pageNumber = storedPage
         }
         const pageToken = generatePageToken({ pageNumber })
-        let contextAttributes, listFilters
-        if (!isEmptyValue(contextAttributes)) {
-          contextAttributes = JSON.stringify(contextAttributesList)
-        }
-        if (!isEmptyValue(filters)) {
-          listFilters = '[' + filters + ']'
-        }
 
         requestBrowserSearch({
-          id: containerUuid,
+          id: browserId,
           contextAttributes,
-          filters: listFilters,
+          filters,
           nextPageToken: pageToken,
           pageSize
         })

@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -31,7 +31,7 @@
       <p style="text-align: end;">
         <action-menu
           :container-manager="containerManager"
-          :container-uuid="browserId"
+          :container-uuid="browserMetadata.uuid"
           :actions-manager="actionsManager"
         />
       </p>
@@ -40,12 +40,12 @@
         <!-- Query Criteria -->
         <collapse-criteria
           :title="$t('views.searchCriteria')"
-          :container-uuid="browserId"
+          :container-uuid="browserMetadata.uuid"
           :container-manager="containerManager"
         >
           <panel-definition
             class="browser-query-criteria"
-            :container-uuid="browserId"
+            :container-uuid="browserMetadata.uuid"
             :panel-metadata="browserMetadata"
             :container-manager="containerManager"
             :is-tab-panel="true"
@@ -58,7 +58,7 @@
         <default-table
           id="mainBrowser"
           class="browser-table-result"
-          :container-uuid="browserId"
+          :container-uuid="browserMetadata.uuid"
           :container-manager="containerManagerTable"
           :panel-metadata="browserMetadata"
           :header="tableHeader"
@@ -72,7 +72,7 @@
     <modal-dialog
       v-if="!isEmptyValue(processUuid)"
       :container-manager="containerManagerProcess"
-      :parent-uuid="browserId"
+      :parent-uuid="browserMetadata.uuid"
       :container-uuid="processUuid"
     />
   </div>
@@ -137,7 +137,7 @@ export default defineComponent({
       parentUuid = root.$route.query.parentUuid
     }
 
-    let browserId = ''
+    let browserId = -1
     // set uuid with linked menu
     if (!isEmptyValue(root.$route.meta) && !isEmptyValue(root.$route.meta.uuid)) {
       browserId = root.$route.meta.id.toString()
@@ -151,12 +151,20 @@ export default defineComponent({
       browserId = props.uuid
     }
 
+    const browserUuid = computed(() => {
+      let uuid = root.$route.meta.uuid
+      if (isEmptyValue(uuid)) {
+        uuid = store.getters.getStoredBrowserUuidById(browserId)
+      }
+      return uuid
+    })
+
     const storedBrowser = computed(() => {
-      return store.getters.getStoredBrowser(browserId)
+      return store.getters.getStoredBrowser(browserUuid.value)
     })
 
     const isLoaded = computed(() => {
-      const browserData = store.state.browserManager.browserData[browserId]
+      const browserData = store.state.browserManager.browserData[browserUuid.value]
       if (isEmptyValue(browserData)) {
         return false
       }
@@ -186,10 +194,14 @@ export default defineComponent({
     })
 
     const isReadyToSearch = computed(() => {
+      if (isEmptyValue(browserUuid.value)) {
+        return false
+      }
+      const fieldsBrowser = store.getters.getBrowserFieldsEmptyMandatory({
+        containerUuid: browserUuid.value
+      })
       return isEmptyValue(
-        store.getters.getBrowserFieldsEmptyMandatory({
-          containerUuid: browserId
-        })
+        fieldsBrowser
       )
     })
 
@@ -213,7 +225,7 @@ export default defineComponent({
         }
 
         store.commit('changeBrowserAttribute', {
-          uuid: browserId,
+          uuid: browserUuid.value,
           attributeName: 'isShowedCriteria',
           attributeValue: showCriteria
         })
@@ -221,6 +233,9 @@ export default defineComponent({
     })
 
     const tableHeader = computed(() => {
+      if (isEmptyValue(storedBrowser.value)) {
+        return []
+      }
       const { fieldsList } = storedBrowser.value
       const header = fieldsList.sort((itemA, itemB) => {
         return itemA.sequence - itemB.sequence
@@ -274,12 +289,12 @@ export default defineComponent({
       if (isReadyToSearch.value) {
         // first search by default
         store.dispatch('getBrowserSearch', {
-          containerUuid: browserId
+          containerUuid: browserUuid.value
         })
 
         // hide showed criteria
         store.commit('changeBrowserAttribute', {
-          uuid: browserId,
+          uuid: browserUuid.value,
           attributeName: 'isShowedCriteria',
           attributeValue: false
         })
@@ -288,7 +303,7 @@ export default defineComponent({
 
       // set empty values into container data
       store.commit('setBrowserData', {
-        containerUuid: browserId
+        containerUuid: browserUuid.value
       })
     }
 
@@ -350,12 +365,12 @@ export default defineComponent({
 
     const actionsManager = computed(() => {
       return {
-        containerUuid: browserId,
+        containerUuid: browserUuid.value,
 
         defaultActionName: processName.value,
 
         getActionList: () => store.getters.getStoredActionsMenu({
-          containerUuid: browserId
+          containerUuid: browserUuid.value
         })
       }
     })
@@ -363,15 +378,17 @@ export default defineComponent({
     // get records list
     const recordsList = computed(() => {
       return store.getters.getBrowserRecordsList({
-        containerUuid: browserId
+        containerUuid: browserUuid.value
       })
     })
 
     getBrowserDefinition()
 
     return {
+      store,
       isLoadedMetadata,
       browserId,
+      browserUuid,
       browserMetadata,
       containerManager,
       containerManagerProcess,

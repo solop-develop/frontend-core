@@ -488,6 +488,7 @@ const actions = {
       // Get all fields on different container
       let currentFieldsList = fieldsList
       if (!field.isCustomForm && containerManager && containerManager.getFieldsList && containerUuid !== field.containerUuid) {
+        // is other tab
         currentFieldsList = containerManager.getFieldsList({
           parentUuid,
           containerUuid

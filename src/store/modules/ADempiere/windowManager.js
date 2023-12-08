@@ -284,14 +284,6 @@ const windowManager = {
       pageSize
     }) {
       return new Promise(resolve => {
-        const storedPage = getters.getTabPageNumber({
-          containerUuid
-        })
-
-        let contextAttributes = '{}'
-
-        let pageToken
-
         const {
           isParentTab,
           isHasTree,
@@ -302,23 +294,9 @@ const windowManager = {
           contextColumnNames
         } = rootGetters.getStoredTab(parentUuid, containerUuid)
 
-        if (isEmptyValue(pageNumber)) {
-          pageNumber = storedPage
-        }
-
-        pageToken = generatePageToken({
-          pageNumber
-        })
-
         if (!isEmptyValue(filters) && typeof filters !== 'object') {
           const parseFilter = JSON.parse(filters)
           filters = [parseFilter]
-        }
-
-        if (isEmptyValue(searchValue)) {
-          searchValue = getters.getSearchValueTabRecordsList({
-            containerUuid
-          })
         }
 
         // add filters with link column name and parent column name
@@ -423,14 +401,31 @@ const windowManager = {
           }
         }
 
-        if (!isEmptyValue(searchValue)) {
-          pageToken = ''
+        // search value to filter
+        if (isEmptyValue(searchValue)) {
+          searchValue = getters.getSearchValueTabRecordsList({
+            containerUuid
+          })
         }
-
         if (!isEmptyValue(searchValue)) {
           searchValue = encodeURI(searchValue)
         }
 
+        // page token
+        const storedPage = getters.getTabPageNumber({
+          containerUuid
+        })
+        if (isEmptyValue(pageNumber)) {
+          pageNumber = storedPage
+        }
+        let pageToken = generatePageToken({
+          pageNumber
+        })
+        if (!isEmptyValue(searchValue)) {
+          pageToken = ''
+        }
+
+        let contextAttributes = '{}'
         if (!isEmptyValue(contextAttributesList)) {
           contextAttributes = JSON.stringify(contextAttributesList)
         }

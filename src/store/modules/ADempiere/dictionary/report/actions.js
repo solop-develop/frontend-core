@@ -95,7 +95,7 @@ export default {
               title: reportDefinition.name,
               doneMethod: () => {
                 dispatch('startReport', {
-                  containerUuid: id
+                  containerUuid: reportDefinition.uuid
                 })
               },
               loadData: ({ containerUuid }) => {
