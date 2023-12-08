@@ -55,8 +55,10 @@ export default {
         id
       })
         .then(browserResponse => {
+          const browserUuid = browserResponse.uuid
+
           const browserDefinition = generatePanelAndFields({
-            containerUuid: id,
+            containerUuid: browserUuid,
             panelMetadata: {
               ...browserResponse,
               isShowedCriteria: true
@@ -88,17 +90,17 @@ export default {
           commit('addBrowserToList', browserDefinition)
           commit('addBrowserUuidToList', {
             id: browserDefinition.id,
-            uuid: browserDefinition.uuid
+            uuid: browserUuid
           })
 
           dispatch('setBrowserActionsMenu', {
             parentUuid,
-            containerUuid: browserDefinition.id
+            containerUuid: browserUuid
           })
 
           // set default values into fields
           dispatch('setBrowserDefaultValues', {
-            containerUuid: browserDefinition.id,
+            containerUuid: browserUuid,
             fieldsList: browserDefinition.fieldsList
           })
           // set parent context
@@ -107,7 +109,7 @@ export default {
               parentUuid
             })
             dispatch('updateValuesOfContainer', {
-              containerUuid: id,
+              containerUuid: browserUuid,
               attributes: parentContext
             })
 
@@ -118,12 +120,12 @@ export default {
                 })
                 if (!isEmptyValue(currentValueElement) && !isEmptyValue(currentValueElement.value)) {
                   commit('updateValueOfField', {
-                    containerUuid: id,
+                    containerUuid: browserUuid,
                     columnName: itemField.elementName,
                     value: currentValueElement.value
                   })
                   commit('updateValueOfField', {
-                    containerUuid: id,
+                    containerUuid: browserUuid,
                     columnName: itemField.columnName,
                     value: currentValueElement.value
                   })
@@ -161,7 +163,7 @@ export default {
                 }
 
                 store.dispatch('startProcessOfBrowser', {
-                  parentUuid: browserDefinition.id,
+                  parentUuid: browserUuid,
                   containerUuid: process.uuid
                 }).then(processOutputResponse => {
                   // close current page
@@ -275,7 +277,7 @@ export default {
     actionsList.push(sharedLink)
 
     commit('setActionMenu', {
-      containerUuid: browserDefinition.id,
+      containerUuid: browserDefinition.uuid,
       actionsList
     })
   },

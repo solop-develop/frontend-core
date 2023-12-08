@@ -43,6 +43,7 @@ import { requestSaveWindowCustomization } from '@/api/ADempiere/user-customizati
 // Utils and Helpers Methods
 import evaluator from '@/utils/ADempiere/contextUtils/evaluator'
 import { getContext } from '@/utils/ADempiere/contextUtils'
+import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
 import { generatePanelAndFields } from '@/utils/ADempiere/dictionary/panel.js'
@@ -935,6 +936,28 @@ export const openBrowserAssociated = {
     const storedTab = store.getters.getStoredTab(parentUuid, containerUuid)
     const { keyColumn } = storedTab
 
+    let relatedColumns = []
+    // TODO: Validate element columns
+    const parentColumns = storedTab.fieldsList
+      .filter(fieldItem => {
+        return fieldItem.isParent || fieldItem.isKey || fieldItem.isMandatory
+      })
+      .map(fieldItem => {
+        return fieldItem.columnName
+      })
+
+    if (!isEmptyValue(storedTab.parentColumn)) {
+      relatedColumns = relatedColumns.push(storedTab.parentColumn)
+    }
+    relatedColumns = relatedColumns.concat(parentColumns).sort()
+
+    // set context values
+    const parentValues = getContextAttributes({
+      parentUuid: parentUuid,
+      containerUuid: containerUuid,
+      contextColumnNames: relatedColumns
+    })
+
     const recordId = store.getters.getValueOfField({
       parentUuid,
       containerUuid,
@@ -948,6 +971,14 @@ export const openBrowserAssociated = {
         value: recordId
       })
     }
+    parentValues.push({
+      columnName: RECORD_ID,
+      value: recordId
+    })
+    store.dispatch('updateValuesOfContainer', {
+      containerUuid: browserUuid,
+      attributes: parentValues
+    })
 
     const containerIdentifier = 'browser_' + browserId
     const inMenu = zoomIn({

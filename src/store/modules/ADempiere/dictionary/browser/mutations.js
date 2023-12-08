@@ -27,7 +27,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
  */
 export default {
   addBrowserToList(state, browser) {
-    Vue.set(state.storedBrowsers, browser.id, browser)
+    Vue.set(state.storedBrowsers, browser.uuid, browser)
   },
   addBrowserUuidToList(state, { id, uuid }) {
     Vue.set(state.storedBrowsersUuid, id, uuid)
