@@ -179,6 +179,9 @@ export default defineComponent({
   padding: 32px;
   background-color: rgb(240, 242, 245);
   position: relative;
+  overflow: auto;
+  display: block;
+  height: 90%;
 
   .github-corner {
     position: absolute;

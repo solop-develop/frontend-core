@@ -23,7 +23,7 @@
     key="browser-loaded"
     class="view-base browser-view"
   >
-    <el-card class="content-collapse card-browser" style="overflow: auto;position: absolute;height: 100%;padding-bottom: 2%!important">
+    <el-card class="content-collapse card-browser" style="overflow: auto;position: absolute;height: -webkit-fill-available !important;padding-bottom: 2%!important">
       <title-and-help
         :name="browserMetadata.name"
         :help="browserMetadata.help"

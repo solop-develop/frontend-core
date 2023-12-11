@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <div class="document-window" style="height: 90vh !important;width: 100% !important;overflow: auto;">
+  <div class="document-window" :style="stylePanelHeight">
     <div id="tab-manager" :style="sizeTab">
       <embedded
         :visible="showRecordAccess"
@@ -125,6 +125,15 @@ export default defineComponent({
     /**
      * Computed
      */
+    const stylePanelHeight = computed(() => {
+      let style = 'width: 100% !important;overflow: auto;'
+      switch (props.windowMetadata.windowType) {
+        case 'T':
+          style = 'width: 100% !important;overflow: auto;height: 90vh;'
+          break
+      }
+      return style
+    })
     const isWithChildsTab = computed(() => {
       if (store.getters['settings/getFullGridMode'] && props.windowMetadata.currentTab.isShowedTableRecords) return false
       return !isEmptyValue(props.windowMetadata.tabsListChild)
@@ -187,9 +196,6 @@ export default defineComponent({
     })
 
     const sizeTab = computed(() => {
-      if (!isWithChildsTab.value) {
-        return 'height: 100% !important'
-      }
       if (isViewFullScreenParent.value) {
         // return 'height: -webkit-fill-available'
         return 'height: 100% !important'
@@ -252,6 +258,7 @@ export default defineComponent({
       isLoadWindows,
       index,
       // Computeds
+      stylePanelHeight,
       isWithChildsTab,
       showRecordAccess,
       settingsFullGridMode,
