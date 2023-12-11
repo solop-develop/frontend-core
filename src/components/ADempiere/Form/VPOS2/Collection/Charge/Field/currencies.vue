@@ -60,8 +60,8 @@ export default defineComponent({
         multiply_rate,
         divide_rate
       } = rate
-      if (multiply_rate.value > divide_rate.value) return multiply_rate.value
-      return divide_rate.value
+      if (Number(multiply_rate) > Number(divide_rate)) return Number(multiply_rate)
+      return Number(divide_rate)
     })
 
     const isDisabled = computed(() => {
@@ -91,8 +91,8 @@ export default defineComponent({
     })
 
     function findConverRate(currency) {
-      const { price_list } = currentOrder.value
-      let amountConvert = Number(store.getters.getCurrentOrder.open_amount.value)
+      const { price_list, open_amount } = currentOrder.value
+      let amountConvert = Number(open_amount)
       if (
         isEmptyValue(currency) ||
         !isEmptyValue(price_list) &&
