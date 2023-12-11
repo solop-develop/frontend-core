@@ -43,7 +43,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           <el-collapse-item :title="$t('form.pos.optionsPoinSales.cashManagement.title')" name="cashManagement">
             <cash-management />
           </el-collapse-item>
-          <el-collapse-item :title="$t('form.pos.optionsPoinSales.generalOptions.title')" name="generalOptions" />
+          <el-collapse-item :title="$t('form.pos.optionsPoinSales.generalOptions.title')" name="generalOptions">
+            <general-options />
+          </el-collapse-item>
         </el-collapse>
       </div>
       <div style="position: absolute;left: 27.5%;top: 42%;">
@@ -67,13 +69,15 @@ import store from '@/store'
 // Components and Mixins
 import SalesOrder from './salesOrder.vue'
 import CashManagement from './cashManagement'
+import generalOptions from './generalOptions'
 // import InfoOrder from './InfoOrder.vue'
 
 export default defineComponent({
   name: 'Options',
   components: {
     SalesOrder,
-    CashManagement
+    CashManagement,
+    generalOptions
   //   InfoOrder
   },
   setup() {

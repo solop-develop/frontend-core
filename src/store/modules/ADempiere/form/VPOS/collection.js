@@ -62,6 +62,7 @@ export default {
    */
   actions: {
     addPayment({
+      commit,
       getters,
       dispatch
     }, {
@@ -120,6 +121,7 @@ export default {
               message: lang.t('pointOfSales.collection.addPayment'),
               showClose: true
             })
+            commit('setPayAmount', 0)
             resolve(response)
           })
           .catch(error => {

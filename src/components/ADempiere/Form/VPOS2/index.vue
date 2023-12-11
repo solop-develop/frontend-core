@@ -21,6 +21,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     <el-aside :width="widthAside" class="panel-options">
       <el-card
         shadow="never"
+        :body-style="{ padding: bodyStyuleCard }"
       >
         <options
           v-if="isShowOptions"
@@ -94,6 +95,11 @@ export default defineComponent({
   setup() {
     store.dispatch('searchPointOfSaleData')
 
+    const bodyStyuleCard = computed(() => {
+      if (isShowOptions.value) return '10px'
+      return '0px'
+    })
+
     const showCollection = computed({
       get() {
         return store.getters.getOpenCollection
@@ -136,6 +142,7 @@ export default defineComponent({
     })
 
     return {
+      bodyStyuleCard,
       showCollection,
       isShowOptions,
       iconsButtons,
