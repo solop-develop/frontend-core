@@ -47,9 +47,9 @@ export function requestSetResourceReference({
   fileSize
 }) {
   let path = `/file-management/references/attachment/${tableName}/${recordId}`
-  if (resourceType == RESOURCE_TYPE_IMAGE) {
+  if (resourceType === RESOURCE_TYPE_IMAGE) {
     path = `/file-management/references/image/${id}`
-  } else if (resourceType == RESOURCE_TYPE_FILE) {
+  } else if (resourceType === RESOURCE_TYPE_FILE) {
     path = `/file-management/references/archive/${id}`
   }
   return request({
