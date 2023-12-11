@@ -34,7 +34,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           >
             <field-amount
               :value-amount="amount"
-              :value-display="amountDisplay"
+              :value-display="amount"
               :handle-change="updateAmount"
             />
           </el-form-item>
@@ -284,6 +284,7 @@ export default defineComponent({
       const currency = getCurrencyPayment({
         paymentMethods: currentPaymentMethod
       })
+      updateAmount(0)
       store.commit('setAvailableCurrencies', currency)
       clearFieldsCollections()
     }

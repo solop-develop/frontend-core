@@ -34,7 +34,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           {{ $t('form.pos.collect.orderTotal') }} {{ '(' + currentOrder.document_no + ')' }}:
         </b>
         <b style="float: right">
-          {{ displayAmount(currentOrder.grand_total.value) }}
+          {{ displayAmount(currentOrder.grand_total) }}
         </b>
       </p>
       <p class="line-info">

@@ -17,8 +17,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 <template>
   <span>
     <el-input-number
-      v-if="isFocus"
-      v-model="amount"
+      v-show="isFocus"
+      ref="fieldNumber"
+      v-model="totalAmount"
       controls-position="right"
       :precision="precision"
       autofocus
@@ -28,8 +29,8 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       @blur="customFocusLost"
     />
     <el-input
-      v-else
-      v-model="valueDisplay"
+      v-show="!isFocus"
+      v-model="displayValue"
       readonly
       autofocus
       :disabled="disabled"
@@ -40,14 +41,15 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 </template>
 
 <script>
-import { defineComponent, ref } from '@vue/composition-api'
+import { defineComponent, computed, ref } from '@vue/composition-api'
 // import lang from '@/lang'
-// import store from '@/store'
+import store from '@/store'
 // // Utils and Helper Methods
 // import { formatPrice, formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 // import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 // import { displayLineProductPriceValue } from '@/utils/ADempiere/dictionary/form/VPOS'
 // import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
+import { formatPrice } from '@/utils/ADempiere/formatValue/numberFormat'
 
 export default defineComponent({
   name: 'fieldAmount',
@@ -57,7 +59,7 @@ export default defineComponent({
       required: true
     },
     valueDisplay: {
-      type: String,
+      type: [String, Number],
       required: true
     },
     precision: {
@@ -78,11 +80,33 @@ export default defineComponent({
   setup(props) {
     // Ref
     const isFocus = ref(false)
+    const fieldNumber = ref(null)
+
     const amount = ref(props.valueAmount)
+
+    const totalAmount = computed({
+      get() {
+        return props.valueAmount
+      },
+      // setter
+      set(value) {
+        store.commit('setPayAmount', value)
+      }
+    })
     // Methods
+    const displayValue = computed(() => {
+      const currency = store.getters.getAvailableCurrencies.currencie
+      return formatPrice({ value: Number(totalAmount.value), currency: currency.iso_code })
+    })
     function customFocusGained(event) {
+      fieldNumber.value.select
+      fieldNumber.value.select()
       isFocus.value = true
       amount.value = props.valueAmount
+      setTimeout(() => {
+        fieldNumber.value.select
+        fieldNumber.value.select()
+      }, 500)
     }
 
     function customFocusLost(event) {
@@ -92,6 +116,9 @@ export default defineComponent({
       // Ref
       amount,
       isFocus,
+      fieldNumber,
+      totalAmount,
+      displayValue,
       // Methods
       customFocusLost,
       customFocusGained
