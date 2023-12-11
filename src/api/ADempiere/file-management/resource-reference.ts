@@ -20,7 +20,9 @@
 import { request } from '@/utils/ADempiere/request'
 
 // Constants
-import { RESOURCE_TYPE_ATTACHMENT } from '@/utils/ADempiere/resource'
+import {
+  RESOURCE_TYPE_ATTACHMENT, RESOURCE_TYPE_FILE, RESOURCE_TYPE_IMAGE
+} from '@/utils/ADempiere/resource'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -44,8 +46,14 @@ export function requestSetResourceReference({
   fileName,
   fileSize
 }) {
+  let path = `/file-management/references/attachment/${tableName}/${recordId}`
+  if (resourceType === RESOURCE_TYPE_IMAGE) {
+    path = `/file-management/references/image/${id}`
+  } else if (resourceType === RESOURCE_TYPE_FILE) {
+    path = `/file-management/references/archive/${id}`
+  }
   return request({
-    url: `/file-management/references/attachment/${tableName}/${recordId}`,
+    url: path,
     method: 'put',
     data: {
       // parent values (attachment, image, archive)

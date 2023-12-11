@@ -102,6 +102,7 @@
             class="upload-button"
             name="file"
             :show-file-list="false"
+            :accept="MIME_TYPE_IMAGE"
             :multiple="false"
             :before-upload="isValidUploadHandler"
             :on-success="loadedSucess"
@@ -142,6 +143,7 @@
       :headers="additionalHeaders"
       drag
       name="file"
+      :accept="MIME_TYPE_IMAGE"
       :show-file-list="false"
       :multiple="false"
       :before-upload="isValidUploadHandler"
@@ -165,6 +167,7 @@ import FileInfo from '@/components/ADempiere/PanelInfo/Component/AttachmentManag
 // Constants
 import { config } from '@/utils/ADempiere/config'
 import { BEARER_TYPE } from '@/utils/auth'
+import { MIME_TYPE_IMAGE } from '@/utils/ADempiere/resource/image.ts'
 import { UUID_PATTERN } from '@/utils/ADempiere/recordUtil'
 import { RESOURCE_TYPE_IMAGE } from '@/utils/ADempiere/resource'
 
@@ -202,10 +205,10 @@ export default {
 
   data() {
     return {
-      endPointUploadResource: config.adempiere.api.url + 'user-interface/component/resource/save-attachment',
       additionalData: {},
       fileResource: {},
       imageSourceSmall: '',
+      MIME_TYPE_IMAGE,
       isLoadImage: false,
       valuesImage: [{
         identifier: 'undefined',
@@ -251,6 +254,13 @@ export default {
     //   console.log(blobImage)
     //   return blobImage.href
     // },
+    endPointUploadResource() {
+      let resourceId = this.value
+      if (isEmptyValue(resourceId)) {
+        resourceId = -1
+      }
+      return config.adempiere.resource.url + '/resources/' + resourceId
+    },
     imageSourceLarge() {
       const displayedAlt = this.displayedValue
       if (isEmptyValue(displayedAlt)) {
@@ -320,7 +330,7 @@ export default {
         }
         requestSetResourceReference({
           resourceType: RESOURCE_TYPE_IMAGE,
-          resourceId: this.value,
+          id: this.value || -1,
           fileName: file.name,
           fileSize: file.size
         }).then(response => {
@@ -331,8 +341,8 @@ export default {
 
           this.fileResource = response
           this.additionalData = {
-            resource_uuid: response.uuid,
-            file_name: response.file_name
+            id: response.id
+            // file_name: response.file_name
           }
 
           this.value = response.resource_id
