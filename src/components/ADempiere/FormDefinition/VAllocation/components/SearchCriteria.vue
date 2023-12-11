@@ -37,20 +37,25 @@
                       {{ bPartner.name }}
                       <span style="color: #f34b4b"> * </span>
                     </template>
-                    <field-definition
-                      :metadata-field="bPartner"
-                      :container-uuid="metadata.containerUuid"
-                      :container-manager="{
-                        generalInfoSearch,
-                        searchTableHeader,
-                        isMandatoryField,
-                        isReadOnlyField,
-                        isDisplayedDefault,
-                        getSearchInfoList,
-                        getLookupList
-                      }"
-                      :in-table="true"
-                    />
+                    <el-select
+                      v-model="currentBPartner"
+                      remote
+                      clearable
+                      filterable
+                      reserve-keyword
+                      style="width: 100%;"
+                      :loading="loadingBPartner"
+                      :placeholder="bPartner.name"
+                      :remote-method="remoteMethodBPartner"
+                      @visible-change="findBusinessPartners"
+                    >
+                      <el-option
+                        v-for="item in optionsBPartner"
+                        :key="item.id"
+                        :label="item.label"
+                        :value="item.id"
+                      />
+                    </el-select>
                   </el-form-item>
                 </el-col>
 
@@ -263,6 +268,9 @@ export default defineComponent({
     const optionsBusinessPartners = ref([])
 
     const bPartner = ref({})
+    const timeOut = ref(null)
+    const optionsBPartner = ref([])
+    const loadingBPartner = ref(false)
 
     const storedTransactionTypes = computed(() => {
       return store.getters.getStoredTransactionTypes
@@ -298,7 +306,24 @@ export default defineComponent({
       return ''
     })
 
-    const businessPartnerId = computed({
+    // const businessPartnerId = computed({
+    //   // getter
+    //   get() {
+    //     const { businessPartnerId } = store.getters.getSearchFilter
+    //     return businessPartnerId
+    //   },
+    //   // setter
+    //   set(id) {
+    //     store.commit('updateAttributeCriteriaVallocation', {
+    //       attribute: 'businessPartnerId',
+    //       criteria: 'searchCriteria',
+    //       value: id
+    //     })
+    //     // store.commit('setBusinessPartner', id)
+    //   }
+    // })
+
+    const currentBPartner = computed({
       // getter
       get() {
         const { businessPartnerId } = store.getters.getSearchFilter
@@ -349,13 +374,13 @@ export default defineComponent({
       }
     })
 
-    const businessPartner = computed(() => {
-      return store.getters.getValueOfFieldOnContainer({
-        parentUuid: '',
-        containerUuid: '8e4268c8-fb40-11e8-a479-7a0060f0aa01',
-        columnName: 'C_BPartner_ID'
-      })
-    })
+    // const businessPartner = computed(() => {
+    //   return store.getters.getValueOfFieldOnContainer({
+    //     parentUuid: '',
+    //     containerUuid: '8e4268c8-fb40-11e8-a479-7a0060f0aa01',
+    //     columnName: 'C_BPartner_ID'
+    //   })
+    // })
 
     const organizationsId = computed({
       // getter
@@ -431,22 +456,46 @@ export default defineComponent({
     /**
      * Methods
      */
+    function remoteMethodBPartner(searchValue) {
+      if (searchValue !== '') {
+        loadingBPartner.value = true
+        clearTimeout(timeOut.value)
+        timeOut.value = setTimeout(() => {
+          loadingBPartner.value = false
+          listBusinessPartners({
+            searchValue
+          })
+            .then(response => {
+              const { records } = response
+              optionsBPartner.value = records.map(business => {
+                return {
+                  ...business,
+                  label: business.values.DisplayColumn
+                }
+              })
+            })
+        }, 200)
+      }
+    }
     function findBusinessPartners(isFind, searchValue) {
       if (!isFind) {
         return
       }
+      loadingBPartner.value = true
       listBusinessPartners({
         searchValue
       })
         .then(response => {
           const { records } = response
-          optionsBusinessPartners.value = records.map(business => {
-            // const { DisplayColumn } = business.values
+          optionsBPartner.value = records.map(business => {
             return {
               ...business,
               label: business.values.DisplayColumn
             }
           })
+        })
+        .finally(() => {
+          loadingBPartner.value = false
         })
     }
 
@@ -648,10 +697,6 @@ export default defineComponent({
       currentTypeTransaction.value = newValue
     })
 
-    watch(businessPartner, (newValue, oldValue) => {
-      businessPartnerId.value = newValue
-    })
-
     loadTransactonsTypes()
 
     return {
@@ -662,11 +707,15 @@ export default defineComponent({
       radioPanel2,
       radioPanel3,
       bPartner,
+      timeOut,
       receivablesPayables,
       // List Option
       optionsBusinessPartners,
       currentTypeTransaction,
       optionsOrganizations,
+      loadingBPartner,
+      optionsBPartner,
+      currentBPartner,
       optionsCurrency,
       // businessPartners,
       organizations,
@@ -674,7 +723,6 @@ export default defineComponent({
       // Computed
       labelReceivablesOnly,
       labelPayablesOnly,
-      businessPartnerId,
       organizationsId,
       currentDate,
       currencyId,
@@ -684,6 +732,7 @@ export default defineComponent({
       remoteSearchCurrencies,
       findBusinessPartners,
       findOrganizations,
+      remoteMethodBPartner,
       findCurrencies,
       createField,
       findFilter,
