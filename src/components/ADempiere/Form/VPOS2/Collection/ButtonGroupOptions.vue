@@ -84,7 +84,6 @@ export default defineComponent({
     function addPayment() {
       const { payment_method } = store.getters.getPaymentMethods
       isLoading.value = true
-      payment_method.is_online_payment = true
       const params = getPaymentValues({})
       if (payment_method.is_online_payment) {
         store.dispatch('setModalDialogVPOS', {
