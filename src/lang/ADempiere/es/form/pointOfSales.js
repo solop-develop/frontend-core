@@ -46,6 +46,11 @@ const pointOfSales = {
       receivingBank: 'Banco Receptor',
       customerAccount: 'Cuenta de Cliente',
       issuingBank: 'Banco Emisor',
+      typeCard: {
+        label: 'Tipo de Tarjeta',
+        debit: 'Débito',
+        credit: 'Crédito'
+      },
       bankAccountType: {
         label: 'Tipo de Cuenta Bancario',
         currentAccount: 'Cuenta Corriente',
@@ -62,6 +67,7 @@ const pointOfSales = {
       cardNumber: 'Número de Tarjeta',
       email: 'Correo'
     },
+    confirmPayment: 'Confirmar Pago',
     chargeAmount: 'Cargo',
     creditAmount: 'Abono',
     others: 'Otros',
