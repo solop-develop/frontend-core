@@ -146,7 +146,8 @@ export default defineComponent({
         return
       }
       zoomIn({
-        uuid: notification.action_uuid
+        attributeValue: `${notification.action.toLowerCase()}_${notification.action_id}`,
+        attributeName: 'containerKey'
       })
       badgeNotifications.value.showPopper = false
     }
