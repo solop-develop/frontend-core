@@ -129,6 +129,7 @@ export default defineComponent({
       let style = 'width: 100% !important;overflow: auto;'
       switch (props.windowMetadata.windowType) {
         case 'T':
+        case 'M':
           style = 'width: 100% !important;overflow: auto;height: 90vh;'
           break
       }

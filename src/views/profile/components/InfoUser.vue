@@ -428,7 +428,7 @@ export default defineComponent({
         return
       }
       zoomIn({
-        attributeValue: `window_${notification.action_id}`,
+        attributeValue: `${notification.action.toLowerCase()}_${notification.action_id}`,
         attributeName: 'containerKey'
       })
     }
