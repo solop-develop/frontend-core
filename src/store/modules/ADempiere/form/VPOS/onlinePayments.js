@@ -86,7 +86,6 @@ export default {
   },
   getters: {
     getAttributeFieldOnlinePayments: (state) => ({ field, attribute }) => {
-      console.log({ field, attribute })
       if (isEmptyValue(field) || isEmptyValue(attribute)) return ''
       return state[field][attribute]
     },
