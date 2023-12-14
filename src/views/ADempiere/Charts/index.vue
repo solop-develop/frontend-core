@@ -30,7 +30,7 @@
         />
       </el-col> -->
       <el-col
-        v-for="(dashboardAttributes, key) in listDashboard"
+        v-for="(dashboardAttributes, key) in allDashboard"
         :key="key"
         :xs="{ span: 24 }"
         :sm="{ span: 24 }"
@@ -52,6 +52,7 @@
 // VUE
 import { defineComponent, computed, onMounted, watch } from '@vue/composition-api'
 import store from '@/store'
+import lang from '@/lang'
 // Components and Mixins
 import DashboardDefinition from '@/components/ADempiere/Dashboard/index.vue'
 import PanelGroup from '@/views/dashboard/admin/components/PanelGroup.vue'
@@ -74,6 +75,10 @@ export default defineComponent({
       return store.getters.getStoredMainDashboard
     })
 
+    const groupPortlet = computed(() => {
+      return dashboardsList.value.filter(list => list.chartType === 'PT')
+    })
+
     const listDashboard = computed(() => {
       const list = dashboardsList.value
       if (isEmptyValue(list)) {
@@ -82,11 +87,21 @@ export default defineComponent({
       if (!isEmptyValue(dashboardsList.value)) {
         return list.filter(dashboard => {
           if (
+            dashboard.chartType !== 'PT' &&
             !isEmptyValue(dashboard.chartType)
           ) {
             return dashboard
           }
         })
+      }
+      return list
+    })
+
+    const allDashboard = computed(() => {
+      const list = listDashboard.value
+      const isExist = list.find(element => element.chartType === 'PT')
+      if (isEmptyValue(isExist)) {
+        list.push({ chartType: 'PT', isCollapsible: true, name: lang.t('component.dashboard.portletChart'), groupPortlet: groupPortlet.value })
       }
       return list
     })
@@ -117,6 +132,8 @@ export default defineComponent({
       dashboardsList,
       mainDashboard,
       listDashboard,
+      allDashboard,
+      groupPortlet,
       currentRole
     }
   }

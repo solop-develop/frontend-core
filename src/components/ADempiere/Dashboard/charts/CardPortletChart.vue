@@ -17,53 +17,69 @@
 -->
 
 <template>
-  <el-card shadow="always" :style="{height:height,width:width}">
-    <el-card
-      shadow="always"
-      :body-style="{ padding: '10px' }"
-      class="card-portlet"
-      style="border: 1px;"
+  <el-row>
+    <el-col
+      v-for="cardPortlet in metadata.groupPortlet"
+      :key="cardPortlet.id"
+      :span="24"
     >
-      <p slot="header" style="margin: 0px;padding: 0pc;color: #606266;text-align: left;">
-        {{ metadata.name }}
-        <i class="el-icon-warning-outline" />
-      </p>
-      <p style="margin: 0px;font-size: 18px;text-align: right;">
-        <count-to
-          :start-val="0"
-          :end-val="Number(portlet.measureTarget)"
-          :duration="2600"
-          style="font-size: 50px;font-weight: 500;color: #303133;"
-        />
-      </p>
-      <p style="margin: 0px;text-align: left;">
-        <span style="color: #606266;">
-          {{ metadata.description }}
-        </span>
-        <span style="float: right;">
-          <count-to
-            :start-val="0"
-            group-separator="."
-            :end-val="Number(portlet.performanceGoal) * 100"
-            style="font-size: 18px;"
-            :style="colorStyle(Number(portlet.performanceGoal) * 100)"
-          />
-          <b :style="colorStyle(Number(portlet.performanceGoal) * 100)">
-            {{ '%' }}
-            <svg-icon :icon-class="iconClass(Number(portlet.performanceGoal) * 100)" />
-          </b>
-        </span>
-      </p>
-    </el-card>
-  </el-card>
+      <el-card style="border: 0px;">
+        <el-card
+          :body-style="{ padding: '10px' }"
+          class="card-portlet"
+          style="border: 0px;"
+        >
+          <p slot="header" style="margin: 0px;padding: 0pc;color: #606266;text-align: left;">
+            {{ cardPortlet.name }}
+            <i class="el-icon-warning-outline" />
+          </p>
+          <span v-if="!isEmptyValue(cardPortlet.metrics) || isLoading">
+            <p style="margin: 0px;font-size: 18px;text-align: right;">
+              <count-to
+                :start-val="0"
+                :end-val="valueAmount(cardPortlet.metrics.measureTarget)"
+                :duration="2600"
+                style="font-size: 50px;font-weight: 500;color: #303133;"
+              />
+            </p>
+            <p style="margin: 0px;text-align: left;">
+              <span style="color: #606266;">
+                {{ cardPortlet.description }}
+              </span>
+              <span style="float: right;">
+                <count-to
+                  :start-val="0"
+                  group-separator="."
+                  :end-val="valueAmount(cardPortlet.metrics.performanceGoal) * 100"
+                  style="font-size: 18px;"
+                  :style="colorStyle(valueAmount(cardPortlet.metrics.performanceGoal) * 100)"
+                />
+                <b :style="colorStyle(valueAmount(cardPortlet.metrics.performanceGoal) * 100)">
+                  {{ '%' }}
+                  <svg-icon :icon-class="iconClass(valueAmount(cardPortlet.metrics.performanceGoal) * 100)" />
+                </b>
+              </span>
+            </p>
+          </span>
+          <el-button v-else type="text" @click="reload">
+            {{ $t('component.dashboard.reload') }}
+            <i class="el-icon-loading" />
+          </el-button>
+        </el-card>
+      </el-card>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
-// // API Request Methods
+// API Request Methods
 import { getMetricRequest } from '@/api/ADempiere/dashboard/index.ts'
 // Components and Mixins
 import CountTo from 'vue-count-to'
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { defineComponent, ref } from '@vue/composition-api'
+
 export default defineComponent({
   name: 'CardPortletChart',
 
@@ -90,14 +106,16 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const portlet = ref('')
+    // console.log({ metadata: props.metadata })
+    const portlet = ref([])
+    const isLoading = ref(false)
 
-    function loadMetrics() {
+    function loadMetrics(element) {
       getMetricRequest({
-        id: props.metadata.id
+        id: element.id
       })
         .then(metrics => {
-          portlet.value = metrics
+          element.metrics = metrics
         })
         .catch(error => {
           console.warn(`Error getting Bar Chart: ${error.message}. Code: ${error.code}.`)
@@ -117,14 +135,29 @@ export default defineComponent({
       return ''
     }
 
-    loadMetrics()
+    function valueAmount(amount) {
+      if (isEmptyValue(amount)) return 0
+      return Number(amount)
+    }
+
+    function reload() {
+      setTimeout(() => {
+        isLoading.value = true
+      }, 1000)
+    }
+
+    props.metadata.groupPortlet.forEach(element => {
+      loadMetrics(element)
+    })
 
     return {
       portlet,
+      isLoading,
+      reload,
       iconClass,
       colorStyle,
-      loadMetrics
-      // formatQuantity
+      loadMetrics,
+      valueAmount
     }
   }
 })

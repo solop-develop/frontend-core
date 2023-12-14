@@ -33,8 +33,12 @@ export function getChartComponent(chart) {
   let chartComponent
   switch (chartType) {
     // Card Portlet Chart
-    case 'BC':
+    case 'PT':
       chartComponent = () => import('@/components/ADempiere/Dashboard/charts/CardPortletChart')
+      break
+    // Bar Chart
+    case 'BC':
+      chartComponent = () => import('@/components/ADempiere/Dashboard/charts/BarChart')
       break
     // Area Chart
     case 'AC':
