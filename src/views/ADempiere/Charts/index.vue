@@ -23,12 +23,12 @@
       :body-style="{ padding: '20px !important;'}"
       style="height: 90vh !important; overflow: auto !important;"
     >
-      <el-col v-if="!isEmptyValue(mainDashboard)" :span="24" style="padding-right:8px;margin-bottom:2px;">
+      <!-- <el-col v-if="!isEmptyValue(mainDashboard)" :span="24" style="padding-right:8px;margin-bottom:2px;">
         <dashboard-definition
           :metadata="mainDashboard"
           :title="mainDashboard.name"
         />
-      </el-col>
+      </el-col> -->
       <el-col
         v-for="(dashboardAttributes, key) in listDashboard"
         :key="key"
@@ -79,10 +79,9 @@ export default defineComponent({
       if (isEmptyValue(list)) {
         return []
       }
-      if (!isEmptyValue(mainDashboard.value)) {
+      if (!isEmptyValue(dashboardsList.value)) {
         return list.filter(dashboard => {
           if (
-            mainDashboard.value.id !== dashboard.id &&
             !isEmptyValue(dashboard.chartType)
           ) {
             return dashboard
