@@ -24,57 +24,45 @@
       class="card-portlet"
       style="border: 1px;"
     >
-      <p slot="header" style="margin: 0px;padding: 0pc;">
+      <p slot="header" style="margin: 0px;padding: 0pc;color: #606266;text-align: left;">
         {{ metadata.name }}
+        <i class="el-icon-warning-outline" />
       </p>
-      <el-card
-        shadow="always"
-        :body-style="{ padding: '10px' }"
-        style="border: 1px;"
-      >
-        <b style="font-size: 18px;">
+      <p style="margin: 0px;font-size: 18px;text-align: right;">
+        <count-to
+          :start-val="0"
+          :end-val="Number(portlet.measureTarget)"
+          :duration="2600"
+          style="font-size: 50px;font-weight: 500;color: #303133;"
+        />
+      </p>
+      <p style="margin: 0px;text-align: left;">
+        <span style="color: #606266;">
+          {{ metadata.description }}
+        </span>
+        <span style="float: right;">
           <count-to
             :start-val="0"
-            :end-val="Number(portlet.measureTarget)"
-            :duration="2600"
-            style="font-size: 44px;"
+            group-separator="."
+            :end-val="Number(portlet.performanceGoal) * 100"
+            style="font-size: 18px;"
+            :style="colorStyle(Number(portlet.performanceGoal) * 100)"
           />
-          <hr>
-          <p style="margin: 0px;">
-            <count-to
-              :start-val="0"
-              group-separator="."
-              :end-val="Number(portlet.performanceGoal) * 100"
-              style="font-size: 18px;"
-              :style="colorStyle(Number(portlet.performanceGoal) * 100)"
-            />
-            <b :style="colorStyle(Number(portlet.performanceGoal) * 100)">
-              {{ '%' }}
-              <svg-icon :icon-class="iconClass(Number(portlet.performanceGoal) * 100)" />
-            </b>
-          </p>
-        </b>
-      </el-card>
+          <b :style="colorStyle(Number(portlet.performanceGoal) * 100)">
+            {{ '%' }}
+            <svg-icon :icon-class="iconClass(Number(portlet.performanceGoal) * 100)" />
+          </b>
+        </span>
+      </p>
     </el-card>
   </el-card>
 </template>
 
 <script>
-// import * as echarts from 'echarts'
-// require('echarts/theme/macarons') // echarts theme
-// import resize from './mixins/resize'
-
-import CountTo from 'vue-count-to'
 // // API Request Methods
 import { getMetricRequest } from '@/api/ADempiere/dashboard/index.ts'
-
-// Utils and Helper Methods
-// import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
-// import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
-
-// const animationDuration = 6000
-// import store from '@/store'
-// import router from '@/router'
+// Components and Mixins
+import CountTo from 'vue-count-to'
 import { defineComponent, ref } from '@vue/composition-api'
 export default defineComponent({
   name: 'CardPortletChart',
