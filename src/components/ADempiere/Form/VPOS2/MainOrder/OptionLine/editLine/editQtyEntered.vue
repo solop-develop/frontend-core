@@ -50,10 +50,14 @@ export default defineComponent({
   setup(props) {
     // Ref
     const qtyEntered = ref(props.qty)
-    const qtyField = ref()
+    const qtyField = ref(null)
     if (qtyField.value) {
       qtyField.value.select()
     }
+    setTimeout(() => {
+      qtyField.value.select
+      qtyField.value.select()
+    }, 200)
     return {
       // Ref
       qtyField,

@@ -68,10 +68,14 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         min-width="200"
       />
       <el-table-column
-        prop="quantity_ordered.value"
+        prop="quantity_ordered"
         :label="$t('form.productInfo.quantityOnHand')"
         align="right"
-      />
+      >
+        <template slot-scope="scope">
+          {{ formatQuantity({ value: scope.row.quantity_ordered }) }}
+        </template>
+      </el-table-column>
       <el-table-column
         :label="$t('form.productInfo.price')"
         align="right"
@@ -127,7 +131,7 @@ import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'
 import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
-import { formatPrice } from '@/utils/ADempiere/formatValue/numberFormat'
+import { formatPrice, formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 
 export default defineComponent({
   name: 'ProductListTable',
@@ -264,6 +268,7 @@ export default defineComponent({
       handleCurrentChange,
       handleChangePage,
       handleSizeChange,
+      formatQuantity,
       displayAmount,
       searchProduct,
       addProduct,

@@ -1164,7 +1164,7 @@ export function validatePIN({
       pin,
       order_id: orderId,
       requested_access: requestedAccess,
-      requested_amount: requestedAmount
+      requested_amount: requestedAmount.toString()
     }
   })
 }

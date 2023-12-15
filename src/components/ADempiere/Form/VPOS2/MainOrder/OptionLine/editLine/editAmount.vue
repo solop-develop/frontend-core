@@ -16,6 +16,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <template>
   <el-input-number
+    ref="fieldAmount"
     v-model="valueAmount"
     controls-position="right"
     :precision="precision"
@@ -48,10 +49,17 @@ export default defineComponent({
   },
   setup(props) {
     // Ref
+    const fieldAmount = ref(null)
     const valueAmount = ref(props.value)
+
+    setTimeout(() => {
+      fieldAmount.value.select
+      fieldAmount.value.select()
+    }, 200)
     return {
       // Ref
-      valueAmount
+      valueAmount,
+      fieldAmount
     }
   }
 })

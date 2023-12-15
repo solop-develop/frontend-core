@@ -16,6 +16,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <template>
   <el-popover
+    v-model="visible"
     placement="right-start"
     :title="$t('form.pos.tableProduct.editQuantities')"
     width="850"
@@ -216,6 +217,7 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const visible = ref(false)
     const valueUOM = ref('')
     const valueStock = ref(props.editLine.warehouse.id)
     const basePrice = ref('')
@@ -260,7 +262,7 @@ export default defineComponent({
     })
 
     const qtyWarehouseLine = computed(() => {
-      if (isEmptyValue(listStock.value)) showListStock(true)
+      if (isEmptyValue(listStock.value) && visible.value) showListStock(true)
       const stock = listStock.value.find(stock => stock.warehouse_id === valueStock.value)
       if ((stock)) {
         return formatQuantity({ value: stock.quantity })
@@ -305,6 +307,7 @@ export default defineComponent({
     }
 
     function showListStock(isVisible) {
+      console.log({ isVisible })
       if (!isVisible) return
       if (
         isEmptyValue(currentLine.value) ||
@@ -404,6 +407,7 @@ export default defineComponent({
     }
 
     return {
+      visible,
       listUOM,
       valueUOM,
       currency,
