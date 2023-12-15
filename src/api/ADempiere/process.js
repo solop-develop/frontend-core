@@ -31,7 +31,7 @@ import { request } from '@/utils/ADempiere/request'
  * @param {array}   selectionsList, selection records, used only browser
       [{
           selectionId,
-          selectionValues: [{ columnName, value }]
+          values: [{ columnName, value }]
       }]
  * @param {number}  tableSelectedId, used only browser // TODO: Add support on adempiere-vue
  */
