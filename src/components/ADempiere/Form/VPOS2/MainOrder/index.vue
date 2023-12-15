@@ -54,12 +54,25 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
               :qty="Number(scope.row.quantity_ordered)"
               :handle-change="updateQuantity"
             />
-            <edit-amount
+            <span
               v-else-if="scope.row.isEditDiscount && valueOrder.columnName === 'Discount'"
-              :value="Number(scope.row.discount_rate)"
-              :handle-change="updateDiscount"
-              :precision="0"
-            />
+            >
+              <p
+                v-if="isLoadingDiscount"
+                style="text-align: center;margin: 0px;"
+              >
+                <i
+                  class="el-icon-loading"
+                  style="font-size: 20px;"
+                />
+              </p>
+              <edit-amount
+                v-else
+                :value="Number(scope.row.discount_rate)"
+                :handle-change="updateDiscount"
+                :precision="0"
+              />
+            </span>
             <span v-else>
               {{ displayValue({ row: scope.row, columnName: valueOrder.columnName}) }}
             </span>
@@ -105,6 +118,7 @@ export default defineComponent({
   },
   setup() {
     const currentLine = ref({})
+    const isLoadingDiscount = ref(false)
     const orderLineDefinition = computed(() => {
       return {
         lineDescription: {
@@ -211,12 +225,16 @@ export default defineComponent({
 
     function updateCurrentPrice(price) {
       const { is_modify_price } = currentPos.value
+      const {
+        quantity_ordered
+      } = currentLine.value
       if (!is_modify_price) {
         store.dispatch('setModalPin', {
           title: lang.t('form.pos.pinMessage.pin') + lang.t('form.pos.pinMessage.price'),
           doneMethod: () => {
             store.dispatch('updateCurrentLine', {
               lineId: currentLine.value.id,
+              quantity: quantity_ordered,
               price
             })
               .then(() => {
@@ -231,6 +249,7 @@ export default defineComponent({
       }
       store.dispatch('updateCurrentLine', {
         lineId: currentLine.value.id,
+        quantity: quantity_ordered,
         price
       })
         .then(() => {
@@ -267,15 +286,21 @@ export default defineComponent({
     }
     function updateDiscount(discount_rate) {
       const { is_allows_modify_discount } = currentPos.value
+      const {
+        quantity_ordered
+      } = currentLine.value
+      isLoadingDiscount.value = true
       if (!is_allows_modify_discount) {
         store.dispatch('setModalPin', {
           title: lang.t('form.pos.pinMessage.pin') + lang.t('form.pos.pinMessage.qtyEntered'),
           doneMethod: () => {
             store.dispatch('updateCurrentLine', {
               lineId: currentLine.value.id,
-              discount_rate
+              discount_rate,
+              quantity: quantity_ordered
             })
-              .then(() => {
+              .finally(() => {
+                isLoadingDiscount.value = false
                 currentLine.value.isEditQtyEntered = false
               })
           },
@@ -287,16 +312,19 @@ export default defineComponent({
       }
       store.dispatch('updateCurrentLine', {
         lineId: currentLine.value.id,
-        discount_rate
+        discount_rate,
+        quantity: quantity_ordered
       })
-        .then(() => {
+        .finally(() => {
           currentLine.value.isEditDiscount = false
+          isLoadingDiscount.value = false
         })
     }
 
     return {
       currentPos,
       orderLineDefinition,
+      isLoadingDiscount,
       currentLine,
       lines,
       // Methods

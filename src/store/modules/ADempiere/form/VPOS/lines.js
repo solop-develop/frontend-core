@@ -290,7 +290,7 @@ export default {
         })
           .then(response => {
             const { stocks } = response
-            const list = sumStocksByWarehouse(stocks)
+            const list = isEmptyValue(sumStocksByWarehouse(stocks)) ? [{ warehouse_id: 0, warehouse_name: '' }] : sumStocksByWarehouse(stocks)
             commit('setListStocks', {
               productId,
               list

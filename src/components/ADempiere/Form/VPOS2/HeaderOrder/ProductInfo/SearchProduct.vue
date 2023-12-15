@@ -75,9 +75,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             </div>
             <div style="width: 30%;float: right;margin: 0px">
               <p style="overflow: hidden;text-overflow: ellipsis;text-align: end;margin: 0px">
-                {{ props.item.priceStandard }}
+                {{ formatPrice({ value: props.item.price_standard, currency: props.item.currency.iso_code}) }}
                 <br>
-                {{ props.item.quantityAvailable }}
+                {{ formatQuantity({ value: props.item.quantity_available }) }}
               </p>
             </div>
           </div>
@@ -200,9 +200,11 @@ export default defineComponent({
       order,
       show,
       // Methods
+      formatPrice,
       showPopever,
       localSearch,
-      selectProduct
+      selectProduct,
+      formatQuantity
     }
   }
 })
