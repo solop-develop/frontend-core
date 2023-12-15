@@ -18,6 +18,8 @@
 
 const dashboard = {
   parameters: 'Parámetros',
+  reload: 'Volver a cargar',
+  portletChart: 'Gráfico de Portlets',
   unsupported: {
     sorry: 'Lo sentimos',
     title: 'Este panel de control no es compatible actualmente',

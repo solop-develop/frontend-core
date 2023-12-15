@@ -23,14 +23,14 @@
       :body-style="{ padding: '20px !important;'}"
       style="height: 90vh !important; overflow: auto !important;"
     >
-      <el-col v-if="!isEmptyValue(mainDashboard)" :span="24" style="padding-right:8px;margin-bottom:2px;">
+      <!-- <el-col v-if="!isEmptyValue(mainDashboard)" :span="24" style="padding-right:8px;margin-bottom:2px;">
         <dashboard-definition
           :metadata="mainDashboard"
           :title="mainDashboard.name"
         />
-      </el-col>
+      </el-col> -->
       <el-col
-        v-for="(dashboardAttributes, key) in listDashboard"
+        v-for="(dashboardAttributes, key) in allDashboard"
         :key="key"
         :xs="{ span: 24 }"
         :sm="{ span: 24 }"
@@ -52,6 +52,7 @@
 // VUE
 import { defineComponent, computed, onMounted, watch } from '@vue/composition-api'
 import store from '@/store'
+import lang from '@/lang'
 // Components and Mixins
 import DashboardDefinition from '@/components/ADempiere/Dashboard/index.vue'
 import PanelGroup from '@/views/dashboard/admin/components/PanelGroup.vue'
@@ -74,20 +75,33 @@ export default defineComponent({
       return store.getters.getStoredMainDashboard
     })
 
+    const groupPortlet = computed(() => {
+      return dashboardsList.value.filter(list => list.chartType === 'PT')
+    })
+
     const listDashboard = computed(() => {
       const list = dashboardsList.value
       if (isEmptyValue(list)) {
         return []
       }
-      if (!isEmptyValue(mainDashboard.value)) {
+      if (!isEmptyValue(dashboardsList.value)) {
         return list.filter(dashboard => {
           if (
-            mainDashboard.value.id !== dashboard.id &&
+            dashboard.chartType !== 'PT' &&
             !isEmptyValue(dashboard.chartType)
           ) {
             return dashboard
           }
         })
+      }
+      return list
+    })
+
+    const allDashboard = computed(() => {
+      const list = listDashboard.value
+      const isExist = list.find(element => element.chartType === 'PT')
+      if (isEmptyValue(isExist)) {
+        list.push({ chartType: 'PT', isCollapsible: true, name: lang.t('component.dashboard.portletChart'), groupPortlet: groupPortlet.value })
       }
       return list
     })
@@ -118,6 +132,8 @@ export default defineComponent({
       dashboardsList,
       mainDashboard,
       listDashboard,
+      allDashboard,
+      groupPortlet,
       currentRole
     }
   }

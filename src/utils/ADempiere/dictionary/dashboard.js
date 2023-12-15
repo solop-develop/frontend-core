@@ -32,6 +32,10 @@ export function getChartComponent(chart) {
   const { chartType } = chart
   let chartComponent
   switch (chartType) {
+    // Card Portlet Chart
+    case 'PT':
+      chartComponent = () => import('@/components/ADempiere/Dashboard/charts/CardPortletChart')
+      break
     // Bar Chart
     case 'BC':
       chartComponent = () => import('@/components/ADempiere/Dashboard/charts/BarChart')
