@@ -58,11 +58,9 @@
         :key="key"
         :column-key="fieldAttributes.columnName"
         :prop="fieldAttributes.columnName"
-        :sortable="true"
+        sortable
         :min-width="widthColumn(fieldAttributes)"
         :fixed="fieldAttributes.isFixedTableColumn"
-        :sort-method="sortByTable"
-        @click="epale(fieldAttributes.columnName)"
       >
         <template slot="header">
           <span v-if="containerManager.isMandatoryColumn(fieldAttributes)" style="color: red">
@@ -575,14 +573,6 @@ export default defineComponent({
       return '210'
     }
 
-    function sortByTable(row, index) {
-      console.log({ row, index })
-    }
-
-    function epale(column, event) {
-      console.log({ column, event }, 'epale')
-    }
-
     /**
      * Watch - watch works directly on a ref
      * @param newValue - New Assessed Property value
@@ -678,8 +668,6 @@ export default defineComponent({
       handleSelection,
       handleCellClick,
       handleRowClick,
-      sortByTable,
-      epale,
       widthColumn,
       changeTable,
       adjustSize,
