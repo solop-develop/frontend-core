@@ -74,8 +74,10 @@
 <script>
 // API Request Methods
 import { getMetricRequest } from '@/api/ADempiere/dashboard/index.ts'
+
 // Components and Mixins
 import CountTo from 'vue-count-to'
+
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { defineComponent, ref } from '@vue/composition-api'
@@ -106,7 +108,6 @@ export default defineComponent({
     }
   },
   setup(props) {
-    // console.log({ metadata: props.metadata })
     const portlet = ref([])
     const isLoading = ref(false)
 
