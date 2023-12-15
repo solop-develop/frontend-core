@@ -468,7 +468,7 @@ const browserControl = {
      * @param {array}  selection
      * [{
      *    selectionId: keyColumn Value,
-     *    selectionValues: [{ columnName, value }]
+     *    values: [{ columnName, value }]
      * }]
      */
     getBrowserSelectionToServer: (state, getters, rootState, rootGetters) => ({
@@ -502,7 +502,7 @@ const browserControl = {
         })
 
       selectionsList.forEach(itemRow => {
-        const attributesList = []
+        const attributesList = {}
 
         Object.keys(itemRow).forEach(columnName => {
           if (!columnName.startsWith(DISPLAY_COLUMN_PREFIX) && !ROW_KEY_ATTRIBUTES.includes(columnName)) {
@@ -511,18 +511,20 @@ const browserControl = {
             })
             // evaluate metadata attributes before to convert
             if (!isEmptyValue(currentField)) {
-              attributesList.push({
-                columnName,
-                valueType: currentField.valueType,
-                value: itemRow[columnName]
-              })
+              const value = itemRow[columnName]
+              // attributesList.push({
+              //   columnName,
+              //   valueType: currentField.valueType,
+              //   value: value
+              // })
+              attributesList[columnName] = value
             }
           }
         })
 
         selectionToServer.push({
           selectionId: itemRow[keyColumn],
-          selectionValues: attributesList
+          values: attributesList
         })
       })
 
