@@ -647,6 +647,10 @@ const reportManager = {
     },
 
     getReportOutput: (state) => (instanceUuid) => {
+      console.log({
+        instanceUuid,
+        qlq: state.reportsOutput
+      })
       return state.reportsOutput[instanceUuid]
     },
 
