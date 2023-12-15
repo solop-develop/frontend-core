@@ -17,7 +17,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
-  <el-main
+  <div
     class="product-list-content"
   >
     <el-form
@@ -40,7 +40,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       :empty-text="$t('quickAccess.searchWithEnter')"
       highlight-current-row
       :border="true"
-      height="450"
+      :height="height"
       fit
       @current-change="addProduct"
     >
@@ -171,7 +171,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         </el-scrollbar>
       </span>
     </el-dialog>
-  </el-main>
+  </div>
 </template>
 
 <script>
@@ -194,6 +194,12 @@ export default defineComponent({
     IndexColumn,
     LoadingView,
     CustomPagination
+  },
+  props: {
+    height: {
+      type: String,
+      default: '450'
+    }
   },
   setup() {
     /**
@@ -396,6 +402,7 @@ export default defineComponent({
 
 <style lang="scss">
 .product-list-content {
+  height: 100% !important;
   padding-top: 0px;
   padding-bottom: 4px;
   padding-left: 0px;
