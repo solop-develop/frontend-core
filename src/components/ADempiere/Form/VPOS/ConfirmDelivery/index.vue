@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
- Contributor(s): Yamel Senih ysenih@erpya.com www.erpya.com
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -261,10 +261,10 @@
 </template>
 
 <script>
-// components and mixins
+// Components and Mixins
 import formMixin from '@/components/ADempiere/Form/formMixin.js'
 
-// api request methods
+// API Request Methods
 import {
   createShipmentLine,
   createShipment,
@@ -274,7 +274,7 @@ import {
   printShipmentPreviwer
 } from '@/api/ADempiere/form/point-of-sales.js'
 
-// utils and helper methods
+// Utils and Helper Methods
 import { formatPrice } from '@/utils/ADempiere/valueFormat.js'
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
@@ -284,9 +284,11 @@ import {
 
 export default {
   name: 'ConfirmDelivery',
+
   mixins: [
     formMixin
   ],
+
   props: {
     metadata: {
       type: Object,
@@ -314,6 +316,7 @@ export default {
       default: false
     }
   },
+
   data() {
     return {
       isLoadedServer: false,
@@ -330,6 +333,7 @@ export default {
       timeOut: null
     }
   },
+
   computed: {
     getItemQuantity() {
       if (this.isEmptyValue(this.productdeliveryList)) {
@@ -395,6 +399,7 @@ export default {
       return this.$store.getters.getShipment
     }
   },
+
   watch: {
     currentLineInfo(value) {
       if (!this.isEmptyValue(this.$refs.open)) {
@@ -410,6 +415,7 @@ export default {
       }
     }
   },
+
   created() {
     this.$store.commit('setListProductPrice', {
       isLoaded: false
@@ -418,6 +424,7 @@ export default {
       this.validatePos(this.currentPointOfSales)
     }, 3000)
   },
+
   methods: {
     formatPrice,
     formatQuantity,
@@ -500,8 +507,8 @@ export default {
     },
     querySearchAsyncDelivery(queryString, callBack) {
       const results = queryString ? this.currentOrderLine.filter(this.createFilter(queryString)) : this.currentOrderLine
-      clearTimeout(this.timeout)
-      this.timeout = setTimeout(() => {
+      clearTimeout(this.timeOut)
+      this.timeOut = setTimeout(() => {
         if (this.isEmptyValue(results)) {
           this.$message({
             type: 'error',

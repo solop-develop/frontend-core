@@ -287,18 +287,6 @@ const AccountCombinations = {
     },
     getAccountCombinationsShow: (state) => ({ containerUuid }) => {
       return state.AccountCombinationsShow[containerUuid]
-    // },
-    // getTableHeader: (state) => ({ containerUuid }) => {
-    //   return state.tableHeaderList[containerUuid] || []
-    // },
-    // getQueryFieldsList: (state, getters) => ({ containerUuid }) => {
-    //   const fieldsList = getters.getTableHeader({ containerUuid })
-    //   return fieldsList.filter(field => {
-    //     return CHAR.id === field.displayType
-    //   })
-    // },
-    // getIdentifier: (state) => ({ containerUuid }) => {
-    //   return state.fileListIdentifier[containerUuid] || []
     }
   }
 }

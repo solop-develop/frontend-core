@@ -190,7 +190,7 @@ export default {
       return ALWAYS_DISPLAY_COLUMN.includes(this.field.columnName)
     },
     sizeField() {
-      if (!this.isEmptyValue(this.sizeCol)) {
+      if (!isEmptyValue(this.sizeCol)) {
         return {
           // ...this.field.size,
           xs: this.sizeCol,
@@ -247,9 +247,9 @@ export default {
         case 'FieldDate':
           field = () => import('@/components/ADempiere/FieldDefinition/FieldDate')
           break
-        // case 'FieldSearch':
-        //   field = () => import('@/components/ADempiere/FieldDefinition/FieldSearch')
-        //   break
+        case 'FieldSearch':
+          field = () => import('@/components/ADempiere/FieldDefinition/FieldSearch')
+          break
         case 'FieldNumber':
           field = () => import('@/components/ADempiere/FieldDefinition/FieldNumber')
           break
@@ -268,9 +268,7 @@ export default {
         case 'FieldWarehouseLocator':
           field = () => import('@/components/ADempiere/FieldDefinition/FieldWarehouseLocator')
           break
-        case 'FieldSearch':
         case 'FieldSelect':
-        // case 'FieldAccountingCombination':
           field = () => import('@/components/ADempiere/FieldDefinition/FieldSelect')
           break
         case 'FieldImage':

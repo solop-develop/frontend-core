@@ -625,15 +625,6 @@ export default defineComponent({
         pageNumber
       })
     }
-    function searchTableHeader({
-      containerUuid,
-      tableName
-    }) {
-      return store.dispatch('searchTableHeader', {
-        containerUuid,
-        tableName
-      })
-    }
 
     function getLookupList({ parentUuid, containerUuid, contextColumnNames, uuid, id, searchValue, isAddBlankValue = false, blankValue }) {
       return store.dispatch('getLookupListFromServer', {
@@ -741,7 +732,6 @@ export default defineComponent({
       isDisplayedDefault,
       isReadOnlyField,
       generalInfoSearch,
-      searchTableHeader,
       getLookupList,
       getSearchInfoList
     }

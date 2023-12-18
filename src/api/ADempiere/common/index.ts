@@ -185,7 +185,7 @@ export function requestListBusinessPartner({
       return {
         nextPageToken: businessPartnerResponse.next_page_token,
         recordCount: businessPartnerResponse.record_count,
-        businessPartnersList: businessPartnerResponse.business_partners.map(businessPartner => {
+        recordsList: businessPartnerResponse.business_partners.map(businessPartner => {
           return convertBusinessPartner(businessPartner)
         })
       }

@@ -19,10 +19,13 @@
 import Vue from 'vue'
 
 // API Request Methods
-import { tableSearchFields, requestGridGeneralInfo } from '@/api/ADempiere/field/search'
+import {
+  requestIdentifierColumns,
+  requestSearchFields
+} from '@/api/ADempiere/dictionary/field.ts'
+import { requestGridGeneralInfo } from '@/api/ADempiere/field/search/index.ts'
 
 // Constants
-import { CHAR, SEARCH, TABLE, TABLE_DIRECT } from '@/utils/ADempiere/references'
 import { TABLE_NAME as TABLE_NAME_BPartner } from '@/utils/ADempiere/dictionary/field/businessPartner.js'
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
@@ -53,6 +56,11 @@ const initState = {
     pageSize: ROWS_OF_RECORDS_BY_PAGE,
     pageNumber: 1
   },
+
+  setIdentifierColumns: {},
+  searchQueryFields: {},
+  searchTableFields: {},
+
   generalInfoSearch: {},
   tableHeaderList: {},
   fileListIdentifier: [],
@@ -64,6 +72,25 @@ const generalInfoSearch = {
   state: initState,
 
   mutations: {
+    setSearchIdentifierFields(state, {
+      tableName,
+      fieldsList
+    }) {
+      Vue.set(state.setIdentifierColumns, tableName, fieldsList)
+    },
+    setSearchQueryFields(state, {
+      tableName,
+      fieldsList
+    }) {
+      Vue.set(state.searchQueryFields, tableName, fieldsList)
+    },
+    setSearchTableFields(state, {
+      tableName,
+      fieldsList
+    }) {
+      Vue.set(state.searchTableFields, tableName, fieldsList)
+    },
+
     setGeneralInfoData(state, {
       containerUuid,
       currentRow = {},
@@ -124,6 +151,73 @@ const generalInfoSearch = {
   },
 
   actions: {
+
+    /**
+     * Load identifiers to build display column by rows
+     * @param {String} tableName
+     * @returns
+     */
+    getIdentifierColumnsFromServer({ commit }, {
+      tableName
+    }) {
+      return new Promise((resolve, reject) => {
+        requestIdentifierColumns({
+          tableName
+        })
+          .then(response => {
+            const { identifier_fields } = response
+
+            commit('setIdentifierColumns', {
+              tableName,
+              fieldsList: identifier_fields
+            })
+
+            resolve(identifier_fields)
+          })
+      })
+    },
+
+    /**
+     * Load fields to search
+     * @param {String} tableName
+     * @returns
+     */
+    getSearchFieldsFromServer({ commit }, {
+      tableName
+    }) {
+      return new Promise((resolve, reject) => {
+        requestSearchFields({
+          tableName
+        })
+          .then(response => {
+            const { query_fields, table_columns } = response
+
+            const fieldsList = query_fields.map(queryField => {
+              return generateField({
+                fieldToGenerate: queryField,
+                moreAttributes: {
+                  containerUuid: tableName
+                }
+              })
+            })
+            commit('setSearchQueryFields', {
+              tableName,
+              fieldsList: fieldsList
+            })
+
+            commit('setSearchTableFields', {
+              tableName,
+              fieldsList: table_columns
+            })
+
+            resolve({
+              query_fields: fieldsList,
+              table_columns
+            })
+          })
+      })
+    },
+
     /**
      * Generic action to call specific action
      * @param {string} parentUuid
@@ -223,7 +317,7 @@ const generalInfoSearch = {
       pageNumber,
       pageSize
     }) {
-      return new Promise(resolve => {
+      return new Promise((resolve, reject) => {
         if (isEmptyValue(pageNumber) || pageNumber < 1) {
           const storedPage = getters.getGeneralInfoPageNumber({
             containerUuid
@@ -260,10 +354,6 @@ const generalInfoSearch = {
           pageSize
         })
           .then(response => {
-            dispatch('searchTableHeader', {
-              containerUuid,
-              tableName
-            })
             let recordsList = []
             if (response.recordsList) {
               recordsList = response.recordsList.map(list => {
@@ -300,75 +390,24 @@ const generalInfoSearch = {
               type: 'info',
               message: error.message
             })
-          })
-      })
-    },
-
-    searchTableHeader({ commit, getters }, {
-      containerUuid,
-      tableName
-    }) {
-      return new Promise(resolve => {
-        const storedFieldsList = getters.getTableHeader({ containerUuid })
-        if (!isEmptyValue(storedFieldsList)) {
-          resolve(storedFieldsList)
-          return
-        }
-
-        tableSearchFields({
-          tableName
-        })
-          .then(response => {
-            const fieldsList = response.fieldsList
-              .filter(field => {
-                // https://github.com/adempiere/adempiere/blob/develop/client/src/org/compiere/apps/search/InfoGeneral.java#L388-L389
-                // without search, table, and table direct references
-                return ![SEARCH.id, TABLE.id, TABLE_DIRECT.id].includes(field.displayType) &&
-                  // key is used to seleccion column, unnused on vue client
-                  !field.isKey && field.isDisplayed
-              })
-              .sort((fieldA, fieldB) => {
-                // https://github.com/adempiere/adempiere/blob/develop/client/src/org/compiere/apps/search/InfoGeneral.java#L332
-                return fieldA.seqNo < fieldB.seqNo
-              })
-              .map(field => {
-                const fieldGenerated = generateField({
-                  fieldToGenerate: field,
-                  moreAttributes: {
-                    isFromDictionary: false,
-                    isMandatory: false,
-                    isMandatoryLogic: '',
-                    containerUuid,
-                    // app attributes
-                    isShowedFromUser: true,
-                    isReadOnlyFromForm: false
-                  }
-                })
-                return fieldGenerated
-              })
-
-            commit('setIdentifier', {
-              containerUuid,
-              fieldsList
-            })
-            commit('setTableHeader', {
-              containerUuid,
-              fieldsList
-            })
-
-            resolve(fieldsList)
-          })
-          .catch(error => {
-            console.warn(error.message)
-            showMessage({
-              type: 'info',
-              message: error.message
-            })
+            reject(error)
           })
       })
     }
+
   },
+
   getters: {
+    getIdentifierColumns: (state) => ({ tableName }) => {
+      return state.setIdentifierColumns[tableName] || []
+    },
+    getSearchQueryFields: (state) => ({ tableName }) => {
+      return state.searchQueryFields[tableName] || []
+    },
+    getSearchTableFields: (state) => ({ tableName }) => {
+      return state.searchTableFields[tableName] || []
+    },
+
     /**
     * Used by result in Business Partner List
     * @param {string} containerUuid
@@ -406,15 +445,6 @@ const generalInfoSearch = {
     },
     getGeneralInfoShow: (state) => ({ containerUuid }) => {
       return state.generalInfoShow[containerUuid] || false
-    },
-    getTableHeader: (state) => ({ containerUuid }) => {
-      return state.tableHeaderList[containerUuid] || []
-    },
-    getQueryFieldsList: (state, getters) => ({ containerUuid }) => {
-      const fieldsList = getters.getTableHeader({ containerUuid })
-      return fieldsList.filter(field => {
-        return CHAR.id === field.displayType
-      })
     },
     getIdentifier: (state) => ({ containerUuid }) => {
       return state.fileListIdentifier[containerUuid] || []
