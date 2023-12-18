@@ -34,7 +34,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       </div>
     </el-col>
     <el-col :span="8">
-      <div @click="listOrders">
+      <div>
         <el-card
           shadow="never"
           class="custom-card-options"
@@ -42,12 +42,23 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         >
           <p
             class="card-options-buttons"
+            @click="listOrders(false)"
           >
             <i class="el-icon-news" />
             <br>
             {{ $t('form.pos.optionsPoinSales.salesOrder.ordersHistory') }}
           </p>
         </el-card>
+        <el-dialog
+          :title="$t('form.pos.optionsPoinSales.salesOrder.ordersHistory')"
+          :visible.sync="isShowOrdersHistory"
+          :custom-class="'option-order-list'"
+          :center="true"
+          :modal="false"
+          width="75%"
+        >
+          <order-history />
+        </el-dialog>
       </div>
     </el-col>
     <el-col :span="8">
@@ -519,6 +530,7 @@ import { defineComponent, computed, ref } from '@vue/composition-api'
 import lang from '@/lang'
 import store from '@/store'
 // Components and Mixins
+import OrderHistory from '@/components/ADempiere/Form/VPOS2/Options/OrderHistory.vue'
 // import Shipments from './Shipments.vue'
 // import OptionsList from './OptionsList.vue'
 // import InfoOrder from './InfoOrder.vue'
@@ -527,6 +539,9 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'SalesOrder',
+  components: {
+    OrderHistory
+  },
   setup() {
     const isShowCancelSaleTransaction = ref(false)
     const isShowApplyDiscount = ref(false)
@@ -540,13 +555,23 @@ export default defineComponent({
     const messageReverseSales = ref('')
     const applyDiscountAmount = ref(0)
 
+    const isShowOrdersHistory = computed({
+      get() {
+        return store.getters.getShowOrdersHistory
+      },
+      // setter
+      set(show) {
+        store.commit('setShowOrdersHistory', show)
+      }
+    })
+
     const isShowShipment = computed({
       get() {
         return store.getters.getShowShipment
       },
       // setter
       set(show) {
-        store.commit('setShowShipment', show)
+        store.commit('setShowShipment', false)
       }
     })
 
@@ -653,7 +678,8 @@ export default defineComponent({
     }
 
     function listOrders() {
-      console.info('Unsupported method')
+      if (isShowOrdersHistory.value) return
+      store.commit('setShowOrdersHistory', { show: true, qlq: 'listOrders' })
     }
 
     function addResource() {
@@ -850,6 +876,7 @@ export default defineComponent({
       IsCopyOrder,
       isLoadingRMA,
       isLoadingCopyOrder,
+      isShowOrdersHistory,
       applyDiscountAmount,
       messageReverseSales,
       isShowApplyDiscount,
