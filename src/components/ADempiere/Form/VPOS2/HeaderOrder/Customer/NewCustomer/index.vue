@@ -1,17 +1,19 @@
 <!--
-ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
-Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https:www.gnu.org/licenses/>.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -80,25 +82,26 @@ import store from '@/store'
 // Components and Mixins
 import CustomerData from './CustomerData.vue'
 import AddAddress from './AddAddress/index.vue'
-// utils and helper methods
+
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({
   name: 'NewCustomer',
+
   components: {
     CustomerData,
     AddAddress
   },
+
   setup() {
     // Ref
-
     const activeNames = ref(['1', '2'])
     const isVisibleAddress = ref(false)
     const copyShippingAddress = ref(true)
     const isLoading = ref(false)
 
     // Computed
-
     const isDisabled = computed(() => {
       const code = store.getters.getAttributeFieldCustomer({
         attribute: 'code'
@@ -106,21 +109,29 @@ export default defineComponent({
       const name = store.getters.getAttributeFieldCustomer({
         attribute: 'name'
       })
-      const countryBilling = store.getters.getAttributeFieldLocationsCustomers({
-        typeLocations: 'billingAddress',
-        attribute: 'countryId'
-      })
-      const countryShipping = store.getters.getAttributeFieldLocationsCustomers({
-        typeLocations: 'shippingAddress',
-        attribute: 'countryId'
-      })
-      if (isVisibleAddress.value) {
-        if (copyShippingAddress.value) {
-          return isEmptyValue(countryShipping) || isEmptyValue(countryBilling) || isEmptyValue(name) || isEmptyValue(code)
-        }
-        return isEmptyValue(countryBilling) || isEmptyValue(name) || isEmptyValue(code)
+      if (isEmptyValue(name) || isEmptyValue(code)) {
+        return true
       }
-      return isEmptyValue(name) || isEmptyValue(code)
+
+      if (isVisibleAddress.value) {
+        if (!copyShippingAddress.value) {
+          const countryShipping = store.getters.getAttributeFieldLocationsCustomers({
+            typeLocations: 'shippingAddress',
+            attribute: 'countryId'
+          })
+          if (isEmptyValue(countryShipping)) {
+            return true
+          }
+        }
+        const countryBilling = store.getters.getAttributeFieldLocationsCustomers({
+          typeLocations: 'billingAddress',
+          attribute: 'countryId'
+        })
+        if (isEmptyValue(countryBilling)) {
+          return true
+        }
+      }
+      return false
     })
 
     const addresses = computed(() => {
