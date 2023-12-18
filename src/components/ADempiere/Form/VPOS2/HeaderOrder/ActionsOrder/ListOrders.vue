@@ -177,6 +177,7 @@ export default defineComponent({
      */
     function close(show = false) {
       store.commit('setShowQuickOptions', show)
+      store.commit('setShowOrdersHistory', show)
     }
 
     /**

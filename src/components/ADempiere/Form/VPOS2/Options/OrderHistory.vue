@@ -16,6 +16,14 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <template>
   <span>
+    <!-- <el-dialog
+      :title="$t('form.pos.optionsPoinSales.salesOrder.ordersHistory')"
+      :visible.sync="isShowOrdersHistory"
+      :custom-class="'option-order-list'"
+      :center="true"
+      :modal="false"
+      width="75%"
+    > -->
     <el-collapse v-model="activeNames">
       <el-collapse-item title="Parametros de Busqueda" name="1">
         <el-form
@@ -88,6 +96,30 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             </el-col>
             <el-col :span="6">
               <el-form-item
+                :label="$t('form.byInvoice.toDeliver')"
+                class="form-item-criteria"
+                style="margin: 0px;width: 100%;"
+              >
+                <el-switch
+                  v-model="isWaitingForShipment"
+                  @change="flagChange"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item
+                :label="$t('form.byInvoice.toCollect')"
+                class="form-item-criteria"
+                style="margin: 0px;width: 100%;"
+              >
+                <el-switch
+                  v-model="isWaitingForPay"
+                  @change="flagChange"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item
                 label="Fecha Desde"
                 class="form-item-criteria"
                 style="margin: 0px;width: 100%;"
@@ -129,9 +161,12 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         date_ordered_from: dateOrderedFrom,
         date_ordered_to: dateOrderedTo,
         is_waiting_for_invoice: isWaitingForInvoice,
-        is_only_processed: isOnlyProcessed
+        is_only_processed: isOnlyProcessed,
+        is_waiting_for_pay: isWaitingForPay,
+        is_waiting_for_shipment: isWaitingForShipment
       }"
     />
+    <!-- </el-dialog> -->
   </span>
 </template>
 
@@ -168,6 +203,8 @@ export default defineComponent({
     const businessPartner = ref(null)
     const currentOptions = ref({})
     const dateOrderedFrom = ref(null)
+    const isWaitingForShipment = ref(false)
+    const isWaitingForPay = ref(false)
     // Computed
     const pickerOptions = computed(() => {
       return {
@@ -330,7 +367,9 @@ export default defineComponent({
         date_ordered_from: dateOrderedFrom.value,
         date_ordered_to: dateOrderedTo.value,
         is_waiting_for_invoice: isWaitingForInvoice.value,
-        is_only_processed: isOnlyProcessed.value
+        is_only_processed: isOnlyProcessed.value,
+        is_waiting_for_pay: isWaitingForPay.value,
+        is_waiting_for_shipment: isWaitingForShipment.value
       })
     }
 
@@ -379,6 +418,8 @@ export default defineComponent({
       }
     })
 
+    findListOrdes()
+
     return {
       // Ref
       isLoading,
@@ -390,7 +431,10 @@ export default defineComponent({
       dateOrderedFrom,
       businessPartner,
       isOnlyProcessed,
+      isWaitingForPay,
       isWaitingForInvoice,
+      // isShowOrdersHistory,
+      isWaitingForShipment,
       // Computed
       quickOptions,
       pickerOptions,
