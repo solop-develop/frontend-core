@@ -99,6 +99,7 @@ export default {
       state.availableCurrencies.listCurrencies = list
     },
     setPayAmount(state, amount) {
+      if (isEmptyValue(amount)) return
       state.amount = Number(amount)
     },
     /**

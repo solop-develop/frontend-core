@@ -37,7 +37,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           {{ displayAmount(currentOrder.grand_total) }}
         </b>
       </p>
-      <p class="line-info">
+      <p v-if="!isEmptyValue(displayCurrency)" class="line-info">
         <b
           style="float: left"
         >
