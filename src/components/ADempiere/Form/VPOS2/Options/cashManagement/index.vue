@@ -42,7 +42,7 @@ import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
 // Components and Mixins
 import cashOpening from './cashOpening/index.vue'
-import cashWithdrawal from './cashWithdrawal'
+import cashWithdrawal from './cashWithdrawal/index.vue'
 import cashClosing from './cashClosing/index.vue'
 import cashDetailClosing from './cashDetailClosing'
 import seller from '@/components/ADempiere/Form/VPOS2/Options/cashManagement/seller/index.vue'
