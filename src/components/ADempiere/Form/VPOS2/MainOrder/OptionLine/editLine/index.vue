@@ -184,7 +184,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     </el-card>
     <el-button
       slot="reference"
-      style="margin-left: 5px;"
+      style="margin-left: 2px;"
       icon="el-icon-edit"
       type="success"
       size="mini"

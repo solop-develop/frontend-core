@@ -35,6 +35,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           :key="key"
           :column-key="valueOrder.columnName"
           :label="valueOrder.label"
+          :min-width="sizeTableColumn(valueOrder.columnName)"
           :align="valueOrder.isNumeric ? 'right' : 'left'"
         >
           <template slot-scope="scope">
@@ -81,13 +82,15 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       </template>
       <el-table-column
         :label="$t('form.pos.tableProduct.options')"
-        width="175"
+        width="150"
+        style="padding: 0px !important;"
       >
-        <template slot-scope="scope">
-          <option-line
-            :line="scope.row"
-          />
-        </template>
+        <!-- <template slot-scope="scope"> -->
+        <option-line
+          slot-scope="scope"
+          :line="scope.row"
+        />
+        <!-- </template> -->
       </el-table-column>
     </el-table>
   </span>
@@ -105,6 +108,7 @@ import editAmount from '@/components/ADempiere/Form/VPOS2/MainOrder/OptionLine/e
 import {
   displayLabel,
   displayValue,
+  sizeTableColumn,
   displayLineQtyEntered
 } from '@/utils/ADempiere/dictionary/form/VPOS'
 import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
@@ -334,6 +338,7 @@ export default defineComponent({
       editLineExit,
       updateQuantity,
       updateDiscount,
+      sizeTableColumn,
       updateCurrentPrice,
       displayLineQtyEntered,
       editLine,
@@ -343,6 +348,9 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" scoped>
-
+<style lang="scss">
+.el-table .cell {
+  padding-left: 5px;
+  padding-right: 5px;
+}
 </style>

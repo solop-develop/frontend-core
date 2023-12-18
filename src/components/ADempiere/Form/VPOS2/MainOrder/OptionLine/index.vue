@@ -15,7 +15,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
-  <span>
+  <p style="margin: 0px;text-align: center;">
     <info-line
       :info-line="line"
     />
@@ -26,12 +26,12 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       size="mini"
       type="danger"
       icon="el-icon-delete"
-      style="margin-left: 5px;"
+      style="margin-left: 2px;"
       :disabled="line.isLoading"
       :loading="line.isLoading"
       @click="deleteLine()"
     />
-  </span>
+  </p>
 </template>
 
 <script>
