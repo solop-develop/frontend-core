@@ -104,7 +104,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         width="400"
         trigger="click"
       >
-        <span v-if="isEmptyValue(currentOrder.id)">
+        <span v-if="!isEmptyValue(currentOrder.id)">
           <el-row v-if="!isLoadingCancelSaleTransaction" :gutter="24" class="container-reverse">
             <el-col :span="24" class="container-reverse">
               <p class="container-popover">
