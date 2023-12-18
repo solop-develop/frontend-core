@@ -115,6 +115,7 @@ export default defineComponent({
         if (!isEmptyValue(price_list)) return price_list.currency.iso_code
         return ''
       }
+      if (isEmptyValue(currencyConvert)) return ''
       return currencyConvert.iso_code
     }
 
