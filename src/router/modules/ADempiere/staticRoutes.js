@@ -58,7 +58,7 @@ const staticRoutes = [
       if (!role) {
         return false
       }
-      return Boolean(role.isAllowInfoAccount)
+      return Boolean(role.is_allow_info_account)
     },
     children: [
       {
@@ -202,14 +202,14 @@ const staticRoutes = [
   },
 
   {
-    path: '/ProductInfo',
+    path: '/product-info',
     component: Layout,
     hidden: false,
     validateToEnable: ({ role }) => {
       if (!role) {
         return false
       }
-      return Boolean(role.isAllowInfoProduct)
+      return Boolean(role.is_allow_info_product)
     },
     children: [
       {
