@@ -44,6 +44,9 @@ export const isEmptyValue = function(value) {
   if (String(value).trim() === '-1') {
     return true
   }
+  if (String(value) === '0001-01-01T00:00:00Z') {
+    return true
+  }
 
   let isEmpty = false
   const typeOfValue = getTypeOfValue(value)
