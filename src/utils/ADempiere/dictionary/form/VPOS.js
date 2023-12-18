@@ -452,3 +452,31 @@ export function clearFieldsCollections() {
     value
   })
 }
+
+export function sizeTableColumn(columnName) {
+  let size
+  switch (columnName) {
+    case 'LineDescription':
+      size = '225px'
+      break
+    case 'DiscountTotal':
+    case 'CurrentPrice':
+    case 'QtyEntered':
+    case 'GrandTotal':
+      size = '100px'
+      break
+    case 'UOM':
+      size = '50px'
+      break
+    case 'taxIndicator':
+      size = '55px'
+      break
+    case 'Discount':
+      size = '90px'
+      break
+    default:
+      size = 'auto'
+      break
+  }
+  return size
+}
