@@ -44,16 +44,47 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
               icon="el-icon-document-copy"
               @click="copyCode(scope.row)"
             />
-            <edit-amount
+            <span
+              v-if="scope.row.isEditCurrentPrice && valueOrder.columnName === 'CurrentPrice'"
+            >
+              <p
+                v-if="isLoadingPrice"
+                style="text-align: center;margin: 0px;"
+              >
+                <i
+                  class="el-icon-loading"
+                  style="font-size: 20px;"
+                />
+              </p>
+              <edit-amount
+                v-else-if="scope.row.isEditCurrentPrice && valueOrder.columnName === 'CurrentPrice'"
+                :value="Number(scope.row.price)"
+                :handle-change="updateCurrentPrice"
+              />
+            </span>
+            <!-- <edit-amount
               v-if="scope.row.isEditCurrentPrice && valueOrder.columnName === 'CurrentPrice'"
               :value="Number(scope.row.price)"
               :handle-change="updateCurrentPrice"
-            />
-            <edit-qty-entered
+            /> -->
+            <span
               v-else-if="scope.row.isEditQtyEntered && valueOrder.columnName === 'QtyEntered'"
-              :qty="Number(scope.row.quantity_ordered)"
-              :handle-change="updateQuantity"
-            />
+            >
+              <p
+                v-if="isLoadingQty"
+                style="text-align: center;margin: 0px;"
+              >
+                <i
+                  class="el-icon-loading"
+                  style="font-size: 20px;"
+                />
+              </p>
+              <edit-qty-entered
+                v-else-if="scope.row.isEditQtyEntered && valueOrder.columnName === 'QtyEntered'"
+                :qty="Number(scope.row.quantity_ordered)"
+                :handle-change="updateQuantity"
+              />
+            </span>
             <span
               v-else-if="scope.row.isEditDiscount && valueOrder.columnName === 'Discount'"
             >
@@ -119,6 +150,8 @@ export default defineComponent({
   setup() {
     const currentLine = ref({})
     const isLoadingDiscount = ref(false)
+    const isLoadingQty = ref(false)
+    const isLoadingPrice = ref(false)
     const orderLineDefinition = computed(() => {
       return {
         lineDescription: {
@@ -232,13 +265,19 @@ export default defineComponent({
         store.dispatch('setModalPin', {
           title: lang.t('form.pos.pinMessage.pin') + lang.t('form.pos.pinMessage.price'),
           doneMethod: () => {
+            isLoadingPrice.value = true
             store.dispatch('updateCurrentLine', {
               lineId: currentLine.value.id,
               quantity: quantity_ordered,
               price
             })
               .then(() => {
-                currentLine.value.isEditQtyEntered = false
+                isLoadingQty.value = false
+                currentLine.value.isEditCurrentPrice = false
+              })
+              .catch(() => {
+                isLoadingQty.value = false
+                currentLine.value.isEditCurrentPrice = true
               })
           },
           requestedAccess: 'IsModifyPrice',
@@ -247,13 +286,19 @@ export default defineComponent({
         })
         return
       }
+      isLoadingPrice.value = true
       store.dispatch('updateCurrentLine', {
         lineId: currentLine.value.id,
         quantity: quantity_ordered,
         price
       })
         .then(() => {
+          isLoadingPrice.value = false
           currentLine.value.isEditCurrentPrice = false
+        })
+        .catch(() => {
+          isLoadingPrice.value = false
+          currentLine.value.isEditCurrentPrice = true
         })
     }
     function updateQuantity(quantity) {
@@ -262,12 +307,18 @@ export default defineComponent({
         store.dispatch('setModalPin', {
           title: lang.t('form.pos.pinMessage.pin') + lang.t('form.pos.pinMessage.qtyEntered'),
           doneMethod: () => {
+            isLoadingQty.value = true
             store.dispatch('updateCurrentLine', {
               lineId: currentLine.value.id,
               quantity
             })
               .then(() => {
+                isLoadingQty.value = false
                 currentLine.value.isEditQtyEntered = false
+              })
+              .catch(() => {
+                isLoadingQty.value = false
+                currentLine.value.isEditQtyEntered = true
               })
           },
           requestedAccess: 'IsAllowsModifyQuantity',
@@ -276,12 +327,18 @@ export default defineComponent({
         })
         return
       }
+      isLoadingQty.value = true
       store.dispatch('updateCurrentLine', {
         lineId: currentLine.value.id,
         quantity
       })
         .then(() => {
+          isLoadingQty.value = false
           currentLine.value.isEditQtyEntered = false
+        })
+        .catch(() => {
+          isLoadingQty.value = false
+          currentLine.value.isEditQtyEntered = true
         })
     }
     function updateDiscount(discount_rate) {
@@ -325,6 +382,8 @@ export default defineComponent({
       currentPos,
       orderLineDefinition,
       isLoadingDiscount,
+      isLoadingPrice,
+      isLoadingQty,
       currentLine,
       lines,
       // Methods
