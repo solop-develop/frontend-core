@@ -17,6 +17,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 <template>
   <el-row :gutter="10">
     <el-col :span="8">
+      <!-- newOrder -->
       <div @click="newOrder">
         <el-card
           shadow="never"
@@ -33,6 +34,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         </el-card>
       </div>
     </el-col>
+    <!-- ordersHistory -->
     <el-col :span="8">
       <div>
         <el-card
@@ -61,6 +63,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         </el-dialog>
       </div>
     </el-col>
+    <!-- addResource -->
     <el-col :span="8">
       <div @click="addResource">
         <el-card
@@ -327,7 +330,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     <!-- applyDiscountOnOrder -->
     <el-col v-if="isAllowsApplyDiscount" :span="8">
       <el-popover
-        v-model="isShowApplyDiscount"
+        ref="showApplyDiscountOnOrder"
         placement="bottom"
         width="350"
         :title="$t('form.pos.applyDiscountOnOrder')"
@@ -380,7 +383,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           element-loading-background="rgba(255, 255, 255, 0.8)"
           class="view-loading"
         />
-        <div slot="reference">
+        <div
+          slot="reference"
+        >
           <el-card
             shadow="never"
             class="custom-card-options"
@@ -400,7 +405,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     <!-- applyDiscountToAllLines -->
     <el-col v-if="isAllowsApplyDiscount" :span="8">
       <el-popover
-        v-model="isShowApplyDiscount"
+        ref="showApplyDiscountToAllLines"
         placement="bottom"
         width="350"
         :title="$t('form.pos.applyDiscountOnOrder')"
@@ -453,7 +458,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           element-loading-background="rgba(255, 255, 255, 0.8)"
           class="view-loading"
         />
-        <div slot="reference">
+        <div
+          slot="reference"
+        >
           <el-card
             shadow="never"
             class="custom-card-options"
@@ -551,6 +558,8 @@ export default defineComponent({
     const isLoadingCopyOrder = ref(false)
     const isLoadingCancelOrder = ref(false)
     const isLoadingRMA = ref((false))
+    const showApplyDiscountOnOrder = ref(null)
+    const showApplyDiscountToAllLines = ref(null)
     const isLoadingApplyDiscountOnOrder = ref(false)
     const messageReverseSales = ref('')
     const applyDiscountAmount = ref(0)
@@ -708,6 +717,8 @@ export default defineComponent({
     }
 
     function closeApplyDiscount() {
+      showApplyDiscountOnOrder.value.showPopper = false
+      showApplyDiscountToAllLines.value.showPopper = false
       applyDiscountAmount.value = 0
       isShowApplyDiscount.value = false
     }
@@ -882,7 +893,9 @@ export default defineComponent({
       isShowApplyDiscount,
       isLoadingPrintTicket,
       isLoadingCancelOrder,
+      showApplyDiscountOnOrder,
       isLoadingPreviewDocument,
+      showApplyDiscountToAllLines,
       isShowCancelSaleTransaction,
       isLoadingApplyDiscountOnOrder,
       isLoadingCancelSaleTransaction,

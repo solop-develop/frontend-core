@@ -182,6 +182,18 @@ export default defineComponent({
             })
         } else {
           const isProduct = store.getters.getListOrderLines.find(list => list.product.id === search.product.id)
+          if (isEmptyValue(isProduct)) {
+            store.dispatch('newLine', {
+              productId: search.product.id,
+              quantity: 1
+            })
+              .finally(() => {
+                searchProduct.value = ''
+                autocompleteSearchProduct.value.close()
+                autocompleteSearchProduct.value.suggestions = []
+              })
+            return
+          }
           store.dispatch('updateCurrentLine', {
             lineId: isProduct.id,
             quantity: Number(isProduct.quantity_ordered) + 1
