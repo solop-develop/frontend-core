@@ -18,145 +18,87 @@
 
 <template>
   <div
-    v-if="isLoaded"
-    style="height: 100% !important;display: -webkit-box;"
+    style="height: 100% !important;"
     @click="focusProductValue"
   >
-
     <img
       fit="contain"
       :src="defaultImage"
       class="background-price-checking"
-      style="z-index: 5;display: flex;"
+      style="z-index: 5;position: absolute;"
+      @click="focusProductValue"
     >
-    <el-container style="height: 100% !important;">
-      <el-main style="display: contents">
-        <el-form
-          key="form-loaded"
-          class="inquiry-form"
-          label-position="top"
-          label-width="10px"
-          style="z-index: -1;"
-          @submit.native.prevent="notSubmitForm"
-        >
-          <field-definition
-            v-for="(field) in fieldsList"
-            id="ProductValue"
-            ref="ProductValue"
-            :key="field.columnName"
-            :container-uuid="containerUuid"
-            :container-manager="{
-              ...containerManager,
-              getLookupList,
-              isDisplayedField,
-              isDisplayedDefault,
-              generalInfoSearch,
-              searchTableHeader,
-              isMandatoryField,
-              isReadOnlyField,
-              changeFieldShowedFromUser
-            }"
-            :metadata-field="field"
-            :v-model="field.value"
-            class="product-value"
-          />
-        </el-form>
-
-        <div v-if="!isEmptyValue(productPrice)" class="inquiry-product" style="z-index: 4;">
-          <div class="product-description">
-            <b> {{ productPrice.product.value }} {{ productPrice.productName }}</b>
-            <br> {{ productPrice.productDescription }}
+    <el-input
+      ref="fieldSearchValue"
+      v-model="searchValue"
+      :autofocus="true"
+      style="z-index: 1;position: absolute;"
+      @input="searchProduct"
+    />
+    <div v-if="!isEmptyValue(productPrice)" class="inquiry-product" style="z-index: 6;">
+      <div class="product-description">
+        <b> {{ productPrice.product.value }} {{ productPrice.product.name }}</b>
+        <br> {{ productPrice.product.description }}
+      </div>
+      <el-row v-if="!isEmptyValue(productPrice)" :gutter="20">
+        <el-col v-if="productPrice.is_tax_included" :span="24" style="padding-left: 0px; padding-right: 0%;">
+          <div class="product-price amount">
+            <span style="float: right;"> {{ formatPrice(productPrice.price_standard, productPrice.currency.iso_code) }} </span> <br>
           </div>
-          <el-row v-if="!isEmptyValue(productPrice)" :gutter="20">
-            <el-col :span="24" style="padding-left: 0px; padding-right: 0%;">
-              <div class="product-price-base">
-                {{ $t('form.priceChecking.basePrice') }}
-                <span class="amount">
-                  {{ formatPrice(productPrice.priceBase, productPrice.currency.iSOCode) }}
-                </span>
-              </div>
-              <br><br><br>
+        </el-col>
+        <el-col v-else :span="24" style="padding-left: 0px; padding-right: 0%;">
+          <span>
+            <div class="product-price-base">
+              {{ $t('form.priceChecking.basePrice') }}
+              <span class="amount">
+                {{ formatPrice(Number(productPrice.price_list), productPrice.currency.iso_code) }}
+                <!-- {{ formatPrice(productPrice.price_standard, productPrice.currency.iso_code) }} -->
+              </span>
+            </div>
+            <br><br><br>
 
-              <div class="product-tax">
-                {{ productPrice.taxName }}
-                <span class="amount">
-                  {{ formatPrice(productPrice.taxAmt, productPrice.currency.iSOCode) }}
-                </span>
-              </div>
-              <br><br><br>
-              <div class="product-price amount">
-                <span style="float: right;"> {{ formatPrice(productPrice.grandTotal, productPrice.currency.iSOCode) }} </span> <br>
-                <span v-if="!isEmptyValue(currentPointOfSales.displayCurrency) && !isEmptyValue(convertionsList)"> {{ formatPrice(productPrice.grandTotal / converted, currentPointOfSales.displayCurrency.iso_code) }}</span>
-              </div>
-            </el-col>
-          </el-row>
-        </div>
-        <div class="inquiry-product" style="z-index: 4;">
-          <el-row v-if="!messageError" :gutter="20">
-            <el-col style="padding-left: 0px; padding-right: 0%;">
-              <div class="product-price amount">
-                {{ $t('form.priceChecking.productNotFound') }}
-              </div>
-            </el-col>
-          </el-row>
-        </div>
-        <div v-if="!isEmptyValue(productPrice) && !isEmptyValue(currentPointOfSales.displayCurrency) && !isEmptyValue(convertionsList)" class="inquiry-product" style="z-index: 4;">
-          <el-row>
-            <el-col>
-              <div v-if="!isEmptyValue(currentConvertion)" class="rate-date">
-                {{ $t('form.pos.collect.dayRate') }}: {{ formatConversionCurrenty(currentConvertion.divideRate) }} ~ ({{ formatPrice(1, productPrice.currency.iSOCode) }} = {{ formatPrice(currentConvertion.divideRate) }} {{ currentPointOfSales.displayCurrency.iso_code }})
-              </div>
-              <div v-else class="rate-date">
-                {{ $t('form.pos.collect.noDayRate') }} {{ currentPointOfSales.displayCurrency.description }}
-              </div>
-            </el-col>
-          </el-row>
-        </div>
-      </el-main>
-    </el-container>
+            <div class="product-tax">
+              {{ productPrice.tax_rate.name }}
+              <span class="amount">
+                {{ formatPrice(getTaxAmount(productPrice.price_list, productPrice.tax_rate.rate), productPrice.currency.iso_code) }}
+              </span>
+            </div>
+          </span>
+          <br><br><br>
+          <div class="product-price amount">
+            <span style="float: right;"> {{ formatPrice(getGrandTotal(productPrice.price_list, productPrice.tax_rate.rate), productPrice.currency.iso_code) }} </span> <br>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
+    <div class="inquiry-product" style="z-index: 4;">
+      <el-row v-if="!isEmptyValue(messageError)" :gutter="20">
+        <el-col style="padding-left: 0px; padding-right: 0%;">
+          <div class="product-price amount">
+            {{ $t('form.priceChecking.productNotFound') }}
+          </div>
+        </el-col>
+      </el-row>
+    </div>
   </div>
-
-  <loading-view
-    v-else
-    key="form-loading"
-  />
 </template>
 
 <script>
-// constants
-import fieldsList from './fieldsList.js'
-
-// components and mixins
-import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
-import formMixin from '@/components/ADempiere/Form/formMixin.js'
-
-// api request methods
-import {
-  getLookupList,
-  isDisplayedField,
-  isDisplayedDefault,
-  generalInfoSearch,
-  searchTableHeader,
-  isMandatoryField,
-  isReadOnlyField,
-  changeFieldShowedFromUser
-} from '@/components/ADempiere/Form/VPOS/containerManagerPos.js'
-import { getProductPrice } from '@/api/ADempiere/form/price-checking.js'
-
 // methods and helpers
-import { formatPercent, formatPrice, formatDateToSend, formatQuantity } from '@/utils/ADempiere/valueFormat.js'
-import { getImagePath } from '@/utils/ADempiere/resource.js'
+import lang from '@/lang'
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere'
+import { formatPrice } from '@/utils/ADempiere/valueFormat.js'
+// import { getImagePath } from '@/utils/ADempiere/resource.js'
+import {
+  defineComponent,
+  computed,
+  ref
+} from '@vue/composition-api'
+import store from '@/store'
 
-export default {
+export default defineComponent({
   name: 'PriceChecking',
-
-  components: {
-    LoadingView
-  },
-
-  mixins: [
-    formMixin
-  ],
 
   props: {
     parentUuid: {
@@ -173,260 +115,74 @@ export default {
     }
   },
 
-  data() {
-    return {
-      messageError: true,
-      fieldsList,
-      productPrice: {},
-      organizationBackground: '',
-      currentImageOfProduct: '',
-      search: '',
-      resul: '',
-      backgroundForm: ''
-    }
-  },
-
-  computed: {
-    organizationImagePath() {
-      return this.$store.getters.corporateBrandingImage
-    },
-    defaultImage() {
+  setup() {
+    // Ref
+    const searchValue = ref('')
+    const timeoutSearch = ref(null)
+    const fieldSearchValue = ref(null)
+    const productPrice = ref({})
+    const messageError = ref('')
+    // Computed
+    const defaultImage = computed(() => {
       return require('@/image/ADempiere/priceChecking/no-image.jpg')
-    },
-    currentPointOfSales() {
-      return this.$store.getters.posAttributes.currentPointOfSales
-    },
-    pointOfSalesList() {
-      return this.$store.getters.posAttributes.pointOfSalesList
-    },
-    convertionsList() {
-      return this.$store.state['pointOfSales/point/index'].conversionsList
-    },
-    currentConvertion() {
-      if (this.isEmptyValue(this.currentPointOfSales.displayCurrency)) {
-        return {}
-      }
-      const convert = this.convertionsList.find(convert => {
-        if (!this.isEmptyValue(convert.currencyTo) && !this.isEmptyValue(this.currentPointOfSales.displayCurrency) && convert.currencyTo.id === this.currentPointOfSales.displayCurrency.id) {
-          return convert
-        }
-      })
-      if (convert) {
-        return convert
-      }
-      return {}
-    },
-    converted() {
-      if (!this.isEmptyValue(this.convertionsList)) {
-        const convertion = this.convertionsList.find(convert => {
-          if (!this.isEmptyValue(convert.currencyTo) && !this.isEmptyValue(this.currentPointOfSales.displayCurrency) && convert.currencyTo.id === this.currentPointOfSales.displayCurrency.id) {
-            return convert
-          }
-        })
-        if (!this.isEmptyValue(convertion)) {
-          return convertion.divideRate
-        }
-      }
-      return 1
-    }
-  },
+    })
 
-  beforeMount() {
-    this.unsubscribe = this.subscribeChanges()
-  },
-
-  beforeDestroy() {
-    this.unsubscribe()
-  },
-
-  mounted() {
-    this.backgroundForm = this.defaultImage
-    this.getImageFromSource(this.organizationImagePath)
-    if (this.isEmptyValue(this.pointOfSalesList)) {
-      this.$store.dispatch('listPointOfSalesFromServer')
-    }
-  },
-
-  methods: {
-    formatPercent,
-    formatDateToSend,
-    formatPrice,
-    formatQuantity,
-    getLookupList,
-    isDisplayedField,
-    isDisplayedDefault,
-    generalInfoSearch,
-    searchTableHeader,
-    isMandatoryField,
-    isReadOnlyField,
-    changeFieldShowedFromUser,
-    focusProductValue() {
-      if (!this.isEmptyValue(this.$refs.ProductValue[0]) && !this.isEmptyValue(this.$refs.ProductValue[0].$children[0]) && !this.isEmptyValue(this.$refs.ProductValue[0].$children[0].$children[0]) && !this.isEmptyValue(this.$refs.ProductValue[0].$children[0].$children[0].$children[1])) {
-        this.$refs.ProductValue[0].$children[0].$children[0].$children[1].$children[0].focus()
-      }
-    },
-    getImageFromSource(fileName) {
-      if (this.isEmptyValue(fileName)) {
-        return this.defaultImage
-      }
-      const image = getImagePath({
-        file: fileName,
-        width: 900,
-        height: 900
-      })
-      this.backgroundForm = image.uri
-    },
-    amountConvert() {
-      if (!this.isEmptyValue(this.currentPointOfSales) && this.isEmptyValue(this.currentConvertion) && !this.isEmptyValue(this.currentPointOfSales.displayCurrency)) {
-        this.$store.dispatch('searchConversion', {
-          conversionTypeUuid: this.currentPointOfSales.conversionTypeUuid,
-          currencyFromUuid: this.currentPointOfSales.priceList.currency.uuid,
-          currencyToUuid: this.currentPointOfSales.displayCurrency.uuid,
-          conversionDate: this.formatDateToSend(this.currentPointOfSales.currentOrder.dateOrdered)
-        })
-      }
-    },
-    subscribeChanges() {
-      return this.$store.subscribe((mutation, state) => {
-        if ((mutation.type === 'currentPointOfSales') || (mutation.type === 'setListProductPrice') || (mutation.type === 'addFocusLost')) {
-          this.focusProductValue()
-        }
-        if ((mutation.type === 'addActionKeyPerformed') && mutation.payload.columnName === 'ProductValue' && (this.productPrice.upc !== mutation.payload.value)) {
-          // cleans all values except column name 'ProductValue'
-          this.search = mutation.payload.value
-          if (!this.isEmptyValue(this.search) && this.search.length >= 4) {
-            getProductPrice({
-              searchValue: mutation.payload.value,
-              posUuid: this.currentPointOfSales.uuid,
-              priceListUuid: this.currentPointOfSales.currentPriceList.uuid,
-              warehouseUuid: this.currentPointOfSales.currentWarehouse.uuid
-            })
-              .then(productPrice => {
-                this.messageError = true
-                const { product, taxRate, priceStandard: priceBase } = productPrice
-                const { rate } = taxRate
-                const { imageURL: image } = product
-
-                this.productPrice = {
-                  currency: productPrice.currency,
-                  image,
-                  grandTotal: this.getGrandTotal(priceBase, rate),
-                  productName: product.name,
-                  productDescription: product.help,
-                  priceBase,
-                  product,
-                  priceStandard: productPrice.priceStandard,
-                  priceList: productPrice.priceList,
-                  priceLimit: productPrice.priceLimit,
-                  taxRate: rate,
-                  taxName: taxRate.name,
-                  taxIndicator: taxRate.taxIndicator,
-                  taxAmt: this.getTaxAmount(priceBase, rate),
-                  upc: product.upc
-                }
-              })
-              .catch(() => {
-                this.messageError = false
-                this.timeMessage()
-                this.productPrice = {}
-              })
-              .finally(() => {
-                this.amountConvert()
-                this.$store.commit('updateValueOfField', {
-                  containerUuid: this.containerUuid,
-                  columnName: 'ProductValue',
-                  value: ''
-                })
-                this.search = ''
-                this.currentImageOfProduct = ''
-                if (this.isEmptyValue(this.productPrice.image)) {
-                  this.getImageFromSource(this.productPrice.image)
-                }
-              })
-          }
-        } else if ((mutation.type === 'updateValueOfField') && (mutation.payload.columnName === 'ProductValue') && !this.isEmptyValue(mutation.payload.value) && (this.productPrice.upc !== mutation.payload.value)) {
-          clearTimeout(this.timeOut)
-          this.timeOut = setTimeout(() => {
-            let value = mutation.payload.value
-            if (typeof value[value.length - 1] === 'string') {
-              value = mutation.payload.value.slice(0, -1)
-            }
-            getProductPrice({
-              searchValue: mutation.payload.value,
-              posUuid: this.currentPointOfSales.uuid,
-              priceListUuid: this.currentPointOfSales.currentPriceList.uuid,
-              warehouseUuid: this.currentPointOfSales.currentWarehouse.uuid
-            })
-              .then(productPrice => {
-                this.messageError = true
-                const { product, taxRate, priceStandard: priceBase } = productPrice
-                const { rate } = taxRate
-                const { imageURL: image } = product
-                this.productPrice = {
-                  currency: productPrice.currency,
-                  image,
-                  grandTotal: this.getGrandTotal(priceBase, rate),
-                  productName: product.name,
-                  productDescription: product.description,
-                  priceBase,
-                  product,
-                  priceStandard: productPrice.priceStandard,
-                  priceList: productPrice.priceList,
-                  priceLimit: productPrice.priceLimit,
-                  schemaCurrency: productPrice.schemaCurrency,
-                  schemaPriceStandard: productPrice.schemaPriceStandard,
-                  schemaPriceList: productPrice.schemaPriceList,
-                  schemaPriceLimit: productPrice.schemaPriceLimit,
-                  taxRate: rate,
-                  taxName: taxRate.name,
-                  taxIndicator: taxRate.taxIndicator,
-                  taxAmt: this.getTaxAmount(priceBase, rate)
-                }
-              })
-              .catch(() => {
-                this.messageError = false
-                this.timeMessage()
-                this.productPrice = {}
-              })
-              .finally(() => {
-                this.amountConvert()
-                this.$store.commit('updateValueOfField', {
-                  containerUuid: this.containerUuid,
-                  columnName: 'ProductValue',
-                  value: ''
-                })
-                this.search = ''
-                this.currentImageOfProduct = ''
-                if (this.isEmptyValue(this.productPrice.image)) {
-                  this.getImageFromSource(this.productPrice.image)
-                }
-              })
-          }, 500)
-        }
-        if (mutation.type === 'changeFormAttribute') {
-          this.focusProductValue()
-        }
-      })
-    },
-    timeMessage() {
+    function focusProductValue() {
       setTimeout(() => {
-        this.messageError = true
-      }, 2000)
-    },
-    getTaxAmount(basePrice, taxRate) {
-      if (this.isEmptyValue(basePrice) || this.isEmptyValue(taxRate)) {
+        fieldSearchValue.value.focus()
+      }, 200)
+    }
+
+    function searchProduct(search) {
+      clearTimeout(timeoutSearch.value)
+      timeoutSearch.value = setTimeout(() => {
+        store.dispatch('searchProductList', {
+          searchValue: search
+        })
+          .then(response => {
+            productPrice.value = response[0]
+          })
+          .catch(() => {
+            messageError.value = lang.t('form.priceChecking.productNotFound')
+          })
+          .finally(() => {
+            searchValue.value = ''
+            focusProductValue()
+          })
+      }, 500)
+    }
+
+    function getGrandTotal(basePrice, taxRate) {
+      if (isEmptyValue(basePrice)) {
         return 0
       }
-      return (basePrice * taxRate) / 100
-    },
-    getGrandTotal(basePrice, taxRate) {
-      if (this.isEmptyValue(basePrice)) {
+      return Number(basePrice) + getTaxAmount(basePrice, taxRate)
+    }
+
+    function getTaxAmount(basePrice, taxRate) {
+      if (isEmptyValue(basePrice) || isEmptyValue(taxRate)) {
         return 0
       }
-      return basePrice + this.getTaxAmount(basePrice, taxRate)
+      return (Number(basePrice) * Number(taxRate)) / 100
+    }
+
+    focusProductValue()
+
+    return {
+      searchValue,
+      defaultImage,
+      productPrice,
+      messageError,
+      timeoutSearch,
+      fieldSearchValue,
+      focusProductValue,
+      getGrandTotal,
+      searchProduct,
+      getTaxAmount,
+      formatPrice
     }
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>
@@ -441,7 +197,8 @@ export default {
 
   .product-description {
     color: #32363a;
-    font-size: 30px;
+    font-size: 40px;
+    font-weight: 900;
     float: right;
     padding-bottom: 1%;
     text-align: end;
