@@ -61,7 +61,6 @@ export default defineComponent({
     const link = document.createElement('a')
     link.href = window.URL.createObjectURL(blob)
     link.download = props.name
-
     const output = computed(() => {
       return link
     })

@@ -294,13 +294,14 @@ export default {
         name: file_name,
         output: output_stream,
         outputStream: output_stream,
+        output_stream,
         reportType: result_type,
         reportUuid: orderId.toString(),
         reportViewUuid: orderId.toString(),
         tableName: 'C_Order',
         url: link.href,
         uuid: orderId.toString(),
-        instanceUuid: instanceUuid.toString()
+        instanceUuid: Number(instanceUuid)
       })
       router.push({
         name: REPORT_VIEWER_NAME,
@@ -309,7 +310,7 @@ export default {
           processId: orderId,
           reportUuid: orderId.toString(),
           tableName: 'C_Order',
-          instanceUuid: instanceUuid.toString(),
+          instanceUuid: Number(instanceUuid),
           fileName: file_name,
           name: file_name,
           mimeType: mime_type,
