@@ -291,8 +291,6 @@ export default defineComponent({
 
     const drawer = ref(false)
 
-    console.log({ link: props.link, storedReportOutput: props.storedReportOutput })
-
     onMounted(() => {
       getReport()
       root.$route.meta.reportType = reportType.value

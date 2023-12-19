@@ -19,6 +19,7 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 import { config } from '@/utils/ADempiere/config'
+
 /**
  * Apply customization to window
  * @param {number} tabId
@@ -27,7 +28,7 @@ import { config } from '@/utils/ADempiere/config'
  * @param {array}
  * @returns
  */
-export function listAccoutingElements({
+export function requestListAccoutingElements({
   sortBy,
   filters,
   pageSize,

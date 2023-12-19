@@ -382,6 +382,13 @@ export default defineComponent({
       console.log('changeRecord')
     }
 
+    function getAccoutingElements() {
+      const accoutingElements = store.getters.getFieldsListAccount
+      if (isEmptyValue(accoutingElements)) {
+        store.dispatch('listAccoutingElementsFromServer')
+      }
+    }
+
     function loadCombinations() {
       isLoadingPanel.value = true
       getAccountingCombination({
@@ -412,6 +419,7 @@ export default defineComponent({
       // return setValuesCombinations.value['DisplayColumn_' + field.columnName]
     }
 
+    getAccoutingElements()
     loadCombinations()
 
     return {
