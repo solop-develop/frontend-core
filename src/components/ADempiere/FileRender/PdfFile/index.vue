@@ -19,24 +19,17 @@
 <template>
   <embed
     class="pdf-content"
-    :src="src"
+    :src="output"
     :type="mimeType"
     style="height:1000px;width:100%; position:relative;"
   >
 </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
-
-// Components and Mixins
-// import DownloadFile from '@/components/ADempiere/FileRender/downloadFile.vue'
+import { defineComponent, computed } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'PDF-File',
-
-  // components: {
-  //   DownloadFile
-  // },
 
   props: {
     src: {
@@ -54,13 +47,28 @@ export default defineComponent({
     name: {
       type: String,
       default: undefined
+    },
+    stream: {
+      type: [Object, Array, String],
+      default: undefined
     }
-    // stream: {
-    //   type: [Object, Array, String],
-    //   default: undefined
-    // }
-  }
+  },
+  setup(props) {
+    // const byte_array = props.stream.encode()
+    const base64 = props.stream
+    const arrayBuffer = Uint8Array.from(atob(base64), c => c.charCodeAt(0))
+    const blob = new Blob([arrayBuffer.buffer], { type: 'application/pdf;charset=utf-8' })
+    const link = document.createElement('a')
+    link.href = window.URL.createObjectURL(blob)
+    link.download = props.name
+    const output = computed(() => {
+      return link
+    })
 
+    return {
+      output
+    }
+  }
 })
 </script>
 
