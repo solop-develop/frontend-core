@@ -146,6 +146,8 @@
 </template>
 
 <script>
+import store from '@/store'
+
 // Constants
 import { ACCOUTING_COMBINATIONS_LIST_FORM, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/accoutingCombination.js'
 import fieldsList from './fieldsList'
@@ -487,6 +489,12 @@ export default {
           }
         }
       })
+    },
+    getFieldsList() {
+      const accoutingElements = store.getters.getFieldsListAccount
+      if (isEmptyValue(accoutingElements)) {
+        store.dispatch('listAccoutingElementsFromServer')
+      }
     },
     // getFieldsList() {
     //   const list = []

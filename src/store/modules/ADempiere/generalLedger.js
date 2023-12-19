@@ -38,7 +38,7 @@ export default {
   },
 
   actions: {
-    listAccoutingElementsRequest({ commit, getters }) {
+    listAccoutingElementsFromServer({ commit, getters }) {
       return new Promise(resolve => {
         const sessionContext = getters.getAllSessionContext
         if (!isEmptyValue(sessionContext)) {
