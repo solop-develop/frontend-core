@@ -455,7 +455,6 @@ export default {
           lastName
         })
           .then(response => {
-            console.log(response, order)
             if (!isEmptyValue(order)) {
               dispatch('changeCustomerOrder', response.id)
             }

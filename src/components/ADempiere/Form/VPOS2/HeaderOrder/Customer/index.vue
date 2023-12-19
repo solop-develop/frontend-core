@@ -278,7 +278,6 @@ export default defineComponent({
     })
     // watch(storedCurrentCustomer, (newValue) => {
     //   if (!isEmptyValue(newValue)) {
-    //     console.log('watch', newValue)
     //     const displayValue = newValue.value + ' - ' + newValue.name
     //     if (searchCustomer.value !== displayValue) {
     //       // searchCustomer.value = displayValue
