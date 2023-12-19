@@ -179,7 +179,7 @@ export function getValidDate(value) {
   let date = value
   if (isEmptyValue(date)) {
     date = new Date()
-  } if (typeof value === 'string') {
+  } else if (typeof value === 'string') {
     // TODO: Verify it time zone
     if (value.length <= 10) {
       value += 'T00:00:00' // without time zone

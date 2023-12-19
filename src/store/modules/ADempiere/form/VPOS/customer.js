@@ -1,32 +1,37 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2023-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 // API Request Methods
 import {
-  listCustomers,
-  updateOrder as changeCustomerOrder,
-  UpdateCustomer,
-  createCustomer
+  updateOrder as changeCustomerOrder
 } from '@/api/ADempiere/form/VPOS'
+import {
+  requestCreateCustomer,
+  requestUpdateCustomer,
+  requestListCustomers
+} from '@/api/ADempiere/form/VPOS/customer'
 import {
   listCountries,
   getCountries,
   listRegion,
   listCities
 } from '@/api/ADempiere/field/locations'
+
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification'
@@ -140,6 +145,9 @@ export default {
     setCustomerPageToken(state, pageToken) {
       state.pageToken = pageToken
     },
+    setCurrentCustomer(state, currentCustomer) {
+      state.currentCustomer = currentCustomer
+    },
     setCustomersList(state, list) {
       state.customers = list
     },
@@ -198,7 +206,7 @@ export default {
       pageToken
     }) {
       return new Promise(resolve => {
-        listCustomers({
+        requestListCustomers({
           pageSize,
           pageToken,
           searchValue,
@@ -378,15 +386,16 @@ export default {
      * Change Business Partner in Order
      */
     changeCustomerOrder({
-      getters,
-      dispatch
+      commit,
+      dispatch,
+      getters
     }, customerId) {
       return new Promise(resolve => {
         const pos = getters.getVPOS
         const order = getters.getCurrentOrder
         if (isEmptyValue(order)) resolve({})
         if (order.document_status.value !== 'DR') {
-          resolve({})
+          return resolve({})
         }
         changeCustomerOrder({
           posId: pos.id,
@@ -395,6 +404,7 @@ export default {
         })
           .then(response => {
             dispatch('overloadOrder', { order: response })
+            commit('setCurrentCustomer', order.customer)
             resolve(response)
           })
           .catch(error => {
@@ -417,8 +427,9 @@ export default {
      * Create New Business Partner
      */
     createCustomer({
-      getters,
-      dispatch
+      commit,
+      dispatch,
+      getters
     }, {
       additionalAttributes,
       addresses
@@ -435,7 +446,7 @@ export default {
         const lastName = getters.getAttributeFieldCustomer({
           attribute: 'name2'
         })
-        createCustomer({
+        requestCreateCustomer({
           additionalAttributes,
           addresses,
           name,
@@ -444,9 +455,11 @@ export default {
           lastName
         })
           .then(response => {
+            console.log(response, order)
             if (!isEmptyValue(order)) {
               dispatch('changeCustomerOrder', response.id)
             }
+            commit('setCurrentCustomer', response)
             resolve(response)
           })
           .catch(error => {
@@ -538,7 +551,7 @@ export default {
           }
         })
         const order = getters.getCurrentOrder
-        UpdateCustomer({
+        requestUpdateCustomer({
           additionalAttributes,
           addresses: listAddresses,
           name,
@@ -572,6 +585,9 @@ export default {
     }
   },
   getters: {
+    getCurrentCustomer: (state) => {
+      return state.currentCustomer
+    },
     getCustomersList: (state) => {
       return state.customers
     },
