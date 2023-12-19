@@ -2,7 +2,7 @@
   <div :class="classObj" class="app-wrapper">
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar v-show="showMenu" class="sidebar-container" />
-    <div :class="{hasTagsView:needTagsView}" class="main-container" style="height: 100%;">
+    <div :class="{hasTagsView:needTagsView}" class="main-container" :style="stylesClass">
       <div v-if="!isMobile">
         <navbar v-show="showNavar" />
         <tags-view v-if="needTagsView" />
@@ -64,6 +64,13 @@ export default {
     },
     isMobile() {
       return this.$store.state.app.device === 'mobile'
+    },
+    stylesClass() {
+      const storedForm = this.$store.getters.getStoredForm(this.$route.meta.uuid)
+      if (!this.isEmptyValue(storedForm) && storedForm.file_name === 'PriceChecking') {
+        return 'height: 100%;margin-left: 0px;'
+      }
+      return 'height: 100%'
     }
   },
   methods: {
