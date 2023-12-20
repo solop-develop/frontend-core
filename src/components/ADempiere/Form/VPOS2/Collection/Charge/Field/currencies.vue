@@ -73,7 +73,17 @@ export default defineComponent({
       return !isEmptyValue(reference_currency)
     })
     const listCurrencies = computed(() => {
-      return store.getters.getAvailableCurrencies.listCurrencies
+      const getAvailableCurrencies = store.getters.getAvailableCurrencies
+      const {
+        listCurrencies: list,
+        currencie: currencieId
+      } = getAvailableCurrencies
+      if (isEmptyValue(list)) {
+        if (currencie.value === currencieId.id) {
+          return [currencieId]
+        }
+      }
+      return list
     })
 
     const currencie = computed({
