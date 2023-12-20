@@ -303,15 +303,7 @@ export const containerManager = {
       pageNumber
     })
   },
-  searchTableHeader({
-    containerUuid,
-    tableName
-  }) {
-    return store.dispatch('searchTableHeader', {
-      containerUuid,
-      tableName
-    })
-  },
+
   warehouseLocatorSearch({
     containerUuid,
     parentUuid,

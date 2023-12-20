@@ -85,12 +85,3 @@ export function generalInfoSearch({
     pageNumber
   })
 }
-export function searchTableHeader({
-  containerUuid,
-  tableName
-}) {
-  return store.dispatch('searchTableHeader', {
-    containerUuid,
-    tableName
-  })
-}

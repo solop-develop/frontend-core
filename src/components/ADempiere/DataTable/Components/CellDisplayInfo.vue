@@ -138,6 +138,7 @@ import { isEmptyValue, getTypeOfValue } from '@/utils/ADempiere/valueUtils.js'
 import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 import { formatField } from '@/utils/ADempiere/valueFormat.js'
 import { getImagePath } from '@/utils/ADempiere/resource'
+import { isNumberField } from '@/utils/ADempiere/references'
 
 // Constants
 import { IMAGE, TEXT_LONG } from '@/utils/ADempiere/references'
@@ -196,7 +197,7 @@ export default defineComponent({
 
     const cellCssClass = computed(() => {
       let classCss = ''
-      if (props.fieldAttributes.componentPath === 'FieldNumber') {
+      if (isNumberField(props.fieldAttributes.displayType) || props.fieldAttributes.componentPath === 'FieldNumber') {
         classCss = ' cell-align-right '
       }
       if (props.fieldAttributes.isColumnDocumentStatus || props.fieldAttributes.displayType === IMAGE.id) {

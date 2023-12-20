@@ -19,10 +19,10 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
+// Utils and Helper Methods
 import { convertField } from '@/utils/ADempiere/apiConverts/field.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
-// Utils and Helper Methods
 export function requestFieldMetadata({
   id,
   tableName,
@@ -55,5 +55,43 @@ export function requestFieldMetadata({
   })
     .then(fieldResponse => {
       return convertField(fieldResponse)
+    })
+}
+
+/**
+ * Load identifiers to build display column by rows
+ * @param {String} tableName
+ * @returns
+ */
+export function requestIdentifierColumns({
+  tableName
+}) {
+  return request({
+    url: `/dictionary/identifiers/${tableName}`,
+    method: 'get'
+  })
+}
+
+/**
+ * Load fields to query
+ * @param {String} tableName
+ * @returns
+ */
+export function requestSearchFields({
+  tableName
+}) {
+  return request({
+    url: `/dictionary/search/${tableName}`,
+    method: 'get'
+  })
+    .then(response => {
+      const { convertField } = require('@/utils/ADempiere/apiConverts/field.js')
+
+      return {
+        table_columns: response.table_columns,
+        query_fields: response.query_fields.map(field => {
+          return convertField(field)
+        })
+      }
     })
 }

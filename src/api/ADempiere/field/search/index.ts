@@ -1,7 +1,7 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- * Contributor(s):  Yamel Senih ysenih@erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -18,55 +18,12 @@
 
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
+
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
-// constants
+// Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
-
-export function tableSearchFields({
-  tableName
-}) {
-  return request({
-    url: '/dictionary/search-info/fields',
-    method: 'get',
-    params: {
-      table_name: tableName
-    }
-  })
-    .then(response => {
-      const { camelizeObjectKeys } = require('@/utils/ADempiere/transformObject.js')
-      return {
-        recordCount: response.record_count,
-        fieldsList: response.records.map(field => {
-          return camelizeObjectKeys(field)
-        }),
-        nextPageToken: response.next_page_token
-      }
-    })
-}
-
-export function identifierFields({
-  tableName
-}) {
-  return request({
-    url: '/dictionary/identifiers-fields',
-    method: 'get',
-    params: {
-      table_name: tableName
-    }
-  })
-    .then(response => {
-      const { convertField } = require('@/utils/ADempiere/apiConverts/field.js')
-
-      return {
-        recordCount: response.record_count,
-        fieldsList: response.records.map(field => {
-          return convertField(field)
-        }),
-        nextPageToken: response.next_page_token
-      }
-    })
-}
 
 export function requestGridGeneralInfo({
   contextAttributesList,

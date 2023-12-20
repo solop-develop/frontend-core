@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -37,11 +37,12 @@
         >
           <el-row>
             <field-definition
-              v-for="(fieldAttributes) in fieldsListQueryCriteria"
+              v-for="(fieldAttributes) in storedFieldsListQuery"
               :key="fieldAttributes.columnName"
               :metadata-field="fieldAttributes"
               :container-uuid="uuidForm"
               :container-manager="containerManagerList"
+              :size-col="6"
             />
           </el-row>
         </el-form>
@@ -71,7 +72,7 @@
       />
 
       <el-table-column
-        v-for="(fieldAttributes, key) in fieldsListQueryCriteria"
+        v-for="(fieldAttributes, key) in storedColumnsListTable"
         :key="key"
         :label="fieldAttributes.name"
         :prop="fieldAttributes.columnName"
@@ -82,7 +83,10 @@
           <cell-display-info
             :parent-uuid="metadata.parentUuid"
             :container-uuid="uuidForm"
-            :field-attributes="fieldAttributes"
+            :field-attributes="{
+              columnName: fieldAttributes.column_name,
+              displayType: fieldAttributes.display_type
+            }"
             :container-manager="containerManagerList"
             :scope="scope"
             :data-row="scope.row"
@@ -201,12 +205,10 @@ export default {
   data() {
     return {
       activeAccordion: 'query-criteria',
-      metadataList: [],
       timeOutRecords: null,
       isLoadingRecords: false,
       timeOutFields: null,
       isLoadingFields: false,
-      cacheUpdateField: {},
       unsubscribe: () => {}
     }
   },
@@ -224,6 +226,9 @@ export default {
         return this.metadata.columnName + '_' + this.metadata.containerUuid
       }
       return GENERAL_INFO_SEARCH_LIST_FORM
+    },
+    tableName() {
+      return this.metadata.reference.tableName
     },
     shortsKey() {
       return {
@@ -250,18 +255,21 @@ export default {
         setPage: this.setPage
       }
     },
-    storedFieldsList() {
-      return store.getters.getTableHeader({
-        containerUuid: this.uuidForm
+    storedFieldsListQuery() {
+      return store.getters.getSearchQueryFields({
+        tableName: this.tableName
       })
     },
-    fieldsListQueryCriteria() {
-      return store.getters.getQueryFieldsList({
-        containerUuid: this.uuidForm
+    storedColumnsListTable() {
+      return store.getters.getSearchTableFields({
+        tableName: this.tableName
       })
+        .filter(fieldItem => {
+          return fieldItem.sequence > 0
+        })
     },
     isloadingTable() {
-      return this.isLoadingRecords && !isEmptyValue(this.storedFieldsList)
+      return this.isLoadingRecords && !isEmptyValue(this.storedColumnsListTable)
     },
     generalInfoData() {
       return store.getters.getGeneralInfoData({
@@ -303,6 +311,8 @@ export default {
 
   created() {
     this.unsubscribe = this.subscribeChanges()
+
+    this.loadSearchFields()
 
     if (this.isReadyFromGetData) {
       this.getListGeneralInfoSearch()
@@ -367,22 +377,16 @@ export default {
         }
       })
     },
-    setFieldsList() {
-      this.isLoadingFields = true
-      const storedFieldsList = store.getters.getTableHeader({ containerUuid: this.uuidForm })
-
-      if (!isEmptyValue(storedFieldsList)) {
-        this.isLoadingFields = false
-        return
+    loadSearchFields() {
+      const fieldsListTable = this.storedColumnsListTable
+      if (isEmptyValue(fieldsListTable)) {
+        store.dispatch('getSearchFieldsFromServer', {
+          tableName: this.tableName
+        })
+          .finally(() => {
+            this.isLoadingFields = false
+          })
       }
-      this.containerManager.searchTableHeader({
-        containerUuid: this.uuidForm,
-        tableName: this.metadata.reference.tableName
-      }).then(fieldsListResponse => {
-        this.metadataList = fieldsListResponse
-      }).finally(() => {
-        this.isLoadingFields = false
-      })
     },
     getListGeneralInfoSearch(pageNumber = 0, pageSize) {
       const values = store.getters.getValuesView({
