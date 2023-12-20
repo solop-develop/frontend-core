@@ -68,12 +68,12 @@ export default {
         if (menu.path === '/PriceChecking') {
           return {
             ...viewSearch,
-            hidden: !this.$store.state['user'].role.isAllowInfoProduct
+            hidden: !this.$store.state['user'].role.is_allow_info_product
           }
         } else if (menu.path === '/ProductInfo') {
           return {
             ...menu,
-            hidden: !this.$store.state['user'].role.isAllowInfoProduct
+            hidden: !this.$store.state['user'].role.is_allow_info_product
           }
         }
         return menu

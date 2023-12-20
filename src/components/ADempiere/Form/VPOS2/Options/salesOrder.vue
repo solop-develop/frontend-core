@@ -17,6 +17,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 <template>
   <el-row :gutter="10">
     <el-col :span="8">
+      <!-- newOrder -->
       <div @click="newOrder">
         <el-card
           shadow="never"
@@ -33,8 +34,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         </el-card>
       </div>
     </el-col>
+    <!-- ordersHistory -->
     <el-col :span="8">
-      <div @click="listOrders">
+      <div>
         <el-card
           shadow="never"
           class="custom-card-options"
@@ -42,14 +44,26 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         >
           <p
             class="card-options-buttons"
+            @click="listOrders(false)"
           >
             <i class="el-icon-news" />
             <br>
             {{ $t('form.pos.optionsPoinSales.salesOrder.ordersHistory') }}
           </p>
         </el-card>
+        <el-dialog
+          :title="$t('form.pos.optionsPoinSales.salesOrder.ordersHistory')"
+          :visible.sync="isShowOrdersHistory"
+          :custom-class="'option-order-list'"
+          :center="true"
+          :modal="false"
+          width="75%"
+        >
+          <order-history />
+        </el-dialog>
       </div>
     </el-col>
+    <!-- addResource -->
     <el-col :span="8">
       <div @click="addResource">
         <el-card
@@ -93,7 +107,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         width="400"
         trigger="click"
       >
-        <span v-if="isEmptyValue(currentOrder.id)">
+        <span v-if="!isEmptyValue(currentOrder.id)">
           <el-row v-if="!isLoadingCancelSaleTransaction" :gutter="24" class="container-reverse">
             <el-col :span="24" class="container-reverse">
               <p class="container-popover">
@@ -316,7 +330,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     <!-- applyDiscountOnOrder -->
     <el-col v-if="isAllowsApplyDiscount" :span="8">
       <el-popover
-        v-model="isShowApplyDiscount"
+        ref="showApplyDiscountOnOrder"
         placement="bottom"
         width="350"
         :title="$t('form.pos.applyDiscountOnOrder')"
@@ -369,7 +383,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           element-loading-background="rgba(255, 255, 255, 0.8)"
           class="view-loading"
         />
-        <div slot="reference">
+        <div
+          slot="reference"
+        >
           <el-card
             shadow="never"
             class="custom-card-options"
@@ -389,7 +405,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     <!-- applyDiscountToAllLines -->
     <el-col v-if="isAllowsApplyDiscount" :span="8">
       <el-popover
-        v-model="isShowApplyDiscount"
+        ref="showApplyDiscountToAllLines"
         placement="bottom"
         width="350"
         :title="$t('form.pos.applyDiscountOnOrder')"
@@ -442,7 +458,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           element-loading-background="rgba(255, 255, 255, 0.8)"
           class="view-loading"
         />
-        <div slot="reference">
+        <div
+          slot="reference"
+        >
           <el-card
             shadow="never"
             class="custom-card-options"
@@ -519,6 +537,7 @@ import { defineComponent, computed, ref } from '@vue/composition-api'
 import lang from '@/lang'
 import store from '@/store'
 // Components and Mixins
+import OrderHistory from '@/components/ADempiere/Form/VPOS2/Options/OrderHistory.vue'
 // import Shipments from './Shipments.vue'
 // import OptionsList from './OptionsList.vue'
 // import InfoOrder from './InfoOrder.vue'
@@ -527,6 +546,9 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'SalesOrder',
+  components: {
+    OrderHistory
+  },
   setup() {
     const isShowCancelSaleTransaction = ref(false)
     const isShowApplyDiscount = ref(false)
@@ -536,9 +558,21 @@ export default defineComponent({
     const isLoadingCopyOrder = ref(false)
     const isLoadingCancelOrder = ref(false)
     const isLoadingRMA = ref((false))
+    const showApplyDiscountOnOrder = ref(null)
+    const showApplyDiscountToAllLines = ref(null)
     const isLoadingApplyDiscountOnOrder = ref(false)
     const messageReverseSales = ref('')
     const applyDiscountAmount = ref(0)
+
+    const isShowOrdersHistory = computed({
+      get() {
+        return store.getters.getShowOrdersHistory
+      },
+      // setter
+      set(show) {
+        store.commit('setShowOrdersHistory', show)
+      }
+    })
 
     const isShowShipment = computed({
       get() {
@@ -546,7 +580,7 @@ export default defineComponent({
       },
       // setter
       set(show) {
-        store.commit('setShowShipment', show)
+        store.commit('setShowShipment', false)
       }
     })
 
@@ -653,7 +687,8 @@ export default defineComponent({
     }
 
     function listOrders() {
-      console.info('Unsupported method')
+      if (isShowOrdersHistory.value) return
+      store.commit('setShowOrdersHistory', { show: true, qlq: 'listOrders' })
     }
 
     function addResource() {
@@ -682,6 +717,8 @@ export default defineComponent({
     }
 
     function closeApplyDiscount() {
+      showApplyDiscountOnOrder.value.showPopper = false
+      showApplyDiscountToAllLines.value.showPopper = false
       applyDiscountAmount.value = 0
       isShowApplyDiscount.value = false
     }
@@ -850,12 +887,15 @@ export default defineComponent({
       IsCopyOrder,
       isLoadingRMA,
       isLoadingCopyOrder,
+      isShowOrdersHistory,
       applyDiscountAmount,
       messageReverseSales,
       isShowApplyDiscount,
       isLoadingPrintTicket,
       isLoadingCancelOrder,
+      showApplyDiscountOnOrder,
       isLoadingPreviewDocument,
+      showApplyDiscountToAllLines,
       isShowCancelSaleTransaction,
       isLoadingApplyDiscountOnOrder,
       isLoadingCancelSaleTransaction,

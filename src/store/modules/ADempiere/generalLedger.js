@@ -16,49 +16,59 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Api
-import { listAccoutingElements } from '@/api/ADempiere/generalLedger'
+// API Request Methods
+import { requestListAccoutingElements } from '@/api/ADempiere/generalLedger'
 
-// utils and helpers methods
+// Utils and Helpers Methods
 import { showMessage } from '@/utils/ADempiere/notification'
 import { isEmptyValue } from '@/utils/ADempiere'
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
-// CONST
-const accoutingElement = {
+
+const initStateGeneralLedger = {
   fileList: []
 }
 
 export default {
-  state: accoutingElement,
+  state: initStateGeneralLedger,
+
   mutations: {
     setFieldsListAccount(state, fieldsListAccount) {
       state.fileList = fieldsListAccount
     }
   },
+
   actions: {
-    listAccoutingElementsRequest({ commit, getters }) {
+    listAccoutingElementsFromServer({ commit, getters }) {
       return new Promise(resolve => {
-        const {
-          is_allow_info_account
-        } = getters['user/getRole']
         const sessionContext = getters.getAllSessionContext
-        if (!is_allow_info_account || isEmptyValue(sessionContext)) return resolve()
-        if (isEmptyValue(sessionContext['$C_AcctSchema_ID'])) return resolve()
-        listAccoutingElements({
-          accoutingSchemaId: sessionContext['$C_AcctSchema_ID']
+        if (!isEmptyValue(sessionContext)) {
+          return resolve()
+        }
+        const isShowAcct = sessionContext['#ShowAcct']
+        if (!isShowAcct) {
+          return resolve()
+        }
+        const accoutingSchemaId = sessionContext['$C_AcctSchema_ID']
+        if (isEmptyValue(accoutingSchemaId)) {
+          return resolve()
+        }
+        requestListAccoutingElements({
+          accoutingSchemaId: accoutingSchemaId
         })
           .then(response => {
             const { accouting_elements } = response
+            let fieldsListAccount = []
             if (!isEmptyValue(accouting_elements)) {
-              const fieldsListAccount = accouting_elements.map(list => {
+              fieldsListAccount = accouting_elements.map(list => {
                 return {
                   ...camelizeObjectKeys(list),
                   value: ''
                 }
               })
-              commit('setFieldsListAccount', fieldsListAccount)
             }
-            resolve(accouting_elements)
+
+            commit('setFieldsListAccount', fieldsListAccount)
+            resolve(fieldsListAccount)
           })
           .catch(error => {
             console.warn(`List Accouting Elements: ${error.message}. Code: ${error.code}.`)
@@ -79,6 +89,7 @@ export default {
       })
     }
   },
+
   getters: {
     getFieldsListAccount: (state) => {
       return state.fileList

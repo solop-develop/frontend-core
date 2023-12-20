@@ -1,17 +1,19 @@
 <!--
-ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https:www.gnu.org/licenses/>.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A.
+  Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -123,21 +125,25 @@ import {
   watch,
   ref
 } from '@vue/composition-api'
+
 import language from '@/lang'
 import store from '@/store'
+
 // Components and Mixins
 import NewCustomer from './NewCustomer'
-// utils and helper methods
+
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({
   name: 'searchCustomer',
+
   components: {
     NewCustomer
   },
+
   setup() {
     // Ref
-
     const searchCustomer = ref('')
     const currentOptions = ref('')
     const listCustomer = ref([])
@@ -153,6 +159,10 @@ export default defineComponent({
 
     const currentOrder = computed(() => {
       return store.getters.getCurrentOrder
+    })
+
+    const storedCurrentCustomer = computed(() => {
+      return store.getters.getCurrentCustomer
     })
 
     const isShowCustomer = computed({
@@ -191,7 +201,8 @@ export default defineComponent({
     }
 
     function selectCustomer(search) {
-      searchCustomer.value = search.name
+      if (isEmptyValue(search)) return
+      searchCustomer.value = search.value + ' - ' + search.name
       if (!isEmptyValue(currentOrder.value.id)) {
         store.dispatch('updateCurrentOrder', {
           customer_id: search.id
@@ -266,6 +277,22 @@ export default defineComponent({
         blurCustomer()
       }
     })
+    // watch(storedCurrentCustomer, (newValue) => {
+    //   if (!isEmptyValue(newValue)) {
+    //     const displayValue = newValue.value + ' - ' + newValue.name
+    //     if (searchCustomer.value !== displayValue) {
+    //       // searchCustomer.value = displayValue
+    //       selectCustomer(newValue)
+    //     }
+    //   }
+    // })
+
+    // first order customer, second selected customer, third template customer
+    const defaultCustomer = !isEmptyValue(currentOrder.value) ? currentOrder.value.customer
+      : !isEmptyValue(storedCurrentCustomer.value) ? storedCurrentCustomer.value
+        : currentVPOS.value.customer
+
+    selectCustomer(defaultCustomer)
 
     return {
       isTrigger,
@@ -277,6 +304,7 @@ export default defineComponent({
       // Computed
       isComponentRender,
       isShowCustomer,
+      storedCurrentCustomer,
       currentOrder,
       currentVPOS,
       // Methods

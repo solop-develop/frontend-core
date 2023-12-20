@@ -195,7 +195,7 @@ const reportManager = {
               link = buildLinkHref({
                 fileName: output.file_name,
                 outputStream: output.output_stream,
-                mimeType: output.mimeType
+                mimeType: output.mime_type
               })
 
               // donwloaded not support render report
@@ -501,11 +501,11 @@ const reportManager = {
               href: undefined,
               download: undefined
             }
-            if (response && response.outputStream) {
+            if (response && response.output_stream) {
               link = buildLinkHref({
-                fileName: response.fileName,
-                outputStream: response.outputStream,
-                type: response.mimeType
+                fileName: response.file_name,
+                outputStream: response.output_stream,
+                type: response.mime_type
               })
             }
 

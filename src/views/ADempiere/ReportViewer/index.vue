@@ -163,10 +163,14 @@ export default defineComponent({
     })
 
     function displayReport(reportOutput) {
+      if (root.$route.params.isPos) {
+        isLoading.value = true
+        return
+      }
       if (!reportOutput.isError) {
         const { output, report_type: format } = reportOutput
 
-        reportType.value = format
+        reportType.value = isEmptyValue(format) ? 'pdf' : format
         reportContent.value = output
 
         isLoading.value = true
@@ -181,6 +185,10 @@ export default defineComponent({
 
     // get report from vuex store or request from server
     function getReport() {
+      if (root.$route.params.isPos) {
+        isLoading.value = true
+        return
+      }
       if (!isEmptyValue(storedReportDefinition.value)) {
         // findActionsMenu()
         getCachedReport()

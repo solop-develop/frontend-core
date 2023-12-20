@@ -46,6 +46,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         </span>
       </template>
       <el-autocomplete
+        ref="autocompleteSearchProduct"
         v-model="searchProduct"
         popper-class="my-autocomplete"
         :fetch-suggestions="localSearch"
@@ -111,6 +112,7 @@ export default defineComponent({
   },
   setup() {
     const searchProduct = ref('')
+    const autocompleteSearchProduct = ref(null)
     const productList = ref([])
     const isLoading = ref(false)
     const isTrigger = ref(false)
@@ -172,11 +174,35 @@ export default defineComponent({
               store.dispatch('newLine', {
                 productId: search.product.id
               })
+                .finally(() => {
+                  searchProduct.value = ''
+                  autocompleteSearchProduct.value.close()
+                  autocompleteSearchProduct.value.suggestions = []
+                })
             })
         } else {
-          store.dispatch('newLine', {
-            productId: search.product.id
+          const isProduct = store.getters.getListOrderLines.find(list => list.product.id === search.product.id)
+          if (isEmptyValue(isProduct)) {
+            store.dispatch('newLine', {
+              productId: search.product.id,
+              quantity: 1
+            })
+              .finally(() => {
+                searchProduct.value = ''
+                autocompleteSearchProduct.value.close()
+                autocompleteSearchProduct.value.suggestions = []
+              })
+            return
+          }
+          store.dispatch('updateCurrentLine', {
+            lineId: isProduct.id,
+            quantity: Number(isProduct.quantity_ordered) + 1
           })
+            .finally(() => {
+              searchProduct.value = ''
+              autocompleteSearchProduct.value.close()
+              autocompleteSearchProduct.value.suggestions = []
+            })
         }
       }
     }
@@ -196,6 +222,7 @@ export default defineComponent({
       isLoading,
       productList,
       searchProduct,
+      autocompleteSearchProduct,
       // Computed
       order,
       show,

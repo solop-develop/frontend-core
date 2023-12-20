@@ -181,7 +181,9 @@ export default {
                 file_name,
                 mime_type,
                 result_type,
-                output_stream
+                output_stream,
+                instanceUuid: orderId,
+                isPos: true
               })
             }
             resolve(response)
@@ -218,10 +220,11 @@ export default {
         })
           .then(response => {
             const {
-              output_stream,
-              result_type,
-              mime_type,
-              file_name,
+              // output_stream,
+              process_log,
+              // result_type,
+              // instance_id,
+              // file_name,
               is_error,
               summary
             } = response
@@ -233,16 +236,17 @@ export default {
               showClose: true
             })
             if (
-              !isEmptyValue(output_stream) &&
-              !isEmptyValue(mime_type) &&
-              !isEmptyValue(file_name)
+              !isEmptyValue(process_log.output.output_stream) &&
+              !isEmptyValue(process_log.output.mime_type) &&
+              !isEmptyValue(process_log.output.file_name)
             ) {
               dispatch('generateReportVPOS', {
-                orderId,
-                file_name,
-                mime_type,
-                result_type,
-                output_stream
+                orderId: process_log.id,
+                file_name: process_log.output.file_name,
+                mime_type: process_log.output.mime_type,
+                result_type: process_log.output.result_type,
+                output_stream: process_log.output.output_stream,
+                instanceUuid: process_log.instance_id
               })
             }
             resolve(response)
@@ -270,7 +274,9 @@ export default {
       file_name,
       mime_type,
       result_type,
-      output_stream
+      output_stream,
+      instanceUuid,
+      isPos = false
     }) {
       const link = buildLinkHref({
         fileName: file_name,
@@ -288,24 +294,27 @@ export default {
         name: file_name,
         output: output_stream,
         outputStream: output_stream,
+        output_stream,
         reportType: result_type,
         reportUuid: orderId.toString(),
         reportViewUuid: orderId.toString(),
         tableName: 'C_Order',
         url: link.href,
         uuid: orderId.toString(),
-        instanceUuid: orderId.toString()
+        instanceUuid: Number(instanceUuid)
       })
       router.push({
         name: REPORT_VIEWER_NAME,
         params: {
+          reportId: orderId,
           processId: orderId,
           reportUuid: orderId.toString(),
           tableName: 'C_Order',
-          instanceUuid: orderId.toString(),
+          instanceUuid: Number(instanceUuid),
           fileName: file_name,
           name: file_name,
-          mimeType: mime_type
+          mimeType: mime_type,
+          isPos
         }
       }, () => {})
     },

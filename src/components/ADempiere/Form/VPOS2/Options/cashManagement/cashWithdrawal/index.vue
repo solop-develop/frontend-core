@@ -17,7 +17,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 <template>
   <el-row :gutter="10">
     <el-col :span="8" style="width: 100% !important;">
-      <div>
+      <div @click="cashwithdrawal">
         <el-card
           shadow="never"
           class="custom-card-options"
@@ -38,9 +38,32 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <script>
 import { defineComponent } from '@vue/composition-api'
-
+import lang from '@/lang'
+import store from '@/store'
+import { isEmptyValue } from '@/utils/ADempiere'
 export default defineComponent({
-  name: 'cashwithdrawal'
+  name: 'cashwithdrawal',
+  setup() {
+    function cashwithdrawal() {
+      store.dispatch('listPaymentsWithdrawal')
+      store.dispatch('setModalDialogVPOS', {
+        title: lang.t('form.pos.optionsPoinSales.cashManagement.cashwithdrawal'),
+        doneMethod: () => {
+          store.dispatch('processCashWithdrawal')
+        },
+        isDisabledDone: () => {
+          return isEmptyValue(store.getters.getAttributeCashWithdrawalFields({
+            attribute: 'collectionAgent'
+          }))
+        },
+        componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/cashManagement/cashWithdrawal/panel.vue'),
+        isShowed: true
+      })
+    }
+    return {
+      cashwithdrawal
+    }
+  }
 })
 </script>
 

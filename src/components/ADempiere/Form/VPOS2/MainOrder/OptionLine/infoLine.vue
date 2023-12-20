@@ -102,6 +102,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       icon="el-icon-info"
       type="primary"
       size="mini"
+      style="margin-left: 2px;"
     />
   </el-popover>
 </template>

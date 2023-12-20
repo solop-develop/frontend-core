@@ -47,6 +47,7 @@ export default defineComponent({
           form = import('@/components/ADempiere/Form/AcctViewer')
           break
         case 'PriceChecking':
+          store.dispatch('searchPointOfSaleData')
           form = import('@/components/ADempiere/Form/PriceChecking')
           store.dispatch('settings/changeSetting', {
             key: 'showMenu',
