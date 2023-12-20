@@ -219,7 +219,7 @@ export default {
               isShowed: false
             })
             dispatch('setModalDialogVPOS', {
-              title: lang.t('form.pos.optionsPoinSales.cashManagement.cashOpenBox'),
+              title: lang.t('form.pos.optionsPoinSales.cashManagement.successfulCashWithdrawal'),
               type: 'success',
               doneMethod: () => {
                 commit('setShowedModalDialogVPOS', {
@@ -240,7 +240,7 @@ export default {
             })
           })
           .catch(error => {
-            console.warn(`Process Orders: ${error.message}. Code: ${error.code}.`)
+            console.warn(`Process Cash Withdrawal: ${error.message}. Code: ${error.code}.`)
             let message = error.message
             if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
               message = error.response.data.message
