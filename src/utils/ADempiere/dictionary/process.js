@@ -268,8 +268,8 @@ export const containerManager = {
       blankValue
     })
   },
-  getSearchInfoList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, id, filters, searchValue, pageNumber }) {
-    return store.dispatch('searchInfoList', {
+  getSearchRecordsList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, id, filters, searchValue, pageNumber }) {
+    return store.dispatch('getSearchRecordsFromServer', {
       parentUuid,
       containerUuid,
       contextColumnNames,
@@ -278,28 +278,6 @@ export const containerManager = {
       columnName,
       filters,
       searchValue,
-      pageNumber
-    })
-  },
-  // TODO: Deperecated
-  generalInfoSearch({
-    containerUuid,
-    contextColumnNames,
-    filters,
-    id,
-    searchValue,
-    tableName,
-    columnName,
-    pageNumber
-  }) {
-    return store.dispatch('searchInfoList', {
-      containerUuid,
-      contextColumnNames,
-      filters,
-      processParameterId: id,
-      searchValue,
-      tableName,
-      columnName,
       pageNumber
     })
   },

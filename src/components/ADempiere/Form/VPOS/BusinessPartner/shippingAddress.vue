@@ -37,7 +37,7 @@
             getLookupList,
             isDisplayedField,
             isDisplayedDefault,
-            generalInfoSearch,
+            getSearchRecordsList,
             isMandatoryField,
             isReadOnlyField,
             changeFieldShowedFromUser
@@ -59,7 +59,7 @@ import FieldLocation from './shippingFieldLocation'
 import {
   getLookupList,
   isDisplayedField,
-  generalInfoSearch,
+  getSearchRecordsList,
   isDisplayedDefault,
   isMandatoryField,
   isReadOnlyField,
@@ -160,7 +160,7 @@ export default {
   methods: {
     getLookupList,
     isDisplayedDefault,
-    generalInfoSearch,
+    getSearchRecordsList,
     isDisplayedField,
     isMandatoryField,
     isReadOnlyField,

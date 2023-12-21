@@ -77,7 +77,7 @@ export function isReadOnlyField({ isQueryCriteria, isReadOnlyFromLogic, isDisabl
   return isQueryCriteria && isReadOnlyFromLogic || isDisabledFieldPos
 }
 
-export function generalInfoSearch({
+export function getSearchRecordsList({
   containerUuid,
   contextColumnNames,
   filters,

@@ -32,7 +32,7 @@
           isDisplayedField,
           isDisplayedDefault,
           isMandatoryField,
-          generalInfoSearch,
+          getSearchRecordsList,
           isReadOnlyField,
           changeFieldShowedFromUser
         }"
@@ -50,7 +50,7 @@ import {
   getLookupList,
   isDisplayedField,
   isDisplayedDefault,
-  generalInfoSearch,
+  getSearchRecordsList,
   isMandatoryField,
   isReadOnlyField,
   changeFieldShowedFromUser
@@ -95,7 +95,7 @@ export default {
     isDisplayedField,
     isDisplayedDefault,
     isMandatoryField,
-    generalInfoSearch,
+    getSearchRecordsList,
     isReadOnlyField,
     changeFieldShowedFromUser
   }

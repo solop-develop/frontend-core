@@ -28,17 +28,16 @@ import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 export function requestGridGeneralInfo({
   contextAttributesList,
   filters = [],
-  fieldUuid,
-  processParameterUuid,
-  browseFieldUuid,
-  id,
+  fieldId,
+  processParameterId,
+  browseFieldId,
   //
-  referenceUuid,
+  // referenceUuid,
   searchValue,
   //
   tableName,
   columnName,
-  columnUuid,
+  columnId,
   //
   pageToken,
   pageSize = ROWS_OF_RECORDS_BY_PAGE
@@ -61,30 +60,37 @@ export function requestGridGeneralInfo({
     })
   }
 
+  let url
+  switch (true) {
+    case (!isEmptyValue(tableName) && isEmptyValue(columnName)):
+      url = `/user-interface/search-records/${tableName}/${columnName}`
+      break
+    case !isEmptyValue(columnId):
+      url = `/user-interface/search-records/column/${columnId}`
+      break
+    case !isEmptyValue(fieldId):
+      url = `/user-interface/search-records/field/${fieldId}`
+      break
+    case !isEmptyValue(processParameterId):
+      url = `/user-interface/search-records/parameter/${processParameterId}`
+      break
+    case !isEmptyValue(browseFieldId):
+      url = `/user-interface/search-records/query-criteria/${browseFieldId}`
+      break
+  }
+
   return request({
-    url: '/grid/general-info',
+    url,
     method: 'get',
     params: {
       context_attributes: contextAttributes,
-      field_uuid: fieldUuid,
-      process_parameter_uuid: processParameterUuid,
-      browse_field_uuid: browseFieldUuid,
       filters,
-      id,
       //
-      reference_uuid: referenceUuid,
+      // reference_id: reference_id,
       search_value: searchValue,
-      //
-      table_name: tableName,
-      column_name: columnName,
-      column_uuid: columnUuid,
       // Page Data
       page_token: pageToken,
       page_size: pageSize
     }
   })
-    .then(response => {
-      const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
-      return convertEntityList(response)
-    })
 }

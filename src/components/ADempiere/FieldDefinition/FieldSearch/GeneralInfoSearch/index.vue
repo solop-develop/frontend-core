@@ -129,7 +129,7 @@ export default {
     remoteSearch(searchValue) {
       return new Promise(resolve => {
         this.isLoading = true
-        this.containerManager.generalInfoSearch({
+        this.containerManager.getSearchRecordsList({
           containerUuid: this.metadata.containerUuid,
           parentUuid: this.metadata.containerUuid,
           pageNumber: 1,

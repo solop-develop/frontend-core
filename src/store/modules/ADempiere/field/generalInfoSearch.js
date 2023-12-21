@@ -233,15 +233,15 @@ const generalInfoSearch = {
      * @param {number} pageNumber
      * @returns {promise}
      */
-    searchInfoList({ dispatch }, {
+    getSearchRecordsFromServer({ dispatch }, {
       parentUuid,
       containerUuid,
       contextColumnNames = [],
       //
-      fieldUuid,
+      columnId,
+      fieldId,
       processParameterUuid,
       browseFieldUuid,
-      columnUuid,
       //
       tableName,
       columnName,
@@ -259,10 +259,10 @@ const generalInfoSearch = {
             containerUuid,
             contextColumnNames,
             //
-            fieldUuid,
+            columnId,
+            fieldId,
             processParameterUuid,
             browseFieldUuid,
-            columnUuid,
             //
             tableName,
             columnName,
@@ -276,13 +276,14 @@ const generalInfoSearch = {
             resolve(response)
           })
         }
-        return dispatch('findGeneralInfo', {
+        return dispatch('getGeneralSearchRecordsFromServer', {
           containerUuid,
           parentUuid,
           contextColumnNames,
           filters,
           //
-          fieldUuid,
+          columnId,
+          fieldId,
           processParameterUuid,
           browseFieldUuid,
           //
@@ -299,13 +300,14 @@ const generalInfoSearch = {
       })
     },
 
-    findGeneralInfo({ commit, getters, dispatch }, {
+    getGeneralSearchRecordsFromServer({ commit, getters, dispatch }, {
       containerUuid,
       parentUuid,
       contextColumnNames = [],
       filters,
       //
-      fieldUuid,
+      columnId,
+      fieldId,
       processParameterUuid,
       browseFieldUuid,
       //
@@ -341,7 +343,9 @@ const generalInfoSearch = {
         return requestGridGeneralInfo({
           contextAttributesList,
           filters,
-          fieldUuid,
+          //
+          columnId,
+          fieldId,
           processParameterUuid,
           browseFieldUuid,
           //
@@ -355,11 +359,11 @@ const generalInfoSearch = {
         })
           .then(response => {
             let recordsList = []
-            if (response.recordsList) {
-              recordsList = response.recordsList.map(list => {
+            if (response.records) {
+              recordsList = response.records.map(row => {
                 return {
-                  ...list.attributes,
-                  IdentifierTable: list.tableName
+                  ...row.values,
+                  IdentifierTable: row.tableName
                 }
               })
             }
@@ -375,10 +379,10 @@ const generalInfoSearch = {
               containerUuid,
               currentRow,
               recordsList,
-              nextPageToken: response.nextPageToken,
+              nextPageToken: response.next_page_token,
               pageNumber,
               isLoaded: true,
-              recordCount: response.recordCount,
+              recordCount: Number(response.record_count),
               pageSize
             })
 

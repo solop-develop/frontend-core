@@ -604,27 +604,6 @@ export default defineComponent({
     function isReadOnlyField({ isQueryCriteria, isReadOnlyFromLogic }) {
       return isQueryCriteria && isReadOnlyFromLogic
     }
-    function generalInfoSearch({
-      containerUuid,
-      contextColumnNames,
-      filters,
-      uuid,
-      searchValue,
-      tableName,
-      columnName,
-      pageNumber
-    }) {
-      return store.dispatch('findGeneralInfo', {
-        containerUuid,
-        contextColumnNames,
-        filters,
-        // fieldUuid: uuid,
-        searchValue,
-        tableName,
-        columnName,
-        pageNumber
-      })
-    }
 
     function getLookupList({ parentUuid, containerUuid, contextColumnNames, uuid, id, searchValue, isAddBlankValue = false, blankValue }) {
       return store.dispatch('getLookupListFromServer', {
@@ -640,10 +619,10 @@ export default defineComponent({
       })
     }
 
-    function getSearchInfoList({
+    function getSearchRecordsList({
       parentUuid, containerUuid,
       contextColumnNames, filters, searchValue,
-      uuid, tableName, columnName,
+      id, tableName, columnName,
       pageNumber, pageSize
     }) {
       filters = [{
@@ -662,12 +641,12 @@ export default defineComponent({
         })
       }
 
-      return store.dispatch('searchInfoList', {
+      return store.dispatch('getSearchRecordsFromServer', {
         isForm: true,
         parentUuid,
         containerUuid,
         contextColumnNames,
-        fieldUuid: uuid,
+        fieldId: id,
         tableName,
         columnName,
         filters,
@@ -731,9 +710,8 @@ export default defineComponent({
       isMandatoryField,
       isDisplayedDefault,
       isReadOnlyField,
-      generalInfoSearch,
       getLookupList,
-      getSearchInfoList
+      getSearchRecordsList
     }
   }
 })

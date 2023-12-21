@@ -1,6 +1,6 @@
 <!--
   ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-  Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
   Contributor(s): Elsio Sanchez esanchez@erpya.com https://github.com/elsiosanchez
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@
               getLookupList,
               isDisplayedField,
               isDisplayedDefault,
-              generalInfoSearch,
+              getSearchRecordsList,
               isMandatoryField,
               isReadOnlyField,
               changeFieldShowedFromUser
@@ -96,7 +96,7 @@
               ...containerManager,
               getLookupList,
               isDisplayedField,
-              generalInfoSearch,
+              getSearchRecordsList,
               isDisplayedDefault,
               isMandatoryField,
               isReadOnlyField,
@@ -134,7 +134,7 @@
               ...containerManager,
               getLookupList,
               isDisplayedField,
-              generalInfoSearch,
+              getSearchRecordsList,
               isDisplayedDefault,
               isMandatoryField,
               isReadOnlyField,
@@ -184,7 +184,7 @@ import {
   isDisplayedField,
   isDisplayedDefault,
   isMandatoryField,
-  generalInfoSearch,
+  getSearchRecordsList,
   isReadOnlyField,
   changeFieldShowedFromUser
 } from '@/components/ADempiere/Form/VPOS/containerManagerPos.js'
@@ -427,7 +427,7 @@ export default {
     getLookupList,
     isDisplayedField,
     isDisplayedDefault,
-    generalInfoSearch,
+    getSearchRecordsList,
     isMandatoryField,
     isReadOnlyField,
     changeFieldShowedFromUser,

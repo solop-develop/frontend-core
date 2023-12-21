@@ -27,7 +27,7 @@ import {
   isDisplayedField,
   isDisplayedDefault,
   isMandatoryField,
-  generalInfoSearch,
+  getSearchRecordsList,
   isReadOnlyField,
   changeFieldShowedFromUser
 } from '@/components/ADempiere/Form/VPOS/containerManagerPos.js'
@@ -89,7 +89,7 @@ export default {
     getLookupList,
     isDisplayedField,
     isDisplayedDefault,
-    generalInfoSearch,
+    getSearchRecordsList,
     isMandatoryField,
     isReadOnlyField,
     changeFieldShowedFromUser,

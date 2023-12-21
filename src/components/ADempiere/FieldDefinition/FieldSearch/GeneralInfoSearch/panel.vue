@@ -114,7 +114,7 @@
             type="info"
             class="button-base-icon"
             plain
-            @click="clearFormValues(); getListGeneralInfoSearch();"
+            @click="clearFormValues(); getListSearchRecords();"
           >
             <svg-icon icon-class="layers-clear" />
           </el-button>
@@ -125,7 +125,7 @@
             class="button-base-icon"
             icon="el-icon-refresh-right"
             size="small"
-            @click="getListGeneralInfoSearch();"
+            @click="getListSearchRecords();"
           />
 
           <el-button
@@ -152,7 +152,7 @@
 import store from '@/store'
 
 // Constants
-import { GENERAL_INFO_SEARCH_LIST_FORM } from '@/utils/ADempiere/dictionary/field/generalInfoSearch'
+import { GENERAL_INFO_SEARCH_LIST_FORM } from '@/utils/ADempiere/dictionary/field/search/index.ts'
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 import { OPERATOR_LIKE } from '@/utils/ADempiere/dataUtils'
 
@@ -304,7 +304,7 @@ export default {
   watch: {
     isReadyFromGetData(isToLoad) {
       if (isToLoad) {
-        this.getListGeneralInfoSearch()
+        this.getListSearchRecords()
       }
     }
   },
@@ -315,7 +315,7 @@ export default {
     this.loadSearchFields()
 
     if (this.isReadyFromGetData) {
-      this.getListGeneralInfoSearch()
+      this.getListSearchRecords()
     }
   },
 
@@ -342,7 +342,7 @@ export default {
            * TODO: When refreshing you are making 2 list requests, you can be the
            * observer that activates the second request
           */
-          this.getListGeneralInfoSearch()
+          this.getListSearchRecords()
           break
 
         case 'close':
@@ -363,7 +363,7 @@ export default {
       })
     },
     setPage(pageNumber) {
-      this.getListGeneralInfoSearch(pageNumber, this.pageSize)
+      this.getListSearchRecords(pageNumber, this.pageSize)
     },
     subscribeChanges() {
       return store.subscribe((mutation, state) => {
@@ -371,7 +371,7 @@ export default {
           if (mutation.payload.containerUuid === this.uuidForm) {
             if (!isEmptyValue(mutation.payload.columnName) &&
               !isEmptyValue(mutation.payload.value)) {
-              this.getListGeneralInfoSearch()
+              this.getListSearchRecords()
             }
           }
         }
@@ -388,7 +388,7 @@ export default {
           })
       }
     },
-    getListGeneralInfoSearch(pageNumber = 0, pageSize) {
+    getListSearchRecords(pageNumber = 0, pageSize) {
       const values = store.getters.getValuesView({
         containerUuid: this.uuidForm,
         format: 'array'
@@ -414,12 +414,12 @@ export default {
       clearTimeout(this.timeOutRecords)
       this.timeOutRecords = setTimeout(() => {
         // search on server
-        this.containerManager.generalInfoSearch({
+        this.containerManager.getSearchRecordsList({
           containerUuid: this.uuidForm,
           parentUuid: this.metadata.parentUuid,
           tableName: this.metadata.reference.tableName,
           columnName: this.metadata.columnName,
-          uuid: this.metadata.uuid,
+          id: this.metadata.id,
           contextColumnNames: this.metadata.reference.contextColumnNames,
           filters: values,
           pageNumber,
@@ -446,7 +446,7 @@ export default {
       }, 500)
     },
     handleChangeSizePage(pageSize) {
-      this.getListGeneralInfoSearch(1, pageSize)
+      this.getListSearchRecords(1, pageSize)
     }
   }
 }

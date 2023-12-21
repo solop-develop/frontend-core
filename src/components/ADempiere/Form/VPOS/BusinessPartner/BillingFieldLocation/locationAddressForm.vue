@@ -37,7 +37,7 @@
                 getLookupList,
                 isDisplayedField,
                 isDisplayedDefault,
-                generalInfoSearch,
+                getSearchRecordsList,
                 isMandatoryField,
                 isReadOnlyField,
                 changeFieldShowedFromUser

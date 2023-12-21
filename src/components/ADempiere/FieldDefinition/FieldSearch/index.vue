@@ -31,7 +31,7 @@
 <script>
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import { iconSearchFieldByTable } from '@/utils/ADempiere/dictionary/field/generalInfoSearch'
+import { iconSearchFieldByTable } from '@/utils/ADempiere/dictionary/field/search/index.ts'
 
 /**
  * This component emulates the behavior of the search field, contemplating:

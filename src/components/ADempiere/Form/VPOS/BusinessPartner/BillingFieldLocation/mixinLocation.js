@@ -28,7 +28,7 @@ import { getSequenceAsList } from '@/utils/ADempiere/dictionary/field/locationAd
 import {
   getLookupList,
   isDisplayedField,
-  generalInfoSearch,
+  getSearchRecordsList,
   isDisplayedDefault,
   isMandatoryField,
   isReadOnlyField,
@@ -81,7 +81,7 @@ export default {
   methods: {
     getLookupList,
     isDisplayedField,
-    generalInfoSearch,
+    getSearchRecordsList,
     isDisplayedDefault,
     isMandatoryField,
     isReadOnlyField,

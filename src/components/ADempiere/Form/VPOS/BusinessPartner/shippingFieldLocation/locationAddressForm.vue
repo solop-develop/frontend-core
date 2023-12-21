@@ -38,7 +38,7 @@
                 isDisplayedField,
                 isDisplayedDefault,
                 isMandatoryField,
-                generalInfoSearch,
+                getSearchRecordsList,
                 isReadOnlyField,
                 changeFieldShowedFromUser
               }"

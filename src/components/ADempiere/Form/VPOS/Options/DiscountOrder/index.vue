@@ -30,7 +30,7 @@
           ...containerManager,
           getLookupList,
           isDisplayedDefault,
-          generalInfoSearch,
+          getSearchRecordsList,
           isDisplayedField,
           isMandatoryField,
           isReadOnlyField,
@@ -51,7 +51,7 @@ import {
   getLookupList,
   isDisplayedDefault,
   isDisplayedField,
-  generalInfoSearch,
+  getSearchRecordsList,
   isMandatoryField,
   isReadOnlyField,
   changeFieldShowedFromUser
@@ -94,7 +94,7 @@ export default {
     getLookupList,
     isDisplayedField,
     isDisplayedDefault,
-    generalInfoSearch,
+    getSearchRecordsList,
     isMandatoryField,
     isReadOnlyField,
     changeFieldShowedFromUser

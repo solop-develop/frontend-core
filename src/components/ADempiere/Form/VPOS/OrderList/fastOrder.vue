@@ -83,7 +83,7 @@
                               getLookupList,
                               isDisplayedField,
                               isDisplayedDefault,
-                              generalInfoSearch,
+                              getSearchRecordsList,
                               isMandatoryField,
                               isReadOnlyField,
                               changeFieldShowedFromUser
@@ -190,7 +190,7 @@
                     getLookupList,
                     isDisplayedField,
                     isDisplayedDefault,
-                    generalInfoSearch,
+                    getSearchRecordsList,
                     isMandatoryField,
                     isReadOnlyField,
                     changeFieldShowedFromUser
@@ -270,7 +270,7 @@ import {
   getLookupList,
   isDisplayedField,
   isDisplayedDefault,
-  generalInfoSearch,
+  getSearchRecordsList,
   isMandatoryField,
   isReadOnlyField,
   changeFieldShowedFromUser
@@ -495,7 +495,7 @@ export default {
     getLookupList,
     isDisplayedField,
     isDisplayedDefault,
-    generalInfoSearch,
+    getSearchRecordsList,
     isMandatoryField,
     isReadOnlyField,
     changeFieldShowedFromUser,

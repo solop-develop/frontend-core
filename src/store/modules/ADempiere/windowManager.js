@@ -820,12 +820,15 @@ const windowManager = {
       }
 
       // clear all tabs
-      const { tabsList } = rootGetters.getStoredWindow(parentUuid)
-      tabsList.forEach(tab => {
-        commit('clearTabData', {
-          containerUuid: tab.uuid
+      const storedWindow = rootGetters.getStoredWindow(parentUuid)
+      if (!isEmptyValue(storedWindow)) {
+        const { tabsList } = storedWindow
+        tabsList.forEach(tab => {
+          commit('clearTabData', {
+            containerUuid: tab.uuid
+          })
         })
-      })
+      }
     },
     reloadTableData({ commit, getters }, {
       containerUuid,
