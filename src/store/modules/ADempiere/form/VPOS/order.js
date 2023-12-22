@@ -111,10 +111,6 @@ export default {
           salesRepresentativeId: getters['user/userInfo'].id
         })
           .then(responseOrder => {
-            commit('setCurrentOrder', responseOrder)
-            dispatch('overloadOrder', {
-              order: responseOrder
-            })
             router.push({
               name,
               params,
@@ -123,6 +119,8 @@ export default {
                 orderId: responseOrder.id
               }
             }, () => {})
+            commit('setCurrentOrder', responseOrder)
+            // dispatch('listLines')
             resolve(responseOrder)
           })
           .catch(error => {
@@ -260,7 +258,8 @@ export default {
       getters,
       dispatch
     }, {
-      order
+      order,
+      isListLine = true
     }) {
       return new Promise(resolve => {
         const { id } = getters.getVPOS
@@ -300,7 +299,7 @@ export default {
               }
             }, () => {})
             commit('setCurrentOrder', responseOrder)
-            dispatch('listLines')
+            if (isListLine) dispatch('listLines')
             resolve(responseOrder)
           })
           .catch(error => {

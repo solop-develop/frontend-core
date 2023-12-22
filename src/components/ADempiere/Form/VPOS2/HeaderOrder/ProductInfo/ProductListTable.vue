@@ -25,11 +25,15 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       label-width="10px"
       @submit.native.prevent="notSubmitForm"
     >
-      <el-form-item :label="$t('form.productInfo.codeProduct')">
+      <el-form-item
+        :label="$t('form.productInfo.codeProduct')"
+        style="width: 100% !important;"
+      >
         <el-input
           v-model="searchValue"
           :placeholder="$t('quickAccess.searchWithEnter')"
           clearable
+          style="width: 100% !important;"
           @input="searchProduct"
         />
       </el-form-item>
