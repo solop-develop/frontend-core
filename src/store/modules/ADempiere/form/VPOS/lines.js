@@ -195,7 +195,8 @@ export default {
       price,
       quantity,
       discount_rate,
-      warehouse_id
+      warehouse_id,
+      isListLine = false
     }) {
       return new Promise(resolve => {
         const currentPos = getters.getVPOS
@@ -216,7 +217,8 @@ export default {
         })
           .then(updateLineResponse => {
             dispatch('overloadOrder', {
-              order: currentOrder
+              order: currentOrder,
+              isListLine
             })
             resolve(updateLineResponse)
           })

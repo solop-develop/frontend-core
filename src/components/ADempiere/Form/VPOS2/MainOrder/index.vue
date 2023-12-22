@@ -275,7 +275,8 @@ export default defineComponent({
               quantity: quantity_ordered,
               price
             })
-              .then(() => {
+              .then(updateLineResponse => {
+                currentLine.value.price = updateLineResponse.price
                 isLoadingQty.value = false
                 currentLine.value.isEditCurrentPrice = false
               })
@@ -296,7 +297,8 @@ export default defineComponent({
         quantity: quantity_ordered,
         price
       })
-        .then(() => {
+        .then(updateLineResponse => {
+          currentLine.value.price = updateLineResponse.price
           isLoadingPrice.value = false
           currentLine.value.isEditCurrentPrice = false
         })
@@ -316,7 +318,8 @@ export default defineComponent({
               lineId: currentLine.value.id,
               quantity
             })
-              .then(() => {
+              .then(updateLineResponse => {
+                currentLine.value.quantity_ordered = updateLineResponse.quantity_ordered
                 isLoadingQty.value = false
                 currentLine.value.isEditQtyEntered = false
               })
@@ -336,7 +339,8 @@ export default defineComponent({
         lineId: currentLine.value.id,
         quantity
       })
-        .then(() => {
+        .then(updateLineResponse => {
+          currentLine.value.quantity_ordered = updateLineResponse.quantity_ordered
           isLoadingQty.value = false
           currentLine.value.isEditQtyEntered = false
         })
@@ -360,9 +364,14 @@ export default defineComponent({
               discount_rate,
               quantity: quantity_ordered
             })
-              .finally(() => {
+              .then(updateLineResponse => {
+                currentLine.value.discount_rate = updateLineResponse.discount_rate
+                currentLine.value.isEditDiscount = false
                 isLoadingDiscount.value = false
-                currentLine.value.isEditQtyEntered = false
+              })
+              .catch(() => {
+                currentLine.value.isEditDiscount = false
+                isLoadingDiscount.value = false
               })
           },
           requestedAccess: 'IsAllowsModifyDiscount',
@@ -376,7 +385,12 @@ export default defineComponent({
         discount_rate,
         quantity: quantity_ordered
       })
-        .finally(() => {
+        .then(updateLineResponse => {
+          currentLine.value.discount_rate = updateLineResponse.discount_rate
+          currentLine.value.isEditDiscount = false
+          isLoadingDiscount.value = false
+        })
+        .catch(() => {
           currentLine.value.isEditDiscount = false
           isLoadingDiscount.value = false
         })

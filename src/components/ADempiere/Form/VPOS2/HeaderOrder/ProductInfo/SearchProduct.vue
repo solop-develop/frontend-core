@@ -133,6 +133,7 @@ export default defineComponent({
     function localSearch(search, callBack) {
       if (search !== '') {
         isLoading.value = true
+        clearTimeout()
         setTimeout(() => {
           productList.value = []
           store.dispatch('searchProductList', {
@@ -149,7 +150,7 @@ export default defineComponent({
               callBack(productList.value)
               isLoading.value = false
             })
-        }, 200)
+        }, 100)
       } else {
         this.options = []
       }
@@ -196,9 +197,10 @@ export default defineComponent({
           }
           store.dispatch('updateCurrentLine', {
             lineId: isProduct.id,
-            quantity: Number(isProduct.quantity_ordered) + 1
+            quantity: Number(isProduct.quantity_ordered) + 1,
+            isListLine: true
           })
-            .finally(() => {
+            .finally(updateLineResponse => {
               searchProduct.value = ''
               autocompleteSearchProduct.value.close()
               autocompleteSearchProduct.value.suggestions = []
