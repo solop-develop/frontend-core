@@ -38,7 +38,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         type="primary"
         icon="el-icon-shopping-cart-full"
         class="button-base-icon"
-        :disabled="isLoadingProcess"
+        :disabled="isLoadingProcess || isLoading"
         :loading="isLoadingProcess"
         @click="processOrdes"
       />
@@ -118,6 +118,7 @@ export default defineComponent({
         refund_amount,
         open_amount
       } = currentOrder.value
+      if (isLoading.value) return
       const total = Number(grand_total) + Number(charge_amount) - Number(credit_amount) - Number(payment_amount)
       if (total === 0) {
         isLoadingProcess.value = true

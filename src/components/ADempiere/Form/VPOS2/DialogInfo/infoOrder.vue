@@ -91,7 +91,11 @@ export default defineComponent({
     })
 
     const displayCurrency = computed(() => {
-      return store.getters.getVPOS.display_currency
+      const currency = store.getters.getVPOS.display_currency
+      if (currency) return currency
+      return {
+        iso_code: ''
+      }
     })
 
     const dayRate = computed(() => {

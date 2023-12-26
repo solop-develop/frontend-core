@@ -340,7 +340,7 @@ export default {
           salesRepresentativeId: currentPos.sales_representative.id
         })
           .then(response => {
-            dispatch('overloadOrder', { order: currentOrder })
+            dispatch('overloadOrder', { order: response })
             resolve(response)
           })
           .catch(error => {
