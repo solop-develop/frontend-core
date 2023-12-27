@@ -17,7 +17,7 @@
  */
 
 // Get Instance for connection
-import { request } from '@/utils/ADempiere/request'
+import { request } from '@/utils/ADempiere/request.js'
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 // Constants
@@ -32,7 +32,7 @@ export function requestCreateResource({
   date
 }) {
   return request({
-    url: '/form/addons/time-record',
+    url: '/time-record/time-records',
     method: 'post',
     data: {
       //  DSL Query
@@ -52,7 +52,7 @@ export function requestCreateResource({
 
 export function requestListTimeRecord() {
   return request({
-    url: '/form/addons/time-record',
+    url: '/time-record/time-records',
     method: 'get'
   })
     .then(response => {
@@ -62,7 +62,7 @@ export function requestListTimeRecord() {
 
 export function requestlistProject() {
   return request({
-    url: '/form/addons/time-record/projects',
+    url: '/time-record/projects',
     method: 'get'
   })
     .then(response => {
@@ -72,7 +72,7 @@ export function requestlistProject() {
 
 export function requestlistIssues() {
   return request({
-    url: '/form/addons/time-record/issues',
+    url: '/time-record/issues',
     method: 'get'
   })
     .then(response => {
