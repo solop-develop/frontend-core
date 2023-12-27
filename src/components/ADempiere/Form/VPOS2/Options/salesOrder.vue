@@ -570,7 +570,6 @@ export default defineComponent({
       },
       // setter
       set(show) {
-        console.log({ show })
         store.commit('setShowOrdersHistory', show)
       }
     })

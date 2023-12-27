@@ -216,7 +216,6 @@ export default {
           posId: id
         })
           .then(response => {
-            console.log({ ...response })
             const {
               records
             } = response
