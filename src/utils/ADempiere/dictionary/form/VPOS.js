@@ -17,9 +17,11 @@
  */
 
 import store from '@/store'
+import language from '@/lang'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'
+import { showMessage } from '@/utils/ADempiere/notification'
 import { formatPrice } from '@/utils/ADempiere/valueFormat.js'
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 
@@ -479,4 +481,293 @@ export function sizeTableColumn(columnName) {
       break
   }
   return size
+}
+
+/**
+ * CommandShortcuts
+ */
+export function CommandShortcutsVPOS(options) {
+  if (isEmptyValue(options)) return
+  const {
+    is_allows_create_order,
+    is_allows_return_order,
+    is_allows_print_document,
+    is_allows_preview_document,
+    is_allows_confirm_shipment,
+    is_allows_cash_opening,
+    is_allows_cash_closing,
+    is_allows_allocate_seller
+  } = store.getters.getVPOS
+  const currentOrder = store.getters.getCurrentOrder
+  const { command } = options
+  switch (command) {
+    case 'newOrder':
+      if (!is_allows_create_order) {
+        store.dispatch('setModalPin', {
+          title: language.t('form.pos.pinMessage.pin') + '( ' + language.t('form.pos.pinMessage.newOrder') + ' )',
+          doneMethod: () => {
+            store.dispatch('newOrder')
+          },
+          requestedAccess: 'IsAllowsCreateOrder',
+          isShowed: true
+        })
+        return
+      }
+      store.dispatch('newOrder')
+        .then(() => {
+          store.dispatch('listLines')
+        })
+      showMessage({
+        type: 'success',
+        message: language.t('form.mnemonicCommand.title') + '( ' + language.t('form.pos.optionsPoinSales.salesOrder.newOrder') + ' )',
+        showClose: true
+      })
+      break
+    case 'ordersHistory':
+      store.commit('setShowOrdersHistory', true)
+      showMessage({
+        type: 'success',
+        message: language.t('form.mnemonicCommand.title') + '( ' + language.t('form.pos.optionsPoinSales.salesOrder.ordersHistory') + ' )',
+        showClose: true
+      })
+      break
+    case 'completePreparedOrder':
+      if (isEmptyValue(currentOrder.id)) {
+        showMessage({
+          type: 'warning',
+          message: language.t('form.mnemonicCommand.emptyOrder'),
+          showClose: true
+        })
+        return
+      }
+      showMessage({
+        type: 'success',
+        message: language.t('form.mnemonicCommand.title') + '( ' + language.t('form.pos.optionsPoinSales.salesOrder.completePreparedOrder') + ' )',
+        showClose: true
+      })
+      store.dispatch('process', {})
+      break
+    case 'cancelSaleTransaction':
+      if (!is_allows_return_order) return
+      showMessage({
+        type: 'success',
+        message: language.t('form.mnemonicCommand.title') + '( ' + language.t('form.pos.optionsPoinSales.salesOrder.cancelSaleTransaction') + ' )',
+        showClose: true
+      })
+      store.dispatch('reverseSales', {
+        description: language.t('form.mnemonicCommand.title') + '( ' + language.t('form.pos.optionsPoinSales.salesOrder.cancelSaleTransaction')
+      })
+      break
+    case 'print':
+      if (!is_allows_print_document) return
+      showMessage({
+        type: 'success',
+        message: language.t('form.mnemonicCommand.title') + '( ' + language.t('form.pos.optionsPoinSales.salesOrder.print') + ' )',
+        showClose: true
+      })
+      store.dispatch('printTicketVPOS', {
+        orderId: currentOrder.id
+      })
+      break
+    case 'preview':
+      if (!is_allows_preview_document) return
+      showMessage({
+        type: 'success',
+        message: language.t('form.mnemonicCommand.title') + '( ' + language.t('form.pos.optionsPoinSales.salesOrder.preview') + ' )',
+        showClose: true
+      })
+      store.dispatch('printPreview', {
+        orderId: currentOrder.id
+      })
+      break
+    case 'copyOrder':
+      if (isEmptyValue(currentOrder.id)) {
+        showMessage({
+          type: 'warning',
+          message: language.t('form.mnemonicCommand.emptyOrder'),
+          showClose: true
+        })
+        return
+      }
+      showMessage({
+        type: 'success',
+        message: language.t('form.mnemonicCommand.title') + '( ' + language.t('form.pos.optionsPoinSales.salesOrder.copyOrder') + ' )',
+        showClose: true
+      })
+      store.dispatch('copyOrder', {
+        sourceOrderId: currentOrder.id
+      })
+      break
+    case 'cancelOrder':
+      if (isEmptyValue(currentOrder.id)) {
+        showMessage({
+          type: 'warning',
+          message: language.t('form.mnemonicCommand.emptyOrder'),
+          showClose: true
+        })
+        return
+      }
+      showMessage({
+        type: 'success',
+        message: language.t('form.mnemonicCommand.title') + '( ' + language.t('form.pos.optionsPoinSales.salesOrder.cancelOrder') + ' )',
+        showClose: true
+      })
+      store.dispatch('deleteOrder')
+      break
+    case 'confirmDelivery':
+      if (!is_allows_confirm_shipment) return
+      if (isEmptyValue(currentOrder.id)) {
+        showMessage({
+          type: 'warning',
+          message: language.t('form.mnemonicCommand.emptyOrder'),
+          showClose: true
+        })
+        return
+      }
+      showMessage({
+        type: 'success',
+        message: language.t('form.mnemonicCommand.title') + '( ' + language.t('form.pos.optionsPoinSales.salesOrder.confirmDelivery') + ' )',
+        showClose: true
+      })
+      store.dispatch('newShipment', {})
+      store.dispatch('setModalDialogVPOS', {
+        title: language.t('form.pos.optionsPoinSales.salesOrder.confirmDelivery'),
+        doneMethod: () => {
+          store.commit('setShowedModalDialogVPOS', {
+            isShowed: false
+          })
+          setTimeout(() => {
+            store.dispatch('setModalDialogVPOS', {
+              title: language.t('form.pos.optionsPoinSales.salesOrder.confirmDelivery'),
+              doneMethod: () => {
+                store.dispatch('sendProcessShipment')
+              },
+              isDisabledDone: () => {
+                return isEmptyValue(store.getters.getCurrentShipment) || isEmptyValue(store.getters.getShipmentList)
+              },
+              componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/Shipments/info.vue'),
+              isShowed: true
+            })
+          })
+        },
+        componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/Shipments/index.vue'),
+        isShowed: true
+      })
+      break
+    case 'deliverAllProducts':
+      if (!is_allows_confirm_shipment) return
+      if (isEmptyValue(currentOrder.id)) {
+        showMessage({
+          type: 'warning',
+          message: language.t('form.mnemonicCommand.emptyOrder'),
+          showClose: true
+        })
+        return
+      }
+      showMessage({
+        type: 'success',
+        message: language.t('form.mnemonicCommand.title') + '( ' + language.t('form.pos.optionsPoinSales.salesOrder.deliverAllProducts') + ' )',
+        showClose: true
+      })
+      store.dispatch('newShipment', {
+        isCreateLinesFromOrder: true
+      })
+      store.dispatch('setModalDialogVPOS', {
+        title: language.t('form.pos.optionsPoinSales.salesOrder.confirmDelivery'),
+        doneMethod: () => {
+          store.commit('setShowedModalDialogVPOS', {
+            isShowed: false
+          })
+          setTimeout(() => {
+            store.dispatch('setModalDialogVPOS', {
+              title: language.t('form.pos.optionsPoinSales.salesOrder.confirmDelivery'),
+              doneMethod: () => {
+                store.dispatch('sendProcessShipment')
+              },
+              isDisabledDone: () => {
+                return isEmptyValue(store.getters.getCurrentShipment) || isEmptyValue(store.getters.getShipmentList)
+              },
+              componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/Shipments/info.vue'),
+              isShowed: true
+            })
+          })
+        },
+        componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/Shipments/index.vue'),
+        isShowed: true
+      })
+      break
+    case 'cashOpening':
+      if (!is_allows_cash_opening) return
+      showMessage({
+        type: 'success',
+        message: language.t('form.mnemonicCommand.title') + '( ' + language.t('form.pos.optionsPoinSales.cashManagement.cashOpening') + ' )',
+        showClose: true
+      })
+      store.dispatch('listPaymentsOpen')
+      store.dispatch('setModalDialogVPOS', {
+        title: language.t('form.pos.optionsPoinSales.cashManagement.cashOpening'),
+        doneMethod: () => {
+          store.dispatch('cashOpening')
+        },
+        isDisabledDone: () => {
+          return isEmptyValue(store.getters.getAttributeCashOpenFields({
+            attribute: 'collectionAgent'
+          }))
+        },
+        componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/cashManagement/cashOpening/panel.vue'),
+        isShowed: true
+      })
+      break
+    case 'closeBox':
+      if (!is_allows_cash_closing) return
+      showMessage({
+        type: 'success',
+        message: language.t('form.mnemonicCommand.title') + '( ' + language.t('form.pos.optionsPoinSales.cashManagement.closeBox') + ' )',
+        showClose: true
+      })
+      store.dispatch('listCashMovements', {})
+      store.dispatch('setModalDialogVPOS', {
+        title: language.t('form.pos.optionsPoinSales.cashManagement.closeBox'),
+        doneMethod: () => {
+          store.dispatch('processCashClosing')
+        },
+        componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/cashManagement/cashClosing/panel.vue'),
+        isShowed: true
+      })
+      break
+    case 'assignSeller':
+      if (!is_allows_allocate_seller) return
+      showMessage({
+        type: 'success',
+        message: language.t('form.mnemonicCommand.title') + '( ' + language.t('form.pos.optionsPoinSales.cashManagement.assignSeller') + ' )',
+        showClose: true
+      })
+      store.dispatch('listAvailableSellers')
+      store.dispatch('setModalDialogVPOS', {
+        title: language.t('form.pos.optionsPoinSales.cashManagement.assignSeller'),
+        doneMethod: () => {
+          store.dispatch('allocateSeller')
+        },
+        componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/cashManagement/seller/panel.vue'),
+        isShowed: true
+      })
+      break
+    case 'unassignSeller':
+      if (!is_allows_allocate_seller) return
+      showMessage({
+        type: 'success',
+        message: language.t('form.mnemonicCommand.title') + '( ' + language.t('form.pos.optionsPoinSales.cashManagement.unassignSeller') + ' )',
+        showClose: true
+      })
+      store.dispatch('listAvailableSellers')
+      store.dispatch('setModalDialogVPOS', {
+        title: language.t('form.pos.optionsPoinSales.cashManagement.assignSeller'),
+        doneMethod: () => {
+          store.dispatch('allocateSeller')
+        },
+        componentPath: () => import('@/components/ADempiere/Form/VPOS2/Options/cashManagement/seller/panel.vue'),
+        isShowed: true
+      })
+      break
+  }
 }

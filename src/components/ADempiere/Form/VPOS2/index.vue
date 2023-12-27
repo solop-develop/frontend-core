@@ -16,7 +16,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <template>
   <el-container
+    v-shortkey="keyListCommant"
     class="v-pos"
+    @shortkey.native="theActionCommand"
   >
     <el-aside :width="widthAside" class="panel-options">
       <el-card
@@ -36,7 +38,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         />
       </el-card>
     </el-aside>
-    <el-main class="panel-main">
+    <el-main
+      class="panel-main"
+    >
       <el-header style="height: auto !important;margin-bottom: 10px;">
         <header-order />
         <!-- {{ 'Header Order' }} -->
@@ -70,6 +74,8 @@ import { defineComponent, computed, watch } from '@vue/composition-api'
 // import lang from '@/lang'
 import store from '@/store'
 // import router from '@/router'
+// Const
+import keyListCommant from '@/components/ADempiere/Form/VPOS2/Options/cashManagement/mnemonicCommand/keyListCommant'
 // Component and Mixins
 import HeaderOrder from './HeaderOrder'
 import MainOrder from './MainOrder'
@@ -79,7 +85,8 @@ import DialogInfo from './DialogInfo'
 import ModalPin from './DialogInfo/pin.vue'
 import Options from './Options'
 // Utils and Helper Methods
-// import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { CommandShortcutsVPOS } from '@/utils/ADempiere/dictionary/form/VPOS'
 
 export default defineComponent({
   name: 'NewVPOS',
@@ -98,6 +105,10 @@ export default defineComponent({
     const bodyStyuleCard = computed(() => {
       if (isShowOptions.value) return '10px'
       return '0px'
+    })
+
+    const listCommand = computed(() => {
+      return store.getters.getListCommand
     })
 
     const showCollection = computed({
@@ -137,6 +148,14 @@ export default defineComponent({
       showCollection.value = false
     }
 
+    function theActionCommand(event) {
+      const { srcKey } = event
+      const isExist = listCommand.value.find(element => element.shortcut === ('ctrl + ' + srcKey))
+      if (!isEmptyValue(isExist)) {
+        CommandShortcutsVPOS(isExist)
+      }
+    }
+
     watch(showCollection, (newValue, oldValue) => {
       if (newValue) store.dispatch('getListPayments')
     })
@@ -146,8 +165,12 @@ export default defineComponent({
       showCollection,
       isShowOptions,
       iconsButtons,
+      listCommand,
       widthAside,
-      handleClose
+      keyListCommant,
+      handleClose,
+      CommandShortcutsVPOS,
+      theActionCommand
     }
   }
 })

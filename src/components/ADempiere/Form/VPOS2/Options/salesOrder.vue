@@ -570,6 +570,7 @@ export default defineComponent({
       },
       // setter
       set(show) {
+        console.log({ show })
         store.commit('setShowOrdersHistory', show)
       }
     })
@@ -688,7 +689,7 @@ export default defineComponent({
 
     function listOrders() {
       if (isShowOrdersHistory.value) return
-      store.commit('setShowOrdersHistory', { show: true, qlq: 'listOrders' })
+      store.commit('setShowOrdersHistory', true)
     }
 
     function addResource() {
@@ -774,7 +775,7 @@ export default defineComponent({
       if (isLoadingCopyOrder.value) return
       isLoadingCopyOrder.value = true
       store.dispatch('copyOrder', {
-        sourceOrderId: currentOrder.id
+        sourceOrderId: currentOrder.value.id
       })
         .then(() => {
           isLoadingCopyOrder.value = false

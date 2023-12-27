@@ -137,6 +137,9 @@ export default {
             })
             resolve({})
           })
+          .finally(() => {
+            resolve({})
+          })
       })
     },
     // /**
@@ -325,7 +328,7 @@ export default {
       return new Promise(resolve => {
         const pos = getters.getVPOS
         if (isEmptyValue(order)) resolve({})
-        if (order.document_status.value === 'CO') {
+        if (['CO', 'VO', 'CL'].includes(order.document_status.value)) {
           resolve({})
           return
         }
@@ -374,7 +377,8 @@ export default {
       return new Promise(resolve => {
         const pos = getters.getVPOS
         if (isEmptyValue(order)) resolve({})
-        if (order.document_status.value === 'CO') {
+        console.log(order.document_status.value)
+        if (['CO', 'VO', 'CL'].includes(order.document_status.value)) {
           dispatch('overloadOrder', { order })
           resolve({})
           return

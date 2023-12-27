@@ -21,6 +21,7 @@ const mnemonicCommand = {
   modifyKeyboardShortcuts: 'Modify Keyboard Shortcuts',
   addKeyboardShortcuts: 'Add Shortcut',
   help: 'Help',
+  emptyOrder: 'Select a Sales Order',
   lockedKeyCombination: 'Locked Key Combination',
   acceptedKeyCombination: 'Accepted Key Combination',
   listAllowedKeys: 'List of Allowed Keys',
