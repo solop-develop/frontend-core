@@ -79,7 +79,7 @@ import mixinDashboard from '@/components/ADempiere/Dashboard/mixinDashboard.js'
 import { getFavoritesRequest } from '@/api/ADempiere/dashboard/index.ts'
 
 // Utils and Helper Methods
-import { convertAction } from '@/utils/ADempiere/dictionaryUtils.js'
+import { convertAction } from '@/utils/ADempiere/dictionary/menu'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 
 export default {
