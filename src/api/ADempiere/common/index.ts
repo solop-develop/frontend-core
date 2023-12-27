@@ -18,6 +18,7 @@
 
 import { request } from '@/utils/ADempiere/request'
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
+
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
@@ -179,17 +180,6 @@ export function requestListBusinessPartner({
       page_token: pageToken
     }
   })
-    .then(businessPartnerResponse => {
-      const { convertBusinessPartner } = require('@/utils/ADempiere/apiConverts/core.js')
-
-      return {
-        nextPageToken: businessPartnerResponse.next_page_token,
-        recordCount: businessPartnerResponse.record_count,
-        recordsList: businessPartnerResponse.business_partners.map(businessPartner => {
-          return convertBusinessPartner(businessPartner)
-        })
-      }
-    })
 }
 
 /**
