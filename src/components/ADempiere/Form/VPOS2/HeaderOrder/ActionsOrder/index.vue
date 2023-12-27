@@ -323,6 +323,9 @@ export default defineComponent({
         return
       }
       store.dispatch('newOrder')
+        .finally(() => {
+          store.dispatch('listLines')
+        })
     }
 
     /**

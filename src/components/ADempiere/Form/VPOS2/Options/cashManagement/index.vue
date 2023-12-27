@@ -34,6 +34,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     <el-col v-if="isAllowsAllocateSeller" :span="8">
       <unassign-seller />
     </el-col>
+    <el-col :span="8">
+      <mnemonic-command />
+    </el-col>
   </el-row>
 </template>
 
@@ -47,6 +50,7 @@ import cashClosing from './cashClosing/index.vue'
 import cashDetailClosing from './cashDetailClosing'
 import seller from '@/components/ADempiere/Form/VPOS2/Options/cashManagement/seller/index.vue'
 import unassignSeller from './unassignSeller'
+import mnemonicCommand from './mnemonicCommand'
 
 export default defineComponent({
   name: 'cashManagement',
@@ -56,6 +60,7 @@ export default defineComponent({
     cashClosing,
     cashWithdrawal,
     unassignSeller,
+    mnemonicCommand,
     cashDetailClosing
   },
   setup() {

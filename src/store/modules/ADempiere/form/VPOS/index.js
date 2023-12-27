@@ -29,6 +29,9 @@ import {
   listAvailableDocumentTypes
   // listAvailableDiscounts,
 } from '@/api/ADempiere/form/VPOS'
+import {
+  listCommandShortcut
+} from '@/api/ADempiere/form/VPOS/CommandShortcut'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification'
@@ -38,8 +41,9 @@ const VPOS = {
   listWarehouses: [],
   listCurrencies: [],
   listCampaigns: [],
-  listPrices: [],
+  listCommand: [],
   listSellers: [],
+  listPrices: [],
   currentPos: {},
   listPos: []
 }
@@ -67,6 +71,9 @@ export default {
     },
     setListDocumentTypes(state, list) {
       state.listDocumentTypes = list
+    },
+    setListCommand(state, list) {
+      state.listCommand = list
     }
   },
   /**
@@ -158,7 +165,8 @@ export default {
      * @param {Object} Point
      */
     changeVPOS({
-      commit
+      commit,
+      dispatch
     }, {
       getPointOfSales
     }) {
@@ -167,6 +175,9 @@ export default {
           resolve({})
           return
         }
+        dispatch('listCommandShortcutsVPOS', {
+          pointOfSales: getPointOfSales
+        })
         commit('setVPOS', getPointOfSales)
         commit('setOrder', {})
         const currentRouter = router.app.$route
@@ -185,6 +196,45 @@ export default {
           }
         }, () => {})
         resolve(getPointOfSales)
+      })
+    },
+    /**
+     * list Command Shortcut Current POS
+     */
+    listCommandShortcutsVPOS({
+      commit,
+      getters
+    }, {
+      pointOfSales
+    }) {
+      return new Promise(resolve => {
+        if (isEmptyValue(pointOfSales)) {
+          pointOfSales = getters.getVPOS
+        }
+        const { id } = pointOfSales
+        listCommandShortcut({
+          posId: id
+        })
+          .then(response => {
+            const {
+              records
+            } = response
+            commit('setListCommand', records)
+          })
+          .catch(error => {
+            console.warn(`list Command Shortcut: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve([])
+          })
       })
     },
     /**
@@ -384,6 +434,9 @@ export default {
     },
     getListDocumentTypes: (state) => {
       return state.listDocumentTypes
+    },
+    getListCommand: (state) => {
+      return state.listCommand
     }
   }
 }
