@@ -66,7 +66,7 @@ import mixinDashboard from '@/components/ADempiere/Dashboard/mixinDashboard.js'
 
 // Utils and Helper Methods
 import { translateDate } from '@/utils/ADempiere/formatValue/dateFormat'
-import { convertAction } from '@/utils/ADempiere/dictionaryUtils'
+import { convertAction } from '@/utils/ADempiere/dictionary/menu'
 
 export default {
   name: 'RecentItems',
