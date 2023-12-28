@@ -49,8 +49,10 @@
 
 <script>
 import { defineComponent, computed, ref } from '@vue/composition-api'
+
 import router from '@/router'
 import store from '@/store'
+
 // Utils and Helper Methods
 import { getImagePath } from '@/utils/ADempiere/resource.js'
 
@@ -63,6 +65,7 @@ export default defineComponent({
       required: true
     }
   },
+
   setup() {
     // Ref
     const title = ref('ADempiere')
@@ -81,8 +84,8 @@ export default defineComponent({
     const storedOrganization = computed(() => {
       return store.getters['user/getOrganization']
     })
-    // Methods
 
+    // Methods
     async function loadImage() {
       const { client } = getRole.value
       if (client.logo) {
