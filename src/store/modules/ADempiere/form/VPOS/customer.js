@@ -440,6 +440,9 @@ export default {
         const value = getters.getAttributeFieldCustomer({
           attribute: 'code'
         })
+        const taxId = getters.getAttributeFieldCustomer({
+          attribute: 'identificationNumber'
+        })
         const name = getters.getAttributeFieldCustomer({
           attribute: 'name'
         })
@@ -452,6 +455,7 @@ export default {
           name,
           posId: pos.id,
           value,
+          taxId,
           lastName
         })
           .then(response => {
@@ -530,6 +534,9 @@ export default {
         const value = getters.getAttributeFieldCustomerEdit({
           attribute: 'code'
         })
+        const taxId = getters.getAttributeFieldCustomerEdit({
+          attribute: 'identificationNumber'
+        })
         const name = getters.getAttributeFieldCustomerEdit({
           attribute: 'name'
         })
@@ -557,6 +564,7 @@ export default {
           posId: pos.id,
           id: order.customer.id,
           value,
+          taxId,
           lastName
         })
           .then(response => {
