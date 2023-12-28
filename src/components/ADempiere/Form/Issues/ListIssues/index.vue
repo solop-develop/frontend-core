@@ -485,7 +485,13 @@ export default defineComponent({
     function updateStatus(params) {
       let element = {}
       if (isEmptyValue(params) && isEmptyValue(params.removed.element) && isEmptyValue(params.add.element)) return
-      element = !isEmptyValue(params.removed) ? params.removed.element : params.add.element
+      if (params.removed) {
+        element = params.removed.element
+      }
+      if (params.add) {
+        element = params.add.element
+      }
+      // element = !isEmptyValue(params.removed) ? params.removed.element : params.add.element
       if (isEmptyValue(element)) return
       const {
         id,
