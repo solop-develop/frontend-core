@@ -193,47 +193,14 @@
         </el-row>
 
         <!-- List View -->
-        <el-row v-else :gutter="20">
-          <el-col v-for="(file, key) in attachmentList" :key="key" :span="24">
-            <el-card shadow="hover" :class="{ 'image-attachment': true, 'is-current': isCurrent(file) }">
-              <div style="float: left;width: 40%; height: 100px;">
-                <el-image
-                  class="image-card-attachment"
-                  :src="file.src"
-                  fit="contain"
-                  :preview-src-list="previewList"
-                  style="padding-left: 0px;padding-right: 0px;border: 1px solid rgba(184, 186, 188, 0.64);width: 150px;height: 100px;float: left;margin-top: 5%;"
-                />
-              </div>
-              <div style="float: left;padding-top: 2%;width: 60%;">
-                <el-radio
-                  v-if="isSelectable"
-                  v-model="resourceReference.id"
-                  :label="file.id"
-                  @click="resourceReference = file"
-                >
-                  {{ file.name }}
-                </el-radio>
-                <p
-                  v-else
-                  style="font-size: 14px;box-sizing: border-box;overflow: hidden;text-overflow: ellipsis;white-space: normal;word-break: break-all;text-align: end;padding-right: 10px;"
-                >
-                  {{ file.name }}
-                  <br>
-                  {{ formatFileSize(file.file_size) }}
-                </p>
-                <!-- <b>{{ file.name }}</b> -->
-                <br>
-                <!-- <span>{{ formatFileSize(file.file_size) }}</span> -->
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
+        <list-view v-else :is-selectable="isSelectable" />
       </el-card>
+
       <div v-if="isEmptyValue(attachmentList)">
         <el-empty />
       </div>
     </el-main>
+
     <!-- Add Description -->
     <el-footer
       height="auto"
@@ -306,6 +273,7 @@
 </template>
 
 <script src="./attachment.js" />
+
 <style lang="scss" scoped src="./attchment.scss" />
 <style scoped>
 .attachment-panel {

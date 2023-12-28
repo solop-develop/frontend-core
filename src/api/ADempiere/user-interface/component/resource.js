@@ -22,37 +22,6 @@ import { request } from '@/utils/ADempiere/request'
 // Constants
 import { config } from '@/utils/ADempiere/config'
 
-// Download a resource from file name
-export function requestResource({ resourceUuid, resourceName }, callBack = {
-  onData: () => {},
-  onStatus: () => {},
-  onEnd: () => {}
-}) {
-  const { getResoursePath } = require('@/utils/ADempiere/resource.js')
-  const { urn } = getResoursePath({
-    resourceUuid,
-    resourceName
-  })
-  return request({
-    url: urn,
-    method: 'get',
-    // responseType: 'arraybuffer',
-    baseURL: config.adempiere.resource.url
-  })
-}
-
-export function requestDownloadResource({ resourceUuid, resourceName }) {
-  return request({
-    url: '/user-interface/component/resource/download',
-    method: 'get',
-    // responseType: 'arraybuffer',
-    params: {
-      resource_uuid: resourceUuid,
-      resource_name: resourceName
-    }
-  })
-}
-
 /**
  * Get image with uri request
  * @param {string} file

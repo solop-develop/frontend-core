@@ -127,11 +127,10 @@ export async function getImagePath({
       operation
     })
       .then(async response => {
-        const { data } = response[0]
         image = await buildLinkHref({
           fileName: file,
           mimeType: file.split('.').pop(),
-          outputStream: data
+          outputStream: response
         })
         resolve(image)
         return image
@@ -209,27 +208,34 @@ export function buildBlobAndValues({
   mimeType,
   outputStream
 }) {
-  let dataValues = outputStream
+  let buffer = outputStream
 
   if (getTypeOfValue(outputStream) === 'OBJECT') {
-    dataValues = Object.values(outputStream)
+    buffer = Object.values(outputStream)
   } else if (getTypeOfValue(outputStream) === 'STRING') {
-    dataValues = Buffer.from(outputStream, 'base64')
+    buffer = Buffer.from(outputStream, 'base64')
+  } else if (getTypeOfValue(outputStream) === 'ARRAY') {
+    const base64_array = outputStream.map(part => part.data)
+    const base64_string = base64_array.join('')
+    buffer = Buffer.from(
+      base64_string,
+      'base64'
+    )
   }
 
   const blobFile = new Blob([
-    Uint8Array.from(dataValues)
+    Uint8Array.from(buffer)
   ], {
     type: mimeType
   })
 
   // const blobFile = new Blob(
-  //   [outputStream],
+  //   [buffer],
   //   { type: mimeType }
   // )
 
   return {
-    dataValues,
+    dataValues: buffer,
     blobFile
   }
 }
@@ -250,30 +256,28 @@ export function buildLinkHref({
   outputStream,
   isDownload = false
 }) {
-  return new Promise((resolve) => {
-    if (isEmptyValue(mimeType)) {
-      if (isEmptyValue(extension)) {
-        extension = getExtensionFromFile(fileName)
-      }
-      mimeType = mimeTypeOfReport[extension]
+  if (isEmptyValue(mimeType)) {
+    if (isEmptyValue(extension)) {
+      extension = getExtensionFromFile(fileName)
     }
+    mimeType = mimeTypeOfReport[extension]
+  }
 
-    const { blobFile } = buildBlobAndValues({
-      mimeType,
-      outputStream
-    })
-
-    const link = document.createElement('a')
-    link.href = window.URL.createObjectURL(blobFile)
-    link.download = fileName
-
-    // download report file
-    if (isDownload) {
-      link.click()
-    }
-
-    return resolve(link)
+  const { blobFile } = buildBlobAndValues({
+    mimeType,
+    outputStream
   })
+
+  const link = document.createElement('a')
+  link.href = window.URL.createObjectURL(blobFile)
+  link.download = fileName
+
+  // download report file
+  if (isDownload) {
+    link.click()
+  }
+
+  return link
 }
 
 /**
