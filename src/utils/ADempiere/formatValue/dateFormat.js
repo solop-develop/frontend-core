@@ -103,14 +103,13 @@ export function formatDate({ value, isTime = false, isDate = false, format }) {
   if (getTypeOfValue(value) === 'DATE') {
     value = value.getTime()
   }
+  const formatMoment = getDateFormat({
+    format,
+    isTime,
+    isDate
+  })
 
-  return moment.utc(value).format(
-    getDateFormat({
-      format,
-      isTime,
-      isDate
-    })
-  )
+  return moment.utc(value).format(formatMoment)
 }
 
 export function dateTimeFormats(date, format) {
