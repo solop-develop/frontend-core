@@ -62,7 +62,12 @@
             v-else-if="scope.row[header.columnName].length < 13 || (typeof scope.row[header.columnName] === 'number')"
             style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;line-height: 12px;margin: 0px;"
           >
-            {{ scope.row[header.columnName] }}
+            <span v-if="['document_no', 'date_invoiced', 'description'].includes(header.columnName)">
+              {{ scope.row[header.columnName] }}
+            </span>
+            <span v-else>
+              {{ formatPrice({ value: Number(scope.row[header.columnName]), currency: scope.row.currency.iso_code }) }}
+            </span>
           </p>
           <p
             v-else
@@ -100,6 +105,7 @@ import headersInvoice from './headersInvoice.js'
 
 // Utils and Helper Methods
 import { isEmptyValue, getTypeOfValue } from '@/utils/ADempiere/valueUtils'
+import { formatPrice } from '@/utils/ADempiere/formatValue/numberFormat'
 
 export default defineComponent({
   name: 'InvocesTable',
@@ -277,6 +283,7 @@ export default defineComponent({
       listInvoces,
       // Methods
       isCellInput,
+      formatPrice,
       selectionInvoces,
       selectionInvocesAll
     }
