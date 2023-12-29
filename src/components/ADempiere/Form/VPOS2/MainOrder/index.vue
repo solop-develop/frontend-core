@@ -277,6 +277,7 @@ export default defineComponent({
             })
               .then(updateLineResponse => {
                 currentLine.value.price = updateLineResponse.price
+                currentLine.value.total_amount_with_tax = updateLineResponse.total_amount_with_tax
                 isLoadingQty.value = false
                 currentLine.value.isEditCurrentPrice = false
               })
@@ -299,6 +300,7 @@ export default defineComponent({
       })
         .then(updateLineResponse => {
           currentLine.value.price = updateLineResponse.price
+          currentLine.value.total_amount_with_tax = updateLineResponse.total_amount_with_tax
           isLoadingPrice.value = false
           currentLine.value.isEditCurrentPrice = false
         })
@@ -320,6 +322,7 @@ export default defineComponent({
             })
               .then(updateLineResponse => {
                 currentLine.value.quantity_ordered = updateLineResponse.quantity_ordered
+                currentLine.value.total_amount_with_tax = updateLineResponse.total_amount_with_tax
                 isLoadingQty.value = false
                 currentLine.value.isEditQtyEntered = false
               })
@@ -341,6 +344,7 @@ export default defineComponent({
       })
         .then(updateLineResponse => {
           currentLine.value.quantity_ordered = updateLineResponse.quantity_ordered
+          currentLine.value.total_amount_with_tax = updateLineResponse.total_amount_with_tax
           isLoadingQty.value = false
           currentLine.value.isEditQtyEntered = false
         })
@@ -366,6 +370,7 @@ export default defineComponent({
             })
               .then(updateLineResponse => {
                 currentLine.value.discount_rate = updateLineResponse.discount_rate
+                currentLine.value.total_amount_with_tax = updateLineResponse.total_amount_with_tax
                 currentLine.value.isEditDiscount = false
                 isLoadingDiscount.value = false
               })
@@ -387,6 +392,7 @@ export default defineComponent({
       })
         .then(updateLineResponse => {
           currentLine.value.discount_rate = updateLineResponse.discount_rate
+          currentLine.value.total_amount_with_tax = updateLineResponse.total_amount_with_tax
           currentLine.value.isEditDiscount = false
           isLoadingDiscount.value = false
         })

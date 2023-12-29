@@ -211,6 +211,10 @@ export default defineComponent({
 
     function showPopever() {
       show.value = true
+      store.dispatch('searchProductList', {
+        searchValue: searchProduct.value,
+        pageSize: 15
+      })
     }
 
     watch(productList, (newValue, oldValue) => {
