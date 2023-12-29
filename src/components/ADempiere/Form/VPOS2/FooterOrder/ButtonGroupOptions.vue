@@ -77,7 +77,7 @@ export default defineComponent({
 
     function openShowCollections() {
       store.commit('setShowCollection', true)
-      store.commit('setPayAmount', order.value.grand_total)
+      store.commit('setPayAmount', order.value.open_amount)
       if (isEmptyValue(store.getters.getVPOS.display_currency)) return
       store.dispatch('findRate', {
         currencyToId: store.getters.getVPOS.display_currency.id
