@@ -116,6 +116,14 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         @click="addProduct(selectProduct)"
       />
       <el-button
+        :loading="isLoadingRecords"
+        type="success"
+        class="button-base-icon"
+        style="float: right;margin-left: 5px;"
+        icon="el-icon-refresh-right"
+        @click="refresh();"
+      />
+      <el-button
         type="danger"
         class="button-base-icon"
         icon="el-icon-close"
@@ -149,6 +157,7 @@ export default defineComponent({
      */
     const searchValue = ref('')
     const isLoading = ref(false)
+    const isLoadingRecords = ref(false)
     const pageSizeNumber = ref(15)
     const selection = ref(0)
     const selectProduct = ref({})
@@ -257,6 +266,19 @@ export default defineComponent({
       }, 500)
     }
 
+    function refresh() {
+      isLoading.value = true
+      isLoadingRecords.value = true
+      store.dispatch('searchProductList', {
+        searchValue: searchValue.value,
+        pageSize: pageSizeNumber.value
+      })
+        .finally(() => {
+          isLoading.value = false
+          isLoadingRecords.value = false
+        })
+    }
+
     return {
       // Ref
       selection,
@@ -264,6 +286,7 @@ export default defineComponent({
       searchValue,
       selectProduct,
       pageSizeNumber,
+      isLoadingRecords,
       // Computed
       listProducto,
       recordCount,
@@ -277,6 +300,7 @@ export default defineComponent({
       searchProduct,
       addProduct,
       copyCode,
+      refresh,
       close
     }
   }
