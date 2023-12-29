@@ -276,8 +276,7 @@ export default defineComponent({
               price
             })
               .then(updateLineResponse => {
-                currentLine.value.price = updateLineResponse.price
-                currentLine.value.total_amount_with_tax = updateLineResponse.total_amount_with_tax
+                refreshLine(updateLineResponse)
                 isLoadingQty.value = false
                 currentLine.value.isEditCurrentPrice = false
               })
@@ -299,8 +298,7 @@ export default defineComponent({
         price
       })
         .then(updateLineResponse => {
-          currentLine.value.price = updateLineResponse.price
-          currentLine.value.total_amount_with_tax = updateLineResponse.total_amount_with_tax
+          refreshLine(updateLineResponse)
           isLoadingPrice.value = false
           currentLine.value.isEditCurrentPrice = false
         })
@@ -321,8 +319,7 @@ export default defineComponent({
               quantity
             })
               .then(updateLineResponse => {
-                currentLine.value.quantity_ordered = updateLineResponse.quantity_ordered
-                currentLine.value.total_amount_with_tax = updateLineResponse.total_amount_with_tax
+                refreshLine(updateLineResponse)
                 isLoadingQty.value = false
                 currentLine.value.isEditQtyEntered = false
               })
@@ -343,8 +340,7 @@ export default defineComponent({
         quantity
       })
         .then(updateLineResponse => {
-          currentLine.value.quantity_ordered = updateLineResponse.quantity_ordered
-          currentLine.value.total_amount_with_tax = updateLineResponse.total_amount_with_tax
+          refreshLine(updateLineResponse)
           isLoadingQty.value = false
           currentLine.value.isEditQtyEntered = false
         })
@@ -369,8 +365,7 @@ export default defineComponent({
               quantity: quantity_ordered
             })
               .then(updateLineResponse => {
-                currentLine.value.discount_rate = updateLineResponse.discount_rate
-                currentLine.value.total_amount_with_tax = updateLineResponse.total_amount_with_tax
+                refreshLine(updateLineResponse)
                 currentLine.value.isEditDiscount = false
                 isLoadingDiscount.value = false
               })
@@ -391,8 +386,7 @@ export default defineComponent({
         quantity: quantity_ordered
       })
         .then(updateLineResponse => {
-          currentLine.value.discount_rate = updateLineResponse.discount_rate
-          currentLine.value.total_amount_with_tax = updateLineResponse.total_amount_with_tax
+          refreshLine(updateLineResponse)
           currentLine.value.isEditDiscount = false
           isLoadingDiscount.value = false
         })
@@ -400,6 +394,42 @@ export default defineComponent({
           currentLine.value.isEditDiscount = false
           isLoadingDiscount.value = false
         })
+    }
+
+    function refreshLine(line) {
+      currentLine.value.available_quantity = line.line.available_quantity
+      currentLine.value.base_tax_amoun = line.base_tax_amoun
+      currentLine.value.charge = line.charge
+      currentLine.value.description = line.description
+      currentLine.value.discount_amount = line.discount_amount
+      currentLine.value.discount_rate = line.discount_rate
+      currentLine.value.id = line.id
+      currentLine.value.line = line.line
+      currentLine.value.line_description = line.line_description
+      currentLine.value.list_tax_amount = line.list_tax_amount
+      currentLine.value.order_id = line.order_id
+      currentLine.value.price = line.price
+      currentLine.value.price_base = line.price_base
+      currentLine.value.price_base_with_tax = line.price_base_with_tax
+      currentLine.value.price_list = line.price_list
+      currentLine.value.price_list_with_tax = line.price_list_with_tax
+      currentLine.value.price_with_tax = line.price_with_tax
+      currentLine.value.product = line.product
+      currentLine.value.product_uom = line.product_uom
+      currentLine.value.quantity = line.quantity
+      currentLine.value.quantity_ordered = line.quantity_ordered
+      currentLine.value.resource_assignment = line.resource_assignment
+      currentLine.value.source_rma_line_id = line.source_rma_line_id
+      currentLine.value.tax_amount = line.tax_amount
+      currentLine.value.tax_rate = line.tax_rate
+      currentLine.value.total_amount = line.total_amount
+      currentLine.value.total_amount_converted = line.total_amount_converted
+      currentLine.value.total_amount_with_tax = line.total_amount_with_tax
+      currentLine.value.total_amount_with_tax_converted = line.total_amount_with_tax_converted
+      currentLine.value.total_base_amount = line.total_base_amount
+      currentLine.value.total_base_amount_with_tax = line.total_base_amount_with_tax
+      currentLine.value.total_discount_amount = line.total_discount_amount
+      currentLine.value.total_tax_amount = line.total_tax_amount
     }
 
     return {
