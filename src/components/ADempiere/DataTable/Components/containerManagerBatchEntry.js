@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,33 +64,24 @@ export function isReadOnlyField({ isQueryCriteria, isReadOnlyFromLogic }) {
   return isQueryCriteria && isReadOnlyFromLogic
 }
 
-export function generalInfoSearch({
+export function getSearchRecordsList({
   containerUuid,
   contextColumnNames,
   filters,
-  uuid,
+  id,
   searchValue,
   tableName,
   columnName,
   pageNumber
 }) {
-  return store.dispatch('findGeneralInfo', {
+  return store.dispatch('getSearchRecordsFromServer', {
     containerUuid,
     contextColumnNames,
     filters,
-    // fieldUuid: uuid,
+    // fieldId: id,
     searchValue,
     tableName,
     columnName,
     pageNumber
-  })
-}
-export function searchTableHeader({
-  containerUuid,
-  tableName
-}) {
-  return store.dispatch('searchTableHeader', {
-    containerUuid,
-    tableName
   })
 }

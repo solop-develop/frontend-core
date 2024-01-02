@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -37,11 +37,12 @@
         >
           <el-row>
             <field-definition
-              v-for="(fieldAttributes) in fieldsListQueryCriteria"
+              v-for="(fieldAttributes) in storedFieldsListQuery"
               :key="fieldAttributes.columnName"
               :metadata-field="fieldAttributes"
               :container-uuid="uuidForm"
               :container-manager="containerManagerList"
+              :size-col="6"
             />
           </el-row>
         </el-form>
@@ -71,7 +72,7 @@
       />
 
       <el-table-column
-        v-for="(fieldAttributes, key) in fieldsListQueryCriteria"
+        v-for="(fieldAttributes, key) in storedColumnsListTable"
         :key="key"
         :label="fieldAttributes.name"
         :prop="fieldAttributes.columnName"
@@ -82,7 +83,10 @@
           <cell-display-info
             :parent-uuid="metadata.parentUuid"
             :container-uuid="uuidForm"
-            :field-attributes="fieldAttributes"
+            :field-attributes="{
+              columnName: fieldAttributes.column_name,
+              displayType: fieldAttributes.display_type
+            }"
             :container-manager="containerManagerList"
             :scope="scope"
             :data-row="scope.row"
@@ -110,7 +114,7 @@
             type="info"
             class="button-base-icon"
             plain
-            @click="clearFormValues(); getListGeneralInfoSearch();"
+            @click="clearFormValues(); getListSearchRecords();"
           >
             <svg-icon icon-class="layers-clear" />
           </el-button>
@@ -121,7 +125,7 @@
             class="button-base-icon"
             icon="el-icon-refresh-right"
             size="small"
-            @click="getListGeneralInfoSearch();"
+            @click="getListSearchRecords();"
           />
 
           <el-button
@@ -148,7 +152,7 @@
 import store from '@/store'
 
 // Constants
-import { GENERAL_INFO_SEARCH_LIST_FORM } from '@/utils/ADempiere/dictionary/field/generalInfoSearch'
+import { GENERAL_INFO_SEARCH_LIST_FORM } from '@/utils/ADempiere/dictionary/field/search/index.ts'
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 import { OPERATOR_LIKE } from '@/utils/ADempiere/dataUtils'
 
@@ -201,12 +205,10 @@ export default {
   data() {
     return {
       activeAccordion: 'query-criteria',
-      metadataList: [],
       timeOutRecords: null,
       isLoadingRecords: false,
       timeOutFields: null,
       isLoadingFields: false,
-      cacheUpdateField: {},
       unsubscribe: () => {}
     }
   },
@@ -224,6 +226,9 @@ export default {
         return this.metadata.columnName + '_' + this.metadata.containerUuid
       }
       return GENERAL_INFO_SEARCH_LIST_FORM
+    },
+    tableName() {
+      return this.metadata.reference.tableName
     },
     shortsKey() {
       return {
@@ -250,18 +255,21 @@ export default {
         setPage: this.setPage
       }
     },
-    storedFieldsList() {
-      return store.getters.getTableHeader({
-        containerUuid: this.uuidForm
+    storedFieldsListQuery() {
+      return store.getters.getSearchQueryFields({
+        tableName: this.tableName
       })
     },
-    fieldsListQueryCriteria() {
-      return store.getters.getQueryFieldsList({
-        containerUuid: this.uuidForm
+    storedColumnsListTable() {
+      return store.getters.getSearchTableFields({
+        tableName: this.tableName
       })
+        .filter(fieldItem => {
+          return fieldItem.sequence > 0
+        })
     },
     isloadingTable() {
-      return this.isLoadingRecords && !isEmptyValue(this.storedFieldsList)
+      return this.isLoadingRecords && !isEmptyValue(this.storedColumnsListTable)
     },
     generalInfoData() {
       return store.getters.getGeneralInfoData({
@@ -296,7 +304,7 @@ export default {
   watch: {
     isReadyFromGetData(isToLoad) {
       if (isToLoad) {
-        this.getListGeneralInfoSearch()
+        this.getListSearchRecords()
       }
     }
   },
@@ -304,8 +312,10 @@ export default {
   created() {
     this.unsubscribe = this.subscribeChanges()
 
+    this.loadSearchFields()
+
     if (this.isReadyFromGetData) {
-      this.getListGeneralInfoSearch()
+      this.getListSearchRecords()
     }
   },
 
@@ -332,7 +342,7 @@ export default {
            * TODO: When refreshing you are making 2 list requests, you can be the
            * observer that activates the second request
           */
-          this.getListGeneralInfoSearch()
+          this.getListSearchRecords()
           break
 
         case 'close':
@@ -353,7 +363,7 @@ export default {
       })
     },
     setPage(pageNumber) {
-      this.getListGeneralInfoSearch(pageNumber, this.pageSize)
+      this.getListSearchRecords(pageNumber, this.pageSize)
     },
     subscribeChanges() {
       return store.subscribe((mutation, state) => {
@@ -361,30 +371,24 @@ export default {
           if (mutation.payload.containerUuid === this.uuidForm) {
             if (!isEmptyValue(mutation.payload.columnName) &&
               !isEmptyValue(mutation.payload.value)) {
-              this.getListGeneralInfoSearch()
+              this.getListSearchRecords()
             }
           }
         }
       })
     },
-    setFieldsList() {
-      this.isLoadingFields = true
-      const storedFieldsList = store.getters.getTableHeader({ containerUuid: this.uuidForm })
-
-      if (!isEmptyValue(storedFieldsList)) {
-        this.isLoadingFields = false
-        return
+    loadSearchFields() {
+      const fieldsListTable = this.storedColumnsListTable
+      if (isEmptyValue(fieldsListTable)) {
+        store.dispatch('getSearchFieldsFromServer', {
+          tableName: this.tableName
+        })
+          .finally(() => {
+            this.isLoadingFields = false
+          })
       }
-      this.containerManager.searchTableHeader({
-        containerUuid: this.uuidForm,
-        tableName: this.metadata.reference.tableName
-      }).then(fieldsListResponse => {
-        this.metadataList = fieldsListResponse
-      }).finally(() => {
-        this.isLoadingFields = false
-      })
     },
-    getListGeneralInfoSearch(pageNumber = 0, pageSize) {
+    getListSearchRecords(pageNumber = 0, pageSize) {
       const values = store.getters.getValuesView({
         containerUuid: this.uuidForm,
         format: 'array'
@@ -410,12 +414,12 @@ export default {
       clearTimeout(this.timeOutRecords)
       this.timeOutRecords = setTimeout(() => {
         // search on server
-        this.containerManager.generalInfoSearch({
+        this.containerManager.getSearchRecordsList({
           containerUuid: this.uuidForm,
           parentUuid: this.metadata.parentUuid,
           tableName: this.metadata.reference.tableName,
           columnName: this.metadata.columnName,
-          uuid: this.metadata.uuid,
+          id: this.metadata.id,
           contextColumnNames: this.metadata.reference.contextColumnNames,
           filters: values,
           pageNumber,
@@ -442,7 +446,7 @@ export default {
       }, 500)
     },
     handleChangeSizePage(pageSize) {
-      this.getListGeneralInfoSearch(1, pageSize)
+      this.getListSearchRecords(1, pageSize)
     }
   }
 }

@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Yamel Senih ysenih@erpya.com
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -62,8 +62,7 @@
                         isDisplayedField,
                         isDisplayedDefault,
                         isMandatoryField,
-                        generalInfoSearch,
-                        searchTableHeader,
+                        getSearchRecordsList,
                         isReadOnlyField,
                         changeFieldShowedFromUser
                       }"
@@ -249,8 +248,7 @@
                         getLookupList,
                         isDisplayedField,
                         isDisplayedDefault,
-                        generalInfoSearch,
-                        searchTableHeader,
+                        getSearchRecordsList,
                         isMandatoryField,
                         isReadOnlyField,
                         changeFieldShowedFromUser
@@ -421,17 +419,21 @@
 </template>
 
 <script>
-// constants
-import fieldsListCollection from './fieldsListCollection.js'
-import { FIELDS_DECIMALS } from '@/utils/ADempiere/references'
-
-// components and mixins
+// Components and Mixins
 import formMixin from '@/components/ADempiere/Form/formMixin'
 import posMixin from '@/components/ADempiere/Form/VPOS/posMixin.js'
 import typeCollection from '@/components/ADempiere/Form/VPOS/Collection/typeCollection'
 import overdrawnInvoice from './overdrawnInvoice'
 
-// utils and helper methods
+// API Request Methods
+import { processOrder } from '@/api/ADempiere/form/point-of-sales.js'
+
+// Constants
+import fieldsListCollection from './fieldsListCollection.js'
+import { FIELDS_DECIMALS } from '@/utils/ADempiere/references'
+import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
+
+// Utils and Helper Methods
 import { isSameValues } from '@/utils/ADempiere/valueUtils'
 import { formatPrice as formatPrice2 } from '@/utils/ADempiere/formatValue/numberFormat'
 import { formatPrice, formatDateToSend } from '@/utils/ADempiere/valueFormat.js'
@@ -440,20 +442,16 @@ import {
   getLookupList,
   isDisplayedField,
   isDisplayedDefault,
-  generalInfoSearch,
-  searchTableHeader,
+  getSearchRecordsList,
   isMandatoryField,
   isReadOnlyField,
   changeFieldShowedFromUser
 } from '@/components/ADempiere/Form/VPOS/containerManagerPos.js'
-
-// api request methods
-import { processOrder } from '@/api/ADempiere/form/point-of-sales.js'
-import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
 import {
   buildLinkHref
 } from '@/utils/ADempiere/resource.js'
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
+
 export default {
   name: 'Collection',
 
@@ -1160,8 +1158,7 @@ export default {
     getLookupList,
     isDisplayedField,
     isDisplayedDefault,
-    generalInfoSearch,
-    searchTableHeader,
+    getSearchRecordsList,
     isMandatoryField,
     isReadOnlyField,
     changeFieldShowedFromUser,

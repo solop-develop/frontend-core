@@ -2136,12 +2136,12 @@ export const containerManager = {
       blankValue
     })
   },
-  getSearchInfoList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, pageNumber, uuid, filters, searchValue, pageSize }) {
-    return store.dispatch('searchInfoList', {
+  getSearchRecordsList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, pageNumber, id, filters, searchValue, pageSize }) {
+    return store.dispatch('getSearchRecordsFromServer', {
       parentUuid,
       containerUuid,
       contextColumnNames,
-      fieldUuid: uuid,
+      fieldId: id,
       tableName,
       columnName,
       filters,
@@ -2190,40 +2190,7 @@ export const containerManager = {
       recordUuid
     })
   },
-  generalInfoSearch({
-    containerUuid,
-    parentUuid,
-    contextColumnNames,
-    filters,
-    uuid,
-    searchValue,
-    tableName,
-    columnName,
-    pageNumber,
-    pageSize
-  }) {
-    return store.dispatch('findGeneralInfo', {
-      containerUuid,
-      parentUuid,
-      contextColumnNames,
-      filters,
-      fieldUuid: uuid,
-      searchValue,
-      tableName,
-      columnName,
-      pageNumber,
-      pageSize
-    })
-  },
-  searchTableHeader({
-    containerUuid,
-    tableName
-  }) {
-    return store.dispatch('searchTableHeader', {
-      containerUuid,
-      tableName
-    })
-  },
+
   warehouseLocatorSearch({
     containerUuid,
     parentUuid,

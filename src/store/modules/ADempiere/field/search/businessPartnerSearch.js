@@ -169,9 +169,10 @@ const businessPartner = {
           pageSize
         })
           .then(responseBusinessPartnerList => {
-            const recordsList = responseBusinessPartnerList.recordsList.map((record, rowIndex) => {
+            const recordsList = responseBusinessPartnerList.business_partners.map((record, rowIndex) => {
               return {
-                ...record.attributes,
+                // ...record.attributes,
+                ...record,
                 // datatables app attributes
                 ...ROW_ATTRIBUTES,
                 rowIndex
@@ -189,11 +190,11 @@ const businessPartner = {
               containerUuid,
               currentRow,
               recordsList,
-              nextPageToken: responseBusinessPartnerList.nextPageToken,
+              nextPageToken: responseBusinessPartnerList.next_page_token,
               pageNumber,
               pageSize,
               isLoaded: true,
-              recordCount: responseBusinessPartnerList.recordCount
+              recordCount: Number(responseBusinessPartnerList.record_count)
             })
 
             resolve(recordsList)

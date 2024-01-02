@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { defineComponent, computed, watch, ref } from '@vue/composition-api'
+import { defineComponent, computed, ref } from '@vue/composition-api'
 
 import store from '@/store'
 
@@ -51,7 +51,7 @@ import store from '@/store'
 import PanelGeneralInfoSearch from './panel.vue'
 
 // Constants
-import { GENERAL_INFO_SEARCH_LIST_FORM } from '@/utils/ADempiere/dictionary/field/generalInfoSearch'
+import { GENERAL_INFO_SEARCH_LIST_FORM } from '@/utils/ADempiere/dictionary/field/search/index.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -102,27 +102,6 @@ export default defineComponent({
       return GENERAL_INFO_SEARCH_LIST_FORM
     })
 
-    const fieldsListQuery = computed(() => {
-      const fieldsList = store.getters.getQueryFieldsList({
-        containerUuid: uuidForm.value
-      })
-      if (isEmptyValue(fieldsList)) {
-        return []
-      }
-      return fieldsList.map(header => {
-        return {
-          columnName: header.columnName,
-          value: undefined
-        }
-      })
-    })
-
-    const listHeader = computed(() => {
-      return store.getters.getQueryFieldsList({
-        containerUuid: uuidForm.value
-      })
-    })
-
     const showedPopoverGeneralInfoPanel = computed({
       get() {
         return store.getters.getGeneralInfoShow({
@@ -137,39 +116,11 @@ export default defineComponent({
       }
     })
 
-    function getHeader() {
-      if (!isEmptyValue(listHeader.value)) return
-      store.dispatch('searchTableHeader', {
-        containerUuid: uuidForm.value,
-        tableName: props.parentMetadata.reference.tableName
-      })
-    }
-    getHeader()
-
-    /**
-     * Wacht
-     */
-
-    watch(fieldsListQuery, (newValue, oldValue) => {
-      if (!isEmptyValue(newValue)) {
-        store.commit('updateValuesOfContainer', {
-          containerUuid: uuidForm.value,
-          attributes: newValue
-        })
-      }
-    })
-
-    // getHeader()
-
     return {
       generalSearchListPopover,
       // computeds
       uuidForm,
-      showedPopoverGeneralInfoPanel,
-      fieldsListQuery,
-      listHeader,
-      // Methods
-      getHeader
+      showedPopoverGeneralInfoPanel
     }
   }
 })
