@@ -127,6 +127,9 @@ export default defineComponent({
         case 'Tracking':
           form = import('@/components/ADempiere/FormDefinition/Tracking')
           break
+        case 'WTrialBalance':
+          form = import('@/components/ADempiere/FormDefinition/WTrialBalance')
+          break
         default:
           form = import('@/views/ADempiere/Unsupported')
           break
