@@ -7,6 +7,7 @@ const { showSettings, tagsView, fixedHeader, showNavar, sidebarLogo, supportPiny
 
 const state = {
   theme: variables.theme,
+  colNum: 8,
   showSettings,
   tagsView,
   fixedHeader: !isEmptyValue(localStorage.getItem('fixedHeader')) ? convertStringToBoolean(localStorage.getItem('fixedHeader')) : fixedHeader,
@@ -39,7 +40,7 @@ const getters = {
     return state.autoSave
   },
   getFullGridMode: (state) => {
-    return state.fullGridMode
+    return state.fullGridMocolNumde
   },
   getFixedHeader: (state) => {
     return state.fixedHeader

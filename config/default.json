@@ -83,5 +83,8 @@
   "noticeManagement": {
     "endpoint": "/notice-management"
   },
+  "trialBalanceDrillable": {
+    "endpoint": "/trial-balance-drillable"
+  },
   "theme": "src/themes/default"
 }
