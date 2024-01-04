@@ -73,7 +73,7 @@ import lang from '@/lang'
 import store from '@/store'
 
 // Components and Mixins
-import SearchCriteria from './components/SearchCriteria'
+import SearchCriteria from './SearchCriteria/index.vue'
 import Payments from './components/Payments'
 // import Summary from './components/Summary'
 
@@ -85,8 +85,8 @@ export default defineComponent({
 
   components: {
     // Carousel,
-    SearchCriteria,
-    Payments
+    Payments,
+    SearchCriteria
     // Summary
   },
 
