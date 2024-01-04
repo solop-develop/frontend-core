@@ -83,7 +83,7 @@
       >
         <p style="text-align: center;margin: 0px;font-size: large;">
           <b>
-            {{ 'Configuración de Estilo de Página' }}
+            {{ $t('page.settings.pageStyleSettings') }}
           </b>
         </p>
       </span>
@@ -110,7 +110,7 @@
             <br>
           </el-descriptions-item>
           <el-descriptions-item
-            label="Tarjeta Principal del Dashboard"
+            :label="$t('page.settings.mainDashboardCard')"
           >
             <el-select
               v-model="panelMain"
@@ -126,7 +126,7 @@
             <br>
           </el-descriptions-item>
           <el-descriptions-item
-            label="Cantidad de Columnas en Dashboard"
+            :label="$t('page.settings.numberColumnsDashboard')"
           >
             <el-select
               v-model="colNum"
