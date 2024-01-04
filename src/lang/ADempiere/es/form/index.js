@@ -23,6 +23,7 @@ import expressMovement from './expressMovement.js'
 import workflowActivity from './workflowActivity'
 import accountingViewer from './accountingViewer'
 import expressReceipt from './expressReceipt.js'
+import WTrialBalance from './WTrialBalance.js'
 import priceChecking from './priceChecking'
 import pointOfSales from './pointOfSales'
 import productInfo from './productInfo'
@@ -40,6 +41,7 @@ export default {
   expressMovement,
   expressReceipt,
   priceChecking,
+  WTrialBalance,
   productInfo,
   VAllocation,
   VBankStatementMatch,
