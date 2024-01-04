@@ -241,7 +241,7 @@ export default {
       if (!this.emptyValue && typeof this.value === 'number') {
         if (isEmptyValue(this.displayedValue)) {
           // request lookup
-          this.getDefaultValueFromServer()
+          this.loadDefaultValueFromServer()
         }
       }
     }

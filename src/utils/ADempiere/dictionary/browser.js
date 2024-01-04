@@ -484,7 +484,7 @@ export const containerManager = {
       uuid,
       // id,
       //
-      // columnName,
+      columnName,
       value
     }).then(response => {
       if (!isEmptyValue(response.value)) {

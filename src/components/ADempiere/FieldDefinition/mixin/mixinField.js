@@ -242,7 +242,7 @@ export default {
      * Get default value from server
      * @returns promisse with object = { value, defaultValue, uuid, id }
      */
-    getDefaultValueFromServer() {
+    loadDefaultValueFromServer() {
       if (this.containerManager && this.containerManager.getDefaultValue) {
         return this.containerManager.getDefaultValue({
           parentUuid: this.metadata.parentUuid,
@@ -282,7 +282,7 @@ export default {
         const {
           value: valueOfServer,
           displayedValue: displayedValueOfServer
-        } = await this.getDefaultValueFromServer()
+        } = await this.loadDefaultValueFromServer()
 
         value = valueOfServer
         displayedValue = displayedValueOfServer

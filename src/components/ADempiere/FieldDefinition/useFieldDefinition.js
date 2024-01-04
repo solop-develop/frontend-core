@@ -187,7 +187,7 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
    * Get default value from server
    * @returns promisse with object = { value, defaultValue, uuid, id }
    */
-  function getDefaultValueFromServer() {
+  function loadDefaultValueFromServer() {
     if (containerManager && containerManager.getDefaultValue) {
       return containerManager.getDefaultValue({
         parentUuid: fieldMetadata.parentUuid,
@@ -377,7 +377,7 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
         uuid: uuidOfSserver,
         value: valueOfServer,
         displayedValue: displayedValueOfServer
-      } = await this.getDefaultValueFromServer()
+      } = await this.loadDefaultValueFromServer()
 
       // set value into component and fieldValue store
       uuidValue.value = uuidOfSserver
@@ -418,7 +418,7 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
     focusLost,
     requestFocus,
     parseValue,
-    getDefaultValueFromServer,
+    loadDefaultValueFromServer,
     keyPressed,
     keyReleased,
     preHandleChange,
