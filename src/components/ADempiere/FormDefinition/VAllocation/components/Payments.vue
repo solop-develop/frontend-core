@@ -753,6 +753,7 @@ export default defineComponent({
     }
 
     function loadHeight(height) {
+      if (isEmptyValue(height)) return
       setTimeout(() => {
         panelInvoce.value = height.clientHeight - 100
       }, 1000)
