@@ -211,17 +211,17 @@ export function generateTransitions(nodesList) {
   const transitionsList = []
 
   nodesList.forEach(element => {
-    const uuid = element.uuid
+    // const uuid = element.uuid
     const id = element.value
 
     if (!isEmptyValue(element.transitions)) {
       element.transitions.forEach((nextNode, key) => {
-        if (!isEmptyValue(nextNode.node_next_uuid)) {
+        if (!isEmptyValue(nextNode.node_next_id)) {
           transitionsList.push({
             id: id + key,
             label: nextNode.description,
-            target: nextNode.node_next_uuid,
-            source: uuid
+            target: nextNode.id,
+            source: id
           })
         }
       })
@@ -229,12 +229,12 @@ export function generateTransitions(nodesList) {
   })
   const blon = nodesList.map(item => {
     return {
-      uuid: item.uuid
+      id: item.id
     }
   })
 
   const workflowTranstitionsList = transitionsList.filter(data => {
-    const isExists = blon.find(mode => mode.uuid === data.source)
+    const isExists = blon.find(mode => mode.id === data.source)
     if (!isEmptyValue(isExists)) {
       return data
     }
@@ -251,7 +251,7 @@ export function generateStates(nodesList) {
   if (!isEmptyValue(nodesList)) {
     statesList = nodesList.map((node, key) => {
       return {
-        id: node.uuid,
+        id: node.id,
         label: node.name,
         key,
         description: node.description,
@@ -268,7 +268,7 @@ export function generateWorkflowDiagram(workflowDefinition) {
   if (!isEmptyValue(workflowDefinition.start_node)) {
     stateSemanticsList.push({
       classname: 'start-node',
-      id: workflowDefinition.start_node.uuid
+      id: workflowDefinition.start_node.id
     })
   }
 

@@ -93,15 +93,15 @@ export function requestListDocumentActions({
 
 // Request a list of Activities from the user's Workflows
 export function workflowActivities({
-  userUuid,
+  id,
   pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
 }) {
   return request({
-    url: '/workflow/workflow-activities',
+    url: `/workflow/workflows/${id}/activities`,
     method: 'get',
     params: {
-      user_uuid: userUuid,
+      user_id: id,
       // Page Data
       page_token: pageToken,
       page_size: pageSize
@@ -173,7 +173,7 @@ export function processWorkflowActivity({
   isApproved
 }) {
   return request({
-    url: '/workflow/process-workflow-activity',
+    url: `/workflow/workflows/${id}/process`,
     method: 'post',
     data: {
       id,
@@ -200,7 +200,7 @@ export function forwardWorkflowActivity({
   userUuid
 }) {
   return request({
-    url: '/workflow/forward-workflow-activity',
+    url: `/workflow/workflows/${id}/forward`,
     method: 'post',
     data: {
       id,

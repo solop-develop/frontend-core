@@ -18,6 +18,7 @@
 
 // Get Instance for connectionimport {
 import { request } from '@/utils/ADempiere/request'
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 // List Activity
 export function listActivity({
@@ -55,4 +56,22 @@ export function sendActivity({
     .then(listActivityResponse => {
       return listActivityResponse
     })
+}
+
+// Request a list of Activities from the user's Workflows
+export function workflowActivities({
+  id,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
+  pageToken
+}) {
+  return request({
+    url: `/workflow/workflows/${id}/activities`,
+    method: 'get',
+    params: {
+      user_id: id,
+      // Page Data
+      page_token: pageToken,
+      page_size: pageSize
+    }
+  })
 }
