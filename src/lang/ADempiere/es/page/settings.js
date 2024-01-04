@@ -26,7 +26,10 @@ const settings = {
   sidebarLogo: 'Logotipo de la barra lateral',
   tagsView: 'Habilitar Tags-View',
   theme: 'Color del tema',
-  title: 'Configuración'
+  title: 'Configuración',
+  pageStyleSettings: 'Configuración de Estilo de Página',
+  mainDashboardCard: 'Tarjeta Principal del Dashboard',
+  numberColumnsDashboard: 'Numero de Columnas en Dashboard'
 }
 
 export default settings

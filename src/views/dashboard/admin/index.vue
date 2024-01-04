@@ -44,11 +44,7 @@
       <template v-for="(dashboardAttributes, index) in listDashboard">
         <el-col
           :key="index"
-          :xs="{ span: 24 }"
-          :sm="{ span: 24 }"
-          :md="{ span: 24 }"
-          :lg="{ span: 8 }"
-          :xl="{ span: 8 }"
+          :span="colNum"
           style="padding-right:8px;margin-bottom:2px;"
         >
           <dashboard-definition
@@ -59,24 +55,106 @@
         </el-col>
       </template>
       <el-col
-        :xs="{ span: 24 }"
-        :sm="{ span: 24 }"
-        :md="{ span: 24 }"
-        :lg="{ span: 8 }"
-        :xl="{ span: 8 }"
+        :span="colNum"
         style="padding-right:8px;margin-bottom:2px;"
       >
         <todo
           :metadata="mainDashboard"
           :title="mainDashboard.name"
+          style="margin: 0px;width: 100% !important;"
         />
       </el-col>
     </el-row>
+    <el-button
+      plain
+      type="primary"
+      icon="el-icon-setting"
+      class="button-base-icon"
+      style="position: fixed;top: 50%;right: 0%;font-size: 30px;"
+      @click="showSettings = !showSettings"
+    />
+
+    <el-drawer
+      :visible.sync="showSettings"
+      :with-header="true"
+    >
+      <span
+        slot="title"
+      >
+        <p style="text-align: center;margin: 0px;font-size: large;">
+          <b>
+            {{ $t('page.settings.pageStyleSettings') }}
+          </b>
+        </p>
+      </span>
+      <el-card
+        style="padding: 10px 20px!important;"
+        :body-style="{ padding: '10px 20px', height: '100% !important' }"
+      >
+        <el-descriptions :column="1">
+          <!-- <el-descriptions-item :label="$t('page.settings.theme')">
+            <theme-picker @change="themeChange" />
+          </el-descriptions-item> -->
+          <el-descriptions-item
+            :label="$t('page.settings.tagsView')"
+          >
+            <el-switch v-model="tagsView" />
+            <br>
+            <br>
+          </el-descriptions-item>
+          <el-descriptions-item
+            :label="$t('page.settings.sidebarLogo')"
+          >
+            <el-switch v-model="sidebarLogo" />
+            <br>
+            <br>
+          </el-descriptions-item>
+          <el-descriptions-item
+            :label="$t('page.settings.mainDashboardCard')"
+          >
+            <el-select
+              v-model="panelMain"
+            >
+              <el-option
+                v-for="item in listDashboard"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+            <br>
+            <br>
+          </el-descriptions-item>
+          <el-descriptions-item
+            :label="$t('page.settings.numberColumnsDashboard')"
+          >
+            <el-select
+              v-model="colNum"
+            >
+              <el-option
+                v-for="item in numColDashboard"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+            <br>
+            <br>
+          </el-descriptions-item>
+        </el-descriptions>
+      </el-card>
+    </el-drawer>
   </div>
 </template>
 
 <script>
-import { defineComponent, computed, onMounted, watch } from '@vue/composition-api'
+import {
+  defineComponent,
+  onMounted,
+  computed,
+  watch,
+  ref
+} from '@vue/composition-api'
 
 import store from '@/store'
 import language from '@/lang'
@@ -86,6 +164,8 @@ import PanelGroup from '@/views/dashboard/admin/components/PanelGroup.vue'
 import UserInfo from '@/views/profile/components/InfoUser.vue'
 import Todo from '@/views/dashboard/admin/components/TodoList/index.vue'
 import notices from '@/components/ADempiere/Dashboard/notices'
+import RightPanel from '@/components/RightPanel'
+import ThemePicker from '@/components/ThemePicker'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -97,11 +177,94 @@ export default defineComponent({
     Todo,
     notices,
     UserInfo,
+    RightPanel,
+    ThemePicker,
     PanelGroup,
     DashboardDefinition
   },
 
   setup() {
+    const showSettings = ref(false)
+
+    const colNum = computed({
+      // getter
+      get() {
+        return store.state.settings.colNum
+      },
+      // setter
+      set(newValue) {
+        // Note: we are using destructuring assignment syntax here.
+        store.dispatch('settings/changeSetting', {
+          key: 'colNum',
+          value: newValue
+        })
+      }
+    })
+
+    const numColDashboard = ref([
+      {
+        value: 24,
+        label: 1
+      },
+      {
+        value: 12,
+        label: 2
+      },
+      {
+        value: 8,
+        label: 3
+      },
+      {
+        value: 6,
+        label: 4
+      }
+    ])
+
+    const tagsView = computed({
+      // getter
+      get() {
+        return store.state.settings.tagsView
+      },
+      // setter
+      set(newValue) {
+        // Note: we are using destructuring assignment syntax here.
+        store.dispatch('settings/changeSetting', {
+          key: 'tagsView',
+          value: newValue
+        })
+      }
+    })
+
+    const panelMain = computed({
+      // getter
+      get() {
+        return store.getters.getStoredMainDashboard.id
+      },
+      // setter
+      set(dashboard) {
+        // Note: we are using destructuring assignment syntax here.
+        if (dashboard) {
+          const currentDashboard = listDashboard.value.find(list => list.id === dashboard)
+          store.dispatch('mainDashboard', currentDashboard)
+        }
+      }
+    })
+
+    const sidebarLogo = computed({
+      // getter
+      get() {
+        return store.getters['settings/getSidebarLogo']
+      },
+      // setter
+      set(newValue) {
+        // Note: we are using destructuring assignment syntax here.
+        store.dispatch('settings/changeSetting', {
+          key: 'sidebarLogo',
+          value: newValue
+        })
+      }
+    })
+
     const dashboardsList = computed(() => {
       return store.getters.getStoredDashboardsList
     })
@@ -153,6 +316,13 @@ export default defineComponent({
       store.dispatch('getDashboardListFromServer')
     }
 
+    function themeChange(val) {
+      store.dispatch('settings/changeSetting', {
+        key: 'theme',
+        value: val
+      })
+    }
+
     watch(roleUuid, (newValue, oldValue) => {
       loadDashboardsList()
     })
@@ -168,7 +338,14 @@ export default defineComponent({
       mainDashboard,
       listDashboard,
       panelNotice,
-      currentRole
+      currentRole,
+      showSettings,
+      sidebarLogo,
+      tagsView,
+      colNum,
+      numColDashboard,
+      panelMain,
+      themeChange
     }
   }
 })
