@@ -170,9 +170,6 @@ export default {
     theme: 'Theme Color',
     tagsView: 'Open Tags-View',
     fixedHeader: 'Fixed Header',
-    sidebarLogo: 'Sidebar Logo',
-    pageStyleSettings: 'Configuración de Estilo de Página',
-    mainDashboardCard: 'Tarjeta Principal del Dashboard',
-    numberColumnsDashboard: 'Numero de Columnas en Dashboard'
+    sidebarLogo: 'Sidebar Logo'
   }
 }
