@@ -204,7 +204,7 @@ export default {
     },
     getValueOfLookup() {
       this.isLoading = true
-      this.getDefaultValueFromServer()
+      this.loadDefaultValueFromServer()
         .then(responseLookupItem => {
           // with value response update local component list
           if (!this.isEmptyValue(responseLookupItem)) {
