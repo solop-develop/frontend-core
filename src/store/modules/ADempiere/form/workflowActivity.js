@@ -16,179 +16,76 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Vue from 'vue'
+// import Vue from 'vue'
 
-import language from '@/lang'
+// import language from '@/lang'
 
 // API Request Methods
 import {
   workflowActivities
-} from '@/api/ADempiere/workflow.js'
-import { listNotifiicationsRequest } from '@/api/ADempiere/dashboard/index.ts'
-import { requestListWorkflowsLogs } from '@/api/ADempiere/window'
+} from '@/api/ADempiere/form/workflow-activity.js'
+// import { listNotifiicationsRequest } from '@/api/ADempiere/dashboard/index.ts'
+// import { requestListWorkflowsLogs } from '@/api/ADempiere/window'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'
 import { showMessage } from '@/utils/ADempiere/notification.js'
-import { generatePageToken } from '@/utils/ADempiere/dataUtils'
+// import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 
-const activity = {
-  listActivity: [],
-  currentActivity: {},
-  recordCount: 0,
-  pageNumber: 1,
-  isLoadActivity: false,
-  workflowLogs: [],
-  listNotifiications: []
+const workflowActivity = {
+  records: [],
+  activity: {}
 }
 
 export default {
-  state: activity,
+  state: workflowActivity,
 
   mutations: {
+    setActivityList(state, list) {
+      state.records = list
+    },
     setActivity(state, activity) {
-      state.listActivity = activity
-    },
-    setActivityRecordCount(state, recordCount) {
-      state.recordCount = recordCount
-    },
-    setCurrentActivity(state, activity) {
-      state.currentActivity = activity
-    },
-    setIsLoadActivity(state, load) {
-      state.isLoadActivity = load
-    },
-    setCurrentPage(state, number) {
-      state.pageNumber = number
-    },
-    setWorkFlowLogs(state, {
-      containerUuid,
-      list = []
-    }) {
-      Vue.set(state.workflowLogs, containerUuid, {
-        list
-      })
-    },
-    setListNotifiications(state, list) {
-      state.listNotifiications = list
+      state.activity = activity
     }
   },
 
   actions: {
-    serverListActivity({ commit, state, dispatch, rootGetters }, {
-      pageNumber,
-      pageToken,
-      pageSize
-    }) {
-      const userUuid = rootGetters['user/getUserUuid']
-      const name = language.t('navbar.badge.activity')
-      if (isEmptyValue(userUuid)) {
-        return
-      }
-      if (!isEmptyValue(pageNumber)) {
-        pageToken = generatePageToken({ pageNumber })
-        commit('setCurrentPage', pageNumber)
-      }
-      commit('setIsLoadActivity', true)
-      workflowActivities({
-        userUuid,
-        pageToken,
-        pageSize
-      })
-        .then(response => {
-          commit('setIsLoadActivity', false)
-          const { listWorkflowActivities, recordCount } = response
-          commit('setActivity', listWorkflowActivities)
-          commit('setActivityRecordCount', recordCount)
+    loadActivity({ commit, getters }) {
+      const { id } = getters['user/userInfo']
+      if (isEmptyValue(id)) return
+      return new Promise(resolve => {
+        workflowActivities({
+          id
         })
-        .catch(error => {
-          commit('setIsLoadActivity', false)
-          console.warn(`serverListActivity: ${error.message}. Code: ${error.code}.`)
-          showMessage({
-            type: 'error',
-            message: error.message,
-            showClose: true
+          .then(response => {
+            const { activities } = response
+            commit('setActivityList', activities)
+            resolve(activities)
           })
-        })
-        .finally(() => {
-          if (isEmptyValue(rootGetters.getNotificationProcess)) {
-            return
-          }
-          const notification = rootGetters.getNotificationProcess.find(notification => {
-            if (!isEmptyValue(notification) && notification.typeActivity && notification.quantityActivities === state.listActivity.length) {
-              return notification
+          .catch(error => {
+            console.warn(`Workflow Activities: ${error.message}. Code: ${error.code}.`)
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
             }
-          })
-          if (isEmptyValue(notification)) {
-            commit('addNotificationProcess', {
-              name,
-              typeActivity: true,
-              quantityActivities: state.listActivity.length
-            })
-          } else {
-            // dispatch('updateNotifications', {
-            //   name,
-            //   typeActivity: true,
-            //   quantityActivities: state.listActivity.length
-            // })
-          }
-        })
-    },
-    selectedActivity({ commit }, activity) {
-      commit('setCurrentActivity', activity)
-    },
 
-    getWorkflowLogsListFromServer({ commit }, {
-      containerUuid,
-      tableName,
-      recordId
-    }) {
-      return requestListWorkflowsLogs({
-        tableName,
-        recordId
-      })
-        .then(response => {
-          const { workflowLogsList } = response
-          commit('setWorkFlowLogs', {
-            containerUuid,
-            list: workflowLogsList
+            showMessage({
+              type: 'error',
+              message,
+              showClose: true
+            })
+            resolve({})
           })
-        })
-        .catch(error => {
-          console.warn(`Error Run Doc Action: ${error.message}. Code: ${error.code}.`)
-        })
-    },
-    findNotifications({ commit }) {
-      return listNotifiicationsRequest()
-        .then(response => {
-          const { notifications } = response
-          commit('setListNotifiications', notifications)
-          return response
-        })
+      })
     }
   },
 
   getters: {
     getCurrentActivity: (state) => {
-      return state.currentActivity
+      return state.activity
     },
-    getActivity: (state) => {
-      return state.listActivity
-    },
-    getRecordCount: (state) => {
-      return state.recordCount
-    },
-    getIsLoadActivity: (state) => {
-      return state.isLoadActivity
-    },
-    getCurrentPageNumber: (state) => {
-      return state.pageNumber
-    },
-    getWorkFlowLogs: (state) => ({ containerUuid }) => {
-      return state.workflowLogs[containerUuid] || []
-    },
-    getListNotifiications(state) {
-      return state.listNotifiications
+    getRecordsWorkflowActivities: (state) => {
+      return state.records
     }
   }
 }

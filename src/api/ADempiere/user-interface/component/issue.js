@@ -67,14 +67,16 @@ export function requestListIssues({
  * List Sales Representatives
  */
 export function requestListSalesRepresentatives({
-  searchValue
+  searchValue,
+  pageSize
 }) {
   return request({
     url: `${config.issuesManagement.endpoint}/sales-representatives`,
     // url: '/issue-management/sales-representatives',
     method: 'get',
     params: {
-      search_value: searchValue
+      search_value: searchValue,
+      page_size: pageSize
     }
   })
 }

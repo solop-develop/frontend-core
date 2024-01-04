@@ -66,7 +66,8 @@
         v-show="showedInfo"
         shadow="always"
         class="collapse-workflow"
-        :style="{ position: 'absolute', zIndex: '9999', padding: '10px', left: leftContextualMenu + 'px', top: topContextualMenu + 'px', width: '40% !important;' }"
+        :body-style="{ padding: '5px' }"
+        :style="{ position: 'absolute', zIndex: '9999', padding: '5px', left: leftContextualMenu + 'px', top: topContextualMenu + 'px', width: '40% !important;' }"
       >
         <el-collapse
           v-model="activeCollapse"
@@ -92,14 +93,40 @@
                 :timestamp="translateDateByLong(logs.log_date)"
                 placement="top"
               >
-                <el-card style="padding: 20px!important;">
-                  <span>
+                <el-card
+                  style="padding: 0px!important;"
+                  :body-style="{ padding: '10px' }"
+                >
+                  <el-descriptions :column="1" border>
+                    <el-descriptions-item :label="$t('page.login.userName')">
+                      {{ logs.user_name }} <i class="el-icon-user-solid" />
+                    </el-descriptions-item>
+                    <el-descriptions-item
+                      v-if="!isEmptyValue(logs.text_message)"
+                      :label="$t('report.summary')"
+                    >
+                      {{ logs.text_message }}
+                    </el-descriptions-item>
+                    <el-descriptions-item
+                      v-if="!isEmptyValue(logs.responsible_name)"
+                      :label="$t('window.containerInfo.logWorkflow.responsible')"
+                    >
+                      {{ logs.responsible_name }}
+                    </el-descriptions-item>
+                    <!-- <el-descriptions-item label="Telephone">18100000000</el-descriptions-item>
+                    <el-descriptions-item label="Place" :span="2">Suzhou</el-descriptions-item>
+                    <el-descriptions-item label="Remarks">
+                      <el-tag size="small">School</el-tag>
+                    </el-descriptions-item>
+                    <el-descriptions-item label="Address">No.1188, Wuzhong Avenue, Wuzhong District, Suzhou, Jiangsu Province</el-descriptions-item> -->
+                  </el-descriptions>
+                  <!-- <span>
                     <b> {{ $t('page.login.userName') }} : </b>{{ logs.user_name }} <i class="el-icon-user-solid" />
                   </span>
                   <br>
                   <b v-show="!isEmptyValue(logs.text_message)"> {{ $t('report.summary') }} :</b> {{ logs.text_message }}
                   <br>
-                  <b v-show="!isEmptyValue(logs.responsible_name)"> {{ $t('window.containerInfo.logWorkflow.responsible') }} :</b> {{ logs.responsible_name }}
+                  <b v-show="!isEmptyValue(logs.responsible_name)"> {{ $t('window.containerInfo.logWorkflow.responsible') }} :</b> {{ logs.responsible_name }} -->
                 </el-card>
               </el-timeline-item>
             </el-timeline>
@@ -132,6 +159,7 @@ import store from '@/store'
 import VueWorkflowChart from 'vue-workflow-chart'
 
 // Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere'
 import { translateDateByLong } from '@/utils/ADempiere/formatValue/dateFormat'
 
 export default {
@@ -180,8 +208,9 @@ export default {
     }
 
     function onLabelClicked(id) {
-      infoNode.value = props.nodeList.find(node => node.id === id)
-      nodeLogs.value = props.workflowLogs.filter(node => node.node_uuid === infoNode.value.id)
+      infoNode.value = props.nodeList.find(node => node.id === Number(id))
+      if (isEmptyValue(infoNode.value)) return
+      nodeLogs.value = props.workflowLogs.filter(node => node.node_id === infoNode.value.id)
       const menuMinWidth = isMobile.value ? 0 : 105
       const offsetLeft = this.$el.getBoundingClientRect().left // container margin left
       const offsetWidth = this.$el.offsetWidth // container width
@@ -193,7 +222,7 @@ export default {
         leftContextualMenu.value = maxLeft
       }
 
-      const menutTop = isMobile.value ? 50 : 350
+      const menutTop = isMobile.value ? 50 : 150
 
       const offsetTop = this.$el.getBoundingClientRect().top
       const top = event.clientY - offsetTop + menutTop
@@ -239,12 +268,19 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
 .info {
   margin: 0px;
   font-size: 14px;
   list-style: none;
   padding: 10px;
+  .el-timeline-item {
+    .el-timeline-item__wrapper {
+      position: relative;
+      padding-left: 15px;
+      top: -3px;
+    }
+  }
 }
 .vue-workflow-chart-state {
   background-color: #fff;
@@ -292,7 +328,7 @@ export default {
   stroke: #AED5FE;
 }
 .collapse-workflow {
-  width: 30% !important;
+  width: 70% !important;
   .el-collapse-item__content {
     padding-bottom: 0px;
     font-size: 13px;
