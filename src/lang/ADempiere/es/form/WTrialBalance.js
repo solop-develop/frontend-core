@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanchez@gmail.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -22,15 +22,15 @@ const WTrialBalance = {
   untilPeriod: 'Hasta Periodo',
   accountingAccount: 'Cuenta Contable',
   cubeReport: 'Cubo Informe',
-  accountNo: 'Número de cuenta',
-  accounName: 'Nombre de la cuenta',
-  usuario: 'Usuario',
+  accountNo: 'Número de Cuenta',
+  accounName: 'Nombre de la Cuenta',
+  user1: 'Usuario 1',
   periodActual: 'Periodo real',
-  periodBudget: 'Presupuesto del periodo',
-  periodVariance: 'Variación del período',
-  yTDActual: 'Hasta la fecha real',
-  yTDBudget: 'Presupuesto hasta la fecha',
-  varianza: 'variación'
+  periodBudget: 'Presupuesto del Periodo',
+  periodVariance: 'Variación del Período',
+  yTDActual: 'Hasta la Fecha Real',
+  yTDBudget: 'Presupuesto Hasta la Fecha',
+  varianza: 'Variación'
 }
 
 export default WTrialBalance

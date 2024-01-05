@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanchez@gmail.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -22,15 +22,15 @@ const WTrialBalance = {
   untilPeriod: 'Until Period',
   accountingAccount: 'Accounting Account',
   cubeReport: 'Cube Report',
-  accountNo: 'Account number',
-  accounName: 'Account name',
-  user: 'User',
-  periodActual: 'Actual period',
-  periodBudget: 'Period budget',
+  accountNo: 'Account Number',
+  accounName: 'Account Name',
+  user1: 'User 1',
+  periodActual: 'Actual Period',
+  periodBudget: 'Period Budget',
   periodVariance: 'Period Variation',
-  yTDActual: 'Up to actual date',
-  yTDBudget: 'Budget to date',
-  variance: 'variation'
+  yTDActual: 'Up to Actual Date',
+  yTDBudget: 'Budget to Date',
+  variance: 'Variation'
 }
 
 export default WTrialBalance
