@@ -25,7 +25,7 @@ export function listMatchesTypes({
   pageSize
 }) {
   return request({
-    url: '/form/addons/v-match/list-matches-types-from',
+    url: '/match-po-receipt-invoice/matches-types/from',
     method: 'get',
     params: {
       page_size: pageSize,
@@ -46,7 +46,7 @@ export function listMatchesTypesTo({
   pageSize
 }) {
   return request({
-    url: '/form/addons/v-match/list-matches-types-to',
+    url: '/match-po-receipt-invoice/matches-types/to',
     method: 'get',
     params: {
       page_size: pageSize,
@@ -67,7 +67,7 @@ export function listSearchModes({
   pageSize
 }) {
   return request({
-    url: '/form/addons/v-match/list-search-modes',
+    url: '/match-po-receipt-invoice/search-modes',
     method: 'get',
     params: {
       page_size: pageSize,
@@ -84,10 +84,10 @@ export function listSearchModes({
 export function listVendors({
   searchValue,
   pageToken,
-  pageSize = 100
+  pageSize = 1000
 }) {
   return request({
-    url: '/form/addons/v-match/list-vendors',
+    url: '/match-po-receipt-invoice/vendors',
     method: 'get',
     params: {
       page_size: pageSize,
@@ -107,7 +107,7 @@ export function listProduct({
   pageSize = 500
 }) {
   return request({
-    url: '/form/addons/v-match/list-products',
+    url: '/match-po-receipt-invoice/products',
     method: 'get',
     params: {
       page_size: pageSize,
@@ -134,7 +134,7 @@ export function ListMatchedFrom({
   pageSize
 }) {
   return request({
-    url: '/form/addons/v-match/list-match-from',
+    url: '/match-po-receipt-invoice/matches/from',
     method: 'get',
     params: {
       page_size: pageSize,
@@ -170,7 +170,7 @@ export function ListMatchedTo({
   matchFromSelectedId
 }) {
   return request({
-    url: '/form/addons/v-match/list-match-to',
+    url: `/match-po-receipt-invoice/matches/to/${vendorId}/${productId}`,
     method: 'get',
     params: {
       page_size: pageSize,
@@ -202,7 +202,7 @@ export function process({
   quantity
 }) {
   return request({
-    url: '/form/addons/v-match/process',
+    url: '/match-po-receipt-invoice/process',
     method: 'post',
     data: {
       //  DSL Query

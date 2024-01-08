@@ -23,6 +23,7 @@ import {
   ListMatchedFrom,
   process
 } from '@/api/ADempiere/form/VMatch.js'
+import { isEmptyValue } from '@/utils/ADempiere'
 
 // Utils and Helper Methods
 // import { showMessage } from '@/utils/ADempiere/notification.js'
@@ -136,16 +137,20 @@ export default {
           dateFrom,
           dateto
         } = state.searchCriteria
+        const vendor = isEmptyValue(vendorId) ? undefined : vendorId
+        const product = isEmptyValue(productId) ? undefined : productId
+        const from = isEmptyValue(dateFrom) ? undefined : dateFrom
+        const to = isEmptyValue(dateto) ? undefined : dateto
         commit('setMatchedFromLoading', true)
         ListMatchedFrom({
           matchMode,
           searchValue,
           matchFromType,
           matchToType,
-          vendorId,
-          productId,
-          dateFrom,
-          dateto
+          vendorId: vendor,
+          productId: product,
+          dateFrom: from,
+          dateto: to
         })
           .then(response => {
             const { records } = response
@@ -153,7 +158,7 @@ export default {
               return {
                 ...list,
                 isSelection: false,
-                date: dateTimeFormats(list.date, 'YYYY-MM-DD')
+                dateDisplay: dateTimeFormats(list.date, 'YYYY-MM-DD')
               }
             })
             commit('setMatchedFrom', list)
@@ -170,8 +175,8 @@ export default {
     },
     findListMatchedTo({ commit, state }, {
       id,
-      vendorId,
-      productId,
+      vendorId = undefined,
+      productId = undefined,
       isSameQuantity
     }) {
       return new Promise(resolve => {
@@ -183,6 +188,11 @@ export default {
           dateFrom,
           dateto
         } = state.searchCriteria
+        // const vendor = isEmptyValue(vendorId) ? undefined : vendorId
+        // const product = isEmptyValue(productId) ? undefined : productId
+        // if (isEmptyValue(productId)) productId
+        const from = isEmptyValue(dateFrom) ? undefined : dateFrom
+        const to = isEmptyValue(dateto) ? undefined : dateto
         commit('setMatchedToLoading', true)
         ListMatchedTo({
           matchMode,
@@ -191,8 +201,8 @@ export default {
           matchToType,
           vendorId,
           productId,
-          dateFrom,
-          dateto,
+          dateFrom: from,
+          dateto: to,
           matchFromSelectedId: id,
           isSameQuantity
         })
@@ -202,7 +212,7 @@ export default {
               return {
                 ...list,
                 isSelection: false,
-                date: dateTimeFormats(list.date, 'YYYY-MM-DD')
+                dateDisplay: dateTimeFormats(list.date, 'YYYY-MM-DD')
               }
             })
             commit('setMatchedToLoading', false)

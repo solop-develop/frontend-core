@@ -16,9 +16,8 @@
  along with this program.  If not, see <https:www.gnu.org/licenses/>.
 -->
 <template>
-  <div style="height: 90% !important;">
-    <!-- Header -->
-    <div style="height: 8%;width: 100%;">
+  <el-container style="height: 100% !important;">
+    <el-header>
       <el-steps :active="active" finish-status="success" process-status="finish">
         <el-step
           v-for="(item, index) in step"
@@ -26,31 +25,27 @@
           :title="item.name"
         />
       </el-steps>
-    </div>
-    <!-- Panel -->
-    <div style="height: 87%;width: 100%;">
-      <transition name="el-fade-in-linear">
-        <search-criteria
-          v-if="active === 0"
-          :fields-list="fieldsList"
-          :metadata="metadata"
-        />
-        <invoices
-          v-if="active === 1"
-        >
-          <template v-slot:footer>
-            <el-button v-show="active > 0" type="danger" icon="el-icon-close" @click="prev" />
-            <el-button type="primary" icon="el-icon-check" :disabled="validateProcess" @click="sendAssignment" />
-          </template>
-        </invoices>
-      </transition>
-    </div>
-    <!-- Buttons Actions -->
-    <div style="height: 5%;width: 100%;">
+    </el-header>
+    <transition name="el-fade-in-linear">
+      <search-criteria
+        v-if="active === 0"
+        :fields-list="fieldsList"
+        :metadata="metadata"
+      />
+      <invoices
+        v-if="active === 1"
+      >
+        <template v-slot:footer>
+          <el-button v-show="active > 0" type="danger" icon="el-icon-close" @click="prev" />
+          <el-button type="primary" icon="el-icon-check" :disabled="validateProcess" @click="sendAssignment" />
+        </template>
+      </invoices>
+    </transition>
+    <div v-if="active === 0" :class="styleFooter">
       <el-button type="primary" icon="el-icon-check" style="float: right;" :disabled="validateNextStep" @click="next" />
       <el-button v-show="active > 0" type="danger" icon="el-icon-close" style="float: right;margin-right: 10px;" @click="prev" />
     </div>
-  </div>
+  </el-container>
 </template>
 
 <script>
