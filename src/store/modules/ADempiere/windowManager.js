@@ -437,12 +437,14 @@ const windowManager = {
               columnName,
               operator,
               value,
-              valueTo
+              valueTo,
+              values
             } = parameter
+
             return JSON.stringify({
               name: columnName,
               operator,
-              values: !isEmptyValue(valueTo) ? [value, valueTo] : value
+              values: !isEmptyValue(values) ? values : !isEmptyValue(valueTo) ? [value, valueTo] : value
             })
           }).toString() + ']'
         }
