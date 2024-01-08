@@ -48,6 +48,7 @@
         </el-tab-pane>
         <custom-pagination
           :total="matchFromList.length"
+          :selection="validateMatchFrom"
           style="margin-top: 10px;"
         />
       </el-tabs>
@@ -90,6 +91,7 @@
           </el-table>
           <custom-pagination
             :total="matchToList.length"
+            :selection="validateMatchTo"
             style="margin-top: 10px;"
           />
         </el-tab-pane>
@@ -264,14 +266,14 @@ export default defineComponent({
       row.isSelection = !row.isSelection
       const {
         id,
-        vendorId,
-        productId
+        vendor_id,
+        product_id
       } = row
       const list = matchFromList.value.filter(from => from.id !== row.id)
       store.dispatch('findListMatchedTo', {
         id,
-        vendorId,
-        productId,
+        vendorId: vendor_id,
+        productId: product_id,
         isSameQuantity: isSameQuantity.value
       })
       store.commit('setSelecteAssignFrom', row)
@@ -293,6 +295,18 @@ export default defineComponent({
       })
     }
 
+    const validateMatchFrom = computed(() => {
+      const currentSelecteAssignFrom = store.getters.getSelecteAssignFrom
+      if (isEmptyValue(currentSelecteAssignFrom)) return 0
+      return 1
+    })
+
+    const validateMatchTo = computed(() => {
+      const currentSelecteAssignTo = store.getters.getSelecteAssignTo
+      if (isEmptyValue(currentSelecteAssignTo)) return 0
+      return 1
+    })
+
     /**
      * Watch
      */
@@ -300,13 +314,13 @@ export default defineComponent({
       if (newValue !== oldValue) {
         const {
           id,
-          vendorId,
-          productId
+          vendor_id,
+          product_id
         } = store.getters.getSelecteAssignFrom
         store.dispatch('findListMatchedTo', {
           id,
-          vendorId,
-          productId,
+          vendorId: vendor_id,
+          productId: product_id,
           isSameQuantity: isSameQuantity.value
         })
       }
@@ -354,7 +368,9 @@ export default defineComponent({
       assigning,
       // Methods
       handleCurrentChangeFrom,
-      handleCurrentChangeTo
+      handleCurrentChangeTo,
+      validateMatchFrom,
+      validateMatchTo
     }
   }
 })

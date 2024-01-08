@@ -19,32 +19,32 @@ import language from '@/lang'
 
 export default [
   {
-    columnName: 'documentNo',
+    columnName: 'document_no',
     label: language.t('form.match.table.nrDocument'),
     isNumeric: false,
     size: '250'
   },
   {
-    columnName: 'date',
+    columnName: 'dateDisplay',
     label: language.t('table.recentItems.date'),
     isNumeric: false,
     size: '150'
   },
   {
-    columnName: 'vendorName',
+    columnName: 'product_name',
     label: language.t('form.pos.order.BusinessPartnerCreate.businessPartner'),
     isNumeric: false,
     size: '200'
   },
   {
-    columnName: 'lineNo',
+    columnName: 'line_no',
     label: language.t('form.pos.order.numberLines'),
     isNumeric: true,
     size: '150',
     align: 'right'
   },
   {
-    columnName: 'productName',
+    columnName: 'product_name',
     label: language.t('form.pos.tableProduct.product'),
     isNumeric: true,
     size: '150'
@@ -57,7 +57,7 @@ export default [
     align: 'right'
   },
   {
-    columnName: 'matchedQuantity',
+    columnName: 'matched_quantity',
     label: language.t('form.match.field.assigning'),
     isNumeric: true,
     size: '150',
