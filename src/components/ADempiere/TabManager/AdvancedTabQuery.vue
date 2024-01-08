@@ -330,7 +330,8 @@ export default defineComponent({
       store.dispatch('getEntities', {
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid,
-        filters
+        filters,
+        isAdvancedQuery: true
       })
         .finally(() => {
           isLoadingSearch.value = false
