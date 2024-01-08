@@ -83,9 +83,9 @@ export default {
         return fieldRender
       }
       switch (this.metadata.reference.tableName) {
-        // case 'C_BPartner':
-        //   fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/BusinessPartnerInfo')
-        //   break
+        case 'C_BPartner':
+          fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/BusinessPartnerInfo')
+          break
         // case 'C_Invoice':
         // case 'M_Product':
         // case 'A_Asset':

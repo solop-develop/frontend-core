@@ -171,6 +171,12 @@ const businessPartner = {
           .then(responseBusinessPartnerList => {
             const recordsList = responseBusinessPartnerList.business_partners.map((record, rowIndex) => {
               return {
+                C_BPartner_ID: record.id,
+                Value: record.value,
+                TaxID: record.tax_id,
+                Name: record.name,
+                LastName: record.last_name,
+                Description: record.description,
                 // ...record.attributes,
                 ...record,
                 // datatables app attributes
