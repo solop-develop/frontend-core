@@ -280,6 +280,7 @@ const windowManager = {
       referenceUuid = '',
       filters = [],
       filtersRecord = {},
+      isAdvancedQuery = false,
       pageNumber,
       pageSize
     }) {
@@ -591,7 +592,15 @@ const windowManager = {
             resolve(dataToStored)
           })
           .catch(error => {
-            console.warn(`Error get entites`, error.message)
+            if (isAdvancedQuery) {
+              showMessage({
+                type: 'error',
+                message: error.message
+              })
+            } else {
+              console.warn(`Error get entites`, error.message)
+            }
+
             commit('setTabData', {
               parentUuid,
               isLoaded: true,
