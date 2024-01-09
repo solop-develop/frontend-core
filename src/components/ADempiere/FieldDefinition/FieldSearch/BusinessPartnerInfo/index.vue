@@ -136,7 +136,7 @@ export default {
       }
     },
     handleSelect(recordSelected) {
-      if (isEmptyValue(recordSelected) || isEmptyValue(recordSelected.UUID)) {
+      if (isEmptyValue(recordSelected) || recordSelected.C_BPartner_ID <= 0) { // || isEmptyValue(recordSelected.UUID)) {
         // set empty values
         recordSelected = this.blankValues
       }
