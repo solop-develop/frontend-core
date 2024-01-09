@@ -199,10 +199,11 @@ const processManager = {
           containerUuid,
           columnName: RECORD_ID
         })
-        const currentRoute = router.app._route
-
-        if (isEmptyValue(recordId) && !isEmptyValue(currentRoute.query.recordId)) {
-          recordId = currentRoute.query.recordId
+        if (isEmptyValue(recordId)) {
+          const currentRoute = router.app._route
+          if (!isEmptyValue(currentRoute.query.recordId)) {
+            recordId = currentRoute.query.recordId
+          }
         }
 
         requestRunBusinessProcessAsBrowser({
