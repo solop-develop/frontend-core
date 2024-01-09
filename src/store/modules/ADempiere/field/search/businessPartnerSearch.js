@@ -24,6 +24,7 @@ import { requestListBusinessPartner } from '@/api/ADempiere/common/index.ts'
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+import { COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/businessPartner'
 
 // Utils and Helper Methods
 import { isSalesTransactionContainer } from '@/utils/ADempiere/contextUtils'
@@ -171,7 +172,7 @@ const businessPartner = {
           .then(responseBusinessPartnerList => {
             const recordsList = responseBusinessPartnerList.business_partners.map((record, rowIndex) => {
               return {
-                C_BPartner_ID: record.id,
+                [COLUMN_NAME]: record.id,
                 Value: record.value,
                 TaxID: record.tax_id,
                 Name: record.name,
