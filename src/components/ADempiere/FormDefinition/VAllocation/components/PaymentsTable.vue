@@ -45,22 +45,41 @@
         <span v-if="(header.columnName === 'organization' || header.columnName === 'transaction_type')">
           {{ scope.row[header.columnName].name }}
         </span>
-        <span v-else-if="isCellInput(header)">
+        <span
+          v-else-if="isCellInput(header)"
+          style="width: 100% !important"
+        >
           <el-input-number
             v-model="scope.row[header.columnName]"
             controls-position="right"
+            size="mini"
+            style="width: 100% !important"
           />
         </span>
         <span v-else>
-          <p
+          <!-- <p
             v-if="scope.row[header.columnName].length < 13 || (typeof scope.row[header.columnName] === 'number')"
             style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;line-height: 12px;margin: 0px;"
           >
             {{ scope.row[header.columnName] }}
+          </p> -->
+          <p
+            v-if="scope.row[header.columnName].length < 13 || (typeof scope.row[header.columnName] === 'number')"
+            style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;line-height: 10px;font-size: 12px; margin: 0px;"
+          >
+            <span v-if="['document_no', 'description'].includes(header.columnName)">
+              {{ scope.row[header.columnName] }}
+            </span>
+            <span v-else-if="header.columnName.includes('date')">
+              {{ formatDate({ value: scope.row[header.columnName], format: 'DD/MM/yyyy'}) }}
+            </span>
+            <span v-else>
+              {{ formatPrice({ value: Number(scope.row[header.columnName]), currency: scope.row.currency.iso_code }) }}
+            </span>
           </p>
           <p
             v-else
-            style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;line-height: 12px;margin: 0px;"
+            style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;line-height: 10px;font-size: 12px;;margin: 0px;"
           >
             <el-popover
               placement="top-start"
@@ -71,7 +90,7 @@
               <p
                 slot="reference"
                 type="text"
-                style="color: #606266;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;line-height: 12px;margin: 0px;"
+                style="color: #606266;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;line-height: 10px;font-size: 12px;margin: 0px;"
               >
                 {{ scope.row[header.columnName] }}
               </p>
@@ -94,6 +113,8 @@ import headersPayments from './headersPayments.js'
 
 // Utils and Helper Methods
 import { isEmptyValue, getTypeOfValue } from '@/utils/ADempiere/valueUtils'
+import { formatPrice } from '@/utils/ADempiere/formatValue/numberFormat'
+import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
 
 export default defineComponent({
   name: 'PaymentsTable',
@@ -300,7 +321,9 @@ export default defineComponent({
       sumAppliedInvoce,
       isLoadingPayments,
       // Methods
+      formatDate,
       isCellInput,
+      formatPrice,
       selectionsPayments,
       selectionsPaymentsAll
     }
@@ -337,7 +360,7 @@ export default defineComponent({
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  line-height: 12px;
+  line-height: 10px;
 }
 </style>
 <style>
