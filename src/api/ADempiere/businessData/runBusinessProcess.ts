@@ -44,12 +44,14 @@ export function requestRunBusinessProcessAsBrowser({
   id,
   parametersList,
   browserId,
+  recordId,
   selectionsList
 }) {
   return request({
     url: `/business-data/process/${id}/smart-browse/${browserId}`,
     method: 'post',
     data: {
+      record_id: recordId,
       parameters: parametersList,
       selections: selectionsList
     }

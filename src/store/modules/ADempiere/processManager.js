@@ -194,11 +194,16 @@ const processManager = {
         let isProcessedError = false
         let summary = ''
 
-        const recordId = rootGetters.getValueOfField({
+        let recordId = rootGetters.getValueOfField({
           parentUuid,
           containerUuid,
           columnName: RECORD_ID
         })
+        const currentRoute = router.app._route
+
+        if (isEmptyValue(recordId) && !isEmptyValue(currentRoute.query.recordId)) {
+          recordId = currentRoute.query.recordId
+        }
 
         requestRunBusinessProcessAsBrowser({
           uuid: containerUuid,
