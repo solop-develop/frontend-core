@@ -87,7 +87,7 @@ export function getSearchRecordsList({
   columnName,
   pageNumber
 }) {
-  return store.dispatch('findGeneralInfo', {
+  return store.dispatch('getGeneralSearchRecordsFromServer', {
     containerUuid,
     contextColumnNames,
     filters,

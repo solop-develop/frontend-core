@@ -62,7 +62,7 @@ export function requestGridGeneralInfo({
 
   let url
   switch (true) {
-    case (!isEmptyValue(tableName) && isEmptyValue(columnName)):
+    case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
       url = `/user-interface/search-records/${tableName}/${columnName}`
       break
     case !isEmptyValue(columnId):

@@ -135,6 +135,7 @@ export default {
           pageNumber: 1,
           contextColumnNames: this.metadata.reference.contextColumnNames,
           tableName: this.metadata.reference.tableName,
+          columnName: this.metadata.columnName,
           fieldUuid: this.metadata.uuid,
           searchValue
         })

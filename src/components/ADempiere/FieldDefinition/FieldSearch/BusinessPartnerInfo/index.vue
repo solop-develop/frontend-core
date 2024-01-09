@@ -66,7 +66,7 @@ import businessPartnerMixin from './mixinBusinessPartner'
 import ButtonBusinessPartnersList from './buttonBusinessPartnersList.vue'
 
 // Constants
-import { TABLE_NAME } from '@/utils/ADempiere/dictionary/field/businessPartner.js'
+import { TABLE_NAME, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/businessPartner.js'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -136,7 +136,7 @@ export default {
       }
     },
     handleSelect(recordSelected) {
-      if (isEmptyValue(recordSelected) || isEmptyValue(recordSelected.UUID)) {
+      if (isEmptyValue(recordSelected) || recordSelected[COLUMN_NAME] <= 0) { // || isEmptyValue(recordSelected.UUID)) {
         // set empty values
         recordSelected = this.blankValues
       }
