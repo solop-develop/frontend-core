@@ -45,22 +45,27 @@
         <span v-if="(header.columnName === 'organization' || header.columnName === 'transaction_type')">
           {{ scope.row[header.columnName].name }}
         </span>
-        <span v-else-if="isCellInput(header)">
+        <span
+          v-else-if="isCellInput(header)"
+          style="width: 100% !important"
+        >
           <el-input-number
             v-model="scope.row[header.columnName]"
             controls-position="right"
+            size="mini"
+            style="width: 100% !important"
           />
         </span>
         <span v-else>
           <p
             v-if="typeof scope.row[header.columnName] === 'object'"
-            style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;line-height: 12px;margin: 0px;"
+            style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;line-height: 10px;font-size: 12px;margin: 0px;"
           >
             {{ scope.row[header.columnName].value }}
           </p>
           <p
             v-else-if="scope.row[header.columnName].length < 13 || (typeof scope.row[header.columnName] === 'number')"
-            style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;line-height: 12px;margin: 0px;"
+            style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;line-height: 10px;font-size: 12px;margin: 0px;"
           >
             <span v-if="['document_no', 'description'].includes(header.columnName)">
               {{ scope.row[header.columnName] }}
@@ -74,7 +79,7 @@
           </p>
           <p
             v-else
-            style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;line-height: 12px;margin: 0px;"
+            style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;line-height: 10px;font-size: 12px;margin: 0px;"
           >
             <el-popover
               placement="top-start"
@@ -85,7 +90,7 @@
               <p
                 slot="reference"
                 type="text"
-                style="color: #606266;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;line-height: 12px;margin: 0px;"
+                style="color: #606266;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;line-height: 10px;font-size: 12px;margin: 0px;"
               >
                 {{ scope.row[header.columnName] }}
               </p>
@@ -325,7 +330,7 @@ export default defineComponent({
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    line-height: 12px;
+    line-height: 10px;
   }
 </style>
 <style>
