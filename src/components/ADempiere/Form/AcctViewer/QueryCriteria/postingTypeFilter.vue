@@ -24,6 +24,7 @@
       v-model="postingTypeValue"
       style="width: 100%;"
       filterable
+      clearable
       @visible-change="getPostingTypesList"
     >
       <el-option

@@ -32,10 +32,10 @@
       type="primary"
       class="button-base-icon"
       icon="el-icon-download"
+      :disabled="isEmptyValue(recordsList)"
       style="margin-top: 10px;margin-right: 10px;float: right;"
       @click="exportAccounting"
     />
-
     <el-button
       type="primary"
       plain
@@ -56,9 +56,10 @@
 </template>
 
 <script>
-import { defineComponent, ref } from '@vue/composition-api'
+import { defineComponent, computed, ref } from '@vue/composition-api'
 
 import store from '@/store'
+import lang from '@/lang'
 
 import {
   requestStartRePost
@@ -68,7 +69,7 @@ import {
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification'
 // import { parseTime } from '@/utils'
-// import { exportFileFromJson } from '@/utils/ADempiere/exportUtil.js'
+import { exportFileFromJson } from '@/utils/ADempiere/exportUtil.js'
 
 export default defineComponent({
   name: 'ActionsFooter',
@@ -93,38 +94,208 @@ export default defineComponent({
     const isLoadingRePost = ref(false)
     const force = ref(false)
 
-    // const accountingShemaId = computed(() => {
-    //   return store.getters.getCurrentStoredAccoutingSchemaId
-    // })
+    const headerAccounting = computed(() => {
+      return [
+        {
+          label: lang.t('form.accountingViewer.organization'),
+          keyColumn: 'DisplayColumn_AD_Org_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.account'),
+          keyColumn: 'DisplayColumn_Account_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.accountedDebit'),
+          keyColumn: 'AmtAcctDr'
+        },
+        {
+          label: lang.t('form.accountingViewer.accountedCredit'),
+          keyColumn: 'AmtAcctDr'
+        },
+        {
+          label: lang.t('form.accountingViewer.transactionDate'),
+          keyColumn: 'DateTrx'
+        },
+        {
+          label: lang.t('form.accountingViewer.currency'),
+          keyColumn: 'DisplayColumn_C_Currency_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.sourceDebit'),
+          keyColumn: 'AmtSourceDr'
+        },
+        {
+          label: lang.t('form.accountingViewer.sourceCredit'),
+          keyColumn: 'AmtSourceCr'
+        },
+        {
+          label: lang.t('form.accountingViewer.rate'),
+          keyColumn: 'Rate'
+        },
+        {
+          label: lang.t('form.accountingViewer.product'),
+          keyColumn: 'M_Product_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.businessPartner'),
+          keyColumn: 'C_BPartner_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.project'),
+          keyColumn: 'C_Project_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.campaign'),
+          keyColumn: 'C_Campaign_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.salesRegion'),
+          keyColumn: 'C_SalesRegion_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.organizationTransaction'),
+          keyColumn: 'AD_OrgTrx_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.locationFrom'),
+          keyColumn: 'C_LocFrom_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.locationTo'),
+          keyColumn: 'C_LocTo_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.userList1'),
+          keyColumn: 'User1_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.userList2'),
+          keyColumn: 'User2_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.activity'),
+          keyColumn: 'C_Activity_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.subAccount'),
+          keyColumn: 'C_SubAcct_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.userElement1'),
+          keyColumn: 'UserElement1_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.userElement2'),
+          keyColumn: 'UserElement2_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.userList3'),
+          keyColumn: 'User1_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.userList4'),
+          keyColumn: 'User4_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.accountDate'),
+          keyColumn: 'DateAcct'
+        },
+        {
+          label: lang.t('form.accountingViewer.period'),
+          keyColumn: 'DisplayColumn_C_Period_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.uom'),
+          keyColumn: 'DisplayColumn_C_UOM_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.quantity'),
+          keyColumn: 'Qty'
+        },
+        {
+          label: lang.t('form.accountingViewer.tableRecord'),
+          keyColumn: 'DisplayColumn_AD_Table_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.recordId'),
+          keyColumn: 'Record_ID'
+        },
+        {
+          label: lang.t('form.accountingViewer.description'),
+          keyColumn: 'Description'
+        },
+        {
+          label: lang.t('form.accountingViewer.postingType'),
+          keyColumn: 'DisplayColumn_PostingType'
+        }
+      ]
+    })
 
-    // const accountingShemasList = computed(() => {
-    //   return store.getters.getStoredAccoutingShemasList
-    // })
+    const isShowSourceColumns = computed(() => {
+      return store.getters.getIsDisplaySourceInfo
+    })
 
-    // function formatJson(filterVal, jsonData) {
-    //   return jsonData.map(v => filterVal.map(j => {
-    //     if (j === 'timestamp') {
-    //       return parseTime(v[j])
-    //     } else {
-    //       return v[j]
-    //     }
-    //   }))
-    // }
+    const isShowQuantityColumns = computed(() => {
+      return store.getters.getIsDisplayQuantity
+    })
+
+    const isShowDocumentColumns = computed(() => {
+      return store.getters.getIsDisplayDocumentInfo
+    })
+
+    const recordsList = computed(() => {
+      return store.getters.getAccoutingRecordsList
+    })
 
     function exportAccounting() {
-      // const fileName = accountingShemasList.value.find(acctSchema => {
-      //   return acctSchema.KeyColumn === accountingShemaId.value
-      // }).DisplayColumn
+      const header = headerAccounting.value
+        .filter(list => {
+          if (
+            isShowSourceColumns.value &&
+            [
+              lang.t('form.accountingViewer.transactionDate'),
+              lang.t('form.accountingViewer.currency'),
+              lang.t('form.accountingViewer.sourceDebit'),
+              lang.t('form.accountingViewer.sourceCredit'),
+              lang.t('form.accountingViewer.rate')
+            ].includes(list.label)
+          ) {
+            return list
+          } else if (
+            isShowQuantityColumns.value &&
+            [
+              lang.t('form.accountingViewer.uom'),
+              lang.t('form.accountingViewer.quantity')
+            ].includes(list.label)
+          ) {
+            return list
+          } else if (
+            isShowDocumentColumns.value &&
+            [
+              lang.t('form.accountingViewer.tableRecord'),
+              lang.t('form.accountingViewer.recordId'),
+              lang.t('form.accountingViewer.description')
+            ].includes(list.label)
+          ) {
+            return list
+          }
+          return list
+        })
+        .map(list => list.label)
 
-      // exportFileFromJson({
-      //   header: headerAccounting.value.map(a => a.label),
-      //   data: formatJson(
-      //     headerAccounting.value.map(a => a.columnName),
-      //     tableData.value
-      //   ),
-      //   fileName,
-      //   bookType: 'xlsx'
-      // })
+      const data = recordsList.value.map((list, index) => {
+        return headerAccounting.value
+          .map(epa => {
+            return list[epa.keyColumn]
+          })
+      })
+
+      exportFileFromJson({
+        header: header,
+        data: data,
+        fileName: 'test',
+        bookType: 'xlsx'
+      })
     }
 
     function refreshAccount() {
@@ -167,6 +338,11 @@ export default defineComponent({
       isLoadingDataTable,
       isLoadingRePost,
       force,
+      headerAccounting,
+      recordsList,
+      isShowQuantityColumns,
+      isShowDocumentColumns,
+      isShowSourceColumns,
       exportAccounting,
       refreshAccount,
       rePost

@@ -31,7 +31,7 @@ export function listProductStorage({
   pageToken
 }) {
   return request({
-    url: '/material-management/list-product-storage',
+    url: '/material-management/products-storage',
     method: 'get',
     params: {
       //  DSL Query
@@ -42,8 +42,4 @@ export function listProductStorage({
       page_token: pageToken
     }
   })
-    .then(response => {
-      const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
-      return convertEntityList(response)
-    })
 }

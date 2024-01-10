@@ -122,10 +122,6 @@ export function requestAccountingFacts({
       filters
     }
   })
-    .then(response => {
-      const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
-      return convertEntityList(response)
-    })
 }
 
 export function requestStartRePost({

@@ -68,15 +68,15 @@ import store from '@/store'
 
 // Components and Mixins
 import AcctViewer from '@/components/ADempiere/Form/AcctViewer'
-import AttachmentManager from './Component/AttachmentManager/index.vue'
-import RecordLogs from './Component/RecordLogs/index.vue'
-import recordIssues from './Component/RecordIssues/index.vue'
-import RecordNotes from './Component/RecordNotes/index.vue'
-import ReferenceRecords from './Component/ReferenceRecords/index.vue'
-import StoreProduct from './Component/storeProduct/index.vue'
-import WorkflowLogs from './Component/workflowLogs/index.vue'
-import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
-import RecordDashboard from './Component/RecordDashboard/index.vue'
+import AttachmentManager from './Component/AttachmentManager'
+import RecordLogs from './Component/RecordLogs'
+import recordIssues from './Component/RecordIssues'
+import RecordNotes from './Component/RecordNotes'
+import ReferenceRecords from './Component/ReferenceRecords'
+import StoreProduct from './Component/storeProduct'
+import WorkflowLogs from './Component/workflowLogs'
+import LoadingView from '@/components/ADempiere/LoadingView'
+import RecordDashboard from './Component/RecordDashboard'
 
 // API Request Methods
 import { listProductStorage } from '@/api/ADempiere/form/storeProduct.js'
@@ -84,6 +84,7 @@ import { listProductStorage } from '@/api/ADempiere/form/storeProduct.js'
 // Utils and Helper Methods
 import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import { isEmptyValue } from '@/utils/ADempiere'
+import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 import { isDisplayedField } from '@/utils/ADempiere/dictionary/window.js'
 
 export default defineComponent({
@@ -156,7 +157,7 @@ export default defineComponent({
           svg: true,
           iconClass: 'tree-table',
           isLoading: isLoadingRecordLogsList.value,
-          component: () => import('./Component/RecordLogs/index.vue')
+          component: RecordLogs
         },
         {
           name: 'listReference',
@@ -165,7 +166,7 @@ export default defineComponent({
           svg: false,
           isLoading: isLoadingListReference.value,
           iconClass: 'el-icon-zoom-in',
-          component: () => import('./Component/ReferenceRecords/index.vue')
+          component: ReferenceRecords
         },
         {
           name: 'recordAttachmentTab',
@@ -174,7 +175,7 @@ export default defineComponent({
           svg: false,
           isLoading: isLoadingListAttachment.value,
           iconClass: 'el-icon-paperclip',
-          component: () => import('./Component/AttachmentManager/index.vue')
+          component: AttachmentManager
         },
         {
           name: 'recordNotesTab',
@@ -183,7 +184,7 @@ export default defineComponent({
           svg: true,
           iconClass: 'message',
           isLoading: isLoadingNotesRecord.value,
-          component: () => import('./Component/RecordNotes/index.vue')
+          component: RecordNotes
         },
         {
           name: 'getListIssues',
@@ -192,7 +193,7 @@ export default defineComponent({
           svg: true,
           iconClass: 'guide',
           isLoading: isLoadingIssuessRecord.value,
-          component: () => import('./Component/RecordIssues/index.vue')
+          component: recordIssues
         },
         {
           name: 'searchWorkflowHistory',
@@ -201,7 +202,7 @@ export default defineComponent({
           svg: true,
           iconClass: 'tree-table',
           isLoading: false,
-          component: () => import('./Component/workflowLogs/index.vue')
+          component: WorkflowLogs
         },
         {
           name: 'accountingInformation',
@@ -219,7 +220,7 @@ export default defineComponent({
           svg: true,
           isLoading: false,
           iconClass: 'warehouse',
-          component: () => import('./Component/storeProduct/index.vue')
+          component: StoreProduct
         },
         {
           name: 'listDashboard',
@@ -228,7 +229,7 @@ export default defineComponent({
           svg: true,
           isLoading: false,
           iconClass: 'dashboard',
-          component: () => import('./Component/RecordDashboard/index.vue')
+          component: RecordDashboard
         }
       ]
     })
@@ -458,11 +459,16 @@ export default defineComponent({
         recordUuid: currentRecordUuid.value
       })
         .then(response => {
-          recordsListStoreProduct.value = response.recordsList.map(record => {
-            const { id, uuid, tableName, attributes } = record
+          recordsListStoreProduct.value = response.records.map(record => {
+            const { id, uuid, tableName, values } = record
+            const { QtyOnHand, QtyOrdered, QtyReserved, QtyAvailable } = values
             return {
-              ...attributes,
-              DateLastInventory: formatDate({ value: attributes.DateLastInventory }),
+              ...values,
+              QtyOnHand: formatQuantity({ value: Number(QtyOnHand.value) }),
+              QtyOrdered: formatQuantity({ value: Number(QtyOrdered.value) }),
+              QtyReserved: formatQuantity({ value: Number(QtyReserved.value) }),
+              QtyAvailable: formatQuantity({ value: Number(QtyAvailable.value) }),
+              DateLastInventory: formatDate({ value: values.DateLastInventory }),
               id,
               uuid,
               tableName
