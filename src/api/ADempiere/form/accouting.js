@@ -29,7 +29,7 @@ export function requestListAccoutingSchemas({
   pageSize = 100
 }) {
   return request({
-    url: '/general-ledger/accounting-schemas',
+    url: '/general-ledger/accounts/schemas',
     method: 'get',
     params: {
       page_size: pageSize,
@@ -69,7 +69,7 @@ export function requestPostingTypesList({
   pageSize = 100
 }) {
   return request({
-    url: '/general-ledger/posting-types',
+    url: '/general-ledger/accounts/posting-types',
     method: 'get',
     params: {
       page_size: pageSize,
@@ -103,8 +103,8 @@ export function requestAccountingFacts({
   })
 
   return request({
-    url: '/general-ledger/accounting-facts',
-    method: 'post',
+    url: '/general-ledger/accounts/facts',
+    method: 'get',
     params: {
       //  DSL Query
       table_name: tableName,
@@ -137,7 +137,7 @@ export function requestStartRePost({
   pageToken
 }) {
   return request({
-    url: '/general-ledger/start-re-post',
+    url: '/general-ledger/re-post',
     method: 'post',
     data: {
       //  DSL Query
