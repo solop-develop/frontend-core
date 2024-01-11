@@ -171,10 +171,10 @@ const acctViewer = {
       }
       return new Promise(resolve => {
         commit('setIsLoadingAccoutingRecords', true)
-
+        const postingType = getters.getCurrentStoredPostingTypeValue
         requestAccountingFacts({
           accoutingSchemaId,
-          postingType: getters.getCurrentStoredPostingTypeValue,
+          postingType: isEmptyValue(postingType) ? undefined : postingType,
           tableName,
           recordId,
           recordUuid,
@@ -182,35 +182,40 @@ const acctViewer = {
           filters: []
         })
           .then(response => {
-            const recordsList = response.recordsList.map(row => {
-              const { id, uuid, tableName, attributes } = row
-
-              let rate = attributes.AmtSourceDr + attributes.AmtSourceCr
+            const recordsList = response.records.map(row => {
+              const { id, tableName, values } = row
+              const { AmtSourceDr, AmtSourceCr, AmtAcctDr, AmtAcctCr } = values
+              let rate = Number(AmtSourceDr.value) + Number(AmtSourceCr.value)
               if (rate !== 0) {
-                rate = (attributes.AmtAcctDr + attributes.AmtAcctCr) / (attributes.AmtSourceDr + attributes.AmtSourceCr)
+                rate = (Number(AmtAcctDr.value) + Number(AmtAcctCr.value)) / (Number(AmtSourceDr.value) + Number(AmtSourceCr.value))
               }
               return {
-                ...attributes,
+                ...values,
+                AmtSourceDr: formatQuantity({
+                  value: Number(AmtSourceDr.value)
+                }),
+                AmtSourceCr: formatQuantity({
+                  value: Number(AmtSourceCr.value)
+                }),
                 AmtAcctDr: formatQuantity({
-                  value: attributes.AmtAcctDr
+                  value: Number(AmtAcctDr.value)
                 }),
                 AmtAcctCr: formatQuantity({
-                  value: attributes.AmtAcctCr
+                  value: Number(AmtAcctCr.value)
                 }),
                 DateAcct: formatDate({
-                  value: attributes.DateAcct
+                  value: values.DateAcct
                 }),
                 DateTrx: formatDate({
-                  value: attributes.DateTrx
+                  value: values.DateTrx
                 }),
                 Qty: formatQuantity({
-                  value: attributes.Qty
+                  value: Number(values.Qty.value)
                 }),
                 Rate: formatQuantity({
                   value: rate
                 }),
                 id,
-                uuid,
                 tableName
               }
             })
