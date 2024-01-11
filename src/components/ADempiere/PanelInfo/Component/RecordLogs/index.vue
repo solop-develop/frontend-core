@@ -30,12 +30,14 @@
           {{ getTableName }}
         </span>
       </el-descriptions-item>
+    </el-descriptions>
+    <el-descriptions :column="2">
       <el-descriptions-item label-style="{ color: #606266; font-weight: bold; }">
         <template slot="label">
           <i class="el-icon-star-on" style="margin-right: 10px;" />
           {{ $t('window.containerInfo.log.recordID') }}
         </template>
-        <span style="color: #606266; font-weight: bold;">
+        <span style="color: #606266;">
           {{ recordId }}
         </span>
       </el-descriptions-item>
@@ -44,19 +46,22 @@
           <i class="el-icon-star-on" style="margin-right: 10px;" />
           {{ $t('window.containerInfo.log.recordUUID') }}
         </template>
-        <span style="color: #606266; font-weight: bold;">
+        <span style="color: #606266;">
           {{ recordUuid }}
         </span>
       </el-descriptions-item>
 
-      <template v-if="!isEmptyValue(listLogs.entity_logs)">
+      <template v-if="!isEmptyValue(listLogs)">
         <el-descriptions-item label-style="{ color: #606266; font-weight: bold; }">
           <template slot="label">
             <svg-icon icon-class="user" style="margin-right: 10px;" />
             {{ $t('window.containerInfo.log.createdBy') }}
           </template>
           <span style="color: #606266; font-weight: bold;">
-            {{ listLogs.entity_logs.at().created_by_name }}
+            {{ listLogs.created_by_name }}
+          </span>
+          <span style="color: #606266; padding-left: 5px;">
+            ({{ translateDate({ value: listLogs.created }) }})
           </span>
         </el-descriptions-item>
 
@@ -66,24 +71,31 @@
             {{ $t('window.containerInfo.log.updatedBy') }}
           </template>
           <span style="color: #606266; font-weight: bold;">
-            {{ listLogs.entity_logs.at(-1).updated_by_name }}
+            {{ listLogs.updated_by_name }}
+          </span>
+          <span style="color: #606266; padding-left: 5px;">
+            ({{ translateDate({ value: listLogs.updated }) }})
           </span>
         </el-descriptions-item>
       </template>
     </el-descriptions>
 
-    <el-timeline v-if="!isEmptyValue(listLogs.entity_logs)" :reverse="true">
+    <el-timeline v-if="!isEmptyValue(listLogs.entity_logs)">
       <el-timeline-item
         v-for="(entityLogs, keys) in listLogs.entity_logs"
         :key="entityLogs.logId"
-        :type="entityLogs.type"
-        :color="'#0bbd87'"
-        :timestamp="translateDateByLong(entityLogs.log_date)"
+        :type="timeLineColor(entityLogs.event_type)"
+        :timestamp="translateDate({ value: entityLogs.log_date, format: 'long' })"
         placement="top"
       >
-        <el-card shadow="hover" class="clearfix" style="padding: 2%">
+        <el-card shadow="hover" class="clearfix" style="padding: 5px 10px;">
           <div>
-            <span style="color: #606266; font-weight: bold;">
+            <span v-if="entityLogs.event_type === EVENT_INSERT" style="color: #606266; font-weight: bold;">
+              {{ $t('window.containerInfo.log.createdBy') }} <b>:</b>
+              {{ entityLogs.created_by_name }}
+              <i class="el-icon-user-solid" />
+            </span>
+            <span v-else-if="entityLogs.event_type === EVENT_UPDATE" style="color: #606266; font-weight: bold;">
               {{ $t('window.containerInfo.log.updatedBy') }} <b>:</b>
               {{ entityLogs.updated_by_name }}
               <i class="el-icon-user-solid" />
@@ -101,61 +113,11 @@
           <el-collapse-transition>
             <div v-show="(currentKey === keys)">
               <span v-for="(changeLog, index) in entityLogs.change_logs" :key="index">
-                <hr v-if="index > 0" style="color: aliceblue;">
+                <hr class="divider">
 
-                <p v-if="isDocumentStatus({ columnName: changeLog.column_name })">
-                  <b>{{ changeLog.display_column_name }} :</b>
-                  <strike>
-                    <document-status-tag
-                      :value="changeLog.old_value"
-                      :displayed-value="changeLog.old_display_value"
-                    />
-                  </strike>
-                  <document-status-tag
-                    :value="changeLog.new_value"
-                    :displayed-value="changeLog.new_display_value"
-                  />
-                </p>
-
-                <el-descriptions v-else class="margin-top" :column="1">
-                  <el-descriptions-item
-                    :label="$t('window.containerInfo.log.field')"
-                    label-style="{ color: #606266; font-weight: bold; }"
-                  >
-                    <span style="color: #606266; font-weight: bold;">
-                      {{ changeLog.display_column_name }}
-                    </span>
-                  </el-descriptions-item>
-
-                  <el-descriptions-item
-                    :label="$t('window.containerInfo.log.newValue')"
-                    label-style="{ color: #606266; font-weight: bold; }"
-                  >
-                    <el-link type="success">
-                      {{ changeLog.new_display_value }}
-                    </el-link>
-                  </el-descriptions-item>
-
-                  <el-descriptions-item
-                    :label="$t('window.containerInfo.log.oldValue')"
-                    label-style="{ color: #606266; font-weight: bold; }"
-                  >
-                    <strike>
-                      <el-link type="danger">
-                        {{ changeLog.old_display_value }}
-                      </el-link>
-                    </strike>
-                  </el-descriptions-item>
-
-                  <el-descriptions-item
-                    :label="$t('window.containerInfo.log.column')"
-                    label-style="{ color: #606266; font-weight: bold; }"
-                  >
-                    <span style="color: #606266; font-weight: bold;">
-                      {{ changeLog.column_name }}
-                    </span>
-                  </el-descriptions-item>
-                </el-descriptions>
+                <change-log
+                  :change-log="changeLog"
+                />
               </span>
             </div>
           </el-collapse-transition>
@@ -179,17 +141,22 @@ import { defineComponent, computed, ref } from '@vue/composition-api'
 import store from '@/store'
 
 // Components and Mixins
+import ChangeLog from '@/components/ADempiere/PanelInfo/Component/RecordLogs/changeLog.vue'
 import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 import DocumentStatusTag from '@/components/ADempiere/ContainerOptions/DocumentStatusTag/index.vue'
 
+// Constants
+import { EVENT_INSERT, EVENT_UPDATE, EVENT_DELETE } from '@/utils/ADempiere/recordUtil/index.ts'
+
 // Utils and Helper Methods
 import { isDocumentStatus } from '@/utils/ADempiere/constants/systemColumns'
-import { translateDateByLong } from '@/utils/ADempiere/formatValue/dateFormat'
+import { translateDate } from '@/utils/ADempiere/formatValue/dateFormat'
 
 export default defineComponent({
   name: 'RecordLogs',
 
   components: {
+    ChangeLog,
     DocumentStatusTag,
     LoadingView
   },
@@ -245,7 +212,22 @@ export default defineComponent({
       return store.getters.getStoredTableNameByTab(props.containerUuid)
     })
 
+    function timeLineColor(event) {
+      if (event === EVENT_INSERT) {
+        return 'success' // '#0BBD87'
+      } else if (event === EVENT_UPDATE) {
+        return 'primary' // '#409EFF'
+      } else if (event === EVENT_DELETE) {
+        return 'danger'
+      }
+    }
+
     return {
+      // Constants
+      EVENT_INSERT,
+      EVENT_UPDATE,
+      EVENT_DELETE,
+      // Computeds
       currentTabLogs,
       currentRecordLogs,
       getTableName,
@@ -255,7 +237,8 @@ export default defineComponent({
       // Methods
       isDocumentStatus,
       showkey,
-      translateDateByLong
+      translateDate,
+      timeLineColor
     }
   }
 
