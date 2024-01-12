@@ -228,6 +228,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { translateDateByLong } from '@/utils/ADempiere/formatValue/dateFormat'
 import { generateWorkflowDiagram } from '@/utils/ADempiere/dictionary/workflow'
 import { showMessage } from '@/utils/ADempiere/notification'
+import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 
 // API Request Methods
 import {
@@ -240,10 +241,12 @@ import {
 
 export default defineComponent({
   name: 'WorkflowActivity',
+
   components: {
     IndexColumn,
     WorkflowDiagram
   },
+
   setup() {
     /**
      * Ref
@@ -360,20 +363,20 @@ export default defineComponent({
     }
 
     function zoomRecord(activity) {
-      // const { zoom_windows } = activity
-      // const { uuid } = zoom_windows[0]
-      // zoomIn({
-      //   uuid,
-      //   params: {
-      //     filters: [
-      //       {
-      //         columnName: 'UUID',
-      //         value: currentActivity.record_uuid
-      //       }
-      //     ]
-      //   }
-      // })
-      // clearData()
+      const { zoom_windows, table_name, record_id } = activity
+      const columnName = table_name + '_ID'
+      // table_name
+      zoomIn({
+        attributeValue: `window_${zoom_windows[0].id}`,
+        attributeName: 'containerKey',
+        query: {
+          [columnName]: record_id
+        },
+        params: {
+          [columnName]: record_id
+        }
+      })
+      clearData()
     }
 
     function sendOPeration() {
