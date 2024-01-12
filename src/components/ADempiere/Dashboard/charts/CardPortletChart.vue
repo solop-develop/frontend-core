@@ -37,7 +37,7 @@
             <p style="margin: 0px;font-size: 18px;text-align: right;">
               <count-to
                 :start-val="0"
-                :end-val="valueAmount(cardPortlet.metrics.measureTarget)"
+                :end-val="valueAmount(cardPortlet.metrics.measureActual)"
                 :duration="2600"
                 style="font-size: 50px;font-weight: 500;color: #303133;"
               />
@@ -49,12 +49,12 @@
               <span style="float: right;">
                 <count-to
                   :start-val="0"
-                  group-separator="."
+                  :decimals="2"
                   :end-val="valueAmount(cardPortlet.metrics.performanceGoal) * 100"
                   style="font-size: 18px;"
-                  :style="colorStyle(valueAmount(cardPortlet.metrics.performanceGoal) * 100)"
+                  :style="{ color: colorSchemas(cardPortlet.metrics) }"
                 />
-                <b :style="colorStyle(valueAmount(cardPortlet.metrics.performanceGoal) * 100)">
+                <b :style="{ color: colorSchemas(cardPortlet.metrics) }">
                   {{ '%' }}
                   <svg-icon :icon-class="iconClass(valueAmount(cardPortlet.metrics.performanceGoal) * 100)" />
                 </b>
@@ -147,6 +147,20 @@ export default defineComponent({
       }, 1000)
     }
 
+    function colorSchemas(metrics) {
+      const {
+        performanceGoal,
+        colorSchemas
+      } = metrics
+      const total = valueAmount(performanceGoal) * 100
+      let colorPercnt = 'red'
+      colorSchemas.forEach(element => {
+        const { percent, color } = element
+        if (total <= Number(percent)) colorPercnt = color
+      })
+      return colorPercnt
+    }
+
     props.metadata.groupPortlet.forEach(element => {
       loadMetrics(element)
     })
@@ -158,7 +172,8 @@ export default defineComponent({
       iconClass,
       colorStyle,
       loadMetrics,
-      valueAmount
+      valueAmount,
+      colorSchemas
     }
   }
 })
