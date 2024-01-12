@@ -65,85 +65,7 @@
         />
       </el-col>
     </el-row>
-    <el-button
-      plain
-      type="primary"
-      icon="el-icon-setting"
-      class="button-base-icon"
-      style="position: fixed;top: 50%;right: 0%;font-size: 30px;"
-      @click="showSettings = !showSettings"
-    />
-
-    <el-drawer
-      :visible.sync="showSettings"
-      :with-header="true"
-    >
-      <span
-        slot="title"
-      >
-        <p style="text-align: center;margin: 0px;font-size: large;">
-          <b>
-            {{ $t('page.settings.pageStyleSettings') }}
-          </b>
-        </p>
-      </span>
-      <el-card
-        style="padding: 10px 20px!important;"
-        :body-style="{ padding: '10px 20px', height: '100% !important' }"
-      >
-        <el-descriptions :column="1">
-          <!-- <el-descriptions-item :label="$t('page.settings.theme')">
-            <theme-picker @change="themeChange" />
-          </el-descriptions-item> -->
-          <el-descriptions-item
-            :label="$t('page.settings.tagsView')"
-          >
-            <el-switch v-model="tagsView" />
-            <br>
-            <br>
-          </el-descriptions-item>
-          <el-descriptions-item
-            :label="$t('page.settings.sidebarLogo')"
-          >
-            <el-switch v-model="sidebarLogo" />
-            <br>
-            <br>
-          </el-descriptions-item>
-          <el-descriptions-item
-            :label="$t('page.settings.mainDashboardCard')"
-          >
-            <el-select
-              v-model="panelMain"
-            >
-              <el-option
-                v-for="item in listDashboard"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
-            <br>
-            <br>
-          </el-descriptions-item>
-          <el-descriptions-item
-            :label="$t('page.settings.numberColumnsDashboard')"
-          >
-            <el-select
-              v-model="colNum"
-            >
-              <el-option
-                v-for="item in numColDashboard"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-            <br>
-            <br>
-          </el-descriptions-item>
-        </el-descriptions>
-      </el-card>
-    </el-drawer>
+    <page-style-settings />
   </div>
 </template>
 
@@ -166,6 +88,7 @@ import Todo from '@/views/dashboard/admin/components/TodoList/index.vue'
 import notices from '@/components/ADempiere/Dashboard/notices'
 import RightPanel from '@/components/RightPanel'
 import ThemePicker from '@/components/ThemePicker'
+import PageStyleSettings from '@/components/ADempiere/PageStyleSettings'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -178,8 +101,9 @@ export default defineComponent({
     notices,
     UserInfo,
     RightPanel,
-    ThemePicker,
     PanelGroup,
+    ThemePicker,
+    PageStyleSettings,
     DashboardDefinition
   },
 
