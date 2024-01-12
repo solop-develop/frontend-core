@@ -51,6 +51,8 @@ const window = {
       column: 'Column',
       created: 'Created',
       createdBy: 'Created By',
+      deleted: 'Deleted',
+      deletedBy: 'Deleted By',
       field: 'Field',
       updated: 'Updated',
       updatedBy: 'Updated By',

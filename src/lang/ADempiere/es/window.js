@@ -51,6 +51,8 @@ const window = {
       column: 'Columna',
       created: 'Creado',
       createdBy: 'Creado Por',
+      deleted: 'Eliminado',
+      deletedBy: 'Eliminado Por',
       field: 'Campo',
       updated: 'Actualizado',
       updatedBy: 'Actualizado Por',

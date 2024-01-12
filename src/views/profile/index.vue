@@ -53,6 +53,7 @@
           </el-card>
         </el-col>
       </el-row>
+
       <!-- Logs User -->
       <el-row :gutter="0" style="padding: 0px 10px;margin: 0px;">
         <el-card :body-style="{ padding: '10px 5px' }">
@@ -60,6 +61,7 @@
             <b style="font-size: 18px;">
               <svg-icon icon-class="tree-table" /> {{ $t('profile.activityLogs') }}
             </b>
+
             <span style="float: right;">
               <el-button
                 type="success"
@@ -69,6 +71,7 @@
               />
               <el-date-picker
                 v-model="filterDate"
+                timezone="UTC"
                 type="date"
                 :picker-options="pickerOptions"
               />
@@ -95,17 +98,19 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default {
   name: 'Profile',
+
   components: {
     UserCard,
     Settings,
     UserInfo,
     UserActivity
   },
+
   data() {
     return {
       user: {},
       activeTab: 'role',
-      filterDate: new Date(),
+      filterDate: null,
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() > Date.now()
@@ -113,6 +118,7 @@ export default {
       }
     }
   },
+
   computed: {
     ...mapGetters([
       'name',
@@ -151,14 +157,17 @@ export default {
       }
     }
   },
+
   watch: {
     filterDate(date) {
       this.loadUserLogActivities(date)
     }
   },
+
   created() {
     this.getUser()
   },
+
   methods: {
     getUser() {
       this.user = {
