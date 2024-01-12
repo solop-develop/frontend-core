@@ -164,9 +164,10 @@ export default {
 }
 
 .theme-picker .el-color-picker__trigger {
-  height: 26px !important;
-  width: 26px !important;
-  padding: 2px;
+  height: 32px !important;
+  width: 32px !important;
+  /* padding-top: 5px;
+  margin-top: 5px; */
 }
 
 .theme-picker-dropdown .el-color-dropdown__link-btn {
