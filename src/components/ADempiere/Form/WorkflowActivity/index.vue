@@ -229,6 +229,7 @@ import { translateDateByLong } from '@/utils/ADempiere/formatValue/dateFormat'
 import { generateWorkflowDiagram } from '@/utils/ADempiere/dictionary/workflow'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
+
 // API Request Methods
 import {
   requestListSalesRepresentatives
@@ -240,10 +241,12 @@ import {
 
 export default defineComponent({
   name: 'WorkflowActivity',
+
   components: {
     IndexColumn,
     WorkflowDiagram
   },
+
   setup() {
     /**
      * Ref
