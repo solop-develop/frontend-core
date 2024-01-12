@@ -22,6 +22,7 @@
     :body-style="{ padding: '10px 5px' }"
   >
     <el-empty v-if="isEmptyValue(getActivityUser)" :image-size="200" />
+
     <el-timeline v-else style="padding: 0px;">
       <el-scrollbar :wrap-class="isMobile ? 'scroll-logs-user-mobile' : 'scroll-logs-user'">
         <el-timeline-item
@@ -31,7 +32,13 @@
           :timestamp="logTimesTamp(logsUser)"
           placement="top"
         >
+          <records-logs
+            v-if="logsUser.userActivityType === 'ENTITY_LOG'"
+            :entity-log="logsUser.entityLog"
+          />
+
           <el-card
+            v-else
             shadow="hover"
             style="padding: 0px !important;"
             :body-style="{ padding: '10px 5px' }"
@@ -78,11 +85,6 @@
                   :summary="logsUser.processLog.summary"
                   :status="logsUser.processLog.isError"
                 />
-                <windows-logs
-                  v-else-if="logsUser.userActivityType === 'ENTITY_LOG'"
-                  :list-change-logs="logsUser.entityLog.changeLogs"
-                  :entity-logs="logsUser.entityLog"
-                />
                 <notices-logs
                   v-else-if="logsUser.userActivityType === 'NOTICE'"
                   :metadata="logsUser.notice"
@@ -101,9 +103,9 @@ import lang from '@/lang'
 import store from '@/store'
 
 // Components and Mixins
-import WindowsLogs from '@/views/profile/components/UserActivity/WindowsLogs.vue'
 import ProcessLogs from '@/views/profile/components/UserActivity/ProcessLogs.vue'
 import NoticesLogs from '@/components/ADempiere/Dashboard/notices/itemsNotices.vue'
+import RecordsLogs from '@/views/profile/components/UserActivity/RecordsLogs/index.vue'
 
 // Utils and Helper Methods
 import { translateDate } from '@/utils/ADempiere/formatValue/dateFormat'
@@ -119,10 +121,11 @@ export default defineComponent({
   name: 'UserActivity',
 
   components: {
-    WindowsLogs,
+    NoticesLogs,
     ProcessLogs,
-    NoticesLogs
+    RecordsLogs
   },
+
   setup() {
     // Ref
     const currentKey = ref(0)
@@ -237,9 +240,6 @@ export default defineComponent({
       const { userActivityType, processLog } = log
       let type
       switch (userActivityType) {
-        case 'ENTITY_LOG':
-          type = lang.t('views.window')
-          break
         case 'NOTICE':
           type = lang.t('profile.notice')
           break
@@ -267,14 +267,10 @@ export default defineComponent({
       const {
         userActivityType,
         processLog,
-        entityLog,
         notice
       } = log
       let name
       switch (userActivityType) {
-        case 'ENTITY_LOG':
-          name = entityLog.tableName
-          break
         case 'PROCESS_LOG':
           name = processLog.name
           break

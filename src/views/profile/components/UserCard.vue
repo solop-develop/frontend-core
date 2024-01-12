@@ -5,29 +5,34 @@
     </div> -->
 
     <div class="user-profile">
-      <div class="box-center">
-        <pan-thumb
-          :image="avatarResize"
-          :hoverable="true"
-        >
-          {{ currentRole.name }}
-        </pan-thumb>
-      </div>
-      <div class="box-center">
-        <div class="user-name text-center">
-          {{ currentRole.name }}
-        </div>
-        <br>
-
-        <div class="user-role text-muted">
-          <div class="user-header">
-            {{ $t('profile.availableRoles') }}
+      <el-row>
+        <el-col :span="12">
+          <div class="box-center">
+            <pan-thumb
+              :image="avatarResize"
+              :hoverable="true"
+            >
+              {{ currentRole.name }}
+            </pan-thumb>
           </div>
-          <li v-for="(item, key) in rolesList" :key="key">
-            {{ item.name | uppercaseFirst }}
-          </li>
-        </div>
-      </div>
+          <div class="box-center">
+            <div class="user-name text-center">
+              {{ currentRole.name }}
+            </div>
+          </div>
+          <!-- <br> -->
+        </el-col>
+        <el-col :span="12">
+          <div class="user-role text-muted">
+            <div class="user-header">
+              {{ $t('profile.availableRoles') }}
+            </div>
+            <li v-for="(item, key) in rolesList" :key="key">
+              {{ item.name | uppercaseFirst }}
+            </li>
+          </div>
+        </el-col>
+      </el-row>
     </div>
   </el-card>
 </template>
