@@ -115,12 +115,18 @@ export default {
           .replace(/[D]/gi, 'd')
       }
       if (isEmptyValue(format)) {
+        const { datePattern } = this.$store.getters['getCurrentLanguageDefinition']
         format = 'yyyy-MM-dd'
+        if (!isEmptyValue(datePattern)) format = datePattern
       }
+
       if (this.typePicker.replace('range', '') === 'datetime') {
         format = format + ' hh:mm:ss A'
       }
       return format
+        .replace(/[Y]/gi, 'y')
+        .replace(/[m]/gi, 'M')
+        .replace(/[D]/gi, 'd')
     },
     formatSend() {
       if (this.formatView) {
