@@ -110,14 +110,13 @@ export default {
       let format = ''
       if (!isEmptyValue(this.metadata.vFormat)) {
         format = this.metadata.vFormat
-          .replace(/[Y]/gi, 'y')
-          .replace(/[m]/gi, 'M')
-          .replace(/[D]/gi, 'd')
       }
       if (isEmptyValue(format)) {
-        const { datePattern } = this.$store.getters['getCurrentLanguageDefinition']
         format = 'yyyy-MM-dd'
-        if (!isEmptyValue(datePattern)) format = datePattern
+        const { datePattern } = this.$store.getters['getCurrentLanguageDefinition']
+        if (!isEmptyValue(datePattern)) {
+          format = datePattern
+        }
       }
 
       if (this.typePicker.replace('range', '') === 'datetime') {
