@@ -40,7 +40,7 @@ const getters = {
     return state.autoSave
   },
   getFullGridMode: (state) => {
-    return state.fullGridMocolNumde
+    return state.fullGridMode
   },
   getFixedHeader: (state) => {
     return state.fixedHeader
