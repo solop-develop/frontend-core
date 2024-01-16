@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,33 +22,6 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
-
-/**
- * Get entity from tab uuid and record id or record uuid
- * @param {string} tabUuid
- * @param {number}  recordId
- * @param {string}  recordUuid
- */
-export function getEntity({
-  tabUuid,
-  recordId,
-  recordUuid
-}) {
-  return request({
-    url: '/user-interface/window/entity',
-    method: 'get',
-    params: {
-      tab_uuid: tabUuid,
-      uuid: recordUuid,
-      id: recordId
-    }
-  })
-    .then(entityResponse => {
-      const { convertEntity } = require('@/utils/ADempiere/apiConverts/persistence.js')
-
-      return convertEntity(entityResponse)
-    })
-}
 
 /**
  * Object List from window

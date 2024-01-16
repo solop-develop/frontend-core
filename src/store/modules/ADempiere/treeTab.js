@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 import Vue from 'vue'
 
 // API Request Methods
-import { requestListTreeNodes } from '@/api/ADempiere/user-interface/component/tree-trab'
+import { requestListTreeNodes } from '@/api/ADempiere/user-interface/tree-nodes.ts'
 
 const initState = {
   treeData: {},
@@ -67,7 +67,7 @@ const treeTab = {
       nodeId = 0
     }) {
       const storedTab = getters.getStoredTab(parentUuid, containerUuid)
-      const { tableName } = storedTab
+      const { id, tableName } = storedTab
 
       const elementId = getters.getValueOfFieldOnContainer({
         parentUuid,
@@ -77,18 +77,21 @@ const treeTab = {
 
       return new Promise(resolve => {
         requestListTreeNodes({
-          tableName,
+          tabId: id,
+          tableName: tableName,
           elementId
         }).then(response => {
+          const recordsList = response.records
+
           commit('setTreeNodes', {
             parentUuid,
             containerUuid,
             elementId,
-            tableName,
+            tableName: tableName,
             nodeId,
-            recordsList: response.recordsList
+            recordsList: recordsList
           })
-          resolve(response.recordsList)
+          resolve(recordsList)
         }).finally(() => {
           // treePanel.value.setCurrentKey(recordUuid.value)
         })

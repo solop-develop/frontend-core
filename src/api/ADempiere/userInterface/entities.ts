@@ -121,20 +121,3 @@ export function deleteEntity({
     method: 'delete'
   })
 }
-
-/**
- * Request Entities
- * @param {string} uuid universally unique identifier
- * @param {number} ,
-  recordUuid,
-  listRecordIdid, identifier
- */
-export function getEntity({
-  id,
-  tabId
-}) {
-  return request({
-    url: `/user-interface/entities/${tabId}/${id}`,
-    method: 'get'
-  })
-}
