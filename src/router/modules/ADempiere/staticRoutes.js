@@ -54,7 +54,7 @@ const staticRoutes = [
     path: '/Views',
     component: Layout,
     redirect: 'noRedirect',
-    name: 'Vistas',
+    title: language.t('route.views'),
     meta: {
       title: 'Vistas',
       icon: 'nested'
