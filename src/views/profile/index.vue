@@ -36,6 +36,14 @@
                   :show-panel-notifications="true"
                 />
               </el-tab-pane>
+              <!-- Settings -->
+              <el-tab-pane
+                :label="$t('page.settings.title')"
+                :name="$t('page.settings.title')"
+              >
+                <settings />
+              </el-tab-pane>
+              <!-- Info Company -->
               <el-tab-pane
                 :label="$t('profile.systemInformation.tabLabel')"
                 :name="$t('profile.systemInformation.tabLabel')"
@@ -86,7 +94,7 @@ import { mapGetters, mapState } from 'vuex'
 import UserCard from './components/UserCard.vue'
 import UserInfo from '@/views/profile/components/InfoUser.vue'
 import UserActivity from '@/views/profile/components/UserActivity/index.vue'
-// import { Settings } from '@/layout/components'
+import { Settings } from '@/layout/components'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -97,6 +105,7 @@ export default {
   components: {
     UserCard,
     UserInfo,
+    Settings,
     UserActivity
   },
 

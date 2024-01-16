@@ -17,72 +17,55 @@
 -->
 
 <template>
-  <el-row :gutter="20" class="panel-group">
-    <el-col
-      v-for="taks in mainTaks"
-      :key="taks.id"
-      :xs="12"
-      :sm="12"
-      :lg="spanSize"
-      class="card-panel-col"
+  <div
+    :style="styleMain"
+  >
+    <el-row
+      :gutter="20"
+      class="panel-group"
     >
-      <div class="card-panel" @click="handleClick(taks)">
-        <div
-          :class="taks.classCard"
-          style="text-align: center;"
-        >
-          <el-badge
-            v-if="isMobile"
-            :value="taks.recordCount"
-            type="primary"
-            class="item"
+      <el-col
+        v-for="(taks, key) in mainTaks"
+        :key="key"
+        :xs="12"
+        :sm="12"
+        :lg="spanSize"
+        class="card-panel-col"
+      >
+        <!-- <p style="margin: 0px;"> -->
+        <div class="card-panel" @click="handleClick(taks)">
+          <div
+            :class="taks.classCard"
+            style="text-align: center;width: 100%;"
           >
-            <i
-              v-if="taks.svg.type === 'i'"
-              :class="taks.svg.class"
-              style="font-size: 65px"
-            />
-            <svg-icon
-              v-else
-              :icon-class="taks.svg.class"
-              class-name="card-panel-icon"
-              style="margin: 0px !important;"
-            />
-          </el-badge>
-          <span v-else>
-            <i
-              v-if="taks.svg.type === 'i'"
-              :class="taks.svg.class"
-              style="font-size: 65px"
-            />
-            <svg-icon
-              v-else
-              :icon-class="taks.svg.class"
-              class-name="card-panel-icon"
-            />
-          </span>
-          <p
-            v-if="isMobile"
-            style="margin: 0px;"
-          >
-            {{ taks.name }}
-          </p>
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            {{ taks.name }}
+            <el-badge
+              :value="taks.recordCount"
+              type="primary"
+              class="class-card-panel"
+            >
+              <i
+                v-if="taks.svg.type === 'i'"
+                :class="taks.svg.class"
+                style="font-size: 65px"
+              />
+              <svg-icon
+                v-else
+                :icon-class="taks.svg.class"
+                class-name="card-panel-icon"
+                style="margin: 0px !important;"
+              />
+            </el-badge>
+            <p
+              style="margin: 0px;font-size: 12px"
+            >
+              {{ taks.name }}
+            </p>
           </div>
-          <count-to
-            :start-val="0"
-            :end-val="Number(taks.recordCount)"
-            :duration="2600"
-            class="card-panel-num"
-            style="float: right;"
-          />
         </div>
-      </div>
-    </el-col>
-  </el-row>
+        <!-- </p> -->
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
 <script>
@@ -106,7 +89,15 @@ export default defineComponent({
       if (quantity === 1) return 24
       if (quantity === 2) return 12
       if (quantity === 3) return 8
+      if (quantity <= 4) return 6
+      if (quantity >= 5) return 4
       return 6
+    })
+
+    const styleMain = computed(() => {
+      const quantity = mainTaks.value.length
+      if (quantity > 4) return 'display: flex;padding: 0px 15px 10px 5px;'
+      return 'padding: 0px 15px 10px 5px;'
     })
 
     const documentList = computed(() => {
@@ -122,7 +113,7 @@ export default defineComponent({
     })
 
     const mainTaks = computed(() => {
-      const list = documentList.value.splice(0, 4)
+      const list = documentList.value
       return list.map((currentValue, index, array) => {
         let classCard = 'card-panel-icon-wrapper icon-people'
         switch (index) {
@@ -173,6 +164,7 @@ export default defineComponent({
       mainTaks,
       isMobile,
       spanSize,
+      styleMain,
       documentList,
       // Methods
       handleClick,
@@ -182,16 +174,28 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+
+.class-card-panel {
+  .el-badge__content.is-fixed {
+    position: absolute;
+    top: 6px;
+    right: 20px;
+    transform: translateY(-50%) translateX(100%);
+  }
+}
 .panel-group {
-  margin-top: 18px;
+  margin: 0px;
+  display: flex;
+  overflow: auto;
+  padding-bottom: 7px;
 
   .card-panel-col {
-    margin-bottom: 32px;
+    margin-bottom: 0px;
   }
 
   .card-panel {
-    height: 108px;
+    height: 125px;
     cursor: pointer;
     font-size: 12px;
     display: flex;
@@ -242,7 +246,8 @@ export default defineComponent({
 
     .card-panel-icon-wrapper {
       float: left;
-      margin: 5px 0px 5px 14px;
+      margin: 0px;
+      // margin: 5px 0px 5px 14px;
       padding: 16px;
       transition: all 0.38s ease-out;
       border-radius: 6px;

@@ -83,12 +83,12 @@ import language from '@/lang'
 // Components and Mixins
 import DashboardDefinition from '@/components/ADempiere/Dashboard/index.vue'
 import PanelGroup from '@/views/dashboard/admin/components/PanelGroup.vue'
-import UserInfo from '@/views/profile/components/InfoUser.vue'
-import Todo from '@/views/dashboard/admin/components/TodoList/index.vue'
-import notices from '@/components/ADempiere/Dashboard/notices'
-import RightPanel from '@/components/RightPanel'
-import ThemePicker from '@/components/ThemePicker'
 import PageStyleSettings from '@/components/ADempiere/PageStyleSettings'
+import Todo from '@/views/dashboard/admin/components/TodoList/index.vue'
+import UserInfo from '@/views/profile/components/InfoUser.vue'
+import notices from '@/components/ADempiere/Dashboard/notices'
+import ThemePicker from '@/components/ThemePicker'
+import RightPanel from '@/components/RightPanel'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
