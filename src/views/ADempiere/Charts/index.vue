@@ -100,7 +100,7 @@ export default defineComponent({
     const allDashboard = computed(() => {
       const list = listDashboard.value
       const isExist = list.find(element => element.chartType === 'PT')
-      if (isEmptyValue(isExist)) {
+      if (isEmptyValue(isExist) && !isEmptyValue(groupPortlet.value)) {
         list.push({ chartType: 'PT', isCollapsible: true, name: lang.t('component.dashboard.portletChart'), groupPortlet: groupPortlet.value })
       }
       return list
