@@ -180,9 +180,9 @@ export function getValidDate(value) {
     date = new Date()
   } else if (typeof value === 'string') {
     // TODO: Verify it time zone
-    if (value.length <= 10) {
-      value += 'T00:00:00' // without time zone
-    }
+    // if (value.length <= 9) {
+    //   value += 'T00:00:00' // without time zone
+    // }
     date = new Date(value)
   } else if (typeof value === 'number') {
     date = new Date(value)
