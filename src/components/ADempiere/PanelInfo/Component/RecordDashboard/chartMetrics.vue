@@ -96,7 +96,19 @@ export default defineComponent({
           !params.columnName.includes('_To')
       })
 
-      return paramsList
+      const listFilters = paramsList.map(list => {
+        const {
+          value,
+          columnName
+        } = list
+        return JSON.stringify({
+          name: columnName,
+          values: value,
+          operator: 'equal'
+        })
+      }).toString()
+      if (!isEmptyValue(listFilters)) return '[' + listFilters + ']'
+      return '[]'
     })
 
     // load the component that is indicated in the attributes of received property
