@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { defineComponent, computed, ref, watch } from '@vue/composition-api'
+import { defineComponent, computed, ref, watch, onMounted, nextTick } from '@vue/composition-api'
 
 import router from '@/router'
 import store from '@/store'
@@ -202,10 +202,12 @@ export default defineComponent({
 
     // if changed record in parent tab, reload tab child
     watch(recordId, (newValue, oldValue) => {
-      if (isEmptyValue(newValue) || newValue === 'create-new') {
-        treePanel.value.setCurrentKey(null)
-      } else if (newValue !== oldValue) {
-        treePanel.value.setCurrentKey(newValue)
+      if (treePanel.value != null) {
+        if (isEmptyValue(newValue) || newValue === 'create-new') {
+          treePanel.value.setCurrentKey(null)
+        } else { // if (newValue !== oldValue) {
+          treePanel.value.setCurrentKey(newValue)
+        }
       }
     })
 
@@ -329,7 +331,9 @@ export default defineComponent({
         containerUuid: props.containerUuid
         // nodeId
       }).finally(() => {
-        treePanel.value.setCurrentKey(recordId.value)
+        if (treePanel.value != null) {
+          treePanel.value.setCurrentKey(recordId.value)
+        }
       })
     }
 
@@ -340,9 +344,15 @@ export default defineComponent({
       return data[nodeName].toLowerCase().indexOf(value.toLowerCase()) !== -1
     }
 
-    setTimeout(() => {
-      treePanel.value.setCurrentKey(recordId.value)
-    }, 500)
+    onMounted(() => {
+      nextTick(() => {
+        setTimeout(() => {
+          if (treePanel.value != null) {
+            treePanel.value.setCurrentKey(recordId.value)
+          }
+        }, 900)
+      })
+    })
 
     return {
       treePanel,
