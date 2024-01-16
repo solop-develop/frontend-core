@@ -35,7 +35,7 @@
           ref="treePanel"
           :data="storedTreeNodes"
           :props="defaultProps"
-          node-key="record_uuid"
+          node-key="record_id"
           :filter-node-method="filterNode"
           highlight-current
           :default-expanded-keys="expandedTree"
@@ -79,10 +79,10 @@ import router from '@/router'
 import store from '@/store'
 
 // API Request Methods
-import { getEntity } from '@/api/ADempiere/user-interface/persistence'
+import { requestGetTabEntity } from '@/api/ADempiere/user-interface/entities.ts'
 
-// Constants
-import { UUID } from '@/utils/ADempiere/constants/systemColumns.js'
+// // Constants
+// import { UUID } from '@/utils/ADempiere/constants/systemColumns.js'
 
 // Components and Mixins
 import DraggablePanel from '@/components/ADempiere/PanelDefinition/DraggablePanel.vue'
@@ -135,6 +135,17 @@ export default defineComponent({
     }
 
     /**
+     * Get the panel object with all its attributes as well as
+     * the fields it contains
+     */
+    const panelMetadata = computed(() => {
+      return props.containerManager.getPanel({
+        parentUuid: props.parentUuid,
+        containerUuid: props.containerUuid
+      }) || {}
+    })
+
+    /**
      * Computed Properties
      */
     const isMobile = computed(() => {
@@ -152,19 +163,19 @@ export default defineComponent({
       }
     })
 
-    const recordUuid = computed(() => {
+    const recordId = computed(() => {
       return store.getters.getValueOfFieldOnContainer({
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid,
-        columnName: UUID
+        columnName: panelMetadata.value.keyColumn
       })
     })
 
     const expandedTree = computed(() => {
-      if (isEmptyValue(recordUuid.value) || recordUuid.value === 'create-new') {
+      if (isEmptyValue(recordId.value) || recordId.value === 'create-new') {
         return []
       }
-      return [recordUuid.value]
+      return [recordId.value]
     })
 
     const elementId = computed(() => {
@@ -173,17 +184,6 @@ export default defineComponent({
         containerUuid: props.containerUuid,
         columnName: 'C_Element_ID'
       })
-    })
-
-    /**
-     * Get the panel object with all its attributes as well as
-     * the fields it contains
-     */
-    const panelMetadata = computed(() => {
-      return props.containerManager.getPanel({
-        parentUuid: props.parentUuid,
-        containerUuid: props.containerUuid
-      }) || {}
     })
 
     /**
@@ -201,8 +201,8 @@ export default defineComponent({
     })
 
     // if changed record in parent tab, reload tab child
-    watch(recordUuid, (newValue, oldValue) => {
-      if (isEmptyValue(newValue) || recordUuid.value === 'create-new') {
+    watch(recordId, (newValue, oldValue) => {
+      if (isEmptyValue(newValue) || newValue === 'create-new') {
         treePanel.value.setCurrentKey(null)
       } else if (newValue !== oldValue) {
         treePanel.value.setCurrentKey(newValue)
@@ -213,7 +213,7 @@ export default defineComponent({
      * Methods
      */
     function handleNodeClick(nodeData) {
-      setRecord(nodeData.record_uuid)
+      setRecord(nodeData.record_id)
     }
 
     function handleDragEnd(draggingNode, dropNode, dropType, ev) {
@@ -225,17 +225,18 @@ export default defineComponent({
       })
     }
 
-    async function getRowValues(recordUuid) {
+    async function getRowValues(recordId) {
       const { parentUuid, containerUuid } = props
       let row = store.getters.getTabRowData({
         containerUuid,
-        recordUuid
+        recordUuid: recordId
       })
 
       if (isEmptyValue(row)) {
-        row = await getEntity({
-          tabUuid: containerUuid,
-          recordUuid
+        const { id } = panelMetadata.value
+        row = await requestGetTabEntity({
+          tabId: id,
+          recordId: recordId
         }).then(response => {
           return response.values
         })
@@ -263,20 +264,20 @@ export default defineComponent({
       return row
     }
 
-    function setRecord(recordUuid) {
+    function setRecord(recordId) {
       /*
       props.containerManager.seekRecord({
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid,
-        recordUuid
+        recordUuid: recordId
       })
       */
-      customSeekRecord(recordUuid)
+      customSeekRecord(recordId)
     }
 
-    function customSeekRecord(recordUuid) {
+    function customSeekRecord(recordId) {
       const { parentUuid, containerUuid } = props
-      const row = getRowValues(recordUuid)
+      const row = getRowValues(recordId)
 
       const tabDefinition = store.getters.getStoredTab(parentUuid, containerUuid)
 
@@ -285,7 +286,7 @@ export default defineComponent({
       // clear old values
       store.dispatch('clearPersistenceQueue', {
         containerUuid,
-        recordUuid: row[UUID]
+        recordUuid: row[panelMetadata.value.keyColumn] // row[UUID]
       }, {
         root: true
       })
@@ -328,7 +329,7 @@ export default defineComponent({
         containerUuid: props.containerUuid
         // nodeId
       }).finally(() => {
-        treePanel.value.setCurrentKey(recordUuid.value)
+        treePanel.value.setCurrentKey(recordId.value)
       })
     }
 
@@ -340,7 +341,7 @@ export default defineComponent({
     }
 
     setTimeout(() => {
-      treePanel.value.setCurrentKey(recordUuid.value)
+      treePanel.value.setCurrentKey(recordId.value)
     }, 500)
 
     return {
@@ -351,7 +352,7 @@ export default defineComponent({
       // computeds
       isMobile,
       elementId,
-      recordUuid,
+      recordId,
       expandedTree,
       panelMetadata,
       // methods

@@ -20,53 +20,27 @@
 import { request } from '@/utils/ADempiere/request'
 
 /**
- * Update browser entity
- * @param {number} id smart browser identifier
- * @param {string}uuid universally unique identifier
- * @param {array} attributesList
+ * List Tree Tab
+ * @param {string} tableName
+ * @param {number} id node identifier
+ * @param {string} uuid node universally unique identifier
+ * @param {number} elementId element identifier
+ * @returns {promise}
  */
-export function updateBrowserEntity({
+export function requestListTreeNodes({
+  tableName,
+  // dsl query
   id,
   uuid,
-  recordId,
-  attributesList
+  elementId
 }) {
   return request({
-    url: '/user-interface/smart-browser/update-browser-entity',
-    method: 'post',
-    data: {
+    url: `/user-interface/tree-nodes/${tableName}`,
+    method: 'get',
+    params: {
       id,
       uuid,
-      record_id: recordId,
-      attributes: attributesList
+      element_id: elementId
     }
-  })
-    .then(browserEntityUpdateResponse => {
-      const { convertEntity } = require('@/utils/ADempiere/apiConverts/persistence.js')
-
-      return convertEntity(browserEntityUpdateResponse)
-    })
-}
-
-/**
- * Delete Record Browser
- * @param {string}  tableName
- * @param {number}  recordId
- * @param {string}  recordUuid
- * @param {array}  listRecordId
- */
-export function requestDeleteBrowser({
-  tableName,
-  recordId,
-  recordUuid,
-  listRecordId
-}) {
-  const { requestDeleteEntity } = require('@/api/ADempiere/business-data/entities.ts')
-
-  return requestDeleteEntity({
-    tableName,
-    recordId,
-    recordUuid,
-    listRecordId
   })
 }

@@ -37,7 +37,7 @@ import { BUTTON, ID, LOCATION_ADDRESS, YES_NO } from '@/utils/ADempiere/referenc
 import { containerManager as CONTAINER_MANAGER_BROWSER } from '@/utils/ADempiere/dictionary/browser'
 
 // API Request Methods
-import { getEntity } from '@/api/ADempiere/userInterface/entities.ts'
+import { requestGetTabEntity } from '@/api/ADempiere/user-interface/entities.ts'
 import { requestSaveWindowCustomization } from '@/api/ADempiere/user-customization/windows.js'
 
 // Utils and Helpers Methods
@@ -1170,9 +1170,9 @@ export const refreshRecord = {
       containerUuid
     })
     nprogress.start()
-    return getEntity({
+    return requestGetTabEntity({
       tabId: tabDefinition.id,
-      id: recordId
+      recordId: recordId
     })
       .then(response => {
         const currentRow = store.getters.getTabRowData({
