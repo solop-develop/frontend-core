@@ -17,7 +17,6 @@
 -->
 <template>
   <span>
-    {{ showSettings }}
     <el-button
       plain
       type="primary"

@@ -60,7 +60,7 @@ const dashboard = {
           .then(dashboardResponse => {
             const dashboardsList = dashboardResponse.dashboardsList
               .filter(item => {
-                return !UNSUPPORTED_DASHBOARDS.includes(item.fileName)
+                return !UNSUPPORTED_DASHBOARDS.includes(item.fileName) && item.id !== 50000
               })
               .sort((itemA, itemB) => {
                 return itemA.chartType > itemB.chartType

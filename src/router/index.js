@@ -13,7 +13,6 @@ import tableRouter from './modules/table'
 import nestedRouter from './modules/nested'
 
 import enrollmentRoute from './modules/ADempiere/enrollment.js'
-import language from '@/lang'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -85,42 +84,6 @@ export const constantRoutes = [
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
         meta: { title: 'dashboard', icon: 'dashboard', affix: true, breadcrumb: false, isIndex: true }
-      }
-    ]
-  },
-  {
-    path: '/documentation',
-    component: Layout,
-    redirect: '/documentation/index',
-    meta: {
-      title: 'documentation',
-      icon: 'documentation',
-      breadcrumb: false
-    },
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/documentation/index'),
-        name: 'Documentation',
-        meta: {
-          title: language.t('documentation.releaseNotes'),
-          icon: 'documentation',
-          isIndex: true
-        }
-      }
-    ]
-  },
-  {
-    path: '/guide',
-    component: Layout,
-    redirect: '/guide/index',
-    meta: { title: 'guide', icon: 'guide', noCache: true, breadcrumb: false },
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/guide/index'),
-        name: 'Guide',
-        meta: { title: 'guide', icon: 'guide', noCache: true, isIndex: true }
       }
     ]
   },

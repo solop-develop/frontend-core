@@ -51,20 +51,79 @@ const staticRoutes = [
   },
 
   {
-    path: '/acct-viewer',
+    path: '/Views',
     component: Layout,
-    hidden: false,
-    validateToEnable: ({ role }) => {
-      if (!role) {
-        return false
-      }
-      return Boolean(role.is_allow_info_account)
+    redirect: 'noRedirect',
+    title: language.t('route.views'),
+    meta: {
+      title: 'Vistas',
+      icon: 'nested'
     },
     children: [
+      {
+        path: '/documentation',
+        component: () => import('@/views/documentation/index'),
+        hidden: false,
+        children: [
+          {
+            path: 'index',
+            component: () => import('@/views/documentation/index'),
+            name: 'Documentation',
+            meta: {
+              title: language.t('documentation.releaseNotes'),
+              icon: 'documentation',
+              isIndex: true
+            }
+          }
+        ]
+      },
+      {
+        path: '/guide',
+        component: () => import('@/views/guide/index'),
+        hidden: false,
+        children: [
+          {
+            path: 'index',
+            component: () => import('@/views/guide/index'),
+            name: 'Guide',
+            meta: { title: 'guide', icon: 'guide', noCache: true, isIndex: true }
+          }
+        ]
+      },
+      {
+        path: '/product-info',
+        component: () => import('@/views/ADempiere/Form'),
+        hidden: false,
+        validateToEnable: ({ role }) => {
+          if (!role) {
+            return false
+          }
+          return Boolean(role.is_allow_info_product)
+        },
+        children: [
+          {
+            path: '/ProductInfo',
+            component: () => import('@/views/ADempiere/Form'),
+            name: 'ProductInfo',
+            meta: {
+              fileName: 'ProductInfo',
+              icon: 'search',
+              isIndex: true,
+              title: language.t('route.ProductInfo')
+            }
+          }
+        ]
+      },
       {
         path: '/acct-viewer',
         component: () => import('@/views/ADempiere/Form'),
         name: 'acct-viewer',
+        validateToEnable: ({ role }) => {
+          if (!role) {
+            return false
+          }
+          return Boolean(role.is_allow_info_account)
+        },
         meta: {
           title: 'Acctouting Viewer',
           fileName: 'AcctViewer',
@@ -72,35 +131,20 @@ const staticRoutes = [
           noCache: true,
           isIndex: true
         }
-      }
-    ]
-  },
-
-  {
-    path: '/ProcessActivity',
-    component: Layout,
-    meta: {
-      title: 'ProcessActivity',
-      icon: 'tree-table',
-      noCache: true,
-      breadcrumb: false
-    },
-    redirect: '/ProcessActivity/index',
-    children: [
+      },
       {
-        path: 'index',
+        path: 'ProcessActivity',
         component: () => import('@/views/ADempiere/ProcessActivity'),
         name: 'ProcessActivity',
         meta: {
           title: 'ProcessActivity',
           icon: 'tree-table',
           noCache: true,
-          isIndex: true
+          breadcrumb: false
         }
       }
     ]
   },
-
   {
     path: '/Charts',
     component: Layout,
@@ -196,31 +240,6 @@ const staticRoutes = [
           icon: 'search',
           title: 'BarcodeReader',
           isIndex: true
-        }
-      }
-    ]
-  },
-
-  {
-    path: '/product-info',
-    component: Layout,
-    hidden: false,
-    validateToEnable: ({ role }) => {
-      if (!role) {
-        return false
-      }
-      return Boolean(role.is_allow_info_product)
-    },
-    children: [
-      {
-        path: '/ProductInfo',
-        component: () => import('@/views/ADempiere/Form'),
-        name: 'ProductInfo',
-        meta: {
-          fileName: 'ProductInfo',
-          icon: 'search',
-          isIndex: true,
-          title: language.t('route.ProductInfo')
         }
       }
     ]

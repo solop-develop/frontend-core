@@ -8,6 +8,7 @@ export default {
     pagePermission: 'Permisos de la página',
     directivePermission: 'Permisos de la directiva',
     icons: 'Iconos',
+    views: 'Vistas',
     components: 'Componentes',
     tinymce: 'Tinymce',
     markdown: 'Markdown',

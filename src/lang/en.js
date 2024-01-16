@@ -8,6 +8,7 @@ export default {
     rolePermission: 'Role Permission',
     directivePermission: 'Directive Permission',
     icons: 'Icons',
+    views: 'Views',
     components: 'Components',
     tinymce: 'Tinymce',
     markdown: 'Markdown',

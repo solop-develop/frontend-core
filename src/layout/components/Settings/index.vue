@@ -62,6 +62,36 @@
       >
         <el-switch v-model="showFullGridMode" />
       </el-form-item>
+      <el-form-item
+        :label="$t('page.settings.mainDashboardCard')"
+        class="drawer-title"
+      >
+        <el-select
+          v-model="panelMain"
+        >
+          <el-option
+            v-for="item in listDashboard"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item
+        :label="$t('page.settings.numberColumnsDashboard')"
+        class="drawer-title"
+      >
+        <el-select
+          v-model="colNum"
+        >
+          <el-option
+            v-for="item in numColDashboard"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
+      </el-form-item>
     </el-form>
     <!-- </div> -->
   </div>
@@ -69,11 +99,14 @@
 
 <script>
 import { computed, ref } from '@vue/composition-api'
-
+import language from '@/lang'
 import store from '@/store'
 
 // components and mixins
 import ThemePicker from '@/components/ThemePicker'
+
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 export default {
   name: 'GeneralSettings',
@@ -233,6 +266,94 @@ export default {
       }
     })
 
+    const panelMain = computed({
+      // getter
+      get() {
+        return store.getters.getStoredMainDashboard.id
+      },
+      // setter
+      set(dashboard) {
+        // Note: we are using destructuring assignment syntax here.
+        if (dashboard) {
+          const currentDashboard = listDashboard.value.find(list => list.id === dashboard)
+          store.dispatch('mainDashboard', currentDashboard)
+        }
+      }
+    })
+
+    const dashboardsList = computed(() => {
+      return store.getters.getStoredDashboardsList
+    })
+
+    const listDashboard = computed(() => {
+      const list = dashboardsList.value
+      if (isEmptyValue(list)) {
+        return []
+      }
+      if (!isEmptyValue(mainDashboard.value)) {
+        const listDashboardPanel = list.filter(dashboard => {
+          if (
+            mainDashboard.value.id !== dashboard.id &&
+            isEmptyValue(dashboard.chartType)
+          ) {
+            return dashboard
+          }
+        })
+        if (isEmptyValue(listDashboardPanel.find(list => list.name === 'notices'))) {
+          listDashboardPanel.push(panelNotice.value)
+        }
+        return listDashboardPanel
+      }
+      return list
+    })
+
+    const colNum = computed({
+      // getter
+      get() {
+        return store.state.settings.colNum
+      },
+      // setter
+      set(newValue) {
+        // Note: we are using destructuring assignment syntax here.
+        store.dispatch('settings/changeSetting', {
+          key: 'colNum',
+          value: newValue
+        })
+      }
+    })
+
+    const numColDashboard = ref([
+      {
+        value: 24,
+        label: 1
+      },
+      {
+        value: 12,
+        label: 2
+      },
+      {
+        value: 8,
+        label: 3
+      },
+      {
+        value: 6,
+        label: 4
+      }
+    ])
+
+    const mainDashboard = computed(() => {
+      return store.getters.getStoredMainDashboard
+    })
+
+    const panelNotice = computed(() => {
+      return {
+        dashboardType: 'dashboard',
+        fileName: 'notices',
+        isCollapsible: true,
+        name: language.t('profile.notice')
+      }
+    })
+
     const lang = computed(() => {
       return store.getters.language
     })
@@ -256,18 +377,25 @@ export default {
       // data
       activeName,
       // Computed
-      isShowTitleForm,
-      showNavar,
-      fixedHeader,
+      lang,
+      colNum,
       showMenu,
       tagsView,
-      showContextMenu,
-      sidebarLogo,
-      supportPinyinSearch,
-      showAutoSave,
-      lang,
       isShowJob,
+      panelMain,
+      showNavar,
+      sidebarLogo,
+      fixedHeader,
+      panelNotice,
+      showAutoSave,
+      mainDashboard,
+      listDashboard,
+      dashboardsList,
+      showContextMenu,
+      isShowTitleForm,
+      numColDashboard,
       showFullGridMode,
+      supportPinyinSearch,
       // methods
       themeChange,
       changeDisplatedTitle
