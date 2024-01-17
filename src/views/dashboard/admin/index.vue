@@ -34,6 +34,12 @@
       <el-col :span="24">
         <panel-group />
       </el-col>
+      <el-col :span="24">
+        <panel-group-pie />
+      </el-col>
+      <el-col :span="24">
+        <panel-group-portlet />
+      </el-col>
       <el-col v-if="!isEmptyValue(mainDashboard)" :span="24" style="padding-right:8px;margin-bottom:2px;">
         <dashboard-definition
           :metadata="mainDashboard"
@@ -43,6 +49,7 @@
 
       <template v-for="(dashboardAttributes, index) in listDashboard">
         <el-col
+          v-if="mainDashboard.name !== dashboardAttributes.name"
           :key="index"
           :span="colNum"
           style="padding-right:8px;margin-bottom:2px;"
@@ -54,7 +61,7 @@
           />
         </el-col>
       </template>
-      <el-col
+      <!-- <el-col
         :span="colNum"
         style="padding-right:8px;margin-bottom:2px;"
       >
@@ -63,7 +70,7 @@
           :title="mainDashboard.name"
           style="margin: 0px;width: 100% !important;"
         />
-      </el-col>
+      </el-col> -->
     </el-row>
     <page-style-settings />
   </div>
@@ -83,6 +90,8 @@ import language from '@/lang'
 // Components and Mixins
 import DashboardDefinition from '@/components/ADempiere/Dashboard/index.vue'
 import PanelGroup from '@/views/dashboard/admin/components/PanelGroup.vue'
+import PanelGroupPie from '@/components/ADempiere/Dashboard/panelGroupPie'
+import PanelGroupPortlet from '@/components/ADempiere/Dashboard/panelGroupPortlet'
 import PageStyleSettings from '@/components/ADempiere/PageStyleSettings'
 import Todo from '@/views/dashboard/admin/components/TodoList/index.vue'
 import UserInfo from '@/views/profile/components/InfoUser.vue'
@@ -103,7 +112,9 @@ export default defineComponent({
     RightPanel,
     PanelGroup,
     ThemePicker,
+    PanelGroupPie,
     PageStyleSettings,
+    PanelGroupPortlet,
     DashboardDefinition
   },
 
@@ -190,7 +201,7 @@ export default defineComponent({
     })
 
     const dashboardsList = computed(() => {
-      return store.getters.getStoredDashboardsList
+      return store.getters.getStoredDashboardsList.filter(list => list.fileName !== 'docstatus')
     })
 
     const mainDashboard = computed(() => {
@@ -203,6 +214,15 @@ export default defineComponent({
         fileName: 'notices',
         isCollapsible: true,
         name: language.t('profile.notice')
+      }
+    })
+
+    const panelTodo = computed(() => {
+      return {
+        dashboardType: 'dashboard',
+        fileName: 'todo',
+        isCollapsible: true,
+        name: 'Todo'
       }
     })
 
@@ -220,6 +240,9 @@ export default defineComponent({
             return dashboard
           }
         })
+        if (isEmptyValue(listDashboardPanel.find(list => list.name === 'todo'))) {
+          listDashboardPanel.push(panelTodo.value)
+        }
         if (isEmptyValue(listDashboardPanel.find(list => list.name === 'notices'))) {
           listDashboardPanel.push(panelNotice.value)
         }
@@ -258,17 +281,18 @@ export default defineComponent({
     })
 
     return {
+      numColDashboard,
       dashboardsList,
       mainDashboard,
       listDashboard,
+      showSettings,
       panelNotice,
       currentRole,
-      showSettings,
       sidebarLogo,
+      panelTodo,
+      panelMain,
       tagsView,
       colNum,
-      numColDashboard,
-      panelMain,
       themeChange
     }
   }

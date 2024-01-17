@@ -46,12 +46,15 @@
       </el-row>
     </div>
     <transition name="el-zoom-in-top">
-      <div v-show="metadata.isCollapsible" class="dashboard-transitio">
+      <div
+        v-show="metadata.isCollapsible"
+        :class="ClassDashboardTransitio"
+      >
         <component
           :is="renderDashboard"
           :ref="metadata.name"
           :metadata="metadata"
-          :height="'450px'"
+          :height="heightSize"
         />
       </div>
     </transition>
@@ -85,6 +88,10 @@ export default defineComponent({
     main: {
       type: Boolean,
       default: false
+    },
+    heightSize: {
+      type: String,
+      default: '450px'
     }
   },
 
@@ -118,6 +125,9 @@ export default defineComponent({
           case 'notices':
             dashboard = () => import('@/components/ADempiere/Dashboard/notices')
             break
+          case 'todo':
+            dashboard = () => import('@/views/dashboard/admin/components/TodoList/index.vue')
+            break
           default:
             dashboard = () => import('@/components/ADempiere/Dashboard/UnsupportedDashboard')
             break
@@ -139,13 +149,26 @@ export default defineComponent({
       return props.title
     })
 
+    const ClassDashboardTransitio = computed(() => {
+      return {
+        margin: '0px;',
+        width: '100%;',
+        paddingRight: '2%;',
+        borderRadius: '4px;',
+        textAlign: 'center;',
+        boxSizing: 'border-box;',
+        height: props.heightSize,
+        overflow: 'auto'
+      }
+    })
+
     function sendMain(dashboard) {
       store.dispatch('mainDashboard', dashboard)
     }
 
-    if (props.metadata.fileName === 'notices') sendMain(props.metadata)
+    // if (props.metadata.fileName === 'notices') sendMain(props.metadata)
 
-    // loadMainPanelNotice()
+    // loadMainPanelNotice()if (!isEmptyValue(props.metadata.groupPortlet))
 
     return {
       UNSUPPORTED_DASHBOARDS,
@@ -153,6 +176,7 @@ export default defineComponent({
       // computeds
       renderDashboard,
       labelDashboard,
+      ClassDashboardTransitio,
       // methods
       sendMain
     }

@@ -1,19 +1,19 @@
 <!--
-  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
-  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
+ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  GNU General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
 
-  You should have received a copy of the GNU General Public License
-  along with this program. If not, see <https:www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -22,45 +22,22 @@
   >
     <el-row
       :gutter="20"
-      class="panel-group"
+      class="panel-group-pie"
     >
       <el-col
-        v-for="(taks, key) in mainTaks"
+        v-for="(dashboardAttributes, key) in dashboardsList"
         :key="key"
         :xs="12"
         :sm="12"
         :lg="spanSize"
         class="card-panel-col"
       >
-        <div class="card-panel" @click="handleClick(taks)">
-          <div
-            :class="taks.classCard"
-            style="text-align: center;width: 100%;"
-          >
-            <el-badge
-              :value="taks.recordCount"
-              type="primary"
-              class="class-card-panel"
-            >
-              <i
-                v-if="taks.svg.type === 'i'"
-                :class="taks.svg.class"
-                style="font-size: 65px"
-              />
-              <svg-icon
-                v-else
-                :icon-class="taks.svg.class"
-                class-name="card-panel-icon"
-                style="margin: 0px !important;"
-              />
-            </el-badge>
-            <p
-              style="margin: 0px;font-size: 12px"
-            >
-              {{ taks.name }}
-            </p>
-          </div>
-        </div>
+        <dashboard-definition
+          :metadata="dashboardAttributes"
+          :title="dashboardAttributes.name"
+          :main="true"
+          :height-size="'250px'"
+        />
       </el-col>
     </el-row>
   </div>
@@ -68,22 +45,31 @@
 
 <script>
 import { defineComponent, computed } from '@vue/composition-api'
+// Components and Mixins
 import CountTo from 'vue-count-to'
-import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
+import DashboardDefinition from '@/components/ADempiere/Dashboard/index.vue'
+// import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 import store from '@/store'
 import { setIconsTableName } from '@/utils/ADempiere'
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 export default defineComponent({
   components: {
-    CountTo
+    CountTo,
+    DashboardDefinition
   },
   setup(props) {
     const isMobile = computed(() => {
       return store.state.app.device === 'mobile'
     })
 
+    const dashboardsList = computed(() => {
+      return store.getters.getStoredDashboardsList.filter(list => !isEmptyValue(list.chartType) && list.chartType === 'GU')
+    })
+
     const spanSize = computed(() => {
-      const quantity = mainTaks.value.length
+      const quantity = dashboardsList.value.length
       if (quantity === 1) return 24
       if (quantity === 2) return 12
       if (quantity === 3) return 8
@@ -132,31 +118,6 @@ export default defineComponent({
       })
     })
 
-    function loadPendingDocuments() {
-      store.dispatch('listPendingDocuments')
-    }
-
-    function handleClick(taks) {
-      let tabParent
-      if (taks.action === 'window') {
-        tabParent = 0
-      }
-
-      zoomIn({
-        attributeValue: `window_${taks.windowId}`,
-        attributeName: 'containerKey',
-        params: {
-          ...taks.criteria
-        },
-        query: {
-          tabParent,
-          action: 'criteria'
-        }
-      })
-    }
-
-    loadPendingDocuments()
-
     return {
       // Computed
       mainTaks,
@@ -164,9 +125,7 @@ export default defineComponent({
       spanSize,
       styleMain,
       documentList,
-      // Methods
-      handleClick,
-      loadPendingDocuments
+      dashboardsList
     }
   }
 })
@@ -182,7 +141,7 @@ export default defineComponent({
     transform: translateY(-50%) translateX(100%);
   }
 }
-.panel-group {
+.panel-group-pie {
   margin: 0px;
   display: flex;
   overflow: auto;
@@ -193,7 +152,7 @@ export default defineComponent({
   }
 
   .card-panel {
-    height: 125px;
+    height: 200px;
     cursor: pointer;
     font-size: 12px;
     display: flex;

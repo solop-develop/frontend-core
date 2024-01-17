@@ -16,7 +16,7 @@
  along with this program.  If not, see <https:www.gnu.org/licenses/>.
 -->
 <template>
-  <el-calendar>
+  <el-calendar style="height: 455px;overflow: auto;">
     <!-- Use 2.5 slot syntax. If you use Vue 2.6, please use new slot syntax-->
     <template
       slot="dateCell"
