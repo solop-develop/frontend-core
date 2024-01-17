@@ -203,7 +203,7 @@ export default {
               const reportDefinition = rootGetters.getStoredReport(process.uuid)
               if (!isEmptyValue(reportDefinition)) {
                 // auto run report if without parameters
-                if (isEmptyValue(reportDefinition.fieldsList)) {
+                if (!reportDefinition.hasParameters || isEmptyValue(reportDefinition.fieldsList)) {
                   // close modal dialog
                   store.commit('setShowedModalDialog', {
                     containerUuid: reportDefinition.uuid,

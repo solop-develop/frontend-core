@@ -16,6 +16,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Constants
+import { config } from '@/utils/ADempiere/config'
+
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
@@ -74,15 +77,33 @@ export function requestReference({
     })
 }
 
+/**
+ * GET Process or Report dictionary metadata definition
+ * @param {Number} id identifier
+ * @param {String} language language
+ * @param {Number} clientId client identifier
+ * @param {Number} roleId role identifier
+ * @param {Number} userId user identifier
+ * @returns
+ */
 export function requestProcessMetadata({
-  id
+  id,
+  // mandatory to open search
+  language,
+  clientId,
+  roleId,
+  userId
 }) {
   return request({
-    url: `/dictionary/processes/${id}`,
-    method: 'get'
-    // params: {
-    //   id
-    // }
+    baseURL: config.adempiere.api.dictionary,
+    url: `/processes/${id}`,
+    method: 'get',
+    params: {
+      language,
+      client_id: clientId,
+      role_id: roleId,
+      user_id: userId
+    }
   })
     .then(processResponse => {
       const { convertProcess } = require('@/utils/ADempiere/apiConverts/dictionary.js')

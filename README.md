@@ -107,7 +107,7 @@ Run container container:
 docker run -it \
 	--name adempiere-vue \
 	-p 80:80 \
-	-e API_URL="http://localhost:8085" \
+	-e API_URL="http://localhost:8080/api/" \
 	-e TZ="America/Caracas" \
 	solopcloud/adempiere-vue
 ```
@@ -121,7 +121,9 @@ docker-compose up
 
  * `PUBLIC_PATH`: You will need to set publicPath if you plan to deploy your site under a sub path, for example GitHub Pages. If you plan to deploy your site to `https://adempiere-vue.github.io/bar/`, then publicPath should be set to `/bar/`. In most cases please use `/`.
 
- * `API_URL`: It indicates the address of the server to which you will point the service [Proxy-Adempiere-Api](https://github.com/adempiere/proxy-adempiere-api), by default its value is `http://localhost:8085/api/adempiere/`.
+ * `API_URL`: It indicates the address of the server to which you will point the service [ADempiere-UI-Gateway](https://github.com/adempiere/adempiere-ui-gateway), by default its value is `http://localhost:8080/api/`.
+
+ * `API_DICTIONARY_URL`: It indicates the address of the dictionary server to which you will point the service [ADempiere-UI-Gateway](https://github.com/adempiere/adempiere-ui-gateway), by default its value is `http://localhost:8080/api/dictionary/`. In the future the dictionary will be loaded through the [OpenSearch-Gateway-RS] project (https://github.com/adempiere/opensearch_gateway_rs) and its default value will be `http://localhost:7878/v1/`.
 
  * `TASK_MANAGER_URL`: It indicates the address of the API RESTFul to task manager [ADempiere-Business-Processors](https://github.com/adempiere/adempiere-business-processors) and [`dKron`](https://dkron.io/), by default its value is `http://localhost:8080/v1`.
 
