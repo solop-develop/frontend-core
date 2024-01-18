@@ -34,6 +34,9 @@ import {
 import {
   clearParameters, runProcess
 } from '@/utils/ADempiere/dictionary/process/actionsMenu.ts'
+import {
+  getCurrentClient, getCurrentRole
+} from '@/utils/ADempiere/auth'
 
 export default {
   addProcessToList({ commit, dispatch }, processResponse) {
@@ -57,12 +60,21 @@ export default {
    * Get process dictionary definition
    * @param {string} uuid of dictionary
    */
-  getProcessDefinitionFromServer({ dispatch }, {
+  getProcessDefinitionFromServer({ dispatch, rootGetters }, {
     id
   }) {
+    const language = rootGetters['getCurrentLanguage']
+    const clientId = getCurrentClient()
+    const roleId = getCurrentRole()
+    const userId = rootGetters['user/getUserId']
+
     return new Promise((resolve, reject) => {
       requestProcessMetadata({
-        id
+        id,
+        language,
+        clientId,
+        roleId,
+        userId
       })
         .then(processResponse => {
           const { processDefinition } = generateProcess({

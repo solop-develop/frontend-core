@@ -59,7 +59,7 @@ import {
 const state = {
   token: getToken(),
   name: '',
-  userUuid: '',
+  userId: -1,
   avatar: '',
   introduction: '',
   role: {}, // info current role
@@ -121,8 +121,8 @@ const mutations = {
   SET_USER: (state, payload) => {
     state.userInfo = payload
   },
-  SET_USER_UUID: (state, payload) => {
-    state.userUuid = payload
+  SET_USER_ID: (state, payload) => {
+    state.userId = payload
   },
   setIsSession(state, payload) {
     state.isSession = payload
@@ -212,6 +212,7 @@ const actions = {
 
           commit('SET_NAME', name)
           commit('SET_USER', userInfo)
+          commit('SET_USER_ID', userInfo.id)
           const avatar = userInfo.image
           commit('SET_AVATAR', avatar)
 
@@ -760,8 +761,8 @@ const getters = {
   getWarehouse: (state) => {
     return state.warehouse
   },
-  getUserUuid: (state) => {
-    return state.userUuid
+  getUserId: (state) => {
+    return state.userId
   },
   userInfo: (state) => {
     return state.userInfo
