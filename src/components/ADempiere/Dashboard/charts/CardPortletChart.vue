@@ -161,9 +161,11 @@ export default defineComponent({
       return colorPercnt
     }
 
-    props.metadata.groupPortlet.forEach(element => {
-      loadMetrics(element)
-    })
+    if (!isEmptyValue(props.metadata.groupPortlet)) {
+      props.metadata.groupPortlet.forEach(element => {
+        loadMetrics(element)
+      })
+    }
 
     return {
       portlet,

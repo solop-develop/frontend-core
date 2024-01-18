@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <div class="activities-dashboard-container">
+  <div class="activities-dashboard-container" style="height: 455px;">
     <el-table
       :data="activitiesList"
       :highlight-current-row="true"

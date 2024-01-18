@@ -74,7 +74,12 @@ const dashboard = {
             commit('setDashboardsList', dashboardsList)
 
             if (isEmptyValue(getters.getStoredMainDashboard)) {
-              dispatch('mainDashboard', dashboardsList.at())
+              const defaulDashboard = dashboardsList.find(list => list.fileName === 'recentItems')
+              if (defaulDashboard) {
+                dispatch('mainDashboard', defaulDashboard)
+                return
+              }
+              dispatch('mainDashboard', dashboardsList.at(2))
             }
             resolve(roleDashboards)
           })
