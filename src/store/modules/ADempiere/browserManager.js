@@ -232,7 +232,7 @@ const browserControl = {
           id: browserId,
           contextAttributes,
           filters,
-          nextPageToken: pageToken,
+          pageToken,
           pageSize
         })
           .then(browserSearchResponse => {
