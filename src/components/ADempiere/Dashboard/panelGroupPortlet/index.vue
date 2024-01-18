@@ -108,7 +108,7 @@ export default defineComponent({
       if (quantity === 2) {
         return 12
       }
-      if (quantity === 3) [
+      if (quantity === 3) {
         return 8
       }
       if (quantity <= 4) {
