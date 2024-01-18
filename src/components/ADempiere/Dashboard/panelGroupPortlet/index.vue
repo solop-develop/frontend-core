@@ -1,19 +1,19 @@
 <!--
-ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
-Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -58,26 +58,32 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 </template>
 
 <script>
-
 import { defineComponent, computed } from '@vue/composition-api'
+
+import store from '@/store'
+
 // API Request Methods
 import { getMetricRequest } from '@/api/ADempiere/dashboard/index.ts'
+
 // Components and Mixins
 import CountTo from 'vue-count-to'
 import DashboardDefinition from '@/components/ADempiere/Dashboard/index.vue'
 import portlet from '@/components/ADempiere/Dashboard/charts/Portlet.vue'
-// import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
-import store from '@/store'
-import { setIconsTableName } from '@/utils/ADempiere'
+
 // Utils and Helper Methods
+// import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
+import { setIconsTableName } from '@/utils/ADempiere'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 export default defineComponent({
+  name: 'PanelGroupPorlet',
+
   components: {
     CountTo,
     portlet,
     DashboardDefinition
   },
+
   setup(props) {
     const isMobile = computed(() => {
       return store.state.app.device === 'mobile'
@@ -96,17 +102,29 @@ export default defineComponent({
 
     const spanSize = computed(() => {
       const quantity = dashboardsList.value.length
-      if (quantity === 1) return 24
-      if (quantity === 2) return 12
-      if (quantity === 3) return 8
-      if (quantity <= 4) return 6
-      if (quantity >= 5) return 4
+      if (quantity === 1) {
+        return 24
+      }
+      if (quantity === 2) {
+        return 12
+      }
+      if (quantity === 3) [
+        return 8
+      }
+      if (quantity <= 4) {
+        return 6
+      }
+      if (quantity >= 5) {
+        return 4
+      }
       return 6
     })
 
     const styleMain = computed(() => {
       const quantity = mainTaks.value.length
-      if (quantity > 4) return 'display: flex;padding: 0px 15px 10px 5px;'
+      if (quantity > 4) {
+        return 'display: flex;padding: 0px 15px 10px 5px;'
+      }
       return 'padding: 0px 15px 10px 5px;'
     })
 
@@ -178,7 +196,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-
 .class-card-panel {
   .el-badge__content.is-fixed {
     position: absolute;
