@@ -181,7 +181,7 @@ export default defineComponent({
       row.isSelect = !isSelect
       row.applied = appliedPay(row)
       console.log({ qlq: appliedPay(row) }, num(appliedPay(row)))
-      row.amountApplied = num(appliedPay(row))
+      row.amountApplied = appliedPay(row)
       addRowSelect(row)
     }
 
@@ -206,6 +206,10 @@ export default defineComponent({
     }
 
     function appliedPay(currentInvoce) {
+      const sumPayment = selectListAll.value.filter(list => {
+        return list.type !== 'isInvoce'
+      })
+      if (isEmptyValue(sumPayment)) return currentInvoce.open_amount
       const { open_amount, discount_amount } = currentInvoce
       if (selectListAll.value.length < 1) {
         return open_amount - discount_amount
