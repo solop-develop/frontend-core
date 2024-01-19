@@ -200,7 +200,7 @@
       >
         <template slot="label">
           <b>
-            {{ $t('page.settings.rightPanelContent  ') }}
+            {{ $t('page.settings.rightPanelContent') }}
           </b>
         </template>
         <el-select
