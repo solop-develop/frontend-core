@@ -17,7 +17,9 @@ const state = {
   showNavar: !isEmptyValue(localStorage.getItem('showNavar')) ? convertStringToBoolean(localStorage.getItem('showNavar')) : showNavar,
   autoSave: !isEmptyValue(localStorage.getItem('autoSave')) ? convertStringToBoolean(localStorage.getItem('autoSave')) : autoSave,
   fullGridMode: !isEmptyValue(localStorage.getItem('fullGridMode')) ? convertStringToBoolean(localStorage.getItem('fullGridMode')) : fullGridMode,
-  showMenu: true
+  showMenu: true,
+  panelLeft: ['PC', 'userfavorites'],
+  panelRight: ['BC', 'LC', 'notices']
 }
 
 const mutations = {
@@ -56,6 +58,12 @@ const getters = {
   },
   getSidebarLogo: (state) => {
     return state.sidebarLogo
+  },
+  getPanelLeft: (state) => {
+    return state.panelLeft
+  },
+  getPanelRight: (state) => {
+    return state.panelRight
   }
 }
 

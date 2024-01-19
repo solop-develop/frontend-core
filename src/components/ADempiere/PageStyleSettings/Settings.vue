@@ -20,13 +20,15 @@
   <el-card
     shadow="never"
     class="custom-card-options"
-    :body-style="{ padding: '5px 25px' }"
+    :body-style="{ padding: '5px 15px' }"
   >
     <el-descriptions
       class="class-descriptions"
       :column="1"
     >
-      <el-descriptions-item>
+      <el-descriptions-item
+        content-class-name="setting-line"
+      >
         <template slot="label">
           <b>
             {{ $t('page.settings.theme') }}
@@ -37,7 +39,9 @@
           @change="themeChange"
         />
       </el-descriptions-item>
-      <el-descriptions-item>
+      <el-descriptions-item
+        content-class-name="setting-line"
+      >
         <template slot="label">
           <b>
             {{ $t('page.settings.isShowTitle') }}
@@ -47,7 +51,9 @@
         <br>
         <br>
       </el-descriptions-item>
-      <el-descriptions-item>
+      <el-descriptions-item
+        content-class-name="setting-line"
+      >
         <template slot="label">
           <b>
             {{ $t('page.settings.isShowMenu') }}
@@ -57,7 +63,9 @@
         <br>
         <br>
       </el-descriptions-item>
-      <el-descriptions-item>
+      <el-descriptions-item
+        content-class-name="setting-line"
+      >
         <template slot="label">
           <b>
             {{ $t('page.settings.tagsView') }}
@@ -67,7 +75,9 @@
         <br>
         <br>
       </el-descriptions-item>
-      <el-descriptions-item>
+      <el-descriptions-item
+        content-class-name="setting-line"
+      >
         <template slot="label">
           <b>
             {{ $t('page.settings.autoSave') }}
@@ -77,7 +87,9 @@
         <br>
         <br>
       </el-descriptions-item>
-      <el-descriptions-item>
+      <el-descriptions-item
+        content-class-name="setting-line"
+      >
         <template slot="label">
           <b>
             {{ $t('page.settings.fullGridMode') }}
@@ -87,7 +99,9 @@
         <br>
         <br>
       </el-descriptions-item>
-      <el-descriptions-item>
+      <el-descriptions-item
+        content-class-name="setting-line"
+      >
         <template slot="label">
           <b>
             {{ $t('page.settings.sidebarLogo') }}
@@ -97,7 +111,9 @@
         <br>
         <br>
       </el-descriptions-item>
-      <el-descriptions-item>
+      <el-descriptions-item
+        content-class-name="setting-line"
+      >
         <template slot="label">
           <b>
             {{ $t('page.settings.showContextMenu') }}
@@ -110,7 +126,9 @@
         <br>
         <br>
       </el-descriptions-item>
-      <el-descriptions-item>
+      <el-descriptions-item
+        content-class-name="setting-line"
+      >
         <template slot="label">
           <b>
             {{ $t('page.settings.mainDashboardCard') }}
@@ -118,6 +136,7 @@
         </template>
         <el-select
           v-model="panelMain"
+          size="mini"
         >
           <el-option
             v-for="item in listDashboard"
@@ -129,7 +148,9 @@
         <br>
         <br>
       </el-descriptions-item>
-      <el-descriptions-item>
+      <el-descriptions-item
+        content-class-name="setting-line"
+      >
         <template slot="label">
           <b>
             {{ $t('page.settings.numberColumnsDashboard') }}
@@ -137,9 +158,60 @@
         </template>
         <el-select
           v-model="colNum"
+          size="mini"
         >
           <el-option
             v-for="item in numColDashboard"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+        <br>
+        <br>
+      </el-descriptions-item>
+      <el-descriptions-item
+        content-class-name="setting-line"
+      >
+        <template slot="label">
+          <b>
+            {{ $t('page.settings.leftPanelContent') }}
+          </b>
+        </template>
+        <el-select
+          v-model="panelRight"
+          multiple
+          collapse-tags
+          size="mini"
+          style="margin-left: 20px;"
+        >
+          <el-option
+            v-for="item in optionsPanelRight"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+        <br>
+        <br>
+      </el-descriptions-item>
+      <el-descriptions-item
+        content-class-name="setting-line"
+      >
+        <template slot="label">
+          <b>
+            {{ $t('page.settings.rightPanelContent  ') }}
+          </b>
+        </template>
+        <el-select
+          v-model="panelLeft"
+          multiple
+          size="mini"
+          collapse-tags
+          style="margin-left: 20px;"
+        >
+          <el-option
+            v-for="item in optionsPanelLeft"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -178,6 +250,66 @@ export default defineComponent({
   setup() {
     // Ref
     const showSettings = ref(false)
+    const panelRight = computed({
+      // getter
+      get() {
+        return store.getters['settings/getPanelRight']
+      },
+      // setter
+      set(newValue) {
+        // Note: we are using destructuring assignment syntax here.
+        store.dispatch('settings/changeSetting', {
+          key: 'panelRight',
+          value: newValue
+        })
+      }
+    })
+    const optionsPanelRight = ref([
+      {
+        value: 'BC',
+        label: 'Graficos Tipos Barra'
+      },
+      {
+        value: 'LC',
+        label: 'Graficos Tipos Line'
+      },
+      {
+        value: 'notices',
+        label: 'Panel de Avisos'
+      }
+    ])
+    const panelLeft = computed({
+      // getter
+      get() {
+        return store.getters['settings/getPanelLeft']
+      },
+      // setter
+      set(newValue) {
+        // Note: we are using destructuring assignment syntax here.
+        store.dispatch('settings/changeSetting', {
+          key: 'panelLeft',
+          value: newValue
+        })
+      }
+    })
+    const optionsPanelLeft = ref([
+      {
+        value: 'PC',
+        label: 'Graficos Tipos Pie'
+      },
+      {
+        value: 'userfavorites',
+        label: 'Panel de Favoritos'
+      },
+      {
+        value: 'recentItems',
+        label: 'Panel de Últimos documentos'
+      },
+      {
+        value: 'todo',
+        label: 'Panel de Por Hacer'
+      }
+    ])
 
     // Computed
 
@@ -412,7 +544,11 @@ export default defineComponent({
 
     return {
       // Ref
+      panelLeft,
+      panelRight,
       showSettings,
+      optionsPanelLeft,
+      optionsPanelRight,
       // Computed
       showFullGridMode,
       isShowTitleForm,
@@ -454,5 +590,9 @@ export default defineComponent({
       }
     }
   }
+}
+.setting-line {
+  display: block !important;
+  text-align: end !important;
 }
 </style>

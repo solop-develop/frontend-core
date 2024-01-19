@@ -28,7 +28,7 @@
     <el-drawer
       :visible.sync="showSettings"
       :with-header="true"
-      :size="'30%'"
+      :size="'45%'"
     >
       <span
         slot="title"

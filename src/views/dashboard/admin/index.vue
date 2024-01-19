@@ -40,27 +40,41 @@
       <el-col :span="24">
         <panel-group-portlet />
       </el-col>
-      <el-col v-if="!isEmptyValue(mainDashboard)" :span="24" style="padding-right:8px;margin-bottom:2px;">
-        <dashboard-definition
-          :metadata="mainDashboard"
-          :title="mainDashboard.name"
-        />
+      <!-- <el-col :span="24">
+        {{ panelRight }}
+      </el-col> -->
+      <!-- <div></div> -->
+      <el-col :span="16">
+        <template v-for="(dashboardAttributes, index) in panelRight">
+          <el-col
+            v-if="mainDashboard.name !== dashboardAttributes.name"
+            :key="index"
+            :span="24"
+            style="padding-right:8px;margin-bottom:2px;"
+          >
+            <dashboard-definition
+              :metadata="dashboardAttributes"
+              :title="dashboardAttributes.name"
+              :main="true"
+            />
+          </el-col>
+        </template>
       </el-col>
-
-      <template v-for="(dashboardAttributes, index) in listDashboard">
-        <el-col
-          v-if="mainDashboard.name !== dashboardAttributes.name"
-          :key="index"
-          :span="colNum"
-          style="padding-right:8px;margin-bottom:2px;"
-        >
-          <dashboard-definition
-            :metadata="dashboardAttributes"
-            :title="dashboardAttributes.name"
-            :main="true"
-          />
-        </el-col>
-      </template>
+      <el-col :span="8">
+        <template v-for="(dashboardAttributes, key) in panelLeft">
+          <el-col
+            :key="key"
+            :span="24"
+            style="padding-right:8px;margin-bottom:2px;"
+          >
+            <dashboard-definition
+              :metadata="dashboardAttributes"
+              :title="dashboardAttributes.name"
+              :main="true"
+            />
+          </el-col>
+        </template>
+      </el-col>
       <!-- <el-col
         :span="colNum"
         style="padding-right:8px;margin-bottom:2px;"
@@ -222,8 +236,45 @@ export default defineComponent({
         dashboardType: 'dashboard',
         fileName: 'todo',
         isCollapsible: true,
-        name: 'Todo'
+        name: language.t('components.todoList')
       }
+    })
+
+    const panelRight = computed(() => {
+      const panelRight = store.getters['settings/getPanelRight']
+      const listDashboard = store.getters.getStoredDashboardsList
+      if (isEmptyValue(listDashboard.find(list => list.fileName === 'notices'))) {
+        listDashboard.unshift(panelNotice.value)
+      }
+      const list = listDashboard
+        .filter(list => {
+          if (!isEmptyValue(list.chartType) && panelRight.includes(list.chartType)) {
+            return list
+          } else if (panelRight.includes(list.fileName)) {
+            return list
+          }
+        })
+      return list
+    })
+
+    const panelLeft = computed(() => {
+      const panelLeft = store.getters['settings/getPanelLeft']
+      const listDashboard = store.getters.getStoredDashboardsList
+      if (isEmptyValue(listDashboard.find(list => list.fileName === 'notices'))) {
+        listDashboard.unshift(panelNotice.value)
+      }
+      if (isEmptyValue(listDashboard.find(list => list.fileName === 'todo'))) {
+        listDashboard.unshift(panelTodo.value)
+      }
+      const list = listDashboard
+        .filter(list => {
+          if (!isEmptyValue(list.chartType) && panelLeft.includes(list.chartType)) {
+            return list
+          } else if (panelLeft.includes(list.fileName)) {
+            return list
+          }
+        })
+      return list
     })
 
     const listDashboard = computed(() => {
@@ -243,7 +294,7 @@ export default defineComponent({
         if (isEmptyValue(listDashboardPanel.find(list => list.name === 'todo'))) {
           listDashboardPanel.push(panelTodo.value)
         }
-        if (isEmptyValue(listDashboardPanel.find(list => list.name === 'notices'))) {
+        if (isEmptyValue(listDashboardPanel.find(list => list.fileName === 'notices'))) {
           listDashboardPanel.push(panelNotice.value)
         }
         return listDashboardPanel
@@ -289,7 +340,9 @@ export default defineComponent({
       panelNotice,
       currentRole,
       sidebarLogo,
+      panelRight,
       panelTodo,
+      panelLeft,
       panelMain,
       tagsView,
       colNum,
