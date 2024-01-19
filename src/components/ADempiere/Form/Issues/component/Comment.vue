@@ -1313,17 +1313,46 @@
                   </el-dropdown>
                 </div>
                 <div>
-                  <!-- <div v-if="!comment.isEdit" v-markdown="comment.result" class="output" /> -->
-                  <v-md-preview v-if="!comment.isEdit" :text="comment.result" class="previwer-disable" style="padding: 0px" />
+                  <span v-if="!comment.isEdit">
+                    <v-md-preview
+                      v-if="comment.issue_comment_type !== 'LOG'"
+                      :text="comment.result"
+                      class="previwer-disable"
+                      style="padding: 0px"
+                    />
+                    <span v-else>
+                      <el-descriptions :column="1">
+                        <el-descriptions-item
+                          v-for="log in comment.change_logs"
+                          :key="log.id"
+                          label-style="{ color: #606266; font-weight: bold; }"
+                        >
+                          <template slot="label">
+                            <span style="color: #606266; font-weight: bold;padding-right: 5px;">
+                              {{ log.label }}
+                            </span>
+                            ({{ log.column_name }})
+                          </template>
+                          <span style="font-weight: bold;">
+                            <el-link
+                              :type="!isEmptyValue(log.displayed_value) ? 'success' : 'danger'"
+                              :style="isEmptyValue(log.displayed_value) ? 'text-decoration:line-through;' : ''"
+                            >
+                              <b>
+                                {{ isEmptyValue(log.displayed_value) ? 'NULL' : log.displayed_value }}
+                              </b>
+                            </el-link>
+                          </span>
+                        </el-descriptions-item>
+                      </el-descriptions>
+                    </span>
+                  </span>
                   <span v-else>
                     <el-card v-if="commentUpdatePreview" shadow="never">
                       <el-scrollbar wrap-class="scroll-previwer-disable">
                         <v-md-preview :text="commentUpdate" class="previwer-disable" style="padding: 0px" height="150px" />
                       </el-scrollbar>
-                      <!-- <v-md-preview v-if="commentUpdate" :text="comment.result" class="previwer-disable" style="padding: 0px" /> -->
-                      <!-- <div v-markdown="commentUpdate" class="output" /> -->
                     </el-card>
-                    <!-- <div v-if="commentUpdatePreview" v-markdown="comment.result" class="output" /> -->
                     <v-md-editor
                       v-else
                       v-model="commentUpdate"
@@ -1426,17 +1455,13 @@
                   </el-dropdown>
                 </div>
                 <div>
-                  <!-- <div v-if="!comment.isEdit" v-markdown="comment.result" class="output" /> -->
                   <v-md-preview v-if="!comment.isEdit" :text="comment.result" class="previwer-disable" style="padding: 0px" />
                   <span v-else>
                     <el-card v-if="commentUpdatePreview" shadow="never">
                       <el-scrollbar wrap-class="scroll-previwer-disable">
                         <v-md-preview :text="commentUpdate" class="previwer-disable" style="padding: 0px" height="150px" />
                       </el-scrollbar>
-                      <!-- <v-md-preview v-if="commentUpdate" :text="comment.result" class="previwer-disable" style="padding: 0px" /> -->
-                      <!-- <div v-markdown="commentUpdate"remoteMethodTask class="output" /> -->
                     </el-card>
-                    <!-- <div v-if="commentUpdatePreview" v-markdown="comment.result" class="output" /> -->
                     <v-md-editor
                       v-else
                       v-model="commentUpdate"
@@ -1485,8 +1510,6 @@
       <el-main height="auto" style="height: auto;overflow: auto;padding: 0px 0px 30px !important;">
         <div v-if="!isEmptyValue(currentIssues) && !isPanelNewRequest">
           <el-card v-if="commentPreview" shadow="never" class="is-add-new-comments">
-            <!-- <v-md-preview :text="comments" height="200px" /> -->
-            <!-- <div v-markdown="comments" class="output" /> -->
             <div slot="header">
               <b>
                 {{ $t('issues.preview') }}
