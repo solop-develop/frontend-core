@@ -2080,7 +2080,7 @@ export const containerManager = {
   /**
    * @returns Promisse with value and displayedValue
    */
-  getDefaultValue({ parentUuid, containerUuid, uuid, id, contextColumnNames, columnName, value }) {
+  getDefaultValue({ parentUuid, containerUuid, uuid, id, contextColumnNames, columnName, defaultValue, value }) {
     return store.dispatch('getDefaultValueFromServer', {
       parentUuid,
       containerUuid,
@@ -2089,6 +2089,7 @@ export const containerManager = {
       id,
       //
       columnName,
+      defaultValue,
       value
     }).then(response => {
       const recordUuid = store.getters.getUuidOfContainer(containerUuid)
@@ -2117,6 +2118,17 @@ export const containerManager = {
             value: response.displayedValue
           })
         }
+      }
+      if (!isEmptyValue(defaultValue) && defaultValue.startsWith('@SQL=')) {
+        const field = store.getters.getStoredFieldsFromTab(parentUuid, containerUuid).find(itemField => itemField.columnName === columnName)
+        store.dispatch('windowActionPerformed', {
+          field,
+          columnName,
+          recordUuid,
+          parentUuid,
+          containerUuid,
+          value: response.value
+        })
       }
       return response
     })

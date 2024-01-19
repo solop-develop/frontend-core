@@ -659,7 +659,8 @@ const actions = {
           contextColumnNames: field.contextColumnNames,
           uuid: field.uuid,
           id: field.id,
-          columnName: columnName
+          columnName: columnName,
+          defaultValue: field.defaultValue
         })
 
         displayedValue = displayedValueByServer

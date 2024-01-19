@@ -100,6 +100,7 @@ export default {
         //
         uuid: this.metadata.uuid,
         id: this.metadata.id,
+        defaultValue: this.metadata.defaultValue,
         value: this.value
       })
     },
@@ -248,6 +249,7 @@ export default {
           parentUuid: this.metadata.parentUuid,
           containerUuid: this.metadata.containerUuid,
           contextColumnNames: this.metadata.contextColumnNames,
+          defaultValue: this.metadata.defaultValue,
           //
           uuid: this.metadata.uuid,
           id: this.metadata.id,
