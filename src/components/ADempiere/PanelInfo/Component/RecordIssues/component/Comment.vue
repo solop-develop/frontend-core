@@ -1313,7 +1313,40 @@
                   </el-dropdown>
                 </div>
                 <div>
-                  <!-- <div v-if="!comment.isEdit" v-markdown="comment.result" class="output" /> -->
+                  <span v-if="!comment.isEdit">
+                    <v-md-preview
+                      v-if="comment.issue_comment_type !== 'LOG'"
+                      :text="comment.result"
+                      class="previwer-disable"
+                      style="padding: 0px"
+                    />
+                    <span v-else>
+                      <el-descriptions :column="1">
+                        <el-descriptions-item
+                          v-for="log in comment.change_logs"
+                          :key="log.id"
+                          label-style="{ color: #606266; font-weight: bold; }"
+                        >
+                          <template slot="label">
+                            <span style="color: #606266; font-weight: bold;padding-right: 5px;">
+                              {{ log.label }}
+                            </span>
+                            ({{ log.column_name }})
+                          </template>
+                          <span style="font-weight: bold;">
+                            <el-link
+                              :type="!isEmptyValue(log.displayed_value) ? 'success' : 'danger'"
+                              :style="isEmptyValue(log.displayed_value) ? 'text-decoration:line-through;' : ''"
+                            >
+                              <b>
+                                {{ isEmptyValue(log.displayed_value) ? 'NULL' : log.displayed_value }}
+                              </b>
+                            </el-link>
+                          </span>
+                        </el-descriptions-item>
+                      </el-descriptions>
+                    </span>
+                  </span>
                   <v-md-preview v-if="!comment.isEdit" :text="comment.result" class="previwer-disable" style="padding: 0px" />
                   <span v-else>
                     <el-card v-if="commentUpdatePreview" shadow="never">
