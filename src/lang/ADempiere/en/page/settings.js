@@ -29,7 +29,9 @@ const settings = {
   title: 'Configuración',
   pageStyleSettings: 'Page Style Settings',
   mainDashboardCard: 'Main Dashboard Card',
-  numberColumnsDashboard: 'Number of Columns in Dashboard'
+  numberColumnsDashboard: 'Number of Columns in Dashboard',
+  rightPanelContent: 'Right Panel Content',
+  leftPanelContent: 'Left Panel Content'
 }
 
 export default settings
