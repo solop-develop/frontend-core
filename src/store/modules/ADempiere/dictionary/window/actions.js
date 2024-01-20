@@ -833,6 +833,7 @@ export default {
               uuid: fieldDocumentStatus.uuid,
               id: fieldDocumentStatus.id,
               columnName: fieldDocumentStatus.columnName,
+              defaultValue: fieldDocumentStatus.defaultValue,
               value: value
             })
           }

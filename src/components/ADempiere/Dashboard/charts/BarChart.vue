@@ -133,6 +133,7 @@ export default {
       }
       const xAxisValues = []
       let seriesToShow = []
+      let legendToShow = []
       if (!this.isEmptyValue(metrics.series)) {
         if (metrics.series.length > 0) {
           metrics.series.forEach(serie => {
@@ -157,6 +158,7 @@ export default {
             animationDuration
           }
         })
+        legendToShow = metrics.series.map(serie => serie.name)
       }
       this.chart.setOption({
         tooltip: {
@@ -199,6 +201,9 @@ export default {
             show: false
           }
         }],
+        legend: {
+          data: legendToShow
+        },
         series: seriesToShow
       })
       this.chart.hideLoading()
