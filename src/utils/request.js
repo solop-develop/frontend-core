@@ -19,10 +19,8 @@
 import axios from 'axios'
 import store from '@/store'
 
-import { config as globalConfig } from '@/utils/ADempiere/config'
-
 // Utils and Helper Methos
-import { MessageBox, Message } from 'element-ui'
+import { MessageBox } from 'element-ui'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 // create an axios instance
@@ -111,66 +109,3 @@ service.interceptors.response.use(
 )
 
 export default service
-
-// create an axios instance
-const dictionaryService = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
-})
-// request interceptor
-dictionaryService.interceptors.request.use(
-  config => {
-    // do something before request is sent
-    // Add custom token and language
-    if (!config.params) {
-      config.params = {}
-    }
-
-    config.baseURL = globalConfig.adempiere.api.dictionary
-
-    const role = store.getters['user/getRole']
-    const { id: roleId, clientId } = role
-
-    const userInfo = store.getters['user/userInfo']
-    const { id: userId } = userInfo
-
-    config.params = {
-      ...config.params,
-      language: 'es-VE',
-      role_id: roleId,
-      client_id: clientId,
-      user_id: userId
-    }
-
-    return config
-  },
-  error => {
-    // do something with request error
-    console.warn(error) // for debug
-    return Promise.reject(error)
-  }
-)
-// response interceptor
-dictionaryService.interceptors.response.use(
-  /**
-   * Determine the request status by custom code
-   * Here is just an example
-   * You can also judge the status by HTTP Status Code
-   */
-  response => {
-    const res = response.data
-    return res
-  },
-  error => {
-    console.log('err' + error) // for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000
-    })
-    return Promise.reject(error)
-  }
-)
-
-export { dictionaryService as dictionaryService }

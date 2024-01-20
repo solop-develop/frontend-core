@@ -16,9 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Constants
-import { config } from '@/utils/ADempiere/config'
-
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
@@ -95,7 +92,6 @@ export function requestProcessMetadata({
   userId
 }) {
   return request({
-    baseURL: config.adempiere.api.dictionary,
     url: `/processes/${id}`,
     method: 'get',
     params: {

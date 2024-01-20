@@ -1,15 +1,23 @@
 version: '3.9'
 
+name: adempiere-vue
+
 services:
   grpc-backend:
-    image: erpya/adempiere-grpc-server:master
+    image: solopcloud/adempiere-backend:alpine-2.2.0
     container_name: adempiere-backend
+    healthcheck:
+      test: "bash -c 'printf \"GET / HTTP/1.1\n\n\" > /dev/tcp/127.0.0.1/50059; exit $?;'"
+      interval: 10s
+      retries: 60
+      start_period: 20s
+      timeout: 10s
     stdin_open: true
     tty: true
     environment:
       - SERVER_PORT=50059
       - IS_ENABLED_ALL_SERVICES=true
-      - SECRET_KEY=A42CF908019918B1D9D9E04E596658345D162D4C0127A4C8365E8BDF6B015CC7
+      - JWT_SECRET_KEY=A42CF908019918B1D9D9E04E596658345D162D4C0127A4C8365E8BDF6B015CC7
       - SERVER_LOG_LEVEL=WARNING
       - TZ="America/Caracas"
       # Consider the host and network where the docker server is located
@@ -22,31 +30,29 @@ services:
     ports:
       - 50059:50059
 
-  api-rest:
-    image: solopcloud/adempiere-proxy:alpine
-    container_name: adempiere-proxy
+  grpc-proxy:
+    image: solopcloud/adempiere-grpc-proxy:2.2.0
+    container_name: adempiere-grpc-proxy
     stdin_open: true
     tty: true
+    depends_on:
+      grpc-backend:
+        condition: service_healthy
     environment:
-      - SERVER_PORT=8085
-      - AD_DEFAULT_HOST=adempiere-backend
-      - AD_DEFAULT_PORT=50059
-      - SCHEDULER_HOST="http://localhost:8080"
-      - TZ="America/Caracas"
+      - SERVER_PORT=5555
+      - BACKEND_HOST=adempiere-backend
+      - BACKEND_PORT=50059
     ports:
-      - 8085:8085
+      - 5555:5555
 
   vue-app:
-    image: solopcloud/adempiere-vue:alpine
+    image: solopcloud/adempiere-vue:alpine-3.4.0
     container_name: adempiere-frontend
-    depends_on:
-      - api-rest
-      - grpc-backend
     stdin_open: true
     tty: true
     environment:
       # Set the ip or dns of the server (not the dns of the container) to access from other client hosts
-      - API_URL=http://localhost:8085/api/adempiere/
+      - API_URL=http://localhost:5555/api/
       - TZ="America/Caracas"
     ports:
       - 9526:80
