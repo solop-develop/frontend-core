@@ -10,9 +10,6 @@ find . -type f -exec sed -i "s|/base-public-path/|$PUBLIC_PATH|g" {} +
 cd /usr/share/nginx/html/static/js
 
 
-# Set API Dictionary connection
-find -name 'app.*.js' -exec sed -i "s|http://localhost:8080/api/dictionary/|$API_DICTIONARY_URL|g" {} \;
-
 # Set API Proxy connection
 find -name 'app.*.js' -exec sed -i "s|http://localhost:8080/api/|$API_URL|g" {} \;
 
