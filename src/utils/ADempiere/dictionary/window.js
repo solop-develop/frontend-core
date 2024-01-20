@@ -2120,15 +2120,20 @@ export const containerManager = {
         }
       }
       if (!isEmptyValue(defaultValue) && defaultValue.startsWith('@SQL=')) {
-        const field = store.getters.getStoredFieldsFromTab(parentUuid, containerUuid).find(itemField => itemField.columnName === columnName)
-        store.dispatch('windowActionPerformed', {
-          field,
-          columnName,
-          recordUuid,
-          parentUuid,
-          containerUuid,
-          value: response.value
-        })
+        const field = store.getters.getStoredFieldsFromTab(parentUuid, containerUuid)
+          .find(itemField => {
+            return itemField.columnName === columnName
+          })
+        if (!isEmptyValue(field)) {
+          store.dispatch('windowActionPerformed', {
+            field,
+            columnName,
+            recordUuid,
+            parentUuid,
+            containerUuid,
+            value: response.value
+          })
+        }
       }
       return response
     })
