@@ -6,19 +6,7 @@
   },
   "adempiere": {
     "api": {
-      "dictionary": "http://localhost:8080/api/dictionary/",
       "url": "http://localhost:8080/api/",
-      "url": "http://suite05.solopapp.com:24618/api/",
-      "url": "http://adempiere.erpcya.com:1124/api/",
-      "url": "http://adempiere.erpcya.com:2124/api/",
-      "url": "http://192.168.5.193:8080/api/", 
-      "url": "http://20.12.0.175:8080/api/",
-      "url": "http://192.168.3.53:8080/api/",
-      "url": "http://host.solopapp.com:24160/api/",
-      "url": "http://host.solopapp.com:24158/api/",
-      "url": "http://adempiere.erpcya.com:1174/api/",
-      "url": "http://192.168.5.101:80/api/",
-      "url": "http://host.solopapp.com:24158/api/",
       "timeout": 99999999
     },
     "images": {
