@@ -98,6 +98,7 @@ export default {
       if (this.isRenderRange && !this.metadata.inTable) {
         picker += 'range'
       }
+      console.log({ picker })
       return picker
     },
     cssClassCustomField() {
@@ -128,12 +129,13 @@ export default {
         .replace(/[D]/gi, 'd')
     },
     formatSend() {
-      if (this.formatView) {
-        return this.formatView
-          .replace(/[h]/gi, 'H')
-          .replace(/[aA]/gi, '')
+      let format = 'yyyy-MM-dd'
+      if (this.typePicker.includes('time')) {
+        format += 'HH:mm:ss'
       }
-      return undefined
+      return format
+        .replace(/[h]/gi, 'H')
+        .replace(/[aA]/gi, '')
     },
     pickerOptions() {
       if (this.typePicker === 'daterange') {
@@ -223,10 +225,10 @@ export default {
         }
         if (typeof startValue !== 'object' && startValue !== undefined) {
           startValue = changeTimeZone({
-            value: this.parseToValidFormat(startValue)
+            value: startValue
           })
           endValue = changeTimeZone({
-            value: this.parseToValidFormat(endValue)
+            value: endValue
           })
         }
 
@@ -343,13 +345,6 @@ export default {
         value: startValue,
         valueTo: endValue
       })
-    },
-    parseToValidFormat(date) {
-      const parts = date.split('/')
-      const day = parts[0]
-      const month = parts[1]
-      const year = parts[2]
-      return `${month}/${day}/${year}`
     }
   }
 }
