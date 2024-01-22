@@ -363,11 +363,13 @@ export default defineComponent({
     }
 
     function zoomRecord(activity) {
-      const { zoom_windows, table_name, record_id } = activity
+      const { zoom_windows, table_name, record_id, is_sales_transaction } = activity
+      let currentActivity = zoom_windows[0]
+      if (zoom_windows.length > 1) currentActivity = zoom_windows.find(list => list.is_sales_transaction === is_sales_transaction)
       const columnName = table_name + '_ID'
       // table_name
       zoomIn({
-        attributeValue: `window_${zoom_windows[0].id}`,
+        attributeValue: `window_${currentActivity.id}`,
         attributeName: 'containerKey',
         query: {
           [columnName]: record_id
