@@ -1,19 +1,19 @@
 <!--
-ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
-Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https:www.gnu.org/licenses/>.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -267,10 +267,10 @@ export default defineComponent({
         id: ''
       }
     ])
+
     /**
      * Computed
      */
-
     const activityList = computed(() => {
       const list = store.getters.getRecordsWorkflowActivities
       if (!isEmptyValue(list)) {
@@ -364,8 +364,12 @@ export default defineComponent({
 
     function zoomRecord(activity) {
       const { zoom_windows, table_name, record_id, is_sales_transaction } = activity
-      let currentActivity = zoom_windows[0]
-      if (zoom_windows.length > 1) currentActivity = zoom_windows.find(list => list.is_sales_transaction === is_sales_transaction)
+      let currentActivity = zoom_windows.at(0)
+      if (zoom_windows.length > 1) {
+        currentActivity = zoom_windows.find(list => {
+          return list.is_sales_transaction === is_sales_transaction
+        })
+      }
       const columnName = table_name + '_ID'
       // table_name
       zoomIn({
