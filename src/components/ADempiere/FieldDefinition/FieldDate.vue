@@ -194,7 +194,6 @@ export default {
       },
       set(value) {
         const { columnName, containerUuid, inTable } = this.metadata
-
         // table records values
         if (inTable) {
           // implement container manager row
@@ -213,7 +212,6 @@ export default {
 
         let startValue, endValue
         startValue = value
-
         if (this.isRenderRange && !this.metadata.inTable && Array.isArray(value)) {
           startValue = value.at(0)
           endValue = value.at(1)
@@ -223,13 +221,12 @@ export default {
           startValue = undefined
           endValue = undefined
         }
-
         if (typeof startValue !== 'object' && startValue !== undefined) {
           startValue = changeTimeZone({
-            value: startValue
+            value: this.parseToValidFormat(startValue)
           })
           endValue = changeTimeZone({
-            value: endValue
+            value: this.parseToValidFormat(endValue)
           })
         }
 
@@ -346,6 +343,13 @@ export default {
         value: startValue,
         valueTo: endValue
       })
+    },
+    parseToValidFormat(date) {
+      const parts = date.split('/')
+      const day = parts[0]
+      const month = parts[1]
+      const year = parts[2]
+      return `${month}/${day}/${year}`
     }
   }
 }
