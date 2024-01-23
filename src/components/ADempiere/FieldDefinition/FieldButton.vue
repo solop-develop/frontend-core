@@ -56,6 +56,11 @@ import ContextInfo from '@/components/ADempiere/FieldDefinition/FieldOptions/Con
 import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
 import fieldMixinDisplayColumn from '@/components/ADempiere/FieldDefinition/mixin/mixinWithDisplayColumn.js'
 
+// Constants
+import {
+  TRUE_STRING, FALSE_STRING
+} from '@/utils/ADempiere/formatValue/booleanFormat'
+
 // Utils and Helpers Methods
 import {
   runProcessOfWindow,
@@ -66,6 +71,9 @@ import {
 } from '@/utils/ADempiere/dictionary/window.js'
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
 import { getContextAttributes, generateContextKey } from '@/utils/ADempiere/contextUtils/contextAttributes'
+import {
+  convertBooleanToString, convertBooleanToTranslationLang
+} from '@/utils/ADempiere/formatValue/booleanFormat'
 
 export default {
   name: 'FieldButton',
@@ -95,9 +103,16 @@ export default {
       }
       const displayValue = this.displayedValue
       if (!isEmptyValue(displayValue)) {
+        // is a list/table value
         return this.metadata.name + ': ' + displayValue
       }
-      return this.metadata.name + ': ' + this.value
+      let value = convertBooleanToString(this.value, false)
+      if ([TRUE_STRING, FALSE_STRING].includes(value)) {
+        // is a boolean value
+        value = convertBooleanToTranslationLang(value)
+      }
+      // is possible big decimal value
+      return this.metadata.name + ': ' + value
     },
     iconProps() {
       return {
