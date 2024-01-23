@@ -289,6 +289,7 @@ const processManager = {
       containerUuid,
       tableName,
       recordUuid,
+      recordId,
       parametersList = []
     }) {
       return new Promise(resolve => {
@@ -322,10 +323,12 @@ const processManager = {
         let isProcessedError = false
         let summary = ''
 
-        const recordId = rootGetters.getIdOfContainer({
-          containerUuid: storedTab.uuid,
-          tableName
-        })
+        if (isEmptyValue(recordId)) {
+          recordId = rootGetters.getIdOfContainer({
+            containerUuid: storedTab.uuid,
+            tableName
+          })
+        }
 
         requestRunBusinessProcessAsWindow({
           id: currentProcess.id,

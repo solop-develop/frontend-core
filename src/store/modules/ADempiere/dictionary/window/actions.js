@@ -285,6 +285,7 @@ export default {
                 parentUuid: tabAssociatedUuid,
                 containerUuid: process.uuid,
                 tableName,
+                recordId,
                 recordUuid,
                 parametersList
               }).then(async processResponse => {
@@ -392,6 +393,7 @@ export default {
                 parentUuid: tabAssociatedUuid,
                 containerUuid: process.uuid,
                 tableName,
+                recordId,
                 recordUuid
               }).then(async processResponse => {
                 // if (processResponse.is_error) {
