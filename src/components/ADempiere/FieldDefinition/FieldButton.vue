@@ -56,6 +56,11 @@ import ContextInfo from '@/components/ADempiere/FieldDefinition/FieldOptions/Con
 import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
 import fieldMixinDisplayColumn from '@/components/ADempiere/FieldDefinition/mixin/mixinWithDisplayColumn.js'
 
+// Constants
+import {
+  TRUE_STRING, FALSE_STRING
+} from '@/utils/ADempiere/formatValue/booleanFormat'
+
 // Utils and Helpers Methods
 import {
   runProcessOfWindow,
@@ -102,7 +107,7 @@ export default {
         return this.metadata.name + ': ' + displayValue
       }
       let value = convertBooleanToString(this.value, false)
-      if (['Y', 'N'].includes(value)) {
+      if ([TRUE_STRING, FALSE_STRING].includes(value)) {
         // is a boolean value
         value = convertBooleanToTranslationLang(value)
       }

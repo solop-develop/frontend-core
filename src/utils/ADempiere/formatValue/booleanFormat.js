@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,12 +22,22 @@ import language from '@/lang'
 import { removeQuotationMark } from '@/utils/ADempiere/formatValue/stringFormat'
 
 /**
+ * true value stored on data base as string `Y`
+ */
+export const TRUE_STRING = 'Y'
+
+/**
+ * false value stored on data base as string `N`
+ */
+export const FALSE_STRING = 'N'
+
+/**
  * Convert boolean value to current translation language
  * @param {boolean} booleanValue
  * @returns {string} true => 'Yes' or 'Si', false => 'Not' or 'No'
  */
 export const convertBooleanToTranslationLang = (booleanValue) => {
-  if (booleanValue === true || booleanValue === 'true' || booleanValue === 'Yes' || booleanValue === 'Y') {
+  if (booleanValue === true || booleanValue === 'true' || booleanValue === 'Yes' || booleanValue === TRUE_STRING) {
     return language.t('components.switchActiveText')
   }
 
@@ -40,25 +50,27 @@ export const convertBooleanToTranslationLang = (booleanValue) => {
  * @param {boolean} isForce
  * @returns {string} 'Y'/'N'
  */
-export const convertBooleanToString = (booleanValue, isForce = true) => {
+export const convertBooleanToString = (valueToEvaluate, isForce = true) => {
+  // remove single/double quotation mark 'N' -> N, "Y" -> Y
+  const booleanValue = removeQuotationMark(valueToEvaluate)
   if (booleanValue === true ||
     booleanValue === 'true' ||
     booleanValue === 'Yes' ||
-    booleanValue === 'Y') {
-    return 'Y'
+    booleanValue === TRUE_STRING) {
+    return TRUE_STRING
   } else if (booleanValue === false ||
     booleanValue === 'false' ||
     booleanValue === 'Not' ||
     booleanValue === 'No' ||
-    booleanValue === 'N') {
-    return 'N'
+    booleanValue === FALSE_STRING) {
+    return FALSE_STRING
   }
   if (isForce) {
-    return 'N'
+    return FALSE_STRING
   }
 
   // return original value
-  return booleanValue
+  return valueToEvaluate
 }
 
 /**
@@ -72,7 +84,7 @@ export const convertStringToBoolean = (valueToParsed) => {
   // remove single/double quotation mark 'N' -> N, "Y" -> Y
   const evaluatedValue = removeQuotationMark(valueToParsed)
   switch (evaluatedValue) {
-    case 'N':
+    case FALSE_STRING:
     case 'No':
     case 'Not':
     case 'false':
@@ -81,7 +93,7 @@ export const convertStringToBoolean = (valueToParsed) => {
       valReturn = false
       break
 
-    case 'Y':
+    case TRUE_STRING:
     case 'Yes':
     case 'true':
     case true:
