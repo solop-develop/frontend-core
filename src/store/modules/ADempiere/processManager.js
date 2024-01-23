@@ -323,7 +323,7 @@ const processManager = {
         let summary = ''
 
         const recordId = rootGetters.getIdOfContainer({
-          containerUuid,
+          containerUuid: storedTab.uuid,
           tableName
         })
 
