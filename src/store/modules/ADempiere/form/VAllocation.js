@@ -385,9 +385,10 @@ export default {
           transactionOrganizationId
         })
           .then(response => {
+            const { message } = response
             showMessage({
               type: 'success',
-              message: 'OK',
+              message,
               showClose: true
             })
             dispatch('findListPayment')
