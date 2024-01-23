@@ -331,10 +331,11 @@ export default defineComponent({
     word-break: break-all;
     padding-left: 10px;
     padding-right: 10px;
+    padding-bottom: 5px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    line-height: 10px;
+    line-height: 15px;
   }
 </style>
 <style>
