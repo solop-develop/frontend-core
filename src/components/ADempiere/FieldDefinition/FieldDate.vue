@@ -120,7 +120,7 @@ export default {
         }
       }
 
-      if (this.typePicker.replace('range', '') === 'datetime') {
+      if (this.metadata.displayType === DATE_PLUS_TIME.id) {
         format = format + ' hh:mm:ss A'
       }
       return format
@@ -130,8 +130,8 @@ export default {
     },
     formatSend() {
       let format = 'yyyy-MM-dd'
-      if (this.typePicker.includes('time')) {
-        format += 'HH:mm:ss'
+      if (this.metadata.displayType === DATE_PLUS_TIME.id) {
+        format += ' HH:mm:ss'
       }
       return format
         .replace(/[h]/gi, 'H')
@@ -196,6 +196,7 @@ export default {
       },
       set(value) {
         const { columnName, containerUuid, inTable } = this.metadata
+
         // table records values
         if (inTable) {
           // implement container manager row
@@ -214,6 +215,7 @@ export default {
 
         let startValue, endValue
         startValue = value
+
         if (this.isRenderRange && !this.metadata.inTable && Array.isArray(value)) {
           startValue = value.at(0)
           endValue = value.at(1)
