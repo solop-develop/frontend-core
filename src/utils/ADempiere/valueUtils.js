@@ -17,6 +17,8 @@
  */
 
 import language from '@/lang'
+import router from '@/router'
+import store from '@/store'
 
 // Constants
 import { SPECIAL_ZERO_ID_TABLES } from '@/utils/ADempiere//constants/systemColumns'
@@ -28,7 +30,6 @@ import { OPERATION_PATTERN } from '@/utils/ADempiere/formatValue/numberFormat.js
 import { convertBooleanToString, convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat.js'
 import { removeQuotationMark } from '@/utils/ADempiere/formatValue/stringFormat'
 import { isIdentifier } from '@/utils/ADempiere/references.js'
-import store from '@/store'
 
 /**
  * Checks if value is empty. Deep-checks arrays and objects
@@ -956,4 +957,21 @@ export function getListKeyColumnsTab({
     })
   }
   return keyColumnsList
+}
+
+/**
+ * Assign record id to path
+ * @param {number} recordId
+ */
+export function setRecordPath({
+  recordId
+}) {
+  const currentRoute = router.app._route
+  const { query } = currentRoute
+  router.replace({
+    query: {
+      ...query,
+      recordId
+    }
+  })
 }
