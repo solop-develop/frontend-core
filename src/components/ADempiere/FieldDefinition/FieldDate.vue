@@ -98,7 +98,6 @@ export default {
       if (this.isRenderRange && !this.metadata.inTable) {
         picker += 'range'
       }
-      console.log({ picker })
       return picker
     },
     cssClassCustomField() {
