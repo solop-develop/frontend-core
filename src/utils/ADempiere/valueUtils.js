@@ -29,6 +29,7 @@ import { convertBooleanToString, convertStringToBoolean } from '@/utils/ADempier
 import { removeQuotationMark } from '@/utils/ADempiere/formatValue/stringFormat'
 import { isIdentifier } from '@/utils/ADempiere/references.js'
 import store from '@/store'
+import router from '@/router'
 
 /**
  * Checks if value is empty. Deep-checks arrays and objects
@@ -956,4 +957,22 @@ export function getListKeyColumnsTab({
     })
   }
   return keyColumnsList
+}
+
+/**
+ * Assign record id to path
+ * @param {number} recordId
+ */
+
+export function setRecordPath({
+  recordId
+}) {
+  const currentRoute = router.app._route
+  const { query } = currentRoute
+  router.replace({
+    query: {
+      ...query,
+      recordId
+    }
+  })
 }

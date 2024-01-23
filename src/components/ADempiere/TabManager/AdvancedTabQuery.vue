@@ -333,17 +333,6 @@ export default defineComponent({
         filters,
         isAdvancedQuery: true
       })
-        .then(response => {
-          const currentRoute = router.app._route
-          const { query } = currentRoute
-          const { tableName } = store.getters.getStoredTab(props.parentUuid, props.containerUuid)
-          router.replace({
-            query: {
-              ...query,
-              recordId: response[0][tableName + '_ID']
-            }
-          })
-        })
         .finally(() => {
           isLoadingSearch.value = false
         })
