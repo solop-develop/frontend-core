@@ -71,8 +71,10 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import listPlugin from '@fullcalendar/list'
 
+// Constants
 import { INITIAL_EVENTS, createEventId } from './event-utils'
 
+// Utils and Helper Methods
 import { translateDate } from '@/utils/ADempiere/formatValue/dateFormat'
 
 export default {
