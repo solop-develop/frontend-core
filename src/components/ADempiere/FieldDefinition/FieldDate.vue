@@ -119,7 +119,7 @@ export default {
         }
       }
 
-      if (this.typePicker.replace('range', '') === 'datetime') {
+      if (this.metadata.displayType === DATE_PLUS_TIME.id) {
         format = format + ' hh:mm:ss A'
       }
       return format
@@ -128,12 +128,13 @@ export default {
         .replace(/[D]/gi, 'd')
     },
     formatSend() {
-      if (this.formatView) {
-        return this.formatView
-          .replace(/[h]/gi, 'H')
-          .replace(/[aA]/gi, '')
+      let format = 'yyyy-MM-dd'
+      if (this.metadata.displayType === DATE_PLUS_TIME.id) {
+        format += ' HH:mm:ss'
       }
-      return undefined
+      return format
+        .replace(/[h]/gi, 'H')
+        .replace(/[aA]/gi, '')
     },
     pickerOptions() {
       if (this.typePicker === 'daterange') {
@@ -223,7 +224,6 @@ export default {
           startValue = undefined
           endValue = undefined
         }
-
         if (typeof startValue !== 'object' && startValue !== undefined) {
           startValue = changeTimeZone({
             value: startValue
