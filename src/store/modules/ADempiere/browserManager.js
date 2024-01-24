@@ -165,20 +165,23 @@ const browserControl = {
         }
 
         // parameters isQueryCriteria
-        const filtersList = rootGetters.getBrowserQueryCriteria({
+        const queryCriteriaFilters = rootGetters.getBrowserQueryCriteria({
           containerUuid,
           fieldsList
-        }).map(parameter => {
+        })
+        const filtersList = queryCriteriaFilters.map(parameter => {
           const {
             columnName,
             operator,
             value,
-            valueTo
+            valueTo,
+            values
           } = parameter
           return JSON.stringify({
             name: columnName,
             operator,
-            values: !isEmptyValue(valueTo) ? [value, valueTo] : value
+            // values > value, valueTo > value
+            values: !isEmptyValue(values) ? values : !isEmptyValue(valueTo) ? [value, valueTo] : value
           })
         }).toString()
         let filters
