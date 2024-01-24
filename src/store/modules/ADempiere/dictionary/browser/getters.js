@@ -16,6 +16,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Constants
+import {
+  IGNORE_VALUE_OPERATORS_LIST, MULTIPLE_VALUES_OPERATORS_LIST, RANGE_VALUE_OPERATORS_LIST
+} from '@/utils/ADempiere/dataUtils'
+import { FIELDS_DATE } from '@/utils/ADempiere/references'
+
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import {
@@ -134,10 +140,11 @@ export default {
     const queryParams = []
 
     fieldsList.forEach(fieldItem => {
-      if (fieldItem.isInfoOnly) {
+      // default operator
+      const { isInfoOnly, columnName, columnNameTo, operator, displayType } = fieldItem
+      if (isInfoOnly) {
         return false
       }
-      const { columnName, operator } = fieldItem
       const isMandatory = isMandatoryField(fieldItem)
       // evaluate displayed fields
       const isDisplayed = isDisplayedField(fieldItem) &&
@@ -147,31 +154,50 @@ export default {
         return
       }
 
-      const value = rootGetters.getValueOfField({
-        containerUuid,
-        columnName
+      const contextValue = rootGetters.getValueOfField({
+        containerUuid: containerUuid,
+        columnName: columnName
       })
 
-      let valueTo
-      if (fieldItem.isRange && !isNumberField(fieldItem.displayType)) {
-        valueTo = rootGetters.getValueOfField({
-          containerUuid,
-          columnName: fieldItem.columnNameTo
-        })
-        // if (!isEmptyValue(valueTo)) {
-        //   queryParams.push({
-        //     columnName: fieldItem.columnNameTo,
-        //     value: valueTo
-        //   })
-        // }
+      let value, valueTo, values
+      if (!IGNORE_VALUE_OPERATORS_LIST.includes(operator)) {
+        if (isEmptyValue(contextValue)) {
+          return
+        }
+        // TODO: Improve conditions
+        if (FIELDS_DATE.includes(displayType)) {
+          if (MULTIPLE_VALUES_OPERATORS_LIST.includes(operator)) {
+            values = contextValue
+          } else if (RANGE_VALUE_OPERATORS_LIST.includes(operator)) {
+            if (Array.isArray(contextValue)) {
+              value = contextValue.at(0)
+              valueTo = contextValue.at(1)
+            } else {
+              value = contextValue
+              valueTo = rootGetters.getValueOfField({
+                containerUuid: containerUuid,
+                columnName: columnNameTo
+              })
+            }
+          } else {
+            value = contextValue
+          }
+        } else {
+          if (Array.isArray(contextValue)) {
+            values = contextValue
+          } else {
+            value = contextValue
+          }
+        }
       }
 
       if (!isEmptyValue(value)) {
         queryParams.push({
           columnName,
+          operator,
           value,
           valueTo,
-          operator
+          values
         })
       }
     })

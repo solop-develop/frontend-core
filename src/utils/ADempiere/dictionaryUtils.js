@@ -216,8 +216,8 @@ export function generateField({
     name: decodeHtmlEntities(
       fieldToGenerate.name
     ),
-    columnNameTo: undefined,
-    elementNameTo: undefined,
+    columnNameTo: `${columnName}_To`,
+    elementNameTo: `${fieldToGenerate.elementColumnName}_To`,
     isSameColumnElement: columnName === fieldToGenerate.elementColumnName,
     isSOTrxMenu,
     // displayed attributes
@@ -266,8 +266,6 @@ export function generateField({
       field.operator = OPERATOR_GREATER_EQUAL.operator
     }
 
-    field.columnNameTo = `${columnName}_To`
-    field.elementNameTo = `${field.elementName}_To`
     if (typeRange) {
       field.operator = OPERATOR_LESS_EQUAL.operator
       field.uuid = `${field.uuid}_To`
