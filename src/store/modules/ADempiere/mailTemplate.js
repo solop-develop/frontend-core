@@ -16,6 +16,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import Vue from 'vue'
+
 import lang from '@/lang'
 
 // API Request Methods
@@ -25,7 +27,7 @@ import {
 
 const initStateMailTemplate = {
   listMail: {
-    title: 'Plantilla de Correo',
+    title: lang.t('issues.emailTemplate'),
     icon: 'v-md-icon-tip',
     menus: []
   }
@@ -36,7 +38,7 @@ export default {
 
   mutations: {
     setListMailTemplates(state, list) {
-      state.listMail = list
+      Vue.set(state.listMail, 'menus', list)
     }
   },
 
@@ -64,13 +66,7 @@ export default {
             }
           })
 
-          commit('setListMailTemplates', {
-            listMailTemplates: {
-              title: lang.t('issues.emailTemplate'),
-              icon: 'v-md-icon-tip',
-              menus: listOptions
-            }
-          })
+          commit('setListMailTemplates', listOptions)
         })
         .catch(error => {
           console.warn(`Error getting List Mail: ${error.message}. Code: ${error.code}.`)

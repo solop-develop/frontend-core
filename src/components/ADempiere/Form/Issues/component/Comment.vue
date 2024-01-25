@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -62,7 +62,7 @@
                           :placeholder="$t('issues.summary')"
                           height="360px"
                           left-toolbar="undo redo clear h bold italic strikethrough quote ul ol table hr link image code save | emoji listMailTemplates"
-                          :toolbar="listOption"
+                          :toolbar="editorToolbarList"
                           right-toolbar="sync-scroll fullscreen"
                           mode="edit"
                         />
@@ -487,7 +487,7 @@
                           v-model="updateSummary"
                           height="250px"
                           left-toolbar="undo redo clear h bold italic strikethrough quote ul ol table hr link image code save | emoji listMailTemplates"
-                          :toolbar="listOption"
+                          :toolbar="editorToolbarList"
                           right-toolbar="sync-scroll fullscreen"
                           mode="edit"
                         />
@@ -537,10 +537,14 @@
             </div>
           </div>
           <i style="font-size: 12px;color: #82848a;">
-            {{ $t('issues.isCreated') }} {{ translateDateByLong(currentIssues.created) }} {{ $t('issues.by') }} {{ currentIssues.user_name }} <svg-icon icon-class="user" />
+            {{ $t('issues.isCreated') }}
+            {{ translateDateByLong(currentIssues.created) }}
+            {{ $t('issues.by') }}
+            <issue-avatar :user="currentIssues.user" />
           </i>
         </el-card>
         <br>
+
         <el-timeline v-if="!isEmptyValue(currentIssues) && !isPanelNewRequest" style="padding-left: 15px;padding-right: 15px;">
           <el-timeline-item
             v-for="(comment, index) in listComments"
@@ -549,40 +553,16 @@
             :timestamp="translateDateByLong(comment.created)"
             style="margin-left: 10px;"
           >
-            <span v-if="comment.issue_comment_type === 1">
-              <svg-icon v-if="!isEmptyValue(comment.user.avatar)" icon-class="user" />
-              <el-image
-                :src="avatarResize(comment.user)"
-                fit="contain"
-                style="
-                  width: 20px;
-                  height: 20px;
-                  border-radius: 50%;
-                  display: inline-block;
-                  position: relative;
-                  cursor: default;
-                  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-                "
-              />
-              <b>
-                {{ comment.user.name }}
-              </b>
-              {{ logDisplayLanguaje(true, false) }}
-              <b>
-                {{ labelDisplayChange(comment, true) }}
-              </b>
-              <span v-show="!isEmptyValue(labelDisplayChange(comment, false, true))">
-                {{ logDisplayLanguaje(false, true) }}
-              </span>
-              <b>
-                {{ labelDisplayChange(comment, false, true) }}
-              </b>
-            </span>
+            <issue-log
+              v-if="comment.issue_comment_type === 'LOG'"
+              :comment="comment"
+              class="list-comments"
+            />
+
             <el-card v-else class="list-comments">
               <div slot="header" class="list-comments-clearfix">
-                <span>
-                  <svg-icon icon-class="user" /> {{ comment.user_name }}
-                </span>
+                <issue-avatar :user="comment.user" />
+
                 <el-dropdown trigger="click" style="float: right" @command="handleCommand">
                   <span class="el-dropdown-link">
                     <el-button type="text" size="mini" style="color: black;">
@@ -610,7 +590,7 @@
                     v-model="commentUpdate"
                     height="150px"
                     left-toolbar="undo redo clear h bold italic strikethrough quote ul ol table hr link image code save | emoji listMailTemplates"
-                    :toolbar="listOption"
+                    :toolbar="editorToolbarList"
                     right-toolbar="sync-scroll fullscreen"
                     mode="edit"
                   />
@@ -686,7 +666,7 @@
                           :placeholder="$t('issues.summary')"
                           height="250px"
                           left-toolbar="undo redo clear h bold italic strikethrough quote ul ol table hr link image code save | emoji listMailTemplates"
-                          :toolbar="listOption"
+                          :toolbar="editorToolbarList"
                           right-toolbar="sync-scroll fullscreen"
                           mode="edit"
                         />
@@ -993,7 +973,7 @@
                           v-model="updateSummary"
                           height="250px"
                           left-toolbar="undo redo clear h bold italic strikethrough quote ul ol table hr link image code save | emoji listMailTemplates"
-                          :toolbar="listOption"
+                          :toolbar="editorToolbarList"
                           right-toolbar="sync-scroll fullscreen"
                           mode="edit"
                         />
@@ -1217,28 +1197,14 @@
             </div>
           </div>
           <i style="font-size: 12px;color: #82848a;">
-            {{ $t('issues.isCreated') }} {{ translateDateByLong(currentIssues.created) }} {{ $t('issues.by') }}
-            <svg-icon
-              v-if="!isEmptyValue(currentIssues.user.avatar)"
-              icon-class="user"
-            />
-            <el-image
-              :src="avatarResize(currentIssues.user)"
-              fit="contain"
-              style="
-                width: 20px;
-                height: 20px;
-                border-radius: 50%;
-                display: inline-block;
-                position: relative;
-                cursor: default;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-              "
-            />
-            <b> {{ currentIssues.user.name }} </b>
+            {{ $t('issues.isCreated') }}
+            {{ translateDateByLong(currentIssues.created) }}
+            {{ $t('issues.by') }}
+            <issue-avatar :user="currentIssues.user" />
           </i>
         </el-card>
         <br>
+
         <el-scrollbar v-if="getFixedHeader" ref="scrollTimeLineTabComments" wrap-class="scroll-timeline-from">
           <el-timeline v-if="!isEmptyValue(currentIssues) && !isPanelNewRequest" style="padding-left: 15px;padding-right: 15px;">
             <el-timeline-item
@@ -1248,56 +1214,16 @@
               :timestamp="translateDateByLong(comment.created)"
               style="margin-left: 10px;"
             >
-              <span v-if="comment.issue_comment_type === 1">
-                <svg-icon v-if="!isEmptyValue(comment.user.avatar)" icon-class="user" />
-                <el-image
-                  :src="avatarResize(comment.user)"
-                  fit="contain"
-                  style="
-                    width: 20px;
-                    height: 20px;
-                    border-radius: 50%;
-                    display: inline-block;
-                    position: relative;
-                    cursor: default;
-                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-                  "
-                />
-                <b>
-                  {{ comment.user.name }}
-                </b>
-                {{ logDisplayLanguaje(true, false) }}
-                <b>
-                  {{ labelDisplayChange(comment, true) }}
-                </b>
-                <span v-show="!isEmptyValue(labelDisplayChange(comment, false, true))">
-                  {{ logDisplayLanguaje(false, true) }}
-                </span>
-                <b>
-                  {{ labelDisplayChange(comment, false, true) }}
-                </b>
-              </span>
+              <issue-log
+                v-if="comment.issue_comment_type === 'LOG'"
+                :comment="comment"
+                class="list-comments"
+              />
+
               <el-card v-else class="list-comments">
                 <div slot="header" class="list-comments-clearfix">
-                  <span>
-                    <svg-icon v-if="!isEmptyValue(comment.user.avatar)" icon-class="user" />
-                    <el-image
-                      :src="avatarResize(comment.user)"
-                      fit="contain"
-                      style="
-                        width: 20px;
-                        height: 20px;
-                        border-radius: 50%;
-                        display: inline-block;
-                        position: relative;
-                        cursor: default;
-                        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-                      "
-                    />
-                    <b>
-                      {{ comment.user.name }}
-                    </b>
-                  </span>
+                  <issue-avatar :user="comment.user" />
+
                   <el-dropdown trigger="click" style="float: right" @command="handleCommand">
                     <span class="el-dropdown-link">
                       <el-button type="text" size="mini" style="color: black;">
@@ -1315,7 +1241,7 @@
                 <div>
                   <span v-if="!comment.isEdit">
                     <v-md-preview
-                      v-if="comment.issue_comment_type !== 'LOG'"
+                      v-if="comment.issue_comment_type === 'COMMENT'"
                       :text="comment.result"
                       class="previwer-disable"
                       style="padding: 0px"
@@ -1358,7 +1284,7 @@
                       v-model="commentUpdate"
                       height="150px"
                       left-toolbar="undo redo clear h bold italic strikethrough quote ul ol table hr link image code save | emoji listMailTemplates"
-                      :toolbar="listOption"
+                      :toolbar="editorToolbarList"
                       right-toolbar="sync-scroll fullscreen"
                       mode="edit"
                     />
@@ -1406,40 +1332,16 @@
               :timestamp="translateDateByLong(comment.created)"
               style="margin-left: 10px;"
             >
-              <span v-if="comment.issue_comment_type === 1">
-                <svg-icon v-if="!isEmptyValue(comment.user.avatar)" icon-class="user" />
-                <el-image
-                  :src="avatarResize(comment.user)"
-                  fit="contain"
-                  style="
-                    width: 20px;
-                    height: 20px;
-                    border-radius: 50%;
-                    display: inline-block;
-                    position: relative;
-                    cursor: default;
-                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-                  "
-                />
-                <b>
-                  {{ comment.user.name }}
-                </b>
-                {{ logDisplayLanguaje(true, false) }}
-                <b>
-                  {{ labelDisplayChange(comment, true) }}
-                </b>
-                <span v-show="!isEmptyValue(labelDisplayChange(comment, false, true))">
-                  {{ logDisplayLanguaje(false, true) }}
-                </span>
-                <b>
-                  {{ labelDisplayChange(comment, false, true) }}
-                </b>
-              </span>
+              <issue-log
+                v-if="comment.issue_comment_type === 'LOG'"
+                :comment="comment"
+                class="list-comments"
+              />
+
               <el-card v-else class="list-comments">
                 <div slot="header" class="list-comments-clearfix">
-                  <span>
-                    <svg-icon icon-class="user" /> {{ comment.user_name }}
-                  </span>
+                  <issue-avatar :user="comment.user" />
+
                   <el-dropdown trigger="click" style="float: right" @command="handleCommand">
                     <span class="el-dropdown-link">
                       <el-button type="text" size="mini" style="color: black;">
@@ -1467,7 +1369,7 @@
                       v-model="commentUpdate"
                       height="150px"
                       left-toolbar="undo redo clear h bold italic strikethrough quote ul ol table hr link image code save | emoji listMailTemplates"
-                      :toolbar="listOption"
+                      :toolbar="editorToolbarList"
                       right-toolbar="sync-scroll fullscreen"
                       mode="edit"
                     />
@@ -1507,68 +1409,11 @@
           </el-timeline>
         </span>
       </el-header>
+
       <el-main height="auto" style="height: auto;overflow: auto;padding: 0px 0px 30px !important;">
-        <div v-if="!isEmptyValue(currentIssues) && !isPanelNewRequest">
-          <el-card v-if="commentPreview" shadow="never" class="is-add-new-comments">
-            <div slot="header">
-              <b>
-                {{ $t('issues.preview') }}
-              </b>
-            </div>
-            <el-scrollbar wrap-class="scroll-previwer-disable">
-              <v-md-preview :text="comments" class="previwer-disable" style="padding: 0px" height="150px" />
-            </el-scrollbar>
-          </el-card>
-          <el-card v-else shadow="never" class="is-add-new-comments" style="padding: 0px;">
-            <div slot="header">
-              <b>
-                {{ $t('issues.commentary') }}
-              </b>
-            </div>
-            <v-md-editor
-              v-model="comments"
-              :placeholder="$t('issues.addNewCommentary')"
-              height="150px"
-              left-toolbar="undo redo clear h bold italic strikethrough quote ul ol table hr link image code save | emoji listMailTemplates"
-              right-toolbar="isCollapseUp sync-scroll fullscreen"
-              mode="edit"
-              :toolbar="listOption"
-            />
-          </el-card>
-          <el-button
-            type="primary"
-            icon="el-icon-check"
-            class="button-base-icon"
-            style="float: right; margin: 10px;"
-            :disabled="isEmptyValue(comments)"
-            @click="addNewComments()"
-          />
-          <el-button
-            type="danger"
-            icon="el-icon-close"
-            style="float: right;margin-top: 10px;"
-            class="button-base-icon"
-            @click="cancelEdit(currentIssues)"
-          />
-          <el-button
-            type="info"
-            plain
-            style="float: right; margin-top: 10px;"
-            class="button-base-icon"
-            :disabled="isEmptyValue(comments)"
-            @click="clearComments()"
-          >
-            <svg-icon icon-class="layers-clear" />
-          </el-button>
-          <el-checkbox
-            v-model="commentPreview"
-            :label="$t('issues.preview')"
-            :border="true"
-            style="float: right; margin-top: 10px;"
-            class="button-base-icon"
-            :disabled="isEmptyValue(comments)"
-          />
-        </div>
+        <issue-comment-add
+          v-if="!isEmptyValue(currentIssues) && !isPanelNewRequest"
+        />
       </el-main>
     </el-container>
   </span>
@@ -1576,7 +1421,7 @@
 
 <script>
 import {
-  defineComponent, computed, ref, watch, nextTick
+  defineComponent, computed, ref, watch
 } from '@vue/composition-api'
 
 import lang from '@/lang'
@@ -1584,6 +1429,10 @@ import store from '@/store'
 
 // Components and Mixins
 import 'simple-m-editor/dist/simple-m-editor.css'
+import IssueAvatar from '@/components/ADempiere/FormDefinition/IssueManagement/issueAvatar.vue'
+import IssueCommentAdd from '@/components/ADempiere/FormDefinition/IssueManagement/IsssueFeed/issueCommentAdd.vue'
+import IssueCommentView from '@/components/ADempiere/FormDefinition/IssueManagement/IsssueFeed/issueCommentView.vue'
+import IssueLog from '@/components/ADempiere/FormDefinition/IssueManagement/IsssueFeed/issueLog.vue'
 import RecordTime from '../recordTime.vue'
 
 // Constants
@@ -1594,7 +1443,6 @@ import { isEmptyValue } from '@/utils/ADempiere'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { translateDateByLong, formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
-// import { getImagePath } from '@/utils/ADempiere/resource.js'
 
 // Api Request Methods
 import {
@@ -1613,6 +1461,10 @@ export default defineComponent({
   name: 'IssueComment',
 
   components: {
+    IssueAvatar,
+    IssueCommentAdd,
+    IssueCommentView,
+    IssueLog,
     RecordTime
   },
 
@@ -1627,7 +1479,7 @@ export default defineComponent({
     }
   },
 
-  setup(props, { refs }) {
+  setup(props) {
     // Const
     const tableName = props.tableName
     const recordId = props.recordId
@@ -1641,11 +1493,9 @@ export default defineComponent({
     const newDateNextAction = ref(new Date())
     const summary = ref('')
     const updateSummary = ref('')
-    const comments = ref('')
     const commentUpdate = ref('')
     const markdownContent = ref('')
     const commentUpdatePreview = ref(false)
-    const commentPreview = ref(false)
     const summaryUpdatePreview = ref(false)
     const summaryNewPreview = ref(false)
     const isPanelNewRequest = ref(false)
@@ -1663,23 +1513,28 @@ export default defineComponent({
 
     currentSalesReps.value = store.getters['user/userInfo'].id
 
-    const listOption = computed(() => {
-      const listMailTemplates = store.getters.getListMailTemplates
-      listMailTemplates.isCollapseDown = {
-        icon: 'el-icon-arrow-down',
-        title: 'Collapse',
-        action(editor) {
-          isCollapseComments.value = !isCollapseComments.value
+    const storedMailTemplatesList = computed(() => {
+      return store.getters.getListMailTemplates
+    })
+
+    const editorToolbarList = computed(() => {
+      return {
+        listMailTemplates: storedMailTemplatesList.value,
+        isCollapseUp: {
+          icon: 'el-icon-arrow-up',
+          title: 'Collapse',
+          action(editor) {
+            isCollapseComments.value = !isCollapseComments.value
+          }
+        },
+        isCollapseDown: {
+          icon: 'el-icon-arrow-down',
+          title: 'Collapse',
+          action(editor) {
+            isCollapseComments.value = !isCollapseComments.value
+          }
         }
       }
-      listMailTemplates.isCollapseUp = {
-        icon: 'el-icon-arrow-up',
-        title: 'Collapse',
-        action(editor) {
-          isCollapseComments.value = !isCollapseComments.value
-        }
-      }
-      return listMailTemplates
     })
 
     const isNewIssues = computed({
@@ -2354,27 +2209,6 @@ export default defineComponent({
       })
     }
 
-    function addNewComments(params) {
-      const { id, uuid } = currentIssues.value
-      store.dispatch('newIssueComment', {
-        id,
-        uuid,
-        result: comments.value
-      })
-        .then(response => {
-          nextTick(() => {
-            scrollIssues.value.$el.scrollTop = scrollIssues.value.$el.scrollHeight
-            // scrollTimeLineTabComments.value.$refs.wrap.scrollTop = 9999999
-          })
-        })
-      clearComments()
-      commentPreview.value = false
-    }
-
-    function clearComments() {
-      comments.value = ''
-    }
-
     function handleCommand(command) {
       const { comment, option } = command
       if (option === 'delete') {
@@ -2427,37 +2261,6 @@ export default defineComponent({
       })
     }
 
-    function labelDisplayChange(comment, isChange = false, isOption = false) {
-      if (
-        !isEmptyValue(comment.label) &&
-        isChange
-      ) {
-        return comment.label
-      }
-      if (
-        !isEmptyValue(comment.new_value) &&
-        isOption
-      ) {
-        return comment.displayed_value
-      }
-      if (
-        !isEmptyValue(comment.displayed_value) &&
-        isOption
-      ) {
-        return comment.displayed_value
-      }
-      return ''
-    }
-
-    function logDisplayLanguaje(isChange = false, isOption = false) {
-      if (isChange) {
-        return lang.t('issues.change')
-      }
-      if (isOption) {
-        return lang.t('issues.to')
-      }
-      return
-    }
     function newIssues(issues) {
       isPanelNewRequest.value = !isPanelNewRequest.value
     }
@@ -2498,19 +2301,6 @@ export default defineComponent({
       }
       return 'padding-top: 35px;'
     })
-
-    loadListMail()
-
-    function avatarResize(user) {
-      // const { avatar } = user
-      // const { uri } = getImagePath({
-      //   file: avatar,
-      //   width: 20,
-      //   height: 20,
-      //   operation: 'resize'
-      // })
-      return ''
-    }
 
     function defaultValueNewIssues() {
       findSalesReps(true)
@@ -2732,7 +2522,11 @@ export default defineComponent({
         findPriority(true)
       }
     })
-    findSalesReps(true)
+    // findSalesReps(true)
+
+    if (isEmptyValue(storedMailTemplatesList.value.menus)) {
+      loadListMail()
+    }
 
     return {
       // Ref
@@ -2744,10 +2538,8 @@ export default defineComponent({
       currentDateNextAction,
       newDateNextAction,
       summary,
-      comments,
       commentUpdate,
       commentUpdatePreview,
-      commentPreview,
       summaryUpdatePreview,
       summaryNewPreview,
       updateSummary,
@@ -2787,9 +2579,10 @@ export default defineComponent({
       isShowTitleForm,
       isPanelNewRequest,
       getFixedHeader,
-      listOption,
+      editorToolbarList,
       isMobile,
       userId,
+      storedMailTemplatesList,
       // Methodos
       findTaskStatus,
       remoteMethodTaskStatus,
@@ -2808,8 +2601,6 @@ export default defineComponent({
       updateIssuesStatus,
       updateIssuesDateNextAction,
       defaultValueNewIssues,
-      addNewComments,
-      clearComments,
       translateDateByLong,
       formatDate,
       handleCommand,
@@ -2821,11 +2612,8 @@ export default defineComponent({
       removeIssues,
       handleCommandIssues,
       exitPopover,
-      labelDisplayChange,
-      logDisplayLanguaje,
       loadListMail,
       zoomIssues,
-      avatarResize,
       remoteMethodSales,
       //
       findBusinessPartner,
