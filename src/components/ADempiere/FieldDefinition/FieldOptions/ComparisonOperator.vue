@@ -1,19 +1,19 @@
 <!--
-ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
-Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -22,9 +22,13 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     plain
     :split-button="true"
     type="primary"
-    :class="{ 'comparison-operator-container': true, 'without-defualt-action': true, 'disabled-operators': readonly }"
+    :class="{
+      'comparison-operator-container': true,
+      'without-defualt-action': true,
+      'disabled-operators': isReadOnlyFromField
+    }"
     trigger="click"
-    :disabled="readonly"
+    :disabled="isReadOnlyFromField"
     @command="handleOperator"
   >
     {{ $t('operators.' + currentOperatorValue) }}
@@ -33,7 +37,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         v-for="(operator, index) in operatorList"
         :key="index"
         :command="operator"
-        :class="{ 'is-current': operator === currentOperatorValue}"
+        :class="{ 'is-current-comparison-operator': operator === currentOperatorValue}"
         :disabled="isDisableOperator(operator)"
       >
         {{ $t('operators.' + operator) }}
@@ -63,7 +67,7 @@ export default defineComponent({
       type: Object,
       default: () => ({})
     },
-    readonly: {
+    isReadOnlyFromField: {
       type: Boolean,
       default: false
     },
@@ -146,6 +150,14 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+// ligth and bold current operator
+.el-dropdown-menu__item {
+  &.is-current-comparison-operator {
+    font-weight: bold;
+    color: #1890ff;
+  }
+}
+
 .comparison-operator-container {
   &.without-defualt-action {
     .el-button {
@@ -154,8 +166,9 @@ export default defineComponent({
     }
   }
 
+  // ligth and bold current operator
   .el-dropdown-menu__item {
-    &.is-current {
+    &.is-current-comparison-operator {
       font-weight: bold;
       color: #1890ff;
     }
