@@ -97,7 +97,7 @@
 
     <el-collapse accordion>
       <el-collapse-item name="1">
-        <template slot="title" style="font-size: 16px;">
+        <template slot="title">
           <span style="font-size: 16px; font-weight: revert;">
             <b> {{ $t('documentation.releases') }} </b>
           </span>

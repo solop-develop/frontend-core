@@ -233,6 +233,7 @@ export default {
       releaseNumber: 'Número de versión',
       backEndVersion: 'Versión del Back-End',
       dateVersion: 'Fecha Versión',
+      frontEndVersion: 'Versión del Front-End',
       proxyVersion: 'Versión del Proxy',
       deploymentName: 'Nombre de Implementación'
     }
