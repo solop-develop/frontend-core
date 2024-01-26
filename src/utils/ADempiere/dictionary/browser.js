@@ -35,7 +35,9 @@ import { showNotification } from '@/utils/ADempiere/notification.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
-
+import {
+  IGNORE_VALUE_OPERATORS_LIST
+} from '@/utils/ADempiere/dataUtils'
 /**
  * Is displayed field in panel query criteria
  */
@@ -87,8 +89,8 @@ export function isMandatoryField({ displayType, isQueryCriteria, isMandatory, is
   return isQueryCriteria && (isMandatory || (!isEmptyValue(mandatoryLogic) && isMandatoryFromLogic))
 }
 
-export function isReadOnlyField({ isQueryCriteria, isReadOnlyFromLogic }) {
-  return isQueryCriteria && isReadOnlyFromLogic
+export function isReadOnlyField({ isQueryCriteria, operator, isReadOnlyFromLogic }) {
+  return isQueryCriteria && isReadOnlyFromLogic || IGNORE_VALUE_OPERATORS_LIST.includes(operator)
 }
 
 export function evaluateDefaultColumnShowed({
