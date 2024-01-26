@@ -38,6 +38,7 @@ const calloutManager = {
     startCallout({ commit, dispatch, rootGetters }, {
       parentUuid,
       containerUuid,
+      displayType,
       callout,
       tableName,
       columnName,
@@ -75,16 +76,16 @@ const calloutManager = {
           let currentValue = value
 
           const field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
-          let displayType = null
+          let currentDisplayType = null
           if (!isEmptyValue(field)) {
-            displayType = field.displayType
+            currentDisplayType = field.displayType
           } else {
             // find on parent tab (first tab)
             const parentField = fieldsListParent.find(fieldItem => {
               return fieldItem.columnName === columnName
             })
             if (!isEmptyValue(parentField)) {
-              displayType = parentField.displayType
+              currentDisplayType = parentField.displayType
             }
           }
           if (getTypeOfValue(currentValue) !== 'OBJECT') {
@@ -93,7 +94,7 @@ const calloutManager = {
                 type: 'date',
                 value
               }
-            } else if (isDecimalField(displayType)) {
+            } else if (isDecimalField(currentDisplayType)) {
               currentValue = {
                 type: 'decimal',
                 value
@@ -102,6 +103,19 @@ const calloutManager = {
           }
           contextAttributesList[columnName] = currentValue
         })
+        if (getTypeOfValue(value) !== 'OBJECT') {
+          if (isDateField(displayType)) {
+            value = {
+              type: 'date',
+              value
+            }
+          } else if (isDecimalField(displayType)) {
+            value = {
+              type: 'decimal',
+              value
+            }
+          }
+        }
 
         runCallOutRequest({
           // windowNo: window.windowIndex,

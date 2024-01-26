@@ -383,6 +383,7 @@ const actions = {
           tableName: field.tableName,
           columnName: field.columnName,
           callout: field.callout,
+          displayType: field.displayType,
           value: newValue,
           withOutColumnNames,
           row,
