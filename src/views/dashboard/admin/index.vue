@@ -218,6 +218,13 @@ export default defineComponent({
       return store.getters.getStoredDashboardsList.filter(list => list.fileName !== 'docstatus')
     })
 
+    store.getters.getStoredDashboardsList.forEach(element => {
+      const { name, sequence, dashboardType } = element
+      if (!isEmptyValue(dashboardType)) {
+        console.log({ name, sequence, dashboardType })
+      }
+    })
+
     const mainDashboard = computed(() => {
       return store.getters.getStoredMainDashboard
     })
@@ -248,7 +255,11 @@ export default defineComponent({
       }
       const list = listDashboard
         .filter(list => {
-          if (!isEmptyValue(list.chartType) && panelRight.includes(list.chartType)) {
+          if (
+            list.sequence === 0 &&
+            !isEmptyValue(list.chartType) &&
+            panelRight.includes(list.chartType)
+          ) {
             return list
           } else if (panelRight.includes(list.fileName)) {
             return list
@@ -268,7 +279,11 @@ export default defineComponent({
       }
       const list = listDashboard
         .filter(list => {
-          if (!isEmptyValue(list.chartType) && panelLeft.includes(list.chartType)) {
+          if (
+            list.sequence === 0 &&
+            !isEmptyValue(list.chartType) &&
+            panelLeft.includes(list.chartType)
+          ) {
             return list
           } else if (panelLeft.includes(list.fileName)) {
             return list
