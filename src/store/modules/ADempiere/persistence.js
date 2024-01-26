@@ -182,7 +182,7 @@ const persistence = {
           dispatch('startCallout', {
             parentUuid,
             containerUuid,
-            field,
+            displayType: field.displayType,
             callout: field.callout,
             columnName,
             value,
