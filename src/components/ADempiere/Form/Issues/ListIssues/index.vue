@@ -1,19 +1,19 @@
 <!--
-ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
-Contributor(s): Elsio Sanchez Elsiosanches@gmail.com https://github.com/Elsiosanchez
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez Elsiosanches@gmail.com https://github.com/Elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 <template>
   <div class="issues-list">
@@ -338,8 +338,10 @@ export default defineComponent({
       store.dispatch('listRequest', {})
         .then(response => {
           if (!isEmptyValue(response)) {
-            let list
-            const isEmptuStatus = listStatuses.value.find(list => list.id === 0)
+            const list = {}
+            const isEmptuStatus = listStatuses.value.find(statusItem => {
+              return statusItem.id === 0
+            })
             if (isEmptyValue(isEmptuStatus)) {
               listStatuses.value.push({
                 name: lang.t('issues.emptyStatus'),
@@ -348,8 +350,8 @@ export default defineComponent({
               })
             }
             listStatuses.value.forEach(elementStatus => {
-              list[elementStatus.id] = response.filter(list => {
-                return list.status.id === elementStatus.id
+              list[elementStatus.id] = response.filter(issueItem => {
+                return issueItem.status.id === elementStatus.id
               })
             })
             store.commit('setListKanbanGroup', list)
@@ -456,15 +458,17 @@ export default defineComponent({
       })
         .then(response => {
           const { records } = response
-          const listAll = records
-          const list = []
-          listAll.push({
+          const statusesList = records
+          const list = {}
+          statusesList.push({
             name: lang.t('issues.emptyStatus'),
             id: 0,
             sequence: 99
           })
-          listAll.forEach(element => {
-            list[element.id] = listIssues.value.filter(list => list.status.id === element.id)
+          statusesList.forEach(statusItem => {
+            list[statusItem.id] = listIssues.value.filter(issueItem => {
+              return issueItem.status.id === statusItem.id
+            })
           })
           store.commit('setListKanbanGroup', list)
           listStatuses.value = records.sort((a, b) => a.sequence - b.sequence)
