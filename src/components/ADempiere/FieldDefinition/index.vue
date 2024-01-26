@@ -295,7 +295,7 @@ export default {
       return {
         ...this.field,
         inTable: this.inTable,
-        isAdvancedQuery: this.field.isAdvancedQuery, // || this.field.isQueryCriteria,
+        isAdvancedQuery: this.field.isAdvancedQuery,
         // DOM properties
         required: this.isMandatoryField,
         readonly: isReadOnly || isReadOnlyFromOperator,
