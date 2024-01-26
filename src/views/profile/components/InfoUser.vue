@@ -87,7 +87,7 @@
             </el-tag>
           </el-col>
         </el-row>
-        <el-row style="margin-bottom: 10px;">
+        <!-- <el-row style="margin-bottom: 10px;">
           <el-col :span="12">
             <p
               class="label-system"
@@ -101,6 +101,24 @@
               <b>
                 <svg-icon icon-class="tag" />
                 {{ systemInfo.proxyVersion }}
+              </b>
+            </el-tag>
+          </el-col>
+        </el-row> -->
+        <el-row style="margin-bottom: 10px;">
+          <el-col :span="12">
+            <p
+              class="label-system"
+            >
+              <svg-icon icon-class="proxy" />
+              {{ $t('profile.systemInformation.frontEndVersion') + ': ' }}
+            </p>
+          </el-col>
+          <el-col :span="12">
+            <el-tag>
+              <b>
+                <svg-icon icon-class="tag" />
+                {{ vueVersion }}
               </b>
             </el-tag>
           </el-col>
@@ -324,10 +342,14 @@
 </template>
 
 <script>
-import store from '@/store'
-import router from '@/router'
-import language from '@/lang'
 import { defineComponent, computed } from '@vue/composition-api'
+
+import language from '@/lang'
+import router from '@/router'
+import store from '@/store'
+
+// Constants
+import { config } from '@/utils/ADempiere/config'
 
 // Utils and Helper Methods
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
@@ -373,11 +395,15 @@ export default defineComponent({
 
     const systemInfo = computed(() => {
       const info = store.getters['user/getSystem']
-      if (!isEmptyValue(info)) return info
+      if (!isEmptyValue(info)) {
+        return info
+      }
       return {
         name: 'ADempiere'
       }
     })
+
+    const vueVersion = config.server.vueVersion
 
     const notifications = computed(() => {
       return store.getters.getListNotifiications
@@ -443,6 +469,7 @@ export default defineComponent({
       organization,
       currentRole,
       systemInfo,
+      vueVersion,
       warehouse,
       userInfo,
       isMobile,
