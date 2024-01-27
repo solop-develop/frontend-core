@@ -179,9 +179,6 @@ import TitleAndHelp from '@/components/ADempiere/TitleAndHelp/index.vue'
 import {
   IS_ADVANCED_QUERY
 } from '@/utils/ADempiere/dictionaryUtils'
-import {
-  IGNORE_VALUE_OPERATORS_LIST
-} from '@/utils/ADempiere/dataUtils'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -270,7 +267,7 @@ export default defineComponent({
           return false
         },
         isReadOnlyField({ isReadOnly, operator }) {
-          return IGNORE_VALUE_OPERATORS_LIST.includes(operator)
+          return false
         },
         getFieldsToHidden({ parentUuid, containerUuid }) {
           const fieldsListTab = store.getters.getStoredFieldsFromTab(parentUuid, containerUuid)

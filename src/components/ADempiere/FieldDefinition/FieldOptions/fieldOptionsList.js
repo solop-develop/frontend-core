@@ -116,7 +116,7 @@ export const operatorOptionItem = {
   svg: false,
   icon: 'el-icon-rank',
   isRender: true,
-  componentRender: () => import('@/components/ADempiere/FieldDefinition/FieldOptions/OperatorComparison'),
+  componentRender: () => import('@/components/ADempiere/FieldDefinition/FieldOptions/ComparisonOperator/'),
   executeMethod: ({ containerManager, fieldAttributes }) => {}
 }
 

@@ -87,8 +87,8 @@ export function isMandatoryField({ displayType, isQueryCriteria, isMandatory, is
   return isQueryCriteria && (isMandatory || (!isEmptyValue(mandatoryLogic) && isMandatoryFromLogic))
 }
 
-export function isReadOnlyField({ isQueryCriteria, isReadOnlyFromLogic }) {
-  return isQueryCriteria && isReadOnlyFromLogic
+export function isReadOnlyField({ isQueryCriteria, operator, isReadOnlyFromLogic }) {
+  return isQueryCriteria && isReadOnlyFromLogic // || IGNORE_VALUE_OPERATORS_LIST.includes(operator)
 }
 
 export function evaluateDefaultColumnShowed({

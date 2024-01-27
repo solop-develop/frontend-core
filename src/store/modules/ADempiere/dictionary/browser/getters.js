@@ -159,8 +159,10 @@ export default {
         columnName: columnName
       })
 
+      const isNullOperator = IGNORE_VALUE_OPERATORS_LIST.includes(operator)
+
       let value, valueTo, values
-      if (!IGNORE_VALUE_OPERATORS_LIST.includes(operator)) {
+      if (!isNullOperator) {
         if (isEmptyValue(contextValue)) {
           return
         }
@@ -191,7 +193,7 @@ export default {
         }
       }
 
-      if (!isEmptyValue(value)) {
+      if (!isEmptyValue(value) || isNullOperator) {
         queryParams.push({
           columnName,
           operator,

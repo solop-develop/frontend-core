@@ -67,9 +67,10 @@
             :metadata="fieldAttributes"
           />
           <comparison-operator
+            v-if="!fieldAttributes.isInfoOnly"
             :metadata-field="field"
             :container-manager="containerManager"
-            :readonly="fieldAttributes.readonly && !fieldAttributes.isAdvancedQuery"
+            :is-read-only-from-field="fieldAttributes.isReadOnlyFromField"
             :style="styleOperator"
           />
         </div>
@@ -98,7 +99,9 @@ import ComparisonOperator from '@/components/ADempiere/FieldDefinition/FieldOpti
 // Constants
 import { UUID } from '@/utils/ADempiere/constants/systemColumns'
 import { BUTTON, TEXT, DEFAULT_SIZE } from '@/utils/ADempiere/references'
-import { MULTIPLE_VALUES_OPERATORS_LIST } from '@/utils/ADempiere/dataUtils'
+import {
+  MULTIPLE_VALUES_OPERATORS_LIST, IGNORE_VALUE_OPERATORS_LIST
+} from '@/utils/ADempiere/dataUtils'
 import { LAYOUT_MAX_COLUMNS_PER_ROW, DEFAULT_COLUMNS_PER_ROW } from '@/utils/ADempiere/componentUtils'
 import { ALWAYS_DISPLAY_COLUMN } from '@/utils/ADempiere/dictionaryUtils'
 
@@ -287,16 +290,20 @@ export default {
       return field
     },
     fieldAttributes() {
+      const isReadOnly = this.isReadOnlyField
+      const isReadOnlyFromOperator = IGNORE_VALUE_OPERATORS_LIST.includes(this.field.operator)
       return {
         ...this.field,
         inTable: this.inTable,
         isAdvancedQuery: this.field.isAdvancedQuery,
         // DOM properties
         required: this.isMandatoryField,
-        readonly: this.isReadOnlyField,
+        readonly: isReadOnly || isReadOnlyFromOperator,
         displayed: this.isDisplayField,
         disabled: !this.field.isActive,
         isSelectCreated: this.isSelectCreated,
+        isReadOnlyFromField: isReadOnly,
+        isReadOnlyFromOperator: isReadOnlyFromOperator,
         placeholder: this.field.help ? this.field.help.slice(0, 40) + '...' : ''
       }
     },
