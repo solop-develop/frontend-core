@@ -242,8 +242,8 @@ export default {
       if (!this.isEmptyValue(query)) {
         this.loginForm = {
           ...this.loginForm,
-          roleUuid: this.clientIdRedirect(query, expr),
-          organizationUuid: this.organizationIdRedirect(query, expr)
+          roleId: this.clientIdRedirect(query, expr),
+          organizationId: this.organizationIdRedirect(query, expr)
         }
       }
       this.$refs.loginForm.validate(valid => {
@@ -289,11 +289,11 @@ export default {
       if (redirect[1] === this.default) {
         return
       }
-      return redirect[1]
+      return redirect[2]
     },
     organizationIdRedirect(query, expr) {
       const redirect = query.split(expr)
-      return redirect[2]
+      return redirect[3]
     },
     svgService(openId) {
       const { authorization_uri } = openId
