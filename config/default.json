@@ -2,7 +2,8 @@
   "server": {
     "host": "localhost",
     "port": 9527,
-    "publicPath": "/base-public-path/"
+    "publicPath": "/base-public-path/",
+    "vueVersion": "develop-1.0.0"
   },
   "adempiere": {
     "api": {
