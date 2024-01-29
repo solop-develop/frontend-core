@@ -50,9 +50,9 @@ export function requestLogin({
     data: {
       user_name: userName,
       user_pass: password,
-      role_id: roleId,
-      organization_id: organizationId,
-      warehouse_id: warehouseId
+      role_id: Number(roleId),
+      organization_id: Number(organizationId),
+      warehouse_id: Number(warehouseId)
     }
   })
     .then(response => {

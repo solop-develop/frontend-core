@@ -32,7 +32,7 @@ export function lisDashboardsRequest({
   pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
-    url: '/dashboard/dashboards',
+    url: '/dashboarding/dashboards',
     method: 'get',
     params: {
       // Page Data
@@ -58,7 +58,7 @@ export function getMetricRequest({
   id
 }) {
   return request({
-    url: `/dashboard/dashboards/${id}/metrics`,
+    url: `/dashboarding/dashboards/${id}/metrics`,
     method: 'get'
   })
     .then(chart => {
@@ -74,7 +74,7 @@ export function getFavoritesRequest({
   pageSize
 }) {
   return request({
-    url: '/dashboard/favorites',
+    url: '/dashboarding/favorites',
     method: 'get',
     params: {
       // Page Data
@@ -103,7 +103,7 @@ export function getPendingDocumentsRequest({
   pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
-    url: '/dashboard/pending-documents',
+    url: '/dashboarding/pending-documents',
     method: 'get',
     params: {
       // Page Data
@@ -129,7 +129,7 @@ export function getPendingDocumentsRequest({
  */
 export function listNotifiicationsRequest() {
   return request({
-    url: '/dashboard/notifications',
+    url: '/dashboarding/notifications',
     method: 'get'
   })
     .then(notificationsResponse => {
