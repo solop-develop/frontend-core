@@ -289,11 +289,11 @@ export default {
       if (redirect[1] === this.default) {
         return
       }
-      return redirect[1]
+      return redirect[2]
     },
     organizationIdRedirect(query, expr) {
       const redirect = query.split(expr)
-      return redirect[2]
+      return redirect[3]
     },
     svgService(openId) {
       const { authorization_uri } = openId
