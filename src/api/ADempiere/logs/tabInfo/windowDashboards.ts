@@ -29,7 +29,7 @@ export function requestExistsWindowDashboards({
   windowId
 }) {
   return request({
-    url: `/dashboard/dashboards/windows/${windowId}/exists`,
+    url: `/dashboarding/dashboards/windows/${windowId}/exists`,
     method: 'get',
     params: {
       tab_id: tabId
@@ -44,7 +44,7 @@ export function requestListWindowDashboards({
   pageToken
 }) {
   return request({
-    url: `/dashboard/dashboards/windows/${windowId}`,
+    url: `/dashboarding/dashboards/windows/${windowId}`,
     method: 'get',
     params: {
       tab_id: tabId,
@@ -66,7 +66,7 @@ export function requestGetWindowMetrics({
   filters
 }) {
   return request({
-    url: `/dashboard/dashboards/windows/metrics/${id}/${tableName}/${recordId}`,
+    url: `/dashboarding/dashboards/windows/metrics/${id}/${tableName}/${recordId}`,
     method: 'get',
     params: {
       //  DSL Query

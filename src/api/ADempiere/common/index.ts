@@ -40,7 +40,7 @@ export function requestGetConversionRate() {
  */
 export function systemInfo() {
   return request({
-    url: '/common/system-info',
+    url: '/core-functionality/system-info',
     method: 'get'
   })
     .then(response => {
@@ -56,7 +56,7 @@ export function requestGetCountryDefinition({
   id
 }) {
   return request({
-    url: `/common/countries/${id}`,
+    url: `/core-functionality/countries/${id}`,
     method: 'get'
   })
     .then(countryResponse => {
@@ -76,7 +76,7 @@ export function requestOrganizationsList({
   pageSize = 100
 }) {
   return request({
-    url: '/common/organizations',
+    url: '/security/organizations',
     method: 'get',
     params: {
       role_id: roleId,
@@ -106,7 +106,7 @@ export function requestWarehousesList({
   pageSize = 100
 }) {
   return request({
-    url: '/common/warehouses',
+    url: '/security/warehouses',
     method: 'get',
     params: {
       organization_id: organizationId,
@@ -125,7 +125,7 @@ export function requestLanguagesList({
   pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
-    url: '/common/languages',
+    url: '/core-functionality/languages',
     method: 'get',
     params: {
       // Page Data
@@ -164,7 +164,7 @@ export function requestListBusinessPartner({
   pageToken
 }) {
   return request({
-    url: '/common/business-partners',
+    url: '/core-functionality/business-partners',
     method: 'get',
     params: {
       pos_uuid: posUuid,
@@ -210,7 +210,7 @@ export function businessPartner({
   searchValue
 }) {
   return request({
-    url: `/common/business-partners`,
+    url: `/core-functionality/business-partners`,
     method: 'get',
     params: {
       search_value: searchValue
@@ -256,7 +256,7 @@ export function requestCreateBusinessPartner({
   posUuid
 }) {
   return request({
-    url: '/common/create-business-partner',
+    url: '/core-functionality/create-business-partner',
     method: 'post',
     data: {
       value,
