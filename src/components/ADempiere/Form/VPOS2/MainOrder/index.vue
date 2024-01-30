@@ -277,13 +277,17 @@ export default defineComponent({
             })
               .then(updateLineResponse => {
                 refreshLine(updateLineResponse)
-                isLoadingQty.value = false
+                isLoadingPrice.value = false
                 currentLine.value.isEditCurrentPrice = false
               })
               .catch(() => {
-                isLoadingQty.value = false
+                isLoadingPrice.value = false
                 currentLine.value.isEditCurrentPrice = true
               })
+          },
+          cancelMethod: () => {
+            currentLine.value.isEditCurrentPrice = false
+            isLoadingPrice.value = false
           },
           requestedAccess: 'IsModifyPrice',
           requestedAmount: price,
@@ -327,6 +331,10 @@ export default defineComponent({
                 isLoadingQty.value = false
                 currentLine.value.isEditQtyEntered = true
               })
+          },
+          cancelMethod: () => {
+            currentLine.value.isEditQtyEntered = false
+            isLoadingQty.value = false
           },
           requestedAccess: 'IsAllowsModifyQuantity',
           requestedAmount: quantity,
@@ -373,6 +381,10 @@ export default defineComponent({
                 currentLine.value.isEditDiscount = false
                 isLoadingDiscount.value = false
               })
+          },
+          cancelMethod: () => {
+            currentLine.value.isEditDiscount = false
+            isLoadingDiscount.value = false
           },
           requestedAccess: 'IsAllowsModifyDiscount',
           requestedAmount: discount_rate,

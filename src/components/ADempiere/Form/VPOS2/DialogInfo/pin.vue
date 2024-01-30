@@ -122,6 +122,7 @@ export default defineComponent({
       store.commit('setShowedDialogPin', {
         isShowed: false
       })
+      storedModalDialog.value.cancelMethod()
       pin.value = ''
     }
 
@@ -136,6 +137,9 @@ export default defineComponent({
             storedModalDialog.value.doneMethod()
             closeDialog()
           }
+        })
+        .finally(() => {
+          closeDialog()
         })
     }
 
