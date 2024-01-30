@@ -252,7 +252,7 @@ export default {
     }
   },
   getters: {
-    getListProduct(state) {
+    getListProductExpressMovement(state) {
       return state.listProduct
     },
     getListMovementLines(state) {

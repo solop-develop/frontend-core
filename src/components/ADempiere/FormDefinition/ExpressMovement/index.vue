@@ -312,7 +312,7 @@ export default defineComponent({
      * Computed
      */
     const listProdcut = computed(() => {
-      return store.getters.getListProduct
+      return store.getters.getListProductExpressMovement
     })
     const listMovementLines = computed(() => {
       return store.getters.getListMovementLines
