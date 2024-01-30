@@ -115,6 +115,8 @@ export default defineComponent({
       const { srcKey } = event
       if (srcKey === 'close') {
         closeDialog()
+      } else if (srcKey === 'enter') {
+        doneButton()
       }
     }
 

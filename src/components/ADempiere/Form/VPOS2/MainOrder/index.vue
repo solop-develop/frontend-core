@@ -358,12 +358,12 @@ export default defineComponent({
         })
     }
     function updateDiscount(discount_rate) {
-      const { is_allows_modify_discount } = currentPos.value
+      const { is_allows_modify_discount, maximum_line_discount_allowed } = currentPos.value
       const {
         quantity_ordered
       } = currentLine.value
       isLoadingDiscount.value = true
-      if (!is_allows_modify_discount) {
+      if (!is_allows_modify_discount || (Number(maximum_line_discount_allowed) !== 0 && discount_rate > Number(maximum_line_discount_allowed))) {
         store.dispatch('setModalPin', {
           title: lang.t('form.pos.pinMessage.pin') + lang.t('form.pos.pinMessage.qtyEntered'),
           doneMethod: () => {

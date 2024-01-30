@@ -429,9 +429,9 @@ export default {
     getListCampaigns: (state) => {
       return state.listCampaigns
     },
-    getListSellers: (state) => {
-      return state.listSellers
-    },
+    // getListSellers: (state) => {
+    //   return state.listSellers
+    // },
     getListDocumentTypes: (state) => {
       return state.listDocumentTypes
     },
