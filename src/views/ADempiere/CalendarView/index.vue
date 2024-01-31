@@ -36,12 +36,24 @@
 
         <ul>
           <li v-for="event in currentEvents" :key="event.id">
-            <b>{{ translateDate({
-              value: event.startStr,
-              format: event.startStr.length > 10 ? 'short' : 'onlyDate',
-
-            }) }}</b>
-            <i>{{ event.title }}</i>
+            <el-card
+              shadow="never"
+              class="custom-card-calendar"
+              :body-style="{ padding: '5px' }"
+            >
+              <b>
+                <i>{{ '( ' + event.name + ' )' }}</i>
+              </b>
+              <p style="font-size: 14px;">
+                {{ event.description }}
+              </p>
+              <p style="text-align: left;color: gray;font-size: 12px;margin: 0px;">
+                {{ translateDate({
+                  value: event.start_date,
+                  format: event.start_date.length > 10 ? 'short' : 'onlyDate'
+                }) }}
+              </p>
+            </el-card>
           </li>
         </ul>
       </div>
@@ -62,6 +74,12 @@
 
 <script>
 import lang from '@/lang'
+import store from '@/store'
+import {
+  defineComponent,
+  computed
+  // ref
+} from '@vue/composition-api'
 
 // Components and Mixins
 import FullCalendar from '@fullcalendar/vue'
@@ -72,21 +90,32 @@ import interactionPlugin from '@fullcalendar/interaction'
 import listPlugin from '@fullcalendar/list'
 
 // Constants
-import { INITIAL_EVENTS, createEventId } from './event-utils'
+import { createEventId } from './event-utils'
 
 // Utils and Helper Methods
 import { translateDate } from '@/utils/ADempiere/formatValue/dateFormat'
 
-export default {
+export default defineComponent({
   name: 'CalendarView',
 
   components: {
     FullCalendar // make the <FullCalendar> tag available
   },
 
-  data: function() {
-    return {
-      calendarOptions: {
+  setup() {
+    /**
+     * Ref
+     */
+    // const currentEvents = ref([])
+    /**
+     * Computed
+     */
+    const currentEvents = computed(() => {
+      return store.getters.getListTasksEvents
+    })
+
+    const calendarOptions = computed(() => {
+      return {
         plugins: [
           dayGridPlugin,
           timeGridPlugin,
@@ -101,39 +130,41 @@ export default {
           right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
         },
         initialView: 'dayGridMonth',
-        initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
+        initialEvents: store.getters.getListTasksEvents.map(list => {
+          const { start_date, end_date, name } = list
+          return {
+            id: list.request,
+            title: name,
+            start: parse(start_date),
+            end: parse(end_date)
+          }
+        }), // alternatively, use the `events` setting to fetch from a feed
         editable: true,
         selectable: true,
         selectMirror: true,
         dayMaxEvents: true,
         weekends: true,
-        select: this.handleDateSelect,
-        eventClick: this.handleEventClick,
-        eventsSet: this.handleEvents
-        /* you can update a remote database when these fire:
-        eventAdd:
-        eventChange:
-        eventRemove:
-        */
-      },
-      currentEvents: []
+        select: handleDateSelect(),
+        eventClick: handleEventClick(),
+        eventsSet: handleEvents()
+      }
+    })
+
+    /**
+     * Methods
+     */
+    function parse(dateToParse) {
+      const parts = dateToParse.split('T')[0].split('-')
+      return `${parts[0]}-${parts[1]}-${parts[2]}`
     }
-  },
 
-  methods: {
-    translateDate,
-
-    handleWeekendsToggle() {
-      // update a property
-      this.calendarOptions.weekends = !this.calendarOptions.weekends
-    },
-
-    handleDateSelect(selectInfo) {
+    function handleDateSelect(selectInfo) {
+      if (!selectInfo) {
+        return
+      }
       const title = prompt(lang.t('component.calendar.titleNewEvent'))
       const calendarApi = selectInfo.view.calendar
-
       calendarApi.unselect() // clear date selection
-
       if (title) {
         calendarApi.addEvent({
           id: createEventId(),
@@ -143,19 +174,39 @@ export default {
           allDay: selectInfo.allDay
         })
       }
-    },
+    }
 
-    handleEventClick(clickInfo) {
+    function handleEventClick(clickInfo) {
       if (confirm(`${lang.t('component.calendar.deleteEventConfirm')} '${clickInfo.event.title}'`)) {
         clickInfo.event.remove()
       }
-    },
+    }
 
-    handleEvents(events) {
-      this.currentEvents = events
+    function handleEvents(events) {
+      currentEvents.value = events
+    }
+
+    store.dispatch('getListTasksFromServer', {})
+
+    return {
+      // Ref
+      currentEvents,
+      // Computed
+      calendarOptions,
+      // Methods
+      handleDateSelect,
+      handleEventClick,
+      handleEvents,
+      translateDate,
+      //
+      esLocale,
+      listPlugin,
+      dayGridPlugin,
+      timeGridPlugin,
+      interactionPlugin
     }
   }
-}
+})
 </script>
 
 <style lang='scss'>
@@ -176,12 +227,14 @@ export default {
     }
 
     ul {
+      overflow: auto;
+      height: 89vh;
+      padding: 0px 5px;
       margin: 0;
-      padding: 0 0 0 1.5em;
     }
 
     li {
-      margin: 1.5em 0;
+      margin: 0.5em 0;
       padding: 0;
     }
 
@@ -209,5 +262,14 @@ export default {
     overflow: auto;
     display: block;
   }
+}
+
+.custom-card-calendar {
+  margin: 0px;
+  cursor: pointer;
+}
+.custom-card-calendar:hover {
+  background-color: #eaf5fe;
+  border: 1px solid #36a3f7;
 }
 </style>

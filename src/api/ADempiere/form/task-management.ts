@@ -26,7 +26,11 @@ export function requestListTasks({
     url: `/task-management/tasks`,
     method: 'get',
     params: {
-      date
+      // date: '2023-01-24T00:00:00.000Z',
+      is_with_projects: true,
+      is_with_requests: true,
+      is_with_resource_assignments: true
+      // date
     }
   })
 }
