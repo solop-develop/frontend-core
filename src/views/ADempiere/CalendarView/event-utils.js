@@ -33,8 +33,8 @@ export const INITIAL_EVENTS = [
   {
     id: 1234,
     title: 'Governors - Full Paint',
-    start: '2023-10-01 13:00-:00',
-    end: '2023-10-01 15:00:00'
+    start: '2023-10-01',
+    end: '2023-10-02'
   },
   {
     id: 1111,
