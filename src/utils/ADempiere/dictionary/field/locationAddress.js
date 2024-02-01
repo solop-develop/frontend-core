@@ -270,6 +270,7 @@ export function setDefaultComponentSequence() {
     },
     {
       sequence: '@CO@',
+      capture: 'CO',
       component: CountriesListFieldComponent,
       isMandatory: true
     }
