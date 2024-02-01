@@ -128,6 +128,13 @@ export default {
           console.warn(`Error getting Metrics: ${error.message}. Code: ${error.code}.`)
         })
     },
+    castValueData(listValue) {
+      if (this.isEmptyValue(listValue)) return 0
+      return listValue
+        .map(setValue => Number(setValue.value))
+        .filter(listValues => !isNaN(listValues))
+        .reduce((partialSum, currentvalue) => partialSum + currentvalue)
+    },
     loadChartMetrics(metrics) {
       const xAxisValues = []
       let seriesToShow = []
@@ -139,49 +146,65 @@ export default {
             type: 'gauge',
             min: 0,
             max: metrics.measureTarget,
-            splitNumber: 15,
+            splitNumber: 5,
+            width: '5px',
             radius: '100%',
-            data: [{
-              value: serie.data_set.map(set => set.value).reduce((partialSum, a) => partialSum + a, 0),
-              name: metrics.name
-            }],
+            progress: {
+              show: true,
+              width: 5
+            },
             axisLine: {
               lineStyle: {
-                color: metrics.colorSchemas.filter(colorSchema => colorSchema.percent > 0).map(colorSchema => {
-                  return [
-                    colorSchema.percent / 100,
-                    colorSchema.color
-                  ]
-                }),
-                width: 5,
-                shadowColor: '#fff',
-                shadowBlur: 10
+                width: 15,
+                color: [
+                  [0.3, '#67e0e3'],
+                  [0.7, '#37a2da'],
+                  [1, '#fd666d']
+                ]
               }
+            },
+            axisTick: {
+              show: true
             },
             splitLine: {
-              length: 25,
+              length: 15,
               lineStyle: {
-                width: 3,
-                color: 'inherit',
-                shadowColor: 'auto',
-                shadowBlur: 10
+                width: 2,
+                color: '#999'
               }
             },
-            pointer: {
-              shadowColor: 'auto',
-              shadowBlur: 5
+            axisLabel: {
+              distance: 15,
+              color: '#999',
+              fontSize: 20
+            },
+            anchor: {
+              show: true,
+              showAbove: true,
+              size: 25,
+              itemStyle: {
+                borderWidth: 10
+              }
+            },
+            title: {
+              show: true,
+              offsetCenter: [0, '65%']
             },
             detail: {
-              ackgroundColor: 'auto',
-              borderColor: 'inherit',
-              offsetCenter: [0, '50%'],
-              fontWeight: 'bolder',
-              fontSize: 20,
-              fontStyle: 'italic',
-              color: 'inherit',
-              shadowColor: 'auto',
-              shadowBlur: 10
-            }
+              valueAnimation: true,
+              fontSize: 26,
+              offsetCenter: [0, '85%'],
+              formatter: `{value}`
+            },
+            pointer: {
+              itemStyle: {
+                color: 'auto'
+              }
+            },
+            data: [{
+              value: this.castValueData(serie.data_set),
+              name: metrics.name
+            }]
           }
         })
       }
@@ -191,10 +214,10 @@ export default {
           feature: {
             dataView: xAxisValues,
             saveAsImage: {
-              pixelRatio: 2
+              pixelRatio: 20
             },
             mark: {
-              show: true
+              show: false
             },
             restore: {
               show: true

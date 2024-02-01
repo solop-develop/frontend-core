@@ -200,6 +200,9 @@ export default {
           axisPointer: {
             type: 'cross'
           },
+          textStyle: {
+            color: '#999'
+          },
           padding: [5, 10]
         },
         yAxis: {

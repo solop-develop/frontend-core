@@ -17,44 +17,48 @@
 -->
 
 <template>
-  <el-card class="box-card" :body-style="{ padding: '0px' }" shadow="never">
-    <div class="recent-items">
-      <el-table :data="dataResult" max-height="455" @row-click="handleClick">
-        <el-table-column width="40">
-          <template slot-scope="{row}">
-            <svg-icon :icon-class="row.icon" class="icon-window" />
-          </template>
-        </el-table-column>
-
-        <el-table-column>
-          <template slot="header" slot-scope="scope">
-            <el-input
-              v-model="search"
-              size="mini"
-              :metadata="scope"
-              class="clearfix"
-              :placeholder="$t('table.dataTable.search')"
-            >
-              <svg-icon slot="prefix" icon-class="search" />
-            </el-input>
-          </template>
-
-          <template slot-scope="{row}">
-            <span>{{ row.display_name }}</span>
-            <el-tag class="action-tag">
-              {{ $t(`views.${row.action}`) }}
-            </el-tag>
-            <br>
-            <span class="time">
-              {{ translateDate({
-                value: row.updated,
-                format: 'long'
-              }) }}
-            </span>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
+  <el-card
+    shadow="never"
+    class="box-card"
+    :body-style="{ padding: '0px' }"
+    style="max-height: 540px;overflow: auto;"
+  >
+    <el-row
+      v-for="item in dataResult"
+      :key="item.id"
+      class="row-panel"
+    >
+      <div
+        style="padding: 0 10px;"
+        @click="handleClick(item)"
+      >
+        <el-col
+          :span="1"
+          class="col-panel-svg"
+        >
+          <svg-icon
+            :icon-class="item.icon"
+            class="icon-window"
+          />
+        </el-col>
+        <el-col
+          :span="23"
+          class="col-panel-content"
+        >
+          <span
+            class="label-iten"
+          >
+            {{ item.display_name }}
+          </span>
+          <span class="time">
+            {{ translateDate({
+              value: item.updated,
+              format: 'short'
+            }) }}
+          </span>
+        </el-col>
+      </div>
+    </el-row>
   </el-card>
 </template>
 
@@ -146,7 +150,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .el-table {
     background-color: #FFFFFF;
   }
@@ -162,8 +166,8 @@ export default {
     overflow: auto;
   }
   .time {
-    float: left;
-    font-size: 11px;
+    float: inline-end;
+    font-size: 10px;
     color: #999;
   }
   .card-box {
@@ -178,6 +182,29 @@ export default {
   }
   .action-tag {
     float: right;
+  }
+  .scroll-panel-recent-items {
+    height: 100px !important;
+    max-height: 150px !important;
+  }
+  .row-panel {
+    border: 1px solid #e6ebf5;
+  }
+  .col-panel-svg {
+    margin: 10px 0px;
+  }
+  .col-panel-content {
+    padding-left: 10px;
+    margin: 10px 0px;
+    .label-iten {
+      font-size: 13px;
+    }
+  }
+  .col-panel-svg:hover{
+    cursor: pointer;
+  }
+  .col-panel-content:hover{
+    cursor: pointer;
   }
 </style>
 <style>

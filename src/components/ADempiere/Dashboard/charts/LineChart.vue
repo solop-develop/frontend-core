@@ -199,6 +199,9 @@ export default {
             labelTextColor: '#5eff00',
             bodyColor: '#5eff00'
           },
+          textStyle: {
+            color: '#999'
+          },
           // color: '#ff0000',
           // textColor: '#ff0000',
           // padding: [5, 10]
