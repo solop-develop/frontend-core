@@ -26,11 +26,11 @@ import {
   requestListCustomers
 } from '@/api/ADempiere/form/VPOS/customer'
 import {
-  listCountries,
-  getCountries,
-  listRegion,
-  listCities
-} from '@/api/ADempiere/field/locations'
+  listCountriesRequest,
+  getCountryRequest,
+  listRegionsRequest,
+  listCitiesRequest
+} from '@/api/ADempiere/field/location-address.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -135,6 +135,7 @@ const customers = {
 
 export default {
   state: customers,
+
   mutations: {
     setShowCustomerList(state, show) {
       state.showCustomer = show
@@ -247,7 +248,7 @@ export default {
       commit
     }, typeLocations) {
       return new Promise(resolve => {
-        listCountries({})
+        listCountriesRequest({})
           .then(response => {
             const { countries } = response
             commit('setAttributeFieldCustomer', {
@@ -284,7 +285,7 @@ export default {
           typeLocations: typeLocations,
           attribute: 'regionId'
         })
-        listCities({
+        listCitiesRequest({
           countryId,
           regionId
         })
@@ -318,7 +319,7 @@ export default {
       typeLocations
     }) {
       return new Promise(resolve => {
-        getCountries({
+        getCountryRequest({
           id: countryId
         })
           .then(response => {
@@ -356,7 +357,7 @@ export default {
           typeLocations: typeLocations,
           attribute: 'countryId'
         })
-        listRegion({
+        listRegionsRequest({
           countryId
         })
           .then(response => {
