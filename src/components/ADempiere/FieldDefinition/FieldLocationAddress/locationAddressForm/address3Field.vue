@@ -1,7 +1,7 @@
 <!--
   ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
-  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A.
+  Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -17,58 +17,57 @@
 -->
 
 <template>
-  <el-option
-    v-model="currentEmptyValue"
-    :label="' '"
-  />
+  <el-form-item
+    :label="$t('field.locationsAddress.address3')"
+    class="field-standard"
+    style="margin: 0px;width: 100%;"
+    :required="isMandatory"
+  >
+    <el-input
+      v-model="address3"
+      size="mini"
+    />
+  </el-form-item>
 </template>
 
 <script>
 import { computed, defineComponent } from '@vue/composition-api'
 
+import store from '@/store'
+
 export default defineComponent({
-  name: 'EmptyOptionSelect',
+  name: 'Address3Field',
 
   props: {
-    currentValue: {
-      type: [Number, String],
-      defaullt() {
-        return -1
-      }
+    locationAddress: {
+      type: Object,
+      default: () => {}
     },
-    // when is false zero is a empty value
-    isAllowsZero: {
+    isMandatory: {
       type: Boolean,
-      defaullt: true
+      default: false
     }
   },
 
-  setup(props) {
-    const blankValues = [null, undefined, -1, '-1', '', ' ']
-    if (!props.isAllowsZero) {
-      blankValues.push(0, '0')
-    }
-
-    const isBlankValue = computed(() => {
-      return blankValues.includes(props.currentValue)
-    })
-
-    const currentEmptyValue = computed({
-      set(newValue) {
-        //
-      },
+  setup() {
+    const address3 = computed({
       get() {
-        if (isBlankValue.value) {
-          return props.currentValue
-        }
-        return -1
+        return store.getters.getAttributeFieldLocations({
+          attribute: 'address3'
+        })
+      },
+      // setter
+      set(value) {
+        store.commit('setAttributeFieldLocations', {
+          attribute: 'address3',
+          value
+        })
       }
     })
 
     return {
-      blankValues,
-      isBlankValue,
-      currentEmptyValue
+      // Computed
+      address3
     }
   }
 })

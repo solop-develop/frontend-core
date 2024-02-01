@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -43,6 +43,7 @@
     >
       <el-input
         v-model="displayedValueNotEdit"
+        v-bind="commonsProperties"
         clearable
         readonly
         style="width: 100%;"
@@ -59,7 +60,7 @@
 import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
 import fieldWithDisplayColumn from '@/components/ADempiere/FieldDefinition/mixin/mixinWithDisplayColumn.js'
 import mixinLocation from './mixinLocationAddress.js'
-import LocationAddressForm from './locationAddressForm2.vue'
+import LocationAddressForm from './locationAddressForm/index.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -113,7 +114,7 @@ export default {
     },
     isShowedLocationForm: {
       get() {
-        return this.$store.getters.getIsShowedLocation
+        return this.$store.getters.getIsShowedLocation && !this.metadata.readonly
       },
       set(value) {
         this.$store.commit('setShowedLocation', Boolean(value))

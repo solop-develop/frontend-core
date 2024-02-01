@@ -1,27 +1,30 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Yamel Senih ysenih@erpya.com www.erpya.com
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-import { isEmptyValue } from '@/utils/ADempiere'
 import { request } from '@/utils/ADempiere/request'
+
+// Utils and Helpers Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 /**
  * List Countries
  */
-
-export function listCountries({
+export function listCountriesRequest({
   sortBy,
   filters,
   searchValue,
@@ -42,10 +45,9 @@ export function listCountries({
 }
 
 /**
- * Get Countries
+ * Get Country
  */
-
-export function getCountries({
+export function getCountryRequest({
   id,
   filters,
   searchValue,
@@ -67,8 +69,7 @@ export function getCountries({
 /**
  * List Regions
  */
-
-export function listRegion({
+export function listRegionsRequest({
   countryId,
   searchValue
 }) {
@@ -84,8 +85,7 @@ export function listRegion({
 /**
  * List Cities
  */
-
-export function listCities({
+export function listCitiesRequest({
   countryId,
   regionId
 }) {
@@ -107,8 +107,7 @@ export function listCities({
 /**
  * Get Location (Address)
  */
-
-export function getAddress({
+export function getLocationAddressRequest({
   id
 }) {
   return request({
@@ -120,8 +119,7 @@ export function getAddress({
 /**
  * Create Location (Address)
  */
-
-export function createAddress({
+export function createAddressRequest({
   countryId,
   regionId,
   cityId,
@@ -162,8 +160,7 @@ export function createAddress({
 /**
  * Update Location (Address)
  */
-
-export function updateAddress({
+export function updateAddressRequest({
   id,
   countryId,
   regionId,

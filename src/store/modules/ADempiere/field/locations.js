@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,56 +16,79 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import Vue from 'vue'
+
 // API Request Methods
 import {
-  updateAddress,
-  createAddress,
-  listCountries,
-  getCountries,
-  getAddress,
-  listRegion,
-  listCities
-} from '@/api/ADempiere/field/locations'
+  updateAddressRequest,
+  createAddressRequest,
+  listCountriesRequest,
+  getCountryRequest,
+  getLocationAddressRequest,
+  listRegionsRequest,
+  listCitiesRequest
+} from '@/api/ADempiere/field/location-address.ts'
+
 // Utils and Helper Methods
-// import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { setComponentSequence } from '@/utils/ADempiere/dictionary/field/locationAddress'
 
+const emptyField = {
+  id: undefined,
+  uuid: '',
+  display_value: '',
+  //
+  country_id: undefined,
+  country_name: '',
+  region_id: undefined,
+  region_name: '',
+  city: '',
+  city_id: undefined,
+  city_name: '',
+  //
+  address1: '',
+  address2: '',
+  address3: '',
+  address4: '',
+  //
+  postal_code: '',
+  posal_code_additional: '',
+  reference: '',
+  //
+  altitude: '',
+  longitude: '',
+  latitude: ''
+}
+
 const locations = {
+  emptyField,
   field: {
-    countryId: undefined,
-    regionId: undefined,
-    cityId: undefined,
-    cityLabel: '',
-    address1: '',
-    address2: '',
-    address3: '',
-    address4: '',
-    postalCode: '',
-    posalCodeAdditional: '',
-    latitude: '',
-    longitude: '',
-    altitude: '',
-    reference: '',
-    id: undefined
+    ...emptyField
   },
-  countries: {},
-  listCountry: [],
+  countriesDefinitions: {},
+  countriesList: [],
   listRegions: [],
   listCities: []
 }
 
 export default {
   state: locations,
+
   mutations: {
+    setCurrentAddressLocation(state, addressLocation) {
+      state.field = addressLocation
+    },
     setAttributeFieldLocations(state, {
       attribute,
       value
     }) {
       state.field[attribute] = value
     },
-    setListCountries(state, list) {
-      state.listCountry = list
+    setLocationAddressCountryDefinition(state, country) {
+      Vue.set(state.countriesDefinitions, country.id, country)
+    },
+    setLocationAddressCountriesList(state, list) {
+      state.countriesList = list
     },
     setListRegions(state, list) {
       state.listRegions = list
@@ -73,22 +96,66 @@ export default {
     setListCities(state, list) {
       state.listCities = list
     },
-    setCountries(state, country) {
-      state.countries = country
+    clearAddressLocation(state, payload) {
+      state.field = payload
     }
   },
+
   actions: {
+    clearAddressLocation({ state, commit, rootGetters }) {
+      const emptyField = state.emptyField
+
+      // session country as default value
+      const sessionCountryId = rootGetters.getSessionContextCountrytId
+
+      commit('clearAddressLocation', {
+        ...emptyField,
+        country_id: sessionCountryId
+      })
+    },
+
+    /**
+     * Get Countries
+     */
+    getCountryDefinitionFromServer({
+      commit
+    }, {
+      countryId
+    }) {
+      return new Promise(resolve => {
+        getCountryRequest({
+          id: countryId
+        })
+          .then(response => {
+            const countryDefintion = {
+              ...response,
+              secuenceComponent: setComponentSequence(response)
+            }
+            commit('setLocationAddressCountryDefinition', countryDefintion)
+            resolve(countryDefintion)
+          })
+          .catch(error => {
+            showMessage({
+              message: error.message,
+              type: 'error'
+            })
+            resolve(error)
+          })
+      })
+    },
     /**
      * Locations List
      */
-    listofCountries({
+    getCountriesListFromServer({
       commit
     }) {
       return new Promise(resolve => {
-        listCountries({})
+        listCountriesRequest({})
           .then(response => {
             const { countries } = response
-            commit('setListCountries', countries)
+
+            commit('setLocationAddressCountriesList', countries)
+
             resolve(countries)
           })
           .catch(error => {
@@ -100,15 +167,16 @@ export default {
           })
       })
     },
-    listofRegions({
+
+    getRegionsListFromServer({
       commit,
       getters
     }) {
       return new Promise(resolve => {
         const countryId = getters.getAttributeFieldLocations({
-          attribute: 'countryId'
+          attribute: 'country_id'
         })
-        listRegion({
+        listRegionsRequest({
           countryId
         })
           .then(response => {
@@ -125,18 +193,19 @@ export default {
           })
       })
     },
-    listOfCities({
+
+    getCitiesListFromServer({
       commit,
       getters
     }) {
       return new Promise(resolve => {
         const countryId = getters.getAttributeFieldLocations({
-          attribute: 'countryId'
+          attribute: 'country_id'
         })
         const regionId = getters.getAttributeFieldLocations({
-          attribute: 'regionId'
+          attribute: 'region_id'
         })
-        listCities({
+        listCitiesRequest({
           countryId,
           regionId
         })
@@ -154,50 +223,21 @@ export default {
           })
       })
     },
-    /**
-     * Get Countries
-     */
-    countries({
-      commit
-    }, {
-      countryId
-    }) {
-      return new Promise(resolve => {
-        getCountries({
-          id: countryId
-        })
-          .then(response => {
-            commit('setCountries', {
-              response,
-              secuenceComponent: setComponentSequence(response)
-            })
-            resolve(response)
-          })
-          .catch(error => {
-            showMessage({
-              message: error.message,
-              type: 'error'
-            })
-            resolve(error)
-          })
-      })
-    },
+
     /**
      * Get Location (Address)
      */
-    location({
-      commit,
-      dispatch
+    getLocationAddressFromServer({
+      commit
     }, {
       locationId
     }) {
       return new Promise(resolve => {
-        getAddress({
+        getLocationAddressRequest({
           id: locationId
         })
           .then(response => {
-            commit('setCountries', response)
-            dispatch('setAttributeLocations', response)
+            commit('setCurrentAddressLocation', response)
             resolve(response)
           })
           .catch(error => {
@@ -205,122 +245,14 @@ export default {
           })
       })
     },
+
     /**
      * Create Location (Address)
      */
     newLocation({
       commit,
-      getters,
-      dispatch
+      getters
     }) {
-      return new Promise(resolve => {
-        const {
-          countryId,
-          regionId,
-          cityId,
-          cityLabel,
-          address1,
-          address2,
-          address3,
-          address4,
-          postalCode,
-          posalCodeAdditional,
-          latitude,
-          longitude,
-          altitude,
-          reference
-        } = getters.getFieldLocations
-        createAddress({
-          countryId,
-          regionId,
-          cityId,
-          cityLabel,
-          address1,
-          address2,
-          address3,
-          address4,
-          postalCode,
-          posalCodeAdditional,
-          latitude,
-          longitude,
-          altitude,
-          reference
-        })
-          .then(response => {
-            commit('setCountries', response)
-            dispatch('setAttributeLocations', response)
-            resolve(response)
-          })
-          .catch(error => {
-            showMessage({
-              message: error.message,
-              type: 'error'
-            })
-            resolve(error)
-          })
-      })
-    },
-    /**
-     * Update Location (Address)
-     */
-    updateLocation({
-      commit,
-      getters,
-      dispatch
-    }, {
-      locationId
-    }) {
-      return new Promise(resolve => {
-        const {
-          countryId,
-          regionId,
-          cityId,
-          cityLabel,
-          address1,
-          address2,
-          address3,
-          address4,
-          postalCode,
-          posalCodeAdditional,
-          latitude,
-          longitude,
-          altitude,
-          reference
-        } = getters.getFieldLocations
-        updateAddress({
-          id: locationId,
-          countryId,
-          regionId,
-          cityId,
-          cityLabel,
-          address1,
-          address2,
-          address3,
-          address4,
-          postalCode,
-          posalCodeAdditional,
-          latitude,
-          longitude,
-          altitude,
-          reference
-        })
-          .then(response => {
-            dispatch('setAttributeLocations', response)
-            commit('setCountries', response)
-            resolve(response)
-          })
-          .catch(error => {
-            showMessage({
-              message: error.message,
-              type: 'error'
-            })
-            resolve(error)
-          })
-      })
-    },
-    setAttributeLocations({
-      commit
-    }, locations) {
       return new Promise(resolve => {
         const {
           country_id,
@@ -332,57 +264,109 @@ export default {
           address3,
           address4,
           postal_code,
-          postal_code_additional
-        } = locations
-        commit('setAttributeFieldLocations', {
-          attribute: 'countryId',
-          value: country_id
+          posal_code_additional,
+          latitude,
+          longitude,
+          altitude,
+          reference
+        } = getters.getFieldLocations
+        createAddressRequest({
+          countryId: country_id,
+          regionId: region_id,
+          cityId: city_id,
+          cityLabel: city,
+          address1,
+          address2,
+          address3,
+          address4,
+          postalCode: postal_code,
+          posalCodeAdditional: posal_code_additional,
+          latitude,
+          longitude,
+          altitude,
+          reference
         })
-        commit('setAttributeFieldLocations', {
-          attribute: 'regionId',
-          value: region_id
+          .then(response => {
+            commit('setCurrentAddressLocation', response)
+            resolve(response)
+          })
+          .catch(error => {
+            showMessage({
+              message: error.message,
+              type: 'error'
+            })
+            resolve(error)
+          })
+      })
+    },
+
+    /**
+     * Update Location (Address)
+     */
+    updateLocation({
+      commit,
+      getters
+    }, {
+      locationId
+    }) {
+      return new Promise(resolve => {
+        const {
+          country_id,
+          region_id,
+          city_id,
+          city,
+          address1,
+          address2,
+          address3,
+          address4,
+          postal_code,
+          posal_code_additional,
+          latitude,
+          longitude,
+          altitude,
+          reference
+        } = getters.getFieldLocations
+        updateAddressRequest({
+          id: locationId,
+          countryId: country_id,
+          regionId: region_id,
+          cityId: city_id,
+          cityLabel: city,
+          address1,
+          address2,
+          address3,
+          address4,
+          postalCode: postal_code,
+          posalCodeAdditional: posal_code_additional,
+          latitude,
+          longitude,
+          altitude,
+          reference
         })
-        commit('setAttributeFieldLocations', {
-          attribute: 'cityId',
-          value: city_id
-        })
-        commit('setAttributeFieldLocations', {
-          attribute: 'city',
-          value: city
-        })
-        commit('setAttributeFieldLocations', {
-          attribute: 'address1',
-          value: address1
-        })
-        commit('setAttributeFieldLocations', {
-          attribute: 'address2',
-          value: address2
-        })
-        commit('setAttributeFieldLocations', {
-          attribute: 'address3',
-          value: address3
-        })
-        commit('setAttributeFieldLocations', {
-          attribute: 'address4',
-          value: address4
-        })
-        commit('setAttributeFieldLocations', {
-          attribute: 'PosalCodeAdditional',
-          value: postal_code_additional
-        })
-        commit('setAttributeFieldLocations', {
-          attribute: 'postalCode',
-          value: postal_code
-        })
+          .then(response => {
+            commit('setCurrentAddressLocation', response)
+            resolve(response)
+          })
+          .catch(error => {
+            showMessage({
+              message: error.message,
+              type: 'error'
+            })
+            resolve(error)
+          })
       })
     }
   },
+
   getters: {
+    getStoredAddressLocation: (state) => {
+      return state.field
+    },
     getAttributeFieldLocations: (state) => ({ attribute }) => {
       return state.field[attribute]
     },
-    getListCountries: (state) => {
-      return state.listCountry
+    getStoredAddressLocationCountries: (state, getters) => {
+      return state.countriesList || []
     },
     getListRegions: (state) => {
       return state.listRegions
@@ -393,8 +377,8 @@ export default {
     getFieldLocations: (state) => {
       return state.field
     },
-    getCountries: (state) => {
-      return state.countries
+    getStoredCountryDefinition: (state) => (id) => {
+      return state.countriesDefinitions[id] || {}
     }
   }
 }

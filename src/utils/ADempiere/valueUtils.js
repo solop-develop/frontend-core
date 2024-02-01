@@ -112,12 +112,15 @@ export function isIdentifierEmpty({
   if (isEmptyValue(value)) {
     return true
   }
+  if (isEmptyValue(columnName)) {
+    throw new Error('Fill Mandatory ColumnName')
+  }
   columnName = columnName.replace(/\$|#/g, '')
 
   const isSpecialZeroUpdate = SPECIAL_ZERO_ID_TABLES.some(tableName => {
     return columnName.startsWith(tableName)
   })
-  if (isSpecialZeroUpdate) {
+  if (isSpecialZeroUpdate && String(value) >= 0) {
     return false
   }
 
