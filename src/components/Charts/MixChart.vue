@@ -1,5 +1,5 @@
 <template>
-  <div :id="id" :class="className" :style="{height:height,width:width}" />
+  <div :id="id" :class="className" :style="{height:height,width:width,color: 'black'}" />
 </template>
 
 <script>
@@ -58,7 +58,7 @@ export default {
           x: '20',
           top: '20',
           textStyle: {
-            color: '#fff',
+            color: '#999',
             fontSize: '22'
           },
           subtextStyle: {
@@ -70,7 +70,7 @@ export default {
           trigger: 'axis',
           axisPointer: {
             textStyle: {
-              color: '#fff'
+              color: '#999'
             }
           }
         },
@@ -81,7 +81,7 @@ export default {
           top: 150,
           bottom: 95,
           textStyle: {
-            color: '#fff'
+            color: '#999'
           }
         },
         legend: {
@@ -151,7 +151,7 @@ export default {
 
           },
           textStyle: {
-            color: '#fff' },
+            color: '#999' },
           borderColor: '#90979c'
 
         }, {
@@ -173,7 +173,7 @@ export default {
               label: {
                 show: true,
                 textStyle: {
-                  color: '#fff'
+                  color: '#999'
                 },
                 position: 'insideTop',
                 formatter(p) {

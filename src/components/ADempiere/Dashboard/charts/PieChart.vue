@@ -152,7 +152,10 @@ export default {
         tooltip: {
           backgroundColor: '#FFF',
           trigger: 'item',
-          formatter: '{a} <br/>{b} : {c} ({d}%)'
+          formatter: '{a} <br/>{b} : {c} ({d}%)',
+          textStyle: {
+            color: '#999'
+          }
         },
         toolbox: {
           // y: 'bottom',

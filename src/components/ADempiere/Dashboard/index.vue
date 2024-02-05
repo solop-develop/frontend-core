@@ -19,8 +19,8 @@
 <template>
   <el-card
     v-if="!UNSUPPORTED_DASHBOARDS.includes(metadata.fileName)"
-    style="height: auto;"
-    :body-style="{ padding: '5px;'}"
+    style="height: auto;padding: 0px !important"
+    :body-style="{ padding: '0px' }"
   >
     <div class="clearfix">
       <el-row :gutter="2">

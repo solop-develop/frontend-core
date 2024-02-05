@@ -302,12 +302,12 @@ export default defineComponent({
         label: 'Panel de Favoritos'
       },
       {
-        value: 'recentItems',
-        label: 'Panel de Últimos documentos'
-      },
-      {
         value: 'todo',
         label: 'Panel de Por Hacer'
+      },
+      {
+        value: 'recentItems',
+        label: 'Panel de Últimos documentos'
       }
     ])
 
