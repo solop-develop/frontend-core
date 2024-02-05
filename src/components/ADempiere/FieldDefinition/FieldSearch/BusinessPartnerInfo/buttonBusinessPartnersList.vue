@@ -50,7 +50,7 @@ import store from '@/store'
 import BusinessPartnersList from './businessPartnersList.vue'
 
 // Constants
-import { BUSINESS_PARTNERS_LIST_FORM } from '@/utils/ADempiere/dictionary/field/businessPartner.js'
+import { BUSINESS_PARTNERS_LIST_FORM } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 
 export default {
   name: 'ButtonBusinessPartnersList',

@@ -24,7 +24,7 @@ import { requestListBusinessPartner } from '@/api/ADempiere/common/index.ts'
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
-import { COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/businessPartner'
+import { COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 
 // Utils and Helper Methods
 import { isSalesTransactionContainer } from '@/utils/ADempiere/contextUtils'

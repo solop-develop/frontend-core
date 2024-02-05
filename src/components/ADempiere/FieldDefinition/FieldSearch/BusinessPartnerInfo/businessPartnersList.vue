@@ -146,7 +146,7 @@
 import store from '@/store'
 
 // Constants
-import { BUSINESS_PARTNERS_LIST_FORM } from '@/utils/ADempiere/dictionary/field/businessPartner.js'
+import { BUSINESS_PARTNERS_LIST_FORM } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 import FIELDS_LIST from './fieldsListSearch'
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 import { IS_SO_TRX } from '@/utils/ADempiere/constants/systemColumns'

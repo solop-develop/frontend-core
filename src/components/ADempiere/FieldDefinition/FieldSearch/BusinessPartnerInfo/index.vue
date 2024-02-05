@@ -66,7 +66,7 @@ import businessPartnerMixin from './mixinBusinessPartner'
 import ButtonBusinessPartnersList from './buttonBusinessPartnersList.vue'
 
 // Constants
-import { TABLE_NAME, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/businessPartner.js'
+import { TABLE_NAME, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
