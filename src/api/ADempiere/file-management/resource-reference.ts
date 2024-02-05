@@ -28,6 +28,22 @@ import {
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 /**
+ * Presigned Url
+ * @param {string} file_name
+ */
+export function requestPresignedUrl({
+  fileName
+}) {
+  return request({
+    url: `presignedUrl`,
+    method: 'get',
+    params: {
+      file_name: fileName
+    }
+  })
+}
+
+/**
  * Set resource reference
  * @param {number} resourceId
  * @param {string} recordUuid

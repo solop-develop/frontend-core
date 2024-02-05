@@ -173,6 +173,7 @@ import { RESOURCE_TYPE_IMAGE } from '@/utils/ADempiere/resource'
 
 // API Request Methods
 import {
+  requestPresignedUrl,
   requestSetResourceReference,
   requestDeleteResourceReference
 } from '@/api/ADempiere/file-management/resource-reference.ts'
@@ -328,6 +329,20 @@ export default {
           reject(false)
           return
         }
+        requestPresignedUrl({
+          fileName: file.name
+        })
+          .then(response => {
+            console.log({ response })
+          })
+          .catch(error => {
+            showMessage({
+              message: error.message || error.result || lang.t('component.attachment.error'),
+              type: 'error'
+            })
+            reject(error)
+            return
+          })
         requestSetResourceReference({
           resourceType: RESOURCE_TYPE_IMAGE,
           id: this.value || -1,

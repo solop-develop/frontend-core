@@ -58,6 +58,7 @@ import { RESOURCE_TYPE_ATTACHMENT } from '@/utils/ADempiere/resource'
 //   // requestUploadAttachment
 // } from '@/api/ADempiere/user-interface/component/resource'
 import {
+  requestPresignedUrl,
   requestSetResourceReference
 } from '@/api/ADempiere/file-management/resource-reference.ts'
 
@@ -107,6 +108,20 @@ export default defineComponent({
 
     function isValidUploadHandler(file) {
       return new Promise((resolve, reject) => {
+        requestPresignedUrl({
+          fileName: file.name
+        })
+          .then(response => {
+            console.log({ response })
+          })
+          .catch(error => {
+            showMessage({
+              message: error.message || error.result || lang.t('component.attachment.error'),
+              type: 'error'
+            })
+            reject(error)
+            return
+          })
         requestSetResourceReference({
           resourceType: RESOURCE_TYPE_ATTACHMENT,
           tableName: props.tableName,
