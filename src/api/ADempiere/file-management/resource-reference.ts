@@ -44,6 +44,24 @@ export function requestPresignedUrl({
 }
 
 /**
+ * Upload File
+ * @param {string} url
+ */
+
+export function requestUploadFile({
+  url,
+  file
+}) {
+  return request({
+    url: `${url}`,
+    method: 'put',
+    data: {
+      file
+    }
+  })
+}
+
+/**
  * Set resource reference
  * @param {number} resourceId
  * @param {string} recordUuid

@@ -51,7 +51,7 @@ import store from '@/store'
 // Constants
 import { config } from '@/utils/ADempiere/config'
 import { BEARER_TYPE } from '@/utils/auth'
-import { RESOURCE_TYPE_ATTACHMENT } from '@/utils/ADempiere/resource'
+// import { RESOURCE_TYPE_ATTACHMENT } from '@/utils/ADempiere/resource'
 
 // API Request Methods
 // import {
@@ -59,7 +59,8 @@ import { RESOURCE_TYPE_ATTACHMENT } from '@/utils/ADempiere/resource'
 // } from '@/api/ADempiere/user-interface/component/resource'
 import {
   requestPresignedUrl,
-  requestSetResourceReference
+  requestUploadFile
+  // requestSetResourceReference
 } from '@/api/ADempiere/file-management/resource-reference.ts'
 
 // Utils and Helper Methods
@@ -108,11 +109,20 @@ export default defineComponent({
 
     function isValidUploadHandler(file) {
       return new Promise((resolve, reject) => {
+        console.log({ file })
         requestPresignedUrl({
           fileName: file.name
         })
           .then(response => {
             console.log({ response })
+            requestUploadFile({
+              url: response,
+              file: file
+            })
+              .then(response => {
+                resolve(response)
+                reject(response)
+              })
           })
           .catch(error => {
             showMessage({
@@ -122,36 +132,37 @@ export default defineComponent({
             reject(error)
             return
           })
-        requestSetResourceReference({
-          resourceType: RESOURCE_TYPE_ATTACHMENT,
-          tableName: props.tableName,
-          recordId: props.recordId,
-          fileName: file.name,
-          fileSize: file.size
-        }).then(response => {
-          if (response.code >= 400) {
-            reject(response)
-          }
-          // endPointUploadResource += response.id
-
-          fileResource.value = response
-          additionalData.value = {
-            // resource_uuid: response.uuid,
-            id: response.id,
-            file_name: response.file_name
-          }
-          resolve(true)
-        }).catch(error => {
-          showMessage({
-            message: error.message || error.result || lang.t('component.attachment.error'),
-            type: 'error'
-          })
-          reject(error)
-        }).finally(() => {
-          // uploadComponent.value.uploadFiles = filesList.value
-          // resolve(true)
-        })
       })
+      //   requestSetResourceReference({
+      //     resourceType: RESOURCE_TYPE_ATTACHMENT,
+      //     tableName: props.tableName,
+      //     recordId: props.recordId,
+      //     fileName: file.name,
+      //     fileSize: file.size
+      //   }).then(response => {
+      //     if (response.code >= 400) {
+      //       reject(response)
+      //     }
+      //     // endPointUploadResource += response.id
+
+      //     fileResource.value = response
+      //     additionalData.value = {
+      //       // resource_uuid: response.uuid,
+      //       id: response.id,
+      //       file_name: response.file_name
+      //     }
+      //     resolve(true)
+      //   }).catch(error => {
+      //     showMessage({
+      //       message: error.message || error.result || lang.t('component.attachment.error'),
+      //       type: 'error'
+      //     })
+      //     reject(error)
+      //   }).finally(() => {
+      //     // uploadComponent.value.uploadFiles = filesList.value
+      //     // resolve(true)
+      //   })
+      // })
     }
 
     function handleError(error, file, fileList) {
