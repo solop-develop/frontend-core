@@ -109,12 +109,10 @@ export default defineComponent({
 
     function isValidUploadHandler(file) {
       return new Promise((resolve, reject) => {
-        console.log({ file })
         requestPresignedUrl({
           fileName: file.name
         })
           .then(response => {
-            console.log({ response })
             requestUploadFile({
               url: response,
               file: file

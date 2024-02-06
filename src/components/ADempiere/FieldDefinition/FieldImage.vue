@@ -334,7 +334,6 @@ export default {
           fileName: file.name
         })
           .then(response => {
-            console.log({ response })
             requestUploadFile({
               url: response,
               file
