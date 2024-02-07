@@ -17,40 +17,34 @@
 -->
 
 <template>
-  <form
-    enctype="multipart/form-data"
-    @submit.prevent="notSubmitForm"
-  >
+  <span>
+    <!-- <input id="selector" type="file" multiple>
+    <button @click="upload()">Upload</button>
+    <div id="status">No uploads</div>' -->
     <el-upload
       ref="uploadComponent"
-      :action="endPointUploadResource + fileResource.id"
+      :action="action"
       class="upload-demo"
-      name="file"
-      :file-list="filesList"
-      :data="additionalData"
-      :headers="additionalHeaders"
-      :multiple="false"
       :before-upload="isValidUploadHandler"
-      :on-success="loadedSucess"
-      :on-error="handleError"
+      :multiple="false"
     >
       <el-button slot="trigger" size="small" type="primary" style="font-size: 13px;">
         <i class="el-icon-upload" />
         {{ $t('component.attachment.uploadFile') }}
       </el-button>
     </el-upload>
-  </form>
+  </span>
 </template>
 
 <script>
-import { defineComponent, computed, ref } from '@vue/composition-api'
+import { defineComponent, ref } from '@vue/composition-api'
 
-import lang from '@/lang'
-import store from '@/store'
+// import lang from '@/lang'
+// import store from '@/store'
 
 // Constants
-import { config } from '@/utils/ADempiere/config'
-import { BEARER_TYPE } from '@/utils/auth'
+// import { config } from '@/utils/ADempiere/config'
+// import { BEARER_TYPE } from '@/utils/auth'
 // import { RESOURCE_TYPE_ATTACHMENT } from '@/utils/ADempiere/resource'
 
 // API Request Methods
@@ -58,15 +52,14 @@ import { BEARER_TYPE } from '@/utils/auth'
 //   // requestUploadAttachment
 // } from '@/api/ADempiere/user-interface/component/resource'
 import {
-  requestPresignedUrl,
-  requestUploadFile
-  // requestSetResourceReference
+  requestPresignedUrl
 } from '@/api/ADempiere/file-management/resource-reference.ts'
 
-// Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import { showMessage } from '@/utils/ADempiere/notification'
-import { getToken } from '@/utils/auth'
+// // Utils and Helper Methods
+// import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+// import { showMessage } from '@/utils/ADempiere/notification'
+// import { getToken } from '@/utils/auth'
+// import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
 
 export default defineComponent({
   name: 'UploadResource',
@@ -88,128 +81,68 @@ export default defineComponent({
   },
 
   setup(props) {
-    const endPointUploadResource = config.adempiere.api.url + 'file-management/resources/'
-
-    const uploadComponent = ref(null)
-    const filesList = ref([])
-    const additionalData = ref({})
-    const fileResource = ref(({}))
-
-    const additionalHeaders = computed(() => {
-      const token = getToken()
-      let bearerToken = token
-      // Json Web Token
-      if (!isEmptyValue(bearerToken) && !bearerToken.startsWith(BEARER_TYPE)) {
-        bearerToken = `${BEARER_TYPE} ${token}`
-      }
-      return {
-        Authorization: bearerToken
-      }
-    })
+    const action = ref('')
+    function upload() {
+      console.log(165165)
+      // // Get selected files from the input element.
+      // var files = document.querySelector('#selector').files
+      // console.log({ files })
+      // for (var i = 0; i < files.length; i++) {
+      //   var file = files[i]
+      //   // Retrieve a URL from our server.
+      //   retrieveNewURL(file, (file, url) => {
+      //     // Upload the file to the server.
+      //     uploadFile(file, url)
+      //   })
+      // }
+    }
 
     function isValidUploadHandler(file) {
-      return new Promise((resolve, reject) => {
+      console.log({ file })
+      retrieveNewURL(file)
+    }
+
+    function retrieveNewURL(file, cb) {
+      console.log({
+        file, cb
+      })
+      return new Promise(resolve => {
         requestPresignedUrl({
-          fileName: file.name
+          fileName: file.name.replaceAll(' ', '_')
         })
           .then(response => {
-            requestUploadFile({
-              url: response,
-              file: file
-            })
-              .then(response => {
-                resolve(response)
-                reject(response)
-              })
-          })
-          .catch(error => {
-            showMessage({
-              message: error.message || error.result || lang.t('component.attachment.error'),
-              type: 'error'
-            })
-            reject(error)
-            return
+            action.value = response
+            uploadFile(file, response)
+            resolve(file, response)
           })
       })
-      //   requestSetResourceReference({
-      //     resourceType: RESOURCE_TYPE_ATTACHMENT,
-      //     tableName: props.tableName,
-      //     recordId: props.recordId,
-      //     fileName: file.name,
-      //     fileSize: file.size
-      //   }).then(response => {
-      //     if (response.code >= 400) {
-      //       reject(response)
-      //     }
-      //     // endPointUploadResource += response.id
-
-      //     fileResource.value = response
-      //     additionalData.value = {
-      //       // resource_uuid: response.uuid,
-      //       id: response.id,
-      //       file_name: response.file_name
-      //     }
-      //     resolve(true)
-      //   }).catch(error => {
-      //     showMessage({
-      //       message: error.message || error.result || lang.t('component.attachment.error'),
-      //       type: 'error'
-      //     })
-      //     reject(error)
-      //   }).finally(() => {
-      //     // uploadComponent.value.uploadFiles = filesList.value
-      //     // resolve(true)
+      // fetch(`/presignedUrl?name=${file.name}`).then((response) => {
+      //   response.text().then((url) => {
+      //     cb(file, url)
       //   })
+      // }).catch((e) => {
+      //   console.error(e)
       // })
     }
 
-    function handleError(error, file, fileList) {
-      return showMessage({
-        type: 'error',
-        message: error.message || error.result || lang.t('component.attachment.error')
-      })
-    }
-
-    function loadedSucess(response, file, fileList) {
-      if (response.code >= 400) {
-        setTimeout(() => {
-          fileList.pop()
-        }, 500)
-        return handleError(
-          new Error(response.result),
-          file,
-          fileList
-        )
-      }
-
-      if (props.loadData) {
-        props.loadData({
-          resource: fileResource.value,
-          file
-        })
-      }
-      additionalData.value = {}
-
-      store.dispatch('getAttachmentFromServer', {
-        tableName: props.tableName,
-        recordId: props.recordId,
-        recordUuid: props.recordUuid
+    // ``uploadFile` accepts the current filename and the pre-signed URL. It then uses `Fetch API`
+    // to upload this file to S3 at `play.min.io:9000` using the URL:
+    function uploadFile(file, url) {
+      console.log('uploadFile', { file, url })
+      fetch(url, {
+        method: 'PUT',
+        body: file
+      }).then(() => {
+        // If multiple files are uploaded, append upload status on the next line.
+      }).catch((e) => {
+        console.error(e)
       })
     }
 
     return {
-      endPointUploadResource,
-      // Refs
-      uploadComponent,
-      additionalData,
-      fileResource,
-      filesList,
-      // Computeds
-      additionalHeaders,
-      // Methods
+      upload,
       isValidUploadHandler,
-      loadedSucess,
-      handleError
+      action
     }
   }
 })

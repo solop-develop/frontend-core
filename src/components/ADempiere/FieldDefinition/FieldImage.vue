@@ -173,7 +173,6 @@ import { UUID_PATTERN } from '@/utils/ADempiere/recordUtil'
 
 // API Request Methods
 import {
-  requestUploadFile,
   requestPresignedUrl,
   // requestSetResourceReference,
   requestDeleteResourceReference
@@ -333,15 +332,16 @@ export default {
         requestPresignedUrl({
           fileName: file.name
         })
-          .then(response => {
-            requestUploadFile({
-              url: response,
-              file
+          .then(responseUrl => {
+            console.log({ file, responseUrl })
+            fetch(responseUrl, {
+              method: 'PUT',
+              body: file
+            }).then(() => {
+              // If multiple files are uploaded, append upload status on the next line.
+            }).catch((e) => {
+              console.error(e)
             })
-              .then(response => {
-                resolve(response)
-                reject(response)
-              })
           })
           .catch(error => {
             showMessage({

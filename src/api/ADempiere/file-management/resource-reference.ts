@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-
+import { config } from '@/utils/ADempiere/config'
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
@@ -35,8 +35,9 @@ export function requestPresignedUrl({
   fileName
 }) {
   return request({
-    url: `presignedUrl`,
+    url: `${config.adempiere.resource.url}/presigned-url/${fileName}`,
     method: 'get',
+    isWithoutAuthorization: true,
     params: {
       file_name: fileName
     }
@@ -55,7 +56,8 @@ export function requestUploadFile({
   return request({
     url: `${url}`,
     method: 'put',
-    data: {
+    isWithoutAuthorization: true,
+    body: {
       file
     }
   })
