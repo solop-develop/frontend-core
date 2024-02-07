@@ -16,7 +16,10 @@
   along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 <template>
-  <div :class="className" :style="{height:height,width:width}" />
+  <div
+    :class="className"
+    :style="{height:height,width:width}"
+  />
 </template>
 
 <script>
@@ -33,7 +36,12 @@ import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttr
 const animationDuration = 2800
 
 export default {
-  mixins: [resize],
+  name: 'GaugeChart',
+
+  mixins: [
+    resize
+  ],
+
   props: {
     className: {
       type: String,
@@ -56,11 +64,13 @@ export default {
       required: true
     }
   },
+
   data() {
     return {
       chart: null
     }
   },
+
   watch: {
     chartData: {
       deep: true,
@@ -69,12 +79,14 @@ export default {
       }
     }
   },
+
   mounted() {
     this.unsubscribe = this.subscribeChanges()
     this.$nextTick(() => {
       this.initChart()
     })
   },
+
   beforeDestroy() {
     this.unsubscribe()
     if (!this.chart) {
@@ -83,6 +95,7 @@ export default {
     this.chart.dispose()
     this.chart = null
   },
+
   methods: {
     subscribeChanges() {
       return this.$store.subscribe((mutation, state) => {
