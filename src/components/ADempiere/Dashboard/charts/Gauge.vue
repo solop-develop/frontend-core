@@ -137,75 +137,73 @@ export default {
     },
     loadChartMetrics(metrics) {
       const xAxisValues = []
-      let seriesToShow = []
+      const seriesToShow = []
       if (!this.isEmptyValue(metrics.series)) {
-        seriesToShow = metrics.series.map(serie => {
-          return {
-            name: serie.name,
-            animationDuration,
-            type: 'gauge',
-            min: 0,
-            max: metrics.measureTarget,
-            splitNumber: 5,
-            width: '5px',
-            radius: '100%',
-            progress: {
-              show: true,
-              width: 5
-            },
-            axisLine: {
-              lineStyle: {
-                width: 15,
-                color: [
-                  [0.3, '#67e0e3'],
-                  [0.7, '#37a2da'],
-                  [1, '#fd666d']
-                ]
-              }
-            },
-            axisTick: {
-              show: true
-            },
-            splitLine: {
-              length: 15,
-              lineStyle: {
-                width: 2,
-                color: '#999'
-              }
-            },
-            axisLabel: {
-              distance: 15,
-              color: '#999',
-              fontSize: 20
-            },
-            anchor: {
-              show: true,
-              showAbove: true,
-              size: 25,
-              itemStyle: {
-                borderWidth: 10
-              }
-            },
-            title: {
-              show: true,
-              offsetCenter: [0, '65%']
-            },
-            detail: {
-              valueAnimation: true,
-              fontSize: 26,
-              offsetCenter: [0, '85%'],
-              formatter: `{value}`
-            },
-            pointer: {
-              itemStyle: {
-                color: 'auto'
-              }
-            },
-            data: [{
-              value: this.castValueData(serie.data_set),
-              name: metrics.name
-            }]
-          }
+        // TODO: Consider color scheme `color_schemas`
+        seriesToShow.push({
+          animationDuration,
+          type: 'gauge',
+          min: 0,
+          max: metrics.measureTarget,
+          splitNumber: 5,
+          width: '5px',
+          radius: '100%',
+          progress: {
+            show: true,
+            width: 5
+          },
+          axisLine: {
+            lineStyle: {
+              width: 15,
+              color: [
+                [0.3, '#67e0e3'],
+                [0.7, '#37a2da'],
+                [1, '#fd666d']
+              ]
+            }
+          },
+          axisTick: {
+            show: true
+          },
+          splitLine: {
+            length: 15,
+            lineStyle: {
+              width: 2,
+              color: '#999'
+            }
+          },
+          axisLabel: {
+            distance: 15,
+            color: '#999',
+            fontSize: 20
+          },
+          anchor: {
+            show: true,
+            showAbove: true,
+            size: 25,
+            itemStyle: {
+              borderWidth: 10
+            }
+          },
+          title: {
+            show: true,
+            offsetCenter: [0, '65%']
+          },
+          detail: {
+            valueAnimation: true,
+            fontSize: 26,
+            offsetCenter: [0, '85%'],
+            formatter: `{value}`
+          },
+          pointer: {
+            itemStyle: {
+              color: 'auto'
+            }
+          },
+          data: [{
+            value: metrics.measureActual, // this.castValueData(serie.data_set),
+            name: metrics.xAxisLabel || metrics.name
+          }]
         })
       }
       this.chart.setOption({

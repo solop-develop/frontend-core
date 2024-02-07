@@ -17,7 +17,10 @@
 -->
 
 <template>
-  <div :class="className" :style="{height:height,width:width,color: black}" />
+  <div
+    :class="className"
+    :style="{height:height,width:width}"
+  />
 </template>
 
 <script>
