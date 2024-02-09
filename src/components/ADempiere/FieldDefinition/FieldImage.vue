@@ -169,11 +169,12 @@ import { config } from '@/utils/ADempiere/config'
 import { BEARER_TYPE } from '@/utils/auth'
 import { MIME_TYPE_IMAGE } from '@/utils/ADempiere/resource/image.ts'
 import { UUID_PATTERN } from '@/utils/ADempiere/recordUtil'
-import { RESOURCE_TYPE_IMAGE } from '@/utils/ADempiere/resource'
+// import { RESOURCE_TYPE_IMAGE } from '@/utils/ADempiere/resource'
 
 // API Request Methods
 import {
-  requestSetResourceReference,
+  requestPresignedUrl,
+  // requestSetResourceReference,
   requestDeleteResourceReference
 } from '@/api/ADempiere/file-management/resource-reference.ts'
 
@@ -251,7 +252,6 @@ export default {
     //   //   height: 200,
     //   //   operation: 'resize'
     //   // })
-    //   console.log(blobImage)
     //   return blobImage.href
     // },
     endPointUploadResource() {
@@ -328,34 +328,55 @@ export default {
           reject(false)
           return
         }
-        requestSetResourceReference({
-          resourceType: RESOURCE_TYPE_IMAGE,
-          id: this.value || -1,
-          fileName: file.name,
-          fileSize: file.size
-        }).then(response => {
-          if (response.code >= 400) {
-            reject(response)
-            return
-          }
-
-          this.fileResource = response
-          this.additionalData = {
-            id: response.id
-            // file_name: response.file_name
-          }
-
-          this.value = response.resource_id
-          this.displayedValue = response.file_name
-          this.preHandleChange(this.value)
-          resolve(true)
-        }).catch(error => {
-          showMessage({
-            message: error.message || error.result || lang.t('component.attachment.error'),
-            type: 'error'
-          })
-          reject(error)
+        requestPresignedUrl({
+          fileName: file.name
         })
+          .then(responseUrl => {
+            fetch(responseUrl, {
+              method: 'PUT',
+              body: file
+            }).then(() => {
+              // If multiple files are uploaded, append upload status on the next line.
+            }).catch((e) => {
+              console.error(e)
+            })
+          })
+          .catch(error => {
+            showMessage({
+              message: error.message || error.result || lang.t('component.attachment.error'),
+              type: 'error'
+            })
+            reject(error)
+            return
+          })
+        // requestSetResourceReference({
+        //   resourceType: RESOURCE_TYPE_IMAGE,
+        //   id: this.value || -1,
+        //   fileName: file.name,
+        //   fileSize: file.size
+        // }).then(response => {
+        //   if (response.code >= 400) {
+        //     reject(response)
+        //     return
+        //   }
+
+        //   this.fileResource = response
+        //   this.additionalData = {
+        //     id: response.id
+        //     // file_name: response.file_name
+        //   }
+
+        //   this.value = response.resource_id
+        //   this.displayedValue = response.file_name
+        //   this.preHandleChange(this.value)
+        //   resolve(true)
+        // }).catch(error => {
+        //   showMessage({
+        //     message: error.message || error.result || lang.t('component.attachment.error'),
+        //     type: 'error'
+        //   })
+        //   reject(error)
+        // })
       })
     },
     handleChange(file, fileList) {
