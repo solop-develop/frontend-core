@@ -171,11 +171,11 @@ export function loginAuthentication({
   state
 }) {
   return request({
-    url: '/user/open-id/login',
+    url: '/security/login-open-id',
     method: 'post',
     data: {
-      code,
-      state
+      code_parameter: code,
+      state_parameter: state
     }
   })
     .then(response => {
