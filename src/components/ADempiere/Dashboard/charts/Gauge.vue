@@ -16,7 +16,10 @@
   along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 <template>
-  <div :class="className" :style="{height:height,width:width}" />
+  <div
+    :class="className"
+    :style="{height:height,width:width}"
+  />
 </template>
 
 <script>
@@ -33,7 +36,12 @@ import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttr
 const animationDuration = 2800
 
 export default {
-  mixins: [resize],
+  name: 'GaugeChart',
+
+  mixins: [
+    resize
+  ],
+
   props: {
     className: {
       type: String,
@@ -56,11 +64,13 @@ export default {
       required: true
     }
   },
+
   data() {
     return {
       chart: null
     }
   },
+
   watch: {
     chartData: {
       deep: true,
@@ -69,12 +79,14 @@ export default {
       }
     }
   },
+
   mounted() {
     this.unsubscribe = this.subscribeChanges()
     this.$nextTick(() => {
       this.initChart()
     })
   },
+
   beforeDestroy() {
     this.unsubscribe()
     if (!this.chart) {
@@ -83,6 +95,7 @@ export default {
     this.chart.dispose()
     this.chart = null
   },
+
   methods: {
     subscribeChanges() {
       return this.$store.subscribe((mutation, state) => {
@@ -128,61 +141,82 @@ export default {
           console.warn(`Error getting Metrics: ${error.message}. Code: ${error.code}.`)
         })
     },
+    castValueData(listValue) {
+      if (this.isEmptyValue(listValue)) return 0
+      return listValue
+        .map(setValue => Number(setValue.value))
+        .filter(listValues => !isNaN(listValues))
+        .reduce((partialSum, currentvalue) => partialSum + currentvalue)
+    },
     loadChartMetrics(metrics) {
       const xAxisValues = []
-      let seriesToShow = []
+      const seriesToShow = []
       if (!this.isEmptyValue(metrics.series)) {
-        seriesToShow = metrics.series.map(serie => {
-          return {
-            name: serie.name,
-            animationDuration,
-            type: 'gauge',
-            min: 0,
-            max: metrics.measureTarget,
-            splitNumber: 15,
-            radius: '100%',
-            data: [{
-              value: serie.data_set.map(set => set.value).reduce((partialSum, a) => partialSum + a, 0),
-              name: metrics.name
-            }],
-            axisLine: {
-              lineStyle: {
-                color: metrics.colorSchemas.filter(colorSchema => colorSchema.percent > 0).map(colorSchema => {
-                  return [
-                    colorSchema.percent / 100,
-                    colorSchema.color
-                  ]
-                }),
-                width: 5,
-                shadowColor: '#fff',
-                shadowBlur: 10
-              }
-            },
-            splitLine: {
-              length: 25,
-              lineStyle: {
-                width: 3,
-                color: 'inherit',
-                shadowColor: 'auto',
-                shadowBlur: 10
-              }
-            },
-            pointer: {
-              shadowColor: 'auto',
-              shadowBlur: 5
-            },
-            detail: {
-              ackgroundColor: 'auto',
-              borderColor: 'inherit',
-              offsetCenter: [0, '50%'],
-              fontWeight: 'bolder',
-              fontSize: 20,
-              fontStyle: 'italic',
-              color: 'inherit',
-              shadowColor: 'auto',
-              shadowBlur: 10
+        // TODO: Consider color scheme `color_schemas`
+        seriesToShow.push({
+          animationDuration,
+          type: 'gauge',
+          min: 0,
+          max: metrics.measureTarget,
+          splitNumber: 5,
+          width: '5px',
+          radius: '100%',
+          progress: {
+            show: true,
+            width: 5
+          },
+          axisLine: {
+            lineStyle: {
+              width: 15,
+              color: [
+                [0.3, '#67e0e3'],
+                [0.7, '#37a2da'],
+                [1, '#fd666d']
+              ]
             }
-          }
+          },
+          axisTick: {
+            show: true
+          },
+          splitLine: {
+            length: 15,
+            lineStyle: {
+              width: 2,
+              color: '#999'
+            }
+          },
+          axisLabel: {
+            distance: 15,
+            color: '#999',
+            fontSize: 20
+          },
+          anchor: {
+            show: true,
+            showAbove: true,
+            size: 25,
+            itemStyle: {
+              borderWidth: 10
+            }
+          },
+          title: {
+            show: true,
+            offsetCenter: [0, '65%']
+          },
+          detail: {
+            valueAnimation: true,
+            fontSize: 26,
+            offsetCenter: [0, '85%'],
+            formatter: `{value}`
+          },
+          pointer: {
+            itemStyle: {
+              color: 'auto'
+            }
+          },
+          data: [{
+            value: metrics.measureActual, // this.castValueData(serie.data_set),
+            name: metrics.xAxisLabel || metrics.name
+          }]
         })
       }
       this.chart.setOption({
@@ -191,10 +225,10 @@ export default {
           feature: {
             dataView: xAxisValues,
             saveAsImage: {
-              pixelRatio: 2
+              pixelRatio: 20
             },
             mark: {
-              show: true
+              show: false
             },
             restore: {
               show: true

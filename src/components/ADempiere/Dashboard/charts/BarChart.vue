@@ -17,7 +17,10 @@
 -->
 
 <template>
-  <div :class="className" :style="{height:height,width:width}" />
+  <div
+    :class="className"
+    :style="{height:height,width:width}"
+  />
 </template>
 
 <script>
@@ -166,6 +169,9 @@ export default {
           trigger: 'axis',
           axisPointer: { // 坐标轴指示器，坐标轴触发有效
             type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+          },
+          textStyle: {
+            color: '#999'
           }
         },
         toolbox: {

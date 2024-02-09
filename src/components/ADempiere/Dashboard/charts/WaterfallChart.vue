@@ -146,6 +146,9 @@ export default {
           trigger: 'axis',
           axisPointer: {
             type: 'shadow'
+          },
+          textStyle: {
+            color: '#999'
           }
         },
         grid: {

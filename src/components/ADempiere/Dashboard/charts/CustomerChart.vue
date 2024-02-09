@@ -237,7 +237,10 @@ export default {
           axisPointer: {
             type: 'cross'
           },
-          padding: [5, 10]
+          padding: [5, 10],
+          textStyle: {
+            color: '#999'
+          }
         },
         yAxis: {
           axisTick: {

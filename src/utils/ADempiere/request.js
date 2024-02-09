@@ -42,12 +42,14 @@ export function request(requestValues) {
   if (!isEmptyValue(config.adempiere.api.timeout) && config.adempiere.api.timeout > 0) {
     requestValues.timeout = config.adempiere.api.timeout
   }
-
   const token = getToken()
   let bearerToken = token
   // Json Web Token
   if (!isEmptyValue(bearerToken) && !bearerToken.startsWith(BEARER_TYPE)) {
     bearerToken = `${BEARER_TYPE} ${token}`
+  }
+  if (requestValues.isWithoutAuthorization) {
+    bearerToken = undefined
   }
   Object.assign(requestValues, {
     headers: {

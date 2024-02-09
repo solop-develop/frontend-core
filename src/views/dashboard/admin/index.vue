@@ -47,7 +47,7 @@
       <el-col :span="16">
         <template v-for="(dashboardAttributes, index) in panelRight">
           <el-col
-            v-if="mainDashboard.name !== dashboardAttributes.name"
+            v-if="(isEmptyValue(mainDashboard.chartType) || mainDashboard.name !== dashboardAttributes.name)"
             :key="index"
             :span="24"
             style="padding-right:8px;margin-bottom:2px;"
@@ -218,13 +218,6 @@ export default defineComponent({
       return store.getters.getStoredDashboardsList.filter(list => list.fileName !== 'docstatus')
     })
 
-    store.getters.getStoredDashboardsList.forEach(element => {
-      const { name, sequence, dashboardType } = element
-      if (!isEmptyValue(dashboardType)) {
-        console.log({ name, sequence, dashboardType })
-      }
-    })
-
     const mainDashboard = computed(() => {
       return store.getters.getStoredMainDashboard
     })
@@ -256,8 +249,8 @@ export default defineComponent({
       const list = listDashboard
         .filter(list => {
           if (
-            list.sequence === 0 &&
-            !isEmptyValue(list.chartType) &&
+            (list.sequence === 0 &&
+            !isEmptyValue(list.chartType)) &&
             panelRight.includes(list.chartType)
           ) {
             return list
@@ -369,7 +362,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .dashboard-editor-container {
-  padding: 32px;
+  padding: 5px 0px 5px 10px;
   background-color: rgb(240, 242, 245);
   position: relative;
   overflow: auto;
