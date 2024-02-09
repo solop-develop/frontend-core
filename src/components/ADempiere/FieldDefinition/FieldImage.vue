@@ -252,7 +252,6 @@ export default {
     //   //   height: 200,
     //   //   operation: 'resize'
     //   // })
-    //   console.log(blobImage)
     //   return blobImage.href
     // },
     endPointUploadResource() {
@@ -333,7 +332,6 @@ export default {
           fileName: file.name
         })
           .then(responseUrl => {
-            console.log({ file, responseUrl })
             fetch(responseUrl, {
               method: 'PUT',
               body: file

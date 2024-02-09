@@ -83,10 +83,8 @@ export default defineComponent({
   setup(props) {
     const action = ref('')
     function upload() {
-      console.log(165165)
       // // Get selected files from the input element.
       // var files = document.querySelector('#selector').files
-      // console.log({ files })
       // for (var i = 0; i < files.length; i++) {
       //   var file = files[i]
       //   // Retrieve a URL from our server.
@@ -98,14 +96,10 @@ export default defineComponent({
     }
 
     function isValidUploadHandler(file) {
-      console.log({ file })
       retrieveNewURL(file)
     }
 
     function retrieveNewURL(file, cb) {
-      console.log({
-        file, cb
-      })
       return new Promise(resolve => {
         requestPresignedUrl({
           fileName: file.name.replaceAll(' ', '_')
@@ -128,7 +122,6 @@ export default defineComponent({
     // ``uploadFile` accepts the current filename and the pre-signed URL. It then uses `Fetch API`
     // to upload this file to S3 at `play.min.io:9000` using the URL:
     function uploadFile(file, url) {
-      console.log('uploadFile', { file, url })
       fetch(url, {
         method: 'PUT',
         body: file
