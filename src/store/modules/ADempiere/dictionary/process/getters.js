@@ -16,6 +16,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Constants
+import { FIELDS_DATE, FIELDS_DECIMALS } from '@/utils/ADempiere/references.js'
+
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { isDisplayedField, isMandatoryField } from '@/utils/ADempiere/dictionary/process.js'
@@ -106,7 +109,7 @@ export default {
       if (fieldItem.isInfoOnly) {
         return false
       }
-      const { columnName } = fieldItem
+      const { columnName, displayType } = fieldItem
       const isMandatory = isMandatoryField(fieldItem)
       if (!isMandatory) {
         // evaluate displayed fields
@@ -120,6 +123,9 @@ export default {
         columnName
       })
 
+      const isDateField = FIELDS_DATE.includes(displayType)
+      const isDecimalField = FIELDS_DECIMALS.includes(displayType)
+
       if (fieldItem.isRange && !isNumberField(fieldItem.displayType)) {
         const valueTo = rootGetters.getValueOfField({
           containerUuid,
@@ -131,6 +137,17 @@ export default {
           //   value: valueTo
           // })
           processParameters[fieldItem.columnNameTo] = valueTo
+          if (isDateField) {
+            processParameters[columnName] = {
+              type: 'date',
+              value: valueTo
+            }
+          } else if (isDecimalField) {
+            processParameters[columnName] = {
+              type: 'decimal',
+              value: valueTo
+            }
+          }
         }
       }
 
@@ -140,6 +157,17 @@ export default {
         //   value
         // })
         processParameters[columnName] = value
+        if (isDateField) {
+          processParameters[columnName] = {
+            type: 'date',
+            value: value
+          }
+        } else if (isDecimalField) {
+          processParameters[columnName] = {
+            type: 'decimal',
+            value: value
+          }
+        }
       }
     })
 
