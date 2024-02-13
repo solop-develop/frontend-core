@@ -249,9 +249,10 @@ export default {
         return option
       }
       return {
-        displayedValue: undefined,
+        uuid: undefined,
         value: undefined,
-        uuid: undefined
+        displayedValue: undefined,
+        reason: 'Unknow find option'
       }
     },
     setDisplayedValue() {
@@ -315,8 +316,15 @@ export default {
           }
         })
         .finally(() => {
-          this.optionsList = this.getStoredLookupAll
-          this.forceRerender()
+          if (this.metadata.inTable) {
+            setTimeout(() => {
+              this.optionsList = this.getStoredLookupAll
+              this.forceRerender()
+            }, 100)
+          } else {
+            this.optionsList = this.getStoredLookupAll
+            this.forceRerender()
+          }
 
           this.isLoading = false
         })
