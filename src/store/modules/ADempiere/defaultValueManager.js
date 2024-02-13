@@ -40,13 +40,14 @@ const defaultValueManager = {
   state: initState,
 
   mutations: {
-    setDefaultValue(state, { key, clientId, contextAttributesList, uuid, value, displayedValue, reason }) {
+    setDefaultValue(state, { key, clientId, contextAttributesList, uuid, value, displayedValue, isActive, reason }) {
       Vue.set(state.storedDefaultValue, key, {
         clientId,
         contextAttributesList,
         uuid,
         value,
         displayedValue,
+        isActive,
         reason
       })
     },
@@ -171,7 +172,7 @@ const defaultValueManager = {
           value
         })
           .then(valueResponse => {
-            const { values } = valueResponse
+            const { values, is_active } = valueResponse
             // const values = {
             //   KeyColumn: undefined,
             //   DisplayColumn: undefined,
@@ -202,7 +203,8 @@ const defaultValueManager = {
               // set value of server to parsed if is number as string "101" -> 101
               value: valueOfServer,
               displayedValue: displayValue,
-              reason: 'Successful'
+              isActive: is_active,
+              reason: 'Successful default value'
             })
 
             commit('updateValueOfField', {
@@ -231,7 +233,8 @@ const defaultValueManager = {
             resolve({
               displayedValue: displayValue,
               value: valueOfServer,
-              uuid: values.UUID
+              uuid: values.UUID,
+              isActive: is_active
             })
           })
           .catch(error => {

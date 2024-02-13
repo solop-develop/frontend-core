@@ -84,6 +84,7 @@ export function requestGridGeneralInfo({
     method: 'get',
     params: {
       context_attributes: contextAttributes,
+      is_only_active_records: true,
       filters,
       //
       // reference_id: reference_id,
