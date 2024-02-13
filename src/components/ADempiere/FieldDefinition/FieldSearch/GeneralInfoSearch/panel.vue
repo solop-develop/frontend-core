@@ -167,6 +167,9 @@ import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
 import { containerManager as containerManagerForm } from '@/utils/ADempiere/dictionary/form'
 
+/**
+ * TODO: Disable select inactive records.
+ */
 export default {
   name: 'PanelGeneralInfoSearch',
 

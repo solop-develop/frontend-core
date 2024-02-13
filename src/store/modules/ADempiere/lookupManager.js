@@ -194,7 +194,7 @@ const lookupManager = {
         })
           .then(lookupListResponse => {
             const optionsList = getOptionsList({
-              recordsList: lookupListResponse.recordsList,
+              recordsList: lookupListResponse.records,
               isAddBlankValue,
               blankValue
             })
@@ -393,7 +393,10 @@ const lookupManager = {
           return optionItem.value === option.value
         })
         if (!isExists) {
-          optionsList.push(option)
+          optionsList.push({
+            ...option,
+            reason: 'Default Value'
+          })
         }
       }
 
