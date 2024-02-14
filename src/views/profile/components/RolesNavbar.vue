@@ -75,6 +75,9 @@ export default {
   name: 'RolesNavbar',
 
   computed: {
+    languagesList() {
+      return this.$store.getters.getLanguagesList
+    },
     storedRole() {
       return this.$store.getters['user/getRole']
     },
@@ -182,7 +185,7 @@ export default {
       }
     },
     getLanguages() {
-      if (this.isEmptyValue(this.getLanguageList)) {
+      if (this.isEmptyValue(this.languageList)) {
         this.$store.dispatch('getLanguagesFromServer')
       }
     }
