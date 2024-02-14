@@ -291,7 +291,8 @@ export default {
     },
     fieldAttributes() {
       const isReadOnly = this.isReadOnlyField
-      const isReadOnlyFromOperator = IGNORE_VALUE_OPERATORS_LIST.includes(this.field.operator)
+      // only to panel (advanded query window, query criteria browser)
+      const isReadOnlyFromOperator = !this.inTable && IGNORE_VALUE_OPERATORS_LIST.includes(this.field.operator)
       return {
         ...this.field,
         inTable: this.inTable,
