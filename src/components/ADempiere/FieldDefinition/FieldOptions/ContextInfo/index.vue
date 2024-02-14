@@ -98,6 +98,7 @@
         type="text"
         @click="redirect({ window: zoomItem })"
       >
+        <i class="el-icon-zoom-in" />
         {{ $t('page.processActivity.zoomIn') }}
         {{ zoomItem.name }}
       </el-button>
