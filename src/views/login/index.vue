@@ -296,25 +296,26 @@ export default {
       return redirect[3]
     },
     svgService(openId) {
-      const { authorization_uri } = openId
-      const searchInclude = authorization_uri.replace('https://', '')
-      const index = searchInclude.search('.com/')
-      let svg
+      const { display_name } = openId
+      let svg = ''
       switch (true) {
-        case searchInclude.slice(0, index).includes('microsoftonline'):
+        case display_name.includes('microsoftonline'):
           svg = 'microsoft'
           break
-        case searchInclude.slice(0, index).includes('google'):
+        case display_name.includes('google'):
           svg = 'google-gmail'
           break
-        case searchInclude.slice(0, index).includes('github'):
+        case display_name.includes('github'):
           svg = 'github'
           break
-        case searchInclude.slice(0, index).includes('gitlab'):
+        case display_name.includes('gitlab'):
           svg = 'gitlab'
           break
-        case searchInclude.slice(0, index).includes('discord'):
+        case display_name.includes('discord'):
           svg = 'discord'
+          break
+        case display_name.includes('KeyCloak'):
+          svg = 'keycloak'
           break
       }
       return svg
@@ -325,13 +326,21 @@ export default {
         state,
         code
       })
-        .then(() => {
-          const { origin } = window.location
-          window.location.pathname = ''
-          window.location.search = ''
-          window.location = origin
+        .then(response => {
+          this.$router.push({
+            path: this.redirect || '/',
+            query: {
+              ...this.otherQuery,
+              action: this.$route.query.recordUuid
+            }
+          }, () => {})
         })
         .catch(error => {
+          const href = window.location.href
+          if (href.includes('state=')) {
+            const index = href.indexOf('state=')
+            window.location.href = href.substring(0, index)
+          }
           let message = this.$t('page.login.unexpectedError')
           if ([13, 500].includes(error.code)) {
             message = this.$t('page.login.invalidLogin')

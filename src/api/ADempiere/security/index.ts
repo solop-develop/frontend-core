@@ -178,9 +178,6 @@ export function loginAuthentication({
       state_parameter: state
     }
   })
-    .then(response => {
-      return response
-    })
 }
 
 /**

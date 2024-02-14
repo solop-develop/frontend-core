@@ -177,10 +177,11 @@ const actions = {
         code,
         state
       })
-        .then(token => {
+        .then(response => {
+          const { token } = response
           commit('SET_TOKEN', token)
           setToken(token)
-          resolve()
+          resolve(token)
         })
         .catch(error => {
           reject(error)
