@@ -26,6 +26,7 @@
   <div
     v-if="isLoadedMetadata"
     id="report-loaded"
+    class="report-view"
   >
     <el-card class="content-collapse card-report" style="overflow: auto;">
       <title-and-help
