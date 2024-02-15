@@ -55,10 +55,6 @@ export function requestLogin({
       warehouse_id: Number(warehouseId)
     }
   })
-    .then(response => {
-      const { token } = response
-      return token
-    })
 }
 
 /**

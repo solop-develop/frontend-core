@@ -146,11 +146,9 @@ export default {
         warehouseId: this.warehouseId
       })
         .then(response => {
-          if (this.$route.name !== 'Dashboard') {
-            this.$router.push({
-              path: '/'
-            }, () => {})
-          }
+          this.$router.push({
+            path: 'dashboard'
+          }, () => {})
           // this.$store.dispatch('getDashboardListFromServer')
         })
     },
@@ -161,7 +159,7 @@ export default {
         iconClass: 'el-icon-loading'
       })
       this.$router.push({
-        path: '/'
+        path: 'dashboard'
       }, () => {})
       this.$store.dispatch('user/changeOrganization', {
         organizationId

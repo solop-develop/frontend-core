@@ -157,7 +157,8 @@ const actions = {
         warehouseId,
         token
       })
-        .then(token => {
+        .then(response => {
+          const { token } = response
           commit('SET_TOKEN', token)
           setToken(token)
           resolve()
@@ -502,7 +503,7 @@ const actions = {
         dispatch('permission/sendRequestMenu', null, {
           root: true
         })
-        location.href = '/'
+        // location.href = '/'
       })
   },
 
@@ -647,7 +648,7 @@ const actions = {
         dispatch('permission/sendRequestMenu', null, {
           root: true
         })
-        location.href = '/'
+        // location.href = '/'
       })
   },
 
