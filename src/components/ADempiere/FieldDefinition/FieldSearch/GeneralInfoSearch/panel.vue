@@ -378,8 +378,7 @@ export default {
       return store.subscribe((mutation, state) => {
         if (mutation.type === 'updateValueOfField') {
           if (mutation.payload.containerUuid === this.uuidForm) {
-            if (!isEmptyValue(mutation.payload.columnName) &&
-              !isEmptyValue(mutation.payload.value)) {
+            if (!isEmptyValue(mutation.payload.columnName)) {
               this.getListSearchRecords()
             }
           }
