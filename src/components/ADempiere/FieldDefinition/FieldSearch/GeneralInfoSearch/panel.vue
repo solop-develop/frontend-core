@@ -262,6 +262,12 @@ export default {
       return store.getters.getSearchQueryFields({
         tableName: this.tableName
       })
+        .map(fieldItem => {
+          return {
+            ...fieldItem,
+            containerUuid: this.uuidForm
+          }
+        })
     },
     storedColumnsListTable() {
       return store.getters.getSearchTableFields({
@@ -461,6 +467,14 @@ export default {
     // space between quey criteria and table
     .el-collapse-item__content {
       padding-bottom: 0px !important;
+    }
+  }
+  .general-info-table {
+    .el-table__cell {
+      padding: 0px !important;
+      &.is-leaf {
+        padding: 6px !important;
+      }
     }
   }
 }
