@@ -346,7 +346,6 @@ const generalInfoSearch = {
         }
 
         let filtersList
-        console.log('action', filters)
         if (!isEmptyValue(filters)) {
           filtersList = '[' + filters.map(parameter => {
             const {
