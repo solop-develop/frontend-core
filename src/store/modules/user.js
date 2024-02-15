@@ -157,7 +157,8 @@ const actions = {
         warehouseId,
         token
       })
-        .then(token => {
+        .then(response => {
+          const { token } = response
           commit('SET_TOKEN', token)
           setToken(token)
           resolve()
