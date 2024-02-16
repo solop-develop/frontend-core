@@ -7,12 +7,20 @@
           fit="scale-down"
           class="circle-image"
         />
-        <br>
+        <!-- <br>
         <el-button round style="margin-top: 3%;" @click="handleClick">
           <b>
             {{ userName }}
           </b>
-        </el-button>
+        </el-button> -->
+        <!-- <el-button
+          round
+          style="margin-top: 3%;"
+        >
+          <b>
+            {{ currentRole.client.name }}
+          </b>
+        </el-button> -->
       </el-col>
     </el-row>
     <roles-navbar />
