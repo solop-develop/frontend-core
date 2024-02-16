@@ -32,7 +32,7 @@ import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
-import { generatePageToken } from '@/utils/ADempiere/dataUtils'
+import { OPERATOR_LIKE, generatePageToken } from '@/utils/ADempiere/dataUtils'
 import { generateField } from '@/utils/ADempiere/dictionaryUtils'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import { isSameSize } from '@/utils/ADempiere/formatValue/iterableFormat'
@@ -193,12 +193,17 @@ const generalInfoSearch = {
             const { query_fields, table_columns } = response
 
             const fieldsList = query_fields.map(queryField => {
-              return generateField({
+              const field = generateField({
                 fieldToGenerate: queryField,
                 moreAttributes: {
                   containerUuid: tableName
                 }
               })
+
+              return {
+                ...field
+                // isCustomField: true
+              }
             })
             commit('setSearchQueryFields', {
               tableName,
@@ -340,9 +345,24 @@ const generalInfoSearch = {
           return
         }
 
+        let filtersList
+        if (!isEmptyValue(filters)) {
+          filtersList = '[' + filters.map(parameter => {
+            const {
+              columnName,
+              value
+            } = parameter
+
+            return JSON.stringify({
+              name: columnName,
+              operator: OPERATOR_LIKE.operator,
+              values: value
+            })
+          }).toString() + ']'
+        }
         return requestGridGeneralInfo({
           contextAttributesList,
-          filters,
+          filters: filtersList,
           //
           columnId,
           fieldId,
