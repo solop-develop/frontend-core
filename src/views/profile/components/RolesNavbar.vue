@@ -145,11 +145,10 @@ export default {
         organizationId: this.currentOrganizationId,
         warehouseId: this.warehouseId
       })
-        .then(response => {
+        .then(() => {
           this.$router.push({
             path: 'dashboard'
           }, () => {})
-          // this.$store.dispatch('getDashboardListFromServer')
         })
     },
     changeOrganization(organizationId) {
@@ -158,12 +157,14 @@ export default {
         showClose: true,
         iconClass: 'el-icon-loading'
       })
-      this.$router.push({
-        path: 'dashboard'
-      }, () => {})
       this.$store.dispatch('user/changeOrganization', {
         organizationId
       })
+        .then(() => {
+          this.$router.push({
+            path: 'dashboard'
+          }, () => {})
+        })
     },
     showOrganizationsList(isShow) {
       if (isShow && this.isEmptyValue(this.organizationsList)) {

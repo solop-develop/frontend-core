@@ -326,7 +326,8 @@ export default {
         state,
         code
       })
-        .then(response => {
+        .then(() => {
+          this.cleanPath()
           this.$router.push({
             path: this.redirect || '/',
             query: {
@@ -336,11 +337,7 @@ export default {
           }, () => {})
         })
         .catch(error => {
-          const href = window.location.href
-          if (href.includes('state=')) {
-            const index = href.indexOf('state=')
-            window.location.href = href.substring(0, index)
-          }
+          this.cleanPath()
           let message = this.$t('page.login.unexpectedError')
           if ([13, 500].includes(error.code)) {
             message = this.$t('page.login.invalidLogin')
@@ -351,6 +348,13 @@ export default {
         .finally(() => {
           this.isLoadingLogin = false
         })
+    },
+    cleanPath() {
+      const href = window.location.href
+      if (href.includes('state=')) {
+        const index = href.indexOf('state=')
+        window.location.href = href.substring(0, index)
+      }
     },
     initialBasicServices() {
       this.listAuthorization()
