@@ -22,7 +22,7 @@
     class="custom-field-image"
     @submit.prevent="notSubmitForm"
   >
-    <el-col v-if="value" :span="24" :offset="0" class="image-with-file">
+    <el-col v-if="value && !isEmptyValue(imageSourceSmall)" :span="24" :offset="0" class="image-with-file">
       <el-card :body-style="{ padding: '0px' }">
         <el-image
           class="image-file"
@@ -31,11 +31,7 @@
           lazy
           fit="contain"
           style="text-align: center ; height: 100px"
-          :preview-src-list="[imageSourceLarge]"
         >
-          <!-- <div slot="placeholder" class="image-loading">
-            {{ $t('notifications.loading') }}<span class="dot">...</span>
-          </div> -->
           <el-skeleton
             slot="placeholder"
             :loading="true"
@@ -53,27 +49,18 @@
         </el-image>
 
         <div class="image-footer">
-          <!-- <el-button
-            slot="reference"
-            class="button-manage-file"
-            icon="el-icon-chat-line-square"
-            plain
-            :disabled="isEmptyValue(value) && isEmptyValue(displayedValue)"
-          /> -->
           <file-info
             :image-id="value"
             :resource-name="displayedValue"
             class="popover-info"
           />
-          <!--
-            <el-button
-              slot="reference"
-              class="button-manage-file"
-              icon="el-icon-chat-line-square"
-              plain
-              :disabled="isEmptyValue(value) && isEmptyValue(displayedValue)"
-            />
-          </file-info> -->
+
+          <file-share
+            :image-id="value"
+            :resource-name="displayedValue"
+            :file="fileResource"
+            class="popover-info"
+          />
 
           <el-button
             class="button-manage-file-svg"
@@ -138,7 +125,7 @@
       ref="uploadComponent"
       class="image-without-file"
       v-bind="commonsProperties"
-      :action="endPointUploadResource"
+      :action="''"
       :data="additionalData"
       :headers="additionalHeaders"
       drag
@@ -163,32 +150,35 @@ import lang from '@/lang'
 import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
 import fieldWithDisplayColumn from '@/components/ADempiere/FieldDefinition/mixin/mixinWithDisplayColumn.js'
 import FileInfo from '@/components/ADempiere/PanelInfo/Component/AttachmentManager/fileInfo'
+import FileShare from '@/components/ADempiere/PanelInfo/Component/AttachmentManager/FileShare'
 
 // Constants
-import { config } from '@/utils/ADempiere/config'
+// import { config } from '@/utils/ADempiere/config'
 import { BEARER_TYPE } from '@/utils/auth'
 import { MIME_TYPE_IMAGE } from '@/utils/ADempiere/resource/image.ts'
 import { UUID_PATTERN } from '@/utils/ADempiere/recordUtil'
-// import { RESOURCE_TYPE_IMAGE } from '@/utils/ADempiere/resource'
+import { RESOURCE_TYPE_IMAGE } from '@/utils/ADempiere/resource'
 
 // API Request Methods
 import {
   requestPresignedUrl,
-  // requestSetResourceReference,
+  requestDeleteResources,
+  requestSetResourceReference,
   requestDeleteResourceReference
 } from '@/api/ADempiere/file-management/resource-reference.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { getToken } from '@/utils/auth'
-import { getImagePath } from '@/utils/ADempiere/resource'
+// import { getImagePath } from '@/utils/ADempiere/resource'
 import { showMessage } from '@/utils/ADempiere/notification'
 
 export default {
   name: 'FieldImage',
 
   components: {
-    FileInfo
+    FileInfo,
+    FileShare
   },
 
   mixins: [
@@ -234,45 +224,26 @@ export default {
     isDownload() {
       return !isEmptyValue(this.displayedValue)
     },
-    // async imageSourceSmall() {
-    //   const displayedAlt = this.displayedValue
-    //   if (isEmptyValue(displayedAlt)) {
-    //     return undefined
-    //   }
-
-    //   const blobImage = await getImagePath({
-    //     file: displayedAlt,
-    //     width: 50,
-    //     height: 50
-    //   })
-    //   // const uri = this.loadImage(displayedAlt)
-    //   // getImagePath({
-    //   //   file: displayedAlt,
-    //   //   width: 200,
-    //   //   height: 200,
-    //   //   operation: 'resize'
-    //   // })
-    //   return blobImage.href
-    // },
     endPointUploadResource() {
       let resourceId = this.value
       if (isEmptyValue(resourceId)) {
         resourceId = -1
       }
-      return config.adempiere.resource.url + '/resources/' + resourceId
+      return `http://192.168.5.101:7879/api/resources/${this.displayedValue}`
     },
     imageSourceLarge() {
-      const displayedAlt = this.displayedValue
-      if (isEmptyValue(displayedAlt)) {
-        return undefined
-      }
-      const blobImage = getImagePath({
-        file: displayedAlt,
-        width: 1024,
-        height: 1024,
-        operation: 'resize'
-      })
-      return blobImage.href
+      // const displayedAlt = this.displayedValue
+      // if (isEmptyValue(displayedAlt)) {
+      //   return undefined
+      // }
+      // const blobImage = getImagePath({
+      //   file: displayedAlt,
+      //   width: 1024,
+      //   height: 1024,
+      //   operation: 'resize'
+      // })
+      // return blobImage.href
+      return ''
     },
     additionalHeaders() {
       const token = getToken()
@@ -312,12 +283,7 @@ export default {
     async loadImage(file) {
       this.isLoadImage = true
       if (file) {
-        const blobImage = await getImagePath({
-          file,
-          width: 50,
-          height: 50
-        })
-        this.imageSourceSmall = blobImage.href
+        this.imageSourceSmall = `http://192.168.5.101:7879/api/resources/${file}`
         this.isLoadImage = false
       }
       return ''
@@ -328,55 +294,64 @@ export default {
           reject(false)
           return
         }
-        requestPresignedUrl({
-          fileName: file.name
-        })
-          .then(responseUrl => {
-            fetch(responseUrl, {
-              method: 'PUT',
-              body: file
-            }).then(() => {
-              // If multiple files are uploaded, append upload status on the next line.
-            }).catch((e) => {
-              console.error(e)
-            })
-          })
-          .catch(error => {
-            showMessage({
-              message: error.message || error.result || lang.t('component.attachment.error'),
-              type: 'error'
-            })
-            reject(error)
+        // TODO: Replace and separate requests in different functions
+        // this.presignedUrl({ file })
+        requestSetResourceReference({
+          resourceType: RESOURCE_TYPE_IMAGE,
+          id: this.value || -1,
+          fileName: file.name,
+          fileSize: file.size
+        }).then(response => {
+          if (response.code >= 400) {
+            reject(response)
             return
+          }
+
+          this.fileResource = response
+          this.additionalData = {
+            id: response.id
+          }
+
+          this.displayedValue = response.name
+          this.preHandleChange(this.value)
+          requestPresignedUrl({
+            fileName: file.name
           })
-        // requestSetResourceReference({
-        //   resourceType: RESOURCE_TYPE_IMAGE,
-        //   id: this.value || -1,
-        //   fileName: file.name,
-        //   fileSize: file.size
-        // }).then(response => {
-        //   if (response.code >= 400) {
-        //     reject(response)
-        //     return
-        //   }
-
-        //   this.fileResource = response
-        //   this.additionalData = {
-        //     id: response.id
-        //     // file_name: response.file_name
-        //   }
-
-        //   this.value = response.resource_id
-        //   this.displayedValue = response.file_name
-        //   this.preHandleChange(this.value)
-        //   resolve(true)
-        // }).catch(error => {
-        //   showMessage({
-        //     message: error.message || error.result || lang.t('component.attachment.error'),
-        //     type: 'error'
-        //   })
-        //   reject(error)
-        // })
+            .then(responseUrl => {
+              fetch(responseUrl, {
+                method: 'PUT',
+                body: file
+              }).then(() => {
+                setTimeout(() => {
+                  this.value = response.resource_id
+                }, 1000)
+                resolve(true)
+              }).catch((error) => {
+                showMessage({
+                  message: error.message || error.result || lang.t('component.attachment.error'),
+                  type: 'error'
+                })
+                this.handleRemove()
+                reject(error)
+              })
+            })
+            .catch(error => {
+              showMessage({
+                message: error.message || error.result || lang.t('component.attachment.error'),
+                type: 'error'
+              })
+              this.handleRemove()
+              reject(error)
+              return
+            })
+          // resolve(true)
+        }).catch(error => {
+          showMessage({
+            message: error.message || error.result || lang.t('component.attachment.error'),
+            type: 'error'
+          })
+          reject(error)
+        })
       })
     },
     handleChange(file, fileList) {
@@ -414,6 +389,71 @@ export default {
     },
 
     /**
+     * Create and Update Reference
+     */
+    handleReference(file) {
+      return new Promise((resolve, reject) => {
+        requestSetResourceReference({
+          resourceType: RESOURCE_TYPE_IMAGE,
+          id: this.value || -1,
+          fileName: file.name,
+          fileSize: file.size
+        })
+          .then(responseReferences => {
+            if (responseReferences.code >= 400) {
+              reject(responseReferences)
+              return
+            }
+            this.fileResource = responseReferences
+            this.additionalData = {
+              id: responseReferences.id
+            }
+
+            this.displayedValue = responseReferences.name
+            this.preHandleChange(this.value)
+            const url = this.presignedUrl({ file, reference: responseReferences })
+            resolve(url)
+          })
+          .catch(error => {
+            showMessage({
+              message: error.message || error.result || lang.t('component.attachment.error'),
+              type: 'error'
+            })
+            reject(error)
+          })
+      })
+    },
+
+    /**
+     * Get URL
+     */
+    presignedUrl({ file, reference }) {
+      return new Promise((resolve, reject) => {
+        requestPresignedUrl({
+          fileName: file.name
+        })
+          .then(responseUrl => {
+            fetch(responseUrl, {
+              method: 'PUT',
+              body: file
+            }).then(() => {
+              setTimeout(() => {
+                this.value = reference.resource_id
+              }, 1000)
+              resolve(true)
+            }).catch((error) => {
+              showMessage({
+                message: error.message || error.result || lang.t('component.attachment.error'),
+                type: 'error'
+              })
+              this.handleRemove()
+              reject(error)
+            })
+          })
+      })
+    },
+
+    /**
      * Handle Download image
      */
     async handleDownload() {
@@ -421,16 +461,23 @@ export default {
         return
       }
 
-      const link = await getImagePath({
-        file: this.displayedValue
-      })
+      // const link = await getImagePath({
+      //   file: this.displayedValue
+      // })
       // const imagen = await fetch(this.imageSourceSmall)
       // const imagenblob = await imagen.blob()
       // const imageURL = URL.createObjectURL(imagenblob)
       // const link = document.createElement('a')
-      // link.href = imageURL
-      // link.download = this.altImage
-      link.click()
+      // let link
+      // link.href = ``
+      // link.download = `http://192.168.5.101:7879/api/resources/${this.displayedValue}`
+      // link.click()
+      // const imagen = document.querySelector(`[src="http://192.168.5.101:7879/api/resources/${this.displayedValue}"]`)
+      // const link = document.createElement('a')
+      // link.setAttribute('href', imagen.src)
+      // link.setAttribute('download', `${this.displayedValue}`)
+      // document.body.appendChild(link)
+      // link.click()
     },
 
     /**
@@ -448,7 +495,12 @@ export default {
         resourceName,
         imageId: this.value
       }).then(() => {
-        this.clearValues()
+        requestDeleteResources({
+          fileName: resourceName
+        })
+          .then(() => {
+            this.clearValues()
+          })
       })
     }
   }

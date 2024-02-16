@@ -37,10 +37,10 @@ export function requestPresignedUrl({
   return request({
     url: `${config.adempiere.resource.url}/presigned-url/${fileName}`,
     method: 'get',
-    isWithoutAuthorization: true,
-    params: {
-      file_name: fileName
-    }
+    isWithoutAuthorization: true
+    // params: {
+    //   file_name: fileName
+    // }
   })
 }
 
@@ -54,11 +54,58 @@ export function requestUploadFile({
   file
 }) {
   return request({
-    url: `${url}`,
+    baseURL: `${url}`,
     method: 'put',
     isWithoutAuthorization: true,
     body: {
       file
+    }
+  })
+}
+
+/**
+ * Get Resources
+ */
+export function requestGetResource({
+  fileName
+}) {
+  return request({
+    url: `${config.adempiere.resource.url}/${fileName}`,
+    method: 'get',
+    isWithoutAuthorization: true,
+    params: {
+      file_name: fileName
+    }
+  })
+}
+
+/**
+ * Delete Resources
+ */
+export function requestDeleteResources({
+  fileName
+}) {
+  return request({
+    url: `${config.adempiere.resource.url}/${fileName}${fileName}`,
+    method: 'delete',
+    isWithoutAuthorization: true
+  })
+}
+
+/**
+ * Share Resoucer
+ */
+
+export function requestShareResources({
+  fileName,
+  seconds
+}) {
+  return request({
+    baseURL: `${config.adempiere.resource.url}/download-url/${fileName}`,
+    isWithoutAuthorization: true,
+    method: 'get',
+    params: {
+      seconds
     }
   })
 }
