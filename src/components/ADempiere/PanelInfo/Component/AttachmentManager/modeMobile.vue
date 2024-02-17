@@ -33,6 +33,9 @@
             :table-name="tableName"
             :record-id="recordId"
             :record-uuid="recordUuid"
+            :container-manager="containerManager"
+            :container-uuid="containerUuid"
+            :parent-uuid="parentUuid"
           />
         </el-col>
 

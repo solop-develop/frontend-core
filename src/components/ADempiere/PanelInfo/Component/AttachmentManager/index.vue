@@ -26,6 +26,8 @@
     :is-selectable="isSelectable"
     :is-loading="isLoading"
     :container-manager="containerManager"
+    :container-uuid="containerUuid"
+    :parent-uuid="parentUuid"
   />
 </template>
 
@@ -49,6 +51,14 @@ export default defineComponent({
     containerManager: {
       type: Object,
       default: () => {}
+    },
+    containerUuid: {
+      type: String,
+      default: ''
+    },
+    parentUuid: {
+      type: String,
+      default: ''
     },
     recordUuid: {
       type: String,

@@ -59,6 +59,7 @@
             :image-id="value"
             :resource-name="displayedValue"
             :file="fileResource"
+            :file-name="displayedValue"
             class="popover-info"
           />
 
@@ -408,27 +409,24 @@ export default {
      * Handle Download image
      */
     async handleDownload() {
-      if (!this.isDownload) {
-        return
+      try {
+        const response = await fetch(this.imageSourceSmall)
+        const blob = await response.blob()
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = this.displayedValue
+        link.style.display = 'none'
+        document.body.appendChild(link)
+        link.click()
+        setTimeout(() => {
+          document.body.removeChild(link)
+          window.URL.revokeObjectURL(url)
+        })
+      } catch (error) {
+        console.error(`Error download: ${this.displayedValue}`, error)
       }
-
-      // const link = await getImagePath({
-      //   file: this.displayedValue
-      // })
-      // const imagen = await fetch(this.imageSourceSmall)
-      // const imagenblob = await imagen.blob()
-      // const imageURL = URL.createObjectURL(imagenblob)
-      // const link = document.createElement('a')
-      // let link
-      // link.href = ``
-      // link.download = `http://192.168.5.101:7879/api/resources/${this.displayedValue}`
-      // link.click()
-      // const imagen = document.querySelector(`[src="http://192.168.5.101:7879/api/resources/${this.displayedValue}"]`)
-      // const link = document.createElement('a')
-      // link.setAttribute('href', imagen.src)
-      // link.setAttribute('download', `${this.displayedValue}`)
-      // document.body.appendChild(link)
-      // link.click()
+      return
     },
 
     /**
