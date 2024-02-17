@@ -357,8 +357,6 @@ export default {
               id: responseReferences.id
             }
 
-            this.displayedValue = responseReferences.file_name
-            this.preHandleChange(this.value)
             const url = this.presignedUrl({ file, reference: responseReferences })
             resolve(url)
           })
@@ -388,6 +386,8 @@ export default {
             }).then(() => {
               setTimeout(() => {
                 this.value = reference.resource_id
+                this.preHandleChange(this.value)
+                this.displayedValue = reference.file_name
               }, 1500)
               resolve(true)
             }).catch((error) => {
