@@ -22,7 +22,8 @@
     class="custom-field-image"
     @submit.prevent="notSubmitForm"
   >
-    <el-col v-if="value && !isEmptyValue(imageSourceSmall)" :span="24" :offset="0" class="image-with-file">
+    <el-col v-if="true" :span="24" :offset="0" class="image-with-file">
+      {{ config.adempiere.resource.url + '/' + 'logo.png' }}
       <el-card :body-style="{ padding: '0px' }">
         <el-image
           class="image-file"
@@ -153,7 +154,7 @@ import FileInfo from '@/components/ADempiere/PanelInfo/Component/AttachmentManag
 import FileShare from '@/components/ADempiere/PanelInfo/Component/AttachmentManager/FileShare'
 
 // Constants
-// import { config } from '@/utils/ADempiere/config'
+import { config } from '@/utils/ADempiere/config'
 import { BEARER_TYPE } from '@/utils/auth'
 import { MIME_TYPE_IMAGE } from '@/utils/ADempiere/resource/image.ts'
 import { UUID_PATTERN } from '@/utils/ADempiere/recordUtil'
@@ -196,6 +197,7 @@ export default {
 
   data() {
     return {
+      config,
       additionalData: {},
       fileResource: {},
       imageSourceSmall: '',
@@ -229,7 +231,8 @@ export default {
       if (isEmptyValue(resourceId)) {
         resourceId = -1
       }
-      return `http://192.168.5.101:7879/api/resources/${this.displayedValue}`
+      const getUrl = config.adempiere.resource.url + '/' + this.displayedValue
+      return getUrl
     },
     imageSourceLarge() {
       // const displayedAlt = this.displayedValue
@@ -283,7 +286,8 @@ export default {
     async loadImage(file) {
       this.isLoadImage = true
       if (file) {
-        this.imageSourceSmall = `http://192.168.5.101:7879/api/resources/${file}`
+        const getUrl = config.adempiere.resource.url + '/' + file
+        this.imageSourceSmall = getUrl
         this.isLoadImage = false
       }
       return ''
