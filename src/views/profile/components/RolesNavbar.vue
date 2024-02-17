@@ -18,11 +18,29 @@
 
 <template>
   <el-form>
-    <label> <b> {{ $t('route.client') }} </b> </label>
-    <el-input
+    <!-- <label> <b> {{ $t('route.client') }} </b> </label> -->
+    <!-- <el-input
       v-model="storedRole.client.name"
       disabled
-    />
+    /> -->
+    <label>
+      <el-tag
+        style="width: 100%;text-align: center;"
+      >
+        <b style="font-size: 14px;">
+          {{ userName.name }}
+        </b>
+      </el-tag>
+    </label>
+    <label>
+      <el-tag
+        style="width: 100%;text-align: center;"
+      >
+        <b style="font-size: 14px;">
+          {{ storedRole.client.name }}
+        </b>
+      </el-tag>
+    </label>
 
     <label> <b> {{ $t('route.role') }} </b> </label>
     <el-select
@@ -80,6 +98,9 @@ export default {
     },
     storedRole() {
       return this.$store.getters['user/getRole']
+    },
+    userName() {
+      return this.$store.getters['user/userInfo']
     },
     currentRoleId: {
       get() {

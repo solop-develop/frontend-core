@@ -321,20 +321,28 @@ export default {
       return svg
     },
     loginAuthentication({ state, code }) {
+      const query = this.$route.query.redirect
+      const expr = '/'
+      if (!this.isEmptyValue(query)) {
+        this.loginForm = {
+          ...this.loginForm,
+          roleId: this.clientIdRedirect(query, expr),
+          organizationId: this.organizationIdRedirect(query, expr)
+        }
+      }
       this.isLoadingLogin = true
       this.$store.dispatch('user/loginOpenId', {
         state,
         code
       })
         .then(() => {
-          this.cleanPath()
           this.$router.push({
             path: this.redirect || '/',
             query: {
               ...this.otherQuery,
               action: this.$route.query.recordUuid
             }
-          }, () => {})
+          }, this.cleanPath())
         })
         .catch(error => {
           this.cleanPath()
@@ -346,6 +354,7 @@ export default {
           this.$message.error(message)
         })
         .finally(() => {
+          // this.cleanPath()
           this.isLoadingLogin = false
         })
     },

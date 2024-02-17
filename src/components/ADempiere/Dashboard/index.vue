@@ -49,6 +49,7 @@
       <div
         v-show="metadata.isCollapsible"
         :class="ClassDashboardTransitio"
+        style="padding: 10px;"
       >
         <component
           :is="renderDashboard"

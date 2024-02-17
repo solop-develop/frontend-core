@@ -629,6 +629,8 @@ const actions = {
         // Update user info and context associated with session
         // dispatch('getSessionInfo', uuid)
 
+        dispatch('getSessionInfo')
+
         showMessage({
           message: language.t('notifications.successChangeRole'),
           type: 'success',
@@ -648,7 +650,6 @@ const actions = {
         dispatch('permission/sendRequestMenu', null, {
           root: true
         })
-        // location.href = '/'
       })
   },
 
