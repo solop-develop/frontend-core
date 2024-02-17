@@ -22,8 +22,7 @@
     class="custom-field-image"
     @submit.prevent="notSubmitForm"
   >
-    <el-col v-if="true" :span="24" :offset="0" class="image-with-file">
-      {{ config.adempiere.resource.url + '/' + 'logo.png' }}
+    <el-col v-if="!isEmptyValue(value) && !isEmptyValue(imageSourceSmall)" :span="24" :offset="0" class="image-with-file">
       <el-card :body-style="{ padding: '0px' }">
         <el-image
           class="image-file"
@@ -203,6 +202,7 @@ export default {
       imageSourceSmall: '',
       MIME_TYPE_IMAGE,
       isLoadImage: false,
+      isLoadImageUpload: false,
       valuesImage: [{
         identifier: 'undefined',
         value: '',
@@ -299,63 +299,7 @@ export default {
           return
         }
         // TODO: Replace and separate requests in different functions
-        // this.presignedUrl({ file })
-        requestSetResourceReference({
-          resourceType: RESOURCE_TYPE_IMAGE,
-          id: this.value || -1,
-          fileName: file.name,
-          fileSize: file.size
-        }).then(response => {
-          if (response.code >= 400) {
-            reject(response)
-            return
-          }
-
-          this.fileResource = response
-          this.additionalData = {
-            id: response.id
-          }
-
-          this.displayedValue = response.name
-          this.preHandleChange(this.value)
-          requestPresignedUrl({
-            fileName: file.name
-          })
-            .then(responseUrl => {
-              fetch(responseUrl, {
-                method: 'PUT',
-                body: file
-              }).then(() => {
-                setTimeout(() => {
-                  this.value = response.resource_id
-                }, 1000)
-                resolve(true)
-              }).catch((error) => {
-                showMessage({
-                  message: error.message || error.result || lang.t('component.attachment.error'),
-                  type: 'error'
-                })
-                this.handleRemove()
-                reject(error)
-              })
-            })
-            .catch(error => {
-              showMessage({
-                message: error.message || error.result || lang.t('component.attachment.error'),
-                type: 'error'
-              })
-              this.handleRemove()
-              reject(error)
-              return
-            })
-          // resolve(true)
-        }).catch(error => {
-          showMessage({
-            message: error.message || error.result || lang.t('component.attachment.error'),
-            type: 'error'
-          })
-          reject(error)
-        })
+        this.handleReference(file)
       })
     },
     handleChange(file, fileList) {
@@ -413,8 +357,6 @@ export default {
               id: responseReferences.id
             }
 
-            this.displayedValue = responseReferences.name
-            this.preHandleChange(this.value)
             const url = this.presignedUrl({ file, reference: responseReferences })
             resolve(url)
           })
@@ -433,8 +375,9 @@ export default {
      */
     presignedUrl({ file, reference }) {
       return new Promise((resolve, reject) => {
+        this.isLoadImageUpload = true
         requestPresignedUrl({
-          fileName: file.name
+          fileName: reference.file_name
         })
           .then(responseUrl => {
             fetch(responseUrl, {
@@ -443,7 +386,9 @@ export default {
             }).then(() => {
               setTimeout(() => {
                 this.value = reference.resource_id
-              }, 1000)
+                this.preHandleChange(this.value)
+                this.displayedValue = reference.file_name
+              }, 1500)
               resolve(true)
             }).catch((error) => {
               showMessage({
@@ -452,6 +397,8 @@ export default {
               })
               this.handleRemove()
               reject(error)
+            }).finally(() => {
+              this.isLoadImageUpload = false
             })
           })
       })
