@@ -1,20 +1,21 @@
 <!--
-ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
-Contributor(s): Elsio Sanchez Elsiosanches@gmail.com https://github.com/Elsiosanchez
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 201-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez Elsiosanches@gmail.com https://github.com/Elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
+
 <template>
   <el-card
     shadow="never"
@@ -93,7 +94,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
                       {{ $t('issues.created') }}
                     </b>
                   </template>
-                  {{ metadata.user_name }}
+                  {{ metadata.user.name }}
                 </el-descriptions-item>
                 <el-descriptions-item style="float: right;">
                   <template slot="label">
@@ -282,9 +283,10 @@ import ProgressPercentage from '@/components/ADempiere/ContainerOptions/Progress
 
 // Utils and Helper Methods
 import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
+import { dueTypeColor } from '@/utils/ADempiere/dictionary/form/Issues'
 
 export default defineComponent({
-  name: 'kanban',
+  name: 'IssuesKanban',
 
   components: {
   //   RecordTime,
@@ -310,18 +312,6 @@ export default defineComponent({
     const isNewIssues = computed(() => {
       return store.getters.getNewIssues
     })
-
-    function dueTypeColor(issue) {
-      const { due_type } = issue
-      const { value } = due_type
-      let color = '#3fb950'
-      if (value === '5') {
-        color = 'orange'
-      } else if (value === '3') {
-        color = '#ff2121'
-      }
-      return color
-    }
 
     function selectIssue(issue) {
       store.commit('setNewIssues', !isNewIssues.value)

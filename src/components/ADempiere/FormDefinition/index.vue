@@ -103,7 +103,7 @@ export default defineComponent({
           form = import('@/components/ADempiere/FormDefinition/VBankStatementMatch')
           break
         case 'IssueManagement':
-          form = import('@/components/ADempiere/Form/Issues')
+          form = import('@/components/ADempiere/FormDefinition/IssueManagement')
           break
         case 'ExpressReceipt':
           form = import('@/components/ADempiere/FormDefinition/ExpressReceipt')

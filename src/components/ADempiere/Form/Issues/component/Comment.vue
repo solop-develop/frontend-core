@@ -1410,9 +1410,9 @@ import store from '@/store'
 // Components and Mixins
 import 'simple-m-editor/dist/simple-m-editor.css'
 import IssueAvatar from '@/components/ADempiere/FormDefinition/IssueManagement/issueAvatar.vue'
-import IssueCommentAdd from '@/components/ADempiere/FormDefinition/IssueManagement/IsssueFeed/issueCommentAdd.vue'
-import IssueCommentView from '@/components/ADempiere/FormDefinition/IssueManagement/IsssueFeed/issueCommentView.vue'
-import IssueLog from '@/components/ADempiere/FormDefinition/IssueManagement/IsssueFeed/issueLog.vue'
+import IssueCommentAdd from '@/components/ADempiere/FormDefinition/IssueManagement/IssueFeed/issueCommentAdd.vue'
+import IssueCommentView from '@/components/ADempiere/FormDefinition/IssueManagement/IssueFeed/issueCommentView.vue'
+import IssueLog from '@/components/ADempiere/FormDefinition/IssueManagement/IssueFeed/issueLog.vue'
 import RecordTime from '../recordTime.vue'
 
 // Constants

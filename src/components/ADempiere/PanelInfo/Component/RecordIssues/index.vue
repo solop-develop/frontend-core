@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Elsio Sanchez Elsiosanches@gmail.com https://github.com/Elsiosanchez
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 201-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez Elsiosanches@gmail.com https://github.com/Elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -51,11 +51,14 @@
                     <b>
                       {{ $t('issues.expirationType') }}
                     </b>
-                    <el-tag :style="dueTypeColor(scope.row)">
+                    <el-tag :style="{ margin: '15px 0px 0px 0px', color: dueTypeColor(scope.row) }">
                       {{ scope.row.due_type.name }}
                     </el-tag>
                     <b slot="reference" style="font-size: 30px;padding-top: 10px;padding-left: 5px;padding-right: 5px;">
-                      <svg-icon icon-class="issues" :style="dueTypeColor(scope.row)" />
+                      <svg-icon
+                        icon-class="issues"
+                        :style="{ margin: '15px 0px 0px 0px', color: dueTypeColor(scope.row) }"
+                      />
                     </b>
                   </el-popover>
 
@@ -154,7 +157,7 @@
                                   {{ $t('issues.expirationType') }}
                                 </b>
                               </template>
-                              <el-tag :style="dueTypeColorDescription(scope.row)">
+                              <el-tag :style="{ margin: '0px', color: dueTypeColor(scope.row) }">
                                 {{ scope.row.due_type.name }}
                               </el-tag>
                             </el-descriptions-item>
@@ -282,6 +285,7 @@ import { REQUEST_WINDOW_UUID } from '@/utils/ADempiere/dictionary/form/Issues.js
 import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 import { getImagePath } from '@/utils/ADempiere/resource.js'
+import { dueTypeColor } from '@/utils/ADempiere/dictionary/form/Issues'
 
 export default defineComponent({
   name: 'RecordIssues',
@@ -341,39 +345,6 @@ export default defineComponent({
       return store.getters.getCurrentIssues
     })
 
-    function dueTypeColor(issue) {
-      const { due_type } = issue
-      const { value } = due_type
-      const margin = '15px 0px 0px 0px'
-
-      let color = '#3fb950'
-      if (value === '5') {
-        color = 'orange'
-      } else if (value === '3') {
-        color = '#ff2121'
-      }
-      return {
-        color,
-        margin
-      }
-    }
-
-    function dueTypeColorDescription(issue) {
-      const { due_type } = issue
-      const { value } = due_type
-      const margin = '0px'
-      let color = '#3fb950'
-      if (value === '5') {
-        color = 'orange'
-      } else if (value === '3') {
-        color = '#ff2121'
-      }
-      return {
-        color,
-        margin
-      }
-    }
-
     function selectIssue(issue) {
       isNewIssues.value = !isNewIssues.value
       store.dispatch('changeCurrentIssues', issue)
@@ -425,7 +396,6 @@ export default defineComponent({
       dueTypeColor,
       formatDate,
       selectIssue,
-      dueTypeColorDescription,
       newIssues,
       zoomIssues,
       avatarResize
