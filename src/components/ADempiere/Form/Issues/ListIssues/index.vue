@@ -87,7 +87,7 @@
             v-for="(data, index) in listIssues"
             :key="index"
           >
-            <items
+            <issue-row
               :metadata="data"
             />
           </span>
@@ -200,7 +200,7 @@
                 v-for="(data, index) in filterData({ data: listIssues, column: item.id })"
                 :key="index"
               >
-                <items
+                <issue-row
                   :metadata="data"
                 />
               </span>
@@ -211,6 +211,7 @@
     </el-card>
   </div>
 </template>
+
 <script>
 import {
   defineComponent, computed, ref
@@ -218,13 +219,15 @@ import {
 
 import store from '@/store'
 import lang from '@/lang'
+
 // Components and Mixins
 import draggable from 'vuedraggable'
 import RecordTime from '@/components/ADempiere/Form/Issues/recordTime.vue'
-import Items from '@/components/ADempiere/Form/Issues/ListIssues/items.vue'
+import IssueRow from '@/components/ADempiere/FormDefinition/IssueManagement/IssuesList/issueRow.vue'
 import Kanban from '@/components/ADempiere/Form/Issues/ListIssues/kanban.vue'
 import Comment from '@/components/ADempiere/Form/Issues/component/Comment.vue'
 import ProgressPercentage from '@/components/ADempiere/ContainerOptions/ProgressPercentage.vue'
+
 // Constants
 import { REQUEST_WINDOW_UUID } from '@/utils/ADempiere/dictionary/form/Issues.js'
 
@@ -246,8 +249,8 @@ export default defineComponent({
   name: 'Issues',
 
   components: {
+    IssueRow,
     // Editor
-    Items,
     Kanban,
     Comment,
     draggable,
