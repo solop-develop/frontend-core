@@ -138,6 +138,7 @@ import {
 
 // Utils and Helper Methods
 import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
+import { dueTypeColor } from '@/utils/ADempiere/dictionary/form/Issues'
 
 export default defineComponent({
   name: 'IssuePreview',
@@ -158,18 +159,6 @@ export default defineComponent({
   },
 
   setup() {
-    function dueTypeColor(issue) {
-      const { due_type } = issue
-      const { value } = due_type
-      let color = '#3fb950'
-      if (value === '5') {
-        color = 'orange'
-      } else if (value === '3') {
-        color = '#ff2121'
-      }
-      return color
-    }
-
     return {
       dueTypeColor,
       formatDate

@@ -228,19 +228,12 @@ import Kanban from '@/components/ADempiere/Form/Issues/ListIssues/kanban.vue'
 import Comment from '@/components/ADempiere/Form/Issues/component/Comment.vue'
 import ProgressPercentage from '@/components/ADempiere/ContainerOptions/ProgressPercentage.vue'
 
-// Constants
-import { REQUEST_WINDOW_UUID } from '@/utils/ADempiere/dictionary/form/Issues.js'
-
 // Utils and Helper Methods
-import { formatDate, translateDateByLong } from '@/utils/ADempiere/formatValue/dateFormat'
-import { getImagePath } from '@/utils/ADempiere/resource.js'
 import { showMessage } from '@/utils/ADempiere/notification'
-import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 
 // Api Request Methods
 import {
   requestListRequestTypes,
-  requestListPriorities,
   requestListStatuses
 } from '@/api/ADempiere/user-interface/component/issue'
 import { isEmptyValue } from '@/utils/ADempiere'
@@ -269,14 +262,12 @@ export default defineComponent({
     }
   },
 
-  setup(props) {
+  setup() {
     const updateDragStatus = ref('')
-    const message = ref('')
     const filter = ref('')
     const priority = ref('')
     const isEdit = ref(false)
     const isKanban = ref(false)
-    const typeRequest = ref('')
     const requestTypes = ref('')
     const currentPriority = ref('')
     const listIssuesTypes = ref([])
@@ -299,38 +290,9 @@ export default defineComponent({
       }
     })
 
-    const currentIssues = computed(() => {
-      return store.getters.getCurrentIssues
-    })
-
-    const isShowTitleForm = computed(() => {
-      return store.getters.getIsShowTitleForm
-    })
-
-    const styleAllRequestBoxCard = computed(() => {
-      if (isShowTitleForm.value) return 'height: 80%;overflow: auto;'
-      return 'height: 90%;overflow: auto;'
-    })
-
     const listKanbanGroup = computed(() => {
       return store.getters.getListKanbanGroup
     })
-    function dueTypeColor(issue) {
-      const { due_type } = issue
-      const { value } = due_type
-      let color = '#3fb950'
-      if (value === '5') {
-        color = 'orange'
-      } else if (value === '3') {
-        color = '#ff2121'
-      }
-      return color
-    }
-
-    function selectIssue(issue) {
-      isNewIssues.value = !isNewIssues.value
-      store.dispatch('changeCurrentIssues', issue)
-    }
 
     function newIssues(issue) {
       isNewIssues.value = !isNewIssues.value
@@ -363,31 +325,6 @@ export default defineComponent({
       store.dispatch('findListMailTemplates')
     }
 
-    function zoomIssues(issues) {
-      zoomIn({
-        uuid: REQUEST_WINDOW_UUID,
-        params: {
-          filters: [
-            {
-              columnName: 'UUID',
-              value: issues.uuid
-            }
-          ]
-        }
-      })
-    }
-
-    function avatarResize(user) {
-      const { avatar } = user
-      const { uri } = getImagePath({
-        file: avatar,
-        width: 20,
-        height: 20,
-        operation: 'resize'
-      })
-      return uri
-    }
-
     function findRequestTypes(isVisible) {
       if (!isVisible) {
         return
@@ -408,22 +345,6 @@ export default defineComponent({
           })
         })
     }
-    function findPriority(isVisible) {
-      if (!isVisible) {
-        return
-      }
-      requestListPriorities({})
-        .then(response => {
-          const { records } = response
-          listPriority.value = records
-        })
-        .catch(error => {
-          showMessage({
-            message: error.message,
-            type: 'warning'
-          })
-        })
-    }
 
     function filterData({
       data,
@@ -435,10 +356,6 @@ export default defineComponent({
     // findRequestTypes(true)
 
     loadIssues()
-
-    function percentageFormat(display) {
-      return display
-    }
 
     function activeGruop() {
       isEdit.value = !isEdit.value
@@ -549,7 +466,6 @@ export default defineComponent({
       //
       isEdit,
       isKanban,
-      message,
       listIssues,
       requestTypes,
       listIssuesTypes,
@@ -559,28 +475,16 @@ export default defineComponent({
       listStatusesKanban,
       //
       priority,
-      typeRequest,
       filter,
       isNewIssues,
-      currentIssues,
-      styleAllRequestBoxCard,
-      isShowTitleForm,
       // methods
       findRequestTypes,
-      findPriority,
       findStatus,
-      dueTypeColor,
-      formatDate,
-      avatarResize,
-      selectIssue,
       newIssues,
       loadIssues,
-      zoomIssues,
       filterData,
-      percentageFormat,
       activeGruop,
       activeKanban,
-      translateDateByLong,
       updateStatus,
       replace
     }
@@ -644,9 +548,8 @@ export default defineComponent({
 .table-list-request {
   overflow: auto;
 }
-.list-card-issues-filter {
-
-}
+// .list-card-issues-filter {
+// }
 </style>
 <style scoped>
 .scroll-chats {
