@@ -1,6 +1,6 @@
 <!--
   ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-  Copyright (C) 201-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
   Contributor(s): Elsio Sanchez Elsiosanches@gmail.com https://github.com/Elsiosanchez
   Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
   This program is free software: you can redistribute it and/or modify
@@ -22,6 +22,7 @@
     <el-main style="padding: 0px;overflow: auto;">
       <list-issues v-if="!isNewIssues" />
     </el-main>
+
     <el-footer v-if="isNewIssues" height="20%">
       <comment
         :table-name="tableName"

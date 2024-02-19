@@ -81,27 +81,7 @@
           {{ $t('issues.assigned') }}
         </b>
       </template>
-      <el-avatar
-        v-if="isEmptyValue(metadata.sales_representative.avatar)"
-        icon="el-icon-user-solid"
-        size="small"
-        style="margin-left: 10px;"
-      />
-      <!-- <el-image
-        v-else
-        :src="avatarResize(metadata.sales_representative)"
-        fit="contain"
-        style="
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          display: inline-block;
-          position: relative;
-          cursor: default;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-        "
-      /> -->
-      {{ metadata.sales_representative.name }}
+      <issue-avatar :user="metadata.sales_representative" />
     </el-descriptions-item>
 
     <el-descriptions-item>
@@ -127,6 +107,9 @@
           value: metadata.dateNextAction
         }) }}
       </span>
+      <span v-else>
+        --/--/----
+      </span>
     </el-descriptions-item>
   </el-descriptions>
 </template>
@@ -136,12 +119,19 @@ import {
   defineComponent
 } from '@vue/composition-api'
 
+// Components and Mixins
+import IssueAvatar from '@/components/ADempiere/FormDefinition/IssueManagement/issueAvatar.vue'
+
 // Utils and Helper Methods
 import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import { dueTypeColor } from '@/utils/ADempiere/dictionary/form/Issues'
 
 export default defineComponent({
   name: 'IssuePreview',
+
+  components: {
+    IssueAvatar
+  },
 
   props: {
     tableName: {

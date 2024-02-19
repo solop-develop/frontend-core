@@ -1,6 +1,6 @@
 <!--
   ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-  Copyright (C) 201-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
   Contributor(s): Elsio Sanchez Elsiosanches@gmail.com https://github.com/Elsiosanchez
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -269,6 +269,7 @@
     </div>
   </el-card>
 </template>
+
 <script>
 import {
   defineComponent,
@@ -385,9 +386,6 @@ export default defineComponent({
 }
 .table-list-request {
   overflow: auto;
-}
-.list-card-issues-filter {
-
 }
 </style>
 <style scoped>

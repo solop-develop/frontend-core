@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
+
 <template>
   <div class="issues-list">
     <el-card
@@ -53,6 +54,7 @@
           />
         </el-button>
       </div>
+
       <el-card
         v-if="isKanban || isEdit"
         shadow="never"
@@ -89,6 +91,8 @@
           >
             <issue-row
               :metadata="data"
+              :table-name="tableName"
+              :record-id="recordId"
             />
           </span>
         </span>
@@ -107,7 +111,7 @@
             style="display: flex;overflow: auto;"
           >
             <div
-              v-for="(issues, index) in listStatuses"
+              v-for="(statusItem, index) in listStatuses"
               :key="index"
               style="height: 80vh;padding: 0px 10px;min-width: 450px;max-width: 450px;"
             >
@@ -115,8 +119,8 @@
                 shadow="never"
                 :body-style="{ padding: '10px' }"
               >
-                <el-collapse accordion>
-                  <el-collapse-item name="1">
+                <el-collapse v-model="statusesExpand">
+                  <el-collapse-item :name="statusItem.id">
                     <template slot="title">
                       <svg-icon
                         icon-class="label"
@@ -124,29 +128,29 @@
                       />
                       <b style="font-size: 16px;padding-left: 10px;">
                         <i>
-                          {{ issues.name }}
+                          {{ statusItem.name }}
                         </i>
                       </b>
                     </template>
-                    <span v-if="isEmptyValue(listKanbanGroup[issues.id])">
+                    <span v-if="isEmptyValue(listKanbanGroup[statusItem.id])">
                       <el-empty :image-size="90" />
                     </span>
                     <!-- {{ listKanbanGroup[0] }} -->
-                    <draggable
+                    <draggable-elements
                       v-if="!isloadinUpdateKanban"
-                      :id="issues.id"
-                      :ref="issues.id"
-                      :list="listKanbanGroup[issues.id]"
+                      :id="statusItem.id"
+                      :ref="statusItem.id"
+                      :list="listKanbanGroup[statusItem.id]"
                       :group="{ name: 'people', pull: replace }"
                       @change="updateStatus"
                     >
                       <el-card
-                        v-for="data in listKanbanGroup[issues.id]"
+                        v-for="data in listKanbanGroup[statusItem.id]"
                         :key="data.id"
                         shadow="never"
                         :body-style="{ padding: '0px' }"
                       >
-                        <kanban
+                        <kanban-issues
                           :metadata="data"
                         />
                         <!-- <div
@@ -159,7 +163,7 @@
                           class="view-loading"
                         /> -->
                       </el-card>
-                    </draggable>
+                    </draggable-elements>
                   </el-collapse-item>
                 </el-collapse>
               </el-card>
@@ -167,6 +171,7 @@
           </div>
         </el-card>
       </div>
+
       <div
         v-else
         style="overflow: auto;"
@@ -202,6 +207,8 @@
               >
                 <issue-row
                   :metadata="data"
+                  :table-name="tableName"
+                  :record-id="recordId"
                 />
               </span>
             </el-collapse-item>
@@ -221,11 +228,10 @@ import store from '@/store'
 import lang from '@/lang'
 
 // Components and Mixins
-import draggable from 'vuedraggable'
+import DraggableElements from 'vuedraggable'
 import RecordTime from '@/components/ADempiere/Form/Issues/recordTime.vue'
 import IssueRow from '@/components/ADempiere/FormDefinition/IssueManagement/IssuesList/issueRow.vue'
-import Kanban from '@/components/ADempiere/Form/Issues/ListIssues/kanban.vue'
-import Comment from '@/components/ADempiere/Form/Issues/component/Comment.vue'
+import KanbanIssues from '@/components/ADempiere/Form/Issues/ListIssues/kanban.vue'
 import ProgressPercentage from '@/components/ADempiere/ContainerOptions/ProgressPercentage.vue'
 
 // Utils and Helper Methods
@@ -244,9 +250,8 @@ export default defineComponent({
   components: {
     IssueRow,
     // Editor
-    Kanban,
-    Comment,
-    draggable,
+    KanbanIssues,
+    DraggableElements,
     RecordTime,
     ProgressPercentage
   },
@@ -274,6 +279,7 @@ export default defineComponent({
     const listPriority = ref([])
     const listStatuses = ref([])
     const listStatusesKanban = ref([])
+    const statusesExpand = ref([])
 
     const listIssues = computed(() => {
       return store.getters.getListIssues
@@ -304,14 +310,14 @@ export default defineComponent({
         .then(response => {
           if (!isEmptyValue(response)) {
             const list = {}
-            const isEmptuStatus = listStatuses.value.find(statusItem => {
+            const emptyStatus = listStatuses.value.find(statusItem => {
               return statusItem.id === 0
             })
-            if (isEmptyValue(isEmptuStatus)) {
-              listStatuses.value.push({
+            if (isEmptyValue(emptyStatus)) {
+              listStatuses.value.unshift({
                 name: lang.t('issues.emptyStatus'),
                 id: 0,
-                sequence: 99
+                sequence: -1
               })
             }
             listStatuses.value.forEach(elementStatus => {
@@ -355,7 +361,7 @@ export default defineComponent({
 
     // findRequestTypes(true)
 
-    loadIssues()
+    // loadIssues()
 
     function activeGruop() {
       isEdit.value = !isEdit.value
@@ -380,12 +386,15 @@ export default defineComponent({
           const { records } = response
           const statusesList = records
           const list = {}
-          statusesList.push({
+          statusesList.unshift({
             name: lang.t('issues.emptyStatus'),
             id: 0,
-            sequence: 99
+            sequence: -1
           })
           statusesList.forEach(statusItem => {
+            // expand all statuses
+            statusesExpand.value.push(statusItem.id)
+            // fill issues by status
             list[statusItem.id] = listIssues.value.filter(issueItem => {
               return issueItem.status.id === statusItem.id
             })
@@ -463,6 +472,7 @@ export default defineComponent({
       listKanbanGroup,
       isloadinUpdateKanban,
       updateDragStatus,
+      statusesExpand,
       //
       isEdit,
       isKanban,
