@@ -27,7 +27,8 @@ import {
 } from '@/api/ADempiere/user-interface/component/resource'
 import {
   requestDeleteResourceReference,
-  requestDeleteResources
+  requestDeleteResources,
+  requestShareResources
 } from '@/api/ADempiere/file-management/resource-reference.ts'
 import {
   requestGetResource
@@ -200,6 +201,15 @@ export default defineComponent({
      * @param {Boolean} isDownload
      */
     const handleDownload = async(file, isDownload = true) => {
+      if (file.content_type.includes('image')) {
+        const link = document.createElement('a')
+        link.target = '_blank'
+        link.href = urlDownload({ fileName: file.name })
+        link.download = this.displayedValue
+        link.style.display = 'none'
+        link.click()
+        return
+      }
       // if (file.content_type.includes('image')) {
       //   const imagen = await fetch(file.src)
       //   const imagenblob = await imagen.blob()
@@ -210,18 +220,23 @@ export default defineComponent({
       link.download = file.name
       link.click()
       return
-      // }
-      // requestGetResource({
-      //   id: file.id,
-      //   resourceName: file.valid_file_name
-      // }).then(response => {
-      //   buildLinkHref({
-      //     fileName: file.name,
-      //     mimeType: file.content_type,
-      //     outputStream: response, // response.data
-      //     isDownload: true
-      //   })
-      // })
+    }
+
+    function urlDownload({
+      fileName
+    }) {
+      return new Promise((resolve, reject) => {
+        requestShareResources({
+          fileName,
+          seconds: 3600
+        })
+          .then(response => {
+            resolve(response)
+          })
+          .catch(() => {
+            reject('')
+          })
+      })
     }
 
     /**

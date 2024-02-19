@@ -163,6 +163,7 @@ import { RESOURCE_TYPE_IMAGE } from '@/utils/ADempiere/resource'
 // API Request Methods
 import {
   requestPresignedUrl,
+  requestShareResources,
   requestDeleteResources,
   requestSetResourceReference,
   requestDeleteResourceReference
@@ -409,24 +410,30 @@ export default {
      * Handle Download image
      */
     async handleDownload() {
-      try {
-        const response = await fetch(this.imageSourceSmall)
-        const blob = await response.blob()
-        const url = window.URL.createObjectURL(blob)
-        const link = document.createElement('a')
-        link.href = url
-        link.download = this.displayedValue
-        link.style.display = 'none'
-        document.body.appendChild(link)
-        link.click()
-        setTimeout(() => {
-          document.body.removeChild(link)
-          window.URL.revokeObjectURL(url)
-        })
-      } catch (error) {
-        console.error(`Error download: ${this.displayedValue}`, error)
-      }
+      const link = document.createElement('a')
+      link.target = '_blank'
+      link.href = this.urlDownload({ fileName: this.displayedValue })
+      link.download = this.displayedValue
+      link.style.display = 'none'
+      link.click()
       return
+    },
+
+    urlDownload({
+      fileName
+    }) {
+      return new Promise((resolve, reject) => {
+        requestShareResources({
+          fileName,
+          seconds: 3600
+        })
+          .then(response => {
+            resolve(response)
+          })
+          .catch(() => {
+            reject('')
+          })
+      })
     },
 
     /**
