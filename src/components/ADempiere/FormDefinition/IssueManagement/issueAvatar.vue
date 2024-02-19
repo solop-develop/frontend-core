@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <span>
+  <p style="margin: 5px 0px;display: inline-flex;">
     <svg-icon
       v-if="isEmptyValue(user.avatar)"
       icon-class="user"
@@ -28,8 +28,8 @@
       :src="avatarSrc"
       fit="contain"
       style="
-        width: 20px;
-        height: 20px;
+        width: 25px;
+        height: 25px;
         border-radius: 50%;
         display: inline-block;
         position: relative;
@@ -37,11 +37,14 @@
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
       "
     />
-
-    <b>
-      {{ user.name }}
-    </b>
-  </span>
+    <span style="padding-left: 6px">
+      <p style="margin: 5px 0px;">
+        <b>
+          {{ user.name }}
+        </b>
+      </p>
+    </span>
+  </p>
 </template>
 
 <script>
@@ -69,15 +72,16 @@ export default defineComponent({
       return require('@/image/ADempiere/avatar/no-avatar.png')
     })
 
-    function loadImage() {
+    async function loadImage() {
       if (props.user.avatar) {
-        getImagePath({
+        await getImagePath({
           file: props.user.avatar,
           width: 20,
           height: 20,
           operation: 'resize'
         })
           .then(response => {
+            console.log({ response })
             avatarSrc.value = response.href
           })
       }
@@ -85,7 +89,7 @@ export default defineComponent({
 
     onMounted(() => {
       avatarSrc.value = imageDefault.value
-      // loadImage()
+      loadImage()
     })
 
     return {
