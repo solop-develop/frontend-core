@@ -18,7 +18,7 @@
 
 <template>
   <el-option
-    v-model="currentEmptyValue"
+    :value="currentEmptyValue"
     :label="' '"
   />
 </template>
