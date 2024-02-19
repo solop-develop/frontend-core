@@ -126,7 +126,7 @@
         <br>
         <br>
       </el-descriptions-item>
-      <el-descriptions-item
+      <!-- <el-descriptions-item
         content-class-name="setting-line"
       >
         <template slot="label">
@@ -147,7 +147,7 @@
         </el-select>
         <br>
         <br>
-      </el-descriptions-item>
+      </el-descriptions-item> -->
       <el-descriptions-item
         content-class-name="setting-line"
       >
