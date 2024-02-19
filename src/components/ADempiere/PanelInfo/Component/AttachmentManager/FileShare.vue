@@ -19,7 +19,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 <template>
   <el-popover
     v-model="isShowed"
-    :title="$t('component.attachment.share.title') + ' ' + resourceName"
+    :title="$t('component.attachment.share.title') + ' ' + fileName"
     placement="bottom"
     trigger="click"
     width="550"
@@ -32,19 +32,20 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         {{ $t('component.attachment.share.timeText') }}
       </b>
     </p>
-    <el-radio-group
-      v-model="validTime"
-      @change="changeTIme"
-    >
-      <el-radio :label="3600">1 {{ ' ' + $t('component.attachment.share.time.hour') }}</el-radio>
-      <el-radio :label="21600">6 {{ ' ' + $t('component.attachment.share.time.hours') }}</el-radio>
-      <el-radio :label="86400">1 {{ ' ' + $t('component.attachment.share.time.day') }}</el-radio>
-      <el-radio :label="259200">3 {{ ' ' + $t('component.attachment.share.time.days') }}</el-radio>
-      <el-radio :label="604800">7 {{ ' ' + $t('component.attachment.share.time.days') }}</el-radio>
-    </el-radio-group>
+    <p>
+      <el-radio-group
+        v-model="validTime"
+        @change="changeTIme"
+      >
+        <el-radio :label="3600">1 {{ ' ' + $t('component.attachment.share.time.hour') }}</el-radio>
+        <el-radio :label="21600">6 {{ ' ' + $t('component.attachment.share.time.hours') }}</el-radio>
+        <el-radio :label="86400">1 {{ ' ' + $t('component.attachment.share.time.day') }}</el-radio>
+        <el-radio :label="259200">3 {{ ' ' + $t('component.attachment.share.time.days') }}</el-radio>
+        <el-radio :label="604800">7 {{ ' ' + $t('component.attachment.share.time.days') }}</el-radio>
+      </el-radio-group>
+    </p>
     <el-input
       v-model="linkShare"
-      size="small"
       disabled
     >
       <!-- <template slot="prepend"> -->
@@ -140,16 +141,12 @@ export default defineComponent({
     const isShowed = ref(false)
     const validTime = ref(3600)
     function loadData() {
-      console.log({
-        file: props.file
-      })
       isLoading.value = true
       requestShareResources({
         fileName: props.resourceName,
         seconds: validTime.value
       })
         .then(response => {
-          console.log({ response })
           linkShare.value = response
         })
         .finally(() => {
@@ -169,7 +166,6 @@ export default defineComponent({
     }
 
     function changeTIme(params) {
-      console.log({ params })
       loadData()
     }
 

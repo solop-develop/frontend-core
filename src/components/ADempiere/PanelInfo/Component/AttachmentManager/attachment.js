@@ -26,7 +26,9 @@ import {
   sendAttachmentDescriptionHeader
 } from '@/api/ADempiere/user-interface/component/resource'
 import {
-  requestDeleteResourceReference
+  requestDeleteResourceReference,
+  requestDeleteResources,
+  requestShareResources
 } from '@/api/ADempiere/file-management/resource-reference.ts'
 import {
   requestGetResource
@@ -38,25 +40,30 @@ import ListView from './listView.vue'
 import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 import UploadResource from './uploadResource.vue'
 import PanelFooter from '@/components/ADempiere/PanelFooter/index.vue'
+import FileInfo from '@/components/ADempiere/PanelInfo/Component/AttachmentManager/fileInfo'
+import FileShare from '@/components/ADempiere/PanelInfo/Component/AttachmentManager/FileShare'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import {
-  buildLinkHref,
+  // buildLinkHref,
   formatFileSize,
   getImageFromContentType
 } from '@/utils/ADempiere/resource.js'
+import { config } from '@/utils/ADempiere/config'
 
 export default defineComponent({
   name: 'AttachmentManager',
 
   components: {
-    FileRender,
-    ListView,
+    UploadResource,
     LoadingView,
     PanelFooter,
-    UploadResource
+    FileRender,
+    FileShare,
+    FileInfo,
+    ListView
   },
 
   props: {
@@ -67,6 +74,14 @@ export default defineComponent({
     containerManager: {
       type: Object,
       default: () => {}
+    },
+    containerUuid: {
+      type: String,
+      default: ''
+    },
+    parentUuid: {
+      type: String,
+      default: ''
     },
     recordId: {
       type: Number,
@@ -154,11 +169,15 @@ export default defineComponent({
     const handleRemove = (file) => {
       requestDeleteResourceReference({
         id: file.id,
+        attachmenId: file.id,
         resourceName: file.file_name
       }).then(() => {
         const resourceReferencesList = attachmentList.value.filter(resourceReference => {
           return resourceReference.uuid !== file.uuid ||
             resourceReference.file_name !== file.file_name
+        })
+        requestDeleteResources({
+          fileName: file.file_name
         })
         attachmentList.value = resourceReferencesList
       })
@@ -182,27 +201,41 @@ export default defineComponent({
      * @param {Boolean} isDownload
      */
     const handleDownload = async(file, isDownload = true) => {
-      // let link
+      if (file.content_type.includes('image')) {
+        const link = document.createElement('a')
+        link.target = '_blank'
+        link.href = urlDownload({ fileName: file.name })
+        link.download = this.displayedValue
+        link.style.display = 'none'
+        link.click()
+        return
+      }
       // if (file.content_type.includes('image')) {
       //   const imagen = await fetch(file.src)
       //   const imagenblob = await imagen.blob()
       //   const imageURL = URL.createObjectURL(imagenblob)
-      //   link = document.createElement('a')
-      //   link.href = imageURL
-      //   link.download = file.name
-      //   link.click()
-      //   return
-      // }
-      requestGetResource({
-        id: file.id,
-        resourceName: file.valid_file_name
-      }).then(response => {
-        buildLinkHref({
-          fileName: file.name,
-          mimeType: file.content_type,
-          outputStream: response, // response.data
-          isDownload: true
+      const link = document.createElement('a')
+      const imageURL = config.adempiere.resource.url + '/' + file.file_name
+      link.href = imageURL
+      link.download = file.name
+      link.click()
+      return
+    }
+
+    function urlDownload({
+      fileName
+    }) {
+      return new Promise((resolve, reject) => {
+        requestShareResources({
+          fileName,
+          seconds: 3600
         })
+          .then(response => {
+            resolve(response)
+          })
+          .catch(() => {
+            reject('')
+          })
       })
     }
 

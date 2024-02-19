@@ -59,6 +59,7 @@
             :image-id="value"
             :resource-name="displayedValue"
             :file="fileResource"
+            :file-name="displayedValue"
             class="popover-info"
           />
 
@@ -162,6 +163,7 @@ import { RESOURCE_TYPE_IMAGE } from '@/utils/ADempiere/resource'
 // API Request Methods
 import {
   requestPresignedUrl,
+  requestShareResources,
   requestDeleteResources,
   requestSetResourceReference,
   requestDeleteResourceReference
@@ -408,27 +410,30 @@ export default {
      * Handle Download image
      */
     async handleDownload() {
-      if (!this.isDownload) {
-        return
-      }
+      const link = document.createElement('a')
+      link.target = '_blank'
+      link.href = this.urlDownload({ fileName: this.displayedValue })
+      link.download = this.displayedValue
+      link.style.display = 'none'
+      link.click()
+      return
+    },
 
-      // const link = await getImagePath({
-      //   file: this.displayedValue
-      // })
-      // const imagen = await fetch(this.imageSourceSmall)
-      // const imagenblob = await imagen.blob()
-      // const imageURL = URL.createObjectURL(imagenblob)
-      // const link = document.createElement('a')
-      // let link
-      // link.href = ``
-      // link.download = `http://192.168.5.101:7879/api/resources/${this.displayedValue}`
-      // link.click()
-      // const imagen = document.querySelector(`[src="http://192.168.5.101:7879/api/resources/${this.displayedValue}"]`)
-      // const link = document.createElement('a')
-      // link.setAttribute('href', imagen.src)
-      // link.setAttribute('download', `${this.displayedValue}`)
-      // document.body.appendChild(link)
-      // link.click()
+    urlDownload({
+      fileName
+    }) {
+      return new Promise((resolve, reject) => {
+        requestShareResources({
+          fileName,
+          seconds: 3600
+        })
+          .then(response => {
+            resolve(response)
+          })
+          .catch(() => {
+            reject('')
+          })
+      })
     },
 
     /**
