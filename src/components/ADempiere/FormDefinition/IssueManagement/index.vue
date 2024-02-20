@@ -41,7 +41,6 @@ import store from '@/store'
 
 // Components and Mixins
 import Comment from '@/components/ADempiere/Form/Issues/component/Comment.vue'
-import RecordTime from '@/components/ADempiere/Form/Issues/recordTime.vue'
 import ListIssues from '@/components/ADempiere/Form/Issues/ListIssues/index.vue'
 
 export default defineComponent({
@@ -50,8 +49,7 @@ export default defineComponent({
   components: {
     // Editor
     Comment,
-    ListIssues,
-    RecordTime
+    ListIssues
   },
 
   props: {

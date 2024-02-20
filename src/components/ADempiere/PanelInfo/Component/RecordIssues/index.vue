@@ -54,7 +54,6 @@ import store from '@/store'
 import IssuesList from '@/components/ADempiere/Form/Issues/ListIssues/index.vue'
 import Comment from '@/components/ADempiere/Form/Issues/component/Comment.vue'
 import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
-import RecordTime from '@/components/ADempiere/Form/Issues/recordTime.vue'
 
 // Constants
 import { REQUEST_WINDOW_UUID } from '@/utils/ADempiere/dictionary/form/Issues.js'
@@ -72,8 +71,7 @@ export default defineComponent({
     // Editor
     Comment,
     IssuesList,
-    LoadingView,
-    RecordTime
+    LoadingView
   },
 
   props: {

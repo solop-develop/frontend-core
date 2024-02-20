@@ -279,7 +279,6 @@ import {
 import store from '@/store'
 
 // Components and Mixins
-// import RecordTime from '@/components/ADempiere/Form/Issues/recordTime.vue'
 import ProgressPercentage from '@/components/ADempiere/ContainerOptions/ProgressPercentage.vue'
 
 // Utils and Helper Methods
@@ -290,7 +289,6 @@ export default defineComponent({
   name: 'IssuesKanban',
 
   components: {
-  //   RecordTime,
     ProgressPercentage
   },
 
