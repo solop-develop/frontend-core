@@ -308,7 +308,7 @@
                     trigger="click"
                     width="450"
                   >
-                    <record-time
+                    <issue-record-time
                       :issue-id="currentIssues.id"
                     />
                     <el-button slot="reference" type="text">
@@ -1008,7 +1008,7 @@
                     trigger="click"
                     width="450"
                   >
-                    <record-time
+                    <issue-record-time
                       :issue-id="currentIssues.id"
                     />
                     <el-button slot="reference" type="text">
@@ -1518,7 +1518,7 @@ import IssueAvatar from '@/components/ADempiere/FormDefinition/IssueManagement/i
 import IssueCommentAdd from '@/components/ADempiere/FormDefinition/IssueManagement/IssueFeed/issueCommentAdd.vue'
 import IssueCommentView from '@/components/ADempiere/FormDefinition/IssueManagement/IssueFeed/issueCommentView.vue'
 import IssueLog from '@/components/ADempiere/FormDefinition/IssueManagement/IssueFeed/issueLog.vue'
-import RecordTime from '../recordTime.vue'
+import IssueRecordTime from '@/components/ADempiere/FormDefinition/IssueManagement/IssueRecordTime/index.vue'
 
 // Constants
 import { REQUEST_WINDOW_UUID } from '@/utils/ADempiere/dictionary/form/Issues.js'
@@ -1551,7 +1551,7 @@ export default defineComponent({
     IssueCommentAdd,
     IssueCommentView,
     IssueLog,
-    RecordTime
+    IssueRecordTime
   },
 
   props: {

@@ -229,7 +229,6 @@ import lang from '@/lang'
 
 // Components and Mixins
 import DraggableElements from 'vuedraggable'
-import RecordTime from '@/components/ADempiere/Form/Issues/recordTime.vue'
 import IssueRow from '@/components/ADempiere/FormDefinition/IssueManagement/IssuesList/issueRow.vue'
 import KanbanIssues from '@/components/ADempiere/Form/Issues/ListIssues/kanban.vue'
 import ProgressPercentage from '@/components/ADempiere/ContainerOptions/ProgressPercentage.vue'
@@ -252,7 +251,6 @@ export default defineComponent({
     // Editor
     KanbanIssues,
     DraggableElements,
-    RecordTime,
     ProgressPercentage
   },
 

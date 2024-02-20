@@ -213,11 +213,11 @@
             <el-popover
               ref="timeRecord"
               placement="left"
-              :title="$t('form.timeRecord.timeRecord') + ' (' + metadata.id + ')'"
+              :title="$t('form.timeRecord.timeRecord') + ' (#' + metadata.document_no + ')'"
               trigger="click"
               width="450"
             >
-              <record-time
+              <issue-record-time
                 :issue-id="metadata.id"
               />
               <el-button
@@ -249,7 +249,7 @@ import store from '@/store'
 
 // Components and Mixins
 import IssuePreview from '@/components/ADempiere/FormDefinition/IssueManagement/IssuesList/issuePreview.vue'
-import RecordTime from '@/components/ADempiere/Form/Issues/recordTime.vue'
+import IssueRecordTime from '@/components/ADempiere/FormDefinition/IssueManagement/IssueRecordTime/index.vue'
 import ProgressPercentage from '@/components/ADempiere/ContainerOptions/ProgressPercentage.vue'
 
 // Constants
@@ -265,7 +265,7 @@ export default defineComponent({
 
   components: {
     IssuePreview,
-    RecordTime,
+    IssueRecordTime,
     ProgressPercentage
   },
 

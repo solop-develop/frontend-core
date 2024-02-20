@@ -58,18 +58,35 @@ button.button-show-popover {
 
 .form-base {
   /**
-   * Reduce the spacing between the form element and its label
-   */
-   .el-form-item__label {
-    padding-bottom: 0px !important;
-  }
-
-  /**
    * To select element and input number
    */
   .el-form-item {
     width: 100%;
+
+    /**
+    * Reduce the spacing between the form element and its label
+    */
+    .el-form-item__label {
+      padding-bottom: 0px !important;
+    }
+
+    /**
+     * width all
+     */
+    .el-input, .el-input-number, .el-select {
+      width: 100%;
+    }
+
+    /**
+     * Number align to rigth
+     */
+    .el-input-number {
+      .el-input__inner {
+        text-align-last: end !important;
+      }
+    }
   }
+  
 }
 
 .divider {
