@@ -19,9 +19,10 @@
 <template>
   <el-form
     label-position="top"
-    class="time-record-issue form-min-label"
+    size="mini"
+    class="time-record-issue form-base"
   >
-    <el-row style="padding-bottom: 10px;" :gutter="20">
+    <el-row :gutter="20">
       <el-col :span="12">
         <el-form-item
           :label="$t('form.timeRecord.date')"
@@ -49,35 +50,50 @@
         </el-form-item>
       </el-col>
 
-      <el-col :span="12">
+      <el-col :span="24">
         <el-form-item
           :label="$t('form.timeRecord.description')"
         >
           <el-input
             v-model="description"
             type="textarea"
-            autosize
+            :rows="3"
           />
         </el-form-item>
       </el-col>
 
       <el-col :span="12">
         <el-form-item
-          :label="$t('form.timeRecord.quantity')"
+          :label="$t('form.timeRecord.quantity') + ' (H)'"
           :rules="{
             required: true
           }"
         >
           <el-input-number
             v-model="quantity"
+            :disabled="timer != null"
             controls-position="right"
             :precision="2"
+            :min="0"
             style="width: -webkit-fill-available;"
+            @change="changeQuantityToTime"
           />
         </el-form-item>
       </el-col>
 
-      <!-- <el-col :span="24">
+      <el-col :span="12">
+        <el-form-item
+          :label="$t('form.timeRecord.time') + ' (HH:MM:SS)'"
+        >
+          <el-input
+            v-model="time"
+            disabled
+          />
+        </el-form-item>
+      </el-col>
+
+      <!--
+      <el-col :span="24">
         <el-form-item
           :label="$t('form.timeRecord.project')"
         >
@@ -95,10 +111,38 @@
             />
           </el-select>
         </el-form-item>
-      </el-col> -->
+      </el-col>
+      -->
 
-      <el-col :span="24">
+      <el-col :span="24" style="padding-top: 5px;">
         <samp style="float: right; paddint-top: 4px;">
+          <el-button
+            v-if="timer == null"
+            type="success"
+            class="button-base-icon"
+            plain
+            @click="play();"
+          >
+            <svg-icon icon-class="play-circle" />
+          </el-button>
+          <el-button
+            v-else
+            type="warning"
+            class="button-base-icon"
+            plain
+            @click="play();"
+          >
+            <svg-icon icon-class="pause-circle" />
+          </el-button>
+          <el-button
+            type="danger"
+            class="button-base-icon"
+            plain
+            @click="clear();"
+          >
+            <svg-icon icon-class="stop-circle" />
+          </el-button>
+
           <el-button
             type="info"
             class="button-base-icon"
@@ -154,6 +198,20 @@ export default defineComponent({
     const date = ref(new Date())
     const quantity = ref(0)
 
+    const seconds = ref(0)
+    const minutes = ref(0)
+    const hours = ref(0)
+    const timer = ref(null)
+
+    const time = computed({
+      get() {
+        return `${zeroFill(hours.value)}:${zeroFill(minutes.value)}:${zeroFill(seconds.value)}`
+      },
+      set(newValue) {
+        //
+      }
+    })
+
     // const listRequest = ref([])
     const listProjects = ref([])
 
@@ -192,6 +250,7 @@ export default defineComponent({
       description.value = ''
       quantity.value = 0
       date.value = new Date()
+      clear()
     }
 
     /**
@@ -229,6 +288,92 @@ export default defineComponent({
         })
     }
 
+    function changeQuantityToTime(quantityValue) {
+      if (isEmptyValue(quantityValue) || quantityValue <= 0) {
+        return clear()
+      }
+      if (quantityValue < 1) {
+        const minutesToQuantity = quantityValue * 60
+        minutes.value = Number.parseInt(minutesToQuantity)
+      } else if (quantityValue > 0) {
+        const hoursToQuantity = Math.abs(quantityValue)
+        if (!Number.isInteger(quantityValue)) {
+          const decimalHours = hoursToQuantity - Math.floor(hoursToQuantity)
+          const minutesToQuantity = decimalHours * 60
+          minutes.value = Number.parseInt(minutesToQuantity)
+          hours.value = hoursToQuantity - decimalHours
+        } else {
+          hours.value = quantityValue
+        }
+      }
+    }
+
+    function changeTimeToQuantity(timeValue) {
+      if (isEmptyValue(timeValue) || String(timeValue) === '00:00:00') {
+        return
+      }
+
+      let quantityToMinutes = 0
+      if (minutes.value > 0) {
+        quantityToMinutes = minutes.value / 60
+      }
+
+      let quantityToHours = 0
+      if (hours.valie > 0) {
+        quantityToHours = hours.value / 0.6
+      }
+
+      quantity.value = quantityToHours + quantityToMinutes
+    }
+
+    function zeroFill(number) {
+      if (isEmptyValue(number)) {
+        return '00'
+      }
+      return number.toString().padStart(2, 0)
+    }
+
+    function play() {
+      if (timer.value === null) {
+        playing()
+        timer.value = setInterval(() => {
+          playing()
+        }, 1000)
+      } else {
+        clearInterval(timer.value)
+        timer.value = null
+        pause()
+      }
+    }
+
+    function playing() {
+      seconds.value++
+      if (seconds.value >= 59) {
+        seconds.value = 0
+        minutes.value++
+      }
+      if (minutes.value >= 59) {
+        minutes.value = 0
+        hours.value++
+      }
+      changeTimeToQuantity(time.value)
+    }
+
+    function pause() {
+    }
+
+    function clear() {
+      if (timer.value !== null) {
+        clearInterval(timer.value)
+        timer.value = null
+      }
+      seconds.value = 0
+      minutes.value = 0
+      hours.value = 0
+      //
+      quantity.value = 0
+    }
+
     return {
       name,
       description,
@@ -237,11 +382,21 @@ export default defineComponent({
       isLoadingCreate,
       listProjects,
       //
+      timer,
+      time,
+      hours,
+      minutes,
+      seconds,
+      //
       isValidateAdd,
       //
       geProjectsList,
       clearFormValues,
-      addTimeRecord
+      addTimeRecord,
+      changeQuantityToTime,
+      //
+      clear,
+      play
     }
   }
 })
@@ -250,25 +405,8 @@ export default defineComponent({
 <style lang="scss">
 .time-record-issue {
   .el-form-item {
-    margin-bottom: 12px !important;
-    margin-left: 10px;
-    margin-right: 10px;
-  }
-
-  /**
-   * Reduce the spacing between the form element and its label
-   */
-  .el-form-item__label {
-    padding-bottom: 0px !important;
-  }
-
-  .el-input, .el-input-number, .el-select {
-    width: 100%;
-  }
-
-  .el-input-number {
-    .el-input__inner {
-      text-align-last: end !important;
+    &.el-form-item--mini {
+      margin-bottom: 7px !important;
     }
   }
 }
