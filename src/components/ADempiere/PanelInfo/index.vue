@@ -62,8 +62,8 @@
 
 <script>
 import { defineComponent, computed, watch, ref } from '@vue/composition-api'
-
 import language from '@/lang'
+import router from '@/router'
 import store from '@/store'
 
 // Components and Mixins
@@ -445,6 +445,7 @@ export default defineComponent({
       nameTab.value = tab.name
       props.containerManager[tabOptions]({
         tableName: currentTab.value.tableName,
+        containerId: router.app._route.meta.referenceId,
         containerUuid: currentTab.value.containerUuid,
         parentUuid: currentTab.value.parentUuid,
         recordId: currentRecordId.value,

@@ -17,8 +17,7 @@
  */
 
 // API Request Methods
-import { requestAttachment } from '@/api/ADempiere/file-management/attachment.ts'
-
+import { requestListResources } from '@/api/ADempiere/file-management/resource-reference.ts'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
@@ -49,29 +48,45 @@ const attachment = {
 
   actions: {
     getAttachmentFromServer({ commit, getters }, {
-      tableName,
       recordId,
-      recordUuid
+      tableName,
+      clienteId,
+      containerId,
+      containerType
     }) {
-      if (isEmptyValue(tableName) && (isEmptyValue(recordId) || isEmptyValue(recordUuid))) {
+      if (isEmptyValue(tableName) && (isEmptyValue(recordId))) {
         return
       }
+      if (isEmptyValue(clienteId)) {
+        clienteId = getters.getSessionContextClientId
+      }
       commit('setIsLoadListAttachment', true)
-      return requestAttachment({
-        tableName,
+      return requestListResources({
         recordId,
-        recordUuid
+        tableName,
+        clienteId,
+        containerId,
+        containerType
       })
         .then(response => {
           commit('setIsLoadListAttachment', false)
-          const resourceReferencesList = response.resource_references
+          const resourceReferencesList = response.parent_folder
+          const listAttachment = response.resources.map(list => {
+            const fullName = list.name
+            const fileName = list.name.replace(response.parent_folder + '/', '')
+            return {
+              ...list,
+              fullName,
+              name: fileName,
+              file_name: fileName
+            }
+          })
 
-          commit('setListAttachment', resourceReferencesList)
+          commit('setListAttachment', listAttachment)
           commit('setAttachment', {
             ...response,
             tableName,
-            recordId,
-            recordUuid
+            recordId
           })
           const currentResource = getters.getResourceReference
           if (!isEmptyValue(currentResource)) {
