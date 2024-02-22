@@ -119,11 +119,12 @@ export function formatQuantity({ value, isInteger = false, precision }) {
     value
   })
   value = currentValue
-  precision = currentPrecision
   if (isEmptyValue(value)) {
     value = 0
   }
 
+  // TODO: Evaluate if currentPrecision overwrite precision
+  precision = currentPrecision
   if (isEmptyValue(precision) || precision === 0) {
     precision = getStandardPrecision()
   }

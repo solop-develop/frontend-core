@@ -37,7 +37,7 @@ import { convertBooleanToTranslationLang } from './formatValue/booleanFormat'
 export { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
 import { decodeHtmlEntities } from '@/utils/ADempiere/formatValue/stringFormat.js'
 // TODO: Duplicated exported method, removed this
-import { formatPrice as formatPriceTemp } from '@/utils/ADempiere/formatValue/numberFormat'
+import { formatPrice as formatPriceTemp, formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 import { formatDate as formatDateTemp } from '@/utils/ADempiere/formatValue/dateFormat'
 
 // TODO: Duplicated method remove and use with destructured params
@@ -55,18 +55,6 @@ export function formatPrice(number, currency) {
     value: number,
     currency
   })
-}
-
-//  Format Quantity
-export function formatQuantity(number) {
-  if (isEmptyValue(number)) {
-    return undefined
-  }
-  if (!Number.isInteger(number)) {
-    return number
-  }
-  return Number.parseFloat(number).toFixed(2)
-  //  Get formatted number
 }
 
 // TODO: Duplicated exported method, removed this
@@ -139,7 +127,9 @@ export function formatField({
 
     case NUMBER.id:
     case QUANTITY.id:
-      formattedValue = formatQuantity(value)
+      formattedValue = formatQuantity({
+        value
+      })
       break
 
     case YES_NO.id:
