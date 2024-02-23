@@ -30,9 +30,6 @@ import {
   requestDeleteResources,
   requestShareResources
 } from '@/api/ADempiere/file-management/resource-reference.ts'
-import {
-  requestGetResource
-} from '@/api/ADempiere/file-management/resources.ts'
 
 // Components and Mixins
 import FileRender from '@/components/ADempiere/FileRender/index.vue'
@@ -176,10 +173,10 @@ export default defineComponent({
           return resourceReference.uuid !== file.uuid ||
             resourceReference.file_name !== file.file_name
         })
-        requestDeleteResources({
-          fileName: file.file_name
-        })
         attachmentList.value = resourceReferencesList
+      })
+      requestDeleteResources({
+        fileName: file.file_name
       })
     }
 
@@ -201,7 +198,7 @@ export default defineComponent({
      * @param {Boolean} isDownload
      */
     const handleDownload = async(file, isDownload = true) => {
-      if (file.content_type.includes('image')) {
+      if (!isEmptyValue(file.content_type) && file.content_type.includes('image')) {
         const link = document.createElement('a')
         link.target = '_blank'
         link.href = urlDownload({ fileName: file.name })
@@ -210,10 +207,6 @@ export default defineComponent({
         link.click()
         return
       }
-      // if (file.content_type.includes('image')) {
-      //   const imagen = await fetch(file.src)
-      //   const imagenblob = await imagen.blob()
-      //   const imageURL = URL.createObjectURL(imagenblob)
       const link = document.createElement('a')
       const imageURL = config.adempiere.resource.url + '/' + file.file_name
       link.href = imageURL
@@ -244,29 +237,15 @@ export default defineComponent({
      * @param {Object} file
      */
     function getSurceFile(file) {
+      if (isEmptyValue(file.content_type)) return ''
       if (file.content_type.includes('image')) {
-        return getImageFromSource(file)
+        return config.adempiere.resource.url + '/' + file.fullName
       }
       return getImageFromContentType({
         contentType: file.content_type,
         fileName: file.file_name
       })
-    }
-
-    /**
-     * Image From Source
-     * @param {Object} file
-     */
-    const getImageFromSource = async(file) => {
-      const bytes = await requestGetResource({
-        id: file.id,
-        resourceName: file.valid_file_name
-      })
-
-      const base64_array = bytes.map(part => part.data)
-      const base64_string = base64_array.join('')
-
-      return 'data:' + file.content_type + ';base64,' + base64_string
+      // return ''
     }
 
     /**

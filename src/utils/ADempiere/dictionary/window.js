@@ -2184,11 +2184,13 @@ export const containerManager = {
     })
   },
 
-  getAttachment({ tableName, recordId, recordUuid }) {
+  getAttachment({ tableName, recordId, containerId, clienteId }) {
     return store.dispatch('getAttachmentFromServer', {
-      tableName,
       recordId,
-      recordUuid
+      tableName,
+      clienteId,
+      containerId,
+      containerType: 'window'
     })
   },
   searchWorkflowHistory({ tableName, recordId, recordUuid, containerUuid }) {

@@ -205,7 +205,7 @@ import { requestExistsReferences } from '@/api/ADempiere/recordManagement/refere
 import {
   requestExistsChatsEntries, requestListEntityChats
 } from '@/api/ADempiere/logs/tabInfo/chatsEntries.ts'
-import { requestExistsAttachment } from '@/api/ADempiere/file-management/attachment.ts'
+import { requestListResources } from '@/api/ADempiere/file-management/resource-reference.ts'
 import { requestExistsIssues } from '@/api/ADempiere/logs/tabInfo/windowIssues.ts'
 
 // Utils and Helper Methods
@@ -791,14 +791,16 @@ export default defineComponent({
         (isEmptyValue(currentRecordId.value) || currentRecordId.value <= 0))) {
         return
       }
-      requestExistsAttachment({
-        tableName: currentTabTableName.value,
+      requestListResources({
         recordId: currentRecordId.value,
-        recordUuid: currentRecordUuid.value
+        tableName: currentTabTableName.value,
+        containerId: router.app._route.meta.referenceId,
+        clienteId: store.getters.getSessionContextClientId,
+        containerType: 'window'
       })
         .then(response => {
-          countAttachment.value = response.record_count
-          showAttachmentAvailable.value = Boolean(response.record_count)
+          countAttachment.value = response.resources.length
+          showAttachmentAvailable.value = !isEmptyValue(response.resources)
         })
         .catch(error => {
           console.warn(`Error getting Count Attachment: ${error.message}. Code: ${error.code}.`)

@@ -32,15 +32,24 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
  * @param {string} file_name
  */
 export function requestPresignedUrl({
+  containerType,
+  containerId,
+  columnName,
+  clienteId,
+  tableName,
+  recordId,
   fileName
 }) {
   return request({
-    url: `${config.adempiere.resource.url}/presigned-url/${fileName}`,
+    url: `${config.adempiere.resource.url}/presigned-url/${clienteId}/${containerId}/${fileName}`,
     method: 'get',
-    isWithoutAuthorization: true
-    // params: {
-    //   file_name: fileName
-    // }
+    isWithoutAuthorization: true,
+    params: {
+      table_name: tableName,
+      record_id: recordId,
+      column_name: columnName,
+      container_type: containerType
+    }
   })
 }
 
@@ -75,6 +84,30 @@ export function requestGetResource({
     isWithoutAuthorization: true,
     params: {
       file_name: fileName
+    }
+  })
+}
+
+/**
+ * Get List Resources (Container)
+ */
+export function requestListResources({
+  recordId,
+  tableName,
+  clienteId,
+  containerId,
+  containerType
+}) {
+  return request({
+    url: `${config.adempiere.resource.url}`,
+    method: 'get',
+    isWithoutAuthorization: true,
+    params: {
+      record_id: recordId,
+      client_id: clienteId,
+      table_name: tableName,
+      container_id: containerId,
+      container_type: containerType
     }
   })
 }
