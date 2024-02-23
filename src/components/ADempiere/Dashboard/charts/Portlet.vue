@@ -17,15 +17,15 @@
 -->
 <template>
   <div v-if="!isEmptyValue(chart) && !isEmptyValue(chart.performanceGoal)">
-    <p style="margin: 0px;font-size: 18px;text-align: right;">
+    <p style="margin: 0px;font-size: 16px;text-align: right;">
       <count-to
         :start-val="0"
         :end-val="valueAmount(chart.measureActual)"
         :duration="2600"
-        style="font-size: 50px;font-weight: 500;color: #303133;"
+        style="font-size: 25px;font-weight: 500;color: #303133;"
       />
     </p>
-    <p style="margin: 0px;text-align: left;">
+    <p style="text-align: left;">
       <span style="color: #606266;">
         {{ chart.description }}
       </span>
@@ -34,7 +34,7 @@
           :start-val="0"
           :decimals="2"
           :end-val="valueAmount(chart.performanceGoal) * 100"
-          style="font-size: 18px;"
+          style="font-size: 16px;"
           :style="{ color: colorSchemas(chart) }"
         />
         <b :style="{ color: colorSchemas(chart) }">
