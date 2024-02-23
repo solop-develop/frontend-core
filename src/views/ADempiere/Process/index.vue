@@ -20,15 +20,16 @@
   <div
     v-if="isLoadedMetadata"
     id="process-loaded"
+    class="process-view"
   >
-    <el-card class="content-collapse card-report" style="overflow: auto;position: absolute;">
+    <el-card class="content-collapse card-process" style="overflow: auto;position: absolute;">
       <title-and-help
         :name="processMetadata.name"
         :help="processMetadata.help"
       />
 
       <div id="process-loaded">
-        <p style="text-align: end;">
+        <p style="text-align: end; margin-top: 0px;">
           <action-menu
             id="action-menu"
             :container-uuid="processUuid"
@@ -192,6 +193,9 @@ export default defineComponent({
 <style lang="scss">
 .process-view {
   .card-process {
+    min-height: auto;
+    display: contents;
+
     >.el-card__body {
       padding-top: 0px;
       padding-right: 20px;
@@ -205,7 +209,7 @@ export default defineComponent({
 <style scoped>
   .el-card {
     width: 100% !important;
-    height: 100% !important;
+    /* height: 100% !important; */
   }
   .scroll-tab-process {
     width: 100% !important;

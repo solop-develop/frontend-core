@@ -22,7 +22,7 @@
     class="custom-field-image"
     @submit.prevent="notSubmitForm"
   >
-    <el-col v-if="value" :span="24" :offset="0" class="image-with-file">
+    <el-col v-if="!isEmptyValue(value) && !isEmptyValue(imageSourceSmall)" :span="24" :offset="0" class="image-with-file">
       <el-card :body-style="{ padding: '0px' }">
         <el-image
           class="image-file"
@@ -31,11 +31,7 @@
           lazy
           fit="contain"
           style="text-align: center ; height: 100px"
-          :preview-src-list="[imageSourceLarge]"
         >
-          <!-- <div slot="placeholder" class="image-loading">
-            {{ $t('notifications.loading') }}<span class="dot">...</span>
-          </div> -->
           <el-skeleton
             slot="placeholder"
             :loading="true"
@@ -53,27 +49,19 @@
         </el-image>
 
         <div class="image-footer">
-          <!-- <el-button
-            slot="reference"
-            class="button-manage-file"
-            icon="el-icon-chat-line-square"
-            plain
-            :disabled="isEmptyValue(value) && isEmptyValue(displayedValue)"
-          /> -->
           <file-info
             :image-id="value"
             :resource-name="displayedValue"
             class="popover-info"
           />
-          <!--
-            <el-button
-              slot="reference"
-              class="button-manage-file"
-              icon="el-icon-chat-line-square"
-              plain
-              :disabled="isEmptyValue(value) && isEmptyValue(displayedValue)"
-            />
-          </file-info> -->
+
+          <file-share
+            :image-id="value"
+            :resource-name="displayedValue"
+            :file="fileResource"
+            :file-name="displayedValue"
+            class="popover-info"
+          />
 
           <el-button
             class="button-manage-file-svg"
@@ -118,7 +106,6 @@
               />
             </el-button>
           </el-upload>
-
           <el-button
             class="button-manage-file-svg"
             plain
@@ -138,7 +125,7 @@
       ref="uploadComponent"
       class="image-without-file"
       v-bind="commonsProperties"
-      :action="endPointUploadResource"
+      :action="''"
       :data="additionalData"
       :headers="additionalHeaders"
       drag
@@ -148,7 +135,6 @@
       :multiple="false"
       :before-upload="isValidUploadHandler"
       :on-success="loadedSucess"
-      :on-change="handleChange"
     >
       <!-- <i v-else class="el-icon-plus icon-image-upload" /> -->
       <svg-icon icon-class="cloud_upload" class="icon-image-upload" style="font-size: 45px;" />
@@ -163,32 +149,37 @@ import lang from '@/lang'
 import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
 import fieldWithDisplayColumn from '@/components/ADempiere/FieldDefinition/mixin/mixinWithDisplayColumn.js'
 import FileInfo from '@/components/ADempiere/PanelInfo/Component/AttachmentManager/fileInfo'
+import FileShare from '@/components/ADempiere/PanelInfo/Component/AttachmentManager/FileShare'
 
 // Constants
 import { config } from '@/utils/ADempiere/config'
 import { BEARER_TYPE } from '@/utils/auth'
 import { MIME_TYPE_IMAGE } from '@/utils/ADempiere/resource/image.ts'
 import { UUID_PATTERN } from '@/utils/ADempiere/recordUtil'
-// import { RESOURCE_TYPE_IMAGE } from '@/utils/ADempiere/resource'
+import { RESOURCE_TYPE_IMAGE } from '@/utils/ADempiere/resource'
 
 // API Request Methods
 import {
   requestPresignedUrl,
-  // requestSetResourceReference,
+  requestListResources,
+  requestShareResources,
+  requestDeleteResources,
+  requestSetResourceReference,
   requestDeleteResourceReference
 } from '@/api/ADempiere/file-management/resource-reference.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { getToken } from '@/utils/auth'
-import { getImagePath } from '@/utils/ADempiere/resource'
+// import { getImagePath } from '@/utils/ADempiere/resource'
 import { showMessage } from '@/utils/ADempiere/notification'
 
 export default {
   name: 'FieldImage',
 
   components: {
-    FileInfo
+    FileInfo,
+    FileShare
   },
 
   mixins: [
@@ -206,11 +197,14 @@ export default {
 
   data() {
     return {
+      config,
       additionalData: {},
       fileResource: {},
       imageSourceSmall: '',
       MIME_TYPE_IMAGE,
       isLoadImage: false,
+      infoImage: {},
+      isLoadImageUpload: false,
       valuesImage: [{
         identifier: 'undefined',
         value: '',
@@ -234,45 +228,13 @@ export default {
     isDownload() {
       return !isEmptyValue(this.displayedValue)
     },
-    // async imageSourceSmall() {
-    //   const displayedAlt = this.displayedValue
-    //   if (isEmptyValue(displayedAlt)) {
-    //     return undefined
-    //   }
-
-    //   const blobImage = await getImagePath({
-    //     file: displayedAlt,
-    //     width: 50,
-    //     height: 50
-    //   })
-    //   // const uri = this.loadImage(displayedAlt)
-    //   // getImagePath({
-    //   //   file: displayedAlt,
-    //   //   width: 200,
-    //   //   height: 200,
-    //   //   operation: 'resize'
-    //   // })
-    //   return blobImage.href
-    // },
     endPointUploadResource() {
       let resourceId = this.value
       if (isEmptyValue(resourceId)) {
         resourceId = -1
       }
-      return config.adempiere.resource.url + '/resources/' + resourceId
-    },
-    imageSourceLarge() {
-      const displayedAlt = this.displayedValue
-      if (isEmptyValue(displayedAlt)) {
-        return undefined
-      }
-      const blobImage = getImagePath({
-        file: displayedAlt,
-        width: 1024,
-        height: 1024,
-        operation: 'resize'
-      })
-      return blobImage.href
+      const getUrl = config.adempiere.resource.url + '/' + this.displayedValue
+      return getUrl
     },
     additionalHeaders() {
       const token = getToken()
@@ -312,12 +274,9 @@ export default {
     async loadImage(file) {
       this.isLoadImage = true
       if (file) {
-        const blobImage = await getImagePath({
-          file,
-          width: 50,
-          height: 50
-        })
-        this.imageSourceSmall = blobImage.href
+        const fileName = await this.getListResources()
+        const getUrl = config.adempiere.resource.url + '/' + fileName
+        this.imageSourceSmall = getUrl
         this.isLoadImage = false
       }
       return ''
@@ -328,55 +287,9 @@ export default {
           reject(false)
           return
         }
-        requestPresignedUrl({
-          fileName: file.name
-        })
-          .then(responseUrl => {
-            fetch(responseUrl, {
-              method: 'PUT',
-              body: file
-            }).then(() => {
-              // If multiple files are uploaded, append upload status on the next line.
-            }).catch((e) => {
-              console.error(e)
-            })
-          })
-          .catch(error => {
-            showMessage({
-              message: error.message || error.result || lang.t('component.attachment.error'),
-              type: 'error'
-            })
-            reject(error)
-            return
-          })
-        // requestSetResourceReference({
-        //   resourceType: RESOURCE_TYPE_IMAGE,
-        //   id: this.value || -1,
-        //   fileName: file.name,
-        //   fileSize: file.size
-        // }).then(response => {
-        //   if (response.code >= 400) {
-        //     reject(response)
-        //     return
-        //   }
-
-        //   this.fileResource = response
-        //   this.additionalData = {
-        //     id: response.id
-        //     // file_name: response.file_name
-        //   }
-
-        //   this.value = response.resource_id
-        //   this.displayedValue = response.file_name
-        //   this.preHandleChange(this.value)
-        //   resolve(true)
-        // }).catch(error => {
-        //   showMessage({
-        //     message: error.message || error.result || lang.t('component.attachment.error'),
-        //     type: 'error'
-        //   })
-        //   reject(error)
-        // })
+        // TODO: Replace and separate requests in different functions
+        if (!this.isEmptyValue(this.value)) this.presignedUrl({ file })
+        this.handleReference(file)
       })
     },
     handleChange(file, fileList) {
@@ -388,6 +301,7 @@ export default {
       })
     },
     loadedSucess(response, file, fileList) {
+      // this.isValidUploadHandler(file)
       if (response.code >= 400) {
         setTimeout(() => {
           fileList.pop()
@@ -398,10 +312,6 @@ export default {
           fileList
         )
       }
-      // const { result } = response
-      // this.value = result.resource_id
-      // this.displayedValue = result.file_name
-      // this.preHandleChange(this.value)
     },
 
     clearValues() {
@@ -414,23 +324,114 @@ export default {
     },
 
     /**
+     * Create and Update Reference
+     */
+    handleReference(file) {
+      return new Promise((resolve, reject) => {
+        requestSetResourceReference({
+          resourceType: RESOURCE_TYPE_IMAGE,
+          id: this.value || -1,
+          fileName: file.name,
+          fileSize: file.size
+        })
+          .then(responseReferences => {
+            if (responseReferences.code >= 400) {
+              reject(responseReferences)
+              return
+            }
+            this.fileResource = responseReferences
+            this.additionalData = {
+              id: responseReferences.id
+            }
+
+            this.presignedUrl({ file, reference: responseReferences })
+            resolve(responseReferences)
+          })
+          .catch(error => {
+            showMessage({
+              message: error.message || error.result || lang.t('component.attachment.error'),
+              type: 'error'
+            })
+            reject(error)
+          })
+      })
+    },
+
+    /**
+     * Get URL
+     */
+    presignedUrl({ file, reference }) {
+      return new Promise((resolve, reject) => {
+        const clienteId = this.$store.getters.getSessionContextClientId
+        const { referenceId, type } = this.$route.meta
+        const { tableName } = this.currentTab
+        this.isLoadImageUpload = true
+        requestPresignedUrl({
+          clienteId: clienteId,
+          containerId: referenceId,
+          containerType: type,
+          columnName: this.metadata.columnName,
+          fileName: file.name,
+          recordId: this.currentRecord[tableName + '_ID'],
+          tableName
+        })
+          .then(responseUrl => {
+            const { url, file_name } = responseUrl
+            fetch(url, {
+              method: 'PUT',
+              body: file
+            }).then(() => {
+              setTimeout(() => {
+                if (this.isEmptyValue(this.value)) {
+                  this.value = reference.resource_id
+                }
+                this.loadImage(file)
+                this.preHandleChange(this.value)
+                this.displayedValue = file_name
+              }, 1500)
+              resolve(true)
+            }).catch((error) => {
+              showMessage({
+                message: error.message || error.result || lang.t('component.attachment.error'),
+                type: 'error'
+              })
+              this.handleRemove()
+              reject(error)
+            }).finally(() => {
+              this.isLoadImageUpload = false
+            })
+          })
+      })
+    },
+
+    /**
      * Handle Download image
      */
     async handleDownload() {
-      if (!this.isDownload) {
-        return
-      }
-
-      const link = await getImagePath({
-        file: this.displayedValue
-      })
-      // const imagen = await fetch(this.imageSourceSmall)
-      // const imagenblob = await imagen.blob()
-      // const imageURL = URL.createObjectURL(imagenblob)
-      // const link = document.createElement('a')
-      // link.href = imageURL
-      // link.download = this.altImage
+      const link = document.createElement('a')
+      link.target = '_blank'
+      link.href = this.urlDownload({ fileName: this.displayedValue })
+      link.download = this.displayedValue
+      link.style.display = 'none'
       link.click()
+      return
+    },
+
+    urlDownload({
+      fileName
+    }) {
+      return new Promise((resolve, reject) => {
+        requestShareResources({
+          fileName,
+          seconds: 3600
+        })
+          .then(response => {
+            resolve(response)
+          })
+          .catch(() => {
+            reject('')
+          })
+      })
     },
 
     /**
@@ -450,12 +451,87 @@ export default {
       }).then(() => {
         this.clearValues()
       })
+      requestDeleteResources({
+        fileName: resourceName
+      })
+        .then(() => {
+          this.clearValues()
+        })
+    },
+
+    getListResources() {
+      return new Promise((resolve, reject) => {
+        const clienteId = this.$store.getters.getSessionContextClientId
+        const { referenceId, type } = this.$route.meta
+        const { tableName } = this.currentTab
+        requestListResources({
+          clienteId: clienteId,
+          containerId: referenceId,
+          containerType: type,
+          columnName: this.metadata.columnName,
+          recordId: this.currentRecord[tableName + '_ID'],
+          tableName
+        })
+          .then(response => {
+            let resource
+            let image = ''
+            const resources = this.sortResource(response.resources)
+            if (!this.isEmptyValue(resources)) {
+              resource = resources[resources.length - 1]
+              image = resource.name
+              this.infoImage = resource
+            }
+            resolve(image)
+          })
+          .catch((error) => {
+            showMessage({
+              message: error.message || error.result || lang.t('component.attachment.error'),
+              type: 'error'
+            })
+            reject('')
+          })
+      })
+    },
+    sortResource(resources) {
+      return resources.sort((a, b) => {
+        const fechaA = new Date(a.last_modified)
+        const fechaB = new Date(b.last_modified)
+
+        if (fechaA < fechaB) {
+          return -1
+        } else if (fechaA > fechaB) {
+          return 1
+        } else {
+          return 0
+        }
+      })
     }
   }
 }
 </script>
 
 <style lang="scss">
+.load-references {
+  display: inline-block;
+  margin: 7px;
+  // .el-upload-list {
+  //   display: none;
+  // }
+  .el-upload-dragger {
+    background-color: #fff !important;
+    border: 0px dashed #d9d9d9 !important;
+    border-radius: 0px !important;
+    -webkit-box-sizing: border-box !important;
+    box-sizing: border-box !important;
+    width: auto !important;
+    height: auto !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    display: contents !important;
+    overflow: hidden !important;
+    margin-top: 9px !important;
+  }
+}
 .custom-field-image {
   .image-with-file {
     // width: 178px;

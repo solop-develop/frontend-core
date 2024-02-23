@@ -308,7 +308,7 @@
                     trigger="click"
                     width="450"
                   >
-                    <record-time
+                    <issue-record-time
                       :issue-id="currentIssues.id"
                     />
                     <el-button slot="reference" type="text">
@@ -324,13 +324,17 @@
               <el-form label-position="top" class="form-comments">
                 <el-row :gutter="20">
                   <el-col :span="12">
-                    <el-form-item :label="$t('issues.typeOfRequest')">
+                    <el-form-item required :label="$t('issues.typeOfRequest')">
                       <el-select
                         v-model="currentRequestTypes"
                         filterable
                         @visible-change="findRequestTypes"
                         @change="updateIssuesTypeRequest"
                       >
+                        <empty-option-select
+                          :current-value="currentRequestTypes"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listIssuesTypes"
                           :key="item.id"
@@ -347,6 +351,10 @@
                         @visible-change="findStatus"
                         @change="updateIssuesStatus"
                       >
+                        <empty-option-select
+                          :current-value="currentStatus"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listStatuses"
                           :key="item.id"
@@ -355,13 +363,17 @@
                         />
                       </el-select>
                     </el-form-item>
-                    <el-form-item :label="$t('issues.priority')">
+                    <el-form-item required :label="$t('issues.priority')">
                       <el-select
                         v-model="currentPriority"
                         filterable
                         @visible-change="findPriority"
                         @change="updateIssuesPriority"
                       >
+                        <empty-option-select
+                          :current-value="currentPriority"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listPriority"
                           :key="item.value"
@@ -370,7 +382,7 @@
                         />
                       </el-select>
                     </el-form-item>
-                    <el-form-item :label="$t('issues.salesAgent')">
+                    <el-form-item required :label="$t('issues.salesAgent')">
                       <el-select
                         v-model="currentSalesReps"
                         remote
@@ -380,6 +392,10 @@
                         @visible-change="findSalesReps"
                         @change="updateIssuesSalesReps"
                       >
+                        <empty-option-select
+                          :current-value="currentSalesReps"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listSalesReps"
                           :key="item.id"
@@ -399,6 +415,10 @@
                         :remote-method="remoteMethodBusinessPartner"
                         @visible-change="findBusinessPartner"
                       >
+                        <empty-option-select
+                          :current-value="currentBusinessPartner"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listBusinessPartner"
                           :key="item.id"
@@ -415,6 +435,10 @@
                         :remote-method="remoteMethodCategory"
                         @visible-change="findCategory"
                       >
+                        <empty-option-select
+                          :current-value="currentCategory"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listCategory"
                           :key="item.id"
@@ -432,6 +456,10 @@
                         :remote-method="remoteMethodProject"
                         @visible-change="findProject"
                       >
+                        <empty-option-select
+                          :current-value="currentProject"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listProject"
                           :key="item.id"
@@ -449,6 +477,10 @@
                         :remote-method="remoteMethodGroup"
                         @visible-change="findGroup"
                       >
+                        <empty-option-select
+                          :current-value="currentGroup"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listGroup"
                           :key="item.id"
@@ -712,13 +744,17 @@
               <el-form label-position="top" class="form-min-label">
                 <el-row :gutter="20">
                   <el-col :span="12">
-                    <el-form-item :label="$t('issues.typeOfRequest')" style="margin: 0px;">
+                    <el-form-item required :label="$t('issues.typeOfRequest')" style="margin: 0px;">
                       <el-select
                         v-model="currentRequestTypes"
                         filterable
                         @visible-change="findRequestTypes"
                         @change="exitPopover('newtypeOfRequest')"
                       >
+                        <empty-option-select
+                          :current-value="currentRequestTypes"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listIssuesTypes"
                           :key="item.id"
@@ -735,6 +771,10 @@
                         @visible-change="findStatus"
                         @change="exitPopover('')"
                       >
+                        <empty-option-select
+                          :current-value="currentStatus"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listStatuses"
                           :key="item.id"
@@ -743,13 +783,17 @@
                         />
                       </el-select>
                     </el-form-item>
-                    <el-form-item :label="$t('issues.priority')" style="margin: 0px;">
+                    <el-form-item required :label="$t('issues.priority')" style="margin: 0px;">
                       <el-select
                         v-model="currentPriority"
                         filterable
                         @visible-change="findPriority"
                         @change="exitPopover('')"
                       >
+                        <empty-option-select
+                          :current-value="currentPriority"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listPriority"
                           :key="item.value"
@@ -758,7 +802,7 @@
                         />
                       </el-select>
                     </el-form-item>
-                    <el-form-item :label="$t('issues.salesAgent')" style="margin: 0px;">
+                    <el-form-item required :label="$t('issues.salesAgent')" style="margin: 0px;">
                       <el-select
                         v-model="currentSalesReps"
                         remote
@@ -768,6 +812,10 @@
                         @visible-change="findSalesReps"
                         @change="exitPopover('')"
                       >
+                        <empty-option-select
+                          :current-value="currentSalesReps"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listSalesReps"
                           :key="item.id"
@@ -797,6 +845,10 @@
                         :remote-method="remoteMethodBusinessPartner"
                         @visible-change="findBusinessPartner"
                       >
+                        <empty-option-select
+                          :current-value="currentBusinessPartner"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listBusinessPartner"
                           :key="item.id"
@@ -813,6 +865,10 @@
                         :remote-method="remoteMethodCategory"
                         @visible-change="findCategory"
                       >
+                        <empty-option-select
+                          :current-value="currentCategory"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listCategory"
                           :key="item.id"
@@ -830,6 +886,10 @@
                         :remote-method="remoteMethodProject"
                         @visible-change="findProject"
                       >
+                        <empty-option-select
+                          :current-value="currentProject"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listProject"
                           :key="item.id"
@@ -847,6 +907,10 @@
                         :remote-method="remoteMethodGroup"
                         @visible-change="findGroup"
                       >
+                        <empty-option-select
+                          :current-value="currentGroup"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listGroup"
                           :key="item.id"
@@ -863,6 +927,10 @@
                         :remote-method="remoteMethodTaskStatus"
                         @visible-change="findTaskStatus"
                       >
+                        <empty-option-select
+                          :current-value="currentTask"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listTaskStatus"
                           :key="item.id"
@@ -940,7 +1008,7 @@
                     trigger="click"
                     width="450"
                   >
-                    <record-time
+                    <issue-record-time
                       :issue-id="currentIssues.id"
                     />
                     <el-button slot="reference" type="text">
@@ -1025,13 +1093,17 @@
               <el-form label-position="top" class="form-min-label">
                 <el-row :gutter="20">
                   <el-col :span="12">
-                    <el-form-item :label="$t('issues.typeOfRequest')" style="margin: 0px;">
+                    <el-form-item required :label="$t('issues.typeOfRequest')" style="margin: 0px;">
                       <el-select
                         v-model="currentIssues.request_type.name"
                         filterable
                         @visible-change="findRequestTypes"
                         @change="updateIssuesTypeRequest"
                       >
+                        <empty-option-select
+                          :current-value="currentIssues.request_type.id"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listIssuesTypes"
                           :key="item.id"
@@ -1048,6 +1120,10 @@
                         @visible-change="findStatus"
                         @change="updateIssuesStatus"
                       >
+                        <empty-option-select
+                          :current-value="currentIssues.status.id"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listStatuses"
                           :key="item.id"
@@ -1056,13 +1132,17 @@
                         />
                       </el-select>
                     </el-form-item>
-                    <el-form-item :label="$t('issues.priority')" style="margin: 0px;">
+                    <el-form-item required :label="$t('issues.priority')" style="margin: 0px;">
                       <el-select
                         v-model="currentIssues.priority.name"
                         filterable
                         @visible-change="findPriority"
                         @change="updateIssuesPriority"
                       >
+                        <empty-option-select
+                          :current-value="currentIssues.priority.id"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listPriority"
                           :key="item.value"
@@ -1071,7 +1151,7 @@
                         />
                       </el-select>
                     </el-form-item>
-                    <el-form-item :label="$t('issues.salesAgent')" style="margin: 0px;">
+                    <el-form-item required :label="$t('issues.salesAgent')" style="margin: 0px;">
                       <el-select
                         v-model="currentIssues.sales_representative.name"
                         remote
@@ -1081,6 +1161,10 @@
                         @visible-change="findSalesReps"
                         @change="updateIssuesSalesReps"
                       >
+                        <empty-option-select
+                          :current-value="currentIssues.sales_representative.id"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listSalesReps"
                           :key="item.id"
@@ -1112,6 +1196,10 @@
                         @visible-change="findBusinessPartner"
                         @change="updateIssuesBusinessPartner"
                       >
+                        <empty-option-select
+                          :current-value="currentIssues.business_partner.id"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listBusinessPartner"
                           :key="item.id"
@@ -1129,6 +1217,10 @@
                         @visible-change="findCategory"
                         @change="updateIssuesCategory"
                       >
+                        <empty-option-select
+                          :current-value="currentIssues.category.id"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listCategory"
                           :key="item.id"
@@ -1147,6 +1239,10 @@
                         @visible-change="findProject"
                         @change="updateIssuesProyect"
                       >
+                        <empty-option-select
+                          :current-value="currentIssues.project.id"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listProject"
                           :key="item.id"
@@ -1165,6 +1261,10 @@
                         @visible-change="findGroup"
                         @change="updateIssuesGroup"
                       >
+                        <empty-option-select
+                          :current-value="currentIssues.group.id"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listGroup"
                           :key="item.id"
@@ -1183,6 +1283,10 @@
                         @visible-change="findTaskStatus"
                         @change="updateIssuesTaskStatus"
                       >
+                        <empty-option-select
+                          :current-value="currentIssues.task_status.id"
+                          :is-allows-zero="false"
+                        />
                         <el-option
                           v-for="item in listTaskStatus"
                           :key="item.id"
@@ -1409,11 +1513,12 @@ import store from '@/store'
 
 // Components and Mixins
 import 'simple-m-editor/dist/simple-m-editor.css'
+import EmptyOptionSelect from '@/components/ADempiere/FieldDefinition/FieldSelect/emptyOptionSelect.vue'
 import IssueAvatar from '@/components/ADempiere/FormDefinition/IssueManagement/issueAvatar.vue'
-import IssueCommentAdd from '@/components/ADempiere/FormDefinition/IssueManagement/IsssueFeed/issueCommentAdd.vue'
-import IssueCommentView from '@/components/ADempiere/FormDefinition/IssueManagement/IsssueFeed/issueCommentView.vue'
-import IssueLog from '@/components/ADempiere/FormDefinition/IssueManagement/IsssueFeed/issueLog.vue'
-import RecordTime from '../recordTime.vue'
+import IssueCommentAdd from '@/components/ADempiere/FormDefinition/IssueManagement/IssueFeed/issueCommentAdd.vue'
+import IssueCommentView from '@/components/ADempiere/FormDefinition/IssueManagement/IssueFeed/issueCommentView.vue'
+import IssueLog from '@/components/ADempiere/FormDefinition/IssueManagement/IssueFeed/issueLog.vue'
+import IssueRecordTime from '@/components/ADempiere/FormDefinition/IssueManagement/IssueRecordTime/index.vue'
 
 // Constants
 import { REQUEST_WINDOW_UUID } from '@/utils/ADempiere/dictionary/form/Issues.js'
@@ -1441,11 +1546,12 @@ export default defineComponent({
   name: 'IssueComment',
 
   components: {
+    EmptyOptionSelect,
     IssueAvatar,
     IssueCommentAdd,
     IssueCommentView,
     IssueLog,
-    RecordTime
+    IssueRecordTime
   },
 
   props: {

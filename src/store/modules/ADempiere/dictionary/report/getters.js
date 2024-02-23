@@ -16,6 +16,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Constants
+import { FIELDS_DATE, FIELDS_DECIMALS } from '@/utils/ADempiere/references.js'
+
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { isDisplayedField, isMandatoryField } from '@/utils/ADempiere/dictionary/process.js'
@@ -117,7 +120,7 @@ export default {
       if (fieldItem.isInfoOnly) {
         return false
       }
-      const { columnName } = fieldItem
+      const { columnName, displayType } = fieldItem
       const isMandatory = isMandatoryField(fieldItem)
       if (!isMandatory) {
         // evaluate displayed fields
@@ -131,6 +134,9 @@ export default {
         columnName
       })
 
+      const isDateField = FIELDS_DATE.includes(displayType)
+      const isDecimalField = FIELDS_DECIMALS.includes(displayType)
+
       if (fieldItem.isRange && !isNumberField(fieldItem.displayType)) {
         const valueTo = rootGetters.getValueOfField({
           containerUuid: uuid,
@@ -142,6 +148,17 @@ export default {
           //   value: valueTo
           // })
           reportParameters[fieldItem.columnNameTo] = valueTo
+          if (isDateField) {
+            reportParameters[columnName] = {
+              type: 'date',
+              value: valueTo
+            }
+          } else if (isDecimalField) {
+            reportParameters[columnName] = {
+              type: 'decimal',
+              value: valueTo
+            }
+          }
         }
       }
 
@@ -151,6 +168,17 @@ export default {
         //   value
         // })
         reportParameters[columnName] = value
+        if (isDateField) {
+          reportParameters[columnName] = {
+            type: 'date',
+            value: value
+          }
+        } else if (isDecimalField) {
+          reportParameters[columnName] = {
+            type: 'decimal',
+            value: value
+          }
+        }
       }
     })
 

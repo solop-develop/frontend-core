@@ -32,7 +32,18 @@ const attachment = {
   description: 'Descripción',
   addMessage: 'Agregar Mensaje',
   addDescription: 'Agregar Descripción',
-  editDescription: 'Editar Descripción'
+  editDescription: 'Editar Descripción',
+  share: {
+    title: 'Compartir Ahora',
+    description: 'Cualquiera que tenga la siguiente URL podrá ver su archivo incluso si está configurado como lectura privada. Actualizar la duración del intercambio generará una nueva URL a continuación.',
+    timeText: 'Duración',
+    time: {
+      hour: 'Hora',
+      hours: 'Horas',
+      day: 'Dia',
+      days: 'Dias'
+    }
+  }
 }
 
 export default attachment

@@ -113,9 +113,12 @@ export default {
       }
       if (isEmptyValue(format)) {
         format = 'yyyy-MM-dd'
-        const { datePattern } = this.$store.getters['getCurrentLanguageDefinition']
-        if (!isEmptyValue(datePattern)) {
-          format = datePattern
+        const currentLanguageDefinition = this.$store.getters['getCurrentLanguageDefinition']
+        if (!isEmptyValue(currentLanguageDefinition)) {
+          const { datePattern } = currentLanguageDefinition
+          if (!isEmptyValue(datePattern)) {
+            format = datePattern
+          }
         }
       }
 

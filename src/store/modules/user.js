@@ -157,7 +157,8 @@ const actions = {
         warehouseId,
         token
       })
-        .then(token => {
+        .then(response => {
+          const { token } = response
           commit('SET_TOKEN', token)
           setToken(token)
           resolve()
@@ -177,10 +178,11 @@ const actions = {
         code,
         state
       })
-        .then(token => {
+        .then(response => {
+          const { token } = response
           commit('SET_TOKEN', token)
           setToken(token)
-          resolve()
+          resolve(token)
         })
         .catch(error => {
           reject(error)
@@ -501,7 +503,7 @@ const actions = {
         dispatch('permission/sendRequestMenu', null, {
           root: true
         })
-        location.href = '/'
+        // location.href = '/'
       })
   },
 
@@ -627,6 +629,8 @@ const actions = {
         // Update user info and context associated with session
         // dispatch('getSessionInfo', uuid)
 
+        dispatch('getSessionInfo')
+
         showMessage({
           message: language.t('notifications.successChangeRole'),
           type: 'success',
@@ -646,7 +650,6 @@ const actions = {
         dispatch('permission/sendRequestMenu', null, {
           root: true
         })
-        location.href = '/'
       })
   },
 

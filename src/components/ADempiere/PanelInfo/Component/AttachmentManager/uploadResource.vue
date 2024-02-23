@@ -25,8 +25,9 @@
       ref="uploadComponent"
       :action="action"
       class="upload-demo"
-      :before-upload="isValidUploadHandler"
       :multiple="false"
+      :before-upload="isValidUploadHandler"
+      :on-success="loadedSucess"
     >
       <el-button slot="trigger" size="small" type="primary" style="font-size: 13px;">
         <i class="el-icon-upload" />
@@ -39,8 +40,9 @@
 <script>
 import { defineComponent, ref } from '@vue/composition-api'
 
-// import lang from '@/lang'
-// import store from '@/store'
+import lang from '@/lang'
+import store from '@/store'
+import router from '@/router'
 
 // Constants
 // import { config } from '@/utils/ADempiere/config'
@@ -53,11 +55,14 @@ import { defineComponent, ref } from '@vue/composition-api'
 // } from '@/api/ADempiere/user-interface/component/resource'
 import {
   requestPresignedUrl
+  // requestDeleteResources,
+  // requestSetResourceReference
+  // requestDeleteResourceReference
 } from '@/api/ADempiere/file-management/resource-reference.ts'
 
 // // Utils and Helper Methods
 // import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-// import { showMessage } from '@/utils/ADempiere/notification'
+import { showMessage } from '@/utils/ADempiere/notification'
 // import { getToken } from '@/utils/auth'
 // import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
 
@@ -77,11 +82,27 @@ export default defineComponent({
       type: String,
       default: ''
     },
+    containerManager: {
+      type: Object,
+      default: () => {}
+    },
+    containerUuid: {
+      type: String,
+      default: ''
+    },
+    parentUuid: {
+      type: String,
+      default: ''
+    },
     loadData: Function
   },
 
   setup(props) {
+    const uploadComponent = ref(null)
     const action = ref('')
+    const filesList = ref([])
+    const additionalData = ref({})
+    const fileResource = ref(({}))
     function upload() {
       // // Get selected files from the input element.
       // var files = document.querySelector('#selector').files
@@ -96,46 +117,130 @@ export default defineComponent({
     }
 
     function isValidUploadHandler(file) {
-      retrieveNewURL(file)
+      resourceReference(file)
     }
 
-    function retrieveNewURL(file, cb) {
-      return new Promise(resolve => {
-        requestPresignedUrl({
-          fileName: file.name.replaceAll(' ', '_')
+    function resourceReference(file) {
+      const clienteId = store.getters.getSessionContextClientId
+      const { referenceId, type } = router.app._route.meta
+      return new Promise((resolve, reject) => {
+        const url = presignedUrl({
+          clienteId: clienteId,
+          containerId: referenceId,
+          containerType: type,
+          // fileName: file.name,
+          file
         })
-          .then(response => {
-            action.value = response
-            uploadFile(file, response)
-            resolve(file, response)
+        resolve(url)
+      })
+    }
+
+    /**
+     * Get URL
+     */
+    function presignedUrl({ clienteId, containerId, containerType, file, reference }) {
+      return new Promise((resolve, reject) => {
+        requestPresignedUrl({
+          clienteId,
+          containerId,
+          containerType,
+          fileName: file.name,
+          recordId: props.recordId,
+          tableName: props.tableName
+        })
+          .then(responseUrl => {
+            uploadFile({
+              file,
+              presigned: responseUrl
+            })
+              .then(response => {
+                resolve(file, responseUrl)
+              })
+              .catch((error) => {
+                showMessage({
+                  message: error.message || error.result || lang.t('component.attachment.error'),
+                  type: 'error'
+                })
+                reject(error)
+              })
           })
       })
-      // fetch(`/presignedUrl?name=${file.name}`).then((response) => {
-      //   response.text().then((url) => {
-      //     cb(file, url)
-      //   })
-      // }).catch((e) => {
-      //   console.error(e)
-      // })
     }
 
     // ``uploadFile` accepts the current filename and the pre-signed URL. It then uses `Fetch API`
     // to upload this file to S3 at `play.min.io:9000` using the URL:
-    function uploadFile(file, url) {
-      fetch(url, {
-        method: 'PUT',
-        body: file
-      }).then(() => {
-        // If multiple files are uploaded, append upload status on the next line.
-      }).catch((e) => {
-        console.error(e)
+    function uploadFile({ file, presigned }) {
+      const { url, file_name } = presigned
+      return new Promise((resolve, reject) => {
+        fetch(url, {
+          method: 'PUT',
+          body: file
+        }).then(() => {
+          props.containerManager.getAttachment({
+            containerUuid: props.containerUuid,
+            containerId: router.app._route.meta.referenceId,
+            parentUuid: props.parentUuid,
+            tableName: props.tableName,
+            recordId: props.recordId
+          })
+          // store.dispatch('')
+          resolve(file_name)
+        }).catch((error) => {
+          showMessage({
+            message: error.message || error.result || lang.t('component.attachment.error'),
+            type: 'error'
+          })
+          reject(error)
+        })
+      })
+    }
+
+    function loadedSucess(response, file, fileList) {
+      if (response.code >= 400) {
+        setTimeout(() => {
+          fileList.pop()
+        }, 500)
+        return handleError(
+          new Error(response.result),
+          file,
+          fileList
+        )
+      }
+
+      if (props.loadData) {
+        props.loadData({
+          resource: fileResource.value,
+          file
+        })
+      }
+      additionalData.value = {}
+
+      store.dispatch('getAttachmentFromServer', {
+        tableName: props.tableName,
+        recordId: props.recordId,
+        recordUuid: props.recordUuid
+      })
+    }
+
+    function handleError(error, file, fileList) {
+      return showMessage({
+        type: 'error',
+        message: error.message || error.result || lang.t('component.attachment.error')
       })
     }
 
     return {
+      // Refs
+      uploadComponent,
+      additionalData,
+      fileResource,
+      filesList,
+      action,
+      // Methods
       upload,
-      isValidUploadHandler,
-      action
+      handleError,
+      loadedSucess,
+      isValidUploadHandler
     }
   }
 })

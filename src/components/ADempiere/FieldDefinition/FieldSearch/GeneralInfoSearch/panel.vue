@@ -167,6 +167,9 @@ import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
 import { containerManager as containerManagerForm } from '@/utils/ADempiere/dictionary/form'
 
+/**
+ * TODO: Disable select inactive records.
+ */
 export default {
   name: 'PanelGeneralInfoSearch',
 
@@ -259,6 +262,12 @@ export default {
       return store.getters.getSearchQueryFields({
         tableName: this.tableName
       })
+        .map(fieldItem => {
+          return {
+            ...fieldItem,
+            containerUuid: this.uuidForm
+          }
+        })
     },
     storedColumnsListTable() {
       return store.getters.getSearchTableFields({
@@ -369,8 +378,7 @@ export default {
       return store.subscribe((mutation, state) => {
         if (mutation.type === 'updateValueOfField') {
           if (mutation.payload.containerUuid === this.uuidForm) {
-            if (!isEmptyValue(mutation.payload.columnName) &&
-              !isEmptyValue(mutation.payload.value)) {
+            if (!isEmptyValue(mutation.payload.columnName)) {
               this.getListSearchRecords()
             }
           }
@@ -458,6 +466,14 @@ export default {
     // space between quey criteria and table
     .el-collapse-item__content {
       padding-bottom: 0px !important;
+    }
+  }
+  .general-info-table {
+    .el-table__cell {
+      padding: 0px !important;
+      &.is-leaf {
+        padding: 6px !important;
+      }
     }
   }
 }

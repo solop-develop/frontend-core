@@ -70,6 +70,7 @@ export function requestLookupList({
     method: 'get',
     params: {
       context_attributes: contextAttributesList,
+      is_only_active_records: true,
       //
       reference_uuid: referenceUuid,
       search_value: searchValue,
@@ -82,11 +83,4 @@ export function requestLookupList({
       page_size: pageSize
     }
   })
-    .then(lookupListResponse => {
-      return {
-        nextPageToken: lookupListResponse.next_page_token,
-        recordCount: lookupListResponse.record_count,
-        recordsList: lookupListResponse.records
-      }
-    })
 }

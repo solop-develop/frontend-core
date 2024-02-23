@@ -32,14 +32,23 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
  * @param {string} file_name
  */
 export function requestPresignedUrl({
+  containerType,
+  containerId,
+  columnName,
+  clienteId,
+  tableName,
+  recordId,
   fileName
 }) {
   return request({
-    url: `${config.adempiere.resource.url}/presigned-url/${fileName}`,
+    url: `${config.adempiere.resource.url}/presigned-url/${clienteId}/${containerId}/${fileName}`,
     method: 'get',
     isWithoutAuthorization: true,
     params: {
-      file_name: fileName
+      table_name: tableName,
+      record_id: recordId,
+      column_name: columnName,
+      container_type: containerType
     }
   })
 }
@@ -54,11 +63,82 @@ export function requestUploadFile({
   file
 }) {
   return request({
-    url: `${url}`,
+    baseURL: `${url}`,
     method: 'put',
     isWithoutAuthorization: true,
     body: {
       file
+    }
+  })
+}
+
+/**
+ * Get Resources
+ */
+export function requestGetResource({
+  fileName
+}) {
+  return request({
+    url: `${config.adempiere.resource.url}/${fileName}`,
+    method: 'get',
+    isWithoutAuthorization: true,
+    params: {
+      file_name: fileName
+    }
+  })
+}
+
+/**
+ * Get List Resources (Container)
+ */
+export function requestListResources({
+  recordId,
+  tableName,
+  clienteId,
+  containerId,
+  containerType
+}) {
+  return request({
+    url: `${config.adempiere.resource.url}`,
+    method: 'get',
+    isWithoutAuthorization: true,
+    params: {
+      record_id: recordId,
+      client_id: clienteId,
+      table_name: tableName,
+      container_id: containerId,
+      container_type: containerType
+    }
+  })
+}
+
+/**
+ * Delete Resources
+ */
+export function requestDeleteResources({
+  fileName
+}) {
+  return request({
+    url: `${config.adempiere.resource.url}/${fileName}${fileName}`,
+    method: 'delete',
+    isWithoutAuthorization: true
+  })
+}
+
+/**
+ * Share Resoucer
+ */
+
+export function requestShareResources({
+  fileName,
+  seconds
+}) {
+  return request({
+    baseURL: `${config.adempiere.resource.url}/download-url/${fileName}`,
+    isWithoutAuthorization: true,
+    method: 'get',
+    params: {
+      seconds
     }
   })
 }

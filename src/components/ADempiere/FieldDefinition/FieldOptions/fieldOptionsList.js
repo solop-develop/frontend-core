@@ -48,24 +48,28 @@ export const zoomInOptionItem = {
   name: language.t('page.processActivity.zoomIn'),
   enabled: true,
   svg: false,
-  icon: 'el-icon-files',
+  // icon: 'el-icon-files',
+  icon: 'el-icon-zoom-in',
   index: 0,
   isRender: false,
   componentRender: () => import('@/components/ADempiere/FieldDefinition/FieldOptions/EmptyOption'),
-  executeMethod: ({ containerManager, fieldAttributes, value }) => {
+  executeMethod: ({ containerManager, window, fieldAttributes, value }) => {
     const { parentUuid, containerUuid, reference } = fieldAttributes
     const { zoomWindows } = reference
 
-    const isSOTrx = isSalesTransaction({
-      parentUuid,
-      containerUuid
-    })
-    let window = zoomWindows.find(zoomWindow => {
-      // Is Sales Transaction Window or Is Purchase Transaction Window
-      return zoomWindow.isSalesTransaction === isSOTrx
-    })
-    if (isEmptyValue(window)) {
-      window = zoomWindows.at(0)
+    let windowToZoom = window
+    if (isEmptyValue(windowToZoom)) {
+      const isSOTrx = isSalesTransaction({
+        parentUuid,
+        containerUuid
+      })
+      windowToZoom = zoomWindows.find(zoomWindow => {
+        // Is Sales Transaction Window or Is Purchase Transaction Window
+        return zoomWindow.isSalesTransaction === isSOTrx
+      })
+      if (isEmptyValue(windowToZoom)) {
+        windowToZoom = zoomWindows.at(0)
+      }
     }
 
     let currentValue = value
@@ -95,7 +99,7 @@ export const zoomInOptionItem = {
     }
 
     zoomIn({
-      attributeValue: `window_${window.id}`,
+      attributeValue: `window_${windowToZoom.id}`,
       attributeName: 'containerKey',
       query: {
         [columnName]: currentValue

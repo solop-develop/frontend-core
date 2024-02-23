@@ -32,7 +32,18 @@ const attachment = {
   description: 'Description',
   addMessage: 'Add Message',
   addDescription: 'Add Description',
-  editDescription: 'Edit Description'
+  editDescription: 'Edit Description',
+  share: {
+    title: 'Quick share',
+    description: 'Anyone with the URL below will be able to view your file even if it`s set to private read. Updating the sharing duration will generate a new URL below.',
+    timeText: 'Sharing duration',
+    time: {
+      hour: 'Hour',
+      hours: 'Hours',
+      day: 'Day',
+      days: 'Days'
+    }
+  }
 }
 
 export default attachment

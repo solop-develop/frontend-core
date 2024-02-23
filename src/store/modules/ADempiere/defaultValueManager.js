@@ -40,13 +40,15 @@ const defaultValueManager = {
   state: initState,
 
   mutations: {
-    setDefaultValue(state, { key, clientId, contextAttributesList, uuid, displayedValue, value }) {
+    setDefaultValue(state, { key, clientId, contextAttributesList, uuid, value, displayedValue, isActive, reason }) {
       Vue.set(state.storedDefaultValue, key, {
         clientId,
         contextAttributesList,
         uuid,
+        value,
         displayedValue,
-        value
+        isActive,
+        reason
       })
     },
 
@@ -93,7 +95,10 @@ const defaultValueManager = {
       }
       return new Promise(resolve => {
         if (isEmptyValue(id) && isEmptyValue(uuid) && isEmptyValue(processParameterId) && isEmptyValue(browseFieldId)) {
-          resolve(defaultEmptyResponse)
+          resolve({
+            ...defaultEmptyResponse,
+            reason: 'Without identifier'
+          })
           return
         }
 
@@ -107,7 +112,10 @@ const defaultValueManager = {
 
         // fill context value to continue
         if (!isSameSize(contextColumnNames, Object.values(contextAttributesList))) {
-          resolve(defaultEmptyResponse)
+          resolve({
+            ...defaultEmptyResponse,
+            reason: 'Without context'
+          })
           return
         }
 
@@ -139,7 +147,10 @@ const defaultValueManager = {
 
         // if it is the same request, it is not made
         if (state.inRequest.get(key)) {
-          resolve(defaultEmptyResponse)
+          resolve({
+            ...defaultEmptyResponse,
+            reason: 'In Request'
+          })
           return
         }
         state.inRequest.set(key, true)
@@ -161,7 +172,7 @@ const defaultValueManager = {
           value
         })
           .then(valueResponse => {
-            const { values } = valueResponse
+            const { values, is_active } = valueResponse
             // const values = {
             //   KeyColumn: undefined,
             //   DisplayColumn: undefined,
@@ -187,11 +198,13 @@ const defaultValueManager = {
               key,
               clientId,
               contextAttributesList,
-              id,
-              displayedValue: displayValue,
+              id, // field id
+              uuid: values.UUID, // record uuid
               // set value of server to parsed if is number as string "101" -> 101
               value: valueOfServer,
-              uuid: values.UUID
+              displayedValue: displayValue,
+              isActive: is_active,
+              reason: 'Successful default value'
             })
 
             commit('updateValueOfField', {
@@ -220,7 +233,8 @@ const defaultValueManager = {
             resolve({
               displayedValue: displayValue,
               value: valueOfServer,
-              uuid: values.UUID
+              uuid: values.UUID,
+              isActive: is_active
             })
           })
           .catch(error => {

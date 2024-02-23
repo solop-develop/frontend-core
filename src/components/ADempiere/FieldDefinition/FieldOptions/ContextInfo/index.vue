@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Elsio Sanchez esanchez@erpya.com https://github.com/elsiosanchez
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez esanchez@erpya.com https://github.com/elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -22,7 +22,7 @@
       <span style="word-break: break-word;">
         {{ $t('field.field') }}
         <b>{{ fieldAttributes.name }}</b>
-        ({{ fieldAttributes.id }}, {{ fieldAttributes.columnName }})
+        ({{ fieldAttributes.id }}, {{ fieldAttributes.columnName }}{{ !fieldAttributes.isSameColumnElement ? ', ' + fieldAttributes.elementName : '' }})
       </span>
     </div>
 
@@ -98,6 +98,7 @@
         type="text"
         @click="redirect({ window: zoomItem })"
       >
+        <i class="el-icon-zoom-in" />
         {{ $t('page.processActivity.zoomIn') }}
         {{ zoomItem.name }}
       </el-button>
@@ -112,8 +113,8 @@ import store from '@/store'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 import { parseContext } from '@/utils/ADempiere/contextUtils'
+import { zoomInOptionItem } from '@/components/ADempiere/FieldDefinition/FieldOptions/fieldOptionsList'
 
 export default defineComponent({
   name: 'ContextInfo',
@@ -153,21 +154,10 @@ export default defineComponent({
       // panel in mobile mode
       store.commit('changeShowRigthPanel', false)
 
-      const { columnName } = props.fieldAttributes
-
-      const filters = [{
-        columnName,
+      zoomInOptionItem.executeMethod({
+        window,
+        fieldAttributes: props.fieldAttributes,
         value: fieldValue.value
-      }]
-
-      zoomIn({
-        uuid: window.uuid,
-        query: {
-          filters
-        },
-        params: {
-          filters
-        }
       })
     }
 

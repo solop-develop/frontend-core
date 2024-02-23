@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
+
 <template>
   <div class="issues-list">
     <el-card
@@ -53,6 +54,7 @@
           />
         </el-button>
       </div>
+
       <el-card
         v-if="isKanban || isEdit"
         shadow="never"
@@ -87,8 +89,10 @@
             v-for="(data, index) in listIssues"
             :key="index"
           >
-            <items
+            <issue-row
               :metadata="data"
+              :table-name="tableName"
+              :record-id="recordId"
             />
           </span>
         </span>
@@ -107,7 +111,7 @@
             style="display: flex;overflow: auto;"
           >
             <div
-              v-for="(issues, index) in listStatuses"
+              v-for="(statusItem, index) in listStatuses"
               :key="index"
               style="height: 80vh;padding: 0px 10px;min-width: 450px;max-width: 450px;"
             >
@@ -115,8 +119,8 @@
                 shadow="never"
                 :body-style="{ padding: '10px' }"
               >
-                <el-collapse accordion>
-                  <el-collapse-item name="1">
+                <el-collapse v-model="statusesExpand">
+                  <el-collapse-item :name="statusItem.id">
                     <template slot="title">
                       <svg-icon
                         icon-class="label"
@@ -124,29 +128,29 @@
                       />
                       <b style="font-size: 16px;padding-left: 10px;">
                         <i>
-                          {{ issues.name }}
+                          {{ statusItem.name }}
                         </i>
                       </b>
                     </template>
-                    <span v-if="isEmptyValue(listKanbanGroup[issues.id])">
+                    <span v-if="isEmptyValue(listKanbanGroup[statusItem.id])">
                       <el-empty :image-size="90" />
                     </span>
                     <!-- {{ listKanbanGroup[0] }} -->
-                    <draggable
+                    <draggable-elements
                       v-if="!isloadinUpdateKanban"
-                      :id="issues.id"
-                      :ref="issues.id"
-                      :list="listKanbanGroup[issues.id]"
+                      :id="statusItem.id"
+                      :ref="statusItem.id"
+                      :list="listKanbanGroup[statusItem.id]"
                       :group="{ name: 'people', pull: replace }"
                       @change="updateStatus"
                     >
                       <el-card
-                        v-for="data in listKanbanGroup[issues.id]"
+                        v-for="data in listKanbanGroup[statusItem.id]"
                         :key="data.id"
                         shadow="never"
                         :body-style="{ padding: '0px' }"
                       >
-                        <kanban
+                        <kanban-issues
                           :metadata="data"
                         />
                         <!-- <div
@@ -159,7 +163,7 @@
                           class="view-loading"
                         /> -->
                       </el-card>
-                    </draggable>
+                    </draggable-elements>
                   </el-collapse-item>
                 </el-collapse>
               </el-card>
@@ -167,6 +171,7 @@
           </div>
         </el-card>
       </div>
+
       <div
         v-else
         style="overflow: auto;"
@@ -200,8 +205,10 @@
                 v-for="(data, index) in filterData({ data: listIssues, column: item.id })"
                 :key="index"
               >
-                <items
+                <issue-row
                   :metadata="data"
+                  :table-name="tableName"
+                  :record-id="recordId"
                 />
               </span>
             </el-collapse-item>
@@ -211,6 +218,7 @@
     </el-card>
   </div>
 </template>
+
 <script>
 import {
   defineComponent, computed, ref
@@ -218,26 +226,19 @@ import {
 
 import store from '@/store'
 import lang from '@/lang'
+
 // Components and Mixins
-import draggable from 'vuedraggable'
-import RecordTime from '@/components/ADempiere/Form/Issues/recordTime.vue'
-import Items from '@/components/ADempiere/Form/Issues/ListIssues/items.vue'
-import Kanban from '@/components/ADempiere/Form/Issues/ListIssues/kanban.vue'
-import Comment from '@/components/ADempiere/Form/Issues/component/Comment.vue'
+import DraggableElements from 'vuedraggable'
+import IssueRow from '@/components/ADempiere/FormDefinition/IssueManagement/IssuesList/issueRow.vue'
+import KanbanIssues from '@/components/ADempiere/Form/Issues/ListIssues/kanban.vue'
 import ProgressPercentage from '@/components/ADempiere/ContainerOptions/ProgressPercentage.vue'
-// Constants
-import { REQUEST_WINDOW_UUID } from '@/utils/ADempiere/dictionary/form/Issues.js'
 
 // Utils and Helper Methods
-import { formatDate, translateDateByLong } from '@/utils/ADempiere/formatValue/dateFormat'
-import { getImagePath } from '@/utils/ADempiere/resource.js'
 import { showMessage } from '@/utils/ADempiere/notification'
-import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 
 // Api Request Methods
 import {
   requestListRequestTypes,
-  requestListPriorities,
   requestListStatuses
 } from '@/api/ADempiere/user-interface/component/issue'
 import { isEmptyValue } from '@/utils/ADempiere'
@@ -246,12 +247,10 @@ export default defineComponent({
   name: 'Issues',
 
   components: {
+    IssueRow,
     // Editor
-    Items,
-    Kanban,
-    Comment,
-    draggable,
-    RecordTime,
+    KanbanIssues,
+    DraggableElements,
     ProgressPercentage
   },
 
@@ -266,20 +265,19 @@ export default defineComponent({
     }
   },
 
-  setup(props) {
+  setup() {
     const updateDragStatus = ref('')
-    const message = ref('')
     const filter = ref('')
     const priority = ref('')
     const isEdit = ref(false)
     const isKanban = ref(false)
-    const typeRequest = ref('')
     const requestTypes = ref('')
     const currentPriority = ref('')
     const listIssuesTypes = ref([])
     const listPriority = ref([])
     const listStatuses = ref([])
     const listStatusesKanban = ref([])
+    const statusesExpand = ref([])
 
     const listIssues = computed(() => {
       return store.getters.getListIssues
@@ -296,38 +294,9 @@ export default defineComponent({
       }
     })
 
-    const currentIssues = computed(() => {
-      return store.getters.getCurrentIssues
-    })
-
-    const isShowTitleForm = computed(() => {
-      return store.getters.getIsShowTitleForm
-    })
-
-    const styleAllRequestBoxCard = computed(() => {
-      if (isShowTitleForm.value) return 'height: 80%;overflow: auto;'
-      return 'height: 90%;overflow: auto;'
-    })
-
     const listKanbanGroup = computed(() => {
       return store.getters.getListKanbanGroup
     })
-    function dueTypeColor(issue) {
-      const { due_type } = issue
-      const { value } = due_type
-      let color = '#3fb950'
-      if (value === '5') {
-        color = 'orange'
-      } else if (value === '3') {
-        color = '#ff2121'
-      }
-      return color
-    }
-
-    function selectIssue(issue) {
-      isNewIssues.value = !isNewIssues.value
-      store.dispatch('changeCurrentIssues', issue)
-    }
 
     function newIssues(issue) {
       isNewIssues.value = !isNewIssues.value
@@ -339,14 +308,14 @@ export default defineComponent({
         .then(response => {
           if (!isEmptyValue(response)) {
             const list = {}
-            const isEmptuStatus = listStatuses.value.find(statusItem => {
+            const emptyStatus = listStatuses.value.find(statusItem => {
               return statusItem.id === 0
             })
-            if (isEmptyValue(isEmptuStatus)) {
-              listStatuses.value.push({
+            if (isEmptyValue(emptyStatus)) {
+              listStatuses.value.unshift({
                 name: lang.t('issues.emptyStatus'),
                 id: 0,
-                sequence: 99
+                sequence: -1
               })
             }
             listStatuses.value.forEach(elementStatus => {
@@ -358,31 +327,6 @@ export default defineComponent({
           }
         })
       store.dispatch('findListMailTemplates')
-    }
-
-    function zoomIssues(issues) {
-      zoomIn({
-        uuid: REQUEST_WINDOW_UUID,
-        params: {
-          filters: [
-            {
-              columnName: 'UUID',
-              value: issues.uuid
-            }
-          ]
-        }
-      })
-    }
-
-    function avatarResize(user) {
-      const { avatar } = user
-      const { uri } = getImagePath({
-        file: avatar,
-        width: 20,
-        height: 20,
-        operation: 'resize'
-      })
-      return uri
     }
 
     function findRequestTypes(isVisible) {
@@ -405,22 +349,6 @@ export default defineComponent({
           })
         })
     }
-    function findPriority(isVisible) {
-      if (!isVisible) {
-        return
-      }
-      requestListPriorities({})
-        .then(response => {
-          const { records } = response
-          listPriority.value = records
-        })
-        .catch(error => {
-          showMessage({
-            message: error.message,
-            type: 'warning'
-          })
-        })
-    }
 
     function filterData({
       data,
@@ -431,11 +359,7 @@ export default defineComponent({
 
     // findRequestTypes(true)
 
-    loadIssues()
-
-    function percentageFormat(display) {
-      return display
-    }
+    // loadIssues()
 
     function activeGruop() {
       isEdit.value = !isEdit.value
@@ -460,12 +384,15 @@ export default defineComponent({
           const { records } = response
           const statusesList = records
           const list = {}
-          statusesList.push({
+          statusesList.unshift({
             name: lang.t('issues.emptyStatus'),
             id: 0,
-            sequence: 99
+            sequence: -1
           })
           statusesList.forEach(statusItem => {
+            // expand all statuses
+            statusesExpand.value.push(statusItem.id)
+            // fill issues by status
             list[statusItem.id] = listIssues.value.filter(issueItem => {
               return issueItem.status.id === statusItem.id
             })
@@ -543,10 +470,10 @@ export default defineComponent({
       listKanbanGroup,
       isloadinUpdateKanban,
       updateDragStatus,
+      statusesExpand,
       //
       isEdit,
       isKanban,
-      message,
       listIssues,
       requestTypes,
       listIssuesTypes,
@@ -556,28 +483,16 @@ export default defineComponent({
       listStatusesKanban,
       //
       priority,
-      typeRequest,
       filter,
       isNewIssues,
-      currentIssues,
-      styleAllRequestBoxCard,
-      isShowTitleForm,
       // methods
       findRequestTypes,
-      findPriority,
       findStatus,
-      dueTypeColor,
-      formatDate,
-      avatarResize,
-      selectIssue,
       newIssues,
       loadIssues,
-      zoomIssues,
       filterData,
-      percentageFormat,
       activeGruop,
       activeKanban,
-      translateDateByLong,
       updateStatus,
       replace
     }
@@ -641,9 +556,8 @@ export default defineComponent({
 .table-list-request {
   overflow: auto;
 }
-.list-card-issues-filter {
-
-}
+// .list-card-issues-filter {
+// }
 </style>
 <style scoped>
 .scroll-chats {

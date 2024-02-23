@@ -85,8 +85,5 @@ export function requestDefaultValue({
       value
     }
   })
-    .then(valueResponse => {
-      return valueResponse
-    })
 }
 

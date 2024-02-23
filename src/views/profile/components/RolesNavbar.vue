@@ -18,11 +18,29 @@
 
 <template>
   <el-form>
-    <label> <b> {{ $t('route.client') }} </b> </label>
-    <el-input
+    <!-- <label> <b> {{ $t('route.client') }} </b> </label> -->
+    <!-- <el-input
       v-model="storedRole.client.name"
       disabled
-    />
+    /> -->
+    <label>
+      <el-tag
+        style="width: 100%;text-align: center;"
+      >
+        <b style="font-size: 14px;">
+          {{ userName.name }}
+        </b>
+      </el-tag>
+    </label>
+    <label>
+      <el-tag
+        style="width: 100%;text-align: center;"
+      >
+        <b style="font-size: 14px;">
+          {{ storedRole.client.name }}
+        </b>
+      </el-tag>
+    </label>
 
     <label> <b> {{ $t('route.role') }} </b> </label>
     <el-select
@@ -75,8 +93,14 @@ export default {
   name: 'RolesNavbar',
 
   computed: {
+    languagesList() {
+      return this.$store.getters.getLanguagesList
+    },
     storedRole() {
       return this.$store.getters['user/getRole']
+    },
+    userName() {
+      return this.$store.getters['user/userInfo']
     },
     currentRoleId: {
       get() {
@@ -142,13 +166,10 @@ export default {
         organizationId: this.currentOrganizationId,
         warehouseId: this.warehouseId
       })
-        .then(response => {
-          if (this.$route.name !== 'Dashboard') {
-            this.$router.push({
-              path: '/'
-            }, () => {})
-          }
-          // this.$store.dispatch('getDashboardListFromServer')
+        .then(() => {
+          this.$router.push({
+            path: 'dashboard'
+          }, () => {})
         })
     },
     changeOrganization(organizationId) {
@@ -157,12 +178,14 @@ export default {
         showClose: true,
         iconClass: 'el-icon-loading'
       })
-      this.$router.push({
-        path: '/'
-      }, () => {})
       this.$store.dispatch('user/changeOrganization', {
         organizationId
       })
+        .then(() => {
+          this.$router.push({
+            path: 'dashboard'
+          }, () => {})
+        })
     },
     showOrganizationsList(isShow) {
       if (isShow && this.isEmptyValue(this.organizationsList)) {
@@ -182,7 +205,7 @@ export default {
       }
     },
     getLanguages() {
-      if (this.isEmptyValue(this.getLanguageList)) {
+      if (this.isEmptyValue(this.languageList)) {
         this.$store.dispatch('getLanguagesFromServer')
       }
     }

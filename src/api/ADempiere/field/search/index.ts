@@ -42,13 +42,13 @@ export function requestGridGeneralInfo({
   pageToken,
   pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
-  filters = filters.map(attribute => {
-    return {
-      column_name: attribute.columnName,
-      operator: attribute.operator,
-      value: attribute.value
-    }
-  })
+  // filters = filters.map(attribute => {
+  //   return {
+  //     column_name: attribute.columnName,
+  //     operator: attribute.operator,
+  //     value: attribute.value
+  //   }
+  // })
 
   let contextAttributes = []
   if (!isEmptyValue(contextAttributesList)) {
@@ -84,6 +84,7 @@ export function requestGridGeneralInfo({
     method: 'get',
     params: {
       context_attributes: contextAttributes,
+      is_only_active_records: true,
       filters,
       //
       // reference_id: reference_id,

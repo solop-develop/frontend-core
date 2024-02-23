@@ -7,14 +7,14 @@
   },
   "adempiere": {
     "api": {
-      "url": "http://localhost:8080/api/",
+      "url": "http://localhost/api/",
       "timeout": 99999999
     },
     "images": {
-      "url": "http://localhost:8080/api/file-management"
+      "url": "http://localhost/api/resources"
     },
     "resource": {
-      "url": "http://localhost:8080/api/file-management"
+      "url": "http://localhost/api/resources"
     }
   },
   "repository": {

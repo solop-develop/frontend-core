@@ -43,7 +43,9 @@ export function getOptionsList({
       optionsList.push({
         displayedValue,
         value,
-        uuid: itemLookup.uuid
+        uuid: itemLookup.uuid,
+        isActive: itemLookup.is_active,
+        reason: 'Successful lookups list'
       })
     }
   })
@@ -53,7 +55,9 @@ export function getOptionsList({
     optionsList.unshift({
       displayedValue: ' ',
       value: blankValue,
-      uuid: undefined
+      uuid: undefined,
+      isActive: true,
+      reason: 'Add blank option'
     })
   }
 
