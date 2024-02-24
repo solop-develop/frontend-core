@@ -21,18 +21,21 @@
     :style="styleMain"
   >
     <el-row
-      :gutter="20"
-      class="panel-group-pie"
+      :gutter="25"
+      :class="classPanel"
     >
       <el-col
         v-for="(portlet, key) in dashboardsList"
         :key="key"
-        :xs="12"
-        :sm="12"
+        :xs="24"
+        :sm="24"
         :lg="spanSize"
         class="card-panel-col"
       >
-        <el-card style="border: 0px;">
+        <el-card
+          :body-style="{ padding: '10px' }"
+          style="border: 0px;"
+        >
           <el-card
             :body-style="{ padding: '10px' }"
             class="card-portlet"
@@ -89,6 +92,11 @@ export default defineComponent({
       return store.state.app.device === 'mobile'
     })
 
+    const classPanel = computed(() => {
+      if (isMobile.value) return 'panel-group-porlet-mobile'
+      return 'panel-group-porlet'
+    })
+
     const dashboardsList = computed(() => {
       return store.getters.getStoredDashboardsList
         .filter(list => !isEmptyValue(list.chartType) && list.chartType === 'PT')
@@ -117,7 +125,7 @@ export default defineComponent({
       if (quantity >= 5) {
         return 4
       }
-      return 6
+      return 5
     })
 
     const styleMain = computed(() => {
@@ -186,6 +194,7 @@ export default defineComponent({
       isMobile,
       spanSize,
       styleMain,
+      classPanel,
       documentList,
       dashboardsList,
       // loadMetrics,
@@ -196,6 +205,11 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+.card-portlet {
+  .el-card__header {
+    padding: 5px;
+  }
+}
 .class-card-panel {
   .el-badge__content.is-fixed {
     position: absolute;
@@ -204,7 +218,7 @@ export default defineComponent({
     transform: translateY(-50%) translateX(100%);
   }
 }
-.panel-group-pie {
+.panel-group-porlet {
   margin: 0px;
   display: flex;
   overflow: auto;
@@ -275,7 +289,103 @@ export default defineComponent({
 
     .card-panel-icon {
       float: left;
-      font-size: 60px;
+      font-size: 35px;
+    }
+
+    .card-panel-description {
+      float: right;
+      font-weight: bold;
+      margin: 15px;
+      margin-left: 0px;
+      width: 100%;
+      margin-right: 10px;
+
+      .card-panel-text {
+        line-height: 18px;
+        color: rgba(0, 0, 0, 0.45);
+        font-size: 16px;
+        text-align: end;
+        margin-bottom: 12px;
+      }
+
+      .card-panel-num {
+        font-size: 20px;
+      }
+    }
+  }
+}
+.panel-group-porlet-mobile {
+  margin: 0px;
+  // display: flex;
+  overflow: auto;
+  padding-bottom: 7px;
+
+  .card-panel-col {
+    margin-bottom: 0px;
+  }
+
+  .card-panel {
+    height: 200px;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    color: #666;
+    background: #fff;
+    box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
+    border-color: rgba(0, 0, 0, .05);
+
+    &:hover {
+      .card-panel-icon-wrapper {
+        color: #fff;
+      }
+
+      .icon-people {
+        background: #40c9c6;
+      }
+
+      .icon-message {
+        background: #36a3f7;
+      }
+
+      .icon-money {
+        background: #f4516c;
+      }
+
+      .icon-shopping {
+        background: #34bfa3
+      }
+    }
+
+    .icon-people {
+      color: #40c9c6;
+    }
+
+    .icon-message {
+      color: #36a3f7;
+    }
+
+    .icon-money {
+      color: #f4516c;
+    }
+
+    .icon-shopping {
+      color: #34bfa3
+    }
+
+    .card-panel-icon-wrapper {
+      float: left;
+      margin: 0px;
+      // margin: 5px 0px 5px 14px;
+      padding: 16px;
+      transition: all 0.38s ease-out;
+      border-radius: 6px;
+    }
+
+    .card-panel-icon {
+      float: left;
+      font-size: 35px;
     }
 
     .card-panel-description {

@@ -31,19 +31,27 @@
     </el-row>
 
     <el-row v-if="!isEmptyValue(dashboardsList)">
-      <el-col :span="24">
-        <panel-group />
+      <el-col
+        v-if="!isEmptyValue(documentList)"
+        :span="24"
+        style="margin-bottom: 5px;"
+      >
+        <panel-group
+          style="height: 100px;"
+        />
       </el-col>
-      <el-col :span="24">
+      <el-col
+        v-if="!isEmptyValue(listPanelGroupPie)"
+        :span="24"
+      >
         <panel-group-pie />
       </el-col>
-      <el-col :span="24">
+      <el-col
+        v-if="!isEmptyValue(listPanelGroupPorlet)"
+        :span="24"
+      >
         <panel-group-portlet />
       </el-col>
-      <!-- <el-col :span="24">
-        {{ panelRight }}
-      </el-col> -->
-      <!-- <div></div> -->
       <el-col :span="16">
         <template v-for="(dashboardAttributes, index) in panelRight">
           <el-col
@@ -75,16 +83,6 @@
           </el-col>
         </template>
       </el-col>
-      <!-- <el-col
-        :span="colNum"
-        style="padding-right:8px;margin-bottom:2px;"
-      >
-        <todo
-          :metadata="mainDashboard"
-          :title="mainDashboard.name"
-          style="margin: 0px;width: 100% !important;"
-        />
-      </el-col> -->
     </el-row>
     <page-style-settings />
   </div>
@@ -318,6 +316,26 @@ export default defineComponent({
       return store.getters.getRoleUuid
     })
 
+    const documentList = computed(() => {
+      return store.getters.getListTaks.map(tasks => {
+        return tasks
+      })
+    })
+
+    const listPanelGroupPie = computed(() => {
+      return store.getters.getStoredDashboardsList.filter(list => {
+        return !isEmptyValue(list.chartType) && list.chartType === 'GU'
+      })
+    })
+
+    const listPanelGroupPorlet = computed(() => {
+      return store.getters.getStoredDashboardsList
+        .filter(list => !isEmptyValue(list.chartType) && list.chartType === 'PT')
+        .map(list => {
+          return list
+        })
+    })
+
     function loadDashboardsList() {
       store.dispatch('getDashboardListFromServer')
     }
@@ -340,11 +358,14 @@ export default defineComponent({
     })
 
     return {
+      listPanelGroupPorlet,
+      listPanelGroupPie,
       numColDashboard,
       dashboardsList,
       mainDashboard,
       listDashboard,
       showSettings,
+      documentList,
       panelNotice,
       currentRole,
       sidebarLogo,

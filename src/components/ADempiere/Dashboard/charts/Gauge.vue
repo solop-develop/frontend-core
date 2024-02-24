@@ -167,7 +167,7 @@ export default {
           },
           axisLine: {
             lineStyle: {
-              width: 15,
+              width: 10,
               color: [
                 [0.3, '#67e0e3'],
                 [0.7, '#37a2da'],
@@ -188,19 +188,20 @@ export default {
           axisLabel: {
             distance: 15,
             color: '#999',
-            fontSize: 20
+            fontSize: 10
           },
           anchor: {
+            distance: 45,
             show: true,
             showAbove: true,
-            size: 25,
+            size: 5,
             itemStyle: {
               borderWidth: 10
             }
           },
           title: {
             show: true,
-            offsetCenter: [0, '65%']
+            offsetCenter: [0, '55%']
           },
           detail: {
             valueAnimation: true,

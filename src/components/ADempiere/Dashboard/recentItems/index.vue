@@ -177,7 +177,7 @@ export default {
     font-size: 15px;
   }
   .icon-window {
-    font-size: x-large;
+    font-size: large;
     color: #36a3f7;
   }
   .action-tag {
