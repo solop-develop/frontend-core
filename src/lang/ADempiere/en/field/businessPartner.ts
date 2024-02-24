@@ -16,13 +16,23 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// used in cell type number
-.cell-align-right {
-  text-align: right !important;
-  width: 100%;
-  display: inline-block;
+const businessPartner = {
+  edit: 'Edit',
+  emptyBusinessPartner: 'Use the filters to search for a business partner by Code, Name, Email and Phone Number',
+  notFound: 'Business partner not found',
+  searchWithEnter: 'Enter a value to search for a Business Partners',
+  // fields
+  value: 'Value',
+  name: 'Name',
+  contact: 'Contact',
+  phone: 'Phone',
+  eMail: 'Email',
+  postalCode: 'Postal Code',
+  group: 'Group',
+  openBalance: 'Open Balance',
+  creditAvailable: 'Credit Avalable',
+  creditUsed: 'Credit Used',
+  revenue: 'Revenue'
 }
 
-.cell-align-center {
-  text-align: center !important;
-}
+export default businessPartner

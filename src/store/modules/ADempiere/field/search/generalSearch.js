@@ -50,6 +50,7 @@ const initState = {
     selectionsList: [],
     nextPageToken: undefined,
     recordCount: 0,
+    isLoading: false,
     isLoaded: false,
     show: false,
     list: [],
@@ -229,8 +230,8 @@ const generalInfoSearch = {
      * @param {string} containerUuid
      * @param {array} contextColumnNames
      * @param {string} fieldUuid
-     * @param {string} processParameterUuid
-     * @param {string} browseFieldUuid
+     * @param {string} processParameterId
+     * @param {string} browseFieldId
      * @param {string} columnUuid
      * @param {string} columnUuid
      * @param {array} filters
@@ -245,8 +246,8 @@ const generalInfoSearch = {
       //
       columnId,
       fieldId,
-      processParameterUuid,
-      browseFieldUuid,
+      processParameterId,
+      browseFieldId,
       //
       tableName,
       columnName,
@@ -266,8 +267,8 @@ const generalInfoSearch = {
             //
             columnId,
             fieldId,
-            processParameterUuid,
-            browseFieldUuid,
+            processParameterId,
+            browseFieldId,
             //
             tableName,
             columnName,
@@ -289,8 +290,8 @@ const generalInfoSearch = {
           //
           columnId,
           fieldId,
-          processParameterUuid,
-          browseFieldUuid,
+          processParameterId,
+          browseFieldId,
           //
           searchValue,
           //
@@ -313,8 +314,8 @@ const generalInfoSearch = {
       //
       columnId,
       fieldId,
-      processParameterUuid,
-      browseFieldUuid,
+      processParameterId,
+      browseFieldId,
       //
       searchValue,
       //
@@ -366,8 +367,8 @@ const generalInfoSearch = {
           //
           columnId,
           fieldId,
-          processParameterUuid,
-          browseFieldUuid,
+          processParameterId,
+          browseFieldId,
           //
           searchValue,
           //

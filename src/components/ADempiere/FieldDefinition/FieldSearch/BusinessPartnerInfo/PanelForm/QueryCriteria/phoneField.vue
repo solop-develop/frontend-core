@@ -17,7 +17,9 @@
 -->
 
 <template>
-  <el-form-item>
+  <el-form-item
+    :label="$t('field.businessPartner.phone')"
+  >
     <el-input />
   </el-form-item>
 </template>
@@ -26,7 +28,7 @@
 import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
-  name: 'ValueField',
+  name: 'PhoneField',
 
   setup() {
     return {

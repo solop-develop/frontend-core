@@ -19,7 +19,7 @@
 import Vue from 'vue'
 
 // API Request Methods
-import { requestListBusinessPartner } from '@/api/ADempiere/common/index.ts'
+import { requestListBusinessPartner } from '@/api/ADempiere/field/search/business-partner.ts'
 
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
@@ -46,6 +46,7 @@ const initState = {
     nextPageToken: undefined,
     recordCount: 0,
     isLoaded: false,
+    isLoading: false,
     BPshow: false,
     pageSize: ROWS_OF_RECORDS_BY_PAGE,
     pageNumber: 1
@@ -65,11 +66,13 @@ const businessPartner = {
       nextPageToken,
       recordCount = 0,
       isLoaded = true,
+      isLoading = false,
       BPshow = false,
       pageNumber = 1,
       pageSize = ROWS_OF_RECORDS_BY_PAGE
     }) {
       Vue.set(state.businessPartnerData, containerUuid, {
+        ...state.emtpyBusinessPartnerData,
         containerUuid,
         currentRow,
         recordsList,
@@ -77,6 +80,7 @@ const businessPartner = {
         nextPageToken,
         recordCount,
         isLoaded,
+        isLoading,
         pageNumber,
         pageSize
       })
@@ -85,7 +89,26 @@ const businessPartner = {
       containerUuid,
       currentRow = {}
     }) {
+      if (isEmptyValue(state.businessPartnerData[containerUuid])) {
+        Vue.set(state.businessPartnerData, containerUuid, {
+          ...state.emtpyBusinessPartnerData,
+          containerUuid
+        })
+      }
       Vue.set(state.businessPartnerData[containerUuid], 'currentRow', currentRow)
+    },
+
+    setBusinessPartnerIsLoading(state, {
+      containerUuid,
+      isLoading = false
+    }) {
+      if (isEmptyValue(state.businessPartnerData[containerUuid])) {
+        Vue.set(state.businessPartnerData, containerUuid, {
+          ...state.emtpyBusinessPartnerData,
+          containerUuid
+        })
+      }
+      Vue.set(state.businessPartnerData[containerUuid], 'isLoading', isLoading)
     },
 
     setBusinessPartnerShow(state, {
@@ -112,10 +135,10 @@ const businessPartner = {
       containerUuid,
       contextColumnNames = [],
       //
-      fieldUuid,
-      processParameterUuid,
-      browseFieldUuid,
-      columnUuid,
+      fieldId,
+      processParameterId,
+      browseFieldId,
+      columnId,
       //
       tableName,
       columnName,
@@ -153,13 +176,18 @@ const businessPartner = {
           }
         }
 
+        commit('setBusinessPartnerIsLoading', {
+          containerUuid,
+          isLoading: true
+        })
+
         requestListBusinessPartner({
           contextColumnNames,
           //
-          fieldUuid,
-          processParameterUuid,
-          browseFieldUuid,
-          columnUuid,
+          fieldId,
+          processParameterId,
+          browseFieldId,
+          columnId,
           //
           tableName,
           columnName,
@@ -170,16 +198,10 @@ const businessPartner = {
           pageSize
         })
           .then(responseBusinessPartnerList => {
-            const recordsList = responseBusinessPartnerList.business_partners.map((record, rowIndex) => {
+            const recordsList = responseBusinessPartnerList.records.map((row, rowIndex) => {
               return {
-                [COLUMN_NAME]: record.id,
-                Value: record.value,
-                TaxID: record.tax_id,
-                Name: record.name,
-                LastName: record.last_name,
-                Description: record.description,
-                // ...record.attributes,
-                ...record,
+                [COLUMN_NAME]: row.id,
+                ...row,
                 // datatables app attributes
                 ...ROW_ATTRIBUTES,
                 rowIndex
@@ -213,6 +235,12 @@ const businessPartner = {
               message: error.message
             })
           })
+          .finally(() => {
+            commit('setBusinessPartnerIsLoading', {
+              containerUuid,
+              isLoading: false
+            })
+          })
       })
     }
   },
@@ -232,6 +260,11 @@ const businessPartner = {
       return getters.getBusinessPartnerData({
         containerUuid
       }).isLoaded
+    },
+    getIsLoadingBusinessPartnerRecord: (state, getters) => ({ containerUuid }) => {
+      return getters.getBusinessPartnerData({
+        containerUuid
+      }).isLoading
     },
     getBusinessPartnerRecordsList: (state, getters) => ({ containerUuid }) => {
       return getters.getBusinessPartnerData({

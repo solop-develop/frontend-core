@@ -17,7 +17,9 @@
 -->
 
 <template>
-  <el-form-item>
+  <el-form-item
+    :label="$t('field.businessPartner.name')"
+  >
     <el-input />
   </el-form-item>
 </template>

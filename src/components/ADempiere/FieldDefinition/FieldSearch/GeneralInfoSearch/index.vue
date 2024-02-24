@@ -136,7 +136,8 @@ export default {
           contextColumnNames: this.metadata.reference.contextColumnNames,
           tableName: this.metadata.reference.tableName,
           columnName: this.metadata.columnName,
-          fieldUuid: this.metadata.uuid,
+          uuid: this.metadata.uuid,
+          id: this.metadata.id,
           searchValue
         })
           .then(responseRecords => {

@@ -16,13 +16,23 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// used in cell type number
-.cell-align-right {
-  text-align: right !important;
-  width: 100%;
-  display: inline-block;
+const businessPartner = {
+  edit: 'Editar',
+  emptyBusinessPartner: 'Utilice los filtros para realizar la búsqueda de socio de negocio según su Código, Nombre, Email y Teléfono',
+  notFound: 'Socio de negocio no encontrado',
+  searchWithEnter: 'Introduzca un valor para buscar Socios de Negocio',
+  // fields
+  value: 'Código',
+  name: 'Nombre',
+  contact: 'Contacto',
+  phone: 'Teléfono',
+  eMail: 'Correo',
+  postalCode: 'Código Postal',
+  group: 'Grupo',
+  openBalance: 'Saldo Actual',
+  creditAvailable: 'Crédito Disponible',
+  creditUsed: 'Crédito Usado',
+  revenue: 'Ingresos'
 }
 
-.cell-align-center {
-  text-align: center !important;
-}
+export default businessPartner

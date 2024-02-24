@@ -439,6 +439,7 @@ export default {
           contextColumnNames: this.metadata.reference.contextColumnNames,
           tableName: this.metadata.reference.tableName,
           uuid: this.metadata.uuid,
+          id: this.metadata.id,
           filters,
           pageNumber,
           pageSize

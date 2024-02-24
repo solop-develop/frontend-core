@@ -17,21 +17,134 @@
 -->
 
 <template>
-  <el-form>
-    <!-- fields -->
-  </el-form>
+  <el-collapse
+    v-model="activeAccordion"
+    accordion
+    class="business-partners-query-criteria"
+  >
+    <el-collapse-item name="query-criteria" class="business-partners-query-criteria-collapse">
+      <template slot="title">
+        {{ title }}
+      </template>
+
+      <el-form
+        label-position="top"
+        size="mini"
+        class="form-base"
+        @submit.native.prevent="notSubmitForm"
+      >
+        <el-row :gutter="10">
+          <el-col :span="6">
+            <value-field />
+          </el-col>
+
+          <el-col :span="6">
+            <contact-field />
+          </el-col>
+
+          <el-col :span="6">
+            <phone-field />
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="10">
+          <el-col :span="6">
+            <name-field />
+          </el-col>
+
+          <el-col :span="6">
+            <email-field />
+          </el-col>
+
+          <el-col :span="6">
+            <postal-code-field />
+          </el-col>
+        </el-row>
+      </el-form>
+    </el-collapse-item>
+  </el-collapse>
 </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, computed, ref } from '@vue/composition-api'
+
+import lang from '@/lang'
+
+// Constants
+import { BUSINESS_PARTNERS_LIST_FORM } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+
+// Components and Mixins
+import ContactField from './contactField.vue'
+import EmailField from './eMailField.vue'
+import NameField from './nameField.vue'
+import PhoneField from './phoneField.vue'
+import PostalCodeField from './postalCodeField.vue'
+import ValueField from './valueField.vue'
+
+// Utils and Helper Methods
+import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
-  name: 'ValueField',
+  name: 'QueryCriteria',
 
-  setup() {
+  components: {
+    ContactField,
+    EmailField,
+    NameField,
+    PhoneField,
+    PostalCodeField,
+    ValueField
+  },
+
+  props: {
+    metadata: {
+      type: Object,
+      default: () => {
+        return {
+          containerUuid: BUSINESS_PARTNERS_LIST_FORM,
+          columnName: 'C_BPartner_ID'
+        }
+      }
+    }
+  },
+
+  setup(props) {
+    const activeAccordion = ref('query-criteria')
+
+    const title = computed(() => {
+      let title = lang.t('form.pos.order.BusinessPartnerCreate.businessPartner')
+      if (!isEmptyValue(props.metadata.panelName) && !isSameValues(props.metadata.panelName, props.metadata.name)) {
+        title += ` (${props.metadata.panelName})`
+      }
+      return title
+    })
+
     return {
+      activeAccordion,
+      title
     }
   }
 })
 </script>
 
+<style lang="scss">
+.business-partners-query-criteria {
+  .business-partners-query-criteria-collapse {
+    .el-form-item {
+      &.el-form-item--mini {
+        margin-bottom: 6px;
+      }
+    }
+    .el-collapse-item__header {
+      height: 40px;
+      line-height: 40px;
+    }
+
+    .el-collapse-item__wrap {
+      .el-collapse-item__content {
+        padding-bottom: 5px;
+      }
+    }
+  }
+}
+</style>
