@@ -56,7 +56,7 @@ const staticRoutes = [
     redirect: 'noRedirect',
     title: language.t('route.views'),
     meta: {
-      title: 'Vistas',
+      title: language.t('route.views'),
       icon: 'nested'
     },
     children: [
