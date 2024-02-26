@@ -20,6 +20,7 @@ const route = {
   dashboard: 'Dashboard',
   charts: 'Charts',
   calendar: 'Calendar',
+  views: 'Views',
   documentation: 'Documentation',
   guide: 'Guide',
   forgotPassword: 'Forgot Password?',
