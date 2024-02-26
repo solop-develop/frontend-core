@@ -40,12 +40,13 @@
       -->
     <template slot-scope="recordRow">
       <div class="header">
-        <!-- <b> -->
-        {{ recordRow.item.Name }}
-        <!-- {{ recordRow.item.lastName }}</b> -->
+        {{ recordRow.item.value }}
+        -
+        {{ recordRow.item.name }}
       </div>
       <span class="info">
-        {{ recordRow.item.Value }} {{ recordRow.item.TaxId }} {{ recordRow.item.Description }}
+        {{ recordRow.item.tax_id }} {{ recordRow.item.name2 }}
+        {{ recordRow.item.description }} ({{ recordRow.item.business_partner_group }})
       </span>
     </template>
 
@@ -191,19 +192,6 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.custom-field-bpartner-info {
-  // button icon suffix
-  .button-search {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-
-    >i {
-      font-size: 20px;
-    }
-  }
-}
-</style>
 <style lang="scss" scope>
 .custom-field-bpartner-info {
   // items of lust
@@ -216,6 +204,7 @@ export default {
     .header {
       text-overflow: ellipsis;
       overflow: hidden;
+      font-weight: bold;
     }
 
     .info {

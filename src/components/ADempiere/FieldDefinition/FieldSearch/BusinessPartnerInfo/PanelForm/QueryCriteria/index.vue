@@ -22,7 +22,10 @@
     accordion
     class="business-partners-query-criteria"
   >
-    <el-collapse-item name="query-criteria" class="business-partners-query-criteria-collapse">
+    <el-collapse-item
+      :name="ACCORDION_KEY"
+      class="business-partners-query-criteria-collapse"
+    >
       <template slot="title">
         {{ title }}
       </template>
@@ -66,12 +69,16 @@
 </template>
 
 <script>
-import { defineComponent, computed, ref } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
 
 import lang from '@/lang'
+import store from '@/store'
 
 // Constants
-import { BUSINESS_PARTNERS_LIST_FORM } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+import {
+  BUSINESS_PARTNERS_LIST_FORM,
+  COLUMN_NAME
+} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 
 // Components and Mixins
 import ContactField from './contactField.vue'
@@ -97,19 +104,23 @@ export default defineComponent({
   },
 
   props: {
+    uuidForm: {
+      required: true,
+      type: String
+    },
     metadata: {
       type: Object,
       default: () => {
         return {
           containerUuid: BUSINESS_PARTNERS_LIST_FORM,
-          columnName: 'C_BPartner_ID'
+          columnName: COLUMN_NAME
         }
       }
     }
   },
 
   setup(props) {
-    const activeAccordion = ref('query-criteria')
+    const ACCORDION_KEY = 'query-criteria'
 
     const title = computed(() => {
       let title = lang.t('form.pos.order.BusinessPartnerCreate.businessPartner')
@@ -119,7 +130,32 @@ export default defineComponent({
       return title
     })
 
+    const showQueryFields = computed({
+      set(newValue) {
+        store.commit('setBusinessPartnerShowQueryFields', {
+          containerUuid: props.uuidForm,
+          showQueryFields: newValue
+        })
+      },
+      get() {
+        return store.getters.getBusinessPartnerShowQueryFields({
+          containerUuid: props.uuidForm
+        })
+      }
+    })
+
+    const activeAccordion = computed({
+      set(newValue) {
+        showQueryFields.value = !isEmptyValue(newValue)
+      },
+      get() {
+        return showQueryFields.value ? ACCORDION_KEY : null
+      }
+    })
+
     return {
+      ACCORDION_KEY,
+      //
       activeAccordion,
       title
     }

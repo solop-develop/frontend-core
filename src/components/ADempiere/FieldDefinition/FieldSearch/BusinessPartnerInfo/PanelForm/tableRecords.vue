@@ -28,6 +28,8 @@
       :data="recordsList"
       :max-height="300"
       size="mini"
+      @current-change="handleCurrentChange"
+      @row-dblclick="changeBusinessPartner"
     >
       <p slot="empty" style="width: 100%;">
         {{ $t('field.businessPartner.emptyBusinessPartner') }}
@@ -50,6 +52,7 @@
         :label="$t('field.businessPartner.group')"
         header-align="center"
       />
+
       <el-table-column
         prop="open_balance_amount"
         :label="$t('field.businessPartner.openBalance')"
@@ -95,11 +98,21 @@
 </template>
 
 <script>
-import { defineComponent, computed } from '@vue/composition-api'
+import {
+  defineComponent, computed, nextTick, onMounted, ref, watch
+} from '@vue/composition-api'
 
 import store from '@/store'
 
+// Constants
+import { BUSINESS_PARTNERS_LIST_FORM } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+
+// Components and Mixins
 import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
+import useBusinessPartner from './useBusinessPartner'
+
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'TableRecords',
@@ -112,26 +125,104 @@ export default defineComponent({
     uuidForm: {
       required: true,
       type: String
+    },
+    containerManager: {
+      type: Object,
+      default: () => ({
+        actionPerformed: () => {},
+        getFieldsLit: () => {},
+        setDefaultValues: () => {}
+      })
+    },
+    metadata: {
+      type: Object,
+      default: () => {
+        return {
+          containerUuid: BUSINESS_PARTNERS_LIST_FORM,
+          columnName: 'C_BPartner_ID'
+        }
+      }
     }
   },
 
   setup(props) {
+    const businessPartnerTable = ref(null)
+
+    const {
+      currentRow,
+      isLoadingRecords,
+      closeList,
+      setValues
+    } = useBusinessPartner({
+      uuidForm: props.uuidForm,
+      parentUuid: props.metadata.parentUuid,
+      containerUuid: props.metadata.containerUuid,
+      containerManager: props.containerManager,
+      fieldAttributes: props.metadata
+    })
+
     const recordsList = computed(() => {
       return store.getters.getBusinessPartnerRecordsList({
         containerUuid: props.uuidForm
       })
     })
 
-    const isLoadingRecords = computed(() => {
-      return store.getters.getIsLoadingBusinessPartnerRecord({
-        containerUuid: props.uuidForm
+    function handleCurrentChange(recordRow) {
+      currentRow.value = recordRow
+    }
+
+    function changeBusinessPartner() {
+      const row = currentRow.value
+      if (!isEmptyValue(row)) {
+        setValues(row)
+        closeList()
+      }
+    }
+
+    watch(currentRow, (newValue, oldValue) => {
+      if (businessPartnerTable.value) {
+        businessPartnerTable.value.setCurrentRow(
+          newValue
+        )
+      }
+    })
+
+    onMounted(() => {
+      nextTick(() => {
+        if (businessPartnerTable.value) {
+          businessPartnerTable.value.setCurrentRow(
+            currentRow.value
+          )
+        }
       })
     })
 
     return {
+      businessPartnerTable,
+      //
+      currentRow,
       isLoadingRecords,
-      recordsList
+      recordsList,
+      //
+      handleCurrentChange,
+      changeBusinessPartner
     }
   }
 })
 </script>
+
+<style lang="scss">
+.business-partners-table {
+  .el-table .cell {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-all;
+    line-height: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+</style>

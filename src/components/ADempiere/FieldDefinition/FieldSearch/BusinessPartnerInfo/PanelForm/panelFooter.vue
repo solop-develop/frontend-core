@@ -46,8 +46,8 @@
           type="success"
           class="button-base-icon"
           icon="el-icon-refresh-right"
+          @click="loadRecordsList({});"
         />
-        <!-- @click="searchBPartnerList();" -->
 
         <el-button
           type="danger"
@@ -72,8 +72,15 @@ import { defineComponent, computed } from '@vue/composition-api'
 
 import store from '@/store'
 
+// Constants
+import {
+  BUSINESS_PARTNERS_LIST_FORM,
+  COLUMN_NAME
+} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+
 // Components and Mixins
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
+import useBusinessPartner from './useBusinessPartner'
 
 export default defineComponent({
   name: 'PanelFooter',
@@ -86,14 +93,40 @@ export default defineComponent({
     uuidForm: {
       required: true,
       type: String
+    },
+    containerManager: {
+      type: Object,
+      default: () => ({
+        actionPerformed: () => {},
+        getFieldsLit: () => {},
+        setDefaultValues: () => {}
+      })
+    },
+    metadata: {
+      type: Object,
+      default: () => {
+        return {
+          containerUuid: BUSINESS_PARTNERS_LIST_FORM,
+          columnName: COLUMN_NAME
+        }
+      }
+    },
+    showPopover: {
+      type: Boolean,
+      default: () => false
     }
   },
 
   setup(props) {
-    const isLoadingRecords = computed(() => {
-      return store.getters.getIsLoadingBusinessPartnerRecord({
-        containerUuid: props.uuidForm
-      })
+    const {
+      isLoadingRecords,
+      loadRecordsList
+    } = useBusinessPartner({
+      uuidForm: props.uuidForm,
+      parentUuid: props.metadata.parentUuid,
+      containerUuid: props.metadata.containerUuid,
+      containerManager: props.containerManager,
+      fieldAttributes: props.metadata
     })
 
     const recordCount = computed(() => {
@@ -104,7 +137,9 @@ export default defineComponent({
 
     return {
       isLoadingRecords,
-      recordCount
+      recordCount,
+      //
+      loadRecordsList
     }
   }
 })

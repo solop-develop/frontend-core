@@ -41,12 +41,14 @@ const initState = {
     contextKey: '',
     searchValue: '',
     currentRecordUuid: undefined,
+    currentRow: {},
     recordsList: [],
     selectionsList: [],
     nextPageToken: undefined,
     recordCount: 0,
     isLoaded: false,
     isLoading: false,
+    showQueryFields: true,
     BPshow: false,
     pageSize: ROWS_OF_RECORDS_BY_PAGE,
     pageNumber: 1
@@ -67,6 +69,7 @@ const businessPartner = {
       recordCount = 0,
       isLoaded = true,
       isLoading = false,
+      showQueryFields = false,
       BPshow = false,
       pageNumber = 1,
       pageSize = ROWS_OF_RECORDS_BY_PAGE
@@ -81,6 +84,7 @@ const businessPartner = {
         recordCount,
         isLoaded,
         isLoading,
+        showQueryFields,
         pageNumber,
         pageSize
       })
@@ -116,6 +120,13 @@ const businessPartner = {
       show = false
     }) {
       Vue.set(state.BPShow, containerUuid, show)
+    },
+
+    setBusinessPartnerShowQueryFields(state, {
+      containerUuid,
+      showQueryFields = false
+    }) {
+      Vue.set(state.businessPartnerData[containerUuid], 'showQueryFields', showQueryFields)
     },
 
     /**
@@ -215,6 +226,10 @@ const businessPartner = {
               currentRow = recordsList.at(0)
             }
 
+            const storedShowQueryFields = getters.getBusinessPartnerShowQueryFields({
+              containerUuid
+            })
+
             commit('setBusinessPartnerData', {
               containerUuid,
               currentRow,
@@ -223,6 +238,7 @@ const businessPartner = {
               pageNumber,
               pageSize,
               isLoaded: true,
+              showQueryFields: storedShowQueryFields,
               recordCount: Number(responseBusinessPartnerList.record_count)
             })
 
@@ -285,6 +301,11 @@ const businessPartner = {
       return getters.getBusinessPartnerData({
         containerUuid
       }).currentRow
+    },
+    getBusinessPartnerShowQueryFields: (state, getters) => ({ containerUuid }) => {
+      return getters.getBusinessPartnerData({
+        containerUuid
+      }).showQueryFields
     },
     getBusinessPartnerPopoverList: (state) => {
       return state.businessPartnerPopoverList || false

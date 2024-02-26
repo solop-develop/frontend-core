@@ -18,32 +18,43 @@
 
 <template>
   <el-main
+    v-shortkey="QUICK_KEY_ACCESS"
     class="business-partners-container"
+    @shortkey.native="keyAction"
   >
     <query-criteria
       :uuid-form="uuidForm"
+      :container-manager="containerManager"
       :metadata="metadata"
     />
 
     <table-records
       :uuid-form="uuidForm"
+      :container-manager="containerManager"
+      :metadata="metadata"
     />
 
     <panel-footer
       :uuid-form="uuidForm"
+      :container-manager="containerManager"
+      :metadata="metadata"
     />
   </el-main>
 </template>
 
 <script>
 import {
-  defineComponent, computed, ref, watch, nextTick
+  defineComponent, computed, watch
 } from '@vue/composition-api'
 
-import store from '@/store'
-
 // Constants
-import { BUSINESS_PARTNERS_LIST_FORM } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+import {
+  BUSINESS_PARTNERS_LIST_FORM,
+  COLUMN_NAME
+} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+import {
+  QUICK_KEY_ACCESS
+} from '@/utils/ADempiere/dictionary/field/search/index.ts'
 
 // Components and Mixins
 import QueryCriteria from './QueryCriteria/index.vue'
@@ -52,6 +63,7 @@ import PanelFooter from './panelFooter.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import useBusinessPartner from './useBusinessPartner'
 
 export default defineComponent({
   name: 'PanelForm',
@@ -76,7 +88,7 @@ export default defineComponent({
       default: () => {
         return {
           containerUuid: BUSINESS_PARTNERS_LIST_FORM,
-          columnName: 'C_BPartner_ID'
+          columnName: COLUMN_NAME
         }
       }
     },
@@ -87,8 +99,6 @@ export default defineComponent({
   },
 
   setup(props) {
-    const timeOutRecords = ref(null)
-
     const uuidForm = computed(() => {
       if (!isEmptyValue(props.metadata.containerUuid)) {
         return props.metadata.columnName + '_' + props.metadata.containerUuid
@@ -96,94 +106,41 @@ export default defineComponent({
       return BUSINESS_PARTNERS_LIST_FORM
     })
 
-    const businessPartnerData = computed(() => {
-      return store.getters.getBusinessPartnerData({
-        containerUuid: uuidForm.value
-      })
-    })
-
-    const isLoadingRecords = computed(() => {
-      const { isLoading } = businessPartnerData.value
-      return isLoading
+    const {
+      isLoadedRecords,
+      isLoadingRecords,
+      keyAction,
+      loadRecordsList
+    } = useBusinessPartner({
+      uuidForm: uuidForm.value,
+      parentUuid: props.metadata.parentUuid,
+      containerUuid: props.metadata.containerUuid,
+      containerManager: props.containerManager,
+      fieldAttributes: props.metadata
     })
 
     const isReadyFromGetData = computed(() => {
-      const { isLoaded } = businessPartnerData.value
-      return !isLoaded && props.showPopover
+      return !isLoadedRecords.value && props.showPopover
     })
-
-    function searchBPartnerList(pageNumber = 0, pageSize) {
-      let parentUuid = props.metadata.parentUuid
-      if (isEmptyValue(parentUuid)) {
-        parentUuid = props.metadata.containerUuid
-      }
-
-      // const filters = store.getters.getValuesView({
-      //   containerUuid: uuidForm.value,
-      //   format: 'array'
-      // })
-      //   .filter(attribute => {
-      //     if (attribute.columnName.startsWith(DISPLAY_COLUMN_PREFIX)) {
-      //       return false
-      //     }
-      //     return !isEmptyValue(attribute.value)
-      //   })
-
-      // isLoadingRecords.value = true
-      clearTimeout(timeOutRecords.value)
-      timeOutRecords.value = setTimeout(() => {
-        // search on server
-        props.containerManager.getSearchRecordsList({
-          parentUuid,
-          containerUuid: uuidForm.value,
-          contextColumnNames: props.metadata.reference.contextColumnNames,
-          tableName: props.metadata.reference.tableName,
-          uuid: props.metadata.uuid,
-          id: props.metadata.id,
-          // filters,
-          pageNumber,
-          pageSize
-        })
-          .then(response => {
-            // store.commit('setFiltersList', {
-            //   containerUuid: uuidForm.value,
-            //   isSOTrx: this.isSOTrx
-            // })
-            if (isEmptyValue(response)) {
-              // this.$message({
-              //   type: 'warning',
-              //   showClose: true,
-              //   message: this.$t('businessPartner.notFound')
-              // })
-            }
-
-            nextTick(() => {
-              // if (this.$refs.businessPartnerTable) {
-              //   this.$refs.businessPartnerTable.setCurrentRow(this.currentRow)
-              // }
-            })
-          })
-          .finally(() => {
-            // isLoadingRecords.value = false
-          })
-      }, 500)
-    }
 
     watch(isReadyFromGetData, (newValue, oldValue) => {
       if (newValue) {
-        searchBPartnerList()
+        loadRecordsList({})
       }
     })
 
     if (isReadyFromGetData.value) {
-      searchBPartnerList()
+      loadRecordsList({})
     }
 
     return {
+      QUICK_KEY_ACCESS,
+      //
       uuidForm,
       isLoadingRecords,
       isReadyFromGetData,
-      businessPartnerData
+      //
+      keyAction
     }
   }
 })

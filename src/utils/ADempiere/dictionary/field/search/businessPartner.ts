@@ -16,8 +16,35 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+
 export const TABLE_NAME = 'C_BPartner'
 
 export const COLUMN_NAME = 'C_BPartner_ID'
 
 export const BUSINESS_PARTNERS_LIST_FORM = 'Business-Partner-List'
+
+export function generateDisplayedValue(recordRow) {
+  const { display_value } = recordRow
+
+  let displayedValue = display_value
+  if (!isEmptyValue(display_value)) {
+    return display_value
+  }
+
+  // generate with standard columns
+  const { value, name } = recordRow
+
+  if (!isEmptyValue(value)) {
+    displayedValue = value
+  }
+  if (!isEmptyValue(name)) {
+    if (!isEmptyValue(displayedValue)) {
+      displayedValue += ' - ' + name
+    } else {
+      displayedValue = name
+    }
+  }
+  return displayedValue
+}
