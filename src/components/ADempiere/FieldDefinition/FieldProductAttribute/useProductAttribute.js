@@ -91,7 +91,7 @@ export default ({
       value: uuid
     })
     // update element column name
-    if (fieldAttributes.isSameColumnElement) {
+    if (!fieldAttributes.isSameColumnElement) {
       store.commit('updateValueOfField', {
         parentUuid,
         containerUuid,
