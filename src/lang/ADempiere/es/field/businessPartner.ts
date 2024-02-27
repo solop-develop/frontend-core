@@ -21,6 +21,11 @@ const businessPartner = {
   emptyBusinessPartner: 'Utilice los filtros para realizar la búsqueda de socio de negocio según su Código, Nombre, Email y Teléfono',
   notFound: 'Socio de negocio no encontrado',
   searchWithEnter: 'Introduzca un valor para buscar Socios de Negocio',
+  //
+  customer: 'Cliente',
+  onlyCustomer: 'Solo Cliente',
+  vendor: 'Proveedor',
+  onlyVendor: 'Solo Proveedor',
   // fields
   value: 'Código',
   name: 'Nombre',

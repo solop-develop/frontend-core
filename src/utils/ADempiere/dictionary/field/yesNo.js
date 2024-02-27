@@ -16,28 +16,25 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-const businessPartner = {
-  edit: 'Edit',
-  emptyBusinessPartner: 'Use the filters to search for a business partner by Code, Name, Email and Phone Number',
-  notFound: 'Business partner not found',
-  searchWithEnter: 'Enter a value to search for a Business Partners',
-  //
-  customer: 'Customer',
-  onlyCustomer: 'Only Customer',
-  vendor: 'Vendor',
-  onlyVendor: 'Only Vendor',
-  // fields
-  value: 'Value',
-  name: 'Name',
-  contact: 'Contact',
-  phone: 'Phone',
-  eMail: 'Email',
-  postalCode: 'Postal Code',
-  group: 'Group',
-  openBalance: 'Open Balance',
-  creditAvailable: 'Credit Avalable',
-  creditUsed: 'Credit Used',
-  revenue: 'Revenue'
-}
+import lang from '@/lang'
 
-export default businessPartner
+export const YES_NO_OPTIONS_LIST = [
+  {
+    // Empty
+    displayValue: ' ',
+    booleanValue: undefined,
+    stringValue: null
+  },
+  {
+    // Yes
+    displayValue: lang.t('components.switchActiveText'),
+    booleanValue: true,
+    stringValue: 'Y'
+  },
+  {
+    // No
+    displayValue: lang.t('components.switchInactiveText'),
+    booleanValue: false,
+    stringValue: 'N'
+  }
+]

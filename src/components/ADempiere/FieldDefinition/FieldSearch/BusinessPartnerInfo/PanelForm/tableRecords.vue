@@ -41,22 +41,26 @@
         prop="value"
         :label="$t('field.businessPartner.value')"
         header-align="center"
+        width="90"
       />
       <el-table-column
         prop="name"
         :label="$t('field.businessPartner.name')"
         header-align="center"
+        width="220"
       />
       <el-table-column
         prop="business_partner_group"
         :label="$t('field.businessPartner.group')"
         header-align="center"
+        width="170"
       />
 
       <el-table-column
         prop="open_balance_amount"
         :label="$t('field.businessPartner.openBalance')"
         header-align="center"
+        width="110"
       >
         <span slot-scope="scope" class="cell-align-right">
           {{ scope.row.open_balance_amount }}
@@ -67,6 +71,7 @@
         prop="credit_available_amount"
         :label="$t('field.businessPartner.creditAvailable')"
         header-align="center"
+        width="130"
       >
         <span slot-scope="scope" class="cell-align-right">
           {{ scope.row.credit_available_amount }}
@@ -77,6 +82,7 @@
         prop="credit_used_amount"
         :label="$t('field.businessPartner.creditUsed')"
         header-align="center"
+        width="110"
       >
         <span slot-scope="scope" class="cell-align-right">
           {{ scope.row.credit_used_amount }}
@@ -87,6 +93,7 @@
         prop="revenue_amount"
         :label="$t('field.businessPartner.revenue')"
         header-align="center"
+        width="110"
       >
         <span slot-scope="scope" class="cell-align-right">
           {{ scope.row.revenue_amount }}
@@ -105,7 +112,10 @@ import {
 import store from '@/store'
 
 // Constants
-import { BUSINESS_PARTNERS_LIST_FORM } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+import {
+  BUSINESS_PARTNERS_LIST_FORM,
+  COLUMN_NAME
+} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 
 // Components and Mixins
 import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
@@ -139,7 +149,7 @@ export default defineComponent({
       default: () => {
         return {
           containerUuid: BUSINESS_PARTNERS_LIST_FORM,
-          columnName: 'C_BPartner_ID'
+          columnName: COLUMN_NAME
         }
       }
     }
@@ -172,9 +182,9 @@ export default defineComponent({
     }
 
     function changeBusinessPartner() {
-      const row = currentRow.value
-      if (!isEmptyValue(row)) {
-        setValues(row)
+      const recordRow = currentRow.value
+      if (!isEmptyValue(recordRow)) {
+        setValues(recordRow)
         closeList()
       }
     }
@@ -213,16 +223,26 @@ export default defineComponent({
 
 <style lang="scss">
 .business-partners-table {
-  .el-table .cell {
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
-    word-break: break-all;
-    line-height: 15px;
-    padding-left: 10px;
-    padding-right: 10px;
+  &.el-table {
+    .el-table__body {
+      .el-table__row {
+        .el-table__cell {
+          padding-top: 5px;
+          padding-bottom: 3px;
+          .cell {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+            word-break: break-all;
+            line-height: 15px;
+            padding-left: 10px;
+            padding-right: 10px;
+          }
+        }
+      }
+    }
   }
 }
 </style>

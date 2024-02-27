@@ -27,7 +27,7 @@ import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 import { COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 
 // Utils and Helper Methods
-import { isSalesTransactionContainer } from '@/utils/ADempiere/contextUtils'
+import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
@@ -48,10 +48,20 @@ const initState = {
     recordCount: 0,
     isLoaded: false,
     isLoading: false,
-    showQueryFields: true,
     BPshow: false,
     pageSize: ROWS_OF_RECORDS_BY_PAGE,
-    pageNumber: 1
+    pageNumber: 1,
+    showQueryFields: true,
+    queryFilters: {
+      contact: undefined,
+      email: undefined,
+      name: undefined,
+      phone: undefined,
+      postal_code: undefined,
+      value: undefined,
+      is_vendor: undefined,
+      is_customer: undefined
+    }
   },
   businessPartnerData: {},
   BPShow: {}
@@ -69,10 +79,11 @@ const businessPartner = {
       recordCount = 0,
       isLoaded = true,
       isLoading = false,
-      showQueryFields = false,
       BPshow = false,
       pageNumber = 1,
-      pageSize = ROWS_OF_RECORDS_BY_PAGE
+      pageSize = ROWS_OF_RECORDS_BY_PAGE,
+      showQueryFields = false,
+      queryFilters = {}
     }) {
       Vue.set(state.businessPartnerData, containerUuid, {
         ...state.emtpyBusinessPartnerData,
@@ -85,6 +96,7 @@ const businessPartner = {
         isLoaded,
         isLoading,
         showQueryFields,
+        queryFilters,
         pageNumber,
         pageSize
       })
@@ -129,6 +141,20 @@ const businessPartner = {
       Vue.set(state.businessPartnerData[containerUuid], 'showQueryFields', showQueryFields)
     },
 
+    setBusinessPartnerQueryFilters(state, {
+      containerUuid,
+      queryFilters
+    }) {
+      Vue.set(state.businessPartnerData[containerUuid], 'queryFilters', queryFilters)
+    },
+    setBusinessPartnerQueryFilterByAttribute(state, {
+      containerUuid,
+      attributeKey,
+      value
+    }) {
+      Vue.set(state.businessPartnerData[containerUuid].queryFilters, attributeKey, value)
+    },
+
     /**
      * Change showed list of business partner
      * TODO: Used only POS form
@@ -154,8 +180,6 @@ const businessPartner = {
       tableName,
       columnName,
       //
-      isForm = false,
-      filters = [],
       searchValue,
       pageNumber,
       pageSize
@@ -170,27 +194,25 @@ const businessPartner = {
         }
         const pageToken = generatePageToken({ pageNumber })
 
-        if (!isForm) {
-          const isSOTrx = isSalesTransactionContainer({
-            parentUuid
-            // containerUuid
-          })
-          if (!isEmptyValue(isSOTrx)) {
-            let columnName = 'IsVendor'
-            if (isSOTrx) {
-              columnName = 'IsCustomer'
-            }
-            filters.push({
-              columnName,
-              value: true
-            })
-          }
-        }
-
         commit('setBusinessPartnerIsLoading', {
           containerUuid,
           isLoading: true
         })
+
+        const isSalesTransactionContext = isSalesTransaction({
+          parentUuid: parentUuid,
+          containerUuid: containerUuid
+        })
+
+        const storedBusinessPartnerData = getters.getBusinessPartnerData({
+          containerUuid
+        })
+        const { queryFilters } = storedBusinessPartnerData
+        if (isSalesTransactionContext) {
+          queryFilters.is_vendor = undefined
+        } else {
+          queryFilters.is_customer = undefined
+        }
 
         requestListBusinessPartner({
           contextColumnNames,
@@ -203,8 +225,9 @@ const businessPartner = {
           tableName,
           columnName,
           // Query
-          filters,
           searchValue,
+          ...queryFilters,
+          //
           pageToken,
           pageSize
         })
@@ -226,11 +249,8 @@ const businessPartner = {
               currentRow = recordsList.at(0)
             }
 
-            const storedShowQueryFields = getters.getBusinessPartnerShowQueryFields({
-              containerUuid
-            })
-
             commit('setBusinessPartnerData', {
+              ...storedBusinessPartnerData,
               containerUuid,
               currentRow,
               recordsList,
@@ -238,7 +258,6 @@ const businessPartner = {
               pageNumber,
               pageSize,
               isLoaded: true,
-              showQueryFields: storedShowQueryFields,
               recordCount: Number(responseBusinessPartnerList.record_count)
             })
 
@@ -271,6 +290,22 @@ const businessPartner = {
         ...state.emtpyBusinessPartnerData,
         containerUuid
       }
+    },
+    getBusinessPartnerQueryFilters: (state, getters) => ({ containerUuid }) => {
+      const { queryFilters } = getters.getBusinessPartnerData({
+        containerUuid
+      })
+      return queryFilters || {}
+    },
+    getBusinessPartnerQueryFilterByAttribute: (state, getters) => ({ containerUuid, attributeKey }) => {
+      const queryFilters = getters.getBusinessPartnerQueryFilters({
+        containerUuid
+      })
+      if (!isEmptyValue(queryFilters)) {
+        const { [attributeKey]: valueFilter } = queryFilters
+        return valueFilter
+      }
+      return undefined
     },
     getIsLoadedBusinessPartnerRecord: (state, getters) => ({ containerUuid }) => {
       return getters.getBusinessPartnerData({

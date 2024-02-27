@@ -36,8 +36,8 @@
           type="info"
           class="button-base-icon"
           plain
+          @click="clearFormValues();"
         >
-          <!-- @click="clearFormValues(); searchBPartnerList();" -->
           <svg-icon icon-class="layers-clear" />
         </el-button>
 
@@ -135,10 +135,18 @@ export default defineComponent({
       })
     })
 
+    function clearFormValues() {
+      store.commit('setBusinessPartnerQueryFilters', {
+        containerUuid: props.uuidForm,
+        queryFilters: {}
+      })
+    }
+
     return {
       isLoadingRecords,
       recordCount,
       //
+      clearFormValues,
       loadRecordsList
     }
   }

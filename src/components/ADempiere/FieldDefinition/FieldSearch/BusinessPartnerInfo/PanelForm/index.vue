@@ -44,8 +44,10 @@
 
 <script>
 import {
-  defineComponent, computed, watch
+  computed, defineComponent, onUnmounted, watch
 } from '@vue/composition-api'
+
+import store from '@/store'
 
 // Constants
 import {
@@ -132,6 +134,21 @@ export default defineComponent({
     if (isReadyFromGetData.value) {
       loadRecordsList({})
     }
+
+    function subscribeAccoutingFacts() {
+      return store.subscribe((mutation, state) => {
+        const enabledMutations = ['setBusinessPartnerQueryFilters', 'setBusinessPartnerQueryFilterByAttribute']
+        if (enabledMutations.includes(mutation.type)) {
+          loadRecordsList({})
+        }
+      })
+    }
+
+    const unsubscribeAccoutingFacts = subscribeAccoutingFacts()
+
+    onUnmounted(() => {
+      unsubscribeAccoutingFacts()
+    })
 
     return {
       QUICK_KEY_ACCESS,

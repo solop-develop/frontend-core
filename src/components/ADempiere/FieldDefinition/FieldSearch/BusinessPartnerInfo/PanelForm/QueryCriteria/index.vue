@@ -38,29 +38,48 @@
       >
         <el-row :gutter="10">
           <el-col :span="6">
-            <value-field />
+            <value-field
+              :uuid-form="uuidForm"
+            />
           </el-col>
 
           <el-col :span="6">
-            <contact-field />
+            <contact-field
+              :uuid-form="uuidForm"
+            />
           </el-col>
 
           <el-col :span="6">
-            <phone-field />
+            <phone-field
+              :uuid-form="uuidForm"
+            />
+          </el-col>
+
+          <el-col :span="6">
+            <customer-vendor-field
+              :uuid-form="uuidForm"
+              :container-uuid="metadata.containerUuid"
+            />
           </el-col>
         </el-row>
 
         <el-row :gutter="10">
           <el-col :span="6">
-            <name-field />
+            <name-field
+              :uuid-form="uuidForm"
+            />
           </el-col>
 
           <el-col :span="6">
-            <email-field />
+            <email-field
+              :uuid-form="uuidForm"
+            />
           </el-col>
 
           <el-col :span="6">
-            <postal-code-field />
+            <postal-code-field
+              :uuid-form="uuidForm"
+            />
           </el-col>
         </el-row>
       </el-form>
@@ -82,7 +101,8 @@ import {
 
 // Components and Mixins
 import ContactField from './contactField.vue'
-import EmailField from './eMailField.vue'
+import CustomerVendorField from './customerVendorField.vue'
+import EmailField from './emailField.vue'
 import NameField from './nameField.vue'
 import PhoneField from './phoneField.vue'
 import PostalCodeField from './postalCodeField.vue'
@@ -96,6 +116,7 @@ export default defineComponent({
 
   components: {
     ContactField,
+    CustomerVendorField,
     EmailField,
     NameField,
     PhoneField,

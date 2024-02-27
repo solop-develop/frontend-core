@@ -18,51 +18,68 @@
 
 <template>
   <el-form-item
-    :label="$t('field.businessPartner.phone')"
+    :label="title"
   >
-    <el-input
-      v-model="currentValue"
-      clearable
-    />
+    <el-select
+      v-model="value"
+    >
+      <el-option
+        v-for="(option, key) in YES_NO_OPTIONS_LIST"
+        :key="key"
+        :value="option.stringValue"
+        :label="option.displayValue"
+      />
+    </el-select>
   </el-form-item>
 </template>
 
 <script>
-import { computed, defineComponent } from '@vue/composition-api'
+import { computed, defineComponent, ref } from '@vue/composition-api'
 
-import store from '@/store'
+import lang from '@/lang'
+
+// Constants
+import { YES_NO_OPTIONS_LIST } from '@/utils/ADempiere/dictionary/field/yesNo'
+
+// Utils and Helper Methods
+import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 
 export default defineComponent({
-  name: 'PhoneField',
+  name: 'OnlyCustomerVendorField',
 
   props: {
     uuidForm: {
+      required: true,
+      type: String
+    },
+    containerUuid: {
       required: true,
       type: String
     }
   },
 
   setup(props) {
-    const ATTRIBUTE_KEY = 'phone'
+    const value = ref(null)
 
-    const currentValue = computed({
-      set(newValue) {
-        store.commit('setBusinessPartnerQueryFilterByAttribute', {
-          containerUuid: props.uuidForm,
-          attributeKey: ATTRIBUTE_KEY,
-          value: newValue
-        })
-      },
-      get() {
-        return store.getters.getBusinessPartnerQueryFilterByAttribute({
-          containerUuid: props.uuidForm,
-          attributeKey: ATTRIBUTE_KEY
-        })
+    const isSalesTransactionContext = computed(() => {
+      return isSalesTransaction({
+        containerUuid: props.containerUuid
+      })
+    })
+
+    const title = computed(() => {
+      if (isSalesTransactionContext.value) {
+        return lang.t('field.businessPartner.customer')
       }
+      return lang.t('field.businessPartner.vendor')
     })
 
     return {
-      currentValue
+      YES_NO_OPTIONS_LIST,
+      //
+      isSalesTransactionContext,
+      value,
+      title
     }
   }
 })

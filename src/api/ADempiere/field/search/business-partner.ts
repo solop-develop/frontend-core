@@ -105,6 +105,15 @@ export function requestListBusinessPartner({
   tableName,
   columnName,
   columnId,
+  // filters
+  contact,
+  email,
+  name,
+  phone,
+  postal_code,
+  value,
+  is_vendor,
+  is_customer,
   //
   pageToken,
   pageSize = ROWS_OF_RECORDS_BY_PAGE
@@ -126,7 +135,6 @@ export function requestListBusinessPartner({
       }
     })
   }
-  console.log({ tableName, columnName, fieldId, processParameterId, browseFieldId })
 
   let url
   switch (true) {
@@ -157,6 +165,14 @@ export function requestListBusinessPartner({
       //
       // reference_id: reference_id,
       search_value: searchValue,
+      contact,
+      email,
+      name,
+      phone,
+      postal_code,
+      value,
+      is_vendor,
+      is_customer,
       // Page Data
       page_token: pageToken,
       page_size: pageSize

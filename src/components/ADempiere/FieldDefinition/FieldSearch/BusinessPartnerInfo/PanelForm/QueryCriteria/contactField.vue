@@ -20,18 +20,49 @@
   <el-form-item
     :label="$t('field.businessPartner.contact')"
   >
-    <el-input />
+    <el-input
+      v-model="currentValue"
+      clearable
+    />
   </el-form-item>
 </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
+import { computed, defineComponent } from '@vue/composition-api'
+
+import store from '@/store'
 
 export default defineComponent({
   name: 'ContactField',
 
-  setup() {
+  props: {
+    uuidForm: {
+      required: true,
+      type: String
+    }
+  },
+
+  setup(props) {
+    const ATTRIBUTE_KEY = 'contact'
+
+    const currentValue = computed({
+      set(newValue) {
+        store.commit('setBusinessPartnerQueryFilterByAttribute', {
+          containerUuid: props.uuidForm,
+          attributeKey: ATTRIBUTE_KEY,
+          value: newValue
+        })
+      },
+      get() {
+        return store.getters.getBusinessPartnerQueryFilterByAttribute({
+          containerUuid: props.uuidForm,
+          attributeKey: ATTRIBUTE_KEY
+        })
+      }
+    })
+
     return {
+      currentValue
     }
   }
 })

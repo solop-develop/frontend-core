@@ -25,6 +25,11 @@ export const COLUMN_NAME = 'C_BPartner_ID'
 
 export const BUSINESS_PARTNERS_LIST_FORM = 'Business-Partner-List'
 
+/**
+ * Generate displayed value from values
+ * @param {Object} recordRow
+ * @returns {String}
+ */
 export function generateDisplayedValue(recordRow) {
   const { display_value } = recordRow
 
