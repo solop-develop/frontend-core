@@ -48,6 +48,7 @@ const initState = {
     recordCount: 0,
     isLoaded: false,
     isLoading: false,
+    isSalesTransaction: undefined,
     BPshow: false,
     pageSize: ROWS_OF_RECORDS_BY_PAGE,
     pageNumber: 1,
@@ -79,6 +80,7 @@ const businessPartner = {
       recordCount = 0,
       isLoaded = true,
       isLoading = false,
+      isSalesTransaction = undefined,
       BPshow = false,
       pageNumber = 1,
       pageSize = ROWS_OF_RECORDS_BY_PAGE,
@@ -95,6 +97,7 @@ const businessPartner = {
         recordCount,
         isLoaded,
         isLoading,
+        isSalesTransaction,
         showQueryFields,
         queryFilters,
         pageNumber,
@@ -257,6 +260,7 @@ const businessPartner = {
               nextPageToken: responseBusinessPartnerList.next_page_token,
               pageNumber,
               pageSize,
+              isSalesTransaction: isSalesTransactionContext,
               isLoaded: true,
               recordCount: Number(responseBusinessPartnerList.record_count)
             })
@@ -271,10 +275,12 @@ const businessPartner = {
             })
           })
           .finally(() => {
-            commit('setBusinessPartnerIsLoading', {
-              containerUuid,
-              isLoading: false
-            })
+            setTimeout(() => {
+              commit('setBusinessPartnerIsLoading', {
+                containerUuid,
+                isLoading: false
+              })
+            }, 500)
           })
       })
     }

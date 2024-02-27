@@ -18,10 +18,26 @@
 
 <template>
   <el-form-item
-    :label="title"
+    v-if="isSalesTransactionContext"
+    :label="$t('field.businessPartner.customer')"
   >
     <el-select
-      v-model="value"
+      v-model="currentValueCustomer"
+    >
+      <el-option
+        v-for="(option, key) in YES_NO_OPTIONS_LIST"
+        :key="key"
+        :value="option.stringValue"
+        :label="option.displayValue"
+      />
+    </el-select>
+  </el-form-item>
+  <el-form-item
+    v-else
+    :label="$t('field.businessPartner.vendor')"
+  >
+    <el-select
+      v-model="currentValueVendor"
     >
       <el-option
         v-for="(option, key) in YES_NO_OPTIONS_LIST"
@@ -34,9 +50,9 @@
 </template>
 
 <script>
-import { computed, defineComponent, ref } from '@vue/composition-api'
+import { computed, defineComponent } from '@vue/composition-api'
 
-import lang from '@/lang'
+import store from '@/store'
 
 // Constants
 import { YES_NO_OPTIONS_LIST } from '@/utils/ADempiere/dictionary/field/yesNo'
@@ -59,7 +75,40 @@ export default defineComponent({
   },
 
   setup(props) {
-    const value = ref(null)
+    const ATTRIBUTE_KEY_CUSTOMER = 'is_customer'
+    const ATTRIBUTE_KEY_VENDOR = 'is_vendor'
+
+    const currentValueCustomer = computed({
+      set(newValue) {
+        store.commit('setBusinessPartnerQueryFilterByAttribute', {
+          containerUuid: props.uuidForm,
+          attributeKey: ATTRIBUTE_KEY_CUSTOMER,
+          value: newValue
+        })
+      },
+      get() {
+        return store.getters.getBusinessPartnerQueryFilterByAttribute({
+          containerUuid: props.uuidForm,
+          attributeKey: ATTRIBUTE_KEY_CUSTOMER
+        })
+      }
+    })
+
+    const currentValueVendor = computed({
+      set(newValue) {
+        store.commit('setBusinessPartnerQueryFilterByAttribute', {
+          containerUuid: props.uuidForm,
+          attributeKey: ATTRIBUTE_KEY_VENDOR,
+          value: newValue
+        })
+      },
+      get() {
+        return store.getters.getBusinessPartnerQueryFilterByAttribute({
+          containerUuid: props.uuidForm,
+          attributeKey: ATTRIBUTE_KEY_VENDOR
+        })
+      }
+    })
 
     const isSalesTransactionContext = computed(() => {
       return isSalesTransaction({
@@ -67,19 +116,12 @@ export default defineComponent({
       })
     })
 
-    const title = computed(() => {
-      if (isSalesTransactionContext.value) {
-        return lang.t('field.businessPartner.customer')
-      }
-      return lang.t('field.businessPartner.vendor')
-    })
-
     return {
       YES_NO_OPTIONS_LIST,
       //
       isSalesTransactionContext,
-      value,
-      title
+      currentValueCustomer,
+      currentValueVendor
     }
   }
 })

@@ -33,6 +33,7 @@ import {
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { generateDisplayedValue } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 
 /**
  * Use Business Partner as mixin
@@ -108,6 +109,12 @@ export default ({
         containerUuid: uuidForm
       })
     }
+  })
+
+  const isSalesTransactionContext = computed(() => {
+    return isSalesTransaction({
+      containerUuid: fieldAttributes.containerUuid
+    })
   })
 
   function clearValues() {
@@ -258,9 +265,11 @@ export default ({
 
   return {
     blankValues,
+    businessPartnerData,
     currentRow,
     isLoadedRecords,
     isLoadingRecords,
+    isSalesTransactionContext,
     showQueryFields,
     //
     clearValues,

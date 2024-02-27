@@ -109,8 +109,10 @@ export default defineComponent({
     })
 
     const {
+      businessPartnerData,
       isLoadedRecords,
       isLoadingRecords,
+      isSalesTransactionContext,
       keyAction,
       loadRecordsList
     } = useBusinessPartner({
@@ -131,7 +133,7 @@ export default defineComponent({
       }
     })
 
-    if (isReadyFromGetData.value) {
+    if (isReadyFromGetData.value || isSalesTransactionContext.value !== businessPartnerData.value.isSalesTransaction) {
       loadRecordsList({})
     }
 
