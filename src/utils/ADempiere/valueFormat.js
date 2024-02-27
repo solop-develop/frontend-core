@@ -38,7 +38,7 @@ export { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableF
 import { decodeHtmlEntities } from '@/utils/ADempiere/formatValue/stringFormat.js'
 // TODO: Duplicated exported method, removed this
 import { formatPrice as formatPriceTemp, formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
-import { formatDate as formatDateTemp } from '@/utils/ADempiere/formatValue/dateFormat'
+import { formatDate as formatDateTemp, getDateFormat } from '@/utils/ADempiere/formatValue/dateFormat'
 
 // TODO: Duplicated method remove and use with destructured params
 export function formatDate(value, isTime = false, format) {
@@ -57,8 +57,6 @@ export function formatPrice(number, currency) {
   })
 }
 
-// TODO: Duplicated exported method, removed this
-export { formatDateToSend } from '@/utils/ADempiere/formatValue/dateFormat'
 // Format percentage based on Intl library
 export { formatPercent } from '@/utils/ADempiere/formatValue/numberFormat.js'
 
@@ -113,7 +111,11 @@ export function formatField({
       formattedValue = formatDateTemp({
         value,
         isTime: true,
-        format: optionalFormat
+        format: getDateFormat({
+          format: optionalFormat,
+          isTime: true,
+          isDate: false
+        })
       })
       break
 
