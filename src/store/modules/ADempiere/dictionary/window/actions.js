@@ -56,7 +56,7 @@ import {
   sharedLink
 } from '@/utils/ADempiere/constants/actionsMenuList.js'
 import evaluator from '@/utils/ADempiere/contextUtils/evaluator'
-import { getContext } from '@/utils/ADempiere/contextUtils'
+import { getContext, isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { containerManager as containerManagerReport } from '@/utils/ADempiere/dictionary/report'
@@ -749,10 +749,15 @@ export default {
         query
       }, () => {})
 
+      const isSalesTransactionContext = isSalesTransaction({
+        parentUuid,
+        containerUuid,
+        isRecord: false
+      })
       let defaultAttributes = rootGetters.getTabParsedDefaultValue({
         parentUuid,
         containerUuid,
-        isSOTrxMenu: currentRoute.meta.isSalesTransaction,
+        isSOTrxDictionary: isSalesTransactionContext,
         fieldsList: tab.fieldsList
       })
 

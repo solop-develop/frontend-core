@@ -128,12 +128,12 @@ export function getEvaluatedFieldLogics({
 /**
  * Get parsed default value to set into field
  * @param {object}  field
- * @param {boolean} isSOTrxMenu
+ * @param {boolean} isSOTrxDictionary
  */
 export function getContextDefaultValue({
   parentUuid,
   containerUuid,
-  isSOTrxMenu,
+  isSOTrxDictionary,
   columnName,
   elementName,
   componentPath,
@@ -154,7 +154,7 @@ export function getContextDefaultValue({
       containerUuid,
       columnName,
       value: parsedDefaultValue,
-      isSOTrxMenu
+      isSOTrxDictionary
     }).value
   }
 

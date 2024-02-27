@@ -16,8 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import router from '@/router'
-
 // API Request Methods
 import { requestProcessMetadata } from '@/api/ADempiere/dictionary/index.ts'
 
@@ -27,6 +25,7 @@ import {
 } from '@/utils/ADempiere/constants/actionsMenuList.js'
 
 // Utils and Helper Methods
+import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import {
   containerManager, generateProcess, isDisplayedField
@@ -167,10 +166,13 @@ export default {
         fieldsList = getters.getStoredFieldsFromProcess(containerUuid)
       }
 
-      const currentRoute = router.app._route
+      const isSalesTransactionContext = isSalesTransaction({
+        containerUuid,
+        isRecord: false
+      })
       const defaultAttributes = getters.getParsedDefaultValues({
         containerUuid,
-        isSOTrxMenu: currentRoute.meta.isSalesTransaction,
+        isSOTrxDictionary: isSalesTransactionContext,
         fieldsList
       })
 

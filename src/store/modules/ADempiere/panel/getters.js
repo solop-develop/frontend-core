@@ -286,7 +286,7 @@ const getters = {
     parentUuid,
     containerUuid,
     isGetServer = true,
-    isSOTrxMenu,
+    isSOTrxDictionary,
     fieldsList = [],
     formatToReturn = 'array'
   }) => {
@@ -308,7 +308,7 @@ const getters = {
             ...fieldItem,
             parentUuid,
             contextColumnNames,
-            isSOTrxMenu
+            isSOTrxDictionary
           })
         }
         attributesObject[columnName] = parsedDefaultValue
@@ -323,7 +323,7 @@ const getters = {
               ...fieldItem,
               parentUuid,
               contextColumnNames,
-              isSOTrxMenu,
+              isSOTrxDictionary,
               columnName: columnNameTo,
               elementName: elementNameTo
             })

@@ -68,6 +68,10 @@ export default defineComponent({
       required: true,
       type: String
     },
+    parentUuid: {
+      type: String,
+      default: undefined
+    },
     containerUuid: {
       required: true,
       type: String
@@ -112,6 +116,7 @@ export default defineComponent({
 
     const isSalesTransactionContext = computed(() => {
       return isSalesTransaction({
+        parentUuid: props.parentUuid,
         containerUuid: props.containerUuid
       })
     })

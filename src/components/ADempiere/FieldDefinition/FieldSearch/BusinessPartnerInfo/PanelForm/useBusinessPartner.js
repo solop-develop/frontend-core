@@ -114,6 +114,7 @@ export default ({
 
   const isSalesTransactionContext = computed(() => {
     return isSalesTransaction({
+      parentUuid: fieldAttributes.parentUuid,
       containerUuid: fieldAttributes.containerUuid
     })
   })
