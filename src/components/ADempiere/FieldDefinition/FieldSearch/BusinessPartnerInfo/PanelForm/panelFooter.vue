@@ -19,15 +19,16 @@
 <template>
   <el-row :gutter="24" class="business-partners-footer">
     <el-col :span="14">
-      <!-- <custom-pagination
+      <custom-pagination
+        :container-manager="containerManager"
         :total="recordCount"
-        :current-page="pageNumber"
-        :container-manager="containerManagerBPList"
-        :handle-change-page="setPage"
-        :records-page="recordsList.length"
-        :selection="selection"
-        :handle-size-change="handleChangeSizePage"
-      /> -->
+        :is-showed-selected="false"
+        :selection="selectedRecords"
+        :page-number="pageNumber"
+        :handle-change-page-number="setPageNumber"
+        :page-size="pageSize"
+        :handle-change-page-size="setPageSize"
+      />
     </el-col>
 
     <el-col :span="10">
@@ -36,7 +37,7 @@
           type="info"
           class="button-base-icon"
           plain
-          @click="clearFormValues();"
+          @click="clearCriteriaValues();"
         >
           <svg-icon icon-class="layers-clear" />
         </el-button>
@@ -53,15 +54,15 @@
           type="danger"
           class="button-base-icon"
           icon="el-icon-close"
+          @click="clearParentValues();"
         />
-        <!-- @click="closeList(); clearValues();" -->
 
         <el-button
           type="primary"
           class="button-base-icon"
           icon="el-icon-check"
+          @click="changeBusinessPartner()"
         />
-        <!-- @click="changeBusinessPartner()" -->
       </samp>
     </el-col>
   </el-row>
@@ -81,6 +82,9 @@ import {
 // Components and Mixins
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 import useBusinessPartner from './useBusinessPartner'
+
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'PanelFooter',
@@ -119,8 +123,14 @@ export default defineComponent({
 
   setup(props) {
     const {
+      blankValues,
+      businessPartnerData,
+      currentRow,
       isLoadingRecords,
-      loadRecordsList
+      //
+      closeList,
+      loadRecordsList,
+      setValues
     } = useBusinessPartner({
       uuidForm: props.uuidForm,
       parentUuid: props.metadata.parentUuid,
@@ -129,25 +139,71 @@ export default defineComponent({
       fieldAttributes: props.metadata
     })
 
+    const selectedRecords = computed(() => {
+      if (!isEmptyValue(currentRow.value)) {
+        return 1
+      }
+      return 0
+    })
+
     const recordCount = computed(() => {
       return store.getters.getBusinessPartnerRecordCount({
         containerUuid: props.uuidForm
       })
     })
 
-    function clearFormValues() {
+    const pageNumber = computed(() => {
+      return businessPartnerData.value.pageNumber
+    })
+
+    const pageSize = computed(() => {
+      return businessPartnerData.value.pageSize
+    })
+
+    function clearCriteriaValues() {
       store.commit('setBusinessPartnerQueryFilters', {
         containerUuid: props.uuidForm,
         queryFilters: {}
       })
     }
 
+    function clearParentValues() {
+      setValues(
+        blankValues.value
+      )
+      closeList()
+    }
+
+    function changeBusinessPartner() {
+      setValues(
+        currentRow.value
+      )
+      closeList()
+    }
+
+    function setPageNumber(pageNumber) {
+      loadRecordsList({
+        pageNumber
+      })
+    }
+    function setPageSize(pageSize) {
+      loadRecordsList({
+        pageSize
+      })
+    }
+
     return {
       isLoadingRecords,
+      pageNumber,
+      pageSize,
       recordCount,
+      selectedRecords,
       //
-      clearFormValues,
-      loadRecordsList
+      changeBusinessPartner,
+      clearCriteriaValues,
+      clearParentValues,
+      setPageNumber,
+      setPageSize
     }
   }
 })

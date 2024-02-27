@@ -532,7 +532,7 @@ export const containerManager = {
       blankValue
     })
   },
-  getSearchRecordsList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, id, filters, searchValue, pageNumber }) {
+  getSearchRecordsList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, id, filters, searchValue, pageNumber, pageSize }) {
     return store.dispatch('getSearchRecordsFromServer', {
       parentUuid,
       containerUuid,
@@ -542,7 +542,8 @@ export const containerManager = {
       columnName,
       filters,
       searchValue,
-      pageNumber
+      pageNumber,
+      pageSize
     })
   },
 

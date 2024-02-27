@@ -29,6 +29,7 @@ import {
   BUSINESS_PARTNERS_LIST_FORM,
   COLUMN_NAME
 } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -201,7 +202,7 @@ export default ({
     })
   }
 
-  function loadRecordsList({ pageNumber = 0, pageSize }) {
+  function loadRecordsList({ pageNumber = 0, pageSize = ROWS_OF_RECORDS_BY_PAGE }) {
     let parentUuid = fieldAttributes.parentUuid
     if (isEmptyValue(parentUuid)) {
       parentUuid = fieldAttributes.containerUuid

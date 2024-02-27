@@ -167,6 +167,7 @@ import {
 } from '@/utils/ADempiere/lookupFactory'
 import { containerManager as containerManagerForm } from '@/utils/ADempiere/dictionary/form'
 
+// TODO: Deprecated component
 export default {
   name: 'BusinessPartnersList',
 
