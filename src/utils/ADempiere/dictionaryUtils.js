@@ -94,7 +94,7 @@ export function generateField({
   evaluateDefaultColumnShowed = ({ isShowedTableFromUser = true }) => {
     return isShowedTableFromUser
   },
-  isSOTrxMenu
+  isSOTrxDictionary
 }) {
   const { columnName } = fieldToGenerate
   let isGetServerValue = false
@@ -154,7 +154,7 @@ export function generateField({
       parentUuid: moreAttributes.parentUuid,
       containerUuid: moreAttributes.containerUuid,
       componentPath: componentReference.componentPath,
-      isSOTrxMenu
+      isSOTrxDictionary
     })
 
     if (String(fieldToGenerate.defaultValue).startsWith('@SQL=')) {
@@ -173,7 +173,7 @@ export function generateField({
         defaultValue: fieldToGenerate.defaultValueTo,
         columnName: `${columnName}_To`,
         elementName: `${fieldToGenerate.elementName}_To`,
-        isSOTrxMenu
+        isSOTrxDictionary
       })
 
       if (String(fieldToGenerate.defaultValueTo).startsWith('@SQL=')) {
@@ -219,7 +219,7 @@ export function generateField({
     columnNameTo: `${columnName}_To`,
     elementNameTo: `${fieldToGenerate.elementColumnName}_To`,
     isSameColumnElement: columnName === fieldToGenerate.elementColumnName,
-    isSOTrxMenu,
+    isSOTrxDictionary,
     // displayed attributes
     componentPath: componentReference.componentPath,
     isSupported: componentReference.isSupported,

@@ -32,6 +32,7 @@ import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { generatePanelAndFields } from '@/utils/ADempiere/dictionary/panel.js'
 import {
   containerManager,
@@ -298,10 +299,13 @@ export default {
         fieldsList = browserDefinition.fieldsList
       }
 
-      const currentRoute = router.app._route
+      const isSalesTransactionContext = isSalesTransaction({
+        containerUuid,
+        isRecord: false
+      })
       const defaultAttributesWithColumn = getters.getParsedDefaultValues({
         containerUuid,
-        isSOTrxMenu: currentRoute.meta.isSalesTransaction,
+        isSOTrxDictionary: isSalesTransactionContext,
         fieldsList
       })
 

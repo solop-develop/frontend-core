@@ -58,6 +58,7 @@
           <el-col :span="6">
             <customer-vendor-field
               :uuid-form="uuidForm"
+              :parent-uuid="metadata.parentUuid"
               :container-uuid="metadata.containerUuid"
             />
           </el-col>

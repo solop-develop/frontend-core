@@ -187,7 +187,7 @@ export function getPreference({
  * @param {string} columnName: (Optional if exists in value) Column name to search in context
  * @param {boolean} isBooleanToString, convert boolean values to string ('Y' or 'N')
  * @param {boolean} isSQL
- * @param {boolean} isSOTrxMenu
+ * @param {boolean} isSOTrxDictionary
  */
 export function parseContext({
   parentUuid,
@@ -196,7 +196,7 @@ export function parseContext({
   value,
   isSQL = false,
   isBooleanToString = false,
-  isSOTrxMenu
+  isSOTrxDictionary
 }) {
   let isError = false
   const errorsList = []
@@ -279,8 +279,8 @@ export function parseContext({
     }
 
     // menu attribute isEmptyValue isSOTrx
-    if (!isEmptyValue(isSOTrxMenu) && isEmptyValue(contextInfo) && SALES_TRANSACTION_COLUMNS.includes(token)) {
-      contextInfo = isSOTrxMenu
+    if (!isEmptyValue(isSOTrxDictionary) && isEmptyValue(contextInfo) && SALES_TRANSACTION_COLUMNS.includes(token)) {
+      contextInfo = isSOTrxDictionary
     }
 
     if ((isBooleanToString || isSQL) && typeof contextInfo === 'boolean') {
@@ -324,17 +324,29 @@ export function parseContext({
 } // parseContext
 
 /**
- * Get Is Sales Transaction on tab, window or container
- * @param {string} parentUuid
- * @param {containerUuid} containerUuid
- * @returns {boolean}
+ * Get Is Sales Transaction
+ * @param {String} parentUuid
+ * @param {String} containerUuid
+ * @param {Boolean} isRecord
+ * @returns {Boolean}
  */
-export function isSalesTransaction({ parentUuid, containerUuid }) {
+export function isSalesTransaction({ parentUuid, containerUuid, isRecord = true }) {
+  let isSOTrx
   // get value from container view
-  let isSOTrx = isSalesTransactionContainer({
-    parentUuid,
-    containerUuid
-  })
+  if (isRecord) {
+    isSOTrx = isSalesTransactionContainer({
+      parentUuid,
+      containerUuid
+    })
+  }
+
+  if (isEmptyValue(isSOTrx) && !isEmptyValue(parentUuid)) {
+    // get value from window
+    isSOTrx = isSalesTransactionWindow({
+      parentUuid
+    })
+  }
+
   if (isEmptyValue(isSOTrx)) {
     // get value from menu
     isSOTrx = isSalesTransactionMenu()
@@ -343,6 +355,13 @@ export function isSalesTransaction({ parentUuid, containerUuid }) {
   return convertStringToBoolean(isSOTrx)
 }
 
+/**
+ * Get Is Sales Transaction on tab, window or container value
+ * @param {String} parentUuid
+ * @param {String} containerUuid
+ * @param {Boolean} isRecord
+ * @returns {Boolean}
+ */
 export function isSalesTransactionContainer({
   parentUuid, containerUuid
 }) {
@@ -356,6 +375,13 @@ export function isSalesTransactionContainer({
   return convertStringToBoolean(isSOTrx)
 }
 
+/**
+ * Get Is Sales Transaction by Window dictionary
+ * @param {String} parentUuid
+ * @param {String} containerUuid
+ * @param {Boolean} isRecord
+ * @returns {Boolean}
+ */
 export function isSalesTransactionWindow({
   parentUuid
 }) {
@@ -374,6 +400,10 @@ export function isSalesTransactionWindow({
   return storedWindow.isSalesTransaction
 }
 
+/**
+ * Get Is Sales Transaction by Menu dictionary
+ * @returns {Boolean}
+ */
 export function isSalesTransactionMenu() {
   // get value from menu
   const currentRoute = router.app._route

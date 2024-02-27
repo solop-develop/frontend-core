@@ -347,7 +347,7 @@ export function getFieldTemplate(overwriteDefinition) {
   // get parsed parent fields list
   const parentFieldsList = getParentFields(fieldTemplateMetadata)
 
-  // TODO: Add support to isSOTrxMenu
+  // TODO: Add support to isSOTrxDictionary
   const parsedDefaultValue = getContextDefaultValue({
     ...fieldTemplateMetadata
   })

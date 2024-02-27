@@ -18,7 +18,6 @@
 
 import Vue from 'vue'
 import language from '@/lang'
-import router from '@/router'
 
 // API Request Methods
 import {
@@ -38,6 +37,7 @@ import { FIELDS_DATE } from '@/utils/ADempiere/references'
 
 // Utils and Helper Methods
 import { containerManager } from '@/utils/ADempiere/dictionary/window'
+import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { getContextAttributes, generateContextKey } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import { isEmptyValue, setRecordPath } from '@/utils/ADempiere/valueUtils.js'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat'
@@ -499,12 +499,16 @@ const windowManager = {
               for (const key in ROW_ATTRIBUTES) {
                 delete currentRow[key]
               }
-              const currentRoute = router.app._route
 
+              const isSalesTransactionContext = isSalesTransaction({
+                parentUuid,
+                containerUuid,
+                isRecord: false
+              })
               const defaultValues = getters.getParsedDefaultValues({
                 parentUuid,
                 containerUuid,
-                isSOTrxMenu: currentRoute.meta.isSalesTransaction,
+                isSOTrxDictionary: isSalesTransactionContext,
                 fieldsList,
                 formatToReturn: 'object'
               })

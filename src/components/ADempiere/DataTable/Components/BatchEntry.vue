@@ -1,19 +1,19 @@
 <!--
-ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
-Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -37,6 +37,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <script>
 import { defineComponent, computed } from '@vue/composition-api'
+
 import store from '@/store'
 
 // Components and Mixins
@@ -49,6 +50,7 @@ import {
   isDisplayedDefault,
   isReadOnlyField
 } from '@/components/ADempiere/DataTable/Components/containerManagerBatchEntry'
+import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
 import { convertArrayKeyValueToObject } from '@/utils/ADempiere/formatValue/iterableFormat.js'
@@ -87,7 +89,7 @@ export default defineComponent({
     }
   },
 
-  setup(props, { root, refs }) {
+  setup(props, { refs }) {
     const containerUuid = props.containerUuid + 'Batch_Entry'
 
     const fieldsList = computed(() => {
@@ -101,10 +103,15 @@ export default defineComponent({
     })
 
     const defaultValues = computed(() => {
+      const isSalesTransactionContext = isSalesTransaction({
+        parentUuid: props.parentUuid,
+        containerUuid: props.containerUuid,
+        isRecord: false
+      })
       return store.getters.getTabParsedDefaultValue({
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid,
-        isSOTrxMenu: root.$route.meta.isSalesTransaction
+        isSOTrxDictionary: isSalesTransactionContext
       })
     })
 

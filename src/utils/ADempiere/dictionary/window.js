@@ -42,7 +42,7 @@ import { requestSaveWindowCustomization } from '@/api/ADempiere/user-customizati
 
 // Utils and Helpers Methods
 import evaluator from '@/utils/ADempiere/contextUtils/evaluator'
-import { getContext } from '@/utils/ADempiere/contextUtils'
+import { getContext, isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
@@ -1629,7 +1629,6 @@ export const containerManager = {
     }
 
     const tabDefinition = store.getters.getStoredTab(parentUuid, containerUuid)
-    const currentRoute = router.app._route
     if (tabDefinition.isParentTab) {
       // const { tableName } = tabDefinition
       // router.push({
@@ -1649,10 +1648,15 @@ export const containerManager = {
     }
 
     const fieldsList = store.getters.getStoredFieldsFromTab(parentUuid, containerUuid)
+    const isSalesTransactionContext = isSalesTransaction({
+      parentUuid,
+      containerUuid,
+      isRecord: false
+    })
     const defaultValues = store.getters.getParsedDefaultValues({
       parentUuid,
       containerUuid,
-      isSOTrxMenu: currentRoute.meta.isSalesTransaction,
+      isSOTrxDictionary: isSalesTransactionContext,
       fieldsList,
       formatToReturn: 'object'
     })
