@@ -16,13 +16,25 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// used in cell type number
-.cell-align-right {
-  text-align: right !important;
-  width: 100%;
-  display: inline-block;
-}
+import lang from '@/lang'
 
-.cell-align-center {
-  text-align: center !important;
-}
+export const YES_NO_OPTIONS_LIST = [
+  {
+    // Empty
+    displayValue: ' ',
+    booleanValue: undefined,
+    stringValue: null
+  },
+  {
+    // Yes
+    displayValue: lang.t('components.switchActiveText'),
+    booleanValue: true,
+    stringValue: 'Y'
+  },
+  {
+    // No
+    displayValue: lang.t('components.switchInactiveText'),
+    booleanValue: false,
+    stringValue: 'N'
+  }
+]

@@ -16,13 +16,40 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// used in cell type number
-.cell-align-right {
-  text-align: right !important;
-  width: 100%;
-  display: inline-block;
-}
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
-.cell-align-center {
-  text-align: center !important;
+export const TABLE_NAME = 'C_BPartner'
+
+export const COLUMN_NAME = 'C_BPartner_ID'
+
+export const BUSINESS_PARTNERS_LIST_FORM = 'Business-Partner-List'
+
+/**
+ * Generate displayed value from values
+ * @param {Object} recordRow
+ * @returns {String}
+ */
+export function generateDisplayedValue(recordRow) {
+  const { display_value } = recordRow
+
+  let displayedValue = display_value
+  if (!isEmptyValue(display_value)) {
+    return display_value
+  }
+
+  // generate with standard columns
+  const { value, name } = recordRow
+
+  if (!isEmptyValue(value)) {
+    displayedValue = value
+  }
+  if (!isEmptyValue(name)) {
+    if (!isEmptyValue(displayedValue)) {
+      displayedValue += ' - ' + name
+    } else {
+      displayedValue = name
+    }
+  }
+  return displayedValue
 }

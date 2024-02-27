@@ -19,15 +19,15 @@
 import Vue from 'vue'
 
 // API Request Methods
-import { requestListBusinessPartner } from '@/api/ADempiere/common/index.ts'
+import { requestListBusinessPartner } from '@/api/ADempiere/field/search/business-partner.ts'
 
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
-import { COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/businessPartner'
+import { COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 
 // Utils and Helper Methods
-import { isSalesTransactionContainer } from '@/utils/ADempiere/contextUtils'
+import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
@@ -41,14 +41,28 @@ const initState = {
     contextKey: '',
     searchValue: '',
     currentRecordUuid: undefined,
+    currentRow: {},
     recordsList: [],
     selectionsList: [],
     nextPageToken: undefined,
     recordCount: 0,
     isLoaded: false,
+    isLoading: false,
+    isSalesTransaction: undefined,
     BPshow: false,
     pageSize: ROWS_OF_RECORDS_BY_PAGE,
-    pageNumber: 1
+    pageNumber: 1,
+    showQueryFields: true,
+    queryFilters: {
+      contact: undefined,
+      email: undefined,
+      name: undefined,
+      phone: undefined,
+      postal_code: undefined,
+      value: undefined,
+      is_vendor: undefined,
+      is_customer: undefined
+    }
   },
   businessPartnerData: {},
   BPShow: {}
@@ -65,11 +79,16 @@ const businessPartner = {
       nextPageToken,
       recordCount = 0,
       isLoaded = true,
+      isLoading = false,
+      isSalesTransaction = undefined,
       BPshow = false,
       pageNumber = 1,
-      pageSize = ROWS_OF_RECORDS_BY_PAGE
+      pageSize = ROWS_OF_RECORDS_BY_PAGE,
+      showQueryFields = false,
+      queryFilters = {}
     }) {
       Vue.set(state.businessPartnerData, containerUuid, {
+        ...state.emtpyBusinessPartnerData,
         containerUuid,
         currentRow,
         recordsList,
@@ -77,6 +96,10 @@ const businessPartner = {
         nextPageToken,
         recordCount,
         isLoaded,
+        isLoading,
+        isSalesTransaction,
+        showQueryFields,
+        queryFilters,
         pageNumber,
         pageSize
       })
@@ -85,7 +108,26 @@ const businessPartner = {
       containerUuid,
       currentRow = {}
     }) {
+      if (isEmptyValue(state.businessPartnerData[containerUuid])) {
+        Vue.set(state.businessPartnerData, containerUuid, {
+          ...state.emtpyBusinessPartnerData,
+          containerUuid
+        })
+      }
       Vue.set(state.businessPartnerData[containerUuid], 'currentRow', currentRow)
+    },
+
+    setBusinessPartnerIsLoading(state, {
+      containerUuid,
+      isLoading = false
+    }) {
+      if (isEmptyValue(state.businessPartnerData[containerUuid])) {
+        Vue.set(state.businessPartnerData, containerUuid, {
+          ...state.emtpyBusinessPartnerData,
+          containerUuid
+        })
+      }
+      Vue.set(state.businessPartnerData[containerUuid], 'isLoading', isLoading)
     },
 
     setBusinessPartnerShow(state, {
@@ -93,6 +135,27 @@ const businessPartner = {
       show = false
     }) {
       Vue.set(state.BPShow, containerUuid, show)
+    },
+
+    setBusinessPartnerShowQueryFields(state, {
+      containerUuid,
+      showQueryFields = false
+    }) {
+      Vue.set(state.businessPartnerData[containerUuid], 'showQueryFields', showQueryFields)
+    },
+
+    setBusinessPartnerQueryFilters(state, {
+      containerUuid,
+      queryFilters
+    }) {
+      Vue.set(state.businessPartnerData[containerUuid], 'queryFilters', queryFilters)
+    },
+    setBusinessPartnerQueryFilterByAttribute(state, {
+      containerUuid,
+      attributeKey,
+      value
+    }) {
+      Vue.set(state.businessPartnerData[containerUuid].queryFilters, attributeKey, value)
     },
 
     /**
@@ -112,16 +175,14 @@ const businessPartner = {
       containerUuid,
       contextColumnNames = [],
       //
-      fieldUuid,
-      processParameterUuid,
-      browseFieldUuid,
-      columnUuid,
+      fieldId,
+      processParameterId,
+      browseFieldId,
+      columnId,
       //
       tableName,
       columnName,
       //
-      isForm = false,
-      filters = [],
       searchValue,
       pageNumber,
       pageSize
@@ -136,50 +197,48 @@ const businessPartner = {
         }
         const pageToken = generatePageToken({ pageNumber })
 
-        if (!isForm) {
-          const isSOTrx = isSalesTransactionContainer({
-            parentUuid
-            // containerUuid
-          })
-          if (!isEmptyValue(isSOTrx)) {
-            let columnName = 'IsVendor'
-            if (isSOTrx) {
-              columnName = 'IsCustomer'
-            }
-            filters.push({
-              columnName,
-              value: true
-            })
-          }
+        commit('setBusinessPartnerIsLoading', {
+          containerUuid,
+          isLoading: true
+        })
+
+        const isSalesTransactionContext = isSalesTransaction({
+          parentUuid: parentUuid,
+          containerUuid: containerUuid
+        })
+
+        const storedBusinessPartnerData = getters.getBusinessPartnerData({
+          containerUuid
+        })
+        const { queryFilters } = storedBusinessPartnerData
+        if (isSalesTransactionContext) {
+          queryFilters.is_vendor = undefined
+        } else {
+          queryFilters.is_customer = undefined
         }
 
         requestListBusinessPartner({
           contextColumnNames,
           //
-          fieldUuid,
-          processParameterUuid,
-          browseFieldUuid,
-          columnUuid,
+          fieldId,
+          processParameterId,
+          browseFieldId,
+          columnId,
           //
           tableName,
           columnName,
           // Query
-          filters,
           searchValue,
+          ...queryFilters,
+          //
           pageToken,
           pageSize
         })
           .then(responseBusinessPartnerList => {
-            const recordsList = responseBusinessPartnerList.business_partners.map((record, rowIndex) => {
+            const recordsList = responseBusinessPartnerList.records.map((row, rowIndex) => {
               return {
-                [COLUMN_NAME]: record.id,
-                Value: record.value,
-                TaxID: record.tax_id,
-                Name: record.name,
-                LastName: record.last_name,
-                Description: record.description,
-                // ...record.attributes,
-                ...record,
+                [COLUMN_NAME]: row.id,
+                ...row,
                 // datatables app attributes
                 ...ROW_ATTRIBUTES,
                 rowIndex
@@ -194,12 +253,14 @@ const businessPartner = {
             }
 
             commit('setBusinessPartnerData', {
+              ...storedBusinessPartnerData,
               containerUuid,
               currentRow,
               recordsList,
               nextPageToken: responseBusinessPartnerList.next_page_token,
               pageNumber,
               pageSize,
+              isSalesTransaction: isSalesTransactionContext,
               isLoaded: true,
               recordCount: Number(responseBusinessPartnerList.record_count)
             })
@@ -212,6 +273,14 @@ const businessPartner = {
               type: 'info',
               message: error.message
             })
+          })
+          .finally(() => {
+            setTimeout(() => {
+              commit('setBusinessPartnerIsLoading', {
+                containerUuid,
+                isLoading: false
+              })
+            }, 500)
           })
       })
     }
@@ -228,10 +297,31 @@ const businessPartner = {
         containerUuid
       }
     },
+    getBusinessPartnerQueryFilters: (state, getters) => ({ containerUuid }) => {
+      const { queryFilters } = getters.getBusinessPartnerData({
+        containerUuid
+      })
+      return queryFilters || {}
+    },
+    getBusinessPartnerQueryFilterByAttribute: (state, getters) => ({ containerUuid, attributeKey }) => {
+      const queryFilters = getters.getBusinessPartnerQueryFilters({
+        containerUuid
+      })
+      if (!isEmptyValue(queryFilters)) {
+        const { [attributeKey]: valueFilter } = queryFilters
+        return valueFilter
+      }
+      return undefined
+    },
     getIsLoadedBusinessPartnerRecord: (state, getters) => ({ containerUuid }) => {
       return getters.getBusinessPartnerData({
         containerUuid
       }).isLoaded
+    },
+    getIsLoadingBusinessPartnerRecord: (state, getters) => ({ containerUuid }) => {
+      return getters.getBusinessPartnerData({
+        containerUuid
+      }).isLoading
     },
     getBusinessPartnerRecordsList: (state, getters) => ({ containerUuid }) => {
       return getters.getBusinessPartnerData({
@@ -252,6 +342,11 @@ const businessPartner = {
       return getters.getBusinessPartnerData({
         containerUuid
       }).currentRow
+    },
+    getBusinessPartnerShowQueryFields: (state, getters) => ({ containerUuid }) => {
+      return getters.getBusinessPartnerData({
+        containerUuid
+      }).showQueryFields
     },
     getBusinessPartnerPopoverList: (state) => {
       return state.businessPartnerPopoverList || false

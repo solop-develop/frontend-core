@@ -146,7 +146,7 @@
 import store from '@/store'
 
 // Constants
-import { BUSINESS_PARTNERS_LIST_FORM } from '@/utils/ADempiere/dictionary/field/businessPartner.js'
+import { BUSINESS_PARTNERS_LIST_FORM } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 import FIELDS_LIST from './fieldsListSearch'
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 import { IS_SO_TRX } from '@/utils/ADempiere/constants/systemColumns'
@@ -167,6 +167,7 @@ import {
 } from '@/utils/ADempiere/lookupFactory'
 import { containerManager as containerManagerForm } from '@/utils/ADempiere/dictionary/form'
 
+// TODO: Deprecated component
 export default {
   name: 'BusinessPartnersList',
 
@@ -439,6 +440,7 @@ export default {
           contextColumnNames: this.metadata.reference.contextColumnNames,
           tableName: this.metadata.reference.tableName,
           uuid: this.metadata.uuid,
+          id: this.metadata.id,
           filters,
           pageNumber,
           pageSize

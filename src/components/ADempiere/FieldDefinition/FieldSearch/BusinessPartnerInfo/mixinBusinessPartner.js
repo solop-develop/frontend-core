@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +18,13 @@
 
 import store from '@/store'
 
+// Constants
+import {
+  COLUMN_NAME
+} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+
 // Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { generateDisplayedValue } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 
 export default {
   name: 'MixinBusinessPartner',
@@ -31,8 +36,8 @@ export default {
         return {
           parentUuid: undefined,
           containerUuid: undefined,
-          columnName: 'C_BPartner_ID',
-          elementName: 'C_BPartner_ID'
+          columnName: COLUMN_NAME,
+          elementName: COLUMN_NAME
         }
       }
     }
@@ -40,19 +45,18 @@ export default {
 
   computed: {
     blankValues() {
+      const { columnName, elementName } = this.metadata
       return {
-        [this.metadata.columnName]: undefined,
-        [this.metadata.elementName]: undefined,
+        [columnName]: undefined,
+        [elementName]: undefined,
+        [COLUMN_NAME]: undefined,
         id: undefined,
         uuid: undefined,
         value: undefined,
-        Value: undefined,
-        taxId: undefined,
-        TaxID: undefined,
+        tax_id: undefined,
         name: undefined,
-        Name: undefined,
-        lastName: undefined,
-        LastName: undefined
+        name2: undefined,
+        description: undefined
       }
     },
     recordsList() {
@@ -61,30 +65,13 @@ export default {
       })
     }
   },
+
   methods: {
     /**
      * @overwrite
      * Get custom displayed value
      * @returns {string}
      */
-    generateDisplayedValue({ Value, Name, LastName }) {
-      let displayedValue
-
-      if (!isEmptyValue(Value)) {
-        displayedValue = Value
-      }
-      if (!isEmptyValue(Name)) {
-        if (!isEmptyValue(displayedValue)) {
-          displayedValue += ' - ' + Name
-        } else {
-          displayedValue = Name
-        }
-      }
-      if (!isEmptyValue(LastName)) {
-        displayedValue += ' ' + LastName
-      }
-
-      return displayedValue
-    }
+    generateDisplayedValue
   }
 }

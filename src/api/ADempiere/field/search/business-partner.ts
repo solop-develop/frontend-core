@@ -23,7 +23,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
-export function requestListBusinessPartner({
+export function requestListBusinessPartner2({
   fieldUuid,
   processParameterUuid,
   browseFieldUuid,
@@ -90,4 +90,92 @@ export function requestListBusinessPartner({
       const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
       return convertEntityList(businessPartnersResponse)
     })
+}
+
+export function requestListBusinessPartner({
+  contextAttributesList,
+  filters = [],
+  fieldId,
+  processParameterId,
+  browseFieldId,
+  //
+  // referenceUuid,
+  searchValue,
+  //
+  tableName,
+  columnName,
+  columnId,
+  // filters
+  contact,
+  email,
+  name,
+  phone,
+  postal_code,
+  value,
+  is_vendor,
+  is_customer,
+  //
+  pageToken,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
+}) {
+  // filters = filters.map(attribute => {
+  //   return {
+  //     column_name: attribute.columnName,
+  //     operator: attribute.operator,
+  //     value: attribute.value
+  //   }
+  // })
+
+  let contextAttributes = []
+  if (!isEmptyValue(contextAttributesList)) {
+    contextAttributes = contextAttributesList.map(attribute => {
+      return {
+        key: attribute.columnName,
+        value: attribute.value
+      }
+    })
+  }
+
+  let url
+  switch (true) {
+    case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
+      url = `/field/business-partners/table/${tableName}/${columnName}`
+      break
+    case !isEmptyValue(columnId):
+      url = `/field/business-partners/column/${columnId}`
+      break
+    case !isEmptyValue(fieldId):
+      url = `/field/business-partners/field/${fieldId}`
+      break
+    case !isEmptyValue(processParameterId):
+      url = `/field/business-partners/parameter/${processParameterId}`
+      break
+    case !isEmptyValue(browseFieldId):
+      url = `/field/business-partners/query-criteria/${browseFieldId}`
+      break
+  }
+
+  return request({
+    url,
+    method: 'get',
+    params: {
+      context_attributes: contextAttributes,
+      is_only_active_records: true,
+      filters,
+      //
+      // reference_id: reference_id,
+      search_value: searchValue,
+      contact,
+      email,
+      name,
+      phone,
+      postal_code,
+      value,
+      is_vendor,
+      is_customer,
+      // Page Data
+      page_token: pageToken,
+      page_size: pageSize
+    }
+  })
 }
