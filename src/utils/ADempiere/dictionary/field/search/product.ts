@@ -16,29 +16,40 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import businessPartner from './businessPartner.ts'
-import product from './product.ts'
-import productAttribute from './productAttribute'
-import warehouseLocator from './warehouseLocator'
-import locationsAddress from './locationsAddress'
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
-export default {
-  businessPartner,
-  field: 'Campo',
-  info: 'Información',
-  calculator: 'Calculadora',
-  preference: 'Preferencia',
-  logsField: 'Bitácora de Cambios',
-  contextInfo: 'Información del Contexto',
-  logsFieldEmpty: 'El campo no tiene cambios aún',
-  coordination: 'Coordenadas',
-  container: {
-    defaultValue: 'Valor Predeterminado',
-    help: 'Ayuda',
-    description: 'Descripción'
-  },
-  product,
-  productAttribute,
-  warehouseLocator,
-  locationsAddress
+export const TABLE_NAME = 'M_Product'
+
+export const COLUMN_NAME = 'M_Product_ID'
+
+export const PRODUCT_LIST_FORM = 'Product-Info-List'
+
+/**
+ * Generate displayed value from values
+ * @param {Object} recordRow
+ * @returns {String}
+ */
+export function generateDisplayedValue(recordRow) {
+  const { display_value } = recordRow
+
+  let displayedValue = display_value
+  if (!isEmptyValue(display_value)) {
+    return display_value
+  }
+
+  // generate with standard columns
+  const { value, name } = recordRow
+
+  if (!isEmptyValue(value)) {
+    displayedValue = value
+  }
+  if (!isEmptyValue(name)) {
+    if (!isEmptyValue(displayedValue)) {
+      displayedValue += ' - ' + name
+    } else {
+      displayedValue = name
+    }
+  }
+  return displayedValue
 }

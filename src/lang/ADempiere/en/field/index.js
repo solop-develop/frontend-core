@@ -17,6 +17,7 @@
  */
 
 import businessPartner from './businessPartner.ts'
+import product from './product.ts'
 import productAttribute from './productAttribute'
 import warehouseLocator from './warehouseLocator'
 import locationsAddress from './locationsAddress'
@@ -36,6 +37,7 @@ export default {
     defaultValue: 'Default Value',
     description: 'Description'
   },
+  product,
   productAttribute,
   warehouseLocator,
   locationsAddress
