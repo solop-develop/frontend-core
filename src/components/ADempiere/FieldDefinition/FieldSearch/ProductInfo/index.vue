@@ -45,8 +45,8 @@
         {{ recordRow.item.name }}
       </div>
       <span class="info">
-        {{ recordRow.item.tax_id }} {{ recordRow.item.name2 }}
-        {{ recordRow.item.description }} ({{ recordRow.item.business_partner_group }})
+        {{ recordRow.item.uom }}
+        {{ recordRow.item.description }} ({{ recordRow.item.product_category }})
       </span>
     </template>
 
@@ -67,7 +67,7 @@ import productMixin from './mixinProduct'
 import ButtonProductsList from './buttonProductList.vue'
 
 // Constants
-import { TABLE_NAME, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+import { TABLE_NAME, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/product.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -103,10 +103,6 @@ export default {
   computed: {
     cssClassCustomField() {
       return ' custom-field-product-info '
-    },
-    // to recrods list overwrite
-    uuidForm() {
-      return this.metadata.containerUuid
     }
   },
 

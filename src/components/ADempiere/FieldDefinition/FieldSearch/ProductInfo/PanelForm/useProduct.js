@@ -147,7 +147,6 @@ export default ({
     const { uuid, id } = recordRow
 
     const displayValue = generateDisplayedValue(recordRow)
-    // console.log(displayValue)
 
     store.commit('updateValueOfField', {
       parentUuid,

@@ -31,6 +31,22 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 
+const emptyQueryFilters = {
+  value: undefined,
+  name: undefined,
+  upc: undefined,
+  sku: undefined,
+  is_stocked: undefined,
+  product_group_id: undefined,
+  product_class_id: undefined,
+  product_category_id: undefined,
+  price_list_id: undefined,
+  warehouse_id: undefined,
+  attribute_set_id: undefined,
+  attribute_set_instance_id: undefined,
+  vendor_id: undefined
+}
+
 const initState = {
   productPopoverList: false,
   // container uuid: record uuid
@@ -53,19 +69,7 @@ const initState = {
     pageNumber: 1,
     showQueryFields: true,
     queryFilters: {
-      value: undefined,
-      name: undefined,
-      upc: undefined,
-      sku: undefined,
-      is_stocked: undefined,
-      product_group_id: undefined,
-      product_class_id: undefined,
-      product_category_id: undefined,
-      price_list_id: undefined,
-      warehouse_id: undefined,
-      attribute_set_id: undefined,
-      attribute_set_instance_id: undefined,
-      vendor_id: undefined
+      ...emptyQueryFilters
     }
   },
   productData: {},
@@ -89,7 +93,7 @@ const productFieldSearch = {
       pageNumber = 1,
       pageSize = ROWS_OF_RECORDS_BY_PAGE,
       showQueryFields = false,
-      queryFilters = {}
+      queryFilters = emptyQueryFilters
     }) {
       Vue.set(state.productData, containerUuid, {
         ...state.emptyProductData,
@@ -210,7 +214,10 @@ const productFieldSearch = {
           isLoading: true
         })
 
-        const { queryFilters } = storedProductData
+        let queryFilters = {}
+        if (isEmptyValue(searchValue)) {
+          queryFilters = storedProductData.queryFilters
+        }
 
         requestListProducts({
           contextColumnNames,
