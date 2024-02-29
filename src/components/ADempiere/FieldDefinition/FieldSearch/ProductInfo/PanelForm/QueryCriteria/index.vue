@@ -38,37 +38,45 @@
       >
         <el-row :gutter="10">
           <el-col :span="6">
-            <value-field
+            <text-field
               :uuid-form="uuidForm"
+              attribute-key="value"
+              :label="$t('field.product.value')"
             />
           </el-col>
           <el-col :span="6">
-            <name-field
+            <text-field
               :uuid-form="uuidForm"
+              attribute-key="name"
+              :label="$t('field.product.name')"
             />
           </el-col>
           <el-col :span="6">
-            <upc-field
+            <text-field
               :uuid-form="uuidForm"
+              attribute-key="upc"
+              :label="$t('field.product.upc')"
             />
           </el-col>
           <el-col :span="6">
-            <sku-field
+            <text-field
               :uuid-form="uuidForm"
+              attribute-key="value"
+              :label="$t('field.product.sku')"
             />
           </el-col>
         </el-row>
 
         <el-row :gutter="10">
           <el-col :span="6">
-            <is-stocked-field
+            <warehouse-field
               :uuid-form="uuidForm"
               :parent-uuid="metadata.parentUuid"
               :container-uuid="metadata.containerUuid"
             />
           </el-col>
           <el-col :span="6">
-            <warehouse-field
+            <is-stocked-field
               :uuid-form="uuidForm"
               :parent-uuid="metadata.parentUuid"
               :container-uuid="metadata.containerUuid"
@@ -110,10 +118,7 @@ import {
 import AttributeSetField from './attributeSet.vue'
 import AttributeSetInstanceField from './attributeSetInstance.vue'
 import IsStockedField from './IsStockedField.vue'
-import NameField from './nameField.vue'
-import ValueField from './valueField.vue'
-import SkuField from './skuField.vue'
-import UpcField from './upcField.vue'
+import TextField from './textField.vue'
 import WarehouseField from './warehouseField.vue'
 
 // Utils and Helper Methods
@@ -126,10 +131,7 @@ export default defineComponent({
     AttributeSetField,
     AttributeSetInstanceField,
     IsStockedField,
-    NameField,
-    ValueField,
-    SkuField,
-    UpcField,
+    TextField,
     WarehouseField
   },
 

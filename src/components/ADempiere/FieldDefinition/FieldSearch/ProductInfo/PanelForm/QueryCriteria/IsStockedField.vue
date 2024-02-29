@@ -22,6 +22,7 @@
   >
     <el-select
       v-model="currentValue"
+      :disabled="isDisabled"
     >
       <el-option
         v-for="(option, key) in YES_NO_OPTIONS_LIST"
@@ -40,6 +41,9 @@ import store from '@/store'
 
 // Constants
 import { YES_NO_OPTIONS_LIST } from '@/utils/ADempiere/dictionary/field/yesNo'
+
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'IsStokedField',
@@ -78,10 +82,19 @@ export default defineComponent({
       }
     })
 
+    const isDisabled = computed(() => {
+      const warehouseId = store.getters.getProductSearchFieldQueryFilterByAttribute({
+        containerUuid: props.uuidForm,
+        attributeKey: 'warehouse_id'
+      })
+      return isEmptyValue(warehouseId) || warehouseId <= 0
+    })
+
     return {
       YES_NO_OPTIONS_LIST,
       //
-      currentValue
+      currentValue,
+      isDisabled
     }
   }
 })
