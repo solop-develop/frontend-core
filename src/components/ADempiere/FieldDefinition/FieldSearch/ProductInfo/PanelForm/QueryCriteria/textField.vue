@@ -18,7 +18,7 @@
 
 <template>
   <el-form-item
-    :label="$t('field.product.value')"
+    :label="label"
   >
     <el-input
       v-model="currentValue"
@@ -33,17 +33,25 @@ import { computed, defineComponent } from '@vue/composition-api'
 import store from '@/store'
 
 export default defineComponent({
-  name: 'ValueField',
+  name: 'TextField',
 
   props: {
     uuidForm: {
+      required: true,
+      type: String
+    },
+    attributeKey: {
+      required: true,
+      type: String
+    },
+    label: {
       required: true,
       type: String
     }
   },
 
   setup(props) {
-    const ATTRIBUTE_KEY = 'value'
+    const ATTRIBUTE_KEY = props.attributeKey
 
     const currentValue = computed({
       set(newValue) {
