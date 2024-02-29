@@ -65,13 +65,13 @@
         width="150"
       />
       <el-table-column
-        prop="upc"
+        prop="product_class"
         :label="$t('field.product.productClass')"
         header-align="center"
         width="150"
       />
       <el-table-column
-        prop="sku"
+        prop="upc"
         :label="$t('field.product.upcEan')"
         header-align="center"
         width="170"
@@ -89,7 +89,8 @@
         width="70"
       />
 
-      <!-- <el-table-column
+      <!--
+      <el-table-column
         prop="open_balance_amount"
         :label="$t('field.product.openBalance')"
         header-align="center"
@@ -131,7 +132,8 @@
         <span slot-scope="scope" class="cell-align-right">
           {{ scope.row.revenue_amount }}
         </span>
-      </el-table-column> -->
+      </el-table-column>
+      -->
 
       <el-table-column
         prop="vendor"
@@ -140,11 +142,15 @@
         width="170"
       />
       <el-table-column
-        prop="is_attribute_instance"
+        prop="is_instance_attribute"
         :label="$t('field.product.instanceAttribute')"
         header-align="center"
         width="140"
-      />
+      >
+        <span slot-scope="scope">
+          {{ convertBooleanToTranslationLang(scope.row.is_instance_attribute) }}
+        </span>
+      </el-table-column>
 
     </el-table>
   </div>
@@ -169,6 +175,7 @@ import useProduct from './useProduct'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { convertBooleanToTranslationLang } from '@/utils/ADempiere/formatValue/booleanFormat'
 
 export default defineComponent({
   name: 'TableRecords',
@@ -264,6 +271,7 @@ export default defineComponent({
       pageSize,
       recordsList,
       //
+      convertBooleanToTranslationLang,
       handleCurrentChange,
       changeCurrentRecord
     }

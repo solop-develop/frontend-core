@@ -42,6 +42,14 @@ export function requestListProducts({
   upc,
   sku,
   is_stocked,
+  product_group_id,
+  product_class_id,
+  product_category_id,
+  price_list_id,
+  warehouse_id,
+  attribute_set_id,
+  attribute_set_instance_id,
+  vendor_id,
   //
   pageToken,
   pageSize = ROWS_OF_RECORDS_BY_PAGE
@@ -98,6 +106,14 @@ export function requestListProducts({
       sku,
       upc,
       is_stocked,
+      product_group_id,
+      product_class_id,
+      product_category_id,
+      price_list_id,
+      warehouse_id,
+      attribute_set_id,
+      attribute_set_instance_id,
+      vendor_id,
       // Page Data
       page_token: pageToken,
       page_size: pageSize
