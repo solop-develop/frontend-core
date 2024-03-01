@@ -19,7 +19,7 @@
 import { defineComponent, computed, ref } from '@vue/composition-api'
 
 import store from '@/store'
-
+import router from '@/router'
 // API Request Methods
 import {
   sendAttachmentDescription,
@@ -164,6 +164,20 @@ export default defineComponent({
      * @param {Object} file
      */
     const handleRemove = (file) => {
+      requestDeleteResources({
+        fileName: file.fullName
+      })
+        .then(() => {
+          const clienteId = store.getters.getSessionContextClientId
+          const { referenceId, type } = router.app._route.meta
+          store.dispatch('getAttachmentFromServer', {
+            containerType: type,
+            clienteId: clienteId,
+            containerId: referenceId,
+            recordId: props.recordId,
+            tableName: props.tableName
+          })
+        })
       requestDeleteResourceReference({
         id: file.id,
         attachmenId: file.id,
@@ -174,9 +188,6 @@ export default defineComponent({
             resourceReference.file_name !== file.file_name
         })
         attachmentList.value = resourceReferencesList
-      })
-      requestDeleteResources({
-        fileName: file.file_name
       })
     }
 

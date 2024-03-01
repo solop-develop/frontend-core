@@ -23,7 +23,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 const initStateAttachment = {
   attachment: {},
-  resourceReference: {},
+  resourceReference: '',
   listAttachment: [],
   isLoaded: false
 }

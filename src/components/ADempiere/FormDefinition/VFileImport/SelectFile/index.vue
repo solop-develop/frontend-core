@@ -184,8 +184,8 @@ export default defineComponent({
     })
 
     const resourceId = computed(() => {
-      const { id } = store.getters.getResourceReference
-      return id
+      // const { id } = store.getters.getResourceReference
+      return store.getters.getResourceReference
     })
 
     /**
@@ -196,6 +196,7 @@ export default defineComponent({
         attribute: 'file',
         criteria: 'resource',
         value: {
+          id: resource,
           ...resource,
           fileLabel: file.name
         }
@@ -251,6 +252,6 @@ export default defineComponent({
     cursor: not-allowed;
 }
 .scroll-list-field {
-  max-height: 25vh;
+  max-height: 20vh;
 }
 </style>

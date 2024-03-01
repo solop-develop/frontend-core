@@ -42,7 +42,7 @@
       </span>
 
       <attachment-manager
-        table-name="AD_ImpFormat"
+        :table-name="'AD_ImpFormat'"
         :record-id="importFormatId"
         :is-selectable="true"
       />
@@ -55,6 +55,7 @@
 import { defineComponent, ref, computed } from '@vue/composition-api'
 
 import store from '@/store'
+import router from '@/router'
 
 // Components and Mixins
 import AttachmentManager from '@/components/ADempiere/PanelInfo/Component/AttachmentManager/index.vue'
@@ -91,9 +92,12 @@ export default defineComponent({
       if (isDisabledManageFile.value) {
         return
       }
+      const { referenceId, type } = router.app._route.meta
       store.dispatch('getAttachmentFromServer', {
         tableName: 'AD_ImpFormat',
-        recordId: props.importFormatId
+        containerId: referenceId,
+        recordId: props.importFormatId,
+        containerType: type
       })
         .then(response => {
           // isShowedFiles.value = true // Boolean(response)
