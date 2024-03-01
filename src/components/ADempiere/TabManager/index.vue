@@ -620,7 +620,7 @@ export default defineComponent({
       })
     }
     if (isReadyFromGetData.value || (!isReadyFromGetData.value &&
-      (!isEmptyValue(root.$route.params.filters) || !isEmptyValue(root.$route.query.referenceUuid)))) {
+      (!isEmptyValue(root.$route.params) || !isEmptyValue(root.$route.query)))) {
       getData()
     }
     watch(currentRecordLogs, (newValue, oldValue) => {
