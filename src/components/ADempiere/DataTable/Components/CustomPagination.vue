@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A.
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -22,20 +22,20 @@
       <el-pagination
         small
         layout="slot, sizes, prev, pager, next"
-        :current-page="currentPage"
+        :current-page="currentPageNumber"
         :total="recordCount"
         :page-sizes="NUMBER_RECORDS_PER_PAGE"
         :page-size="currentPageSize"
         style="float: right;padding-left: 0px;padding-right: 0px;"
-        @size-change="handleSizeChange"
-        @current-change="handleChangePage"
+        @size-change="handleChangePageSize"
+        @current-change="handleChangePageNumber"
       >
         <span class="selections-number">
           <span style="padding-top: 3px;">
             {{ currentIndex + ' / ' + recordCount }}
           </span>
           <span :class="isMobile ? 'is-pagination-content-panel-mobile' : 'is-pagination-content-panel'">
-            <span v-show="isShowedTableRecords">
+            <span v-show="isShowedSelected">
               {{ $t('table.dataTable.selected') }}: {{ selection }}
             </span>
           </span>
@@ -47,11 +47,15 @@
 
 <script>
 import { defineComponent, computed } from '@vue/composition-api'
-import store from '@/store'
-// constants
-import { ROWS_OF_RECORDS_BY_PAGE, NUMBER_RECORDS_PER_PAGE, totalRowByPage, indexRowByPage } from '@/utils/ADempiere/tableUtils'
 
-// utils and helper methods
+import store from '@/store'
+
+// Constants
+import {
+  ROWS_OF_RECORDS_BY_PAGE, NUMBER_RECORDS_PER_PAGE, totalRowByPage, indexRowByPage
+} from '@/utils/ADempiere/tableUtils'
+
+// Utils and Helper Methods
 import { isEmptyValue, getValidInteger } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
@@ -70,23 +74,23 @@ export default defineComponent({
       type: Object,
       required: false
     },
-    currentPage: {
-      type: Number,
-      default: 1
-    },
     selection: {
       type: Number,
-      default: undefined
+      default: 0
     },
     pageSize: {
       type: Number,
-      default: ROWS_OF_RECORDS_BY_PAGE
+      default: undefined
     },
-    recordsPage: {
+    pageNumber: {
       type: Number,
-      default: 1
+      default: undefined
     },
-    total: {
+    rowIndex: {
+      type: [Number, String],
+      default: -1
+    },
+    totalRecords: {
       type: [Number, String],
       default: 0
     },
@@ -94,13 +98,13 @@ export default defineComponent({
       type: Boolean,
       required: false
     },
-    handleSizeChange: {
+    handleChangePageSize: {
       type: Function,
       default: (pageSizeNumber) => {
         console.info('implement change size page number method', pageSizeNumber)
       }
     },
-    handleChangePage: {
+    handleChangePageNumber: {
       type: Function,
       default: (pageNumber) => {
         console.info('implement change page number method', pageNumber)
@@ -126,41 +130,35 @@ export default defineComponent({
 
   setup(props) {
     const containerUuid = props.containerUuid
-    const parentUuid = props.parentUuid
-    const selection = props.selection
 
     const recordCount = computed(() => {
-      return getValidInteger(props.total)
-    })
-
-    const isSelection = computed(() => {
-      if (isEmptyValue(selection)) {
-        return false
-      }
-      return true
+      return getValidInteger(props.totalRecords)
     })
 
     const isMobile = computed(() => {
       return store.state.app.device === 'mobile'
     })
 
+    const currentPageSize = computed(() => {
+      if (!isEmptyValue(props.pageSize)) {
+        return props.pageSize
+      }
+      // return store.getters.getTabPageSize({ containerUuid })
+      return ROWS_OF_RECORDS_BY_PAGE
+    })
+
+    const currentPageNumber = computed(() => {
+      if (!isEmptyValue(props.pageNumber)) {
+        return props.pageNumber
+      }
+      return 1
+    })
+
     const rowPage = computed(() => {
       return totalRowByPage({
-        pageSize: props.pageSize,
-        pageNumber: props.currentPage
+        pageSize: currentPageSize.value,
+        pageNumber: currentPageNumber.value
       })
-    })
-
-    const currentPageSize = computed(() => {
-      return store.getters.getTabPageSize({ containerUuid })
-    })
-
-    const isShowedTableRecords = computed(() => {
-      if (props.isShowedSelected) return props.isShowedSelected
-      return store.getters.getStoredTab(
-        parentUuid,
-        containerUuid
-      ).isShowedTableRecords
     })
 
     const disableNextRecord = computed(() => {
@@ -186,26 +184,33 @@ export default defineComponent({
     })
 
     const currentIndex = computed(() => {
+      if (!isEmptyValue(props.rowIndex)) {
+        return indexRowByPage({
+          indexRow: props.rowIndex,
+          pageNumber: currentPageNumber.value,
+          pageSize: currentPageSize.value
+        })
+      }
       const records = recordsWithFilter.value
       if (isEmptyValue(records)) {
-        return selection
+        return props.selection
       }
-      const index = records.findIndex(row => row.UUID === store.getters.getUuidOfContainer(containerUuid))
+      const recordUuid = store.getters.getUuidOfContainer(containerUuid)
+      const index = records.findIndex(row => row.UUID === recordUuid)
       return indexRowByPage({
         indexRow: index,
-        pageNumber: props.currentPage,
-        pageSize: props.pageSize
+        pageNumber: currentPageNumber.value,
+        pageSize: currentPageSize.value
       })
     })
 
     return {
       // Computed
-      isSelection,
       rowPage,
       recordCount,
+      currentPageNumber,
       currentPageSize,
       isMobile,
-      isShowedTableRecords,
       disableNextRecord,
       recordsWithFilter,
       disablePreviousRecord,

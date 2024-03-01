@@ -97,12 +97,12 @@
                   <el-row :gutter="24" class="orders-list-footer">
                     <el-col :span="18">
                       <custom-pagination
-                        :total="total"
-                        :current-page="currentPage"
-                        :handle-change-page="handleChangePage"
+                        :total-records="total"
+                        :page-number="currentPage"
+                        :page-size="orderList.length"
                         layout="total, prev, pager, next"
                         style="float: right;"
-                        :records-page="orderList.length"
+                        :handle-change-page-number="handleChangePage"
                       />
                     </el-col>
 
@@ -205,12 +205,11 @@
           <el-row :gutter="24" class="orders-list-footer">
             <el-col :span="18">
               <custom-pagination
-                :total="total"
-                :current-page="currentPage"
-                :handle-change-page="handleChangePage"
-                layout="total, prev, pager, next"
                 style="float: right;"
-                :records-page="orderList.length"
+                :total-records="total"
+                :page-number="currentPage"
+                :page-size="orderList.length"
+                :handle-change-page-size="handleChangePage"
               />
             </el-col>
 

@@ -94,10 +94,10 @@
     <el-row :gutter="24" class="pos-bpartner-list-footer">
       <el-col :span="18">
         <custom-pagination
-          :total="businessPartners.recordCount"
-          :current-page="businessPartners.pageNumber"
-          :handle-change-page="handleChangePage"
-          :records-page="businessPartnersList.length"
+          :total-records="businessPartners.recordCount"
+          :page-number="businessPartners.pageNumber"
+          :page-size="businessPartnersList.length"
+          :handle-change-page-number="handleChangePage"
         />
       </el-col>
 

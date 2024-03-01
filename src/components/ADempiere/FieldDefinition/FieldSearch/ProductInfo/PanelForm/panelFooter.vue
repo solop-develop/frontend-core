@@ -19,16 +19,15 @@
 <template>
   <el-row :gutter="24" class="business-partners-footer">
     <el-col :span="14">
-      <!-- :row-index="currentRow.rowIndex" -->
       <custom-pagination
         :container-manager="containerManager"
         :total-records="recordCount"
+        :row-index="rowIndex"
         :is-showed-selected="false"
         :selection="selectedRecords"
         :page-number="pageNumber"
-        :row-index="rowIndex"
-        :handle-change-page-number="setPageNumber"
         :page-size="pageSize"
+        :handle-change-page-number="setPageNumber"
         :handle-change-page-size="setPageSize"
       />
     </el-col>

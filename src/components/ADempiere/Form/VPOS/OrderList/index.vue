@@ -237,10 +237,10 @@
     <el-row :gutter="24" class="orders-list-footer">
       <el-col :span="18">
         <custom-pagination
-          :total="ordersList.recordCount"
-          :current-page="ordersList.pageNumber"
-          :handle-change-page="handleChangePage"
-          :records-page="sortTableOrderList.length"
+          :total-records="ordersList.recordCount"
+          :page-number="ordersList.pageNumber"
+          :page-size="sortTableOrderList.length"
+          :handle-change-page-number="handleChangePage"
         />
       </el-col>
 

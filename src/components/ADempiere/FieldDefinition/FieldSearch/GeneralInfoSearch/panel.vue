@@ -98,13 +98,13 @@
     <el-row :gutter="24" class="general-info-list-footer">
       <el-col :span="14">
         <custom-pagination
-          :total="generalInfoData.recordCount"
-          :current-page="pageNumber"
           :container-manager="containerManagerList"
-          :handle-change-page="setPage"
-          :records-page="recordsList.length"
+          :total-records="generalInfoData.recordCount"
           :selection="selection"
-          :handle-size-change="handleChangeSizePage"
+          :page-number="pageNumber"
+          :page-size="recordsList.length"
+          :handle-change-page-number="setPage"
+          :handle-change-page-size="handleChangeSizePage"
         />
       </el-col>
 

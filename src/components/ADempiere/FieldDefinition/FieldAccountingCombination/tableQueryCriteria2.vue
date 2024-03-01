@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -169,13 +169,17 @@ import {
   computed,
   ref
 } from '@vue/composition-api'
+
 import store from '@/store'
+
 // Api
 import {
   getAccountingCombination
 } from '@/api/ADempiere/field/generalGedger'
+
 // Constants
 import { ACCOUTING_COMBINATIONS_LIST_FORM, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/accoutingCombination.js'
+
 // Components and Mixins
 import CellDisplayInfo from '@/components/ADempiere/DataTable/Components/CellDisplayInfo.vue'
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
@@ -183,11 +187,13 @@ import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn
 import SelectAccounting from '@/components/ADempiere/FieldDefinition/FieldAccountingCombination/Fields/SelectAccounting'
 import TextAccounting from '@/components/ADempiere/FieldDefinition/FieldAccountingCombination/Fields/TextAccounting'
 import { ORGANIZATION } from '@/utils/ADempiere/constants/systemColumns'
+
 // Utils and Helper Methods
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'TableQueryCriteria',
+
   components: {
     CellDisplayInfo,
     CustomPagination,
@@ -195,6 +201,7 @@ export default defineComponent({
     TextAccounting,
     IndexColumn
   },
+
   props: {
     containerManager: {
       type: Object,
@@ -218,6 +225,7 @@ export default defineComponent({
       default: () => false
     }
   },
+
   setup(props) {
     // Ref
     const isLoadingPanel = ref(false)
@@ -227,8 +235,8 @@ export default defineComponent({
     const timeOutRecords = ref(null)
     const combinations = ref('')
     const setValuesCombinations = ref({})
-    // Computed
 
+    // Computed
     const title = computed(() => {
       let title = props.metadata.panelName
       if (!isEmptyValue(props.metadata.panelName) && !isSameValues(props.metadata.panelName, props.metadata.name)) title += ` (${props.metadata.name})`
@@ -283,7 +291,6 @@ export default defineComponent({
     })
 
     // Methods
-
     function keyAction(event) {
       switch (event.srcKey) {
         case 'refreshList':
