@@ -20,17 +20,15 @@
   <el-select
     v-model="value"
     v-bind="commonsProperties"
-    :filterable="true"
-    value-key="value"
-    clearable
+    multiple
+    filterable
+    allow-create
     @change="preHandleChange"
-    @clear="handleClearValue"
   >
     <el-option
-      v-for="(option, key) in optionsList"
+      v-for="(option, key) in value"
       :key="key"
-      :value="option.booleanValue"
-      :label="option.displayValue"
+      :value="option"
     />
   </el-select>
 </template>
@@ -39,43 +37,20 @@
 // Components and Mixins
 import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
 
-// Constants
-import { YES_NO_OPTIONS_LIST } from '@/utils/ADempiere/dictionary/field/yesNo'
-
-// Utils and Helper Methods
-import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat.js'
-
+/**
+ * This component is a list type field, for IN and NOT IN search with advanced query
+ */
 export default {
-  name: 'FieldYesNoSelect',
+  name: 'FieldSelectMultiple',
 
   mixins: [
     fieldMixin
   ],
 
-  data() {
-    return {
-      optionsList: YES_NO_OPTIONS_LIST
-    }
-  },
-
   computed: {
     cssClassCustomField() {
-      return ' custom-field-yes-no-select '
-    }
-  },
-
-  methods: {
-    parseValue(value) {
-      return convertStringToBoolean(value)
+      return ' custom-field-select custom-field-select-multiple '
     }
   }
-
 }
 </script>
-
-<style scoped>
-  .custom-field-yes-no-select {
-    max-height: 34px;
-    width: 100%;
-  }
-</style>

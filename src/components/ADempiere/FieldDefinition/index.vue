@@ -240,7 +240,7 @@ export default {
         return () => import('@/components/ADempiere/FieldDefinition/FieldText')
       }
       if (this.isSelectCreated) {
-        return () => import('@/components/ADempiere/FieldDefinition/FieldSelectMultiple')
+        return () => import('@/components/ADempiere/FieldDefinition/FieldSelect/FieldSelectMultiple.vue')
       }
       let field
       switch (this.field.componentPath) {
