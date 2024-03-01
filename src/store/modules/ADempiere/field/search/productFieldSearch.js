@@ -19,23 +19,38 @@
 import Vue from 'vue'
 
 // API Request Methods
-import { requestListBusinessPartner } from '@/api/ADempiere/field/search/business-partner.ts'
+import { requestListProducts } from '@/api/ADempiere/field/search/product.ts'
 
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
-import { COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+import { COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/product.ts'
 
 // Utils and Helper Methods
-import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 
+const emptyQueryFilters = {
+  value: undefined,
+  name: undefined,
+  upc: undefined,
+  sku: undefined,
+  product_group_id: undefined,
+  product_class_id: undefined,
+  product_category_id: undefined,
+  price_list_version_id: undefined,
+  warehouse_id: undefined,
+  is_stocked: undefined,
+  attribute_set_id: undefined,
+  attribute_set_instance_id: undefined,
+  vendor_id: undefined
+}
+
 const initState = {
-  businessPartnerPopoverList: false,
+  productPopoverList: false,
   // container uuid: record uuid
-  emtpyBusinessPartnerData: {
+  emptyProductData: {
     parentUuid: undefined,
     containerUuid: undefined,
     contextKey: '',
@@ -49,30 +64,23 @@ const initState = {
     isLoaded: false,
     isLoading: false,
     isSalesTransaction: undefined,
-    BPshow: false,
+    productShow: false,
     pageSize: ROWS_OF_RECORDS_BY_PAGE,
     pageNumber: 1,
     showQueryFields: true,
     queryFilters: {
-      contact: undefined,
-      email: undefined,
-      name: undefined,
-      phone: undefined,
-      postal_code: undefined,
-      value: undefined,
-      is_vendor: undefined,
-      is_customer: undefined
+      ...emptyQueryFilters
     }
   },
-  businessPartnerData: {},
-  BPShow: {}
+  productData: {},
+  productShow: {}
 }
 
-const businessPartner = {
+const productFieldSearch = {
   state: initState,
 
   mutations: {
-    setBusinessPartnerData(state, {
+    setProductSearchFieldData(state, {
       containerUuid,
       currentRow = {},
       recordsList = [],
@@ -81,18 +89,18 @@ const businessPartner = {
       isLoaded = true,
       isLoading = false,
       isSalesTransaction = undefined,
-      BPshow = false,
+      productShow = false,
       pageNumber = 1,
       pageSize = ROWS_OF_RECORDS_BY_PAGE,
       showQueryFields = false,
-      queryFilters = {}
+      queryFilters = emptyQueryFilters
     }) {
-      Vue.set(state.businessPartnerData, containerUuid, {
-        ...state.emtpyBusinessPartnerData,
+      Vue.set(state.productData, containerUuid, {
+        ...state.emptyProductData,
         containerUuid,
         currentRow,
         recordsList,
-        BPshow,
+        productShow,
         nextPageToken,
         recordCount,
         isLoaded,
@@ -104,58 +112,58 @@ const businessPartner = {
         pageSize
       })
     },
-    setBusinessPartnerSelectedRow(state, {
+    setProductSearchFieldSelectedRow(state, {
       containerUuid,
       currentRow = {}
     }) {
-      if (isEmptyValue(state.businessPartnerData[containerUuid])) {
-        Vue.set(state.businessPartnerData, containerUuid, {
-          ...state.emtpyBusinessPartnerData,
+      if (isEmptyValue(state.productData[containerUuid])) {
+        Vue.set(state.productData, containerUuid, {
+          ...state.emptyProductData,
           containerUuid
         })
       }
-      Vue.set(state.businessPartnerData[containerUuid], 'currentRow', currentRow)
+      Vue.set(state.productData[containerUuid], 'currentRow', currentRow)
     },
 
-    setBusinessPartnerIsLoading(state, {
+    setProductSearchFieldIsLoading(state, {
       containerUuid,
       isLoading = false
     }) {
-      if (isEmptyValue(state.businessPartnerData[containerUuid])) {
-        Vue.set(state.businessPartnerData, containerUuid, {
-          ...state.emtpyBusinessPartnerData,
+      if (isEmptyValue(state.productData[containerUuid])) {
+        Vue.set(state.productData, containerUuid, {
+          ...state.emptyProductData,
           containerUuid
         })
       }
-      Vue.set(state.businessPartnerData[containerUuid], 'isLoading', isLoading)
+      Vue.set(state.productData[containerUuid], 'isLoading', isLoading)
     },
 
-    setBusinessPartnerShow(state, {
+    setProductSearchFieldShow(state, {
       containerUuid,
       show = false
     }) {
-      Vue.set(state.BPShow, containerUuid, show)
+      Vue.set(state.productShow, containerUuid, show)
     },
 
-    setBusinessPartnerShowQueryFields(state, {
+    setProductSearchFieldShowQueryFields(state, {
       containerUuid,
       showQueryFields = false
     }) {
-      Vue.set(state.businessPartnerData[containerUuid], 'showQueryFields', showQueryFields)
+      Vue.set(state.productData[containerUuid], 'showQueryFields', showQueryFields)
     },
 
-    setBusinessPartnerQueryFilters(state, {
+    setProductSearchFieldQueryFilters(state, {
       containerUuid,
-      queryFilters
+      queryFilters = {}
     }) {
-      Vue.set(state.businessPartnerData[containerUuid], 'queryFilters', queryFilters)
+      Vue.set(state.productData[containerUuid], 'queryFilters', queryFilters)
     },
-    setBusinessPartnerQueryFilterByAttribute(state, {
+    setProductSearchFieldQueryFilterByAttribute(state, {
       containerUuid,
       attributeKey,
       value
     }) {
-      Vue.set(state.businessPartnerData[containerUuid].queryFilters, attributeKey, value)
+      Vue.set(state.productData[containerUuid].queryFilters, attributeKey, value)
     },
 
     /**
@@ -164,13 +172,13 @@ const businessPartner = {
      * @param {object} state
      * @param {boolean} isShowed
      */
-    changePopoverListBusinessPartner(state, isShowed = false) {
-      state.businessPartnerPopoverList = isShowed
+    changePopoverListProductSearchField(state, isShowed = false) {
+      state.productPopoverList = isShowed
     }
   },
 
   actions: {
-    gridBusinessPartners({ commit, getters }, {
+    gridProducts({ commit, getters }, {
       parentUuid,
       containerUuid,
       contextColumnNames = [],
@@ -188,37 +196,30 @@ const businessPartner = {
       pageSize
     }) {
       return new Promise(resolve => {
-        const storedBusinessPartnerData = getters.getBusinessPartnerData({
-          containerUuid
-        })
-
         if (isEmptyValue(pageNumber) || pageNumber < 1) {
-          const {
-            pageNumber: storedPageNumber
-          } = storedBusinessPartnerData.pageNumber
+          const storedPage = getters.getProductSearchFieldPageNumber({
+            containerUuid
+          })
           // refresh with same page
-          pageNumber = storedPageNumber
+          pageNumber = storedPage
         }
         const pageToken = generatePageToken({ pageNumber })
 
-        commit('setBusinessPartnerIsLoading', {
+        const storedProductData = getters.getProductSearchFieldData({
+          containerUuid
+        })
+
+        commit('setProductSearchFieldIsLoading', {
           containerUuid,
           isLoading: true
         })
 
-        const isSalesTransactionContext = isSalesTransaction({
-          parentUuid: parentUuid,
-          containerUuid: containerUuid
-        })
-
-        const { queryFilters } = storedBusinessPartnerData
-        if (isSalesTransactionContext) {
-          queryFilters.is_vendor = undefined
-        } else {
-          queryFilters.is_customer = undefined
+        let queryFilters = {}
+        if (isEmptyValue(searchValue)) {
+          queryFilters = storedProductData.queryFilters
         }
 
-        requestListBusinessPartner({
+        requestListProducts({
           contextColumnNames,
           //
           fieldId,
@@ -235,8 +236,8 @@ const businessPartner = {
           pageToken,
           pageSize
         })
-          .then(responseBusinessPartnerList => {
-            const recordsList = responseBusinessPartnerList.records.map((row, rowIndex) => {
+          .then(responseProductList => {
+            const recordsList = responseProductList.records.map((row, rowIndex) => {
               return {
                 [COLUMN_NAME]: row.id,
                 ...row,
@@ -253,17 +254,16 @@ const businessPartner = {
               currentRow = recordsList.at(0)
             }
 
-            commit('setBusinessPartnerData', {
-              ...storedBusinessPartnerData,
+            commit('setProductSearchFieldData', {
+              ...storedProductData,
               containerUuid,
               currentRow,
               recordsList,
-              nextPageToken: responseBusinessPartnerList.next_page_token,
+              nextPageToken: responseProductList.next_page_token,
               pageNumber,
               pageSize,
-              isSalesTransaction: isSalesTransactionContext,
               isLoaded: true,
-              recordCount: Number(responseBusinessPartnerList.record_count)
+              recordCount: Number(responseProductList.record_count)
             })
 
             resolve(recordsList)
@@ -277,7 +277,7 @@ const businessPartner = {
           })
           .finally(() => {
             setTimeout(() => {
-              commit('setBusinessPartnerIsLoading', {
+              commit('setProductSearchFieldIsLoading', {
                 containerUuid,
                 isLoading: false
               })
@@ -292,20 +292,23 @@ const businessPartner = {
      * Used by result in Business Partner List
      * @param {string} containerUuid
      */
-    getBusinessPartnerData: (state) => ({ containerUuid }) => {
-      return state.businessPartnerData[containerUuid] || {
-        ...state.emtpyBusinessPartnerData,
-        containerUuid
+    getProductSearchFieldData: (state) => ({ containerUuid }) => {
+      if (isEmptyValue(state.productData[containerUuid])) {
+        return {
+          ...state.emptyProductData,
+          containerUuid
+        }
       }
+      return state.productData[containerUuid]
     },
-    getBusinessPartnerQueryFilters: (state, getters) => ({ containerUuid }) => {
-      const { queryFilters } = getters.getBusinessPartnerData({
+    getProductSearchFieldQueryFilters: (state, getters) => ({ containerUuid }) => {
+      const { queryFilters } = getters.getProductSearchFieldData({
         containerUuid
       })
       return queryFilters || {}
     },
-    getBusinessPartnerQueryFilterByAttribute: (state, getters) => ({ containerUuid, attributeKey }) => {
-      const queryFilters = getters.getBusinessPartnerQueryFilters({
+    getProductSearchFieldQueryFilterByAttribute: (state, getters) => ({ containerUuid, attributeKey }) => {
+      const queryFilters = getters.getProductSearchFieldQueryFilters({
         containerUuid
       })
       if (!isEmptyValue(queryFilters)) {
@@ -314,48 +317,49 @@ const businessPartner = {
       }
       return undefined
     },
-    getIsLoadedBusinessPartnerRecord: (state, getters) => ({ containerUuid }) => {
-      return getters.getBusinessPartnerData({
+    getIsLoadedProductSearchFieldRecord: (state, getters) => ({ containerUuid }) => {
+      return getters.getProductSearchFieldData({
         containerUuid
       }).isLoaded
     },
-    getIsLoadingBusinessPartnerRecord: (state, getters) => ({ containerUuid }) => {
-      return getters.getBusinessPartnerData({
+    getIsLoadingProductSearchFieldRecord: (state, getters) => ({ containerUuid }) => {
+      return getters.getProductSearchFieldData({
         containerUuid
       }).isLoading
     },
-    getBusinessPartnerRecordsList: (state, getters) => ({ containerUuid }) => {
-      return getters.getBusinessPartnerData({
+    getProductSearchFieldRecordsList: (state, getters) => ({ containerUuid }) => {
+      return getters.getProductSearchFieldData({
         containerUuid
       }).recordsList
     },
-    getBusinessPartnerRecordCount: (state, getters) => ({ containerUuid }) => {
-      return getters.getBusinessPartnerData({
+    getProductSearchFieldRecordCount: (state, getters) => ({ containerUuid }) => {
+      return getters.getProductSearchFieldData({
         containerUuid
       }).recordCount
     },
-    getBusinessPartnerPageNumber: (state, getters) => ({ containerUuid }) => {
-      return getters.getBusinessPartnerData({
+    getProductSearchFieldPageNumber: (state, getters) => ({ containerUuid }) => {
+      return getters.getProductSearchFieldData({
         containerUuid
       }).pageNumber
     },
-    getBusinessPartnerCurrentRow: (state, getters) => ({ containerUuid }) => {
-      return getters.getBusinessPartnerData({
+    getProductSearchFieldCurrentRow: (state, getters) => ({ containerUuid }) => {
+      const { currentRow } = getters.getProductSearchFieldData({
         containerUuid
-      }).currentRow
+      })
+      return currentRow
     },
-    getBusinessPartnerShowQueryFields: (state, getters) => ({ containerUuid }) => {
-      return getters.getBusinessPartnerData({
+    getProductSearchFieldShowQueryFields: (state, getters) => ({ containerUuid }) => {
+      return getters.getProductSearchFieldData({
         containerUuid
       }).showQueryFields
     },
-    getBusinessPartnerPopoverList: (state) => {
-      return state.businessPartnerPopoverList || false
+    getProductSearchFieldPopoverList: (state) => {
+      return state.productPopoverList || false
     },
-    getBPShow: (state) => ({ containerUuid }) => {
-      return state.BPShow[containerUuid] || false
+    getProductSearchFieldShow: (state) => ({ containerUuid }) => {
+      return state.productShow[containerUuid] || false
     }
   }
 }
 
-export default businessPartner
+export default productFieldSearch

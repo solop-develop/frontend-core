@@ -51,6 +51,9 @@ export default {
 
   computed: {
     uuidForm() {
+      if (!isEmptyValue(this.metadata.containerUuid)) {
+        return this.metadata.columnName + '_' + this.metadata.containerUuid
+      }
       return this.metadata.containerUuid
     },
     title() {

@@ -27,6 +27,7 @@ import { requestGridGeneralInfo } from '@/api/ADempiere/field/search/index.ts'
 
 // Constants
 import { TABLE_NAME as TABLE_NAME_BPartner } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+import { TABLE_NAME as TABLE_NAME_PRODUCT } from '@/utils/ADempiere/dictionary/field/search/product.ts'
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 // Utils and Helper Methods
@@ -261,6 +262,28 @@ const generalInfoSearch = {
       return new Promise(resolve => {
         if (tableName === TABLE_NAME_BPartner) {
           return dispatch('gridBusinessPartners', {
+            parentUuid,
+            containerUuid,
+            contextColumnNames,
+            //
+            columnId,
+            fieldId,
+            processParameterId,
+            browseFieldId,
+            //
+            tableName,
+            columnName,
+            //
+            isForm,
+            filters,
+            searchValue,
+            pageNumber,
+            pageSize
+          }).then(response => {
+            resolve(response)
+          })
+        } else if (tableName === TABLE_NAME_PRODUCT) {
+          return dispatch('gridProducts', {
             parentUuid,
             containerUuid,
             contextColumnNames,
