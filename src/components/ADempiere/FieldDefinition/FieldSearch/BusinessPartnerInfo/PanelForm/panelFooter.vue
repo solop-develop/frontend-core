@@ -21,12 +21,12 @@
     <el-col :span="14">
       <custom-pagination
         :container-manager="containerManager"
-        :total="recordCount"
+        :total-records="recordCount"
         :is-showed-selected="false"
         :selection="selectedRecords"
         :page-number="pageNumber"
-        :handle-change-page-number="setPageNumber"
         :page-size="pageSize"
+        :handle-change-page-number="setPageNumber"
         :handle-change-page-size="setPageSize"
       />
     </el-col>
@@ -202,6 +202,7 @@ export default defineComponent({
       changeBusinessPartner,
       clearCriteriaValues,
       clearParentValues,
+      loadRecordsList,
       setPageNumber,
       setPageSize
     }

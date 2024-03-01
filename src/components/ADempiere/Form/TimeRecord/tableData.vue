@@ -59,9 +59,9 @@
       <el-row :gutter="0" class="list-footer">
         <el-col :span="23">
           <custom-pagination
-            :total="recordCount"
-            :records-page="tableData.length"
-            :handle-change-page="setPage"
+            :total-records="recordCount"
+            :page-size="tableData.length"
+            :handle-change-page-size="setPage"
           />
         </el-col>
 

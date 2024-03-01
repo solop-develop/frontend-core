@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -49,14 +49,15 @@
                 :prop="workflowColumn.columnName"
               />
             </el-table>
+
             <custom-pagination
               v-show="!collapse"
-              :total="recordCount"
-              :current-page="currentPagePagination"
               :container-manager="containerManagerBPList"
-              :handle-change-page="setPage"
-              :handle-size-change="handleChangeSizePage"
-              :records-page="activityList.length"
+              :total-records="recordCount"
+              :page-number="currentPagePagination"
+              :page-size="activityList.length"
+              :handle-change-page-number="setPage"
+              :handle-change-page-size="handleChangeSizePage"
             />
           </el-card>
         </el-header>
@@ -73,7 +74,7 @@
                   <el-timeline-item
                     v-for="(nodes, key) in listProcessWorkflow"
                     :key="key"
-                    :timestamp="translateDateByLong(nodes.log_date)"
+                    :timestamp="translateDate({ value: nodes.log_date, format: 'long' })"
                     placement="top"
                   >
                     <b>{{ nodes.node_name }}</b> {{ nodes.text_message }}
@@ -219,14 +220,15 @@
             :width="workflowColumn.width"
           />
         </el-table>
+
         <custom-pagination
           v-show="!collapse"
-          :total="recordCount"
-          :current-page="currentPagePagination"
           :container-manager="containerManagerBPList"
-          :handle-change-page="setPage"
-          :handle-size-change="handleChangeSizePage"
-          :records-page="activityList.length"
+          :total-records="recordCount"
+          :page-number="currentPagePagination"
+          :page-size="activityList.length"
+          :handle-change-page-number="setPage"
+          :handle-change-page-size="handleChangeSizePage"
         />
       </el-card>
 
@@ -247,7 +249,7 @@
           <el-timeline-item
             v-for="(nodes, key) in listProcessWorkflow"
             :key="key"
-            :timestamp="translateDateByLong(nodes.log_date)"
+            :timestamp="translateDate({ value: nodes.log_date, format: 'long' })"
             placement="top"
           >
             <b>{{ nodes.node_name }}</b> {{ nodes.text_message }}
@@ -345,13 +347,14 @@ import CustomPagination from '@/components/ADempiere/DataTable/Components/Custom
 import WorkflowDiagram from '@/components/ADempiere/WorkflowManager/WorkflowDiagram.vue'
 import 'simple-m-editor/dist/simple-m-editor.css'
 import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
+
 // Constants
 import fieldsList from './fieldsList.js'
 
 // Utils and Helper Methods
 import { generateWorkflowDiagram } from '@/utils/ADempiere/dictionary/workflow'
 import { showMessage } from '@/utils/ADempiere/notification'
-import { translateDateByLong } from '@/utils/ADempiere/formatValue/dateFormat'
+import { translateDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 
 // API Request Methods
@@ -547,7 +550,7 @@ export default {
   },
 
   methods: {
-    translateDateByLong,
+    translateDate,
     setCurrent(activity) {
       if (this.isEmptyValue(activity)) {
         return

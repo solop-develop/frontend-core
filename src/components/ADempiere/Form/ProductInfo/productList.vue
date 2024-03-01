@@ -61,12 +61,14 @@
         </template>
       </el-table-column>
     </el-table>
+
     <custom-pagination
-      :total="productPrice.recordCount"
-      :current-page="productPrice.pageNumber"
-      :handle-change-page="handleChangePage"
-      :records-page="listWithPrice.length"
+      :total-records="productPrice.recordCount"
+      :page-number="productPrice.pageNumber"
+      :page-size="listWithPrice.length"
+      :handle-change-page-number="handleChangePage"
     />
+
     <el-dialog
       :visible.sync="isDetail"
       :center="true"
