@@ -188,12 +188,16 @@ const businessPartner = {
       pageSize
     }) {
       return new Promise(resolve => {
+        const storedBusinessPartnerData = getters.getBusinessPartnerData({
+          containerUuid
+        })
+
         if (isEmptyValue(pageNumber) || pageNumber < 1) {
-          const storedPage = getters.getBusinessPartnerPageNumber({
-            containerUuid
-          })
+          const {
+            pageNumber: storedPageNumber
+          } = storedBusinessPartnerData.pageNumber
           // refresh with same page
-          pageNumber = storedPage
+          pageNumber = storedPageNumber
         }
         const pageToken = generatePageToken({ pageNumber })
 
@@ -207,9 +211,6 @@ const businessPartner = {
           containerUuid: containerUuid
         })
 
-        const storedBusinessPartnerData = getters.getBusinessPartnerData({
-          containerUuid
-        })
         const { queryFilters } = storedBusinessPartnerData
         if (isSalesTransactionContext) {
           queryFilters.is_vendor = undefined

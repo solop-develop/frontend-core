@@ -26,7 +26,7 @@
         :is-showed-selected="false"
         :selection="selectedRecords"
         :page-number="pageNumber"
-        :row-index="currentRow.rowIndex"
+        :row-index="rowIndex"
         :handle-change-page-number="setPageNumber"
         :page-size="pageSize"
         :handle-change-page-size="setPageSize"
@@ -160,6 +160,14 @@ export default defineComponent({
       return fieldSearchData.value.pageSize
     })
 
+    const rowIndex = computed(() => {
+      const row = currentRow.value
+      if (isEmptyValue(row)) {
+        return -1
+      }
+      return row.rowIndex
+    })
+
     function clearCriteriaValues() {
       store.commit('setProductSearchFieldQueryFilters', {
         containerUuid: props.uuidForm,
@@ -198,6 +206,7 @@ export default defineComponent({
       pageNumber,
       pageSize,
       recordCount,
+      rowIndex,
       selectedRecords,
       //
       changeCurrentRecord,

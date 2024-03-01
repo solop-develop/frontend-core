@@ -45,11 +45,11 @@ const product = {
   // quantity
   stocked: 'Almacenado',
   available: 'Disponible',
-  onHandQuantity: 'Cantidad en Existencia',
-  reservedQuantity: 'Cantidad Reservada',
-  orderedQuantity: 'Cantidad Ordenada',
-  unconfirmedQuantity: 'Cantidad sin confirmar',
-  unconfirmedMove: 'Movimiento sin confirmar',
+  onHandQuantity: 'Cant. Existencia',
+  reservedQuantity: 'Cant. Reservada',
+  orderedQuantity: 'Cant. Ordenada',
+  unconfirmedQuantity: 'Cant. sin Confirmar',
+  unconfirmedMove: 'Movimiento sin Confirmar',
   //
   instanceAttribute: 'Atributo de Instancia'
 }

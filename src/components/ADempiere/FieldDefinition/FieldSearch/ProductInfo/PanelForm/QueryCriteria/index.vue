@@ -83,6 +83,21 @@
             />
           </el-col>
           <el-col :span="6">
+            <price-list-version-field
+              :uuid-form="uuidForm"
+              :parent-uuid="metadata.parentUuid"
+              :container-uuid="metadata.containerUuid"
+            />
+          </el-col>
+          <el-col :span="6">
+            <vendor-field
+              :uuid-form="uuidForm"
+              :parent-uuid="metadata.parentUuid"
+              :container-uuid="metadata.containerUuid"
+            />
+          </el-col>
+          <!--
+          <el-col :span="6">
             <attribute-set-field
               :uuid-form="uuidForm"
               :parent-uuid="metadata.parentUuid"
@@ -96,6 +111,7 @@
               :container-uuid="metadata.containerUuid"
             />
           </el-col>
+          -->
         </el-row>
       </el-form>
     </el-collapse-item>
@@ -117,8 +133,10 @@ import {
 // Components and Mixins
 import AttributeSetField from './attributeSet.vue'
 import AttributeSetInstanceField from './attributeSetInstance.vue'
-import IsStockedField from './IsStockedField.vue'
+import IsStockedField from './isStockedField.vue'
+import PriceListVersionField from './priceListVersionField.vue'
 import TextField from './textField.vue'
+import VendorField from './vendorField.vue'
 import WarehouseField from './warehouseField.vue'
 
 // Utils and Helper Methods
@@ -131,7 +149,9 @@ export default defineComponent({
     AttributeSetField,
     AttributeSetInstanceField,
     IsStockedField,
+    PriceListVersionField,
     TextField,
+    VendorField,
     WarehouseField
   },
 

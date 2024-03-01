@@ -18,35 +18,44 @@
 
 <template>
   <el-form-item
-    :label="$t('field.product.stocked')"
+    :label="$t('field.product.vendor')"
   >
     <el-select
       v-model="currentValue"
-      :disabled="isDisabled"
+      :remote-method="remoteSearch"
+      @visible-change="loadVendors"
     >
+      <empty-option-select
+        :current-value="currentValue"
+        :is-allows-zero="false"
+      />
       <el-option
-        v-for="(option, key) in YES_NO_OPTIONS_LIST"
+        v-for="(option, key) in optionsList"
         :key="key"
-        :value="option.stringValue"
-        :label="option.displayValue"
+        :value="option.values.KeyColumn"
+        :label="option.values.DisplayColumn"
       />
     </el-select>
   </el-form-item>
 </template>
 
 <script>
-import { computed, defineComponent } from '@vue/composition-api'
+import { computed, defineComponent, ref } from '@vue/composition-api'
 
 import store from '@/store'
 
-// Constants
-import { YES_NO_OPTIONS_LIST } from '@/utils/ADempiere/dictionary/field/yesNo'
+// API Request Methods
+import { requestListVendors } from '@/api/ADempiere/field/search/product.ts'
 
-// Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+// Components and Mixins
+import EmptyOptionSelect from '@/components/ADempiere/FieldDefinition/FieldSelect/emptyOptionSelect.vue'
 
 export default defineComponent({
-  name: 'IsStokedField',
+  name: 'vendorField',
+
+  components: {
+    EmptyOptionSelect
+  },
 
   props: {
     uuidForm: {
@@ -64,7 +73,9 @@ export default defineComponent({
   },
 
   setup(props) {
-    const ATTRIBUTE_KEY = 'is_stocked'
+    const ATTRIBUTE_KEY = 'vendor_id'
+
+    const optionsList = ref([])
 
     const currentValue = computed({
       set(newValue) {
@@ -82,19 +93,35 @@ export default defineComponent({
       }
     })
 
-    const isDisabled = computed(() => {
-      const warehouseId = store.getters.getProductSearchFieldQueryFilterByAttribute({
-        containerUuid: props.uuidForm,
-        attributeKey: 'warehouse_id'
+    function loadVendors(isShowList) {
+      if (!isShowList) {
+        return
+      }
+      requestListVendors({
+        pageSize: 100
       })
-      return isEmptyValue(warehouseId) || warehouseId <= 0
-    })
+        .then(response => {
+          optionsList.value = response.records
+        })
+    }
+
+    function remoteSearch(searchValue) {
+      requestListVendors({
+        searchValue,
+        pageSize: 100
+      })
+        .then(response => {
+          optionsList.value = response.records
+        })
+    }
 
     return {
-      YES_NO_OPTIONS_LIST,
+      optionsList,
       //
       currentValue,
-      isDisabled
+      //
+      loadVendors,
+      remoteSearch
     }
   }
 })

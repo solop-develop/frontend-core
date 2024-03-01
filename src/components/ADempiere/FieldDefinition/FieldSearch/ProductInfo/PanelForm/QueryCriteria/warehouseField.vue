@@ -22,27 +22,40 @@
   >
     <el-select
       v-model="currentValue"
+      :remote-method="remoteSearch"
+      @visible-change="loadWarehouses"
     >
+      <empty-option-select
+        :current-value="currentValue"
+        :is-allows-zero="false"
+      />
       <el-option
-        v-for="(option, key) in YES_NO_OPTIONS_LIST"
+        v-for="(option, key) in optionsList"
         :key="key"
-        :value="option.stringValue"
-        :label="option.displayValue"
+        :value="option.values.KeyColumn"
+        :label="option.values.DisplayColumn"
       />
     </el-select>
   </el-form-item>
 </template>
 
 <script>
-import { computed, defineComponent } from '@vue/composition-api'
+import { computed, defineComponent, ref } from '@vue/composition-api'
 
 import store from '@/store'
 
-// Constants
-import { YES_NO_OPTIONS_LIST } from '@/utils/ADempiere/dictionary/field/yesNo'
+// API Request Methods
+import { requestListWarehouses } from '@/api/ADempiere/field/search/product.ts'
+
+// Components and Mixins
+import EmptyOptionSelect from '@/components/ADempiere/FieldDefinition/FieldSelect/emptyOptionSelect.vue'
 
 export default defineComponent({
   name: 'WarehouseField',
+
+  components: {
+    EmptyOptionSelect
+  },
 
   props: {
     uuidForm: {
@@ -62,6 +75,8 @@ export default defineComponent({
   setup(props) {
     const ATTRIBUTE_KEY = 'warehouse_id'
 
+    const optionsList = ref([])
+
     const currentValue = computed({
       set(newValue) {
         store.commit('setProductSearchFieldQueryFilterByAttribute', {
@@ -78,10 +93,35 @@ export default defineComponent({
       }
     })
 
+    function loadWarehouses(isShowList) {
+      if (!isShowList) {
+        return
+      }
+      requestListWarehouses({
+        pageSize: 100
+      })
+        .then(response => {
+          optionsList.value = response.records
+        })
+    }
+
+    function remoteSearch(searchValue) {
+      requestListWarehouses({
+        searchValue,
+        pageSize: 100
+      })
+        .then(response => {
+          optionsList.value = response.records
+        })
+    }
+
     return {
-      YES_NO_OPTIONS_LIST,
+      optionsList,
       //
-      currentValue
+      currentValue,
+      //
+      loadWarehouses,
+      remoteSearch
     }
   }
 })

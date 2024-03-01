@@ -23,6 +23,138 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
+export function requestListWarehouses({
+  contextAttributesList,
+  filters,
+  searchValue,
+  //
+  pageToken,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
+}) {
+  let contextAttributes = []
+  if (!isEmptyValue(contextAttributesList)) {
+    contextAttributes = contextAttributesList.map(attribute => {
+      return {
+        key: attribute.columnName,
+        value: attribute.value
+      }
+    })
+  }
+  return request({
+    url: `/field/products/warehouses`,
+    method: 'get',
+    params: {
+      context_attributes: contextAttributes,
+      is_only_active_records: true,
+      //
+      filters,
+      search_value: searchValue,
+      // Page Data
+      page_token: pageToken,
+      page_size: pageSize
+    }
+  })
+}
+
+export function requestListPricesListVersions({
+  contextAttributesList,
+  filters,
+  searchValue,
+  //
+  pageToken,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
+}) {
+  let contextAttributes = []
+  if (!isEmptyValue(contextAttributesList)) {
+    contextAttributes = contextAttributesList.map(attribute => {
+      return {
+        key: attribute.columnName,
+        value: attribute.value
+      }
+    })
+  }
+  return request({
+    url: `/field/products/prices-lists-versions`,
+    method: 'get',
+    params: {
+      context_attributes: contextAttributes,
+      is_only_active_records: true,
+      //
+      filters,
+      search_value: searchValue,
+      // Page Data
+      page_token: pageToken,
+      page_size: pageSize
+    }
+  })
+}
+
+export function requestListAttributeSets({
+  contextAttributesList,
+  filters,
+  searchValue,
+  //
+  pageToken,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
+}) {
+  let contextAttributes = []
+  if (!isEmptyValue(contextAttributesList)) {
+    contextAttributes = contextAttributesList.map(attribute => {
+      return {
+        key: attribute.columnName,
+        value: attribute.value
+      }
+    })
+  }
+  return request({
+    url: `/field/products/attribute-sets`,
+    method: 'get',
+    params: {
+      context_attributes: contextAttributes,
+      is_only_active_records: true,
+      //
+      filters,
+      search_value: searchValue,
+      // Page Data
+      page_token: pageToken,
+      page_size: pageSize
+    }
+  })
+}
+
+export function requestListVendors({
+  contextAttributesList,
+  filters,
+  searchValue,
+  //
+  pageToken,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
+}) {
+  let contextAttributes = []
+  if (!isEmptyValue(contextAttributesList)) {
+    contextAttributes = contextAttributesList.map(attribute => {
+      return {
+        key: attribute.columnName,
+        value: attribute.value
+      }
+    })
+  }
+  return request({
+    url: `/field/products/vendors`,
+    method: 'get',
+    params: {
+      context_attributes: contextAttributes,
+      is_only_active_records: true,
+      //
+      filters,
+      search_value: searchValue,
+      // Page Data
+      page_token: pageToken,
+      page_size: pageSize
+    }
+  })
+}
+
 export function requestListProducts({
   contextAttributesList,
   filters = [],
@@ -45,7 +177,7 @@ export function requestListProducts({
   product_group_id,
   product_class_id,
   product_category_id,
-  price_list_id,
+  price_list_version_id,
   warehouse_id,
   attribute_set_id,
   attribute_set_instance_id,
@@ -109,7 +241,7 @@ export function requestListProducts({
       product_group_id,
       product_class_id,
       product_category_id,
-      price_list_id,
+      price_list_version_id,
       warehouse_id,
       attribute_set_id,
       attribute_set_instance_id,

@@ -20,6 +20,7 @@
   <div>
     <el-table
       ref="recordsTable"
+      :key="componentKey"
       v-loading="isLoadingRecords"
       class="products-table"
       highlight-current-row
@@ -86,54 +87,124 @@
         prop="uom"
         :label="$t('field.product.uom')"
         header-align="center"
-        width="70"
+        width="60"
       />
-
-      <!--
       <el-table-column
-        prop="open_balance_amount"
-        :label="$t('field.product.openBalance')"
+        prop="is_stocked"
+        :label="$t('field.product.stocked')"
         header-align="center"
-        width="110"
+        width="85"
       >
-        <span slot-scope="scope" class="cell-align-right">
-          {{ scope.row.open_balance_amount }}
+        <span slot-scope="scope">
+          {{ convertBooleanToTranslationLang(scope.row.is_stocked) }}
         </span>
       </el-table-column>
 
-      <el-table-column
-        prop="credit_available_amount"
-        :label="$t('field.product.creditAvailable')"
-        header-align="center"
-        width="130"
-      >
-        <span slot-scope="scope" class="cell-align-right">
-          {{ scope.row.credit_available_amount }}
-        </span>
-      </el-table-column>
+      <template v-if="isPriceAmounts">
+        <el-table-column
+          prop="list_price"
+          :label="$t('field.product.listPrice')"
+          header-align="center"
+          width="110"
+        >
+          <span slot-scope="scope" class="cell-align-right">
+            {{ formatQuantity({ value: scope.row.list_price }) }}
+          </span>
+        </el-table-column>
+        <el-table-column
+          prop="standard_price"
+          :label="$t('field.product.standardPrice')"
+          header-align="center"
+          width="110"
+        >
+          <span slot-scope="scope" class="cell-align-right">
+            {{ formatQuantity({ value: scope.row.standard_price }) }}
+          </span>
+        </el-table-column>
+        <el-table-column
+          prop="limit_price"
+          :label="$t('field.product.limitPrice')"
+          header-align="center"
+          width="110"
+        >
+          <span slot-scope="scope" class="cell-align-right">
+            {{ formatQuantity({ value: scope.row.limit_price }) }}
+          </span>
+        </el-table-column>
+        <el-table-column
+          prop="margin"
+          :label="$t('field.product.margin')"
+          header-align="center"
+          width="110"
+        >
+          <span slot-scope="scope" class="cell-align-right">
+            {{ formatQuantity({ value: scope.row.margin }) }}
+          </span>
+        </el-table-column>
+      </template>
 
-      <el-table-column
-        prop="credit_used_amount"
-        :label="$t('field.product.creditUsed')"
-        header-align="center"
-        width="110"
-      >
-        <span slot-scope="scope" class="cell-align-right">
-          {{ scope.row.credit_used_amount }}
-        </span>
-      </el-table-column>
-
-      <el-table-column
-        prop="revenue_amount"
-        :label="$t('field.product.revenue')"
-        header-align="center"
-        width="110"
-      >
-        <span slot-scope="scope" class="cell-align-right">
-          {{ scope.row.revenue_amount }}
-        </span>
-      </el-table-column>
-      -->
+      <template v-if="isStockQuantities">
+        <el-table-column
+          prop="available_quantity"
+          :label="$t('field.product.available')"
+          header-align="center"
+          width="110"
+        >
+          <span slot-scope="scope" class="cell-align-right">
+            {{ formatQuantity({ value: scope.row.available_quantity }) }}
+          </span>
+        </el-table-column>
+        <el-table-column
+          prop="on_hand_quantity"
+          :label="$t('field.product.onHandQuantity')"
+          header-align="center"
+          width="110"
+        >
+          <span slot-scope="scope" class="cell-align-right">
+            {{ formatQuantity({ value: scope.row.on_hand_quantity }) }}
+          </span>
+        </el-table-column>
+        <el-table-column
+          prop="reserved_quantity"
+          :label="$t('field.product.reservedQuantity')"
+          header-align="center"
+          width="110"
+        >
+          <span slot-scope="scope" class="cell-align-right">
+            {{ formatQuantity({ value: scope.row.reserved_quantity }) }}
+          </span>
+        </el-table-column>
+        <el-table-column
+          prop="ordered_quantity"
+          :label="$t('field.product.orderedQuantity')"
+          header-align="center"
+          width="110"
+        >
+          <span slot-scope="scope" class="cell-align-right">
+            {{ formatQuantity({ value: scope.row.ordered_quantity }) }}
+          </span>
+        </el-table-column>
+        <el-table-column
+          prop="unconfirmed_quantity"
+          :label="$t('field.product.unconfirmedQuantity')"
+          header-align="center"
+          width="110"
+        >
+          <span slot-scope="scope" class="cell-align-right">
+            {{ formatQuantity({ value: scope.row.unconfirmed_quantity }) }}
+          </span>
+        </el-table-column>
+        <el-table-column
+          prop="unconfirmed_move_quantity"
+          :label="$t('field.product.unconfirmedMove')"
+          header-align="center"
+          width="110"
+        >
+          <span slot-scope="scope" class="cell-align-right">
+            {{ formatQuantity({ value: scope.row.unconfirmed_move_quantity }) }}
+          </span>
+        </el-table-column>
+      </template>
 
       <el-table-column
         prop="vendor"
@@ -145,7 +216,7 @@
         prop="is_instance_attribute"
         :label="$t('field.product.instanceAttribute')"
         header-align="center"
-        width="140"
+        width="130"
       >
         <span slot-scope="scope">
           {{ convertBooleanToTranslationLang(scope.row.is_instance_attribute) }}
@@ -176,6 +247,7 @@ import useProduct from './useProduct'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { convertBooleanToTranslationLang } from '@/utils/ADempiere/formatValue/booleanFormat'
+import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 
 export default defineComponent({
   name: 'TableRecords',
@@ -210,6 +282,7 @@ export default defineComponent({
 
   setup(props) {
     const recordsTable = ref(null)
+    const componentKey = ref(0)
 
     const {
       currentRow,
@@ -232,6 +305,22 @@ export default defineComponent({
       })
     })
 
+    const isStockQuantities = computed(() => {
+      const warehouseId = store.getters.getProductSearchFieldQueryFilterByAttribute({
+        containerUuid: props.uuidForm,
+        attributeKey: 'warehouse_id'
+      })
+      return !isEmptyValue(warehouseId) && warehouseId > 0
+    })
+
+    const isPriceAmounts = computed(() => {
+      const priceListVersionId = store.getters.getProductSearchFieldQueryFilterByAttribute({
+        containerUuid: props.uuidForm,
+        attributeKey: 'price_list_version_id'
+      })
+      return !isEmptyValue(priceListVersionId) && priceListVersionId > 0
+    })
+
     function handleCurrentChange(recordRow) {
       currentRow.value = recordRow
     }
@@ -252,6 +341,15 @@ export default defineComponent({
       }
     })
 
+    // to update width table
+    watch(isStockQuantities, (newValue, oldValue) => {
+      componentKey.value++
+    })
+    // to update width table
+    watch(isPriceAmounts, (newValue, oldValue) => {
+      componentKey.value++
+    })
+
     onMounted(() => {
       nextTick(() => {
         if (recordsTable.value) {
@@ -263,15 +361,19 @@ export default defineComponent({
     })
 
     return {
+      componentKey,
       recordsTable,
       //
       currentRow,
       isLoadingRecords,
+      isPriceAmounts,
+      isStockQuantities,
       pageNumber,
       pageSize,
       recordsList,
       //
       convertBooleanToTranslationLang,
+      formatQuantity,
       handleCurrentChange,
       changeCurrentRecord
     }
@@ -282,6 +384,14 @@ export default defineComponent({
 <style lang="scss">
 .products-table {
   &.el-table {
+    .el-table__header {
+      th.el-table__cell {
+        .cell {
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+      }
+    }
     .el-table__body {
       .el-table__row {
         .el-table__cell {
@@ -295,8 +405,8 @@ export default defineComponent({
             white-space: normal;
             word-break: break-all;
             line-height: 15px;
-            padding-left: 10px;
-            padding-right: 10px;
+            padding-left: 5px;
+            padding-right: 5px;
           }
         }
       }
