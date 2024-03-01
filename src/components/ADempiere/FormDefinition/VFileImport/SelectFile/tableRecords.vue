@@ -28,7 +28,7 @@
     :element-loading-text="$t('notifications.loading')"
     element-loading-background="rgba(255, 255, 255, 0.8)"
     :empty-text="$t('form.VFileImport.configureToImport.emptyDataTable')"
-    height="35vh"
+    height="25vh"
     @current-change="changeRow"
   >
     <index-column

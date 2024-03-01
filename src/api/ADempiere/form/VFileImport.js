@@ -24,7 +24,7 @@ export function requestListCharsets({
   pageSize = 250
 }) {
   return request({
-    url: '/import-file-loader/charsets',
+    url: '/import-loader/charsets',
     method: 'get',
     params: {
       page_size: pageSize,
@@ -37,7 +37,7 @@ export function requestListCharsets({
 
 export function requestListImportTables() {
   return request({
-    url: '/import-file-loader/tables',
+    url: '/import-loader/tables',
     method: 'get'
   })
 }
@@ -46,7 +46,7 @@ export function requestImportFormatsList({
   tableName
 }) {
   return request({
-    url: `/import-file-loader/formats/${tableName}`,
+    url: `/import-loader/formats/${tableName}`,
     method: 'get'
   })
 }
@@ -55,7 +55,7 @@ export function requestGetImportFormat({
   id
 }) {
   return request({
-    url: `/import-file-loader/formats/get/${id}`,
+    url: `/import-loader/formats/get/${id}`,
     method: 'get'
   })
 }
@@ -64,7 +64,7 @@ export function requestListImportProcesses({
   tableName
 }) {
   return request({
-    url: `/import-file-loader/processes/${tableName}`,
+    url: `/import-loader/processes/${tableName}`,
     method: 'get'
   })
 }
@@ -78,7 +78,7 @@ export function saveRecordImport({
   parameters
 }) {
   return request({
-    url: `/import-file-loader/imports/${importFormatId}/${resourceId}`,
+    url: `/import-loader/imports/${importFormatId}/${resourceId}`,
     method: 'post',
     data: {
       charset,
@@ -95,7 +95,7 @@ export function requestListFilePreview({
   importFormatId
 }) {
   return request({
-    url: `/import-file-loader/imports/${importFormatId}/${resourceId}/preview`,
+    url: `/import-loader/imports/${importFormatId}/${resourceId}/preview`,
     method: 'get',
     params: {
       charset

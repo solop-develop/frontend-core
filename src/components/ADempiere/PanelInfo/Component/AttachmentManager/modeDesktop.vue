@@ -68,9 +68,9 @@
             <el-card shadow="hover" :class="{ 'image-attachment': true, 'is-current': isCurrent(file) }">
               <div v-if="isSelectable" slot="header" class="clearfix" style="margin-top: 16px; margin-bottom: 16px;">
                 <el-radio
-                  v-model="resourceReference.id"
-                  :label="file.id"
-                  @click="resourceReference = file"
+                  v-model="resourceReference"
+                  :label="file.fullName"
+                  @click="resourceReference = file.fullName"
                 >
                   {{ file.name }}
                 </el-radio>

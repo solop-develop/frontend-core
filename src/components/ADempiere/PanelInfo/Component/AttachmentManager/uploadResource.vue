@@ -176,6 +176,25 @@ export default defineComponent({
           method: 'PUT',
           body: file
         }).then(() => {
+          if (!props.containerManager) {
+            const clienteId = store.getters.getSessionContextClientId
+            const { referenceId, type } = router.app._route.meta
+            store.dispatch('getAttachmentFromServer', {
+              containerType: type,
+              clienteId: clienteId,
+              containerId: referenceId,
+              recordId: props.recordId,
+              tableName: props.tableName
+            })
+            if (props.loadData) {
+              props.loadData({
+                resource: file_name,
+                file
+              })
+            }
+            resolve(file)
+            return file
+          }
           props.containerManager.getAttachment({
             containerUuid: props.containerUuid,
             containerId: router.app._route.meta.referenceId,

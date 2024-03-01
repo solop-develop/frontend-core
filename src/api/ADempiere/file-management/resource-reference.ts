@@ -119,7 +119,7 @@ export function requestDeleteResources({
   fileName
 }) {
   return request({
-    url: `${config.adempiere.resource.url}/${fileName}${fileName}`,
+    url: `${config.adempiere.resource.url}/${fileName}`,
     method: 'delete',
     isWithoutAuthorization: true
   })
