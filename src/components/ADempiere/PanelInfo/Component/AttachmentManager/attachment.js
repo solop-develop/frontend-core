@@ -18,8 +18,9 @@
 
 import { defineComponent, computed, ref } from '@vue/composition-api'
 
-import store from '@/store'
 import router from '@/router'
+import store from '@/store'
+
 // API Request Methods
 import {
   sendAttachmentDescription,
@@ -263,7 +264,6 @@ export default defineComponent({
      * Current Filed
      * @param {Object} file
      */
-
     function isCurrent(file) {
       if (!props.isSelectable) {
         return false
@@ -307,7 +307,6 @@ export default defineComponent({
     /**
      * Clean Message
      */
-
     function cleanMessage() {
       addMessage.value = ''
     }
@@ -315,7 +314,6 @@ export default defineComponent({
     /**
      * Close Message
      */
-
     function closeMessage(file) {
       cleanMessage()
       file.isShowMessage = false
@@ -336,7 +334,6 @@ export default defineComponent({
     /**
      * Refrest Attachment
      */
-
     function loadAttachment() {
       props.containerManager['getAttachment']({
         tableName: props.tableName,
@@ -348,7 +345,6 @@ export default defineComponent({
     /**
      * Add Description in Header
      */
-
     function addAttachmentDescriptionHeader() {
       const { id, attachment_uuid } = currentAttachment.value
       sendAttachmentDescriptionHeader({
@@ -375,7 +371,6 @@ export default defineComponent({
     /**
      * Update Description Header
      */
-
     function updateDescriptionHeader(description) {
       isEditHeard.value = true
       resourceDescription.value = description
@@ -384,7 +379,6 @@ export default defineComponent({
     /**
      * Clean Description Header
      */
-
     function clearDescriptionHeader() {
       resourceDescription.value = ''
     }
@@ -392,7 +386,6 @@ export default defineComponent({
     /**
      * Close Note
      */
-
     function closeNote() {
       store.dispatch('showLogs', {
         show: false
