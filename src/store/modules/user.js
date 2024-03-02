@@ -448,6 +448,8 @@ const actions = {
       root: true
     })
 
+    const isSameOrganization = organizationId === getCurrentOrganization()
+
     return requestChangeRole({
       roleId: getCurrentRole(),
       organizationId
@@ -479,7 +481,12 @@ const actions = {
         // Update user info and context associated with session
         // dispatch('getSessionInfo', tokenSession)
 
-        // dispatch('getWarehousesList', { organizationId: id })
+        // refresh warehouses
+        if (!isSameOrganization) {
+          dispatch('getWarehousesList', {
+            organizationId: id
+          })
+        }
 
         showMessage({
           message: language.t('notifications.successChangeRole'),
