@@ -132,7 +132,7 @@
             </el-col>
             <el-col v-show="isValidateUserChoice" :span="12" style="text-align: center;margin: 0px;">
               <el-form-item :label="$t('form.workflowActivity.filtersSearch.approve')" style="margin: 0px;padding: 0px;">
-                <el-switch v-model="isProved" />
+                <el-switch v-model="isApproved" />
               </el-form-item>
             </el-col>
             <el-col v-show="chooseOption" :span="18" style="text-align: center;margin: 0px;padding: 0px">
@@ -268,7 +268,7 @@
 
             <el-col v-show="isValidateUserChoice" :span="8" style="text-align: center;">
               <el-form-item :label="$t('form.workflowActivity.filtersSearch.approve')">
-                <el-switch v-model="isProved" />
+                <el-switch v-model="isApproved" />
               </el-form-item>
             </el-col>
 
@@ -437,17 +437,7 @@ export default {
       chooseOption: false,
       chooseOptionB: true,
       userId: '',
-      isProved: false,
-      listAproved: [
-        {
-          displayedValue: this.$t('components.switchActiveText'),
-          value: true
-        },
-        {
-          displayedValue: this.$t('components.switchInactiveText'),
-          value: false
-        }
-      ],
+      isApproved: false,
       chatEditor: null,
       listSalesReps: [],
       input: '',
@@ -600,7 +590,7 @@ export default {
       this.message = ''
     },
     sendOPeration() {
-      if (this.isProved) {
+      if (this.isApproved) {
         this.processWorkflow(this.currentActivity)
       } else {
         this.forwardWorkflow(this.currentActivity)
@@ -634,7 +624,7 @@ export default {
         id,
         uuid,
         message: this.message,
-        isApproved: this.isProved
+        isApproved: this.isApproved
       })
         .then(response => {
           showMessage({
@@ -653,7 +643,7 @@ export default {
       this.message = ''
       this.chooseOption = false
       this.userId = ''
-      this.isProved = false
+      this.isApproved = false
     },
     changeOption(value) {
       this.chooseOptionB = !value

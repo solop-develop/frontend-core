@@ -17,6 +17,11 @@
  */
 
 import { request } from '@/utils/ADempiere/request'
+
+// Constants
+import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
+
+// Utils and Helper Methods
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 export function requestListTransactionTypes() {
@@ -49,7 +54,7 @@ export function listBusinessPartners({
 export function requestListOrganizations({
   searchValue,
   pageToken,
-  pageSize = 250
+  pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
     url: '/payment-allocation/organizations',
@@ -66,7 +71,7 @@ export function requestListOrganizations({
 export function requestListCurrencies({
   searchValue,
   pageToken,
-  pageSize = 250
+  pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
     url: '/payment-allocation/currencies',

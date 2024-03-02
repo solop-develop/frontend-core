@@ -69,10 +69,10 @@
                     v-model="confirmedFind"
                   >
                     <el-option
-                      v-for="item in confirmedOptionsList"
+                      v-for="item in YES_NO_OPTIONS_LIST"
                       :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
+                      :value="item.stringValue"
+                      :label="item.displayValue"
                     />
                   </el-select>
                 </el-form-item>
@@ -171,6 +171,7 @@ import store from '@/store'
 
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
+import { YES_NO_OPTIONS_LIST } from '@/utils/ADempiere/dictionary/field/yesNo'
 
 // Componets and Mixins
 import TitleAndHelp from '@/components/ADempiere/TitleAndHelp'
@@ -243,20 +244,6 @@ export default defineComponent({
     // Search
     const nameFind = ref('')
     const confirmedFind = ref('Y')
-    const confirmedOptionsList = ref([
-      {
-        value: undefined,
-        label: ' '
-      },
-      {
-        value: 'Y',
-        label: lang.t('components.switchActiveText')
-      },
-      {
-        value: 'N',
-        label: lang.t('components.switchInactiveText')
-      }
-    ])
     const descriptionFind = ref('')
 
     /**
@@ -639,6 +626,7 @@ export default defineComponent({
     listResourcesAssignment()
 
     return {
+      YES_NO_OPTIONS_LIST,
       // Ref
       name,
       nameEdit,
@@ -656,7 +644,6 @@ export default defineComponent({
       nameFind,
       descriptionFind,
       confirmedFind,
-      confirmedOptionsList,
       // Computeds
       recurringType,
       recurringTypeUuid,

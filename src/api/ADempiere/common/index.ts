@@ -17,10 +17,13 @@
  */
 
 import { request } from '@/utils/ADempiere/request'
-import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
+
+// Utils and Helper Methods
+import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 /**
  * Conversion Rate
@@ -73,7 +76,7 @@ export function requestGetCountryDefinition({
 export function requestOrganizationsList({
   roleId,
   pageToken,
-  pageSize = 100
+  pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
     url: '/security/organizations',
@@ -103,7 +106,7 @@ export function requestOrganizationsList({
 export function requestWarehousesList({
   organizationId,
   pageToken,
-  pageSize = 100
+  pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
     url: '/security/warehouses',

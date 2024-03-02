@@ -127,10 +127,10 @@
                       style="display: block;"
                     >
                       <el-option
-                        v-for="item in confirmedOptionsList"
+                        v-for="item in YES_NO_OPTIONS_LIST"
                         :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
+                        :value="item.stringValue"
+                        :label="item.displayValue"
                       />
                     </el-select>
                   </el-form-item>
@@ -257,6 +257,7 @@ import store from '@/store'
 
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
+import { YES_NO_OPTIONS_LIST } from '@/utils/ADempiere/dictionary/field/yesNo'
 
 // Componets and Mixins
 import TitleAndHelp from '@/components/ADempiere/TitleAndHelp'
@@ -329,20 +330,6 @@ export default defineComponent({
     const isLoadingCreate = ref(false)
     const metadataList = ref([])
     const confirmedFind = ref('N')
-    const confirmedOptionsList = ref([
-      {
-        value: undefined,
-        label: ' '
-      },
-      {
-        value: 'Y',
-        label: lang.t('components.switchActiveText')
-      },
-      {
-        value: 'N',
-        label: lang.t('components.switchInactiveText')
-      }
-    ])
     const isLoadingRecords = ref(false)
     // Pagination
     const recordCount = ref(0)
@@ -671,6 +658,7 @@ export default defineComponent({
     listResource()
 
     return {
+      YES_NO_OPTIONS_LIST,
       // Ref
       activeCollapse,
       name,
@@ -683,7 +671,6 @@ export default defineComponent({
       metadataList,
       timeOutFocus,
       confirmedFind,
-      confirmedOptionsList,
       nameFind,
       descriptionFind,
       isLoadingRecords,

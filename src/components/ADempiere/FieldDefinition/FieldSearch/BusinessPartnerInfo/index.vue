@@ -68,6 +68,7 @@ import ButtonBusinessPartnersList from './buttonBusinessPartnersList.vue'
 
 // Constants
 import { TABLE_NAME, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -164,7 +165,8 @@ export default {
           uuid: this.metadata.uuid,
           id: this.metadata.id,
           searchValue,
-          pageNumber: 1
+          pageNumber: 1,
+          pageSize: RECORD_ROWS_BY_LIST
         })
           .then(responseRecords => {
             if (isEmptyValue(responseRecords)) {

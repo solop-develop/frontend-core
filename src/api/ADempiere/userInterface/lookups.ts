@@ -17,9 +17,14 @@
  */
 
 // Get Instance for connection
-import { isEmptyValue } from '@/utils/ADempiere'
 import { request } from '@/utils/ADempiere/request'
-import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/references.js'
+
+// Constants
+import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups.js'
+
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+
 /**
  * Request a Lookup list data from Reference
  * The main attributes that function hope are:

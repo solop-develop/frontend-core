@@ -98,7 +98,6 @@ export default defineComponent({
         return
       }
       requestListPricesListVersions({
-        pageSize: 100
       })
         .then(response => {
           optionsList.value = response.records
@@ -107,8 +106,7 @@ export default defineComponent({
 
     function remoteSearch(searchValue) {
       requestListPricesListVersions({
-        searchValue,
-        pageSize: 100
+        searchValue
       })
         .then(response => {
           optionsList.value = response.records

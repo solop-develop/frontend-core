@@ -21,6 +21,7 @@ import { request } from '@/utils/ADempiere/request'
 
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
 
 /**
  * List available users to apply customization
@@ -30,7 +31,7 @@ import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 export function requestListUsers({
   searchValue,
   pageToken,
-  pageSize = 100
+  pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
     url: '/user-customization/users',
@@ -52,7 +53,7 @@ export function requestListUsers({
 export function requestListRoles({
   searchValue,
   pageToken,
-  pageSize = 100
+  pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
     url: '/user-customization/roles',

@@ -18,7 +18,9 @@
 
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
-import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/references.js'
+
+// Constants
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 /**
  * Request Entities
@@ -32,7 +34,7 @@ export function requestGetEntities({
   pageToken,
   searchValue,
   contextAttributes,
-  pageSize = RECORD_ROWS_BY_LIST
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
     url: `/user-interface/entities/${tabId}`,

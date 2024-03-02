@@ -47,6 +47,7 @@
 <script>
 // Constants
 import { TABLE_NAME } from '@/utils/ADempiere/dictionary/field/accoutingCombination.js'
+import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
 
 // Components and Mixins
 import ButtonToList from './buttonToList.vue'
@@ -150,8 +151,10 @@ export default {
           contextColumnNames: this.metadata.reference.contextColumnNames,
           tableName: TABLE_NAME,
           uuid: this.metadata.uuid,
+          id: this.metadata.id,
           searchValue,
-          pageNumber: 1
+          pageNumber: 1,
+          pageSize: RECORD_ROWS_BY_LIST
         })
           .then(responseRecords => {
             if (isEmptyValue(responseRecords)) {
