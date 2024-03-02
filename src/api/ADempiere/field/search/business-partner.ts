@@ -18,10 +18,12 @@
 
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 export function requestListBusinessPartner2({
   fieldUuid,

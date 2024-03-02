@@ -21,13 +21,14 @@ import { request } from '@/utils/ADempiere/request'
 
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
 
 // Get Organization list from role
 export function requestOrganizationsList({
   roleUuid,
   roleId,
   pageToken,
-  pageSize = 100
+  pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
     url: '/security/organizations',
@@ -58,7 +59,7 @@ export function requestWarehousesList({
   organizationUuid,
   organizationId,
   pageToken,
-  pageSize = 100
+  pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
     url: '/security/warehouses',

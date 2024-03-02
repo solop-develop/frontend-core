@@ -20,7 +20,7 @@
 import { request } from '@/utils/ADempiere/request'
 
 // Constants
-import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/references'
+import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups.js'
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 /**
