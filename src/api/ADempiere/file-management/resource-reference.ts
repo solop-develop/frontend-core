@@ -79,7 +79,7 @@ export function requestGetResource({
   fileName
 }) {
   return request({
-    url: `${config.adempiere.resource.url}/${fileName}`,
+    url: `${config.adempiere.resource.url}${fileName}`,
     method: 'get',
     isWithoutAuthorization: true,
     params: {
@@ -119,7 +119,7 @@ export function requestDeleteResources({
   fileName
 }) {
   return request({
-    url: `${config.adempiere.resource.url}/${fileName}`,
+    url: `${config.adempiere.resource.url}${fileName}`,
     method: 'delete',
     isWithoutAuthorization: true
   })
@@ -134,7 +134,7 @@ export function requestShareResources({
   seconds
 }) {
   return request({
-    baseURL: `${config.adempiere.resource.url}/download-url/${fileName}`,
+    baseURL: `${config.adempiere.resource.url}download-url/${fileName}`,
     isWithoutAuthorization: true,
     method: 'get',
     params: {
