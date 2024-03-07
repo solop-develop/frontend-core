@@ -324,7 +324,7 @@ export default defineComponent({
     })
 
     function handleChangePage(pageNumber) {
-      props.containerManager.setPage({
+      props.containerManager.setPageNumber({
         parentUuid: props.parentUuid,
         containerUuid: props.tabAttributes.uuid,
         pageSize: store.getters.getTabPageSize({ containerUuid: props.tabAttributes.uuid }),
@@ -344,7 +344,7 @@ export default defineComponent({
      * custom method to handle change size page
      */
     function handleChangeSizePage(pageSize) {
-      props.containerManager.setSizePage({
+      props.containerManager.setPageSize({
         parentUuid: props.parentUuid,
         containerUuid: props.tabAttributes.uuid,
         pageSize,

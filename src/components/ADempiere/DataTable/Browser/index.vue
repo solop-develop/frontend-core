@@ -336,7 +336,7 @@ export default defineComponent({
      * custom method to handle change page
      */
     function handleChangePage(pageNumber) {
-      props.containerManager.setPage({
+      props.containerManager.setPageNumber({
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid,
         pageNumber,
@@ -354,7 +354,7 @@ export default defineComponent({
     }
 
     function handleChangeSizePage(pageSize) {
-      props.containerManager.setSizePage({
+      props.containerManager.setPageSize({
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid,
         pageSize,

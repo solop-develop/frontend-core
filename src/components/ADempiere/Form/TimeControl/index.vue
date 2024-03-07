@@ -240,7 +240,7 @@
               :total-records="recordCount"
               :page-size="tableData.length"
               :selection="selection"
-              :handle-change-page-number="setPage"
+              :handle-change-page-number="setPageNumber"
             />
           </el-col>
         </el-row>
@@ -645,7 +645,7 @@ export default defineComponent({
     }
 
     // Get Record Control Table
-    function setPage(pageNumber) {
+    function setPageNumber(pageNumber) {
       listResource(pageNumber)
     }
 
@@ -700,7 +700,7 @@ export default defineComponent({
       editChild,
       listResource,
       confirmResiurce,
-      setPage,
+      setPageNumber,
       handleRowClick,
       closeList
     }

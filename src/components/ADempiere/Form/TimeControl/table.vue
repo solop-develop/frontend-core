@@ -131,7 +131,7 @@
             :total-records="totalRecords"
             :selection="selection"
             :page-size="tableData.length"
-            :handle-change-page-number="setPage"
+            :handle-change-page-number="setPageNumber"
           />
         </el-col>
 
@@ -614,7 +614,7 @@ export default defineComponent({
         })
     }
 
-    function setPage(pageName) {
+    function setPageNumber(pageName) {
       listResourcesAssignment(pageName)
     }
 
@@ -671,7 +671,7 @@ export default defineComponent({
       createOrder,
       listResourcesAssignment,
       setFieldsList,
-      setPage
+      setPageNumber
     }
   }
 })

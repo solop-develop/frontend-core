@@ -61,7 +61,7 @@
           <custom-pagination
             :total-records="recordCount"
             :page-size="tableData.length"
-            :handle-change-page-size="setPage"
+            :handle-change-page-size="setPageNumber"
           />
         </el-col>
 
@@ -172,7 +172,7 @@ export default defineComponent({
     }
 
     // Get Record Control Table
-    function setPage(pageNumber) {
+    function setPageNumber(pageNumber) {
       listResource(pageNumber)
     }
 
@@ -192,7 +192,7 @@ export default defineComponent({
       heardList,
       // Methods
       listResource,
-      setPage,
+      setPageNumber,
       handleRowClick
     }
   }
