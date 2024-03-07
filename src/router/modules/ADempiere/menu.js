@@ -17,7 +17,7 @@
  */
 
 import Layout from '@/layout'
-
+import store from '@/store'
 // Constants
 import staticRoutes from '@/router/modules/ADempiere/staticRoutes.js'
 
@@ -38,15 +38,20 @@ import { getCurrentClient, getCurrentOrganization, getCurrentRole } from '@/util
 export function loadMainMenu({
   role
 }) {
+  const language = store.getters['getCurrentLanguage']
   const clientId = getCurrentClient()
   const roleId = getCurrentRole()
   const organizationId = getCurrentOrganization()
 
   return new Promise(resolve => {
-    requestMenu().then(menuResponse => {
+    requestMenu({
+      roleId,
+      language,
+      clientId
+    }).then(menuResponse => {
       const asyncRoutesMap = []
 
-      menuResponse.children.forEach(menuElement => {
+      menuResponse.menus.forEach(menuElement => {
         const optionMenu = getRouteFromMenuItem({
           menu: menuElement,
           clientId,
