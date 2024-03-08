@@ -420,12 +420,6 @@ export const containerManager = {
     })
   },
 
-  getPageNumber({ containerUuid }) {
-    return store.getters.getBrowserPageNumber({
-      containerUuid
-    })
-  },
-
   setRow: ({ containerUuid, rowIndex, row }) => {
     return store.commit('setBrowserRow', {
       containerUuid,
@@ -456,18 +450,28 @@ export const containerManager = {
     })
   },
 
-  setPage: ({ containerUuid, pageNumber, pageSize }) => {
+  setPageNumber: ({ containerUuid, pageNumber, pageSize }) => {
     store.dispatch('getBrowserSearch', {
       containerUuid,
       pageSize,
       pageNumber
     })
   },
-  setSizePage: ({ containerUuid, pageSize, pageNumber = 1 }) => {
+  getPageNumber({ containerUuid }) {
+    return store.getters.getBrowserPageNumber({
+      containerUuid
+    })
+  },
+  setPageSize: ({ containerUuid, pageSize, pageNumber = 1 }) => {
     store.dispatch('getBrowserSearch', {
       containerUuid,
       pageNumber,
       pageSize
+    })
+  },
+  getPageSize({ containerUuid }) {
+    return store.getters.getBrowserPageSize({
+      containerUuid
     })
   },
 

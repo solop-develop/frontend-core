@@ -30,7 +30,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           @click="getListJobs"
         />
       </div>
-      <el-card class="box-card" style="margin: 0px 10px;padding: : 0px 10px;">
+      <el-card class="box-card" style="margin: 0px 10px;padding: 0px 10px;">
         <el-table
           v-if="isEmptyValue(currentJob)"
           :data="list"
