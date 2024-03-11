@@ -37,7 +37,8 @@ export function templateFields(field) {
     default_value,
     default_value_to,
     is_query_criteria,
-    element_column_name
+    element_column_name,
+    context_column_names
   } = field
   return {
     ...field,
@@ -51,8 +52,10 @@ export function templateFields(field) {
     defaultValueTo: default_value_to,
     isQueryCriteria: is_query_criteria,
     elementColumnName: element_column_name,
+    contextColumnNames: context_column_names,
     reference: {
-      tableName: ''
+      tableName: '',
+      contextColumnNames: context_column_names
     }
   }
 }
