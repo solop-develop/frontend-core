@@ -27,7 +27,7 @@ import { generateField } from '@/utils/ADempiere/dictionaryUtils'
 import { sortFields } from '@/utils/ADempiere/dictionary/panel'
 import { BUTTON, isAddRangeField, isHiddenField } from '@/utils/ADempiere/references'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
-import { templateFields } from '@/utils/ADempiere/dictionary/process/templateProcess.ts'
+import { templateFields } from '@/utils/ADempiere/dictionary/process/templateProcess.js'
 /**
  * Prefix to generate unique key
  */

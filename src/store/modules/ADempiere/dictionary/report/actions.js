@@ -42,6 +42,7 @@ import {
 import { generateProcess as generateReport, isDisplayedField } from '@/utils/ADempiere/dictionary/process.js'
 import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { definitionProcess } from '@/utils/ADempiere/dictionary/process/templateProcess.js'
 import {
   getCurrentClient, getCurrentRole
 } from '@/utils/ADempiere/auth'
@@ -87,7 +88,7 @@ export default {
         .then(async reportResponse => {
           const { uuid } = reportResponse
           const { processDefinition: reportDefinition } = generateReport({
-            processToGenerate: reportResponse
+            processToGenerate: definitionProcess(reportResponse.process)
           })
 
           await dispatch('getListPrintFormatsFromServer', {

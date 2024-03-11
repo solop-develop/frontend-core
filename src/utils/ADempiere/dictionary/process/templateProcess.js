@@ -50,6 +50,9 @@ export function templateFields(field) {
     defaultValue: default_value,
     defaultValueTo: default_value_to,
     isQueryCriteria: is_query_criteria,
-    elementColumnName: element_column_name
+    elementColumnName: element_column_name,
+    reference: {
+      tableName: ''
+    }
   }
 }
