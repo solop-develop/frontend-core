@@ -210,7 +210,7 @@ import { requestExistsIssues } from '@/api/ADempiere/logs/tabInfo/windowIssues.t
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
-import { showMessage } from '@/utils/ADempiere/notification'
+// import { showMessage } from '@/utils/ADempiere/notification'
 
 export default defineComponent({
   name: 'TabManager',
@@ -252,10 +252,12 @@ export default defineComponent({
     }
   },
 
-  setup(props, { root }) {
+  setup(props) {
+    const currentRoute = router.app._route
+
     const queryProperty = 'tab'
     // if tabParent is present in path set this
-    const tabNo = root.$route.query[queryProperty] || '0'
+    const tabNo = currentRoute.query[queryProperty] || '0'
     const currentTab = ref(tabNo)
 
     const tabUuid = ref(props.tabsList[tabNo].uuid)
@@ -365,7 +367,7 @@ export default defineComponent({
     })
 
     const isCreateNew = computed(() => {
-      return Boolean(root.$route.query.action === 'create-new')
+      return Boolean(currentRoute.query.action === 'create-new')
     })
 
     const isWithChildsTab = computed(() => {
@@ -482,11 +484,11 @@ export default defineComponent({
       }
       router.push({
         query: {
-          ...root.$route.query,
+          ...currentRoute.query,
           [queryProperty]: currentTab.value
         },
         params: {
-          ...root.$route.params
+          ...currentRoute.params
         }
       }, () => {})
 
@@ -499,9 +501,9 @@ export default defineComponent({
       })
     })
 
-    const query = root.$route.query
+    const query = currentRoute.query
 
-    const routerParams = root.$route.params
+    const routerParams = currentRoute.params
 
     // get records list
     const recordsList = computed(() => {
@@ -582,7 +584,7 @@ export default defineComponent({
         // uuid into action query
         if (!isEmptyValue(action) && action !== 'create-new') {
           if (action === 'zoomIn') {
-            const { columnName, value } = root.$route.query
+            const { columnName, value } = currentRoute.query
             row = responseData.find(rowData => {
               return rowData[columnName] === value
             })
@@ -606,34 +608,40 @@ export default defineComponent({
         })
         const recordId = currentRecordId.value
         router.push({
-          name: root.$route.name,
+          name: currentRoute.name,
           query: {
-            ...root.$route.query,
+            ...currentRoute.query,
             recordId
           },
           params: {
-            ...root.$route.params,
+            ...currentRoute.params,
             filter: {},
             recordId
           }
         }, () => {})
       })
     }
-    if (isReadyFromGetData.value || (!isReadyFromGetData.value &&
-      (!isEmptyValue(root.$route.params) || !isEmptyValue(root.$route.query)))) {
+    if (
+      isReadyFromGetData.value || (!isReadyFromGetData.value &&
+      (
+        !isEmptyValue(currentRoute.params.filters) ||
+        !isEmptyValue(currentRoute.query.referenceUuid)) ||
+        !isEmptyValue(currentRoute.query[currentTabTableName.value + '_ID'])
+      )
+    ) {
       getData()
     }
     watch(currentRecordLogs, (newValue, oldValue) => {
       const recordId = newValue[currentTabTableName.value + '_ID']
       router.push({
-        name: root.$route.name,
+        name: currentRoute.name,
         query: {
-          ...root.$route.query,
+          ...currentRoute.query,
           action: newValue.UUID,
           recordId
         },
         params: {
-          ...root.$route.params,
+          ...currentRoute.params,
           recordId
         }
       }, () => {})
@@ -802,13 +810,13 @@ export default defineComponent({
           countAttachment.value = response.resources.length
           showAttachmentAvailable.value = !isEmptyValue(response.resources)
         })
-        .catch(error => {
-          console.warn(`Error getting Count Attachment: ${error.message}. Code: ${error.code}.`)
-          showMessage({
-            message: error.message,
-            type: 'error'
-          })
-        })
+        // .catch(error => {
+        //   console.warn(`Error getting Count Attachment: ${error.message}. Code: ${error.code}.`)
+        //   showMessage({
+        //     message: error.message,
+        //     type: 'error'
+        //   })
+        // })
     }
 
     /**
