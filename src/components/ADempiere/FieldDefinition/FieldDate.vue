@@ -227,7 +227,7 @@ export default {
           startValue = undefined
           endValue = undefined
         }
-        if (typeof startValue !== 'object' && startValue !== undefined) {
+        if (typeof startValue !== 'object' && startValue !== undefined && this.isRenderRange) {
           startValue = changeTimeZone({
             value: startValue
           })
