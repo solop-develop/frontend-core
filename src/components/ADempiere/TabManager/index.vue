@@ -210,7 +210,7 @@ import { requestExistsIssues } from '@/api/ADempiere/logs/tabInfo/windowIssues.t
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
-import { showMessage } from '@/utils/ADempiere/notification'
+// import { showMessage } from '@/utils/ADempiere/notification'
 
 export default defineComponent({
   name: 'TabManager',
@@ -619,8 +619,14 @@ export default defineComponent({
         }, () => {})
       })
     }
-    if (isReadyFromGetData.value || (!isReadyFromGetData.value &&
-      (!isEmptyValue(root.$route.params) || !isEmptyValue(root.$route.query)))) {
+    if (
+      isReadyFromGetData.value || (!isReadyFromGetData.value &&
+      (
+        !isEmptyValue(root.$route.params.filters) ||
+        !isEmptyValue(root.$route.query.referenceUuid)) ||
+        !isEmptyValue(root.$route.query[currentTabTableName.value + '_ID'])
+      )
+    ) {
       getData()
     }
     watch(currentRecordLogs, (newValue, oldValue) => {
@@ -641,6 +647,7 @@ export default defineComponent({
     // if changed tab and not records in stored, get records from server
     watch(tabUuid, (newValue, oldValue) => {
       if (newValue !== oldValue && !isEmptyValue(recordUuidTabParent.value) && !tabData.value.isLoaded) {
+        console.log('epale')
         getData()
       }
     })
@@ -802,13 +809,13 @@ export default defineComponent({
           countAttachment.value = response.resources.length
           showAttachmentAvailable.value = !isEmptyValue(response.resources)
         })
-        .catch(error => {
-          console.warn(`Error getting Count Attachment: ${error.message}. Code: ${error.code}.`)
-          showMessage({
-            message: error.message,
-            type: 'error'
-          })
-        })
+        // .catch(error => {
+        //   console.warn(`Error getting Count Attachment: ${error.message}. Code: ${error.code}.`)
+        //   showMessage({
+        //     message: error.message,
+        //     type: 'error'
+        //   })
+        // })
     }
 
     /**
