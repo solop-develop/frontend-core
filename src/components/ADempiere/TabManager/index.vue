@@ -252,10 +252,12 @@ export default defineComponent({
     }
   },
 
-  setup(props, { root }) {
+  setup(props) {
+    const currentRoute = router.app._route
+
     const queryProperty = 'tab'
     // if tabParent is present in path set this
-    const tabNo = root.$route.query[queryProperty] || '0'
+    const tabNo = currentRoute.query[queryProperty] || '0'
     const currentTab = ref(tabNo)
 
     const tabUuid = ref(props.tabsList[tabNo].uuid)
@@ -365,7 +367,7 @@ export default defineComponent({
     })
 
     const isCreateNew = computed(() => {
-      return Boolean(root.$route.query.action === 'create-new')
+      return Boolean(currentRoute.query.action === 'create-new')
     })
 
     const isWithChildsTab = computed(() => {
@@ -482,11 +484,11 @@ export default defineComponent({
       }
       router.push({
         query: {
-          ...root.$route.query,
+          ...currentRoute.query,
           [queryProperty]: currentTab.value
         },
         params: {
-          ...root.$route.params
+          ...currentRoute.params
         }
       }, () => {})
 
@@ -499,9 +501,9 @@ export default defineComponent({
       })
     })
 
-    const query = root.$route.query
+    const query = currentRoute.query
 
-    const routerParams = root.$route.params
+    const routerParams = currentRoute.params
 
     // get records list
     const recordsList = computed(() => {
@@ -582,7 +584,7 @@ export default defineComponent({
         // uuid into action query
         if (!isEmptyValue(action) && action !== 'create-new') {
           if (action === 'zoomIn') {
-            const { columnName, value } = root.$route.query
+            const { columnName, value } = currentRoute.query
             row = responseData.find(rowData => {
               return rowData[columnName] === value
             })
@@ -606,13 +608,13 @@ export default defineComponent({
         })
         const recordId = currentRecordId.value
         router.push({
-          name: root.$route.name,
+          name: currentRoute.name,
           query: {
-            ...root.$route.query,
+            ...currentRoute.query,
             recordId
           },
           params: {
-            ...root.$route.params,
+            ...currentRoute.params,
             filter: {},
             recordId
           }
@@ -622,9 +624,9 @@ export default defineComponent({
     if (
       isReadyFromGetData.value || (!isReadyFromGetData.value &&
       (
-        !isEmptyValue(root.$route.params.filters) ||
-        !isEmptyValue(root.$route.query.referenceUuid)) ||
-        !isEmptyValue(root.$route.query[currentTabTableName.value + '_ID'])
+        !isEmptyValue(currentRoute.params.filters) ||
+        !isEmptyValue(currentRoute.query.referenceUuid)) ||
+        !isEmptyValue(currentRoute.query[currentTabTableName.value + '_ID'])
       )
     ) {
       getData()
@@ -632,14 +634,14 @@ export default defineComponent({
     watch(currentRecordLogs, (newValue, oldValue) => {
       const recordId = newValue[currentTabTableName.value + '_ID']
       router.push({
-        name: root.$route.name,
+        name: currentRoute.name,
         query: {
-          ...root.$route.query,
+          ...currentRoute.query,
           action: newValue.UUID,
           recordId
         },
         params: {
-          ...root.$route.params,
+          ...currentRoute.params,
           recordId
         }
       }, () => {})
@@ -647,7 +649,6 @@ export default defineComponent({
     // if changed tab and not records in stored, get records from server
     watch(tabUuid, (newValue, oldValue) => {
       if (newValue !== oldValue && !isEmptyValue(recordUuidTabParent.value) && !tabData.value.isLoaded) {
-        console.log('epale')
         getData()
       }
     })
