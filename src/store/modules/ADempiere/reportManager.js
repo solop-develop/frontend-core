@@ -164,15 +164,20 @@ const reportManager = {
           }
         }
 
+        const recordId = rootGetters.getIdOfContainer({
+          containerUuid,
+          tableName
+        })
         generateReportRequest({
           id: reportDefinition.id,
           reportType,
           parameters,
           printFormatId,
-          reportViewId
-          // tableName,
+          reportViewId,
           // isSummary,
-          // recordUuid
+          // window
+          tableName,
+          recordId
         })
           .then(runReportRepsonse => {
             const { instance_id, output, is_error } = runReportRepsonse
