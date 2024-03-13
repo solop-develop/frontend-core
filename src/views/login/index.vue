@@ -1,3 +1,22 @@
+<!--
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com www.erpya.com https://github.com/elsiosanchez
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
+-->
+
 <template>
   <div
     class="login-container"
@@ -43,7 +62,7 @@
         />
       </el-form-item>
 
-      <el-tooltip v-model="capsTooltip" :content="$t('page.login.capsLock')" placement="right" manual>
+      <el-tooltip v-model="isCapsTooltip" :content="$t('page.login.capsLock')" placement="right" manual>
         <el-form-item prop="password">
           <span class="svg-container">
             <svg-icon icon-class="password" />
@@ -58,7 +77,7 @@
             tabindex="2"
             autocomplete="on"
             @keyup.native="checkCapslock"
-            @blur="capsTooltip = false"
+            @blur="isCapsTooltip = false"
             @keyup.enter.native="handleLogin"
           />
           <span class="show-pwd" @click="showPwd">
@@ -178,7 +197,7 @@ export default {
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       passwordType: 'password',
-      capsTooltip: false,
+      isCapsTooltip: false,
       loading: false,
       showDialog: false,
       redirect: undefined,
@@ -231,7 +250,10 @@ export default {
   methods: {
     checkCapslock(e) {
       const { key } = e
-      this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
+      this.isCapsTooltip = key &&
+        key.length === 1 &&
+        key >= 'A' &&
+        key <= 'Z'
     },
     jumpToPassword() {
       this.$refs.password.focus()
@@ -360,10 +382,18 @@ export default {
     },
     cleanPath() {
       const href = window.location.href
-      if (href.includes('state=')) {
-        const index = href.indexOf('state=')
-        window.location.href = href.substring(0, index)
+      if (!href.includes('state=')) {
+        return
       }
+      const index = href.indexOf('state=')
+      if (index < 0) {
+        return
+      }
+      let newLocation = href.substring(0, index)
+      if (newLocation.endsWith('?')) {
+        newLocation = newLocation.substring(0, newLocation.length - 1)
+      }
+      window.location.href = newLocation
     },
     initialBasicServices() {
       this.listAuthorization()
