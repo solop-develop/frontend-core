@@ -39,7 +39,7 @@ export function generateReportRequest({
   isSummary,
   // window
   tableName,
-  recordId,
+  recordId
 }) {
   return request({
     url: `/report-management/report/${id}`,
