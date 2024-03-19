@@ -56,6 +56,22 @@ export function requestListWarehouses({
   })
 }
 
+export function requestGetPriceListVersion({
+  priceListId,
+  dateOrdered,
+  dateInvoiced
+}) {
+  return request({
+    url: `/field/products/prices-lists-versions/${priceListId}`,
+    method: 'get',
+    params: {
+      // price_list_id: priceListId,
+      date_ordered: dateOrdered,
+      date_invoiced: dateInvoiced
+    }
+  })
+}
+
 export function requestListPricesListVersions({
   contextAttributesList,
   filters,
