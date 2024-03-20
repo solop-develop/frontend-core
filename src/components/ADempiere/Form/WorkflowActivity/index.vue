@@ -19,10 +19,10 @@
 <template>
   <div style="height: 90vh">
     <el-card
-      style="height: 100%;"
+      style="height: 100vh;"
       :body-style="{ padding: '10px', height: '100%' }"
     >
-      <div style="height: 65% !important;">
+      <div style="height: 40% !important;">
         <el-row
           :gutter="10"
           style="height: 100%;"
@@ -32,8 +32,8 @@
             style="height: 100%;"
           >
             <el-card
-              style="height: 100%;"
-              :body-style="{ padding: '5px', height: '90%' }"
+              style="height: 100%;text-align: center;"
+              :body-style="{ padding: '5px', height: '70%' }"
             >
               <b
                 slot="header"
@@ -41,11 +41,12 @@
                 {{ $t('form.workflowActivity.title') }}
               </b>
               <el-table
+                class="business-partners-table_worck"
                 :data="activityList"
                 highlight-current-row
-                style="width: 100%;height: 100%"
+                style="width: 100%;height: 100%;"
                 border
-                height="60% !important"
+                height="65% !important"
                 @current-change="handleCurrentChange"
               >
                 <index-column
@@ -56,7 +57,7 @@
                   :key="workflowColumn.columnName"
                   :column-key="workflowColumn.columnName"
                   :label="workflowColumn.name"
-                  :align="workflowColumn.isNumeric ? 'right' : 'left'"
+                  :align="workflowColumn.isNumeric ? 'right' : 'center'"
                   :prop="workflowColumn.columnName"
                   :width="workflowColumn.width"
                 />
@@ -112,10 +113,10 @@
           </el-col>
         </el-row>
       </div>
-      <div style="height: 35% !important;">
+      <div style="height: 60% !important;">
         <el-card
-          style="height: 100%;"
-          :body-style="{ padding: '10px', height: '100%' }"
+          style="height: 100%"
+          :body-style="{ padding: '10px', height: '100%'}"
         >
           <el-form
             v-show="!isEmptyValue(currentActivity)"
@@ -155,7 +156,7 @@
           </el-form>
           <v-md-editor
             v-model="message"
-            height="200px"
+            height="55%"
           />
           <p style="text-align: end; width: 100%;margin: 5px;">
             <el-button
@@ -302,7 +303,7 @@ export default defineComponent({
           columnName: 'node.name',
           name: lang.t('form.workflowActivity.table.node'),
           isNumeric: false,
-          width: 250
+          width: 'auto'
         },
         {
           columnName: 'summary',
@@ -641,6 +642,29 @@ export default defineComponent({
   }
   .el-card__body {
     height: 95% !important;
+  }
+}
+.business-partners-table_worck{
+  &.el-table {
+    .el-table__body {
+      .el-table__row {
+        .el-table__cell {
+          padding-top: 5px;
+          padding-bottom: 3px;
+          .cell {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+            word-break: break-all;
+            line-height: 15px;
+            padding-left: 10px;
+            padding-right: 10px;
+          }
+        }
+      }
+    }
   }
 }
 </style>

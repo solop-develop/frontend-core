@@ -7,7 +7,7 @@
   },
   "adempiere": {
     "api": {
-      "url": "http://localhost/api/",
+      "url": "http://10.11.12.136:81/api/",
       "timeout": 99999999
     },
     "images": {
