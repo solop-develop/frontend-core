@@ -25,7 +25,7 @@
       <div style="height: 65% !important;">
         <el-row
           :gutter="10"
-          style="height: 70%;"
+          style="height: 65%;"
         >
           <el-col
             :span="12"
@@ -41,6 +41,7 @@
                 {{ $t('form.workflowActivity.title') }}
               </b>
               <el-table
+                class="business-partners-table_v"
                 :data="activityList"
                 highlight-current-row
                 style="width: 100%;height: 100%"
@@ -114,7 +115,7 @@
       </div>
       <div style="height:100% !important">
         <el-card
-          style="height:auto; margin-top: -8%;"
+          style="height:50%; margin-top: -8%;"
           :body-style="{ padding: '10px', height: '100%' }"
         >
           <el-form
@@ -626,6 +627,29 @@ export default defineComponent({
   }
   .el-card__body {
     height: 80% !important;
+  }
+}
+.business-partners-table_v {
+  &.el-table {
+    .el-table__body {
+      .el-table__row {
+        .el-table__cell {
+          padding-top: 5px;
+          padding-bottom: 3px;
+          .cell {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+            word-break: break-all;
+            line-height: 15px;
+            padding-left: 10px;
+            padding-right: 10px;
+          }
+        }
+      }
+    }
   }
 }
 .headerLogs {
