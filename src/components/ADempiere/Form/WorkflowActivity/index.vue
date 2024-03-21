@@ -41,7 +41,7 @@
                 {{ $t('form.workflowActivity.title') }}
               </b>
               <el-table
-                class="business-partners-table_v"
+                class="workflow-activity-table"
                 :data="activityList"
                 highlight-current-row
                 style="width: 100%;height: 100%"
@@ -629,7 +629,7 @@ export default defineComponent({
     height: 80% !important;
   }
 }
-.business-partners-table_v {
+.workflow-activity-table {
   &.el-table {
     .el-table__body {
       .el-table__row {
