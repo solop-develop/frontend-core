@@ -25,7 +25,7 @@
       <div style="height: 65% !important;">
         <el-row
           :gutter="10"
-          style="height: 100%;"
+          style="height: 70%;"
         >
           <el-col
             :span="12"
@@ -33,7 +33,7 @@
           >
             <el-card
               style="height: 100%;"
-              :body-style="{ padding: '5px', height: '90%' }"
+              :body-style="{ padding: '5px', height: '70%' }"
             >
               <b
                 slot="header"
@@ -112,9 +112,9 @@
           </el-col>
         </el-row>
       </div>
-      <div style="height: 35% !important;">
+      <div style="height:100% !important">
         <el-card
-          style="height: 100%;"
+          style="height:auto; margin-top: -8%;"
           :body-style="{ padding: '10px', height: '100%' }"
         >
           <el-form
@@ -155,7 +155,7 @@
           </el-form>
           <v-md-editor
             v-model="message"
-            height="200px"
+            height="70%"
           />
           <p style="text-align: end; width: 100%;margin: 5px;">
             <el-button
@@ -192,7 +192,7 @@
       size="50%"
     >
       <h3 slot="title" style="text-align: center;margin: 0px;">
-        {{ $t('form.workflowActivity.filtersSearch.workFlowDiagram') }}
+        {{ $t('form.workflowActivity.filtersSearch.workFlowDiagram ') }}
       </h3>
       <workflow-diagram
         v-if="(!isEmptyValue(workflowStatesList) && !isEmptyValue(currentActivity))"
@@ -302,7 +302,7 @@ export default defineComponent({
           columnName: 'node.name',
           name: lang.t('form.workflowActivity.table.node'),
           isNumeric: false,
-          width: 250
+          width: 'auto'
         },
         {
           columnName: 'summary',
