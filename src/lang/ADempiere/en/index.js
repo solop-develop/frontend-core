@@ -117,7 +117,7 @@ export default {
       link: 'Go to Procces Logs'
     },
     resetCache: 'Cache Reset',
-    dashboard: 'Graphic',
+    dashboard: 'Graphic ',
     github: 'Github',
     logOut: 'Log Out',
     profile: 'Profile',
