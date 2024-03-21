@@ -192,7 +192,7 @@
       size="50%"
     >
       <h3 slot="title" style="text-align: center;margin: 0px;">
-        {{ $t('form.workflowActivity.filtersSearch.workFlowDiagram') }}
+        {{ $t('form.workflowActivity.filtersSearch.workFlowDiagram ') }}
       </h3>
       <workflow-diagram
         v-if="(!isEmptyValue(workflowStatesList) && !isEmptyValue(currentActivity))"

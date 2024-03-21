@@ -24,7 +24,7 @@ const workflowActivity = {
     user: 'Usuario',
     approve: 'Aprobar',
     workFlowDiagram: 'Diagrama del Flujo de Trabajo',
-    seeFlowDiagram: 'Ver Diagrama de Flujo'
+    seeFlowDiagram: 'Ver Diagrama de Flujo '
   },
   table: {
     priority: 'Prioridad',
