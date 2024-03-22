@@ -24,10 +24,10 @@
       <el-descriptions-item
         v-for="log in comment.change_logs"
         :key="log.id"
-        label-style="{ color: #606266; font-weight: bold; }"
+        label-style="{ color: #606266;  }"
       >
         <template slot="label">
-          <span style="color: #606266; font-weight: bold;padding-right: 5px;">
+          <span style="color: #606266; padding-right: 5px;">
             {{ log.label }}
           </span>
           <!-- ({{ log.column_name }}) -->
