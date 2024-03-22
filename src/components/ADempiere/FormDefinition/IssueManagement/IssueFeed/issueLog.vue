@@ -30,7 +30,7 @@
           <span style="color: #606266; font-weight: bold;padding-right: 5px;">
             {{ log.label }}
           </span>
-          ({{ log.column_name }})
+          <!-- ({{ log.column_name }}) -->
         </template>
 
         <span style="font-weight: bold;">
