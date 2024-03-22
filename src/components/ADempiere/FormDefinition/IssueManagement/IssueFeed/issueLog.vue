@@ -18,7 +18,7 @@
 
 <template>
   <el-card class="list-comments">
-    <issue-avatar :user="comment.user" />
+    <issue-avatar :user="comment.user" style="font-size: 80%" />
 
     <el-descriptions :column="1">
       <el-descriptions-item
@@ -27,7 +27,7 @@
         label-style="{ color: #606266;  }"
       >
         <template slot="label">
-          <span style="color: #606266; padding-right: 5px;">
+          <span style="color: #606266; padding-right: 5px; font-size: 80%">
             {{ log.label }}
           </span>
           <!-- ({{ log.column_name }}) -->
