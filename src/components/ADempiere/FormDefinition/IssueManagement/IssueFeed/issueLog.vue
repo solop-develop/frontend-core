@@ -18,7 +18,7 @@
 
 <template>
   <el-card class="list-comments">
-    <issue-avatar :user="comment.user" style="font-size: 80%" />
+    <issue-avatar :user="comment.user" style="font-size: 10px" />
     <el-descriptions :column="1">
       <el-descriptions-item
         v-for="log in comment.change_logs"
@@ -26,7 +26,7 @@
         label-style="{ color: #606266;  }"
       >
         <template slot="label">
-          <span style="color: #606266; padding-right: 5px; font-size: 80%">
+          <span style="color: #606266; padding-right: 5px; font-size: 10px">
             {{ log.label }}
           </span>
           <!-- ({{ log.column_name }}) -->
