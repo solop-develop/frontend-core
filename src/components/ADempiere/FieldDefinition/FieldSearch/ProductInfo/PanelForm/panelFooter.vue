@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <el-row :gutter="24" class="business-partners-footer">
+  <el-row :gutter="24" class="products-footer">
     <el-col :span="14">
       <custom-pagination
         :container-manager="containerManager"
@@ -79,6 +79,7 @@ import {
   PRODUCT_LIST_FORM,
   COLUMN_NAME
 } from '@/utils/ADempiere/dictionary/field/search/product.ts'
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 // Components and Mixins
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
@@ -151,12 +152,28 @@ export default defineComponent({
       return fieldSearchData.value.recordCount
     })
 
-    const pageNumber = computed(() => {
-      return fieldSearchData.value.pageNumber
+    const pageNumber = computed({
+      set(newValue) {
+        store.commit('setProductSearchFieldPageNumber', {
+          containerUuid: props.uuidForm,
+          pageNumber: newValue
+        })
+      },
+      get() {
+        return fieldSearchData.value.pageNumber
+      }
     })
 
-    const pageSize = computed(() => {
-      return fieldSearchData.value.pageSize
+    const pageSize = computed({
+      set(newValue) {
+        store.commit('setProductSearchFieldPageSize', {
+          containerUuid: props.uuidForm,
+          pageSize: newValue
+        })
+      },
+      get() {
+        return fieldSearchData.value.pageSize
+      }
     })
 
     const rowIndex = computed(() => {
@@ -168,6 +185,8 @@ export default defineComponent({
     })
 
     function clearCriteriaValues() {
+      pageNumber.value = 1
+      pageSize.value = ROWS_OF_RECORDS_BY_PAGE
       store.commit('setProductSearchFieldQueryFilters', {
         containerUuid: props.uuidForm,
         queryFilters: {}
@@ -188,14 +207,16 @@ export default defineComponent({
       closeList()
     }
 
-    function setPageNumber(pageNumber) {
+    function setPageNumber(newPageNumber) {
       loadRecordsList({
-        pageNumber
+        pageNumber: newPageNumber,
+        pageSize: pageSize.value
       })
     }
-    function setPageSize(pageSize) {
+    function setPageSize(newPageSize) {
       loadRecordsList({
-        pageSize
+        pageSize: newPageSize,
+        pageNumber: pageNumber.value
       })
     }
 
