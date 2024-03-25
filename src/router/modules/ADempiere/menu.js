@@ -16,8 +16,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Layout from '@/layout'
 import store from '@/store'
+
+// Components
+import Layout from '@/layout'
+
 // Constants
 import staticRoutes from '@/router/modules/ADempiere/staticRoutes.js'
 
