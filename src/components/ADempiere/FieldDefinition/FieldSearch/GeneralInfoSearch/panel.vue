@@ -103,7 +103,7 @@
           :selection="selection"
           :page-number="pageNumber"
           :page-size="recordsList.length"
-          :handle-change-page-number="setPage"
+          :handle-change-page-number="setPageNumber"
           :handle-change-page-size="handleChangeSizePage"
         />
       </el-col>
@@ -255,7 +255,7 @@ export default {
         isDisplayedDefault: () => { return true },
         isReadOnlyColumn: ({ field, row }) => { return true },
         setDefaultValues: () => {},
-        setPage: this.setPage
+        setPageNumber: this.setPageNumber
       }
     },
     storedFieldsListQuery() {
@@ -371,7 +371,7 @@ export default {
         show: false
       })
     },
-    setPage(pageNumber) {
+    setPageNumber(pageNumber) {
       this.getListSearchRecords(pageNumber, this.pageSize)
     },
     subscribeChanges() {

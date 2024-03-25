@@ -56,7 +56,7 @@
               :total-records="recordCount"
               :page-number="currentPagePagination"
               :page-size="activityList.length"
-              :handle-change-page-number="setPage"
+              :handle-change-page-number="setPageNumber"
               :handle-change-page-size="handleChangeSizePage"
             />
           </el-card>
@@ -227,7 +227,7 @@
           :total-records="recordCount"
           :page-number="currentPagePagination"
           :page-size="activityList.length"
-          :handle-change-page-number="setPage"
+          :handle-change-page-number="setPageNumber"
           :handle-change-page-size="handleChangeSizePage"
         />
       </el-card>
@@ -509,7 +509,7 @@ export default {
         getFieldsLit: () => {},
         isReadOnlyColumn: ({ field, row }) => { return true },
         setDefaultValues: () => {},
-        setPage: this.setPage
+        setPageNumber: this.setPageNumber
       }
     },
     currentPagePagination() {
@@ -548,7 +548,7 @@ export default {
       activity = this.activityList.find(activity => activity.node === this.currentActivity.node)
       // this.$refs.WorkflowActivity.setCurrentRow(activity)
     },
-    setPage(pageNumber) {
+    setPageNumber(pageNumber) {
       this.$store.dispatch('serverListActivity', { pageNumber })
     },
     handleChangeSizePage(pageSize) {

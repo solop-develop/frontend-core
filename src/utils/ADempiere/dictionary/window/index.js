@@ -2012,7 +2012,7 @@ export const containerManager = {
   },
 
   // To Default Table
-  setPage: ({
+  setPageNumber: ({
     parentUuid,
     containerUuid,
     pageSize,
@@ -2030,10 +2030,14 @@ export const containerManager = {
       pageNumber
     })
   },
-  setSizePage: ({
+  getPageNumber({ containerUuid }) {
+    return store.getters.getTabPageNumber({
+      containerUuid
+    })
+  },
+  setPageSize: ({
     parentUuid,
     containerUuid,
-    pageNumber = 1,
     pageSize = 15
   }) => {
     const filters = store.getters.getTabDataFilters({
@@ -2044,12 +2048,11 @@ export const containerManager = {
       parentUuid,
       containerUuid,
       filters,
-      pageSize,
-      pageNumber
+      pageSize
     })
   },
-  getPageNumber({ containerUuid }) {
-    return store.getters.getTabPageNumber({
+  getPageSize({ containerUuid }) {
+    return store.getters.getTabPageSize({
       containerUuid
     })
   },

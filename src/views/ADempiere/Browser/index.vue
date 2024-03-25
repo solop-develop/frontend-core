@@ -409,6 +409,7 @@ export default defineComponent({
 <style lang="scss">
 // Browser View
 .browser-view {
+  height: 90%;
   .browser-collapse {
     margin-bottom: 10px;
   }

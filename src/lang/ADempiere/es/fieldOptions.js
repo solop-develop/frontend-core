@@ -41,7 +41,9 @@ const fieldOptions = {
   },
   // field info
   info: {
+    currentValue: 'Valor Actual',
     defaultValue: 'Valor Predeterminado',
+    defaultValueTo: 'Valor Predeterminado Hasta',
     displayLogic: 'Lógica de Visualización',
     readOnlyLogic: 'Lógica de Solo Lectura',
     mandatoryLogic: 'Lógica de Obligatoriedad'

@@ -30,7 +30,7 @@ import { getMetricRequest } from '@/api/ADempiere/dashboard/index.ts'
 // Utils and Helper Methods
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 
-const animationDuration = 2800
+// const animationDuration = 2800
 
 export default {
   mixins: [resize],
@@ -146,15 +146,11 @@ export default {
         seriesToShow = metrics.series.map(serie => {
           return {
             name: serie.name,
-            stack: 'vistors',
-            barWidth: '60%',
             data: serie.data_set.map(set => set.value),
-            animationDuration,
-            smooth: true,
             type: 'line',
-            animationEasing: 'quadraticOut',
-            lineStyle: {
-              width: 2
+            smooth: true,
+            emphasis: {
+              focus: 'series'
             }
           }
         })

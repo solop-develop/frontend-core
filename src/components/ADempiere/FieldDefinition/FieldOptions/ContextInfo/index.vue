@@ -59,11 +59,31 @@
         </el-form-item>
 
         <el-form-item
+          v-if="!isEmptyValue(valueField)"
+          :label="$t('fieldOptions.info.currentValue')"
+          class="justify-text"
+        >
+          <template v-if="!isEmptyValue(displayValueField)">
+            {{ displayValueField }} =
+          </template>
+          <b>
+            {{ valueField }}
+          </b>
+        </el-form-item>
+
+        <el-form-item
           v-if="!isEmptyValue(fieldAttributes.defaultValue)"
           :label="$t('fieldOptions.info.defaultValue')"
           class="justify-text"
         >
           <pre>{{ fieldAttributes.defaultValue }}</pre>
+        </el-form-item>
+        <el-form-item
+          v-if="fieldAttributes.isRange && !isEmptyValue(fieldAttributes.defaultValueTo)"
+          :label="$t('fieldOptions.info.defaultValue')"
+          class="justify-text"
+        >
+          <pre>{{ fieldAttributes.defaultValueTo }}</pre>
         </el-form-item>
 
         <el-form-item
@@ -111,10 +131,14 @@ import { defineComponent, computed, onMounted } from '@vue/composition-api'
 
 import store from '@/store'
 
+// Constants
+import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
+
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { parseContext } from '@/utils/ADempiere/contextUtils'
 import { zoomInOptionItem } from '@/components/ADempiere/FieldDefinition/FieldOptions/fieldOptionsList'
+import { isLookup } from '@/utils/ADempiere/references'
 
 export default defineComponent({
   name: 'ContextInfo',
@@ -127,12 +151,23 @@ export default defineComponent({
   },
 
   setup(props) {
-    const fieldValue = computed(() => {
+    const valueField = computed(() => {
       const { parentUuid, containerUuid, columnName } = props.fieldAttributes
       return store.getters.getValueOfFieldOnContainer({
         parentUuid,
         containerUuid,
         columnName
+      })
+    })
+    const displayValueField = computed(() => {
+      if (!isLookup(props.fieldAttributes.displayType)) {
+        return null
+      }
+      const { parentUuid, containerUuid, columnName } = props.fieldAttributes
+      return store.getters.getValueOfFieldOnContainer({
+        parentUuid,
+        containerUuid,
+        columnName: DISPLAY_COLUMN_PREFIX + columnName
       })
     })
 
@@ -157,7 +192,7 @@ export default defineComponent({
       zoomInOptionItem.executeMethod({
         window,
         fieldAttributes: props.fieldAttributes,
-        value: fieldValue.value
+        value: valueField.value
       })
     }
 
@@ -181,6 +216,8 @@ export default defineComponent({
 
     return {
       // Computeds
+      valueField,
+      displayValueField,
       messageText,
       // Methods
       redirect

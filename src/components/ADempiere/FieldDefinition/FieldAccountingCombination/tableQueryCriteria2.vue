@@ -128,7 +128,7 @@
           :total="recordData.recordCount"
           :current-page="pageNumber"
           :container-manager="containerManagerSearchList"
-          :handle-change-page="setPage"
+          :handle-change-page="setPageNumber"
           :records-page="recordsList.length"
           :selection="selection"
         />
