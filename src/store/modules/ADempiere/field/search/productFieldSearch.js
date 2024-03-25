@@ -166,6 +166,31 @@ const productFieldSearch = {
       Vue.set(state.productData[containerUuid].queryFilters, attributeKey, value)
     },
 
+    setProductSearchFieldPageNumber(state, {
+      containerUuid,
+      pageNumber = 1
+    }) {
+      if (isEmptyValue(state.productData[containerUuid])) {
+        Vue.set(state.productData, containerUuid, {
+          ...state.emptyProductData,
+          containerUuid
+        })
+      }
+      Vue.set(state.productData[containerUuid], 'pageNumber', pageNumber)
+    },
+    setProductSearchFieldPageSize(state, {
+      containerUuid,
+      pageSize = ROWS_OF_RECORDS_BY_PAGE
+    }) {
+      if (isEmptyValue(state.productData[containerUuid])) {
+        Vue.set(state.productData, containerUuid, {
+          ...state.emptyProductData,
+          containerUuid
+        })
+      }
+      Vue.set(state.productData[containerUuid], 'pageSize', pageSize)
+    },
+
     /**
      * Change showed list of business partner
      * TODO: Used only POS form

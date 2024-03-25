@@ -61,7 +61,7 @@
           <el-col :span="6">
             <text-field
               :uuid-form="uuidForm"
-              attribute-key="value"
+              attribute-key="sku"
               :label="$t('field.product.sku')"
             />
           </el-col>
