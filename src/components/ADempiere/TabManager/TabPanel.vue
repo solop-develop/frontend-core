@@ -316,10 +316,6 @@ export default defineComponent({
 
     const commonFilterFielsProperties = computed(() => {
       if (isShowedTableRecords.value) {
-        console.log({
-          changeColumnShowedFromUser: props.containerManager.changeColumnShowedFromUser,
-          isDisplayedColumn: props.containerManager.isDisplayedColumn
-        })
         return {
           filterManager: props.containerManager.changeColumnShowedFromUser,
           showedManager: props.containerManager.isDisplayedColumn
