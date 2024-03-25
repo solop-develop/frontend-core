@@ -19,16 +19,16 @@
 <template>
   <el-card class="list-comments">
     <issue-avatar :user="comment.user" style="font-size: 10px" />
-    <el-descriptions :column="1">
+    <el-descriptions :column="1" style="margin-top: 10px; margin-bottom:10px">
       <el-descriptions-item
         v-for="log in comment.change_logs"
         :key="log.id"
-        label-style="{ color: #606266;  }"
+        label-style="{ color: #606266; }"
       >
         <template slot="label">
-          <span style="color: #606266; padding-right: 5px; font-size: 10px">
+          <label style="color: #606266;padding-right: 5px; font-size: 10px">
             {{ log.label }}
-          </span>
+          </label>
           <!-- ({{ log.column_name }}) -->
         </template>
         <span style="font-weight: bold">

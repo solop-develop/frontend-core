@@ -2844,7 +2844,7 @@ export default defineComponent({
 }
 .list-comments {
   .comments-card .el-card__header {
-    padding-top: 5px;
+    padding-top: 20px;
     padding-right: 10px;
     padding-bottom: 5px;
     padding-left: 10px;
@@ -2862,7 +2862,7 @@ export default defineComponent({
     box-sizing: border-box;
   }
   .el-card__body {
-    padding-top: 0px !important;
+    padding-top: 20px !important;
     padding-right: 10px;
     padding-bottom: 0px!important;
     padding-left: 10px;
