@@ -408,6 +408,7 @@ export default {
           return !isEmptyValue(attribute.value)
         })
         .map(attribute => {
+          console.log({ attribute })
           if (attribute.value.startsWith('%') || attribute.value.endsWith('%')) {
             return {
               ...attribute,

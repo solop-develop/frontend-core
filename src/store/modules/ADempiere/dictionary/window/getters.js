@@ -25,7 +25,7 @@ import { ID, YES_NO } from '@/utils/ADempiere/references'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import {
   isDisplayedColumn, isDisplayedField, isMandatoryColumn, isMandatoryField
-} from '@/utils/ADempiere/dictionary/window.js'
+} from '@/utils/ADempiere/dictionary/window/index.js'
 import { getContext } from '@/utils/ADempiere/contextUtils'
 import { getContextDefaultValue } from '@/utils/ADempiere/contextUtils/contextField'
 import { isSupportLookup } from '@/utils/ADempiere/references'
@@ -370,7 +370,7 @@ export default {
     // all optionals (not mandatory) fields
     return fieldsList
       .filter(fieldItem => {
-        if (!fieldItem.isActive || !fieldItem.isDisplayed) {
+        if (!fieldItem.isDisplayed) {
           return
         }
         const isMandatory = mandatoryMethod(fieldItem)

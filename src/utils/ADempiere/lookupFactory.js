@@ -207,9 +207,6 @@ export function createFieldFromDefinition({
       columnName.indexOf('_ID') > 0) {
       definition.tableName = columnName.replace('_ID', '')
     }
-    if (isEmptyValue(definition.isActive)) {
-      definition.isActive = true
-    }
     if (isEmptyValue(definition.isDisplayed)) {
       definition.isDisplayed = true
     }

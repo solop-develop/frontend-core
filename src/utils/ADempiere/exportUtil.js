@@ -182,7 +182,7 @@ export const exportRecords = ({ parentUuid, containerUuid, containerManager, for
   }).filter(fieldItem => {
     // TODO: Verify with containerManager.isDisplayedColumn
     // Hide not displayed fields
-    if (!(fieldItem.isDisplayed && fieldItem.isDisplayedGrid)) {
+    if (!(fieldItem.isDisplayed && fieldItem.is_displayed_grid)) {
       return false
     }
     // Hide encrypted fields
@@ -193,7 +193,7 @@ export const exportRecords = ({ parentUuid, containerUuid, containerManager, for
     if (fieldItem.displayType === BUTTON.id) { // && fieldItem.referenceValue === 0) {
       return false
     }
-    if (fieldItem.isActive && !fieldItem.isKey && fieldItem.sequence > 0) {
+    if (!fieldItem.isKey && fieldItem.sequence > 0) {
       return true
     }
     return false

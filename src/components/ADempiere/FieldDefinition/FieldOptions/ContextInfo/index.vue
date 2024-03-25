@@ -138,7 +138,7 @@ export default defineComponent({
 
     const messageText = computed(() => {
       const { contextInfo } = props.fieldAttributes
-      if (!isEmptyValue(contextInfo.sqlStatement)) {
+      if (!isEmptyValue(contextInfo) && !isEmptyValue(contextInfo.sqlStatement)) {
         const storedContextInfo = store.getters.getContextInfoField(
           contextInfo.uuid,
           contextInfo.sqlStatement
@@ -162,7 +162,7 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      if (!isEmptyValue(props.fieldAttributes.contextInfo.sqlStatement)) {
+      if (!isEmptyValue(props.fieldAttributes.contextInfo) && !isEmptyValue(props.fieldAttributes.contextInfo.sqlStatement)) {
         const sqlParse = parseContext({
           parentUuid: props.fieldAttributes.parentUuid,
           containerUuid: props.fieldAttributes.containerUuid,

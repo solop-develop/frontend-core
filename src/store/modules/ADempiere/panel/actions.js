@@ -77,7 +77,7 @@ const actions = {
           // })
         }
         //  Get dependent fields
-        if (!isEmptyValue(itemField.parentFieldsList) && itemField.isActive) {
+        if (!isEmptyValue(itemField.parentFieldsList)) {
           itemField.parentFieldsList.forEach(parentColumnName => {
             const parentField = listFields.find(parentFieldItem => {
               return parentFieldItem.columnName === parentColumnName &&

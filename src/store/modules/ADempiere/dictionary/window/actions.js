@@ -50,6 +50,9 @@ import {
   recordAccess,
   undoChange
 } from '@/utils/ADempiere/dictionary/window'
+import {
+  getCurrentClient, getCurrentRole
+} from '@/utils/ADempiere/auth'
 import { panelAdvanceQuery } from '@/utils/ADempiere/dictionary/panel.js'
 import {
   exportRecordsSelected,
@@ -92,12 +95,21 @@ export default {
   getWindowDefinitionFromServer({ dispatch, rootGetters }, {
     id
   }) {
+    const language = rootGetters['getCurrentLanguage']
+    const clientId = getCurrentClient()
+    const roleId = getCurrentRole()
+    const userId = rootGetters['user/getUserId']
+
     return new Promise(resolve => {
       requestWindowMetadata({
-        id
+        id,
+        language,
+        clientId,
+        roleId,
+        userId
       })
         .then(async windowResponse => {
-          const window = generateWindow(windowResponse)
+          const window = generateWindow(windowResponse.window)
           dispatch('addWindow', window)
 
           resolve(window)
