@@ -2383,7 +2383,7 @@ export default defineComponent({
 
     const cssStyleButton = computed(() => {
       if (isMobile.value) {
-        return 'padding-top: 20px;padding-bottom: 10px;text-align: center;margin-bottom: 0px !important;'
+        return 'padding-top: 20px;text-align: center;margin-bottom: 0px !important;'
       }
       return 'padding-top: 35px;'
     })
