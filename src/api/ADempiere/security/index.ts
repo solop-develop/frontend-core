@@ -146,7 +146,7 @@ export function requestMenu({
   clientId
 }) {
   return request({
-    url: '/menu',
+    url: '/security/menu',
     method: 'get',
     params: {
       language,

@@ -18,7 +18,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <template>
   <el-button
-    v-if="!isEmptyValue(process) && isDocument"
+    v-if="!isEmptyValue(process) && is_document"
     plain
     type="info"
     size="small"
@@ -61,7 +61,7 @@ export default defineComponent({
      */
     const containerUuid = props.tabAttributes.uuid
     const { process } = props.tabAttributes
-    const { isDocument } = props.tabAttributes
+    const { is_document } = props.tabAttributes
     /**
      * Methods
      */
@@ -79,7 +79,7 @@ export default defineComponent({
     return {
       // Const
       process,
-      isDocument,
+      is_document,
       // Methods
       printProcess
     }

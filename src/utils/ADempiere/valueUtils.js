@@ -367,7 +367,7 @@ export function parsedValueComponent({
             returnValue = 0
           }
         }
-      } else if (typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'query')) {
+      } else if (value && typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'query')) {
         returnValue = value
       } else {
         if (Array.isArray(value) && value.length) {
@@ -380,7 +380,7 @@ export function parsedValueComponent({
 
     // data type Boolean
     case 'FieldYesNo':
-      if (typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'query')) {
+      if (value && typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'query')) {
         returnValue = value
       }
       returnValue = convertStringToBoolean(value)
@@ -391,10 +391,10 @@ export function parsedValueComponent({
     case 'FieldText':
     case 'FieldUrl':
     case 'FieldTextArea':
-      if (typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'query')) {
+      if (value && typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'query')) {
         returnValue = value
       }
-      returnValue = value ? String(value) : undefined
+      returnValue = !isEmptyValue(value) ? String(value) : undefined
       break
 
     // data type Date
@@ -409,7 +409,7 @@ export function parsedValueComponent({
       if (typeof value === 'number' || typeof value === 'string') {
         value = new Date(value)
       }
-      if (typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'query')) {
+      if (value && typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'query')) {
         returnValue = value
       }
       returnValue = value
@@ -578,7 +578,7 @@ export function tableColumnDataType(column, currentOption) {
   if (currentOption === language.t('table.dataTable.showOnlyMandatoryColumns') && (column.isMandatory || column.isMandatoryFromLogic)) {
     return true
   }
-  if (currentOption === language.t('table.dataTable.showTableColumnsOnly') && column.isDisplayedGrid) {
+  if (currentOption === language.t('table.dataTable.showTableColumnsOnly') && column.is_displayed_grid) {
     return true
   }
   if (currentOption === language.t('table.dataTable.showMinimalistView') &&

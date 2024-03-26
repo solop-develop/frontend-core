@@ -24,7 +24,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { generateField } from '@/utils/ADempiere/dictionaryUtils.js'
 import { getFieldTemplate } from '@/utils/ADempiere/lookupFactory.js'
 import { isAddRangeField } from '@/utils/ADempiere/references'
-
+import { templateFields } from '@/utils/ADempiere/dictionary/window/templatesWindow.js'
 /**
  * Order the fields, then assign the groups to each field, and finally group
  * in an array according to each field group to show in panel (or table).
@@ -160,7 +160,7 @@ export function generatePanelAndFields({
   // convert fields and add app attributes
   let fieldsList = panelMetadata.fields.map((fieldItem, index) => {
     const fieldDefinition = generateField({
-      fieldToGenerate: fieldItem,
+      fieldToGenerate: templateFields(fieldItem),
       evaluateDefaultFieldShowed,
       evaluateDefaultColumnShowed,
       moreAttributes: {
@@ -283,7 +283,7 @@ export function generatePanelAndFields({
  */
 export function generateDependenFieldsList(fieldsList) {
   fieldsList.forEach((itemField, index, listFields) => {
-    if (isEmptyValue(itemField.parentFieldsList) || !itemField.isActive) {
+    if (isEmptyValue(itemField.parentFieldsList)) {
       return
     }
 

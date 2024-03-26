@@ -85,7 +85,7 @@ import { listProductStorage } from '@/api/ADempiere/form/storeProduct.js'
 import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import { isEmptyValue } from '@/utils/ADempiere'
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
-import { isDisplayedField } from '@/utils/ADempiere/dictionary/window.js'
+import { isDisplayedField } from '@/utils/ADempiere/dictionary/window'
 
 export default defineComponent({
   name: 'ContainerInfo',

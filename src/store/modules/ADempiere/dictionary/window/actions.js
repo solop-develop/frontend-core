@@ -50,6 +50,9 @@ import {
   recordAccess,
   undoChange
 } from '@/utils/ADempiere/dictionary/window'
+import {
+  getCurrentClient, getCurrentRole
+} from '@/utils/ADempiere/auth'
 import { panelAdvanceQuery } from '@/utils/ADempiere/dictionary/panel.js'
 import {
   exportRecordsSelected,
@@ -92,9 +95,18 @@ export default {
   getWindowDefinitionFromServer({ dispatch, rootGetters }, {
     id
   }) {
+    const language = rootGetters['getCurrentLanguage']
+    const clientId = getCurrentClient()
+    const roleId = getCurrentRole()
+    const userId = rootGetters['user/getUserId']
+
     return new Promise(resolve => {
       requestWindowMetadata({
-        id
+        id,
+        language,
+        clientId,
+        roleId,
+        userId
       })
         .then(async windowResponse => {
           const window = generateWindow(windowResponse)
@@ -267,11 +279,11 @@ export default {
               const recordUuid = rootGetters.getUuidOfContainer(tabAssociatedUuid)
 
               const storedTab = rootGetters.getStoredTab(windowUuid, tabAssociatedUuid)
-              const { tableName } = storedTab
+              const { table_name } = storedTab
 
               const recordId = rootGetters.getIdOfContainer({
                 containerUuid: storedTab.containerUuid,
-                tableName
+                tableName: table_name
               })
 
               const documentAction = getters.getValueOfField({
@@ -280,11 +292,10 @@ export default {
               })
               const parametersList = {}
               parametersList[DOCUMENT_ACTION] = documentAction
-
               dispatch('startProcessOfWindows', {
                 parentUuid: tabAssociatedUuid,
                 containerUuid: process.uuid,
-                tableName,
+                tableName: table_name,
                 recordId,
                 recordUuid,
                 parametersList
@@ -309,13 +320,13 @@ export default {
 
                 if (!isEmptyValue(documentStatus)) {
                   dispatch('getDocumentStatusesListFromServer', {
-                    tableName,
+                    tableName: table_name,
                     recordId,
                     recordUuid,
                     documentStatus
                   })
                   dispatch('getDocumentActionsListFromServer', {
-                    tableName,
+                    tableName: table_name,
                     recordId,
                     recordUuid,
                     documentStatus
@@ -382,17 +393,18 @@ export default {
               const recordUuid = rootGetters.getUuidOfContainer(tabAssociatedUuid)
 
               const storedTab = rootGetters.getStoredTab(windowUuid, tabAssociatedUuid)
-              const { tableName } = storedTab
+              console.log({ storedTab })
+              const { table_name } = storedTab
 
               const recordId = rootGetters.getIdOfContainer({
                 containerUuid: storedTab.containerUuid,
-                tableName
+                tableName: table_name
               })
 
               dispatch('startProcessOfWindows', {
                 parentUuid: tabAssociatedUuid,
                 containerUuid: process.uuid,
-                tableName,
+                tableName: table_name,
                 recordId,
                 recordUuid
               }).then(async processResponse => {
@@ -814,7 +826,7 @@ export default {
         root: true
       })
 
-      if (tab.isDocument) {
+      if (tab.is_document) {
         // get displayed value on status
         const fieldDocumentStatus = tab.fieldsList.find(field => {
           return field.columnName === DOCUMENT_STATUS

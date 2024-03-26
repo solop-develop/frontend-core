@@ -158,7 +158,7 @@ export default defineComponent({
               props.parentUuid,
               firstTabUuid
             )
-            if (!isEmptyValue(firstTab) && firstTab.isDocument) {
+            if (!isEmptyValue(firstTab) && firstTab.is_document) {
               refreshRecord.refreshRecord({
                 parentUuid: props.parentUuid,
                 containerUuid: firstTabUuid

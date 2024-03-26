@@ -36,6 +36,7 @@ import {
 import {
   getCurrentClient, getCurrentRole
 } from '@/utils/ADempiere/auth'
+import { definitionProcess } from '@/utils/ADempiere/dictionary/process/templateProcess.js'
 
 export default {
   addProcessToList({ commit, dispatch }, processResponse) {
@@ -77,7 +78,7 @@ export default {
       })
         .then(processResponse => {
           const { processDefinition } = generateProcess({
-            processToGenerate: processResponse
+            processToGenerate: definitionProcess(processResponse)
           })
 
           dispatch('addProcessToList', processDefinition)
