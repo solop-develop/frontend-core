@@ -20,7 +20,7 @@ import store from '@/store'
 
 // Components
 import Layout from '@/layout'
-import store from '@/store'
+// import store from '@/store'
 // Constants
 import staticRoutes from '@/router/modules/ADempiere/staticRoutes.js'
 
