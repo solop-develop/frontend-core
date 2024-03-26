@@ -29,7 +29,7 @@
         >
           <el-col
             :span="12"
-            style="height: 100%;"
+            style="height: 100%; width:60%"
           >
             <el-card
               style="height: 100%;"
@@ -66,7 +66,7 @@
           </el-col>
           <el-col
             :span="12"
-            style="height: 100%;"
+            style="height: 100%; width:40%"
           >
             <el-card
               style="height: 100%;"
