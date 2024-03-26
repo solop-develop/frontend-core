@@ -276,7 +276,7 @@ export default {
               .then(remoteResponse => {
                 callBack(remoteResponse)
               })
-          }, 2000)
+          }, 700)
           return
         }
       }

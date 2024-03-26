@@ -22,6 +22,8 @@
   >
     <el-select
       v-model="currentValue"
+      filterable
+      remote
       :remote-method="remoteSearch"
       @visible-change="loadProductGroups"
     >
