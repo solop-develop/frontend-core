@@ -33,7 +33,7 @@ export function requestWindowMetadata({
 }) {
   return request({
     // url: `/dictionary/windows/${id}`,
-    url: `/windows/${id}`,
+    url: `/dictionary/windows/${id}`,
     method: 'get',
     params: {
       language,

@@ -88,7 +88,7 @@ export default {
         .then(async reportResponse => {
           const { uuid } = reportResponse
           const { processDefinition: reportDefinition } = generateReport({
-            processToGenerate: definitionProcess(reportResponse.process)
+            processToGenerate: definitionProcess(reportResponse)
           })
 
           await dispatch('getListPrintFormatsFromServer', {

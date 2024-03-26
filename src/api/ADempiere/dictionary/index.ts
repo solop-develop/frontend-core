@@ -92,7 +92,7 @@ export function requestProcessMetadata({
   userId
 }) {
   return request({
-    url: `/processes/${id}`,
+    url: `/dictionary/processes/${id}`,
     method: 'get',
     params: {
       language,

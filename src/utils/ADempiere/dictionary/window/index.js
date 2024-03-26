@@ -1386,7 +1386,7 @@ export function generateTabs({
   tabs,
   parentUuid
 }) {
-  const firstTabTableName = tabs[0].table.table_name
+  const firstTabTableName = tabs[0].table_name
   const firstTabUuid = tabs[0].uuid
 
   const sequenceTabsListOnWindow = []
@@ -1406,8 +1406,7 @@ export function generateTabs({
       itemTab.isTranslationTab
     )
   }).map((currentTab, index, listTabs) => {
-    const isParentTab = Boolean(firstTabTableName === currentTab.table.table_name)
-
+    const isParentTab = Boolean(firstTabTableName === currentTab.table_name)
     const parentTabs = listTabs
       .filter(currentItemTab => {
         return currentItemTab.uuid !== currentTab.uuid &&

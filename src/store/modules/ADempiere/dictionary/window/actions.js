@@ -109,7 +109,7 @@ export default {
         userId
       })
         .then(async windowResponse => {
-          const window = generateWindow(windowResponse.window)
+          const window = generateWindow(windowResponse)
           dispatch('addWindow', window)
 
           resolve(window)
@@ -279,11 +279,11 @@ export default {
               const recordUuid = rootGetters.getUuidOfContainer(tabAssociatedUuid)
 
               const storedTab = rootGetters.getStoredTab(windowUuid, tabAssociatedUuid)
-              const { tableName } = storedTab
+              const { table_name } = storedTab
 
               const recordId = rootGetters.getIdOfContainer({
                 containerUuid: storedTab.containerUuid,
-                tableName
+                tableName: table_name
               })
 
               const documentAction = getters.getValueOfField({
@@ -292,11 +292,10 @@ export default {
               })
               const parametersList = {}
               parametersList[DOCUMENT_ACTION] = documentAction
-
               dispatch('startProcessOfWindows', {
                 parentUuid: tabAssociatedUuid,
                 containerUuid: process.uuid,
-                tableName,
+                tableName: table_name,
                 recordId,
                 recordUuid,
                 parametersList
@@ -321,13 +320,13 @@ export default {
 
                 if (!isEmptyValue(documentStatus)) {
                   dispatch('getDocumentStatusesListFromServer', {
-                    tableName,
+                    tableName: table_name,
                     recordId,
                     recordUuid,
                     documentStatus
                   })
                   dispatch('getDocumentActionsListFromServer', {
-                    tableName,
+                    tableName: table_name,
                     recordId,
                     recordUuid,
                     documentStatus
@@ -394,17 +393,18 @@ export default {
               const recordUuid = rootGetters.getUuidOfContainer(tabAssociatedUuid)
 
               const storedTab = rootGetters.getStoredTab(windowUuid, tabAssociatedUuid)
-              const { tableName } = storedTab
+              console.log({ storedTab })
+              const { table_name } = storedTab
 
               const recordId = rootGetters.getIdOfContainer({
                 containerUuid: storedTab.containerUuid,
-                tableName
+                tableName: table_name
               })
 
               dispatch('startProcessOfWindows', {
                 parentUuid: tabAssociatedUuid,
                 containerUuid: process.uuid,
-                tableName,
+                tableName: table_name,
                 recordId,
                 recordUuid
               }).then(async processResponse => {
@@ -826,7 +826,7 @@ export default {
         root: true
       })
 
-      if (tab.isDocument) {
+      if (tab.is_document) {
         // get displayed value on status
         const fieldDocumentStatus = tab.fieldsList.find(field => {
           return field.columnName === DOCUMENT_STATUS

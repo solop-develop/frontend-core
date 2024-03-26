@@ -78,7 +78,7 @@ export default {
       })
         .then(processResponse => {
           const { processDefinition } = generateProcess({
-            processToGenerate: definitionProcess(processResponse.process)
+            processToGenerate: definitionProcess(processResponse)
           })
 
           dispatch('addProcessToList', processDefinition)

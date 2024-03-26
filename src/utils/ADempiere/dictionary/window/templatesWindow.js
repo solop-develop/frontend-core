@@ -18,15 +18,6 @@
 
 // Utils and Helpers Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
-import { convertProcess } from '@/utils/ADempiere/apiConverts/dictionary.js'
-
-export function definitionProcess(process) {
-  if (isEmptyValue(process)) return process
-  return {
-    ...convertProcess(process),
-    ...process
-  }
-}
 
 export function templateFields(field) {
   if (isEmptyValue(field)) return field
@@ -85,6 +76,7 @@ export function convertRelationTabs(itemTab) {
     id,
     name,
     uuid,
+    table_name,
     tableName: table_name,
     sequence,
     tabLevel: tab_level,

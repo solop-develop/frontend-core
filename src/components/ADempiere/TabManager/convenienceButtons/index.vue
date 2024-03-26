@@ -45,7 +45,7 @@
       />
 
       <document-action
-        v-if="tabAttributes.isDocument"
+        v-if="tabAttributes.is_document"
         :parent-uuid="parentUuid"
         :container-manager="containerManager"
         :tab-attributes="tabAttributes"
