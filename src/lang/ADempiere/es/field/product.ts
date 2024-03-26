@@ -17,7 +17,7 @@
  */
 
 const product = {
-  title: 'Products',
+  title: 'Productos',
   edit: 'Editar',
   emptyRecords: 'Utilice los filtros para la búsqueda de producto según su Código, Nombre, SKU',
   notFound: 'Producto no encontrado',
@@ -28,9 +28,10 @@ const product = {
   upcEan: 'UPC/EAN',
   warehouse: 'Almacén',
   priceListVersion: 'Versión de Lista de Precios',
-  productGroup: 'Grupo de Producto',
   productCategory: 'Categoria de Producto',
   productClass: 'Clase de Producto',
+  productClassification: 'Clasificación de Producto',
+  productGroup: 'Grupo de Producto',
   sku: 'SKU',
   upc: 'UPC/EAN',
   uom: 'UM',

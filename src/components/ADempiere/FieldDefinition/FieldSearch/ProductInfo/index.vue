@@ -23,6 +23,7 @@
     v-bind="commonsProperties"
     value-key="name"
     clearable
+    :debounce="10"
     style="width: 100%;"
     popper-class="custom-field-product-info"
     :trigger-on-focus="false"
@@ -60,6 +61,8 @@
 </template>
 
 <script>
+import store from '@/store'
+
 // Components and Mixins
 import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
 import fieldSearchMixin from '@/components/ADempiere/FieldDefinition/FieldSearch/mixinFieldSearch.js'
@@ -104,6 +107,12 @@ export default {
   computed: {
     cssClassCustomField() {
       return ' custom-field-product-info '
+    },
+    // implement to overwrite
+    recordsList() {
+      return store.getters.getProductSearchFieldRecordsList({
+        containerUuid: this.uuidForm
+      })
     }
   },
 
@@ -145,6 +154,25 @@ export default {
       this.controlDisplayed = this.generateDisplayedValue(recordSelected)
       this.$refs.autocompleteProduct.activated = false
     },
+
+    localSearch(stringToMatch, callBack) {
+      if (isEmptyValue(stringToMatch)) {
+        // not show list
+        callBack([])
+        return
+      }
+
+      // Remote search
+      clearTimeout(this.timeOutSearchRecords)
+
+      this.timeOutSearchRecords = setTimeout(() => {
+        this.remoteSearch(stringToMatch)
+          .then(remoteResponse => {
+            callBack(remoteResponse)
+          })
+      }, 500)
+      return
+    },
     remoteSearch(searchValue, isKeyEnterPress) {
       return new Promise(resolve => {
         let parentUuid = this.metadata.parentUuid
@@ -167,6 +195,17 @@ export default {
           .then(responseRecords => {
             if (isEmptyValue(responseRecords)) {
               this.whitOutResultsMessage()
+
+              // show table records
+              store.commit('setProductSearchFieldShow', {
+                containerUuid: this.uuidForm,
+                show: true
+              })
+            } else {
+              if (isKeyEnterPress || responseRecords.length === 1) {
+                const recordSelected = responseRecords.at()
+                this.handleSelect(recordSelected)
+              }
             }
 
             resolve(responseRecords)
