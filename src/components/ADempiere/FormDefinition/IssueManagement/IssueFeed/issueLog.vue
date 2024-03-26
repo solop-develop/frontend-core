@@ -24,6 +24,7 @@
         v-for="log in comment.change_logs"
         :key="log.id"
         label-style="{ color: #606266; }"
+        style="padding-bottom: 0"
       >
         <template slot="label">
           <label style="color: #606266;padding-right: 5px; font-size: 10px">
@@ -73,3 +74,8 @@ export default defineComponent({
   }
 })
 </script>
+<style>
+.el-descriptions--medium:not(.is-bordered) .el-descriptions-item__cell {
+  padding-bottom: 0px;
+}
+</style>

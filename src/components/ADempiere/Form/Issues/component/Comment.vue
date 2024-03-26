@@ -2862,7 +2862,7 @@ export default defineComponent({
     box-sizing: border-box;
   }
   .el-card__body {
-    padding-top: 20px !important;
+    padding-top: 10px !important;
     padding-right: 10px;
     padding-bottom: 0px!important;
     padding-left: 10px;
