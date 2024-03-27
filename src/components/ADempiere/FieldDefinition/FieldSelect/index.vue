@@ -39,6 +39,7 @@
       :key="key"
       :value="option.value"
       :label="option.displayedValue"
+      :disabled="!isEmptyValue(option.isActive) && option.isActive === false"
     />
   </el-select>
 </template>
