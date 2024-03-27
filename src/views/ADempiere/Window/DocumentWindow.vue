@@ -286,7 +286,92 @@ export default defineComponent({
   padding-top: 0px;
   padding-bottom: 0px;
 }
-.tab-manager {
-  height: 100%;
+#tab-manager{
+    height:100%;
+  }
+  @media screen and (min-height: 800px) {
+  #tab-manager {
+    height: 93%;
+  }
+  .custom-panel-field {
+    height: 500px;
+  }
+  .el-select .el-input.is-disabled .el-input__inner,
+  .el-input.is-disabled .el-input__inner {
+    height: 40px;
+  }
+}
+
+@media screen and (min-height: 1000px) {
+  #tab-manager {
+    height: 95%;
+  }
+  .el-col-xl-8 {
+    padding: 0.5%;
+  }
+  .custom-panel-field {
+    height: 670px;
+  }
+  .field-title-name {
+    font-size: 100%;
+  }
+}
+@media screen and (min-height: 1100px) {
+  #tab-manager {
+    height: 96%;
+  }
+  .el-col-xl-8 {
+    padding: 0.5%;
+  }
+  .custom-panel-field {
+    height: 670px;
+  }
+  .field-title-name {
+    font-size: 100%;
+  }
+}
+
+@media screen and (min-height: 1200px) {
+  #tab-manager {
+    height: 96%;
+  }
+  .el-col-xl-8 {
+    padding: 1%;
+  }
+  .custom-panel-field {
+    height: 750px;
+  }
+  .field-title-name {
+    font-size: 120%;
+  }
+}
+
+@media screen and (min-height: 1300px) {
+  #tab-manager {
+    height: 97%;
+  }
+  .el-col-xl-8 {
+    padding: 2%;
+  }
+  .custom-panel-field {
+    height: 850px;
+  }
+  .field-title-name {
+    font-size: 150%;
+  }
+}
+@media screen and (min-height: 1400px) {
+  #tab-manager {
+    height: 98%;
+  }
+  .el-col-xl-8 {
+    padding: 2%;
+  }
+  .custom-panel-field {
+    height: 900px;
+  }
+  .field-title-name {
+    font-size: 150%;
+  }
 }
 </style>
