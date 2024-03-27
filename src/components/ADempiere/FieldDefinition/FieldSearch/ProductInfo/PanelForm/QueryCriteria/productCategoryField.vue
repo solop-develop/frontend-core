@@ -18,14 +18,14 @@
 
 <template>
   <el-form-item
-    :label="$t('field.product.vendor')"
+    :label="$t('field.product.productCategory')"
   >
     <el-select
       v-model="currentValue"
       filterable
       remote
       :remote-method="remoteSearch"
-      @visible-change="loadVendors"
+      @visible-change="loadProductCategories"
     >
       <empty-option-select
         :current-value="currentValue"
@@ -47,13 +47,13 @@ import { computed, defineComponent, ref } from '@vue/composition-api'
 import store from '@/store'
 
 // API Request Methods
-import { requestListVendors } from '@/api/ADempiere/field/search/product.ts'
+import { requestListProductCategories } from '@/api/ADempiere/field/search/product.ts'
 
 // Components and Mixins
 import EmptyOptionSelect from '@/components/ADempiere/FieldDefinition/FieldSelect/emptyOptionSelect.vue'
 
 export default defineComponent({
-  name: 'vendorField',
+  name: 'ProductCategoryField',
 
   components: {
     EmptyOptionSelect
@@ -75,7 +75,7 @@ export default defineComponent({
   },
 
   setup(props) {
-    const ATTRIBUTE_KEY = 'vendor_id'
+    const ATTRIBUTE_KEY = 'product_category_id'
 
     const optionsList = ref([])
 
@@ -95,11 +95,11 @@ export default defineComponent({
       }
     })
 
-    function loadVendors(isShowList) {
+    function loadProductCategories(isShowList) {
       if (!isShowList) {
         return
       }
-      requestListVendors({
+      requestListProductCategories({
         pageSize: 100
       })
         .then(response => {
@@ -108,7 +108,7 @@ export default defineComponent({
     }
 
     function remoteSearch(searchValue) {
-      requestListVendors({
+      requestListProductCategories({
         searchValue,
         pageSize: 100
       })
@@ -122,7 +122,7 @@ export default defineComponent({
       //
       currentValue,
       //
-      loadVendors,
+      loadProductCategories,
       remoteSearch
     }
   }

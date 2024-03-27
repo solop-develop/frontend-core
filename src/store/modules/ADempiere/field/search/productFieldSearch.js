@@ -36,9 +36,10 @@ const emptyQueryFilters = {
   name: undefined,
   upc: undefined,
   sku: undefined,
-  product_group_id: undefined,
-  product_class_id: undefined,
   product_category_id: undefined,
+  product_class_id: undefined,
+  product_classification_id: undefined,
+  product_group_id: undefined,
   price_list_version_id: undefined,
   warehouse_id: undefined,
   is_stocked: undefined,
@@ -164,6 +165,31 @@ const productFieldSearch = {
       value
     }) {
       Vue.set(state.productData[containerUuid].queryFilters, attributeKey, value)
+    },
+
+    setProductSearchFieldPageNumber(state, {
+      containerUuid,
+      pageNumber = 1
+    }) {
+      if (isEmptyValue(state.productData[containerUuid])) {
+        Vue.set(state.productData, containerUuid, {
+          ...state.emptyProductData,
+          containerUuid
+        })
+      }
+      Vue.set(state.productData[containerUuid], 'pageNumber', pageNumber)
+    },
+    setProductSearchFieldPageSize(state, {
+      containerUuid,
+      pageSize = ROWS_OF_RECORDS_BY_PAGE
+    }) {
+      if (isEmptyValue(state.productData[containerUuid])) {
+        Vue.set(state.productData, containerUuid, {
+          ...state.emptyProductData,
+          containerUuid
+        })
+      }
+      Vue.set(state.productData[containerUuid], 'pageSize', pageSize)
     },
 
     /**

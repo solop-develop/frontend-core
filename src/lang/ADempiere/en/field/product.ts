@@ -17,6 +17,7 @@
  */
 
 const product = {
+  title: 'Products',
   edit: 'Edit',
   emptyRecords: 'Use the filters to search for a product by Code, Name, SKU',
   notFound: 'Product not found',
@@ -27,9 +28,10 @@ const product = {
   upcEan: 'UPC/EAN',
   warehouse: 'Warehouse',
   priceListVersion: 'Pricelist Version',
-  productGroup: 'Product Group',
   productCategory: 'Product Category',
   productClass: 'Product Class',
+  productClassification: 'Product Classification',
+  productGroup: 'Product Group',
   sku: 'SKU',
   upc: 'UPC/EAN',
   uom: 'UOM',
