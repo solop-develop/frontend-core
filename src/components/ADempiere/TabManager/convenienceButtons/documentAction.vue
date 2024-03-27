@@ -18,7 +18,7 @@
 
 <template>
   <span
-    v-if="tabAttributes.isDocument"
+    v-if="tabAttributes.is_document"
     class="document-action-main"
   >
     <el-dropdown

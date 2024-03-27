@@ -101,11 +101,6 @@ export function requestProcessMetadata({
       user_id: userId
     }
   })
-    .then(processResponse => {
-      const { convertProcess } = require('@/utils/ADempiere/apiConverts/dictionary.js')
-
-      return convertProcess(processResponse)
-    })
 }
 
 /**

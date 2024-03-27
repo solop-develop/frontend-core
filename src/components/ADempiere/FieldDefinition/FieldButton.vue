@@ -68,7 +68,7 @@ import {
   openBrowserAssociated,
   openDocumentAction,
   openFormAssociated
-} from '@/utils/ADempiere/dictionary/window.js'
+} from '@/utils/ADempiere/dictionary/window'
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
 import { getContextAttributes, generateContextKey } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import {

@@ -161,7 +161,7 @@ export default defineComponent({
           break
         case 'showTableColumnsOnly':
           listShowed = props.allFieldsList
-            .filter(list => list.isDisplayedGrid)
+            .filter(list => list.is_displayed_grid)
             .map(list => list.columnName)
           break
         case 'showMinimalistView':

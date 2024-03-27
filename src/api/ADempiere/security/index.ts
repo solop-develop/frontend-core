@@ -140,10 +140,19 @@ export function requestChangeRole({
 /**
  * GET Menu
  */
-export function requestMenu() {
+export function requestMenu({
+  language,
+  roleId,
+  clientId
+}) {
   return request({
     url: '/security/menu',
-    method: 'get'
+    method: 'get',
+    params: {
+      language,
+      role_id: roleId,
+      client_id: clientId
+    }
   })
 }
 

@@ -24,14 +24,21 @@ import { request } from '@/utils/ADempiere/request'
  * @param {number} id, identifier
  */
 export function requestWindowMetadata({
-  id
+  id,
+  // mandatory to open search
+  language,
+  clientId,
+  roleId,
+  userId
 }) {
   return request({
     url: `/dictionary/windows/${id}`,
-    method: 'get'
+    method: 'get',
+    params: {
+      language,
+      client_id: clientId,
+      role_id: roleId,
+      user_id: userId
+    }
   })
-    .then(windowResponse => {
-      const { convertWindow } = require('@/utils/ADempiere/apiConverts/dictionary.js')
-      return convertWindow(windowResponse)
-    })
 }
