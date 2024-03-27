@@ -44,13 +44,15 @@ export function loadMainMenu({
   const language = store.getters['getCurrentLanguage']
   const clientId = getCurrentClient()
   const roleId = getCurrentRole()
+  const userId = store.getters['user/getUserId']
   const organizationId = getCurrentOrganization()
 
   return new Promise(resolve => {
     requestMenu({
       roleId,
       language,
-      clientId
+      clientId,
+      userId
     }).then(menuResponse => {
       const { menus } = menuResponse
       const asyncRoutesMap = []

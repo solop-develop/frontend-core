@@ -148,8 +148,12 @@ const browserControl = {
         })
 
         const {
-          id: browserId, fieldsList, contextColumnNames
+          id, fieldsList, contextColumnNames
         } = rootGetters.getStoredBrowser(containerUuid)
+        if (isEmptyValue(id) && isEmptyValue(fieldsList) && isEmptyValue(contextColumnNames)) {
+          resolve(currentRecordsList)
+          return
+        }
 
         const fieldsEmpty = rootGetters.getBrowserFieldsEmptyMandatory({
           containerUuid,
@@ -232,7 +236,7 @@ const browserControl = {
         const pageToken = generatePageToken({ pageNumber })
 
         requestBrowserSearch({
-          id: browserId,
+          id,
           contextAttributes,
           filters,
           pageToken,
