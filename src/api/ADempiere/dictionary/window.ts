@@ -32,7 +32,6 @@ export function requestWindowMetadata({
   userId
 }) {
   return request({
-    // url: `/dictionary/windows/${id}`,
     url: `/dictionary/windows/${id}`,
     method: 'get',
     params: {
