@@ -72,7 +72,7 @@
       style="
         top: 50%;
         right: 0%;
-        position: absolute;8
+        position: absolute;
       "
       @click="handleOpem()"
     />
