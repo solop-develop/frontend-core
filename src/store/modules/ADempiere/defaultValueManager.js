@@ -47,7 +47,7 @@ const defaultValueManager = {
         uuid,
         value,
         displayedValue,
-        // isActive,
+        isActive,
         reason
       })
     },
