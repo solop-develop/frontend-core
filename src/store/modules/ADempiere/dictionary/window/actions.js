@@ -393,7 +393,6 @@ export default {
               const recordUuid = rootGetters.getUuidOfContainer(tabAssociatedUuid)
 
               const storedTab = rootGetters.getStoredTab(windowUuid, tabAssociatedUuid)
-              console.log({ storedTab })
               const { table_name } = storedTab
 
               const recordId = rootGetters.getIdOfContainer({
