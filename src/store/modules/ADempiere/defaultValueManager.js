@@ -172,7 +172,7 @@ const defaultValueManager = {
           value
         })
           .then(valueResponse => {
-            const { values } = valueResponse
+            const { values, is_active } = valueResponse
             // const values = {
             //   KeyColumn: undefined,
             //   DisplayColumn: undefined,
@@ -203,7 +203,7 @@ const defaultValueManager = {
               // set value of server to parsed if is number as string "101" -> 101
               value: valueOfServer,
               displayedValue: displayValue,
-              // isActive: is_active,
+              isActive: is_active,
               reason: 'Successful default value'
             })
 
@@ -233,8 +233,8 @@ const defaultValueManager = {
             resolve({
               displayedValue: displayValue,
               value: valueOfServer,
-              uuid: values.UUID
-              // isActive: is_active
+              uuid: values.UUID,
+              isActive: is_active
             })
           })
           .catch(error => {
