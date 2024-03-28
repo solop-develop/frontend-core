@@ -286,52 +286,16 @@ export default defineComponent({
   padding-top: 0px;
   padding-bottom: 0px;
 }
-#tab-manager{
-    height:100%;
-  }
-  @media screen and (min-height: 800px) {
-  #tab-manager {
-    height: 93%;
-  }
-  .custom-panel-field {
-    height: 500px;
-  }
-  .el-select .el-input.is-disabled .el-input__inner,
-  .el-input.is-disabled .el-input__inner {
-    height: 40px;
-  }
-}
 
-@media screen and (min-height: 1000px) {
+@media screen and (min-height: 720px) {
   #tab-manager {
-    height: 95%;
-  }
-  .el-col-xl-8 {
-    padding: 0.5%;
+    height: 92%;
   }
   .custom-panel-field {
-    height: 670px;
-  }
-  .field-title-name {
-    font-size: 100%;
+    height: 430px;
   }
 }
-@media screen and (min-height: 1100px) {
-  #tab-manager {
-    height: 96%;
-  }
-  .el-col-xl-8 {
-    padding: 0.5%;
-  }
-  .custom-panel-field {
-    height: 670px;
-  }
-  .field-title-name {
-    font-size: 100%;
-  }
-}
-
-@media screen and (min-height: 1200px) {
+@media screen and (min-height: 1080px) {
   #tab-manager {
     height: 96%;
   }
@@ -339,14 +303,19 @@ export default defineComponent({
     padding: 1%;
   }
   .custom-panel-field {
-    height: 750px;
+    height: 670px;
   }
   .field-title-name {
     font-size: 120%;
   }
+  .el-select .el-input.is-disabled .el-input__inner,
+  .el-input.is-disabled .el-input__inner,
+  .el-input--medium .el-input__inner {
+    height: 40px;
+}
 }
 
-@media screen and (min-height: 1300px) {
+@media screen and (min-height: 1400px) {
   #tab-manager {
     height: 97%;
   }
@@ -354,24 +323,40 @@ export default defineComponent({
     padding: 2%;
   }
   .custom-panel-field {
-    height: 850px;
+    height: 890px;
   }
   .field-title-name {
     font-size: 150%;
   }
+  .el-select .el-input.is-disabled .el-input__inner,
+  .el-input.is-disabled .el-input__inner,
+  .el-input--medium .el-input__inner {
+    height: 40px;
+    margin-top: 5px;
+    font-size:20px
 }
-@media screen and (min-height: 1400px) {
+}
+
+@media screen and (min-height: 2160px) {
   #tab-manager {
     height: 98%;
   }
   .el-col-xl-8 {
-    padding: 2%;
+    padding: 1%;
+    margin-top: 100px;
   }
   .custom-panel-field {
-    height: 900px;
+    height: 1500px;
   }
   .field-title-name {
-    font-size: 150%;
+    font-size: 300%;
   }
+  .el-select .el-input.is-disabled .el-input__inner,
+  .el-input.is-disabled .el-input__inner,
+  .el-input--medium .el-input__inner {
+    height: 60px;
+    margin-top: 25px;
+    font-size:40px
+}
 }
 </style>
