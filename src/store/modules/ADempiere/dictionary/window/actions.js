@@ -101,7 +101,7 @@ export default {
             // show the error message
             showMessage({
               type: 'error',
-              message: 'No se puede ver esta información con su rol actual'
+              message: language.t('profile.roleMessage')
             })
             navigateBack()
             return

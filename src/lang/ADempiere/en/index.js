@@ -226,6 +226,7 @@ export default {
     activityLogs: 'Activity Logs',
     notice: 'Notice',
     request: 'Request',
+    roleMessage:'You cannot see this information with your current role',
     workflowActivities: 'Workflow Activities',
     systemInformation: {
       tabLabel: 'System Information',
