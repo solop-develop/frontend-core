@@ -17,6 +17,7 @@
  */
 
 // Get Instance for connection
+import { isEmptyValue } from '@/utils/ADempiere'
 import { request } from '@/utils/ADempiere/request'
 
 /**
@@ -32,6 +33,9 @@ export function requestWindowMetadata({
   })
     .then(windowResponse => {
       const { convertWindow } = require('@/utils/ADempiere/apiConverts/dictionary.js')
+      if (isEmptyValue(windowResponse.tabs)) {
+        return 'error'
+      }
       return convertWindow(windowResponse)
     })
 }
