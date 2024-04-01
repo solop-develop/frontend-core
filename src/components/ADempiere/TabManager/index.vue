@@ -803,7 +803,7 @@ export default defineComponent({
         recordId: currentRecordId.value,
         tableName: currentTabTableName.value,
         containerId: router.app._route.meta.referenceId,
-        clienteId: store.getters.getSessionContextClientId,
+        clientId: store.getters.getSessionContextClientId,
         containerType: 'window'
       })
         .then(response => {

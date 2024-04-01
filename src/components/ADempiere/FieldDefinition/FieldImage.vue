@@ -233,7 +233,7 @@ export default {
       if (isEmptyValue(resourceId)) {
         resourceId = -1
       }
-      const getUrl = config.adempiere.resource.url + '/' + this.displayedValue
+      const getUrl = config.adempiere.resource.url + this.displayedValue
       return getUrl
     },
     additionalHeaders() {
@@ -275,7 +275,7 @@ export default {
       this.isLoadImage = true
       if (file) {
         const fileName = await this.getListResources()
-        const getUrl = config.adempiere.resource.url + '/' + fileName
+        const getUrl = config.adempiere.resource.url + fileName
         this.imageSourceSmall = getUrl
         this.isLoadImage = false
       }
@@ -362,12 +362,12 @@ export default {
      */
     presignedUrl({ file, reference }) {
       return new Promise((resolve, reject) => {
-        const clienteId = this.$store.getters.getSessionContextClientId
+        const clientId = this.$store.getters.getSessionContextClientId
         const { referenceId, type } = this.$route.meta
         const { tableName } = this.currentTab
         this.isLoadImageUpload = true
         requestPresignedUrl({
-          clienteId: clienteId,
+          clientId: clientId,
           containerId: referenceId,
           containerType: type,
           columnName: this.metadata.columnName,
@@ -461,11 +461,11 @@ export default {
 
     getListResources() {
       return new Promise((resolve, reject) => {
-        const clienteId = this.$store.getters.getSessionContextClientId
+        const clientId = this.$store.getters.getSessionContextClientId
         const { referenceId, type } = this.$route.meta
         const { tableName } = this.currentTab
         requestListResources({
-          clienteId: clienteId,
+          clientId: clientId,
           containerId: referenceId,
           containerType: type,
           columnName: this.metadata.columnName,

@@ -2179,11 +2179,11 @@ export const containerManager = {
     })
   },
 
-  getAttachment({ tableName, recordId, containerId, clienteId }) {
+  getAttachment({ tableName, recordId, containerId, clientId }) {
     return store.dispatch('getAttachmentFromServer', {
       recordId,
       tableName,
-      clienteId,
+      clientId,
       containerId,
       containerType: 'window'
     })
