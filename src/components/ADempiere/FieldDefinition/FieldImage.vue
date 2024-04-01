@@ -362,12 +362,12 @@ export default {
      */
     presignedUrl({ file, reference }) {
       return new Promise((resolve, reject) => {
-        const clienteId = this.$store.getters.getSessionContextClientId
+        const clientId = this.$store.getters.getSessionContextClientId
         const { referenceId, type } = this.$route.meta
         const { tableName } = this.currentTab
         this.isLoadImageUpload = true
         requestPresignedUrl({
-          clienteId: clienteId,
+          clientId: clientId,
           containerId: referenceId,
           containerType: type,
           columnName: this.metadata.columnName,
@@ -461,11 +461,11 @@ export default {
 
     getListResources() {
       return new Promise((resolve, reject) => {
-        const clienteId = this.$store.getters.getSessionContextClientId
+        const clientId = this.$store.getters.getSessionContextClientId
         const { referenceId, type } = this.$route.meta
         const { tableName } = this.currentTab
         requestListResources({
-          clienteId: clienteId,
+          clientId: clientId,
           containerId: referenceId,
           containerType: type,
           columnName: this.metadata.columnName,
