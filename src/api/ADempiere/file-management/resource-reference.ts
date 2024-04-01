@@ -41,7 +41,7 @@ export function requestPresignedUrl({
   fileName
 }) {
   return request({
-    url: `${config.adempiere.resource.url}/presigned-url/${clienteId}/${containerId}/${fileName}`,
+    url: `${config.adempiere.resource.url}presigned-url/${clienteId}/${containerId}/${fileName}`,
     method: 'get',
     isWithoutAuthorization: true,
     params: {

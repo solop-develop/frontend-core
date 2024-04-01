@@ -233,7 +233,7 @@ export default {
       if (isEmptyValue(resourceId)) {
         resourceId = -1
       }
-      const getUrl = config.adempiere.resource.url + '/' + this.displayedValue
+      const getUrl = config.adempiere.resource.url + this.displayedValue
       return getUrl
     },
     additionalHeaders() {
@@ -275,7 +275,7 @@ export default {
       this.isLoadImage = true
       if (file) {
         const fileName = await this.getListResources()
-        const getUrl = config.adempiere.resource.url + '/' + fileName
+        const getUrl = config.adempiere.resource.url + fileName
         this.imageSourceSmall = getUrl
         this.isLoadImage = false
       }

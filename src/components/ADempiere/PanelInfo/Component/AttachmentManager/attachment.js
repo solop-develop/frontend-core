@@ -220,7 +220,7 @@ export default defineComponent({
         return
       }
       const link = document.createElement('a')
-      const imageURL = config.adempiere.resource.url + '/' + file.file_name
+      const imageURL = config.adempiere.resource.url + file.file_name
       link.href = imageURL
       link.download = file.name
       link.click()
@@ -251,7 +251,7 @@ export default defineComponent({
     function getSurceFile(file) {
       if (isEmptyValue(file.content_type)) return ''
       if (file.content_type.includes('image')) {
-        return config.adempiere.resource.url + '/' + file.fullName
+        return config.adempiere.resource.url + file.fullName
       }
       return getImageFromContentType({
         contentType: file.content_type,

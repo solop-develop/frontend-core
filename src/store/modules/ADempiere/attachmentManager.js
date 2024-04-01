@@ -54,9 +54,9 @@ const attachment = {
       containerId,
       containerType
     }) {
-      if (isEmptyValue(tableName) && (isEmptyValue(recordId))) {
-        return
-      }
+      // if (isEmptyValue(tableName) && (isEmptyValue(recordId))) {
+      //   return
+      // }
       if (isEmptyValue(clienteId)) {
         clienteId = getters.getSessionContextClientId
       }
