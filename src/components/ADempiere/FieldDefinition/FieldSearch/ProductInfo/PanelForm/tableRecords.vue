@@ -187,7 +187,7 @@
           </span>
         </el-table-column>
       </template> -->
-      <template v-if="isStockQuantities">
+      <!-- <template v-if="isStockQuantities">
         <el-table-column
           prop="reserved_quantity"
           :label="$t('field.product.reservedQuantity')"
@@ -232,7 +232,7 @@
             {{ formatQuantity({ value: scope.row.unconfirmed_move_quantity }) }}
           </span>
         </el-table-column>
-      </template>
+      </template> -->
       <el-table-column
         prop="is_instance_attribute"
         :label="$t('field.product.instanceAttribute')"
