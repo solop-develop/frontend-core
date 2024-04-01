@@ -19,11 +19,11 @@
 <template>
   <el-form-item
     v-if="!isEmptyValue(bPartnerField)"
-    style="width: 100%;"
+    :required="true"
   >
     <template slot="label">
       {{ bPartnerField.name }}
-      <span style="color: #f34b4b"> * </span>
+      <!-- <span style="color: #f34b4b"> * </span> -->
     </template>
 
     <el-select
