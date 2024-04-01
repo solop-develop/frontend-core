@@ -166,10 +166,8 @@ export default {
         organizationId: this.currentOrganizationId,
         warehouseId: this.warehouseId
       })
-        .then(() => {
-          this.$router.push({
-            path: 'dashboard'
-          }, () => {})
+        .finally(() => {
+          this.refreshRouter()
         })
     },
     changeOrganization(organizationId) {
@@ -181,10 +179,8 @@ export default {
       this.$store.dispatch('user/changeOrganization', {
         organizationId
       })
-        .then(() => {
-          this.$router.push({
-            path: 'dashboard'
-          }, () => {})
+        .finally(() => {
+          this.refreshRouter()
         })
     },
     showOrganizationsList(isShow) {
@@ -208,6 +204,34 @@ export default {
       if (this.isEmptyValue(this.languageList)) {
         this.$store.dispatch('getLanguagesFromServer')
       }
+    },
+    refreshRouter() {
+      const view = {
+        fullPath: '/dashboard',
+        meta: {
+          affix: true,
+          breadcrumb: false,
+          icon: 'dashboard',
+          isIndex: true,
+          title: 'dashboard'
+        },
+        name: 'Dashboard',
+        path: '/dashboard',
+        title: 'dashboard'
+      }
+
+      this.$store.dispatch('tagsView/delCachedView', view)
+        .then(() => {
+          this.$nextTick(() => {
+            this.$router.replace({
+              path: '/redirect' + '/dashboard'
+            })
+          })
+        })
+        .finally(() => {
+          this.$store.dispatch('getDashboardListFromServer')
+          this.$store.dispatch('listPendingDocuments')
+        })
     }
   }
 }

@@ -19,15 +19,16 @@
 // Constants
 import { ACTIVE, PROCESSED, PROCESSING } from '@/utils/ADempiere/constants/systemColumns'
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils.js'
+import { ID, YES_NO } from '@/utils/ADempiere/references'
 
 // Utils and Helpers Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import {
   isDisplayedColumn, isDisplayedField, isMandatoryColumn, isMandatoryField
-} from '@/utils/ADempiere/dictionary/window.js'
+} from '@/utils/ADempiere/dictionary/window/index.js'
 import { getContext } from '@/utils/ADempiere/contextUtils'
 import { getContextDefaultValue } from '@/utils/ADempiere/contextUtils/contextField'
-import { isSupportLookup, ID, YES_NO } from '@/utils/ADempiere/references'
+import { isSupportLookup } from '@/utils/ADempiere/references'
 
 /**
  * Dictionary Window Getters
@@ -206,7 +207,7 @@ export default {
     containerUuid,
     isGetServer = true,
     isAddDisplayColumn = true,
-    isSOTrxMenu,
+    isSOTrxDictionary,
     fieldsList = [],
     formatToReturn = 'array'
   }) => {
@@ -232,7 +233,7 @@ export default {
             ...fieldItem,
             parentUuid,
             contextColumnNames,
-            isSOTrxMenu
+            isSOTrxDictionary
           })
         }
         // get value of link column
@@ -369,7 +370,7 @@ export default {
     // all optionals (not mandatory) fields
     return fieldsList
       .filter(fieldItem => {
-        if (!fieldItem.isActive || !fieldItem.isDisplayed) {
+        if (!fieldItem.isDisplayed) {
           return
         }
         const isMandatory = mandatoryMethod(fieldItem)

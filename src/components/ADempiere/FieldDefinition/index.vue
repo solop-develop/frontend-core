@@ -240,7 +240,7 @@ export default {
         return () => import('@/components/ADempiere/FieldDefinition/FieldText')
       }
       if (this.isSelectCreated) {
-        return () => import('@/components/ADempiere/FieldDefinition/FieldSelectMultiple')
+        return () => import('@/components/ADempiere/FieldDefinition/FieldSelect/FieldSelectMultiple.vue')
       }
       let field
       switch (this.field.componentPath) {
@@ -301,7 +301,7 @@ export default {
         required: this.isMandatoryField,
         readonly: isReadOnly || isReadOnlyFromOperator,
         displayed: this.isDisplayField,
-        disabled: !this.field.isActive,
+        // disabled: !this.field.isActive,
         isSelectCreated: this.isSelectCreated,
         isReadOnlyFromField: isReadOnly,
         isReadOnlyFromOperator: isReadOnlyFromOperator,
@@ -443,7 +443,7 @@ export default {
       }
       this.field = {
         ...this.metadataField,
-        isActive: true,
+        // isActive: true,
         isDisplayed: true,
         isDisplayedFromLogic: true,
         isShowedFromUser: true,

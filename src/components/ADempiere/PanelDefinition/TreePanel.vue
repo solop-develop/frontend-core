@@ -75,7 +75,6 @@
 <script>
 import { defineComponent, computed, ref, watch, onMounted, nextTick } from '@vue/composition-api'
 
-import router from '@/router'
 import store from '@/store'
 
 // API Request Methods
@@ -89,6 +88,7 @@ import DraggablePanel from '@/components/ADempiere/PanelDefinition/DraggablePane
 import StandardPanel from '@/components/ADempiere/PanelDefinition/StandardPanel.vue'
 
 // Utils and Helper Methods
+import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat'
 
@@ -244,11 +244,15 @@ export default defineComponent({
         })
       }
 
-      const currentRoute = router.app._route
+      const isSalesTransactionContext = isSalesTransaction({
+        parentUuid,
+        containerUuid,
+        isRecord: false
+      })
       const defaultValues = store.getters.getParsedDefaultValues({
         parentUuid,
         containerUuid,
-        isSOTrxMenu: currentRoute.meta.isSalesTransaction,
+        isSOTrxDictionary: isSalesTransactionContext,
         formatToReturn: 'object'
       })
 

@@ -21,7 +21,7 @@ import { request } from '@/utils/ADempiere/request'
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 // Constants
-import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/references.js'
+import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups.js'
 
 export function requestCreateResource({
   resourceTypeId,

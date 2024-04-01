@@ -27,7 +27,7 @@ import { requestLookupList } from '@/api/ADempiere/userInterface/lookups.ts'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { getContextAttributes, generateContextKey } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import { showMessage } from '@/utils/ADempiere/notification'
-import { getOptionsList } from '@/utils/ADempiere/lookups.ts'
+import { getOptionsList } from '@/utils/ADempiere/dictionary/field/lookups.js'
 
 const initStateLookup = {
   lookupList: {}

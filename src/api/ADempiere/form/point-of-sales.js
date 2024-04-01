@@ -24,6 +24,7 @@ import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
 
 /**
  * method in api/price-checking.js as getProductPrice
@@ -981,7 +982,7 @@ export function listCurrencies({
  */
 export function listTenderTypes({
   posUuid,
-  pageSize = 50
+  pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
     url: `${config.pointOfSales.endpoint}/available-payment-methods`,
@@ -1636,7 +1637,7 @@ export function listUom({
 export function banks({
   posUuid,
   searchValue,
-  pageSize = 150,
+  pageSize = RECORD_ROWS_BY_LIST,
   pageToken
 }) {
   return request({
@@ -1671,7 +1672,7 @@ export function banks({
 export function campaigns({
   posUuid,
   searchValue,
-  pageSize = 50,
+  pageSize = RECORD_ROWS_BY_LIST,
   pageToken
 }) {
   return request({
@@ -1739,7 +1740,7 @@ export function copyOrder({
 export function listCreditMemoRequest({
   posId,
   customerId,
-  pageSize = 100,
+  pageSize = RECORD_ROWS_BY_LIST,
   documentTypeId
 }) {
   return request({

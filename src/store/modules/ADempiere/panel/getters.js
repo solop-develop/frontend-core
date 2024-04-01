@@ -286,7 +286,7 @@ const getters = {
     parentUuid,
     containerUuid,
     isGetServer = true,
-    isSOTrxMenu,
+    isSOTrxDictionary,
     fieldsList = [],
     formatToReturn = 'array'
   }) => {
@@ -299,7 +299,9 @@ const getters = {
     const attributesObject = {}
     let attributesList = fieldsList
       .map(fieldItem => {
-        const { id, uuid, columnName, defaultValue, contextColumnNames } = fieldItem
+        const { id, uuid, columnName, defaultValue } = fieldItem
+        let contextColumnNames = fieldItem.contextColumnNames
+        if (isEmptyValue(contextColumnNames)) contextColumnNames = fieldItem.context_column_names
         const isSQL = String(defaultValue).startsWith('@SQL=') && isGetServer
 
         let parsedDefaultValue
@@ -308,7 +310,7 @@ const getters = {
             ...fieldItem,
             parentUuid,
             contextColumnNames,
-            isSOTrxMenu
+            isSOTrxDictionary
           })
         }
         attributesObject[columnName] = parsedDefaultValue
@@ -323,7 +325,7 @@ const getters = {
               ...fieldItem,
               parentUuid,
               contextColumnNames,
-              isSOTrxMenu,
+              isSOTrxDictionary,
               columnName: columnNameTo,
               elementName: elementNameTo
             })
@@ -346,7 +348,7 @@ const getters = {
             const optionsList = rootGetters.getStoredLookupAll({
               parentUuid,
               containerUuid,
-              contextColumnNames: fieldItem.reference.contextColumnNames,
+              contextColumnNames: fieldItem.context_column_names,
               contextColumnNamesByDefaultValue: contextColumnNames,
               id,
               uuid,

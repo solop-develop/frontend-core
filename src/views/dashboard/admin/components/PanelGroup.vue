@@ -21,8 +21,8 @@
     :style="styleMain"
   >
     <el-row
-      :gutter="20"
-      class="panel-group"
+      :gutter="15"
+      :class="classPanel"
     >
       <el-col
         v-for="(taks, key) in mainTaks"
@@ -45,7 +45,7 @@
               <i
                 v-if="taks.svg.type === 'i'"
                 :class="taks.svg.class"
-                style="font-size: 65px"
+                style="font-size: 50px"
               />
               <svg-icon
                 v-else
@@ -82,20 +82,25 @@ export default defineComponent({
       return store.state.app.device === 'mobile'
     })
 
+    const classPanel = computed(() => {
+      if (isMobile.value) return 'panel-group-taks-mobile'
+      return 'panel-group-taks'
+    })
+
     const spanSize = computed(() => {
-      const quantity = mainTaks.value.length
-      if (quantity === 1) return 24
-      if (quantity === 2) return 12
-      if (quantity === 3) return 8
-      if (quantity <= 4) return 6
-      if (quantity >= 5) return 4
-      return 6
+      // const quantity = mainTaks.value.length
+      // if (quantity === 1) return 24
+      // if (quantity === 2) return 12
+      // if (quantity === 3) return 8
+      // if (quantity <= 4) return 6
+      // if (quantity >= 5) return 4
+      return 4
     })
 
     const styleMain = computed(() => {
       const quantity = mainTaks.value.length
       if (quantity > 4) return 'display: flex;padding: 0px 15px 10px 5px;'
-      return 'padding: 0px 15px 10px 5px;'
+      return 'padding: 0px 15px 20px 5px;'
     })
 
     const documentList = computed(() => {
@@ -163,6 +168,7 @@ export default defineComponent({
       isMobile,
       spanSize,
       styleMain,
+      classPanel,
       documentList,
       // Methods
       handleClick,
@@ -182,8 +188,11 @@ export default defineComponent({
     transform: translateY(-50%) translateX(100%);
   }
 }
-.panel-group {
+.panel-group-taks {
   margin: 0px;
+  margin-left: -5px;
+  margin-right: -5px;
+  height: 90px;
   display: flex;
   overflow: auto;
   padding-bottom: 7px;
@@ -193,12 +202,11 @@ export default defineComponent({
   }
 
   .card-panel {
-    height: 125px;
+    height: 90px;
     cursor: pointer;
     font-size: 12px;
     display: flex;
     position: relative;
-    overflow: hidden;
     color: #666;
     background: #fff;
     box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
@@ -246,14 +254,113 @@ export default defineComponent({
       float: left;
       margin: 0px;
       // margin: 5px 0px 5px 14px;
-      padding: 16px;
+      padding: 16px 0px 0px 0px;
       transition: all 0.38s ease-out;
       border-radius: 6px;
     }
 
     .card-panel-icon {
       float: left;
-      font-size: 60px;
+      font-size: 50px;
+    }
+
+    .card-panel-description {
+      float: right;
+      font-weight: bold;
+      margin: 15px;
+      margin-left: 0px;
+      width: 100%;
+      margin-right: 10px;
+
+      .card-panel-text {
+        line-height: 18px;
+        color: rgba(0, 0, 0, 0.45);
+        font-size: 16px;
+        text-align: end;
+        margin-bottom: 12px;
+      }
+
+      .card-panel-num {
+        font-size: 20px;
+      }
+    }
+  }
+}
+.panel-group-taks-mobile {
+  margin: 0px;
+  margin-left: -5px;
+  margin-right: -5px;
+  height: 90px;
+  margin-bottom: 10px;
+  // display: flex;
+  // overflow: auto;
+  padding-bottom: 10px;
+
+  .card-panel-col {
+    margin-bottom: 5px;
+  }
+
+  .card-panel {
+    height: 90px;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    position: relative;
+    color: #666;
+    background: #fff;
+    box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
+    border-color: rgba(0, 0, 0, .05);
+
+    &:hover {
+      .card-panel-icon-wrapper {
+        color: #fff;
+      }
+
+      .icon-people {
+        background: #40c9c6;
+      }
+
+      .icon-message {
+        background: #36a3f7;
+      }
+
+      .icon-money {
+        background: #f4516c;
+      }
+
+      .icon-shopping {
+        background: #34bfa3
+      }
+    }
+
+    .icon-people {
+      color: #40c9c6;
+    }
+
+    .icon-message {
+      color: #36a3f7;
+    }
+
+    .icon-money {
+      color: #f4516c;
+    }
+
+    .icon-shopping {
+      color: #34bfa3
+    }
+
+    .card-panel-icon-wrapper {
+      float: left;
+      margin: 0px;
+      // margin: 5px 0px 5px 14px;
+      padding: 16px 0px 0px 0px;
+      transition: all 0.38s ease-out;
+      border-radius: 6px;
+    }
+
+    .card-panel-icon {
+      float: left;
+      font-size: 50px;
     }
 
     .card-panel-description {

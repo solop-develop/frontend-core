@@ -50,13 +50,16 @@ import {
   recordAccess,
   undoChange
 } from '@/utils/ADempiere/dictionary/window'
+import {
+  getCurrentClient, getCurrentRole
+} from '@/utils/ADempiere/auth'
 import { panelAdvanceQuery } from '@/utils/ADempiere/dictionary/panel.js'
 import {
   exportRecordsSelected,
   sharedLink
 } from '@/utils/ADempiere/constants/actionsMenuList.js'
 import evaluator from '@/utils/ADempiere/contextUtils/evaluator'
-import { getContext } from '@/utils/ADempiere/contextUtils'
+import { getContext, isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { containerManager as containerManagerReport } from '@/utils/ADempiere/dictionary/report'
@@ -92,9 +95,18 @@ export default {
   getWindowDefinitionFromServer({ dispatch, rootGetters }, {
     id
   }) {
+    const language = rootGetters['getCurrentLanguage']
+    const clientId = getCurrentClient()
+    const roleId = getCurrentRole()
+    const userId = rootGetters['user/getUserId']
+
     return new Promise(resolve => {
       requestWindowMetadata({
-        id
+        id,
+        language,
+        clientId,
+        roleId,
+        userId
       })
         .then(async windowResponse => {
           const window = generateWindow(windowResponse)
@@ -267,11 +279,11 @@ export default {
               const recordUuid = rootGetters.getUuidOfContainer(tabAssociatedUuid)
 
               const storedTab = rootGetters.getStoredTab(windowUuid, tabAssociatedUuid)
-              const { tableName } = storedTab
+              const { table_name } = storedTab
 
               const recordId = rootGetters.getIdOfContainer({
                 containerUuid: storedTab.containerUuid,
-                tableName
+                tableName: table_name
               })
 
               const documentAction = getters.getValueOfField({
@@ -280,11 +292,10 @@ export default {
               })
               const parametersList = {}
               parametersList[DOCUMENT_ACTION] = documentAction
-
               dispatch('startProcessOfWindows', {
                 parentUuid: tabAssociatedUuid,
                 containerUuid: process.uuid,
-                tableName,
+                tableName: table_name,
                 recordId,
                 recordUuid,
                 parametersList
@@ -309,13 +320,13 @@ export default {
 
                 if (!isEmptyValue(documentStatus)) {
                   dispatch('getDocumentStatusesListFromServer', {
-                    tableName,
+                    tableName: table_name,
                     recordId,
                     recordUuid,
                     documentStatus
                   })
                   dispatch('getDocumentActionsListFromServer', {
-                    tableName,
+                    tableName: table_name,
                     recordId,
                     recordUuid,
                     documentStatus
@@ -382,17 +393,17 @@ export default {
               const recordUuid = rootGetters.getUuidOfContainer(tabAssociatedUuid)
 
               const storedTab = rootGetters.getStoredTab(windowUuid, tabAssociatedUuid)
-              const { tableName } = storedTab
+              const { table_name } = storedTab
 
               const recordId = rootGetters.getIdOfContainer({
                 containerUuid: storedTab.containerUuid,
-                tableName
+                tableName: table_name
               })
 
               dispatch('startProcessOfWindows', {
                 parentUuid: tabAssociatedUuid,
                 containerUuid: process.uuid,
-                tableName,
+                tableName: table_name,
                 recordId,
                 recordUuid
               }).then(async processResponse => {
@@ -749,10 +760,15 @@ export default {
         query
       }, () => {})
 
+      const isSalesTransactionContext = isSalesTransaction({
+        parentUuid,
+        containerUuid,
+        isRecord: false
+      })
       let defaultAttributes = rootGetters.getTabParsedDefaultValue({
         parentUuid,
         containerUuid,
-        isSOTrxMenu: currentRoute.meta.isSalesTransaction,
+        isSOTrxDictionary: isSalesTransactionContext,
         fieldsList: tab.fieldsList
       })
 
@@ -809,7 +825,7 @@ export default {
         root: true
       })
 
-      if (tab.isDocument) {
+      if (tab.is_document) {
         // get displayed value on status
         const fieldDocumentStatus = tab.fieldsList.find(field => {
           return field.columnName === DOCUMENT_STATUS

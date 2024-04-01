@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -17,6 +17,11 @@
  */
 
 import { request } from '@/utils/ADempiere/request'
+
+// Constants
+import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
+
+// Utils and Helper Methods
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 export function requestListTransactionTypes() {
@@ -38,6 +43,7 @@ export function listBusinessPartners({
       page_size: pageSize,
       page_token: pageToken,
       //  DSL Query
+      is_only_active_records: true,
       search_value: searchValue
     }
   })
@@ -49,7 +55,7 @@ export function listBusinessPartners({
 export function requestListOrganizations({
   searchValue,
   pageToken,
-  pageSize = 250
+  pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
     url: '/payment-allocation/organizations',
@@ -58,6 +64,7 @@ export function requestListOrganizations({
       page_size: pageSize,
       page_token: pageToken,
       //  DSL Query
+      is_only_active_records: true,
       search_value: searchValue
     }
   })
@@ -66,7 +73,7 @@ export function requestListOrganizations({
 export function requestListCurrencies({
   searchValue,
   pageToken,
-  pageSize = 250
+  pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
     url: '/payment-allocation/currencies',
@@ -75,6 +82,7 @@ export function requestListCurrencies({
       page_size: pageSize,
       page_token: pageToken,
       //  DSL Query
+      is_only_active_records: true,
       search_value: searchValue
     }
   })
@@ -162,6 +170,7 @@ export function requestListCharges({
       page_size: pageSize,
       page_token: pageToken,
       //  DSL Query
+      is_only_active_records: true,
       search_value: searchValue
     }
   })
@@ -180,6 +189,7 @@ export function requestListTransactionOrganizations({
       page_size: pageSize,
       page_token: pageToken,
       //  DSL Query
+      is_only_active_records: true,
       search_value: searchValue
     }
   })

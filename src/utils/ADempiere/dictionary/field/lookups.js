@@ -19,6 +19,8 @@
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
+export const RECORD_ROWS_BY_LIST = 100
+
 /**
  * Convert lookups items proto to options select html
  * @param {Array} recordsList records of service on LookupItem proto message

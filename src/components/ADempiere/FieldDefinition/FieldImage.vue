@@ -106,7 +106,6 @@
               />
             </el-button>
           </el-upload>
-
           <el-button
             class="button-manage-file-svg"
             plain
@@ -136,7 +135,6 @@
       :multiple="false"
       :before-upload="isValidUploadHandler"
       :on-success="loadedSucess"
-      :on-change="handleChange"
     >
       <!-- <i v-else class="el-icon-plus icon-image-upload" /> -->
       <svg-icon icon-class="cloud_upload" class="icon-image-upload" style="font-size: 45px;" />
@@ -163,6 +161,7 @@ import { RESOURCE_TYPE_IMAGE } from '@/utils/ADempiere/resource'
 // API Request Methods
 import {
   requestPresignedUrl,
+  requestListResources,
   requestShareResources,
   requestDeleteResources,
   requestSetResourceReference,
@@ -204,6 +203,7 @@ export default {
       imageSourceSmall: '',
       MIME_TYPE_IMAGE,
       isLoadImage: false,
+      infoImage: {},
       isLoadImageUpload: false,
       valuesImage: [{
         identifier: 'undefined',
@@ -235,20 +235,6 @@ export default {
       }
       const getUrl = config.adempiere.resource.url + '/' + this.displayedValue
       return getUrl
-    },
-    imageSourceLarge() {
-      // const displayedAlt = this.displayedValue
-      // if (isEmptyValue(displayedAlt)) {
-      //   return undefined
-      // }
-      // const blobImage = getImagePath({
-      //   file: displayedAlt,
-      //   width: 1024,
-      //   height: 1024,
-      //   operation: 'resize'
-      // })
-      // return blobImage.href
-      return ''
     },
     additionalHeaders() {
       const token = getToken()
@@ -288,7 +274,8 @@ export default {
     async loadImage(file) {
       this.isLoadImage = true
       if (file) {
-        const getUrl = config.adempiere.resource.url + '/' + file
+        const fileName = await this.getListResources()
+        const getUrl = config.adempiere.resource.url + '/' + fileName
         this.imageSourceSmall = getUrl
         this.isLoadImage = false
       }
@@ -301,6 +288,7 @@ export default {
           return
         }
         // TODO: Replace and separate requests in different functions
+        if (!this.isEmptyValue(this.value)) this.presignedUrl({ file })
         this.handleReference(file)
       })
     },
@@ -313,6 +301,7 @@ export default {
       })
     },
     loadedSucess(response, file, fileList) {
+      // this.isValidUploadHandler(file)
       if (response.code >= 400) {
         setTimeout(() => {
           fileList.pop()
@@ -323,10 +312,6 @@ export default {
           fileList
         )
       }
-      // const { result } = response
-      // this.value = result.resource_id
-      // this.displayedValue = result.file_name
-      // this.preHandleChange(this.value)
     },
 
     clearValues() {
@@ -359,8 +344,8 @@ export default {
               id: responseReferences.id
             }
 
-            const url = this.presignedUrl({ file, reference: responseReferences })
-            resolve(url)
+            this.presignedUrl({ file, reference: responseReferences })
+            resolve(responseReferences)
           })
           .catch(error => {
             showMessage({
@@ -377,19 +362,32 @@ export default {
      */
     presignedUrl({ file, reference }) {
       return new Promise((resolve, reject) => {
+        const clienteId = this.$store.getters.getSessionContextClientId
+        const { referenceId, type } = this.$route.meta
+        const { tableName } = this.currentTab
         this.isLoadImageUpload = true
         requestPresignedUrl({
-          fileName: reference.file_name
+          clienteId: clienteId,
+          containerId: referenceId,
+          containerType: type,
+          columnName: this.metadata.columnName,
+          fileName: file.name,
+          recordId: this.currentRecord[tableName + '_ID'],
+          tableName
         })
           .then(responseUrl => {
-            fetch(responseUrl, {
+            const { url, file_name } = responseUrl
+            fetch(url, {
               method: 'PUT',
               body: file
             }).then(() => {
               setTimeout(() => {
-                this.value = reference.resource_id
+                if (this.isEmptyValue(this.value)) {
+                  this.value = reference.resource_id
+                }
+                this.loadImage(file)
                 this.preHandleChange(this.value)
-                this.displayedValue = reference.file_name
+                this.displayedValue = file_name
               }, 1500)
               resolve(true)
             }).catch((error) => {
@@ -451,12 +449,61 @@ export default {
         resourceName,
         imageId: this.value
       }).then(() => {
-        requestDeleteResources({
-          fileName: resourceName
+        this.clearValues()
+      })
+      requestDeleteResources({
+        fileName: resourceName
+      })
+        .then(() => {
+          this.clearValues()
         })
-          .then(() => {
-            this.clearValues()
+    },
+
+    getListResources() {
+      return new Promise((resolve, reject) => {
+        const clienteId = this.$store.getters.getSessionContextClientId
+        const { referenceId, type } = this.$route.meta
+        const { tableName } = this.currentTab
+        requestListResources({
+          clienteId: clienteId,
+          containerId: referenceId,
+          containerType: type,
+          columnName: this.metadata.columnName,
+          recordId: this.currentRecord[tableName + '_ID'],
+          tableName
+        })
+          .then(response => {
+            let resource
+            let image = ''
+            const resources = this.sortResource(response.resources)
+            if (!this.isEmptyValue(resources)) {
+              resource = resources[resources.length - 1]
+              image = resource.name
+              this.infoImage = resource
+            }
+            resolve(image)
           })
+          .catch((error) => {
+            showMessage({
+              message: error.message || error.result || lang.t('component.attachment.error'),
+              type: 'error'
+            })
+            reject('')
+          })
+      })
+    },
+    sortResource(resources) {
+      return resources.sort((a, b) => {
+        const fechaA = new Date(a.last_modified)
+        const fechaB = new Date(b.last_modified)
+
+        if (fechaA < fechaB) {
+          return -1
+        } else if (fechaA > fechaB) {
+          return 1
+        } else {
+          return 0
+        }
       })
     }
   }
@@ -464,6 +511,27 @@ export default {
 </script>
 
 <style lang="scss">
+.load-references {
+  display: inline-block;
+  margin: 7px;
+  // .el-upload-list {
+  //   display: none;
+  // }
+  .el-upload-dragger {
+    background-color: #fff !important;
+    border: 0px dashed #d9d9d9 !important;
+    border-radius: 0px !important;
+    -webkit-box-sizing: border-box !important;
+    box-sizing: border-box !important;
+    width: auto !important;
+    height: auto !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    display: contents !important;
+    overflow: hidden !important;
+    margin-top: 9px !important;
+  }
+}
 .custom-field-image {
   .image-with-file {
     // width: 178px;

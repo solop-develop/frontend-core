@@ -39,6 +39,11 @@ const dateTimeFormats = {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit'
+    },
+    onlyDateLatin: {
+      year: 'numeric',
+      month: 'long',
+      day: '2-digit'
     }
   },
   'es': {
@@ -63,6 +68,11 @@ const dateTimeFormats = {
     onlyDate: {
       year: 'numeric',
       month: '2-digit',
+      day: '2-digit'
+    },
+    onlyDateLatin: {
+      year: 'numeric',
+      month: 'long',
       day: '2-digit'
     }
   }

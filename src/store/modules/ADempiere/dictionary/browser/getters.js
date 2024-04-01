@@ -220,6 +220,7 @@ export default {
   }) => {
     if (isEmptyValue(fieldsList)) {
       fieldsList = getters.getStoredFieldsFromBrowser(containerUuid)
+      if (isEmptyValue(fieldsList)) return []
     }
 
     const fieldsEmpty = fieldsList.filter(fieldItem => {

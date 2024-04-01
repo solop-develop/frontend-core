@@ -42,7 +42,7 @@ import { requestSaveWindowCustomization } from '@/api/ADempiere/user-customizati
 
 // Utils and Helpers Methods
 import evaluator from '@/utils/ADempiere/contextUtils/evaluator'
-import { getContext } from '@/utils/ADempiere/contextUtils'
+import { getContext, isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
@@ -53,6 +53,7 @@ import { showMessage } from '@/utils/ADempiere/notification.js'
 import { zoomIn } from '@/utils/ADempiere/coreUtils'
 import { exportRecords, supportedTypes } from '@/utils/ADempiere/exportUtil.js'
 import { isRunableDocumentAction } from '@/utils/ADempiere/dictionary/workflow'
+import { convertRelationTabs } from '@/utils/ADempiere/dictionary/window/templatesWindow.js'
 
 /**
  * Evaluate if tab is displayed
@@ -378,14 +379,14 @@ export function isReadOnlyField({ isReadOnly, readOnlyLogic, isReadOnlyFromLogic
 /**
  * Is displayed column in table multi record
  */
-export function isDisplayedColumn({ isDisplayed, isDisplayedGrid, isDisplayedFromLogic, isActive, isKey, displayType, displayLogic }) {
+export function isDisplayedColumn({ isDisplayed, is_displayed_grid, isDisplayedFromLogic, isKey, displayType, displayLogic }) {
   // key or button field not showed
   if (isKey || isHiddenField(displayType)) {
     return false
   }
 
   // window (table) result
-  return isActive && isDisplayed && isDisplayedGrid &&
+  return isDisplayed && is_displayed_grid &&
     (isEmptyValue(displayLogic) || isDisplayedFromLogic)
 }
 
@@ -442,7 +443,7 @@ export const createNewRecord = {
       return false
     }
 
-    if (!tab.isInsertRecord) {
+    if (!tab.is_insert_record) {
       return false
     }
     const recordUuid = store.getters.getUuidOfContainer(containerUuid)
@@ -470,7 +471,7 @@ export const createNewRecord = {
     }
 
     const tab = store.getters.getStoredTab(parentUuid, containerUuid)
-    if (!tab.isInsertRecord) {
+    if (!tab.is_insert_record) {
       return false
     }
     // TODO: Verify index Parent Tab
@@ -1385,7 +1386,7 @@ export function generateTabs({
   tabs,
   parentUuid
 }) {
-  const firstTabTableName = tabs[0].tableName
+  const firstTabTableName = tabs[0].table_name
   const firstTabUuid = tabs[0].uuid
 
   const sequenceTabsListOnWindow = []
@@ -1405,35 +1406,22 @@ export function generateTabs({
       itemTab.isTranslationTab
     )
   }).map((currentTab, index, listTabs) => {
-    const isParentTab = Boolean(firstTabTableName === currentTab.tableName)
-
-    const convertRelationTabs = (itemTab) => {
-      return {
-        name: itemTab.name,
-        id: itemTab.id,
-        uuid: itemTab.uuid,
-        tableName: itemTab.tableName,
-        sequence: itemTab.sequence,
-        tabLevel: itemTab.tabLevel,
-        contextColumnNames: itemTab.contextColumnNames
-      }
-    }
-
+    const isParentTab = Boolean(firstTabTableName === currentTab.table_name)
     const parentTabs = listTabs
-      .filter(itemTab => {
-        return itemTab.uuid !== currentTab.uuid &&
-          itemTab.sequence < currentTab.sequence &&
-          itemTab.tabLevel < currentTab.tabLevel
+      .filter(currentItemTab => {
+        return currentItemTab.uuid !== currentTab.uuid &&
+        currentItemTab.sequence < currentTab.sequence &&
+        currentItemTab.tab_level < currentTab.tab_level
       })
-      .map(convertRelationTabs)
+      .map(item => convertRelationTabs(item))
 
     const childTabs = listTabs
-      .filter(itemTab => {
-        return itemTab.uuid !== currentTab.uuid &&
-          itemTab.sequence > currentTab.sequence &&
-          itemTab.tabLevel > currentTab.tabLevel
+      .filter(currentItemTab => {
+        return currentItemTab.uuid !== currentTab.uuid &&
+        currentItemTab.sequence > currentTab.sequence &&
+        currentItemTab.tab_level > currentTab.tab_level
       })
-      .map(convertRelationTabs)
+      .map(item => convertRelationTabs(item))
 
     let parentFieldsList = []
     if (!isEmptyValue(currentTab.displayLogic)) {
@@ -1441,13 +1429,13 @@ export function generateTabs({
     }
 
     const sequenceTabsList = sequenceTabsListOnWindow
-      .filter(itemTab => {
-        return itemTab.isSortTab &&
-          itemTab.tableName === currentTab.tableName
+      .filter(currentItemTab => {
+        return currentItemTab.isSortTab &&
+        currentItemTab.table.tableName === currentTab.table.tableName
       })
-      .map(itemTab => {
+      .map(currentItemTab => {
         return {
-          ...itemTab,
+          ...currentItemTab,
           parentUuid,
           parentTabs: [
             ...parentTabs,
@@ -1629,7 +1617,6 @@ export const containerManager = {
     }
 
     const tabDefinition = store.getters.getStoredTab(parentUuid, containerUuid)
-    const currentRoute = router.app._route
     if (tabDefinition.isParentTab) {
       // const { tableName } = tabDefinition
       // router.push({
@@ -1649,10 +1636,15 @@ export const containerManager = {
     }
 
     const fieldsList = store.getters.getStoredFieldsFromTab(parentUuid, containerUuid)
+    const isSalesTransactionContext = isSalesTransaction({
+      parentUuid,
+      containerUuid,
+      isRecord: false
+    })
     const defaultValues = store.getters.getParsedDefaultValues({
       parentUuid,
       containerUuid,
-      isSOTrxMenu: currentRoute.meta.isSalesTransaction,
+      isSOTrxDictionary: isSalesTransactionContext,
       fieldsList,
       formatToReturn: 'object'
     })
@@ -2019,7 +2011,7 @@ export const containerManager = {
   },
 
   // To Default Table
-  setPage: ({
+  setPageNumber: ({
     parentUuid,
     containerUuid,
     pageSize,
@@ -2037,10 +2029,14 @@ export const containerManager = {
       pageNumber
     })
   },
-  setSizePage: ({
+  getPageNumber({ containerUuid }) {
+    return store.getters.getTabPageNumber({
+      containerUuid
+    })
+  },
+  setPageSize: ({
     parentUuid,
     containerUuid,
-    pageNumber = 1,
     pageSize = 15
   }) => {
     const filters = store.getters.getTabDataFilters({
@@ -2051,12 +2047,11 @@ export const containerManager = {
       parentUuid,
       containerUuid,
       filters,
-      pageSize,
-      pageNumber
+      pageSize
     })
   },
-  getPageNumber({ containerUuid }) {
-    return store.getters.getTabPageNumber({
+  getPageSize({ containerUuid }) {
+    return store.getters.getTabPageSize({
       containerUuid
     })
   },
@@ -2153,7 +2148,7 @@ export const containerManager = {
       blankValue
     })
   },
-  getSearchRecordsList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, pageNumber, id, filters, searchValue, pageSize }) {
+  getSearchRecordsList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, id, filters, searchValue, pageNumber, pageSize }) {
     return store.dispatch('getSearchRecordsFromServer', {
       parentUuid,
       containerUuid,
@@ -2184,11 +2179,13 @@ export const containerManager = {
     })
   },
 
-  getAttachment({ tableName, recordId, recordUuid }) {
+  getAttachment({ tableName, recordId, containerId, clienteId }) {
     return store.dispatch('getAttachmentFromServer', {
-      tableName,
       recordId,
-      recordUuid
+      tableName,
+      clienteId,
+      containerId,
+      containerType: 'window'
     })
   },
   searchWorkflowHistory({ tableName, recordId, recordUuid, containerUuid }) {

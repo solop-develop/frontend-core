@@ -65,6 +65,9 @@ import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.
 import fieldSearchMixin from '@/components/ADempiere/FieldDefinition/FieldSearch/mixinFieldSearch.js'
 import ButtonGeneralInfoSearch from './button.vue'
 
+// Constants
+import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
+
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
@@ -132,12 +135,14 @@ export default {
         this.containerManager.getSearchRecordsList({
           containerUuid: this.metadata.containerUuid,
           parentUuid: this.metadata.containerUuid,
-          pageNumber: 1,
           contextColumnNames: this.metadata.reference.contextColumnNames,
           tableName: this.metadata.reference.tableName,
           columnName: this.metadata.columnName,
-          fieldUuid: this.metadata.uuid,
-          searchValue
+          uuid: this.metadata.uuid,
+          id: this.metadata.id,
+          searchValue,
+          pageNumber: 1,
+          pageSize: RECORD_ROWS_BY_LIST
         })
           .then(responseRecords => {
             if (isEmptyValue(responseRecords)) {

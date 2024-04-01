@@ -1,18 +1,21 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
- Contributor(s): Elsio Sanchez elsiosanchez@erpya.com www.erpya.com
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <https:www.gnu.org/licenses/>.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
+
 <template>
   <div style="padding: 10px;">
     <div style="height: 70vh;">
@@ -46,10 +49,11 @@
             />
           </el-table>
         </el-tab-pane>
+
         <custom-pagination
-          :total="matchFromList.length"
-          :selection="validateMatchFrom"
           style="margin-top: 10px;"
+          :total-records="matchFromList.length"
+          :selection="validateMatchFrom"
         />
       </el-tabs>
 
@@ -89,8 +93,9 @@
               :align="fieldAttributes.align"
             />
           </el-table>
+
           <custom-pagination
-            :total="matchToList.length"
+            :total-records="matchToList.length"
             :selection="validateMatchTo"
             style="margin-top: 10px;"
           />
@@ -110,7 +115,7 @@
             style="text-align: center;"
           >
             <el-form-item class="front-item-receipt">
-              <template slot="label" style="width: 450px;">
+              <template slot="label">
                 {{ $t('form.match.field.toAssigned') }}
               </template>
               <el-input-number
@@ -126,7 +131,7 @@
             style="text-align: center;"
           >
             <el-form-item class="front-item-receipt">
-              <template slot="label" style="width: 450px;">
+              <template slot="label">
                 {{ $t('form.match.field.assigning') }}
               </template>
               <el-input-number
@@ -142,7 +147,7 @@
             style="text-align: center;"
           >
             <el-form-item class="front-item-receipt">
-              <template slot="label" style="width: 450px;">
+              <template slot="label">
                 {{ $t('form.match.field.difference') }}
               </template>
               <el-input-number
@@ -187,7 +192,7 @@ export default defineComponent({
     CustomPagination
   },
 
-  setup(props, { root }) {
+  setup() {
     /**
      * Refs
      */
@@ -196,6 +201,7 @@ export default defineComponent({
     const toAssignedField = ref(0)
     const assigningField = ref(0)
     const differenceField = ref(0)
+
     /**
      * Computed
      */

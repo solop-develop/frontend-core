@@ -68,9 +68,9 @@
             <el-card shadow="hover" :class="{ 'image-attachment': true, 'is-current': isCurrent(file) }">
               <div v-if="isSelectable" slot="header" class="clearfix" style="margin-top: 16px; margin-bottom: 16px;">
                 <el-radio
-                  v-model="resourceReference.id"
-                  :label="file.id"
-                  @click="resourceReference = file"
+                  v-model="resourceReference"
+                  :label="file.fullName"
+                  @click="resourceReference = file.fullName"
                 >
                   {{ file.name }}
                 </el-radio>
@@ -120,7 +120,7 @@
                     plain
                   />
                 </el-popover>
-                <el-popover
+                <!-- <el-popover
                   :value="isShowMessage"
                   placement="bottom"
                   trigger="click"
@@ -180,7 +180,7 @@
                     plain
                     @click="openMessage(file)"
                   />
-                </el-popover>
+                </el-popover> -->
                 <file-share
                   :image-id="file.id"
                   :resource-name="file.file_name"
@@ -218,70 +218,6 @@
         <el-empty />
       </div>
     </el-main>
-
-    <!-- Add Description -->
-    <el-footer
-      height="auto"
-    >
-      <el-card v-if="!isEmptyValue(currentAttachment.textMessage) && !isEditHeard" class="box-card">
-        <div slot="header" class="clearfix">
-          <b style="font-size: 20px;">
-            {{ currentAttachment.textMessage }}
-          </b>
-          <el-button
-            plain
-            style="color: black;float: right;"
-            @click="updateDescriptionHeader(currentAttachment.textMessage)"
-          >
-            <svg-icon icon-class="edit" />
-            {{ $t('component.attachment.editDescription') }}
-          </el-button>
-        </div>
-      </el-card>
-      <el-card v-else class="box-card">
-        {{ currentAttachment.textMessage }}
-        <b slot="header" style="font-size: 20px;">
-          {{ $t('component.attachment.addDescription') }}
-        </b>
-        <el-row :gutter="24">
-          <el-col :span="24">
-            <el-input
-              v-model="resourceDescription"
-              type="textarea"
-              :placeholder="$t('component.attachment.addDescription')"
-              maxlength="2000"
-              show-word-limit
-            />
-          </el-col>
-        </el-row>
-        <p style="text-align: end;">
-          <el-button
-            plain
-            type="info"
-            class="button-base-icon"
-            style="font-size: 25px;"
-            :disabled="isEmptyValue(resourceDescription)"
-            @click="clearDescriptionHeader"
-          >
-            <svg-icon icon-class="layers-clear" />
-          </el-button>
-          <el-button
-            type="danger"
-            icon="el-icon-close"
-            class="button-base-icon"
-            style="margin-top: 10px;"
-            @click="closeNote"
-          />
-          <el-button
-            type="primary"
-            class="button-base-icon"
-            icon="el-icon-check"
-            :disabled="isEmptyValue(resourceDescription)"
-            @click="addAttachmentDescriptionHeader"
-          />
-        </p>
-      </el-card>
-    </el-footer>
   </el-container>
 
   <loading-view

@@ -11,10 +11,10 @@
       "timeout": 99999999
     },
     "images": {
-      "url": "http://localhost/api/resources"
+      "url": "http://localhost/api/resources/"
     },
     "resource": {
-      "url": "http://localhost/api/resources"
+      "url": "http://localhost/api/resources/"
     }
   },
   "repository": {

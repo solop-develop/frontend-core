@@ -263,13 +263,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style lang="scss">
-// used in cell type number
-.cell-align-right {
-  text-align: right !important;
-}
-.cell-align-center {
-  text-align: center !important;
-}
-</style>

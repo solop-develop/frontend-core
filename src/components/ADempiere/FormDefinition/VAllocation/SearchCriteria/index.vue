@@ -36,11 +36,9 @@
                 <el-col :span="12">
                   <el-form-item
                     :label="$t('form.VAllocation.searchCriteria.organization')"
-                    style="width: 100%;"
                   >
                     <el-select
                       v-model="organizationsId"
-                      style="width: 100%;"
                       filterable
                       clearable
                       :default-first-option="true"
@@ -63,44 +61,16 @@
 
               <el-row :gutter="20">
                 <el-col :span="12">
-                  <el-form-item
-                    style="width: 100%;"
-                  >
-                    <template slot="label">
-                      {{ $t('form.VAllocation.searchCriteria.currency') }}
-                      <span style="color: #f34b4b"> * </span>
-                    </template>
-                    <el-select
-                      v-model="currencyId"
-                      style="width: 100%;"
-                      filterable
-                      clearable
-                      :default-first-option="true"
-                      :remote-method="remoteSearchCurrencies"
-                      @visible-change="findCurrencies"
-                    >
-                      <empty-option-select
-                        :current-value="currencyId"
-                      />
-                      <el-option
-                        v-for="item in optionsCurrency"
-                        :key="item.id"
-                        :label="item.label"
-                        :value="item.id"
-                      />
-                    </el-select>
-                  </el-form-item>
+                  <currency-field />
                 </el-col>
 
                 <el-col :span="12">
                   <el-form-item
                     :label="$t('form.VAllocation.searchCriteria.date')"
-                    style="width: 100%;"
                   >
                     <el-date-picker
                       v-model="currentDate"
                       type="date"
-                      style="width: 100%;"
                     />
                   </el-form-item>
                 </el-col>
@@ -186,6 +156,7 @@ import store from '@/store'
 // Components and Mixins
 import BusinessPartner from '@/components/ADempiere/FormDefinition/VAllocation/SearchCriteria/businessPartner.vue'
 import Carousel from '@/components/ADempiere/Carousel'
+import CurrencyField from '@/components/ADempiere/FormDefinition/VAllocation/SearchCriteria/currencyField.vue'
 import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
 import EmptyOptionSelect from '@/components/ADempiere/FieldDefinition/FieldSelect/emptyOptionSelect.vue'
 
@@ -198,8 +169,7 @@ import {
 
 // API Request Methods
 import {
-  requestListOrganizations,
-  requestListCurrencies
+  requestListOrganizations
 } from '@/api/ADempiere/form/VAllocation.ts'
 
 // Utils and Helper Methods
@@ -211,6 +181,7 @@ export default defineComponent({
   components: {
     BusinessPartner,
     Carousel,
+    CurrencyField,
     FieldDefinition,
     EmptyOptionSelect
   },
@@ -289,23 +260,6 @@ export default defineComponent({
       }
     })
 
-    const optionsCurrency = computed({
-      // getter
-      get() {
-        const { listCurrency } = store.getters.getSearchFilter
-        return listCurrency
-      },
-      // setter
-      set(list) {
-        store.commit('updateAttributeCriteriaVallocation', {
-          attribute: 'listCurrency',
-          criteria: 'searchCriteria',
-          value: list
-        })
-        // store.commit('setBusinessPartner', id)
-      }
-    })
-
     // const businessPartner = computed(() => {
     //   return store.getters.getValueOfFieldOnContainer({
     //     parentUuid: '',
@@ -328,23 +282,6 @@ export default defineComponent({
         })
         store.commit('updateAttributeCriteriaVallocation', {
           attribute: 'organizationId',
-          criteria: 'searchCriteria',
-          value: id
-        })
-      }
-    })
-
-    const currencyId = computed({
-      // getter
-      get() {
-        const { currencyId } = store.getters.getSearchFilter
-        return currencyId
-      },
-      // setter
-      set(id) {
-        // store.commit('setCurrency', id)
-        store.commit('updateAttributeCriteriaVallocation', {
-          attribute: 'currencyId',
           criteria: 'searchCriteria',
           value: id
         })
@@ -404,40 +341,11 @@ export default defineComponent({
         })
     }
 
-    function findCurrencies(isFind, searchValue) {
-      if (!isFind) {
-        return
-      }
-      requestListCurrencies({
-        searchValue
-      })
-        .then(response => {
-          const { records } = response
-          optionsCurrency.value = records.map(currency => {
-            const { id, uuid, values } = currency
-            return {
-              id,
-              uuid,
-              label: values.DisplayColumn
-            }
-          })
-        })
-    }
-
     function remoteSearchOrganizations(query) {
       if (!isEmptyValue(query) && query.length > 2) {
         const result = optionsOrganizations.value.filter(findFilter(query))
         if (isEmptyValue(result)) {
           findOrganizations(true, query)
-        }
-      }
-    }
-
-    function remoteSearchCurrencies(query) {
-      if (!isEmptyValue(query) && query.length > 2) {
-        const result = optionsCurrency.value.filter(findFilter(query))
-        if (isEmptyValue(result)) {
-          findCurrencies(true, query)
         }
       }
     }
@@ -539,7 +447,6 @@ export default defineComponent({
       // List Option
       currentTypeTransaction,
       optionsOrganizations,
-      optionsCurrency,
       // businessPartners,
       organizations,
       currency,
@@ -548,12 +455,9 @@ export default defineComponent({
       labelPayablesOnly,
       organizationsId,
       currentDate,
-      currencyId,
       // Methods,
       remoteSearchOrganizations,
-      remoteSearchCurrencies,
       findOrganizations,
-      findCurrencies,
       findFilter,
       //
       isMandatoryField,

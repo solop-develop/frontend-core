@@ -22,11 +22,12 @@ import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
 
 export function requestListAccoutingSchemas({
   searchValue,
   pageToken,
-  pageSize = 100
+  pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
     url: '/general-ledger/accounts/schemas',
@@ -46,7 +47,7 @@ export function requestListAccoutingSchemas({
 export function requestListOrganizations({
   searchValue,
   pageToken,
-  pageSize = 100
+  pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
     url: '/general-ledger/organizations',
@@ -66,7 +67,7 @@ export function requestListOrganizations({
 export function requestPostingTypesList({
   searchValue,
   pageToken,
-  pageSize = 100
+  pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
     url: '/general-ledger/accounts/posting-types',

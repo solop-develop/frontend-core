@@ -1,3 +1,21 @@
+<!--
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
+-->
+
 <template>
   <el-container
     key="child-income-loaded"
@@ -109,10 +127,10 @@
                       style="display: block;"
                     >
                       <el-option
-                        v-for="item in confirmedOptionsList"
+                        v-for="item in YES_NO_OPTIONS_LIST"
                         :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
+                        :value="item.stringValue"
+                        :label="item.displayValue"
                       />
                     </el-select>
                   </el-form-item>
@@ -219,10 +237,10 @@
         <el-row :gutter="24">
           <el-col :span="24">
             <custom-pagination
-              :total="recordCount"
-              :records-page="tableData.length"
+              :total-records="recordCount"
+              :page-size="tableData.length"
               :selection="selection"
-              :handle-change-page="setPage"
+              :handle-change-page-number="setPageNumber"
             />
           </el-col>
         </el-row>
@@ -237,14 +255,18 @@ import { defineComponent, ref, computed } from '@vue/composition-api'
 import lang from '@/lang'
 import store from '@/store'
 
-// componets and mixins
+// Constants
+import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
+import { YES_NO_OPTIONS_LIST } from '@/utils/ADempiere/dictionary/field/yesNo'
+
+// Componets and Mixins
 import TitleAndHelp from '@/components/ADempiere/TitleAndHelp'
 import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
 import heardList from './headerTable'
 import fieldsList from './fieldsList'
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 
-// api request methods
+// API Request Methods
 import {
   requestCreateResource,
   requestUpdateResource,
@@ -253,10 +275,9 @@ import {
   requestConfirmResourceAssignnment
 } from '@/api/ADempiere/form/timeControl.js'
 
-// utils and helper methods
+// Utils and Helper Methods
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 import { createFieldFromDictionary } from '@/utils/ADempiere/lookupFactory'
-import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { containerManager as containerManagerForm } from '@/utils/ADempiere/dictionary/form/index.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -309,20 +330,6 @@ export default defineComponent({
     const isLoadingCreate = ref(false)
     const metadataList = ref([])
     const confirmedFind = ref('N')
-    const confirmedOptionsList = ref([
-      {
-        value: undefined,
-        label: ' '
-      },
-      {
-        value: 'Y',
-        label: lang.t('components.switchActiveText')
-      },
-      {
-        value: 'N',
-        label: lang.t('components.switchInactiveText')
-      }
-    ])
     const isLoadingRecords = ref(false)
     // Pagination
     const recordCount = ref(0)
@@ -638,7 +645,7 @@ export default defineComponent({
     }
 
     // Get Record Control Table
-    function setPage(pageNumber) {
+    function setPageNumber(pageNumber) {
       listResource(pageNumber)
     }
 
@@ -651,6 +658,7 @@ export default defineComponent({
     listResource()
 
     return {
+      YES_NO_OPTIONS_LIST,
       // Ref
       activeCollapse,
       name,
@@ -663,7 +671,6 @@ export default defineComponent({
       metadataList,
       timeOutFocus,
       confirmedFind,
-      confirmedOptionsList,
       nameFind,
       descriptionFind,
       isLoadingRecords,
@@ -693,7 +700,7 @@ export default defineComponent({
       editChild,
       listResource,
       confirmResiurce,
-      setPage,
+      setPageNumber,
       handleRowClick,
       closeList
     }

@@ -16,13 +16,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import router from '@/router'
-
 // Utils and Helper Methods
 import { isEmptyValue, getTypeOfValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
 import evaluator from '@/utils/ADempiere/contextUtils/evaluator'
-import { getContext, parseContext } from '@/utils/ADempiere/contextUtils'
+import { getContext, isSalesTransaction, parseContext } from '@/utils/ADempiere/contextUtils'
 import { fieldIsDisplayed } from '@/utils/ADempiere/dictionaryUtils.js'
 import { assignedGroup } from '@/utils/ADempiere/dictionary/panel'
 import { isLookup } from '@/utils/ADempiere/references'
@@ -79,7 +77,7 @@ const actions = {
           // })
         }
         //  Get dependent fields
-        if (!isEmptyValue(itemField.parentFieldsList) && itemField.isActive) {
+        if (!isEmptyValue(itemField.parentFieldsList)) {
           itemField.parentFieldsList.forEach(parentColumnName => {
             const parentField = listFields.find(parentFieldItem => {
               return parentFieldItem.columnName === parentColumnName &&
@@ -260,11 +258,15 @@ const actions = {
         return
       }
 
-      const currentRoute = router.app._route
+      const isSalesTransactionContext = isSalesTransaction({
+        parentUuid,
+        containerUuid,
+        isRecord: false
+      })
       const defaultAttributes = getters.getParsedDefaultValues({
         parentUuid,
         containerUuid,
-        isSOTrxMenu: currentRoute.meta.isSalesTransaction,
+        isSOTrxDictionary: isSalesTransactionContext,
         fieldsList: panel.fieldsList
       })
 

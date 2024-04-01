@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -49,14 +49,15 @@
                 :prop="workflowColumn.columnName"
               />
             </el-table>
+
             <custom-pagination
               v-show="!collapse"
-              :total="recordCount"
-              :current-page="currentPagePagination"
               :container-manager="containerManagerBPList"
-              :handle-change-page="setPage"
-              :handle-size-change="handleChangeSizePage"
-              :records-page="activityList.length"
+              :total-records="recordCount"
+              :page-number="currentPagePagination"
+              :page-size="activityList.length"
+              :handle-change-page-number="setPageNumber"
+              :handle-change-page-size="handleChangeSizePage"
             />
           </el-card>
         </el-header>
@@ -73,7 +74,7 @@
                   <el-timeline-item
                     v-for="(nodes, key) in listProcessWorkflow"
                     :key="key"
-                    :timestamp="translateDateByLong(nodes.log_date)"
+                    :timestamp="translateDate({ value: nodes.log_date, format: 'long' })"
                     placement="top"
                   >
                     <b>{{ nodes.node_name }}</b> {{ nodes.text_message }}
@@ -131,7 +132,7 @@
             </el-col>
             <el-col v-show="isValidateUserChoice" :span="12" style="text-align: center;margin: 0px;">
               <el-form-item :label="$t('form.workflowActivity.filtersSearch.approve')" style="margin: 0px;padding: 0px;">
-                <el-switch v-model="isProved" />
+                <el-switch v-model="isApproved" />
               </el-form-item>
             </el-col>
             <el-col v-show="chooseOption" :span="18" style="text-align: center;margin: 0px;padding: 0px">
@@ -219,14 +220,15 @@
             :width="workflowColumn.width"
           />
         </el-table>
+
         <custom-pagination
           v-show="!collapse"
-          :total="recordCount"
-          :current-page="currentPagePagination"
           :container-manager="containerManagerBPList"
-          :handle-change-page="setPage"
-          :handle-size-change="handleChangeSizePage"
-          :records-page="activityList.length"
+          :total-records="recordCount"
+          :page-number="currentPagePagination"
+          :page-size="activityList.length"
+          :handle-change-page-number="setPageNumber"
+          :handle-change-page-size="handleChangeSizePage"
         />
       </el-card>
 
@@ -247,7 +249,7 @@
           <el-timeline-item
             v-for="(nodes, key) in listProcessWorkflow"
             :key="key"
-            :timestamp="translateDateByLong(nodes.log_date)"
+            :timestamp="translateDate({ value: nodes.log_date, format: 'long' })"
             placement="top"
           >
             <b>{{ nodes.node_name }}</b> {{ nodes.text_message }}
@@ -266,7 +268,7 @@
 
             <el-col v-show="isValidateUserChoice" :span="8" style="text-align: center;">
               <el-form-item :label="$t('form.workflowActivity.filtersSearch.approve')">
-                <el-switch v-model="isProved" />
+                <el-switch v-model="isApproved" />
               </el-form-item>
             </el-col>
 
@@ -345,13 +347,14 @@ import CustomPagination from '@/components/ADempiere/DataTable/Components/Custom
 import WorkflowDiagram from '@/components/ADempiere/WorkflowManager/WorkflowDiagram.vue'
 import 'simple-m-editor/dist/simple-m-editor.css'
 import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
+
 // Constants
 import fieldsList from './fieldsList.js'
 
 // Utils and Helper Methods
 import { generateWorkflowDiagram } from '@/utils/ADempiere/dictionary/workflow'
 import { showMessage } from '@/utils/ADempiere/notification'
-import { translateDateByLong } from '@/utils/ADempiere/formatValue/dateFormat'
+import { translateDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 
 // API Request Methods
@@ -434,17 +437,7 @@ export default {
       chooseOption: false,
       chooseOptionB: true,
       userId: '',
-      isProved: false,
-      listAproved: [
-        {
-          displayedValue: this.$t('components.switchActiveText'),
-          value: true
-        },
-        {
-          displayedValue: this.$t('components.switchInactiveText'),
-          value: false
-        }
-      ],
+      isApproved: false,
       chatEditor: null,
       listSalesReps: [],
       input: '',
@@ -516,7 +509,7 @@ export default {
         getFieldsLit: () => {},
         isReadOnlyColumn: ({ field, row }) => { return true },
         setDefaultValues: () => {},
-        setPage: this.setPage
+        setPageNumber: this.setPageNumber
       }
     },
     currentPagePagination() {
@@ -547,7 +540,7 @@ export default {
   },
 
   methods: {
-    translateDateByLong,
+    translateDate,
     setCurrent(activity) {
       if (this.isEmptyValue(activity)) {
         return
@@ -555,7 +548,7 @@ export default {
       activity = this.activityList.find(activity => activity.node === this.currentActivity.node)
       // this.$refs.WorkflowActivity.setCurrentRow(activity)
     },
-    setPage(pageNumber) {
+    setPageNumber(pageNumber) {
       this.$store.dispatch('serverListActivity', { pageNumber })
     },
     handleChangeSizePage(pageSize) {
@@ -597,7 +590,7 @@ export default {
       this.message = ''
     },
     sendOPeration() {
-      if (this.isProved) {
+      if (this.isApproved) {
         this.processWorkflow(this.currentActivity)
       } else {
         this.forwardWorkflow(this.currentActivity)
@@ -631,7 +624,7 @@ export default {
         id,
         uuid,
         message: this.message,
-        isApproved: this.isProved
+        isApproved: this.isApproved
       })
         .then(response => {
           showMessage({
@@ -650,7 +643,7 @@ export default {
       this.message = ''
       this.chooseOption = false
       this.userId = ''
-      this.isProved = false
+      this.isApproved = false
     },
     changeOption(value) {
       this.chooseOptionB = !value

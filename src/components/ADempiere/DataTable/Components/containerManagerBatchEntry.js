@@ -53,7 +53,7 @@ export function isDisplayedField({ isQuickEntry, displayType, isActive, isDispla
     return false
   }
   // verify if field is active
-  return isActive && isDisplayed && isQuickEntry
+  return isDisplayed && isQuickEntry
 }
 
 export function isDisplayedDefault({ isMandatory }) {

@@ -63,6 +63,7 @@ import ButtonPopover from './button.vue'
 
 // Constants
 import { WAREHOUSE } from '@/utils/ADempiere/constants/systemColumns'
+import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -152,12 +153,15 @@ export default {
         }
 
         this.containerManager.warehouseLocatorSearch({
+          parentUuid: this.parentUuid,
           containerUuid: this.containerUuid,
           contextAttributesList,
           warehouseId: this.warehouseId,
           uuid: this.metadata.uuid,
+          id: this.metadata.id,
           searchValue,
-          pageNumber: 1
+          pageNumber: 1,
+          pageSize: RECORD_ROWS_BY_LIST
         })
           .then((response) => {
             if (isEmptyValue(response)) {

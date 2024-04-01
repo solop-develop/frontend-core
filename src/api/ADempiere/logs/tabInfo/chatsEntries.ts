@@ -21,6 +21,7 @@ import { request } from '@/utils/ADempiere/request'
 
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
 
 /**
  * Is Chats Entries
@@ -88,7 +89,7 @@ export function requestListChatsEntries({
   id,
   // tableName,
   pageToken,
-  pageSize = 100
+  pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
     url: `/logs/chat-entities/${id}`,

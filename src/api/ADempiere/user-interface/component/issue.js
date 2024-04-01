@@ -21,6 +21,9 @@ import { config } from '@/utils/ADempiere/config'
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
+// Constants
+import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
+
 /**
  * Issues exist
  * @param {string} tableName
@@ -146,7 +149,7 @@ export function requestListPriorities({
 export function listCategoriesRequest({
   searchValue,
   requestTypeId,
-  pageSize = 200
+  pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
     url: `${config.issuesManagement.endpoint}/categories`,
@@ -174,7 +177,7 @@ export function listCategoriesRequest({
 export function listGroupsRequest({
   searchValue,
   requestTypeId,
-  pageSize = 200
+  pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
     url: `${config.issuesManagement.endpoint}/groups`,
@@ -202,7 +205,7 @@ export function listGroupsRequest({
 export function listBusinessPartners({
   searchValue,
   requestTypeId,
-  pageSize = 200
+  pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
     url: `${config.issuesManagement.endpoint}/business-partners`,
@@ -230,7 +233,7 @@ export function listBusinessPartners({
 export function listProjects({
   searchValue,
   requestTypeId,
-  pageSize = 200
+  pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
     url: `${config.issuesManagement.endpoint}/projects`,
@@ -249,7 +252,7 @@ export function listProjects({
 export function listTaskStatuses({
   searchValue,
   requestTypeId,
-  pageSize = 200
+  pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
     url: `${config.issuesManagement.endpoint}/task-statuses`,

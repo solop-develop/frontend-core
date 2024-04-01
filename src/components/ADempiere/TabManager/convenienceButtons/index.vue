@@ -45,7 +45,7 @@
       />
 
       <document-action
-        v-if="tabAttributes.isDocument"
+        v-if="tabAttributes.is_document"
         :parent-uuid="parentUuid"
         :container-manager="containerManager"
         :tab-attributes="tabAttributes"
@@ -56,6 +56,13 @@
         :container-uuid="tabAttributes.uuid"
         :container-manager="containerManager"
         style="float: right;"
+      />
+      <print-process
+        v-if="!isMobile"
+        :parent-uuid="parentUuid"
+        :container-uuid="tabAttributes.uuid"
+        :tab-attributes="tabAttributes"
+        :container-manager="containerManager"
       />
 
     </div>
@@ -84,6 +91,7 @@ import UndoChangeButton from '@/components/ADempiere/TabManager/convenienceButto
 import RefreshRecordButton from '@/components/ADempiere/TabManager/convenienceButtons/RefreshRecordButton.vue'
 import DeleteRecordButton from '@/components/ADempiere/TabManager/convenienceButtons/DeleteRecordButton.vue'
 import OptionsSecuence from '@/components/ADempiere/TabManager/convenienceButtons/OptionsSecuence.vue'
+import PrintProcess from '@/components/ADempiere/TabManager/convenienceButtons/PrintProcess.vue'
 export default defineComponent({
   name: 'ConvenienceButtons',
 
@@ -94,6 +102,7 @@ export default defineComponent({
     SaveRecordButton,
     UndoChangeButton,
     RefreshRecordButton,
+    PrintProcess,
     DeleteRecordButton,
     OptionsSecuence
   },

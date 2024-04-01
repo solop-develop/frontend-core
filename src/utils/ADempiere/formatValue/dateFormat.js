@@ -193,7 +193,7 @@ export function getValidDate(value) {
 /**
  * Translate date value
  * @param {number} value
- * @param {string} format
+ * @param {string} format (short,onlyDate,long )
  * @returns {string}
  */
 export function translateDate({ value, format = 'short' }) {

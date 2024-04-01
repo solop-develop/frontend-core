@@ -40,12 +40,13 @@
       -->
     <template slot-scope="recordRow">
       <div class="header">
-        <!-- <b> -->
-        {{ recordRow.item.Name }}
-        <!-- {{ recordRow.item.lastName }}</b> -->
+        {{ recordRow.item.value }}
+        -
+        {{ recordRow.item.name }}
       </div>
       <span class="info">
-        {{ recordRow.item.Value }} {{ recordRow.item.TaxId }} {{ recordRow.item.Description }}
+        {{ recordRow.item.tax_id }} {{ recordRow.item.name2 }}
+        {{ recordRow.item.description }} ({{ recordRow.item.business_partner_group }})
       </span>
     </template>
 
@@ -66,7 +67,8 @@ import businessPartnerMixin from './mixinBusinessPartner'
 import ButtonBusinessPartnersList from './buttonBusinessPartnersList.vue'
 
 // Constants
-import { TABLE_NAME, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/businessPartner.js'
+import { TABLE_NAME, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -161,8 +163,10 @@ export default {
           contextColumnNames: this.metadata.reference.contextColumnNames,
           tableName: TABLE_NAME,
           uuid: this.metadata.uuid,
+          id: this.metadata.id,
           searchValue,
-          pageNumber: 1
+          pageNumber: 1,
+          pageSize: RECORD_ROWS_BY_LIST
         })
           .then(responseRecords => {
             if (isEmptyValue(responseRecords)) {
@@ -190,19 +194,6 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.custom-field-bpartner-info {
-  // button icon suffix
-  .button-search {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-
-    >i {
-      font-size: 20px;
-    }
-  }
-}
-</style>
 <style lang="scss" scope>
 .custom-field-bpartner-info {
   // items of lust
@@ -215,6 +206,7 @@ export default {
     .header {
       text-overflow: ellipsis;
       overflow: hidden;
+      font-weight: bold;
     }
 
     .info {

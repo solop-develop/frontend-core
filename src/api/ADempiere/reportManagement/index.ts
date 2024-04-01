@@ -20,26 +20,38 @@
 import { request } from '@/utils/ADempiere/request'
 
 /**
- * Get default value for a field, parameter or query criteria
- * @param {number} id, identifier of field
+ * Generate report
+ * @param {number} id, identifier of Report
+ * @param {string} reportType, PDF, XLS, XML, TXT...
+ * @param {array} parameters, filters
+ * @param {number} printFormatId
+ * @param {number} reportViewId
+ * @param {boolean} isSummary, show as summary data
+ * @param {string} tableName, table of window tab
+ * @param {number} recordId, record of window tab
  */
 export function generateReportRequest({
   id,
-  parameters,
   reportType,
+  parameters,
   printFormatId,
   reportViewId,
-  isSummary
+  isSummary,
+  // window
+  tableName,
+  recordId
 }) {
   return request({
     url: `/report-management/report/${id}`,
     method: 'post',
     data: {
-      parameters,
       report_type: reportType,
+      parameters,
       print_format_id: printFormatId,
       report_view_id: reportViewId,
-      is_summary: isSummary
+      is_summary: isSummary,
+      table_name: tableName,
+      record_id: recordId
     }
   })
 }

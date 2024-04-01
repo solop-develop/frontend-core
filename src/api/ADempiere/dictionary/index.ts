@@ -101,11 +101,6 @@ export function requestProcessMetadata({
       user_id: userId
     }
   })
-    .then(processResponse => {
-      const { convertProcess } = require('@/utils/ADempiere/apiConverts/dictionary.js')
-
-      return convertProcess(processResponse)
-    })
 }
 
 /**
@@ -114,17 +109,22 @@ export function requestProcessMetadata({
  * @param {number} id, identifier
  */
 export function requestBrowserMetadata({
-  id
+  id,
+  language,
+  clientId,
+  roleId,
+  userId
 }) {
   return request({
     url: `/dictionary/browsers/${id}`,
-    method: 'get'
+    method: 'get',
+    params: {
+      language,
+      client_id: clientId,
+      role_id: roleId,
+      user_id: userId
+    }
   })
-    .then(browserResponse => {
-      const { convertBrowser } = require('@/utils/ADempiere/apiConverts/dictionary.js')
-
-      return convertBrowser(browserResponse)
-    })
 }
 
 /**

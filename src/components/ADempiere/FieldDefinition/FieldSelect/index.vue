@@ -48,7 +48,7 @@
 // Components and Mixins
 import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
 import fieldWithDisplayColumn from '@/components/ADempiere/FieldDefinition/mixin/mixinWithDisplayColumn.js'
-import selectMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinFieldSelect.js'
+import selectMixin from '@/components/ADempiere/FieldDefinition/FieldSelect/mixinFieldSelect.js'
 
 // Constants
 import { LIST } from '@/utils/ADempiere/references'

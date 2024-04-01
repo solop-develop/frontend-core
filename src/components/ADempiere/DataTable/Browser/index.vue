@@ -99,16 +99,16 @@
 
     <!-- pagination table, set custom or use default change page method -->
     <custom-pagination
-      :container-manager="containerManager"
       :parent-uuid="parentUuid"
       :container-uuid="containerUuid"
-      :total="recordsLength"
-      :current-page="currentPage"
-      :selection="selectionsLength"
-      :records-page="recordsWithFilter.length"
+      :container-manager="containerManager"
+      :total-records="recordCount"
       :is-showed-selected="true"
-      :handle-change-page="handleChangePage"
-      :handle-size-change="handleChangeSizePage"
+      :selection="selectionsLength"
+      :page-number="currentPage"
+      :page-size="currentPageSize"
+      :handle-change-page-number="handleChangePage"
+      :handle-change-page-size="handleChangeSizePage"
     />
   </div>
 
@@ -123,6 +123,9 @@ import { defineComponent, computed, onMounted, onUpdated, ref, watch } from '@vu
 
 import router from '@/router'
 import store from '@/store'
+
+// Constants
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 // Components and Mixins
 import CellEditInfo from '@/components/ADempiere/DataTable/Components/CellEditInfo.vue'
@@ -247,6 +250,15 @@ export default defineComponent({
       return 1
     })
 
+    const currentPageSize = computed(() => {
+      if (props.containerManager.getRecordCount) {
+        return parseInt(props.containerManager.getPageSize({
+          containerUuid: props.containerUuid
+        }), 10)
+      }
+      return ROWS_OF_RECORDS_BY_PAGE
+    })
+
     const isMobile = computed(() => {
       return store.state.app.device === 'mobile'
     })
@@ -260,7 +272,7 @@ export default defineComponent({
       return []
     })
 
-    const recordsLength = computed(() => {
+    const recordCount = computed(() => {
       if (props.containerManager.getRecordCount) {
         return props.containerManager.getRecordCount({
           containerUuid: props.containerUuid
@@ -324,7 +336,7 @@ export default defineComponent({
      * custom method to handle change page
      */
     function handleChangePage(pageNumber) {
-      props.containerManager.setPage({
+      props.containerManager.setPageNumber({
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid,
         pageNumber,
@@ -342,7 +354,7 @@ export default defineComponent({
     }
 
     function handleChangeSizePage(pageSize) {
-      props.containerManager.setSizePage({
+      props.containerManager.setPageSize({
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid,
         pageSize,
@@ -483,8 +495,9 @@ export default defineComponent({
       recordsWithFilter,
       currentOption,
       keyColumn,
-      recordsLength,
+      recordCount,
       currentPage,
+      currentPageSize,
       selectionsLength,
       defaultSize,
       sizeViewTable,

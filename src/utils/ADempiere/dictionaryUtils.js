@@ -94,7 +94,7 @@ export function generateField({
   evaluateDefaultColumnShowed = ({ isShowedTableFromUser = true }) => {
     return isShowedTableFromUser
   },
-  isSOTrxMenu
+  isSOTrxDictionary
 }) {
   const { columnName } = fieldToGenerate
   let isGetServerValue = false
@@ -154,7 +154,7 @@ export function generateField({
       parentUuid: moreAttributes.parentUuid,
       containerUuid: moreAttributes.containerUuid,
       componentPath: componentReference.componentPath,
-      isSOTrxMenu
+      isSOTrxDictionary
     })
 
     if (String(fieldToGenerate.defaultValue).startsWith('@SQL=')) {
@@ -173,7 +173,7 @@ export function generateField({
         defaultValue: fieldToGenerate.defaultValueTo,
         columnName: `${columnName}_To`,
         elementName: `${fieldToGenerate.elementName}_To`,
-        isSOTrxMenu
+        isSOTrxDictionary
       })
 
       if (String(fieldToGenerate.defaultValueTo).startsWith('@SQL=')) {
@@ -219,7 +219,7 @@ export function generateField({
     columnNameTo: `${columnName}_To`,
     elementNameTo: `${fieldToGenerate.elementColumnName}_To`,
     isSameColumnElement: columnName === fieldToGenerate.elementColumnName,
-    isSOTrxMenu,
+    isSOTrxDictionary,
     // displayed attributes
     componentPath: componentReference.componentPath,
     isSupported: componentReference.isSupported,
@@ -310,7 +310,7 @@ export function generateField({
   // hidden field type button
   if (isHiddenField(field.displayType)) {
     field.isDisplayedFromLogic = false
-    field.isDisplayedGrid = false
+    field.is_displayed_grid = false
     field.isDisplayed = false
   }
 
@@ -319,7 +319,6 @@ export function generateField({
 
 /**
  * Determinate if field is displayed
- * @param {boolean} isActive
  * @param {boolean} isDisplayed
  * @param {boolean} isDisplayedFromLogic
  * @param {boolean} isQueryCriteria
@@ -329,14 +328,13 @@ export function generateField({
 export function fieldIsDisplayed({
   // standard
   panelType,
-  isActive,
   isDisplayed,
   displayType,
   // panel
   isQueryCriteria,
   isKey,
   // table
-  isDisplayedGrid,
+  is_displayed_grid,
   // other
   isDisplayedFromLogic
 }, isTable = false) {
@@ -346,7 +344,7 @@ export function fieldIsDisplayed({
   }
 
   // verify if field is active
-  if (!isActive || !isDisplayed) {
+  if (!isDisplayed) {
     return false
   }
 
@@ -357,7 +355,7 @@ export function fieldIsDisplayed({
       panelType,
       // table,
       isKey,
-      isDisplayedGrid,
+      is_displayed_grid,
       // other
       isDisplayedFromLogic
     })
@@ -404,12 +402,12 @@ export function fieldIsDisplayedTable({
   panelType,
   // table,
   isKey,
-  isDisplayedGrid,
+  is_displayed_grid,
   // other
   isDisplayedFromLogic
 }) {
   // window table
-  if (panelType === 'window' && !isDisplayedGrid) {
+  if (panelType === 'window' && !is_displayed_grid) {
     return false
   }
 

@@ -61,6 +61,10 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+    response.headers['Access-Control-Request-Method'] = '*'
+
     const res = response.data
     // if the custom code is not 20000, it is judged as an error.
     if (response.status >= 400) {

@@ -22,6 +22,15 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 export const GENERAL_INFO_SEARCH_LIST_FORM = 'General-Info-Search-List'
 
 /**
+ * Generic quick access keys to actions
+ */
+export const QUICK_KEY_ACCESS = {
+  close: ['esc'],
+  toggleQuery: ['f3'],
+  refreshList: ['f5']
+}
+
+/**
  * Icon to search component by table name
  * @param {String} tableName
  * @returns

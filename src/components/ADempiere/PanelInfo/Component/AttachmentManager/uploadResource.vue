@@ -42,20 +42,21 @@ import { defineComponent, ref } from '@vue/composition-api'
 
 import lang from '@/lang'
 import store from '@/store'
+import router from '@/router'
 
 // Constants
 // import { config } from '@/utils/ADempiere/config'
 // import { BEARER_TYPE } from '@/utils/auth'
-import { RESOURCE_TYPE_ATTACHMENT } from '@/utils/ADempiere/resource'
+// import { RESOURCE_TYPE_ATTACHMENT } from '@/utils/ADempiere/resource'
 
 // API Request Methods
 // import {
 //   // requestUploadAttachment
 // } from '@/api/ADempiere/user-interface/component/resource'
 import {
-  requestPresignedUrl,
+  requestPresignedUrl
   // requestDeleteResources,
-  requestSetResourceReference
+  // requestSetResourceReference
   // requestDeleteResourceReference
 } from '@/api/ADempiere/file-management/resource-reference.ts'
 
@@ -120,79 +121,95 @@ export default defineComponent({
     }
 
     function resourceReference(file) {
+      const clienteId = store.getters.getSessionContextClientId
+      const { referenceId, type } = router.app._route.meta
       return new Promise((resolve, reject) => {
-        requestSetResourceReference({
-          resourceType: RESOURCE_TYPE_ATTACHMENT,
-          tableName: props.tableName,
-          recordId: props.recordId,
-          fileName: file.name,
-          fileSize: file.size
+        const url = presignedUrl({
+          clienteId: clienteId,
+          containerId: referenceId,
+          containerType: type,
+          // fileName: file.name,
+          file
         })
-          .then(responseReferences => {
-            if (responseReferences.code >= 400) {
-              reject(responseReferences)
-              return
-            }
-            fileResource.value = responseReferences
-            additionalData.value = {
-              id: responseReferences.id
-            }
-
-            const url = presignedUrl({ file, reference: responseReferences })
-            resolve(url)
-          })
-          .catch(error => {
-            showMessage({
-              message: error.message || error.result || lang.t('component.attachment.error'),
-              type: 'error'
-            })
-            reject(error)
-          })
-          .finally(() => {
-            uploadComponent.value.uploadFiles = filesList.value
-            resolve(true)
-          })
+        resolve(url)
       })
     }
 
     /**
      * Get URL
      */
-    function presignedUrl({ file, reference }) {
+    function presignedUrl({ clienteId, containerId, containerType, file, reference }) {
       return new Promise((resolve, reject) => {
         requestPresignedUrl({
-          fileName: reference.file_name
+          clienteId,
+          containerId,
+          containerType,
+          fileName: file.name,
+          recordId: props.recordId,
+          tableName: props.tableName
         })
           .then(responseUrl => {
             uploadFile({
               file,
-              url: responseUrl
+              presigned: responseUrl
             })
-            resolve(file, responseUrl)
+              .then(response => {
+                resolve(file, responseUrl)
+              })
+              .catch((error) => {
+                showMessage({
+                  message: error.message || error.result || lang.t('component.attachment.error'),
+                  type: 'error'
+                })
+                reject(error)
+              })
           })
       })
     }
 
     // ``uploadFile` accepts the current filename and the pre-signed URL. It then uses `Fetch API`
     // to upload this file to S3 at `play.min.io:9000` using the URL:
-    function uploadFile({ file, url }) {
-      fetch(url, {
-        method: 'PUT',
-        body: file
-      }).then(() => {
-        props.containerManager.getAttachment({
-          containerUuid: props.containerUuid,
-          recordUuid: props.recordUuid,
-          parentUuid: props.parentUuid,
-          tableName: props.tableName,
-          recordId: props.recordId
-        })
-        store.dispatch('')
-        return true
-      }).catch((error) => {
-        showMessage({
-          message: error.message || error.result || lang.t('component.attachment.error'),
-          type: 'error'
+    function uploadFile({ file, presigned }) {
+      const { url, file_name } = presigned
+      return new Promise((resolve, reject) => {
+        fetch(url, {
+          method: 'PUT',
+          body: file
+        }).then(() => {
+          if (!props.containerManager) {
+            const clienteId = store.getters.getSessionContextClientId
+            const { referenceId, type } = router.app._route.meta
+            store.dispatch('getAttachmentFromServer', {
+              containerType: type,
+              clienteId: clienteId,
+              containerId: referenceId,
+              recordId: props.recordId,
+              tableName: props.tableName
+            })
+            if (props.loadData) {
+              props.loadData({
+                resource: file_name,
+                file
+              })
+            }
+            resolve(file)
+            return file
+          }
+          props.containerManager.getAttachment({
+            containerUuid: props.containerUuid,
+            containerId: router.app._route.meta.referenceId,
+            parentUuid: props.parentUuid,
+            tableName: props.tableName,
+            recordId: props.recordId
+          })
+          // store.dispatch('')
+          resolve(file_name)
+        }).catch((error) => {
+          showMessage({
+            message: error.message || error.result || lang.t('component.attachment.error'),
+            type: 'error'
+          })
+          reject(error)
         })
       })
     }

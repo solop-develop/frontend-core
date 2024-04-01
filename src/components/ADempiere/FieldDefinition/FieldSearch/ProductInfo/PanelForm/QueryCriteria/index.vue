@@ -37,14 +37,22 @@
         @submit.native.prevent="notSubmitForm"
       >
         <el-row :gutter="10">
+   
           <el-col :span="8">
+
+          <el-col :span="6">
+         
             <text-field
               :uuid-form="uuidForm"
               attribute-key="value"
               :label="$t('field.product.value')"
             />
           </el-col>
+
           <el-col :span="8">
+
+          <el-col :span="6">
+
             <text-field
               :uuid-form="uuidForm"
               attribute-key="name"
@@ -52,43 +60,68 @@
             />
           </el-col>
           <!-- <el-col :span="8">
+
+          <el-col :span="6">
             <text-field
               :uuid-form="uuidForm"
               attribute-key="upc"
               :label="$t('field.product.upc')"
             />
+
           </el-col> -->
-          <!-- <el-col :span="6">
+
+          </el-col>
+          <el-col :span="6">
+
             <text-field
               :uuid-form="uuidForm"
               attribute-key="sku"
               :label="$t('field.product.sku')"
             />
+
           </el-col> -->
           <el-col :span="8">
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="10">
+          <el-col :span="6">
+
             <warehouse-field
               :uuid-form="uuidForm"
               :parent-uuid="metadata.parentUuid"
               :container-uuid="metadata.containerUuid"
             />
           </el-col>
+
         </el-row>
         <el-row :gutter="10">
           <el-col :span="8">
+
+          <el-col :span="6">
+
             <is-stocked-field
               :uuid-form="uuidForm"
               :parent-uuid="metadata.parentUuid"
               :container-uuid="metadata.containerUuid"
             />
           </el-col>
+
           <el-col :span="8">
+
+          <el-col :span="6">
+
             <price-list-version-field
               :uuid-form="uuidForm"
               :parent-uuid="metadata.parentUuid"
               :container-uuid="metadata.containerUuid"
             />
           </el-col>
+
           <el-col :span="8">
+
+          <el-col :span="6">
+
             <vendor-field
               :uuid-form="uuidForm"
               :parent-uuid="metadata.parentUuid"

@@ -21,6 +21,7 @@ import store from '@/store'
 
 // Constants
 import {
+  DISPLAY_COLUMN_PREFIX,
   IDENTIFIER_COLUMN_SUFFIX
 } from '@/utils/ADempiere/dictionaryUtils'
 
@@ -50,6 +51,9 @@ export default {
 
   computed: {
     uuidForm() {
+      if (!isEmptyValue(this.metadata.containerUuid)) {
+        return this.metadata.columnName + '_' + this.metadata.containerUuid
+      }
       return this.metadata.containerUuid
     },
     title() {
@@ -61,18 +65,24 @@ export default {
     },
 
     blankValues() {
+      const { columnName, elementName } = this.metadata
       return {
-        [this.metadata.columnName]: undefined,
-        [this.metadata.elementName]: undefined,
         id: undefined,
+        [columnName]: undefined,
+        [elementName]: undefined,
         uuid: undefined,
         UUID: undefined,
+        [DISPLAY_COLUMN_PREFIX + columnName]: undefined,
+        [DISPLAY_COLUMN_PREFIX + elementName]: undefined,
         name: undefined,
         Name: undefined,
+        value: undefined,
         Value: undefined,
+        description: undefined,
         Description: undefined
       }
     },
+
     // implement to overwrite
     recordsList() {
       return store.getters.getGeneralInfoRecordsList({
@@ -266,7 +276,7 @@ export default {
               .then(remoteResponse => {
                 callBack(remoteResponse)
               })
-          }, 2000)
+          }, 700)
           return
         }
       }

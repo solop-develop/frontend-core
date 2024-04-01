@@ -10,7 +10,7 @@
 
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
   GNU General Public License for more details.
 
   You should have received a copy of the GNU General Public License
@@ -87,7 +87,9 @@ export default {
           fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/BusinessPartnerInfo')
           break
         // case 'C_Invoice':
-        // case 'M_Product':
+        case 'M_Product':
+          fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/ProductInfo')
+          break
         // case 'A_Asset':
         // case 'C_Order':
         default:

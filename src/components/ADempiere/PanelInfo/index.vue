@@ -62,8 +62,8 @@
 
 <script>
 import { defineComponent, computed, watch, ref } from '@vue/composition-api'
-
 import language from '@/lang'
+import router from '@/router'
 import store from '@/store'
 
 // Components and Mixins
@@ -85,7 +85,7 @@ import { listProductStorage } from '@/api/ADempiere/form/storeProduct.js'
 import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import { isEmptyValue } from '@/utils/ADempiere'
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
-import { isDisplayedField } from '@/utils/ADempiere/dictionary/window.js'
+import { isDisplayedField } from '@/utils/ADempiere/dictionary/window'
 
 export default defineComponent({
   name: 'ContainerInfo',
@@ -445,6 +445,7 @@ export default defineComponent({
       nameTab.value = tab.name
       props.containerManager[tabOptions]({
         tableName: currentTab.value.tableName,
+        containerId: router.app._route.meta.referenceId,
         containerUuid: currentTab.value.containerUuid,
         parentUuid: currentTab.value.parentUuid,
         recordId: currentRecordId.value,

@@ -131,7 +131,7 @@
 
               <el-col v-show="isValidateUserChoice" :span="8" style="text-align: center;">
                 <el-form-item :label="$t('form.workflowActivity.filtersSearch.approve')">
-                  <el-switch v-model="isProved" />
+                  <el-switch v-model="isApproved" />
                 </el-form-item>
               </el-col>
 
@@ -253,7 +253,7 @@ export default defineComponent({
      */
     const message = ref('')
     const chooseOption = ref(false)
-    const isProved = ref(false)
+    const isApproved = ref(false)
     const userId = ref('')
     const listSalesReps = ref([])
     const showWorkflow = ref(false)
@@ -386,7 +386,7 @@ export default defineComponent({
     }
 
     function sendOPeration() {
-      if (isProved.value) {
+      if (isApproved.value) {
         processWorkflow(currentActivity.value)
       } else {
         forwardWorkflow(currentActivity.value)
@@ -427,7 +427,7 @@ export default defineComponent({
         id,
         uuid,
         message: message.value,
-        isApproved: isProved.value
+        isApproved: isApproved.value
       })
         .then(() => {
           showMessage({
@@ -454,7 +454,7 @@ export default defineComponent({
       message.value = ''
       chooseOption.value = false
       userId.value = ''
-      isProved.value = false
+      isApproved.value = false
     }
 
     function findSalesReps(isVisible) {
@@ -492,7 +492,7 @@ export default defineComponent({
       // Ref
       message,
       userId,
-      isProved,
+      isApproved,
       showWorkflow,
       chooseOption,
       listSalesReps,

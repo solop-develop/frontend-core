@@ -41,7 +41,9 @@ const fieldOptions = {
   },
   // field info
   info: {
+    currentValue: 'Current Value',
     defaultValue: 'Default Value',
+    defaultValueTo: 'Default Value To',
     displayLogic: 'Display Logic',
     readOnlyLogic: 'Read Only Logic',
     mandatoryLogic: 'Mandatory Logic'

@@ -1,30 +1,31 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
   <el-popover
     ref="businessPartnerListPopover"
     v-model="showedPopoverBusinessPartnerList"
+    popper-class="business-partners-popover"
     placement="top"
     width="900"
     trigger="click"
   >
-    <business-partners-list
+    <business-partner-panel
       v-if="showedPopoverBusinessPartnerList"
       :show-popover="showedPopoverBusinessPartnerList"
       :container-manager="containerManager"
@@ -33,7 +34,7 @@
 
     <el-button
       slot="reference"
-      class="button-search"
+      class="button-show-popover"
       :disabled="isDisabled"
     >
       <i
@@ -47,16 +48,20 @@
 import store from '@/store'
 
 // Components and Mixins
-import BusinessPartnersList from './businessPartnersList.vue'
+import BusinessPartnerPanel from './PanelForm/index.vue'
+// import BusinessPartnerPanel from './businessPartnersList.vue'
 
 // Constants
-import { BUSINESS_PARTNERS_LIST_FORM } from '@/utils/ADempiere/dictionary/field/businessPartner.js'
+import {
+  BUSINESS_PARTNERS_LIST_FORM,
+  COLUMN_NAME
+} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 
 export default {
   name: 'ButtonBusinessPartnersList',
 
   components: {
-    BusinessPartnersList
+    BusinessPartnerPanel
   },
 
   props: {
@@ -66,8 +71,8 @@ export default {
         return {
           parentUuid: undefined,
           containerUuid: undefined,
-          columnName: 'C_BPartner_ID',
-          elementName: 'C_BPartner_ID'
+          columnName: COLUMN_NAME,
+          elementName: COLUMN_NAME
         }
       }
     },
@@ -104,14 +109,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.button-search {
-  padding-left: 9px !important;
-  padding-right: 0px !important;
-
-  i, svg {
-    font-size: 20px !important;
-  }
-}
-</style>

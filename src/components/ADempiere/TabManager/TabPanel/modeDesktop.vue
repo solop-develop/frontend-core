@@ -101,15 +101,15 @@
     <el-footer :style="styleFooterPanel" class="tab-panel-footer">
       <!-- pagination table, set custom or use default change page method -->
       <custom-pagination
-        :container-manager="containerManager"
         :parent-uuid="parentUuid"
         :container-uuid="tabAttributes.uuid"
-        :total="recordsLength"
-        :current-page="currentPage"
+        :container-manager="containerManager"
+        :total-records="recordsLength"
         :selection="selectionsLength"
-        :records-page="recordsWithFilter.length"
-        :handle-change-page="handleChangePage"
-        :handle-size-change="handleChangeSizePage"
+        :page-number="currentPage"
+        :page-size="recordsWithFilter.length"
+        :handle-change-page-number="handleChangePage"
+        :handle-change-page-size="handleChangeSizePage"
       />
     </el-footer>
   </el-container>
@@ -324,7 +324,7 @@ export default defineComponent({
     })
 
     function handleChangePage(pageNumber) {
-      props.containerManager.setPage({
+      props.containerManager.setPageNumber({
         parentUuid: props.parentUuid,
         containerUuid: props.tabAttributes.uuid,
         pageSize: store.getters.getTabPageSize({ containerUuid: props.tabAttributes.uuid }),
@@ -344,7 +344,7 @@ export default defineComponent({
      * custom method to handle change size page
      */
     function handleChangeSizePage(pageSize) {
-      props.containerManager.setSizePage({
+      props.containerManager.setPageSize({
         parentUuid: props.parentUuid,
         containerUuid: props.tabAttributes.uuid,
         pageSize,

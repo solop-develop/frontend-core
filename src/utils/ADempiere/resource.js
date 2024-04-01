@@ -354,6 +354,7 @@ export function getImageFromContentType({ contentType, fileName }) {
       urlImage = require('@/image/ADempiere/attachment/txt.png')
       break
     case 'application/vnd.ms-excel':
+    case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
       urlImage = require('@/image/ADempiere/attachment/xlsx.png')
       break
     default:

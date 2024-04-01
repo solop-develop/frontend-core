@@ -1,19 +1,19 @@
 <!--
-ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
-Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -97,16 +97,18 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         </template>
       </el-table-column>
     </el-table>
+
     <p>
       <custom-pagination
-        :total="recordCount"
         style="float: left;"
+        :total-records="recordCount"
         :selection="selection"
-        :current-page="pageToken"
-        :records-page="listProducto.length"
-        :handle-change-page="handleChangePage"
-        :handle-size-change="handleSizeChange"
+        :page-number="pageToken"
+        :page-size="listProducto.length"
+        :handle-change-page-number="handleChangePage"
+        :handle-change-page-size="handleSizeChange"
       />
+
       <el-button
         type="primary"
         class="button-base-icon"
@@ -136,10 +138,13 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <script>
 import { defineComponent, computed, ref } from '@vue/composition-api'
+
 import store from '@/store'
+
 // Components and Mixins
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
+
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'
 import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
@@ -147,10 +152,12 @@ import { formatPrice, formatQuantity } from '@/utils/ADempiere/formatValue/numbe
 
 export default defineComponent({
   name: 'ProductListTable',
+
   components: {
     IndexColumn,
     CustomPagination
   },
+
   setup() {
     /**
      * Ref

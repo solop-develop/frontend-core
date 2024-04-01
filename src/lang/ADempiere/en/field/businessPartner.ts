@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,28 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-export const TABLE_NAME = 'C_BPartner'
+const businessPartner = {
+  edit: 'Edit',
+  emptyBusinessPartner: 'Use the filters to search for a business partner by Code, Name, Email and Phone Number',
+  notFound: 'Business partner not found',
+  searchWithEnter: 'Enter a value to search for a Business Partners',
+  //
+  customer: 'Customer',
+  onlyCustomer: 'Only Customer',
+  vendor: 'Vendor',
+  onlyVendor: 'Only Vendor',
+  // fields
+  value: 'Value',
+  name: 'Name',
+  contact: 'Contact',
+  phone: 'Phone',
+  eMail: 'Email',
+  postalCode: 'Postal Code',
+  group: 'Group',
+  openBalance: 'Open Balance',
+  creditAvailable: 'Credit Avalable',
+  creditUsed: 'Credit Used',
+  revenue: 'Revenue'
+}
 
-export const COLUMN_NAME = 'C_BPartner_ID'
-
-export const BUSINESS_PARTNERS_LIST_FORM = 'Business-Partner-List'
+export default businessPartner

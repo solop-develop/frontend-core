@@ -60,7 +60,7 @@
               </div>
               <div style="width: 30%;float: right;margin: 0px">
                 <p style="overflow: hidden;text-overflow: ellipsis;text-align: end;margin: 0px">
-                  {{ formatQuantity(props.item.quantityOrdered) }}
+                  {{ formatQuantity({ value: props.item.quantityOrdered }) }}
                 </p>
               </div>
             </div>

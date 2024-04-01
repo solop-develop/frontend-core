@@ -94,13 +94,13 @@
     <el-row :gutter="24" class="business-partners-footer">
       <el-col :span="14">
         <custom-pagination
-          :total="businessPartnerData.recordCount"
-          :current-page="pageNumber"
           :container-manager="containerManagerBPList"
-          :handle-change-page="setPage"
-          :records-page="recordsList.length"
+          :total-records="businessPartnerData.recordCount"
           :selection="selection"
-          :handle-size-change="handleChangeSizePage"
+          :page-number="pageNumber"
+          :page-size="recordsList.length"
+          :handle-change-page-number="setPageNumber"
+          :handle-change-page-size="handleChangeSizePage"
         />
       </el-col>
 
@@ -146,7 +146,7 @@
 import store from '@/store'
 
 // Constants
-import { BUSINESS_PARTNERS_LIST_FORM } from '@/utils/ADempiere/dictionary/field/businessPartner.js'
+import { BUSINESS_PARTNERS_LIST_FORM } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 import FIELDS_LIST from './fieldsListSearch'
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 import { IS_SO_TRX } from '@/utils/ADempiere/constants/systemColumns'
@@ -167,6 +167,7 @@ import {
 } from '@/utils/ADempiere/lookupFactory'
 import { containerManager as containerManagerForm } from '@/utils/ADempiere/dictionary/form'
 
+// TODO: Deprecated component
 export default {
   name: 'BusinessPartnersList',
 
@@ -249,7 +250,7 @@ export default {
       return {
         ...this.containerManager,
         ...containerManagerForm,
-        setPage: this.setPage
+        setPageNumber: this.setPageNumber
       }
     },
     labelTable() {
@@ -379,7 +380,7 @@ export default {
         show: false
       })
     },
-    setPage(pageNumber) {
+    setPageNumber(pageNumber) {
       this.searchBPartnerList(pageNumber, this.pageSize)
     },
     subscribeChanges() {
@@ -439,6 +440,7 @@ export default {
           contextColumnNames: this.metadata.reference.contextColumnNames,
           tableName: this.metadata.reference.tableName,
           uuid: this.metadata.uuid,
+          id: this.metadata.id,
           filters,
           pageNumber,
           pageSize
