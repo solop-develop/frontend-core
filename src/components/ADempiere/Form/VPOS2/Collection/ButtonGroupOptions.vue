@@ -53,6 +53,7 @@ import lang from '@/lang'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { getPaymentValues } from '@/utils/ADempiere/dictionary/form/VPOS'
+import { getAttributesPaymentSales } from '@/utils/ADempiere/pos/Sitef.js'
 // import { defaultValueCollections } from '@/utils/ADempiere/dictionary/form/VPOS'
 
 export default defineComponent({
@@ -83,6 +84,36 @@ export default defineComponent({
     function addPayment() {
       const { payment_method } = store.getters.getPaymentMethods
       isLoading.value = true
+      payment_method.is_online_payment = true
+      const params = getPaymentValues({})
+      if (payment_method.is_online_payment) {
+        store.dispatch('setModalDialogVPOS', {
+          title: lang.t('pointOfSales.collection.confirmPayment'),
+          doneMethod: () => {
+            const {
+              cardType,
+              accountType
+            } = store.getters.getAllAttributeOnlinePayments
+
+            const attribute = getAttributesPaymentSales({
+              amount: params.amount,
+              typeCard: cardType,
+              type: accountType
+            })
+            store.dispatch('transactionalSale', attribute)
+            isLoading.value = false
+          },
+          cancelMethod: () => {
+            store.commit('setShowedModalDialogVPOS', {
+              isShowed: false
+            })
+            isLoading.value = false
+          },
+          componentPath: () => import('@/components/ADempiere/Form/VPOS2/Collection/OnlinePayments'),
+          isShowed: true
+        })
+        return
+      }
       if (
         !isEmptyValue(payment_method) &&
         isEmptyValue(currentAccount.value) &&
@@ -102,7 +133,7 @@ export default defineComponent({
           })
         return
       }
-      const params = getPaymentValues({})
+      // const params = getPaymentValues({})
       store.dispatch('addPayment', params)
         .then(() => {
           isLoading.value = false
