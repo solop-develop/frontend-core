@@ -55,6 +55,7 @@
         header-align="center"
         width="220"
       />
+
       <template v-if="isPriceAmounts">
         <el-table-column
           prop="standard_price"
@@ -68,98 +69,8 @@
           </span>
         </el-table-column>
 
-      </template>
-
-      <el-table-column
-        prop="uom"
-        :label="$t('field.product.uom')"
-        sortable
-        header-align="center"
-        width="60"
-      />
-      <el-table-column
-        prop="is_stocked"
-        :label="$t('field.product.stocked')"
-        sortable
-        header-align="center"
-        width="120"
-      >
-        <span slot-scope="scope">
-          {{ convertBooleanToTranslationLang(scope.row.is_stocked) }}
-        </span>
-      </el-table-column>
-      <template v-if="isStockQuantities">
+        <!--
         <el-table-column
-          prop="available_quantity"
-          :label="$t('field.product.available')"
-          sortable
-          header-align="center"
-          width="140"
-        >
-          <span slot-scope="scope" class="cell-align-right">
-            {{ formatQuantity({ value: scope.row.available_quantity }) }}
-          </span>
-        </el-table-column>
-      </template>
-      <template v-if="isStockQuantities">
-        <el-table-column
-          prop="on_hand_quantity"
-          :label="$t('field.product.onHandQuantity')"
-          sortable
-          header-align="center"
-          width="110"
-        >
-          <span slot-scope="scope" class="cell-align-right">
-            {{ formatQuantity({ value: scope.row.on_hand_quantity }) }}
-          </span>
-        </el-table-column>
-      </template>
-
-      <el-table-column
-        prop="product_category"
-        :label="$t('field.product.productCategory')"
-        sortable
-        header-align="center"
-        width="165"
-      />
-      <el-table-column
-        prop="product_group"
-        :label="$t('field.product.productGroup')"
-        sortable
-        header-align="center"
-        width="150"
-      />
-      <el-table-column
-        prop="product_class"
-        :label="$t('field.product.productClass')"
-        sortable
-        header-align="center"
-        width="150"
-      />
-      <el-table-column
-        prop="vendor"
-        :label="$t('field.product.vendor')"
-        sortable
-        header-align="center"
-        width="170"
-      />
-      <!-- <el-table-column
-        prop="upc"
-        :label="$t('field.product.upcEan')"
-        sortable
-        header-align="center"
-        width="170"
-      />
-      <el-table-column
-        prop="sku"
-        :label="$t('field.product.sku')"
-        sortable
-        header-align="center"
-        width="170"
-      /> -->
-
-      <!-- <template v-if="isPriceAmounts"> -->
-      <!-- <el-table-column
           prop="list_price"
           :label="$t('field.product.listPrice')"
           sortable
@@ -169,9 +80,9 @@
           <span slot-scope="scope" class="cell-align-right">
             {{ formatQuantity({ value: scope.row.list_price }) }}
           </span>
-        </el-table-column> -->
+        </el-table-column>
 
-      <!-- <el-table-column
+        <el-table-column
           prop="limit_price"
           :label="$t('field.product.limitPrice')"
           sortable
@@ -192,10 +103,54 @@
           <span slot-scope="scope" class="cell-align-right">
             {{ formatQuantity({ value: scope.row.margin }) }}
           </span>
-        </el-table-column> -->
-      <!-- </template> -->
+        </el-table-column>
+        -->
+      </template>
+
+      <el-table-column
+        prop="uom"
+        :label="$t('field.product.uom')"
+        sortable
+        header-align="center"
+        width="60"
+      />
+      <el-table-column
+        prop="is_stocked"
+        :label="$t('field.product.stocked')"
+        sortable
+        header-align="center"
+        width="120"
+      >
+        <span slot-scope="scope">
+          {{ convertBooleanToTranslationLang(scope.row.is_stocked) }}
+        </span>
+      </el-table-column>
 
       <template v-if="isStockQuantities">
+        <el-table-column
+          prop="available_quantity"
+          :label="$t('field.product.available')"
+          sortable
+          header-align="center"
+          width="140"
+        >
+          <span slot-scope="scope" class="cell-align-right">
+            {{ formatQuantity({ value: scope.row.available_quantity }) }}
+          </span>
+        </el-table-column>
+        <el-table-column
+          prop="on_hand_quantity"
+          :label="$t('field.product.onHandQuantity')"
+          sortable
+          header-align="center"
+          width="110"
+        >
+          <span slot-scope="scope" class="cell-align-right">
+            {{ formatQuantity({ value: scope.row.on_hand_quantity }) }}
+          </span>
+        </el-table-column>
+
+        <!--
         <el-table-column
           prop="reserved_quantity"
           :label="$t('field.product.reservedQuantity')"
@@ -240,8 +195,10 @@
             {{ formatQuantity({ value: scope.row.unconfirmed_move_quantity }) }}
           </span>
         </el-table-column>
+      -->
       </template>
 
+      <!--
       <el-table-column
         prop="is_instance_attribute"
         :label="$t('field.product.instanceAttribute')"
@@ -253,6 +210,52 @@
           {{ convertBooleanToTranslationLang(scope.row.is_instance_attribute) }}
         </span>
       </el-table-column>
+      -->
+
+      <el-table-column
+        prop="product_category"
+        :label="$t('field.product.productCategory')"
+        sortable
+        header-align="center"
+        width="165"
+      />
+      <el-table-column
+        prop="product_group"
+        :label="$t('field.product.productGroup')"
+        sortable
+        header-align="center"
+        width="150"
+      />
+      <el-table-column
+        prop="product_class"
+        :label="$t('field.product.productClass')"
+        sortable
+        header-align="center"
+        width="150"
+      />
+      <el-table-column
+        prop="vendor"
+        :label="$t('field.product.vendor')"
+        sortable
+        header-align="center"
+        width="170"
+      />
+      <!--
+      <el-table-column
+        prop="upc"
+        :label="$t('field.product.upcEan')"
+        sortable
+        header-align="center"
+        width="170"
+      />
+      <el-table-column
+        prop="sku"
+        :label="$t('field.product.sku')"
+        sortable
+        header-align="center"
+        width="170"
+      />
+    -->
 
     </el-table>
   </div>
