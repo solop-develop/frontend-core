@@ -51,7 +51,8 @@
               :label="$t('field.product.name')"
             />
           </el-col>
-          <!-- <el-col :span="6">
+          <!--
+          <el-col :span="6">
             <text-field
               :uuid-form="uuidForm"
               attribute-key="upc"
@@ -64,7 +65,8 @@
               attribute-key="sku"
               :label="$t('field.product.sku')"
             />
-          </el-col> -->
+          </el-col>
+          -->
           <el-col :span="8">
             <warehouse-field
               :uuid-form="uuidForm"
