@@ -412,7 +412,7 @@ const persistence = {
                   const parentValues = getContextAttributes({
                     parentUuid,
                     containerUuid,
-                    contextColumnNames: tabItem.contextColumnNames
+                    contextColumnNames: tabItem.context_column_names
                   })
                   dispatch('updateValuesOfContainer', {
                     containerUuid: tabItem.uuid,

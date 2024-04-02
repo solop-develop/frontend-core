@@ -439,7 +439,7 @@ export default defineComponent({
     const currentContextAttributes = computed(() => {
       const contextAttributesList = getContextAttributes({
         parentUuid: props.parentUuid,
-        contextColumnNames: currentTabMetadata.value.contextColumnNames,
+        contextColumnNames: currentTabMetadata.value.context_column_names,
         keyName: 'key'
       })
       return generateContextKey(contextAttributesList, 'key')

@@ -222,7 +222,7 @@ export default {
     const attributesObject = {}
     let attributesList = fieldsList
       .map(fieldItem => {
-        const { uuid, id, columnName, default_value, contextColumnNames } = fieldItem
+        const { uuid, id, columnName, default_value, context_column_names } = fieldItem
         const isSQL = String(default_value).startsWith('@SQL=') && isGetServer
         const isLinkColumn = !isEmptyValue(link_column_name) && columnName === link_column_name
         const isParentColumn = fieldItem.isParent || (!isEmptyValue(parent_column_name) && columnName === parent_column_name)
@@ -232,7 +232,6 @@ export default {
           parsedDefaultValue = getContextDefaultValue({
             ...fieldItem,
             parentUuid,
-            contextColumnNames,
             isSOTrxDictionary
           })
         }
@@ -281,7 +280,7 @@ export default {
                 const storedDefaultValue = rootGetters.getStoredDefaultValue({
                   parentUuid,
                   containerUuid,
-                  contextColumnNames: contextColumnNames,
+                  contextColumnNames: context_column_names,
                   uuid,
                   value: parsedDefaultValue
                 })
