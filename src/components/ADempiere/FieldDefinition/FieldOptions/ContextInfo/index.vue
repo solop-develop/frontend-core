@@ -72,18 +72,18 @@
         </el-form-item>
 
         <el-form-item
-          v-if="!isEmptyValue(fieldAttributes.defaultValue)"
+          v-if="!isEmptyValue(fieldAttributes.default_value)"
           :label="$t('fieldOptions.info.defaultValue')"
           class="justify-text"
         >
-          <pre>{{ fieldAttributes.defaultValue }}</pre>
+          <pre>{{ fieldAttributes.default_value }}</pre>
         </el-form-item>
         <el-form-item
-          v-if="fieldAttributes.isRange && !isEmptyValue(fieldAttributes.defaultValueTo)"
+          v-if="fieldAttributes.is_range && !isEmptyValue(fieldAttributes.default_value_to)"
           :label="$t('fieldOptions.info.defaultValue')"
           class="justify-text"
         >
-          <pre>{{ fieldAttributes.defaultValueTo }}</pre>
+          <pre>{{ fieldAttributes.default_value_to }}</pre>
         </el-form-item>
 
         <el-form-item
@@ -95,19 +95,19 @@
         </el-form-item>
 
         <el-form-item
-          v-if="!isEmptyValue(fieldAttributes.readOnlyLogic)"
+          v-if="!isEmptyValue(fieldAttributes.read_only_logic)"
           :label="$t('fieldOptions.info.readOnlyLogic')"
           class="justify-text"
         >
-          <pre>{{ fieldAttributes.defaultValue }}</pre>
+          <pre>{{ fieldAttributes.default_value }}</pre>
         </el-form-item>
 
         <el-form-item
-          v-if="!isEmptyValue(fieldAttributes.mandatoryLogic)"
+          v-if="!isEmptyValue(fieldAttributes.mandatory_logic)"
           :label="$t('fieldOptions.info.mandatoryLogic')"
           class="justify-text"
         >
-          <pre>{{ fieldAttributes.mandatoryLogic }}</pre>
+          <pre>{{ fieldAttributes.mandatory_logic }}</pre>
         </el-form-item>
       </el-form>
     </el-scrollbar>

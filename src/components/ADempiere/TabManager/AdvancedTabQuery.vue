@@ -256,17 +256,17 @@ export default defineComponent({
     const containerManagerAdvancedQuery = computed(() => {
       return {
         ...props.containerManager,
-        isDisplayedField({ isDisplayed }) {
+        isDisplayedField({ is_displayed }) {
           return true
         },
-        isDisplayedDefault({ isSelectionColumn }) {
+        isDisplayedDefault({ is_selection_column }) {
           // add is showed from user
           return false
         },
-        isMandatoryField({ isMandatory }) {
+        isMandatoryField({ is_mandatory }) {
           return false
         },
-        isReadOnlyField({ isReadOnly, operator }) {
+        isReadOnlyField({ is_read_only, operator }) {
           return false
         },
         getFieldsToHidden({ parentUuid, containerUuid }) {

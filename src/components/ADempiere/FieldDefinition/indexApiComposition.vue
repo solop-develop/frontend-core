@@ -291,7 +291,7 @@ export default defineComponent({
       field.value = {
         ...props.metadataField,
         // isActive: true,
-        isDisplayed: true,
+        is_displayed: true,
         isDisplayedFromLogic: true,
         isShowedFromUser: true,
         //

@@ -37,42 +37,42 @@ export const CONTAINER_PROCESS_PREFIX = 'process_'
  * Is displayed field parameter in process/report panel
  * @param {number} displayType
  * @param {boolean} isActive
- * @param {boolean} isDisplayed
+ * @param {boolean} is_displayed
  * @param {string} displayLogic
  * @param {boolean} isDisplayedFromLogic
  * @returns {boolean}
  */
-export function isDisplayedField({ displayType, isActive, isDisplayed, displayLogic, isDisplayedFromLogic }) {
+export function isDisplayedField({ displayType, is_displayed, display_logic, isDisplayedFromLogic }) {
   // button field not showed
   if (isHiddenField(displayType)) {
     return false
   }
 
   // verify if field is active
-  return isActive && isDisplayed && (isEmptyValue(displayLogic) || isDisplayedFromLogic)
+  return is_displayed && (isEmptyValue(display_logic) || isDisplayedFromLogic)
 }
 
 /**
  * Default showed field from user
  */
 export function evaluateDefaultFieldShowed({
-  defaultValue, displayType, parsedDefaultValue,
+  default_value, displayType, parsedDefaultValue,
   isShowedFromUser, isDisplayedAsPanel,
-  isMandatory, displayLogic
+  is_mandatory, display_logic
 }) {
   if (!isEmptyValue(isDisplayedAsPanel)) {
     return convertStringToBoolean(isDisplayedAsPanel)
   }
-  if (!isEmptyValue(displayLogic)) {
+  if (!isEmptyValue(display_logic)) {
     return true
   }
   const isMandatoryGenerated = isMandatoryField({
-    displayType, isMandatory
+    displayType, is_mandatory
   })
   if (isMandatoryGenerated) {
     return true
   }
-  if (!isEmptyValue(defaultValue) || !isEmptyValue(parsedDefaultValue)) {
+  if (!isEmptyValue(default_value) || !isEmptyValue(parsedDefaultValue)) {
     return true
   }
   return Boolean(isShowedFromUser)
@@ -93,12 +93,12 @@ export function isMandatoryField({ displayType, isMandatory }) {
 
 /**
  * Process is read only field
- * @param {string} readOnlyLogic
+ * @param {string} read_only_logic
  * @param {boolean} isReadOnlyFromLogic
  * @returns {boolean}
  */
-export function isReadOnlyField({ readOnlyLogic, isReadOnlyFromLogic }) {
-  return !isEmptyValue(readOnlyLogic) && isReadOnlyFromLogic
+export function isReadOnlyField({ read_only_logic, isReadOnlyFromLogic }) {
+  return !isEmptyValue(read_only_logic) && isReadOnlyFromLogic
 }
 
 /**
@@ -220,12 +220,12 @@ export const containerManager = {
   },
 
   isDisplayedField,
-  isDisplayedDefault: ({ isMandatory, defaultValue, isShowedFromUser }) => {
+  isDisplayedDefault: ({ isMandatory, default_value, isShowedFromUser }) => {
     // add is showed from user
     if (isMandatory) {
       return true
     }
-    if (!isEmptyValue(defaultValue)) {
+    if (!isEmptyValue(default_value)) {
       return isShowedFromUser
     }
     return false

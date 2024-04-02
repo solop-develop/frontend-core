@@ -40,7 +40,7 @@ export function templateFields(field) {
     isDisplayed: true,
     isMandatory: is_mandatory,
     defaultValue: default_value,
-    defaultValueTo: default_value_to,
+    default_value_to: default_value_to,
     isQueryCriteria: is_query_criteria,
     elementColumnName: element_column_name,
     contextColumnNames: context_column_names,

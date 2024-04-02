@@ -205,7 +205,7 @@ export default defineComponent({
         return isDisplayedTab({
           parentUuid: props.parentUuid,
           containerUuid: tab.uuid,
-          displayLogic: tab.displayLogic
+          displayLogic: tab.display_logic
         })
       })
     })
@@ -391,14 +391,14 @@ export default defineComponent({
         if (!isEmptyValue(action) && action !== 'create-new') {
           /*
           // search link value
-          const { linkColumnName } = tab
+          const { link_column_name } = tab
           const value = store.getters.getValueOfField({
             parentUuid: props.parentUuid,
-            columnName: linkColumnName
+            columnName: link_column_name
           })
-          if (linkColumnName && !isEmptyValue(value)) {
+          if (link_column_name && !isEmptyValue(value)) {
             row = responseData.find(rowData => {
-            return rowData[linkColumnName] === value
+            return rowData[link_column_name] === value
           })
           }
           */

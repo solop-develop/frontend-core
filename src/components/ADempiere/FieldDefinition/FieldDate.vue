@@ -83,7 +83,7 @@ export default {
       if (!isEmptyValue(this.metadata.operator)) {
         return RANGE_VALUE_OPERATORS_LIST.includes(this.metadata.operator)
       }
-      return this.metadata.isRange
+      return this.metadata.is_range
     },
     typePicker() {
       let picker = 'date'

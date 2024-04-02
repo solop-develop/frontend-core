@@ -539,7 +539,7 @@ export default defineComponent({
           .then(responseField => {
             list.push({
               ...responseField,
-              isReadOnly: false,
+              is_read_only: false,
               containerUuid: 'ChildIncome'
             })
           }).catch(error => {

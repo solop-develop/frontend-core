@@ -370,8 +370,8 @@ export default defineComponent({
     function isDisplayedDefault() {
       return true
     }
-    function isReadOnlyField({ isQueryCriteria, isReadOnlyFromLogic }) {
-      return isQueryCriteria && isReadOnlyFromLogic
+    function isReadOnlyField({ is_query_criteria, isReadOnlyFromLogic }) {
+      return is_query_criteria && isReadOnlyFromLogic
     }
 
     function getLookupList({ parentUuid, containerUuid, contextColumnNames, uuid, id, searchValue, isAddBlankValue = false, blankValue }) {

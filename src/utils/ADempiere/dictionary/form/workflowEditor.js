@@ -36,8 +36,8 @@ export const FIELDS_LIST_DEFINITION = [
       // handleFocusGained: true,
       // handleFocusLost: true,
       // handleActionKeyPerformed: true,
-      isDisplayed: true,
-      isReadOnly: false
+      is_displayed: true,
+      is_read_only: false
       // componentPath: 'FieldSelect'
     }
   }

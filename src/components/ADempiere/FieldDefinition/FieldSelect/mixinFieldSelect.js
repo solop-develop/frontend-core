@@ -40,14 +40,14 @@ export default {
 
   computed: {
     isSelectMultiple() {
-      return (this.metadata.isAdvancedQuery || this.metadata.isQueryCriteria) &&
+      return (this.metadata.isAdvancedQuery || this.metadata.is_query_criteria) &&
       MULTIPLE_VALUES_OPERATORS_LIST.includes(this.metadata.operator)
     },
 
     blankOption() {
       let value
-      if (Number(this.metadata.defaultValue) === -1) {
-        value = this.metadata.defaultValue
+      if (Number(this.metadata.default_value) === -1) {
+        value = this.metadata.default_value
       }
 
       return {

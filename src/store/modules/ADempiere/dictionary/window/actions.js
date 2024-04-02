@@ -150,7 +150,7 @@ export default {
       let relatedColumns = []
       const parentColumns = tabDefinition.fieldsList
         .filter(fieldItem => {
-          return fieldItem.isParent || fieldItem.isKey || fieldItem.isMandatory
+          return fieldItem.isParent || fieldItem.is_key || fieldItem.isMandatory
         })
         .map(fieldItem => {
           return fieldItem.columnName
@@ -163,7 +163,7 @@ export default {
 
       tabDefinition.processes.forEach(process => {
         let defaultAction = {}
-        if (process.isReport) {
+        if (process.is_report) {
           defaultAction = {
             ...generateReportOfWindow
           }
@@ -250,15 +250,15 @@ export default {
             componentPath: () => import('@/components/ADempiere/PanelDefinition/index.vue'),
             isShowed: false
           })
-        } else if (!isEmptyValue(process.browserId) && process.browserId > 0) {
+        } else if (!isEmptyValue(process.browser_id) && process.browser_id > 0) {
           defaultAction = {
             ...openBrowserAssociated
           }
-        } else if (!isEmptyValue(process.formId) && process.formId > 0) {
+        } else if (!isEmptyValue(process.form_id) && process.form_id > 0) {
           defaultAction = {
             ...openFormAssociated
           }
-        } else if (!isEmptyValue(process.workflowId) && process.workflowId > 0) {
+        } else if (!isEmptyValue(process.workflow_id) && process.workflow_id > 0) {
           // Add workflow icon
           defaultAction = {
             ...openDocumentAction
@@ -851,7 +851,7 @@ export default {
               uuid: fieldDocumentStatus.uuid,
               id: fieldDocumentStatus.id,
               columnName: fieldDocumentStatus.columnName,
-              defaultValue: fieldDocumentStatus.defaultValue,
+              defaultValue: fieldDocumentStatus.default_value,
               value: value
             })
           }

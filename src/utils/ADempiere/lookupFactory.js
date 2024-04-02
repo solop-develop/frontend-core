@@ -30,12 +30,12 @@
 // - isAdvancedQuery:
 // - isMandatory:
 // - isMandatoryFromLogic
-// - isReadOnly:
+// - is_read_only:
 // - isDisplayed:
 // - isShowedFromUser
 // - isActive:
 // - isSelectCreated:
-// - isAlwaysUpdateable:
+// - is_always_updateable:
 // - parentUuid:
 // - containerUuid:
 // - value:
@@ -44,13 +44,13 @@
 // - directQuery:
 // - tableName:
 // Date and Time:
-// - isRange
+// - is_range
 // - vFormat
 // - valueTo
 // - valueMax
 // - valueMin
 // Number:
-// - isRange
+// - is_range
 // - valueTo
 // - valueMax
 // - valueMin
@@ -63,7 +63,7 @@
 // - directQuery
 // - tableName
 // - displayColumnName
-// - defaultValue
+// - default_value
 
 import store from '@/store'
 
@@ -175,7 +175,7 @@ function getFactoryFromField({
     parentFieldsList: field.parentFieldsList || [],
     dependentFieldsList: field.dependentFieldsList || [],
     ...field,
-    isDisplayed: true,
+    is_displayed: true,
     // Overwrite definition
     ...overwriteDefinition
   }
@@ -207,11 +207,11 @@ export function createFieldFromDefinition({
       columnName.indexOf('_ID') > 0) {
       definition.tableName = columnName.replace('_ID', '')
     }
-    if (isEmptyValue(definition.isDisplayed)) {
-      definition.isDisplayed = true
+    if (isEmptyValue(definition.is_displayed)) {
+      definition.is_displayed = true
     }
-    if (isEmptyValue(definition.isReadOnly)) {
-      definition.isReadOnly = false
+    if (isEmptyValue(definition.is_read_only)) {
+      definition.is_read_only = false
     }
 
     if (isEmptyValue(definition.isMandatory)) {
@@ -219,7 +219,7 @@ export function createFieldFromDefinition({
     }
     if (isEmptyValue(definition.sequence)) {
       definition.sequence = 0
-      if (definition.isDisplayed) {
+      if (definition.is_displayed) {
         definition.sequence = 10
       }
     }
@@ -282,40 +282,40 @@ export function getFieldTemplate(overwriteDefinition) {
     componentPath: componentReference.componentPath,
     size,
     isFieldOnly: false,
-    isRange: false,
+    is_range: false,
     isSameLine: false,
     sequence: 0,
     seqNoGrid: 0,
-    isIdentifier: 0,
-    isKey: false,
-    isSelectionColumn: false,
-    isUpdateable: true,
+    is_identifier: 0,
+    is_key: false,
+    is_selection_column: false,
+    is_updateable: true,
     //
     formatPattern: undefined,
     vFormat: undefined,
     value: undefined,
     valueTo: undefined,
-    defaultValue: undefined,
+    default_value: undefined,
     parsedDefaultValue: undefined,
-    defaultValueTo: undefined,
+    default_value_to: undefined,
     parsedDefaultValueTo: undefined,
     valueType: componentReference.valueType, // value type to convert with gGRPC
     valueMin: undefined,
     valueMax: undefined,
     //
-    isDisplayed: false,
+    is_displayed: false,
     isActive: true,
     isMandatory: false,
-    isReadOnly: false,
+    is_read_only: false,
     isDisplayedFromLogic: undefined,
     isReadOnlyFromLogic: undefined,
     isMandatoryFromLogic: undefined,
     // browser attributes
     callout: undefined,
-    isQueryCriteria: false,
+    is_query_criteria: false,
     displayLogic: undefined,
-    mandatoryLogic: undefined,
-    readOnlyLogic: undefined,
+    mandatory_logic: undefined,
+    read_only_logic: undefined,
     handleFocusGained: false,
     handleFocusLost: false,
     handleKeyPressed: false,
@@ -350,10 +350,10 @@ export function getFieldTemplate(overwriteDefinition) {
   })
 
   let parsedDefaultValueTo
-  if (fieldTemplateMetadata.isRange) {
+  if (fieldTemplateMetadata.is_range) {
     parsedDefaultValueTo = getContextDefaultValue({
       ...fieldTemplateMetadata,
-      defaultValue: fieldTemplateMetadata.defaultValueTo,
+      default_value: fieldTemplateMetadata.default_value_to,
       columnName: `${fieldTemplateMetadata.columnName}_To`,
       elementName: `${fieldTemplateMetadata.elementName}_To`
     })

@@ -26,26 +26,26 @@ import {
 import evaluator from '@/utils/ADempiere/contextUtils/evaluator'
 import { getContext, parseContext, getPreference } from '@/utils/ADempiere/contextUtils'
 import { arrayMatches, isEmptyValue, parsedValueComponent } from '@/utils/ADempiere/valueUtils'
-import { isNumberField, isIdentifier } from '@/utils/ADempiere/references'
+import { isNumberField, isIdentifierField } from '@/utils/ADempiere/references'
 
 /**
  * Extracts the associated fields from the logics or default values
  * @param {string} displayLogic
- * @param {string} mandatoryLogic
- * @param {string} readOnlyLogic
+ * @param {string} mandatory_logic
+ * @param {string} read_only_logic
  * @param {object} reference.contextColumnNames array
- * @param {string} defaultValue
- * @param {string} defaultValueTo
+ * @param {string} default_value
+ * @param {string} default_value_to
  * @returns {array} List column name of parent fields
  */
 export function getParentFields({
   displayLogic,
-  mandatoryLogic,
-  readOnlyLogic,
+  mandatory_logic,
+  read_only_logic,
   reference,
-  defaultValue,
+  default_value,
   contextColumnNames = [],
-  defaultValueTo
+  default_value_to
 }) {
   let contextColumnNamesByReference = []
   // validate reference
@@ -61,15 +61,15 @@ export function getParentFields({
       // For Display logic
       ...evaluator.parseDepends(displayLogic),
       // For Mandatory Logic
-      ...evaluator.parseDepends(mandatoryLogic),
+      ...evaluator.parseDepends(mandatory_logic),
       // For Read Only Logic
-      ...evaluator.parseDepends(readOnlyLogic),
+      ...evaluator.parseDepends(read_only_logic),
       // For Default Value
       ...contextColumnNames,
       // For Default Value
-      ...evaluator.parseDepends(defaultValue),
+      ...evaluator.parseDepends(default_value),
       // For Default Value To
-      ...evaluator.parseDepends(defaultValueTo)
+      ...evaluator.parseDepends(default_value_to)
     ])
   ]
 
@@ -84,8 +84,8 @@ export function getEvaluatedFieldLogics({
   parentUuid,
   containerUuid,
   displayLogic,
-  mandatoryLogic,
-  readOnlyLogic
+  mandatory_logic,
+  read_only_logic
 }) {
   // evaluate logics
   const commonParameters = {
@@ -103,18 +103,18 @@ export function getEvaluatedFieldLogics({
   }
 
   let isMandatoryFromLogic = false
-  if (!isEmptyValue(mandatoryLogic)) {
+  if (!isEmptyValue(mandatory_logic)) {
     isMandatoryFromLogic = evaluator.evaluateLogic({
       ...commonParameters,
-      logic: mandatoryLogic
+      logic: mandatory_logic
     })
   }
 
   let isReadOnlyFromLogic = false
-  if (!isEmptyValue(readOnlyLogic)) {
+  if (!isEmptyValue(read_only_logic)) {
     isReadOnlyFromLogic = evaluator.evaluateLogic({
       ...commonParameters,
-      logic: readOnlyLogic
+      logic: read_only_logic
     })
   }
 
@@ -138,12 +138,12 @@ export function getContextDefaultValue({
   elementName,
   componentPath,
   displayType,
-  defaultValue,
+  default_value,
   isMandatory,
   isColumnReadOnlyForm,
-  isKey
+  is_key
 }) {
-  let parsedDefaultValue = defaultValue
+  let parsedDefaultValue = default_value
 
   const isContextValue = String(parsedDefaultValue).includes('@')
 
@@ -169,7 +169,7 @@ export function getContextDefaultValue({
   }
 
   // search value preference with column name
-  if (isEmptyValue(parsedDefaultValue) && !isKey &&
+  if (isEmptyValue(parsedDefaultValue) && !is_key &&
     String(parsedDefaultValue).trim() !== '-1') {
     parsedDefaultValue = getPreference({
       parentUuid,
@@ -199,14 +199,14 @@ export function getContextDefaultValue({
   // set default value
   if (!isContextValue) {
     if (isEmptyValue(parsedDefaultValue)) {
-      parsedDefaultValue = defaultValue
+      parsedDefaultValue = default_value
     }
     if (isEmptyValue(parsedDefaultValue)) {
       if (isNumberField(displayType)) {
         if (isMandatory) {
           parsedDefaultValue = 0
         }
-      } else if (isIdentifier(displayType)) {
+      } else if (isIdentifierField(displayType)) {
         parsedDefaultValue = -1
       }
     }
