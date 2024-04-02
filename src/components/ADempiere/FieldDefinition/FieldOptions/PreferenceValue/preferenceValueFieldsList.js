@@ -23,7 +23,7 @@ export default [
       size: 24,
       sequence: 0,
       isActiveLogics: true, // enable logics
-      isReadOnly: true,
+      is_read_only: true,
       handleActionPerformed: true,
       handleContentSelection: true,
       handleActionKeyPerformed: true,
@@ -43,7 +43,7 @@ export default [
       handleContentSelection: true,
       handleActionKeyPerformed: true,
       componentPath: 'FieldYesNo',
-      readOnlyLogic: `@AD_Client_ID@='N'`,
+      read_only_logic: `@AD_Client_ID@='N'`,
       value: false
     }
   },
@@ -55,7 +55,7 @@ export default [
       size: 24,
       sequence: 2,
       isActiveLogics: true, // enable logics
-      isReadOnly: true,
+      is_read_only: true,
       handleActionPerformed: true,
       handleContentSelection: true,
       handleActionKeyPerformed: true,
@@ -71,7 +71,7 @@ export default [
       size: 24,
       sequence: 3,
       isActiveLogics: true, // enable logics
-      isReadOnly: true,
+      is_read_only: true,
       handleActionPerformed: true,
       handleContentSelection: true,
       handleActionKeyPerformed: true,

@@ -647,7 +647,7 @@ export default defineComponent({
       if (command === 'showDefaultField') {
         const { fieldsList } = panelDefault.value
         fieldsShowed = fieldsList
-          .filter(field => field.isDisplayed && field.isShowedFromUser)
+          .filter(field => field.is_displayed && field.isShowedFromUser)
           .map(field => field.columnName)
       }
       if (command === 'showWithValue') {

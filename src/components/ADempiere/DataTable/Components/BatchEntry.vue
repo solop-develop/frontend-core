@@ -28,7 +28,7 @@
       :container-uuid="containerUuid + 'Batch_Entry'"
       :metadata-field="fieldAttributes"
       :container-manager="containerManagerBatchEntry"
-      :v-model="fieldAttributes.defaultValue"
+      :v-model="fieldAttributes.default_value"
       :size-col="6"
       @keyup.native.enter="actionKeyEnter(fieldAttributes)"
     />

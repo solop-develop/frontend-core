@@ -114,11 +114,11 @@ export function generateField({
   })
 
   let parentFieldsList = []
-  let parsedDefaultValue = fieldToGenerate.defaultValue
-  let parsedDefaultValueTo = fieldToGenerate.defaultValueTo
+  let parsedDefaultValue = fieldToGenerate.default_value
+  let parsedDefaultValueTo = fieldToGenerate.default_value_to
   let operator
   let isNumericField = componentReference.componentPath === 'FieldNumber'
-  let isTranslatedField = fieldToGenerate.isTranslated
+  let isTranslatedField = fieldToGenerate.is_translated
   let isComparisonField = false // to list operators comparison
   let operatorsList = []
   if (moreAttributes.isAdvancedQuery) {
@@ -133,8 +133,8 @@ export function generateField({
       isMandatoryFromLogic: false,
       isReadOnlyFromLogic: false
     }
-    fieldToGenerate.isDisplayed = true
-    fieldToGenerate.isReadOnly = false
+    fieldToGenerate.is_displayed = true
+    fieldToGenerate.is_read_only = false
     // Is mandatory to showed available filter fields
     fieldToGenerate.isMandatory = false
   } else {
@@ -157,26 +157,26 @@ export function generateField({
       isSOTrxDictionary
     })
 
-    if (String(fieldToGenerate.defaultValue).startsWith('@SQL=')) {
+    if (String(fieldToGenerate.default_value).startsWith('@SQL=')) {
       // isShowedFromUser = true
       isGetServerValue = true
     }
 
     // VALUE TO
-    if (fieldToGenerate.isRange) {
+    if (fieldToGenerate.is_range) {
       parsedDefaultValueTo = getContextDefaultValue({
         ...fieldToGenerate,
         isColumnReadOnlyForm,
         parentUuid: moreAttributes.parentUuid,
         containerUuid: moreAttributes.containerUuid,
         componentPath: componentReference.componentPath,
-        defaultValue: fieldToGenerate.defaultValueTo,
+        default_value: fieldToGenerate.default_value_to,
         columnName: `${columnName}_To`,
         elementName: `${fieldToGenerate.elementName}_To`,
         isSOTrxDictionary
       })
 
-      if (String(fieldToGenerate.defaultValueTo).startsWith('@SQL=')) {
+      if (String(fieldToGenerate.default_value_to).startsWith('@SQL=')) {
         isGetServerValue = true
       }
     }
@@ -190,7 +190,7 @@ export function generateField({
     })
   }
   // set field operators list
-  if (moreAttributes.isAdvancedQuery || fieldToGenerate.isQueryCriteria) {
+  if (moreAttributes.isAdvancedQuery || fieldToGenerate.is_query_criteria) {
     operator = OPERATOR_EQUAL.operator
     isComparisonField = !['FieldBinary', 'FieldButton', 'FieldImage'].includes(componentReference.componentPath)
     if (isComparisonField) {
@@ -260,7 +260,7 @@ export function generateField({
   }
 
   // Overwrite some values
-  if (field.isRange) {
+  if (field.is_range) {
     field.operator = OPERATOR_BETWEEN.operator
     if (field.isNumericField) {
       field.operator = OPERATOR_GREATER_EQUAL.operator
@@ -273,7 +273,7 @@ export function generateField({
       field.elementName = field.elementNameTo
       field.name = `${field.name} To`
       field.value = parsedDefaultValueTo
-      field.defaultValue = field.defaultValueTo
+      field.default_value = field.default_value_to
       field.parsedDefaultValue = field.parsedDefaultValueTo
 
       // increment order sequence
@@ -311,7 +311,7 @@ export function generateField({
   if (isHiddenField(field.displayType)) {
     field.isDisplayedFromLogic = false
     field.is_displayed_grid = false
-    field.isDisplayed = false
+    field.is_displayed = false
   }
 
   return field
@@ -319,20 +319,20 @@ export function generateField({
 
 /**
  * Determinate if field is displayed
- * @param {boolean} isDisplayed
+ * @param {boolean} is_displayed
  * @param {boolean} isDisplayedFromLogic
- * @param {boolean} isQueryCriteria
+ * @param {boolean} is_query_criteria
  * @param {string}  panelType
  * @returns {boolean}
  */
 export function fieldIsDisplayed({
   // standard
   panelType,
-  isDisplayed,
+  is_displayed,
   displayType,
   // panel
-  isQueryCriteria,
-  isKey,
+  is_query_criteria,
+  is_key,
   // table
   is_displayed_grid,
   // other
@@ -344,7 +344,7 @@ export function fieldIsDisplayed({
   }
 
   // verify if field is active
-  if (!isDisplayed) {
+  if (!is_displayed) {
     return false
   }
 
@@ -354,7 +354,7 @@ export function fieldIsDisplayed({
       // standard
       panelType,
       // table,
-      isKey,
+      is_key,
       is_displayed_grid,
       // other
       isDisplayedFromLogic
@@ -366,7 +366,7 @@ export function fieldIsDisplayed({
     // standard
     panelType,
     // panel
-    isQueryCriteria,
+    is_query_criteria,
     // other
     isDisplayedFromLogic
   })
@@ -380,13 +380,13 @@ export function fieldIsDisplayedPanel({
   // standard
   panelType,
   // panel
-  isQueryCriteria,
+  is_query_criteria,
   // other
   isDisplayedFromLogic
 }) {
   // browser query criteria
   if (panelType === 'browser') {
-    return isQueryCriteria
+    return is_query_criteria
   }
 
   // window, process and report
@@ -401,7 +401,7 @@ export function fieldIsDisplayedTable({
   // standard
   panelType,
   // table,
-  isKey,
+  is_key,
   is_displayed_grid,
   // other
   isDisplayedFromLogic
@@ -413,5 +413,5 @@ export function fieldIsDisplayedTable({
 
   // window , browser (table) result
   return isDisplayedFromLogic &&
-    !isKey
+    !is_key
 }

@@ -216,16 +216,16 @@ export default {
       fieldsList = storedTab.fieldsList
     }
 
-    const { isParentTab, linkColumnName, parentColumnName } = storedTab
+    const { isParentTab, link_column_name, parent_column_name } = storedTab
 
     const attributesDisplayColumn = []
     const attributesObject = {}
     let attributesList = fieldsList
       .map(fieldItem => {
-        const { uuid, id, columnName, defaultValue, contextColumnNames } = fieldItem
-        const isSQL = String(defaultValue).startsWith('@SQL=') && isGetServer
-        const isLinkColumn = !isEmptyValue(linkColumnName) && columnName === linkColumnName
-        const isParentColumn = fieldItem.isParent || (!isEmptyValue(parentColumnName) && columnName === parentColumnName)
+        const { uuid, id, columnName, default_value, contextColumnNames } = fieldItem
+        const isSQL = String(default_value).startsWith('@SQL=') && isGetServer
+        const isLinkColumn = !isEmptyValue(link_column_name) && columnName === link_column_name
+        const isParentColumn = fieldItem.isParent || (!isEmptyValue(parent_column_name) && columnName === parent_column_name)
 
         let parsedDefaultValue
         if (!isSQL) {
@@ -307,7 +307,7 @@ export default {
                 }
               }
             }
-            if (isEmptyValue(displayedValue) && !fieldItem.isKey && String(defaultValue).includes('@')) {
+            if (isEmptyValue(displayedValue) && !fieldItem.is_key && String(default_value).includes('@')) {
               displayedValue = getContext({
                 parentUuid,
                 containerUuid,
@@ -370,7 +370,7 @@ export default {
     // all optionals (not mandatory) fields
     return fieldsList
       .filter(fieldItem => {
-        if (!fieldItem.isDisplayed) {
+        if (!fieldItem.is_displayed) {
           return
         }
         const isMandatory = mandatoryMethod(fieldItem)
@@ -380,9 +380,9 @@ export default {
           return true
         }
         // Yes/No field always boolean value
-        const { defaultValue } = fieldItem
+        const { default_value } = fieldItem
         const isYesNo = fieldItem.displayType === YES_NO.id
-        if (isMandatory && (isEmptyValue(defaultValue) && !isYesNo)) {
+        if (isMandatory && (isEmptyValue(default_value) && !isYesNo)) {
           if (isTable) {
             return true
           }
@@ -391,12 +391,12 @@ export default {
 
         if (isEvaluateDefaultValue && isEvaluateShowed) {
           return showedMethod(fieldItem) &&
-          !isEmptyValue(defaultValue) &&
+          !isEmptyValue(default_value) &&
           !isYesNo
         }
 
         if (isEvaluateDefaultValue) {
-          return !isEmptyValue(defaultValue)
+          return !isEmptyValue(default_value)
         }
 
         if (isEvaluateShowed) {

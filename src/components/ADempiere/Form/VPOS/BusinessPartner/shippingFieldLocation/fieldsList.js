@@ -29,9 +29,9 @@ export default [
     columnName: 'C_Country_ID',
     overwriteDefinition: {
       isCustomField: true,
-      isUpdateable: true,
+      is_updateable: true,
       isActiveLogics: true, // enable logics
-      defaultValue: '@#C_Country_ID@',
+      default_value: '@#C_Country_ID@',
       size: 24,
       sequenceFields: 'CO',
       index: 2,
@@ -45,7 +45,7 @@ export default [
     uuid: '8ced32aa-fb40-11e8-a479-7a0060f0aa01',
     overwriteDefinition: {
       isCustomField: true,
-      isUpdateable: true,
+      is_updateable: true,
       size: 24,
       sequenceFields: 'R',
       index: 3,
@@ -59,7 +59,7 @@ export default [
     uuid: '8cfb4d90-fb40-11e8-a479-7a0060f0aa01',
     overwriteDefinition: {
       isCustomField: true,
-      isUpdateable: true,
+      is_updateable: true,
       size: 24,
       displayType: 19,
       sequenceFields: 'C',
@@ -73,7 +73,7 @@ export default [
     columnName: 'Address1',
     overwriteDefinition: {
       isCustomField: true,
-      isUpdateable: true,
+      is_updateable: true,
       isMandatory: true,
       size: 24,
       sequenceFields: 'A1',
@@ -86,7 +86,7 @@ export default [
     columnName: 'Address2',
     overwriteDefinition: {
       isCustomField: true,
-      isUpdateable: true,
+      is_updateable: true,
       size: 24,
       isMandatory: false,
       sequenceFields: 'A2',
@@ -99,7 +99,7 @@ export default [
     columnName: 'Address3',
     overwriteDefinition: {
       isCustomField: true,
-      isUpdateable: true,
+      is_updateable: true,
       size: 24,
       isMandatory: false,
       sequenceFields: 'A3',
@@ -112,7 +112,7 @@ export default [
     columnName: 'Address4',
     overwriteDefinition: {
       isCustomField: true,
-      isUpdateable: true,
+      is_updateable: true,
       size: 24,
       isMandatory: false,
       sequenceFields: 'A4',
@@ -125,7 +125,7 @@ export default [
     columnName: 'Postal',
     overwriteDefinition: {
       isCustomField: true,
-      isUpdateable: true,
+      is_updateable: true,
       size: 24,
       sequenceFields: 'P',
       index: 9
@@ -137,7 +137,7 @@ export default [
     overwriteDefinition: {
       tabindex: 1,
       isCustomField: true,
-      isUpdateable: true,
+      is_updateable: true,
       size: 24,
       name: language.t('components.contextMenuReferences'),
       sequence: 1,

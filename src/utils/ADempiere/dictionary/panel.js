@@ -91,7 +91,7 @@ export function assignedGroup({
     if (!firstChangeGroup) {
       if (!isEmptyValue(fieldElement.fieldGroup.name) &&
         currentGroup !== fieldElement.fieldGroup.name &&
-        fieldElement.isDisplayed) {
+        fieldElement.is_displayed) {
         firstChangeGroup = true
       }
     }
@@ -152,7 +152,6 @@ export function generatePanelAndFields({
   }
 
   const fieldsRangeList = []
-  const selectionColumns = []
   let identifierColumns = []
 
   let keyColumn
@@ -170,13 +169,10 @@ export function generatePanelAndFields({
     })
     const { columnName, componentPath } = fieldDefinition
 
-    if (fieldDefinition.isKey) {
+    if (fieldDefinition.is_key) {
       keyColumn = columnName
     }
-    if (fieldDefinition.isSelectionColumn) {
-      selectionColumns.push(columnName)
-    }
-    if (fieldDefinition.isIdentifier) {
+    if (fieldDefinition.is_identifier) {
       identifierColumns.push({
         name: fieldDefinition.name,
         columnName,
@@ -261,7 +257,6 @@ export function generatePanelAndFields({
     // app attributes
     keyColumn,
     sortOrderColumnName: sortField,
-    selectionColumns,
     identifierColumns,
     isLoadedFieldsList: true,
     isShowedTotals: false,
@@ -287,10 +282,10 @@ export function generateDependenFieldsList(fieldsList) {
       return
     }
 
-    itemField.parentFieldsList.forEach(parentColumnName => {
+    itemField.parentFieldsList.forEach(itemParentColumnName => {
       const parentField = listFields.find(parentFieldItem => {
-        return (parentColumnName === parentFieldItem.columnName ||
-          parentColumnName === parentFieldItem.elementName)
+        return (itemParentColumnName === parentFieldItem.columnName ||
+          itemParentColumnName === parentFieldItem.elementName)
       })
 
       if (isEmptyValue(parentField)) {
@@ -329,8 +324,8 @@ export function panelAdvanceQuery({
         moreAttributes: {
           isAdvancedQuery: true
         },
-        evaluateDefaultFieldShowed: ({ isSelectionColumn }) => {
-          return isSelectionColumn
+        evaluateDefaultFieldShowed: ({ is_selection_column }) => {
+          return is_selection_column
         }
       })
     }),

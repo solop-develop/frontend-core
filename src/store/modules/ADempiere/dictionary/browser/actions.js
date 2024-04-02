@@ -93,7 +93,7 @@ export default {
               browserDefinition.columnsList[DISPLAY_COLUMN_PREFIX + fieldItem.elementName] = DISPLAY_COLUMN_PREFIX + fieldItem.columnName
             }
 
-            if (fieldItem.isRange) {
+            if (fieldItem.is_range) {
               browserDefinition.elementsList[fieldItem.columnNameTo] = fieldItem.elementNameTo
               browserDefinition.columnsList[fieldItem.elementNameTo] = fieldItem.columnNameTo
             }

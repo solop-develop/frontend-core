@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ export default [
     overwriteDefinition: {
       isCustomField: true,
       size: 24,
-      isDisplayed: false,
+      is_displayed: false,
       index: 1
     }
   },
@@ -42,9 +42,9 @@ export default [
     uuid: '8ceddfca-fb40-11e8-a479-7a0060f0aa01',
     overwriteDefinition: {
       isCustomField: true,
-      isUpdateable: true,
+      is_updateable: true,
       isActiveLogics: true, // enable logics
-      defaultValue: '@#C_Country_ID@',
+      default_value: '@#C_Country_ID@',
       size: 24,
       reference: {
         tableName: 'C_Location'
@@ -61,7 +61,7 @@ export default [
     uuid: '8ced32aa-fb40-11e8-a479-7a0060f0aa01',
     overwriteDefinition: {
       isCustomField: true,
-      isUpdateable: true,
+      is_updateable: true,
       size: 24,
       sequenceFields: 'R',
       reference: {
@@ -81,7 +81,7 @@ export default [
       reference: {
         tableName: 'C_Location'
       },
-      isUpdateable: true,
+      is_updateable: true,
       componentPath: 'FieldSelect',
       size: 24,
       sequenceFields: 'C',
@@ -95,7 +95,7 @@ export default [
     columnName: 'Address1',
     overwriteDefinition: {
       isCustomField: true,
-      isUpdateable: true,
+      is_updateable: true,
       size: 24,
       sequenceFields: 'A1',
       index: 5
@@ -107,7 +107,7 @@ export default [
     columnName: 'Address2',
     overwriteDefinition: {
       isCustomField: true,
-      isUpdateable: true,
+      is_updateable: true,
       size: 24,
       sequenceFields: 'A2',
       isMandatory: false,
@@ -120,7 +120,7 @@ export default [
     columnName: 'Address3',
     overwriteDefinition: {
       isCustomField: true,
-      isUpdateable: true,
+      is_updateable: true,
       size: 24,
       sequenceFields: 'A3',
       isMandatory: false,
@@ -133,7 +133,7 @@ export default [
     columnName: 'Address4',
     overwriteDefinition: {
       isCustomField: true,
-      isUpdateable: true,
+      is_updateable: true,
       size: 24,
       sequenceFields: 'A4',
       isMandatory: false,
@@ -146,7 +146,7 @@ export default [
     columnName: 'Postal',
     overwriteDefinition: {
       isCustomField: true,
-      isUpdateable: true,
+      is_updateable: true,
       size: 24,
       sequenceFields: 'P',
       index: 9
@@ -158,7 +158,7 @@ export default [
     overwriteDefinition: {
       tabindex: 1,
       isCustomField: true,
-      isUpdateable: true,
+      is_updateable: true,
       size: 24,
       name: language.t('components.contextMenuReferences'),
       sequence: 1,

@@ -95,7 +95,7 @@ export default defineComponent({
         formatReturn: false
       }).filter(itemField => {
         // omit send to server (to create or update) columns manage by backend
-        return itemField.isAlwaysUpdateable ||
+        return itemField.is_always_updateable ||
           !LOG_COLUMNS_NAME_LIST.includes(itemField.columnName)
       }).map(itemField => {
         return itemField.name

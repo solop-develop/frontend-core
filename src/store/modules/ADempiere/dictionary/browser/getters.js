@@ -99,7 +99,7 @@ export default {
         columnName
       })
 
-      if (fieldItem.isRange && !isNumberField(fieldItem.displayType)) {
+      if (fieldItem.is_range && !isNumberField(fieldItem.displayType)) {
         const valueTo = rootGetters.getValueOfField({
           containerUuid,
           columnName: fieldItem.columnNameTo
@@ -141,8 +141,8 @@ export default {
 
     fieldsList.forEach(fieldItem => {
       // default operator
-      const { isInfoOnly, columnName, columnNameTo, operator, displayType } = fieldItem
-      if (isInfoOnly) {
+      const { is_info_only, columnName, columnNameTo, operator, displayType } = fieldItem
+      if (is_info_only) {
         return false
       }
       const isMandatory = isMandatoryField(fieldItem)
@@ -224,7 +224,7 @@ export default {
     }
 
     const fieldsEmpty = fieldsList.filter(fieldItem => {
-      if (fieldItem.isInfoOnly) {
+      if (fieldItem.is_info_only) {
         return false
       }
       const isMandatory = isMandatoryField(fieldItem)
@@ -296,14 +296,14 @@ export default {
           return false
         }
 
-        const { defaultValue } = fieldItem
+        const { default_value } = fieldItem
         if (isEvaluateDefaultValue && isEvaluateShowed) {
           return showedMethod(fieldItem) &&
-            !isEmptyValue(defaultValue)
+            !isEmptyValue(default_value)
         }
 
         if (isEvaluateDefaultValue) {
-          return !isEmptyValue(defaultValue)
+          return !isEmptyValue(default_value)
         }
 
         if (isEvaluateShowed) {

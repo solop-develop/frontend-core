@@ -120,7 +120,7 @@ const browserControl = {
           fieldsList,
           containerManager: containerManager
         }).then(() => {
-          if (field.isInfoOnly) {
+          if (field.is_info_only) {
             // omit search
             resolve()
             return
@@ -168,7 +168,7 @@ const browserControl = {
           return
         }
 
-        // parameters isQueryCriteria
+        // parameters Query Criteria
         const queryCriteriaFilters = rootGetters.getBrowserQueryCriteria({
           containerUuid,
           fieldsList
@@ -499,7 +499,7 @@ const browserControl = {
       // reduce list
       const fieldsListSelection = fieldsList
         .filter(itemField => {
-          return itemField.isKey || itemField.isIdentifier || !isReadOnlyColumn(itemField)
+          return itemField.is_key || itemField.is_identifier || !isReadOnlyColumn(itemField)
         })
         .map(itemField => {
           return {

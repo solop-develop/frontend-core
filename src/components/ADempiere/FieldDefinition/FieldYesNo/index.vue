@@ -51,7 +51,7 @@ export default {
 
   computed: {
     yesNoComponentRender() {
-      if (this.metadata.isAdvancedQuery || (this.metadata.isQueryCriteria && !this.metadata.required)) {
+      if (this.metadata.isAdvancedQuery || (this.metadata.is_query_criteria && !this.metadata.required)) {
         return () => import('@/components/ADempiere/FieldDefinition/FieldYesNo/SelectTemplate.vue')
       }
       return () => import('@/components/ADempiere/FieldDefinition/FieldYesNo/SwitchTemplate.vue')

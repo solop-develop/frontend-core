@@ -85,7 +85,7 @@ const actions = {
       values.isSendServer = false
 
       // get the link column name from the tab
-      let linkColumnName = tabPanel.linkColumnName
+      let linkColumnName = tabPanel.link_column_name
       if (isEmptyValue(linkColumnName)) {
         // get the link column name from field list
         linkColumnName = tabPanel.fieldLinkColumnName
@@ -155,7 +155,7 @@ const actions = {
               valueGetDisplayColumn = await dispatch('getDefaultValueFromServer', {
                 parentUuid,
                 containerUuid,
-                query: itemField.defaultValue,
+                query: itemField.default_value,
                 columnName
               })
               values[columnName] = valueGetDisplayColumn

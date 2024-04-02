@@ -264,13 +264,13 @@ export default {
             if (newSequence.includes(item.sequenceFields)) {
               return {
                 ...item,
-                isDisplayed: true,
+                is_displayed: true,
                 index: newSequence.indexOf(item.sequenceFields)
               }
             }
             return {
               ...item,
-              isDisplayed: false
+              is_displayed: false
             }
           }).sort((itemA, itemB) => {
             return itemA.index - itemB.index
