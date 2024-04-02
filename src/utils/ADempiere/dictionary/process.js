@@ -111,7 +111,7 @@ export function generateProcess({
   processToGenerate,
   containerUuidAssociated = undefined
 }) {
-  const panelType = processToGenerate.isReport ? 'report' : 'process'
+  const panelType = processToGenerate.is_report ? 'report' : 'process'
   const additionalAttributes = {
     containerUuid: processToGenerate.uuid,
     panelName: processToGenerate.name,
@@ -151,6 +151,7 @@ export function generateProcess({
 
     fieldsList = fieldsList.concat(fieldsRangeList)
     // order range fields
+    console.log({ fieldsList })
     fieldsList = sortFields({
       fieldsList
     })

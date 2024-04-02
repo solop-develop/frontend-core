@@ -27,7 +27,59 @@ const report = {
   reportOptions: 'Report Options',
   preference: 'Preference',
   reportSettings: 'Report Settings',
-  summary: 'Summary'
+  summary: 'Summary',
+  reportExportTypes: {
+    ps: {
+      name: 'ps - Postscript file',
+      description: 'ps - Postscript file',
+      type: 'ps'
+    },
+    xml: {
+      name: 'xml - XML file',
+      description: 'xml - XML file',
+      type: 'xml'
+    },
+    pdf: {
+      name: 'pdf - Acrobat PDF file',
+      description: 'pdf - Acrobat PDF file',
+      type: 'pdf'
+    },
+    html: {
+      name: 'html - HTML file',
+      description: 'html - HTML file',
+      type: 'html'
+    },
+    txt: {
+      name: 'txt - Tab delimited file',
+      description: 'txt - Tab delimited file',
+      type: 'txt'
+    },
+    ssv: {
+      name: 'ssv - Semicolon Separated Values file',
+      description: 'ssv - Semicolon Separated Values file',
+      type: 'ssv'
+    },
+    csv: {
+      name: 'csv - Excel Comma Separated Values file',
+      description: 'csv - Excel Comma Separated Values file',
+      type: 'csv'
+    },
+    xls: {
+      name: 'xls - Excel file',
+      description: 'xls - Excel file',
+      type: 'xls'
+    },
+    xlsx: {
+      name: 'xlsx - XLSX file',
+      description: 'xlsx - XLSX file',
+      type: 'xlsx'
+    },
+    arxml: {
+      name: 'arxml - Adempiere Report Definition',
+      description: 'arxml - Adempiere Report Definition',
+      type: 'arxml'
+    }
+  }
 }
 
 export default report

@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import language from '@/lang'
+
 const today = new Date()
 
 export const REPORT_VIEWER_NAME = 'Report Viewer'
@@ -30,5 +32,58 @@ export const staticReportRoutes = [
     action: 'processOption',
     tabChild: undefined,
     parametersList: [{ columnName: 'ValidFrom', value: today }, { columnName: 'MustBeStocked', value: false }]
+  }
+]
+
+export const reportExportTypes = [
+  {
+    name: language.t('report.reportExportTypes.ps.name'),
+    description: language.t('report.reportExportTypes.ps.description'),
+    type: language.t('report.reportExportTypes.ps.type')
+  },
+  {
+    name: language.t('report.reportExportTypes.xml.name'),
+    description: language.t('report.reportExportTypes.xml.description'),
+    type: language.t('report.reportExportTypes.xml.type')
+  },
+  {
+    name: language.t('report.reportExportTypes.pdf.name'),
+    description: language.t('report.reportExportTypes.pdf.description'),
+    type: language.t('report.reportExportTypes.pdf.type')
+  },
+  {
+    name: language.t('report.reportExportTypes.html.name'),
+    description: language.t('report.reportExportTypes.html.description'),
+    type: language.t('report.reportExportTypes.html.type')
+  },
+  {
+    name: language.t('report.reportExportTypes.txt.name'),
+    description: language.t('report.reportExportTypes.txt.description'),
+    type: language.t('report.reportExportTypes.txt.type')
+  },
+  {
+    name: language.t('report.reportExportTypes.ssv.name'),
+    description: language.t('report.reportExportTypes.ssv.description'),
+    type: language.t('report.reportExportTypes.ssv.type')
+  },
+  {
+    name: language.t('report.reportExportTypes.csv.name'),
+    description: language.t('report.reportExportTypes.csv.description'),
+    type: language.t('report.reportExportTypes.csv.type')
+  },
+  {
+    name: language.t('report.reportExportTypes.xls.name'),
+    description: language.t('report.reportExportTypes.xls-.description'),
+    type: language.t('report.reportExportTypes.xls.type')
+  },
+  {
+    name: language.t('report.reportExportTypes.xlsx.name'),
+    description: language.t('report.reportExportTypes.xlsx.description'),
+    type: language.t('report.reportExportTypes.xlsx.type')
+  },
+  {
+    name: language.t('report.reportExportTypes.arxml.name'),
+    description: language.t('report.reportExportTypes.arxml.description'),
+    type: language.t('report.reportExportTypes.arxml.type')
   }
 ]

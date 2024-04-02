@@ -16,6 +16,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Constants
+import { reportExportTypes } from '@/utils/ADempiere/constants/report'
 // Utils and Helpers Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertProcess } from '@/utils/ADempiere/apiConverts/dictionary.js'
@@ -24,7 +26,8 @@ export function definitionProcess(process) {
   if (isEmptyValue(process)) return process
   return {
     ...convertProcess(process),
-    ...process
+    ...process,
+    reportExportTypes: process.is_report ? reportExportTypes : []
   }
 }
 
@@ -47,6 +50,7 @@ export function templateFields(field) {
     columnName: column_name,
     displayType: display_type,
     isDisplayed: true,
+    is_displayed: true,
     isMandatory: is_mandatory,
     default_value: default_value,
     default_value_to: default_value_to,
@@ -59,3 +63,4 @@ export function templateFields(field) {
     }
   }
 }
+
