@@ -16,6 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { config } from '@/utils/ADempiere/config'
+
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
@@ -40,8 +41,12 @@ export function requestPresignedUrl({
   recordId,
   fileName
 }) {
+  let baseURL = config.adempiere.resource.url
+  if (baseURL.endsWith('/')) {
+    baseURL = config.adempiere.resource.url.substring(0, baseURL.length - 1)
+  }
   return request({
-    url: `${config.adempiere.resource.url}presigned-url/${clientId}/${containerId}/${fileName}`,
+    url: `${baseURL}/presigned-url/${clientId}/${containerId}/${fileName}`,
     method: 'get',
     isWithoutAuthorization: true,
     params: {
