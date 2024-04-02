@@ -60,7 +60,9 @@ const initState = {
     recordCount: 0, // total number of all records
     isLoaded: false, // has not been charged the first time
     isLoading: false, // request currently in progress
-    pageNumber: 1 // page number of records
+    pageNumber: 1, // page number of records
+    pageSize: 15
+
   }
 }
 
@@ -228,6 +230,9 @@ const windowManager = {
       containerUuid,
       selectionsList
     }) {
+      // if (isEmptyValue(state.tabData[containerUuid])) {
+      //   Vue.set(state.tabData, containerUuid, state.emtpyTabData)
+      // }
       Vue.set(state.tabData[containerUuid], 'selectionsList', selectionsList)
     },
 
@@ -293,7 +298,7 @@ const windowManager = {
           table_name,
           link_column_name,
           parent_column_name,
-          contextColumnNames
+          context_column_names
         } = rootGetters.getStoredTab(parentUuid, containerUuid)
 
         if (!isEmptyValue(filters) && typeof filters !== 'object') {
@@ -304,7 +309,7 @@ const windowManager = {
         // add filters with link column name and parent column name
         if (
           !isEmptyValue(link_column_name) &&
-          !contextColumnNames.includes(link_column_name) &&
+          !context_column_names.includes(link_column_name) &&
           !filters.some(filter => filter.columnName === link_column_name)
         ) {
           const value = rootGetters.getValueOfField({
@@ -323,7 +328,7 @@ const windowManager = {
         }
         if (
           !isEmptyValue(parent_column_name) &&
-          !contextColumnNames.includes(parent_column_name &&
+          !context_column_names.includes(parent_column_name &&
           !filters.some(filter => filter.columnName === parent_column_name))
         ) {
           const value = rootGetters.getValueOfField({
@@ -344,12 +349,12 @@ const windowManager = {
         // get context values
         const contextAttributesList = getContextAttributes({
           parentUuid,
-          contextColumnNames,
+          contextColumnNames: context_column_names,
           keyName: 'key',
           format: 'object'
         })
 
-        // const isWithoutValues = contextColumnNames.find(columnName =>
+        // const isWithoutValues = context_column_names.find(columnName =>
         //   isEmptyValue(columnName) ||
         //   isEmptyValue(contextAttributesList[columnName])
         // )

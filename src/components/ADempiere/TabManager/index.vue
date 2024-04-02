@@ -621,6 +621,7 @@ export default defineComponent({
         }, () => {})
       })
     }
+
     if (
       isReadyFromGetData.value || (!isReadyFromGetData.value &&
       (

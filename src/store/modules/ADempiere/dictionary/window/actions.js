@@ -513,7 +513,7 @@ export default {
           description: sequenceTab.description
         })
 
-        const relatedColumns = sequenceTab.contextColumnNames
+        const relatedColumns = sequenceTab.context_column_names
 
         dispatch('setModalDialog', {
           containerUuid: sequenceTab.uuid,
@@ -553,7 +553,7 @@ export default {
                 parentUuid: windowUuid,
                 containerUuid: tabUuid,
                 tabUuid: sequenceTab.uuid,
-                contextColumnNames: sequenceTab.contextColumnNames
+                contextColumnNames: sequenceTab.context_column_names
               })
               if (!isEmptyValue(recordsListSortTab)) {
                 resolve(recordsListSortTab)
@@ -562,7 +562,7 @@ export default {
               dispatch('listTabSequences', {
                 parentUuid: windowUuid,
                 containerUuid: tabUuid,
-                contextColumnNames: sequenceTab.contextColumnNames,
+                contextColumnNames: sequenceTab.context_column_names,
                 tabUuid: sequenceTab.uuid
               })
               resolve([])
@@ -590,7 +590,7 @@ export default {
             return !rootGetters.getTabSequenceIsChanged({
               parentUuid: windowUuid,
               containerUuid: tabAssociatedUuid,
-              contextColumnNames: sequenceTab.contextColumnNames,
+              contextColumnNames: sequenceTab.context_column_names,
               tabUuid: sequenceTab.uuid
             })
           },
@@ -598,7 +598,7 @@ export default {
             dispatch('discardTabSequenceChanges', {
               parentUuid: windowUuid,
               containerUuid: tabUuid,
-              contextColumnNames: sequenceTab.contextColumnNames,
+              contextColumnNames: sequenceTab.context_column_names,
               tabUuid: sequenceTab.uuid
             })
           }
@@ -846,7 +846,7 @@ export default {
             containerManager.getDefaultValue({
               parentUuid: fieldDocumentStatus.parentUuid,
               containerUuid: fieldDocumentStatus.containerUuid,
-              contextColumnNames: fieldDocumentStatus.contextColumnNames,
+              contextColumnNames: fieldDocumentStatus.context_column_names,
               //
               uuid: fieldDocumentStatus.uuid,
               id: fieldDocumentStatus.id,
