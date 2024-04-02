@@ -56,7 +56,7 @@ export function loadMainMenu({
     }).then(menuResponse => {
       const { menus } = menuResponse
       const asyncRoutesMap = []
-      menus[0].children.forEach(menuElement => {
+      menus.forEach(menuElement => {
         const optionMenu = getRouteFromMenuItem({
           menu: menuElement,
           clientId,
