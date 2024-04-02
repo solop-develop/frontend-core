@@ -17,7 +17,7 @@
  */
 
 // Constants
-import { reportExportTypes } from '@/utils/ADempiere/constants/report'
+import { REPORT_EXPORT_TYPES } from '@/utils/ADempiere/constants/report'
 // Utils and Helpers Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertProcess } from '@/utils/ADempiere/apiConverts/dictionary.js'
@@ -27,7 +27,7 @@ export function definitionProcess(process) {
   return {
     ...convertProcess(process),
     ...process,
-    reportExportTypes: process.is_report ? reportExportTypes : []
+    reportExportTypes: process.is_report ? REPORT_EXPORT_TYPES : []
   }
 }
 

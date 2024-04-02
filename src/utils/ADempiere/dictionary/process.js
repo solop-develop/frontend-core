@@ -151,7 +151,6 @@ export function generateProcess({
 
     fieldsList = fieldsList.concat(fieldsRangeList)
     // order range fields
-    console.log({ fieldsList })
     fieldsList = sortFields({
       fieldsList
     })

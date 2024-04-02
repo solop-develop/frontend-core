@@ -35,7 +35,7 @@ export const staticReportRoutes = [
   }
 ]
 
-export const reportExportTypes = [
+export const REPORT_EXPORT_TYPES = [
   {
     name: language.t('report.reportExportTypes.ps.name'),
     description: language.t('report.reportExportTypes.ps.description'),
