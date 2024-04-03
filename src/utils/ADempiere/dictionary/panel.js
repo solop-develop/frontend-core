@@ -24,7 +24,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { generateField } from '@/utils/ADempiere/dictionaryUtils.js'
 import { getFieldTemplate } from '@/utils/ADempiere/lookupFactory.js'
 import { isAddRangeField } from '@/utils/ADempiere/references'
-
+import { templateFields } from '@/utils/ADempiere/dictionary/window/templatesWindow.js'
 /**
  * Order the fields, then assign the groups to each field, and finally group
  * in an array according to each field group to show in panel (or table).
@@ -91,7 +91,7 @@ export function assignedGroup({
     if (!firstChangeGroup) {
       if (!isEmptyValue(fieldElement.fieldGroup.name) &&
         currentGroup !== fieldElement.fieldGroup.name &&
-        fieldElement.isDisplayed) {
+        fieldElement.is_displayed) {
         firstChangeGroup = true
       }
     }
@@ -152,7 +152,6 @@ export function generatePanelAndFields({
   }
 
   const fieldsRangeList = []
-  const selectionColumns = []
   let identifierColumns = []
 
   let keyColumn
@@ -160,7 +159,7 @@ export function generatePanelAndFields({
   // convert fields and add app attributes
   let fieldsList = panelMetadata.fields.map((fieldItem, index) => {
     const fieldDefinition = generateField({
-      fieldToGenerate: fieldItem,
+      fieldToGenerate: templateFields(fieldItem),
       evaluateDefaultFieldShowed,
       evaluateDefaultColumnShowed,
       moreAttributes: {
@@ -170,13 +169,10 @@ export function generatePanelAndFields({
     })
     const { columnName, componentPath } = fieldDefinition
 
-    if (fieldDefinition.isKey) {
+    if (fieldDefinition.is_key) {
       keyColumn = columnName
     }
-    if (fieldDefinition.isSelectionColumn) {
-      selectionColumns.push(columnName)
-    }
-    if (fieldDefinition.isIdentifier) {
+    if (fieldDefinition.is_identifier) {
       identifierColumns.push({
         name: fieldDefinition.name,
         columnName,
@@ -261,7 +257,6 @@ export function generatePanelAndFields({
     // app attributes
     keyColumn,
     sortOrderColumnName: sortField,
-    selectionColumns,
     identifierColumns,
     isLoadedFieldsList: true,
     isShowedTotals: false,
@@ -283,14 +278,14 @@ export function generatePanelAndFields({
  */
 export function generateDependenFieldsList(fieldsList) {
   fieldsList.forEach((itemField, index, listFields) => {
-    if (isEmptyValue(itemField.parentFieldsList) || !itemField.isActive) {
+    if (isEmptyValue(itemField.parentFieldsList)) {
       return
     }
 
-    itemField.parentFieldsList.forEach(parentColumnName => {
+    itemField.parentFieldsList.forEach(itemParentColumnName => {
       const parentField = listFields.find(parentFieldItem => {
-        return (parentColumnName === parentFieldItem.columnName ||
-          parentColumnName === parentFieldItem.elementName)
+        return (itemParentColumnName === parentFieldItem.columnName ||
+          itemParentColumnName === parentFieldItem.elementName)
       })
 
       if (isEmptyValue(parentField)) {
@@ -329,8 +324,8 @@ export function panelAdvanceQuery({
         moreAttributes: {
           isAdvancedQuery: true
         },
-        evaluateDefaultFieldShowed: ({ isSelectionColumn }) => {
-          return isSelectionColumn
+        evaluateDefaultFieldShowed: ({ is_selection_column }) => {
+          return is_selection_column
         }
       })
     }),

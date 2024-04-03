@@ -19,7 +19,7 @@
 import store from '@/store'
 
 // Utils and Helper Methods
-import { isHiddenField } from '@/utils/ADempiere/references'
+// import { isHiddenField } from '@/utils/ADempiere/references'
 
 export function getLookupList({ parentUuid, containerUuid, contextColumnNames, columnName, tableName, searchValue, isAddBlankValue, uuid, blankValue }) {
   return store.dispatch('getLookupListFromServer', {
@@ -47,13 +47,13 @@ export function isMandatoryField({ isMandatory, isMandatoryFromLogic }) {
   return isMandatory || isMandatoryFromLogic
 }
 
-export function isDisplayedField({ displayType, isActive, isDisplayed, isDisplayedFromLogic }) {
-  // button field not showed
-  if (isHiddenField(displayType)) {
-    return false
-  }
+export function isDisplayedField({ displayType, is_displayed, isDisplayedFromLogic }) {
+  // // button field not showed
+  // if (isHiddenField(displayType)) {
+  //   return false
+  // }
   // verify if field is active
-  return isActive && isDisplayed
+  return is_displayed
 }
 
 // export function getLookupList({ parentUuid, containerUuid, contextColumnNames, columnName, searchValue, isAddBlankValue, blankValue }) {
@@ -73,8 +73,8 @@ export function isDisplayedDefault({ isMandatory }) {
   return true
 }
 
-export function isReadOnlyField({ isQueryCriteria, isReadOnlyFromLogic, isDisabledFieldPos = false }) {
-  return isQueryCriteria && isReadOnlyFromLogic || isDisabledFieldPos
+export function isReadOnlyField({ is_query_criteria, isReadOnlyFromLogic, isDisabledFieldPos = false }) {
+  return is_query_criteria && isReadOnlyFromLogic || isDisabledFieldPos
 }
 
 export function getSearchRecordsList({

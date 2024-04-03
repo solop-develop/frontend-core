@@ -53,6 +53,7 @@ import { showMessage } from '@/utils/ADempiere/notification.js'
 import { zoomIn } from '@/utils/ADempiere/coreUtils'
 import { exportRecords, supportedTypes } from '@/utils/ADempiere/exportUtil.js'
 import { isRunableDocumentAction } from '@/utils/ADempiere/dictionary/workflow'
+import { convertRelationTabs } from '@/utils/ADempiere/dictionary/window/templatesWindow.js'
 
 /**
  * Evaluate if tab is displayed
@@ -79,26 +80,30 @@ export function isDisplayedTab({ parentUuid, containerUuid, displayLogic }) {
 
 export function isReadOnlyTab({ parentUuid, containerUuid }) {
   const window = store.getters.getStoredWindow(parentUuid)
-  if (isEmptyValue(window)) return true
-  const { windowType } = window
+  if (isEmptyValue(window)) {
+    return true
+  }
+  const { window_type } = window
   // window is "Only Query" type
-  if (!isEmptyValue(windowType) && windowType === 'Q') {
+  if (!isEmptyValue(window_type) && window_type === 'Q') {
     return true
   }
   const storeTab = store.getters.getStoredTab(parentUuid, containerUuid)
-  if (isEmptyValue(storeTab)) return true
-  const { isReadOnly, readOnlyLogic } = storeTab
+  if (isEmptyValue(storeTab)) {
+    return true
+  }
+  const { is_read_only, read_only_logic } = storeTab
   // if tab is read only, all fields are read only
-  if (isReadOnly) {
+  if (is_read_only) {
     return true
   }
 
-  if (!isEmptyValue(readOnlyLogic)) {
+  if (!isEmptyValue(read_only_logic)) {
     const isReadOnlyFromLogic = evaluator.evaluateLogic({
       context: getContext,
       parentUuid,
       containerUuid,
-      logic: readOnlyLogic,
+      logic: read_only_logic,
       defaultReturned: false
     })
     if (isReadOnlyFromLogic) {
@@ -157,36 +162,36 @@ export function isEditableRecord({ parentUuid, containerUuid }) {
 /**
  * Is displayed field in panel single record
  */
-export function isDisplayedField({ isDisplayed, displayLogic, isDisplayedFromLogic, isActive, displayType }) {
-  // button field not showed
-  if (isHiddenField(displayType)) {
-    return false
-  }
+export function isDisplayedField({ is_displayed, display_logic, isDisplayedFromLogic, displayType }) {
+  // // button field not showed
+  // if (isHiddenField(displayType)) {
+  //   return false
+  // }
 
   // verify if field is active and displayed
-  return isActive && isDisplayed && (isEmptyValue(displayLogic) || isDisplayedFromLogic)
+  return is_displayed && (isEmptyValue(display_logic) || isDisplayedFromLogic)
 }
 
 /**
  * Default showed field from user
  * @param {string} columnName
- * @param {string} defaultValue
+ * @param {string} default_value
  * @param {boolean} isMandatory
  * @param {boolean} isShowedFromUser
  * @param {boolean} isParent
  */
 export function evaluateDefaultFieldShowed({
   parentUuid, containerUuid,
-  isKey, isParent, columnName,
-  defaultValue, parsedDefaultValue,
+  is_key, isParent, columnName,
+  default_value, parsedDefaultValue,
   isShowedFromUser, isDisplayedAsPanel,
   displayType, displayLogic,
-  isMandatory, mandatoryLogic, isMandatoryFromLogic
+  isMandatory, mandatory_logic, isMandatoryFromLogic
 }) {
   if (!isEmptyValue(isDisplayedAsPanel)) {
     return convertStringToBoolean(isDisplayedAsPanel)
   }
-  if (String(defaultValue).startsWith('@SQL=')) {
+  if (String(default_value).startsWith('@SQL=')) {
     return true
   }
   if (!isEmptyValue(displayLogic)) {
@@ -197,13 +202,13 @@ export function evaluateDefaultFieldShowed({
     return true
   }
 
-  const { isParentTab, linkColumnName, parentColumnName } = store.getters.getStoredTab(parentUuid, containerUuid)
-  if (!isParentTab && (linkColumnName === columnName || parentColumnName === columnName)) {
+  const { isParentTab, link_column_name, itemParentColumnName } = store.getters.getStoredTab(parentUuid, containerUuid)
+  if (!isParentTab && (link_column_name === columnName || itemParentColumnName === columnName)) {
     return true
   }
 
   const isMandatoryGenerated = isMandatoryField({
-    isKey, columnName, displayType, isMandatory, mandatoryLogic, isMandatoryFromLogic
+    is_key, columnName, displayType, isMandatory, mandatory_logic, isMandatoryFromLogic
   })
   const isEmpty = isEmptyValue(parsedDefaultValue) || (isDecimalField(displayType) && parsedDefaultValue === 0)
   if (isEmpty && isMandatoryGenerated && !isParent) {
@@ -259,22 +264,22 @@ export function evaluateDefaultFieldShowed({
 /**
  * Default showed field from user
  * @param {string} columnName
- * @param {string} defaultValue
+ * @param {string} default_value
  * @param {boolean} isMandatory
  * @param {boolean} isShowedTableFromUser
  * @param {boolean} isParent
  */
 export function evaluateDefaultColumnShowed({
   parentUuid, containerUuid,
-  isKey, isParent, columnName,
-  defaultValue, parsedDefaultValue,
+  is_key, isParent, columnName,
+  default_value, parsedDefaultValue,
   displayType, isShowedTableFromUser, isDisplayedAsTable,
-  isMandatory, mandatoryLogic, isMandatoryFromLogic
+  isMandatory, mandatory_logic, isMandatoryFromLogic
 }) {
   if (!isEmptyValue(isDisplayedAsTable)) {
     return convertStringToBoolean(isDisplayedAsTable)
   }
-  if (String(defaultValue).startsWith('@SQL=')) {
+  if (String(default_value).startsWith('@SQL=')) {
     return true
   }
 
@@ -282,13 +287,13 @@ export function evaluateDefaultColumnShowed({
     return true
   }
 
-  const { isParentTab, linkColumnName, parentColumnName } = store.getters.getStoredTab(parentUuid, containerUuid)
-  if (!isParentTab && (linkColumnName === columnName || parentColumnName === columnName)) {
+  const { isParentTab, link_column_name, parent_column_name } = store.getters.getStoredTab(parentUuid, containerUuid)
+  if (!isParentTab && (link_column_name === columnName || parent_column_name === columnName)) {
     return true
   }
 
   const isMandatoryGenerated = isMandatoryColumn({
-    isKey, columnName, displayType, isMandatory, mandatoryLogic, isMandatoryFromLogic
+    is_key, columnName, displayType, isMandatory, mandatory_logic, isMandatoryFromLogic
   })
   const isEmpty = isEmptyValue(parsedDefaultValue) || (isDecimalField(displayType) && parsedDefaultValue === 0)
   if (isEmpty && isMandatoryGenerated && !isParent) {
@@ -322,20 +327,20 @@ export function evaluateDefaultColumnShowed({
 /**
  * Tab manager mandatory logic
  * @see https://github.com/adempiere/adempiere/blob/develop/base/src/org/compiere/model/GridField.java#L401
- * @param {boolean} isKey
+ * @param {boolean} is_key
  * @param {string} columnName
  * @param {boolean} isMandatory
- * @param {string} mandatoryLogic
+ * @param {string} mandatory_logic
  * @param {boolean} isMandatoryFromLogic
  * @returns {boolean}
  */
-export function isMandatoryField({ isKey, columnName, displayType, isMandatory, mandatoryLogic, isMandatoryFromLogic }) {
+export function isMandatoryField({ is_key, columnName, displayType, isMandatory, mandatory_logic, isMandatoryFromLogic }) {
   if (displayType === BUTTON.id) {
     return false
   }
 
   // mandatory rule
-  if ((!isEmptyValue(mandatoryLogic) && isMandatoryFromLogic)) {
+  if ((!isEmptyValue(mandatory_logic) && isMandatoryFromLogic)) {
     return true
   }
   // // is virtual column
@@ -349,7 +354,7 @@ export function isMandatoryField({ isKey, columnName, displayType, isMandatory, 
     VALUE, DOCUMENT_NO, 'M_AttributeSetInstance_ID'
   ]
   if (
-    (isKey && columnName.endsWith(IDENTIFIER_COLUMN_SUFFIX)) ||
+    (is_key && columnName.endsWith(IDENTIFIER_COLUMN_SUFFIX)) ||
     columnName.startsWith('Created') || columnName.startsWith('Updated') ||
     notMandatoryRender.includes(columnName)
   ) {
@@ -361,40 +366,40 @@ export function isMandatoryField({ isKey, columnName, displayType, isMandatory, 
     // TODO: Evaluate displayed
     return true
   }
-  // return isMandatory || (!isEmptyValue(mandatoryLogic) && isMandatoryFromLogic)
+  // return isMandatory || (!isEmptyValue(mandatory_logic) && isMandatoryFromLogic)
   return false
 }
 
 /**
  * Is read only field in panel single record
- * @param {boolean} isReadOnly
+ * @param {boolean} is_read_only
  * @param {boolean} isReadOnlyFromLogic
  * @returns {boolean}
  */
-export function isReadOnlyField({ isReadOnly, readOnlyLogic, isReadOnlyFromLogic }) {
-  return isReadOnly || (!isEmptyValue(readOnlyLogic) && isReadOnlyFromLogic)
+export function isReadOnlyField({ is_read_only, read_only_logic, isReadOnlyFromLogic }) {
+  return is_read_only || (!isEmptyValue(read_only_logic) && isReadOnlyFromLogic)
 }
 
 /**
  * Is displayed column in table multi record
  */
-export function isDisplayedColumn({ isDisplayed, isDisplayedGrid, isDisplayedFromLogic, isActive, isKey, displayType, displayLogic }) {
+export function isDisplayedColumn({ is_displayed, is_displayed_grid, isDisplayedFromLogic, is_key, displayType, display_logic }) {
   // key or button field not showed
-  if (isKey || isHiddenField(displayType)) {
+  if (is_key || isHiddenField(displayType)) {
     return false
   }
 
   // window (table) result
-  return isActive && isDisplayed && isDisplayedGrid &&
-    (isEmptyValue(displayLogic) || isDisplayedFromLogic)
+  return is_displayed && is_displayed_grid &&
+    (isEmptyValue(display_logic) || isDisplayedFromLogic)
 }
 
-export function isMandatoryColumn({ isKey, columnName, displayType, isMandatory, mandatoryLogic, isMandatoryFromLogic }) {
+export function isMandatoryColumn({ is_key, columnName, displayType, is_mandatory, mandatory_logic, isMandatoryFromLogic }) {
   const notMandatoryRender = [
     VALUE, DOCUMENT_NO, 'M_AttributeSetInstance_ID'
   ]
   if (
-    (isKey && columnName.endsWith(IDENTIFIER_COLUMN_SUFFIX)) ||
+    (is_key && columnName.endsWith(IDENTIFIER_COLUMN_SUFFIX)) ||
     columnName.startsWith('Created') || columnName.startsWith('Updated') ||
     notMandatoryRender.includes(columnName)
   ) {
@@ -404,11 +409,11 @@ export function isMandatoryColumn({ isKey, columnName, displayType, isMandatory,
   if (displayType === BUTTON.id) {
     return false
   }
-  return isMandatory || (!isEmptyValue(mandatoryLogic) && isMandatoryFromLogic)
+  return is_mandatory || (!isEmptyValue(mandatory_logic) && isMandatoryFromLogic)
 }
 
-export function isReadOnlyColumn({ isReadOnly }) {
-  return isReadOnly
+export function isReadOnlyColumn({ is_read_only }) {
+  return is_read_only
 }
 
 export function clearFilter(currentRoute) {
@@ -442,7 +447,7 @@ export const createNewRecord = {
       return false
     }
 
-    if (!tab.isInsertRecord) {
+    if (!tab.is_insert_record) {
       return false
     }
     const recordUuid = store.getters.getUuidOfContainer(containerUuid)
@@ -470,7 +475,7 @@ export const createNewRecord = {
     }
 
     const tab = store.getters.getStoredTab(parentUuid, containerUuid)
-    if (!tab.isInsertRecord) {
+    if (!tab.is_insert_record) {
       return false
     }
     // TODO: Verify index Parent Tab
@@ -490,7 +495,7 @@ export const createNewRecord = {
     const currentValues = {}
     if (isCopyValues) {
       const copyableFields = tab.fieldsList.filter(field => {
-        if (field.isVirtualColumn || field.isKey) {
+        if (field.isVirtualColumn || field.is_key) {
           return false
         }
         if ([ID.id, LOCATION_ADDRESS.id].includes(field.displayType)) {
@@ -504,7 +509,7 @@ export const createNewRecord = {
         if ([CLIENT, ACTIVE, PROCESSING, PROCESSED, UUID].includes(columnName)) {
           return false
         }
-        return field.isAllowCopy
+        return field.is_allow_copy
       })
       const tabContext = store.getters.getValuesView({
         containerUuid,
@@ -679,7 +684,7 @@ export const deleteRecord = {
     if (tab.isParentTab && tab.index > 0) {
       return false
     }
-    if (!tab.isDeleteable) {
+    if (!tab.table.is_deleteable) {
       return false
     }
 
@@ -734,7 +739,7 @@ export const deleteRecord = {
     }
 
     const tab = store.getters.getStoredTab(parentUuid, containerUuid)
-    if (!tab.isDeleteable) {
+    if (!tab.table.is_deleteable) {
       return false
     }
 
@@ -883,7 +888,7 @@ export const openBrowserAssociated = {
         tabUuid: containerUuid,
         processUuid: uuid
       })
-      browserId = process.browserId
+      browserId = process.browser_id
     }
 
     const browserUuid = store.getters.getStoredBrowserUuidById(browserId)
@@ -940,7 +945,7 @@ export const openBrowserAssociated = {
     // TODO: Validate element columns
     const parentColumns = storedTab.fieldsList
       .filter(fieldItem => {
-        return fieldItem.isParent || fieldItem.isKey || fieldItem.isMandatory
+        return fieldItem.isParent || fieldItem.is_key || fieldItem.isMandatory
       })
       .map(fieldItem => {
         return fieldItem.columnName
@@ -1385,14 +1390,14 @@ export function generateTabs({
   tabs,
   parentUuid
 }) {
-  const firstTabTableName = tabs[0].tableName
+  const firstTabTableName = tabs[0].table_name
   const firstTabUuid = tabs[0].uuid
 
   const sequenceTabsListOnWindow = []
 
   // indexes related to visualization
   const tabsList = tabs.filter((itemTab, index) => {
-    if (itemTab.isSortTab) {
+    if (itemTab.is_sort_tab) {
       sequenceTabsListOnWindow.push({
         ...itemTab,
         firstTabUuid,
@@ -1402,52 +1407,39 @@ export function generateTabs({
       return false
     }
     return !(
-      itemTab.isTranslationTab
+      itemTab.is_translation_tab
     )
   }).map((currentTab, index, listTabs) => {
-    const isParentTab = Boolean(firstTabTableName === currentTab.tableName)
-
-    const convertRelationTabs = (itemTab) => {
-      return {
-        name: itemTab.name,
-        id: itemTab.id,
-        uuid: itemTab.uuid,
-        tableName: itemTab.tableName,
-        sequence: itemTab.sequence,
-        tabLevel: itemTab.tabLevel,
-        contextColumnNames: itemTab.contextColumnNames
-      }
-    }
-
+    const isParentTab = Boolean(firstTabTableName === currentTab.table_name)
     const parentTabs = listTabs
-      .filter(itemTab => {
-        return itemTab.uuid !== currentTab.uuid &&
-          itemTab.sequence < currentTab.sequence &&
-          itemTab.tabLevel < currentTab.tabLevel
+      .filter(currentItemTab => {
+        return currentItemTab.uuid !== currentTab.uuid &&
+        currentItemTab.sequence < currentTab.sequence &&
+        currentItemTab.tab_level < currentTab.tab_level
       })
-      .map(convertRelationTabs)
+      .map(item => convertRelationTabs(item))
 
     const childTabs = listTabs
-      .filter(itemTab => {
-        return itemTab.uuid !== currentTab.uuid &&
-          itemTab.sequence > currentTab.sequence &&
-          itemTab.tabLevel > currentTab.tabLevel
+      .filter(currentItemTab => {
+        return currentItemTab.uuid !== currentTab.uuid &&
+        currentItemTab.sequence > currentTab.sequence &&
+        currentItemTab.tab_level > currentTab.tab_level
       })
-      .map(convertRelationTabs)
+      .map(item => convertRelationTabs(item))
 
     let parentFieldsList = []
-    if (!isEmptyValue(currentTab.displayLogic)) {
-      parentFieldsList = evaluator.parseDepends(currentTab.displayLogic)
+    if (!isEmptyValue(currentTab.display_logic)) {
+      parentFieldsList = evaluator.parseDepends(currentTab.display_logic)
     }
 
     const sequenceTabsList = sequenceTabsListOnWindow
-      .filter(itemTab => {
-        return itemTab.isSortTab &&
-          itemTab.tableName === currentTab.tableName
+      .filter(currentItemTab => {
+        return currentItemTab.is_sort_tab &&
+        currentItemTab.table_name === currentTab.table_name
       })
-      .map(itemTab => {
+      .map(currentItemTab => {
         return {
-          ...itemTab,
+          ...currentItemTab,
           parentUuid,
           parentTabs: [
             ...parentTabs,
@@ -1721,8 +1713,8 @@ export const containerManager = {
   },
 
   isDisplayedField,
-  isDisplayedDefault: ({ isMandatory, isParent, defaultValue, displayType, parsedDefaultValue }) => {
-    if (isMandatory && !isParent && isEmptyValue(defaultValue)) {
+  isDisplayedDefault: ({ isMandatory, isParent, default_value, displayType, parsedDefaultValue }) => {
+    if (isMandatory && !isParent && isEmptyValue(default_value)) {
       // Yes/No field always boolean value (as default value)
       if (displayType === YES_NO.id) {
         return false
@@ -1732,8 +1724,8 @@ export const containerManager = {
     return false
   },
   isDisplayedColumn,
-  isDisplayedDefaultTable: ({ isMandatory, isParent, defaultValue, displayType, parsedDefaultValue }) => {
-    if (isMandatory && !isParent && isEmptyValue(defaultValue)) {
+  isDisplayedDefaultTable: ({ isMandatory, isParent, default_value, displayType, parsedDefaultValue }) => {
+    if (isMandatory && !isParent && isEmptyValue(default_value)) {
       // Yes/No field always boolean value (as default value)
       if (displayType === YES_NO.id) {
         return false
@@ -1752,10 +1744,10 @@ export const containerManager = {
     }
 
     // tab properties
-    const { isParentTab, linkColumnName } = store.getters.getStoredTab(parentUuid, containerUuid)
+    const { isParentTab, link_column_name } = store.getters.getStoredTab(parentUuid, containerUuid)
 
     // fill value with context
-    if (linkColumnName === columnName) {
+    if (link_column_name === columnName) {
       return true
     }
 
@@ -1773,71 +1765,71 @@ export const containerManager = {
     const isWithRecord = !isEmptyValue(recordUuid) && recordUuid !== 'create-new'
     if (isWithRecord) {
       // not updateable and record saved
-      if (!field.isUpdateable) {
+      if (!field.is_updateable) {
         return true
       }
 
-      // client id value of record
-      const clientIdRecord = store.getters.getValueOfField({
-        parentUuid,
-        containerUuid,
-        columnName: CLIENT
-      })
-      // evaluate client id context with record
-      const preferenceClientId = store.getters.getSessionContextClientId
-      if (clientIdRecord !== preferenceClientId) {
-        return true
-      }
-    } else {
-      // button not invoke (browser/process/report/workflow) without record
-      if (field.displayType === BUTTON.id) {
-        return true
-      }
+    //   // client id value of record
+    //   const clientIdRecord = store.getters.getValueOfField({
+    //     parentUuid,
+    //     containerUuid,
+    //     columnName: CLIENT
+    //   })
+    //   // evaluate client id context with record
+    //   const preferenceClientId = store.getters.getSessionContextClientId
+    //   if (clientIdRecord !== preferenceClientId) {
+    //     return true
+    //   }
+    // } else {
+    //   // button not invoke (browser/process/report/workflow) without record
+    //   if (field.displayType === BUTTON.id) {
+    //     return true
+    //   }
     }
 
-    // validate parent record and current record
-    // record is inactive isReadOnlyFromForm
-    if (columnName !== ACTIVE) {
-      // is active value of record
-      const isActiveRecord = store.getters.getValueOfField({
-        parentUuid: isParentTab ? undefined : parentUuid,
-        containerUuid,
-        columnName: ACTIVE
-      })
-      if (!convertStringToBoolean(isActiveRecord)) {
-        return true
-      }
-    }
+    // // validate parent record and current record
+    // // record is inactive isReadOnlyFromForm
+    // if (columnName !== ACTIVE) {
+    //   // is active value of record
+    //   const isActiveRecord = store.getters.getValueOfField({
+    //     parentUuid: isParentTab ? undefined : parentUuid,
+    //     containerUuid,
+    //     columnName: ACTIVE
+    //   })
+    //   if (!convertStringToBoolean(isActiveRecord)) {
+    //     return true
+    //   }
+    // }
 
-    // always updateable field
-    if (field.isAlwaysUpdateable) {
-      return false
-    }
+    // // always updateable field
+    // if (field.is_always_updateable) {
+    //   return false
+    // }
 
-    // Button to process document
-    if (columnName === DOCUMENT_ACTION) {
-      return false
-    }
+    // // Button to process document
+    // if (columnName === DOCUMENT_ACTION) {
+    //   return false
+    // }
 
-    // is processed value of record
-    const isProcessedRecord = store.getters.getValueOfField({
-      parentUuid,
-      containerUuid,
-      columnName: PROCESSED
-    })
-    if (convertStringToBoolean(isProcessedRecord)) {
-      return true
-    }
+    // // is processed value of record
+    // const isProcessedRecord = store.getters.getValueOfField({
+    //   parentUuid,
+    //   containerUuid,
+    //   columnName: PROCESSED
+    // })
+    // if (convertStringToBoolean(isProcessedRecord)) {
+    //   return true
+    // }
 
-    // is processing value of record
-    const isProcessingRecord = store.getters.getValueOfField({
-      parentUuid,
-      containerUuid,
-      columnName: PROCESSING
-    })
-    if (convertStringToBoolean(isProcessingRecord)) {
-      return true
-    }
+    // // is processing value of record
+    // const isProcessingRecord = store.getters.getValueOfField({
+    //   parentUuid,
+    //   containerUuid,
+    //   columnName: PROCESSING
+    // })
+    // if (convertStringToBoolean(isProcessingRecord)) {
+    //   return true
+    // }
 
     return isReadOnlyField(field) || field.isReadOnlyFromForm
   },
@@ -1854,10 +1846,10 @@ export const containerManager = {
       return true
     }
 
-    const { isParentTab, linkColumnName, parentColumnName } = store.getters.getStoredTab(parentUuid, containerUuid)
+    const { isParentTab, link_column_name, parent_column_name } = store.getters.getStoredTab(parentUuid, containerUuid)
 
     // fill value with context
-    if (field.isParent || linkColumnName === columnName || parentColumnName === columnName) {
+    if (field.isParent || link_column_name === columnName || parent_column_name === columnName) {
       return true
     }
 
@@ -1883,7 +1875,7 @@ export const containerManager = {
     const isWithRecord = !isEmptyValue(recordUuid) && recordUuid !== 'create-new'
     if (isWithRecord) {
       // not updateable and record saved
-      if (!field.isUpdateable) {
+      if (!field.is_updateable) {
         return true
       }
     } else {
@@ -1919,7 +1911,7 @@ export const containerManager = {
       return true
     }
 
-    if (field.isAlwaysUpdateable) {
+    if (field.is_always_updateable) {
       return false
     }
 
@@ -2087,7 +2079,7 @@ export const containerManager = {
   /**
    * @returns Promisse with value and displayedValue
    */
-  getDefaultValue({ parentUuid, containerUuid, uuid, id, contextColumnNames, columnName, defaultValue, value }) {
+  getDefaultValue({ parentUuid, containerUuid, uuid, id, contextColumnNames, columnName, default_value, value }) {
     return store.dispatch('getDefaultValueFromServer', {
       parentUuid,
       containerUuid,
@@ -2096,7 +2088,6 @@ export const containerManager = {
       id,
       //
       columnName,
-      defaultValue,
       value
     }).then(response => {
       const recordUuid = store.getters.getUuidOfContainer(containerUuid)
@@ -2126,7 +2117,7 @@ export const containerManager = {
           })
         }
       }
-      if (!isEmptyValue(defaultValue) && defaultValue.startsWith('@SQL=')) {
+      if (!isEmptyValue(default_value) && default_value.startsWith('@SQL=')) {
         const field = store.getters.getStoredFieldsFromTab(parentUuid, containerUuid)
           .find(itemField => {
             return itemField.columnName === columnName
@@ -2191,11 +2182,11 @@ export const containerManager = {
     })
   },
 
-  getAttachment({ tableName, recordId, containerId, clienteId }) {
+  getAttachment({ tableName, recordId, containerId, clientId }) {
     return store.dispatch('getAttachmentFromServer', {
       recordId,
       tableName,
-      clienteId,
+      clientId,
       containerId,
       containerType: 'window'
     })

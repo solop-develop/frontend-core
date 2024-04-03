@@ -1389,7 +1389,7 @@ export default {
           this.$store.commit('updateValueOfField', {
             containerUuid: this.containerUuid,
             columnName: element.columnName,
-            value: element.defaultValue
+            value: element.default_value
           })
 
           // set default logics
@@ -1434,7 +1434,7 @@ export default {
           this.$store.commit('updateValueOfField', {
             containerUuid: this.containerUuid,
             columnName: element.columnName,
-            value: element.defaultValue
+            value: element.default_value
           })
         }
         this.$store.dispatch('changeDependentFieldsList', {

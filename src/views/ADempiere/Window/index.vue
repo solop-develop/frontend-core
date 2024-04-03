@@ -51,7 +51,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertWindow } from '@/utils/ADempiere/apiConverts/dictionary.js'
 import {
   containerManager
-} from '@/utils/ADempiere/dictionary/window.js'
+} from '@/utils/ADempiere/dictionary/window'
 
 export default defineComponent({
   name: 'Window',
@@ -162,7 +162,7 @@ export default defineComponent({
 
     const renderWindowComponent = computed(() => {
       let windowComponent
-      switch (windowMetadata.value.windowType) {
+      switch (windowMetadata.value.window_type) {
         case 'SO':
         case 'PO':
         case 'T':

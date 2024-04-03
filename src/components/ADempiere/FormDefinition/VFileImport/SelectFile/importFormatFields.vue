@@ -51,7 +51,7 @@
 
           <el-date-picker
             v-else-if="field.data_type === 'D'"
-            v-model="field.defaultValue"
+            v-model="field.default_value"
             type="date"
             disabled
             style="width: 100%;"

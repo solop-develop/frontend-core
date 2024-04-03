@@ -50,21 +50,21 @@ const attachment = {
     getAttachmentFromServer({ commit, getters }, {
       recordId,
       tableName,
-      clienteId,
+      clientId,
       containerId,
       containerType
     }) {
-      if (isEmptyValue(tableName) && (isEmptyValue(recordId))) {
-        return
-      }
-      if (isEmptyValue(clienteId)) {
-        clienteId = getters.getSessionContextClientId
+      // if (isEmptyValue(tableName) && (isEmptyValue(recordId))) {
+      //   return
+      // }
+      if (isEmptyValue(clientId)) {
+        clientId = getters.getSessionContextClientId
       }
       commit('setIsLoadListAttachment', true)
       return requestListResources({
         recordId,
         tableName,
-        clienteId,
+        clientId,
         containerId,
         containerType
       })

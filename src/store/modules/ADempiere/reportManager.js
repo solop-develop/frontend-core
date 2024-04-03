@@ -209,14 +209,15 @@ const reportManager = {
               }
 
               router.push({
+                path: `/report-viewer/${reportDefinition.id}/${instance_id}`,
                 name: REPORT_VIEWER_NAME,
                 params: {
                   reportId: reportDefinition.id,
                   reportUuid: reportDefinition.uuid,
                   instanceUuid: instance_id,
-                  fileName: output.file_name,
+                  fileName: output.file_name + instance_id,
                   // menuParentUuid,
-                  name: output.name,
+                  name: output.name + instance_id,
                   tableName: output.table_name
                 }
               }, () => {})
@@ -285,7 +286,7 @@ const reportManager = {
         }
 
         generateReportRequest({
-          uuid: containerUuid,
+          id: reportDefinition.id,
           reportType,
           parametersList
         })
@@ -610,10 +611,10 @@ const reportManager = {
         })
           .then(reportOutput => {
             dispatch('tagsView/updateVisitedView', {
-              processUuid: uuid,
+              processUuid: uuid || containerUuid,
               instanceUuid,
               ...currentRoute,
-              title: `${language.t('route.reportViewer')}: ${reportOutput.name}`
+              title: `${language.t('route.reportViewer')}: ${reportOutput.name} - ${instanceUuid}`
             })
 
             if (!isEmptyValue(reportOutput)) {

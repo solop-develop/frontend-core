@@ -37,20 +37,21 @@
         @submit.native.prevent="notSubmitForm"
       >
         <el-row :gutter="10">
-          <el-col :span="6">
+          <el-col :span="8">
             <text-field
               :uuid-form="uuidForm"
               attribute-key="value"
               :label="$t('field.product.value')"
             />
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <text-field
               :uuid-form="uuidForm"
               attribute-key="name"
               :label="$t('field.product.name')"
             />
           </el-col>
+          <!--
           <el-col :span="6">
             <text-field
               :uuid-form="uuidForm"
@@ -61,35 +62,36 @@
           <el-col :span="6">
             <text-field
               :uuid-form="uuidForm"
-              attribute-key="value"
+              attribute-key="sku"
               :label="$t('field.product.sku')"
             />
           </el-col>
-        </el-row>
-
-        <el-row :gutter="10">
-          <el-col :span="6">
+          -->
+          <el-col :span="8">
             <warehouse-field
               :uuid-form="uuidForm"
               :parent-uuid="metadata.parentUuid"
               :container-uuid="metadata.containerUuid"
             />
           </el-col>
-          <el-col :span="6">
+        </el-row>
+
+        <el-row :gutter="10">
+          <el-col :span="8">
             <is-stocked-field
               :uuid-form="uuidForm"
               :parent-uuid="metadata.parentUuid"
               :container-uuid="metadata.containerUuid"
             />
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <price-list-version-field
               :uuid-form="uuidForm"
               :parent-uuid="metadata.parentUuid"
               :container-uuid="metadata.containerUuid"
             />
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <vendor-field
               :uuid-form="uuidForm"
               :parent-uuid="metadata.parentUuid"
@@ -113,6 +115,40 @@
           </el-col>
           -->
         </el-row>
+
+        <el-row :gutter="10">
+          <el-col :span="6">
+            <product-category-field
+              :uuid-form="uuidForm"
+              :parent-uuid="metadata.parentUuid"
+              :container-uuid="metadata.containerUuid"
+            />
+          </el-col>
+
+          <el-col :span="6">
+            <product-group-field
+              :uuid-form="uuidForm"
+              :parent-uuid="metadata.parentUuid"
+              :container-uuid="metadata.containerUuid"
+            />
+          </el-col>
+
+          <el-col :span="6">
+            <product-class-field
+              :uuid-form="uuidForm"
+              :parent-uuid="metadata.parentUuid"
+              :container-uuid="metadata.containerUuid"
+            />
+          </el-col>
+
+          <el-col :span="6">
+            <product-classification-field
+              :uuid-form="uuidForm"
+              :parent-uuid="metadata.parentUuid"
+              :container-uuid="metadata.containerUuid"
+            />
+          </el-col>
+        </el-row>
       </el-form>
     </el-collapse-item>
   </el-collapse>
@@ -135,6 +171,10 @@ import AttributeSetField from './attributeSet.vue'
 import AttributeSetInstanceField from './attributeSetInstance.vue'
 import IsStockedField from './isStockedField.vue'
 import PriceListVersionField from './priceListVersionField.vue'
+import ProductCategoryField from './productCategoryField.vue'
+import ProductClassField from './productClassField.vue'
+import ProductClassificationField from './productClassificationField.vue'
+import ProductGroupField from './productGroupField.vue'
 import TextField from './textField.vue'
 import VendorField from './vendorField.vue'
 import WarehouseField from './warehouseField.vue'
@@ -150,6 +190,10 @@ export default defineComponent({
     AttributeSetInstanceField,
     IsStockedField,
     PriceListVersionField,
+    ProductCategoryField,
+    ProductClassField,
+    ProductClassificationField,
+    ProductGroupField,
     TextField,
     VendorField,
     WarehouseField

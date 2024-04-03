@@ -41,13 +41,13 @@ const actions = {
 
     if (params.fieldsList) {
       params.fieldsList.forEach((itemField, index, listFields) => {
-        if (itemField.isKey) {
+        if (itemField.is_key) {
           keyColumn = itemField.columnName
         }
-        if (itemField.isSelectionColumn) {
+        if (itemField.is_selection_column) {
           selectionColumn.push(itemField.columnName)
         }
-        if (itemField.isIdentifier) {
+        if (itemField.is_identifier) {
           identifierColumns.push({
             name: itemField.name,
             columnName: itemField.columnName,
@@ -59,7 +59,7 @@ const actions = {
         }
         if (panelType === 'table' || params.isAdvancedQuery) {
           itemField.isShowedFromUser = false
-          if (count < 2 && itemField.isSelectionColumn && itemField.sequence >= 10) {
+          if (count < 2 && itemField.is_selection_column && itemField.sequence >= 10) {
             itemField.isShowedFromUser = true
             count++
           }
@@ -77,11 +77,11 @@ const actions = {
           // })
         }
         //  Get dependent fields
-        if (!isEmptyValue(itemField.parentFieldsList) && itemField.isActive) {
-          itemField.parentFieldsList.forEach(parentColumnName => {
+        if (!isEmptyValue(itemField.parentFieldsList)) {
+          itemField.parentFieldsList.forEach(itemParentColumnName => {
             const parentField = listFields.find(parentFieldItem => {
-              return parentFieldItem.columnName === parentColumnName &&
-                parentColumnName !== itemField.columnName
+              return parentFieldItem.columnName === itemParentColumnName &&
+                itemParentColumnName !== itemField.columnName
             })
             if (parentField) {
               parentField.dependentFieldsList.push(itemField.columnName)
@@ -101,7 +101,7 @@ const actions = {
     }
 
     params.keyColumn = keyColumn
-    if (params.isSortTab) {
+    if (params.is_sort_tab) {
       const panelParent = getters.getPanel(params.tabAssociatedUuid)
       selectionColumn = selectionColumn.concat(panelParent.selectionColumn)
       identifierColumns = identifierColumns.concat(panelParent.identifierColumns)
@@ -499,7 +499,7 @@ const actions = {
       if (isEmptyValue(currentFieldsList)) {
         console.warn('fieldsList not found in vuex store', {
           parentUuid,
-          parentColumnName: field.columnName,
+          parent_column_name: field.columnName,
           parentContainerName: field.panelName,
           parentContainerUuid: field.containerUuid,
           dependentColumnName: columnName,
@@ -520,7 +520,7 @@ const actions = {
       if (isEmptyValue(storedFieldDependentsList)) {
         console.warn('field not found in vuex store', {
           parentUuid,
-          parentColumnName: field.columnName,
+          parent_column_name: field.columnName,
           parentContainerName: field.panelName,
           parentContainerUuid: field.containerUuid,
           dependentColumnName: columnName,
@@ -557,21 +557,21 @@ const actions = {
         })
       }
       //  Mandatory Logic
-      if (!isEmptyValue(storedFieldDependent.mandatoryLogic)) {
+      if (!isEmptyValue(storedFieldDependent.mandatory_logic)) {
         isMandatoryFromLogic = evaluator.evaluateLogic({
           context: getContext,
           parentUuid,
           containerUuid,
-          logic: storedFieldDependent.mandatoryLogic
+          logic: storedFieldDependent.mandatory_logic
         })
       }
       //  Read Only Logic
-      if (!isEmptyValue(storedFieldDependent.readOnlyLogic)) {
+      if (!isEmptyValue(storedFieldDependent.read_only_logic)) {
         isReadOnlyFromLogic = evaluator.evaluateLogic({
           context: getContext,
           parentUuid,
           containerUuid,
-          logic: storedFieldDependent.readOnlyLogic
+          logic: storedFieldDependent.read_only_logic
         })
       }
 
@@ -611,17 +611,17 @@ const actions = {
 
       let defaultValue, newValue, displayedValue
 
-      if (isEmptyValue(field.defaultValue)) {
+      if (isEmptyValue(field.default_value)) {
         resolve(resolveValues)
         return
       }
 
       // default value without sql
-      if (field.defaultValue.includes('@') && !field.defaultValue.startsWith('@SQL=')) {
+      if (field.default_value.includes('@') && !field.default_value.startsWith('@SQL=')) {
         defaultValue = parseContext({
           parentUuid,
           containerUuid,
-          value: field.defaultValue
+          value: field.default_value
         }).value
         resolveValues.defaultValue = defaultValue
         resolve(resolveValues)
@@ -629,7 +629,7 @@ const actions = {
       }
 
       // default value with sql
-      if (!isGetDefaultValue || !field.defaultValue.startsWith('@SQL=')) {
+      if (!isGetDefaultValue || !field.default_value.startsWith('@SQL=')) {
         resolve(resolveValues)
         return
       }
@@ -638,7 +638,7 @@ const actions = {
         parentUuid,
         containerUuid,
         isSQL: true,
-        value: field.defaultValue
+        value: field.default_value
       }).query
 
       newValue = rootGetters.getValueOfField({
@@ -662,7 +662,7 @@ const actions = {
           uuid: field.uuid,
           id: field.id,
           columnName: columnName,
-          defaultValue: field.defaultValue
+          defaultValue: field.default_value
         })
 
         displayedValue = displayedValueByServer

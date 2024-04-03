@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { isHiddenField } from '@/utils/ADempiere/references'
+// import { isHiddenField } from '@/utils/ADempiere/references'
 
-export const isDisplayedField = function({ displayType, isActive, isDisplayed }) {
-  // button field not showed
-  if (isHiddenField(displayType)) {
-    return false
-  }
+export const isDisplayedField = function({ displayType, is_displayed }) {
+  // // button field not showed
+  // if (isHiddenField(displayType)) {
+  //   return false
+  // }
   // verify if field is active
-  return isActive && isDisplayed
+  return is_displayed
 }
 
 export function isMandatoryField({ isMandatory, isMandatoryFromLogic }) {

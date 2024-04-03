@@ -65,14 +65,14 @@
                   :container-manager="containerManager"
                   :field-metadata="{
                     ...element,
-                    isReadOnly: true,
-                    readOnlyLogic: true,
+                    is_read_only: true,
+                    read_only_logic: true,
                     isReadOnlyFromLogic: true
                   }"
                   :metadata-field="{
                     ...element,
-                    isReadOnly: true,
-                    readOnlyLogic: true,
+                    is_read_only: true,
+                    read_only_logic: true,
                     isReadOnlyFromLogic: true
                   }"
                   :is-draggable="true"

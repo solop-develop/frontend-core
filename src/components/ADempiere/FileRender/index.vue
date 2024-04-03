@@ -65,7 +65,9 @@ export default defineComponent({
     const componentRender = computed(() => {
       let viewer
       switch (props.format) {
+        case 'htm':
         case 'html':
+        case 'text/html':
           viewer = () => import('@/components/ADempiere/FileRender/HtmlFile')
           break
         case 'pdf':
@@ -73,13 +75,20 @@ export default defineComponent({
           viewer = () => import('@/components/ADempiere/FileRender/PdfFile')
           break
         case 'csv':
+        case 'text/csv':
         case 'ssv':
         case 'xls':
+        case 'application/vnd.ms-excel':
         case 'xlsx':
+        case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
         case 'txt':
+        case 'text/plain':
           viewer = () => import('@/components/ADempiere/FileRender/ExcelFile')
           break
         case 'xml':
+        case 'application/xml':
+        case 'text/xml':
+        case 'application/atom+xml':
           viewer = () => import('@/components/ADempiere/FileRender/XmlFile')
           break
         default:

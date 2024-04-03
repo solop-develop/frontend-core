@@ -43,7 +43,7 @@
             <component
               :is="tab.component"
               :container-uuid="currentTab.containerUuid"
-              :table-name="allTabsList[0].tableName"
+              :table-name="allTabsList[0].table_name"
               :container-manager="containerManager"
               :parent-uuid="currentTab.parentUuid"
               :record-uuid="currentRecordUuid"
@@ -85,7 +85,7 @@ import { listProductStorage } from '@/api/ADempiere/form/storeProduct.js'
 import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import { isEmptyValue } from '@/utils/ADempiere'
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
-import { isDisplayedField } from '@/utils/ADempiere/dictionary/window.js'
+import { isDisplayedField } from '@/utils/ADempiere/dictionary/window'
 
 export default defineComponent({
   name: 'ContainerInfo',
@@ -283,7 +283,7 @@ export default defineComponent({
       if (currentTab.value) {
         return store.getters.getIdOfContainer({
           containerUuid: currentTab.value.containerUuid,
-          tableName: currentTab.value.tableName
+          tableName: currentTab.value.table_name
         })
       }
       return ''
@@ -444,7 +444,7 @@ export default defineComponent({
       }
       nameTab.value = tab.name
       props.containerManager[tabOptions]({
-        tableName: currentTab.value.tableName,
+        tableName: currentTab.value.table_name,
         containerId: router.app._route.meta.referenceId,
         containerUuid: currentTab.value.containerUuid,
         parentUuid: currentTab.value.parentUuid,

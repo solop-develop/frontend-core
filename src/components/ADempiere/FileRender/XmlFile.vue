@@ -17,65 +17,83 @@
 -->
 
 <template>
-  <embed
-    class="pdf-content"
-    :src="output"
-    :type="mimeType"
-    style="height:1000px;width:100%; position:relative;"
-  >
+  <div class="xml-content">
+    <download-file
+      :format="format"
+      :name="name"
+      :mime-type="mimeType"
+      :stream="stream"
+    />
+
+    <br>
+    <span style="margin:0 0 10px 20px; color: gray;">
+      {{ xmlComment }}
+    </span>
+
+    <XmlViewer :xml="xmlParsed" style="margin:0 0 10px 20px;" />
+  </div>
 </template>
 
 <script>
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, ref, onMounted } from '@vue/composition-api'
+
+// Components and Mixins
+import XmlViewer from 'vue-xml-viewer'
+import DownloadFile from '@/components/ADempiere/FileRender/downloadFile.vue'
 
 export default defineComponent({
-  name: 'PDF-File',
+  name: 'XML-File',
+
+  components: {
+    DownloadFile,
+    XmlViewer
+  },
 
   props: {
-    src: {
+    format: {
       type: String,
       required: true
     },
     mimeType: {
-      type: String,
-      default: 'application/pdf'
+      // type: String,
+      default: undefined
     },
-    // format: {
-    //   type: String,
-    //   required: true
-    // },
     name: {
       type: String,
       default: undefined
     },
     stream: {
       type: [Object, Array, String],
-      default: undefined
+      required: true
     }
   },
+
   setup(props) {
-    // const byte_array = props.stream.encode()
-    const base64 = props.stream
-    const arrayBuffer = Uint8Array.from(atob(base64), c => c.charCodeAt(0))
-    const blob = new Blob([arrayBuffer.buffer], { type: 'application/pdf;charset=utf-8' })
-    const link = document.createElement('a')
-    link.href = window.URL.createObjectURL(blob)
-    link.download = props.name
-    const output = computed(() => {
-      return link
+    const xmlParsed = ref('')
+    const xmlComment = ref('')
+    const htmlCommentPattern = /<\!--.*?-->/g
+
+    onMounted(() => {
+      const xmlDocument = new Buffer.from(props.stream, 'base64')
+      const xmlAsString = xmlDocument.toString()
+
+      xmlComment.value = xmlAsString.match(htmlCommentPattern).toString()
+      xmlParsed.value = xmlAsString.replace(htmlCommentPattern, '')
     })
 
     return {
-      output
+      xmlParsed,
+      xmlComment
     }
   }
+
 })
 </script>
 
 <style lang="scss" scoped>
-.pdf-content {
+.xml-content {
   width: 100%;
-  height: 90%;
+  height: inherit;
   padding-right: 10px;
 }
 </style>

@@ -29,7 +29,7 @@ import { OPERATION_PATTERN } from '@/utils/ADempiere/formatValue/numberFormat.js
 // Utils and Helper Methods
 import { convertBooleanToString, convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat.js'
 import { removeQuotationMark } from '@/utils/ADempiere/formatValue/stringFormat'
-import { isIdentifier } from '@/utils/ADempiere/references.js'
+import { isIdentifierField } from '@/utils/ADempiere/references.js'
 
 /**
  * Checks if value is empty. Deep-checks arrays and objects
@@ -239,7 +239,7 @@ export function convertFieldsListToShareLink(fieldsList) {
       attributesListLink += `${fieldItem.columnName}=${encodeURIComponent(value)}&`
     }
 
-    if (fieldItem.isRange && !isEmptyValue(valueTo)) {
+    if (fieldItem.is_range && !isEmptyValue(valueTo)) {
       if (['FieldDate', 'FieldTime'].includes(fieldItem.componentPath) || typeof value === 'object') {
         valueTo = valueTo.getTime()
       }
@@ -331,7 +331,6 @@ export const recursiveTreeSearch = ({
  * @param {string} componentPath
  * @param {number} displayType, reference in ADempiere
  * @param {boolean} isMandatory, field is mandatory
- * @param {boolean} isIdentifier, field is ID
  */
 export function parsedValueComponent({
   componentPath,
@@ -361,13 +360,13 @@ export function parsedValueComponent({
       if (isEmpty) {
         returnValue = undefined
         if (isMandatory) {
-          if (isIdentifier(displayType)) {
+          if (isIdentifierField(displayType)) {
             returnValue = -1
           } else {
             returnValue = 0
           }
         }
-      } else if (typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'query')) {
+      } else if (value && typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'query')) {
         returnValue = value
       } else {
         if (Array.isArray(value) && value.length) {
@@ -380,7 +379,7 @@ export function parsedValueComponent({
 
     // data type Boolean
     case 'FieldYesNo':
-      if (typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'query')) {
+      if (value && typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'query')) {
         returnValue = value
       }
       returnValue = convertStringToBoolean(value)
@@ -391,10 +390,10 @@ export function parsedValueComponent({
     case 'FieldText':
     case 'FieldUrl':
     case 'FieldTextArea':
-      if (typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'query')) {
+      if (value && typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'query')) {
         returnValue = value
       }
-      returnValue = value ? String(value) : undefined
+      returnValue = !isEmptyValue(value) ? String(value) : undefined
       break
 
     // data type Date
@@ -409,7 +408,7 @@ export function parsedValueComponent({
       if (typeof value === 'number' || typeof value === 'string') {
         value = new Date(value)
       }
-      if (typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'query')) {
+      if (value && typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'query')) {
         returnValue = value
       }
       returnValue = value
@@ -578,7 +577,7 @@ export function tableColumnDataType(column, currentOption) {
   if (currentOption === language.t('table.dataTable.showOnlyMandatoryColumns') && (column.isMandatory || column.isMandatoryFromLogic)) {
     return true
   }
-  if (currentOption === language.t('table.dataTable.showTableColumnsOnly') && column.isDisplayedGrid) {
+  if (currentOption === language.t('table.dataTable.showTableColumnsOnly') && column.is_displayed_grid) {
     return true
   }
   if (currentOption === language.t('table.dataTable.showMinimalistView') &&
@@ -923,14 +922,14 @@ export function setIconsTableName({
 /**
  * Get Valid Integer
  * @param {string|number} value
- * @param {boolean} isIdentifier
+ * @param {boolean} is_identifier
  * @returns {number}
  */
-export function getValidInteger(value, isIdentifier = false) {
+export function getValidInteger(value, is_identifier = false) {
   if (!isEmptyValue(value) && !Number.isNaN(value)) {
     return Number.parseInt(value, 10)
   }
-  if (isIdentifier) {
+  if (is_identifier) {
     return -1
   }
   return 0
@@ -940,7 +939,7 @@ export function getValidInteger(value, isIdentifier = false) {
  * Get a List with the values of the key Columns of the Tab
  * @param {string} parentUuid
  * @param {string} containerUuid
- * @param {array} keyColumns
+ * @param {Array[String]} keyColumns
  * return {object} keyColumnsList
  */
 export function getListKeyColumnsTab({

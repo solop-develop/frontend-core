@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -205,7 +205,7 @@ export default defineComponent({
         return isDisplayedTab({
           parentUuid: props.parentUuid,
           containerUuid: tab.uuid,
-          displayLogic: tab.displayLogic
+          displayLogic: tab.display_logic
         })
       })
     })
@@ -391,14 +391,14 @@ export default defineComponent({
         if (!isEmptyValue(action) && action !== 'create-new') {
           /*
           // search link value
-          const { linkColumnName } = tab
+          const { link_column_name } = tab
           const value = store.getters.getValueOfField({
             parentUuid: props.parentUuid,
-            columnName: linkColumnName
+            columnName: link_column_name
           })
-          if (linkColumnName && !isEmptyValue(value)) {
+          if (link_column_name && !isEmptyValue(value)) {
             row = responseData.find(rowData => {
-            return rowData[linkColumnName] === value
+            return rowData[link_column_name] === value
           })
           }
           */
@@ -439,7 +439,7 @@ export default defineComponent({
     const currentContextAttributes = computed(() => {
       const contextAttributesList = getContextAttributes({
         parentUuid: props.parentUuid,
-        contextColumnNames: currentTabMetadata.value.contextColumnNames,
+        contextColumnNames: currentTabMetadata.value.context_column_names,
         keyName: 'key'
       })
       return generateContextKey(contextAttributesList, 'key')

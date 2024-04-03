@@ -28,8 +28,8 @@ export default [
       handleFocusGained: true,
       handleFocusLost: true,
       handleActionKeyPerformed: true,
-      isDisplayed: true,
-      isReadOnly: false
+      is_displayed: true,
+      is_read_only: false
       // componentPath: 'FieldSelect'
     }
   }

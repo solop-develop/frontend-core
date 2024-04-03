@@ -49,20 +49,19 @@ export function changeFieldShowedFromUser({ containerUuid, fieldsShowed = [] }) 
 /**
  * Is displayed field
  * @param {number} displayType
- * @param {boolean} isActive
- * @param {boolean} isDisplayed
+ * @param {boolean} is_displayed
  * @param {string} displayLogic
  * @param {boolean} isDisplayedFromLogic
  * @returns {boolean}
  */
-export function isDisplayedField({ displayType, isActive, isDisplayed, displayLogic, isDisplayedFromLogic }) {
+export function isDisplayedField({ displayType, is_displayed, displayLogic, isDisplayedFromLogic }) {
   // fields not showed
   if (isHiddenField(displayType)) {
     return false
   }
 
   // verify if field is active and displayed
-  return isActive && isDisplayed && (isEmptyValue(displayLogic) || isDisplayedFromLogic)
+  return is_displayed && (isEmptyValue(displayLogic) || isDisplayedFromLogic)
 }
 
 export function isDisplayedDefault({ isMandatory }) {
@@ -71,29 +70,27 @@ export function isDisplayedDefault({ isMandatory }) {
 
 /**
  * Manager mandatory logic
- * @param {boolean} isActive
  * @param {boolean} isMandatory
- * @param {string} mandatoryLogic
+ * @param {string} mandatory_logic
  * @param {boolean} isMandatoryFromLogic
  * @returns {boolean}
  */
-export function isMandatoryField({ isActive, isMandatory, mandatoryLogic, isMandatoryFromLogic }) {
+export function isMandatoryField({ isMandatory, mandatory_logic, isMandatoryFromLogic }) {
   // verify if field is active and displayed
-  return isActive && (isMandatory ||
-    (!isEmptyValue(mandatoryLogic) && isMandatoryFromLogic))
+  return (isMandatory ||
+    (!isEmptyValue(mandatory_logic) && isMandatoryFromLogic))
 }
 
 /**
  * Is read only field
- * @param {boolean} isActive
- * @param {boolean} isReadOnly
- * @param {string} readOnlyLogic
+ * @param {boolean} is_read_only
+ * @param {string} read_only_logic
  * @param {boolean} isReadOnlyFromLogic
  * @returns {boolean}
  */
-export function isReadOnlyField({ isActive, isReadOnly, readOnlyLogic, isReadOnlyFromLogic }) {
-  return isActive && (isReadOnly ||
-    (!isEmptyValue(readOnlyLogic) && isReadOnlyFromLogic))
+export function isReadOnlyField({ is_read_only, read_only_logic, isReadOnlyFromLogic }) {
+  return (is_read_only ||
+    (!isEmptyValue(read_only_logic) && isReadOnlyFromLogic))
 }
 
 /**

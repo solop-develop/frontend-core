@@ -39,7 +39,7 @@
       v-if="panelType !== 'From'"
     >
       <sequence-order
-        v-if="modalMetadata.isSortTab"
+        v-if="modalMetadata.is_sort_tab"
         key="order"
         :parent-uuid="parentUuid"
         :container-uuid="modalMetadata.uuid"
@@ -142,7 +142,7 @@ export default {
   // watch: {
   //   isVisibleDialog(value) {
   //     if (value) {
-  //       if (this.modalMetadata.isSortTab) {
+  //       if (this.modalMetadata.is_sort_tab) {
   //         const data = this.$store.getters.getDataRecordAndSelection(this.modalMetadata.containerUuid)
   //         if (!data.isLoaded && !data.record.length) {
   //           this.$store.dispatch('getDataListTab', {
@@ -169,7 +169,7 @@ export default {
   //   },
   //   runAction(action) {
   //     this.$store.commit('setRecordAccess', false)
-  //     if (action.isSortTab) {
+  //     if (action.is_sort_tab) {
   //       this.$store.dispatch('updateSequence', {
   //         parentUuid: this.modalMetadata.parentUuid,
   //         containerUuid: this.modalMetadata.containerUuid

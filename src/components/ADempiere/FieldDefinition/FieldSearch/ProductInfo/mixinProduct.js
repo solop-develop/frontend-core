@@ -20,14 +20,16 @@ import store from '@/store'
 
 // Constants
 import {
-  COLUMN_NAME
-} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+  COLUMN_NAME,
+  PRODUCT_LIST_FORM
+} from '@/utils/ADempiere/dictionary/field/search/product.ts'
 
 // Utils and Helper Methods
-import { generateDisplayedValue } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { generateDisplayedValue } from '@/utils/ADempiere/dictionary/field/search/product.ts'
 
 export default {
-  name: 'MixinBusinessPartner',
+  name: 'MixinProduct',
 
   props: {
     metadata: {
@@ -53,14 +55,18 @@ export default {
         id: undefined,
         uuid: undefined,
         value: undefined,
-        tax_id: undefined,
         name: undefined,
-        name2: undefined,
         description: undefined
       }
     },
+    uuidForm() {
+      if (!isEmptyValue(this.metadata.containerUuid)) {
+        return this.metadata.columnName + '_' + this.metadata.containerUuid
+      }
+      return PRODUCT_LIST_FORM
+    },
     recordsList() {
-      return store.getters.getBusinessPartnerRecordsList({
+      return store.getters.getProductSearchFieldRecordsList({
         containerUuid: this.uuidForm
       })
     }

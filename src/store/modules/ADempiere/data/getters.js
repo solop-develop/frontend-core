@@ -77,7 +77,7 @@ const getters = {
     // reduce list
     const fieldsListSelection = fieldsList
       .filter(itemField => {
-        return itemField.isIdentifier || itemField.isUpdateable
+        return itemField.is_identifier || itemField.is_updateable
       })
       .map(itemField => {
         return itemField.columnName

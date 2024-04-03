@@ -113,7 +113,7 @@ export default {
         if (locationDisplayedSequence.includes(sequenceFields)) {
           return {
             ...item,
-            isDisplayed: true,
+            is_displayed: true,
             sequenceFields,
             index: locationDisplayedSequence.indexOf(sequenceFields)
           }
@@ -121,10 +121,10 @@ export default {
         return {
           ...item,
           sequenceFields,
-          isDisplayed: false
+          is_displayed: false
         }
       }).filter(field => {
-        return field.isDisplayed
+        return field.is_displayed
       }).sort((itemA, itemB) => {
         return itemA.index - itemB.index
       })

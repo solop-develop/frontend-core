@@ -156,17 +156,17 @@ export default defineComponent({
           break
         case 'showOnlyMandatoryColumns':
           listShowed = props.allFieldsList
-            .filter(list => list.isMandatory)
+            .filter(list => list.is_mandatory)
             .map(list => list.columnName)
           break
         case 'showTableColumnsOnly':
           listShowed = props.allFieldsList
-            .filter(list => list.isDisplayedGrid)
+            .filter(list => list.is_displayed_grid)
             .map(list => list.columnName)
           break
         case 'showMinimalistView':
           listShowed = props.allFieldsList
-            .filter(field => field.isDisplayed && field.isShowedFromUser)
+            .filter(field => field.is_displayed && field.isShowedFromUser)
             .map(field => field.columnName)
           break
       }

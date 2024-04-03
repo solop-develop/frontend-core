@@ -1,50 +1,52 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
-  <div class="content-excel" style="height: -webkit-fill-available; height: inherit;">
-    <el-container class="sub-content-excel" style="height: -webkit-fill-available; height: inherit;width: 100%">
-      <el-main style="padding: 0;">
-        <download-file
-          :format="format"
-          :name="name"
-          :mime-type="mimeType"
-          :stream="stream"
-        />
+  <div class="content-excel">
+    <!-- <el-container class="sub-content-excel"> -->
+    <el-main class="sub-content-excel" style="padding: 0;">
+      <download-file
+        :format="format"
+        :name="name"
+        :mime-type="mimeType"
+        :stream="stream"
+      />
 
-        <el-table
-          :data="excelData.results"
-          border
-          highlight-current-row
-          style="width: 100%;height: 85% !important;"
-          height="90% !important"
+      <el-table
+        :data="excelData.results"
+        border
+        highlight-current-row
+        style="width: 100%;height: 85% !important;"
+        height="90% !important"
+      >
+        <el-table-column
+          v-for="item of excelData.header"
+          :key="item"
+          :label="item"
         >
-          <el-table-column
-            v-for="item of excelData.header"
-            :key="item"
-            :label="item"
-          >
-            <template slot-scope="scope">
-              {{ scope.row[item] }} {{ item }}
-            </template>
-          </el-table-column>
-        </el-table>
+          <template slot-scope="scope">
+            {{ scope.row[item] }}
+          </template>
+        </el-table-column>
+      </el-table>
 
-      </el-main>
-    </el-container>
+    </el-main>
+    <!-- </el-container> -->
   </div>
 </template>
 
@@ -79,7 +81,7 @@ export default defineComponent({
       default: undefined
     },
     stream: {
-      type: [Object, Array],
+      type: [Object, Array, String],
       required: true
     }
   },
@@ -143,3 +145,20 @@ export default defineComponent({
 
 })
 </script>
+
+<style lang="scss">
+.content-excel {
+  width: 100%;
+  // height: -webkit-fill-available;
+  // height: inherit;
+  height: 85vh;
+  // display: contents;
+  .sub-content-excel {
+    width: 100%;
+    // height: -webkit-fill-available;
+    height: 85vh;
+    // height: inherit;
+    overflow: auto;
+  }
+}
+</style>

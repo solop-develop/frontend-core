@@ -141,10 +141,10 @@ const persistence = {
           oldValue = currentRecord[columnName]
         }
         if (isEmptyValue(currentRecord) || oldValue === value) {
-          const defaultValue = getContextDefaultValue({
+          const defaultValueGenerated = getContextDefaultValue({
             ...field
           })
-          oldValue = defaultValue
+          oldValue = defaultValueGenerated
         }
 
         if (isSupportLookup(field.displayType) || IMAGE.id === field.displayType ||
@@ -154,11 +154,11 @@ const persistence = {
             displayedValue = currentRecord[field.displayColumnName]
           }
           if (isEmptyValue(currentRecord) || oldValue === value) {
-            const defaultValue = getContextDefaultValue({
+            const defaultValueGenerated = getContextDefaultValue({
               ...field,
               columnName: field.displayColumnName
             })
-            displayedValue = defaultValue
+            displayedValue = defaultValueGenerated
           }
           commit('addChangeToPersistenceQueue', {
             containerUuid,
@@ -198,7 +198,7 @@ const persistence = {
             formatReturn: false
           }).filter(itemField => {
             // omit send to server (to create or update) columns manage by backend
-            return itemField.isAlwaysUpdateable ||
+            return itemField.is_always_updateable ||
               !LOG_COLUMNS_NAME_LIST.includes(itemField.columnName)
           }).map(itemField => {
             return itemField.name
@@ -240,7 +240,8 @@ const persistence = {
     }) {
       return new Promise((resolve, reject) => {
         const tabDefinition = rootGetters.getStoredTab(parentUuid, containerUuid)
-        const { fieldsList } = tabDefinition
+        const { fieldsList, table } = tabDefinition
+        const { key_columns, identifier_columns } = table
 
         const persistenceAttributesList = getters.getPersistenceAttributes({
           containerUuid,
@@ -259,11 +260,11 @@ const persistence = {
 
               const field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
               if (!isEmptyValue(field)) {
-                if (field.isAlwaysUpdateable) {
+                if (field.is_always_updateable) {
                   return true
                 }
                 // prevent `PO.set_Value: Column not updateable`
-                if (!isEmptyValue(recordUuid) && recordUuid !== 'create-new' && !field.isUpdateable) {
+                if (!isEmptyValue(recordUuid) && recordUuid !== 'create-new' && !field.is_updateable) {
                   return false
                 }
                 if (LOG_COLUMNS_NAME_LIST.includes(columnName)) {
@@ -274,18 +275,17 @@ const persistence = {
               return true
             })
         }
-        const currentTab = getters.getStoredTab(parentUuid, containerUuid)
 
         if (!isEmptyValue(attributesList)) {
           if (!isEmptyValue(recordUuid) && recordUuid !== 'create-new') {
             // Update existing entity
-            if (currentTab.keyColumns.length > 1) {
+            if (key_columns.length > 1) {
               reccordId = 0
             }
             const keyColumnsList = getListKeyColumnsTab({
               parentUuid,
               containerUuid,
-              keyColumns: currentTab.keyColumns
+              keyColumns: key_columns
             })
             return updateEntity({
               tabUuid: containerUuid,
@@ -349,11 +349,10 @@ const persistence = {
                 const attributesRecord = response.values
 
                 // add display column to current record
-                const { identifierColumns, keyColumns } = tabDefinition
-                if (keyColumns.length === 1) {
+                if (key_columns.length === 1) {
                   let displayedValue = ''
                   const displayedColumnName = DISPLAY_COLUMN_PREFIX + tableName + IDENTIFIER_COLUMN_SUFFIX
-                  identifierColumns.forEach(identifier => {
+                  identifier_columns.forEach(identifier => {
                     const { columnName } = identifier
                     let currentValue = attributesRecord[columnName]
                     // types `decimal` and `date` is a object struct
@@ -413,7 +412,7 @@ const persistence = {
                   const parentValues = getContextAttributes({
                     parentUuid,
                     containerUuid,
-                    contextColumnNames: tabItem.contextColumnNames
+                    contextColumnNames: tabItem.context_column_names
                   })
                   dispatch('updateValuesOfContainer', {
                     containerUuid: tabItem.uuid,

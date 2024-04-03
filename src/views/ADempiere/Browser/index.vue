@@ -334,8 +334,8 @@ export default defineComponent({
         containerUuid,
         row
       }) => {
-        const { isUpdateable, tableName } = store.getters.getStoredBrowser(containerUuid)
-        if (!isUpdateable || isEmptyValue(tableName)) {
+        const { is_updateable, tableName } = store.getters.getStoredBrowser(containerUuid)
+        if (!is_updateable || isEmptyValue(tableName)) {
           return Promise.resolve({})
         }
         return store.dispatch('updateRecordOfBrowser', {

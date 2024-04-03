@@ -233,8 +233,8 @@ export default {
           })
         },
 
-        isReadOnlyField({ isReadOnly }) {
-          return isReadOnly
+        isReadOnlyField({ is_read_only }) {
+          return is_read_only
         },
 
         isMandatoryField({ isMandatory }) {
@@ -243,7 +243,7 @@ export default {
           }
           return false
         },
-        isDisplayedField({ isDisplayed, columnName, containerUuid }) {
+        isDisplayedField({ is_displayed, columnName, containerUuid }) {
           if (columnName === COLUMNNAME_City) {
             const cityId = store.getters.getValueOfField({
               containerUuid,
@@ -253,7 +253,7 @@ export default {
               return false
             }
           }
-          return isDisplayed
+          return is_displayed
         }
       }
     },
@@ -469,7 +469,7 @@ export default {
                   return {
                     ...item,
                     index,
-                    isDisplayed: hasRegion,
+                    is_displayed: hasRegion,
                     isMandatory,
                     name: !isEmptyValue(regionName) ? regionName : item.name
                   }
@@ -481,13 +481,13 @@ export default {
                     ...item,
                     index,
                     // displayed/hidden
-                    isDisplayed: allowCitiesOutOfList
+                    is_displayed: allowCitiesOutOfList
                   }
                 }
 
                 return {
                   ...item,
-                  isDisplayed: true,
+                  is_displayed: true,
                   isMandatory,
                   index
                 }
@@ -497,7 +497,7 @@ export default {
                   if (!(captureSequence.includes('@CO@') || captureSequence.includes('@CO!@'))) {
                     return {
                       ...item,
-                      isDisplayed: true,
+                      is_displayed: true,
                       isMandatory: true,
                       index: arrayList.length * 10 // to last index
                     }
@@ -507,7 +507,7 @@ export default {
               // is manage with capture sequence and not displayed
               return {
                 ...item,
-                isDisplayed: false,
+                is_displayed: false,
                 isMandatory: false
               }
             })

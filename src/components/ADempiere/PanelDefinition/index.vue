@@ -101,9 +101,9 @@ export default defineComponent({
         if (panelMetadata.value.isEditSecuence) {
           panelComponent = () => import('@/components/ADempiere/PanelDefinition/DraggablePanel.vue')
         }
-        if (panelMetadata.value.isSortTab) {
+        if (panelMetadata.value.is_sort_tab) {
           panelComponent = () => import('@/components/ADempiere/PanelDefinition/SortPanel.vue')
-        } else if (panelMetadata.value.isHasTree) {
+        } else if (panelMetadata.value.is_has_tree) {
           panelComponent = () => import('@/components/ADempiere/PanelDefinition/TreePanel.vue')
         }
       }

@@ -49,7 +49,8 @@ export const runReportAs = {
   name: language.t('actionMenu.generateReportAs'),
   description: language.t('actionMenu.generateReportAsOtherFormat'),
   enabled: ({ containerUuid }) => {
-    return !isEmptyValue(store.getters.getStoredReportExportTypes(containerUuid))
+    // return !isEmptyValue(store.getters.getStoredReportExportTypes(containerUuid))
+    return true
   },
   isSvgIcon: false,
   icon: 'el-icon-document',

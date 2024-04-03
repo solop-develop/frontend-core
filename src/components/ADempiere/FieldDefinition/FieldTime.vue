@@ -46,7 +46,7 @@ export default {
 
   computed: {
     isPickerRange() {
-      if (this.metadata.isRange && !this.metadata.inTable) {
+      if (this.metadata.is_range && !this.metadata.inTable) {
         return true
       }
       return false

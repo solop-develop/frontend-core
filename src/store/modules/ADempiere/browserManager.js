@@ -120,7 +120,7 @@ const browserControl = {
           fieldsList,
           containerManager: containerManager
         }).then(() => {
-          if (field.isInfoOnly) {
+          if (field.is_info_only) {
             // omit search
             resolve()
             return
@@ -148,8 +148,12 @@ const browserControl = {
         })
 
         const {
-          id: browserId, fieldsList, contextColumnNames
+          id, fieldsList, contextColumnNames
         } = rootGetters.getStoredBrowser(containerUuid)
+        if (isEmptyValue(id) && isEmptyValue(fieldsList) && isEmptyValue(contextColumnNames)) {
+          resolve(currentRecordsList)
+          return
+        }
 
         const fieldsEmpty = rootGetters.getBrowserFieldsEmptyMandatory({
           containerUuid,
@@ -164,7 +168,7 @@ const browserControl = {
           return
         }
 
-        // parameters isQueryCriteria
+        // parameters Query Criteria
         const queryCriteriaFilters = rootGetters.getBrowserQueryCriteria({
           containerUuid,
           fieldsList
@@ -232,7 +236,7 @@ const browserControl = {
         const pageToken = generatePageToken({ pageNumber })
 
         requestBrowserSearch({
-          id: browserId,
+          id,
           contextAttributes,
           filters,
           pageToken,
@@ -495,7 +499,7 @@ const browserControl = {
       // reduce list
       const fieldsListSelection = fieldsList
         .filter(itemField => {
-          return itemField.isKey || itemField.isIdentifier || !isReadOnlyColumn(itemField)
+          return itemField.is_key || itemField.is_identifier || !isReadOnlyColumn(itemField)
         })
         .map(itemField => {
           return {

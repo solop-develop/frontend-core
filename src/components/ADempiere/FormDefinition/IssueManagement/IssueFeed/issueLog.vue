@@ -18,41 +18,42 @@
 
 <template>
   <el-card class="list-comments">
-    <issue-avatar :user="comment.user" />
-
-    <el-descriptions :column="1">
+    <issue-avatar :user="comment.user" style="font-size: 10px" />
+    <el-descriptions :column="1" style="margin-top: 10px; margin-bottom:10px">
       <el-descriptions-item
         v-for="log in comment.change_logs"
         :key="log.id"
-        label-style="{ color: #606266; font-weight: bold; }"
+        label-style="{ color: #606266; }"
+        style="padding-bottom: 0"
       >
         <template slot="label">
-          <span style="color: #606266; font-weight: bold;padding-right: 5px;">
+          <label style="color: #606266;padding-right: 5px; font-size: 10px">
             {{ log.label }}
-          </span>
-          ({{ log.column_name }})
+          </label>
+          <!-- ({{ log.column_name }}) -->
         </template>
-
-        <span style="font-weight: bold;">
+        <span style="font-weight: bold">
           <el-link
             :type="!isEmptyValue(log.displayed_value) ? 'success' : 'danger'"
-            :style="isEmptyValue(log.displayed_value) ? 'text-decoration:line-through;' : ''"
+            :style="isEmptyValue(log.displayed_value) ? 'text-decoration:line-through; font-size:10px' : 'font-size:10px'"
           >
-            <b>
-              {{ isEmptyValue(log.displayed_value) ? 'NULL' : log.displayed_value }}
+            <b v-if="!isEmptyValue(log.new_value) && log.new_value.type === 'date'">
+              {{ isEmptyValue(log.new_value.value) ? 'NULL': translateDate({value:log.new_value.value, format:'onlyDateLatin'}) }}
+            </b>
+            <b v-else>
+              {{ isEmptyValue(log.displayed_value) ?'NULL': log.displayed_value }}
             </b>
           </el-link>
         </span>
-      </el-descriptions-item>
+      </el-descriptions-item>onlyDate
     </el-descriptions>
   </el-card>
 </template>
 
 <script>
 import { defineComponent } from '@vue/composition-api'
-
+import { translateDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import IssueAvatar from '@/components/ADempiere/FormDefinition/IssueManagement/issueAvatar.vue'
-
 export default defineComponent({
   name: 'IssueLog',
 
@@ -66,9 +67,15 @@ export default defineComponent({
       required: true
     }
   },
-
   setup() {
+    return {
+      translateDate
+    }
   }
 })
 </script>
-
+<style>
+.el-descriptions--medium:not(.is-bordered) .el-descriptions-item__cell {
+  padding-bottom: 0px;
+}
+</style>

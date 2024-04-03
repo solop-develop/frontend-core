@@ -2383,7 +2383,7 @@ export default defineComponent({
 
     const cssStyleButton = computed(() => {
       if (isMobile.value) {
-        return 'padding-top: 20px;padding-bottom: 10px;text-align: center;margin-bottom: 0px !important;'
+        return 'padding-top: 20px;text-align: center;margin-bottom: 0px !important;'
       }
       return 'padding-top: 35px;'
     })
@@ -2844,7 +2844,7 @@ export default defineComponent({
 }
 .list-comments {
   .comments-card .el-card__header {
-    padding-top: 5px;
+    padding-top: 20px;
     padding-right: 10px;
     padding-bottom: 5px;
     padding-left: 10px;
@@ -2862,7 +2862,7 @@ export default defineComponent({
     box-sizing: border-box;
   }
   .el-card__body {
-    padding-top: 0px !important;
+    padding-top: 10px !important;
     padding-right: 10px;
     padding-bottom: 0px!important;
     padding-left: 10px;
