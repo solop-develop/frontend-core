@@ -20,7 +20,7 @@ import store from '@/store'
 
 // Components
 import Layout from '@/layout'
-// import store from '@/store'
+
 // Constants
 import staticRoutes from '@/router/modules/ADempiere/staticRoutes.js'
 
@@ -77,14 +77,17 @@ export function loadMainMenu({
             children.push(childsSumaryConverted)
           })
         } else {
-          const childsConverted = getChildFromAction({
+          const childConverted = getChildFromAction({
             menu: menuElement,
             index: undefined,
             clientId,
             roleId,
             organizationId
           })
-          children.push(childsConverted)
+          childConverted.hidden = true
+          children.push(childConverted)
+          // optionMenu.redirect = childConverted.path
+          optionMenu.meta.breadcrumb = false
         }
 
         optionMenu.children = children
