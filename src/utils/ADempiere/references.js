@@ -376,7 +376,7 @@ export const FIELDS_IDENTIFIER = [
  * @param {Numner} displayType or reference to displayed
  * @returns {Boolean}
  */
-export function isIdentifier(displayType) {
+export function isIdentifierField(displayType) {
   return FIELDS_IDENTIFIER.includes(displayType)
 }
 
@@ -455,12 +455,12 @@ export function isRangeField(displayType) {
 
 /**
  * Is manage range to in other field
- * @param {boolean} isRange
+ * @param {boolean} is_range
  * @param {number} displayType
  * @returns {boolean}
  */
-export function isAddRangeField({ isRange, displayType }) {
-  if (!isRange) {
+export function isAddRangeField({ is_range, displayType }) {
+  if (!is_range) {
     return false
   }
 

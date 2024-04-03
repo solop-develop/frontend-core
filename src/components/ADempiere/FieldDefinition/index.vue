@@ -67,7 +67,7 @@
             :metadata="fieldAttributes"
           />
           <comparison-operator
-            v-if="!fieldAttributes.isInfoOnly"
+            v-if="!fieldAttributes.is_info_only"
             :metadata-field="field"
             :container-manager="containerManager"
             :is-read-only-from-field="fieldAttributes.isReadOnlyFromField"
@@ -290,7 +290,7 @@ export default {
       return field
     },
     fieldAttributes() {
-      const isReadOnly = this.isReadOnlyField
+      const isReadOnlyGenerated = this.isReadOnlyField
       // only to panel (advanded query window, query criteria browser)
       const isReadOnlyFromOperator = !this.inTable && IGNORE_VALUE_OPERATORS_LIST.includes(this.field.operator)
       return {
@@ -299,11 +299,11 @@ export default {
         isAdvancedQuery: this.field.isAdvancedQuery,
         // DOM properties
         required: this.isMandatoryField,
-        readonly: isReadOnly || isReadOnlyFromOperator,
+        readonly: isReadOnlyGenerated || isReadOnlyFromOperator,
         displayed: this.isDisplayField,
-        disabled: !this.field.isActive,
+        // disabled: !this.field.isActive,
         isSelectCreated: this.isSelectCreated,
-        isReadOnlyFromField: isReadOnly,
+        isReadOnlyFromField: isReadOnlyGenerated,
         isReadOnlyFromOperator: isReadOnlyFromOperator,
         placeholder: this.field.help ? this.field.help.slice(0, 40) + '...' : ''
       }
@@ -359,7 +359,7 @@ export default {
     },
 
     isSelectCreated() {
-      return (this.field.isAdvancedQuery || this.field.isQueryCriteria) &&
+      return (this.field.isAdvancedQuery || this.field.is_query_criteria) &&
         MULTIPLE_VALUES_OPERATORS_LIST.includes(this.field.operator) &&
         !['FieldBinary', 'FieldDate', 'FieldSelect', 'FieldYesNo'].includes(this.field.componentPath)
     },
@@ -407,14 +407,14 @@ export default {
       const isBrowser = this.$route.meta.type === 'browser'
       const {
         isAdvancedQuery,
-        isQueryCriteria
+        is_query_criteria
       } = this.field
       if (
         !this.isEmptyValue(isAdvancedQuery) &&
         isAdvancedQuery ||
         (
           isBrowser &&
-          isQueryCriteria
+          is_query_criteria
         )
       ) return true
       return false
@@ -443,8 +443,8 @@ export default {
       }
       this.field = {
         ...this.metadataField,
-        isActive: true,
-        isDisplayed: true,
+        // isActive: true,
+        is_displayed: true,
         isDisplayedFromLogic: true,
         isShowedFromUser: true,
         //

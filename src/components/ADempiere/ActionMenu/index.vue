@@ -191,17 +191,6 @@ export default defineComponent({
   },
 
   setup(props, { root }) {
-    const currentTab = computed(() => {
-      const currentRoute = router.app._route
-      if (currentRoute.meta.type !== 'window') return props.actionsManager
-      return store.getters.getContainerInfo.currentTab
-    })
-
-    const {
-      containerUuid,
-      tableName
-    } = currentTab.value
-
     const isMobile = computed(() => {
       return store.getters.device === 'mobile'
     })
@@ -213,7 +202,12 @@ export default defineComponent({
       return 'small'
     })
 
-    const instanceUuid = root.$route.params.instanceUuid
+    const currentRoute = router.app._route
+    let instanceUuid
+    if (currentRoute.params && currentRoute.params.instanceUuid) {
+      instanceUuid = currentRoute.params.instanceUuid
+    }
+
     // set initial value
     const actionsList = computed(() => {
       if (props.actionsManager && props.actionsManager.getActionList) {
@@ -227,7 +221,7 @@ export default defineComponent({
     })
 
     const recordUuid = computed(() => {
-      return store.getters.getUuidOfContainer(containerUuid)
+      return store.getters.getUuidOfContainer(props.containerUuid)
     })
 
     const isWithRecord = computed(() => {
@@ -235,7 +229,15 @@ export default defineComponent({
     })
 
     const isUndoAction = computed(() => {
-      if (!isEmptyValue(tableName)) {
+      if (isEmptyValue(recordUuid.value)) {
+        return false
+      }
+      const storedTab = store.getters.getStordTab(props.parentUuid, props.containerUuid)
+      if (isEmptyValue(storedTab)) {
+        return false
+      }
+      const { table_name } = storedTab
+      if (!isEmptyValue(table_name)) {
         if (!isWithRecord.value) {
           return true
         }
@@ -315,23 +317,21 @@ export default defineComponent({
       if (actionName === 'Moreoptions') return store.commit('setShowMenuMobile', true)
       action[actionName]({
         root,
-        parentUuid: currentTab.value.parentUuid,
-        containerUuid: containerUuid, // currentTab.value.uuid,
+        parentUuid: props.parentUuid,
+        containerUuid: props.containerUuid, // currentTab.value.uuid,
         containerId: action.containerId, // currentTab.value.uuid,
-        tableName: currentTab.value.tableName,
-        tabId: currentTab.value.id,
+        //  : currentTab.value.tableName,
+        // tabId: currentTab.value.id,
         instanceUuid,
         containerManager: props.containerManager,
         recordUuid: recordUuid.value,
-        uuid: action.uuid,
-        currentTab: currentTab.value
+        uuid: action.uuid
       })
     }
 
     /**
      * Index Space
      */
-
     function indexSpace(index, menuList) {
       return index === (menuList - 1)
     }

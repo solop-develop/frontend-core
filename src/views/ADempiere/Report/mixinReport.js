@@ -54,7 +54,7 @@ export default ({ reportId, reportUuid }) => {
 
     defaultActionName() {
       let reportType = DEFAULT_REPORT_TYPE
-      const storedReportGenerated = store.getters.getReportGenerated(reportId)
+      const storedReportGenerated = store.getters.getReportGenerated(reportUuid)
       if (!isEmptyValue(storedReportGenerated)) {
         if (!isEmptyValue(storedReportGenerated.reportType)) {
           reportType = storedReportGenerated.reportType

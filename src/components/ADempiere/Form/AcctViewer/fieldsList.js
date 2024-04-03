@@ -26,7 +26,7 @@ export default [
   //   overwriteDefinition: {
   //     size: 8,
   //     sequence: 10,
-  //     defaultValue: '$C_AcctSchema_ID'
+  //     default_value: '$C_AcctSchema_ID'
   //   }
   // },
   // // Posting Type

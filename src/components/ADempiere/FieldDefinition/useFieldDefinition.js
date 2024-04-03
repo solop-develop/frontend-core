@@ -185,7 +185,7 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
 
   /**
    * Get default value from server
-   * @returns promisse with object = { value, defaultValue, uuid, id }
+   * @returns promisse with object = { value, default_value, uuid, id }
    */
   function loadDefaultValueFromServer() {
     if (containerManager && containerManager.getDefaultValue) {

@@ -27,7 +27,59 @@ const report = {
   reportOptions: 'Opciones del Reporte',
   preference: 'Preferencia',
   reportSettings: 'Configuración del Reporte',
-  summary: 'Resumen'
+  summary: 'Resumen',
+  reportExportTypes: {
+    ps: {
+      name: 'ps - Archivo Postscript PS',
+      description: 'ps - Archivo Postscript PS',
+      type: 'ps'
+    },
+    xml: {
+      name: 'xml - Archivo XML',
+      description: 'xml - Archivo XML',
+      type: 'xml'
+    },
+    pdf: {
+      name: 'pdf - Archivo PDF Acrobat',
+      description: 'pdf - Archivo PDF Acrobat',
+      type: 'pdf'
+    },
+    html: {
+      name: 'html - Archivo HTML',
+      description: 'html - Archivo HTML',
+      type: 'html'
+    },
+    txt: {
+      name: 'txt - Archivo de texto delimitado por tabuladores',
+      description: 'txt - Archivo de texto delimitado por tabuladores',
+      type: 'txt'
+    },
+    ssv: {
+      name: 'ssv - Archivo separado por punto y coma',
+      description: 'ssv - Archivo separado por punto y coma',
+      type: 'ssv'
+    },
+    csv: {
+      name: 'csv - Archivo CSV de Excel',
+      description: 'csv - Archivo CSV de Excel',
+      type: 'csv'
+    },
+    xls: {
+      name: 'xls - Archivo Excel',
+      description: 'xls - Archivo Excel',
+      type: 'xls'
+    },
+    xlsx: {
+      name: 'xlsx - XLSX file',
+      description: 'xlsx - XLSX file',
+      type: 'xlsx'
+    },
+    arxml: {
+      name: 'arxml - Archivo de Definición de Reporte ADempiere',
+      description: 'arxml - Archivo de Definición de Reporte ADempiere',
+      type: 'arxml'
+    }
+  }
 }
 
 export default report

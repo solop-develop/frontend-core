@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import language from '@/lang'
+import lang from '@/lang'
 import router from '@/router'
 import store from '@/store'
 
@@ -45,24 +45,35 @@ import {
 } from '@/utils/ADempiere/dictionary/browser.js'
 import { showMessage, showNotification } from '@/utils/ADempiere/notification.js'
 import { isLookup } from '@/utils/ADempiere/references'
+import { getCurrentClient, getCurrentRole } from '@/utils/ADempiere/auth'
+import { templateBrowser } from '@/utils/ADempiere/dictionary/browser/templateBrowser.js'
 
 export default {
-  getBrowserDefinitionFromServer({ commit, dispatch, rootGetters }, {
+  getBrowserDefinitionFromServer({ commit, state, dispatch, rootGetters }, {
     id,
     parentUuid = '' // context of associated
   }) {
     return new Promise(resolve => {
+      const language = rootGetters['getCurrentLanguage']
+      const clientId = getCurrentClient()
+      const roleId = getCurrentRole()
+      const userId = rootGetters['user/getUserId']
       requestBrowserMetadata({
-        id
+        id,
+        roleId,
+        userId,
+        language,
+        clientId
       })
         .then(browserResponse => {
-          const browserUuid = browserResponse.uuid
+          const browser = templateBrowser(browserResponse.browser)
+          const browserUuid = browser.uuid
 
           const browserDefinition = generatePanelAndFields({
             containerUuid: browserUuid,
             panelMetadata: {
-              ...browserResponse,
-              isShowedCriteria: true
+              ...browser,
+              isShowedCriteria: false
             },
             fieldOverwrite: {
               isShowedFromUser: false
@@ -82,7 +93,7 @@ export default {
               browserDefinition.columnsList[DISPLAY_COLUMN_PREFIX + fieldItem.elementName] = DISPLAY_COLUMN_PREFIX + fieldItem.columnName
             }
 
-            if (fieldItem.isRange) {
+            if (fieldItem.is_range) {
               browserDefinition.elementsList[fieldItem.columnNameTo] = fieldItem.elementNameTo
               browserDefinition.columnsList[fieldItem.elementNameTo] = fieldItem.columnNameTo
             }
@@ -157,7 +168,7 @@ export default {
                 })
                 if (!isEmptyValue(emptyMandatory)) {
                   showMessage({
-                    message: language.t('notifications.mandatoryFieldMissing') + emptyMandatory,
+                    message: lang.t('notifications.mandatoryFieldMissing') + emptyMandatory,
                     type: 'info'
                   })
                   return
@@ -207,8 +218,8 @@ export default {
         })
         .catch(error => {
           showNotification({
-            title: language.t('notifications.error'),
-            message: language.t('smartBrowser.dictionaryError'),
+            title: lang.t('notifications.error'),
+            message: lang.t('smartBrowser.dictionaryError'),
             type: 'error'
           })
           console.warn(`Error getting Smart Browser definition: ${error.message}. Code: ${error.code}.`)

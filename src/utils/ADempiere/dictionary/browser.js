@@ -39,23 +39,23 @@ import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFor
 /**
  * Is displayed field in panel query criteria
  */
-export function isDisplayedField({ displayType, isActive, isQueryCriteria, displayLogic, isDisplayedFromLogic }) {
+export function isDisplayedField({ displayType, is_query_criteria, displayLogic, isDisplayedFromLogic }) {
   // button field not showed
   if (isHiddenField(displayType)) {
     return false
   }
 
-  return isActive && isQueryCriteria && (isEmptyValue(displayLogic) || isDisplayedFromLogic)
+  return is_query_criteria && (isEmptyValue(displayLogic) || isDisplayedFromLogic)
 }
 
 /**
  * Default showed field from user
  */
 export function evaluateDefaultFieldShowed({
-  displayType, isQueryCriteria,
+  displayType, is_query_criteria,
   isShowedFromUser, isDisplayedAsPanel,
-  defaultValue, parsedDefaultValue, displayLogic,
-  isMandatory, isMandatoryFromLogic, mandatoryLogic
+  default_value, parsedDefaultValue, displayLogic,
+  isMandatory, isMandatoryFromLogic, mandatory_logic
 }) {
   if (!isEmptyValue(isDisplayedAsPanel)) {
     return convertStringToBoolean(isDisplayedAsPanel)
@@ -64,12 +64,12 @@ export function evaluateDefaultFieldShowed({
     return true
   }
   const isMandatoryGenerated = isMandatoryField({
-    displayType, isQueryCriteria, isMandatory, isMandatoryFromLogic, mandatoryLogic
+    displayType, is_query_criteria, isMandatory, isMandatoryFromLogic, mandatory_logic
   })
   if (isMandatoryGenerated) {
     return true
   }
-  if (!isEmptyValue(defaultValue) || !isEmptyValue(parsedDefaultValue)) {
+  if (!isEmptyValue(default_value) || !isEmptyValue(parsedDefaultValue)) {
     return true
   }
   return Boolean(isShowedFromUser)
@@ -80,39 +80,38 @@ export function evaluateDefaultFieldShowed({
  * @param {boolean} isMandatoryFromLogic
  * @returns {boolean}
  */
-export function isMandatoryField({ displayType, isQueryCriteria, isMandatory, isMandatoryFromLogic, mandatoryLogic }) {
+export function isMandatoryField({ displayType, is_query_criteria, isMandatory, isMandatoryFromLogic, mandatory_logic }) {
   if (displayType === BUTTON.id) {
     return false
   }
-  return isQueryCriteria && (isMandatory || (!isEmptyValue(mandatoryLogic) && isMandatoryFromLogic))
+  return is_query_criteria && (isMandatory || (!isEmptyValue(mandatory_logic) && isMandatoryFromLogic))
 }
 
-export function isReadOnlyField({ isQueryCriteria, operator, isReadOnlyFromLogic }) {
-  return isQueryCriteria && isReadOnlyFromLogic // || IGNORE_VALUE_OPERATORS_LIST.includes(operator)
+export function isReadOnlyField({ is_query_criteria, operator, isReadOnlyFromLogic }) {
+  return is_query_criteria && isReadOnlyFromLogic // || IGNORE_VALUE_OPERATORS_LIST.includes(operator)
 }
 
 export function evaluateDefaultColumnShowed({
-  isKey, isActive, displayType, isDisplayed,
+  is_key, displayType, is_displayed,
   isShowedTableFromUser, isDisplayedAsTable,
-  isMandatory, isMandatoryFromLogic, mandatoryLogic
+  isMandatory, isMandatoryFromLogic, mandatory_logic
 }) {
   if (!isEmptyValue(isDisplayedAsTable)) {
     return convertStringToBoolean(isDisplayedAsTable)
   }
   // const isDisplayedColumnGenerated = isDisplayedColumn({
-  //   isKey,
-  //   isActive,
+  //   is_key,
   //   displayType,
   //   isDisplayed,
   //   isMandatory,
   //   isMandatoryFromLogic,
-  //   mandatoryLogic
+  //   mandatory_logic
   // })
   // if (!isDisplayedColumnGenerated) {
   //   return
   // }
   // const isMandatoryGenerated = isMandatoryColumn({
-  //   displayType, isMandatory, isMandatoryFromLogic, mandatoryLogic
+  //   displayType, isMandatory, isMandatoryFromLogic, mandatory_logic
   // })
   // if (isMandatoryGenerated) {
   //   return true
@@ -125,29 +124,29 @@ export function evaluateDefaultColumnShowed({
 /**
  * Is displayed column in table multi record
  */
-export function isDisplayedColumn({ displayType, isActive, isDisplayed, isKey }) {
+export function isDisplayedColumn({ displayType, is_displayed, is_key }) {
   // column check to selection or button field not showed
-  if (isKey || isHiddenField(displayType)) {
+  if (is_key || isHiddenField(displayType)) {
     return false
   }
 
-  return isActive && isDisplayed
+  return is_displayed
 }
 
-export function isMandatoryColumn({ displayType, isMandatory, isMandatoryFromLogic, mandatoryLogic }) {
+export function isMandatoryColumn({ displayType, isMandatory, isMandatoryFromLogic, mandatory_logic }) {
   if (displayType === BUTTON.id) {
     return false
   }
-  return isMandatory || (!isEmptyValue(mandatoryLogic) && isMandatoryFromLogic)
+  return isMandatory || (!isEmptyValue(mandatory_logic) && isMandatoryFromLogic)
 }
 
 /**
  * Read only column in table multi record
- * @param {boolean} isReadOnly
+ * @param {boolean} is_read_only
  * @returns {boolean}
  */
-export function isReadOnlyColumn({ isReadOnly }) {
-  return isReadOnly
+export function isReadOnlyColumn({ is_read_only }) {
+  return is_read_only
 }
 
 export const refreshBrowserSearh = {
@@ -209,13 +208,14 @@ export const runProcessOfBrowser = {
 }
 
 /**
+ * TableName
  * isDeleteable
  */
 export const runDeleteable = {
   name: language.t('actionMenu.delete'),
   enabled: ({ containerUuid, containerManager }) => {
-    const { isDeleteable, tableName } = store.getters.getStoredBrowser(containerUuid)
-    if (!isDeleteable || isEmptyValue(tableName)) {
+    const { is_deleteable, table_name } = store.getters.getStoredBrowser(containerUuid)
+    if (!is_deleteable || isEmptyValue(table_name)) {
       return false
     }
     const selection = containerManager.getSelection({
@@ -372,8 +372,8 @@ export const containerManager = {
     return false
   },
   isDisplayedColumn,
-  isDisplayedDefaultTable: ({ isMandatory, isKey }) => {
-    if (isMandatory && !isKey) {
+  isDisplayedDefaultTable: ({ isMandatory, is_key }) => {
+    if (isMandatory && !is_key) {
       return true
     }
     return false

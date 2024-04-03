@@ -38,7 +38,7 @@ export default [
       sequence: 4,
       isActiveLogics: true,
       isMandatory: true,
-      isReadOnly: true
+      is_read_only: true
     }
   },
   // Messages

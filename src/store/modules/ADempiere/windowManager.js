@@ -60,7 +60,9 @@ const initState = {
     recordCount: 0, // total number of all records
     isLoaded: false, // has not been charged the first time
     isLoading: false, // request currently in progress
-    pageNumber: 1 // page number of records
+    pageNumber: 1, // page number of records
+    pageSize: 15
+
   }
 }
 
@@ -228,6 +230,9 @@ const windowManager = {
       containerUuid,
       selectionsList
     }) {
+      // if (isEmptyValue(state.tabData[containerUuid])) {
+      //   Vue.set(state.tabData, containerUuid, state.emtpyTabData)
+      // }
       Vue.set(state.tabData[containerUuid], 'selectionsList', selectionsList)
     },
 
@@ -287,13 +292,13 @@ const windowManager = {
       return new Promise(resolve => {
         const {
           isParentTab,
-          isHasTree,
+          is_has_tree,
           fieldsList,
           id,
-          tableName,
-          linkColumnName,
-          parentColumnName,
-          contextColumnNames
+          table_name,
+          link_column_name,
+          parent_column_name,
+          context_column_names
         } = rootGetters.getStoredTab(parentUuid, containerUuid)
 
         if (!isEmptyValue(filters) && typeof filters !== 'object') {
@@ -303,53 +308,53 @@ const windowManager = {
 
         // add filters with link column name and parent column name
         if (
-          !isEmptyValue(linkColumnName) &&
-          !contextColumnNames.includes(linkColumnName) &&
-          !filters.some(filter => filter.columnName === linkColumnName)
+          !isEmptyValue(link_column_name) &&
+          !context_column_names.includes(link_column_name) &&
+          !filters.some(filter => filter.columnName === link_column_name)
         ) {
           const value = rootGetters.getValueOfField({
             parentUuid,
             containerUuid,
-            columnName: linkColumnName
+            columnName: link_column_name
           })
           if (!isEmptyValue(value)) {
             filters.push({
-              columnName: linkColumnName,
+              columnName: link_column_name,
               value
             })
           } else {
-            console.warn(`Get entities without context to ${linkColumnName} to filter in getEntities`)
+            console.warn(`Get entities without context to ${link_column_name} to filter in getEntities`)
           }
         }
         if (
-          !isEmptyValue(parentColumnName) &&
-          !contextColumnNames.includes(parentColumnName &&
-          !filters.some(filter => filter.columnName === parentColumnName))
+          !isEmptyValue(parent_column_name) &&
+          !context_column_names.includes(parent_column_name &&
+          !filters.some(filter => filter.columnName === parent_column_name))
         ) {
           const value = rootGetters.getValueOfField({
             parentUuid,
             containerUuid,
-            columnName: parentColumnName
+            columnName: parent_column_name
           })
           if (!isEmptyValue(value)) {
             filters.push({
-              columnName: parentColumnName,
+              columnName: parent_column_name,
               value
             })
           } else {
-            console.warn(`Get entities without context to ${parentColumnName} to filter in getEntities`)
+            console.warn(`Get entities without context to ${parent_column_name} to filter in getEntities`)
           }
         }
 
         // get context values
         const contextAttributesList = getContextAttributes({
           parentUuid,
-          contextColumnNames,
+          contextColumnNames: context_column_names,
           keyName: 'key',
           format: 'object'
         })
 
-        // const isWithoutValues = contextColumnNames.find(columnName =>
+        // const isWithoutValues = context_column_names.find(columnName =>
         //   isEmptyValue(columnName) ||
         //   isEmptyValue(contextAttributesList[columnName])
         // )
@@ -385,12 +390,12 @@ const windowManager = {
         })
         if (
           !isEmptyValue(filters) &&
-          !isEmptyValue(linkColumnName) &&
+          !isEmptyValue(link_column_name) &&
           !isEmptyValue(contextAttributesList)
         ) {
-          const listFilters = filters.find(i => i.columnName === linkColumnName)
-          // const listContextAttributes = contextAttributesList.find(i => i.key === linkColumnName)
-          const listContextAttributes = contextAttributesList[linkColumnName]
+          const listFilters = filters.find(i => i.columnName === link_column_name)
+          // const listContextAttributes = contextAttributesList.find(i => i.key === link_column_name)
+          const listContextAttributes = contextAttributesList[link_column_name]
           if (
             !isEmptyValue(listFilters) &&
             !isEmptyValue(listFilters.value) &&
@@ -487,7 +492,7 @@ const windowManager = {
                 }
               }
               currentRecordUuid = currentRow[UUID]
-              currentRecordId = currentRow[tableName + '_ID']
+              currentRecordId = currentRow[table_name + '_ID']
 
               if (isParentTab) {
                 setRecordPath({
@@ -528,14 +533,14 @@ const windowManager = {
               // Always overwrite key values on parent context
               const relatedColumnsList = fieldsList
                 .filter(fieldItem => {
-                  return fieldItem.isParent || fieldItem.isKey
+                  return fieldItem.isParent || fieldItem.is_key
                 })
                 .map(fieldItem => {
                   return fieldItem.columnName
                 })
 
-              if (!isEmptyValue(parentColumnName)) {
-                relatedColumnsList.push(parentColumnName)
+              if (!isEmptyValue(parent_column_name)) {
+                relatedColumnsList.push(parent_column_name)
               }
               // set context values
               const parentValues = getContextAttributes({
@@ -594,7 +599,7 @@ const windowManager = {
             }
 
             // TODO: Set recordId as nodeId
-            if (isHasTree) {
+            if (is_has_tree) {
               dispatch('getTreeNodesFromServer', {
                 parentUuid,
                 containerUuid
@@ -677,7 +682,7 @@ const windowManager = {
         const tab = rootGetters.getStoredTab(parentUuid, containerUuid)
 
         deleteEntity({
-          tableName: tab.tableName,
+          tableName: tab.table_name,
           recordId,
           recordUuid
         })

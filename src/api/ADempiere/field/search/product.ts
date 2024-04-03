@@ -23,6 +23,94 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
+export function requestListProductCategories({
+  filters,
+  searchValue,
+  //
+  pageToken,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
+}) {
+  return request({
+    url: `/field/products/categories`,
+    method: 'get',
+    params: {
+      is_only_active_records: true,
+      //
+      filters,
+      search_value: searchValue,
+      // Page Data
+      page_token: pageToken,
+      page_size: pageSize
+    }
+  })
+}
+
+export function requestListProductGroups({
+  filters,
+  searchValue,
+  //
+  pageToken,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
+}) {
+  return request({
+    url: `/field/products/groups`,
+    method: 'get',
+    params: {
+      is_only_active_records: true,
+      //
+      filters,
+      search_value: searchValue,
+      // Page Data
+      page_token: pageToken,
+      page_size: pageSize
+    }
+  })
+}
+
+export function requestListProductClasess({
+  filters,
+  searchValue,
+  //
+  pageToken,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
+}) {
+  return request({
+    url: `/field/products/clasess`,
+    method: 'get',
+    params: {
+      is_only_active_records: true,
+      //
+      filters,
+      search_value: searchValue,
+      // Page Data
+      page_token: pageToken,
+      page_size: pageSize
+    }
+  })
+}
+
+export function requestListProductClassifications({
+  filters,
+  searchValue,
+  //
+  pageToken,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
+}) {
+  return request({
+    url: `/field/products/classifications`,
+    method: 'get',
+    params: {
+      is_only_active_records: true,
+      //
+      filters,
+      search_value: searchValue,
+      // Page Data
+      page_token: pageToken,
+      page_size: pageSize
+    }
+  })
+}
+
 export function requestListWarehouses({
   contextAttributesList,
   filters,

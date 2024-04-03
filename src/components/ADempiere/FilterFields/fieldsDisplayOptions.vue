@@ -232,7 +232,7 @@ import {
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
-import { evaluateDefaultFieldShowed } from '@/utils/ADempiere/dictionary/window.js'
+import { evaluateDefaultFieldShowed } from '@/utils/ADempiere/dictionary/window'
 import { generatePanelAndFields } from '@/utils/ADempiere/dictionary/panel.js'
 
 export default defineComponent({
@@ -647,7 +647,7 @@ export default defineComponent({
       if (command === 'showDefaultField') {
         const { fieldsList } = panelDefault.value
         fieldsShowed = fieldsList
-          .filter(field => field.isDisplayed && field.isShowedFromUser)
+          .filter(field => field.is_displayed && field.isShowedFromUser)
           .map(field => field.columnName)
       }
       if (command === 'showWithValue') {

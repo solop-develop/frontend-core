@@ -90,7 +90,7 @@ export default [
       handleContentSelection: true,
       size: 24,
       isActiveLogics: true,
-      isReadOnly: true,
+      is_read_only: true,
       isMandatory: true
     }
   },

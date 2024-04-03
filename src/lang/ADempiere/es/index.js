@@ -119,7 +119,7 @@ export default {
     },
     resetCache: 'Reiniciar Cache',
     logOut: 'Salir',
-    dashboard: 'Panel de control',
+    dashboard: 'Gráficos',
     github: 'Github',
     theme: 'Tema',
     size: 'Tamaño global',

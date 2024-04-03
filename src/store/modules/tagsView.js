@@ -11,11 +11,7 @@ const state = {
 const mutations = {
   ADD_VISITED_VIEW: (state, view) => {
     if (view.name === REPORT_VIEWER_NAME) {
-      if (state.visitedViews.some(v =>
-        v.params &&
-        v.params.reportUuid === view.params.reportUuid &&
-        v.params.tableName === view.params.tableName
-      )) return
+      if (state.visitedViews.some(v => v.path === view.path)) return
       state.visitedViews.push(
         Object.assign({}, view, {
           title: view.meta.title

@@ -16,6 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { config } from '@/utils/ADempiere/config'
+
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
@@ -35,13 +36,17 @@ export function requestPresignedUrl({
   containerType,
   containerId,
   columnName,
-  clienteId,
+  clientId,
   tableName,
   recordId,
   fileName
 }) {
+  let baseURL = config.adempiere.resource.url
+  if (baseURL.endsWith('/')) {
+    baseURL = config.adempiere.resource.url.substring(0, baseURL.length - 1)
+  }
   return request({
-    url: `${config.adempiere.resource.url}/presigned-url/${clienteId}/${containerId}/${fileName}`,
+    url: `${baseURL}/presigned-url/${clientId}/${containerId}/${fileName}`,
     method: 'get',
     isWithoutAuthorization: true,
     params: {
@@ -94,7 +99,7 @@ export function requestGetResource({
 export function requestListResources({
   recordId,
   tableName,
-  clienteId,
+  clientId,
   containerId,
   containerType
 }) {
@@ -104,7 +109,7 @@ export function requestListResources({
     isWithoutAuthorization: true,
     params: {
       record_id: recordId,
-      client_id: clienteId,
+      client_id: clientId,
       table_name: tableName,
       container_id: containerId,
       container_type: containerType

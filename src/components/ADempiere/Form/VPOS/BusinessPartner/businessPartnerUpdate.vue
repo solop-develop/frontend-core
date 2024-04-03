@@ -43,7 +43,7 @@
                 :key="field.columnName"
                 :metadata-field="{
                   ...field,
-                  isReadOnly: validateCustomerTemplate
+                  is_read_only: validateCustomerTemplate
                 }"
                 :container-uuid="'Business-Partner-Update'"
                 :container-manager="{

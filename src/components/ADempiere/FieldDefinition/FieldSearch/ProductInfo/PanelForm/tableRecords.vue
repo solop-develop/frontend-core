@@ -44,88 +44,50 @@
       <el-table-column
         prop="value"
         :label="$t('field.product.value')"
+        sortable
         header-align="center"
         width="90"
       />
       <el-table-column
         prop="name"
         :label="$t('field.product.name')"
+        sortable
         header-align="center"
         width="220"
       />
-      <el-table-column
-        prop="product_category"
-        :label="$t('field.product.productCategory')"
-        header-align="center"
-        width="150"
-      />
-      <el-table-column
-        prop="product_group"
-        :label="$t('field.product.productGroup')"
-        header-align="center"
-        width="150"
-      />
-      <el-table-column
-        prop="product_class"
-        :label="$t('field.product.productClass')"
-        header-align="center"
-        width="150"
-      />
-      <el-table-column
-        prop="upc"
-        :label="$t('field.product.upcEan')"
-        header-align="center"
-        width="170"
-      />
-      <el-table-column
-        prop="sku"
-        :label="$t('field.product.sku')"
-        header-align="center"
-        width="170"
-      />
-      <el-table-column
-        prop="uom"
-        :label="$t('field.product.uom')"
-        header-align="center"
-        width="60"
-      />
-      <el-table-column
-        prop="is_stocked"
-        :label="$t('field.product.stocked')"
-        header-align="center"
-        width="85"
-      >
-        <span slot-scope="scope">
-          {{ convertBooleanToTranslationLang(scope.row.is_stocked) }}
-        </span>
-      </el-table-column>
 
       <template v-if="isPriceAmounts">
         <el-table-column
-          prop="list_price"
-          :label="$t('field.product.listPrice')"
-          header-align="center"
-          width="110"
-        >
-          <span slot-scope="scope" class="cell-align-right">
-            {{ formatQuantity({ value: scope.row.list_price }) }}
-          </span>
-        </el-table-column>
-        <el-table-column
           prop="standard_price"
           :label="$t('field.product.standardPrice')"
+          sortable
           header-align="center"
-          width="110"
+          width="127"
         >
           <span slot-scope="scope" class="cell-align-right">
             {{ formatQuantity({ value: scope.row.standard_price }) }}
           </span>
         </el-table-column>
+
+        <!--
+        <el-table-column
+          prop="list_price"
+          :label="$t('field.product.listPrice')"
+          sortable
+          header-align="center"
+          width="122"
+        >
+          <span slot-scope="scope" class="cell-align-right">
+            {{ formatQuantity({ value: scope.row.list_price }) }}
+          </span>
+        </el-table-column>
+
         <el-table-column
           prop="limit_price"
           :label="$t('field.product.limitPrice')"
+          sortable
           header-align="center"
-          width="110"
+          width="118"
         >
           <span slot-scope="scope" class="cell-align-right">
             {{ formatQuantity({ value: scope.row.limit_price }) }}
@@ -134,6 +96,7 @@
         <el-table-column
           prop="margin"
           :label="$t('field.product.margin')"
+          sortable
           header-align="center"
           width="110"
         >
@@ -141,14 +104,35 @@
             {{ formatQuantity({ value: scope.row.margin }) }}
           </span>
         </el-table-column>
+        -->
       </template>
+
+      <el-table-column
+        prop="uom"
+        :label="$t('field.product.uom')"
+        sortable
+        header-align="center"
+        width="60"
+      />
+      <el-table-column
+        prop="is_stocked"
+        :label="$t('field.product.stocked')"
+        sortable
+        header-align="center"
+        width="120"
+      >
+        <span slot-scope="scope">
+          {{ convertBooleanToTranslationLang(scope.row.is_stocked) }}
+        </span>
+      </el-table-column>
 
       <template v-if="isStockQuantities">
         <el-table-column
           prop="available_quantity"
           :label="$t('field.product.available')"
+          sortable
           header-align="center"
-          width="110"
+          width="140"
         >
           <span slot-scope="scope" class="cell-align-right">
             {{ formatQuantity({ value: scope.row.available_quantity }) }}
@@ -157,6 +141,7 @@
         <el-table-column
           prop="on_hand_quantity"
           :label="$t('field.product.onHandQuantity')"
+          sortable
           header-align="center"
           width="110"
         >
@@ -164,9 +149,12 @@
             {{ formatQuantity({ value: scope.row.on_hand_quantity }) }}
           </span>
         </el-table-column>
+
+        <!--
         <el-table-column
           prop="reserved_quantity"
           :label="$t('field.product.reservedQuantity')"
+          sortable
           header-align="center"
           width="110"
         >
@@ -177,6 +165,7 @@
         <el-table-column
           prop="ordered_quantity"
           :label="$t('field.product.orderedQuantity')"
+          sortable
           header-align="center"
           width="110"
         >
@@ -187,6 +176,7 @@
         <el-table-column
           prop="unconfirmed_quantity"
           :label="$t('field.product.unconfirmedQuantity')"
+          sortable
           header-align="center"
           width="110"
         >
@@ -197,6 +187,7 @@
         <el-table-column
           prop="unconfirmed_move_quantity"
           :label="$t('field.product.unconfirmedMove')"
+          sortable
           header-align="center"
           width="110"
         >
@@ -204,24 +195,67 @@
             {{ formatQuantity({ value: scope.row.unconfirmed_move_quantity }) }}
           </span>
         </el-table-column>
+      -->
       </template>
 
-      <el-table-column
-        prop="vendor"
-        :label="$t('field.product.vendor')"
-        header-align="center"
-        width="170"
-      />
+      <!--
       <el-table-column
         prop="is_instance_attribute"
         :label="$t('field.product.instanceAttribute')"
+        sortable
         header-align="center"
-        width="130"
+        width="155"
       >
         <span slot-scope="scope">
           {{ convertBooleanToTranslationLang(scope.row.is_instance_attribute) }}
         </span>
       </el-table-column>
+      -->
+
+      <el-table-column
+        prop="product_category"
+        :label="$t('field.product.productCategory')"
+        sortable
+        header-align="center"
+        width="165"
+      />
+      <el-table-column
+        prop="product_group"
+        :label="$t('field.product.productGroup')"
+        sortable
+        header-align="center"
+        width="150"
+      />
+      <el-table-column
+        prop="product_class"
+        :label="$t('field.product.productClass')"
+        sortable
+        header-align="center"
+        width="150"
+      />
+      <el-table-column
+        prop="vendor"
+        :label="$t('field.product.vendor')"
+        sortable
+        header-align="center"
+        width="170"
+      />
+      <!--
+      <el-table-column
+        prop="upc"
+        :label="$t('field.product.upcEan')"
+        sortable
+        header-align="center"
+        width="170"
+      />
+      <el-table-column
+        prop="sku"
+        :label="$t('field.product.sku')"
+        sortable
+        header-align="center"
+        width="170"
+      />
+    -->
 
     </el-table>
   </div>

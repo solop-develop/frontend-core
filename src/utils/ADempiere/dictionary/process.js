@@ -27,7 +27,7 @@ import { generateField } from '@/utils/ADempiere/dictionaryUtils'
 import { sortFields } from '@/utils/ADempiere/dictionary/panel'
 import { BUTTON, isAddRangeField, isHiddenField } from '@/utils/ADempiere/references'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
-
+import { templateFields } from '@/utils/ADempiere/dictionary/process/templateProcess.js'
 /**
  * Prefix to generate unique key
  */
@@ -37,42 +37,42 @@ export const CONTAINER_PROCESS_PREFIX = 'process_'
  * Is displayed field parameter in process/report panel
  * @param {number} displayType
  * @param {boolean} isActive
- * @param {boolean} isDisplayed
+ * @param {boolean} is_displayed
  * @param {string} displayLogic
  * @param {boolean} isDisplayedFromLogic
  * @returns {boolean}
  */
-export function isDisplayedField({ displayType, isActive, isDisplayed, displayLogic, isDisplayedFromLogic }) {
+export function isDisplayedField({ displayType, is_displayed, display_logic, isDisplayedFromLogic }) {
   // button field not showed
   if (isHiddenField(displayType)) {
     return false
   }
 
   // verify if field is active
-  return isActive && isDisplayed && (isEmptyValue(displayLogic) || isDisplayedFromLogic)
+  return is_displayed && (isEmptyValue(display_logic) || isDisplayedFromLogic)
 }
 
 /**
  * Default showed field from user
  */
 export function evaluateDefaultFieldShowed({
-  defaultValue, displayType, parsedDefaultValue,
+  default_value, displayType, parsedDefaultValue,
   isShowedFromUser, isDisplayedAsPanel,
-  isMandatory, displayLogic
+  is_mandatory, display_logic
 }) {
   if (!isEmptyValue(isDisplayedAsPanel)) {
     return convertStringToBoolean(isDisplayedAsPanel)
   }
-  if (!isEmptyValue(displayLogic)) {
+  if (!isEmptyValue(display_logic)) {
     return true
   }
   const isMandatoryGenerated = isMandatoryField({
-    displayType, isMandatory
+    displayType, is_mandatory
   })
   if (isMandatoryGenerated) {
     return true
   }
-  if (!isEmptyValue(defaultValue) || !isEmptyValue(parsedDefaultValue)) {
+  if (!isEmptyValue(default_value) || !isEmptyValue(parsedDefaultValue)) {
     return true
   }
   return Boolean(isShowedFromUser)
@@ -93,12 +93,12 @@ export function isMandatoryField({ displayType, isMandatory }) {
 
 /**
  * Process is read only field
- * @param {string} readOnlyLogic
+ * @param {string} read_only_logic
  * @param {boolean} isReadOnlyFromLogic
  * @returns {boolean}
  */
-export function isReadOnlyField({ readOnlyLogic, isReadOnlyFromLogic }) {
-  return !isEmptyValue(readOnlyLogic) && isReadOnlyFromLogic
+export function isReadOnlyField({ read_only_logic, isReadOnlyFromLogic }) {
+  return !isEmptyValue(read_only_logic) && isReadOnlyFromLogic
 }
 
 /**
@@ -111,7 +111,7 @@ export function generateProcess({
   processToGenerate,
   containerUuidAssociated = undefined
 }) {
-  const panelType = processToGenerate.isReport ? 'report' : 'process'
+  const panelType = processToGenerate.is_report ? 'report' : 'process'
   const additionalAttributes = {
     containerUuid: processToGenerate.uuid,
     panelName: processToGenerate.name,
@@ -128,14 +128,16 @@ export function generateProcess({
     fieldsList = processToGenerate.parameters
       .map(fieldItem => {
         const field = generateField({
-          fieldToGenerate: fieldItem,
+          fieldToGenerate: templateFields(fieldItem),
+          // fieldToGenerate: fieldItem,
           moreAttributes: additionalAttributes,
           evaluateDefaultFieldShowed
         })
         // Add new field if is range number
         if (isAddRangeField(field)) {
           const fieldRange = generateField({
-            fieldToGenerate: fieldItem,
+            fieldToGenerate: templateFields(fieldItem),
+            // fieldToGenerate: fieldItem,
             moreAttributes: additionalAttributes,
             typeRange: true,
             evaluateDefaultFieldShowed
@@ -218,12 +220,12 @@ export const containerManager = {
   },
 
   isDisplayedField,
-  isDisplayedDefault: ({ isMandatory, defaultValue, isShowedFromUser }) => {
+  isDisplayedDefault: ({ isMandatory, default_value, isShowedFromUser }) => {
     // add is showed from user
     if (isMandatory) {
       return true
     }
-    if (!isEmptyValue(defaultValue)) {
+    if (!isEmptyValue(default_value)) {
       return isShowedFromUser
     }
     return false

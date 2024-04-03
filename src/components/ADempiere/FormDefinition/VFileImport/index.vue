@@ -29,7 +29,7 @@
       </el-steps>
     </div>
 
-    <div style="height: 90% !important;">
+    <div>
       <transition name="el-fade-in-linear">
         <selectTable
           v-if="currentSetp === 1"
@@ -359,7 +359,6 @@ export default defineComponent({
 
 <style scoped>
 .carousel-panel {
-  height: 100% !important;
   padding: 10px 0px;
 }
 .el-carousel__item {

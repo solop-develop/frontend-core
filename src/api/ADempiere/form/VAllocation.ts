@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -43,6 +43,7 @@ export function listBusinessPartners({
       page_size: pageSize,
       page_token: pageToken,
       //  DSL Query
+      is_only_active_records: true,
       search_value: searchValue
     }
   })
@@ -63,6 +64,7 @@ export function requestListOrganizations({
       page_size: pageSize,
       page_token: pageToken,
       //  DSL Query
+      is_only_active_records: true,
       search_value: searchValue
     }
   })
@@ -80,6 +82,7 @@ export function requestListCurrencies({
       page_size: pageSize,
       page_token: pageToken,
       //  DSL Query
+      is_only_active_records: true,
       search_value: searchValue
     }
   })
@@ -167,6 +170,7 @@ export function requestListCharges({
       page_size: pageSize,
       page_token: pageToken,
       //  DSL Query
+      is_only_active_records: true,
       search_value: searchValue
     }
   })
@@ -185,6 +189,7 @@ export function requestListTransactionOrganizations({
       page_size: pageSize,
       page_token: pageToken,
       //  DSL Query
+      is_only_active_records: true,
       search_value: searchValue
     }
   })

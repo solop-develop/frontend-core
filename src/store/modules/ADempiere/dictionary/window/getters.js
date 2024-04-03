@@ -25,7 +25,7 @@ import { ID, YES_NO } from '@/utils/ADempiere/references'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import {
   isDisplayedColumn, isDisplayedField, isMandatoryColumn, isMandatoryField
-} from '@/utils/ADempiere/dictionary/window.js'
+} from '@/utils/ADempiere/dictionary/window/index.js'
 import { getContext } from '@/utils/ADempiere/contextUtils'
 import { getContextDefaultValue } from '@/utils/ADempiere/contextUtils/contextField'
 import { isSupportLookup } from '@/utils/ADempiere/references'
@@ -216,23 +216,22 @@ export default {
       fieldsList = storedTab.fieldsList
     }
 
-    const { isParentTab, linkColumnName, parentColumnName } = storedTab
+    const { isParentTab, link_column_name, parent_column_name } = storedTab
 
     const attributesDisplayColumn = []
     const attributesObject = {}
     let attributesList = fieldsList
       .map(fieldItem => {
-        const { uuid, id, columnName, defaultValue, contextColumnNames } = fieldItem
-        const isSQL = String(defaultValue).startsWith('@SQL=') && isGetServer
-        const isLinkColumn = !isEmptyValue(linkColumnName) && columnName === linkColumnName
-        const isParentColumn = fieldItem.isParent || (!isEmptyValue(parentColumnName) && columnName === parentColumnName)
+        const { uuid, id, columnName, default_value, context_column_names } = fieldItem
+        const isSQL = String(default_value).startsWith('@SQL=') && isGetServer
+        const isLinkColumn = !isEmptyValue(link_column_name) && columnName === link_column_name
+        const isParentColumn = fieldItem.isParent || (!isEmptyValue(parent_column_name) && columnName === parent_column_name)
 
         let parsedDefaultValue
         if (!isSQL) {
           parsedDefaultValue = getContextDefaultValue({
             ...fieldItem,
             parentUuid,
-            contextColumnNames,
             isSOTrxDictionary
           })
         }
@@ -281,7 +280,7 @@ export default {
                 const storedDefaultValue = rootGetters.getStoredDefaultValue({
                   parentUuid,
                   containerUuid,
-                  contextColumnNames: contextColumnNames,
+                  contextColumnNames: context_column_names,
                   uuid,
                   value: parsedDefaultValue
                 })
@@ -307,7 +306,7 @@ export default {
                 }
               }
             }
-            if (isEmptyValue(displayedValue) && !fieldItem.isKey && String(defaultValue).includes('@')) {
+            if (isEmptyValue(displayedValue) && !fieldItem.is_key && String(default_value).includes('@')) {
               displayedValue = getContext({
                 parentUuid,
                 containerUuid,
@@ -370,7 +369,7 @@ export default {
     // all optionals (not mandatory) fields
     return fieldsList
       .filter(fieldItem => {
-        if (!fieldItem.isActive || !fieldItem.isDisplayed) {
+        if (!fieldItem.is_displayed) {
           return
         }
         const isMandatory = mandatoryMethod(fieldItem)
@@ -380,9 +379,9 @@ export default {
           return true
         }
         // Yes/No field always boolean value
-        const { defaultValue } = fieldItem
+        const { default_value } = fieldItem
         const isYesNo = fieldItem.displayType === YES_NO.id
-        if (isMandatory && (isEmptyValue(defaultValue) && !isYesNo)) {
+        if (isMandatory && (isEmptyValue(default_value) && !isYesNo)) {
           if (isTable) {
             return true
           }
@@ -391,12 +390,12 @@ export default {
 
         if (isEvaluateDefaultValue && isEvaluateShowed) {
           return showedMethod(fieldItem) &&
-          !isEmptyValue(defaultValue) &&
+          !isEmptyValue(default_value) &&
           !isYesNo
         }
 
         if (isEvaluateDefaultValue) {
-          return !isEmptyValue(defaultValue)
+          return !isEmptyValue(default_value)
         }
 
         if (isEvaluateShowed) {

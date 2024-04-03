@@ -89,7 +89,7 @@ export default defineComponent({
         ...field.value,
         containerUuid: containerUuid.value,
         size,
-        columnNameTo: isRange(field.value),
+        columnNameTo: isRangeField(field.value),
         isAdvancedQuery: isBoolean(field.value),
         overwriteDefinition: {
           size
@@ -133,8 +133,8 @@ export default defineComponent({
       return displayType === YES_NO.id
     }
 
-    function isRange({ isRange, columnName }) {
-      if (isRange) {
+    function isRangeField({ is_range, columnName }) {
+      if (is_range) {
         return columnName + '_To'
       }
       return ''
@@ -151,7 +151,7 @@ export default defineComponent({
       evalutateTypeField,
       getFieldTemplate,
       isBoolean,
-      isRange
+      isRangeField
     }
   }
 })

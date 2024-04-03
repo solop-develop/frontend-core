@@ -100,7 +100,7 @@ export default {
         //
         uuid: this.metadata.uuid,
         id: this.metadata.id,
-        defaultValue: this.metadata.defaultValue,
+        defaultValue: this.metadata.default_value,
         value: this.value
       })
     },
@@ -241,7 +241,7 @@ export default {
 
     /**
      * Get default value from server
-     * @returns promisse with object = { value, defaultValue, uuid, id }
+     * @returns promisse with object = { value, default_value, uuid, id }
      */
     loadDefaultValueFromServer() {
       if (this.containerManager && this.containerManager.getDefaultValue) {
@@ -249,7 +249,7 @@ export default {
           parentUuid: this.metadata.parentUuid,
           containerUuid: this.metadata.containerUuid,
           contextColumnNames: this.metadata.contextColumnNames,
-          defaultValue: this.metadata.defaultValue,
+          defaultValue: this.metadata.default_value,
           //
           uuid: this.metadata.uuid,
           id: this.metadata.id,

@@ -20,7 +20,10 @@
 // related to upload to server side and downdload from server side to client side.
 // Please add the necessary functions here:
 import { config } from '@/utils/ADempiere/config'
+
+// Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
+
 // Constants
 import { BEARER_TYPE } from '@/utils/auth'
 
@@ -143,8 +146,12 @@ function getImageUrl({
   width,
   height
 }) {
+  let baseUrl = config.adempiere.images.url
+  if (baseUrl.endsWith('/')) {
+    baseUrl = config.adempiere.images.url.substring(0, baseUrl.length - 1)
+  }
   return request({
-    url: `${config.adempiere.images.url}/resources/file-name/${file}`,
+    url: `${baseUrl}/resources/file-name/${file}`,
     method: 'get',
     params: {
       width,

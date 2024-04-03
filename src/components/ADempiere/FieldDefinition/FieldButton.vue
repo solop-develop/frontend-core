@@ -60,6 +60,7 @@ import fieldMixinDisplayColumn from '@/components/ADempiere/FieldDefinition/mixi
 import {
   TRUE_STRING, FALSE_STRING
 } from '@/utils/ADempiere/formatValue/booleanFormat'
+import { RECORD_ID } from '@/utils/ADempiere/constants/systemColumns'
 
 // Utils and Helpers Methods
 import {
@@ -68,7 +69,7 @@ import {
   openBrowserAssociated,
   openDocumentAction,
   openFormAssociated
-} from '@/utils/ADempiere/dictionary/window.js'
+} from '@/utils/ADempiere/dictionary/window'
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
 import { getContextAttributes, generateContextKey } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import {
@@ -89,7 +90,7 @@ export default {
 
   computed: {
     isDisabledButton() {
-      return (this.metadata.readonly || this.isDisableAction) && !['Posted', 'Record_ID'].includes(this.metadata.columnName)
+      return (this.metadata.readonly || this.isDisableAction) && !['Posted', RECORD_ID].includes(this.metadata.columnName)
     },
     isDisableAction() {
       return this.actionAssociated.isEnabled && !this.actionAssociated.isEnabled()
@@ -165,7 +166,7 @@ export default {
         }
       }
 
-      if (this.metadata.process.browserId) {
+      if (this.metadata.process.browser_id) {
         return {
           is: 'svg-icon',
           'icon-class': 'search',
@@ -173,7 +174,7 @@ export default {
             parentUuid: this.parentUuid,
             containerUuid: this.containerUuid,
             uuid: this.metadata.process.uuid,
-            browserUuid: this.metadata.process.browserUuid
+            browserUuid: this.metadata.process.browser.uuid
           }),
           isEnabled: () => generateReportOfWindow.enabled({
             parentUuid: this.parentUuid,
@@ -182,7 +183,7 @@ export default {
         }
       }
 
-      if (this.metadata.process.formId) {
+      if (this.metadata.process.form_id) {
         return {
           is: 'svg-icon',
           'icon-class': 'search',
@@ -190,7 +191,7 @@ export default {
             parentUuid: this.parentUuid,
             containerUuid: this.containerUuid,
             uuid: this.metadata.process.uuid,
-            formUuid: this.metadata.process.formUuid
+            formUuid: this.metadata.process.form.uuid
           }),
           isEnabled: () => openFormAssociated.enabled({
             parentUuid: this.parentUuid,
@@ -199,7 +200,7 @@ export default {
         }
       }
 
-      if (this.metadata.process.workflowId) {
+      if (this.metadata.process.workflow_id) {
         return {
           is: 'svg-icon',
           'icon-class': 'example',
@@ -243,7 +244,7 @@ export default {
 
   watch: {
     contextAttributes(newValue, oldValue) {
-      if (this.metadata.columnName === 'Record_ID' && !isSameValues(newValue, oldValue)) {
+      if (this.metadata.columnName === RECORD_ID && !isSameValues(newValue, oldValue)) {
         if (!isEmptyValue(newValue)) {
           this.setDefaultValue()
         }
@@ -252,7 +253,7 @@ export default {
   },
 
   beforeMount() {
-    if (this.metadata.displayed && this.metadata.columnName === 'Record_ID') {
+    if (this.metadata.displayed && this.metadata.columnName === RECORD_ID) {
       if (!this.emptyValue && typeof this.value === 'number') {
         if (isEmptyValue(this.displayedValue)) {
           // request lookup

@@ -121,11 +121,11 @@ export default defineComponent({
     }
 
     function resourceReference(file) {
-      const clienteId = store.getters.getSessionContextClientId
+      const clientId = store.getters.getSessionContextClientId
       const { referenceId, type } = router.app._route.meta
       return new Promise((resolve, reject) => {
         const url = presignedUrl({
-          clienteId: clienteId,
+          clientId: clientId,
           containerId: referenceId,
           containerType: type,
           // fileName: file.name,
@@ -138,10 +138,10 @@ export default defineComponent({
     /**
      * Get URL
      */
-    function presignedUrl({ clienteId, containerId, containerType, file, reference }) {
+    function presignedUrl({ clientId, containerId, containerType, file, reference }) {
       return new Promise((resolve, reject) => {
         requestPresignedUrl({
-          clienteId,
+          clientId,
           containerId,
           containerType,
           fileName: file.name,
@@ -177,11 +177,11 @@ export default defineComponent({
           body: file
         }).then(() => {
           if (!props.containerManager) {
-            const clienteId = store.getters.getSessionContextClientId
+            const clientId = store.getters.getSessionContextClientId
             const { referenceId, type } = router.app._route.meta
             store.dispatch('getAttachmentFromServer', {
               containerType: type,
-              clienteId: clienteId,
+              clientId: clientId,
               containerId: referenceId,
               recordId: props.recordId,
               tableName: props.tableName

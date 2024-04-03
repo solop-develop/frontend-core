@@ -29,7 +29,7 @@
 
           :metadata="{
             ...fieldsList[0],
-            isReadOnly: disabled
+            is_read_only: disabled
           }"
           :container-uuid="'Shipping-Address'"
           :container-manager="{

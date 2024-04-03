@@ -16,6 +16,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import store from '@/store'
+
+// Components
 import Layout from '@/layout'
 
 // Constants
@@ -38,15 +41,22 @@ import { getCurrentClient, getCurrentOrganization, getCurrentRole } from '@/util
 export function loadMainMenu({
   role
 }) {
+  const language = store.getters['getCurrentLanguage']
   const clientId = getCurrentClient()
   const roleId = getCurrentRole()
+  const userId = store.getters['user/getUserId']
   const organizationId = getCurrentOrganization()
 
   return new Promise(resolve => {
-    requestMenu().then(menuResponse => {
+    requestMenu({
+      roleId,
+      language,
+      clientId,
+      userId
+    }).then(menuResponse => {
+      const { menus } = menuResponse
       const asyncRoutesMap = []
-
-      menuResponse.children.forEach(menuElement => {
+      menus.forEach(menuElement => {
         const optionMenu = getRouteFromMenuItem({
           menu: menuElement,
           clientId,
@@ -67,14 +77,17 @@ export function loadMainMenu({
             children.push(childsSumaryConverted)
           })
         } else {
-          const childsConverted = getChildFromAction({
+          const childConverted = getChildFromAction({
             menu: menuElement,
             index: undefined,
             clientId,
             roleId,
             organizationId
           })
-          children.push(childsConverted)
+          childConverted.hidden = true
+          children.push(childConverted)
+          // optionMenu.redirect = childConverted.path
+          optionMenu.meta.breadcrumb = false
         }
 
         optionMenu.children = children

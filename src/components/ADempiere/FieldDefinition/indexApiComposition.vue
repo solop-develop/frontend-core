@@ -204,7 +204,7 @@ export default defineComponent({
         required: isMandatoryField.value,
         readonly: isReadOnlyField.value,
         displayed: isDisplayedField.value,
-        disabled: !field.value.isActive,
+        // disabled: !field.value.isActive,
         isSelectCreated: isSelectCreated.value,
         placeholder: field.value.help ? field.value.help.slice(0, 40) + '...' : ''
       }
@@ -290,8 +290,8 @@ export default defineComponent({
       }
       field.value = {
         ...props.metadataField,
-        isActive: true,
-        isDisplayed: true,
+        // isActive: true,
+        is_displayed: true,
         isDisplayedFromLogic: true,
         isShowedFromUser: true,
         //

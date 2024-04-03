@@ -170,7 +170,7 @@ export default [
     isFromDictionary: true,
     overwriteDefinition: {
       sequence: 7,
-      defaultValue: 'M',
+      default_value: 'M',
       handleActionKeyPerformed: true,
       handleContentSelection: true,
       handleActionPerformed: true,
