@@ -364,7 +364,7 @@ export default {
       return new Promise((resolve, reject) => {
         const clientId = this.$store.getters.getSessionContextClientId
         const { referenceId, type } = this.$route.meta
-        const { tableName } = this.currentTab
+        const { table_name } = this.currentTab
         this.isLoadImageUpload = true
         requestPresignedUrl({
           clientId: clientId,
@@ -372,8 +372,8 @@ export default {
           containerType: type,
           columnName: this.metadata.columnName,
           fileName: file.name,
-          recordId: this.currentRecord[tableName + '_ID'],
-          tableName
+          recordId: this.currentRecord[table_name + '_ID'],
+          tableName: table_name
         })
           .then(responseUrl => {
             const { url, file_name } = responseUrl
