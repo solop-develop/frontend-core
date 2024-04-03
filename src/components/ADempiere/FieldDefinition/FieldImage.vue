@@ -352,6 +352,7 @@ export default {
               message: error.message || error.result || lang.t('component.attachment.error'),
               type: 'error'
             })
+            this.presignedUrl({ file })
             reject(error)
           })
       })
@@ -410,14 +411,16 @@ export default {
     async handleDownload() {
       const link = document.createElement('a')
       link.target = '_blank'
-      link.href = this.urlDownload({ fileName: this.displayedValue })
+      link.href = this.imageSourceSmall + '?f=' + Date.now()
       link.download = this.displayedValue
       link.style.display = 'none'
       link.click()
+      document.body.appendChild(link)
+      document.body.removeChild(link)
       return
     },
 
-    urlDownload({
+    async urlDownload({
       fileName
     }) {
       return new Promise((resolve, reject) => {
@@ -463,14 +466,14 @@ export default {
       return new Promise((resolve, reject) => {
         const clientId = this.$store.getters.getSessionContextClientId
         const { referenceId, type } = this.$route.meta
-        const { tableName } = this.currentTab
+        const { table_name } = this.currentTab
         requestListResources({
           clientId: clientId,
           containerId: referenceId,
           containerType: type,
           columnName: this.metadata.columnName,
-          recordId: this.currentRecord[tableName + '_ID'],
-          tableName
+          recordId: this.currentRecord[table_name + '_ID'],
+          tableName: table_name
         })
           .then(response => {
             let resource
