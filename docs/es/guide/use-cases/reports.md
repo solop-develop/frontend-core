@@ -41,28 +41,6 @@ Abrir un reporte de ítems recientes:
 ##### Versión Vue:
 <img :src="$withBase('/images/use-cases/report/open-recient-item-vue.gif')" alt="ZK Desktop" width="100%">
 
-
-### Relaciones
-Abrir un reporte desde las relaciones del mismo nivel del menú:
-
-El cliente ZK de ADempiere no cuenta con una característica equivalente.
-
-
-### Pasos a seguir
-
-1.  Desplegar el árbol de menú en **Gestión de Saldos Pendientes**
-2.  Seleccione el reporte de **Saldos Abiertos a la Fecha**
-3.  Desplegar la lista del el menú de relaciones, en la parte superior a la derecha de la ventana.
-4. Ubicar y seleccionar el reporte **Saldos Abiertos**.
-
-
-
-#### Versión Vue:
-<img :src="$withBase('/images/use-cases/report/open-relations-vue.gif')" alt="ZK Desktop" width="100%">
-
-
-
-
 ### Re Abrir Reporte desde el Histórico Procesos
 
 Abrir un reporte el **Histórico Procesos** con los parámetros ejecutados del reporte seleccionado
@@ -75,6 +53,13 @@ Actualmente en el cliente ZK de ADempiere no cuenta con una característica equi
 
 <img :src="$withBase('/images/use-cases/report/open-process-activity.gif')" alt="ZK Desktop" width="100%">
 
+### Issues
+
+ [**Reporte: Apertura > Árbol del Menú #59**](https://github.com/solop-develop/frontend-core/issues/59)<br>
+ [**Reporte: Apertura > Buscador del Menú #60**](https://github.com/solop-develop/frontend-core/issues/60)<br>
+ [**Reporte: Apertura > Elementos Recientes #61**](https://github.com/solop-develop/frontend-core/issues/61)<br>
+ [**Reporte: Apertura > Asociado a Ventana #135**](https://github.com/solop-develop/frontend-core/issues/135)<br>
+ [**Reporte: Apertura > Re Abrir desde el Histórico Procesos #63**](https://github.com/solop-develop/frontend-core/issues/63)
 ## Carga
 
 ### Parámetros
