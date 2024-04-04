@@ -18,7 +18,7 @@
 
 <template>
   <span
-    v-if="tabAttributes.is_document"
+    v-if="tabAttributes.table.is_document"
     class="document-action-main"
   >
     <el-dropdown
@@ -117,7 +117,7 @@
     <document-status
       :parent-uuid="parentUuid"
       :container-uuid="tabAttributes.uuid"
-      :table-name="tabAttributes.tableName"
+      :table-name="tabAttributes.table_name"
       :style="isMobile ? 'padding-left: 0px;' : 'padding-left: 5px;'"
     />
 
@@ -196,7 +196,7 @@ export default defineComponent({
     const recordId = computed(() => {
       return store.getters.getIdOfContainer({
         containerUuid: containerUuid,
-        tableName: props.tabAttributes.tableName
+        tableName: props.tabAttributes.table_name
       })
     })
 
@@ -237,7 +237,7 @@ export default defineComponent({
 
     const defaultDocumentAction = computed(() => {
       return store.getters.getStoredDefaultDocumentAction({
-        tableName: props.tabAttributes.tableName,
+        tableName: props.tabAttributes.table_name,
         recordUuid: recordUuid.value,
         documentStatus: currentRecordDocumentStatus.value
       })
@@ -262,7 +262,7 @@ export default defineComponent({
 
     const documentStatusesList = computed(() => {
       return store.getters.getStoredDocumentStatusesList({
-        tableName: props.tabAttributes.tableName,
+        tableName: props.tabAttributes.table_name,
         recordUuid: recordUuid.value,
         documentStatus: currentRecordDocumentStatus.value
       })
@@ -270,7 +270,7 @@ export default defineComponent({
 
     const documentActionsList = computed(() => {
       return store.getters.getStoredDocumentActionsList({
-        tableName: props.tabAttributes.tableName,
+        tableName: props.tabAttributes.table_name,
         recordUuid: recordUuid.value,
         documentStatus: currentRecordDocumentStatus.value
       })
@@ -391,7 +391,7 @@ export default defineComponent({
       store.dispatch('runDocumentActionOnServer', {
         parentUuid: props.parentUuid,
         containerUuid,
-        tableName: props.tabAttributes.tableName,
+        tableName: props.tabAttributes.table_name,
         recordId: recordId.value,
         recordUuid: recordUuid.value,
         docAction: selectDocActions.value,
@@ -424,7 +424,7 @@ export default defineComponent({
       clearTimeout(timeOut.value)
       timeOut.value = setTimeout(() => {
         store.dispatch('getDocumentActionsListFromServer', {
-          tableName: props.tabAttributes.tableName,
+          tableName: props.tabAttributes.table_name,
           recordUuid: recordUuid.value,
           recordId: recordId.value,
           documentStatus: currentRecordDocumentStatus.value

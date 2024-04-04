@@ -111,7 +111,7 @@ export function getCurrentDocumentDisplayedValue({
 export function isRunableDocumentAction({ parentUuid, containerUuid }) {
   // table not document or multi record
   const storedTab = store.getters.getStoredTab(parentUuid, containerUuid)
-  if (!storedTab.isDocument || storedTab.isShowedTableRecords) {
+  if (!storedTab.table.is_document || storedTab.isShowedTableRecords) {
     return false
   }
 

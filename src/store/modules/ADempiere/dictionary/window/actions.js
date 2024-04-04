@@ -80,7 +80,7 @@ export default {
 
         commit('setTableNameByTab', {
           uuid: tab.uuid,
-          tableName: tab.tableName
+          tableName: tab.table_name
         })
         // dispatch('setTabDefaultValues', {
         //   parentUuid: windowResponse.uuid,
