@@ -23,7 +23,7 @@ const workflowActivity = {
     forward: 'Re-enviar',
     user: 'Usuario',
     approve: 'Aprobar',
-    workFlowDiagram: 'Diagrama del Flujo de Trabajo',
+    workFlowDiagram: 'Diagrama del Flujo',
     seeFlowDiagram: 'Ver Diagrama de Flujo'
   },
   table: {

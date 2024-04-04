@@ -22,18 +22,18 @@
       style="height: 100%;"
       :body-style="{ padding: '10px', height: '100%' }"
     >
-      <div style="height: 65% !important;">
+      <div class="panel-top">
         <el-row
           :gutter="10"
-          style="height: 100%;"
+          style="height: 65%;"
         >
           <el-col
             :span="12"
-            style="height: 100%;"
+            style="height: 100%; width:60%"
           >
             <el-card
               style="height: 100%;"
-              :body-style="{ padding: '5px', height: '90%' }"
+              :body-style="{ padding: '5px', height: '70%' }"
             >
               <b
                 slot="header"
@@ -41,6 +41,7 @@
                 {{ $t('form.workflowActivity.title') }}
               </b>
               <el-table
+                class="workflow-activity-table"
                 :data="activityList"
                 highlight-current-row
                 style="width: 100%;height: 100%"
@@ -65,7 +66,7 @@
           </el-col>
           <el-col
             :span="12"
-            style="height: 100%;"
+            style="height: 100%; width:40%"
           >
             <el-card
               style="height: 100%;"
@@ -112,78 +113,80 @@
           </el-col>
         </el-row>
       </div>
-      <div style="height: 35% !important;">
+      <div class="panel-child">
         <el-card
-          style="height: 100%;"
+          style="height:100%"
           :body-style="{ padding: '10px', height: '100%' }"
         >
-          <el-form
-            v-show="!isEmptyValue(currentActivity)"
-            :inline="true"
-            class="demo-form-inline"
-          >
-            <el-row :gutter="24">
-              <el-col :span="8" style="text-align: center;">
-                <el-form-item label="Reenviar">
-                  <el-switch v-model="chooseOption" />
-                </el-form-item>
-              </el-col>
-
-              <el-col v-show="isValidateUserChoice" :span="8" style="text-align: center;">
-                <el-form-item :label="$t('form.workflowActivity.filtersSearch.approve')">
-                  <el-switch v-model="isApproved" />
-                </el-form-item>
-              </el-col>
-
-              <el-col v-show="chooseOption" :span="8" style="text-align: center;">
-                <el-form-item :label="$t('form.workflowActivity.filtersSearch.user')">
-                  <el-select
-                    v-model="userId"
-                    filterable
-                    @visible-change="findSalesReps"
-                  >
-                    <el-option
-                      v-for="item in listSalesReps"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-form>
           <v-md-editor
             v-model="message"
-            height="200px"
+            height="82%"
           />
-          <p style="text-align: end; width: 100%;margin: 5px;">
-            <el-button
-              type="primary"
-              class="button-base-icon"
-              icon="el-icon-check"
-              style="float: right;"
-              @click="sendOPeration()"
-            />
-            <el-button
-              type="primary"
-              plain
-              icon="el-icon-zoom-in"
-              :alt="$t('page.processActivity.zoomIn')"
-              style="float: right; margin-right: 5px; margin-left: 0px;"
-              class="button-base-icon"
-              @click="zoomRecord(currentActivity)"
-            />
-            <el-button
-              type="info"
-              class="button-base-icon"
-              plain
-              style="float: right; margin-right: 5px;"
-              @click="clearMessage()"
+          <div style="justify-content: space-between; margin-top:1%">
+            <el-form
+              v-show="!isEmptyValue(currentActivity)"
+              :inline="true"
+              class="demo-form-inline"
             >
-              <svg-icon icon-class="layers-clear" />
-            </el-button>
-          </p>
+              <el-row :gutter="24">
+                <el-col :span="8" style="text-align: center;">
+                  <el-form-item label="Reenviar">
+                    <el-switch v-model="chooseOption" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col v-show="isValidateUserChoice" :span="8" style="text-align: center;">
+                  <el-form-item :label="$t('form.workflowActivity.filtersSearch.approve')">
+                    <el-switch v-model="isApproved" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col v-show="chooseOption" :span="8" style="text-align: center;">
+                  <el-form-item :label="$t('form.workflowActivity.filtersSearch.user')">
+                    <el-select
+                      v-model="userId"
+                      filterable
+                      @visible-change="findSalesReps"
+                    >
+                      <el-option
+                        v-for="item in listSalesReps"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-form>
+            <p style="text-align: end; width: 100%;" class="style-bot">
+              <el-button
+                type="primary"
+                class="button-base-icon"
+                icon="el-icon-check"
+                style="float: right;"
+                @click="sendOPeration()"
+              />
+              <el-button
+                type="primary"
+                plain
+                icon="el-icon-zoom-in"
+                :alt="$t('page.processActivity.zoomIn')"
+                style="float: right; margin-right: 5px; margin-left: 0px;"
+                class="button-base-icon"
+                @click="zoomRecord(currentActivity)"
+              />
+              <el-button
+                type="info"
+                class="button-base-icon"
+                plain
+                style="float: right; margin-right: 5px;"
+                @click="clearMessage()"
+              >
+                <svg-icon icon-class="layers-clear" />
+              </el-button>
+            </p>
+          </div>
         </el-card>
       </div>
     </el-card>
@@ -302,7 +305,7 @@ export default defineComponent({
           columnName: 'node.name',
           name: lang.t('form.workflowActivity.table.node'),
           isNumeric: false,
-          width: 250
+          width: 'auto'
         },
         {
           columnName: 'summary',
@@ -628,6 +631,29 @@ export default defineComponent({
     height: 80% !important;
   }
 }
+.workflow-activity-table {
+  &.el-table {
+    .el-table__body {
+      .el-table__row {
+        .el-table__cell {
+          padding-top: 5px;
+          padding-bottom: 3px;
+          .cell {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+            word-break: break-all;
+            line-height: 15px;
+            padding-left: 10px;
+            padding-right: 10px;
+          }
+        }
+      }
+    }
+  }
+}
 .headerLogs {
   .el-card {
     border-radius: 4px;
@@ -641,6 +667,140 @@ export default defineComponent({
   }
   .el-card__body {
     height: 95% !important;
+  }
+}
+
+:root {
+  --size-panel-top-height:65%;
+  --size-panel-child-height:100%;
+}
+
+@media screen and (min-height: 720px) {
+  :root{
+    --size-panel-top-height:85%;
+    --size-panel-child-height:45%;
+  }
+  .panel-top{
+    height: var(--size-panel-top-height);
+    .el-table__body{
+      height: 100% !important;
+    }
+    .el-card__body{
+      height: 65% !important;
+    }
+  }
+  .panel-child{
+    height:var(--size-panel-child-height);
+    margin-top:-14%
+  }
+  .v-md-editor{
+    height: 84% !important
+  }
+  .style-bot{
+    margin-top:-2%
+  }
+}
+
+@media screen and (min-height: 800px) {
+  :root{
+    --size-panel-top-height:90%;
+    --size-panel-child-height:40%;
+  }
+  .panel-top{
+    height: var(--size-panel-top-height);
+    .el-table__body{
+      height: 100% !important;
+    }
+    .el-card__body{
+      height: 60% !important;
+    }
+  }
+  .panel-child{
+    height:var(--size-panel-child-height);
+    margin-top:-15%
+  }
+  .v-md-editor{
+    height: 85% !important
+  }
+  .style-bot{
+    margin-top:-3%
+  }
+}
+
+@media screen and (min-height: 1080px) {
+  :root{
+    --size-panel-top-height:1010px;
+    --size-panel-child-height:32%;
+  }
+  .panel-top{
+    height: var(--size-panel-top-height);
+    .el-table__body{
+      height: 100% !important;
+    }
+    .el-card__body{
+      height: 60% !important;
+    }
+  }
+  .panel-child{
+    height:var(--size-panel-child-height);
+    margin-top:-25%
+  }
+  .v-md-editor{
+    height: 85% !important
+  }
+  .style-bot{
+    margin-top:-3%
+  }
+}
+
+@media screen and (min-height:1200px){
+  :root{
+    --size-panel-top-height:105%;
+    --size-panel-child-height:32%;
+  }
+  .panel-top{
+    height: var(--size-panel-top-height);
+    .el-table__body{
+      height: 100% !important;
+    }
+    .el-card__body{
+      height: 70% !important;
+    }
+  }
+  .panel-child{
+    height:var(--size-panel-child-height);
+    margin-top:-27%;
+    .v-md-editor{
+      height: 88% !important
+    }
+    .style-bot{
+      margin-top:-40px
+    }
+  }
+}
+@media screen and (min-height:1400px){
+  :root{
+    --size-panel-top-height:100%;
+    --size-panel-child-height:35%;
+  }
+  .panel-top{
+    height: var(--size-panel-top-height);
+    .el-table__body{
+      height: 100% !important;
+    }
+    .el-card__body{
+      height: 70% !important;
+    }
+  }
+  .panel-child{
+    height:var(--size-panel-child-height);
+    margin-top:-30%;
+    .v-md-editor{
+      height: 88% !important
+    }
+    .style-bot{
+      margin-top:-40px
+    }
   }
 }
 </style>

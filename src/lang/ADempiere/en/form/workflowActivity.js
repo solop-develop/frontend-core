@@ -23,7 +23,7 @@ const workflowActivity = {
     forward: 'Re-send',
     user: 'User',
     approve: 'Approve',
-    workFlowDiagram: 'Work Flow Diagram',
+    workFlowDiagram: 'Flow Diagram',
     seeFlowDiagram: 'See Flow Diagram'
   },
   table: {
