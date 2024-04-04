@@ -730,7 +730,7 @@ export default defineComponent({
 @media screen and (min-height: 1080px) {
   :root{
     --size-panelTop-height:1010px;
-    --size-panelChild-height:30%;
+    --size-panelChild-height:32%;
   }
   .panelTop{
     height: var(--size-panelTop-height);
@@ -746,7 +746,7 @@ export default defineComponent({
     margin-top:-25%
   }
   .v-md-editor{
-    height: 88% !important
+    height: 85% !important
   }
   .styleBot{
     margin-top:-3%
@@ -796,7 +796,7 @@ export default defineComponent({
     height:var(--size-panelChild-height);
     margin-top:-30%;
     .v-md-editor{
-      height: 85% !important
+      height: 88% !important
     }
     .styleBot{
       margin-top:-40px
