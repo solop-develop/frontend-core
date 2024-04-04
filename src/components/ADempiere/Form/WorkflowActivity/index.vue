@@ -22,7 +22,7 @@
       style="height: 100%;"
       :body-style="{ padding: '10px', height: '100%' }"
     >
-      <div class="panelTop">
+      <div class="panel-top">
         <el-row
           :gutter="10"
           style="height: 65%;"
@@ -113,7 +113,7 @@
           </el-col>
         </el-row>
       </div>
-      <div class="panelChild">
+      <div class="panel-child">
         <el-card
           style="height:100%"
           :body-style="{ padding: '10px', height: '100%' }"
@@ -159,7 +159,7 @@
                 </el-col>
               </el-row>
             </el-form>
-            <p style="text-align: end; width: 100%;" class="styleBot">
+            <p style="text-align: end; width: 100%;" class="style-bot">
               <el-button
                 type="primary"
                 class="button-base-icon"
@@ -671,17 +671,17 @@ export default defineComponent({
 }
 
 :root {
-  --size-panelTop-height:65%;
-  --size-panelChild-height:100%;
+  --size-panel-top-height:65%;
+  --size-panel-child-height:100%;
 }
 
 @media screen and (min-height: 720px) {
   :root{
-    --size-panelTop-height:85%;
-    --size-panelChild-height:45%;
+    --size-panel-top-height:85%;
+    --size-panel-child-height:45%;
   }
-  .panelTop{
-    height: var(--size-panelTop-height);
+  .panel-top{
+    height: var(--size-panel-top-height);
     .el-table__body{
       height: 100% !important;
     }
@@ -689,25 +689,25 @@ export default defineComponent({
       height: 65% !important;
     }
   }
-  .panelChild{
-    height:var(--size-panelChild-height);
+  .panel-child{
+    height:var(--size-panel-child-height);
     margin-top:-14%
   }
   .v-md-editor{
     height: 84% !important
   }
-  .styleBot{
+  .style-bot{
     margin-top:-2%
   }
 }
 
 @media screen and (min-height: 800px) {
   :root{
-    --size-panelTop-height:90%;
-    --size-panelChild-height:40%;
+    --size-panel-top-height:90%;
+    --size-panel-child-height:40%;
   }
-  .panelTop{
-    height: var(--size-panelTop-height);
+  .panel-top{
+    height: var(--size-panel-top-height);
     .el-table__body{
       height: 100% !important;
     }
@@ -715,25 +715,25 @@ export default defineComponent({
       height: 60% !important;
     }
   }
-  .panelChild{
-    height:var(--size-panelChild-height);
+  .panel-child{
+    height:var(--size-panel-child-height);
     margin-top:-15%
   }
   .v-md-editor{
     height: 85% !important
   }
-  .styleBot{
+  .style-bot{
     margin-top:-3%
   }
 }
 
 @media screen and (min-height: 1080px) {
   :root{
-    --size-panelTop-height:1010px;
-    --size-panelChild-height:32%;
+    --size-panel-top-height:1010px;
+    --size-panel-child-height:32%;
   }
-  .panelTop{
-    height: var(--size-panelTop-height);
+  .panel-top{
+    height: var(--size-panel-top-height);
     .el-table__body{
       height: 100% !important;
     }
@@ -741,25 +741,25 @@ export default defineComponent({
       height: 60% !important;
     }
   }
-  .panelChild{
-    height:var(--size-panelChild-height);
+  .panel-child{
+    height:var(--size-panel-child-height);
     margin-top:-25%
   }
   .v-md-editor{
     height: 85% !important
   }
-  .styleBot{
+  .style-bot{
     margin-top:-3%
   }
 }
 
 @media screen and (min-height:1200px){
   :root{
-    --size-panelTop-height:105%;
-    --size-panelChild-height:32%;
+    --size-panel-top-height:105%;
+    --size-panel-child-height:32%;
   }
-  .panelTop{
-    height: var(--size-panelTop-height);
+  .panel-top{
+    height: var(--size-panel-top-height);
     .el-table__body{
       height: 100% !important;
     }
@@ -767,24 +767,24 @@ export default defineComponent({
       height: 70% !important;
     }
   }
-  .panelChild{
-    height:var(--size-panelChild-height);
+  .panel-child{
+    height:var(--size-panel-child-height);
     margin-top:-27%;
     .v-md-editor{
       height: 88% !important
     }
-    .styleBot{
+    .style-bot{
       margin-top:-40px
     }
   }
 }
 @media screen and (min-height:1400px){
   :root{
-    --size-panelTop-height:100%;
-    --size-panelChild-height:35%;
+    --size-panel-top-height:100%;
+    --size-panel-child-height:35%;
   }
-  .panelTop{
-    height: var(--size-panelTop-height);
+  .panel-top{
+    height: var(--size-panel-top-height);
     .el-table__body{
       height: 100% !important;
     }
@@ -792,13 +792,13 @@ export default defineComponent({
       height: 70% !important;
     }
   }
-  .panelChild{
-    height:var(--size-panelChild-height);
+  .panel-child{
+    height:var(--size-panel-child-height);
     margin-top:-30%;
     .v-md-editor{
       height: 88% !important
     }
-    .styleBot{
+    .style-bot{
       margin-top:-40px
     }
   }
