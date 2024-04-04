@@ -77,7 +77,7 @@ export default {
   getTableName: (state, getters) => (windowUuid, tabUuid) => {
     const tab = getters.getStoredTab(windowUuid, tabUuid)
     if (!isEmptyValue(tab)) {
-      return tab.tableName
+      return tab.table_name
     }
     return undefined
   },
