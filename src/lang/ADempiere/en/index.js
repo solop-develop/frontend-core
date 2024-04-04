@@ -190,6 +190,7 @@ export default {
       previousRecord: 'Previous',
       recordsPage: 'Records Page',
       deleteSelection: 'Delete Selected Records',
+      disabledSelection: 'Disable Selected Records',
       advancedQuery: 'Advanced Query',
       exportZip: 'Export Zip',
       showAllColumns: 'Show All Columns',

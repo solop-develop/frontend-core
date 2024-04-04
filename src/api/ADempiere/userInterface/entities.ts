@@ -123,3 +123,45 @@ export function deleteEntity({
     method: 'delete'
   })
 }
+
+/**
+ * Delete Entity
+ * @param {string}  tableName
+ * @param {array}  recordId
+ */
+
+export function deleteAllEntity({
+  tableName,
+  recordIds
+}) {
+  console.log(recordIds)
+  // Use the recordIds array to make multiple delete requests
+  return Promise.all(recordIds.map(recordId => {
+    return request({
+      url: `/business-data/entities/${tableName}/${recordId}`,
+      method: 'delete'
+    })
+  }))
+}
+
+/**
+ * Disabled Entity
+ * @param {string}  tableName
+ * @param {array} recordIds
+ * @param {bool} is_active
+ */
+
+export function disabledAllEntity({
+  tableName,
+  recordIds
+}) {
+  console.log(recordIds)
+  return request({
+    url: `/record-management/${tableName}/toogle`,
+    method: 'post',
+    data: {
+      is_active: false,
+      ids: recordIds
+    }
+  })
+}

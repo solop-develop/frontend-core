@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <el-popover
+  <!-- <el-popover
     v-if="isDeleteRecord"
     v-model="isVisibleConfirmDelete"
     placement="top"
@@ -68,7 +68,63 @@
         {{ $t('actionMenu.delete') }}
       </span>
     </el-button>
-  </el-popover>
+  </el-popover> -->
+  <div class="el-dropdown">
+    <el-dropdown
+      split-button
+      size="small"
+      type="danger"
+      class="delete-record-container"
+      @click="handleClick"
+    >
+      <svg-icon icon-class="delete" />
+      <span>
+        {{ $t('actionMenu.delete') }}
+      </span>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item @click.native="handleClick">
+          <svg-icon icon-class="delete" />
+          {{ $t('Eliminar registros') }}
+        </el-dropdown-item>
+        <el-dropdown-item divided @click.native="disableCurrentRecord">
+          <svg-icon icon-class="delete" />
+          {{ $t('Desabilitar registros') }}
+        </el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
+    <el-dialog
+      :visible.sync="isVisibleConfirmDelete"
+    >
+      <el-descriptions :title="$t('window.confirmDeleteRecord')" direction="vertical" :column="tabAttributes.identifierColumns.length" border>
+        <el-descriptions-item
+          v-for="(item, index) in tabAttributes.identifierColumns"
+          :key="index"
+          :label="item.name"
+        >
+          <cell-display-info
+            v-for="(record, key) in listOfRecordsToDeleted"
+            :key="key"
+            :field-attributes="item"
+            :data-row="record"
+          />
+        </el-descriptions-item>
+      </el-descriptions>
+      <span slot="footer" class="dialog-footer">
+        <el-button
+          type="danger"
+          class="button-base-icon"
+          icon="el-icon-close"
+          @click="isVisibleConfirmDelete = false"
+        />
+        <el-button
+          type="primary"
+          class="button-base-icon"
+          icon="el-icon-check"
+          @click="deleteCurrentRecord()"
+        />
+      </span>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -102,7 +158,19 @@ export default defineComponent({
       required: true
     }
   },
-
+  data() {
+    return {
+      isVisibleConfirmDelete: false
+    }
+  },
+  methods: {
+    handleClick() {
+      this.isVisibleConfirmDelete = true
+    },
+    handleDelete() {
+      this.isVisibleConfirmDelete = false
+    }
+  },
   setup(props) {
     const isVisibleConfirmDelete = ref(false)
     const buttonConfirmDelete = ref(null)
@@ -176,7 +244,7 @@ export default defineComponent({
 
       const recordId = store.getters.getIdOfContainer({
         containerUuid: tabAttributes.value.containerUuid,
-        tableName: tabAttributes.value.tableName
+        tableName: tabAttributes.value.table_name
       })
 
       deleteRecord.deleteRecord({
@@ -196,7 +264,20 @@ export default defineComponent({
         })
       }
     }
-
+    function disableCurrentRecord() {
+      if (tabAttributes.value.isShowedTableRecords && !isEmptyValue(selectionsRecords.value)) {
+        store.dispatch('disabledSelectedRecorsFromWindow', {
+          parentUuid: props.parentUuid,
+          containerUuid: props.containerUuid
+        })
+        return
+      }
+      const info = {
+        fieldsList: tabAttributes.value.fieldsList,
+        option: language.t('actionMenu.delete')
+      }
+      store.dispatch('fieldListInfo', { info })
+    }
     return {
       isVisibleConfirmDelete,
       buttonConfirmDelete,
@@ -207,7 +288,8 @@ export default defineComponent({
       listOfRecordsToDeleted,
       // Methods
       deleteCurrentRecord,
-      focusConfirmDelete
+      focusConfirmDelete,
+      disableCurrentRecord
     }
   }
 })
