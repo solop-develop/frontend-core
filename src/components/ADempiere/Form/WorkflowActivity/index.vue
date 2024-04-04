@@ -22,7 +22,7 @@
       style="height: 100%;"
       :body-style="{ padding: '10px', height: '100%' }"
     >
-      <div style="height: 65% !important;">
+      <div class="panelTop">
         <el-row
           :gutter="10"
           style="height: 65%;"
@@ -113,78 +113,80 @@
           </el-col>
         </el-row>
       </div>
-      <div style="height:100% !important">
+      <div class="panelChild">
         <el-card
-          style="height:50%; margin-top: -8%;"
+          style="height:100%"
           :body-style="{ padding: '10px', height: '100%' }"
         >
-          <el-form
-            v-show="!isEmptyValue(currentActivity)"
-            :inline="true"
-            class="demo-form-inline"
-          >
-            <el-row :gutter="24">
-              <el-col :span="8" style="text-align: center;">
-                <el-form-item label="Reenviar">
-                  <el-switch v-model="chooseOption" />
-                </el-form-item>
-              </el-col>
-
-              <el-col v-show="isValidateUserChoice" :span="8" style="text-align: center;">
-                <el-form-item :label="$t('form.workflowActivity.filtersSearch.approve')">
-                  <el-switch v-model="isApproved" />
-                </el-form-item>
-              </el-col>
-
-              <el-col v-show="chooseOption" :span="8" style="text-align: center;">
-                <el-form-item :label="$t('form.workflowActivity.filtersSearch.user')">
-                  <el-select
-                    v-model="userId"
-                    filterable
-                    @visible-change="findSalesReps"
-                  >
-                    <el-option
-                      v-for="item in listSalesReps"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-form>
           <v-md-editor
             v-model="message"
-            height="70%"
+            height="82%"
           />
-          <p style="text-align: end; width: 100%;margin: 5px;">
-            <el-button
-              type="primary"
-              class="button-base-icon"
-              icon="el-icon-check"
-              style="float: right;"
-              @click="sendOPeration()"
-            />
-            <el-button
-              type="primary"
-              plain
-              icon="el-icon-zoom-in"
-              :alt="$t('page.processActivity.zoomIn')"
-              style="float: right; margin-right: 5px; margin-left: 0px;"
-              class="button-base-icon"
-              @click="zoomRecord(currentActivity)"
-            />
-            <el-button
-              type="info"
-              class="button-base-icon"
-              plain
-              style="float: right; margin-right: 5px;"
-              @click="clearMessage()"
+          <div style="justify-content: space-between; margin-top:1%">
+            <el-form
+              v-show="!isEmptyValue(currentActivity)"
+              :inline="true"
+              class="demo-form-inline"
             >
-              <svg-icon icon-class="layers-clear" />
-            </el-button>
-          </p>
+              <el-row :gutter="24">
+                <el-col :span="8" style="text-align: center;">
+                  <el-form-item label="Reenviar">
+                    <el-switch v-model="chooseOption" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col v-show="isValidateUserChoice" :span="8" style="text-align: center;">
+                  <el-form-item :label="$t('form.workflowActivity.filtersSearch.approve')">
+                    <el-switch v-model="isApproved" />
+                  </el-form-item>
+                </el-col>
+
+                <el-col v-show="chooseOption" :span="8" style="text-align: center;">
+                  <el-form-item :label="$t('form.workflowActivity.filtersSearch.user')">
+                    <el-select
+                      v-model="userId"
+                      filterable
+                      @visible-change="findSalesReps"
+                    >
+                      <el-option
+                        v-for="item in listSalesReps"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-form>
+            <p style="text-align: end; width: 100%;" class="styleBot">
+              <el-button
+                type="primary"
+                class="button-base-icon"
+                icon="el-icon-check"
+                style="float: right;"
+                @click="sendOPeration()"
+              />
+              <el-button
+                type="primary"
+                plain
+                icon="el-icon-zoom-in"
+                :alt="$t('page.processActivity.zoomIn')"
+                style="float: right; margin-right: 5px; margin-left: 0px;"
+                class="button-base-icon"
+                @click="zoomRecord(currentActivity)"
+              />
+              <el-button
+                type="info"
+                class="button-base-icon"
+                plain
+                style="float: right; margin-right: 5px;"
+                @click="clearMessage()"
+              >
+                <svg-icon icon-class="layers-clear" />
+              </el-button>
+            </p>
+          </div>
         </el-card>
       </div>
     </el-card>
@@ -665,6 +667,140 @@ export default defineComponent({
   }
   .el-card__body {
     height: 95% !important;
+  }
+}
+
+:root {
+  --size-panelTop-height:65%;
+  --size-panelChild-height:100%;
+}
+
+@media screen and (min-height: 720px) {
+  :root{
+    --size-panelTop-height:85%;
+    --size-panelChild-height:45%;
+  }
+  .panelTop{
+    height: var(--size-panelTop-height);
+    .el-table__body{
+      height: 100% !important;
+    }
+    .el-card__body{
+      height: 65% !important;
+    }
+  }
+  .panelChild{
+    height:var(--size-panelChild-height);
+    margin-top:-14%
+  }
+  .v-md-editor{
+    height: 84% !important
+  }
+  .styleBot{
+    margin-top:-2%
+  }
+}
+
+@media screen and (min-height: 800px) {
+  :root{
+    --size-panelTop-height:90%;
+    --size-panelChild-height:40%;
+  }
+  .panelTop{
+    height: var(--size-panelTop-height);
+    .el-table__body{
+      height: 100% !important;
+    }
+    .el-card__body{
+      height: 60% !important;
+    }
+  }
+  .panelChild{
+    height:var(--size-panelChild-height);
+    margin-top:-15%
+  }
+  .v-md-editor{
+    height: 85% !important
+  }
+  .styleBot{
+    margin-top:-3%
+  }
+}
+
+@media screen and (min-height: 1080px) {
+  :root{
+    --size-panelTop-height:1010px;
+    --size-panelChild-height:30%;
+  }
+  .panelTop{
+    height: var(--size-panelTop-height);
+    .el-table__body{
+      height: 100% !important;
+    }
+    .el-card__body{
+      height: 60% !important;
+    }
+  }
+  .panelChild{
+    height:var(--size-panelChild-height);
+    margin-top:-25%
+  }
+  .v-md-editor{
+    height: 88% !important
+  }
+  .styleBot{
+    margin-top:-3%
+  }
+}
+
+@media screen and (min-height:1200px){
+  :root{
+    --size-panelTop-height:105%;
+    --size-panelChild-height:32%;
+  }
+  .panelTop{
+    height: var(--size-panelTop-height);
+    .el-table__body{
+      height: 100% !important;
+    }
+    .el-card__body{
+      height: 70% !important;
+    }
+  }
+  .panelChild{
+    height:var(--size-panelChild-height);
+    margin-top:-27%;
+    .v-md-editor{
+      height: 88% !important
+    }
+    .styleBot{
+      margin-top:-40px
+    }
+  }
+}
+@media screen and (min-height:1400px){
+  :root{
+    --size-panelTop-height:100%;
+    --size-panelChild-height:35%;
+  }
+  .panelTop{
+    height: var(--size-panelTop-height);
+    .el-table__body{
+      height: 100% !important;
+    }
+    .el-card__body{
+      height: 70% !important;
+    }
+  }
+  .panelChild{
+    height:var(--size-panelChild-height);
+    margin-top:-30%;
+    .v-md-editor{
+      height: 85% !important
+    }
+    .styleBot{
+      margin-top:-40px
+    }
   }
 }
 </style>
