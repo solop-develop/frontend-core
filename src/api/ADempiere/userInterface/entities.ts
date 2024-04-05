@@ -149,7 +149,6 @@ export function deleteAllEntity({
  * @param {array} recordIds
  * @param {bool} activate
  */
-
 export function disabledAllEntity({
   tableName,
   recordIds,
