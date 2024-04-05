@@ -123,3 +123,43 @@ export function deleteEntity({
     method: 'delete'
   })
 }
+
+/**
+ * Delete Entity
+ * @param {string}  tableName
+ * @param {array}  recordIds
+ */
+export function deleteAllEntity({
+  tableName,
+  recordIds
+}) {
+  // Use the recordIds array to make multiple delete requests
+  return request({
+    url: `/business-data/entities/batch-delete/${tableName}`,
+    method: 'post',
+    data: {
+      ids: recordIds
+    }
+  })
+}
+
+/**
+ * Disabled Entity
+ * @param {string}  tableName
+ * @param {array} recordIds
+ * @param {bool} activate
+ */
+export function disabledAllEntity({
+  tableName,
+  recordIds,
+  activate
+}) {
+  return request({
+    url: `/record-management/${tableName}/toogle`,
+    method: 'post',
+    data: {
+      is_active: activate,
+      ids: recordIds
+    }
+  })
+}

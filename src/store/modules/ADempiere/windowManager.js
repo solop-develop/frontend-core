@@ -23,7 +23,9 @@ import language from '@/lang'
 import {
   updateEntity,
   deleteEntity,
-  requestGetEntities
+  requestGetEntities,
+  deleteAllEntity,
+  disabledAllEntity
 } from '@/api/ADempiere/userInterface/entities.ts'
 
 // Constants
@@ -721,16 +723,59 @@ const windowManager = {
     }) {
       const tableName = getters.getTableName(parentUuid, containerUuid)
       const selectionsList = getters.getTabSelectionsList({ containerUuid })
-      const listRecordId = selectionsList.map(list => list[tableName + '_ID'])
+      const recordIds = selectionsList.map(list => list[tableName + '_ID'])
 
-      showMessage({
-        message: language.t('table.dataTable.deleteSelection'),
-        type: 'info'
-      })
       return new Promise((resolve, reject) => {
-        deleteEntity({
+        deleteAllEntity({
           tableName,
-          listRecordId
+          recordIds
+        })
+          .then(async(response) => {
+            showMessage({
+              message: language.t('notifications.succesful'),
+              type: 'success'
+            })
+            await dispatch('getEntities', {
+              parentUuid,
+              containerUuid
+            })
+            resolve(response)
+          })
+          .catch(error => {
+            showMessage({
+              message: language.t('notifications.error'),
+              type: 'error'
+            })
+            reject(error)
+          })
+      })
+    },
+
+    /**
+    * Disabled Entity table
+    * @param {string} parentUuid
+    * @param {string} containerUuid
+    * @param {bool} activate
+    * TODO: Add suport to uuid list
+    */
+
+    disabledSelectedRecorsFromWindow({
+      dispatch,
+      getters
+    }, {
+      parentUuid,
+      containerUuid,
+      activate
+    }) {
+      const tableName = getters.getTableName(parentUuid, containerUuid)
+      const selectionsList = getters.getTabSelectionsList({ containerUuid })
+      const recordIds = selectionsList.map(list => list[tableName + '_ID'])
+
+      return new Promise((resolve, reject) => {
+        disabledAllEntity({
+          tableName,
+          recordIds,
+          activate
         })
           .then(async(response) => {
             showMessage({

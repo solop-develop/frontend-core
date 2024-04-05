@@ -50,6 +50,7 @@ const actionMenu = {
   exportSelectedRecords: 'Exportar Registros Seleccionados',
   exportRecord: 'Exportar Registro',
   delete: 'Eliminar',
+  disabledAllRecord: 'Deshabilitar Seleccionados',
   // relations
   relations: 'Relaciones',
   withoutRelations: 'Sin Relaciones',

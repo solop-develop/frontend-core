@@ -191,6 +191,7 @@ export default {
       previousRecord: 'Anteriror',
       recordsPage: 'Registros por Página',
       deleteSelection: 'Eliminar Registros Seleccionados',
+      disabledSelection: 'Deshabilitar Registros Seleccionados',
       advancedQuery: 'Consulta Avanzada',
       exportZip: 'Exportar Zip',
       showAllColumns: 'Mostrar todas las Columnas',

@@ -134,13 +134,13 @@ export default defineComponent({
       const currentRoute = router.app._route
       const reccordId = store.getters.getIdOfContainer({
         containerUuid: tabAttributes.value.containerUuid,
-        tableName: tabAttributes.value.tableName
+        tableName: tabAttributes.value.table_name
       })
       store.dispatch('flushPersistenceQueue', {
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid,
         tabId: tabAttributes.value.id,
-        tableName: tabAttributes.value.tableName,
+        tableName: tabAttributes.value.table_name,
         recordUuid: recordUuid.value,
         reccordId
       })

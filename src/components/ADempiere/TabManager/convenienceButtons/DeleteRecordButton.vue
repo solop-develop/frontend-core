@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <el-popover
+  <!-- <el-popover
     v-if="isDeleteRecord"
     v-model="isVisibleConfirmDelete"
     placement="top"
@@ -68,7 +68,70 @@
         {{ $t('actionMenu.delete') }}
       </span>
     </el-button>
-  </el-popover>
+  </el-popover> -->
+  <div class="el-dropdown">
+    <el-dropdown
+      v-if="isDeleteRecord"
+      split-button
+      size="small"
+      class="delete-record-container"
+      trigger="click"
+      @click="handleCommandActions('deleteRecord');"
+      @command="handleCommandActions"
+    >
+      <svg-icon icon-class="delete" />
+      <span>
+        {{ $t('actionMenu.delete') }}
+      </span>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item command="deleteRecord">
+          <svg-icon icon-class="delete" />
+          {{ $t('actionMenu.deleteRecord') }}
+        </el-dropdown-item>
+        <el-dropdown-item divided command="disabledRecord">
+          <svg-icon icon-class="disabled" />
+          {{ $t('actionMenu.disabledAllRecord') }}
+        </el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
+    <el-popover
+      v-model="isVisibleConfirmDelete"
+      tigger="click"
+      placement="top"
+      width="450"
+    >
+      <el-descriptions :title="$t(title)" direction="vertical" :column="tabAttributes.identifierColumns.length" border>
+        <el-descriptions-item
+          v-for="(item, index) in tabAttributes.identifierColumns"
+          :key="index"
+          :label="item.name"
+        >
+          <cell-display-info
+            v-for="(record, key) in listOfRecordsToDeleted"
+            :key="key"
+            :field-attributes="item"
+            :data-row="record"
+          />
+        </el-descriptions-item>
+      </el-descriptions>
+      <div
+        style="text-align: right; margin: 0;margin-top: 5px;"
+      >
+        <el-button
+          type="danger"
+          class="button-base-icon"
+          icon="el-icon-close"
+          @click="isVisibleConfirmDelete = false"
+        />
+        <el-button
+          type="primary"
+          class="button-base-icon"
+          icon="el-icon-check"
+          @click="okMethod()"
+        />
+      </div>
+    </el-popover>
+  </div>
 </template>
 
 <script>
@@ -106,6 +169,8 @@ export default defineComponent({
   setup(props) {
     const isVisibleConfirmDelete = ref(false)
     const buttonConfirmDelete = ref(null)
+    const title = ref('')
+    const okMethod = ref(() => {})
 
     const isMobile = computed(() => {
       return store.state.app.device === 'mobile'
@@ -176,7 +241,7 @@ export default defineComponent({
 
       const recordId = store.getters.getIdOfContainer({
         containerUuid: tabAttributes.value.containerUuid,
-        tableName: tabAttributes.value.tableName
+        tableName: tabAttributes.value.table_name
       })
 
       deleteRecord.deleteRecord({
@@ -196,10 +261,39 @@ export default defineComponent({
         })
       }
     }
+    function disableCurrentRecord() {
+      if (tabAttributes.value.isShowedTableRecords && !isEmptyValue(selectionsRecords.value)) {
+        store.dispatch('disabledSelectedRecorsFromWindow', {
+          parentUuid: props.parentUuid,
+          containerUuid: props.containerUuid,
+          activate: false
+        })
+        isVisibleConfirmDelete.value = false
+        return
+      }
+      const info = {
+        fieldsList: tabAttributes.value.fieldsList,
+        option: language.t('actionMenu.delete')
+      }
+      store.dispatch('fieldListInfo', { info })
+    }
+
+    function handleCommandActions(command) {
+      if (command === 'deleteRecord') {
+        title.value = 'window.confirmDeleteRecord'
+        okMethod.value = deleteCurrentRecord
+      } else if (command === 'disabledRecord') {
+        title.value = 'window.confirmDisabledRecord'
+        okMethod.value = disableCurrentRecord
+      }
+      isVisibleConfirmDelete.value = true
+    }
 
     return {
       isVisibleConfirmDelete,
       buttonConfirmDelete,
+      title,
+      okMethod,
       //
       isDeleteRecord,
       tabAttributes,
@@ -207,8 +301,30 @@ export default defineComponent({
       listOfRecordsToDeleted,
       // Methods
       deleteCurrentRecord,
-      focusConfirmDelete
+      focusConfirmDelete,
+      disableCurrentRecord,
+      handleCommandActions
     }
   }
 })
 </script>
+
+<style lang="scss">
+.delete-record-container {
+  &.el-dropdown {
+    .el-button {
+      // as button success with plain
+      background: #f8eeee;
+      color: #ff1e1e;
+      border-color: #eba1a1;
+
+      &:hover {
+        // as button success without plain
+        background: #ff1e1e;
+        border-color: #ff1e1e;
+        color: #fff;
+      }
+    }
+  }
+}
+</style>
