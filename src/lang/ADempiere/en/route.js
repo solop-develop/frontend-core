@@ -31,6 +31,7 @@ const route = {
   ProcessActivity: 'Process Logs',
   withoutLog: 'No Error Log Found',
   ProductInfo: 'Product Information',
+  accountingViewer: 'Accounting Viewer',
   role: 'Role',
   client: 'Client',
   organization: 'Organization',

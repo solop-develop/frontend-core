@@ -125,7 +125,7 @@ const staticRoutes = [
           return Boolean(role.is_allow_info_account)
         },
         meta: {
-          title: 'Acctouting Viewer',
+          title: language.t('route.accountingViewer'),
           fileName: 'AcctViewer',
           icon: 'balance',
           noCache: true,
