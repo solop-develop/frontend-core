@@ -25,6 +25,7 @@ const window = {
   copyRecord: 'Copy Record',
   deleteRecord: 'Delete Record',
   confirmDeleteRecord: 'Are you sure you want to delete this record?',
+  confirmDisabledRecord: 'Are you sure you want to disable this record?',
   cancel: 'Cancel',
   confirm: 'Confirm',
   undoNew: 'Undo New Record',

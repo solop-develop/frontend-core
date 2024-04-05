@@ -54,6 +54,8 @@ const actionMenu = {
   withoutRelations: 'Without Relations',
   // references
   delete: 'Delete',
+  deleteAllRecord: 'Delete Selected',
+  disabledAllRecord: 'Disable Selected',
   references: 'References',
   withoutReferences: 'Without references for record',
   menu: 'Menú the',

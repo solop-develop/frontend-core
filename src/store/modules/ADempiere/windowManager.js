@@ -725,10 +725,6 @@ const windowManager = {
       const selectionsList = getters.getTabSelectionsList({ containerUuid })
       const recordIds = selectionsList.map(list => list[tableName + '_ID'])
 
-      showMessage({
-        message: language.t('table.dataTable.deleteSelection'),
-        type: 'info'
-      })
       return new Promise((resolve, reject) => {
         deleteAllEntity({
           tableName,
@@ -759,6 +755,7 @@ const windowManager = {
     * Disabled Entity table
     * @param {string} parentUuid
     * @param {string} containerUuid
+    * @param {bool} activate
     * TODO: Add suport to uuid list
     */
 
@@ -767,21 +764,18 @@ const windowManager = {
       getters
     }, {
       parentUuid,
-      containerUuid
+      containerUuid,
+      activate
     }) {
       const tableName = getters.getTableName(parentUuid, containerUuid)
       const selectionsList = getters.getTabSelectionsList({ containerUuid })
       const recordIds = selectionsList.map(list => list[tableName + '_ID'])
-      console.log(recordIds)
-      showMessage({
-        message: language.t('table.dataTable.disabledSelection'),
-        type: 'info'
-      })
 
       return new Promise((resolve, reject) => {
         disabledAllEntity({
           tableName,
-          recordIds
+          recordIds,
+          activate
         })
           .then(async(response) => {
             showMessage({

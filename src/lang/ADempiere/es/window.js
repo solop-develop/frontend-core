@@ -21,10 +21,12 @@ const window = {
     title: 'Consulta Avanzada',
     help: 'Realiza una búsqueda haciendo uso de rangos de valores, selección múltiple de valores, y operadores de comparación'
   },
+
   newRecord: 'Nuevo Registro',
   copyRecord: 'Copiar Registro',
   deleteRecord: 'Eliminar Registro',
   confirmDeleteRecord: '¿Está seguro de que quiere eliminar este registro?',
+  confirmDisabledRecord: '¿Está seguro de que quiere deshabilitar este registro?',
   cancel: 'Cancelar',
   confirm: 'Confirmar',
   undoNew: 'Descartar Nuevo Registro',

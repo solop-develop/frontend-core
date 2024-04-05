@@ -61,6 +61,13 @@
         <i class="el-icon-copy-document" />
         {{ $t('window.copyRecord') }}
       </el-dropdown-item>
+      <!-- <el-dropdown-item
+        command="enabledRecord"
+        divided
+      >
+        <i class="el-icon-copy-document" />
+        {{ $t('Activar Registros') }}
+      </el-dropdown-item> -->
     </el-dropdown-menu>
   </el-dropdown>
 </template>
@@ -138,6 +145,8 @@ export default defineComponent({
         newRecord()
       } else if (command === 'copyAndNewRecord') {
         newRecord(true)
+      } else if (command === 'enabledRecord') {
+        activateRecord()
       }
     }
 
@@ -158,11 +167,24 @@ export default defineComponent({
       }
       store.dispatch('fieldListInfo', { info })
     }
-
+    function activateRecord() {
+      store.dispatch('disabledSelectedRecorsFromWindow', {
+        parentUuid: props.parentUuid,
+        containerUuid: props.containerUuid,
+        activate: true
+      })
+      const info = {
+        fieldsList: tabAttributes.value.fieldsList,
+        option: language.t('actionMenu.delete')
+      }
+      store.dispatch('fieldListInfo', { info })
+      return
+    }
     return {
       isCreateRecord,
       isMobile,
-      handleCommandActions
+      handleCommandActions,
+      activateRecord
     }
   }
 })

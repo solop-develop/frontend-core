@@ -127,40 +127,39 @@ export function deleteEntity({
 /**
  * Delete Entity
  * @param {string}  tableName
- * @param {array}  recordId
+ * @param {array}  recordIds
  */
-
 export function deleteAllEntity({
   tableName,
   recordIds
 }) {
-  console.log(recordIds)
   // Use the recordIds array to make multiple delete requests
-  return Promise.all(recordIds.map(recordId => {
-    return request({
-      url: `/business-data/entities/${tableName}/${recordId}`,
-      method: 'delete'
-    })
-  }))
+  return request({
+    url: `/business-data/entities/batch-delete/${tableName}`,
+    method: 'post',
+    data: {
+      ids: recordIds
+    }
+  })
 }
 
 /**
  * Disabled Entity
  * @param {string}  tableName
  * @param {array} recordIds
- * @param {bool} is_active
+ * @param {bool} activate
  */
 
 export function disabledAllEntity({
   tableName,
-  recordIds
+  recordIds,
+  activate
 }) {
-  console.log(recordIds)
   return request({
     url: `/record-management/${tableName}/toogle`,
     method: 'post',
     data: {
-      is_active: false,
+      is_active: activate,
       ids: recordIds
     }
   })
