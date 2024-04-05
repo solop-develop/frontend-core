@@ -31,6 +31,7 @@ const route = {
   ProcessActivity: 'Histórico Procesos',
   withoutLog: 'No se Encontró Registro de Error ',
   ProductInfo: 'Información de Producto',
+  accountingViewer: 'Navegador Contable',
   role: 'Rol',
   client: 'Compañía',
   organization: 'Organización',
