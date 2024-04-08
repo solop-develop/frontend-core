@@ -428,7 +428,7 @@ export default defineComponent({
         tabOptions = 'listReference'
         isLoadingListReference.value = true
         store.dispatch('getReferencesFromServer', {
-          tableName: currentTab.value.tableName,
+          tableName: currentTab.value.table_name,
           containerUuid: currentTab.value.containerUuid,
           tabId: currentTab.value.id,
           parentUuid: currentTab.value.parentUuid,
