@@ -535,7 +535,7 @@ const windowManager = {
               // Always overwrite key values on parent context
               const relatedColumnsList = fieldsList
                 .filter(fieldItem => {
-                  return fieldItem.isParent || fieldItem.is_key
+                  return fieldItem.is_parent || fieldItem.is_key
                 })
                 .map(fieldItem => {
                   return fieldItem.columnName

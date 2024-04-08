@@ -150,7 +150,7 @@ export default {
       let relatedColumns = []
       const parentColumns = tabDefinition.fieldsList
         .filter(fieldItem => {
-          return fieldItem.isParent || fieldItem.is_key || fieldItem.isMandatory
+          return fieldItem.is_parent || fieldItem.is_key || fieldItem.is_mandatory
         })
         .map(fieldItem => {
           return fieldItem.columnName

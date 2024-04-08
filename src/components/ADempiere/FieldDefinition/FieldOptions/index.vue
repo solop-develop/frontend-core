@@ -276,7 +276,7 @@ export default defineComponent({
 
       // add hide this field with isShowedFromUser
       if (!field.isCustomField &&
-        (field.isParent || !field.required || !isEmptyValue(field.default_value))
+        (field.is_parent || !field.required || !isEmptyValue(field.default_value))
       ) {
         menuOptions.push(hideThisField)
       }

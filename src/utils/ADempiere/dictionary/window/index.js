@@ -178,11 +178,11 @@ export function isDisplayedField({ is_displayed, display_logic, isDisplayedFromL
  * @param {string} default_value
  * @param {boolean} isMandatory
  * @param {boolean} isShowedFromUser
- * @param {boolean} isParent
+ * @param {boolean} is_parent
  */
 export function evaluateDefaultFieldShowed({
   parentUuid, containerUuid,
-  is_key, isParent, columnName,
+  is_key, is_parent, columnName,
   default_value, parsedDefaultValue,
   isShowedFromUser, isDisplayedAsPanel,
   displayType, displayLogic,
@@ -198,7 +198,7 @@ export function evaluateDefaultFieldShowed({
     return true
   }
 
-  if (isParent) {
+  if (is_parent) {
     return true
   }
 
@@ -211,7 +211,7 @@ export function evaluateDefaultFieldShowed({
     is_key, columnName, displayType, isMandatory, mandatory_logic, isMandatoryFromLogic
   })
   const isEmpty = isEmptyValue(parsedDefaultValue) || (isDecimalField(displayType) && parsedDefaultValue === 0)
-  if (isEmpty && isMandatoryGenerated && !isParent) {
+  if (isEmpty && isMandatoryGenerated && !is_parent) {
     // Yes/No field always boolean value (as default value)
     if (displayType === YES_NO.id) {
       // Business Partner Window
@@ -267,11 +267,11 @@ export function evaluateDefaultFieldShowed({
  * @param {string} default_value
  * @param {boolean} isMandatory
  * @param {boolean} isShowedTableFromUser
- * @param {boolean} isParent
+ * @param {boolean} is_parent
  */
 export function evaluateDefaultColumnShowed({
   parentUuid, containerUuid,
-  is_key, isParent, columnName,
+  is_key, is_parent, columnName,
   default_value, parsedDefaultValue,
   displayType, isShowedTableFromUser, isDisplayedAsTable,
   isMandatory, mandatory_logic, isMandatoryFromLogic
@@ -283,7 +283,7 @@ export function evaluateDefaultColumnShowed({
     return true
   }
 
-  if (isParent) {
+  if (is_parent) {
     return true
   }
 
@@ -296,7 +296,7 @@ export function evaluateDefaultColumnShowed({
     is_key, columnName, displayType, isMandatory, mandatory_logic, isMandatoryFromLogic
   })
   const isEmpty = isEmptyValue(parsedDefaultValue) || (isDecimalField(displayType) && parsedDefaultValue === 0)
-  if (isEmpty && isMandatoryGenerated && !isParent) {
+  if (isEmpty && isMandatoryGenerated && !is_parent) {
     // Yes/No field always boolean value (as default value)
     if (displayType === YES_NO.id) {
       return false
@@ -945,7 +945,7 @@ export const openBrowserAssociated = {
     // TODO: Validate element columns
     const parentColumns = storedTab.fieldsList
       .filter(fieldItem => {
-        return fieldItem.isParent || fieldItem.is_key || fieldItem.isMandatory
+        return fieldItem.is_parent || fieldItem.is_key || fieldItem.isMandatory
       })
       .map(fieldItem => {
         return fieldItem.columnName
@@ -1713,8 +1713,8 @@ export const containerManager = {
   },
 
   isDisplayedField,
-  isDisplayedDefault: ({ isMandatory, isParent, default_value, displayType, parsedDefaultValue }) => {
-    if (isMandatory && !isParent && isEmptyValue(default_value)) {
+  isDisplayedDefault: ({ isMandatory, is_parent, default_value, displayType, parsedDefaultValue }) => {
+    if (isMandatory && !is_parent && isEmptyValue(default_value)) {
       // Yes/No field always boolean value (as default value)
       if (displayType === YES_NO.id) {
         return false
@@ -1724,8 +1724,8 @@ export const containerManager = {
     return false
   },
   isDisplayedColumn,
-  isDisplayedDefaultTable: ({ isMandatory, isParent, default_value, displayType, parsedDefaultValue }) => {
-    if (isMandatory && !isParent && isEmptyValue(default_value)) {
+  isDisplayedDefaultTable: ({ isMandatory, is_parent, default_value, displayType, parsedDefaultValue }) => {
+    if (isMandatory && !is_parent && isEmptyValue(default_value)) {
       // Yes/No field always boolean value (as default value)
       if (displayType === YES_NO.id) {
         return false
@@ -1839,7 +1839,10 @@ export const containerManager = {
     // records values
     row
   }) {
-    const { parentUuid, containerUuid, columnName } = field
+    const {
+      parentUuid, containerUuid, columnName,
+      display_type, is_parent, is_updateable, is_always_updateable
+    } = field
 
     // if tab is read only, all fields are read only
     if (isReadOnlyTab({ parentUuid, containerUuid })) {
@@ -1849,7 +1852,7 @@ export const containerManager = {
     const { isParentTab, link_column_name, parent_column_name } = store.getters.getStoredTab(parentUuid, containerUuid)
 
     // fill value with context
-    if (field.isParent || link_column_name === columnName || parent_column_name === columnName) {
+    if (is_parent || link_column_name === columnName || parent_column_name === columnName) {
       return true
     }
 
@@ -1875,12 +1878,12 @@ export const containerManager = {
     const isWithRecord = !isEmptyValue(recordUuid) && recordUuid !== 'create-new'
     if (isWithRecord) {
       // not updateable and record saved
-      if (!field.is_updateable) {
+      if (!is_updateable) {
         return true
       }
     } else {
       // button not invoke (browser/process/report/workflow) without record
-      if (field.displayType === BUTTON.id) {
+      if (display_type === BUTTON.id) {
         return true
       }
     }
@@ -1911,7 +1914,7 @@ export const containerManager = {
       return true
     }
 
-    if (field.is_always_updateable) {
+    if (is_always_updateable) {
       return false
     }
 
