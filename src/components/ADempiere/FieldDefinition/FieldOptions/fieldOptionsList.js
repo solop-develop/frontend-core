@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -74,7 +74,7 @@ export const zoomInOptionItem = {
 
     let currentValue = value
 
-    let columnName = reference.keyColumnName
+    let columnName = reference.key_column_name
       .match(/(\.)(\b\w*)/ig)
       .toString()
       .replace('.', '')
@@ -87,7 +87,7 @@ export const zoomInOptionItem = {
       }
     }
 
-    // TODO: Evaluate reference.keyColumnName: AD_Ref_List.Value
+    // TODO: Evaluate reference.key_column_name: AD_Ref_List.Value
     if (fieldAttributes.displayType === LIST.id) {
       columnName = 'AD_Reference_ID'
       // TODO: Direct query is deprecated
