@@ -231,7 +231,7 @@ export default {
       return GENERAL_INFO_SEARCH_LIST_FORM
     },
     tableName() {
-      return this.metadata.reference.tableName
+      return this.metadata.reference.table_name
     },
     shortsKey() {
       return {
@@ -425,10 +425,10 @@ export default {
         this.containerManager.getSearchRecordsList({
           containerUuid: this.uuidForm,
           parentUuid: this.metadata.parentUuid,
-          tableName: this.metadata.reference.tableName,
+          tableName: this.metadata.reference.table_name,
           columnName: this.metadata.columnName,
           id: this.metadata.id,
-          contextColumnNames: this.metadata.reference.contextColumnNames,
+          contextColumnNames: this.metadata.reference.context_column_names,
           filters: values,
           pageNumber,
           pageSize

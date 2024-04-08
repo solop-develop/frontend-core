@@ -49,18 +49,18 @@ export function templateFields(field) {
     isActive: true,
     columnName: column_name,
     displayType: display_type,
-    isDisplayed: true,
-    is_displayed: true,
+    // isDisplayed: true,
+    // is_displayed: true,
     isMandatory: is_mandatory,
     default_value: default_value,
     default_value_to: default_value_to,
     isQueryCriteria: is_query_criteria,
     elementColumnName: element_column_name,
-    contextColumnNames: context_column_names,
-    reference: {
-      tableName: '',
-      contextColumnNames: context_column_names
-    }
+    contextColumnNames: context_column_names
+    // reference: {
+    //   tableName: '',
+    //   contextColumnNames: context_column_names
+    // }
   }
 }
 

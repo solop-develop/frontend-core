@@ -225,8 +225,8 @@ export default ({
       containerManager.getSearchRecordsList({
         parentUuid,
         containerUuid: uuidForm,
-        contextColumnNames: fieldAttributes.reference.contextColumnNames,
-        tableName: fieldAttributes.reference.tableName,
+        contextColumnNames: fieldAttributes.reference.context_column_names,
+        tableName: fieldAttributes.reference.table_name,
         uuid: fieldAttributes.uuid,
         id: fieldAttributes.id,
         // filters,

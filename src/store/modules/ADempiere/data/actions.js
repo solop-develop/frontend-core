@@ -170,13 +170,13 @@ const actions = {
             const options = rootGetters.getStoredLookupAll({
               parentUuid,
               containerUuid,
-              contextColumnNames: itemField.reference.contextColumnNames,
-              contextColumnNamesByDefaultValue: itemField.contextColumnNames,
+              contextColumnNames: itemField.reference.context_column_names,
+              contextColumnNamesByDefaultValue: itemField.context_column_names,
               //
               id: itemField.id,
               fieldUuid: itemField.uuid,
               columnName: itemField.columnName,
-              tableName: itemField.reference.tableName,
+              tableName: itemField.reference.table_name,
               value: valueGetDisplayColumn
             })
 
@@ -205,12 +205,12 @@ const actions = {
             const { displayedValue } = await dispatch('getLookupItemFromServer', {
               parentUuid,
               containerUuid,
-              contextColumnNames: itemField.reference.contextColumnNames,
+              contextColumnNames: itemField.reference.context_column_names,
               //
               id: itemField.id,
               fieldUuid: itemField.uuid,
               columnName: itemField.columnName,
-              tableName: itemField.reference.tableName,
+              tableName: itemField.reference.table_name,
               value: valueGetDisplayColumn
             })
             values[itemField.displayColumnName] = displayedValue
