@@ -55,7 +55,7 @@ export const zoomInOptionItem = {
   componentRender: () => import('@/components/ADempiere/FieldDefinition/FieldOptions/EmptyOption'),
   executeMethod: ({ containerManager, window, fieldAttributes, value }) => {
     const { parentUuid, containerUuid, reference } = fieldAttributes
-    const { zoomWindows } = reference
+    const { zoom_windows } = reference
 
     let windowToZoom = window
     if (isEmptyValue(windowToZoom)) {
@@ -63,12 +63,12 @@ export const zoomInOptionItem = {
         parentUuid,
         containerUuid
       })
-      windowToZoom = zoomWindows.find(zoomWindow => {
+      windowToZoom = zoom_windows.find(zoomWindow => {
         // Is Sales Transaction Window or Is Purchase Transaction Window
         return zoomWindow.isSalesTransaction === isSOTrx
       })
       if (isEmptyValue(windowToZoom)) {
-        windowToZoom = zoomWindows.at(0)
+        windowToZoom = zoom_windows.at(0)
       }
     }
 

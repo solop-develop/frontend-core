@@ -43,11 +43,11 @@ export function templateFields(field) {
     default_value_to: default_value_to,
     isQueryCriteria: is_query_criteria,
     elementColumnName: element_column_name,
-    contextColumnNames: context_column_names,
-    reference: {
-      tableName: '',
-      contextColumnNames: context_column_names
-    }
+    contextColumnNames: context_column_names
+    // reference: {
+    //   tableName: '',
+    //   contextColumnNames: context_column_names
+    // }
   }
 }
 

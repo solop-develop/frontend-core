@@ -294,7 +294,7 @@ export default {
                 const storedLookupList = rootGetters.getStoredLookupList({
                   parentUuid,
                   containerUuid,
-                  contextColumnNames: fieldItem.reference.contextColumnNames,
+                  contextColumnNames: fieldItem.reference.context_column_names,
                   uuid,
                   id
                 })

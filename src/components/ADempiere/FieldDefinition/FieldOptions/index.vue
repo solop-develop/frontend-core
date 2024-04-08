@@ -290,7 +290,7 @@ export default defineComponent({
 
       if (isSupportLookup(field.displayType)) {
         menuOptions.push(refreshLookup)
-        if (field.reference && !isEmptyValue(field.reference.zoomWindows)) {
+        if (field.reference && !isEmptyValue(field.reference.zoom_windows)) {
           menuOptions.push(zoomInOptionItem)
         }
       }
