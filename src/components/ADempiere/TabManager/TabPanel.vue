@@ -224,7 +224,7 @@ export default defineComponent({
     const styleFooterPanel = computed(() => {
       if (props.isChildTab) {
         // if (storedWindow.value.isFullScreenTabsChildren) {
-        return 'height: 100px !important'
+        return 'height: 50px !important'
         // }
         // return 'height: 20% !important'
       }

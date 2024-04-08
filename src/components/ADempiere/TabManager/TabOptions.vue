@@ -50,11 +50,13 @@
       style="display: contents;"
     />
 
-    <!-- <full-screen-container
+    <!--
+    <full-screen-container
       style="float: right;"
       :parent-uuid="parentUuid"
       :container-uuid="currentTabUuid"
-    /> -->
+    />
+    -->
 
     <action-menu
       :parent-uuid="parentUuid"
@@ -96,6 +98,7 @@ import menuMobile from '@/components/ADempiere/ActionMenu/menuMobile.vue'
 import ConvenienceButtons from '@/components/ADempiere/TabManager/convenienceButtons/index.vue'
 // import FullScreenContainer from '@/components/ADempiere/ContainerOptions/FullScreenContainer'
 import ChangeRecord from '@/components/ADempiere/DataTable/Components/ChangeRecord.vue'
+
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 

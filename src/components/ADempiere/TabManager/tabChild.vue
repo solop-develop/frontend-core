@@ -478,6 +478,10 @@ export default defineComponent({
       }
     })
 
+    if (!isEmptyValue(recordUuidTabParent.value) && !tabData.value.isLoading) {
+      getData()
+    }
+
     watch(showedTabsList, (newValue, oldValue) => {
       if (newValue) {
         const currentIndexDisplayed = newValue.some(newTab => {
