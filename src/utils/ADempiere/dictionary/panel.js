@@ -142,7 +142,7 @@ export function generatePanelAndFields({
     parentUuid,
     containerUuid,
     // tab attributes
-    tabTableName: panelMetadata.tableName,
+    tabTableName: panelMetadata.table_name,
     panelName: panelMetadata.name,
     // app attributes
     isShowedFromUser: true,

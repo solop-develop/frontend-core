@@ -66,9 +66,8 @@ export default {
         clientId
       })
         .then(browserResponse => {
-          const browser = templateBrowser(browserResponse.browser)
+          const browser = templateBrowser(browserResponse)
           const browserUuid = browser.uuid
-
           const browserDefinition = generatePanelAndFields({
             containerUuid: browserUuid,
             panelMetadata: {

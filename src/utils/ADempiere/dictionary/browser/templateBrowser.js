@@ -24,14 +24,14 @@ export function templateBrowser(browser) {
     return {}
   }
   const {
+    fields,
     table_name,
-    criteria_fields,
     context_column_names
   } = browser
   return {
     ...browser,
     tableName: table_name,
-    fields: criteria_fields,
+    fields: fields,
     contextColumnNames: context_column_names
   }
 }
