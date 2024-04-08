@@ -215,7 +215,7 @@ export function generatePanelAndFields({
   if (isAddLinkColumn) {
     // parent link column name
     fieldLinkColumnName = fieldsList.find(fieldItem => {
-      return fieldItem.isParent
+      return fieldItem.is_parent
     })
     if (fieldLinkColumnName) {
       fieldLinkColumnName = fieldLinkColumnName.columnName

@@ -222,10 +222,10 @@ export default {
     const attributesObject = {}
     let attributesList = fieldsList
       .map(fieldItem => {
-        const { uuid, id, columnName, default_value, context_column_names } = fieldItem
+        const { uuid, id, columnName, default_value, context_column_names, is_parent } = fieldItem
         const isSQL = String(default_value).startsWith('@SQL=') && isGetServer
         const isLinkColumn = !isEmptyValue(link_column_name) && columnName === link_column_name
-        const isParentColumn = fieldItem.isParent || (!isEmptyValue(parent_column_name) && columnName === parent_column_name)
+        const isParentColumn = is_parent || (!isEmptyValue(parent_column_name) && columnName === parent_column_name)
 
         let parsedDefaultValue
         if (!isSQL) {
@@ -375,7 +375,7 @@ export default {
         const isMandatory = mandatoryMethod(fieldItem)
 
         // parent column
-        if (fieldItem.isParent) {
+        if (fieldItem.is_parent) {
           return true
         }
         // Yes/No field always boolean value

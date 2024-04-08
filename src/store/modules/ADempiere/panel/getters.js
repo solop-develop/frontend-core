@@ -164,13 +164,13 @@ const getters = {
     // all optionals (not mandatory) fields
     return fieldsList
       .filter(fieldItem => {
-        const { default_value } = fieldItem
+        const { default_value, is_mandatory, is_parent } = fieldItem
 
         // parent column
-        if (fieldItem.isParent) {
+        if (is_parent) {
           return true
         }
-        const isMandatoryGenerated = fieldItem.isMandatory || fieldItem.isMandatoryFromLogic
+        const isMandatoryGenerated = is_mandatory || fieldItem.isMandatoryFromLogic
         if (isMandatoryGenerated && isEmptyValue(default_value) && !isTable) {
           return false
         }
