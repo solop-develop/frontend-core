@@ -825,7 +825,7 @@ export default {
         root: true
       })
 
-      if (tab.is_document) {
+      if (tab.table.is_document) {
         // get displayed value on status
         const fieldDocumentStatus = tab.fieldsList.find(field => {
           return field.columnName === DOCUMENT_STATUS

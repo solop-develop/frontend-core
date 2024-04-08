@@ -225,11 +225,13 @@ export default defineComponent({
           // batch entry collapse
           return 'height: 130px'
         }
-        if (currentTab.value.is_document) return 'height: 120px;padding: 0px 5px;'
+        if (currentTab.value.table.is_document) {
+          return 'height: 120px;padding: 0px 5px;'
+        }
         // multi record
         return 'height: 110px; margin-left: 0px;margin-right: 0px;padding-right: 5px;padding-left: 5px;'
       }
-      if (currentTab.value.is_document) {
+      if (currentTab.value.table.is_document) {
         return 'height: 110px; margin-left: 0px;margin-right: 0px;padding-right: 0px;padding-left: 0px;'
       }
       // mono record
