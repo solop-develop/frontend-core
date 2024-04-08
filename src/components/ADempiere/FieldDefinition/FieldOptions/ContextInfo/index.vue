@@ -112,17 +112,19 @@
       </el-form>
     </el-scrollbar>
 
-    <span v-for="(zoomItem, index) in fieldAttributes.reference.zoomWindows" :key="index">
-      <el-button
-        :key="index"
-        type="text"
-        @click="redirect({ window: zoomItem })"
-      >
-        <i class="el-icon-zoom-in" />
-        {{ $t('page.processActivity.zoomIn') }}
-        {{ zoomItem.name }}
-      </el-button>
-    </span>
+    <template v-if="!isEmptyValue(fieldAttributes.reference) && !isEmptyValue(fieldAttributes.reference.zoom_windows)">
+      <span v-for="(zoomItem, index) in fieldAttributes.reference.zoom_windows" :key="index">
+        <el-button
+          :key="index"
+          type="text"
+          @click="redirect({ window: zoomItem })"
+        >
+          <i class="el-icon-zoom-in" />
+          {{ $t('page.processActivity.zoomIn') }}
+          {{ zoomItem.name }}
+        </el-button>
+      </span>
+    </template>
   </el-card>
 </template>
 
