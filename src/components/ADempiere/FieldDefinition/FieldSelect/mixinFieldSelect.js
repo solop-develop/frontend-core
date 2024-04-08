@@ -67,11 +67,11 @@ export default {
       return store.getters.getStoredLookupList({
         parentUuid: this.metadata.parentUuid,
         containerUuid: this.metadata.containerUuid,
-        contextColumnNames: this.metadata.reference.contextColumnNames,
+        contextColumnNames: this.metadata.reference.context_column_names,
         uuid: this.metadata.uuid,
         id: this.metadata.id,
         //
-        tableName: this.metadata.reference.tableName,
+        tableName: this.metadata.reference.table_name,
         columnName: this.metadata.columnName
       })
     },
@@ -79,12 +79,12 @@ export default {
       const allOptions = store.getters.getStoredLookupAll({
         parentUuid: this.metadata.parentUuid,
         containerUuid: this.metadata.containerUuid,
-        contextColumnNames: this.metadata.reference.contextColumnNames,
-        contextColumnNamesByDefaultValue: this.metadata.contextColumnNames,
+        contextColumnNames: this.metadata.reference.context_column_names,
+        contextColumnNamesByDefaultValue: this.metadata.context_column_names,
         uuid: this.metadata.uuid,
         id: this.metadata.id,
         //
-        tableName: this.metadata.reference.tableName,
+        tableName: this.metadata.reference.table_name,
         columnName: this.metadata.columnName,
         value: this.value
       })

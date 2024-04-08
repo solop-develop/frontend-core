@@ -252,8 +252,8 @@ export const refreshLookup = {
     store.dispatch('deleteLookup', {
       parentUuid: fieldAttributes.parentUuid,
       containerUuid: fieldAttributes.containerUuid,
-      contextColumnNames: fieldAttributes.reference.contextColumnNames,
-      contextColumnNamesByDefaultValue: fieldAttributes.contextColumnNames,
+      contextColumnNames: fieldAttributes.reference.context_column_names,
+      contextColumnNamesByDefaultValue: fieldAttributes.context_column_names,
       uuid: fieldAttributes.uuid,
       //
       value

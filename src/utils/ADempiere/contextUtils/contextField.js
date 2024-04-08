@@ -44,13 +44,13 @@ export function getParentFields({
   read_only_logic,
   reference,
   default_value,
-  contextColumnNames = [],
+  context_column_names = [],
   default_value_to
 }) {
   let contextColumnNamesByReference = []
   // validate reference
-  if (!isEmptyValue(reference) && !isEmptyValue(reference.contextColumnNames)) {
-    contextColumnNamesByReference = reference.contextColumnNames
+  if (!isEmptyValue(reference) && !isEmptyValue(reference.context_column_names)) {
+    contextColumnNamesByReference = reference.context_column_names
   }
 
   // remove duplicated elements
@@ -65,7 +65,7 @@ export function getParentFields({
       // For Read Only Logic
       ...evaluator.parseDepends(read_only_logic),
       // For Default Value
-      ...contextColumnNames,
+      ...context_column_names,
       // For Default Value
       ...evaluator.parseDepends(default_value),
       // For Default Value To

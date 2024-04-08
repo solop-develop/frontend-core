@@ -82,7 +82,7 @@ export default {
       if (isEmptyValue(this.metadata.reference)) {
         return fieldRender
       }
-      switch (this.metadata.reference.tableName) {
+      switch (this.metadata.reference.table_name) {
         case 'C_BPartner':
           fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/BusinessPartnerInfo')
           break
@@ -108,7 +108,7 @@ export default {
         return icon
       }
       return iconSearchFieldByTable(
-        this.metadata.reference.tableName
+        this.metadata.reference.table_name
       )
     }
   }

@@ -143,11 +143,11 @@ export default {
         }
 
         let contextAttributesList = []
-        if (!isEmptyValue(this.metadata.reference) && !isEmptyValue(this.metadata.reference.contextColumnNames)) {
+        if (!isEmptyValue(this.metadata.reference) && !isEmptyValue(this.metadata.reference.context_column_names)) {
           contextAttributesList = getContextAttributes({
             parentUuid: this.parentUuid,
             containerUuid: this.containerUuid,
-            contextColumnNames: this.metadata.reference.contextColumnNames,
+            contextColumnNames: this.metadata.reference.context_column_names,
             keyName: 'key'
           })
         }

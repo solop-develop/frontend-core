@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
- Contributor(s): Yamel Senih ysenih@erpya.com www.erpya.com
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 <template>
   <el-container style="background: white; height: 100% !important;display: block;">
@@ -110,7 +110,7 @@
                         }}
                       </span>
                     </div>
-                    <div class="bottom clearfix" style="margin-top: 0px !important!">
+                    <div class="bottom clearfix" style="margin-top: 0px !important;">
                       <el-button
                         type="text"
                         class="button"
@@ -261,7 +261,7 @@ export default {
     listPaymentType(value) {
       if (!this.isEmptyValue(value) && !this.isEmptyValue(value.reference)) {
         this.tenderTypeDisplaye({
-          tableName: value.reference.tableName,
+          tableName: value.reference.table_name,
           query: value.reference.query
         })
       }
@@ -273,7 +273,7 @@ export default {
     }
     if (!this.isEmptyValue(this.listPaymentType) && !this.isEmptyValue(this.listPaymentType.reference)) {
       this.tenderTypeDisplaye({
-        tableName: this.listPaymentType.reference.tableName,
+        tableName: this.listPaymentType.reference.table_name,
         query: this.listPaymentType.reference.query
       })
     }

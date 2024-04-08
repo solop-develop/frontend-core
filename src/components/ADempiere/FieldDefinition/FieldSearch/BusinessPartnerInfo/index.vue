@@ -160,7 +160,7 @@ export default {
         this.containerManager.getSearchRecordsList({
           parentUuid,
           containerUuid: this.metadata.containerUuid,
-          contextColumnNames: this.metadata.reference.contextColumnNames,
+          contextColumnNames: this.metadata.reference.context_column_names,
           tableName: TABLE_NAME,
           uuid: this.metadata.uuid,
           id: this.metadata.id,

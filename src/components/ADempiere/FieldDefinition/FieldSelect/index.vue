@@ -378,11 +378,11 @@ export default {
       this.containerManager.getLookupList({
         parentUuid: this.metadata.parentUuid,
         containerUuid: this.metadata.containerUuid,
-        contextColumnNames: this.metadata.reference.contextColumnNames,
+        contextColumnNames: this.metadata.reference.context_column_names,
         uuid: this.metadata.uuid,
         id: this.metadata.id,
         //
-        tableName: this.metadata.reference.tableName,
+        tableName: this.metadata.reference.table_name,
         columnName: this.metadata.columnName,
         columnUuid: this.metadata.columnUuid,
         searchValue: searchQuery,
@@ -406,11 +406,11 @@ export default {
       this.$store.dispatch('deleteLookup', {
         parentUuid: this.metadata.parentUuid,
         containerUuid: this.metadata.containerUuid,
-        contextColumnNames: this.metadata.reference.contextColumnNames,
-        contextColumnNamesByDefaultValue: this.metadata.contextColumnNames,
+        contextColumnNames: this.metadata.reference.context_column_names,
+        contextColumnNamesByDefaultValue: this.metadata.context_column_names,
         uuid: this.metadata.uuid,
         //
-        tableName: this.metadata.reference.tableName,
+        tableName: this.metadata.reference.table_name,
         columnName: this.metadata.columnName,
         value: this.value
       })

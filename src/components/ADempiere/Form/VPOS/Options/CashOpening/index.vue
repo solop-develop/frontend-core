@@ -157,7 +157,7 @@
                                 }}
                               </span>
                             </div>
-                            <div class="bottom clearfix" style="margin-top: 0px !important!">
+                            <div class="bottom clearfix" style="margin-top: 0px !important;">
                               <el-button
                                 type="text"
                                 class="button"
@@ -708,7 +708,7 @@ export default {
       })
       if (!this.isEmptyValue(value.reference) && this.isEmptyValue(displayPaymentType)) {
         this.$store.dispatch('getLookupListFromServer', {
-          tableName: value.reference.tableName,
+          tableName: value.reference.table_name,
           query: value.reference.query
         })
       }

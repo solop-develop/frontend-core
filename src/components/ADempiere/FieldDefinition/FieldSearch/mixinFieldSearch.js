@@ -94,12 +94,12 @@ export default {
       const allOptions = store.getters.getStoredLookupAll({
         parentUuid: this.metadata.parentUuid,
         containerUuid: this.metadata.containerUuid,
-        contextColumnNames: this.metadata.reference.contextColumnNames,
-        contextColumnNamesByDefaultValue: this.metadata.contextColumnNames,
+        contextColumnNames: this.metadata.reference.context_column_names,
+        contextColumnNamesByDefaultValue: this.metadata.context_column_names,
         uuid: this.metadata.uuid,
         id: this.metadata.id,
         //
-        tableName: this.metadata.reference.tableName,
+        tableName: this.metadata.reference.table_name,
         columnName: this.metadata.columnName,
         value: this.value
       })
@@ -308,8 +308,8 @@ export default {
         value = rowData[elementName]
       }
       // when value is referneced as Account_ID -> C_ElementValue_ID, C_Currency_ID_To -> C_Currency_ID
-      if (isEmptyValue(value) && !isEmptyValue(reference) && !isEmptyValue(reference.tableName)) {
-        const referenceColumn = reference.tableName + IDENTIFIER_COLUMN_SUFFIX
+      if (isEmptyValue(value) && !isEmptyValue(reference) && !isEmptyValue(reference.table_name)) {
+        const referenceColumn = reference.table_name + IDENTIFIER_COLUMN_SUFFIX
         value = rowData[referenceColumn]
       }
 

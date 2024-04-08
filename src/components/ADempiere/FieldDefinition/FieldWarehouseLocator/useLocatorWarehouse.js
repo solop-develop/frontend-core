@@ -89,11 +89,11 @@ export default ({
   })
 
   const contextAttributesList = computed(() => {
-    if (!isEmptyValue(fieldAttributes.reference) && !isEmptyValue(fieldAttributes.reference.contextColumnNames)) {
+    if (!isEmptyValue(fieldAttributes.reference) && !isEmptyValue(fieldAttributes.reference.context_column_names)) {
       return getContextAttributes({
         parentUuid,
         containerUuid,
-        contextColumnNames: fieldAttributes.reference.contextColumnNames,
+        contextColumnNames: fieldAttributes.reference.context_column_names,
         keyName: 'key'
       })
     }
