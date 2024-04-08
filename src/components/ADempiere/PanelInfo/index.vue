@@ -420,7 +420,7 @@ export default defineComponent({
             tabId: currentTab.id,
             windowId: storedWindow.value.id,
             recordId: currentRecordId.value,
-            tableName: currentTab.tableName
+            tableName: currentTab.table_name
           })
         }
       }
@@ -455,7 +455,7 @@ export default defineComponent({
 
     function findListStoreProduct(params) {
       listProductStorage({
-        tableName: currentTab.value.tableName,
+        tableName: currentTab.value.table_name,
         recordId: currentRecordId.value,
         recordUuid: currentRecordUuid.value
       })
