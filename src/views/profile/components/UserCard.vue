@@ -38,14 +38,24 @@
 </template>
 
 <script>
-import PanThumb from '@/components/PanThumb'
-import { getImagePath, buildLinkHref } from '@/utils/ADempiere/resource.js'
 import { defineComponent, computed, ref } from '@vue/composition-api'
+
 import store from '@/store'
+
+// Components and Mixins
+import PanThumb from '@/components/PanThumb'
+
+// Constants
+import { config } from '@/utils/ADempiere/config'
+
+// Utils and Helper Methods
+// import { getImagePath } from '@/utils/ADempiere/resource.js'
+
 export default defineComponent({
   components: {
     PanThumb
   },
+
   props: {
     user: {
       type: Object,
@@ -59,6 +69,7 @@ export default defineComponent({
       }
     }
   },
+
   setup() {
     const currentRole = computed(() => {
       return store.getters['user/getRole']
@@ -74,17 +85,22 @@ export default defineComponent({
 
     const avatarResize = ref('')
 
+    const userAvatar = computed(() => {
+      return store.getters['user/getUserAvatar']
+    })
+
     avatarResize.value = require('@/image/ADempiere/avatar/no-avatar.png')
 
     async function loadImage() {
-      const { image } = userInfo.value
-      if (image) {
-        const blobImage = await getImagePath({
-          file: image,
-          width: 200,
-          height: 200
-        })
-        avatarResize.value = blobImage.href
+      // const { image } = userInfo.value
+      if (userAvatar.value) {
+        // const blobImage = await getImagePath({
+        //   file: image,
+        //   width: 200,
+        //   height: 200
+        // })
+        // avatarResize.value = blobImage.href
+        avatarResize.value = config.adempiere.resource.url + userAvatar.value
       }
     }
 
@@ -98,9 +114,8 @@ export default defineComponent({
       rolesList,
       userInfo,
       // Methods
-      loadImage,
-      getImagePath,
-      buildLinkHref
+      // getImagePath,
+      loadImage
     }
   }
 })

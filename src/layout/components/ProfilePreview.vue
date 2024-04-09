@@ -36,8 +36,11 @@ import store from '@/store'
 // Components and Mixins
 import RolesNavbar from '@/views/profile/components/RolesNavbar'
 
+// Constants
+import { config } from '@/utils/ADempiere/config'
+
 // Utils and Helper Methods
-import { getImagePath } from '@/utils/ADempiere/resource.js'
+// import { getImagePath } from '@/utils/ADempiere/resource.js'
 
 export default defineComponent({
   name: 'ProfilePreview',
@@ -72,6 +75,10 @@ export default defineComponent({
       return store.getters['user/userInfo']
     })
 
+    const userAvatar = computed(() => {
+      return store.getters['user/getUserAvatar']
+    })
+
     const userName = computed(() => {
       if (userInfo.value) return userInfo.value.name
       return ''
@@ -86,14 +93,15 @@ export default defineComponent({
     avatarResize.value = require('@/image/ADempiere/avatar/no-avatar.png')
 
     async function loadImage() {
-      const { image } = userInfo.value
-      if (image) {
-        const blobImage = await getImagePath({
-          file: image,
-          width: 200,
-          height: 200
-        })
-        avatarResize.value = blobImage.href
+      // const { image } = userInfo.value
+      if (userAvatar.value) {
+        // const blobImage = await getImagePath({
+        //   file: image,
+        //   width: 200,
+        //   height: 200
+        // })
+        // avatarResize.value = blobImage.href
+        avatarResize.value = config.adempiere.resource.url + userAvatar.value
       }
     }
 
