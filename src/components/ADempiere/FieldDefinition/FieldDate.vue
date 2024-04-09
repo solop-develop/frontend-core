@@ -51,7 +51,6 @@ import {
 
 // Utils and Helper Methods
 import { getTypeOfValue, isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
-import { changeTimeZone } from '@/utils/ADempiere/formatValue/dateFormat'
 
 /**
  * TODO: Improves set values into store and set in vales in component when change operators
@@ -226,14 +225,6 @@ export default {
         if (startValue === null) {
           startValue = undefined
           endValue = undefined
-        }
-        if (typeof startValue !== 'object' && startValue !== undefined && this.isRenderRange) {
-          startValue = changeTimeZone({
-            value: startValue
-          })
-          endValue = changeTimeZone({
-            value: endValue
-          })
         }
 
         this.$store.commit('updateValueOfField', {
