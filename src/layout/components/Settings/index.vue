@@ -2,66 +2,70 @@
   <div class="drawer-container">
     <!-- <div> -->
     <el-form label-position="top" :inline="true">
-      <el-form-item
-        :label="$t('page.settings.theme')"
-        class="drawer-title"
-      >
-        <theme-picker @change="themeChange" />
-      </el-form-item>
-      <el-form-item
-        :label="$t('page.settings.fixedHeader')"
-        class="drawer-title"
-      >
-        <el-switch v-model="fixedHeader" />
-      </el-form-item>
-      <el-form-item
-        :label="$t('page.settings.tagsView')"
-        class="drawer-title"
-      >
-        <el-switch v-model="tagsView" />
-      </el-form-item>
-      <el-form-item
-        :label="$t('page.settings.fixedHeader')"
-        class="drawer-title"
-      >
-        <el-switch v-model="showNavar" />
-      </el-form-item>
-      <el-form-item
-        :label="$t('page.settings.showContextMenu')"
-        class="drawer-title"
-      >
-        <el-switch v-model="showContextMenu" />
-      </el-form-item>
-      <el-form-item
-        :label="$t('page.settings.isShowTitle')"
-        class="drawer-title"
-      >
-        <el-switch v-model="isShowTitleForm" />
-      </el-form-item>
-      <el-form-item
-        :label="$t('page.settings.isShowMenu')"
-        class="drawer-title"
-      >
-        <el-switch v-model="showMenu" />
-      </el-form-item>
-      <el-form-item
-        :label="$t('page.settings.sidebarLogo')"
-        class="drawer-title"
-      >
-        <el-switch v-model="sidebarLogo" />
-      </el-form-item>
-      <el-form-item
-        :label="$t('page.settings.autoSave')"
-        class="drawer-title"
-      >
-        <el-switch v-model="showAutoSave" />
-      </el-form-item>
-      <el-form-item
-        :label="$t('page.settings.fullGridMode')"
-        class="drawer-title"
-      >
-        <el-switch v-model="showFullGridMode" />
-      </el-form-item>
+      <div>
+        <el-form-item
+          :label="$t('page.settings.theme')"
+          class="drawer-title"
+        >
+          <theme-picker @change="themeChange" />
+        </el-form-item>
+        <el-form-item
+          :label="$t('page.settings.fixedHeader')"
+          class="drawer-title"
+        >
+          <el-switch v-model="fixedHeader" />
+        </el-form-item>
+        <el-form-item
+          :label="$t('page.settings.tagsView')"
+          class="drawer-title"
+        >
+          <el-switch v-model="tagsView" />
+        </el-form-item>
+        <el-form-item
+          :label="$t('page.settings.fixedHeader')"
+          class="drawer-title"
+        >
+          <el-switch v-model="showNavar" />
+        </el-form-item>
+        <el-form-item
+          :label="$t('page.settings.showContextMenu')"
+          class="drawer-title"
+        >
+          <el-switch v-model="showContextMenu" />
+        </el-form-item>
+      </div>
+      <div>
+        <el-form-item
+          :label="$t('page.settings.isShowTitle')"
+          class="drawer-title"
+        >
+          <el-switch v-model="isShowTitleForm" />
+        </el-form-item>
+        <el-form-item
+          :label="$t('page.settings.isShowMenu')"
+          class="drawer-title"
+        >
+          <el-switch v-model="showMenu" />
+        </el-form-item>
+        <el-form-item
+          :label="$t('page.settings.sidebarLogo')"
+          class="drawer-title"
+        >
+          <el-switch v-model="sidebarLogo" />
+        </el-form-item>
+        <el-form-item
+          :label="$t('page.settings.autoSave')"
+          class="drawer-title"
+        >
+          <el-switch v-model="showAutoSave" />
+        </el-form-item>
+        <el-form-item
+          :label="$t('page.settings.fullGridMode')"
+          class="drawer-title"
+        >
+          <el-switch v-model="showFullGridMode" />
+        </el-form-item>
+      </div>
       <el-form-item
         :label="$t('page.settings.mainDashboardCard')"
         class="drawer-title"
@@ -89,6 +93,44 @@
             :key="item.id"
             :label="item.name"
             :value="item.id"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item
+        :label="$t('page.settings.rightPanelContent')"
+        class="drawer-title"
+      >
+        <el-select
+          v-model="panelLeft"
+          multiple
+          size="mini"
+          collapse-tags
+          style="margin-left: 20px;"
+        >
+          <el-option
+            v-for="item in optionsPanelLeft"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item
+        :label="$t('page.settings.leftPanelContent')"
+        class="drawer-title"
+      >
+        <el-select
+          v-model="panelRight"
+          multiple
+          collapse-tags
+          size="mini"
+          style="margin-left: 20px;"
+        >
+          <el-option
+            v-for="item in optionsPanelRight"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
           />
         </el-select>
       </el-form-item>
@@ -373,9 +415,74 @@ export default {
       store.commit('changeShowTitleForm', !isShowTitleForm.value)
     }
 
+    const panelLeft = computed({
+      // getter
+      get() {
+        return store.getters['settings/getPanelLeft']
+      },
+      // setter
+      set(newValue) {
+        // Note: we are using destructuring assignment syntax here.
+        store.dispatch('settings/changeSetting', {
+          key: 'panelLeft',
+          value: newValue
+        })
+      }
+    })
+    const optionsPanelLeft = ref([
+      {
+        value: 'PC',
+        label: 'Graficos Tipos Pie'
+      },
+      {
+        value: 'userfavorites',
+        label: 'Panel de Favoritos'
+      },
+      // {
+      //   value: 'todo',
+      //   label: 'Panel de Por Hacer'
+      // },
+      {
+        value: 'recentItems',
+        label: 'Panel de Últimos documentos'
+      }
+    ])
+    const panelRight = computed({
+      // getter
+      get() {
+        return store.getters['settings/getPanelRight']
+      },
+      // setter
+      set(newValue) {
+        // Note: we are using destructuring assignment syntax here.
+        store.dispatch('settings/changeSetting', {
+          key: 'panelRight',
+          value: newValue
+        })
+      }
+    })
+    const optionsPanelRight = ref([
+      {
+        value: 'BC',
+        label: 'Graficos Tipos Barra'
+      },
+      {
+        value: 'LC',
+        label: 'Graficos Tipos Line'
+      },
+      {
+        value: 'notices',
+        label: 'Panel de Avisos'
+      }
+    ])
     return {
       // data
       activeName,
+      // Ref
+      panelLeft,
+      panelRight,
+      optionsPanelLeft,
+      optionsPanelRight,
       // Computed
       lang,
       colNum,

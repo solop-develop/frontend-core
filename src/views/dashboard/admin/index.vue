@@ -84,7 +84,7 @@
         </template>
       </el-col>
     </el-row>
-    <page-style-settings />
+    <!-- <page-style-settings /> -->
   </div>
 </template>
 

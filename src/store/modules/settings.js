@@ -18,7 +18,7 @@ const state = {
   autoSave: !isEmptyValue(localStorage.getItem('autoSave')) ? convertStringToBoolean(localStorage.getItem('autoSave')) : autoSave,
   fullGridMode: !isEmptyValue(localStorage.getItem('fullGridMode')) ? convertStringToBoolean(localStorage.getItem('fullGridMode')) : fullGridMode,
   showMenu: true,
-  panelLeft: ['PC', 'userfavorites', 'todo', 'recentItems'],
+  panelLeft: ['PC', 'userfavorites', 'recentItems'],
   panelRight: ['BC', 'LC', 'notices']
 }
 
