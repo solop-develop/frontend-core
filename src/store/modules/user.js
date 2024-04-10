@@ -19,7 +19,7 @@
 import language from '@/lang'
 
 // Constants
-import { ORGANIZATION, WAREHOUSE } from '@/utils/ADempiere/constants/systemColumns'
+import { CLIENT, ORGANIZATION, WAREHOUSE } from '@/utils/ADempiere/constants/systemColumns'
 import { title } from '@/settings'
 
 // API Request Methods
@@ -215,8 +215,15 @@ const actions = {
           commit('SET_NAME', name)
           commit('SET_USER', userInfo)
           commit('SET_USER_ID', userInfo.id)
+
           const avatar = userInfo.image
-          commit('SET_AVATAR', avatar)
+          if (!isEmptyValue(avatar)) {
+            // 108=window User
+            // 11/client/window/108/ad_user/101/logo_id/2024-04-0811-55.png
+            const clientId = defaultContext[`#${CLIENT}`]
+            const newLogoPath = `${clientId}/client/window/108/ad_user/${userInfo.id}/logo_id/${userInfo.image}`
+            commit('SET_AVATAR', newLogoPath)
+          }
 
           // TODO: Check decimals Number as String '0.123'
           // set multiple context
@@ -776,6 +783,9 @@ const getters = {
   },
   userInfo: (state) => {
     return state.userInfo
+  },
+  getUserAvatar: (state) => {
+    return state.avatar
   },
   // TODO: Manage with vuex module to personal lock
   getIsPersonalLock: (state) => {

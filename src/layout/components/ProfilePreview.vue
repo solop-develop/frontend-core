@@ -36,8 +36,12 @@ import store from '@/store'
 // Components and Mixins
 import RolesNavbar from '@/views/profile/components/RolesNavbar'
 
+// Constants
+import { config } from '@/utils/ADempiere/config'
+
 // Utils and Helper Methods
-import { getImagePath } from '@/utils/ADempiere/resource.js'
+// import { getImagePath } from '@/utils/ADempiere/resource.js'
+import { requestListResources } from '@/api/ADempiere/file-management/resource-reference.ts'
 
 export default defineComponent({
   name: 'ProfilePreview',
@@ -72,6 +76,10 @@ export default defineComponent({
       return store.getters['user/userInfo']
     })
 
+    // const userAvatar = computed(() => {
+    //   return store.getters['user/getUserAvatar']
+    // })
+
     const userName = computed(() => {
       if (userInfo.value) return userInfo.value.name
       return ''
@@ -86,14 +94,30 @@ export default defineComponent({
     avatarResize.value = require('@/image/ADempiere/avatar/no-avatar.png')
 
     async function loadImage() {
-      const { image } = userInfo.value
-      if (image) {
-        const blobImage = await getImagePath({
-          file: image,
-          width: 200,
-          height: 200
+      // const { image } = userInfo.value
+      if (userInfo.value.image) {
+        // const blobImage = await getImagePath({
+        //   file: image,
+        //   width: 200,
+        //   height: 200
+        // })
+        // avatarResize.value = blobImage.href
+        const clientId = store.getters.getSessionContextClientId
+        // const { table_name } = this.currentTab
+        requestListResources({
+          clientId: clientId,
+          containerId: 108,
+          containerType: 'window',
+          columnName: 'logo_id',
+          recordId: userInfo.value.id,
+          tableName: 'AD_User'
         })
-        avatarResize.value = blobImage.href
+          .then(response => {
+            const image = response.resources[0].name
+            avatarResize.value = config.adempiere.resource.url + image
+            return config.adempiere.resource.url + image
+          })
+        return avatarResize.value
       }
     }
 

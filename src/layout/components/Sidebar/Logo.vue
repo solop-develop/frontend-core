@@ -24,7 +24,7 @@
           <div slot="content">
             {{ getRole.name }} | {{ getRole.client.name }} | {{ storedOrganization.name }}
           </div>
-          <img v-if="logo" :src="logo" class="sidebar-logo" style="height: 50px;width: 50px;">
+          <img v-if="clientLogo" :src="clientLogo" class="sidebar-logo" style="height: 50px;width: 50px;">
           <svg-icon v-else icon-class="AD" class="standard-logo" />
           <b style="margin-left: 5px;">{{ title }}</b>
         </el-tooltip>
@@ -32,7 +32,7 @@
 
       <span v-else>
         <p key="expand" style="display: flex;text-align: center;width: 100%;padding: 0px 15px;margin-top: 0px;">
-          <img v-if="logo" :src="logo" class="sidebar-logo" style="height: 50px;width: 50px;" @click="dashboard()">
+          <img v-if="clientLogo" :src="clientLogo" class="sidebar-logo" style="height: 50px;width: 50px;" @click="dashboard()">
           <svg-icon v-else icon-class="AD" class="standard-logo" />
           <b style="color: white;font-size: 18px;padding-top: 15px;cursor: pointer; margin-left: 5px;" @click="dashboard()">
             {{ systemName }}
@@ -54,7 +54,10 @@ import router from '@/router'
 import store from '@/store'
 
 // Utils and Helper Methods
-import { getImagePath } from '@/utils/ADempiere/resource.js'
+// import { getImagePath } from '@/utils/ADempiere/resource.js'
+
+// Constants
+import { config } from '@/utils/ADempiere/config'
 
 export default defineComponent({
   name: 'SidebarLogo',
@@ -69,7 +72,8 @@ export default defineComponent({
   setup() {
     // Ref
     const title = ref('ADempiere')
-    const logo = ref('')
+    const clientLogo = ref('')
+
     // Computed
     const getRole = computed(() => {
       return store.getters['user/getRole']
@@ -89,12 +93,13 @@ export default defineComponent({
     async function loadImage() {
       const { client } = getRole.value
       if (client.logo) {
-        const blobImage = await getImagePath({
-          file: client.logo,
-          width: 50,
-          height: 50
-        })
-        logo.value = blobImage.href
+        // const blobImage = await getImagePath({
+        //   file: client.logo,
+        //   width: 50,
+        //   height: 50
+        // })
+        // logo.value = blobImage.href
+        clientLogo.value = config.adempiere.resource.url + client.logo
       }
     }
 
@@ -115,7 +120,7 @@ export default defineComponent({
     return {
       // Ref
       title,
-      logo,
+      clientLogo,
       // Computed
       getRole,
       systemName,
