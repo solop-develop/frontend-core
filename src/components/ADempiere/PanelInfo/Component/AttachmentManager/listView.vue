@@ -64,9 +64,10 @@ import store from '@/store'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import {
   formatFileSize,
-  getImagePath,
+  // getImagePath,
   getImageFromContentType
 } from '@/utils/ADempiere/resource.js'
+import { config } from '@/utils/ADempiere/config'
 
 export default defineComponent({
   name: 'ListView',
@@ -89,9 +90,10 @@ export default defineComponent({
           return []
         }
         return storedResourcesList.map(element => {
+          const sourceFile = getSurceFile(element)
           return {
             ...element,
-            src: getSurceFile(element),
+            src: sourceFile,
             isShowMessage: false
           }
         })
@@ -129,27 +131,29 @@ export default defineComponent({
      * Image From Source
      * @param {Object} file
      */
-    const getImageFromSource = (file) => {
-      const image = getImagePath({
-        file: file.file_name,
-        width: 900,
-        height: 500
-      })
-      return image
-    }
+    // const getImageFromSource = (file) => {
+    //   const image = getImagePath({
+    //     file: file.file_name,
+    //     width: 900,
+    //     height: 500
+    //   })
+    //   return image
+    // }
 
     /**
      * Get Surce File
      * @param {Object} file
      */
     function getSurceFile(file) {
+      if (isEmptyValue(file.content_type)) return ''
       if (file.content_type.includes('image')) {
-        return getImageFromSource(file).uri
+        return config.adempiere.resource.url + file.fullName
       }
       return getImageFromContentType({
         contentType: file.content_type,
         fileName: file.file_name
       })
+      // return ''
     }
 
     return {
