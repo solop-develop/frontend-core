@@ -723,7 +723,7 @@ export default defineComponent({
     height: 80% !important
   }
   .style-bot{
-    margin-top:-3%
+    margin-top:-30px
   }
 }
 
@@ -799,7 +799,7 @@ export default defineComponent({
       height: 84% !important
     }
     .style-bot{
-      margin-top:-20px
+      margin-top:-30px
     }
   }
 }
