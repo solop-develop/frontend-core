@@ -45,7 +45,7 @@
               :span="6"
             >
               <text-accounting
-                v-if="field.displayType === 14"
+                v-if="field.display_type === TEXT.id"
                 :metadata="{
                   ...field,
                   value: valuesCombinations(field)
@@ -178,6 +178,7 @@ import {
 } from '@/api/ADempiere/field/generalGedger'
 
 // Constants
+import { TEXT } from '@/utils/ADempiere/references'
 import { ACCOUTING_COMBINATIONS_LIST_FORM, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/accoutingCombination.js'
 
 // Components and Mixins
@@ -430,6 +431,7 @@ export default defineComponent({
     loadCombinations()
 
     return {
+      TEXT,
       // Ref
       setValuesCombinations,
       isLoadingRecords,

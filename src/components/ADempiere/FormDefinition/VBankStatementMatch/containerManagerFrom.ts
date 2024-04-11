@@ -18,9 +18,9 @@
 
 // import { isHiddenField } from '@/utils/ADempiere/references'
 
-export const isDisplayedField = function({ displayType, is_displayed }) {
+export const isDisplayedField = function({ display_type, is_displayed }) {
   // // button field not showed
-  // if (isHiddenField(displayType)) {
+  // if (isHiddenField(display_type)) {
   //   return false
   // }
   // verify if field is active

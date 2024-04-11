@@ -129,8 +129,8 @@ export default defineComponent({
      * Methods
      */
 
-    function isBoolean({ displayType }) {
-      return displayType === YES_NO.id
+    function isBoolean({ display_type }) {
+      return display_type === YES_NO.id
     }
 
     function isRangeField({ is_range, columnName }) {

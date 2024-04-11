@@ -430,7 +430,6 @@ import { processOrder } from '@/api/ADempiere/form/point-of-sales.js'
 
 // Constants
 import fieldsListCollection from './fieldsListCollection.js'
-import { FIELDS_DECIMALS } from '@/utils/ADempiere/references'
 import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
 
 // Utils and Helper Methods
@@ -1196,14 +1195,6 @@ export default {
         currencyToUuid: currency.uuid,
         conversionDate: this.formatDateToSend(this.currentPointOfSales.currentOrder.dateOrdered)
       })
-    },
-    formatNumber({ displayType, number }) {
-      let fixed = 0
-      // Amount, Costs+Prices, Number
-      if (FIELDS_DECIMALS.includes(displayType)) {
-        fixed = 2
-      }
-      return new Intl.NumberFormat().format(number.toFixed(fixed))
     },
     formatPrice,
     sumCash(cash) {

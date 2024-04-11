@@ -116,7 +116,7 @@ export default {
       }
       return listIdentifier
         .filter(field => {
-          // return field.displayType === field.displayType === CHAR.id
+          // return field.display_type === CHAR.id
           return field.identifierSequence > 0
         })
         .sort((fieldA, fieldB) => {
@@ -251,12 +251,12 @@ export default {
           // }
           // find on identifier columns
           for (const field of this.storedIdentifierColumns) {
-            const { columnName, displayColumnName, displayType } = field
+            const { columnName, displayColumnName, display_type } = field
 
             const currentValue = formatField({
               value: row[columnName],
               displayedValue: row[displayColumnName],
-              displayType
+              displayType: display_type
             })
             const valueToCompare = String(currentValue).toLowerCase()
 
@@ -344,12 +344,12 @@ export default {
 
       // generate with identifier columns
       this.storedIdentifierColumns.forEach(field => {
-        const { columnName, displayColumnName, displayType } = field
+        const { columnName, displayColumnName, display_type } = field
 
         const currentValue = formatField({
           value: row[columnName],
           displayedValue: row[displayColumnName],
-          displayType
+          displayType: display_type
         })
 
         if (isEmptyValue(currentValue)) {

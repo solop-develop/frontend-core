@@ -91,7 +91,7 @@ export default {
         return picker
       }
       // Date + Time reference (16)
-      if (this.metadata.displayType === DATE_PLUS_TIME.id) {
+      if (this.metadata.display_type === DATE_PLUS_TIME.id) {
         picker += 'time'
       }
       if (this.isRenderRange && !this.metadata.inTable) {
@@ -121,7 +121,7 @@ export default {
         }
       }
 
-      if (this.metadata.displayType === DATE_PLUS_TIME.id) {
+      if (this.metadata.display_type === DATE_PLUS_TIME.id) {
         format = format + ' hh:mm:ss A'
       }
       return format
@@ -131,7 +131,7 @@ export default {
     },
     formatSend() {
       let format = 'yyyy-MM-dd'
-      if (this.metadata.displayType === DATE_PLUS_TIME.id) {
+      if (this.metadata.display_type === DATE_PLUS_TIME.id) {
         format += ' HH:mm:ss'
       }
       return format

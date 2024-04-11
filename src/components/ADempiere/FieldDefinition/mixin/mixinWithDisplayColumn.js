@@ -101,9 +101,9 @@ export default {
           }
         }
 
-        const { displayColumnName: columnName, containerUuid, inTable, displayType } = this.metadata
+        const { displayColumnName: columnName, containerUuid, inTable, display_type } = this.metadata
 
-        if (isEmptyValue(this.value) && displayType === IMAGE.id) {
+        if (isEmptyValue(this.value) && display_type === IMAGE.id) {
           return undefined
         }
 

@@ -85,7 +85,7 @@
             :container-uuid="uuidForm"
             :field-attributes="{
               columnName: fieldAttributes.column_name,
-              displayType: fieldAttributes.display_type
+              display_type: fieldAttributes.display_type
             }"
             :container-manager="containerManagerList"
             :scope="scope"

@@ -162,9 +162,9 @@ export function isEditableRecord({ parentUuid, containerUuid }) {
 /**
  * Is displayed field in panel single record
  */
-export function isDisplayedField({ is_displayed, display_logic, isDisplayedFromLogic, displayType }) {
+export function isDisplayedField({ is_displayed, display_logic, isDisplayedFromLogic, display_type }) {
   // // button field not showed
-  // if (isHiddenField(displayType)) {
+  // if (isHiddenField(display_type)) {
   //   return false
   // }
 
@@ -185,7 +185,7 @@ export function evaluateDefaultFieldShowed({
   is_key, is_parent, columnName,
   default_value, parsedDefaultValue,
   isShowedFromUser, is_displayed_as_panel,
-  displayType, displayLogic,
+  display_type, displayLogic,
   isMandatory, mandatory_logic, isMandatoryFromLogic
 }) {
   if (!isEmptyValue(is_displayed_as_panel)) {
@@ -208,12 +208,12 @@ export function evaluateDefaultFieldShowed({
   }
 
   const isMandatoryGenerated = isMandatoryField({
-    is_key, columnName, displayType, isMandatory, mandatory_logic, isMandatoryFromLogic
+    is_key, columnName, display_type, isMandatory, mandatory_logic, isMandatoryFromLogic
   })
-  const isEmpty = isEmptyValue(parsedDefaultValue) || (isDecimalField(displayType) && parsedDefaultValue === 0)
+  const isEmpty = isEmptyValue(parsedDefaultValue) || (isDecimalField(display_type) && parsedDefaultValue === 0)
   if (isEmpty && isMandatoryGenerated && !is_parent) {
     // Yes/No field always boolean value (as default value)
-    if (displayType === YES_NO.id) {
+    if (display_type === YES_NO.id) {
       // Business Partner Window
       if (parentUuid === 'a520de12-fb40-11e8-a479-7a0060f0aa01') {
         // Customer Tab
@@ -273,7 +273,7 @@ export function evaluateDefaultColumnShowed({
   parentUuid, containerUuid,
   is_key, is_parent, columnName,
   default_value, parsedDefaultValue,
-  displayType, isShowedTableFromUser, is_displayed_as_table,
+  display_type, isShowedTableFromUser, is_displayed_as_table,
   isMandatory, mandatory_logic, isMandatoryFromLogic
 }) {
   if (!isEmptyValue(is_displayed_as_table)) {
@@ -293,12 +293,12 @@ export function evaluateDefaultColumnShowed({
   }
 
   const isMandatoryGenerated = isMandatoryColumn({
-    is_key, columnName, displayType, isMandatory, mandatory_logic, isMandatoryFromLogic
+    is_key, columnName, display_type, isMandatory, mandatory_logic, isMandatoryFromLogic
   })
-  const isEmpty = isEmptyValue(parsedDefaultValue) || (isDecimalField(displayType) && parsedDefaultValue === 0)
+  const isEmpty = isEmptyValue(parsedDefaultValue) || (isDecimalField(display_type) && parsedDefaultValue === 0)
   if (isEmpty && isMandatoryGenerated && !is_parent) {
     // Yes/No field always boolean value (as default value)
-    if (displayType === YES_NO.id) {
+    if (display_type === YES_NO.id) {
       return false
     }
     return true
@@ -334,8 +334,8 @@ export function evaluateDefaultColumnShowed({
  * @param {boolean} isMandatoryFromLogic
  * @returns {boolean}
  */
-export function isMandatoryField({ is_key, columnName, displayType, isMandatory, mandatory_logic, isMandatoryFromLogic }) {
-  if (displayType === BUTTON.id) {
+export function isMandatoryField({ is_key, columnName, display_type, isMandatory, mandatory_logic, isMandatoryFromLogic }) {
+  if (display_type === BUTTON.id) {
     return false
   }
 
@@ -383,9 +383,9 @@ export function isReadOnlyField({ is_read_only, read_only_logic, isReadOnlyFromL
 /**
  * Is displayed column in table multi record
  */
-export function isDisplayedColumn({ is_displayed, is_displayed_grid, isDisplayedFromLogic, is_key, displayType, display_logic }) {
+export function isDisplayedColumn({ is_displayed, is_displayed_grid, isDisplayedFromLogic, is_key, display_type, display_logic }) {
   // key or button field not showed
-  if (is_key || isHiddenField(displayType)) {
+  if (is_key || isHiddenField(display_type)) {
     return false
   }
 
@@ -394,7 +394,7 @@ export function isDisplayedColumn({ is_displayed, is_displayed_grid, isDisplayed
     (isEmptyValue(display_logic) || isDisplayedFromLogic)
 }
 
-export function isMandatoryColumn({ is_key, columnName, displayType, is_mandatory, mandatory_logic, isMandatoryFromLogic }) {
+export function isMandatoryColumn({ is_key, columnName, display_type, is_mandatory, mandatory_logic, isMandatoryFromLogic }) {
   const notMandatoryRender = [
     VALUE, DOCUMENT_NO, 'M_AttributeSetInstance_ID'
   ]
@@ -406,7 +406,7 @@ export function isMandatoryColumn({ is_key, columnName, displayType, is_mandator
     return false
   }
 
-  if (displayType === BUTTON.id) {
+  if (display_type === BUTTON.id) {
     return false
   }
   return is_mandatory || (!isEmptyValue(mandatory_logic) && isMandatoryFromLogic)
@@ -498,7 +498,7 @@ export const createNewRecord = {
         if (field.isVirtualColumn || field.is_key) {
           return false
         }
-        if ([ID.id, LOCATION_ADDRESS.id].includes(field.displayType)) {
+        if ([ID.id, LOCATION_ADDRESS.id].includes(field.display_type)) {
           return false
         }
         // Ignore Standard Values
@@ -1713,10 +1713,10 @@ export const containerManager = {
   },
 
   isDisplayedField,
-  isDisplayedDefault: ({ isMandatory, is_parent, default_value, displayType, parsedDefaultValue }) => {
+  isDisplayedDefault: ({ isMandatory, is_parent, default_value, display_type, parsedDefaultValue }) => {
     if (isMandatory && !is_parent && isEmptyValue(default_value)) {
       // Yes/No field always boolean value (as default value)
-      if (displayType === YES_NO.id) {
+      if (display_type === YES_NO.id) {
         return false
       }
       return true
@@ -1724,10 +1724,10 @@ export const containerManager = {
     return false
   },
   isDisplayedColumn,
-  isDisplayedDefaultTable: ({ isMandatory, is_parent, default_value, displayType, parsedDefaultValue }) => {
+  isDisplayedDefaultTable: ({ isMandatory, is_parent, default_value, display_type, parsedDefaultValue }) => {
     if (isMandatory && !is_parent && isEmptyValue(default_value)) {
       // Yes/No field always boolean value (as default value)
-      if (displayType === YES_NO.id) {
+      if (display_type === YES_NO.id) {
         return false
       }
       return true

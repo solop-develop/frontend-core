@@ -200,9 +200,9 @@ export function createFieldFromDefinition({
   definition = {}
 }) {
   if (!isEmptyValue(definition)) {
-    if (isEmptyValue(definition.displayType)) {
-      definition.displayType = CHAR.id
-    } else if (definition.displayType === TABLE_DIRECT.id &&
+    if (isEmptyValue(definition.display_type)) {
+      definition.display_type = CHAR.id
+    } else if (definition.display_type === TABLE_DIRECT.id &&
       isEmptyValue(definition.tableName) &&
       columnName.indexOf('_ID') > 0) {
       definition.tableName = columnName.replace('_ID', '')
@@ -238,12 +238,12 @@ export function createFieldFromDefinition({
 
 // Default template for injected fields
 export function getFieldTemplate(overwriteDefinition) {
-  let displayType = CHAR.id // String reference (10)
-  if (!isEmptyValue(overwriteDefinition.displayType)) {
-    displayType = overwriteDefinition.displayType
+  let display_type = CHAR.id // String reference (10)
+  if (!isEmptyValue(overwriteDefinition.display_type)) {
+    display_type = overwriteDefinition.display_type
   }
 
-  const componentReference = evalutateTypeField(displayType)
+  const componentReference = evalutateTypeField(display_type)
 
   // set size from displayed, max 24
   let size = DEFAULT_SIZE
@@ -278,7 +278,7 @@ export function getFieldTemplate(overwriteDefinition) {
       name: '',
       fieldGroupType: ''
     },
-    displayType,
+    display_type,
     componentPath: componentReference.componentPath,
     size,
     isFieldOnly: false,

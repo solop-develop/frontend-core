@@ -137,7 +137,7 @@ export function getContextDefaultValue({
   columnName,
   elementName,
   componentPath,
-  displayType,
+  display_type,
   default_value,
   isMandatory,
   isColumnReadOnlyForm,
@@ -202,11 +202,11 @@ export function getContextDefaultValue({
       parsedDefaultValue = default_value
     }
     if (isEmptyValue(parsedDefaultValue)) {
-      if (isNumberField(displayType)) {
+      if (isNumberField(display_type)) {
         if (isMandatory) {
           parsedDefaultValue = 0
         }
-      } else if (isIdentifierField(displayType)) {
+      } else if (isIdentifierField(display_type)) {
         parsedDefaultValue = -1
       }
     }
@@ -216,7 +216,7 @@ export function getContextDefaultValue({
   parsedDefaultValue = parsedValueComponent({
     columnName,
     componentPath,
-    displayType,
+    displayType: display_type,
     isMandatory,
     value: parsedDefaultValue
   })

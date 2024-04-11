@@ -53,7 +53,7 @@ const actions = {
             columnName: itemField.columnName,
             displayColumnName: itemField.displayColumnName,
             identifierSequence: itemField.identifierSequence,
-            displayType: itemField.displayType,
+            display_type: itemField.display_type,
             componentPath: itemField.componentPath
           })
         }
@@ -686,7 +686,7 @@ const actions = {
         })
       }
       // update displayed value for field
-      if (isLookup(field.displayType)) {
+      if (isLookup(field.display_type)) {
         commit('updateValueOfField', {
           parentUuid,
           containerUuid,

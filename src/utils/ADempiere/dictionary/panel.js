@@ -178,7 +178,7 @@ export function generatePanelAndFields({
         columnName,
         displayColumnName: fieldDefinition.displayColumnName,
         identifierSequence: fieldDefinition.identifierSequence,
-        displayType: fieldDefinition.displayType,
+        display_type: fieldDefinition.display_type,
         componentPath
       })
     }

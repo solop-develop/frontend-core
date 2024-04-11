@@ -179,7 +179,7 @@ export default {
       if (['FieldTextLong', 'FieldImage'].includes(this.field.componentPath)) {
         return 'field-text-long'
       }
-      if ([TEXT.id].includes(this.field.displayType)) {
+      if ([TEXT.id].includes(this.field.display_type)) {
         return 'field-text-area'
       }
       return 'field-standard'
@@ -365,7 +365,7 @@ export default {
     },
 
     isOnlyField() {
-      return this.field.isFieldOnly || [BUTTON.id].includes(this.field.displayType)
+      return this.field.isFieldOnly || [BUTTON.id].includes(this.field.display_type)
     },
     currentTab() {
       if (this.isEmptyValue(this.parentUuid) || !this.containerManager.getPanel) {
@@ -435,7 +435,7 @@ export default {
     // assined field with prop
     this.field = this.metadataField
     if (this.field.isCustomField && !this.field.componentPath) {
-      let componentReference = evalutateTypeField(this.field.displayType)
+      let componentReference = evalutateTypeField(this.field.display_type)
       if (isEmptyValue(componentReference)) {
         componentReference = {
           componentPath: 'FieldText'

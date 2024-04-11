@@ -91,7 +91,7 @@ export default {
 
     isFiltrable() {
       if (this.isMobile) {
-        if (LIST.id === this.metadata.displayType) {
+        if (LIST.id === this.metadata.display_type) {
           return false
         }
       }
@@ -352,17 +352,17 @@ export default {
       }
     },
     remoteSearch(searchQuery = '') {
-      const results = this.localSearch(searchQuery)
-      if (isEmptyValue(searchQuery) ||
-        (!isEmptyValue(searchQuery) && (isEmptyValue(results) || results.length < 3))) {
-        clearTimeout(this.timeOut)
-        this.timeOut = setTimeout(() => {
-          this.loadListFromServer(searchQuery)
-        }, 500)
-        return
-      }
+      // const results = this.localSearch(searchQuery)
+      // if (isEmptyValue(searchQuery) ||
+      //   (!isEmptyValue(searchQuery) && (isEmptyValue(results) || results.length < 3))) {
+      clearTimeout(this.timeOut)
+      this.timeOut = setTimeout(() => {
+        this.loadListFromServer(searchQuery)
+      }, 500)
+      // return
+      // }
       // use this, if remote is enabled, local search not working
-      this.optionsList = results
+      // this.optionsList = results
     },
     localSearch(searchQuery = '') {
       if (isEmptyValue(searchQuery)) {

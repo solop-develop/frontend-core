@@ -147,8 +147,8 @@ const persistence = {
           oldValue = defaultValueGenerated
         }
 
-        if (isSupportLookup(field.displayType) || IMAGE.id === field.displayType ||
-          (['DocAction', 'Record_ID'].includes(columnName) && BUTTON.id === field.displayType)) {
+        if (isSupportLookup(field.display_type) || IMAGE.id === field.display_type ||
+          (['DocAction', 'Record_ID'].includes(columnName) && BUTTON.id === field.display_type)) {
           let displayedValue
           if (!isEmptyValue(currentRecord)) {
             displayedValue = currentRecord[field.displayColumnName]
@@ -182,7 +182,7 @@ const persistence = {
           dispatch('startCallout', {
             parentUuid,
             containerUuid,
-            displayType: field.displayType,
+            displayType: field.display_type,
             callout: field.callout,
             columnName,
             value,

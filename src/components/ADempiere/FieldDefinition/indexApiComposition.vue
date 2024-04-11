@@ -139,7 +139,7 @@ export default defineComponent({
       if (['FieldTextLong', 'FieldImage'].includes(field.value.componentPath)) {
         return 'field-text-long'
       }
-      if ([TEXT.id].includes(field.value.displayType)) {
+      if ([TEXT.id].includes(field.value.display_type)) {
         return 'field-text-area'
       }
       return 'field-standard'
@@ -282,7 +282,7 @@ export default defineComponent({
 
     // assined field with prop
     if (field.value.isCustomField && !field.value.componentPath) {
-      let componentReference = evalutateTypeField(field.value.displayType)
+      let componentReference = evalutateTypeField(field.value.display_type)
       if (isEmptyValue(componentReference)) {
         componentReference = {
           componentPath: 'FieldText'
