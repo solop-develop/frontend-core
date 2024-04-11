@@ -103,8 +103,7 @@ export function generateField({
   let valueIsReadOnlyForm
 
   let isColumnDocumentStatus = false
-
-  const componentReference = evalutateTypeField(fieldToGenerate.displayType)
+  const componentReference = evalutateTypeField(fieldToGenerate.display_type)
 
   // evaluate logics (diplayed, mandatory, readOnly)
   let evaluatedLogics = getEvaluatedFieldLogics({
