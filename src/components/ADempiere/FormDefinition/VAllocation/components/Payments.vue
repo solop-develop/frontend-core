@@ -351,7 +351,10 @@ export default defineComponent({
       },
       // setter
       set(value) {
-        store.commit('setProcess', value)
+        store.commit('setProcess', {
+          attribute: 'description',
+          value
+        })
       }
     })
 
