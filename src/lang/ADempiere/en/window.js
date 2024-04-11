@@ -18,8 +18,8 @@
 
 const window = {
   advancedQuery: {
-    title: 'Consulta Avanzada',
-    help: 'Realiza una búsqueda haciendo uso de rangos de valores, selección múltiple de valores, y operadores de comparación'
+    title: 'Advanced Query',
+    help: 'Perform a search using ranges of values, multiple selection of values, and comparison operators'
   },
   newRecord: 'New Record',
   copyRecord: 'Copy Record',
