@@ -174,7 +174,7 @@ export default {
             parentUuid: this.parentUuid,
             containerUuid: this.containerUuid,
             uuid: this.metadata.process.uuid,
-            browserUuid: this.metadata.process.browser.uuid
+            browserUuid: this.metadata.process.browse.uuid
           }),
           isEnabled: () => generateReportOfWindow.enabled({
             parentUuid: this.parentUuid,
