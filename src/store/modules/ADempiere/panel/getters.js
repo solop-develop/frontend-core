@@ -341,7 +341,7 @@ const getters = {
         }
 
         // add display column to default
-        if (isSupportLookup(fieldItem.displayType)) {
+        if (isSupportLookup(fieldItem.display_type)) {
           const { displayColumnName } = fieldItem
           let displayedValue
           if (!isEmptyValue(parsedDefaultValue)) {
@@ -570,7 +570,7 @@ const getters = {
               return parsedValueComponent({
                 columnName,
                 componentPath: parameterItem.componentPath,
-                displayType: parameterItem.displayType,
+                displayType: parameterItem.display_type,
                 isMandatory: isMandatoryGenerated,
                 value: itemValue
               })

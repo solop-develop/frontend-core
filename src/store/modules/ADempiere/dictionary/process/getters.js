@@ -109,7 +109,7 @@ export default {
       if (fieldItem.is_info_only) {
         return false
       }
-      const { columnName, displayType } = fieldItem
+      const { columnName, display_type } = fieldItem
       const isMandatory = isMandatoryField(fieldItem)
       if (!isMandatory) {
         // evaluate displayed fields
@@ -123,10 +123,10 @@ export default {
         columnName
       })
 
-      const isDateField = FIELDS_DATE.includes(displayType)
-      const isDecimalField = FIELDS_DECIMALS.includes(displayType)
+      const isDateField = FIELDS_DATE.includes(display_type)
+      const isDecimalField = FIELDS_DECIMALS.includes(display_type)
 
-      if (fieldItem.is_range && !isNumberField(fieldItem.displayType)) {
+      if (fieldItem.is_range && !isNumberField(fieldItem.display_type)) {
         const valueTo = rootGetters.getValueOfField({
           containerUuid,
           columnName: fieldItem.columnNameTo

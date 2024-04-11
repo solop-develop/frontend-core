@@ -88,7 +88,7 @@ export const zoomInOptionItem = {
     }
 
     // TODO: Evaluate reference.key_column_name: AD_Ref_List.Value
-    if (fieldAttributes.displayType === LIST.id) {
+    if (fieldAttributes.display_type === LIST.id) {
       columnName = 'AD_Reference_ID'
       // TODO: Direct query is deprecated
       // const valueQuery = reference.directQuery

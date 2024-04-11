@@ -99,7 +99,7 @@ export default {
         columnName
       })
 
-      if (fieldItem.is_range && !isNumberField(fieldItem.displayType)) {
+      if (fieldItem.is_range && !isNumberField(fieldItem.display_type)) {
         const valueTo = rootGetters.getValueOfField({
           containerUuid,
           columnName: fieldItem.columnNameTo
@@ -141,7 +141,7 @@ export default {
 
     fieldsList.forEach(fieldItem => {
       // default operator
-      const { is_info_only, columnName, columnNameTo, operator, displayType } = fieldItem
+      const { is_info_only, columnName, columnNameTo, operator, display_type } = fieldItem
       if (is_info_only) {
         return false
       }
@@ -167,7 +167,7 @@ export default {
           return
         }
         // TODO: Improve conditions
-        if (FIELDS_DATE.includes(displayType)) {
+        if (FIELDS_DATE.includes(display_type)) {
           if (MULTIPLE_VALUES_OPERATORS_LIST.includes(operator)) {
             values = contextValue
           } else if (RANGE_VALUE_OPERATORS_LIST.includes(operator)) {

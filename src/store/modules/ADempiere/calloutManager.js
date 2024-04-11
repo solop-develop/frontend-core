@@ -78,14 +78,14 @@ const calloutManager = {
           const field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
           let currentDisplayType = null
           if (!isEmptyValue(field)) {
-            currentDisplayType = field.displayType
+            currentDisplayType = field.display_type
           } else {
             // find on parent tab (first tab)
             const parentField = fieldsListParent.find(fieldItem => {
               return fieldItem.columnName === columnName
             })
             if (!isEmptyValue(parentField)) {
-              currentDisplayType = parentField.displayType
+              currentDisplayType = parentField.display_type
             }
           }
           if (getTypeOfValue(currentValue) !== 'OBJECT') {

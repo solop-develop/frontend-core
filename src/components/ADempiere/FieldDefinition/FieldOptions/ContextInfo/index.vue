@@ -162,7 +162,7 @@ export default defineComponent({
       })
     })
     const displayValueField = computed(() => {
-      if (!isLookup(props.fieldAttributes.displayType)) {
+      if (!isLookup(props.fieldAttributes.display_type)) {
         return null
       }
       const { parentUuid, containerUuid, columnName } = props.fieldAttributes

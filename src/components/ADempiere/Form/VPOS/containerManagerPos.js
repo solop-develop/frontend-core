@@ -47,9 +47,9 @@ export function isMandatoryField({ isMandatory, isMandatoryFromLogic }) {
   return isMandatory || isMandatoryFromLogic
 }
 
-export function isDisplayedField({ displayType, is_displayed, isDisplayedFromLogic }) {
+export function isDisplayedField({ display_type, is_displayed, isDisplayedFromLogic }) {
   // // button field not showed
-  // if (isHiddenField(displayType)) {
+  // if (isHiddenField(display_type)) {
   //   return false
   // }
   // verify if field is active

@@ -35,16 +35,16 @@ export const CONTAINER_PROCESS_PREFIX = 'process_'
 
 /**
  * Is displayed field parameter in process/report panel
- * @param {number} displayType
+ * @param {number} display_type
  * @param {boolean} isActive
  * @param {boolean} is_displayed
  * @param {string} displayLogic
  * @param {boolean} isDisplayedFromLogic
  * @returns {boolean}
  */
-export function isDisplayedField({ displayType, is_displayed, display_logic, isDisplayedFromLogic }) {
+export function isDisplayedField({ display_type, is_displayed, display_logic, isDisplayedFromLogic }) {
   // button field not showed
-  if (isHiddenField(displayType)) {
+  if (isHiddenField(display_type)) {
     return false
   }
 
@@ -56,7 +56,7 @@ export function isDisplayedField({ displayType, is_displayed, display_logic, isD
  * Default showed field from user
  */
 export function evaluateDefaultFieldShowed({
-  default_value, displayType, parsedDefaultValue,
+  default_value, display_type, parsedDefaultValue,
   isShowedFromUser, is_displayed_as_panel,
   is_mandatory, display_logic
 }) {
@@ -67,7 +67,7 @@ export function evaluateDefaultFieldShowed({
     return true
   }
   const isMandatoryGenerated = isMandatoryField({
-    displayType, is_mandatory
+    display_type, is_mandatory
   })
   if (isMandatoryGenerated) {
     return true
@@ -84,8 +84,8 @@ export function evaluateDefaultFieldShowed({
  * @param {boolean} isMandatory
  * @returns {boolean}
  */
-export function isMandatoryField({ displayType, isMandatory }) {
-  if (displayType === BUTTON.id) {
+export function isMandatoryField({ display_type, isMandatory }) {
+  if (display_type === BUTTON.id) {
     return false
   }
   return isMandatory

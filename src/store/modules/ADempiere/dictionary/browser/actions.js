@@ -87,7 +87,7 @@ export default {
           browserDefinition.fieldsList.forEach(fieldItem => {
             browserDefinition.elementsList[fieldItem.columnName] = fieldItem.elementName
             browserDefinition.columnsList[fieldItem.elementName] = fieldItem.columnName
-            if (isLookup(fieldItem.displayType)) {
+            if (isLookup(fieldItem.display_type)) {
               browserDefinition.elementsList[DISPLAY_COLUMN_PREFIX + fieldItem.columnName] = DISPLAY_COLUMN_PREFIX + fieldItem.elementName
               browserDefinition.columnsList[DISPLAY_COLUMN_PREFIX + fieldItem.elementName] = DISPLAY_COLUMN_PREFIX + fieldItem.columnName
             }

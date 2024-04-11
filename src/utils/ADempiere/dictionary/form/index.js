@@ -48,15 +48,15 @@ export function changeFieldShowedFromUser({ containerUuid, fieldsShowed = [] }) 
 
 /**
  * Is displayed field
- * @param {number} displayType
+ * @param {number} display_type
  * @param {boolean} is_displayed
  * @param {string} displayLogic
  * @param {boolean} isDisplayedFromLogic
  * @returns {boolean}
  */
-export function isDisplayedField({ displayType, is_displayed, displayLogic, isDisplayedFromLogic }) {
+export function isDisplayedField({ display_type, is_displayed, displayLogic, isDisplayedFromLogic }) {
   // fields not showed
-  if (isHiddenField(displayType)) {
+  if (isHiddenField(display_type)) {
     return false
   }
 

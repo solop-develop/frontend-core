@@ -34,7 +34,7 @@
     /> -->
 
     <p
-      v-else-if="!isEmptyValue(displayedValue) && displayedValue.length >= 23 && fieldAttributes.displayType != IMAGE.id"
+      v-else-if="!isEmptyValue(displayedValue) && displayedValue.length >= 23 && fieldAttributes.display_type != IMAGE.id"
       key="display-column"
       style="max-height: 40px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap; margin: 5px;"
     >
@@ -191,16 +191,16 @@ export default defineComponent({
         value: currentValue,
         currency: props.dataRow[DISPLAY_COLUMN_PREFIX + CURRENCY],
         displayedValue: props.dataRow[displayColumnName.value],
-        displayType: props.fieldAttributes.displayType
+        displayType: props.fieldAttributes.display_type
       })
     })
 
     const cellCssClass = computed(() => {
       let classCss = ''
-      if (isNumberField(props.fieldAttributes.displayType) || props.fieldAttributes.componentPath === 'FieldNumber') {
+      if (isNumberField(props.fieldAttributes.display_type) || props.fieldAttributes.componentPath === 'FieldNumber') {
         classCss = ' cell-align-right '
       }
-      if (props.fieldAttributes.isColumnDocumentStatus || props.fieldAttributes.displayType === IMAGE.id) {
+      if (props.fieldAttributes.isColumnDocumentStatus || props.fieldAttributes.display_type === IMAGE.id) {
         classCss = ' cell-align-center '
       }
       return classCss

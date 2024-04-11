@@ -116,7 +116,7 @@ export default defineComponent({
     })
 
     const isRowChangeEdited = computed(() => {
-      if ([BINARY_DATA.id, IMAGE.id].includes(props.fieldAttributes.displayType)) {
+      if ([BINARY_DATA.id, IMAGE.id].includes(props.fieldAttributes.display_type)) {
         return false
       }
       if (props.dataRow.isEditRow && !isReadOnly.value) {

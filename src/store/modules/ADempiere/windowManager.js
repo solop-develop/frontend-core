@@ -1080,7 +1080,7 @@ const windowManager = {
             return
           }
           // TODO: Improve conditions
-          if (FIELDS_DATE.includes(field.displayType)) {
+          if (FIELDS_DATE.includes(field.display_type)) {
             if (MULTIPLE_VALUES_OPERATORS_LIST.includes(operator)) {
               values = contextValue
             } else if (RANGE_VALUE_OPERATORS_LIST.includes(operator)) {

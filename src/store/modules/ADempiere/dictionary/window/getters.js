@@ -261,7 +261,7 @@ export default {
         attributesObject[columnName] = parsedDefaultValue
 
         // add display column to default
-        if (isAddDisplayColumn && isSupportLookup(fieldItem.displayType) || fieldItem.displayType === ID.id) {
+        if (isAddDisplayColumn && isSupportLookup(fieldItem.display_type) || fieldItem.display_type === ID.id) {
           const { displayColumnName } = fieldItem
           let displayedValue
           if (!isEmptyValue(parsedDefaultValue)) {
@@ -380,7 +380,7 @@ export default {
         }
         // Yes/No field always boolean value
         const { default_value } = fieldItem
-        const isYesNo = fieldItem.displayType === YES_NO.id
+        const isYesNo = fieldItem.display_type === YES_NO.id
         if (isMandatory && (isEmptyValue(default_value) && !isYesNo)) {
           if (isTable) {
             return true
