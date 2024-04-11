@@ -202,9 +202,6 @@ export default {
         if (inTable) {
           // implement container manager row
           if (this.containerManager && this.containerManager.setCell) {
-            if (typeof value !== 'object' && value !== undefined) {
-              value = new Date(value)
-            }
             this.containerManager.setCell({
               containerUuid,
               rowIndex: this.metadata.rowIndex,
