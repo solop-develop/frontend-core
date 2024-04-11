@@ -285,7 +285,7 @@ export function getFieldTemplate(overwriteDefinition) {
     is_range: false,
     isSameLine: false,
     sequence: 0,
-    seqNoGrid: 0,
+    seq_no_grid: 0,
     is_identifier: 0,
     is_key: false,
     is_selection_column: false,

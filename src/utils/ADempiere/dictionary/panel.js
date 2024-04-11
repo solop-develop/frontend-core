@@ -29,7 +29,7 @@ import { templateFields } from '@/utils/ADempiere/dictionary/window/templatesWin
  * Order the fields, then assign the groups to each field, and finally group
  * in an array according to each field group to show in panel (or table).
  * @param {array} fieldsList
- * @param {string} orderBy sequence, sortNo, seqNoGrid
+ * @param {string} orderBy sequence, sort_no, seq_no_grid
  * @param {string} type asc | desc
  * @returns {array}
  */
@@ -59,7 +59,7 @@ export function sortFields({
  * [assignedGroup]
  * @param {array} fieldsList List of fields
  * @param {string} groupToAssigned group assing to fields
- * @param {string} orderBy sequence, sortNo, seqNoGrid
+ * @param {string} orderBy sequence, sort_no, seq_no_grid
  * @return {array} fieldsList
  */
 export function assignedGroup({
@@ -134,7 +134,7 @@ export function generatePanelAndFields({
   isAddFieldUuid = false,
   isAddLinkColumn = false,
   fieldOverwrite = {},
-  sortField = 'sequence', // sequence, sortNo, seqNoGrid,
+  sortField = 'sequence', // sequence, sort_no, seq_no_grid,
   evaluateDefaultFieldShowed,
   evaluateDefaultColumnShowed
 }) {

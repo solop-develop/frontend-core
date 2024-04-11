@@ -57,11 +57,11 @@ export function isDisplayedField({ displayType, is_displayed, display_logic, isD
  */
 export function evaluateDefaultFieldShowed({
   default_value, displayType, parsedDefaultValue,
-  isShowedFromUser, isDisplayedAsPanel,
+  isShowedFromUser, is_displayed_as_panel,
   is_mandatory, display_logic
 }) {
-  if (!isEmptyValue(isDisplayedAsPanel)) {
-    return convertStringToBoolean(isDisplayedAsPanel)
+  if (!isEmptyValue(is_displayed_as_panel)) {
+    return convertStringToBoolean(is_displayed_as_panel)
   }
   if (!isEmptyValue(display_logic)) {
     return true
