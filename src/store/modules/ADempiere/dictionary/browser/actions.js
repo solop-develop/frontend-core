@@ -77,7 +77,7 @@ export default {
             fieldOverwrite: {
               isShowedFromUser: false
             },
-            sortField: 'seqNoGrid',
+            sortField: 'seq_no_grid',
             evaluateDefaultFieldShowed,
             evaluateDefaultColumnShowed
           })

@@ -278,8 +278,8 @@ export function generateField({
 
       // increment order sequence
       field.sequence = field.sequence > 0 ? field.sequence + 1 : 0
-      field.seqNoGrid = field.seqNoGrid > 0 ? field.seqNoGrid + 1 : 0
-      field.sortNo = field.sortNo > 0 ? field.sortNo + 1 : 0
+      field.seq_no_grid = field.seq_no_grid > 0 ? field.seq_no_grid + 1 : 0
+      field.sort_no = field.sort_no > 0 ? field.sort_no + 1 : 0
 
       // if field with value displayed in main panel
       field.isShowedFromUser = evaluateDefaultFieldShowed({

@@ -53,12 +53,12 @@ export function isDisplayedField({ displayType, is_query_criteria, displayLogic,
  */
 export function evaluateDefaultFieldShowed({
   displayType, is_query_criteria,
-  isShowedFromUser, isDisplayedAsPanel,
+  isShowedFromUser, is_displayed_as_panel,
   default_value, parsedDefaultValue, displayLogic,
   isMandatory, isMandatoryFromLogic, mandatory_logic
 }) {
-  if (!isEmptyValue(isDisplayedAsPanel)) {
-    return convertStringToBoolean(isDisplayedAsPanel)
+  if (!isEmptyValue(is_displayed_as_panel)) {
+    return convertStringToBoolean(is_displayed_as_panel)
   }
   if (!isEmptyValue(displayLogic)) {
     return true
@@ -93,11 +93,11 @@ export function isReadOnlyField({ is_query_criteria, operator, isReadOnlyFromLog
 
 export function evaluateDefaultColumnShowed({
   is_key, displayType, is_displayed,
-  isShowedTableFromUser, isDisplayedAsTable,
+  isShowedTableFromUser, is_displayed_as_table,
   isMandatory, isMandatoryFromLogic, mandatory_logic
 }) {
-  if (!isEmptyValue(isDisplayedAsTable)) {
-    return convertStringToBoolean(isDisplayedAsTable)
+  if (!isEmptyValue(is_displayed_as_table)) {
+    return convertStringToBoolean(is_displayed_as_table)
   }
   // const isDisplayedColumnGenerated = isDisplayedColumn({
   //   is_key,

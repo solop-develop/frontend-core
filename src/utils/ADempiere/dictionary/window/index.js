@@ -184,12 +184,12 @@ export function evaluateDefaultFieldShowed({
   parentUuid, containerUuid,
   is_key, is_parent, columnName,
   default_value, parsedDefaultValue,
-  isShowedFromUser, isDisplayedAsPanel,
+  isShowedFromUser, is_displayed_as_panel,
   displayType, displayLogic,
   isMandatory, mandatory_logic, isMandatoryFromLogic
 }) {
-  if (!isEmptyValue(isDisplayedAsPanel)) {
-    return convertStringToBoolean(isDisplayedAsPanel)
+  if (!isEmptyValue(is_displayed_as_panel)) {
+    return convertStringToBoolean(is_displayed_as_panel)
   }
   if (String(default_value).startsWith('@SQL=')) {
     return true
@@ -273,11 +273,11 @@ export function evaluateDefaultColumnShowed({
   parentUuid, containerUuid,
   is_key, is_parent, columnName,
   default_value, parsedDefaultValue,
-  displayType, isShowedTableFromUser, isDisplayedAsTable,
+  displayType, isShowedTableFromUser, is_displayed_as_table,
   isMandatory, mandatory_logic, isMandatoryFromLogic
 }) {
-  if (!isEmptyValue(isDisplayedAsTable)) {
-    return convertStringToBoolean(isDisplayedAsTable)
+  if (!isEmptyValue(is_displayed_as_table)) {
+    return convertStringToBoolean(is_displayed_as_table)
   }
   if (String(default_value).startsWith('@SQL=')) {
     return true

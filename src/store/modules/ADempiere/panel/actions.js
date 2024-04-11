@@ -92,7 +92,7 @@ const actions = {
 
       let orderBy = 'sequence'
       if ((panelType === 'window' && !params.isParentTab) || panelType === 'browser') {
-        orderBy = 'seqNoGrid'
+        orderBy = 'seq_no_grid'
       }
       params.fieldsList = assignedGroup({
         fieldsList: params.fieldsList,

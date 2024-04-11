@@ -405,7 +405,7 @@ export default defineComponent({
         fieldOverwrite: {
           isShowedFromUser: false
         },
-        sortField: 'seqNoGrid',
+        sortField: 'seq_no_grid',
         evaluateDefaultFieldShowed
       })
     })
