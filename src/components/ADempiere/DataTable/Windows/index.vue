@@ -78,7 +78,7 @@
             :scope="scope"
             :data-row="scope.row"
             :data-cell="scope.column"
-            :table-name="panelMetadata.tableName"
+            :table-name="panelMetadata.table_name"
           />
         </template>
       </el-table-column>
@@ -465,7 +465,7 @@ export default defineComponent({
         row.isEditRow = row.isSelectedRow
       }
 
-      const { tableName } = props.panelMetadata
+      const { table_name } = props.panelMetadata
       let currentRowEdit = {
         UUID: ''
       }
@@ -474,7 +474,7 @@ export default defineComponent({
         row.isEditRow = true
         return
       } else {
-        const changeAllOthers = recordsWithFilter.value.filter(records => row[tableName + '_ID'] !== records[tableName + '_ID'])
+        const changeAllOthers = recordsWithFilter.value.filter(records => row[table_name + '_ID'] !== records[table_name + '_ID'])
         changeAllOthers.forEach(element => {
           element.isEditRow = false
         })
@@ -484,7 +484,7 @@ export default defineComponent({
           props.containerManager.exitEditMode({
             parentUuid: props.parentUuid,
             containerUuid: props.containerUuid,
-            tableName,
+            tableName: table_name,
             recordUuid: currentRowEdit.UUID
           })
         }

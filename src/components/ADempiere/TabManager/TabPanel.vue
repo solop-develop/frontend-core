@@ -63,7 +63,7 @@
               :container-uuid="tabAttributes.uuid"
               :container-manager="containerManager"
               :field-list-batch-entry="batchEntry"
-              :table-name="tabAttributes.tableName"
+              :table-name="tabAttributes.table_name"
               :field-list-all="tableHeaders"
             />
           </el-form>
@@ -366,7 +366,7 @@ export default defineComponent({
     function changePreviousRecord(recordPrevious) {
       const posicionIndex = recordsWithFilter.value.findIndex(record => record.UUID === recordUuid.value)
       const previosRecord = recordsWithFilter.value[posicionIndex - 1]
-      const recordId = previosRecord[props.tabAttributes.tableName + '_ID']
+      const recordId = previosRecord[props.tabAttributes.table_name + '_ID']
       store.dispatch('changeTabAttribute', {
         attributeName: 'isShowedTableRecords',
         attributeNameControl: undefined,
@@ -396,7 +396,7 @@ export default defineComponent({
     function changeNextRecord(recordNext) {
       const posicionIndex = recordsWithFilter.value.findIndex(record => record.UUID === recordUuid.value)
       const nextRecord = recordsWithFilter.value[posicionIndex + 1]
-      const recordId = nextRecord[props.tabAttributes.tableName + '_ID']
+      const recordId = nextRecord[props.tabAttributes.table_name + '_ID']
       store.dispatch('changeTabAttribute', {
         attributeName: 'isShowedTableRecords',
         attributeNameControl: undefined,

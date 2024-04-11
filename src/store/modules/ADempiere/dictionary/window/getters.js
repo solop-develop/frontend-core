@@ -59,7 +59,7 @@ export default {
    */
   getStoredTabsFromTableName: (state) => ({ parentUuid, tableName, containerUuid = '' }) => {
     return state.storedWindows[parentUuid].tabsList.filter(tab => {
-      return tab.tableName === tableName &&
+      return tab.table_name === tableName &&
         tab.uuid !== containerUuid
     })
   },

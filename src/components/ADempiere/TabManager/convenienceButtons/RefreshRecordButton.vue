@@ -72,7 +72,7 @@ export default defineComponent({
     const recordId = computed(() => {
       return store.getters.getIdOfContainer({
         containerUuid: tabAttributes.value.containerUuid,
-        tableName: tabAttributes.value.tableName
+        tableName: tabAttributes.value.table_name
       })
     })
 

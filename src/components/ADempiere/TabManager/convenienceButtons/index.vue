@@ -168,7 +168,7 @@ export default defineComponent({
       const list = store.getters.getTabRecordsList({ containerUuid })
       const currentRecord = list.find(row => row.UUID === recordUuid.value)
       store.dispatch('showLogs', {
-        tableName: props.tabAttributes.tableName,
+        tableName: props.tabAttributes.table_name,
         recordUuid: recordUuid.value,
         containerUuid,
         currentRecord,

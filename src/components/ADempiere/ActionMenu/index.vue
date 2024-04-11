@@ -229,7 +229,7 @@ export default defineComponent({
     })
 
     const isUndoAction = computed(() => {
-      if (isEmptyValue(recordUuid.value)) {
+      if (!isWithRecord.value) {
         return false
       }
       const storedTab = store.getters.getStordTab(props.parentUuid, props.containerUuid)
@@ -238,9 +238,7 @@ export default defineComponent({
       }
       const { table_name } = storedTab
       if (!isEmptyValue(table_name)) {
-        if (!isWithRecord.value) {
-          return true
-        }
+        return true
       }
       return false
     })
@@ -320,7 +318,7 @@ export default defineComponent({
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid, // currentTab.value.uuid,
         containerId: action.containerId, // currentTab.value.uuid,
-        //  : currentTab.value.tableName,
+        //  : currentTab.value.table_name,
         // tabId: currentTab.value.id,
         instanceUuid,
         containerManager: props.containerManager,

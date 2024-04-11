@@ -149,7 +149,7 @@ export default defineComponent({
         parentUuid: props.parentUuid,
         containerUuid: isEmptyValue(tab) ? props.tabAttributes.uuid : tab.containerUuid,
         defaultActionName: language.t('actionMenu.createNewRecord'),
-        tableName: isEmptyValue(tab) ? props.tabAttributes.tableName : tab.tableName,
+        tableName: isEmptyValue(tab) ? props.tabAttributes.table_name : tab.table_name,
         withoutDefaulAction: true,
         getActionList: () => {
           return store.getters.getStoredActionsMenu({
