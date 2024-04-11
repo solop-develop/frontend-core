@@ -146,15 +146,6 @@ export default defineComponent({
   },
 
   setup(props, { root }) {
-    const currentTab = computed(() => {
-      return store.getters.getContainerInfo.currentTab
-    })
-
-    const {
-      containerUuid,
-      tableName
-    } = currentTab.value
-
     const isMobile = computed(() => {
       return store.getters.device === 'mobile'
     })
@@ -180,7 +171,7 @@ export default defineComponent({
     })
 
     const recordUuid = computed(() => {
-      return store.getters.getUuidOfContainer(containerUuid)
+      return store.getters.getUuidOfContainer(props.containerUuid)
     })
 
     const isWithRecord = computed(() => {
@@ -188,10 +179,16 @@ export default defineComponent({
     })
 
     const isUndoAction = computed(() => {
-      if (!isEmptyValue(tableName)) {
-        if (!isWithRecord.value) {
-          return true
-        }
+      if (!isWithRecord.value) {
+        return false
+      }
+      const storedTab = store.getters.getStordTab(props.parentUuid, props.containerUuid)
+      if (isEmptyValue(storedTab)) {
+        return false
+      }
+      const { table_name } = storedTab
+      if (!isEmptyValue(table_name)) {
+        return true
       }
       return false
     })
@@ -243,14 +240,13 @@ export default defineComponent({
       const { actionName } = currentAction
       currentAction[actionName]({
         root,
-        parentUuid: currentTab.value.parentUuid,
-        containerUuid: currentTab.value.containerUuid,
-        tableName: currentTab.value.tableName,
+        parentUuid: props.parentUuid,
+        containerUuid: props.containerUuid, // currentTab.value.uuid,
+        // tableName: currentTab.value.table_name,
         instanceUuid,
         containerManager: props.containerManager,
         recordUuid: recordUuid.value,
-        uuid: currentAction.uuid,
-        currentTab: currentTab.value
+        uuid: currentAction.uuid
       })
       store.commit('setShowMenuMobile', false)
     }
@@ -264,8 +260,6 @@ export default defineComponent({
     }
 
     return {
-      currentTab,
-      //
       size,
       isMobile,
       actionsList,

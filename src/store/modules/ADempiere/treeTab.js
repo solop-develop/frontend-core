@@ -67,7 +67,7 @@ const treeTab = {
       nodeId = 0
     }) {
       const storedTab = getters.getStoredTab(parentUuid, containerUuid)
-      const { id, tableName } = storedTab
+      const { id, table_name } = storedTab
 
       const elementId = getters.getValueOfFieldOnContainer({
         parentUuid,
@@ -78,7 +78,7 @@ const treeTab = {
       return new Promise(resolve => {
         requestListTreeNodes({
           tabId: id,
-          tableName: tableName,
+          tableName: table_name,
           elementId
         }).then(response => {
           const recordsList = response.records
@@ -87,7 +87,7 @@ const treeTab = {
             parentUuid,
             containerUuid,
             elementId,
-            tableName: tableName,
+            tableName: table_name,
             nodeId,
             recordsList: recordsList
           })

@@ -70,7 +70,7 @@
               :container-uuid="tabAttributes.uuid"
               :container-manager="containerManager"
               :field-list-batch-entry="batchEntry"
-              :table-name="tabAttributes.tableName"
+              :table-name="tabAttributes.table_name"
               :field-list-all="tableHeaders"
             />
           </el-form>
