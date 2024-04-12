@@ -52,7 +52,56 @@ const product = {
   unconfirmedQuantity: 'Unconfirmed Qty',
   unconfirmedMove: 'Unconfirmed Move',
   //
-  instanceAttribute: 'Instance Attribute'
+  instanceAttribute: 'Instance Attribute',
+  //
+  warehouseStocks: 'Warehouse Stocks',
+  substitute: 'Substitute',
+  relateds: 'Related',
+  availableToPromises: 'AvailableToPromises',
+  vendorPurchases: 'Vendor Purchases',
+  wrehouseTables: {
+    name: 'Name',
+    availableQuantity: 'AvailableQuantity',
+    reservedQuantity: 'Quantity Available',
+    orderedQuantity: 'ReservedQuantity',
+    onHandQuantity: 'OrderedQuantity'
+  },
+  substituteTables: {
+    name: 'Name',
+    value: 'Code',
+    warehouse: 'Warehouse',
+    availableQuantity: 'Quantity Available',
+    reservedQuantity: 'Quantity Available',
+    standardPrice: 'Standard Price',
+    onHandQuantity: 'Quantity Ordered'
+  },
+  relatedsTables: {
+    name: 'Name',
+    value: 'Code',
+    warehouse: 'Warehouse',
+    availableQuantity: 'Quantity Available',
+    reservedQuantity: 'Quantity Available',
+    standardPrice: 'Standard Price',
+    onHandQuantity: 'Quantity Ordered'
+  },
+  availableToPromisesTables: {
+    name: 'Name',
+    value: 'Code',
+    locator: 'location',
+    availableQuantity: 'Quantity Available',
+    onHandQuantity: 'Quantity Ordered',
+    expectedChangeQuantity: 'Expected Change Quantity',
+    businessPartner: 'Business Partner',
+    reservedQuantity: 'Available Quantity',
+    standardPrice: 'Standard Price',
+    documentNo: 'Document Number',
+    attributeSetInstance: 'Attribute'
+  },
+  vendorPurchasesTables: {
+    name: 'Name',
+    isCurrentVendor: 'Current Vendor',
+    uom: 'UOM'
+  }
 }
 
 export default product

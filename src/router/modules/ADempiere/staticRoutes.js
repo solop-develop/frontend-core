@@ -115,6 +115,30 @@ const staticRoutes = [
         ]
       },
       {
+        path: '/product-search',
+        component: () => import('@/views/ADempiere/Form'),
+        hidden: false,
+        validateToEnable: ({ role }) => {
+          if (!role) {
+            return false
+          }
+          return Boolean(role.is_allow_info_product)
+        },
+        children: [
+          {
+            path: '/ProductSearch',
+            component: () => import('@/views/ADempiere/Form'),
+            name: 'ProductSearch',
+            meta: {
+              fileName: 'ProductSearch',
+              icon: 'search',
+              isIndex: true,
+              title: language.t('route.ProductSearch')
+            }
+          }
+        ]
+      },
+      {
         path: '/acct-viewer',
         component: () => import('@/views/ADempiere/Form'),
         name: 'acct-viewer',

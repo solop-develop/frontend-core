@@ -83,7 +83,7 @@ export default defineComponent({
       default: undefined
     },
     pageNumber: {
-      type: Number,
+      type: [Number, String],
       default: undefined
     },
     rowIndex: {
