@@ -356,3 +356,48 @@ export function requestListProducts({
     }
   })
 }
+
+export function requestListWarehouseStocks({
+  productId
+}) {
+  return request({
+    url: `/field/products/${productId}/warehouse-stocks`,
+    method: 'get'
+  })
+}
+
+export function requestListSubstituteProducts({
+  productId
+}) {
+  return request({
+    url: `/field/products/${productId}/substitutes`,
+    method: 'get'
+  })
+}
+
+export function requestListRelatedProducts({
+  productId
+}) {
+  return request({
+    url: `/field/products/${productId}/relateds`,
+    method: 'get'
+  })
+}
+
+export function requestListAvailableToPromises({
+  productId
+}) {
+  return request({
+    url: `/field/products/${productId}/available-to-promises`,
+    method: 'get'
+  })
+}
+
+export function requestListVendorPurchases({
+  productId
+}) {
+  return request({
+    url: `/field/products/${productId}/vendor-purchases`,
+    method: 'get'
+  })
+}

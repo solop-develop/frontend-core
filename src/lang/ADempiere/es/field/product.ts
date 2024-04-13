@@ -52,7 +52,56 @@ const product = {
   unconfirmedQuantity: 'Cant. sin Confirmar',
   unconfirmedMove: 'Movimiento sin Confirmar',
   //
-  instanceAttribute: 'Atributo de Instancia'
+  instanceAttribute: 'Atributo de Instancia',
+  //
+  warehouseStocks: 'Existencias en Almacén',
+  substitute: 'Sustituto',
+  relateds: 'Relacionados',
+  availableToPromises: 'Disponibles para Promesas',
+  vendorPurchases: 'Compras de Proveedores',
+  wrehouseTables: {
+    name: 'Nombre',
+    availableQuantity: 'Cantidad Disponible',
+    reservedQuantity: 'Cantidad Disponible',
+    orderedQuantity: 'Cantidad Reservada',
+    onHandQuantity: 'Cantidad Pedida'
+  },
+  substituteTables: {
+    name: 'Nombre',
+    value: 'Código',
+    warehouse: 'Almacén',
+    availableQuantity: 'Cantidad Disponible',
+    reservedQuantity: 'Cantidad Disponible',
+    standardPrice: 'Precio Estandar',
+    onHandQuantity: 'Cantidad Pedida'
+  },
+  relatedsTables: {
+    name: 'Nombre',
+    value: 'Código',
+    warehouse: 'Almacén',
+    availableQuantity: 'Cantidad Disponible',
+    reservedQuantity: 'Cantidad Disponible',
+    standardPrice: 'Precio Estandar',
+    onHandQuantity: 'Cantidad Pedida'
+  },
+  availableToPromisesTables: {
+    name: 'Nombre',
+    value: 'Código',
+    locator: 'localizacion',
+    availableQuantity: 'Cantidad Disponible',
+    onHandQuantity: 'Cantidad Pedida',
+    expectedChangeQuantity: 'Cantidad de Cambio Prevista',
+    businessPartner: 'Socio de Negocios',
+    reservedQuantity: 'Cantidad Disponible',
+    standardPrice: 'Precio Estandar',
+    documentNo: 'Numero de Documento',
+    attributeSetInstance: 'Attributo'
+  },
+  vendorPurchasesTables: {
+    name: 'Nombre',
+    isCurrentVendor: 'Proveedor Actual',
+    uom: 'UOM'
+  }
 }
 
 export default product
