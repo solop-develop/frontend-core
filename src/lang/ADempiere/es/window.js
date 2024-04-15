@@ -63,7 +63,8 @@ const window = {
       recordID: 'ID del Registro',
       recordUUID: 'UUID del Registro',
       tab: 'Pestaña',
-      tableName: 'Nombre de la Tabla'
+      tableName: 'Nombre de la Tabla',
+      allChanges: 'Ver todos los cambios '
     },
     notices: {
       user: 'Usuario'
