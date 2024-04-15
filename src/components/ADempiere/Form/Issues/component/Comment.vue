@@ -2895,4 +2895,11 @@ export default defineComponent({
     width: 100%;
   }
 }
+.el-timeline-item__wrapper{
+  font-size: 10px !important
+}
+.previwer-disable {
+  margin-top: -12px;
+  margin-bottom: -18px;
+}
 </style>
