@@ -346,7 +346,7 @@ export default defineComponent({
 
     const isAccountingInfo = computed(() => {
       const { currentTab } = store.getters.getContainerInfo
-      if (!currentTab.isDocument) {
+      if (!currentTab.table.is_document) {
         return false
       }
       const { fieldsList } = currentTab
