@@ -397,7 +397,7 @@ export default {
       } else {
         const values = this.$store.getters.getValuesView({
           containerUuid: this.containerUuid,
-          format: 'Object'
+          format: 'object'
         })
 
         baseUrlMap += this.generateDisplayedValue(values)

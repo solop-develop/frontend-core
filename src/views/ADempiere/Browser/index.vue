@@ -132,9 +132,15 @@ export default defineComponent({
     const browserMetadata = ref({})
     const containerManagerProcess = ref({})
 
+    // as window source
     let parentUuid = ''
     if (!isEmptyValue(root.$route.query) && !isEmptyValue(root.$route.query.parentUuid)) {
       parentUuid = root.$route.query.parentUuid
+    }
+    // as tab source
+    let containerUuid = ''
+    if (!isEmptyValue(root.$route.query) && !isEmptyValue(root.$route.query.containerUuid)) {
+      containerUuid = root.$route.query.containerUuid
     }
 
     let browserId = -1
@@ -272,7 +278,8 @@ export default defineComponent({
 
       store.dispatch('getBrowserDefinitionFromServer', {
         id: browserId,
-        parentUuid
+        parentUuid,
+        containerUuid
       })
         .then(browserResponse => {
           generateBrowser(browserResponse)

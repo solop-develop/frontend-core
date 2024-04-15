@@ -167,15 +167,15 @@ export function generatePanelAndFields({
         fieldsListIndex: index
       }
     })
-    const { columnName, componentPath } = fieldDefinition
+    const { column_name, componentPath } = fieldDefinition
 
     if (fieldDefinition.is_key) {
-      keyColumn = columnName
+      keyColumn = column_name
     }
     if (fieldDefinition.is_identifier) {
       identifierColumns.push({
         name: fieldDefinition.name,
-        columnName,
+        columnName: column_name,
         displayColumnName: fieldDefinition.displayColumnName,
         identifierSequence: fieldDefinition.identifierSequence,
         display_type: fieldDefinition.display_type,
@@ -218,14 +218,14 @@ export function generatePanelAndFields({
       return fieldItem.is_parent
     })
     if (fieldLinkColumnName) {
-      fieldLinkColumnName = fieldLinkColumnName.columnName
+      fieldLinkColumnName = fieldLinkColumnName.column_name
     }
   }
 
   if (isAddFieldUuid) {
     // indicates it contains the uuid field
     const isWithUuidField = fieldsList.some(fieldItem => {
-      return fieldItem.columnName === 'UUID'
+      return fieldItem.column_name === 'UUID'
     })
     // add field uuid column name
     if (!isWithUuidField) {
@@ -284,8 +284,8 @@ export function generateDependenFieldsList(fieldsList) {
 
     itemField.parentFieldsList.forEach(itemParentColumnName => {
       const parentField = listFields.find(parentFieldItem => {
-        return (itemParentColumnName === parentFieldItem.columnName ||
-          itemParentColumnName === parentFieldItem.elementName)
+        return (itemParentColumnName === parentFieldItem.column_name ||
+          itemParentColumnName === parentFieldItem.element_name)
       })
 
       if (isEmptyValue(parentField)) {
@@ -293,10 +293,10 @@ export function generateDependenFieldsList(fieldsList) {
       }
 
       // set and remove duplicates columnNames
-      parentField.dependentFieldsList = [
+      parentField.dependent_fields = [
         ...new Set([
-          itemField.columnName,
-          ...parentField.dependentFieldsList
+          itemField.column_name,
+          ...parentField.dependent_fields
         ])
       ]
     })

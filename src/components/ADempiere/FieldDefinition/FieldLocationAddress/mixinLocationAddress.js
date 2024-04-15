@@ -47,7 +47,7 @@ export default {
   computed: {
     uuidForm() {
       if (!isEmptyValue(this.metadata.containerUuid)) {
-        return this.metadata.columnName + '_' + this.metadata.containerUuid
+        return this.metadata.column_name + '_' + this.metadata.containerUuid
       }
       return LOCATION_ADDRESS_FORM
     },
@@ -64,8 +64,8 @@ export default {
     },
     blankValues() {
       return {
-        [this.metadata.columnName]: undefined,
-        [this.metadata.elementName]: undefined,
+        [this.metadata.column_name]: undefined,
+        [this.metadata.element_name]: undefined,
         id: undefined,
         uuid: undefined,
         UUID: undefined,
@@ -195,8 +195,8 @@ export default {
       })
 
       newFieldsList.forEach(field => {
-        const { columnName } = field
-        const displayColumnName = DISPLAY_COLUMN_PREFIX + columnName
+        const { column_name } = field
+        const displayColumnName = DISPLAY_COLUMN_PREFIX + column_name
 
         let currrentValue = ''
         if (!isEmptyValue(entityValues[displayColumnName])) {
@@ -204,10 +204,10 @@ export default {
         }
 
         if (isEmptyValue(currrentValue)) {
-          if (columnName === 'C_City_ID') {
+          if (column_name === 'C_City_ID') {
             currrentValue = entityValues['City']
           }
-          if (columnName === 'C_Region_ID') {
+          if (column_name === 'C_Region_ID') {
             currrentValue = entityValues['RegionName']
           }
 
@@ -219,7 +219,7 @@ export default {
           }
         }
         if (isEmptyValue(currrentValue)) {
-          currrentValue = entityValues[columnName]
+          currrentValue = entityValues[column_name]
         }
 
         addDisplayValue(currrentValue)

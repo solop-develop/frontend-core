@@ -51,7 +51,8 @@ import { templateBrowser } from '@/utils/ADempiere/dictionary/browser/templateBr
 export default {
   getBrowserDefinitionFromServer({ commit, state, dispatch, rootGetters }, {
     id,
-    parentUuid = '' // context of associated
+    parentUuid = '', // context of associated
+    containerUuid = '' // context of associated
   }) {
     return new Promise(resolve => {
       const language = rootGetters['getCurrentLanguage']
@@ -68,6 +69,11 @@ export default {
         .then(browserResponse => {
           const browser = templateBrowser(browserResponse)
           const browserUuid = browser.uuid
+          commit('addBrowserUuidToList', {
+            id: browser.id,
+            uuid: browserUuid
+          })
+
           const browserDefinition = generatePanelAndFields({
             containerUuid: browserUuid,
             panelMetadata: {
@@ -85,11 +91,11 @@ export default {
           browserDefinition.elementsList = {}
           browserDefinition.columnsList = {}
           browserDefinition.fieldsList.forEach(fieldItem => {
-            browserDefinition.elementsList[fieldItem.columnName] = fieldItem.elementName
-            browserDefinition.columnsList[fieldItem.elementName] = fieldItem.columnName
+            browserDefinition.elementsList[fieldItem.column_name] = fieldItem.element_name
+            browserDefinition.columnsList[fieldItem.element_name] = fieldItem.column_name
             if (isLookup(fieldItem.display_type)) {
-              browserDefinition.elementsList[DISPLAY_COLUMN_PREFIX + fieldItem.columnName] = DISPLAY_COLUMN_PREFIX + fieldItem.elementName
-              browserDefinition.columnsList[DISPLAY_COLUMN_PREFIX + fieldItem.elementName] = DISPLAY_COLUMN_PREFIX + fieldItem.columnName
+              browserDefinition.elementsList[DISPLAY_COLUMN_PREFIX + fieldItem.column_name] = DISPLAY_COLUMN_PREFIX + fieldItem.element_name
+              browserDefinition.columnsList[DISPLAY_COLUMN_PREFIX + fieldItem.element_name] = DISPLAY_COLUMN_PREFIX + fieldItem.column_name
             }
 
             if (fieldItem.is_range) {
@@ -99,10 +105,6 @@ export default {
           })
 
           commit('addBrowserToList', browserDefinition)
-          commit('addBrowserUuidToList', {
-            id: browserDefinition.id,
-            uuid: browserUuid
-          })
 
           dispatch('setBrowserActionsMenu', {
             parentUuid,
@@ -114,10 +116,13 @@ export default {
             containerUuid: browserUuid,
             fieldsList: browserDefinition.fieldsList
           })
+
           // set parent context
-          if (!isEmptyValue(parentUuid)) {
+          if (!isEmptyValue(parentUuid) || !isEmptyValue(containerUuid)) {
             const parentContext = rootGetters.getValuesView({
-              parentUuid
+              parentUuid,
+              containerUuid,
+              format: 'object'
             })
             dispatch('updateValuesOfContainer', {
               containerUuid: browserUuid,
@@ -125,20 +130,22 @@ export default {
             })
 
             browserDefinition.fieldsList.forEach(itemField => {
-              if (!itemField.isSameColumnElement) {
-                const currentValueElement = parentContext.find(itemAttribute => {
-                  return itemAttribute.columnName === itemField.elementName
-                })
-                if (!isEmptyValue(currentValueElement) && !isEmptyValue(currentValueElement.value)) {
+              const { isSameColumnElement, column_name, element_name } = itemField
+              if (!isSameColumnElement) {
+                // const currentContextValue = parentContext.find(itemAttribute => {
+                //   return itemAttribute.columnName === itemField.element_name
+                // })
+                const currentContextValue = parentContext[element_name]
+                if (!isEmptyValue(currentContextValue)) {
                   commit('updateValueOfField', {
                     containerUuid: browserUuid,
-                    columnName: itemField.elementName,
-                    value: currentValueElement.value
+                    columnName: element_name,
+                    value: currentContextValue
                   })
                   commit('updateValueOfField', {
                     containerUuid: browserUuid,
-                    columnName: itemField.columnName,
-                    value: currentValueElement.value
+                    columnName: column_name,
+                    value: currentContextValue
                   })
                 }
                 // change Dependents
@@ -154,8 +161,6 @@ export default {
 
           const { process } = browserDefinition
           if (!isEmptyValue(process)) {
-            // get browser definition
-
             dispatch('setModalDialog', {
               containerUuid: process.uuid,
               title: process.name,
@@ -174,7 +179,7 @@ export default {
                 }
 
                 store.dispatch('startProcessOfBrowser', {
-                  parentUuid: browserUuid,
+                  parentUuid: browserDefinition.uuid,
                   containerUuid: process.uuid
                 }).then(processOutputResponse => {
                   // close current page
@@ -261,6 +266,7 @@ export default {
       }
       actionsList.push(actionProcess)
     }
+
     actionsList.push(runDeleteable)
 
     // export selected records
@@ -364,9 +370,9 @@ export default {
     let fieldChangedDisplayedWithValue = false
 
     fieldsList.forEach(itemField => {
-      const { columnName } = itemField
+      const { column_name } = itemField
 
-      const isShowedFromUser = fieldsShowed.includes(columnName)
+      const isShowedFromUser = fieldsShowed.includes(column_name)
       if (itemField.isShowedFromUser === isShowedFromUser) {
         // no to mutate the state unnecessarily
         return
@@ -386,7 +392,7 @@ export default {
       if (!fieldChangedDisplayedWithValue) {
         const value = rootGetters.getValueOfField({
           containerUuid,
-          columnName
+          columnName: column_name
         })
         // if isShowedFromUser was changed with value, the SmartBrowser
         // must send the parameters to update the search result
@@ -419,7 +425,7 @@ export default {
     }
 
     fieldsList.forEach(itemField => {
-      const isShowedTableFromUser = fieldsShowed.includes(itemField.columnName)
+      const isShowedTableFromUser = fieldsShowed.includes(itemField.column_name)
       if (itemField.isShowedTableFromUser === isShowedTableFromUser) {
         // no to mutate the state unnecessarily
         return

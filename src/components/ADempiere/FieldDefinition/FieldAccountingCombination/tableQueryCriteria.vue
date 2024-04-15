@@ -401,6 +401,7 @@ export default {
       })
     },
     saveAccoutingCombination() {
+      // TODO: Improve with format 'object'
       const attributes = this.$store.getters.getValuesView({
         containerUuid: this.uuidForm,
         format: 'array'
@@ -523,6 +524,7 @@ export default {
       if (isEmptyValue(parentUuid)) {
         parentUuid = this.metadata.containerUuid
       }
+      // TODO: Improve with format 'object'
       const filters = this.$store.getters.getValuesView({
         containerUuid: this.uuidForm,
         format: 'array'

@@ -96,7 +96,7 @@ export function generateField({
   },
   isSOTrxDictionary
 }) {
-  const { columnName } = fieldToGenerate
+  const { column_name: columnName } = fieldToGenerate
   let isGetServerValue = false
   let isColumnReadOnlyForm = false
   let isChangedAllForm = false
@@ -170,8 +170,8 @@ export function generateField({
         containerUuid: moreAttributes.containerUuid,
         componentPath: componentReference.componentPath,
         default_value: fieldToGenerate.default_value_to,
-        columnName: `${columnName}_To`,
-        elementName: `${fieldToGenerate.elementName}_To`,
+        column_name: `${columnName}_To`,
+        element_name: `${fieldToGenerate.element_name}_To`,
         isSOTrxDictionary
       })
 
@@ -185,7 +185,7 @@ export function generateField({
     // manage document status and tag document status
     isColumnDocumentStatus = isDocumentStatus({
       columnName,
-      elementColumnName: fieldToGenerate.elementColumnName
+      elementColumnName: fieldToGenerate.element_name
     })
   }
   // set field operators list
@@ -216,8 +216,8 @@ export function generateField({
       fieldToGenerate.name
     ),
     columnNameTo: `${columnName}_To`,
-    elementNameTo: `${fieldToGenerate.elementColumnName}_To`,
-    isSameColumnElement: columnName === fieldToGenerate.elementColumnName,
+    elementNameTo: `${fieldToGenerate.element_name}_To`,
+    isSameColumnElement: columnName === fieldToGenerate.element_name,
     isSOTrxDictionary,
     // displayed attributes
     componentPath: componentReference.componentPath,
@@ -235,7 +235,7 @@ export function generateField({
     ...evaluatedLogics,
     //
     parentFieldsList,
-    // dependentFieldsList: [],
+    // dependent_fields: [],
     // TODO: Add support on server
     // app attributes
     isShowedFromUser: false,
@@ -269,7 +269,9 @@ export function generateField({
       field.operator = OPERATOR_LESS_EQUAL.operator
       field.uuid = `${field.uuid}_To`
       field.columnName = field.columnNameTo
+      field.column_name = field.columnNameTo
       field.elementName = field.elementNameTo
+      field.element_name = field.elementNameTo
       field.name = `${field.name} To`
       field.value = parsedDefaultValueTo
       field.default_value = field.default_value_to

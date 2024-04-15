@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ export default {
   computed: {
     value: {
       get() {
-        const { columnName, containerUuid, inTable } = this.metadata
+        const { column_name, containerUuid, inTable } = this.metadata
         // table records values
         if (inTable) {
           // implement container manager row
@@ -42,7 +42,7 @@ export default {
             const value = this.containerManager.getCell({
               containerUuid,
               rowIndex: this.metadata.rowIndex,
-              columnName
+              columnName: column_name
             })
             if (!isEmptyValue(value)) {
               return value
@@ -53,11 +53,11 @@ export default {
         return store.getters.getValueOfFieldOnContainer({
           parentUuid: this.metadata.parentUuid,
           containerUuid,
-          columnName
+          columnName: column_name
         })
       },
       set(newValue) {
-        const { columnName, containerUuid, inTable } = this.metadata
+        const { column_name, containerUuid, inTable } = this.metadata
 
         // table records values
         if (inTable) {
@@ -66,7 +66,7 @@ export default {
             this.containerManager.setCell({
               containerUuid,
               rowIndex: this.metadata.rowIndex,
-              columnName,
+              columnName: column_name,
               value: newValue
             })
           }
@@ -75,7 +75,7 @@ export default {
         store.commit('updateValueOfField', {
           parentUuid: this.metadata.parentUuid,
           containerUuid,
-          columnName,
+          columnName: column_name,
           value: newValue
         })
         // update element column name
@@ -83,7 +83,7 @@ export default {
           store.commit('updateValueOfField', {
             parentUuid: this.metadata.parentUuid,
             containerUuid,
-            columnName: this.metadata.elementName,
+            columnName: this.metadata.element_name,
             value: newValue
           })
         }
@@ -101,7 +101,7 @@ export default {
           }
         }
 
-        const { displayColumnName: columnName, containerUuid, inTable, display_type } = this.metadata
+        const { displayColumnName, containerUuid, inTable, display_type } = this.metadata
 
         if (isEmptyValue(this.value) && display_type === IMAGE.id) {
           return undefined
@@ -115,7 +115,7 @@ export default {
             const value = this.containerManager.getCell({
               containerUuid,
               rowIndex: this.metadata.rowIndex,
-              columnName
+              columnName: displayColumnName
             })
             if (!isEmptyValue(value)) {
               return value
@@ -126,12 +126,12 @@ export default {
         // return store.getters.getValueOfFieldOnContainer({
         //   parentUuid: this.metadata.parentUuid,
         //   containerUuid,
-        //   columnName
+        //   columnName: displayColumnName
         // })
         return store.getters.getValueOfField({
           // parentUuid: this.metadata.parentUuid,
           containerUuid,
-          columnName
+          columnName: displayColumnName
         })
       },
       set(newValue) {
@@ -162,7 +162,7 @@ export default {
           store.commit('updateValueOfField', {
             parentUuid: this.metadata.parentUuid,
             containerUuid,
-            columnName: DISPLAY_COLUMN_PREFIX + this.metadata.elementName,
+            columnName: DISPLAY_COLUMN_PREFIX + this.metadata.element_name,
             value: newValue
           })
         }
@@ -175,7 +175,7 @@ export default {
           parentUuid: this.metadata.parentUuid,
           containerUuid: this.metadata.containerUuid,
           // 'ColumnName'_UUID
-          columnName: this.metadata.columnName + UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX
+          columnName: this.metadata.column_name + UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX
         })
       },
       set(value) {
@@ -185,7 +185,7 @@ export default {
           parentUuid,
           containerUuid,
           // 'ColumnName'_UUID
-          columnName: this.metadata.columnName + UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX,
+          columnName: this.metadata.column_name + UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX,
           value
         })
         // update element column name
@@ -193,7 +193,7 @@ export default {
           store.commit('updateValueOfField', {
             parentUuid,
             containerUuid,
-            columnName: this.metadata.elementName + UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX,
+            columnName: this.metadata.element_name + UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX,
             value
           })
         }

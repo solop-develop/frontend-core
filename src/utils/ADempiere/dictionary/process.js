@@ -38,7 +38,7 @@ export const CONTAINER_PROCESS_PREFIX = 'process_'
  * @param {number} display_type
  * @param {boolean} isActive
  * @param {boolean} is_displayed
- * @param {string} displayLogic
+ * @param {string} display_logic
  * @param {boolean} isDisplayedFromLogic
  * @returns {boolean}
  */

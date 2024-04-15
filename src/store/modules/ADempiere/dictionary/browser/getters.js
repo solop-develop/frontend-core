@@ -54,8 +54,8 @@ export default {
     const columnsList = []
     if (!isEmptyValue(browser)) {
       browser.fieldsList.forEach(field => {
-        columnsList.push(field.columnName)
-        columnsList.push(field.elementName)
+        columnsList.push(field.column_name)
+        columnsList.push(field.element_name)
       })
       return columnsList
     }
@@ -84,11 +84,11 @@ export default {
 
     const queryParams = []
     fieldsList.forEach(fieldItem => {
-      const { columnName, elementName } = fieldItem
-      const isMandatory = isMandatoryField(fieldItem)
+      const { column_name, element_name } = fieldItem
+      const isMandatoryGenerated = isMandatoryField(fieldItem)
       // evaluate displayed fields
       const isDisplayed = isDisplayedField(fieldItem) &&
-        (fieldItem.isShowedFromUser || isMandatory)
+        (fieldItem.isShowedFromUser || isMandatoryGenerated)
 
       if (!isDisplayed) {
         return
@@ -96,7 +96,7 @@ export default {
 
       const value = rootGetters.getValueOfField({
         containerUuid,
-        columnName
+        columnName: column_name
       })
 
       if (fieldItem.is_range && !isNumberField(fieldItem.display_type)) {
@@ -114,7 +114,7 @@ export default {
 
       if (!isEmptyValue(value)) {
         queryParams.push({
-          columnName: elementName,
+          columnName: element_name,
           value
         })
       }
@@ -141,7 +141,7 @@ export default {
 
     fieldsList.forEach(fieldItem => {
       // default operator
-      const { is_info_only, columnName, columnNameTo, operator, display_type } = fieldItem
+      const { is_info_only, column_name, columnNameTo, operator, display_type } = fieldItem
       if (is_info_only) {
         return false
       }
@@ -156,7 +156,7 @@ export default {
 
       const contextValue = rootGetters.getValueOfField({
         containerUuid: containerUuid,
-        columnName: columnName
+        columnName: column_name
       })
 
       const isNullOperator = IGNORE_VALUE_OPERATORS_LIST.includes(operator)
@@ -195,7 +195,7 @@ export default {
 
       if (!isEmptyValue(value) || isNullOperator) {
         queryParams.push({
-          columnName,
+          columnName: column_name,
           operator,
           value,
           valueTo,
@@ -344,7 +344,7 @@ export default {
     }
 
     return fieldsList.find(itemField => {
-      return itemField.columnName === columnName
+      return itemField.column_name === columnName
     })
   },
 
@@ -361,7 +361,7 @@ export default {
     }
 
     return fieldsList.find(itemField => {
-      return itemField.elementName === columnName
+      return itemField.element_name === columnName
     })
   }
 

@@ -103,7 +103,7 @@ const field = {
             fieldResponse.elementColumnName = elementColumnName
           } else if (tableName && columnName) {
             fieldResponse.tableName = tableName
-            fieldResponse.columnName = columnName
+            fieldResponse.column_name = columnName
           }
 
           commit('addField', fieldResponse)
@@ -151,7 +151,7 @@ const field = {
     },
     getFieldFromElementColumnName: (state) => (elementColumnName) => {
       return state.fieldsList.find(fieldItem => {
-        return fieldItem.elementName === elementColumnName
+        return fieldItem.element_name === elementColumnName
       })
     },
     getFieldFromTableNameAndColumnName: (state) => ({
@@ -160,7 +160,7 @@ const field = {
     }) => {
       return state.fieldsList.find(fieldItem => {
         return fieldItem.tableName === tableName &&
-          fieldItem.columnName === columnName
+          fieldItem.column_name === columnName
       })
     },
     getSizeColumn: (state, getters) => ({ containerUuid }) => {

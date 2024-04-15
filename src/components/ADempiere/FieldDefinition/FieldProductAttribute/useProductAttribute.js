@@ -1,6 +1,6 @@
 /**
 * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-* Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+* Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
 * Contributor(s): Elsio Sanchez elsiosanchez@gmail.com https://github.com/elsiosanchez
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -35,9 +35,9 @@ export default ({
   const blankValues = computed(() => {
     return {
       [fieldAttributes.columnName]: undefined,
-      [fieldAttributes.elementName]: undefined,
+      [fieldAttributes.element_name]: undefined,
       [DISPLAY_COLUMN_PREFIX + fieldAttributes.columnName]: undefined,
-      [DISPLAY_COLUMN_PREFIX + fieldAttributes.elementName]: undefined,
+      [DISPLAY_COLUMN_PREFIX + fieldAttributes.element_name]: undefined,
       id: undefined,
       uuid: undefined,
       UUID: undefined,
@@ -65,14 +65,12 @@ export default ({
   function setValues(row) {
     const { id, uuid, description } = row
 
-    const { parentUuid, containerUuid } = fieldAttributes
-
-    const columnName = fieldAttributes.columnName
+    const { parentUuid, containerUuid, column_name } = fieldAttributes
 
     store.commit('updateValueOfField', {
       parentUuid,
       containerUuid,
-      columnName,
+      columnName: column_name,
       value: id
     })
     // set display column (name) value
@@ -80,14 +78,14 @@ export default ({
       parentUuid,
       containerUuid,
       // DisplayColumn_'ColumnName'
-      columnName: DISPLAY_COLUMN_PREFIX + columnName,
+      columnName: DISPLAY_COLUMN_PREFIX + column_name,
       value: description
     })
     // set UUID value
     store.commit('updateValueOfField', {
       parentUuid,
       containerUuid,
-      columnName: columnName + UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX,
+      columnName: column_name + UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX,
       value: uuid
     })
     // update element column name
@@ -95,7 +93,7 @@ export default ({
       store.commit('updateValueOfField', {
         parentUuid,
         containerUuid,
-        columnName: fieldAttributes.elementName,
+        columnName: fieldAttributes.element_name,
         value: id
       })
       // set display column (name) value
@@ -103,7 +101,7 @@ export default ({
         parentUuid,
         containerUuid,
         // DisplayColumn_'ColumnName'
-        columnName: DISPLAY_COLUMN_PREFIX + fieldAttributes.elementName,
+        columnName: DISPLAY_COLUMN_PREFIX + fieldAttributes.element_name,
         value: description
       })
     }
@@ -113,13 +111,13 @@ export default ({
       containerManager.setCell({
         containerUuid,
         rowIndex: fieldAttributes.rowIndex,
-        columnName,
+        columnName: column_name,
         value: id
       })
       containerManager.setCell({
         containerUuid,
         rowIndex: fieldAttributes.rowIndex,
-        columnName: DISPLAY_COLUMN_PREFIX + columnName,
+        columnName: DISPLAY_COLUMN_PREFIX + column_name,
         value: description
       })
     }
@@ -128,7 +126,7 @@ export default ({
       containerUuid,
       containerManager,
       field: fieldAttributes,
-      columnName
+      columnName: column_name
     })
   }
 

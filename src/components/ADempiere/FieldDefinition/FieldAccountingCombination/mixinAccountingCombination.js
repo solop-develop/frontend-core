@@ -42,8 +42,8 @@ export default {
         return {
           parentUuid: undefined,
           containerUuid: undefined,
-          columnName: COLUMN_NAME,
-          elementName: COLUMN_NAME
+          column_name: COLUMN_NAME,
+          element_name: COLUMN_NAME
         }
       }
     }
@@ -52,10 +52,10 @@ export default {
   computed: {
     blankValues() {
       return {
-        [this.metadata.columnName]: undefined,
-        [this.metadata.elementName]: undefined,
-        [DISPLAY_COLUMN_PREFIX + this.metadata.columnName]: undefined,
-        [DISPLAY_COLUMN_PREFIX + this.metadata.elementName]: undefined,
+        [this.metadata.column_name]: undefined,
+        [this.metadata.element_name]: undefined,
+        [DISPLAY_COLUMN_PREFIX + this.metadata.column_name]: undefined,
+        [DISPLAY_COLUMN_PREFIX + this.metadata.element_name]: undefined,
         uuid: undefined,
         UUID: undefined
       }
@@ -128,7 +128,7 @@ export default {
         containerUuid: this.metadata.containerUuid,
         containerManager: this.containerManager,
         field: this.metadata,
-        columnName: this.metadata.columnName,
+        columnName: this.metadata.column_name,
         newValue: value
       })
     }

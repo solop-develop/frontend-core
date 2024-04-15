@@ -112,7 +112,7 @@ export default {
 
     value: {
       get() {
-        const { columnName, containerUuid, inTable } = this.metadata
+        const { column_name, containerUuid, inTable } = this.metadata
         // table records values
         if (inTable) {
           // implement container manager row
@@ -120,7 +120,7 @@ export default {
             return this.containerManager.getCell({
               containerUuid,
               rowIndex: this.metadata.rowIndex,
-              columnName
+              columnName: column_name
             })
           }
         }
@@ -128,11 +128,11 @@ export default {
         return this.$store.getters.getValueOfFieldOnContainer({
           parentUuid: this.metadata.parentUuid,
           containerUuid,
-          columnName
+          columnName: column_name
         })
       },
       set(value) {
-        const { columnName, containerUuid, inTable } = this.metadata
+        const { column_name, containerUuid, inTable } = this.metadata
 
         // table records values
         if (inTable) {
@@ -141,7 +141,7 @@ export default {
             this.containerManager.setCell({
               containerUuid,
               rowIndex: this.metadata.rowIndex,
-              columnName,
+              columnName: column_name,
               value
             })
           }
@@ -154,7 +154,7 @@ export default {
         this.$store.commit('updateValueOfField', {
           parentUuid: this.metadata.parentUuid,
           containerUuid,
-          columnName,
+          columnName: column_name,
           value
         })
         // update element column name
@@ -162,7 +162,7 @@ export default {
           this.$store.commit('updateValueOfField', {
             parentUuid: this.metadata.parentUuid,
             containerUuid,
-            columnName: this.metadata.elementName,
+            columnName: this.metadata.element_name,
             value
           })
         }
@@ -383,7 +383,7 @@ export default {
         id: this.metadata.id,
         //
         tableName: this.metadata.reference.table_name,
-        columnName: this.metadata.columnName,
+        columnName: this.metadata.column_name,
         columnUuid: this.metadata.columnUuid,
         searchValue: searchQuery,
         referenceUuid: this.metadata.reference.uuid,
@@ -411,7 +411,7 @@ export default {
         uuid: this.metadata.uuid,
         //
         tableName: this.metadata.reference.table_name,
-        columnName: this.metadata.columnName,
+        columnName: this.metadata.column_name,
         value: this.value
       })
         .then(() => {
