@@ -20,7 +20,7 @@
   <span
     v-if="!isLoading"
   >
-    <el-descriptions :column="1">
+    <el-descriptions :column="2">
       <el-descriptions-item label-style="{ color: #606266; font-weight: bold; }">
         <template slot="label">
           <svg-icon icon-class="table" style="margin-right: 10px;" />
@@ -29,6 +29,13 @@
         <span style="color: #606266; font-weight: bold;">
           {{ getTableName }}
         </span>
+      </el-descriptions-item>
+      <el-descriptions-item label-style="{ color: #606266; font-weight: bold; }">
+        <template slot="label">
+          <i style="margin-right: 10px;" />
+          {{ $t('window.containerInfo.log.allChanges') }}
+        </template>
+        <el-switch v-model="showAllChanges" @change="showkey(listLogs.entity_logs)" />
       </el-descriptions-item>
     </el-descriptions>
     <el-descriptions :column="2">
@@ -111,7 +118,7 @@
           </div>
 
           <el-collapse-transition>
-            <div v-show="(currentKey === keys)">
+            <div v-show="currentKey.includes(keys)">
               <span v-for="(changeLog, index) in entityLogs.change_logs" :key="index">
                 <hr class="divider">
 
@@ -186,10 +193,10 @@ export default defineComponent({
 
   setup(props) {
     const currentRecordLogs = ref({ name: '' })
-    const currentKey = ref(-1)
+    const currentKey = ref([])
     const typeAction = ref(0)
     const currentTabLogs = ref('0')
-
+    const showAllChanges = ref(false)
     // // use getter to reactive properties
     const listLogs = computed(() => {
       return store.getters.getRecordLogs
@@ -198,12 +205,33 @@ export default defineComponent({
     /**
      * showkey
      */
-    const showkey = (key, index) => {
-      if (key === currentKey.value && index === typeAction.value) {
-        currentKey.value = 1000
-      } else {
-        currentKey.value = key
-        typeAction.value = index
+    function showkey(key) {
+      if (Array.isArray(key)) {
+        activateAll(key)
+        return
+      }
+      if (currentKey.value.includes(key)) {
+        const index = currentKey.value.indexOf(key)
+        currentKey.value.splice(index, 1)
+        changeBol()
+        return
+      }
+      currentKey.value.push(key)
+    }
+
+    function activateAll(array) {
+      if (showAllChanges.value) {
+        array.forEach((e, i) => { currentKey.value[i] = i })
+        return
+      }
+      array.forEach((e, i) => {
+        currentKey.value[i] = []
+      })
+    }
+
+    function changeBol() {
+      if (currentKey.value.length < 1) {
+        showAllChanges.value = false
       }
     }
 
@@ -234,6 +262,9 @@ export default defineComponent({
       typeAction,
       currentKey,
       listLogs,
+      showAllChanges,
+      activateAll,
+      changeBol,
       // Methods
       isDocumentStatus,
       showkey,
