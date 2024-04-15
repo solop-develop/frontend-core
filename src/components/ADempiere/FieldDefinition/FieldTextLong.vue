@@ -68,7 +68,7 @@ export default {
     },
     value: {
       get() {
-        const { columnName, containerUuid, inTable } = this.metadata
+        const { column_name, containerUuid, inTable } = this.metadata
         // table records values
         if (inTable) {
           // implement container manager row
@@ -76,7 +76,7 @@ export default {
             const value = this.containerManager.getCell({
               containerUuid,
               rowIndex: this.metadata.rowIndex,
-              columnName
+              columnName: column_name
             })
             if (!isEmptyValue(value)) {
               return value
@@ -87,14 +87,14 @@ export default {
         const valueEditor = store.getters.getValueOfFieldOnContainer({
           parentUuid: this.metadata.parentUuid,
           containerUuid,
-          columnName
+          columnName: column_name
         })
 
         if (this.isEmptyValue(valueEditor)) return ''
         return valueEditor
       },
       set(newValue) {
-        const { columnName, containerUuid, inTable } = this.metadata
+        const { column_name, containerUuid, inTable } = this.metadata
 
         // table records values
         if (inTable) {
@@ -103,7 +103,7 @@ export default {
             this.containerManager.setCell({
               containerUuid,
               rowIndex: this.metadata.rowIndex,
-              columnName,
+              columnName: column_name,
               value: newValue
             })
           }
@@ -112,7 +112,7 @@ export default {
         store.commit('updateValueOfField', {
           parentUuid: this.metadata.parentUuid,
           containerUuid,
-          columnName,
+          columnName: column_name,
           value: newValue
         })
         // update element column name
@@ -120,7 +120,7 @@ export default {
           store.commit('updateValueOfField', {
             parentUuid: this.metadata.parentUuid,
             containerUuid,
-            columnName: this.metadata.elementName,
+            columnName: this.metadata.element_name,
             value: newValue
           })
         }

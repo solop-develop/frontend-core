@@ -80,10 +80,10 @@ export const zoomInOptionItem = {
       .replace('.', '')
 
     if (isEmptyValue(columnName)) {
-      columnName = fieldAttributes.columnName
+      columnName = fieldAttributes.column_name
       // to Smart Browser
       if (isEmptyValue(parentUuid)) {
-        columnName = fieldAttributes.elementName
+        columnName = fieldAttributes.element_name
       }
     }
 
@@ -170,7 +170,7 @@ export const logsOptionItem = {
   isRender: true,
   componentRender: () => import('@/components/ADempiere/FieldDefinition/FieldOptions/ChangeLogs'),
   executeMethod: ({ containerManager, fieldAttributes }) => {
-    const { containerUuid, tabTableName, columnName } = fieldAttributes
+    const { containerUuid, tabTableName, column_name } = fieldAttributes
 
     const currrentRecord = store.getters.getTabCurrentRow({
       containerUuid
@@ -179,7 +179,7 @@ export const logsOptionItem = {
       tableName: tabTableName,
       recordId: currrentRecord[tabTableName + '_ID'],
       recordUuid: currrentRecord.UUID,
-      columnName
+      columnName: column_name
     })
   }
 }
@@ -224,9 +224,9 @@ export const hideThisField = {
     })
       .filter(itemField => {
         return itemField.isShowedFromUser &&
-          itemField.columnName !== fieldAttributes.columnName
+          itemField.column_name !== fieldAttributes.column_name
       }).map(itemField => {
-        return itemField.columnName
+        return itemField.column_name
       })
 
     containerManager.changeFieldShowedFromUser({
