@@ -169,10 +169,10 @@ export default defineComponent({
     const isPreviewImage = ref(false)
 
     const columnName = computed(() => {
-      return props.fieldAttributes.columnName
+      return props.fieldAttributes.column_name
     })
     // const elementName = computed(() => {
-    //   return props.fieldAttributes.elementName
+    //   return props.fieldAttributes.element_name
     // })
     const displayColumnName = computed(() => {
       return props.fieldAttributes.displayColumnName

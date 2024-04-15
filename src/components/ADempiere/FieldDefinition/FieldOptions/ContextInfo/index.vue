@@ -22,7 +22,7 @@
       <span style="word-break: break-word;">
         {{ $t('field.field') }}
         <b>{{ fieldAttributes.name }}</b>
-        ({{ fieldAttributes.id }}, {{ fieldAttributes.columnName }}{{ !fieldAttributes.isSameColumnElement ? ', ' + fieldAttributes.elementName : '' }})
+        ({{ fieldAttributes.id }}, {{ fieldAttributes.column_name }}{{ !fieldAttributes.isSameColumnElement ? ', ' + fieldAttributes.element_name : '' }})
       </span>
     </div>
 
@@ -87,11 +87,11 @@
         </el-form-item>
 
         <el-form-item
-          v-if="!isEmptyValue(fieldAttributes.displayLogic)"
+          v-if="!isEmptyValue(fieldAttributes.display_logic)"
           :label="$t('fieldOptions.info.displayLogic')"
           class="justify-text"
         >
-          <pre>{{ fieldAttributes.displayLogic }}</pre>
+          <pre>{{ fieldAttributes.display_logic }}</pre>
         </el-form-item>
 
         <el-form-item
@@ -154,22 +154,22 @@ export default defineComponent({
 
   setup(props) {
     const valueField = computed(() => {
-      const { parentUuid, containerUuid, columnName } = props.fieldAttributes
+      const { parentUuid, containerUuid, column_name } = props.fieldAttributes
       return store.getters.getValueOfFieldOnContainer({
         parentUuid,
         containerUuid,
-        columnName
+        columnName: column_name
       })
     })
     const displayValueField = computed(() => {
       if (!isLookup(props.fieldAttributes.display_type)) {
         return null
       }
-      const { parentUuid, containerUuid, columnName } = props.fieldAttributes
+      const { parentUuid, containerUuid, column_name } = props.fieldAttributes
       return store.getters.getValueOfFieldOnContainer({
         parentUuid,
         containerUuid,
-        columnName: DISPLAY_COLUMN_PREFIX + columnName
+        columnName: DISPLAY_COLUMN_PREFIX + column_name
       })
     })
 

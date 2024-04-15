@@ -70,7 +70,7 @@ export const OPERATOR_GREATER_EQUAL = {
 }
 
 export const OPERATOR_LESS = {
-  operator: 'lesss',
+  operator: 'less',
   sqlOperators: [
     '<'
   ],
