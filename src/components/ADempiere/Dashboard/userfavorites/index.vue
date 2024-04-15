@@ -162,7 +162,8 @@ export default {
         attributeName: 'containerKey',
         query: {
           tabParent: 0,
-          action: param
+          action: undefined,
+          options: param
         }
       })
     }

@@ -126,12 +126,12 @@ import BatchEntry from '@/components/ADempiere/DataTable/Components/BatchEntry.v
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 import DefaultTable from '@/components/ADempiere/DataTable/index.vue'
 import FilterFields from '@/components/ADempiere/FilterFields/index.vue'
-// import FullScreenContainer from '@/components/ADempiere/ContainerOptions/FullScreenContainer'
 import PanelDefinition from '@/components/ADempiere/PanelDefinition/index.vue'
 import TabOptions from '@/components/ADempiere/TabManager/TabOptions.vue'
 
 // Utils and Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { createNewRecord } from '@/utils/ADempiere/dictionary/window'
 
 export default defineComponent({
   name: 'modeDesktop',
@@ -140,7 +140,6 @@ export default defineComponent({
     CustomPagination,
     DefaultTable,
     FilterFields,
-    // FullScreenContainer,
     PanelDefinition,
     TabOptions,
     BatchEntry
@@ -173,16 +172,6 @@ export default defineComponent({
 
     const overflowHeightScrooll = computed(() => {
       return ''
-      // if (props.tabAttributes.isParentTab) {
-      //   if (store.getters.getStoredWindow(props.parentUuid).isFullScreenTabsParent) {
-      //     return ''
-      //   }
-      //   return 'max-height: 300px;'
-      // }
-      // if (store.getters.getStoredWindow(props.parentUuid).isFullScreenTabsChildren) {
-      //   return ''
-      // }
-      // return 'max-height: 300px !important;'
     })
 
     const isShowedTableRecords = computed(() => {
@@ -219,10 +208,7 @@ export default defineComponent({
 
     const styleFooterPanel = computed(() => {
       if (props.isChildTab) {
-        // if (storedWindow.value.isFullScreenTabsChildren) {
         return 'height: 100px !important'
-        // }
-        // return 'height: 20% !important'
       }
       return 'height: 36px'
     })
@@ -352,6 +338,32 @@ export default defineComponent({
       })
     }
 
+    function loadOpenWindows() {
+      if (root.$route.query.options === 'listRecords') {
+        showedTableRecords(true)
+      } else if (root.$route.query.options === 'create-new') {
+        showedTableRecords(false)
+        const { parentUuid, containerUuid } = currentTab.value
+        createNewRecord.createNewRecord({
+          parentUuid,
+          containerUuid,
+          isCopyValues: false
+        })
+      }
+    }
+
+    function showedTableRecords(attributeValue = false) {
+      const { parentUuid, containerUuid } = currentTab.value
+      store.dispatch('changeTabAttribute', {
+        attributeName: 'isShowedTableRecords',
+        attributeValue,
+        containerUuid,
+        parentUuid
+      })
+    }
+
+    loadOpenWindows()
+
     return {
       currentTabUuid,
       // computeds
@@ -373,6 +385,7 @@ export default defineComponent({
       batchEntry,
       activeNames,
       // methods
+      loadOpenWindows,
       handleChangePage,
       handleChangeSizePage
     }
