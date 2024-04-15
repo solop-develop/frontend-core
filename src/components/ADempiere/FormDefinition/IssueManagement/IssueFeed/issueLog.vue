@@ -18,7 +18,9 @@
 
 <template>
   <el-card class="list-comments">
-    <issue-avatar :user="comment.user" style="font-size: 10px" />
+    <div style="border-bottom:1px solid #e6ebf5">
+      <issue-avatar :user="comment.user" style="font-size: 10px;" />
+    </div>
     <el-descriptions :column="1" style="margin-top: 10px; margin-bottom:10px">
       <el-descriptions-item
         v-for="log in comment.change_logs"
