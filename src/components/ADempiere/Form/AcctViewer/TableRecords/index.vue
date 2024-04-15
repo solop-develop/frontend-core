@@ -35,6 +35,7 @@
       <el-table-column
         :label="$t('form.accountingViewer.organization')"
         :min-width="110"
+        header-align="center"
       >
         <template slot-scope="scope">
           {{ scope.row.DisplayColumn_AD_Org_ID }}
@@ -44,6 +45,7 @@
       <el-table-column
         :label="$t('form.accountingViewer.account')"
         :min-width="110"
+        header-align="center"
       >
         <template slot-scope="scope">
           {{ scope.row.DisplayColumn_Account_ID }}
@@ -52,7 +54,8 @@
 
       <el-table-column
         :label="$t('form.accountingViewer.accountedDebit')"
-        :min-width="140"
+        :min-width="170"
+        header-align="center"
       >
         <span slot-scope="scope" class="cell-align-right">
           {{ scope.row.AmtAcctDr }}
@@ -61,7 +64,8 @@
 
       <el-table-column
         :label="$t('form.accountingViewer.accountedCredit')"
-        :min-width="140"
+        :min-width="180"
+        header-align="center"
       >
         <span slot-scope="scope" class="cell-align-right">
           {{ scope.row.AmtSourceCr }}
@@ -72,7 +76,8 @@
       <template v-if="isShowSourceColumns">
         <el-table-column
           :label="$t('form.accountingViewer.transactionDate')"
-          :min-width="110"
+          :min-width="190"
+          header-align="center"
         >
           <template slot-scope="scope">
             {{ scope.row.DateTrx }}
@@ -81,6 +86,7 @@
         <el-table-column
           :label="$t('form.accountingViewer.currency')"
           :min-width="110"
+          header-align="center"
         >
           <template slot-scope="scope">
             {{ scope.row.DisplayColumn_C_Currency_ID }}
@@ -88,7 +94,8 @@
         </el-table-column>
         <el-table-column
           :label="$t('form.accountingViewer.sourceDebit')"
-          :min-width="130"
+          :min-width="140"
+          header-align="center"
         >
           <span slot-scope="scope" class="cell-align-right">
             {{ scope.row.AmtSourceDr }}
@@ -97,6 +104,7 @@
         <el-table-column
           :label="$t('form.accountingViewer.sourceCredit')"
           :min-width="130"
+          header-align="center"
         >
           <span slot-scope="scope" class="cell-align-right">
             {{ scope.row.AmtSourceCr }}
@@ -105,6 +113,7 @@
         <el-table-column
           :label="$t('form.accountingViewer.rate')"
           :min-width="110"
+          header-align="center"
         >
           <span slot-scope="scope" class="cell-align-right">
             {{ scope.row.Rate }}
@@ -117,7 +126,7 @@
         v-for="(acctElement, key) in avaliableAccountingElements"
         :key="key"
         :label="acctElement.name || acctElement.elementType"
-        :min-width="140"
+        :min-width="180"
         header-align="center"
       >
         <template slot-scope="scope">
@@ -127,7 +136,8 @@
 
       <el-table-column
         :label="$t('form.accountingViewer.accountDate')"
-        :min-width="120"
+        :min-width="130"
+        header-align="center"
       >
         <template slot-scope="scope">
           {{ scope.row.DateAcct }}
@@ -137,6 +147,7 @@
       <el-table-column
         :label="$t('form.accountingViewer.period')"
         :min-width="80"
+        header-align="center"
       >
         <template slot-scope="scope">
           {{ scope.row.DisplayColumn_C_Period_ID }}
@@ -148,6 +159,7 @@
         <el-table-column
           :label="$t('form.accountingViewer.uom')"
           :min-width="80"
+          header-align="center"
         >
           <span slot-scope="scope">
             {{ scope.row.DisplayColumn_C_UOM_ID }}
@@ -156,6 +168,7 @@
         <el-table-column
           :label="$t('form.accountingViewer.quantity')"
           :min-width="85"
+          header-align="center"
         >
           <span slot-scope="scope" class="cell-align-right">
             {{ scope.row.Qty }}
@@ -167,6 +180,7 @@
         <el-table-column
           :label="$t('form.accountingViewer.tableRecord')"
           :min-width="210"
+          header-align="center"
         >
           <span slot-scope="scope">
             {{ scope.row.DisplayColumn_AD_Table_ID }}
@@ -174,7 +188,8 @@
         </el-table-column>
         <el-table-column
           :label="$t('form.accountingViewer.recordId')"
-          :min-width="90"
+          :min-width="130"
+          header-align="center"
         >
           <span slot-scope="scope">
             {{ scope.row.Record_ID }}
@@ -183,6 +198,7 @@
         <el-table-column
           :label="$t('form.accountingViewer.description')"
           :min-width="310"
+          header-align="center"
         >
           <span slot-scope="scope">
             {{ scope.row.Description }}
@@ -192,7 +208,8 @@
 
       <el-table-column
         :label="$t('form.accountingViewer.postingType')"
-        :min-width="110"
+        :min-width="150"
+        header-align="center"
       >
         <template slot-scope="scope">
           {{ scope.row.DisplayColumn_PostingType }}
