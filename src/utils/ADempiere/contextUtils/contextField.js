@@ -30,16 +30,17 @@ import { isNumberField, isIdentifierField } from '@/utils/ADempiere/references'
 
 /**
  * Extracts the associated fields from the logics or default values
- * @param {string} displayLogic
+ * @param {string} display_logic
  * @param {string} mandatory_logic
  * @param {string} read_only_logic
- * @param {object} reference.contextColumnNames array
+ * @param {object} reference.context_column_names array
  * @param {string} default_value
  * @param {string} default_value_to
+ * @param {array} context_column_names array
  * @returns {array} List column name of parent fields
  */
 export function getParentFields({
-  displayLogic,
+  display_logic,
   mandatory_logic,
   read_only_logic,
   reference,
@@ -59,7 +60,7 @@ export function getParentFields({
       // For Validation Code
       ...contextColumnNamesByReference,
       // For Display logic
-      ...evaluator.parseDepends(displayLogic),
+      ...evaluator.parseDepends(display_logic),
       // For Mandatory Logic
       ...evaluator.parseDepends(mandatory_logic),
       // For Read Only Logic
@@ -83,7 +84,7 @@ export function getParentFields({
 export function getEvaluatedFieldLogics({
   parentUuid,
   containerUuid,
-  displayLogic,
+  display_logic,
   mandatory_logic,
   read_only_logic
 }) {
@@ -94,11 +95,11 @@ export function getEvaluatedFieldLogics({
     context: getContext
   }
 
-  let isDisplayedFromLogic = isEmptyValue(displayLogic)
+  let isDisplayedFromLogic = isEmptyValue(display_logic)
   if (!isDisplayedFromLogic) {
     isDisplayedFromLogic = evaluator.evaluateLogic({
       ...commonParameters,
-      logic: displayLogic
+      logic: display_logic
     })
   }
 
@@ -134,12 +135,12 @@ export function getContextDefaultValue({
   parentUuid,
   containerUuid,
   isSOTrxDictionary,
-  columnName,
-  elementName,
+  column_name,
+  element_name,
   componentPath,
   display_type,
   default_value,
-  isMandatory,
+  is_mandatory,
   isColumnReadOnlyForm,
   is_key
 }) {
@@ -152,19 +153,19 @@ export function getContextDefaultValue({
     parsedDefaultValue = parseContext({
       parentUuid,
       containerUuid,
-      columnName,
+      columnName: column_name,
       value: parsedDefaultValue,
       isSOTrxDictionary
     }).value
   }
 
-  const isSpeciaColumn = !isEmptyValue(arrayMatches(ACCOUNTING_COLUMNS, [columnName, elementName]))
+  const isSpeciaColumn = !isEmptyValue(arrayMatches(ACCOUNTING_COLUMNS, [column_name, element_name]))
   // search value with context
   if (isSpeciaColumn && String(parsedDefaultValue).trim() !== '-1') {
     parsedDefaultValue = getPreference({
       parentUuid,
       containerUuid,
-      columnName
+      columnName: column_name
     })
   }
 
@@ -174,16 +175,16 @@ export function getContextDefaultValue({
     parsedDefaultValue = getPreference({
       parentUuid,
       containerUuid,
-      columnName
+      columnName: column_name
     })
 
     // search value preference with element name
-    if (!isEmptyValue(elementName) &&
+    if (!isEmptyValue(element_name) &&
       isEmptyValue(parsedDefaultValue)) {
       parsedDefaultValue = getPreference({
         parentUuid,
         containerUuid,
-        columnName: elementName
+        columnName: element_name
       })
     }
   }
@@ -191,7 +192,7 @@ export function getContextDefaultValue({
   // search value with form read only
   if (isColumnReadOnlyForm && isEmptyValue(parsedDefaultValue)) {
     const { defaultValue: defaultValueColumn } = READ_ONLY_FORM_COLUMNS.find(columnItem => {
-      return columnItem.columnName === columnName
+      return columnItem.columnName === column_name
     })
     parsedDefaultValue = defaultValueColumn
   }
@@ -203,7 +204,7 @@ export function getContextDefaultValue({
     }
     if (isEmptyValue(parsedDefaultValue)) {
       if (isNumberField(display_type)) {
-        if (isMandatory) {
+        if (is_mandatory) {
           parsedDefaultValue = 0
         }
       } else if (isIdentifierField(display_type)) {
@@ -214,10 +215,10 @@ export function getContextDefaultValue({
 
   // convert to element-ui compatible value
   parsedDefaultValue = parsedValueComponent({
-    columnName,
+    columnName: column_name,
     componentPath,
     displayType: display_type,
-    isMandatory,
+    isMandatory: is_mandatory,
     value: parsedDefaultValue
   })
 

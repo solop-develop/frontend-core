@@ -48,10 +48,10 @@ export default ({
 
   const blankValues = computed(() => {
     return {
-      [fieldAttributes.columnName]: undefined,
-      [fieldAttributes.elementName]: undefined,
-      [DISPLAY_COLUMN_PREFIX + fieldAttributes.columnName]: undefined,
-      [DISPLAY_COLUMN_PREFIX + fieldAttributes.elementName]: undefined,
+      [fieldAttributes.column_name]: undefined,
+      [fieldAttributes.element_name]: undefined,
+      [DISPLAY_COLUMN_PREFIX + fieldAttributes.column_name]: undefined,
+      [DISPLAY_COLUMN_PREFIX + fieldAttributes.element_name]: undefined,
       id: undefined,
       uuid: undefined,
       UUID: undefined,
@@ -61,7 +61,7 @@ export default ({
 
   const uuidForm = computed(() => {
     if (!isEmptyValue(fieldAttributes.containerUuid)) {
-      return fieldAttributes.columnName + '_' + containerUuid
+      return fieldAttributes.column_name + '_' + containerUuid
     }
     return 'Warehouse-Locator-Form'
   })
@@ -120,7 +120,7 @@ export default ({
 
     // const { parentUuid, containerUuid } = fieldAttributes
 
-    const columnName = fieldAttributes.columnName
+    const { column_name } = fieldAttributes
 
     // set ID value
     value.value = id
@@ -135,7 +135,7 @@ export default ({
       containerUuid,
       containerManager,
       field: fieldAttributes,
-      columnName
+      columnName: column_name
     })
   }
 

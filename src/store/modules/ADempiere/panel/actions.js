@@ -42,15 +42,15 @@ const actions = {
     if (params.fieldsList) {
       params.fieldsList.forEach((itemField, index, listFields) => {
         if (itemField.is_key) {
-          keyColumn = itemField.columnName
+          keyColumn = itemField.column_name
         }
         if (itemField.is_selection_column) {
-          selectionColumn.push(itemField.columnName)
+          selectionColumn.push(itemField.column_name)
         }
         if (itemField.is_identifier) {
           identifierColumns.push({
             name: itemField.name,
-            columnName: itemField.columnName,
+            columnName: itemField.column_name,
             displayColumnName: itemField.displayColumnName,
             identifierSequence: itemField.identifierSequence,
             display_type: itemField.display_type,
@@ -72,7 +72,7 @@ const actions = {
           //   parentUuid,
           //   containerUuid,
           //   // isOverWriteParent: Boolean(isParentTab),
-          //   columnName: itemField.columnName,
+          //   columnName: itemField.column_name,
           //   value: itemField.value
           // })
         }
@@ -80,11 +80,11 @@ const actions = {
         if (!isEmptyValue(itemField.parentFieldsList)) {
           itemField.parentFieldsList.forEach(itemParentColumnName => {
             const parentField = listFields.find(parentFieldItem => {
-              return parentFieldItem.columnName === itemParentColumnName &&
-                itemParentColumnName !== itemField.columnName
+              return parentFieldItem.column_name === itemParentColumnName &&
+                itemParentColumnName !== itemField.column_name
             })
             if (parentField) {
-              parentField.dependentFieldsList.push(itemField.columnName)
+              parentField.dependent_fields.push(itemField.column_name)
             }
           })
         }
@@ -158,14 +158,14 @@ const actions = {
     }
 
     const fieldsList = panel.fieldsList.map(itemField => {
-      const { columnName } = itemField
+      const { column_name } = itemField
 
       // not change exlude field
-      if (!isEmptyValue(fieldsExcludes) && fieldsExcludes.includes(columnName)) {
+      if (!isEmptyValue(fieldsExcludes) && fieldsExcludes.includes(column_name)) {
         return itemField
       }
       // if it field is included to change value
-      if (!isEmptyValue(fieldsIncludes) && fieldsIncludes.includes(columnName)) {
+      if (!isEmptyValue(fieldsIncludes) && fieldsIncludes.includes(column_name)) {
         itemField[attribute] = valueAttribute
         return itemField
       }
@@ -193,9 +193,9 @@ const actions = {
     }
     const fieldsIncludes = []
     fieldsList.forEach(fieldItem => {
-      const isMandatory = fieldItem.isMandatory || fieldItem.isMandatoryFromLogic
-      if (isMandatory) {
-        fieldsIncludes.push(fieldItem.columnName)
+      const isMandatoryGenerated = fieldItem.isMandatory || fieldItem.isMandatoryFromLogic
+      if (isMandatoryGenerated) {
+        fieldsIncludes.push(fieldItem.column_name)
       }
     })
 
@@ -224,7 +224,7 @@ const actions = {
     const fieldsIncludes = []
     fieldsList.forEach(fieldItem => {
       if (fieldIsDisplayed(fieldItem, true)) {
-        fieldsIncludes.push(fieldItem.columnName)
+        fieldsIncludes.push(fieldItem.column_name)
       }
     })
 
@@ -310,7 +310,7 @@ const actions = {
           //     })
           //   }
           //   // if (itemField.isShowedFromUserDefault || !isEmptyValue(itemField.value)) {
-          //   //   fieldsUser.push(itemField.columnName)
+          //   //   fieldsUser.push(itemField.column_name)
           //   // }
           // }
           // panel.fieldsList.forEach(execute)
@@ -363,7 +363,7 @@ const actions = {
       let fieldsList = []
       if (isEmptyValue(field)) {
         fieldsList = getters.getFieldsListFromPanel(containerUuid)
-        field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
+        field = fieldsList.find(fieldItem => fieldItem.column_name === columnName)
       }
       if (containerManager.getFieldsList && !isEmptyValue(field.parentUuid)) {
         fieldsList = containerManager.getFieldsList({
@@ -373,7 +373,7 @@ const actions = {
       }
 
       if (isEmptyValue(field)) {
-        field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
+        field = fieldsList.find(fieldItem => fieldItem.column_name === columnName)
         if (isEmptyValue(field)) {
           console.warn('notifyFieldChange: Field not found ', columnName)
           return
@@ -385,7 +385,7 @@ const actions = {
         value = getters.getValueOfField({
           parentUuid: field.parentUuid,
           containerUuid: field.containerUuid,
-          columnName: field.columnName
+          columnName: field.column_name
         })
       } else {
         value = newValue
@@ -413,7 +413,7 @@ const actions = {
           if (response) {
             dispatch('notifyPanelChange', {
               containerUuid: field.containerUuid,
-              columnName: field.columnName,
+              columnName: field.column_name,
               attributes: response.attributes
             })
           }
@@ -446,12 +446,11 @@ const actions = {
     isGetDefaultValue = true,
     containerManager
   }) {
-    if (isEmptyValue(field.dependentFieldsList)) {
+    const { parentUuid, dependent_fields } = field
+    if (isEmptyValue(dependent_fields)) {
       // breaks if there are no field dependencies
       return
     }
-
-    const { parentUuid } = field
 
     // Get all fields
     if (isEmptyValue(fieldsList)) {
@@ -467,12 +466,8 @@ const actions = {
       }
     }
 
-    if (isEmptyValue(field.dependentFieldsList)) {
-      return
-    }
-
     // Iterate for change logic
-    field.dependentFieldsList.map(async fieldDependentDefinition => {
+    dependent_fields.map(async fieldDependentDefinition => {
       let containerName, containerUuid, columnName
       let fieldId = -1
       // old implementation (used on forms)
@@ -482,9 +477,9 @@ const actions = {
       } else {
         // new implementation
         fieldId = fieldDependentDefinition.id
-        columnName = fieldDependentDefinition.columnName
-        containerUuid = fieldDependentDefinition.containerUuid
-        containerName = fieldDependentDefinition.containerName
+        columnName = fieldDependentDefinition.column_name
+        containerUuid = fieldDependentDefinition.container_uuid
+        containerName = fieldDependentDefinition.container_name
       }
 
       // Get all fields on different container
@@ -499,7 +494,7 @@ const actions = {
       if (isEmptyValue(currentFieldsList)) {
         console.warn('fieldsList not found in vuex store', {
           parentUuid,
-          parent_column_name: field.columnName,
+          parent_column_name: field.column_name,
           parentContainerName: field.panelName,
           parentContainerUuid: field.containerUuid,
           dependentColumnName: columnName,
@@ -513,14 +508,14 @@ const actions = {
         if (!isEmptyValue(fieldId)) {
           return fieldId === fieldItem.id
         }
-        return columnName === fieldItem.columnName ||
-          columnName === fieldItem.elementName
+        return columnName === fieldItem.column_name ||
+          columnName === fieldItem.element_name
       })
 
       if (isEmptyValue(storedFieldDependentsList)) {
         console.warn('field not found in vuex store', {
           parentUuid,
-          parent_column_name: field.columnName,
+          parent_column_name: field.column_name,
           parentContainerName: field.panelName,
           parentContainerUuid: field.containerUuid,
           dependentColumnName: columnName,
@@ -536,7 +531,7 @@ const actions = {
             storedFieldDependentsList.map(i => {
               return {
                 id: i.id,
-                columnName: i.columnName,
+                columnName: i.column_name,
                 name: i.name
               }
             })
@@ -548,12 +543,12 @@ const actions = {
 
       //  isDisplayed Logic
       let isDisplayedFromLogic, isMandatoryFromLogic, isReadOnlyFromLogic
-      if (!isEmptyValue(storedFieldDependent.displayLogic)) {
+      if (!isEmptyValue(storedFieldDependent.display_logic)) {
         isDisplayedFromLogic = evaluator.evaluateLogic({
           context: getContext,
           parentUuid,
           containerUuid,
-          logic: storedFieldDependent.displayLogic
+          logic: storedFieldDependent.display_logic
         })
       }
       //  Mandatory Logic
@@ -602,7 +597,7 @@ const actions = {
     containerManager
   }) {
     return new Promise(resolve => {
-      const { columnName } = field
+      const { column_name } = field
       const resolveValues = {
         value: undefined,
         defaultValue: undefined,
@@ -644,7 +639,7 @@ const actions = {
       newValue = rootGetters.getValueOfField({
         parentUuid,
         containerUuid,
-        columnName: columnName
+        columnName: column_name
       })
       if (!isEmptyValue(newValue)) {
         displayedValue = rootGetters.getValueOfField({
@@ -661,7 +656,7 @@ const actions = {
           contextColumnNames: field.contextColumnNames,
           uuid: field.uuid,
           id: field.id,
-          columnName: columnName,
+          columnName: column_name,
           defaultValue: field.default_value
         })
 
@@ -673,7 +668,7 @@ const actions = {
       commit('updateValueOfField', {
         parentUuid,
         containerUuid,
-        columnName: columnName,
+        columnName: column_name,
         value: newValue
       })
       // update values for field on elememnt name of column
@@ -681,7 +676,7 @@ const actions = {
         commit('updateValueOfField', {
           parentUuid,
           containerUuid,
-          columnName: field.elementName,
+          columnName: field.element_name,
           value: newValue
         })
       }

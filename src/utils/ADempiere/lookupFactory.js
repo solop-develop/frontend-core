@@ -173,7 +173,7 @@ function getFactoryFromField({
 }) {
   const definition = {
     parentFieldsList: field.parentFieldsList || [],
-    dependentFieldsList: field.dependentFieldsList || [],
+    dependent_fields: field.dependent_fields || [],
     ...field,
     is_displayed: true,
     // Overwrite definition
@@ -313,7 +313,7 @@ export function getFieldTemplate(overwriteDefinition) {
     // browser attributes
     callout: undefined,
     is_query_criteria: false,
-    displayLogic: undefined,
+    display_logic: undefined,
     mandatory_logic: undefined,
     read_only_logic: undefined,
     handleFocusGained: false,
@@ -322,7 +322,7 @@ export function getFieldTemplate(overwriteDefinition) {
     handleKeyReleased: false,
     handleActionKeyPerformed: false,
     handleActionPerformed: false,
-    dependentFieldsList: [],
+    dependent_fields: [],
     reference: {
       tableName: '',
       keyColumnName: '',
@@ -337,7 +337,7 @@ export function getFieldTemplate(overwriteDefinition) {
     ...overwriteDefinition
   }
 
-  if (isEmptyValue(fieldTemplateMetadata.elementName) && !isEmptyValue(fieldTemplateMetadata.columnName)) {
+  if (isEmptyValue(fieldTemplateMetadata.element_name) && !isEmptyValue(fieldTemplateMetadata.columnName)) {
     fieldTemplateMetadata.elementColumnName = fieldTemplateMetadata.columnName
   }
 
@@ -355,7 +355,7 @@ export function getFieldTemplate(overwriteDefinition) {
       ...fieldTemplateMetadata,
       default_value: fieldTemplateMetadata.default_value_to,
       columnName: `${fieldTemplateMetadata.columnName}_To`,
-      elementName: `${fieldTemplateMetadata.elementName}_To`
+      element_name: `${fieldTemplateMetadata.element_name}_To`
     })
   }
 

@@ -174,19 +174,19 @@ export function isDisplayedField({ is_displayed, display_logic, isDisplayedFromL
 
 /**
  * Default showed field from user
- * @param {string} columnName
+ * @param {string} column_name
  * @param {string} default_value
- * @param {boolean} isMandatory
+ * @param {boolean} is_mandatory
  * @param {boolean} isShowedFromUser
  * @param {boolean} is_parent
  */
 export function evaluateDefaultFieldShowed({
   parentUuid, containerUuid,
-  is_key, is_parent, columnName,
+  is_key, is_parent, column_name,
   default_value, parsedDefaultValue,
   isShowedFromUser, is_displayed_as_panel,
-  display_type, displayLogic,
-  isMandatory, mandatory_logic, isMandatoryFromLogic
+  display_type, display_logic,
+  is_mandatory, mandatory_logic, isMandatoryFromLogic
 }) {
   if (!isEmptyValue(is_displayed_as_panel)) {
     return convertStringToBoolean(is_displayed_as_panel)
@@ -194,7 +194,7 @@ export function evaluateDefaultFieldShowed({
   if (String(default_value).startsWith('@SQL=')) {
     return true
   }
-  if (!isEmptyValue(displayLogic)) {
+  if (!isEmptyValue(display_logic)) {
     return true
   }
 
@@ -202,13 +202,13 @@ export function evaluateDefaultFieldShowed({
     return true
   }
 
-  const { isParentTab, link_column_name, itemParentColumnName } = store.getters.getStoredTab(parentUuid, containerUuid)
-  if (!isParentTab && (link_column_name === columnName || itemParentColumnName === columnName)) {
+  const { isParentTab, link_column_name, parent_column_name } = store.getters.getStoredTab(parentUuid, containerUuid)
+  if (!isParentTab && (link_column_name === column_name || parent_column_name === column_name)) {
     return true
   }
 
   const isMandatoryGenerated = isMandatoryField({
-    is_key, columnName, display_type, isMandatory, mandatory_logic, isMandatoryFromLogic
+    is_key, column_name, display_type, is_mandatory, mandatory_logic, isMandatoryFromLogic
   })
   const isEmpty = isEmptyValue(parsedDefaultValue) || (isDecimalField(display_type) && parsedDefaultValue === 0)
   if (isEmpty && isMandatoryGenerated && !is_parent) {
@@ -218,19 +218,19 @@ export function evaluateDefaultFieldShowed({
       if (parentUuid === 'a520de12-fb40-11e8-a479-7a0060f0aa01') {
         // Customer Tab
         if (containerUuid === 'a49fb436-fb40-11e8-a479-7a0060f0aa01') {
-          if (['IsCustomer'].includes(columnName)) {
+          if (['IsCustomer'].includes(column_name)) {
             return true
           }
         }
         // Vendor Tab
         if (containerUuid === 'a49fb4e0-fb40-11e8-a479-7a0060f0aa01') {
-          if (['IsVendor'].includes(columnName)) {
+          if (['IsVendor'].includes(column_name)) {
             return true
           }
         }
         // Emproyee Tab
         if (containerUuid === 'a4a07ccc-fb40-11e8-a479-7a0060f0aa01') {
-          if (['IsEmployee'].includes(columnName)) {
+          if (['IsEmployee'].includes(column_name)) {
             return true
           }
         }
@@ -254,7 +254,7 @@ export function evaluateDefaultFieldShowed({
     // TODO: Remove this columns with fixes default value
     'UserLevel'
   ]
-  if (permissedDisplayedDefault.includes(columnName)) {
+  if (permissedDisplayedDefault.includes(column_name)) {
     return true
   }
 
@@ -263,18 +263,18 @@ export function evaluateDefaultFieldShowed({
 
 /**
  * Default showed field from user
- * @param {string} columnName
+ * @param {string} column_name
  * @param {string} default_value
- * @param {boolean} isMandatory
+ * @param {boolean} is_mandatory
  * @param {boolean} isShowedTableFromUser
  * @param {boolean} is_parent
  */
 export function evaluateDefaultColumnShowed({
   parentUuid, containerUuid,
-  is_key, is_parent, columnName,
+  is_key, is_parent, column_name,
   default_value, parsedDefaultValue,
   display_type, isShowedTableFromUser, is_displayed_as_table,
-  isMandatory, mandatory_logic, isMandatoryFromLogic
+  is_mandatory, mandatory_logic, isMandatoryFromLogic
 }) {
   if (!isEmptyValue(is_displayed_as_table)) {
     return convertStringToBoolean(is_displayed_as_table)
@@ -288,12 +288,12 @@ export function evaluateDefaultColumnShowed({
   }
 
   const { isParentTab, link_column_name, parent_column_name } = store.getters.getStoredTab(parentUuid, containerUuid)
-  if (!isParentTab && (link_column_name === columnName || parent_column_name === columnName)) {
+  if (!isParentTab && (link_column_name === column_name || parent_column_name === column_name)) {
     return true
   }
 
   const isMandatoryGenerated = isMandatoryColumn({
-    is_key, columnName, display_type, isMandatory, mandatory_logic, isMandatoryFromLogic
+    is_key, column_name, display_type, is_mandatory, mandatory_logic, isMandatoryFromLogic
   })
   const isEmpty = isEmptyValue(parsedDefaultValue) || (isDecimalField(display_type) && parsedDefaultValue === 0)
   if (isEmpty && isMandatoryGenerated && !is_parent) {
@@ -317,7 +317,7 @@ export function evaluateDefaultColumnShowed({
     'TaskStatus'
   ]
 
-  if (permissedDisplayedDefault.includes(columnName)) {
+  if (permissedDisplayedDefault.includes(column_name)) {
     return true
   }
 
@@ -328,13 +328,13 @@ export function evaluateDefaultColumnShowed({
  * Tab manager mandatory logic
  * @see https://github.com/adempiere/adempiere/blob/develop/base/src/org/compiere/model/GridField.java#L401
  * @param {boolean} is_key
- * @param {string} columnName
- * @param {boolean} isMandatory
+ * @param {string} column_name
+ * @param {boolean} is_mandatory
  * @param {string} mandatory_logic
  * @param {boolean} isMandatoryFromLogic
  * @returns {boolean}
  */
-export function isMandatoryField({ is_key, columnName, display_type, isMandatory, mandatory_logic, isMandatoryFromLogic }) {
+export function isMandatoryField({ is_key, column_name, display_type, is_mandatory, mandatory_logic, isMandatoryFromLogic }) {
   if (display_type === BUTTON.id) {
     return false
   }
@@ -354,19 +354,19 @@ export function isMandatoryField({ is_key, columnName, display_type, isMandatory
     VALUE, DOCUMENT_NO, 'M_AttributeSetInstance_ID'
   ]
   if (
-    (is_key && columnName.endsWith(IDENTIFIER_COLUMN_SUFFIX)) ||
-    columnName.startsWith('Created') || columnName.startsWith('Updated') ||
-    notMandatoryRender.includes(columnName)
+    (is_key && column_name.endsWith(IDENTIFIER_COLUMN_SUFFIX)) ||
+    column_name.startsWith('Created') || column_name.startsWith('Updated') ||
+    notMandatoryRender.includes(column_name)
   ) {
     return false
   }
 
   // is mandatory
-  if (isMandatory) {
+  if (is_mandatory) {
     // TODO: Evaluate displayed
     return true
   }
-  // return isMandatory || (!isEmptyValue(mandatory_logic) && isMandatoryFromLogic)
+  // return is_mandatory || (!isEmptyValue(mandatory_logic) && isMandatoryFromLogic)
   return false
 }
 
@@ -394,14 +394,14 @@ export function isDisplayedColumn({ is_displayed, is_displayed_grid, isDisplayed
     (isEmptyValue(display_logic) || isDisplayedFromLogic)
 }
 
-export function isMandatoryColumn({ is_key, columnName, display_type, is_mandatory, mandatory_logic, isMandatoryFromLogic }) {
+export function isMandatoryColumn({ is_key, column_name, display_type, is_mandatory, mandatory_logic, isMandatoryFromLogic }) {
   const notMandatoryRender = [
     VALUE, DOCUMENT_NO, 'M_AttributeSetInstance_ID'
   ]
   if (
-    (is_key && columnName.endsWith(IDENTIFIER_COLUMN_SUFFIX)) ||
-    columnName.startsWith('Created') || columnName.startsWith('Updated') ||
-    notMandatoryRender.includes(columnName)
+    (is_key && column_name.endsWith(IDENTIFIER_COLUMN_SUFFIX)) ||
+    column_name.startsWith('Created') || column_name.startsWith('Updated') ||
+    notMandatoryRender.includes(column_name)
   ) {
     return false
   }
@@ -899,7 +899,8 @@ export const openBrowserAssociated = {
         containerUuid: browserUuid
       })
       const tabContext = store.getters.getValuesView({
-        containerUuid
+        containerUuid,
+        format: 'object'
       })
 
       store.dispatch('updateValuesOfContainer', {
@@ -907,21 +908,21 @@ export const openBrowserAssociated = {
         attributes: tabContext
       })
 
+      // load the tab fields
       storedBrowser.fieldsList.forEach(itemField => {
-        if (!itemField.isSameColumnElement) {
-          const currentValueElement = tabContext.find(itemAttribute => {
-            return itemAttribute.columnName === itemField.elementName
-          })
-          if (!isEmptyValue(currentValueElement) && !isEmptyValue(currentValueElement.value)) {
+        const { isSameColumnElement, column_name, element_name } = itemField
+        if (!isSameColumnElement) {
+          const currentContextValue = tabContext[element_name]
+          if (!isEmptyValue(currentContextValue)) {
             store.commit('updateValueOfField', {
               containerUuid: browserUuid,
-              columnName: itemField.elementName,
-              value: currentValueElement.value
+              columnName: element_name,
+              value: currentContextValue
             })
             store.commit('updateValueOfField', {
               containerUuid: browserUuid,
-              columnName: itemField.columnName,
-              value: currentValueElement.value
+              columnName: column_name,
+              value: currentContextValue
             })
           }
           // change Dependents
@@ -932,6 +933,7 @@ export const openBrowserAssociated = {
         }
       })
 
+      // clear resutls
       store.dispatch('clearBrowserData', {
         containerUuid: browserUuid
       })
@@ -939,20 +941,24 @@ export const openBrowserAssociated = {
 
     // set record id from window
     const storedTab = store.getters.getStoredTab(parentUuid, containerUuid)
-    const { keyColumn } = storedTab
+    const { keyColumn, table, parent_column_name, link_column_name } = storedTab
+    const { key_columns } = table
 
-    let relatedColumns = []
+    let relatedColumns = key_columns
     // TODO: Validate element columns
     const parentColumns = storedTab.fieldsList
       .filter(fieldItem => {
-        return fieldItem.is_parent || fieldItem.is_key || fieldItem.isMandatory
+        return fieldItem.is_parent || fieldItem.is_key || fieldItem.is_mandatory
       })
       .map(fieldItem => {
-        return fieldItem.columnName
+        return fieldItem.column_name
       })
 
-    if (!isEmptyValue(storedTab.parentColumn)) {
-      relatedColumns = relatedColumns.push(storedTab.parentColumn)
+    if (!isEmptyValue(parent_column_name)) {
+      relatedColumns.push(parent_column_name)
+    }
+    if (!isEmptyValue(link_column_name)) {
+      relatedColumns.push(link_column_name)
     }
     relatedColumns = relatedColumns.concat(parentColumns).sort()
 
@@ -1713,8 +1719,8 @@ export const containerManager = {
   },
 
   isDisplayedField,
-  isDisplayedDefault: ({ isMandatory, is_parent, default_value, display_type, parsedDefaultValue }) => {
-    if (isMandatory && !is_parent && isEmptyValue(default_value)) {
+  isDisplayedDefault: ({ is_mandatory, is_parent, default_value, display_type, parsedDefaultValue }) => {
+    if (is_mandatory && !is_parent && isEmptyValue(default_value)) {
       // Yes/No field always boolean value (as default value)
       if (display_type === YES_NO.id) {
         return false
@@ -1724,8 +1730,8 @@ export const containerManager = {
     return false
   },
   isDisplayedColumn,
-  isDisplayedDefaultTable: ({ isMandatory, is_parent, default_value, display_type, parsedDefaultValue }) => {
-    if (isMandatory && !is_parent && isEmptyValue(default_value)) {
+  isDisplayedDefaultTable: ({ is_mandatory, is_parent, default_value, display_type, parsedDefaultValue }) => {
+    if (is_mandatory && !is_parent && isEmptyValue(default_value)) {
       // Yes/No field always boolean value (as default value)
       if (display_type === YES_NO.id) {
         return false

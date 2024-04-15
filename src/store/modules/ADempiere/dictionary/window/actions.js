@@ -156,8 +156,8 @@ export default {
           return fieldItem.columnName
         })
 
-      if (!isEmptyValue(tabDefinition.parentColumn)) {
-        relatedColumns = relatedColumns.push(tabDefinition.parentColumn)
+      if (!isEmptyValue(tabDefinition.parent_column_name)) {
+        relatedColumns = relatedColumns.push(tabDefinition.parent_column_name)
       }
       relatedColumns = relatedColumns.concat(parentColumns).sort()
 
@@ -478,14 +478,14 @@ export default {
         let displayed = ({ containerUuid, parentUuid }) => {
           return true
         }
-        if (fieldAssociated && !isEmptyValue(fieldAssociated.displayLogic)) {
+        if (fieldAssociated && !isEmptyValue(fieldAssociated.display_logic)) {
           displayed = ({ parentUuid, containerUuid }) => {
             // evaluate display logic of field with process associated to hidden/showed
             const isDisplayedFromLogic = evaluator.evaluateLogic({
               parentUuid,
               containerUuid,
               context: getContext,
-              logic: fieldAssociated.displayLogic
+              logic: fieldAssociated.display_logic
             })
             return isDisplayedFromLogic
           }
@@ -642,9 +642,9 @@ export default {
 
     fieldsList.forEach(itemField => {
       if (groupField === itemField.groupAssigned) {
-        const { columnName } = itemField
+        const { column_name } = itemField
 
-        const isShowedFromUser = fieldsShowed.includes(columnName)
+        const isShowedFromUser = fieldsShowed.includes(column_name)
         if (itemField.isShowedFromUser === isShowedFromUser) {
           // no to mutate the state unnecessarily
           return
@@ -679,7 +679,7 @@ export default {
 
     fieldsList.forEach(itemField => {
       if (groupField === itemField.groupAssigned) {
-        const isShowedTableFromUser = fieldsShowed.includes(itemField.columnName)
+        const isShowedTableFromUser = fieldsShowed.includes(itemField.column_name)
 
         commit('changeTabFieldAttribute', {
           field: itemField,
@@ -779,7 +779,7 @@ export default {
         if (!isEmptyValue(parsedFilters)) {
           // merge values
           defaultAttributes = defaultAttributes.map(attribute => {
-            const filterValue = parsedFilters[attribute.columnName]
+            const filterValue = parsedFilters[attribute.column_name]
             return {
               ...attribute,
               value: filterValue
@@ -795,7 +795,7 @@ export default {
       // with copy values
       if (!isEmptyValue(overwriteValues)) {
         defaultAttributes = defaultAttributes.map(attribute => {
-          const filterValue = overwriteValues[attribute.columnName]
+          const filterValue = overwriteValues[attribute.column_name]
           if (isEmptyValue(filterValue)) {
             return attribute
           }
@@ -828,7 +828,7 @@ export default {
       if (tab.table.is_document) {
         // get displayed value on status
         const fieldDocumentStatus = tab.fieldsList.find(field => {
-          return field.columnName === DOCUMENT_STATUS
+          return field.column_name === DOCUMENT_STATUS
         })
         if (!isEmptyValue(fieldDocumentStatus)) {
           const value = getDocumentStatusValue({
@@ -850,7 +850,7 @@ export default {
               //
               uuid: fieldDocumentStatus.uuid,
               id: fieldDocumentStatus.id,
-              columnName: fieldDocumentStatus.columnName,
+              columnName: fieldDocumentStatus.column_name,
               defaultValue: fieldDocumentStatus.default_value,
               value: value
             })

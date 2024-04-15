@@ -39,13 +39,13 @@ import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFor
 /**
  * Is displayed field in panel query criteria
  */
-export function isDisplayedField({ display_type, is_query_criteria, displayLogic, isDisplayedFromLogic }) {
+export function isDisplayedField({ display_type, is_query_criteria, display_logic, isDisplayedFromLogic }) {
   // button field not showed
   if (isHiddenField(display_type)) {
     return false
   }
 
-  return is_query_criteria && (isEmptyValue(displayLogic) || isDisplayedFromLogic)
+  return is_query_criteria && (isEmptyValue(display_logic) || isDisplayedFromLogic)
 }
 
 /**
@@ -54,13 +54,13 @@ export function isDisplayedField({ display_type, is_query_criteria, displayLogic
 export function evaluateDefaultFieldShowed({
   display_type, is_query_criteria,
   isShowedFromUser, is_displayed_as_panel,
-  default_value, parsedDefaultValue, displayLogic,
+  default_value, parsedDefaultValue, display_logic,
   isMandatory, isMandatoryFromLogic, mandatory_logic
 }) {
   if (!isEmptyValue(is_displayed_as_panel)) {
     return convertStringToBoolean(is_displayed_as_panel)
   }
-  if (!isEmptyValue(displayLogic)) {
+  if (!isEmptyValue(display_logic)) {
     return true
   }
   const isMandatoryGenerated = isMandatoryField({
@@ -501,13 +501,13 @@ export const containerManager = {
         if (!field.isSameColumnElement) {
           store.commit('updateValueOfField', {
             containerUuid,
-            columnName: field.elementName,
+            columnName: field.element_name,
             value: response.value
           })
 
           store.commit('updateValueOfField', {
             containerUuid,
-            columnName: DISPLAY_COLUMN_PREFIX + field.elementName,
+            columnName: DISPLAY_COLUMN_PREFIX + field.element_name,
             value: response.displayedValue
           })
         }

@@ -53,7 +53,7 @@ export default ({ fieldMetadata, containerManager }) => {
       }
 
       // DisplayColumn_'ColumnName'
-      const { displayColumnName: columnName, containerUuid, inTable } = fieldMetadata
+      const { displayColumnName, containerUuid, inTable } = fieldMetadata
       // table records values
       if (inTable) {
         // implement container manager row
@@ -61,7 +61,7 @@ export default ({ fieldMetadata, containerManager }) => {
           const currentValue = containerManager.getCell({
             containerUuid,
             rowIndex: fieldMetadata.rowIndex,
-            columnName
+            columnName: displayColumnName
           })
           if (!isEmptyValue(currentValue)) {
             return currentValue
@@ -72,12 +72,12 @@ export default ({ fieldMetadata, containerManager }) => {
       // return store.getters.getValueOfFieldOnContainer({
       //   parentUuid: fieldMetadata.parentUuid,
       //   containerUuid,
-      //   columnName
+      //   columnName: displayColumnName
       // })
       return store.getters.getValueOfField({
         // parentUuid: fieldMetadata.parentUuid,
         containerUuid,
-        columnName
+        columnName: displayColumnName
       })
     },
     set(newValue) {
@@ -108,7 +108,7 @@ export default ({ fieldMetadata, containerManager }) => {
         store.commit('updateValueOfField', {
           parentUuid: fieldMetadata.parentUuid,
           containerUuid,
-          columnName: DISPLAY_COLUMN_PREFIX + fieldMetadata.elementName,
+          columnName: DISPLAY_COLUMN_PREFIX + fieldMetadata.element_name,
           value: newValue
         })
       }
@@ -121,7 +121,7 @@ export default ({ fieldMetadata, containerManager }) => {
         parentUuid: fieldMetadata.parentUuid,
         containerUuid: fieldMetadata.containerUuid,
         // 'ColumnName'_UUID
-        columnName: fieldMetadata.columnName + UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX
+        columnName: fieldMetadata.column_name + UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX
       })
     },
     set(value) {
@@ -131,7 +131,7 @@ export default ({ fieldMetadata, containerManager }) => {
         parentUuid,
         containerUuid,
         // 'ColumnName'_UUID
-        columnName: fieldMetadata.columnName + UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX,
+        columnName: fieldMetadata.column_name + UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX,
         value
       })
       // update element column name
@@ -139,7 +139,7 @@ export default ({ fieldMetadata, containerManager }) => {
         store.commit('updateValueOfField', {
           parentUuid,
           containerUuid,
-          columnName: fieldMetadata.elementName + UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX,
+          columnName: fieldMetadata.element_name + UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX,
           value
         })
       }

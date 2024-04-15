@@ -62,7 +62,7 @@ export default {
         disabled: this.isDisabled,
         placeholder: this.metadata.placeholder,
         readonly: Boolean(this.metadata.readonly),
-        ref: this.metadata.columnName
+        ref: this.metadata.column_name
       }
     },
     cssClassCustomField() {
@@ -106,7 +106,7 @@ export default {
     },
     value: {
       get() {
-        const { columnName, containerUuid, inTable } = this.metadata
+        const { column_name, containerUuid, inTable } = this.metadata
         // table records values
         if (inTable) {
           // implement container manager row
@@ -114,7 +114,7 @@ export default {
             const value = this.containerManager.getCell({
               containerUuid,
               rowIndex: this.metadata.rowIndex,
-              columnName
+              columnName: column_name
             })
             // types `decimal` and `date` is a object struct
             if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
@@ -127,7 +127,7 @@ export default {
         const value = store.getters.getValueOfFieldOnContainer({
           parentUuid: this.metadata.parentUuid,
           containerUuid,
-          columnName
+          columnName: column_name
         })
         // types `decimal` and `date` is a object struct
         if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
@@ -136,7 +136,7 @@ export default {
         return value
       },
       set(newValue) {
-        const { columnName, containerUuid, inTable } = this.metadata
+        const { column_name, containerUuid, inTable } = this.metadata
 
         // table records values
         if (inTable) {
@@ -145,7 +145,7 @@ export default {
             this.containerManager.setCell({
               containerUuid,
               rowIndex: this.metadata.rowIndex,
-              columnName,
+              columnName: column_name,
               value: newValue
             })
           }
@@ -154,7 +154,7 @@ export default {
         store.commit('updateValueOfField', {
           parentUuid: this.metadata.parentUuid,
           containerUuid,
-          columnName,
+          columnName: column_name,
           value: newValue
         })
         // update element column name
@@ -162,7 +162,7 @@ export default {
           store.commit('updateValueOfField', {
             parentUuid: this.metadata.parentUuid,
             containerUuid,
-            columnName: this.metadata.elementName,
+            columnName: this.metadata.element_name,
             value: newValue
           })
         }
@@ -195,7 +195,7 @@ export default {
         !isEmptyValue(fieldFocusColumnName) &&
         !isEmptyValue(tabPanel) &&
         fieldFocusColumnName &&
-        this.metadata.columnName === fieldFocusColumnName &&
+        this.metadata.column_name === fieldFocusColumnName &&
         tabPanel.currentTab.containerUuid === this.metadata.containerUuid &&
         !isEmptyValue(this.$refs) &&
         !isEmptyValue(this.$refs[fieldFocusColumnName]) &&
@@ -253,7 +253,7 @@ export default {
           //
           uuid: this.metadata.uuid,
           id: this.metadata.id,
-          columnName: this.metadata.columnName,
+          columnName: this.metadata.column_name,
           value: this.value
         })
       }
@@ -299,8 +299,8 @@ export default {
      * Set focus if handle focus attribute is true
      */
     requestFocus() {
-      if (this.$refs[this.metadata.columnName]) {
-        this.$refs[this.metadata.columnName].focus()
+      if (this.$refs[this.metadata.column_name]) {
+        this.$refs[this.metadata.column_name].focus()
       }
     },
     /**
@@ -313,10 +313,10 @@ export default {
     },
     focusGained(value) {
       // const info = {
-      //   columnName: this.metadata.columnName
+      //   columnName: this.metadata.column_name
       // }
       // store.dispatch('fieldListInfo', { info })
-      store.commit('setFieldFocusColumnName', this.metadata.columnName)
+      store.commit('setFieldFocusColumnName', this.metadata.column_name)
 
       if (this.metadata.handleContentSelection) {
         // select all the content inside the text box
@@ -329,18 +329,18 @@ export default {
       if (this.metadata.handleFocusGained) {
         store.dispatch('notifyFocusGained', {
           containerUuid: this.metadata.containerUuid,
-          columnName: this.metadata.columnName,
+          columnName: this.metadata.column_name,
           value: this.value
         })
       }
       this.setContainerInformation()
     },
     focusLost(value) {
-      store.commit('setFieldFocusColumnName', this.metadata.columnName)
+      store.commit('setFieldFocusColumnName', this.metadata.column_name)
       if (this.metadata.handleFocusLost) {
         store.dispatch('notifyFocusLost', {
           containerUuid: this.metadata.containerUuid,
-          columnName: this.metadata.columnName,
+          columnName: this.metadata.column_name,
           value: this.value
         })
       }
@@ -349,7 +349,7 @@ export default {
       if (this.metadata.handleKeyPressed) {
         store.dispatch('notifyKeyPressed', {
           containerUuid: this.metadata.containerUuid,
-          columnName: this.metadata.columnName,
+          columnName: this.metadata.column_name,
           value: value.key,
           keyCode: value.keyCode
         })
@@ -363,7 +363,7 @@ export default {
       if (this.metadata.handleActionKeyPerformed) {
         store.dispatch('notifyActionKeyPerformed', {
           containerUuid: this.metadata.containerUuid,
-          columnName: this.metadata.columnName,
+          columnName: this.metadata.column_name,
           value: event.target.value,
           keyCode: event.keyCode
         })
@@ -375,7 +375,7 @@ export default {
       if (this.metadata.handleKeyReleased) {
         store.dispatch('notifyKeyReleased', {
           containerUuid: this.metadata.containerUuid,
-          columnName: this.metadata.columnName,
+          columnName: this.metadata.column_name,
           value: value.key,
           keyCode: value.keyCode
         })
@@ -414,22 +414,22 @@ export default {
     }) {
       // Global Action performed
       const info = {
-        columnName: this.metadata.columnName
+        columnName: this.metadata.column_name
       }
       store.dispatch('fieldListInfo', { info })
       this.setContainerInformation()
-      store.commit('setFieldFocusColumnName', this.metadata.columnName)
+      store.commit('setFieldFocusColumnName', this.metadata.column_name)
 
       if (this.metadata.handleActionPerformed && this.autoSave) {
         store.dispatch('notifyActionPerformed', {
           containerUuid: this.metadata.containerUuid,
-          columnName: this.metadata.columnName,
+          columnName: this.metadata.column_name,
           value
         })
         if (!this.metadata.isSameColumnElement) {
           store.dispatch('notifyActionPerformed', {
             containerUuid: this.metadata.containerUuid,
-            columnName: this.metadata.elementName,
+            columnName: this.metadata.element_name,
             value
           })
         }
@@ -451,7 +451,7 @@ export default {
         containerUuid: this.metadata.containerUuid,
         containerManager: this.containerManager,
         field: this.metadata,
-        columnName: this.metadata.columnName
+        columnName: this.metadata.column_name
       })
     },
 

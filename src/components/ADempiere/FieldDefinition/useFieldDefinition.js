@@ -79,13 +79,13 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
       disabled: isDisabled.value,
       placeholder: fieldMetadata.placeholder,
       readonly: Boolean(fieldMetadata.readonly),
-      ref: fieldMetadata.columnName
+      ref: fieldMetadata.column_name
     }
   })
 
   const value = computed({
     get() {
-      const { columnName, containerUuid, inTable } = fieldMetadata
+      const { column_name, containerUuid, inTable } = fieldMetadata
 
       // table records values
       if (inTable) {
@@ -94,7 +94,7 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
           const value = containerManager.getCell({
             containerUuid,
             rowIndex: fieldMetadata.rowIndex,
-            columnName
+            columnName: column_name
           })
           // types `decimal` and `date` is a object struct
           if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
@@ -108,7 +108,7 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
       const value = store.getters.getValueOfFieldOnContainer({
         parentUuid: fieldMetadata.parentUuid,
         containerUuid,
-        columnName
+        columnName: column_name
       })
       // types `decimal` and `date` is a object struct
       if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
@@ -117,7 +117,7 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
       return value
     },
     set(newValue) {
-      const { columnName, containerUuid, inTable } = fieldMetadata
+      const { column_name, containerUuid, inTable } = fieldMetadata
 
       // table records values
       if (inTable) {
@@ -126,7 +126,7 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
           return containerManager.setCell({
             containerUuid,
             rowIndex: fieldMetadata.rowIndex,
-            columnName,
+            columnName: column_name,
             value: newValue
           })
         }
@@ -135,14 +135,14 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
       store.commit('updateValueOfField', {
         parentUuid: fieldMetadata.parentUuid,
         containerUuid,
-        columnName,
+        columnName: column_name,
         value: newValue
       })
       if (!fieldMetadata.isSameColumnElement) {
         store.commit('updateValueOfField', {
           parentUuid: fieldMetadata.parentUuid,
           containerUuid,
-          columnName: fieldMetadata.elementName,
+          columnName: fieldMetadata.element_name,
           value: newValue
         })
       }
@@ -196,7 +196,7 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
         //
         uuid: fieldMetadata.uuid,
         id: fieldMetadata.id,
-        columnName: fieldMetadata.columnName,
+        columnName: fieldMetadata.column_name,
         value: value.value
       })
     }
@@ -214,8 +214,8 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
    * TODO: Add support with composition api
    */
   function requestFocus() {
-    // if (this.$refs[fieldMetadata.columnName]) {
-    //   this.$refs[fieldMetadata.columnName].focus()
+    // if (this.$refs[fieldMetadata.column_name]) {
+    //   this.$refs[fieldMetadata.column_name].focus()
     // }
   }
 
@@ -231,7 +231,7 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
     if (fieldMetadata.handleFocusGained) {
       store.dispatch('notifyFocusGained', {
         containerUuid: fieldMetadata.containerUuid,
-        columnName: fieldMetadata.columnName,
+        columnName: fieldMetadata.column_name,
         value: event.value
       })
     }
@@ -241,7 +241,7 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
     if (fieldMetadata.handleFocusLost) {
       store.dispatch('notifyFocusLost', {
         containerUuid: fieldMetadata.containerUuid,
-        columnName: fieldMetadata.columnName,
+        columnName: fieldMetadata.column_name,
         value: event.value
       })
     }
@@ -251,7 +251,7 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
     if (fieldMetadata.handleKeyPressed) {
       store.dispatch('notifyKeyPressed', {
         containerUuid: fieldMetadata.containerUuid,
-        columnName: fieldMetadata.columnName,
+        columnName: fieldMetadata.column_name,
         value: event.key,
         keyCode: event.keyCode
       })
@@ -266,7 +266,7 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
     if (fieldMetadata.handleActionKeyPerformed) {
       store.dispatch('notifyActionKeyPerformed', {
         containerUuid: fieldMetadata.containerUuid,
-        columnName: fieldMetadata.columnName,
+        columnName: fieldMetadata.column_name,
         value: event.target.value,
         keyCode: event.keyCode
       })
@@ -279,7 +279,7 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
     if (fieldMetadata.handleKeyReleased) {
       store.dispatch('notifyKeyReleased', {
         containerUuid: fieldMetadata.containerUuid,
-        columnName: fieldMetadata.columnName,
+        columnName: fieldMetadata.column_name,
         value: event.key,
         keyCode: event.keyCode
       })
@@ -328,13 +328,13 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
     if (fieldMetadata.handleActionPerformed && autoSave.value) {
       store.dispatch('notifyActionPerformed', {
         containerUuid: fieldMetadata.containerUuid,
-        columnName: fieldMetadata.columnName,
+        columnName: fieldMetadata.column_name,
         value
       })
       if (!fieldMetadata.isSameColumnElement) {
         store.dispatch('notifyActionPerformed', {
           containerUuid: fieldMetadata.containerUuid,
-          columnName: fieldMetadata.elementName,
+          columnName: fieldMetadata.element_name,
           value
         })
       }
@@ -352,7 +352,7 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
       containerUuid: fieldMetadata.containerUuid,
       containerManager,
       field: fieldMetadata,
-      columnName: fieldMetadata.columnName
+      columnName: fieldMetadata.column_name
     })
   }
 
