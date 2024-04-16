@@ -3,7 +3,7 @@
     <el-row>
       <el-col :span="24" style="text-align: center;">
         <el-image
-          :src="avatarResize"
+          :src="userAvatar"
           fit="scale-down"
           class="circle-image"
         />
@@ -89,6 +89,10 @@ export default defineComponent({
       return store.getters['user/getRole']
     })
 
+    const userAvatar = computed(() => {
+      return store.getters['user/getUserAvatar']
+    })
+
     const avatarResize = ref('')
 
     avatarResize.value = require('@/image/ADempiere/avatar/no-avatar.png')
@@ -135,6 +139,7 @@ export default defineComponent({
       // Computed
       userInfo,
       userName,
+      userAvatar,
       currentRole,
       // Methods
       handleClick,
