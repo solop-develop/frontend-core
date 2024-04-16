@@ -317,7 +317,7 @@ export default defineComponent({
       {
         label: lang.t('form.WTrialBalance.yTDActual'),
         columnName: 'ytd_actual_amount',
-        width: '105px',
+        width: '120px',
         align: 'center'
       },
       {
@@ -329,7 +329,7 @@ export default defineComponent({
       {
         label: lang.t('form.WTrialBalance.varianza'),
         columnName: 'variance_amount',
-        width: '120px',
+        width: '105px',
         align: 'center'
       }
     ])
