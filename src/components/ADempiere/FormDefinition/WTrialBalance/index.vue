@@ -281,53 +281,56 @@ export default defineComponent({
       {
         label: lang.t('form.WTrialBalance.accountNo'),
         columnName: 'value',
-        width: '100'
+        width: '100',
+        align: 'center'
       },
       {
         label: lang.t('form.WTrialBalance.accounName'),
         columnName: 'name',
-        width: '120px'
+        width: '120px',
+        align: 'center'
       },
       {
         label: lang.t('form.WTrialBalance.user1'),
         columnName: 'user_list_name',
-        width: '80px'
+        width: '80px',
+        align: 'center'
       },
       {
         label: lang.t('form.WTrialBalance.periodActual'),
         columnName: 'period_actual_amount',
         width: 'auto',
-        align: 'right'
+        align: 'center'
       },
       {
         label: lang.t('form.WTrialBalance.periodBudget'),
         columnName: 'period_budget_amount',
         width: '120px',
-        align: 'right'
+        align: 'center'
       },
       {
         label: lang.t('form.WTrialBalance.periodVariance'),
         columnName: 'period_variance_amount',
         width: '110px',
-        align: 'right'
+        align: 'center'
       },
       {
         label: lang.t('form.WTrialBalance.yTDActual'),
         columnName: 'ytd_actual_amount',
         width: '105px',
-        align: 'right'
+        align: 'center'
       },
       {
         label: lang.t('form.WTrialBalance.yTDBudget'),
         columnName: 'ytd_budget_amount',
         width: '130px',
-        align: 'right'
+        align: 'center'
       },
       {
         label: lang.t('form.WTrialBalance.varianza'),
         columnName: 'variance_amount',
-        width: '95px',
-        align: 'right'
+        width: '120px',
+        align: 'center'
       }
     ])
     const isLoading = ref(false)
