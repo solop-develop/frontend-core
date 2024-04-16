@@ -34,10 +34,10 @@
       <el-col
         v-if="!isEmptyValue(documentList)"
         :span="24"
-        style="margin-bottom: 5px;"
+        style="margin-bottom: 0px;"
       >
         <panel-group
-          style="height: 100px;"
+          style="height: 125px;"
         />
       </el-col>
       <el-col

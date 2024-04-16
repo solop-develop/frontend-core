@@ -21,7 +21,7 @@
     :style="styleMain"
   >
     <el-row
-      :gutter="15"
+      :gutter="10"
       :class="classPanel"
     >
       <el-col
@@ -45,7 +45,7 @@
               <i
                 v-if="taks.svg.type === 'i'"
                 :class="taks.svg.class"
-                style="font-size: 50px"
+                style="font-size: 55px"
               />
               <svg-icon
                 v-else
@@ -55,7 +55,7 @@
               />
             </el-badge>
             <p
-              style="margin: 0px;font-size: 12px"
+              style="margin: 0px;font-size: 14px"
             >
               {{ taks.name }}
             </p>
@@ -94,7 +94,7 @@ export default defineComponent({
       // if (quantity === 3) return 8
       // if (quantity <= 4) return 6
       // if (quantity >= 5) return 4
-      return 4
+      return 5
     })
 
     const styleMain = computed(() => {
@@ -142,20 +142,12 @@ export default defineComponent({
     }
 
     function handleClick(taks) {
-      let tabParent
-      if (taks.action === 'window') {
-        tabParent = 0
-      }
-
       zoomIn({
         attributeValue: `window_${taks.windowId}`,
         attributeName: 'containerKey',
-        params: {
-          ...taks.criteria
-        },
         query: {
-          tabParent,
-          action: 'criteria'
+          tabParent: 0,
+          referenceUuid: taks.referenceUuid
         }
       })
     }
@@ -192,7 +184,7 @@ export default defineComponent({
   margin: 0px;
   margin-left: -5px;
   margin-right: -5px;
-  height: 90px;
+  height: 100%;
   display: flex;
   overflow: auto;
   padding-bottom: 7px;
@@ -202,7 +194,7 @@ export default defineComponent({
   }
 
   .card-panel {
-    height: 90px;
+    height: 110px;
     cursor: pointer;
     font-size: 12px;
     display: flex;
