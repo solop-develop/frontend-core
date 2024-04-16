@@ -182,7 +182,7 @@ export default defineComponent({
       if (!isWithRecord.value) {
         return false
       }
-      const storedTab = store.getters.getStordTab(props.parentUuid, props.containerUuid)
+      const storedTab = store.getters.getStoredTab(props.parentUuid, props.containerUuid)
       if (isEmptyValue(storedTab)) {
         return false
       }
