@@ -9,7 +9,7 @@
         <el-col :span="12">
           <div class="box-center">
             <pan-thumb
-              :image="avatarResize"
+              :image="userAvatar"
               :hoverable="true"
             >
               {{ currentRole.name }}
@@ -46,7 +46,7 @@ import store from '@/store'
 import PanThumb from '@/components/PanThumb'
 
 // Constants
-import { config } from '@/utils/ADempiere/config'
+// import { config } from '@/utils/ADempiere/config'
 
 // Utils and Helper Methods
 // import { getImagePath } from '@/utils/ADempiere/resource.js'
@@ -100,7 +100,7 @@ export default defineComponent({
         //   height: 200
         // })
         // avatarResize.value = blobImage.href
-        avatarResize.value = config.adempiere.resource.url + userAvatar.value
+        avatarResize.value = userAvatar.value
       }
     }
 
@@ -108,6 +108,7 @@ export default defineComponent({
 
     return {
       // Ref
+      userAvatar,
       avatarResize,
       // Computed
       currentRole,

@@ -21,6 +21,7 @@ import language from '@/lang'
 // Constants
 import { CLIENT, ORGANIZATION, WAREHOUSE } from '@/utils/ADempiere/constants/systemColumns'
 import { title } from '@/settings'
+import { config } from '@/utils/ADempiere/config'
 
 // API Request Methods
 import {
@@ -785,7 +786,12 @@ const getters = {
     return state.userInfo
   },
   getUserAvatar: (state) => {
-    return state.avatar
+    console.log({
+      config: config.adempiere.resource.url,
+      avatar: state.avatar
+    })
+    if (isEmptyValue(state.avatar)) return ''
+    return config.adempiere.resource.url + state.avatar
   },
   // TODO: Manage with vuex module to personal lock
   getIsPersonalLock: (state) => {

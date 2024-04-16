@@ -58,7 +58,7 @@
         <el-button slot="reference" type="text" style="padding-top: 5px;padding-right: 10px;">
           <el-image
             v-if="!isEmptyValue(avatar)"
-            :src="avatarResize"
+            :src="userAvatar"
             fit="contain"
             style="
               width: 40px;
@@ -114,6 +114,9 @@ export default {
     }
   },
   computed: {
+    userAvatar() {
+      return this.$store.getters['user/getUserAvatar']
+    },
     isMobile() {
       return this.$store.state.app.device === 'mobile'
     },
