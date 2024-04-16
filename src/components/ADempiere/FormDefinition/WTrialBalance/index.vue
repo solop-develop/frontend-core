@@ -288,11 +288,11 @@ export default defineComponent({
         columnName: 'name',
         width: '120px'
       },
-      {
-        label: lang.t('form.WTrialBalance.user1'),
-        columnName: 'user_list_name',
-        width: '80px'
-      },
+      // {
+      //   label: lang.t('form.WTrialBalance.user1'),
+      //   columnName: 'user_list_name',
+      //   width: '80px'
+      // },
       {
         label: lang.t('form.WTrialBalance.periodActual'),
         columnName: 'period_actual_amount',
