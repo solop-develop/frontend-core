@@ -282,17 +282,18 @@ export default defineComponent({
         label: lang.t('form.WTrialBalance.accountNo'),
         columnName: 'value',
         width: '100'
+
       },
       {
         label: lang.t('form.WTrialBalance.accounName'),
         columnName: 'name',
         width: '120px'
       },
-      {
-        label: lang.t('form.WTrialBalance.user1'),
-        columnName: 'user_list_name',
-        width: '80px'
-      },
+      // {
+      //   label: lang.t('form.WTrialBalance.user1'),
+      //   columnName: 'user_list_name',
+      //   width: '80px'
+      // },
       {
         label: lang.t('form.WTrialBalance.periodActual'),
         columnName: 'period_actual_amount',
