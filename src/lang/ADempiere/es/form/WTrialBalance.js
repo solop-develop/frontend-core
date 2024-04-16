@@ -25,11 +25,11 @@ const WTrialBalance = {
   accountNo: 'Número de Cuenta',
   accounName: 'Nombre de la Cuenta',
   user1: 'Usuario 1',
-  periodActual: 'Periodo real',
+  periodActual: 'Período Actual',
   periodBudget: 'Presupuesto del Periodo',
   periodVariance: 'Variación del Período',
-  yTDActual: 'Hasta la Fecha Real',
-  yTDBudget: 'Presupuesto Hasta la Fecha',
+  yTDActual: 'Acumulado Actual (YTD)',
+  yTDBudget: 'Presupuesto Acumulado (YTD)',
   varianza: 'Variación'
 }
 
