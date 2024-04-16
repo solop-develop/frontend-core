@@ -291,12 +291,6 @@ export default defineComponent({
         align: 'center'
       },
       {
-        label: lang.t('form.WTrialBalance.user1'),
-        columnName: 'user_list_name',
-        width: '80px',
-        align: 'center'
-      },
-      {
         label: lang.t('form.WTrialBalance.periodActual'),
         columnName: 'period_actual_amount',
         width: 'auto',

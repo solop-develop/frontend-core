@@ -32,8 +32,8 @@ export function updateBrowserEntity({
   attributesList
 }) {
   return request({
-    url: '/user-interface/smart-browser/update-browser-entity',
-    method: 'post',
+    url: `/user-interface/browser-items/${id}/${recordId}`,
+    method: 'patch',
     data: {
       id,
       uuid,
@@ -41,11 +41,6 @@ export function updateBrowserEntity({
       attributes: attributesList
     }
   })
-    .then(browserEntityUpdateResponse => {
-      const { convertEntity } = require('@/utils/ADempiere/apiConverts/persistence.js')
-
-      return convertEntity(browserEntityUpdateResponse)
-    })
 }
 
 /**

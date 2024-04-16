@@ -958,12 +958,55 @@ export default defineComponent({
   .el-badge__content.is-fixed {
     right: 150% !important;
   }
+  .el-tabs-container {
+    height:auto !important
+  }
+  .el-card__body {
+    height: 450px !important
+  }
 }
 
 .drawer-panel-info {
   header.el-drawer__header {
     margin-bottom: 10px !important;
     padding-top: 10px !important;
+  }
+}
+@media screen and (min-height:720){
+  tab-manager-container{
+    .el-card__body{
+      height: 400px !important
+    }
+  }
+}
+
+@media screen and (min-height:800px){
+  tab-manager-container{
+    .el-card__body{
+      height: 400px !important
+    }
+  }
+}
+@media screen and (min-height: 1050px){
+  .tab-manager-container{
+    .el-card__body{
+      height: 700px !important
+    }
+  }
+}
+
+@media screen and (min-height: 1200px){
+  .tab-manager-container{
+    .el-card__body{
+      height: 850px !important
+    }
+  }
+}
+@media screen and (min-height: 1400px){
+  .tab-manager-container{
+    .el-card__body{
+      height: 950px !important
+    }
   }
 }
 </style>
