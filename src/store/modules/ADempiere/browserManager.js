@@ -302,7 +302,8 @@ const browserControl = {
         containerUuid,
         row,
         keyName: 'key',
-        fieldsList
+        fieldsList,
+        type: 'object'
       })
 
       return new Promise((resolve) => {
@@ -449,22 +450,26 @@ const browserControl = {
       containerUuid,
       row,
       fieldsList = [],
-      keyName = 'columnName'
+      keyName = 'columnName',
+      type = 'array'
     }) => {
       if (isEmptyValue(fieldsList)) {
         fieldsList = rootGetters.getStoredFieldsFromBrowser(containerUuid)
       }
       const attributesList = []
+      const attributesObject = {}
       fieldsList.filter(itemField => {
         return !isReadOnlyColumn(itemField)
       }).forEach(itemField => {
         const { columnName } = itemField
-
+        attributesObject[columnName] = row[columnName]
         attributesList.push({
           value: row[columnName],
           [keyName]: columnName
         })
       })
+
+      if (type === 'object') return attributesObject
 
       return attributesList
     },
