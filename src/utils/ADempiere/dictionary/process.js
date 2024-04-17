@@ -81,14 +81,14 @@ export function evaluateDefaultFieldShowed({
 /**
  * Process manager mandatory logic
  * TODO: Add support on ADempiere core to mandatory logic
- * @param {boolean} isMandatory
+ * @param {boolean} is_mandatory
  * @returns {boolean}
  */
-export function isMandatoryField({ display_type, isMandatory }) {
+export function isMandatoryField({ display_type, is_mandatory }) {
   if (display_type === BUTTON.id) {
     return false
   }
-  return isMandatory
+  return is_mandatory
 }
 
 /**
@@ -220,9 +220,9 @@ export const containerManager = {
   },
 
   isDisplayedField,
-  isDisplayedDefault: ({ isMandatory, default_value, isShowedFromUser }) => {
+  isDisplayedDefault: ({ is_mandatory, default_value, isShowedFromUser }) => {
     // add is showed from user
-    if (isMandatory) {
+    if (is_mandatory) {
       return true
     }
     if (!isEmptyValue(default_value)) {

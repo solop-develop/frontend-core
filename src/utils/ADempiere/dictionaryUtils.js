@@ -135,7 +135,7 @@ export function generateField({
     fieldToGenerate.is_displayed = true
     fieldToGenerate.is_read_only = false
     // Is mandatory to showed available filter fields
-    fieldToGenerate.isMandatory = false
+    fieldToGenerate.is_mandatory = false
   } else {
     // Yes No value, and form manage
     if (moreAttributes.isReadOnlyFromForm && YES_NO.id === fieldToGenerate.displayType) {

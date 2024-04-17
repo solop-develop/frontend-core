@@ -55,7 +55,7 @@ export function evaluateDefaultFieldShowed({
   display_type, is_query_criteria,
   isShowedFromUser, is_displayed_as_panel,
   default_value, parsedDefaultValue, display_logic,
-  isMandatory, isMandatoryFromLogic, mandatory_logic
+  is_mandatory, isMandatoryFromLogic, mandatory_logic
 }) {
   if (!isEmptyValue(is_displayed_as_panel)) {
     return convertStringToBoolean(is_displayed_as_panel)
@@ -64,7 +64,7 @@ export function evaluateDefaultFieldShowed({
     return true
   }
   const isMandatoryGenerated = isMandatoryField({
-    display_type, is_query_criteria, isMandatory, isMandatoryFromLogic, mandatory_logic
+    display_type, is_query_criteria, is_mandatory, isMandatoryFromLogic, mandatory_logic
   })
   if (isMandatoryGenerated) {
     return true
@@ -80,11 +80,11 @@ export function evaluateDefaultFieldShowed({
  * @param {boolean} isMandatoryFromLogic
  * @returns {boolean}
  */
-export function isMandatoryField({ display_type, is_query_criteria, isMandatory, isMandatoryFromLogic, mandatory_logic }) {
+export function isMandatoryField({ display_type, is_query_criteria, is_mandatory, isMandatoryFromLogic, mandatory_logic }) {
   if (display_type === BUTTON.id) {
     return false
   }
-  return is_query_criteria && (isMandatory || (!isEmptyValue(mandatory_logic) && isMandatoryFromLogic))
+  return is_query_criteria && (is_mandatory || (!isEmptyValue(mandatory_logic) && isMandatoryFromLogic))
 }
 
 export function isReadOnlyField({ is_query_criteria, operator, isReadOnlyFromLogic }) {
@@ -94,7 +94,7 @@ export function isReadOnlyField({ is_query_criteria, operator, isReadOnlyFromLog
 export function evaluateDefaultColumnShowed({
   is_key, display_type, is_displayed,
   isShowedTableFromUser, is_displayed_as_table,
-  isMandatory, isMandatoryFromLogic, mandatory_logic
+  is_mandatory, isMandatoryFromLogic, mandatory_logic
 }) {
   if (!isEmptyValue(is_displayed_as_table)) {
     return convertStringToBoolean(is_displayed_as_table)
@@ -103,7 +103,7 @@ export function evaluateDefaultColumnShowed({
   //   is_key,
   //   display_type,
   //   isDisplayed,
-  //   isMandatory,
+  //   is_mandatory,
   //   isMandatoryFromLogic,
   //   mandatory_logic
   // })
@@ -111,7 +111,7 @@ export function evaluateDefaultColumnShowed({
   //   return
   // }
   // const isMandatoryGenerated = isMandatoryColumn({
-  //   display_type, isMandatory, isMandatoryFromLogic, mandatory_logic
+  //   display_type, is_mandatory, isMandatoryFromLogic, mandatory_logic
   // })
   // if (isMandatoryGenerated) {
   //   return true
@@ -133,11 +133,11 @@ export function isDisplayedColumn({ display_type, is_displayed, is_key }) {
   return is_displayed
 }
 
-export function isMandatoryColumn({ display_type, isMandatory, isMandatoryFromLogic, mandatory_logic }) {
+export function isMandatoryColumn({ display_type, is_mandatory, isMandatoryFromLogic, mandatory_logic }) {
   if (display_type === BUTTON.id) {
     return false
   }
-  return isMandatory || (!isEmptyValue(mandatory_logic) && isMandatoryFromLogic)
+  return is_mandatory || (!isEmptyValue(mandatory_logic) && isMandatoryFromLogic)
 }
 
 /**
@@ -364,16 +364,16 @@ export const containerManager = {
    * Is displayed field in panel single record
    */
   isDisplayedField,
-  isDisplayedDefault: ({ isMandatory }) => {
+  isDisplayedDefault: ({ is_mandatory }) => {
     // add is showed from user
-    if (isMandatory) {
+    if (is_mandatory) {
       return true
     }
     return false
   },
   isDisplayedColumn,
-  isDisplayedDefaultTable: ({ isMandatory, is_key }) => {
-    if (isMandatory && !is_key) {
+  isDisplayedDefaultTable: ({ is_mandatory, is_key }) => {
+    if (is_mandatory && !is_key) {
       return true
     }
     return false

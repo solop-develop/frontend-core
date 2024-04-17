@@ -56,7 +56,7 @@ export function isDisplayedField({ is_quick_entry, display_type, is_displayed, i
   return is_displayed && is_quick_entry
 }
 
-export function isDisplayedDefault({ isMandatory }) {
+export function isDisplayedDefault({ is_mandatory }) {
   return true
 }
 

@@ -69,9 +69,9 @@ const getters = {
         return false
       }
 
-      const isMandatory = fieldItem.isMandatory || fieldItem.isMandatoryFromLogic
-      const isDisplayed = fieldIsDisplayed(fieldItem) && (fieldItem.isShowedFromUser || isMandatory)
-      if (isDisplayed && isMandatory) {
+      const isMandatoryGenerated = fieldItem.is_mandatory || fieldItem.isMandatoryFromLogic
+      const isDisplayedGenerated = fieldIsDisplayed(fieldItem) && (fieldItem.isShowedFromUser || isMandatoryGenerated)
+      if (isDisplayedGenerated && isMandatoryGenerated) {
         let value
         // used when evaluate data in table
         if (row) {
@@ -123,8 +123,8 @@ const getters = {
       })
 
       if (isEmptyValue(value)) {
-        const isMandatory = fieldItem.isMandatory || fieldItem.isMandatoryFromLogic
-        if (showedMethod(fieldItem) && isMandatory) {
+        const isMandatoryGenerated = fieldItem.is_mandatory || fieldItem.isMandatoryFromLogic
+        if (showedMethod(fieldItem) && isMandatoryGenerated) {
           return true
         }
       }
@@ -391,8 +391,8 @@ const getters = {
 
     if (fieldsList.length) {
       fieldsIsDisplayed = fieldsList.filter(itemField => {
-        const isMandatory = itemField.isMandatory && itemField.isMandatoryFromLogic
-        if (fieldIsDisplayed(itemField) && (isMandatory || itemField.isShowedFromUser)) {
+        const isMandatoryGenerated = itemField.is_mandatory && itemField.isMandatoryFromLogic
+        if (fieldIsDisplayed(itemField) && (isMandatoryGenerated || itemField.isShowedFromUser)) {
           return true
         }
         fieldsNotDisplayed.push(itemField)
@@ -503,13 +503,13 @@ const getters = {
         }
 
         // evaluate displayed fields
-        let isDisplayed = fieldItem.isShowedFromUser
+        let isDisplayedGenerated = fieldItem.isShowedFromUser
         if (!fieldItem.isAdvancedQuery) {
           // window, process, browser, form
-          isDisplayed = fieldIsDisplayed(fieldItem) && (fieldItem.isShowedFromUser || isMandatoryGenerated)
+          isDisplayedGenerated = fieldIsDisplayed(fieldItem) && (fieldItem.isShowedFromUser || isMandatoryGenerated)
         }
 
-        if (isDisplayed) {
+        if (isDisplayedGenerated) {
           // from table
           if (row) {
             if (!isEmptyValue(row[columnName])) {
@@ -565,7 +565,7 @@ const getters = {
           if (Array.isArray(value)) {
             values = value.map(itemValue => {
               const isMandatoryGenerated = !parameterItem.isAdvancedQuery &&
-                (parameterItem.isMandatory || parameterItem.isMandatoryFromLogic)
+                (parameterItem.is_mandatory || parameterItem.isMandatoryFromLogic)
 
               return parsedValueComponent({
                 columnName,

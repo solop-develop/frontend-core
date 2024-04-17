@@ -237,8 +237,8 @@ export default {
           return is_read_only
         },
 
-        isMandatoryField({ isMandatory }) {
-          if (isMandatory) {
+        isMandatoryField({ is_mandatory }) {
+          if (is_mandatory) {
             return true
           }
           return false
@@ -458,10 +458,10 @@ export default {
                 let index = newSequence.indexOf(item.sequenceFields)
                 index *= 10
 
-                let isMandatory = newSequence.includes(item.sequenceFields + MANDATORY_CHAR)
+                let isMandatoryGenerated = newSequence.includes(item.sequenceFields + MANDATORY_CHAR)
                 // country always is displayed and mandatory
                 if (item.columnName === COLUMNNAME_C_Country_ID) {
-                  isMandatory = true
+                  isMandatoryGenerated = true
                 }
 
                 // rename field title in region and hidden/showd if country has region
@@ -470,7 +470,7 @@ export default {
                     ...item,
                     index,
                     is_displayed: hasRegion,
-                    isMandatory,
+                    isMandatory: isMandatoryGenerated,
                     name: !isEmptyValue(regionName) ? regionName : item.name
                   }
                 }
@@ -488,7 +488,7 @@ export default {
                 return {
                   ...item,
                   is_displayed: true,
-                  isMandatory,
+                  isMandatory: isMandatoryGenerated,
                   index
                 }
               } else {

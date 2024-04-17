@@ -367,6 +367,7 @@ export function getFieldTemplate(overwriteDefinition) {
   return {
     ...fieldTemplateMetadata,
     ...evaluatedLogics,
+    column_name: fieldTemplateMetadata.columnName,
     parsedDefaultValue,
     parsedDefaultValueTo,
     parentFieldsList

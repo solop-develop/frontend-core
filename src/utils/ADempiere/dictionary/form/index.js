@@ -70,14 +70,14 @@ export function isDisplayedDefault({ is_mandatory }) {
 
 /**
  * Manager mandatory logic
- * @param {boolean} isMandatory
+ * @param {boolean} is_mandatory
  * @param {string} mandatory_logic
  * @param {boolean} isMandatoryFromLogic
  * @returns {boolean}
  */
-export function isMandatoryField({ isMandatory, mandatory_logic, isMandatoryFromLogic }) {
+export function isMandatoryField({ is_mandatory, mandatory_logic, isMandatoryFromLogic }) {
   // verify if field is active and displayed
-  return (isMandatory ||
+  return (is_mandatory ||
     (!isEmptyValue(mandatory_logic) && isMandatoryFromLogic))
 }
 
