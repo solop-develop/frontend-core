@@ -70,6 +70,7 @@ export default defineComponent({
   },
 
   setup() {
+    const resorucePath = '11/client/window/109/ad_clientinfo/11/logo_id/'
     // Ref
     const title = ref('ADempiere')
     const clientLogo = ref('')
@@ -99,7 +100,7 @@ export default defineComponent({
         //   height: 50
         // })
         // logo.value = blobImage.href
-        clientLogo.value = config.adempiere.resource.url + client.logo
+        clientLogo.value = config.adempiere.resource.url + resorucePath + client.logo
       }
     }
 
