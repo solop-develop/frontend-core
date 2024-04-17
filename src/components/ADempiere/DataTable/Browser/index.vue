@@ -220,7 +220,7 @@ export default defineComponent({
           const isMandatoryGenerated = props.containerManager.isMandatoryColumn(fieldItem)
           const isDisplayedDefault = props.containerManager.isDisplayedDefaultTable({
             ...fieldItem,
-            isMandatory: isMandatoryGenerated
+            is_mandatory: isMandatoryGenerated
           })
           // madatory, not parent column and without default value to window, mandatory or with default value to others
           if (isDisplayedDefault) {

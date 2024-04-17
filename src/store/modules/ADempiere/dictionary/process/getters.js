@@ -59,10 +59,10 @@ export default {
       if (fieldItem.is_info_only) {
         return false
       }
-      const isMandatory = isMandatoryField(fieldItem)
-      const isDisplayed = isDisplayedField(fieldItem)
+      const isMandatoryGenerated = isMandatoryField(fieldItem)
+      const isDisplayedGenerated = isDisplayedField(fieldItem)
 
-      if (!(isDisplayed && isMandatory)) {
+      if (!(isDisplayedGenerated && isMandatoryGenerated)) {
         return false
       }
 

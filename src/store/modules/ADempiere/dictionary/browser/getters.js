@@ -145,10 +145,10 @@ export default {
       if (is_info_only) {
         return false
       }
-      const isMandatory = isMandatoryField(fieldItem)
+      const isMandatoryGenerated = isMandatoryField(fieldItem)
       // evaluate displayed fields
       const isDisplayed = isDisplayedField(fieldItem) &&
-        (fieldItem.isShowedFromUser || isMandatory)
+        (fieldItem.isShowedFromUser || isMandatoryGenerated)
 
       if (!isDisplayed) {
         return
@@ -227,10 +227,10 @@ export default {
       if (fieldItem.is_info_only) {
         return false
       }
-      const isMandatory = isMandatoryField(fieldItem)
-      const isDisplayed = isDisplayedField(fieldItem)
+      const isMandatoryGenerated = isMandatoryField(fieldItem)
+      const isDisplayedGenerated = isDisplayedField(fieldItem)
 
-      if (!(isDisplayed && isMandatory)) {
+      if (!(isDisplayedGenerated && isMandatoryGenerated)) {
         return false
       }
 
@@ -287,12 +287,12 @@ export default {
     // all optionals (not mandatory) fields
     return fieldsList
       .filter(fieldItem => {
-        if (!fieldItem.isActive) {
-          return
-        }
-        const isMandatory = mandatoryMethod(fieldItem)
+        // if (!fieldItem.isActive) {
+        //   return
+        // }
+        const isMandatoryGenerated = mandatoryMethod(fieldItem)
 
-        if (isMandatory) {
+        if (isMandatoryGenerated) {
           return false
         }
 

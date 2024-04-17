@@ -27,6 +27,6 @@ export const isDisplayedField = function({ display_type, is_displayed }) {
   return is_displayed
 }
 
-export function isMandatoryField({ isMandatory, isMandatoryFromLogic }) {
-  return isMandatory || isMandatoryFromLogic
+export function isMandatoryField({ is_mandatory, isMandatoryFromLogic }) {
+  return is_mandatory || isMandatoryFromLogic
 }
