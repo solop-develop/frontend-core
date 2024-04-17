@@ -193,15 +193,15 @@ export default {
         }
       }
 
-      if (!isEmptyValue(value) || isNullOperator) {
-        queryParams.push({
-          columnName: column_name,
-          operator,
-          value,
-          valueTo,
-          values
-        })
-      }
+      // if ((!isEmptyValue(value) || !isEmptyValue(valueTo) || !isEmptyValue(values)) || isNullOperator) {
+      queryParams.push({
+        columnName: column_name,
+        operator,
+        value,
+        valueTo,
+        values
+      })
+      // }
     })
 
     return queryParams
