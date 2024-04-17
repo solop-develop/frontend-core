@@ -30,7 +30,8 @@ const WTrialBalance = {
   periodVariance: 'Period Variation',
   yTDActual: 'Current Accumulated (YTD)',
   yTDBudget: 'Accumulated Budget (YTD)',
-  varianza: 'Variation'
+  varianza: 'Variation',
+  varianza_porcent: '% Variation'
 }
 
 export default WTrialBalance

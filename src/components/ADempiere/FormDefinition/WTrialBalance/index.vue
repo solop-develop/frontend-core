@@ -259,14 +259,14 @@ export default defineComponent({
      * Ref
      */
 
-    // Values
+    // Values]
+    const porcent = ref(null)
     const organization = ref(undefined)
     const budget = ref(undefined)
     const untilPeriod = ref(undefined)
     const accountingAccount1 = ref(undefined)
     const accountingAccount2 = ref(undefined)
     const cubeReport = ref(undefined)
-
     // Options List
     const organizationOptions = ref([])
     const budgetOptions = ref([])
@@ -317,12 +317,18 @@ export default defineComponent({
       {
         label: lang.t('form.WTrialBalance.yTDBudget'),
         columnName: 'ytd_budget_amount',
-        width: '130px',
+        width: '140px',
         align: 'center'
       },
       {
         label: lang.t('form.WTrialBalance.varianza'),
         columnName: 'variance_amount',
+        width: '90px',
+        align: 'center'
+      },
+      {
+        label: lang.t('form.WTrialBalance.varianza_porcent'),
+        columnName: 'variance_percentage',
         width: '105px',
         align: 'center'
       }
@@ -333,6 +339,20 @@ export default defineComponent({
     /**
      * Computed
      */
+
+    function calculate(period_variation, period_budget) {
+      const period_variation_number = changeFloat(period_variation)
+      const period_budget_number = changeFloat(period_budget)
+      if (period_variation_number !== 0 && period_budget_number !== 0) {
+        porcent.value = (period_variation_number / period_budget_number * 100).toFixed(2)
+        return
+      }
+      porcent.value = 0
+    }
+
+    const changeFloat = (num) => {
+      return parseFloat(num.replace(/[^\d.-]/g, ''))
+    }
 
     const validateBeforeSearch = computed(() => {
       return isEmptyValue(organization.value) || isEmptyValue(untilPeriod.value) || isEmptyValue(cubeReport.value)
@@ -411,14 +431,18 @@ export default defineComponent({
           isLoading.value = false
           const { records } = response
           listSummary.value = records.map(list => {
+            const priod_variance = formatQuantity({ value: list.period_variance_amount })
+            const period_budget = formatQuantity({ value: list.period_budget_amount })
+            calculate(priod_variance, period_budget)
             return {
               ...list,
               period_actual_amount: formatQuantity({ value: list.period_actual_amount }),
-              period_budget_amount: formatQuantity({ value: list.period_budget_amount }),
-              period_variance_amount: formatQuantity({ value: list.period_variance_amount }),
+              period_budget_amount: period_budget,
+              period_variance_amount: priod_variance,
               ytd_actual_amount: formatQuantity({ value: list.ytd_actual_amount }),
               ytd_budget_amount: formatQuantity({ value: list.ytd_budget_amount }),
-              variance_amount: formatQuantity({ value: list.variance_amount })
+              variance_amount: formatQuantity({ value: list.variance_amount }),
+              variance_percentage: '% ' + porcent.value
             }
           })
         })
@@ -509,6 +533,7 @@ export default defineComponent({
 
     return {
       //  Values
+      porcent,
       organization,
       budget,
       untilPeriod,
@@ -527,6 +552,7 @@ export default defineComponent({
       selectedExport,
       isLoading,
       // Computed
+      calculate,
       validateBeforeSearch,
       // Methods
       changeSelections,
