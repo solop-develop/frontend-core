@@ -18,7 +18,7 @@
 
 <template>
   <div v-if="isLoaded" key="window-loaded" class="view-base" style="height: 100% !important;width: 100% !important;/* display: contents; */overflow: auto;">
-    <el-container style="height: 100% !important;overflow: auto;">
+    <el-container style="height: 100vh !important;overflow: auto;">
       <el-aside :style="styleContainer">
         <component
           :is="renderWindowComponent"
