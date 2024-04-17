@@ -79,6 +79,12 @@ export function convertAction(action) {
   return actionAttributes
 }
 
+/**
+ * Extract action identifier as reference identifier
+ * @deprecated
+ * @param {Object} menu
+ * @returns {Object}
+ */
 export function getReferenceByMenu(menu) {
   let reference_id = 0
   let reference_uuid = ''
