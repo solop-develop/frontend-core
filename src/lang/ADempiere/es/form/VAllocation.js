@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -66,11 +66,12 @@ const VAllocation = {
       overUnderPay: 'Pago Sobre/ Por debajo'
     }
   },
-  description: {
+  footer: {
+    date: 'Fecha',
+    description: 'Descripción',
     difference: 'Diferencia',
     charge: 'Cargo',
-    organization: 'Organización',
-    description: 'Descripción'
+    organization: 'Organización'
   }
 }
 
