@@ -28,7 +28,7 @@ import staticRoutes from '@/router/modules/ADempiere/staticRoutes.js'
 import { requestMenu } from '@/api/ADempiere/security/index.ts'
 
 // Utils and Helper Methods
-import { convertAction, getReferenceByMenu } from '@/utils/ADempiere/dictionary/menu'
+import { convertAction } from '@/utils/ADempiere/dictionary/menu'
 import { getCurrentClient, getCurrentOrganization, getCurrentRole } from '@/utils/ADempiere/auth'
 
 /**
@@ -121,10 +121,10 @@ export function loadMainMenu({
  * @param {number} organizationId
  */
 function getChildFromAction({ menu, index, clientId, roleId, organizationId }) {
-  const { component, icon, name: type } = convertAction(menu.action)
-  const { reference_id, reference_uuid } = getReferenceByMenu(menu)
+  const { action, action_id, action_uuid } = menu
+  const { component, icon, name: type } = convertAction(action)
 
-  const routeIdentifier = type + '/' + reference_id
+  const routeIdentifier = type + '/' + action_id
   const isIndex = menu.is_summary
   const option = {
     path: '/' + clientId + '/' + roleId + '/' + organizationId + '/' + menu.id + '/' + routeIdentifier,
@@ -145,11 +145,11 @@ function getChildFromAction({ menu, index, clientId, roleId, organizationId }) {
       tabUuid: '',
       title: menu.name,
       type,
-      id: reference_id,
-      uuid: reference_uuid,
-      referenceId: reference_id,
-      referenceUuid: reference_uuid,
-      containerKey: type + '_' + reference_id,
+      id: action_id,
+      uuid: action_uuid,
+      action_id: action_id,
+      action_uuid: action_uuid,
+      containerKey: type + '_' + action_id,
       childs: []
     },
     children: []
@@ -182,9 +182,9 @@ function getChildFromAction({ menu, index, clientId, roleId, organizationId }) {
  * @param {number} organizationId
  */
 function getRouteFromMenuItem({ menu, clientId, roleId, organizationId }) {
+  const { action, action_id, action_uuid } = menu
   // use component of convertAction
-  const { icon, name: type } = convertAction(menu.action)
-  const { reference_id, reference_uuid } = getReferenceByMenu(menu)
+  const { icon, name: type } = convertAction(action)
 
   const isIndex = menu.is_summary
   const optionMenu = {
@@ -202,11 +202,11 @@ function getRouteFromMenuItem({ menu, clientId, roleId, organizationId }) {
       parentId: menu.parent_id,
       // parentUuid: menu.parent_uuid,
       noCache: true,
-      id: reference_id,
-      uuid: reference_uuid,
-      referenceId: reference_id,
-      referenceUuid: reference_uuid,
-      containerKey: type + '_' + reference_id,
+      id: action_id,
+      uuid: action_uuid,
+      action_id: action_id,
+      action_uuid: action_uuid,
+      containerKey: type + '_' + action_uuid,
       title: menu.name,
       type,
       childs: []

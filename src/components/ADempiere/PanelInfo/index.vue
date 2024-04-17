@@ -445,7 +445,7 @@ export default defineComponent({
       nameTab.value = tab.name
       props.containerManager[tabOptions]({
         tableName: currentTab.value.table_name,
-        containerId: router.app._route.meta.referenceId,
+        containerId: router.app._route.meta.action_id,
         containerUuid: currentTab.value.containerUuid,
         parentUuid: currentTab.value.parentUuid,
         recordId: currentRecordId.value,

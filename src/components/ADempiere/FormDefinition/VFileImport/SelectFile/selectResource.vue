@@ -92,10 +92,10 @@ export default defineComponent({
       if (isDisabledManageFile.value) {
         return
       }
-      const { referenceId, type } = router.app._route.meta
+      const { action_id, type } = router.app._route.meta
       store.dispatch('getAttachmentFromServer', {
         tableName: 'AD_ImpFormat',
-        containerId: referenceId,
+        containerId: action_id,
         recordId: props.importFormatId,
         containerType: type
       })

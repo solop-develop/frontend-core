@@ -170,11 +170,11 @@ export default defineComponent({
       })
         .then(() => {
           const clientId = store.getters.getSessionContextClientId
-          const { referenceId, type } = router.app._route.meta
+          const { action_id, type } = router.app._route.meta
           store.dispatch('getAttachmentFromServer', {
             containerType: type,
             clientId: clientId,
-            containerId: referenceId,
+            containerId: action_id,
             recordId: props.recordId,
             tableName: props.tableName
           })
