@@ -21,6 +21,8 @@
 // Please add the necessary functions here:
 import { config } from '@/utils/ADempiere/config'
 
+// API Request Methods
+import { requestListResources } from '@/api/ADempiere/file-management/resource-reference.ts'
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
@@ -386,4 +388,47 @@ export function getImageFromExtension({ fileName }) {
     urlImage = require('@/image/ADempiere/attachment/sql.png')
   }
   return urlImage
+}
+
+/**
+ * Get the Resource Path
+ * @param {string} clientId
+ * @param {string} containerId
+ * @param {string} containerType
+ * @param {string} columnName
+ * @param {string} recordId
+ * @param {string} tableName
+ * @param {string} resourceName
+ */
+
+export function getResourcePath({
+  clientId,
+  containerId,
+  containerType,
+  columnName,
+  recordId,
+  tableName,
+  resourceName
+}) {
+  return new Promise((resolve, reject) => {
+    requestListResources({
+      clientId,
+      containerId,
+      containerType,
+      columnName,
+      recordId,
+      tableName
+    })
+      .then(response => {
+        const { resources } = response
+        if (!isEmptyValue(resources)) {
+          const resource = resources.find(resource => resource.name.includes(resourceName))
+          if (!isEmptyValue(resource)) resolve(resource.name)
+        }
+        resolve('')
+      })
+      .catch(() => {
+        reject('')
+      })
+  })
 }

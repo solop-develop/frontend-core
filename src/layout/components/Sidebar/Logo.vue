@@ -54,7 +54,7 @@ import router from '@/router'
 import store from '@/store'
 
 // Utils and Helper Methods
-// import { getImagePath } from '@/utils/ADempiere/resource.js'
+import { getResourcePath } from '@/utils/ADempiere/resource'
 
 // Constants
 import { config } from '@/utils/ADempiere/config'
@@ -70,7 +70,6 @@ export default defineComponent({
   },
 
   setup() {
-    const resorucePath = '11/client/window/109/ad_clientinfo/11/logo_id/'
     // Ref
     const title = ref('ADempiere')
     const clientLogo = ref('')
@@ -94,13 +93,16 @@ export default defineComponent({
     async function loadImage() {
       const { client } = getRole.value
       if (client.logo) {
-        // const blobImage = await getImagePath({
-        //   file: client.logo,
-        //   width: 50,
-        //   height: 50
-        // })
-        // logo.value = blobImage.href
-        clientLogo.value = config.adempiere.resource.url + resorucePath + client.logo
+        const fileName = await getResourcePath({
+          clientId: client.id,
+          containerId: '109',
+          containerType: 'window',
+          columnName: 'Logo_ID',
+          recordId: client.id,
+          tableName: 'AD_ClientInfo',
+          resourceName: client.logo
+        })
+        clientLogo.value = config.adempiere.resource.url + fileName
       }
     }
 
