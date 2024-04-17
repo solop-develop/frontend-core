@@ -106,11 +106,19 @@ export default defineComponent({
       if (isEmptyValue(recordUuid.value) || recordUuid.value === 'create-new') {
         return true
       }
-      // if (!isEmptyValue(emptyMandatoryFields.value)) {
-      //   return false
-      // }
 
       return isExistsChanges.value
+    })
+
+    const reccordId = computed(() => {
+      const { table } = tabAttributes.value
+      const { key_columns, table_name } = table
+      const currentReccord = store.getters.getTabCurrentRow({
+        containerUuid: tabAttributes.value.containerUuid
+      })
+      if (!isEmptyValue(currentReccord[table_name + '_ID'])) return currentReccord[table_name + '_ID']
+      if (!isEmptyValue(key_columns)) return currentReccord[key_columns[0]]
+      return 1
     })
 
     function saveChanges() {
@@ -132,17 +140,13 @@ export default defineComponent({
       isSaveRecordLoading.value = true
 
       const currentRoute = router.app._route
-      const reccordId = store.getters.getIdOfContainer({
-        containerUuid: tabAttributes.value.containerUuid,
-        tableName: tabAttributes.value.table_name
-      })
       store.dispatch('flushPersistenceQueue', {
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid,
         tabId: tabAttributes.value.id,
         tableName: tabAttributes.value.table_name,
         recordUuid: recordUuid.value,
-        reccordId
+        reccordId: reccordId.value
       })
         .then(response => {
           const {

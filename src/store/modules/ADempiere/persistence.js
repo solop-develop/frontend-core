@@ -35,7 +35,7 @@ import {
 
 // Utils and Helper Methods
 import {
-  getTypeOfValue, isEmptyValue, isSameValues, getListKeyColumnsTab
+  getTypeOfValue, isEmptyValue, isSameValues
 } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import { getContextDefaultValue } from '@/utils/ADempiere/contextUtils/contextField'
@@ -275,24 +275,17 @@ const persistence = {
               return true
             })
         }
-
         if (!isEmptyValue(attributesList)) {
           if (!isEmptyValue(recordUuid) && recordUuid !== 'create-new') {
             // Update existing entity
             if (key_columns.length > 1) {
               reccordId = 0
             }
-            const keyColumnsList = getListKeyColumnsTab({
-              parentUuid,
-              containerUuid,
-              keyColumns: key_columns
-            })
             return updateEntity({
               tabUuid: containerUuid,
               reccordId,
               tabId,
               recordUuid,
-              keyColumnsList,
               attributesList
             })
               .then(response => {

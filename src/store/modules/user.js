@@ -786,10 +786,6 @@ const getters = {
     return state.userInfo
   },
   getUserAvatar: (state) => {
-    console.log({
-      config: config.adempiere.resource.url,
-      avatar: state.avatar
-    })
     if (isEmptyValue(state.avatar)) return ''
     return config.adempiere.resource.url + state.avatar
   },

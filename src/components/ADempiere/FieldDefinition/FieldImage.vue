@@ -23,7 +23,7 @@
     @submit.prevent="notSubmitForm"
   >
     <el-col v-if="!isEmptyValue(value) && !isEmptyValue(imageSourceSmall)" :span="24" :offset="0" class="image-with-file">
-      <el-card :body-style="{ padding: '0px' }">
+      <el-card :body-style="{ padding: '0px', height: '-webkit-fill-available !important' }">
         <el-image
           class="image-file"
           :alt="altImage"
@@ -246,6 +246,13 @@ export default {
       return {
         Authorization: bearerToken
       }
+    },
+    recordId() {
+      const { table } = this.currentTab
+      const { key_columns, table_name } = table
+      if (!isEmptyValue(this.currentRecord[table_name + '_ID'])) return this.currentRecord[table_name + '_ID']
+      if (!isEmptyValue(key_columns)) return this.currentRecord[key_columns[0]]
+      return 1
     }
   },
 
@@ -373,7 +380,7 @@ export default {
           containerType: type,
           columnName: this.metadata.columnName,
           fileName: file.name,
-          recordId: this.currentRecord[table_name + '_ID'],
+          recordId: this.recordId,
           tableName: table_name
         })
           .then(responseUrl => {
@@ -472,7 +479,7 @@ export default {
           containerId: referenceId,
           containerType: type,
           columnName: this.metadata.columnName,
-          recordId: this.currentRecord[table_name + '_ID'],
+          recordId: this.recordId,
           tableName: table_name
         })
           .then(response => {
@@ -538,7 +545,7 @@ export default {
 .custom-field-image {
   .image-with-file {
     // width: 178px;
-    // height: 178px;
+    max-height: 178px;
     .image-file {
       // align center alt text
       // display: flex;
