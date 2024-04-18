@@ -32,6 +32,7 @@
         <invoce-table />
       </div>
     </div>
+
     <div style="height: 10%;margin-top: 5px;border: solid 1px lightgrey;border-radius: 10px;padding: 0px;">
       <div id="description-payment" class="description-payment">
         <div>
@@ -46,7 +47,7 @@
                 style="text-align: center;"
               >
                 <el-form-item
-                  :label="$t('form.VAllocation.description.difference')"
+                  :label="$t('form.VAllocation.footer.difference')"
                   label-width="120px"
                   style="margin: 0px;padding: 0px;"
                 >
@@ -62,7 +63,7 @@
                 style="text-align: center;"
               >
                 <el-form-item
-                  :label="$t('form.VAllocation.searchCriteria.date')"
+                  :label="$t('form.VAllocation.footer.date')"
                   label-width="120px"
                   style="margin: 0px;padding: 0px;"
                 >
@@ -79,7 +80,7 @@
                 style="text-align: center;"
               >
                 <el-form-item
-                  :label="$t('form.VAllocation.description.charge')"
+                  :label="$t('form.VAllocation.footer.charge')"
                   label-width="120px"
                   style="margin: 0px;padding: 0px;"
                 >
@@ -91,6 +92,10 @@
                     :filter-method="remoteSearchCharges"
                     @visible-change="findCharges"
                   >
+                    <empty-option-select
+                      :current-value="charges"
+                      :is-allows-zero="false"
+                    />
                     <el-option
                       v-for="item in optionsCharges"
                       :key="item.id"
@@ -105,7 +110,7 @@
                 style="text-align: center;"
               >
                 <el-form-item
-                  :label="$t('form.VAllocation.description.organization')"
+                  :label="$t('form.VAllocation.footer.organization')"
                   label-width="120px"
                   style="margin: 0px;padding: 0px;"
                 >
@@ -117,6 +122,10 @@
                     :filter-method="remoteSearchOrganizations"
                     @visible-change="findOrganizations"
                   >
+                    <empty-option-select
+                      :current-value="transactionOrganizationId"
+                      :is-allows-zero="false"
+                    />
                     <el-option
                       v-for="item in optionsOrganizations"
                       :key="item.id"
@@ -131,7 +140,7 @@
                 style="padding-left: 0px;padding-right: 0px;text-align: center;"
               >
                 <el-form-item
-                  :label="$t('form.VAllocation.description.description')"
+                  :label="$t('form.VAllocation.footer.description')"
                   label-width="120px"
                   style="margin: 0px;padding: 0px;"
                 >
@@ -171,6 +180,7 @@ import store from '@/store'
 import router from '@/router'
 
 // Components and Mixins
+import EmptyOptionSelect from '@/components/ADempiere/FieldDefinition/FieldSelect/emptyOptionSelect.vue'
 import headersInvoice from './headersInvoice.js'
 import headersPayments from './headersPayments.js'
 import InvoceTable from './InvoceTable.vue'
@@ -189,6 +199,7 @@ export default defineComponent({
   name: 'Payments',
 
   components: {
+    EmptyOptionSelect,
     InvoceTable,
     PaymentsTable
   },
