@@ -961,9 +961,11 @@ export default defineComponent({
   .el-tabs-container {
     height:auto !important
   }
+  /*
   .el-card__body {
     height: 450px !important
   }
+  */
 }
 
 .drawer-panel-info {

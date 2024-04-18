@@ -51,6 +51,8 @@
 </template>
 
 <script>
+import store from '@/store'
+
 // Components and Mixins
 import ContextInfo from '@/components/ADempiere/FieldDefinition/FieldOptions/ContextInfo'
 import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
@@ -132,6 +134,14 @@ export default {
             this.$store.commit('setDefaultOpenedTab', 'accountingInformation')
             this.$store.dispatch('showLogs', {
               show: true
+            })
+
+            const recordUuid = store.getters.getUuidOfContainer(this.metadata.containerUuid)
+            store.dispatch('getAccoutingFactsFromServer', {
+              searchValue: '',
+              tableName: this.metadata.tabTableName,
+              // recordId: props.recordId
+              recordUuid: recordUuid
             })
           },
           isEnabled: () => true
