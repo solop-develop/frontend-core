@@ -321,13 +321,13 @@ export default defineComponent({
         align: 'center'
       },
       {
-        label: lang.t('form.WTrialBalance.varianza'),
+        label: lang.t('form.WTrialBalance.variance'),
         columnName: 'variance_amount',
         width: '90px',
         align: 'center'
       },
       {
-        label: lang.t('form.WTrialBalance.varianza_porcent'),
+        label: lang.t('form.WTrialBalance.variancePorcent'),
         columnName: 'variance_percentage',
         width: '105px',
         align: 'center'
