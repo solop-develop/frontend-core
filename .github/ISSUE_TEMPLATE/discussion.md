@@ -22,7 +22,7 @@ category: General
 
 #### Versiones compatibles
 * S3 Gateway RS
-https://github.com/adempiere/s3_gateway_rs/releases/tag/
+https://github.com/adempiere/s3_gateway_rs/releases/latest/
 
 * OpenSearch Gateway RS
 https://github.com/adempiere/opensearch_gateway_rs/releases/tag/
