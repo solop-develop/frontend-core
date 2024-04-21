@@ -182,6 +182,9 @@ import AdvancedTabQuery from '@/components/ADempiere/TabManager/AdvancedTabQuery
 import ColumnsDisplayOption from '@/components/ADempiere/DataTable/Components/ColumnsDisplayOption.vue'
 import FieldsDisplayOption from './fieldsDisplayOptions.vue'
 
+// Utils and helper methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+
 export default defineComponent({
   name: 'FilterFields',
 
@@ -261,11 +264,13 @@ export default defineComponent({
     })
 
     const isClassOptions = computed(() => {
+      if (!panelType.value) {
+        return 'float: right;'
+      }
       const { isShowedTableRecords } = store.getters.getStoredTab(
         props.parentUuid,
         props.containerUuid
       )
-      if (!panelType) return 'float: right;'
       if (isShowedTableRecords) {
         if (isDocumentTab.value) {
           return 'right-panel-field-options-table-mobile'
@@ -293,12 +298,19 @@ export default defineComponent({
     })
 
     const isDocumentTab = computed(() => {
-      const { table, isParentTab } = store.getters.getStoredTab(
-        props.parentUuid,
-        props.containerUuid
-      )
-      const { is_document } = table
-      return is_document && isParentTab
+      if (panelType.value === 'window') {
+        const storedTab = store.getters.getStoredTab(
+          props.parentUuid,
+          props.containerUuid
+        )
+        if (!isEmptyValue(storedTab)) {
+          // TODO: Validate `isParentTab`
+          const { table, isParentTab } = storedTab
+          const { is_document } = table
+          return is_document && isParentTab
+        }
+      }
+      return false
     })
 
     const fieldsListAvailable = computed(() => {
