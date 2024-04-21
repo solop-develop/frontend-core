@@ -79,10 +79,10 @@ export default {
     componentRender() {
       // let fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/GeneralInfoSearch')
       let fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSelect')
-      if (isEmptyValue(this.metadata.reference)) {
+      if (isEmptyValue(this.metadata.referenceTableName)) {
         return fieldRender
       }
-      switch (this.metadata.reference.table_name) {
+      switch (this.metadata.referenceTableName) {
         case 'C_BPartner':
           fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/BusinessPartnerInfo')
           break
@@ -104,11 +104,11 @@ export default {
         type: 'svg',
         class: 'search'
       }
-      if (isEmptyValue(this.metadata.reference)) {
+      if (isEmptyValue(this.metadata.referenceTableName)) {
         return icon
       }
       return iconSearchFieldByTable(
-        this.metadata.reference.table_name
+        this.metadata.referenceTableName
       )
     }
   }

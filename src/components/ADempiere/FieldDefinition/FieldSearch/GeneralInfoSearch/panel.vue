@@ -75,7 +75,7 @@
         v-for="(fieldAttributes, key) in storedColumnsListTable"
         :key="key"
         :label="fieldAttributes.name"
-        :prop="fieldAttributes.columnName"
+        :prop="fieldAttributes.column_ame"
         min-width="210"
       >
         <template slot-scope="scope">
@@ -84,7 +84,7 @@
             :parent-uuid="metadata.parentUuid"
             :container-uuid="uuidForm"
             :field-attributes="{
-              columnName: fieldAttributes.column_name,
+              column_name: fieldAttributes.column_name,
               display_type: fieldAttributes.display_type
             }"
             :container-manager="containerManagerList"
@@ -109,7 +109,7 @@
       </el-col>
 
       <el-col :span="10">
-        <samp style="float: right; paddint-top: 4px;">
+        <samp style="float: right; padding-top: 4px;">
           <el-button
             type="info"
             class="button-base-icon"
@@ -231,7 +231,7 @@ export default {
       return GENERAL_INFO_SEARCH_LIST_FORM
     },
     tableName() {
-      return this.metadata.reference.table_name
+      return this.metadata.referenceTableName
     },
     shortsKey() {
       return {
@@ -408,7 +408,7 @@ export default {
           return !isEmptyValue(attribute.value)
         })
         .map(attribute => {
-          if (attribute.value.startsWith('%') || attribute.value.endsWith('%')) {
+          if (!isEmptyValue(attribute) && !isEmptyValue(attribute.value) && (String(attribute.value).startsWith('%') || String(attribute.value).endsWith('%'))) {
             return {
               ...attribute,
               operator: OPERATOR_LIKE.operator
@@ -425,7 +425,7 @@ export default {
         this.containerManager.getSearchRecordsList({
           containerUuid: this.uuidForm,
           parentUuid: this.metadata.parentUuid,
-          tableName: this.metadata.reference.table_name,
+          tableName: this.metadata.referenceTableName,
           columnName: this.metadata.columnName,
           id: this.metadata.id,
           contextColumnNames: this.metadata.reference.context_column_names,

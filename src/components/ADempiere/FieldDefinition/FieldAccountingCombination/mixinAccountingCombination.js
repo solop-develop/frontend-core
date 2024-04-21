@@ -53,9 +53,9 @@ export default {
     blankValues() {
       return {
         [this.metadata.column_name]: undefined,
-        [this.metadata.element_name]: undefined,
+        [this.metadata.elementColumnName]: undefined,
         [DISPLAY_COLUMN_PREFIX + this.metadata.column_name]: undefined,
-        [DISPLAY_COLUMN_PREFIX + this.metadata.element_name]: undefined,
+        [DISPLAY_COLUMN_PREFIX + this.metadata.elementColumnName]: undefined,
         uuid: undefined,
         UUID: undefined
       }
