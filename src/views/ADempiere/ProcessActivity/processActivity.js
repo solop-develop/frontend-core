@@ -174,8 +174,14 @@ export default defineComponent({
         })
         setProcessParameters(activity.uuid, parameters)
       } else if (activity.command === 'copyLogs') {
-        const logsList = activity.summary + activity.logsList.map(list => list.id + list.log)
-        copyLogs(logsList)
+        let logAsText = activity.summary
+        if (!isEmptyValue(activity.logs)) {
+          logAsText += '\n\n'
+          activity.logs.forEach(list => {
+            logAsText += list.record_id + ': ' + list.log + '\n'
+          })
+        }
+        copyLogs(logAsText)
       }
     }
 
@@ -244,7 +250,7 @@ export default defineComponent({
 
     const copyLogs = (text) => {
       copyToClipboard({
-        text: JSON.stringify(text),
+        text: text,
         isShowMessage: true
       })
     }
