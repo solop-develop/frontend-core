@@ -36,7 +36,6 @@ import {
 import {
   getCurrentClient, getCurrentRole
 } from '@/utils/ADempiere/auth'
-import { definitionProcess } from '@/utils/ADempiere/dictionary/process/templateProcess.js'
 
 export default {
   addProcessToList({ commit, dispatch }, processResponse) {
@@ -78,7 +77,7 @@ export default {
       })
         .then(processResponse => {
           const { processDefinition } = generateProcess({
-            processToGenerate: definitionProcess(processResponse)
+            processToGenerate: processResponse
           })
 
           dispatch('addProcessToList', processDefinition)
@@ -132,10 +131,10 @@ export default {
     }
 
     fieldsList.forEach(itemField => {
-      const { columnName } = itemField
+      const { column_name, isShowedFromUser } = itemField
 
-      const isShowedFromUser = fieldsShowed.includes(columnName)
-      if (itemField.isShowedFromUser === isShowedFromUser) {
+      const isShowedFromUserGenerated = fieldsShowed.includes(column_name)
+      if (isShowedFromUser === isShowedFromUserGenerated) {
         // no to mutate the state unnecessarily
         return
       }
@@ -148,7 +147,7 @@ export default {
       commit('changeProcessFieldAttribute', {
         field: itemField,
         attributeName: 'isShowedFromUser',
-        attributeValue: isShowedFromUser
+        attributeValue: isShowedFromUserGenerated
       })
     })
   },

@@ -21,13 +21,17 @@ import store from '@/store'
 // API Request Methods
 import { requestSaveProcessCustomization } from '@/api/ADempiere/user-customization/processes'
 
+// Constants
+import { REPORT_EXPORT_TYPES } from '@/utils/ADempiere/constants/report'
+import { BUTTON } from '@/utils/ADempiere/references'
+
 // Utils and Helpers Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { generateField } from '@/utils/ADempiere/dictionaryUtils'
 import { sortFields } from '@/utils/ADempiere/dictionary/panel'
-import { BUTTON, isAddRangeField, isHiddenField } from '@/utils/ADempiere/references'
+import { isAddRangeField, isHiddenField } from '@/utils/ADempiere/references'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
-import { templateFields } from '@/utils/ADempiere/dictionary/process/templateProcess.js'
+
 /**
  * Prefix to generate unique key
  */
@@ -36,20 +40,18 @@ export const CONTAINER_PROCESS_PREFIX = 'process_'
 /**
  * Is displayed field parameter in process/report panel
  * @param {number} display_type
- * @param {boolean} isActive
- * @param {boolean} is_displayed
  * @param {string} display_logic
  * @param {boolean} isDisplayedFromLogic
  * @returns {boolean}
  */
-export function isDisplayedField({ display_type, is_displayed, display_logic, isDisplayedFromLogic }) {
+export function isDisplayedField({ display_type, display_logic, isDisplayedFromLogic }) {
   // button field not showed
   if (isHiddenField(display_type)) {
     return false
   }
 
   // verify if field is active
-  return is_displayed && (isEmptyValue(display_logic) || isDisplayedFromLogic)
+  return (isEmptyValue(display_logic) || isDisplayedFromLogic)
 }
 
 /**
@@ -111,13 +113,19 @@ export function generateProcess({
   processToGenerate,
   containerUuidAssociated = undefined
 }) {
-  const panelType = processToGenerate.is_report ? 'report' : 'process'
+  let panelType = 'process'
+  let reportExportTypes = []
+  if (processToGenerate.is_report) {
+    panelType = 'report'
+    reportExportTypes = REPORT_EXPORT_TYPES
+  }
+
   const additionalAttributes = {
     containerUuid: processToGenerate.uuid,
     panelName: processToGenerate.name,
     isEvaluateValueChanges: true,
     isEditSecuence: false,
-    panelType
+    panelType: panelType
   }
 
   //  Convert from gRPC
@@ -128,16 +136,14 @@ export function generateProcess({
     fieldsList = processToGenerate.parameters
       .map(fieldItem => {
         const field = generateField({
-          fieldToGenerate: templateFields(fieldItem),
-          // fieldToGenerate: fieldItem,
+          fieldToGenerate: fieldItem,
           moreAttributes: additionalAttributes,
           evaluateDefaultFieldShowed
         })
         // Add new field if is range number
         if (isAddRangeField(field)) {
           const fieldRange = generateField({
-            fieldToGenerate: templateFields(fieldItem),
-            // fieldToGenerate: fieldItem,
+            fieldToGenerate: fieldItem,
             moreAttributes: additionalAttributes,
             typeRange: true,
             evaluateDefaultFieldShowed
@@ -163,6 +169,7 @@ export function generateProcess({
     ...processToGenerate,
     ...additionalAttributes,
     isAssociated: Boolean(containerUuidAssociated),
+    reportExportTypes: reportExportTypes,
     containerUuidAssociated,
     isLoadedFieldsList: true,
     sortOrderColumnName: 'sequence',

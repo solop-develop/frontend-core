@@ -42,7 +42,7 @@
           v-for="(item, key) in fieldsListAvailable"
           :key="key"
           :label="item.name"
-          :value="item.columnName"
+          :value="item.column_name"
         />
       </el-select>
 
@@ -96,7 +96,7 @@
           v-for="(item, key) in fieldsListAvailable"
           :key="key"
           :label="item.name"
-          :value="item.columnName"
+          :value="item.column_name"
         />
       </el-select>
 
@@ -146,7 +146,7 @@
           v-for="(item, key) in fieldsListAvailable"
           :key="key"
           :label="item.name"
-          :value="item.columnName"
+          :value="item.column_name"
         />
       </el-select>
 
@@ -293,11 +293,12 @@ export default defineComponent({
     })
 
     const isDocumentTab = computed(() => {
-      const { isDocument, isParentTab } = store.getters.getStoredTab(
+      const { table, isParentTab } = store.getters.getStoredTab(
         props.parentUuid,
         props.containerUuid
       )
-      return isDocument && isParentTab
+      const { is_document } = table
+      return is_document && isParentTab
     })
 
     const fieldsListAvailable = computed(() => {
@@ -344,7 +345,7 @@ export default defineComponent({
         return fieldsListAvailable.value.filter(itemField => {
           return itemField[showedAttibute.value]
         }).map(itemField => {
-          return itemField.columnName
+          return itemField.column_name
         })
       },
       set(selecteds) {
