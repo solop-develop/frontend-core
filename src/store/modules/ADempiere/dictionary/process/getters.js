@@ -200,14 +200,11 @@ export default {
     // all optionals (not mandatory) fields
     return fieldsList
       .filter(fieldItem => {
-        if (!fieldItem.isActive) {
-          return
-        }
-        if (fieldItem.isMandatory) {
+        const { is_mandatory, default_value } = fieldItem
+        if (is_mandatory) {
           return false
         }
 
-        const { default_value } = fieldItem
         if (isEvaluateDefaultValue && isEvaluateShowed) {
           return showedMethod(fieldItem) &&
             !isEmptyValue(default_value)

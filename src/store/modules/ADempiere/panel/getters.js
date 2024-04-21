@@ -426,9 +426,9 @@ const getters = {
 
     if (isOnlyDisplayed) {
       fieldsList = fieldsList.filter(fieldItem => {
-        const isMandatory = Boolean(fieldItem.isMandatory || fieldItem.isMandatoryFromLogic) && !fieldItem.isAdvancedQuery
-        const isDisplayed = fieldIsDisplayed(fieldItem) && (fieldItem.isShowedFromUser || isMandatory)
-        if (isDisplayed) {
+        const isMandatoryGenerated = Boolean(fieldItem.is_mandatory || fieldItem.isMandatoryFromLogic) && !fieldItem.isAdvancedQuery
+        const isDisplayedGenerated = fieldIsDisplayed(fieldItem) && (fieldItem.isShowedFromUser || isMandatoryGenerated)
+        if (isDisplayedGenerated) {
           return true
         }
         return false
@@ -438,13 +438,13 @@ const getters = {
     fieldsList.map(fieldItem => {
       // assign values
       let value = fieldItem.value
-      let valueTo = fieldItem.valueTo
+      let valueTo = fieldItem.value_to
 
       if (!isEmptyValue(value)) {
         if (['FieldDate', 'FieldTime'].includes(fieldItem.componentPath)) {
           value = value.getTime()
         }
-        attributesListLink += `${fieldItem.columnName}=${encodeURIComponent(value)}&`
+        attributesListLink += `${fieldItem.column_name}=${encodeURIComponent(value)}&`
       }
 
       if (fieldItem.is_range && !isEmptyValue(valueTo)) {

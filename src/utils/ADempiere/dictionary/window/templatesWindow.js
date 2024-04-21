@@ -34,7 +34,6 @@ export function templateFields(field) {
   return {
     ...field,
     isAdvancedQuery: false,
-    isActive: true,
     columnName: column_name,
     displayType: display_type,
     isDisplayed: true,

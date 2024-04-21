@@ -304,8 +304,7 @@ export function getFieldTemplate(overwriteDefinition) {
     valueMax: undefined,
     //
     is_displayed: false,
-    isActive: true,
-    isMandatory: false,
+    is_mandatory: false,
     is_read_only: false,
     isDisplayedFromLogic: undefined,
     isReadOnlyFromLogic: undefined,

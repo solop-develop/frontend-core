@@ -215,6 +215,7 @@ export function generateField({
     name: decodeHtmlEntities(
       fieldToGenerate.name
     ),
+    columnName: columnName,
     columnNameTo: `${columnName}_To`,
     elementNameTo: `${fieldToGenerate.element_name}_To`,
     isSameColumnElement: columnName === fieldToGenerate.element_name,

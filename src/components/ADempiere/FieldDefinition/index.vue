@@ -443,7 +443,6 @@ export default {
       }
       this.field = {
         ...this.metadataField,
-        // isActive: true,
         is_displayed: true,
         isDisplayedFromLogic: true,
         isShowedFromUser: true,
