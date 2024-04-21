@@ -176,7 +176,7 @@ const actions = {
               id: itemField.id,
               fieldUuid: itemField.uuid,
               columnName: itemField.columnName,
-              tableName: itemField.reference.table_name,
+              tableName: itemField.referenceTableName,
               value: valueGetDisplayColumn
             })
 
@@ -210,7 +210,7 @@ const actions = {
               id: itemField.id,
               fieldUuid: itemField.uuid,
               columnName: itemField.columnName,
-              tableName: itemField.reference.table_name,
+              tableName: itemField.referenceTableName,
               value: valueGetDisplayColumn
             })
             values[itemField.displayColumnName] = displayedValue

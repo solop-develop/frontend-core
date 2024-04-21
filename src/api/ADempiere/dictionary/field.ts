@@ -20,7 +20,6 @@
 import { request } from '@/utils/ADempiere/request'
 
 // Utils and Helper Methods
-import { convertField } from '@/utils/ADempiere/apiConverts/field.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export function requestFieldMetadata({
@@ -53,9 +52,6 @@ export function requestFieldMetadata({
     url,
     method: 'get'
   })
-    .then(fieldResponse => {
-      return convertField(fieldResponse)
-    })
 }
 
 /**
@@ -84,14 +80,4 @@ export function requestSearchFields({
     url: `/dictionary/search/${tableName}`,
     method: 'get'
   })
-    .then(response => {
-      const { convertField } = require('@/utils/ADempiere/apiConverts/field.js')
-
-      return {
-        table_columns: response.table_columns,
-        query_fields: response.query_fields.map(field => {
-          return convertField(field)
-        })
-      }
-    })
 }

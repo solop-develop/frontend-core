@@ -357,6 +357,39 @@ export function isSupportLookup(displayType) {
   return SUPPORTED_LOOKUPS.includes(displayType)
 }
 
+/**
+ * Get Table Name for special tables
+ * @param columnName
+ * @param displayTypeId
+ * @return
+ */
+export function getTableNameFromReference(columnName, displayTypeId) {
+  let tableName = null
+  if (!isLookup(displayTypeId)) {
+    return tableName
+  }
+  if ([ID.id, SEARCH.id, TABLE.id, TABLE_DIRECT.id].includes(displayTypeId)) {
+    tableName = columnName.replaceAll(/(_ID_To|_ID)$/g, '')
+  } else if (LIST.id === displayTypeId) {
+    tableName = 'AD_Reference'
+  } else if (LOCATION_ADDRESS.id === displayTypeId) {
+    tableName = 'C_Location'
+  } else if (LOCATOR_WAREHOUSE.id === displayTypeId) {
+    tableName = 'M_Locator'
+  } else if (PRODUCT_ATTRIBUTE.id === displayTypeId) {
+    tableName = 'M_AttributeSetInstance'
+  } else if (IMAGE.id === displayTypeId) {
+    tableName = 'AD_Image'
+  } else if (RESOURCE_ASSIGNMENT.id === displayTypeId) {
+    tableName = 'S_ResourceAssignment'
+  } else if (CHART.id === displayTypeId) {
+    tableName = 'AD_Chart'
+  } else if (ACCOUNT_ELEMENT.id === displayTypeId) {
+    tableName = 'C_ElementValue'
+  }
+  return tableName
+}
+
 export const FIELDS_IDENTIFIER = [
   ID.id,
   IMAGE.id,

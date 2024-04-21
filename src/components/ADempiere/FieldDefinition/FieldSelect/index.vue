@@ -382,7 +382,7 @@ export default {
         uuid: this.metadata.uuid,
         id: this.metadata.id,
         //
-        tableName: this.metadata.reference.table_name,
+        tableName: this.metadata.referenceTableName,
         columnName: this.metadata.column_name,
         columnUuid: this.metadata.columnUuid,
         searchValue: searchQuery,
@@ -410,7 +410,7 @@ export default {
         contextColumnNamesByDefaultValue: this.metadata.context_column_names,
         uuid: this.metadata.uuid,
         //
-        tableName: this.metadata.reference.table_name,
+        tableName: this.metadata.referenceTableName,
         columnName: this.metadata.column_name,
         value: this.value
       })

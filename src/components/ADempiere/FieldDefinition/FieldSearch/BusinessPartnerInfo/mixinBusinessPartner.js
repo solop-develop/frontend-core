@@ -36,8 +36,8 @@ export default {
         return {
           parentUuid: undefined,
           containerUuid: undefined,
-          columnName: COLUMN_NAME,
-          elementName: COLUMN_NAME
+          column_name: COLUMN_NAME,
+          elementColumnName: COLUMN_NAME
         }
       }
     }
@@ -45,10 +45,10 @@ export default {
 
   computed: {
     blankValues() {
-      const { columnName, elementName } = this.metadata
+      const { column_name, elementColumnName } = this.metadata
       return {
-        [columnName]: undefined,
-        [elementName]: undefined,
+        [column_name]: undefined,
+        [elementColumnName]: undefined,
         [COLUMN_NAME]: undefined,
         id: undefined,
         uuid: undefined,

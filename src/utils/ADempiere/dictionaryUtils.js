@@ -16,23 +16,25 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Constants
+import REFERENCES, { YES_NO, DEFAULT_SIZE, getTableNameFromReference } from '@/utils/ADempiere/references'
+import {
+  FIELD_OPERATORS_LIST, OPERATOR_EQUAL,
+  OPERATOR_LIKE, OPERATOR_GREATER_EQUAL, OPERATOR_LESS_EQUAL, OPERATOR_BETWEEN
+} from '@/utils/ADempiere/dataUtils'
+import {
+  CURRENCY, DOCUMENT_ACTION, DOCUMENT_STATUS
+} from '@/utils/ADempiere/constants/systemColumns'
+
 // Utils and Helpers Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { decodeHtmlEntities } from '@/utils/ADempiere/formatValue/stringFormat'
 import {
   getContextDefaultValue, getEvaluatedFieldLogics, getParentFields
 } from '@/utils/ADempiere/contextUtils/contextField'
-import REFERENCES, { YES_NO, DEFAULT_SIZE, isHiddenField } from '@/utils/ADempiere/references'
+import { isHiddenField, isLookup } from '@/utils/ADempiere/references'
 import {
-  FIELD_OPERATORS_LIST, OPERATOR_EQUAL,
-  OPERATOR_LIKE, OPERATOR_GREATER_EQUAL, OPERATOR_LESS_EQUAL, OPERATOR_BETWEEN
-} from '@/utils/ADempiere/dataUtils'
-import {
-  CURRENCY,
-  DOCUMENT_ACTION,
-  DOCUMENT_STATUS,
-  isDocumentStatus,
-  readOnlyColumn
+  isDocumentStatus, readOnlyColumn
 } from '@/utils/ADempiere/constants/systemColumns'
 
 /**
@@ -209,6 +211,19 @@ export function generateField({
     }
   }
 
+  let elementColumnName
+  let isSameColumnElement = false
+  if (isEmptyValue(fieldToGenerate.element_name)) {
+    elementColumnName = fieldToGenerate.column_name
+    isSameColumnElement = true
+  } else {
+    elementColumnName = fieldToGenerate.element_name
+  }
+  let referenceTableName = null
+  if (isLookup(fieldToGenerate.display_type)) {
+    referenceTableName = getTableNameFromReference(elementColumnName, fieldToGenerate.display_type)
+  }
+
   const field = {
     ...fieldToGenerate,
     ...moreAttributes,
@@ -217,9 +232,11 @@ export function generateField({
     ),
     columnName: columnName,
     columnNameTo: `${columnName}_To`,
-    elementNameTo: `${fieldToGenerate.element_name}_To`,
-    isSameColumnElement: columnName === fieldToGenerate.element_name,
+    elementColumnName,
+    elementNameTo: `${elementColumnName}_To`,
+    isSameColumnElement: isSameColumnElement,
     isSOTrxDictionary,
+    referenceTableName,
     // displayed attributes
     componentPath: componentReference.componentPath,
     isSupported: componentReference.isSupported,

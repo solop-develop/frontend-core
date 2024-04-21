@@ -71,7 +71,7 @@ export default {
         uuid: this.metadata.uuid,
         id: this.metadata.id,
         //
-        tableName: this.metadata.reference.table_name,
+        tableName: this.metadata.referenceTableName,
         columnName: this.metadata.columnName
       })
     },
@@ -84,7 +84,7 @@ export default {
         uuid: this.metadata.uuid,
         id: this.metadata.id,
         //
-        tableName: this.metadata.reference.table_name,
+        tableName: this.metadata.referenceTableName,
         columnName: this.metadata.columnName,
         value: this.value
       })
