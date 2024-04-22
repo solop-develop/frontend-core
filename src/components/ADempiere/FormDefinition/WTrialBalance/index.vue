@@ -162,10 +162,26 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
+            <el-form-item
+              style="margin-left: 20%;text-align:center"
+            >
+              <template slot="label">
+                {{ $t('form.WTrialBalance.showPeriod') }}
+              </template>
+              <el-switch v-model="showPeriod" @change="visibleColumn" />
+            </el-form-item>
+            <el-form-item
+              style="margin-left: 27%; text-align:center"
+            >
+              <template slot="label">
+                {{ $t('form.WTrialBalance.showAccumulated') }}
+              </template>
+              <el-switch v-model="showAccumulated" @change="visibleColumn" />
+            </el-form-item>
             <el-form-item
               class="front-item-w-trial-balance"
-              style="text-align: center"
+              style="text-align: center; margin-top: -5%;"
             >
               <template slot="label">
                 <b style="color: transparent;">
@@ -207,7 +223,7 @@
           width="45"
         />
         <el-table-column
-          v-for="(header, key) in headerList"
+          v-for="(header, key) in viewList"
           :key="key"
           :align="header.align"
           :min-width="header.width"
@@ -259,6 +275,8 @@ export default defineComponent({
      * Ref
      */
 
+    const showPeriod = ref(false)
+    const showAccumulated = ref(false)
     // Values
     const organization = ref(undefined)
     const budget = ref(undefined)
@@ -275,7 +293,7 @@ export default defineComponent({
     const cubeReportOptions = ref([])
 
     // Data Table
-
+    const viewList = ref([])
     const listSummary = ref([])
     const headerList = ref([
       {
@@ -338,10 +356,37 @@ export default defineComponent({
       return isEmptyValue(organization.value) || isEmptyValue(untilPeriod.value) || isEmptyValue(cubeReport.value)
     })
 
+    function visibleColumn() {
+      viewList.value = headerList.value
+      if (showPeriod.value === true && showAccumulated.value === true) {
+        visibleAll()
+        return
+      } else if (showPeriod.value === true) {
+        visiblePeriod()
+        return
+      } else if (showAccumulated.value === true) {
+        visibleAccumulated()
+        return
+      }
+    }
+
+    const visiblePeriod = () => {
+      const columnsPeriod = ['period_actual_amount', 'period_budget_amount', 'period_variance_amount']
+      viewList.value = headerList.value.filter((header) => !columnsPeriod.includes(header.columnName))
+    }
+
+    const visibleAccumulated = () => {
+      const columnsAccumulated = ['ytd_actual_amount', 'ytd_budget_amount', 'variance_amount']
+      viewList.value = headerList.value.filter((header) => !columnsAccumulated.includes(header.columnName))
+    }
+
+    const visibleAll = () => {
+      const columAll = ['period_actual_amount', 'period_budget_amount', 'period_variance_amount', 'ytd_actual_amount', 'ytd_budget_amount', 'variance_amount']
+      viewList.value = headerList.value.filter((header) => !columAll.includes(header.columnName))
+    }
     /**
      * Methods
      */
-
     function showListOrganization(show, search = '') {
       if (!show) return
       listOrganizations({
@@ -506,9 +551,11 @@ export default defineComponent({
 
       return sums
     }
-
+    visibleColumn()
     return {
       //  Values
+      showPeriod,
+      showAccumulated,
       organization,
       budget,
       untilPeriod,
@@ -524,6 +571,7 @@ export default defineComponent({
       // Data Table
       listSummary,
       headerList,
+      viewList,
       selectedExport,
       isLoading,
       // Computed
@@ -539,7 +587,11 @@ export default defineComponent({
       formatQuantity,
       exportRecords,
       getSummaries,
-      refresh
+      refresh,
+      visiblePeriod,
+      visibleAccumulated,
+      visibleColumn,
+      visibleAll
     }
   }
 })
