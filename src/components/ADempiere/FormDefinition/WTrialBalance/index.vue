@@ -164,7 +164,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item
-              style="margin-left: 20%;text-align:center"
+              style="text-align:center"
             >
               <template slot="label">
                 {{ $t('form.WTrialBalance.showPeriod') }}
@@ -172,7 +172,7 @@
               <el-switch v-model="showPeriod" @change="visibleColumn" />
             </el-form-item>
             <el-form-item
-              style="margin-left: 27%; text-align:center"
+              style="text-align:center; margin-left: 5%;"
             >
               <template slot="label">
                 {{ $t('form.WTrialBalance.showAccumulated') }}
@@ -180,14 +180,8 @@
               <el-switch v-model="showAccumulated" @change="visibleColumn" />
             </el-form-item>
             <el-form-item
-              class="front-item-w-trial-balance"
-              style="text-align: center; margin-top: -5%;"
+              style="text-align: center; margin-top:7%; margin-right:10%; float:right"
             >
-              <template slot="label">
-                <b style="color: transparent;">
-                  {{ $t('form.WTrialBalance.cubeReport') }}
-                </b>
-              </template>
               <el-button
                 plain
                 type="success"
