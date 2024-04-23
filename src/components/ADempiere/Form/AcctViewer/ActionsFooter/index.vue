@@ -39,7 +39,7 @@
     <el-button
       type="primary"
       plain
-      style="margin-right: 10px; !important"
+      style="margin-right: 10px;"
       :loading="isLoadingRePost"
       :disabled="isLoadingRePost"
       @click="rePost"

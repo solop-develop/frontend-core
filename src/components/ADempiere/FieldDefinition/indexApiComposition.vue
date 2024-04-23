@@ -290,7 +290,6 @@ export default defineComponent({
       }
       field.value = {
         ...props.metadataField,
-        // isActive: true,
         is_displayed: true,
         isDisplayedFromLogic: true,
         isShowedFromUser: true,

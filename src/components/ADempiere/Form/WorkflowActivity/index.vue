@@ -305,7 +305,7 @@ export default defineComponent({
           columnName: 'node.name',
           name: lang.t('form.workflowActivity.table.node'),
           isNumeric: false,
-          width: 'auto'
+          width: 300
         },
         {
           columnName: 'summary',

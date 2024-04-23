@@ -51,15 +51,15 @@ export default ({
   const timeOutRecords = ref(null)
 
   const blankValues = computed(() => {
-    const { columnName, elementName } = fieldAttributes
+    const { column_name, elementColumnName } = fieldAttributes
     return {
-      [columnName]: undefined,
-      [elementName]: undefined,
+      [column_name]: undefined,
+      [elementColumnName]: undefined,
       [COLUMN_NAME]: undefined,
       id: undefined,
       uuid: undefined,
-      [DISPLAY_COLUMN_PREFIX + columnName]: undefined,
-      [DISPLAY_COLUMN_PREFIX + elementName]: undefined,
+      [DISPLAY_COLUMN_PREFIX + column_name]: undefined,
+      [DISPLAY_COLUMN_PREFIX + elementColumnName]: undefined,
       value: undefined,
       tax_id: undefined,
       name: undefined,
@@ -217,7 +217,7 @@ export default ({
         parentUuid,
         containerUuid: uuidForm,
         contextColumnNames: fieldAttributes.reference.context_column_names,
-        tableName: fieldAttributes.reference.table_name,
+        tableName: fieldAttributes.referenceTableName,
         uuid: fieldAttributes.uuid,
         id: fieldAttributes.id,
         // filters,

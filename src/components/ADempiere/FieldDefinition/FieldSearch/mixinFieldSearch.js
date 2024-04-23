@@ -52,7 +52,7 @@ export default {
   computed: {
     uuidForm() {
       if (!isEmptyValue(this.metadata.containerUuid)) {
-        return this.metadata.columnName + '_' + this.metadata.containerUuid
+        return this.metadata.column_name + '_' + this.metadata.containerUuid
       }
       return this.metadata.containerUuid
     },
@@ -65,15 +65,15 @@ export default {
     },
 
     blankValues() {
-      const { columnName, elementName } = this.metadata
+      const { column_name, elementColumnName } = this.metadata
       return {
         id: undefined,
-        [columnName]: undefined,
-        [elementName]: undefined,
+        [column_name]: undefined,
+        [elementColumnName]: undefined,
         uuid: undefined,
         UUID: undefined,
-        [DISPLAY_COLUMN_PREFIX + columnName]: undefined,
-        [DISPLAY_COLUMN_PREFIX + elementName]: undefined,
+        [DISPLAY_COLUMN_PREFIX + column_name]: undefined,
+        [DISPLAY_COLUMN_PREFIX + elementColumnName]: undefined,
         name: undefined,
         Name: undefined,
         value: undefined,
@@ -99,8 +99,8 @@ export default {
         uuid: this.metadata.uuid,
         id: this.metadata.id,
         //
-        tableName: this.metadata.reference.table_name,
-        columnName: this.metadata.columnName,
+        tableName: this.metadata.referenceTableName,
+        columnName: this.metadata.column_name,
         value: this.value
       })
 
@@ -140,7 +140,7 @@ export default {
     //     if (mutation.type === 'updateValueOfField') {
     //       if (mutation.payload.containerUuid === this.metadata.containerUuid) {
     //         // add displayed value to persistence
-    //         if (mutation.payload.columnName === this.metadata.columnName) {
+    //         if (mutation.payload.columnName === this.metadata.column_name) {
     //           this.preHandleChange(mutation.payload.value)
 
     //           store.dispatch('notifyFieldChange', {
@@ -251,10 +251,10 @@ export default {
           // }
           // find on identifier columns
           for (const field of this.storedIdentifierColumns) {
-            const { columnName, displayColumnName, display_type } = field
+            const { column_name, displayColumnName, display_type } = field
 
             const currentValue = formatField({
-              value: row[columnName],
+              value: row[column_name],
               displayedValue: row[displayColumnName],
               displayType: display_type
             })
@@ -298,18 +298,18 @@ export default {
     },
 
     setValues(rowData) {
-      const { parentUuid, containerUuid, columnName, elementName, reference } = this.metadata
+      const { parentUuid, containerUuid, column_name, elementName } = this.metadata
       const { UUID: uuid } = rowData
 
       const displayedValue = this.generateDisplayedValue(rowData)
 
-      let value = rowData[columnName]
+      let value = rowData[column_name]
       if (isEmptyValue(value) && !this.metadata.isSameColumnElement) {
         value = rowData[elementName]
       }
       // when value is referneced as Account_ID -> C_ElementValue_ID, C_Currency_ID_To -> C_Currency_ID
-      if (isEmptyValue(value) && !isEmptyValue(reference) && !isEmptyValue(reference.table_name)) {
-        const referenceColumn = reference.table_name + IDENTIFIER_COLUMN_SUFFIX
+      if (isEmptyValue(value) && !isEmptyValue(this.metadata.referenceTableName)) {
+        const referenceColumn = this.metadata.referenceTableName + IDENTIFIER_COLUMN_SUFFIX
         value = rowData[referenceColumn]
       }
 
@@ -330,7 +330,7 @@ export default {
         containerUuid,
         containerManager: this.containerManager,
         field: this.metadata,
-        columnName,
+        columnName: column_name,
         newValue: value
       })
     },
@@ -344,10 +344,10 @@ export default {
 
       // generate with identifier columns
       this.storedIdentifierColumns.forEach(field => {
-        const { columnName, displayColumnName, display_type } = field
+        const { column_name, displayColumnName, display_type } = field
 
         const currentValue = formatField({
-          value: row[columnName],
+          value: row[column_name],
           displayedValue: row[displayColumnName],
           displayType: display_type
         })
@@ -401,7 +401,7 @@ export default {
 
     generatedDescription(recordRow) {
       const identifierColumnName = this.storedIdentifierColumns.map(field => {
-        return field.columnName
+        return field.column_name
       })
       let displayedDescription
 
