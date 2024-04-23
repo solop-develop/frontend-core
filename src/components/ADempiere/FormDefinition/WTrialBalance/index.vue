@@ -211,6 +211,7 @@
     </el-card>
     <div style="padding-top: 10px;">
       <el-table
+        height="500"
         :data="listSummary"
         border
         :show-summary="true"
@@ -554,7 +555,7 @@ export default defineComponent({
       } = param
       const sums = []
       columns.forEach((column, index) => {
-        sums[index] = 'N/A'
+        sums[index] = ''
         // if (index === 0) {
         //   sums[index] = 'Total'
         //   return
@@ -644,46 +645,5 @@ export default defineComponent({
       margin: 0px;
     }
   }
-}
-:root {
-  --base-table-height: 50vh;
-}
-@media screen and (min-height: 600px){
-  :root{
-    --base-table-height: 45vh
-  }
-}
-@media screen and (min-height: 720px) {
-  :root {
-    --base-table-height: 45vh;
-  }
-}
-@media screen and (min-height: 800px) {
-  :root {
-    --base-table-height: 60vh;
-  }
-}
-@media screen and (min-height: 1050px) {
-  :root {
-    --base-table-height: 65vh;
-  }
-}
-@media screen and (min-height: 1200px) {
-  :root {
-    --base-table-height: 70vh;
-  }
-}
-@media screen and (min-height: 1400px) {
-  :root {
-    --base-table-height: 75vh;
-  }
-}
-.el-table {
-  position: absolute;
-}
-.el-table__body-wrapper {
-  overflow-y: scroll;
-  overflow-x: hidden;
-  height: calc(var(--base-table-height) - 40px)
 }
 </style>
