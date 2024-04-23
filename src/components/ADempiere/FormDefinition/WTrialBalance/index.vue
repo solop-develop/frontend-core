@@ -397,12 +397,12 @@ export default defineComponent({
     }
 
     const visibleAccumulated = () => {
-      const columnsAccumulated = ['ytd_actual_amount', 'ytd_budget_amount', 'variance_amount']
+      const columnsAccumulated = ['ytd_actual_amount', 'ytd_budget_amount', 'variance_amount', 'variance_percentage']
       viewList.value = headerList.value.filter((header) => !columnsAccumulated.includes(header.columnName))
     }
 
     const visibleAll = () => {
-      const columAll = ['period_actual_amount', 'period_budget_amount', 'period_variance_amount', 'ytd_actual_amount', 'ytd_budget_amount', 'variance_amount']
+      const columAll = ['period_actual_amount', 'period_budget_amount', 'period_variance_amount', 'ytd_actual_amount', 'ytd_budget_amount', 'variance_amount', 'variance_percentage']
       viewList.value = headerList.value.filter((header) => !columAll.includes(header.columnName))
     }
     /**
