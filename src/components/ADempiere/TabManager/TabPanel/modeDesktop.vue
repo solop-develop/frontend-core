@@ -339,16 +339,18 @@ export default defineComponent({
     }
 
     function loadOpenWindows() {
-      if (root.$route.query.options === 'listRecords') {
+      if (root.$route.query.options === 'listRecords' && currentTab.value.isParentTab) {
         showedTableRecords(true)
-      } else if (root.$route.query.options === 'create-new') {
+      } else if (root.$route.query.options === 'create-new' && currentTab.value.isParentTab) {
+        const { parentUuid, containerUuid } = props.tabAttributes
         showedTableRecords(false)
-        const { parentUuid, containerUuid } = currentTab.value
-        createNewRecord.createNewRecord({
-          parentUuid,
-          containerUuid,
-          isCopyValues: false
-        })
+        setTimeout(() => {
+          createNewRecord.createNewRecord({
+            parentUuid,
+            containerUuid,
+            isCopyValues: false
+          })
+        }, 500)
       }
     }
 
