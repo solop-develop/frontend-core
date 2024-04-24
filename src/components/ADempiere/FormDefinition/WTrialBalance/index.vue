@@ -58,6 +58,7 @@
                 clearable
                 filterable
                 @visible-change="showListOrganization"
+                @change="activateAuto"
               >
                 <el-option
                   v-for="item in organizationOptions"
@@ -103,6 +104,7 @@
                 filterable
                 clearable
                 @visible-change="showListPeriods"
+                @change="activateAuto"
               >
                 <el-option
                   v-for="item in untilPeriodOptions"
@@ -169,6 +171,7 @@
                 filterable
                 clearable
                 @visible-change="showListReportCubes"
+                @change="activateAuto"
               >
                 <el-option
                   v-for="item in cubeReportOptions"
@@ -280,20 +283,6 @@ export default defineComponent({
     metadata: {
       type: Object,
       default: () => {}
-    }
-  },
-  methods: {
-    classChecker({ row, column }) {
-      const numberRegex = /[^\d.,-]+/g
-      const numberColumns = ['variance_amount', 'period_variance_amount', 'variance_percentage']
-      if (numberColumns.includes(column.property)) {
-        const val = parseFloat(row[column.property].replace(numberRegex, ''))
-        if (val > 0) {
-          return 'greenClass'
-        } else if (val < 0) {
-          return 'redClass'
-        }
-      }
     }
   },
   setup(props) {
@@ -603,6 +592,12 @@ export default defineComponent({
 
       return sums
     }
+    const activateAuto = () => {
+      if (!isEmptyValue(organization.value) && !isEmptyValue(untilPeriod.value) && !isEmptyValue(cubeReport.value)) {
+        refresh()
+      }
+      return
+    }
     function changeView(data) {
       isVisible.value = data
     }
@@ -634,6 +629,7 @@ export default defineComponent({
       // Computed
       calculate,
       validateBeforeSearch,
+      activateAuto,
       // Methods
       changeSelections,
       showListOrganization,
