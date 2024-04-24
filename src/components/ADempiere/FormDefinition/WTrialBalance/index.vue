@@ -191,7 +191,12 @@
               <template slot="label">
                 {{ $t('form.WTrialBalance.showPeriod') }}
               </template>
-              <el-switch v-model="showPeriod" @change="visibleColumn" />
+              <el-switch
+                v-model="showPeriod"
+                :active-value="false"
+                :inactive-value="true"
+                @change="visibleColumn"
+              />
             </el-form-item>
             <el-form-item
               style="text-align:center; margin-left: 5%;"
@@ -199,7 +204,12 @@
               <template slot="label">
                 {{ $t('form.WTrialBalance.showAccumulated') }}
               </template>
-              <el-switch v-model="showAccumulated" @change="visibleColumn" />
+              <el-switch
+                v-model="showAccumulated"
+                :active-value="false"
+                :inactive-value="true"
+                @change="visibleColumn"
+              />
             </el-form-item>
             <el-form-item
               style="text-align: center; margin-top:7%; margin-right:10%; float:right"
@@ -228,7 +238,6 @@
     <div style="padding-top: 10px;">
       <el-table
         height="500"
-        :cell-class-name="classChecker"
         :data="listSummary"
         border
         :show-summary="true"
@@ -297,8 +306,8 @@ export default defineComponent({
      * Ref
      */
     const isVisible = ref(true)
-    const showPeriod = ref(true)
-    const showAccumulated = ref(true)
+    const showPeriod = ref(false)
+    const showAccumulated = ref(false)
     // Values
 
     const porcent = ref(null)
@@ -402,13 +411,13 @@ export default defineComponent({
 
     function visibleColumn() {
       viewList.value = headerList.value
-      if (showPeriod.value === false && showAccumulated.value === false) {
+      if (showPeriod.value === true && showAccumulated.value === true) {
         visibleAll()
         return
-      } else if (showPeriod.value === false) {
+      } else if (showPeriod.value === true) {
         visiblePeriod()
         return
-      } else if (showAccumulated.value === false) {
+      } else if (showAccumulated.value === true) {
         visibleAccumulated()
         return
       }
