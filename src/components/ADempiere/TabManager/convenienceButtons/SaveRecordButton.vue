@@ -117,7 +117,7 @@ export default defineComponent({
         containerUuid: tabAttributes.value.containerUuid
       })
       if (!isEmptyValue(currentReccord[table_name + '_ID'])) return currentReccord[table_name + '_ID']
-      if (!isEmptyValue(key_columns)) return currentReccord[key_columns[0]]
+      if (!isEmptyValue(key_columns)) return currentReccord[key_columns[key_columns.length - 1]]
       return 1
     })
 
