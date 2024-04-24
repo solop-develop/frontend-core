@@ -153,7 +153,8 @@ export function requestMenu({
       language,
       role_id: roleId,
       client_id: clientId,
-      user_id: userId
+      user_id: userId,
+      page_size: 100
     }
   })
 }

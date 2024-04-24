@@ -482,7 +482,7 @@ export default defineComponent({
       if (tabNumber !== currentTab.value) {
         currentTab.value = tabNumber
       }
-      router.push({
+      setValuesPath({
         query: {
           ...currentRoute.query,
           [queryProperty]: currentTab.value
@@ -490,7 +490,7 @@ export default defineComponent({
         params: {
           ...currentRoute.params
         }
-      }, () => {})
+      })
 
       return tabNumber
     }
@@ -607,8 +607,7 @@ export default defineComponent({
           row
         })
         const recordId = currentRecordId.value
-        router.push({
-          name: currentRoute.name,
+        setValuesPath({
           query: {
             ...currentRoute.query,
             recordId
@@ -618,7 +617,7 @@ export default defineComponent({
             filter: {},
             recordId
           }
-        }, () => {})
+        })
       })
     }
 
@@ -634,18 +633,18 @@ export default defineComponent({
     }
     watch(currentRecordLogs, (newValue, oldValue) => {
       const recordId = newValue[currentTabTableName.value + '_ID']
-      router.push({
-        name: currentRoute.name,
+      const { query, params } = currentRoute
+      setValuesPath({
         query: {
-          ...currentRoute.query,
           action: newValue.UUID,
+          ...query,
           recordId
         },
         params: {
-          ...currentRoute.params,
+          ...params,
           recordId
         }
-      }, () => {})
+      })
     })
     // if changed tab and not records in stored, get records from server
     watch(tabUuid, (newValue, oldValue) => {
@@ -858,6 +857,20 @@ export default defineComponent({
         .catch(() => {})
     }
 
+    /**
+     * Set Values in the Path
+     */
+    const setValuesPath = ({ query, params }) => {
+      if (query.options === 'create-new') {
+        delete query.recordId
+        delete params.recordId
+      }
+      router.push({
+        query: query,
+        params: params
+      }, () => {})
+    }
+
     const tabMetadata = computed(() => {
       return store.getters.getStoredTab(
         props.parentUuid,
@@ -936,6 +949,7 @@ export default defineComponent({
       // methods
       handleClick,
       changeShowedRecords,
+      setValuesPath,
       findRecordLogs,
       openRecordLogs,
       isDisabledTab,

@@ -18,7 +18,24 @@
 
 <template>
   <div>
+    <el-button
+      v-if="isVisible"
+      type="text"
+      style="float: right; z-index: 5; margin-top:10px"
+      :circle="true"
+      icon="el-icon-arrow-up"
+      @click="changeView(false)"
+    />
+    <el-button
+      v-if="!isVisible"
+      type="text"
+      style="float:right; z-index: 5; margin-top:10px"
+      :circle="true"
+      icon="el-icon-arrow-down"
+      @click="changeView(true)"
+    />
     <el-card
+      v-show="isVisible"
       shadow="header"
       :body-style="{ padding: '10px 20px', margin: '0px' }"
     >
@@ -162,16 +179,26 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item
-              class="front-item-w-trial-balance"
-              style="text-align: center"
+              style="text-align:center"
             >
               <template slot="label">
-                <b style="color: transparent;">
-                  {{ $t('form.WTrialBalance.cubeReport') }}
-                </b>
+                {{ $t('form.WTrialBalance.showPeriod') }}
               </template>
+              <el-switch v-model="showPeriod" @change="visibleColumn" />
+            </el-form-item>
+            <el-form-item
+              style="text-align:center; margin-left: 5%;"
+            >
+              <template slot="label">
+                {{ $t('form.WTrialBalance.showAccumulated') }}
+              </template>
+              <el-switch v-model="showAccumulated" @change="visibleColumn" />
+            </el-form-item>
+            <el-form-item
+              style="text-align: center; margin-top:7%; margin-right:10%; float:right"
+            >
               <el-button
                 plain
                 type="success"
@@ -195,6 +222,7 @@
     </el-card>
     <div style="padding-top: 10px;">
       <el-table
+        :cell-class-name="classChecker"
         :data="listSummary"
         border
         :show-summary="true"
@@ -207,7 +235,7 @@
           width="45"
         />
         <el-table-column
-          v-for="(header, key) in headerList"
+          v-for="(header, key) in viewList"
           :key="key"
           :align="header.align"
           :min-width="header.width"
@@ -253,13 +281,29 @@ export default defineComponent({
       default: () => {}
     }
   },
-
+  methods: {
+    classChecker({ row, column }) {
+      const numberRegex = /[^\d.,-]+/g
+      const numberColumns = ['variance_amount', 'period_variance_amount', 'variance_percentage']
+      if (numberColumns.includes(column.property)) {
+        const val = parseFloat(row[column.property].replace(numberRegex, ''))
+        if (val > 0) {
+          return 'greenClass'
+        } else if (val < 0) {
+          return 'redClass'
+        }
+      }
+    }
+  },
   setup(props) {
     /**
      * Ref
      */
+    const isVisible = ref(true)
+    const showPeriod = ref(false)
+    const showAccumulated = ref(false)
+    // Values
 
-    // Values]
     const porcent = ref(null)
     const organization = ref(undefined)
     const budget = ref(undefined)
@@ -275,7 +319,7 @@ export default defineComponent({
     const cubeReportOptions = ref([])
 
     // Data Table
-
+    const viewList = ref([])
     const listSummary = ref([])
     const headerList = ref([
       {
@@ -333,6 +377,7 @@ export default defineComponent({
         align: 'center'
       }
     ])
+
     const isLoading = ref(false)
     const selectedExport = ref([])
 
@@ -358,10 +403,37 @@ export default defineComponent({
       return isEmptyValue(organization.value) || isEmptyValue(untilPeriod.value) || isEmptyValue(cubeReport.value)
     })
 
+    function visibleColumn() {
+      viewList.value = headerList.value
+      if (showPeriod.value === true && showAccumulated.value === true) {
+        visibleAll()
+        return
+      } else if (showPeriod.value === true) {
+        visiblePeriod()
+        return
+      } else if (showAccumulated.value === true) {
+        visibleAccumulated()
+        return
+      }
+    }
+
+    const visiblePeriod = () => {
+      const columnsPeriod = ['period_actual_amount', 'period_budget_amount', 'period_variance_amount']
+      viewList.value = headerList.value.filter((header) => !columnsPeriod.includes(header.columnName))
+    }
+
+    const visibleAccumulated = () => {
+      const columnsAccumulated = ['ytd_actual_amount', 'ytd_budget_amount', 'variance_amount', 'variance_percentage']
+      viewList.value = headerList.value.filter((header) => !columnsAccumulated.includes(header.columnName))
+    }
+
+    const visibleAll = () => {
+      const columAll = ['period_actual_amount', 'period_budget_amount', 'period_variance_amount', 'ytd_actual_amount', 'ytd_budget_amount', 'variance_amount', 'variance_percentage']
+      viewList.value = headerList.value.filter((header) => !columAll.includes(header.columnName))
+    }
     /**
      * Methods
      */
-
     function showListOrganization(show, search = '') {
       if (!show) return
       listOrganizations({
@@ -530,9 +602,15 @@ export default defineComponent({
 
       return sums
     }
-
+    function changeView(data) {
+      isVisible.value = data
+    }
+    visibleColumn()
     return {
       //  Values
+      isVisible,
+      showPeriod,
+      showAccumulated,
       porcent,
       organization,
       budget,
@@ -549,6 +627,7 @@ export default defineComponent({
       // Data Table
       listSummary,
       headerList,
+      viewList,
       selectedExport,
       isLoading,
       // Computed
@@ -565,7 +644,12 @@ export default defineComponent({
       formatQuantity,
       exportRecords,
       getSummaries,
-      refresh
+      refresh,
+      visiblePeriod,
+      visibleAccumulated,
+      visibleColumn,
+      visibleAll,
+      changeView
     }
   }
 })
@@ -591,5 +675,12 @@ export default defineComponent({
       margin: 0px;
     }
   }
+}
+
+.greenClass {
+  color: green;
+}
+.redClass {
+  color: red;
 }
 </style>
