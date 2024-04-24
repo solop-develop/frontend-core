@@ -16,17 +16,26 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <template>
   <el-form-item
-    :label="titleField"
     class="form-item-criteria"
     style="margin: 0px;width: 100%;"
   >
+    <template slot="label">.
+      <!-- <span class="field-title-name">
+        {{ titleField }}
+      </span> -->
+      {{ titleField }}
+      <span v-if="metadata.is_mandatory" style="color: #f34b4b"> * </span>
+    </template>
     <el-select
       v-model="displayValue"
       clearable
       filterable
+      size="mini"
       :placeholder="titleField"
       :filter-method="filterSearch"
       style="margin: 0px;width: 100%;"
+      @change="changeSelect"
+      @visible-change="showList"
     >
       <el-option
         v-for="item in optionsList"
@@ -60,6 +69,12 @@ export default defineComponent({
     defaultValue: {
       type: Object,
       default: () => {}
+    },
+    handleChange: {
+      type: Function,
+      default: () => {
+        console.info('implement change size page number method')
+      }
     }
   },
   setup(props) {
@@ -68,6 +83,7 @@ export default defineComponent({
     const timeOut = ref(null)
     const optionsList = ref([])
     const displayValue = ref(props.metadata.value)
+    const filters = ref({})
     // Computed
     const titleField = computed(() => {
       return props.metadata.name
@@ -82,11 +98,28 @@ export default defineComponent({
       return props.metadata.value
     })
 
+    // const displayValue = computed({
+    //   get() {
+    //     return store.getters.getFieldsValue(props.metadata.column_name)
+    //   },
+    //   // setter
+    //   set(value) {
+    //     store.commit('setFieldsValue', {
+    //       columnName: props.metadata.column_name,
+    //       value
+    //     })
+    //   }
+    // })
+
     // Methods
 
     /**
      * Load Display
      */
+
+    function showList(isShow) {
+      if (isShow && isEmptyValue(optionsList.value)) filterSearch(displayValue.value)
+    }
 
     /**
      * Filters Remote Search
@@ -97,8 +130,8 @@ export default defineComponent({
       clearTimeout(timeOut.value)
       timeOut.value = setTimeout(() => {
         let attributes
-        if (!isEmptyValue(props.metadata.contextColumnNames)) {
-          attributes = props.metadata.contextColumnNames.map(list => {
+        if (!isEmptyValue(props.metadata.context_column_names)) {
+          attributes = props.metadata.context_column_names.map(list => {
             return JSON.stringify({
               [list]: store.getters.getValueOfField({
                 containerUuid: props.metadata.containerUuid,
@@ -109,7 +142,7 @@ export default defineComponent({
         }
         listAccoutingElementValues({
           accoutingSchemaId: accoutingSchemaId.value,
-          elementType: props.metadata.elementType,
+          elementType: props.metadata.element_type,
           searchValue: searchQuery,
           contextAttributes: attributes
         })
@@ -122,9 +155,9 @@ export default defineComponent({
                 displayColumn: list.values.DisplayColumn
               }
             })
-            if (!isEmptyValue(optionsList.value) && optionsList.value.length <= 1) {
-              displayValue.value = optionsList.value[0].id
-            }
+            // if (!isEmptyValue(optionsList.value) && optionsList.value.length <= 1) {
+            //   displayValue.value = optionsList.value[0].id
+            // }
           })
       }, 500)
       return
@@ -134,8 +167,8 @@ export default defineComponent({
       clearTimeout(timeOut.value)
       timeOut.value = setTimeout(() => {
         let attributes
-        if (!isEmptyValue(props.metadata.contextColumnNames)) {
-          attributes = props.metadata.contextColumnNames.map(list => {
+        if (!isEmptyValue(props.metadata.context_column_names)) {
+          attributes = props.metadata.context_column_names.map(list => {
             return JSON.stringify({
               [list]: store.getters.getValueOfField({
                 containerUuid: props.metadata.containerUuid,
@@ -159,12 +192,35 @@ export default defineComponent({
                 displayColumn: list.values.DisplayColumn
               }
             })
-            if (!isEmptyValue(optionsList.value) && optionsList.value.length <= 1) {
-              displayValue.value = optionsList.value[0].id
-            }
+            // if (!isEmptyValue(optionsList.value) && optionsList.value.length <= 1) {
+            //   displayValue.value = optionsList.value[0].id
+            // }
           })
       }, 500)
       return
+    }
+
+    function changeSelect(value) {
+      store.dispatch('changeIsloaded', true)
+      store.commit('setFieldsValue', {
+        columnName: props.metadata.column_name,
+        value
+      })
+      store.dispatch('changeAttributes', {
+        columnName: props.metadata.column_name,
+        value
+      })
+      if (props.metadata.column_name !== 'AD_Org_ID' && props.metadata.column_name !== 'Account_ID') {
+        if (isEmptyValue(value)) {
+          delete filters.value[props.metadata.column_name]
+        } else {
+          filters.value[props.metadata.column_name] = value
+        }
+        store.commit('setFiltersAccount', filters.value)
+      }
+      setTimeout(() => {
+        store.dispatch('changeIsloaded', false)
+      }, 500)
     }
 
     if (!isEmptyValue(props.defaultValue['DisplayColumn_' + props.metadata.columnName])) {
@@ -173,6 +229,7 @@ export default defineComponent({
 
     return {
       // Ref
+      filters,
       isLoading,
       optionsList,
       displayValue,
@@ -181,6 +238,8 @@ export default defineComponent({
       titleField,
       accoutingSchemaId,
       // Methods
+      showList,
+      changeSelect,
       filterSearch
     }
   }

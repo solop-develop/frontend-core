@@ -38,7 +38,7 @@
           <el-row>
             <field-definition
               v-for="(field) in metadataList"
-              :key="field.columnName"
+              :key="field.column_name"
               :metadata-field="{
                 ...field,
                 parentUuid: metadata.parentUuid
@@ -262,45 +262,46 @@ export default {
     },
     labelTable() {
       return this.metadataList.map(field => {
-        if (field.columnName === 'AD_Client_ID') {
+        const { column_name, name } = field
+        if (column_name === 'AD_Client_ID') {
           return {
-            label: field.name,
+            label: name,
             columnName: 'DisplayColumn_AD_Client_ID'
           }
-        } else if (field.columnName === 'AD_Org_ID') {
+        } else if (column_name === 'AD_Org_ID') {
           return {
-            label: field.name,
+            label: name,
             columnName: 'DisplayColumn_AD_Org_ID'
           }
-        } else if (field.columnName === 'Account_ID') {
+        } else if (column_name === 'Account_ID') {
           return {
-            label: field.name,
+            label: name,
             columnName: 'DisplayColumn_Account_ID'
           }
-        } else if (field.columnName === 'M_Product_ID') {
+        } else if (column_name === 'M_Product_ID') {
           return {
-            label: field.name,
+            label: name,
             columnName: 'DisplayColumn_M_Product_ID'
           }
-        } else if (field.columnName === 'C_BPartner_ID') {
+        } else if (column_name === 'C_BPartner_ID') {
           return {
-            label: field.name,
+            label: name,
             columnName: 'DisplayColumn_C_BPartner_ID'
           }
-        } else if (field.columnName === 'C_Project_ID') {
+        } else if (column_name === 'C_Project_ID') {
           return {
-            label: field.name,
+            label: name,
             columnName: 'DisplayColumn_C_Project_ID'
           }
-        } else if (field.columnName === 'C_Campaign_ID') {
+        } else if (column_name === 'C_Campaign_ID') {
           return {
-            label: field.name,
+            label: name,
             columnName: 'DisplayColumn_C_Campaign_ID'
           }
         }
         return {
-          label: field.name,
-          columnName: field.columnName
+          label: name,
+          columnName: column_name
         }
       })
     },

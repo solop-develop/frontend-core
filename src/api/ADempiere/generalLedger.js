@@ -18,7 +18,7 @@
 
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
-import { config } from '@/utils/ADempiere/config'
+// import { config } from '@/utils/ADempiere/config'
 
 /**
  * Apply customization to window
@@ -40,7 +40,7 @@ export function requestListAccoutingElements({
   accoutingSchemaId
 }) {
   return request({
-    url: `${config.generalGedger.accounts}/schemas/${accoutingSchemaId}/elements`,
+    url: `/general-ledger/accounts/schemas/${accoutingSchemaId}/elements`,
     method: 'get',
     params: {
       filters,

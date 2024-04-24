@@ -33,10 +33,11 @@
         <el-form
           label-position="top"
           size="small"
+          class="form-base"
           @submit.native.prevent="notSubmitForm"
         >
           <el-row
-            v-if="isLoadingPanel"
+            v-if="!isLoadingPanel"
             :gutter="20"
           >
             <el-col
@@ -66,7 +67,6 @@
             :count="2"
           />
         </el-form>
-
         <el-button
           type="primary"
           class="button-save"
@@ -78,8 +78,7 @@
         </el-button>
       </el-collapse-item>
     </el-collapse>
-
-    <!-- <el-table
+    <el-table
       ref="accountCombinationsTable"
       v-loading="isLoadingRecords"
       class="accouting-combintantions-table"
@@ -98,7 +97,7 @@
       </p>
 
       <index-column
-        :page-number="pageNumber"
+        :page-number="recordData.pageNumber"
       />
 
       <el-table-column
@@ -109,7 +108,7 @@
         header-align="center"
       >
         <template slot-scope="scope">
-          formatted displayed value
+          <!-- formatted displayed value -->
           <cell-display-info
             :parent-uuid="metadata.parentUuid"
             :container-uuid="uuidForm"
@@ -120,19 +119,19 @@
           />
         </template>
       </el-table-column>
-    </el-table> -->
+    </el-table>
 
     <el-row class="accouting-combintantions-footer">
-      <!-- <el-col :span="20">
+      <el-col :span="20">
         <custom-pagination
           :total="recordData.recordCount"
-          :current-page="pageNumber"
+          :current-page="recordData.pageNumber"
           :container-manager="containerManagerSearchList"
-          :handle-change-page="setPageNumber"
+          :handle-change-page-number="setPageNumber"
           :records-page="recordsList.length"
           :selection="selection"
         />
-      </el-col> -->
+      </el-col>
 
       <el-col :span="4">
         <samp style="float: right; padding-top: 4px;">
@@ -167,6 +166,8 @@
 import {
   defineComponent,
   computed,
+  // onUpdated,
+  watch,
   ref
 } from '@vue/composition-api'
 
@@ -191,6 +192,9 @@ import { ORGANIZATION } from '@/utils/ADempiere/constants/systemColumns'
 
 // Utils and Helper Methods
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
+import { containerManager as containerManagerForm } from '@/utils/ADempiere/dictionary/form'
+import { showMessage } from '@/utils/ADempiere/notification'
+import language from '@/lang'
 
 export default defineComponent({
   name: 'TableQueryCriteria',
@@ -236,6 +240,7 @@ export default defineComponent({
     const timeOutRecords = ref(null)
     const combinations = ref('')
     const setValuesCombinations = ref({})
+    const tableNameAccounting = ref('')
 
     // Computed
     const title = computed(() => {
@@ -270,15 +275,28 @@ export default defineComponent({
     })
 
     const organizationId = computed(() => {
-      return store.getters.getValueOfField({
-        containerUuid: uuidForm.value,
-        columnName: ORGANIZATION
+      if (isEmptyValue(metadataList.value)) return setValuesCombinations.value['AD_Org_ID']
+      return store.getters.getFieldsValue(ORGANIZATION)
+    })
+
+    const attributesQuery = computed(() => {
+      return store.getters.getAttributeValueAccount
+    })
+
+    const recordData = computed(() => {
+      return store.getters.getAccountCombinationsData({
+        containerUuid: uuidForm.value
       })
+    })
+
+    const filtersAccount = computed(() => {
+      if (isEmptyValue(store.getters.getFiltersAccount)) return null
+      return JSON.stringify(store.getters.getFiltersAccount)
     })
 
     const accoutId = computed(() => {
       return store.getters.getValueOfField({
-        containerUuid: uuidForm.value,
+        containerUuid: props.metadata.containerUuid,
         columnName: 'Account_ID'
       })
     })
@@ -291,16 +309,102 @@ export default defineComponent({
       ]
     })
 
+    const recordsList = computed(() => {
+      return store.getters.getAccountCombinationsRecordsList({
+        containerUuid: uuidForm.value
+      })
+    })
+
+    const labelTable = computed(() => {
+      return metadataList.value.map(field => {
+        const { column_name, name } = field
+        if (column_name === 'AD_Client_ID') {
+          return {
+            label: name,
+            column_name: 'DisplayColumn_AD_Client_ID'
+          }
+        } else if (column_name === 'AD_Org_ID') {
+          return {
+            label: name,
+            column_name: 'DisplayColumn_AD_Org_ID'
+          }
+        } else if (column_name === 'Account_ID') {
+          return {
+            label: name,
+            column_name: 'DisplayColumn_Account_ID'
+          }
+        } else if (column_name === 'M_Product_ID') {
+          return {
+            label: name,
+            column_name: 'DisplayColumn_M_Product_ID'
+          }
+        } else if (column_name === 'C_BPartner_ID') {
+          return {
+            label: name,
+            column_name: 'DisplayColumn_C_BPartner_ID'
+          }
+        } else if (column_name === 'C_Project_ID') {
+          return {
+            label: name,
+            column_name: 'DisplayColumn_C_Project_ID'
+          }
+        } else if (column_name === 'C_Campaign_ID') {
+          return {
+            label: name,
+            column_name: 'DisplayColumn_C_Campaign_ID'
+          }
+        }
+        return {
+          label: name,
+          column_name: column_name
+        }
+      })
+    })
+
+    const containerManagerSearchList = computed(() => {
+      return {
+        ...props.containerManager,
+        ...containerManagerForm,
+        setPageNumber: setPageNumber()
+      }
+    })
+
+    const selection = computed(() => {
+      if (isEmptyValue(currentRow.value)) {
+        return 0
+      }
+      return 1
+    })
+
+    const isLoadingTable = computed(() => {
+      return store.getters.getIsLoadeTables
+    })
+
+    const currentRow = computed({
+      get() {
+        return store.getters.getAccountCombinationsCurrentRow({
+          containerUuid: uuidForm.value
+        })
+      },
+      // setter
+      set(rowSelected) {
+        store.commit('setAccountCombinationsSelectedRow', {
+          containerUuid: uuidForm.value,
+          currentRow: rowSelected
+        })
+      }
+    })
+
     // Methods
     function keyAction(event) {
       switch (event.srcKey) {
-        case 'refreshList':
-          /**
-           * TODO: When refreshing you are making 2 list requests, you can be the
-           * observer that activates the second request
-          */
-          searchRecordsList()
-          break
+        // case 'refreshList':
+        //   /**
+        //    * TODO: When refreshing you are making 2 list requests, you can be the
+        //    * observer that activates the second request
+        //   */
+        //   searchRecordsList()
+        //   break
 
         case 'close':
           closeList()
@@ -309,58 +413,86 @@ export default defineComponent({
     }
 
     function saveAccoutingCombination() {
-      const attributes = store.getters.getValuesView({
-        containerUuid: uuidForm.value,
-        format: 'array'
-      }).filter(item => {
-        return item.columnName !== 'Combination' &&
-          metadataList.value.find(itemDefinition => itemDefinition.columnName === item.columnName)
-      }).map(item => {
-        return {
-          value: item.value,
-          key: item.columnName
-        }
-      })
+      // const attributes = store.getters.getValuesView({
+      //   containerUuid: uuidForm.value,
+      //   format: 'array'
+      // }).filter(item => {
+      //   return item.columnName !== 'Combination' &&
+      //     metadataList.value.find(itemDefinition => itemDefinition.columnName === item.columnName)
+      // }).map(item => {
+      //   return {
+      //     value: item.value,
+      //     key: item.columnName
+      //   }
+      // })
 
       store.dispatch('saveAccountCombinations', {
+        id: store.getters.getValueOfField({
+          containerUuid: props.metadata.containerUuid,
+          columnName: props.metadata.columnName
+        }),
+        organizationId: store.getters.getFieldsValue(ORGANIZATION),
+        accountId: store.getters.getFieldsValue('Account_ID'),
         parentUuid: props.metadata.parentUuid,
+        accountingSchemaId: setValuesCombinations.value['C_AcctSchema_ID'],
         containerUuid: uuidForm.value,
-        attributes,
-        contextAttributesList: contextAttributesList.value
+        attributes: attributesQuery.value
       })
+        .then(response => {
+          const { values } = response
+          metadataList.value[0].value = values.Combination
+        })
       searchRecordsList()
     }
 
     function searchRecordsList(pageNumber = 0, isConvert = true) {
+      if (isEmptyValue(store.getters.getFieldsValue(ORGANIZATION))) {
+        showMessage({
+          type: 'warning',
+          showClose: true,
+          message: language.t('notifications.fieldMandatory') + ': ' + language.t('form.accountingViewer.organization')
+        })
+        return
+      }
+      if (isEmptyValue(store.getters.getFieldsValue('Account_ID'))) {
+        showMessage({
+          type: 'warning',
+          showClose: true,
+          message: language.t('notifications.fieldMandatory') + ': ' + language.t('form.accountingViewer.account')
+        })
+        return
+      }
       let parentUuid = props.metadata.parentUuid
       if (isEmptyValue(parentUuid)) {
         parentUuid = props.metadata.containerUuid
       }
-      const filters = store.getters.getValuesView({
-        containerUuid: uuidForm.value,
-        format: 'array'
-      }).filter(item => {
-        return !isEmptyValue(item.value) &&
-          item.columnName !== 'Combination' &&
-          item.columnName !== 'Alias' &&
-          props.metadataList.find(itemDefinition => itemDefinition.columnName === item.columnName)
-      })
+      // const filters = store.getters.getValuesView({
+      //   containerUuid: uuidForm.value,
+      //   format: 'array'
+      // }).filter(item => {
+      //   return !isEmptyValue(item.value) &&
+      //     item.columnName !== 'Combination' &&
+      //     item.columnName !== 'Alias' &&
+      //     props.metadataList.find(itemDefinition => itemDefinition.columnName === item.columnName)
+      // })
       clearTimeout(timeOutRecords.value)
       timeOutRecords.value = setTimeout(() => {
         isLoadingRecords.value = true
         store.dispatch('listAccountCombinations', {
-          parentUuid: props.metadata.parentUuid,
-          containerUuid: uuidForm.value,
           contextAttributesList: contextAttributesList.value,
-          filters,
-          pageNumber
+          organizationId: store.getters.getFieldsValue(ORGANIZATION),
+          parentUuid: props.metadata.parentUuid,
+          accountId: store.getters.getFieldsValue('Account_ID'),
+          containerUuid: uuidForm.value,
+          pageNumber,
+          filters: filtersAccount.value
         })
           .then(response => {
             if (isEmptyValue(response)) {
-              this.$message({
+              showMessage({
                 type: 'warning',
                 showClose: true,
-                message: this.$t('notifications.searchWithOutRecords')
+                message: language.t('notifications.searchWithOutRecords')
               })
             }
           })
@@ -384,10 +516,27 @@ export default defineComponent({
         containerUuid: uuidForm.value,
         show: false
       })
+      store.commit('cleanAccountData')
     }
 
     function changeRecord() {
-      console.log('changeRecord')
+      // if (!isEmptyValue(currentRow.value)) {
+      //   store.dispatch('notifyFieldChange', {
+      //     containerUuid: this.metadata.containerUuid,
+      //     containerManager: this.containerManager,
+      //     field: this.metadata,
+      //     columnName: this.metadata.column_name,
+      //     newValue: value
+      //   })
+      // }
+      store.dispatch('notifyFieldChange', {
+        containerUuid: props.metadata.containerUuid,
+        containerManager: props.containerManager,
+        field: props.metadata,
+        columnName: props.metadata.columnName,
+        newValue: currentRow.value[tableNameAccounting.value + '_ID']
+      })
+      closeList()
     }
 
     function getAccoutingElements() {
@@ -395,6 +544,10 @@ export default defineComponent({
       if (isEmptyValue(accoutingElements)) {
         store.dispatch('listAccoutingElementsFromServer')
       }
+    }
+
+    function handleCurrentChange(row) {
+      currentRow.value = row
     }
 
     function loadCombinations() {
@@ -406,7 +559,8 @@ export default defineComponent({
         })
       })
         .then(response => {
-          const { values } = response
+          const { values, table_name } = response
+          tableNameAccounting.value = table_name
           setValuesCombinations.value = values
           // combinations.value = values.Combination
           metadataList.value.map(list => {
@@ -415,6 +569,11 @@ export default defineComponent({
               value: values[list.columnName]
             }
           })
+          // setTimeout(() => {
+          // isLoadingPanel.value = false
+          // }, 500)
+        })
+        .finally(() => {
           setTimeout(() => {
             isLoadingPanel.value = false
           }, 500)
@@ -427,6 +586,14 @@ export default defineComponent({
       // return setValuesCombinations.value['DisplayColumn_' + field.columnName]
     }
 
+    function setPageNumber(pageNumber) {
+      searchRecordsList(pageNumber)
+    }
+
+    watch(isLoadingTable, (newValue, oldValue) => {
+      if (newValue && newValue !== oldValue) searchRecordsList()
+    })
+
     getAccoutingElements()
     loadCombinations()
 
@@ -434,6 +601,7 @@ export default defineComponent({
       TEXT,
       // Ref
       setValuesCombinations,
+      tableNameAccounting,
       isLoadingRecords,
       isLoadingFields,
       activeAccordion,
@@ -442,21 +610,32 @@ export default defineComponent({
       combinations,
       // Computed
       title,
+      selection,
+      isLoadingTable,
       uuidForm,
       accoutId,
       shortsKey,
+      labelTable,
+      currentRow,
+      recordsList,
       metadataList,
+      recordData,
       acctSchemaId,
       organizationId,
+      filtersAccount,
+      attributesQuery,
       contextAttributesList,
+      containerManagerSearchList,
       // Methods
       keyAction,
       closeList,
       clearValues,
       changeRecord,
+      setPageNumber,
       loadCombinations,
       searchRecordsList,
       valuesCombinations,
+      handleCurrentChange,
       saveAccoutingCombination
     }
   }
