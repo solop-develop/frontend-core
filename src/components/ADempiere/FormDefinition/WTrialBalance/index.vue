@@ -297,8 +297,8 @@ export default defineComponent({
      * Ref
      */
     const isVisible = ref(true)
-    const showPeriod = ref(false)
-    const showAccumulated = ref(false)
+    const showPeriod = ref(true)
+    const showAccumulated = ref(true)
     // Values
 
     const porcent = ref(null)
@@ -402,13 +402,13 @@ export default defineComponent({
 
     function visibleColumn() {
       viewList.value = headerList.value
-      if (showPeriod.value === true && showAccumulated.value === true) {
+      if (showPeriod.value === false && showAccumulated.value === false) {
         visibleAll()
         return
-      } else if (showPeriod.value === true) {
+      } else if (showPeriod.value === false) {
         visiblePeriod()
         return
-      } else if (showAccumulated.value === true) {
+      } else if (showAccumulated.value === false) {
         visibleAccumulated()
         return
       }
