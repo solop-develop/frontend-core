@@ -35,7 +35,7 @@ const WTrialBalance = {
   yTDBudget: 'Accumulated Budget (YTD)',
   variance: 'Variance',
   variancePorcent: '% Variance',
-  titleCollapse: 'filter'
+  titleCollapse: 'Filter'
 }
 
 export default WTrialBalance
