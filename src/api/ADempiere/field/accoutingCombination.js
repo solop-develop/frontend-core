@@ -20,64 +20,50 @@
 import { request } from '@/utils/ADempiere/request'
 
 // Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+// import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 export function requestListAccountingCombinations({
-  contextAttributesList,
+  accountId,
+  searchValue,
+  organizationId,
   filters = [],
   pageToken,
   pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
-  filters = filters.map(attribute => {
-    return {
-      column_name: attribute.columnName,
-      operator: attribute.operator,
-      value: attribute.value
-    }
-  })
-
-  let contextAttributes = []
-  if (!isEmptyValue(contextAttributesList)) {
-    contextAttributes = contextAttributesList.map(attribute => {
-      return {
-        key: attribute.columnName,
-        value: attribute.value
-      }
-    })
-  }
-
   return request({
-    url: '/general-ledger/accouting-combination/accounting-combinations',
+    url: '/general-ledger/accounts/combinations',
     method: 'get',
     params: {
-      context_attributes: contextAttributes,
-      filters,
+      organization_id: organizationId,
+      search_value: searchValue,
+      account_id: accountId,
       page_token: pageToken,
-      page_size: pageSize
+      page_size: pageSize,
+      filters
     }
   })
     .then(response => {
-      const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
-      return convertEntityList(response)
+      return response
     })
 }
 
 export function requestGetAccountingCombination({
-  id,
-  uuid,
-  value
+  id
+  // uuid,
+  // value
 }) {
   return request({
-    url: '/general-ledger/accouting-combination/accounting-combination',
-    method: 'get',
-    params: {
-      id,
-      uuid,
-      value
-    }
+    // url: '/general-ledger/accouting-combination/accounting-combination',
+    url: `/general-ledger/accounts/combinations/${id}`,
+    method: 'get'
+    // params: {
+    //   id,
+    //   uuid,
+    //   value
+    // }
   })
     .then(response => {
       const { convertEntity } = require('@/utils/ADempiere/apiConverts/persistence.js')
@@ -87,32 +73,32 @@ export function requestGetAccountingCombination({
 
 export function requestSaveAccountingCombination({
   id,
-  uuid,
   attributes,
+  accountId,
+  organizationId,
+  accountingSchemaId,
   contextAttributesList
 }) {
-  let contextAttributes = []
-  if (!isEmptyValue(contextAttributesList)) {
-    contextAttributes = contextAttributesList.map(attribute => {
-      return {
-        key: attribute.columnName,
-        value: attribute.value
-      }
-    })
-  }
+  // let contextAttributes = []
+  // if (!isEmptyValue(contextAttributesList)) {
+  //   contextAttributes = contextAttributesList.map(attribute => {
+  //     return {
+  //       key: attribute.columnName,
+  //       value: attribute.value
+  //     }
+  //   })
+  // }
 
   return request({
-    url: '/general-ledger/accouting-combination/save-accounting-combination',
-    method: 'get',
-    params: {
+    url: '/general-ledger/accounts/combinations',
+    method: 'post',
+    data: {
       id,
-      uuid,
       attributes,
-      context_attributes: contextAttributes
+      organization_id: organizationId,
+      account_id: accountId,
+      accounting_schema_id: accountingSchemaId,
+      context_attributes: contextAttributesList
     }
   })
-    .then(response => {
-      const { convertEntity } = require('@/utils/ADempiere/apiConverts/persistence.js')
-      return convertEntity(response)
-    })
 }

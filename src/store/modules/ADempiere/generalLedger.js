@@ -22,10 +22,12 @@ import { requestListAccoutingElements } from '@/api/ADempiere/generalLedger'
 // Utils and Helpers Methods
 import { showMessage } from '@/utils/ADempiere/notification'
 import { isEmptyValue } from '@/utils/ADempiere'
-import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 const initStateGeneralLedger = {
-  fileList: []
+  fileList: [],
+  attributes: {},
+  filters: {},
+  isLoadeTables: false
 }
 
 export default {
@@ -34,6 +36,33 @@ export default {
   mutations: {
     setFieldsListAccount(state, fieldsListAccount) {
       state.fileList = fieldsListAccount
+    },
+    setFieldsValue(state, {
+      columnName,
+      value
+    }) {
+      if (isEmptyValue(columnName)) return
+      const currentField = state.fileList.find(field => field.column_name === columnName)
+      const index = state.fileList.findIndex(field => field.column_name === columnName)
+      if (isEmptyValue(currentField)) return
+      state.fileList[index].fieldValue = value
+    },
+    setAttributes(state, {
+      columnName,
+      value
+    }) {
+      state.attributes[columnName] = value
+    },
+    setFiltersAccount(state, filters) {
+      state.filters = filters
+    },
+    cleanAccountData(state) {
+      state.fileList = []
+      state.attributes = {}
+      state.filters = {}
+    },
+    setIsLoadeTables(state, isLoadeTables) {
+      state.isLoadeTables = isLoadeTables
     }
   },
 
@@ -41,7 +70,7 @@ export default {
     listAccoutingElementsFromServer({ commit, getters }) {
       return new Promise(resolve => {
         const sessionContext = getters.getAllSessionContext
-        if (!isEmptyValue(sessionContext)) {
+        if (isEmptyValue(sessionContext)) {
           return resolve()
         }
         const isShowAcct = sessionContext['#ShowAcct']
@@ -61,7 +90,7 @@ export default {
             if (!isEmptyValue(accouting_elements)) {
               fieldsListAccount = accouting_elements.map(list => {
                 return {
-                  ...camelizeObjectKeys(list),
+                  ...list,
                   value: ''
                 }
               })
@@ -82,17 +111,50 @@ export default {
               message,
               showClose: true
             })
+            return resolve()
           })
           .finally(() => {
             resolve()
           })
       })
+    },
+    changeAttributes({ commit, state }, {
+      columnName,
+      value
+    }) {
+      // if (columnName === 'AD_Org_ID') return
+      if (isEmptyValue(value)) {
+        delete state.attributes[columnName]
+        return
+      }
+      commit('setAttributes', {
+        columnName,
+        value
+      })
+    },
+    changeIsloaded({ commit }, value) {
+      commit('setIsLoadeTables', value)
     }
   },
 
   getters: {
     getFieldsListAccount: (state) => {
       return state.fileList
+    },
+    getFieldsValue: (state) => (columnName) => {
+      if (isEmptyValue(columnName)) return ''
+      const currentField = state.fileList.find(field => field.column_name === columnName)
+      if (isEmptyValue(currentField)) return ''
+      return currentField.fieldValue
+    },
+    getAttributeValueAccount: (state) => {
+      return state.attributes
+    },
+    getFiltersAccount: (state) => {
+      return state.filters
+    },
+    getIsLoadeTables: (state) => {
+      return state.isLoadeTables
     }
   }
 }

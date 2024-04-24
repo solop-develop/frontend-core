@@ -278,9 +278,9 @@ const persistence = {
         if (!isEmptyValue(attributesList)) {
           if (!isEmptyValue(recordUuid) && recordUuid !== 'create-new') {
             // Update existing entity
-            if (key_columns.length > 1) {
-              reccordId = 0
-            }
+            // if (key_columns.length > 1) {
+            //   reccordId = 0
+            // }
             return updateEntity({
               tabUuid: containerUuid,
               reccordId,

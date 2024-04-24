@@ -120,6 +120,9 @@ const AccountCombinations = {
       id,
       uuid,
       attributes,
+      accountId,
+      organizationId,
+      accountingSchemaId,
       contextColumnNames = [],
       contextAttributesList
     }) {
@@ -132,12 +135,23 @@ const AccountCombinations = {
             isBooleanToString: true
           })
         }
+        console.log({
+          id,
+          uuid,
+          attributes,
+          accountId,
+          organizationId,
+          accountingSchemaId,
+          contextAttributesList
+        })
 
         return requestSaveAccountingCombination({
           id,
           uuid,
           attributes,
-          contextAttributesList
+          accountId,
+          organizationId,
+          accountingSchemaId
         })
           .then(response => {
             resolve(response)
@@ -180,6 +194,8 @@ const AccountCombinations = {
       containerUuid,
       parentUuid,
       filters,
+      accountId,
+      organizationId,
       contextAttributesList,
       contextColumnNames = [],
       //
@@ -205,14 +221,17 @@ const AccountCombinations = {
 
         return requestListAccountingCombinations({
           contextAttributesList,
+          organizationId,
+          accountId,
           filters,
           pageToken,
           pageNumber
         })
           .then(response => {
-            const recordsList = response.recordsList.map((record, rowIndex) => {
+            const { record_count, records, next_page_token } = response
+            const recordsList = records.map((record, rowIndex) => {
               return {
-                ...record.attributes,
+                ...record.values,
                 // datatables app attributes
                 ...ROW_ATTRIBUTES,
                 rowIndex
@@ -230,10 +249,10 @@ const AccountCombinations = {
               containerUuid,
               currentRow,
               recordsList,
-              nextPageToken: response.nextPageToken,
+              nextPageToken: next_page_token,
               pageNumber,
               isLoaded: true,
-              recordCount: response.recordCount
+              recordCount: record_count
             })
 
             resolve(recordsList)
