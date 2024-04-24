@@ -24,8 +24,8 @@
     style="max-height: 540px;overflow: auto;"
   >
     <el-row
-      v-for="item in dataResult"
-      :key="item.id"
+      v-for="(item, key) in dataResult"
+      :key="key"
       class="row-panel"
     >
       <div
