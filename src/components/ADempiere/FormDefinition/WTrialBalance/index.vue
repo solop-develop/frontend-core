@@ -288,18 +288,6 @@ export default defineComponent({
     }
   },
   methods: {
-    classChecker({ row, column }) {
-      const numberRegex = /[^\d.,-]+/g
-      const numberColumns = ['variance_amount', 'period_variance_amount', 'variance_percentage']
-      if (numberColumns.includes(column.property)) {
-        const val = parseFloat(row[column.property].replace(numberRegex, ''))
-        if (val > 0) {
-          return 'greenClass'
-        } else if (val < 0) {
-          return 'redClass'
-        }
-      }
-    },
     filterMethod(query) {
       this.showListAccoutingKeys(true, query)
     }
