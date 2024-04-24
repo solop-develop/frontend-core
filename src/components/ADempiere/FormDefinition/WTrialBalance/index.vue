@@ -211,6 +211,7 @@
     </el-card>
     <div style="padding-top: 10px;">
       <el-table
+        :cell-class-name="classChecker"
         :data="listSummary"
         border
         :show-summary="true"
@@ -269,7 +270,20 @@ export default defineComponent({
       default: () => {}
     }
   },
-
+  methods: {
+    classChecker({ row, column }) {
+      const numberRegex = /[^\d.,-]+/g
+      const numberColumns = ['variance_amount', 'period_variance_amount', 'variance_percentage']
+      if (numberColumns.includes(column.property)) {
+        const val = parseFloat(row[column.property].replace(numberRegex, ''))
+        if (val > 0) {
+          return 'greenClass'
+        } else if (val < 0) {
+          return 'redClass'
+        }
+      }
+    }
+  },
   setup(props) {
     /**
      * Ref
@@ -352,6 +366,7 @@ export default defineComponent({
         align: 'center'
       }
     ])
+
     const isLoading = ref(false)
     const selectedExport = ref([])
 
@@ -644,5 +659,12 @@ export default defineComponent({
       margin: 0px;
     }
   }
+}
+
+.greenClass {
+  color: green;
+}
+.redClass {
+  color: red;
 }
 </style>
