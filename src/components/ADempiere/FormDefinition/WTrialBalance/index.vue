@@ -18,7 +18,24 @@
 
 <template>
   <div>
+    <el-button
+      v-if="isVisible"
+      type="text"
+      style="float: right; z-index: 5; margin-top:10px"
+      :circle="true"
+      icon="el-icon-arrow-up"
+      @click="changeView(false)"
+    />
+    <el-button
+      v-if="!isVisible"
+      type="text"
+      style="float:right; z-index: 5; margin-top:10px"
+      :circle="true"
+      icon="el-icon-arrow-down"
+      @click="changeView(true)"
+    />
     <el-card
+      v-show="isVisible"
       shadow="header"
       :body-style="{ padding: '10px 20px', margin: '0px' }"
     >
@@ -164,7 +181,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item
-              style="margin-left: 20%;text-align:center"
+              style="text-align:center"
             >
               <template slot="label">
                 {{ $t('form.WTrialBalance.showPeriod') }}
@@ -172,7 +189,7 @@
               <el-switch v-model="showPeriod" @change="visibleColumn" />
             </el-form-item>
             <el-form-item
-              style="margin-left: 27%; text-align:center"
+              style="text-align:center; margin-left: 5%;"
             >
               <template slot="label">
                 {{ $t('form.WTrialBalance.showAccumulated') }}
@@ -180,14 +197,8 @@
               <el-switch v-model="showAccumulated" @change="visibleColumn" />
             </el-form-item>
             <el-form-item
-              class="front-item-w-trial-balance"
-              style="text-align: center; margin-top: -5%;"
+              style="text-align: center; margin-top:7%; margin-right:10%; float:right"
             >
-              <template slot="label">
-                <b style="color: transparent;">
-                  {{ $t('form.WTrialBalance.cubeReport') }}
-                </b>
-              </template>
               <el-button
                 plain
                 type="success"
@@ -212,6 +223,7 @@
     <div style="padding-top: 10px;">
       <el-table
         height="500"
+        :cell-class-name="classChecker"
         :data="listSummary"
         border
         :show-summary="true"
@@ -270,12 +282,25 @@ export default defineComponent({
       default: () => {}
     }
   },
-
+  methods: {
+    classChecker({ row, column }) {
+      const numberRegex = /[^\d.,-]+/g
+      const numberColumns = ['variance_amount', 'period_variance_amount', 'variance_percentage']
+      if (numberColumns.includes(column.property)) {
+        const val = parseFloat(row[column.property].replace(numberRegex, ''))
+        if (val > 0) {
+          return 'greenClass'
+        } else if (val < 0) {
+          return 'redClass'
+        }
+      }
+    }
+  },
   setup(props) {
     /**
      * Ref
      */
-
+    const isVisible = ref(true)
     const showPeriod = ref(false)
     const showAccumulated = ref(false)
     // Values
@@ -353,6 +378,7 @@ export default defineComponent({
         align: 'center'
       }
     ])
+
     const isLoading = ref(false)
     const selectedExport = ref([])
 
@@ -398,12 +424,12 @@ export default defineComponent({
     }
 
     const visibleAccumulated = () => {
-      const columnsAccumulated = ['ytd_actual_amount', 'ytd_budget_amount', 'variance_amount']
+      const columnsAccumulated = ['ytd_actual_amount', 'ytd_budget_amount', 'variance_amount', 'variance_percentage']
       viewList.value = headerList.value.filter((header) => !columnsAccumulated.includes(header.columnName))
     }
 
     const visibleAll = () => {
-      const columAll = ['period_actual_amount', 'period_budget_amount', 'period_variance_amount', 'ytd_actual_amount', 'ytd_budget_amount', 'variance_amount']
+      const columAll = ['period_actual_amount', 'period_budget_amount', 'period_variance_amount', 'ytd_actual_amount', 'ytd_budget_amount', 'variance_amount', 'variance_percentage']
       viewList.value = headerList.value.filter((header) => !columAll.includes(header.columnName))
     }
     /**
@@ -577,9 +603,13 @@ export default defineComponent({
 
       return sums
     }
+    function changeView(data) {
+      isVisible.value = data
+    }
     visibleColumn()
     return {
       //  Values
+      isVisible,
       showPeriod,
       showAccumulated,
       porcent,
@@ -619,7 +649,8 @@ export default defineComponent({
       visiblePeriod,
       visibleAccumulated,
       visibleColumn,
-      visibleAll
+      visibleAll,
+      changeView
     }
   }
 })
@@ -645,5 +676,12 @@ export default defineComponent({
       margin: 0px;
     }
   }
+}
+
+.greenClass {
+  color: green;
+}
+.redClass {
+  color: red;
 }
 </style>
