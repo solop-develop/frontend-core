@@ -41,7 +41,7 @@
             :gutter="20"
           >
             <el-col
-              v-for="field in metadataList"
+              v-for="field in fieldsListElements"
               :key="field.sequece"
               :span="6"
             >
@@ -263,7 +263,7 @@ export default defineComponent({
       return ACCOUTING_COMBINATIONS_LIST_FORM
     })
 
-    const metadataList = computed(() => {
+    const fieldsListElements = computed(() => {
       return store.getters.getFieldsListAccount
     })
 
@@ -275,7 +275,7 @@ export default defineComponent({
     })
 
     const organizationId = computed(() => {
-      if (isEmptyValue(metadataList.value)) return setValuesCombinations.value['AD_Org_ID']
+      if (isEmptyValue(fieldsListElements.value)) return setValuesCombinations.value['AD_Org_ID']
       return store.getters.getFieldsValue(ORGANIZATION)
     })
 
@@ -316,7 +316,7 @@ export default defineComponent({
     })
 
     const labelTable = computed(() => {
-      return metadataList.value.map(field => {
+      return fieldsListElements.value.map(field => {
         const { column_name, name } = field
         if (column_name === 'AD_Client_ID') {
           return {
@@ -418,7 +418,7 @@ export default defineComponent({
       //   format: 'array'
       // }).filter(item => {
       //   return item.columnName !== 'Combination' &&
-      //     metadataList.value.find(itemDefinition => itemDefinition.columnName === item.columnName)
+      //     fieldsListElements.value.find(itemDefinition => itemDefinition.columnName === item.columnName)
       // }).map(item => {
       //   return {
       //     value: item.value,
@@ -440,7 +440,7 @@ export default defineComponent({
       })
         .then(response => {
           const { values } = response
-          metadataList.value[0].value = values.Combination
+          fieldsListElements.value[0].value = values.Combination
         })
       searchRecordsList()
     }
@@ -473,7 +473,7 @@ export default defineComponent({
       //   return !isEmptyValue(item.value) &&
       //     item.columnName !== 'Combination' &&
       //     item.columnName !== 'Alias' &&
-      //     props.metadataList.find(itemDefinition => itemDefinition.columnName === item.columnName)
+      //     props.fieldsListElements.find(itemDefinition => itemDefinition.columnName === item.columnName)
       // })
       clearTimeout(timeOutRecords.value)
       timeOutRecords.value = setTimeout(() => {
@@ -503,7 +503,7 @@ export default defineComponent({
     }
 
     function clearValues() {
-      metadataList.value.map(element => {
+      fieldsListElements.value.map(element => {
         return {
           ...element,
           value: ''
@@ -563,7 +563,7 @@ export default defineComponent({
           tableNameAccounting.value = table_name
           setValuesCombinations.value = values
           // combinations.value = values.Combination
-          metadataList.value.map(list => {
+          fieldsListElements.value.map(list => {
             return {
               ...list,
               value: values[list.columnName]
@@ -618,7 +618,7 @@ export default defineComponent({
       labelTable,
       currentRow,
       recordsList,
-      metadataList,
+      fieldsListElements,
       recordData,
       acctSchemaId,
       organizationId,
