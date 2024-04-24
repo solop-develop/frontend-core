@@ -18,188 +18,143 @@
 
 <template>
   <div>
-    <el-collapse v-model="activeName" style="margin-top:20px">
-      <el-collapse-item name="top">
-        <template slot="title">
-          <h3 style="margin-left:50%"> {{ $t('form.WTrialBalance.titleCollapse') }} </h3>
-        </template>
-        <el-card
-          v-show="isVisible"
-          shadow="header"
-          :body-style="{ padding: '10px 20px', margin: '0px' }"
+    <el-button
+      v-if="isVisible"
+      type="text"
+      style="float: right; z-index: 5; margin-top:10px"
+      :circle="true"
+      icon="el-icon-arrow-up"
+      @click="changeView(false)"
+    />
+    <el-button
+      v-if="!isVisible"
+      type="text"
+      style="float:right; z-index: 5; margin-top:10px"
+      :circle="true"
+      icon="el-icon-arrow-down"
+      @click="changeView(true)"
+    />
+    <el-card
+      v-show="isVisible"
+      shadow="header"
+      :body-style="{ padding: '10px 20px', margin: '0px' }"
+    >
+      <el-row :gutter="20">
+        <el-form
+          inline
+          class="field-from-trial-balance"
+          label-position="top"
         >
-          <el-row :gutter="20">
-            <el-form
-              inline
-              class="field-from-trial-balance"
-              label-position="top"
-            >
-              <el-col :span="8">
-                <el-form-item class="front-item-w-trial-balance">
-                  <template slot="label">
-                    {{ $t('form.WTrialBalance.organization') }}
-                    <b style="color: #f34b4b"> * </b>
-                  </template>
-                  <el-select
-                    v-model="organization"
-                    :placeholder="$t('form.WTrialBalance.organization')"
-                    style="width: 100%;"
-                    clearable
-                    filterable
-                    @visible-change="showListOrganization"
-                    @change="activateAuto"
-                  >
-                    <el-option
-                      v-for="item in organizationOptions"
-                      :key="item.id"
-                      :label="item.values.DisplayColumn"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item class="front-item-w-trial-balance">
-                  <template slot="label">
-                    {{ $t('form.WTrialBalance.budget') }}
-                  </template>
-                  <el-select
-                    v-model="budget"
-                    :placeholder="$t('form.WTrialBalance.budget')"
-                    style="width: 100%;"
-                    filterable
-                    clearable
-                    @visible-change="showListBudgets"
-                  >
-                    <el-option
-                      v-for="item in budgetOptions"
-                      :key="item.id"
-                      :label="item.values.DisplayColumn"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item class="front-item-w-trial-balance">
-                  <template slot="label">
-                    {{ $t('form.WTrialBalance.untilPeriod') }}
-                    <b style="color: #f34b4b"> * </b>
-                  </template>
-                  <el-select
-                    v-model="untilPeriod"
-                    :placeholder="$t('form.WTrialBalance.untilPeriod')"
-                    style="width: 100%;"
-                    filterable
-                    clearable
-                    @visible-change="showListPeriods"
-                    @change="activateAuto"
-                  >
-                    <el-option
-                      v-for="item in untilPeriodOptions"
-                      :key="item.id"
-                      :label="item.values.DisplayColumn"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item class="front-item-w-trial-balance">
-                  <template slot="label">
-                    {{ $t('form.WTrialBalance.accountingAccount') }}
-                  </template>
-                  <el-card
-                    shadow="never"
-                    :body-style="{ padding: '0px', margin: '0px', display: 'flex' }"
-                  >
-                    <el-select
-                      v-model="accountingAccount1"
-                      :filter-method="filterMethod"
-                      style="width: 100%;"
-                      filterable
-                      clearable
-                      @visible-change="showListAccoutingKeys"
-                    >
-                      <el-option
-                        v-for="item in accountingAccountOptions"
-                        :key="item.id"
-                        :label="item.values.DisplayColumn"
-                        :value="item.id"
-                      />
-                    </el-select>
-                    <b style="color: #c0c4cc;padding: 0px 5px;font-weight: bold;">
-                      {{ '-' }}
-                    </b>
-                    <el-select
-                      v-model="accountingAccount2"
-                      :filter-method="filterMethod"
-                      style="width: 100%;"
-                      filterable
-                      clearable
-                      @visible-change="showListAccoutingKeys"
-                    >
-                      <el-option
-                        v-for="item in accountingAccountOptions"
-                        :key="item.id"
-                        :label="item.values.DisplayColumn"
-                        :value="item.id"
-                      />
-                    </el-select>
-                  </el-card>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item class="front-item-w-trial-balance">
-                  <template slot="label">
-                    {{ $t('form.WTrialBalance.cubeReport') }}
-                    <b style="color: #f34b4b"> * </b>
-                  </template>
-                  <el-select
-                    v-model="cubeReport"
-                    :placeholder="$t('form.WTrialBalance.cubeReport')"
-                    style="width: 100%;"
-                    filterable
-                    clearable
-                    @visible-change="showListReportCubes"
-                    @change="activateAuto"
-                  >
-                    <el-option
-                      v-for="item in cubeReportOptions"
-                      :key="item.id"
-                      :label="item.values.DisplayColumn"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item
-                  style="text-align:center"
+          <el-col :span="8">
+            <el-form-item class="front-item-w-trial-balance">
+              <template slot="label">
+                {{ $t('form.WTrialBalance.organization') }}
+                <b style="color: #f34b4b"> * </b>
+              </template>
+              <el-select
+                v-model="organization"
+                :placeholder="$t('form.WTrialBalance.organization')"
+                style="width: 100%;"
+                clearable
+                filterable
+                @visible-change="showListOrganization"
+                @change="activateAuto"
+              >
+                <el-option
+                  v-for="item in organizationOptions"
+                  :key="item.id"
+                  :label="item.values.DisplayColumn"
+                  :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item class="front-item-w-trial-balance">
+              <template slot="label">
+                {{ $t('form.WTrialBalance.budget') }}
+              </template>
+              <el-select
+                v-model="budget"
+                :placeholder="$t('form.WTrialBalance.budget')"
+                style="width: 100%;"
+                filterable
+                clearable
+                @visible-change="showListBudgets"
+              >
+                <el-option
+                  v-for="item in budgetOptions"
+                  :key="item.id"
+                  :label="item.values.DisplayColumn"
+                  :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item class="front-item-w-trial-balance">
+              <template slot="label">
+                {{ $t('form.WTrialBalance.untilPeriod') }}
+                <b style="color: #f34b4b"> * </b>
+              </template>
+              <el-select
+                v-model="untilPeriod"
+                :placeholder="$t('form.WTrialBalance.untilPeriod')"
+                style="width: 100%;"
+                filterable
+                clearable
+                @visible-change="showListPeriods"
+                @change="activateAuto"
+              >
+                <el-option
+                  v-for="item in untilPeriodOptions"
+                  :key="item.id"
+                  :label="item.values.DisplayColumn"
+                  :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item class="front-item-w-trial-balance">
+              <template slot="label">
+                {{ $t('form.WTrialBalance.accountingAccount') }}
+              </template>
+              <el-card
+                shadow="never"
+                :body-style="{ padding: '0px', margin: '0px', display: 'flex' }"
+              >
+                <el-select
+                  v-model="accountingAccount1"
+                  :filter-method="filterMethod"
+                  style="width: 100%;"
+                  filterable
+                  clearable
+                  @visible-change="showListAccoutingKeys"
                 >
-                  <template slot="label">
-                    {{ $t('form.WTrialBalance.showPeriod') }}
-                  </template>
-                  <el-switch v-model="showPeriod" @change="visibleColumn" />
-                </el-form-item>
-                <el-form-item
-                  style="text-align:center; margin-left: 5%;"
+                  <el-option
+                    v-for="item in accountingAccountOptions"
+                    :key="item.id"
+                    :label="item.values.DisplayColumn"
+                    :value="item.id"
+                  />
+                </el-select>
+                <b style="color: #c0c4cc;padding: 0px 5px;font-weight: bold;">
+                  {{ '-' }}
+                </b>
+                <el-select
+                  v-model="accountingAccount2"
+                  :filter-method="filterMethod"
+                  style="width: 100%;"
+                  filterable
+                  clearable
+                  @visible-change="showListAccoutingKeys"
                 >
-                  <template slot="label">
-                    {{ $t('form.WTrialBalance.showAccumulated') }}
-                  </template>
-                  <el-switch v-model="showAccumulated" @change="visibleColumn" />
-                </el-form-item>
-                <el-form-item
-                  style="text-align: center; margin-top:7%; margin-right:10%; float:right"
-                >
-                  <el-button
-                    plain
-                    type="success"
-                    :icon="isLoading ? 'el-icon-loading' : 'el-icon-refresh'"
-                    class="button-base-icon"
-                    :disabled="validateBeforeSearch"
-                    @click="refresh"
+                  <el-option
+                    v-for="item in accountingAccountOptions"
+                    :key="item.id"
+                    :label="item.values.DisplayColumn"
+                    :value="item.id"
                   />
                 </el-select>
               </el-card>
@@ -280,24 +235,10 @@
         </el-form>
       </el-row>
     </el-card>
-                  <el-button
-                    plain
-                    type="primary"
-                    icon="el-icon-download"
-                    class="button-base-icon"
-                    :disabled="isEmptyValue(selectedExport)"
-                    @click="exportRecords()"
-                  />
-                </el-form-item>
-              </el-col>
-            </el-form>
-          </el-row>
-        </el-card>
-      </el-collapse-item>
-    </el-collapse>
     <div style="padding-top: 10px;">
       <el-table
         height="500"
+        :cell-class-name="classChecker"
         :data="listSummary"
         border
         :show-summary="true"
