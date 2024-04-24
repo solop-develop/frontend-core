@@ -41,6 +41,7 @@
                 clearable
                 filterable
                 @visible-change="showListOrganization"
+                @change="handleOrganizationChange"
               >
                 <el-option
                   v-for="item in organizationOptions"
@@ -86,6 +87,7 @@
                 filterable
                 clearable
                 @visible-change="showListPeriods"
+                @change="handleOrganizationChange"
               >
                 <el-option
                   v-for="item in untilPeriodOptions"
@@ -152,6 +154,7 @@
                 filterable
                 clearable
                 @visible-change="showListReportCubes"
+                @change="handleOrganizationChange"
               >
                 <el-option
                   v-for="item in cubeReportOptions"
@@ -269,7 +272,6 @@ export default defineComponent({
       default: () => {}
     }
   },
-
   setup(props) {
     /**
      * Ref
@@ -576,6 +578,12 @@ export default defineComponent({
 
       return sums
     }
+    const handleOrganizationChange = () => {
+      if (!isEmptyValue(organization.value) && !isEmptyValue(untilPeriod.value) && !isEmptyValue(cubeReport.value)) {
+        refresh()
+      }
+      return
+    }
     visibleColumn()
     return {
       //  Values
@@ -603,6 +611,7 @@ export default defineComponent({
       // Computed
       calculate,
       validateBeforeSearch,
+      handleOrganizationChange,
       // Methods
       changeSelections,
       showListOrganization,
