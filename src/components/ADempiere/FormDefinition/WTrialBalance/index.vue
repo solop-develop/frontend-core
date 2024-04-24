@@ -284,7 +284,6 @@ export default defineComponent({
       default: () => {}
     }
   },
-  
   setup(props) {
     /**
      * Ref
@@ -592,9 +591,6 @@ export default defineComponent({
 
       return sums
     }
-    
-    
-
     const activateAuto = () => {
       if (!isEmptyValue(organization.value) && !isEmptyValue(untilPeriod.value) && !isEmptyValue(cubeReport.value)) {
         refresh()
@@ -603,7 +599,6 @@ export default defineComponent({
     }
     function changeView(data) {
       isVisible.value = data
-
     }
     visibleColumn()
     return {
