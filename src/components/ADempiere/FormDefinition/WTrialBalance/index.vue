@@ -222,6 +222,7 @@
     </el-card>
     <div style="padding-top: 10px;">
       <el-table
+        height="500"
         :cell-class-name="classChecker"
         :data="listSummary"
         border
@@ -580,7 +581,7 @@ export default defineComponent({
       } = param
       const sums = []
       columns.forEach((column, index) => {
-        sums[index] = 'N/A'
+        sums[index] = ''
         // if (index === 0) {
         //   sums[index] = 'Total'
         //   return
