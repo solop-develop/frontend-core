@@ -126,6 +126,7 @@
               >
                 <el-select
                   v-model="accountingAccount1"
+                  :filter-method="filterMethod"
                   style="width: 100%;"
                   filterable
                   clearable
@@ -143,6 +144,7 @@
                 </b>
                 <el-select
                   v-model="accountingAccount2"
+                  :filter-method="filterMethod"
                   style="width: 100%;"
                   filterable
                   clearable
@@ -283,6 +285,11 @@ export default defineComponent({
     metadata: {
       type: Object,
       default: () => {}
+    }
+  },
+  methods: {
+    filterMethod(query) {
+      this.showListAccoutingKeys(true, query)
     }
   },
   setup(props) {
