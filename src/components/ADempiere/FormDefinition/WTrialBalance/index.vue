@@ -18,7 +18,24 @@
 
 <template>
   <div>
+    <el-button
+      v-if="isVisible"
+      type="text"
+      style="float: right; z-index: 5; margin-top:10px"
+      :circle="true"
+      icon="el-icon-arrow-up"
+      @click="changeView(false)"
+    />
+    <el-button
+      v-if="!isVisible"
+      type="text"
+      style="float:right; z-index: 5; margin-top:10px"
+      :circle="true"
+      icon="el-icon-arrow-down"
+      @click="changeView(true)"
+    />
     <el-card
+      v-show="isVisible"
       shadow="header"
       :body-style="{ padding: '10px 20px', margin: '0px' }"
     >
@@ -268,7 +285,7 @@ export default defineComponent({
     /**
      * Ref
      */
-
+    const isVisible = ref(true)
     const showPeriod = ref(false)
     const showAccumulated = ref(false)
     // Values
@@ -570,9 +587,13 @@ export default defineComponent({
 
       return sums
     }
+    function changeView(data) {
+      isVisible.value = data
+    }
     visibleColumn()
     return {
       //  Values
+      isVisible,
       showPeriod,
       showAccumulated,
       porcent,
@@ -612,7 +633,8 @@ export default defineComponent({
       visiblePeriod,
       visibleAccumulated,
       visibleColumn,
-      visibleAll
+      visibleAll,
+      changeView
     }
   }
 })
