@@ -11,6 +11,10 @@
 <script>
 // components and mixins
 import ModalIdle from '@/components/ADempiere/ModalIdle'
+// Utils and Helper Methods
+import { getResourcePath } from '@/utils/ADempiere/resource'
+// Constants
+import { config } from '@/utils/ADempiere/config'
 
 export default {
   name: 'App',
@@ -21,9 +25,38 @@ export default {
     },
     isSession() {
       return this.$store.getters['user/getIsSession']
+    },
+    getRole() {
+      return this.$store.getters['user/getRole']
+    },
+    getResourceName() {
+      return this.$store.getters['user/getRole'].client.logo
     }
   },
-  mounted() {
+  watch: {
+    getResourceName(value) {
+      this.loadImage()
+    }
+  },
+  async mounted() {
+    const { client } = this.getRole
+    if (client.logo) {
+      const fileName = await getResourcePath({
+        clientId: client.id,
+        containerId: '109',
+        containerType: 'window',
+        columnName: 'Logo_ID',
+        recordId: client.id,
+        tableName: 'AD_ClientInfo',
+        resourceName: client.logo
+      })
+      const link = document.createElement('link')
+      link.rel = 'shortcut icon'
+      link.type = 'image/x-icon'
+      link.href = config.adempiere.resource.url + fileName
+      document.head.appendChild(link)
+    }
+
     this.$nextTick(() => {
       window.addEventListener('resize', this.getWindowWidth)
       window.addEventListener('resize', this.getWindowHeight)
@@ -37,6 +70,25 @@ export default {
     window.removeEventListener('resize', this.getWindowHeight)
   },
   methods: {
+    async loadImage() {
+      const { client } = this.getRole
+      if (client.logo) {
+        const fileName = await getResourcePath({
+          clientId: client.id,
+          containerId: '109',
+          containerType: 'window',
+          columnName: 'Logo_ID',
+          recordId: client.id,
+          tableName: 'AD_ClientInfo',
+          resourceName: client.logo
+        })
+        const link = document.createElement('link')
+        link.rel = 'shortcut icon'
+        link.type = 'image/x-icon'
+        link.href = config.adempiere.resource.url + fileName
+        document.head.appendChild(link)
+      }
+    },
     getWindowWidth(event) {
       this.$store.dispatch('setWidth', document.documentElement.clientWidth)
     },

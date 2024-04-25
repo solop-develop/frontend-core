@@ -168,6 +168,7 @@ export default {
       })
         .finally(() => {
           this.refreshRouter()
+          location.reload(true)
         })
     },
     changeOrganization(organizationId) {

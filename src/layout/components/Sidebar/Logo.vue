@@ -25,7 +25,8 @@
             {{ getRole.name }} | {{ getRole.client.name }} | {{ storedOrganization.name }}
           </div>
           <img v-if="clientLogo" :src="clientLogo" class="sidebar-logo" style="height: 50px;width: 50px;">
-          <svg-icon v-else icon-class="AD" class="standard-logo" />
+          <img v-else src="https://avatars1.githubusercontent.com/u/1263359?s=200&v=4" class="sidebar-logo" style="height: 50px;width: 50px;">
+          <!-- <svg-icon v-else icon-class="AD" class="standard-logo" /> -->
           <b style="margin-left: 5px;">{{ title }}</b>
         </el-tooltip>
       </router-link>
@@ -33,7 +34,8 @@
       <span v-else>
         <p key="expand" style="display: flex;text-align: center;width: 100%;padding: 0px 15px;margin-top: 0px;">
           <img v-if="clientLogo" :src="clientLogo" class="sidebar-logo" style="height: 50px;width: 50px;" @click="dashboard()">
-          <svg-icon v-else icon-class="AD" class="standard-logo" />
+          <img v-else src="https://avatars1.githubusercontent.com/u/1263359?s=200&v=4" class="sidebar-logo" style="height: 50px;width: 50px;" @click="dashboard()">
+          <!-- <svg-icon v-else icon-class="AD" class="standard-logo" /> -->
           <b style="color: white;font-size: 18px;padding-top: 15px;cursor: pointer; margin-left: 5px;" @click="dashboard()">
             {{ systemName }}
           </b>
@@ -49,6 +51,7 @@
 
 <script>
 import { defineComponent, computed, ref } from '@vue/composition-api'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 import router from '@/router'
 import store from '@/store'
@@ -102,6 +105,10 @@ export default defineComponent({
           tableName: 'AD_ClientInfo',
           resourceName: client.logo
         })
+        if (isEmptyValue(fileName)) {
+          clientLogo.value = 'https://avatars1.githubusercontent.com/u/1263359?s=200&v=4'
+          return
+        }
         clientLogo.value = config.adempiere.resource.url + fileName
       }
     }
