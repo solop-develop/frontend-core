@@ -122,6 +122,7 @@ export function generateProcess({
 
   const additionalAttributes = {
     containerUuid: processToGenerate.uuid,
+    parentUuid: containerUuidAssociated,
     panelName: processToGenerate.name,
     isEvaluateValueChanges: true,
     isEditSecuence: false,

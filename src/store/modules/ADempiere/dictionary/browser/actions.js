@@ -21,7 +21,7 @@ import router from '@/router'
 import store from '@/store'
 
 // API Request Methods
-import { requestBrowserMetadata } from '@/api/ADempiere/dictionary/smart-browser.js'
+import { requestBrowserMetadata } from '@/api/ADempiere/dictionary/index.ts'
 
 // Constants
 import {
@@ -210,7 +210,8 @@ export default {
                   return Promise.resolve(processDefinition)
                 }
                 return dispatch('getProcessDefinitionFromServer', {
-                  id: process.id.toString()
+                  id: process.id.toString(),
+                  containerUuidAssociated: browserDefinition.uuid
                 })
               },
               ...process,
