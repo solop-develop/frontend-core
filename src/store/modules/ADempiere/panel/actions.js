@@ -478,8 +478,8 @@ const actions = {
         // new implementation
         fieldId = fieldDependentDefinition.id
         columnName = fieldDependentDefinition.column_name
-        containerUuid = fieldDependentDefinition.container_uuid
-        containerName = fieldDependentDefinition.container_name
+        containerUuid = fieldDependentDefinition.parent_uuid
+        containerName = fieldDependentDefinition.parent_name
       }
 
       // Get all fields on different container

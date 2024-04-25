@@ -20,39 +20,6 @@
 import { request } from '@/utils/ADempiere/request'
 
 /**
- * Request dictionary Window metadata
- * @param {number} id, identifier
- */
-export function requestWindowMetadata({
-  id
-}) {
-  return request({
-    url: `/dictionary/windows/${id}`,
-    method: 'get'
-  })
-    .then(windowResponse => {
-      const { convertWindow } = require('@/utils/ADempiere/apiConverts/dictionary.js')
-      return convertWindow(windowResponse)
-    })
-}
-
-/**
- * Request Get Tabs
- * @param {number} id
- */
-export function requestTabsMetadata({
-  id
-}) {
-  return request({
-    url: `/dictionary/tabs/${id}`,
-    method: 'get'
-  })
-    .then(responde => {
-      return responde
-    })
-}
-
-/**
  * GET References
  * @param {String} id
  */
@@ -93,30 +60,6 @@ export function requestProcessMetadata({
 }) {
   return request({
     url: `/dictionary/processes/${id}`,
-    method: 'get',
-    params: {
-      language,
-      client_id: clientId,
-      role_id: roleId,
-      user_id: userId
-    }
-  })
-}
-
-/**
- * Request dictionary Smart Browser metadata
- * @param {string} uuid universally unique identifier
- * @param {number} id, identifier
- */
-export function requestBrowserMetadata({
-  id,
-  language,
-  clientId,
-  roleId,
-  userId
-}) {
-  return request({
-    url: `/dictionary/browsers/${id}`,
     method: 'get',
     params: {
       language,
