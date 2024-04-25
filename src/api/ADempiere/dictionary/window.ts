@@ -42,3 +42,17 @@ export function requestWindowMetadata({
     }
   })
 }
+
+/**
+ * Request Get Tabs
+ * @param {number} id
+ */
+export function requestTabMetadata({
+  id,
+  windowId
+}) {
+  return request({
+    url: `/dictionary/windows/${windowId}/tabs/${id}`,
+    method: 'get'
+  })
+}

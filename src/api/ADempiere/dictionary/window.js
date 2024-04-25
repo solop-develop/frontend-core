@@ -19,30 +19,6 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
-/**
- * Request dictionary Window metadata
- * @param {string} uuid universally unique identifier
- * @param {number} id, identifier
- */
-export function requestWindowMetadata({
-  uuid,
-  id
-}) {
-  return request({
-    url: '/dictionary/window',
-    method: 'get',
-    params: {
-      uuid,
-      id
-    }
-  })
-    .then(windowResponse => {
-      const { convertWindow } = require('@/utils/ADempiere/apiConverts/dictionary.js')
-
-      return convertWindow(windowResponse)
-    })
-}
-
 export function requestReference({
   uuid,
   columnName
