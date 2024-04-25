@@ -92,7 +92,7 @@ export function requestListChatsEntries({
   pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
-    url: `/logs/chat-entities/${id}`,
+    url: `/logs/chat-entries/${id}`,
     method: 'get',
     params: {
       // Page Data
@@ -106,7 +106,7 @@ export function requestListChatsEntries({
       return {
         nextPageToken: chatEntriesListResponse.next_page_token,
         recordCount: chatEntriesListResponse.record_count,
-        chatEntriesList: chatEntriesListResponse.records.map(chatEntry => {
+        chatEntriesList: chatEntriesListResponse.chat_entries.map(chatEntry => {
           return convertChatEntry(chatEntry)
         })
       }

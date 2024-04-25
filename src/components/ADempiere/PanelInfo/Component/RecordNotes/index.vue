@@ -256,13 +256,13 @@ export default defineComponent({
 }
 .list-notes-previwer {
   .el-card__body {
-    padding-top: 0px !important;
+    padding-top: 5px !important;
     padding-right: 5px;
     padding-bottom: 0px !important;
     padding-left: 5px;
   }
   .el-card__header {
-    padding: 18px 10px;
+    padding: 8px 10px;
     border-bottom: 1px solid #e6ebf5;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
