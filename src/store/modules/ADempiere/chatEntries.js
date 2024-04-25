@@ -84,16 +84,16 @@ export default {
         pageToken
       })
         .then(responseList => {
-          const { entityChatsList: chatList } = responseList
+          const { entity_chats: chatList } = responseList
           if (isEmptyValue(chatList)) {
             commit('addListChatEntries', [])
           }
           chatList.forEach(chat => {
             const uuid = chat.chatUuid
-
+            const idChat = chat.chat_id
             requestListChatsEntries({
               tableName,
-              id: recordId,
+              id: idChat,
               uuid,
               pageSize
             })
