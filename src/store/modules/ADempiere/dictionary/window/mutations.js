@@ -40,6 +40,7 @@ export default {
     if (!isEmptyValue(attributeNameControl)) {
       value = state.storedWindows[uuid][attributeNameControl]
     }
+    if (isEmptyValue(state.storedWindows[uuid])) return
 
     Vue.set(state.storedWindows[uuid], attributeName, value)
     // state.storedWindows[uuid][attributeName] = value

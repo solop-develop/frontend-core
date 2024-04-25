@@ -60,7 +60,8 @@ export default {
    * @param {string} uuid of dictionary
    */
   getProcessDefinitionFromServer({ dispatch, rootGetters }, {
-    id
+    id,
+    containerUuidAssociated
   }) {
     const language = rootGetters['getCurrentLanguage']
     const clientId = getCurrentClient()
@@ -77,7 +78,8 @@ export default {
       })
         .then(processResponse => {
           const { processDefinition } = generateProcess({
-            processToGenerate: processResponse
+            processToGenerate: processResponse,
+            containerUuidAssociated
           })
 
           dispatch('addProcessToList', processDefinition)
