@@ -28,6 +28,14 @@ export default {
     },
     getRole() {
       return this.$store.getters['user/getRole']
+    },
+    getResourceName() {
+      return this.$store.getters['user/getRole'].client.logo
+    }
+  },
+  watch: {
+    getResourceName(value) {
+      this.loadImage()
     }
   },
   async mounted() {
@@ -62,6 +70,25 @@ export default {
     window.removeEventListener('resize', this.getWindowHeight)
   },
   methods: {
+    async loadImage() {
+      const { client } = this.getRole
+      if (client.logo) {
+        const fileName = await getResourcePath({
+          clientId: client.id,
+          containerId: '109',
+          containerType: 'window',
+          columnName: 'Logo_ID',
+          recordId: client.id,
+          tableName: 'AD_ClientInfo',
+          resourceName: client.logo
+        })
+        const link = document.createElement('link')
+        link.rel = 'shortcut icon'
+        link.type = 'image/x-icon'
+        link.href = config.adempiere.resource.url + fileName
+        document.head.appendChild(link)
+      }
+    },
     getWindowWidth(event) {
       this.$store.dispatch('setWidth', document.documentElement.clientWidth)
     },
