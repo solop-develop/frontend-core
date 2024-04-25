@@ -338,6 +338,7 @@ export default defineComponent({
 
     function loadDashboardsList() {
       store.dispatch('getDashboardListFromServer')
+      store.dispatch('listPendingDocuments')
     }
 
     function themeChange(val) {
