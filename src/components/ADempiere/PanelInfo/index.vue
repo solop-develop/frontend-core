@@ -307,11 +307,10 @@ export default defineComponent({
 
     const isWorkflowLog = computed(() => {
       if (currentTab.value) {
-        return currentTab.value.isDocument
+        return currentTab.value.table.is_document
       }
       return false
     })
-
     // Open Container the Info
     const showPanelInfo = computed(() => {
       return store.getters.getShowLogs
