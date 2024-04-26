@@ -30,6 +30,7 @@ export default {
       return this.$store.getters['user/getRole']
     },
     getResourceName() {
+      if (this.isEmptyValue(this.getRole) && this.isEmptyValue(this.getRole.client)) return ''
       return this.$store.getters['user/getRole'].client.logo
     }
   },
@@ -40,7 +41,7 @@ export default {
   },
   async mounted() {
     const { client } = this.getRole
-    if (client.logo) {
+    if (!this.isEmptyValue(client) && !this.isEmptyValue(client.logo)) {
       const fileName = await getResourcePath({
         clientId: client.id,
         containerId: '109',
