@@ -42,6 +42,7 @@ import { config } from '@/utils/ADempiere/config'
 // Utils and Helper Methods
 // import { getImagePath } from '@/utils/ADempiere/resource.js'
 import { requestListResources } from '@/api/ADempiere/file-management/resource-reference.ts'
+import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({
   name: 'ProfilePreview',
@@ -117,6 +118,11 @@ export default defineComponent({
           tableName: 'AD_User'
         })
           .then(response => {
+            const { resources } = response
+            if (isEmptyValue(resources)) {
+              avatarResize.value = require('@/image/ADempiere/avatar/no-avatar.png')
+              return
+            }
             const image = response.resources[0].name
             avatarResize.value = config.adempiere.resource.url + image
             return config.adempiere.resource.url + image
