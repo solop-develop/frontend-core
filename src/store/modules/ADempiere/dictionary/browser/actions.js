@@ -21,7 +21,7 @@ import router from '@/router'
 import store from '@/store'
 
 // API Request Methods
-import { requestBrowserMetadata } from '@/api/ADempiere/dictionary/index.ts'
+import { requestBrowserMetadata } from '@/api/ADempiere/dictionary/smart-browser.js'
 
 // Constants
 import {
