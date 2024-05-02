@@ -23,6 +23,8 @@
     <el-form
       label-position="top"
       label-width="10px"
+      size="mini"
+      class="form-base"
       @submit.native.prevent="notSubmitForm"
     >
       <el-form-item :label="$t('form.productInfo.codeProduct')">
@@ -32,6 +34,31 @@
           clearable
           @input="searchProduct"
         />
+        <el-row :gutter="10">
+          <el-col :span="6">
+            <product-category-field
+              :uuid-form="uuidForm"
+            />
+          </el-col>
+
+          <el-col :span="6">
+            <product-group-field
+              :uuid-form="uuidForm"
+            />
+          </el-col>
+
+          <el-col :span="6">
+            <product-class-field
+              :uuid-form="uuidForm"
+            />
+          </el-col>
+
+          <el-col :span="6">
+            <product-classification-field
+              :uuid-form="uuidForm"
+            />
+          </el-col>
+        </el-row>
       </el-form-item>
     </el-form>
     <el-table
@@ -49,47 +76,22 @@
         :page-size="50"
       />
       <el-table-column
-        :label="$t('form.productInfo.code')"
+        v-for="(fieldAttributes, key) in headerList"
+        :key="key"
+        :label="fieldAttributes.label"
         header-align="center"
+        :min-width="widthColumn(fieldAttributes)"
+        :align="fieldAttributes.align"
       >
         <template slot-scope="scope">
           <el-button
+            v-if="fieldAttributes.columName === 'value'"
             type="text"
             icon="el-icon-document-copy"
             @click="copyCode(scope.row)"
           />
-          {{ scope.row.value }}
+          {{ displayValue({ row: scope.row, columName: fieldAttributes.columName}) }}
         </template>
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        :label="$t('form.productInfo.name')"
-        header-align="center"
-        min-width="120"
-      />
-      <el-table-column
-        prop="standard_price"
-        :label="$t('field.product.standardPrice')"
-        header-align="center"
-      >
-        <span slot-scope="scope" class="cell-align-right">
-          {{ formatQuantity({ value: scope.row.standard_price }) }}
-        </span>
-      </el-table-column>
-      <el-table-column
-        prop="uom"
-        :label="$t('field.product.uom')"
-        header-align="center"
-      />
-      <el-table-column
-        prop="quantity_on_hand"
-        :label="$t('form.productInfo.quantityOnHand')"
-        header-align="center"
-        align="right"
-      >
-        <span slot-scope="scope" class="cell-align-right">
-          {{ formatQuantity({ value: Number(scope.row.quantity_on_hand) }) }}
-        </span>
       </el-table-column>
     </el-table>
 
@@ -125,24 +127,6 @@
         <br>
         <p>
           <b style="float: left">
-            {{ $t('field.product.productCategory') }}
-          </b>
-          <span style="float: right">
-            {{ currentLine.product_category }}
-          </span>
-        </p>
-        <br>
-        <p>
-          <b style="float: left">
-            {{ $t('field.product.productGroup') }}
-          </b>
-          <span style="float: right">
-            {{ currentLine.product_group }}
-          </span>
-        </p>
-        <br>
-        <p>
-          <b style="float: left">
             {{ $t('field.product.upc') }}
           </b>
           <span style="float: right">
@@ -170,6 +154,51 @@
         <br>
         <p>
           <b style="float: left">
+            {{ $t('field.product.stocked') }}
+          </b>
+          <span style="float: right">
+            {{ convertBooleanToTranslationLang(currentLine.is_stocked) }}
+          </span>
+        </p>
+        <br>
+        <p>
+          <b style="float: left">
+            {{ $t('field.product.productCategory') }}
+          </b>
+          <span style="float: right">
+            {{ currentLine.product_category }}
+          </span>
+        </p>
+        <br>
+        <p>
+          <b style="float: left">
+            {{ $t('field.product.productGroup') }}
+          </b>
+          <span style="float: right">
+            {{ currentLine.product_group }}
+          </span>
+        </p>
+        <br>
+        <p>
+          <b style="float: left">
+            {{ $t('field.product.productClass') }}
+          </b>
+          <span style="float: right">
+            {{ currentLine.product_class }}
+          </span>
+        </p>
+        <br>
+        <p>
+          <b style="float: left">
+            {{ $t('field.product.vendor') }}
+          </b>
+          <span style="float: right">
+            {{ currentLine.vendor }}
+          </span>
+        </p>
+        <br>
+        <p>
+          <b style="float: left">
             {{ $t('field.product.standardPrice') }}
           </b>
           <span style="float: right">
@@ -187,6 +216,7 @@
         >
           <el-tab-pane :label="$t('field.product.warehouseStocks')" name="warehouseStocks">
             <el-table
+              v-loading="isLoadingTable"
               :data="listWarehouseStocks"
               border
               height="300"
@@ -221,6 +251,7 @@
           </el-tab-pane>
           <el-tab-pane :label="$t('field.product.substitute')" name="substitute">
             <el-table
+              v-loading="isLoadingTable"
               :data="listSubstituteProducts"
               border
               height="300"
@@ -265,6 +296,7 @@
           </el-tab-pane>
           <el-tab-pane :label="$t('field.product.relateds')" name="relateds">
             <el-table
+              v-loading="isLoadingTable"
               :data="listRelatedsProducts"
               border
               height="300"
@@ -309,6 +341,7 @@
           </el-tab-pane>
           <el-tab-pane :label="$t('field.product.availableToPromises')" name="availableToPromises">
             <el-table
+              v-loading="isLoadingTable"
               :data="listAvailableToPromise"
               border
               height="300"
@@ -363,6 +396,7 @@
           </el-tab-pane>
           <el-tab-pane :label="$t('field.product.vendorPurchases')" name="vendorPurchases">
             <el-table
+              v-loading="isLoadingTable"
               :data="listVendorPurchase"
               border
               height="300"
@@ -396,20 +430,26 @@
 </template>
 
 <script>
-import { defineComponent, computed, ref } from '@vue/composition-api'
+import { defineComponent, computed, watch, ref } from '@vue/composition-api'
 
 import store from '@/store'
+// Const
+import headerList from '@/components/ADempiere/Form/ProductSearch/headerList.ts'
 
 // Components and Mixins
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
 import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
+import ProductCategoryField from '@/components/ADempiere/FieldDefinition/FieldSearch/ProductInfo/PanelForm/QueryCriteria/productCategoryField.vue'
+import ProductClassField from '@/components/ADempiere/FieldDefinition/FieldSearch/ProductInfo/PanelForm/QueryCriteria/productClassField.vue'
+import ProductClassificationField from '@/components/ADempiere/FieldDefinition/FieldSearch/ProductInfo/PanelForm/QueryCriteria/productClassificationField.vue'
+import ProductGroupField from '@/components/ADempiere/FieldDefinition/FieldSearch/ProductInfo/PanelForm/QueryCriteria/productGroupField.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'
 import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 import { formatPrice, formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
-
+import { convertBooleanToTranslationLang } from '@/utils/ADempiere/formatValue/booleanFormat'
 // API Request Methods
 import {
   requestListProducts,
@@ -426,7 +466,11 @@ export default defineComponent({
   components: {
     IndexColumn,
     LoadingView,
-    CustomPagination
+    CustomPagination,
+    ProductCategoryField,
+    ProductClassField,
+    ProductClassificationField,
+    ProductGroupField
   },
 
   props: {
@@ -437,6 +481,10 @@ export default defineComponent({
   },
 
   setup() {
+    /**
+     * Const
+     */
+    const uuidForm = 'product_search_form'
     /**
      * Ref
      */
@@ -451,6 +499,7 @@ export default defineComponent({
     const activeName = ref('warehouseStocks')
     const recordCount = ref(0)
     const pageToken = ref('')
+    const isLoadingTable = ref(false)
     const listWarehouseStocks = ref([])
     const listSubstituteProducts = ref([])
     const listRelatedsProducts = ref([])
@@ -481,6 +530,38 @@ export default defineComponent({
       })
     })
 
+    const getProductCategoryField = computed(() => {
+      return store.getters.getProductSearchFieldQueryFilterByAttribute({
+        containerUuid: uuidForm,
+        attributeKey: 'product_category_id'
+      })
+    })
+
+    const getProductClassField = computed(() => {
+      return store.getters.getProductSearchFieldQueryFilterByAttribute({
+        containerUuid: uuidForm,
+        attributeKey: 'product_class_id'
+      })
+    })
+
+    const getProductClassificationField = computed(() => {
+      return store.getters.getProductSearchFieldQueryFilterByAttribute({
+        containerUuid: uuidForm,
+        attributeKey: 'product_classification_id'
+      })
+    })
+
+    const getProductGroupField = computed(() => {
+      return store.getters.getProductSearchFieldQueryFilterByAttribute({
+        containerUuid: uuidForm,
+        attributeKey: 'product_group_id'
+      })
+    })
+
+    const queryCriteria = computed(() => {
+      return store.getters.getProductSearchFieldQueryFilters({ containerUuid: uuidForm })
+    })
+
     // Methods
     function copyCode(row) {
       copyToClipboard({
@@ -496,6 +577,7 @@ export default defineComponent({
         requestListProducts({
           tableName: 'M_Product',
           columnName: 'M_Product_ID',
+          ...queryCriteria.value,
           // Query
           searchValue: search,
           pageSize: pageSizeNumber.value
@@ -518,72 +600,73 @@ export default defineComponent({
     }
 
     function warehouseStocks() {
-      isLoadingWarehouse.value = true
+      // isLoadingWarehouse.value = true
       requestListWarehouseStocks({
         productId: currentLine.value.id
       })
         .then(response => {
           const { records } = response
-          listWarehouseStocks.value = records
+          isLoadingTable.value = records
         })
         .finally(() => {
-          isLoadingWarehouse.value = false
+          isLoadingTable.value = false
         })
     }
 
     function substitute() {
-      isLoadingSubstitute.value = true
+      // isLoadingSubstitute.value = true
       requestListSubstituteProducts({
         productId: currentLine.value.id
       })
         .then(response => {
           const { records } = response
-          listSubstituteProducts.value = records
+          isLoadingTable.value = records
         })
         .finally(() => {
-          isLoadingSubstitute.value = false
+          isLoadingTable.value = false
         })
     }
 
     function relateds() {
-      isLoadingRelateds.value = true
+      // isLoadingRelateds.value = true
       requestListRelatedProducts({
         productId: currentLine.value.id
       })
         .then(response => {
           const { records } = response
-          listRelatedsProducts.value = records
+          isLoadingTable.value = records
         })
         .finally(() => {
-          isLoadingRelateds.value = false
+          isLoadingTable.value = false
         })
     }
 
     function availableToPromises() {
-      isLoadingVendor.value = true
+      // isLoadingVendor.value = true
       requestListAvailableToPromises({
         productId: currentLine.value.id
       })
         .then(response => {
           const { records } = response
           listAvailableToPromise.value = records
+          isLoadingTable.value = false
         })
         .finally(() => {
-          isLoadingVendor.value = false
+          isLoadingTable.value = false
         })
     }
 
     function vendorPurchases() {
-      isLoadingvailable.value = true
+      // isLoadingvailable.value = true
       requestListVendorPurchases({
         productId: currentLine.value.id
       })
         .then(response => {
           const { records } = response
-          listVendorPurchase.value = records
+          isLoadingTable.value = records
         })
         .finally(() => {
-          isLoadingvailable.value = false
+          isLoadingTable.value = false
         })
     }
 
@@ -617,6 +700,7 @@ export default defineComponent({
     }
 
     function selectTabs(tab) {
+      isLoadingTable.value = true
       const { name } = tab
       switch (name) {
         case 'warehouseStocks':
@@ -644,6 +728,10 @@ export default defineComponent({
           tableName: 'M_Product',
           columnName: 'M_Product_ID',
           // Query
+          product_group_id: getProductGroupField.value,
+          product_class_id: getProductClassField.value,
+          product_category_id: getProductCategoryField.value,
+          product_classification_id: getProductClassificationField.value,
           searchValue: searchValue.value,
           pageSize: pageSizeNumber.value,
           pageToken: store.getters.getProductPageToken + '-' + pageNumber
@@ -667,11 +755,67 @@ export default defineComponent({
       return (basePrice * taxRate) / 100
     }
 
+    /**
+     * Tables
+     */
+    function widthColumn(fieldAttributes) {
+      const { columName } = fieldAttributes
+      if (['vendor', 'name'].includes(columName)) return '120'
+      return '50'
+    }
+
+    function displayValue({ row, columName }) {
+      const value = row[columName]
+      if (typeof value === 'boolean') return convertBooleanToTranslationLang(value)
+      if (['standard_price', 'quantityOnHand'].includes(columName)) return formatQuantity({ value: Number(value) })
+      return value
+    }
+
+    function setQuery() {
+      store.commit('setProductSearchFieldData', {
+        containerUuid: uuidForm
+      })
+    }
+
+    setQuery()
+
+    /**
+     * Watch - watch works directly on a ref
+     * @param newValue - New Assessed Property value
+     * @param oldValue - Old Assessed Property value
+     */
+
+    watch(getProductCategoryField, (newValue, oldValue) => {
+      if (newValue !== oldValue) {
+        searchProduct()
+      }
+    })
+
+    watch(getProductClassField, (newValue, oldValue) => {
+      if (newValue !== oldValue) {
+        searchProduct()
+      }
+    })
+
+    watch(getProductClassificationField, (newValue, oldValue) => {
+      if (newValue !== oldValue) {
+        searchProduct()
+      }
+    })
+
+    watch(getProductGroupField, (newValue, oldValue) => {
+      if (newValue !== oldValue) {
+        searchProduct()
+      }
+    })
+
     return {
+      uuidForm,
       // Ref
       isDetail,
       selection,
       isLoading,
+      isLoadingTable,
       activeName,
       searchValue,
       currentLine,
@@ -693,17 +837,28 @@ export default defineComponent({
       recordCount,
       pageToken,
       isShowDialogo,
+      getProductCategoryField,
+      getProductClassField,
+      getProductClassificationField,
+      getProductGroupField,
+      queryCriteria,
+      // Import Constants
+      headerList,
       // Methods
+      convertBooleanToTranslationLang,
       handleChangePage,
       handleSizeChange,
       warehouseStocks,
       formatQuantity,
       searchProduct,
       getTaxAmount,
+      displayValue,
+      widthColumn,
       formatPrice,
       selectTabs,
       addProduct,
       copyCode,
+      setQuery,
       close
     }
   }
