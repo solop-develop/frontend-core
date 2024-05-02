@@ -569,14 +569,19 @@ export default defineComponent({
               value: values[list.columnName]
             }
           })
+          isLoadingPanel.value = false
           // setTimeout(() => {
           // isLoadingPanel.value = false
           // }, 500)
         })
+        .catch(() => {
+          isLoadingPanel.value = false
+        })
         .finally(() => {
-          setTimeout(() => {
-            isLoadingPanel.value = false
-          }, 500)
+          isLoadingPanel.value = false
+          // setTimeout(() => {
+          //   isLoadingPanel.value = false
+          // }, 500)
         })
     }
 

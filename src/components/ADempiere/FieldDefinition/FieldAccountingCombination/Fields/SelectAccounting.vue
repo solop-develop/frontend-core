@@ -34,6 +34,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       :placeholder="titleField"
       :filter-method="filterSearch"
       style="margin: 0px;width: 100%;"
+      :loading="isLoading"
       @change="changeSelect"
       @visible-change="showList"
     >
@@ -140,6 +141,7 @@ export default defineComponent({
             })
           }).toString()
         }
+        isLoading.value = true
         listAccoutingElementValues({
           accoutingSchemaId: accoutingSchemaId.value,
           elementType: props.metadata.element_type,
@@ -155,9 +157,13 @@ export default defineComponent({
                 displayColumn: list.values.DisplayColumn
               }
             })
+            isLoading.value = false
             // if (!isEmptyValue(optionsList.value) && optionsList.value.length <= 1) {
             //   displayValue.value = optionsList.value[0].id
             // }
+          })
+          .catch(() => {
+            isLoading.value = false
           })
       }, 500)
       return
