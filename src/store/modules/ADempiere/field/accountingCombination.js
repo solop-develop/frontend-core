@@ -167,7 +167,7 @@ const AccountCombinations = {
     },
 
     getAccountingCombination({ dispatch }, {
-      id,
+      id = -1,
       uuid,
       value // as combination
     }) {
