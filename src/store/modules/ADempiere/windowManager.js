@@ -311,6 +311,7 @@ const windowManager = {
         // add filters with link column name and parent column name
         if (
           !isEmptyValue(link_column_name) &&
+          !isEmptyValue(context_column_names) &&
           !context_column_names.includes(link_column_name) &&
           !filters.some(filter => filter.columnName === link_column_name)
         ) {
