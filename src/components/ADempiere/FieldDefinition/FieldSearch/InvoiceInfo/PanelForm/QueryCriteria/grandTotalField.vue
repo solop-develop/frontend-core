@@ -17,7 +17,7 @@
 -->
 <template>
   <el-form-item
-    label="Gran Total"
+    :label="$t('field.invoice.grandTotal')"
     style="align-items: center; margin-left: 20%;"
   >
     <div style="display: flex;">

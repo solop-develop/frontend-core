@@ -17,7 +17,7 @@
 -->
 <template>
   <el-form-item
-    label="Fecha de facturación"
+    :label="$t('field.invoice.invoiceDate')"
     style="align-items: center; margin-left: 20%;"
   >
     <div class="date-picker-container">

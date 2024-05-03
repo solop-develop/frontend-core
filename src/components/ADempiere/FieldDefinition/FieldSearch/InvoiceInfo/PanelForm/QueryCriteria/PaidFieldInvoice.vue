@@ -17,7 +17,7 @@
 -->
 <template>
   <el-form-item
-    label="Pagado"
+    :label="$t('field.invoice.paid')"
     style="align-items: center;"
   >
     <el-select

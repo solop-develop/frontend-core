@@ -93,7 +93,6 @@ export function requestListInvoicesInfo({
   grand_total_from,
   grand_total_to
 }) {
-  console.log()
   return request({
     url: '/field/invoices',
     method: 'get',

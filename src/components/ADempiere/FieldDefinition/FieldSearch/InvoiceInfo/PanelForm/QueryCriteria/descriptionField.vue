@@ -17,7 +17,7 @@
 -->
 <template>
   <el-form-item
-    label="Descricion"
+    :label="$t('field.invoice.description')"
   >
     <el-input
       v-model="descriptionFieldValue"

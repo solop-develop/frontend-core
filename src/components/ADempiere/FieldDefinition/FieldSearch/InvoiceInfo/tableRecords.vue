@@ -136,7 +136,7 @@ export default defineComponent({
       {
         label: lang.t('field.invoice.invoiceDate'),
         columnName: 'date_invoiced',
-        width: '140',
+        width: '145',
         align: 'right'
       },
       {

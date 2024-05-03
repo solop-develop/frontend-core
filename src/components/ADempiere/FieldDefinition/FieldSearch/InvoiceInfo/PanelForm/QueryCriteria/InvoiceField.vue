@@ -16,7 +16,7 @@
   along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 <template>
-  <el-form-item label="Orden de venta">
+  <el-form-item :label="$t('field.invoice.saleOrder')">
     <el-select
       v-model="saleOrderField"
       clearable
@@ -63,7 +63,7 @@ export default defineComponent({
       searchQuery
     ) {
       requestListOrders({
-        searchValue: searchQuery
+        search_value: searchQuery
       })
         .then(response => {
           const { records } = response

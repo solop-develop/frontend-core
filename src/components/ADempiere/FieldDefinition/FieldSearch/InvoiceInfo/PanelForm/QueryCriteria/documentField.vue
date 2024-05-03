@@ -17,7 +17,7 @@
 -->
 <template>
   <el-form-item
-    label="Documento"
+    :label="$t('field.invoice.document')"
   >
     <el-input
       v-model="documentField"

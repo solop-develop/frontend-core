@@ -17,7 +17,7 @@
 -->
 <template>
   <el-form-item
-    label="Transaccion de venta"
+    :label="$t('field.invoice.saleTransaction')"
     style="align-items: center;"
   >
     <el-select

@@ -32,7 +32,11 @@
     </el-col>
     <el-col :span="10">
       <samp style="float: right; padding-top: 10px">
-        <el-button type="info" class="button-base-icon" plain>
+        <el-button
+          type="info"
+          class="button-base-icon"
+          plain
+        >
           <svg-icon icon-class="layers-clear" />
         </el-button>
         <el-button
@@ -52,6 +56,7 @@
           type="primary"
           class="button-base-icon"
           icon="el-icon-check"
+          @click="changeRecord()"
         />
       </samp>
     </el-col>
@@ -85,6 +90,9 @@ export default defineComponent({
   ],
 
   props: {
+    uuidForm: {
+      required: true
+    },
     containerManager: {
       type: Object,
       default: () => ({
@@ -134,7 +142,8 @@ export default defineComponent({
     const timeOutRecords = ref(null)
 
     const {
-      closeList
+      closeList,
+      setValues
     } = useInvoice({
       uuidForm: props.uuidForm,
       parentUuid: props.metadata.parentUuid,
@@ -185,6 +194,16 @@ export default defineComponent({
       })
     }
 
+    function changeRecord(row) {
+      if (!isEmptyValue(row)) {
+        setValues(row)
+        store.commit('setGeneralInfoShow', {
+          containerUuid: props.uuidForm,
+          show: false
+        })
+      }
+    }
+
     return {
       isLoadingRecords,
       //
@@ -196,7 +215,8 @@ export default defineComponent({
       recordCount,
       pageNumber,
       pageSize,
-      selectedRecords
+      selectedRecords,
+      changeRecord
     }
   }
 })

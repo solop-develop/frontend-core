@@ -16,7 +16,7 @@
   along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 <template>
-  <el-form-item label="Socio del negocio">
+  <el-form-item :label="$t('field.invoice.businessParnet')">
     <el-select
       v-model="businessPartnerField"
       clearable
@@ -67,7 +67,7 @@ export default defineComponent({
       searchQuery
     ) {
       requestListBusinessPartners({
-        searchValue: searchQuery
+        search_value: searchQuery
       })
         .then(response => {
           const { records } = response
