@@ -1359,7 +1359,7 @@ export function generateWindow(responseWindow) {
     tabsList, tabsListParent, tabsListChild,
     firstTab, firstTabUuid
   } = generateTabs({
-    tabs: responseWindow.tabs,
+    tabs: sortTabs(responseWindow.tabs),
     parentUuid: responseWindow.uuid
   })
 
@@ -2261,4 +2261,19 @@ export const containerManager = {
       fieldAttributes
     })
   }
+}
+
+/**
+ * Sort Tabs by tab_level and sequence
+ * @param {array} tabsList
+ * returns {array}
+ */
+export function sortTabs(tabsList) {
+  return tabsList.sort((tabItemA, tabItemB) => {
+    if (tabItemA.tab_level === tabItemB.tab_level) {
+      return tabItemA.sequence - tabItemB.sequence
+    } else {
+      return tabItemA.tab_level - tabItemB.tab_level
+    }
+  })
 }
