@@ -80,31 +80,36 @@ export function requestListBusinessPartners({
 }
 
 export function requestListInvoicesInfo({
-  filters,
-  sort_by,
-  group_columns,
-  select_columns,
   page_size,
   page_token,
-  search_value,
-  context_attributes,
-  is_only_active_records,
-  is_sales_transaction
+  document_no,
+  is_sales_transaction,
+  business_partner_id,
+  is_paid,
+  description,
+  invoice_date_from,
+  invoice_date_to,
+  order_id,
+  grand_total_from,
+  grand_total_to
 }) {
+  console.log()
   return request({
     url: '/field/invoices',
     method: 'get',
     params: {
-      filters,
-      sort_by,
-      group_columns,
-      select_columns,
       page_size,
       page_token,
-      search_value,
-      context_attributes,
-      is_only_active_records,
-      is_sales_transaction
+      document_no,
+      is_sales_transaction,
+      business_partner_id,
+      is_paid,
+      description,
+      invoice_date_from,
+      invoice_date_to,
+      order_id,
+      grand_total_from,
+      grand_total_to
     }
   })
 }

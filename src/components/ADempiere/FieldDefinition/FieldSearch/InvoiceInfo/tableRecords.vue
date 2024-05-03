@@ -44,6 +44,7 @@
 
 <script>
 import store from '@/store'
+import lang from '@/lang'
 
 import { computed, defineComponent, ref } from '@vue/composition-api'
 
@@ -127,73 +128,73 @@ export default defineComponent({
     })
     const headerList = ref([
       {
-        label: 'Socio del negocio',
+        label: lang.t('field.invoice.businessParnet'),
         columnName: 'business_partner',
         width: '150',
         align: 'center'
       },
       {
-        label: 'Fecha de factura',
+        label: lang.t('field.invoice.invoiceDate'),
         columnName: 'date_invoiced',
         width: '140',
         align: 'right'
       },
       {
-        label: 'Documento No.',
+        label: lang.t('field.invoice.documentNo'),
         columnName: 'document_no',
         width: '120',
         align: 'right'
       },
       {
-        label: 'Moneda',
+        label: lang.t('field.invoice.currency'),
         columnName: 'currency',
         width: '70',
         align: 'center'
       },
       {
-        label: 'Gran Total',
+        label: lang.t('field.invoice.grandTotal'),
         columnName: 'grand_total',
         width: '90',
         align: 'right'
       },
       {
-        label: 'Convertido',
+        label: lang.t('field.invoice.converted'),
         columnName: 'converted_amount',
         width: '90',
         align: 'right'
       },
       {
-        label: 'Abierto',
+        label: lang.t('field.invoice.open'),
         columnName: 'open_amount',
         width: '90',
         align: 'right'
       },
       {
-        label: 'Termino de pago',
+        label: lang.t('field.invoice.payment'),
         columnName: 'payment_term',
         width: '120',
         align: 'center'
       },
       {
-        label: 'Pagado',
+        label: lang.t('field.invoice.paid'),
         columnName: 'is_paid',
         width: '70',
         align: 'right'
       },
       {
-        label: 'Transaccion de ventas',
+        label: lang.t('field.invoice.saleTransaction'),
         columnName: 'is_sales_transaction',
         width: '155',
         align: 'right'
       },
       {
-        label: 'Descripcion',
+        label: lang.t('field.invoice.description'),
         columnName: 'description',
         width: '100',
         align: 'center'
       },
       {
-        label: 'Referencia de orden de socio del negocio',
+        label: lang.t('field.invoice.reference'),
         columnName: 'po_reference',
         width: '260',
         align: 'center'

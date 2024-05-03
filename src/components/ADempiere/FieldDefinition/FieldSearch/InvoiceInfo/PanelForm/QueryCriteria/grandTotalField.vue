@@ -17,14 +17,14 @@
 -->
 <template>
   <el-form-item
-    label="Gran total"
-    style="text-align: center; align-items: center; margin-left: 20%;"
+    label="Gran Total"
+    style="align-items: center; margin-left: 20%;"
   >
     <div style="display: flex;">
       <el-input
         v-model="grandTotalFieldFrom"
         clearable
-        @input="currentValue"
+        @input="currentValue()"
       />
       <b style="color: #c0c4cc;padding: 0px 5px;font-weight: bold;">
         {{ '-' }}

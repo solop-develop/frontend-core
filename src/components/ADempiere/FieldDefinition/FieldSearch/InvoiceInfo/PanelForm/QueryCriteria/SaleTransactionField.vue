@@ -18,11 +18,11 @@
 <template>
   <el-form-item
     label="Transaccion de venta"
-    style="text-align: center; align-items: center;"
+    style="align-items: center;"
   >
     <el-select
       v-model="saleTransactionField"
-      @change="currentValue"
+      @change="currentValue()"
     >
       <el-option
         v-for="(option, key) in YES_NO_OPTIONS_LIST"

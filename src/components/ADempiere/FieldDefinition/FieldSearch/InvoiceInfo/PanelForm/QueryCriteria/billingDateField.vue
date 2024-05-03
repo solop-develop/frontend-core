@@ -17,15 +17,15 @@
 -->
 <template>
   <el-form-item
-    label="Fecha de factura"
-    style="text-align: center; align-items: center; margin-left: 20%;"
+    label="Fecha de facturación"
+    style="align-items: center; margin-left: 20%;"
   >
     <div class="date-picker-container">
       <el-date-picker
         v-model="billingDateFieldFrom"
         type="datetime"
         placeholder="Select date and time"
-        @change="currentValue"
+        @change="currentValue()"
       />
       <b style="color: #c0c4cc;padding: 0px 5px;font-weight: bold;">
         {{ '-' }}

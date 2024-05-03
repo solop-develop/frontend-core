@@ -25,7 +25,7 @@
       :filter-method="filterSearchOrder"
       style="margin: 0px; width: 100%"
       @visible-change="showList"
-      @change="currentValue"
+      @change="currentValue()"
     >
       <el-option
         v-for="item in optionsListOrder"

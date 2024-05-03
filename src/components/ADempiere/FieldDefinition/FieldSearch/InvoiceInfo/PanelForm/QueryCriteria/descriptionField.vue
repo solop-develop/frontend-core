@@ -22,7 +22,7 @@
     <el-input
       v-model="descriptionFieldValue"
       clearable
-      @input="currentValue"
+      @input="currentValue()"
     />
   </el-form-item>
 </template>

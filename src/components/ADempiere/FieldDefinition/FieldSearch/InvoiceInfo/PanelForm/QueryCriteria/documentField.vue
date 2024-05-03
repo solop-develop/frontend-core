@@ -22,7 +22,7 @@
     <el-input
       v-model="documentField"
       clearable
-      @input="currentValue"
+      @input="currentValue()"
     />
   </el-form-item>
 </template>

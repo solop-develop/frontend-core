@@ -18,11 +18,11 @@
 <template>
   <el-form-item
     label="Pagado"
-    style="align-items: center; text-align: center;"
+    style="align-items: center;"
   >
     <el-select
       v-model="paidFieldValue"
-      @change="currentValue"
+      @change="currentValue()"
     >
       <el-option
         v-for="(option, key) in YES_NO_OPTIONS_LIST"

@@ -21,6 +21,7 @@ import product from './product.ts'
 import productAttribute from './productAttribute'
 import warehouseLocator from './warehouseLocator'
 import locationsAddress from './locationsAddress'
+import invoice from './invoice'
 
 export default {
   businessPartner,
@@ -40,5 +41,6 @@ export default {
   product,
   productAttribute,
   warehouseLocator,
-  locationsAddress
+  locationsAddress,
+  invoice
 }
