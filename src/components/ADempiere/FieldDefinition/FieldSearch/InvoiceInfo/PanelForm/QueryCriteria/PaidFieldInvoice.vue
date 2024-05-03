@@ -22,6 +22,7 @@
   >
     <el-select
       v-model="paidFieldValue"
+      @change="currentValue"
     >
       <el-option
         v-for="(option, key) in YES_NO_OPTIONS_LIST"

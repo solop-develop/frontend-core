@@ -118,14 +118,14 @@ export default defineComponent({
     }
   },
 
-  methods: {
-    closeList() {
-      store.commit('setGeneralInfoShow', {
-        containerUuid: this.uuidForm,
-        show: false
-      })
-    }
-  },
+  // methods: {
+  //   closeList() {
+  //     store.commit('setGeneralInfoShow', {
+  //       containerUuid: this.uuidForm,
+  //       show: false
+  //     })
+  //   }
+  // },
 
   setup(props) {
     const invoicesData = ref(0)

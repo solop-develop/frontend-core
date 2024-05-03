@@ -243,7 +243,6 @@ export default defineComponent({
       },
       // setter
       set(rowSelected) {
-        console.log(rowSelected)
         store.commit('setAccountCombinationsSelectedRow', {
           containerUuid: props.uuidForm,
           currentRow: rowSelected
@@ -252,7 +251,6 @@ export default defineComponent({
     })
 
     function changeRecord(row) {
-      console.log(row)
       if (!isEmptyValue(row)) {
         setValues(row)
         store.commit('setGeneralInfoShow', {
