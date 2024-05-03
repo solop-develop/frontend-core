@@ -17,20 +17,20 @@
  */
 
 const invoice = {
-  document: 'Documento',
-  businessParnet: 'Socio del negocio',
-  saleTransaction: 'Transacción de venta',
+  document: 'Numero de Documento',
+  businessParnet: 'Socio del Negocio',
+  saleTransaction: 'Transacción de Venta',
   paid: 'Pagado',
   description: 'Descripción',
-  invoiceDate: 'Fecha de facturación',
-  saleOrder: 'Orden de venta',
-  grandTotal: 'Gran total',
+  invoiceDate: 'Fecha de Facturación',
+  saleOrder: 'Orden de Venta',
+  grandTotal: 'Gran Total',
   documentNo: 'Documento No.',
   currency: 'Moneda',
   converted: 'Convertido',
   open: 'Abierto',
-  payment: 'Termino de pago',
-  reference: 'Referencia de orden de socio del negocio'
+  payment: 'Termino de Pago',
+  reference: 'Referencia de Orden de Socio del Negocio'
 }
 
 export default invoice

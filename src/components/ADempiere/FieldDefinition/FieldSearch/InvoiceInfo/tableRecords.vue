@@ -196,7 +196,7 @@ export default defineComponent({
       {
         label: lang.t('field.invoice.reference'),
         columnName: 'po_reference',
-        width: '260',
+        width: '265',
         align: 'center'
       }
     ])

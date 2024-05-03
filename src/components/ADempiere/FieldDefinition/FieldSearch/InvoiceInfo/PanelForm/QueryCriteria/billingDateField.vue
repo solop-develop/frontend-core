@@ -18,7 +18,7 @@
 <template>
   <el-form-item
     :label="$t('field.invoice.invoiceDate')"
-    style="align-items: center; margin-left: 20%;"
+    style="align-items: center;"
   >
     <div class="date-picker-container">
       <el-date-picker

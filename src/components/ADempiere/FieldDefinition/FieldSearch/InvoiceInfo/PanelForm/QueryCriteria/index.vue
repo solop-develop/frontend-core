@@ -19,30 +19,30 @@
 <template>
   <el-form label-position="top" size="mini" class="form-base">
     <el-row :gutter="10">
-      <el-col :span="6">
+      <el-col :span="8">
         <document-field />
       </el-col>
-      <el-col :span="6">
+      <el-col :span="8">
         <business-partner-field />
       </el-col>
-      <el-col :span="6">
+      <el-col :span="8">
         <sale-transaction-field />
-      </el-col>
-      <el-col :span="6">
-        <paid-field />
       </el-col>
     </el-row>
     <el-row :gutter="10">
       <el-col :span="8">
         <description-field />
       </el-col>
-      <el-col :span="12">
-        <billing-date-field />
+      <el-col :span="8">
+        <paid-field />
+      </el-col>
+      <el-col :span="8">
+        <invoice-field />
       </el-col>
     </el-row>
     <el-row :gutter="10">
-      <el-col :span="8">
-        <invoice-field />
+      <el-col :span="12">
+        <billing-date-field />
       </el-col>
       <el-col :span="12">
         <grand-total-field />
