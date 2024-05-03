@@ -37,6 +37,7 @@
         :width="header.width"
         :label="header.label"
         :prop="header.columnName"
+        header-align="center"
       />
     </el-table>
   </div>
@@ -59,7 +60,7 @@ import fieldSearchMixin from '../mixinFieldSearch.js'
 // Utils and Helper Methods
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
-import { convertBooleanToString } from '@/utils/ADempiere/formatValue/booleanFormat.js'
+import { convertBooleanToTranslationLang } from '@/utils/ADempiere/formatValue/booleanFormat.js'
 import { isEmptyValue } from '@/utils/ADempiere'
 import useInvoice from './PanelForm/useInvoice'
 
@@ -216,8 +217,8 @@ export default defineComponent({
           converted_amount: formatQuantity({ value: list.converted_amount }),
           open_amount: formatQuantity({ value: list.open_amount }),
           payment_term: list.payment_term,
-          is_paid: convertBooleanToString(list.is_paid),
-          is_sales_transaction: convertBooleanToString(list.is_sales_transaction),
+          is_paid: convertBooleanToTranslationLang(list.is_paid),
+          is_sales_transaction: convertBooleanToTranslationLang(list.is_sales_transaction),
           description: list.description,
           po_reference: list.po_reference
         }
