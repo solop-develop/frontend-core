@@ -2270,10 +2270,6 @@ export const containerManager = {
  */
 export function sortTabs(tabsList) {
   return tabsList.sort((tabItemA, tabItemB) => {
-    if (tabItemA.tab_level === tabItemB.tab_level) {
       return tabItemA.sequence - tabItemB.sequence
-    } else {
-      return tabItemA.tab_level - tabItemB.tab_level
-    }
   })
 }
