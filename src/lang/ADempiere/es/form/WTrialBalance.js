@@ -19,7 +19,7 @@
 const WTrialBalance = {
   organization: 'Organización',
   budget: 'Presupuesto',
-  untilPeriod: 'Hasta Periodo',
+  untilPeriod: 'Hasta Período',
   accountingAccount: 'Cuenta Contable',
   cubeReport: 'Cubo Informe',
   showPeriod: 'Mostrar Período',
@@ -29,7 +29,7 @@ const WTrialBalance = {
   accounName: 'Nombre de la Cuenta',
   user1: 'Usuario 1',
   periodActual: 'Período Actual',
-  periodBudget: 'Presupuesto del Periodo',
+  periodBudget: 'Presupuesto del Período',
   periodVariance: 'Variación del Período',
   yTDActual: 'Acumulado Actual (YTD)',
   yTDBudget: 'Presupuesto Acumulado (YTD)',
