@@ -22,7 +22,7 @@ const WTrialBalance = {
   untilPeriod: 'Hasta Periodo',
   accountingAccount: 'Cuenta Contable',
   cubeReport: 'Cubo Informe',
-  showPeriod: 'Mostrar Periodo',
+  showPeriod: 'Mostrar Período',
   showAccumulated: 'Mostrar Acumulado',
   // table
   accountNo: 'Número de Cuenta',
