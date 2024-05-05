@@ -90,9 +90,9 @@ export default defineComponent({
   ],
 
   props: {
-    uuidForm: {
-      required: true
-    },
+    // uuidForm: {
+    //   required: true
+    // },
     containerManager: {
       type: Object,
       default: () => ({

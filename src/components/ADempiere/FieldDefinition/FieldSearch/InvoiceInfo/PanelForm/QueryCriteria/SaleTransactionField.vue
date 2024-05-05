@@ -35,16 +35,33 @@
 </template>
 
 <script>
-import { defineComponent, ref } from '@vue/composition-api'
+import { defineComponent, ref, computed } from '@vue/composition-api'
 import store from '@/store'
 
 // Constants
 import { YES_NO_OPTIONS_LIST } from '@/utils/ADempiere/dictionary/field/yesNo'
+// Utils and Helper Methods
+import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
+// import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({
   name: 'saleTransactionField',
+  props: {
+    uuidForm: {
+      required: true,
+      type: String
+    },
+    parentUuid: {
+      type: String,
+      default: undefined
+    },
+    containerUuid: {
+      required: true,
+      type: String
+    }
+  },
 
-  setup() {
+  setup(props) {
     const saleTransactionField = ref('')
 
     const currentValue = () => {
@@ -53,11 +70,36 @@ export default defineComponent({
       })
     }
 
+    const isSalesTransactionContext = computed(() => {
+      return isSalesTransaction({
+        parentUuid: props.parentUuid,
+        containerUuid: props.containerUuid
+      })
+    })
+    function changeValue() {
+      const response = isSalesTransactionContext.value
+      if (response === true) {
+        saleTransactionField.value = 'Y'
+        return
+      } else if (response === false) {
+        saleTransactionField.value = 'N'
+        return
+      } else {
+        saleTransactionField.value = ''
+      }
+      currentValue()
+      return
+    }
+
+    changeValue()
+
     return {
       saleTransactionField,
       YES_NO_OPTIONS_LIST,
+      isSalesTransactionContext,
       //
-      currentValue
+      currentValue,
+      changeValue
     }
   }
 })

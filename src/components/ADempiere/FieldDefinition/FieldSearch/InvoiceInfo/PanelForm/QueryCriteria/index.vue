@@ -20,32 +20,50 @@
   <el-form label-position="top" size="mini" class="form-base">
     <el-row :gutter="10">
       <el-col :span="8">
-        <document-field />
+        <document-field
+          :uuid-form="uuidForm"
+        />
       </el-col>
       <el-col :span="8">
-        <business-partner-field />
+        <business-partner-field
+          :uuid-form="uuidForm"
+        />
       </el-col>
       <el-col :span="8">
-        <sale-transaction-field />
+        <sale-transaction-field
+          :uuid-form="uuidForm"
+          :parent-uuid="metadata.parentUuid"
+          :container-uuid="metadata.containerUuid"
+        />
       </el-col>
     </el-row>
     <el-row :gutter="10">
       <el-col :span="8">
-        <description-field />
+        <description-field
+          :uuid-form="uuidForm"
+        />
       </el-col>
       <el-col :span="8">
-        <paid-field />
+        <paid-field
+          :uuid-form="uuidForm"
+        />
       </el-col>
       <el-col :span="8">
-        <invoice-field />
+        <invoice-field
+          :uuid-form="uuidForm"
+        />
       </el-col>
     </el-row>
     <el-row :gutter="10">
       <el-col :span="12">
-        <billing-date-field />
+        <billing-date-field
+          :uuid-form="uuidForm"
+        />
       </el-col>
       <el-col :span="12">
-        <grand-total-field />
+        <grand-total-field
+          :uuid-form="uuidForm"
+        />
       </el-col>
     </el-row>
   </el-form>
@@ -63,6 +81,12 @@ import DescriptionField from './descriptionField.vue'
 import InvoiceField from './InvoiceField.vue'
 import GrandTotalField from './grandTotalField.vue'
 
+// Constants
+import {
+  INVOICE_LIST_FORM,
+  COLUMN_NAME
+} from '@/utils/ADempiere/dictionary/field/search/invoice.ts'
+
 export default defineComponent({
   name: 'QueryCriteria',
 
@@ -75,6 +99,22 @@ export default defineComponent({
     DescriptionField,
     InvoiceField,
     GrandTotalField
+  },
+
+  props: {
+    uuidForm: {
+      required: true,
+      type: String
+    },
+    metadata: {
+      type: Object,
+      default: () => {
+        return {
+          containerUuid: INVOICE_LIST_FORM,
+          columnName: COLUMN_NAME
+        }
+      }
+    }
   }
 })
 </script>
