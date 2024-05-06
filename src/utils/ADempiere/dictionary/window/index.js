@@ -2270,6 +2270,6 @@ export const containerManager = {
  */
 export function sortTabs(tabsList) {
   return tabsList.sort((tabItemA, tabItemB) => {
-      return tabItemA.sequence - tabItemB.sequence
+    return tabItemA.sequence - tabItemB.sequence
   })
 }
