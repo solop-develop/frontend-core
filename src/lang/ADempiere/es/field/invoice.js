@@ -17,7 +17,7 @@
  */
 
 const invoice = {
-  document: 'Numero de Documento',
+  document: 'Número de Documento',
   businessParnet: 'Socio del Negocio',
   saleTransaction: 'Transacción de Venta',
   paid: 'Pagado',
@@ -29,7 +29,7 @@ const invoice = {
   currency: 'Moneda',
   converted: 'Convertido',
   open: 'Abierto',
-  payment: 'Termino de Pago',
+  payment: 'Término de Pago',
   reference: 'Referencia de Orden de Socio del Negocio'
 }
 

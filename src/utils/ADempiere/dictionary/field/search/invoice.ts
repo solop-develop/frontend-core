@@ -34,11 +34,16 @@ export const INVOICE_LIST_FORM = 'Accouting-Combination-List'
 export function generateDisplayedValue(recordRow) {
   const { document_no, date_invoiced, grand_total } = recordRow
   let displayedValue = document_no
-  if (!isEmptyValue(document_no)) {
-    displayedValue += ' - ' + date_invoiced + ' - ' + grand_total
+  if (!isEmptyValue(date_invoiced)) {
+    if (!isEmptyValue(displayedValue)) {
+      displayedValue += ' - ' + date_invoiced
+    } if (!isEmptyValue(grand_total)) {
+      displayedValue += ' - ' + grand_total
+    } else {
+      displayedValue = date_invoiced
+    }
     return displayedValue
   }
-
   // generate with standard columns
   const { business_partner } = recordRow
 
