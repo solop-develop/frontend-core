@@ -87,14 +87,14 @@ const product = {
   availableToPromisesTables: {
     name: 'Nombre',
     value: 'Código',
-    locator: 'localizacion',
+    locator: 'localización',
     availableQuantity: 'Cantidad Disponible',
     onHandQuantity: 'Cantidad Pedida',
     expectedChangeQuantity: 'Cantidad de Cambio Prevista',
     businessPartner: 'Socio de Negocios',
     reservedQuantity: 'Cantidad Disponible',
     standardPrice: 'Precio Estandar',
-    documentNo: 'Numero de Documento',
+    documentNo: 'Número de Documento',
     attributeSetInstance: 'Attributo'
   },
   vendorPurchasesTables: {
