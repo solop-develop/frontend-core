@@ -257,6 +257,7 @@
           :min-width="header.width"
           :label="header.label"
           :prop="header.columnName"
+          header-align="center"
         />
       </el-table>
     </div>
@@ -349,7 +350,7 @@ export default defineComponent({
         label: lang.t('form.WTrialBalance.accountNo'),
         columnName: 'value',
         width: '100',
-        align: 'center'
+        align: 'right'
       },
       {
         label: lang.t('form.WTrialBalance.accounName'),
@@ -361,43 +362,43 @@ export default defineComponent({
         label: lang.t('form.WTrialBalance.periodActual'),
         columnName: 'period_actual_amount',
         width: 'auto',
-        align: 'center'
+        align: 'right'
       },
       {
         label: lang.t('form.WTrialBalance.periodBudget'),
         columnName: 'period_budget_amount',
         width: '120px',
-        align: 'center'
+        align: 'right'
       },
       {
         label: lang.t('form.WTrialBalance.periodVariance'),
         columnName: 'period_variance_amount',
         width: '110px',
-        align: 'center'
+        align: 'right'
       },
       {
         label: lang.t('form.WTrialBalance.yTDActual'),
         columnName: 'ytd_actual_amount',
         width: '120px',
-        align: 'center'
+        align: 'right'
       },
       {
         label: lang.t('form.WTrialBalance.yTDBudget'),
         columnName: 'ytd_budget_amount',
         width: '140px',
-        align: 'center'
+        align: 'right'
       },
       {
         label: lang.t('form.WTrialBalance.variance'),
         columnName: 'variance_amount',
         width: '90px',
-        align: 'center'
+        align: 'right'
       },
       {
         label: lang.t('form.WTrialBalance.variancePorcent'),
         columnName: 'variance_percentage',
-        width: '105px',
-        align: 'center'
+        width: '60px',
+        align: 'right'
       }
     ])
 
