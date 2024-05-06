@@ -30,16 +30,17 @@ export const INVOICE_LIST_FORM = 'Accouting-Combination-List'
  * @param {Object} recordRow
  * @returns {String}
  */
-export function generateDisplayedValue(recordRow) {
-  const { document_no } = recordRow
 
+export function generateDisplayedValue(recordRow) {
+  const { document_no, date_invoiced, grand_total } = recordRow
   let displayedValue = document_no
   if (!isEmptyValue(document_no)) {
-    return document_no
+    displayedValue += ' - ' + date_invoiced + ' - ' + grand_total
+    return displayedValue
   }
 
   // generate with standard columns
-  const { business_partner, date_invoiced } = recordRow
+  const { business_partner } = recordRow
 
   if (!isEmptyValue(business_partner)) {
     displayedValue = business_partner

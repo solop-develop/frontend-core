@@ -263,7 +263,6 @@ export default {
         tableName: this.tableName
       })
         .map(fieldItem => {
-          console.log(fieldItem)
           return {
             ...fieldItem,
             containerUuid: this.uuidForm
