@@ -23,6 +23,7 @@
     <el-select
       v-model="currentValue"
       filterable
+      clearable
       remote
       :remote-method="remoteSearch"
       @visible-change="loadPriceListVersions"
@@ -76,7 +77,7 @@ export default defineComponent({
       default: undefined
     },
     containerUuid: {
-      required: true,
+      required: false,
       type: String
     }
   },
@@ -131,6 +132,7 @@ export default defineComponent({
 
     const currentValue = computed({
       set(newValue) {
+        if (isEmptyValue(newValue)) newValue = -1
         store.commit('setProductSearchFieldQueryFilterByAttribute', {
           containerUuid: props.uuidForm,
           attributeKey: ATTRIBUTE_KEY,

@@ -22,6 +22,7 @@
   >
     <el-select
       v-model="currentValue"
+      clearable
     >
       <!-- :disabled="isDisabled" -->
       <el-option
@@ -43,7 +44,7 @@ import store from '@/store'
 import { YES_NO_OPTIONS_LIST } from '@/utils/ADempiere/dictionary/field/yesNo'
 
 // Utils and Helper Methods
-// import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'IsStokedField',
@@ -58,7 +59,7 @@ export default defineComponent({
       default: undefined
     },
     containerUuid: {
-      required: true,
+      required: false,
       type: String
     }
   },
@@ -68,6 +69,7 @@ export default defineComponent({
 
     const currentValue = computed({
       set(newValue) {
+        if (isEmptyValue(newValue)) newValue = -1
         store.commit('setProductSearchFieldQueryFilterByAttribute', {
           containerUuid: props.uuidForm,
           attributeKey: ATTRIBUTE_KEY,

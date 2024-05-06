@@ -24,6 +24,7 @@
       v-model="currentValue"
       filterable
       remote
+      clearable
       :remote-method="remoteSearch"
       @visible-change="loadProductClassifications"
     >
@@ -51,6 +52,7 @@ import { requestListProductClassifications } from '@/api/ADempiere/field/search/
 
 // Components and Mixins
 import EmptyOptionSelect from '@/components/ADempiere/FieldDefinition/FieldSelect/emptyOptionSelect.vue'
+import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({
   name: 'ProductClassificationField',
@@ -69,7 +71,7 @@ export default defineComponent({
       default: undefined
     },
     containerUuid: {
-      required: true,
+      required: false,
       type: String
     }
   },
@@ -81,6 +83,7 @@ export default defineComponent({
 
     const currentValue = computed({
       set(newValue) {
+        if (isEmptyValue(newValue)) newValue = -1
         store.commit('setProductSearchFieldQueryFilterByAttribute', {
           containerUuid: props.uuidForm,
           attributeKey: ATTRIBUTE_KEY,

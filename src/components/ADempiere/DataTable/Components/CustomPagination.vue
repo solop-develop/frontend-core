@@ -149,7 +149,7 @@ export default defineComponent({
 
     const currentPageNumber = computed(() => {
       if (!isEmptyValue(props.pageNumber)) {
-        return props.pageNumber
+        return Number(props.pageNumber)
       }
       return 1
     })
