@@ -331,8 +331,9 @@ const windowManager = {
         }
         if (
           !isEmptyValue(parent_column_name) &&
-          !context_column_names.includes(parent_column_name &&
-          !filters.some(filter => filter.columnName === parent_column_name))
+          !isEmptyValue(context_column_names) &&
+          !context_column_names.includes(parent_column_name) &&
+          !filters.some(filter => filter.columnName === parent_column_name)
         ) {
           const value = rootGetters.getValueOfField({
             parentUuid,
