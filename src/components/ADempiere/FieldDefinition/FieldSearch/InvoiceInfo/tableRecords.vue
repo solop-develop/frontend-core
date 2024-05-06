@@ -106,14 +106,14 @@ export default defineComponent({
       })
     }
   },
-  // computed: {
-  //   uuidForm() {
-  //     if (!isEmptyValue(this.metadata.containerUuid)) {
-  //       return this.metadata.columnName + '_' + this.metadata.containerUuid
-  //     }
-  //     return INVOICE_LIST_FORM
-  //   }
-  // },
+  computed: {
+    uuidForm() {
+      if (!isEmptyValue(this.metadata.containerUuid)) {
+        return this.metadata.columnName + '_' + this.metadata.containerUuid
+      }
+      return INVOICE_LIST_FORM
+    }
+  },
   setup(props) {
     const listSummary = []
     const isLoadingRecords = ref(false)
@@ -256,7 +256,7 @@ export default defineComponent({
       if (!isEmptyValue(row)) {
         setValues(row)
         store.commit('setGeneralInfoShow', {
-          containerUuid: props.uuidForm,
+          containerUuid: this.uuidForm,
           show: false
         })
       }

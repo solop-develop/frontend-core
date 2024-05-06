@@ -89,10 +89,16 @@ export default defineComponent({
     fieldSearchMixin
   ],
 
+  computed: {
+    uuidForm() {
+      if (!isEmptyValue(this.metadata.containerUuid)) {
+        return this.metadata.columnName + '_' + this.metadata.containerUuid
+      }
+      return INVOICE_LIST_FORM
+    }
+  },
+
   props: {
-    // uuidForm: {
-    //   required: true
-    // },
     containerManager: {
       type: Object,
       default: () => ({
@@ -126,14 +132,14 @@ export default defineComponent({
     }
   },
 
-  // methods: {
-  //   closeList() {
-  //     store.commit('setGeneralInfoShow', {
-  //       containerUuid: this.uuidForm,
-  //       show: false
-  //     })
-  //   }
-  // },
+  methods: {
+    closeList() {
+      store.commit('setGeneralInfoShow', {
+        containerUuid: this.uuidForm,
+        show: false
+      })
+    }
+  },
 
   setup(props) {
     const invoicesData = ref(0)

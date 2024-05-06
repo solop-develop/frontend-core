@@ -24,127 +24,34 @@
     style="padding-top: 0px"
     @shortkey.native="keyAction"
   >
-    <el-collapse v-model="activeAccordion" accordion class="general-info-list-query-criteria">
+    <el-collapse
+      v-model="activeAccordion"
+      accordion
+      class="general-info-list-query-criteria"
+    >
       <el-collapse-item name="query-criteria">
         <template slot="title">
           {{ title }}
         </template>
 
-        <el-form
-          label-position="top"
-          size="small"
-          @submit.native.prevent="notSubmitForm"
-        >
-          <el-row>
-            <field-definition
-              v-for="(fieldAttributes) in storedFieldsListQuery"
-              :key="fieldAttributes.columnName"
-              :metadata-field="fieldAttributes"
-              :container-uuid="uuidForm"
-              :container-manager="containerManagerList"
-              :size-col="6"
-            />
-          </el-row>
-        </el-form>
+        <query-criteria
+          :uuid-form="uuidForm"
+          :container-manager="containerManager"
+          :metadata="metadata"
+        />
       </el-collapse-item>
     </el-collapse>
 
-    <el-table
-      ref="generalInfoTable"
-      v-loading="isloadingTable"
-      class="general-info-table"
-      :data="recordsList"
-      highlight-current-row
-      border
-      fit
-      :max-height="300"
-      size="mini"
-      @current-change="handleCurrentChange"
-      @row-dblclick="changeRecord"
-    >
-      <p slot="empty" style="width: 100%;">
-        {{ $t('businessPartner.emptyBusinessPartner') }}
-      </p>
-
-      <index-column
-        :page-number="pageNumber"
-        :page-size="pageSize"
-      />
-
-      <el-table-column
-        v-for="(fieldAttributes, key) in storedColumnsListTable"
-        :key="key"
-        :label="fieldAttributes.name"
-        :prop="fieldAttributes.column_ame"
-        min-width="210"
-      >
-        <template slot-scope="scope">
-          <!-- formatted displayed value -->
-          <cell-display-info
-            :parent-uuid="metadata.parentUuid"
-            :container-uuid="uuidForm"
-            :field-attributes="{
-              column_name: fieldAttributes.column_name,
-              display_type: fieldAttributes.display_type
-            }"
-            :container-manager="containerManagerList"
-            :scope="scope"
-            :data-row="scope.row"
-          />
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <el-row :gutter="24" class="general-info-list-footer">
-      <el-col :span="14">
-        <custom-pagination
-          :container-manager="containerManagerList"
-          :total-records="generalInfoData.recordCount"
-          :selection="selection"
-          :page-number="pageNumber"
-          :page-size="recordsList.length"
-          :handle-change-page-number="setPageNumber"
-          :handle-change-page-size="handleChangeSizePage"
-        />
-      </el-col>
-
-      <el-col :span="10">
-        <samp style="float: right; padding-top: 4px;">
-          <el-button
-            type="info"
-            class="button-base-icon"
-            plain
-            @click="clearFormValues(); getListSearchRecords();"
-          >
-            <svg-icon icon-class="layers-clear" />
-          </el-button>
-
-          <el-button
-            :loading="isLoadingRecords"
-            type="success"
-            class="button-base-icon"
-            icon="el-icon-refresh-right"
-            size="small"
-            @click="getListSearchRecords();"
-          />
-
-          <el-button
-            type="danger"
-            class="button-base-icon"
-            icon="el-icon-close"
-            size="small"
-            @click="closeList(); clearValues();"
-          />
-
-          <el-button
-            type="primary"
-            class="button-base-icon"
-            icon="el-icon-check"
-            @click="changeRecord()"
-          />
-        </samp>
-      </el-col>
-    </el-row>
+    <table-records
+      :uuid-form="uuidForm"
+      :container-manager="containerManager"
+      :metadata="metadata"
+    />
+    <panel-footer
+      :uuid-form="uuidForm"
+      :container-manager="containerManager"
+      :metadata="metadata"
+    />
   </el-main>
 </template>
 
@@ -152,17 +59,15 @@
 import store from '@/store'
 
 // Constants
-import { GENERAL_INFO_SEARCH_LIST_FORM } from '@/utils/ADempiere/dictionary/field/search/index.ts'
+import { INVOICE_LIST_FORM } from '@/utils/ADempiere/dictionary/field/search/invoice.ts'
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 import { OPERATOR_LIKE } from '@/utils/ADempiere/dataUtils'
 
 // Components and Mixins
-import fieldSearchMixin from '../mixinFieldSearch'
-import CellDisplayInfo from '@/components/ADempiere/DataTable/Components/CellDisplayInfo.vue'
-import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
-import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
-import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
-
+import MixinFieldSearch from '../../mixinFieldSearch'
+import QueryCriteria from '@/components/ADempiere/FieldDefinition/FieldSearch/InvoiceInfo/PanelForm/QueryCriteria'
+import TableRecords from '@/components/ADempiere/FieldDefinition/FieldSearch/InvoiceInfo/tableRecords.vue'
+import PanelFooter from '@/components/ADempiere/FieldDefinition/FieldSearch/InvoiceInfo/panelFooter.vue'
 // Utils and Helper Methods
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
 import { containerManager as containerManagerForm } from '@/utils/ADempiere/dictionary/form'
@@ -174,22 +79,19 @@ export default {
   name: 'PanelGeneralInfoSearch',
 
   components: {
-    CellDisplayInfo,
-    CustomPagination,
-    FieldDefinition,
-    IndexColumn
+    QueryCriteria,
+    TableRecords,
+    PanelFooter
   },
 
-  mixins: [
-    fieldSearchMixin
-  ],
+  mixins: [MixinFieldSearch],
 
   props: {
     metadata: {
       type: Object,
       default: () => {
         return {
-          containerUuid: GENERAL_INFO_SEARCH_LIST_FORM,
+          containerUuid: INVOICE_LIST_FORM,
           columnName: undefined,
           elementName: undefined
         }
@@ -219,7 +121,10 @@ export default {
   computed: {
     title() {
       let title = this.metadata.name
-      if (!isEmptyValue(this.metadata.panelName) && !isSameValues(this.metadata.panelName, this.metadata.name)) {
+      if (
+        !isEmptyValue(this.metadata.panelName) &&
+        !isSameValues(this.metadata.panelName, this.metadata.name)
+      ) {
         title += ` (${this.metadata.panelName})`
       }
       return title
@@ -228,7 +133,7 @@ export default {
       if (!isEmptyValue(this.metadata.containerUuid)) {
         return this.metadata.columnName + '_' + this.metadata.containerUuid
       }
-      return GENERAL_INFO_SEARCH_LIST_FORM
+      return INVOICE_LIST_FORM
     },
     tableName() {
       return this.metadata.referenceTableName
@@ -251,19 +156,25 @@ export default {
         ...containerManagerForm,
         actionPerformed: () => {},
         getFieldsLit: () => {},
-        isDisplayedField: () => { return true },
-        isDisplayedDefault: () => { return true },
-        isReadOnlyColumn: ({ field, row }) => { return true },
+        isDisplayedField: () => {
+          return true
+        },
+        isDisplayedDefault: () => {
+          return true
+        },
+        isReadOnlyColumn: ({ field, row }) => {
+          return true
+        },
         setDefaultValues: () => {},
         setPageNumber: this.setPageNumber
       }
     },
     storedFieldsListQuery() {
-      return store.getters.getSearchQueryFields({
-        tableName: this.tableName
-      })
-        .map(fieldItem => {
-          console.log(fieldItem)
+      return store.getters
+        .getSearchQueryFields({
+          tableName: this.tableName
+        })
+        .map((fieldItem) => {
           return {
             ...fieldItem,
             containerUuid: this.uuidForm
@@ -271,15 +182,18 @@ export default {
         })
     },
     storedColumnsListTable() {
-      return store.getters.getSearchTableFields({
-        tableName: this.tableName
-      })
-        .filter(fieldItem => {
+      return store.getters
+        .getSearchTableFields({
+          tableName: this.tableName
+        })
+        .filter((fieldItem) => {
           return fieldItem.sequence > 0
         })
     },
     isloadingTable() {
-      return this.isLoadingRecords && !isEmptyValue(this.storedColumnsListTable)
+      return (
+        this.isLoadingRecords && !isEmptyValue(this.storedColumnsListTable)
+      )
     },
     generalInfoData() {
       return store.getters.getGeneralInfoData({
@@ -351,7 +265,7 @@ export default {
           /**
            * TODO: When refreshing you are making 2 list requests, you can be the
            * observer that activates the second request
-          */
+           */
           this.getListSearchRecords()
           break
 
@@ -389,27 +303,34 @@ export default {
     loadSearchFields() {
       const fieldsListTable = this.storedColumnsListTable
       if (isEmptyValue(fieldsListTable)) {
-        store.dispatch('getSearchFieldsFromServer', {
-          tableName: this.tableName
-        })
+        store
+          .dispatch('getSearchFieldsFromServer', {
+            tableName: this.tableName
+          })
           .finally(() => {
             this.isLoadingFields = false
           })
       }
     },
     getListSearchRecords(pageNumber = 0, pageSize) {
-      const values = store.getters.getValuesView({
-        containerUuid: this.uuidForm,
-        format: 'array'
-      })
-        .filter(attribute => {
+      const values = store.getters
+        .getValuesView({
+          containerUuid: this.uuidForm,
+          format: 'array'
+        })
+        .filter((attribute) => {
           if (attribute.columnName.startsWith(DISPLAY_COLUMN_PREFIX)) {
             return false
           }
           return !isEmptyValue(attribute.value)
         })
-        .map(attribute => {
-          if (!isEmptyValue(attribute) && !isEmptyValue(attribute.value) && (String(attribute.value).startsWith('%') || String(attribute.value).endsWith('%'))) {
+        .map((attribute) => {
+          if (
+            !isEmptyValue(attribute) &&
+            !isEmptyValue(attribute.value) &&
+            (String(attribute.value).startsWith('%') ||
+              String(attribute.value).endsWith('%'))
+          ) {
             return {
               ...attribute,
               operator: OPERATOR_LIKE.operator
@@ -423,18 +344,19 @@ export default {
       clearTimeout(this.timeOutRecords)
       this.timeOutRecords = setTimeout(() => {
         // search on server
-        this.containerManager.getSearchRecordsList({
-          containerUuid: this.uuidForm,
-          parentUuid: this.metadata.parentUuid,
-          tableName: this.metadata.referenceTableName,
-          columnName: this.metadata.columnName,
-          id: this.metadata.id,
-          contextColumnNames: this.metadata.reference.context_column_names,
-          filters: values,
-          pageNumber,
-          pageSize
-        })
-          .then(response => {
+        this.containerManager
+          .getSearchRecordsList({
+            containerUuid: this.uuidForm,
+            parentUuid: this.metadata.parentUuid,
+            tableName: this.metadata.referenceTableName,
+            columnName: this.metadata.columnName,
+            id: this.metadata.id,
+            contextColumnNames: this.metadata.reference.context_column_names,
+            filters: values,
+            pageNumber,
+            pageSize
+          })
+          .then((response) => {
             if (isEmptyValue(response)) {
               this.$message({
                 type: 'warning',

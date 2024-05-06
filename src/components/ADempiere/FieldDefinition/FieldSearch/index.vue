@@ -92,6 +92,9 @@ export default {
           break
         // case 'A_Asset':
         // case 'C_Order':
+        case 'C_Invoice':
+          fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/InvoiceInfo')
+          break
         default:
           fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/GeneralInfoSearch')
           break

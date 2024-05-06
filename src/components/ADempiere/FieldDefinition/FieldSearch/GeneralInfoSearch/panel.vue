@@ -30,24 +30,121 @@
           {{ title }}
         </template>
 
-        <query-criteria
-          :uuid-form="uuidForm"
-          :container-manager="containerManager"
-          :metadata="metadata"
-        />
+        <el-form
+          label-position="top"
+          size="small"
+          @submit.native.prevent="notSubmitForm"
+        >
+          <el-row>
+            <field-definition
+              v-for="(fieldAttributes) in storedFieldsListQuery"
+              :key="fieldAttributes.columnName"
+              :metadata-field="fieldAttributes"
+              :container-uuid="uuidForm"
+              :container-manager="containerManagerList"
+              :size-col="6"
+            />
+          </el-row>
+        </el-form>
       </el-collapse-item>
     </el-collapse>
 
-    <table-records
-      :uuid-form="uuidForm"
-      :container-manager="containerManager"
-      :metadata="metadata"
-    />
-    <panel-footer
-      :uuid-form="uuidForm"
-      :container-manager="containerManager"
-      :metadata="metadata"
-    />
+    <el-table
+      ref="generalInfoTable"
+      v-loading="isloadingTable"
+      class="general-info-table"
+      :data="recordsList"
+      highlight-current-row
+      border
+      fit
+      :max-height="300"
+      size="mini"
+      @current-change="handleCurrentChange"
+      @row-dblclick="changeRecord"
+    >
+      <p slot="empty" style="width: 100%;">
+        {{ $t('businessPartner.emptyBusinessPartner') }}
+      </p>
+
+      <index-column
+        :page-number="pageNumber"
+        :page-size="pageSize"
+      />
+
+      <el-table-column
+        v-for="(fieldAttributes, key) in storedColumnsListTable"
+        :key="key"
+        :label="fieldAttributes.name"
+        :prop="fieldAttributes.column_ame"
+        min-width="210"
+      >
+        <template slot-scope="scope">
+          <!-- formatted displayed value -->
+          <cell-display-info
+            :parent-uuid="metadata.parentUuid"
+            :container-uuid="uuidForm"
+            :field-attributes="{
+              column_name: fieldAttributes.column_name,
+              display_type: fieldAttributes.display_type
+            }"
+            :container-manager="containerManagerList"
+            :scope="scope"
+            :data-row="scope.row"
+          />
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <el-row :gutter="24" class="general-info-list-footer">
+      <el-col :span="14">
+        <custom-pagination
+          :container-manager="containerManagerList"
+          :total-records="generalInfoData.recordCount"
+          :selection="selection"
+          :page-number="pageNumber"
+          :page-size="recordsList.length"
+          :handle-change-page-number="setPageNumber"
+          :handle-change-page-size="handleChangeSizePage"
+        />
+      </el-col>
+
+      <el-col :span="10">
+        <samp style="float: right; padding-top: 4px;">
+          <el-button
+            type="info"
+            class="button-base-icon"
+            plain
+            @click="clearFormValues(); getListSearchRecords();"
+          >
+            <svg-icon icon-class="layers-clear" />
+          </el-button>
+
+          <el-button
+            :loading="isLoadingRecords"
+            type="success"
+            class="button-base-icon"
+            icon="el-icon-refresh-right"
+            size="small"
+            @click="getListSearchRecords();"
+          />
+
+          <el-button
+            type="danger"
+            class="button-base-icon"
+            icon="el-icon-close"
+            size="small"
+            @click="closeList(); clearValues();"
+          />
+
+          <el-button
+            type="primary"
+            class="button-base-icon"
+            icon="el-icon-check"
+            @click="changeRecord()"
+          />
+        </samp>
+      </el-col>
+    </el-row>
   </el-main>
 </template>
 
@@ -61,9 +158,11 @@ import { OPERATOR_LIKE } from '@/utils/ADempiere/dataUtils'
 
 // Components and Mixins
 import fieldSearchMixin from '../mixinFieldSearch'
-import QueryCriteria from '@/components/ADempiere/FieldDefinition/FieldSearch/InvoiceInfo/PanelForm/QueryCriteria'
-import TableRecords from '@/components/ADempiere/FieldDefinition/FieldSearch/InvoiceInfo/tableRecords.vue'
-import PanelFooter from '@/components/ADempiere/FieldDefinition/FieldSearch/InvoiceInfo/panelFooter.vue'
+import CellDisplayInfo from '@/components/ADempiere/DataTable/Components/CellDisplayInfo.vue'
+import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
+import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
+import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
+
 // Utils and Helper Methods
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
 import { containerManager as containerManagerForm } from '@/utils/ADempiere/dictionary/form'
@@ -75,9 +174,10 @@ export default {
   name: 'PanelGeneralInfoSearch',
 
   components: {
-    QueryCriteria,
-    TableRecords,
-    PanelFooter
+    CellDisplayInfo,
+    CustomPagination,
+    FieldDefinition,
+    IndexColumn
   },
 
   mixins: [
@@ -163,6 +263,7 @@ export default {
         tableName: this.tableName
       })
         .map(fieldItem => {
+          console.log(fieldItem)
           return {
             ...fieldItem,
             containerUuid: this.uuidForm
