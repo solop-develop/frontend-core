@@ -15,23 +15,26 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
+
 <template>
   <el-form-item
     :label="$t('field.invoice.grandTotal')"
     style="align-items: center;"
   >
     <div style="display: flex;">
-      <el-input
+      <el-input-number
         v-model="grandTotalFieldFrom"
         clearable
+        controls-position="right"
         @input="currentValue()"
       />
       <b style="color: #c0c4cc;padding: 0px 5px;font-weight: bold;">
-        {{ '-' }}
+        —
       </b>
-      <el-input
+      <el-input-number
         v-model="grandTotalFieldTo"
         clearable
+        controls-position="right"
         @input="currentValue"
       />
     </div>
@@ -40,6 +43,7 @@
 
 <script>
 import { defineComponent, ref } from '@vue/composition-api'
+
 import store from '@/store'
 
 export default defineComponent({

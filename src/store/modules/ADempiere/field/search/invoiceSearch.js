@@ -18,12 +18,51 @@
 
 import Vue from 'vue'
 
+// API Request Methods
 import { requestListInvoicesInfo } from '@/api/ADempiere/field/search/invoice.ts'
+
+// Constants
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 const initState = {
   InvociesInfo: {},
+  emtpyInvoiceData: {
+    parentUuid: undefined,
+    containerUuid: undefined,
+    contextKey: '',
+    searchValue: '',
+    currentRecordUuid: undefined,
+    currentRow: {},
+    recordsList: [],
+    selectionsList: [],
+    nextPageToken: undefined,
+    recordCount: 0,
+    isLoaded: false,
+    isLoading: false,
+    isSalesTransaction: undefined,
+    BPshow: false,
+    pageSize: ROWS_OF_RECORDS_BY_PAGE,
+    pageNumber: 1,
+    showQueryFields: true,
+    queryFilters: {
+      document_no: undefined,
+      is_sales_transaction: undefined,
+      business_partner_id: undefined,
+      is_paid: undefined,
+      description: undefined,
+      invoice_date_from: undefined,
+      invoice_date_to: undefined,
+      order_id: undefined,
+      grand_total_from: undefined,
+      grand_total_to: undefined
+    }
+  },
+  invoiceData: {},
   CountInvocies: 0,
-  BPShowInvoice: {}
+  showInvoice: {}
 }
 
 export default {
@@ -33,6 +72,18 @@ export default {
     setInvociesInfo(state, element) {
       state.InvociesInfo = element
     },
+
+    setInvoiceSearchQueryFilterByAttribute(state, {
+      containerUuid,
+      attributeKey,
+      value
+    }) {
+      if (isEmptyValue(state.invoiceData[containerUuid])) {
+        Vue.set(state.invoiceData, containerUuid, state.emtpyInvoiceData)
+      }
+      Vue.set(state.invoiceData[containerUuid].queryFilters, attributeKey, value)
+    },
+
     setCountInfo(state, count) {
       state.CountInvocies = count
     },
@@ -40,7 +91,7 @@ export default {
       containerUuid,
       show = false
     }) {
-      Vue.set(state.BPShowInvoice, containerUuid, show)
+      Vue.set(state.showInvoice, containerUuid, show)
     }
   },
 
@@ -92,8 +143,34 @@ export default {
     getCountInvocies: (state) => {
       return state.CountInvocies
     },
+    /**
+     * Used by result in Invoice List
+     * @param {string} containerUuid
+     */
+    getInvoiceSearchData: (state) => ({ containerUuid }) => {
+      return state.invoiceData[containerUuid] || {
+        ...state.emtpyInvoiceData,
+        containerUuid
+      }
+    },
+    getInvoiceSearchQueryFilters: (state, getters) => ({ containerUuid }) => {
+      const { queryFilters } = getters.getInvoiceSearchData({
+        containerUuid
+      })
+      return queryFilters || {}
+    },
+    getInvoiceSearchQueryFilterByAttribute: (state, getters) => ({ containerUuid, attributeKey }) => {
+      const queryFilters = getters.getInvoiceSearchQueryFilters({
+        containerUuid
+      })
+      if (!isEmptyValue(queryFilters)) {
+        const { [attributeKey]: valueFilter } = queryFilters
+        return valueFilter
+      }
+      return undefined
+    },
     getSetShow: (state) => ({ containerUuid }) => {
-      return state.BPShowInvoice[containerUuid] || false
+      return state.showInvoice[containerUuid] || false
     }
   }
 }

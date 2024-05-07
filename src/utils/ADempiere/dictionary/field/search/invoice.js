@@ -18,6 +18,8 @@
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
+import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 
 export const TABLE_NAME = 'C_Invoice'
 
@@ -32,30 +34,52 @@ export const INVOICE_LIST_FORM = 'Accouting-Combination-List'
  */
 
 export function generateDisplayedValue(recordRow) {
-  const { document_no, date_invoiced, grand_total } = recordRow
-  let displayedValue = document_no
-  if (!isEmptyValue(date_invoiced)) {
-    if (!isEmptyValue(displayedValue)) {
-      displayedValue += ' - ' + date_invoiced
-    } if (!isEmptyValue(grand_total)) {
-      displayedValue += ' - ' + grand_total
-    } else {
-      displayedValue = date_invoiced
-    }
-    return displayedValue
-  }
-  // generate with standard columns
-  const { business_partner } = recordRow
+  const { display_value } = recordRow
 
-  if (!isEmptyValue(business_partner)) {
-    displayedValue = business_partner
+  let displayedValue = display_value
+  if (!isEmptyValue(display_value)) {
+    return display_value
   }
+
+  // generate with standard columns
+  const { document_no, date_invoiced, grand_total } = recordRow
+
+  if (!isEmptyValue(document_no)) {
+    displayedValue = document_no
+  }
+
   if (!isEmptyValue(date_invoiced)) {
+    const dateInvoiced = formatDate({
+      value: date_invoiced,
+      isDate: true
+    })
     if (!isEmptyValue(displayedValue)) {
-      displayedValue += ' - ' + date_invoiced
+      displayedValue += ' _ ' + dateInvoiced
     } else {
-      displayedValue = date_invoiced
+      displayedValue = dateInvoiced
     }
   }
+
+  if (!isEmptyValue(grand_total)) {
+    const grandTotal = formatQuantity({
+      value: grand_total,
+      precision: 2
+    })
+    if (!isEmptyValue(displayedValue)) {
+      displayedValue += ' _ ' + grandTotal
+    } else {
+      displayedValue = grandTotal
+    }
+  }
+
+  const { business_partner } = recordRow
+  if (!isEmptyValue(business_partner)) {
+    if (!isEmptyValue(displayedValue)) {
+      displayedValue += ' _ ' + business_partner
+    } else {
+      displayedValue = business_partner
+    }
+  }
+
   return displayedValue
 }

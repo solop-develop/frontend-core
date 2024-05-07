@@ -28,12 +28,12 @@ import {
 import {
   INVOICE_LIST_FORM,
   COLUMN_NAME
-} from '@/utils/ADempiere/dictionary/field/search/invoice.ts'
+} from '@/utils/ADempiere/dictionary/field/search/invoice.js'
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import { generateDisplayedValue } from '@/utils/ADempiere/dictionary/field/search/invoice.ts'
+import { generateDisplayedValue } from '@/utils/ADempiere/dictionary/field/search/invoice.js'
 import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 
 /**
@@ -142,6 +142,7 @@ export default ({
     const { uuid, id } = recordRow
 
     const displayValue = generateDisplayedValue(recordRow)
+
     // console.log(displayValue)
     store.commit('updateValueOfField', {
       parentUuid,

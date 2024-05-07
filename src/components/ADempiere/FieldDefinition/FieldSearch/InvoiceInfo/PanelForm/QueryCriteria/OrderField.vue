@@ -16,7 +16,7 @@
   along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 <template>
-  <el-form-item :label="$t('field.invoice.saleOrder')">
+  <el-form-item :label="orderTitle">
     <el-select
       v-model="saleOrderField"
       clearable
@@ -39,22 +39,48 @@
 
 <script>
 import {
-  defineComponent, ref
+  computed, defineComponent, ref
 } from '@vue/composition-api'
+
+import lang from '@/lang'
+import store from '@/store'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import store from '@/store'
 
 //
 import { requestListOrders } from '@/api/ADempiere/field/search/invoice.ts'
+import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
 
 export default defineComponent({
-  name: 'InvoiceField',
+  name: 'OrderField',
 
-  setup() {
+  props: {
+    uuidForm: {
+      required: true,
+      type: String
+    }
+  },
+
+  setup(props) {
     const optionsListOrder = ref([])
     const saleOrderField = ref('')
+
+    const isSalesTransaction = computed(() => {
+      const stringValue = store.getters.getInvoiceSearchQueryFilterByAttribute({
+        containerUuid: props.uuidForm,
+        attributeKey: 'is_sales_transaction'
+      })
+      return convertStringToBoolean(stringValue)
+    })
+
+    const orderTitle = computed(() => {
+      if (isSalesTransaction.value) {
+        return lang.t('field.invoice.salesOrder')
+      }
+      return lang.t('field.invoice.purchaseOrder')
+    })
+
     function showList(isShow) {
       if (isShow && isEmptyValue(optionsListOrder.value)) { filterSearchOrder({}) }
     }
@@ -85,6 +111,8 @@ export default defineComponent({
     return {
       optionsListOrder,
       saleOrderField,
+      //
+      orderTitle,
       //
       filterSearchOrder,
       showList,

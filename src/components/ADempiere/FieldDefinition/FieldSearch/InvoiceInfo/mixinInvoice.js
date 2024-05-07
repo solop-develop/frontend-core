@@ -21,10 +21,10 @@ import store from '@/store'
 // Constants
 import {
   COLUMN_NAME
-} from '@/utils/ADempiere/dictionary/field/search/invoice.ts'
+} from '@/utils/ADempiere/dictionary/field/search/invoice.js'
 
 // Utils and Helper Methods
-import { generateDisplayedValue } from '@/utils/ADempiere/dictionary/field/search/invoice.ts'
+import { generateDisplayedValue } from '@/utils/ADempiere/dictionary/field/search/invoice.js'
 
 export default {
   name: 'MixinInvoice',

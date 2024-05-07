@@ -1,7 +1,7 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- * Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -18,18 +18,19 @@
 
 const invoice = {
   document: 'Número de Documento',
-  businessParnet: 'Socio del Negocio',
-  saleTransaction: 'Transacción de Venta',
+  businessPartner: 'Socio del Negocio',
+  salesTransaction: 'Transacción de Venta',
   paid: 'Pagado',
   description: 'Descripción',
   invoiceDate: 'Fecha de Facturación',
-  saleOrder: 'Orden de Venta',
+  salesOrder: 'Orden de Venta',
+  purchaseOrder: 'Orden de Compra',
   grandTotal: 'Gran Total',
   documentNo: 'Documento No.',
   currency: 'Moneda',
-  converted: 'Convertido',
-  open: 'Abierto',
-  payment: 'Término de Pago',
+  convertedAmount: 'Convertido',
+  openAmount: 'Abierto',
+  paymentTerm: 'Término de Pago',
   reference: 'Referencia de Orden de Socio del Negocio'
 }
 

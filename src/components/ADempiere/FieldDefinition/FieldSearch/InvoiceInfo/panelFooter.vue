@@ -75,7 +75,7 @@ import fieldSearchMixin from '../mixinFieldSearch'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import { INVOICE_LIST_FORM, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/invoice.ts'
+import { INVOICE_LIST_FORM, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/invoice.js'
 
 export default defineComponent({
   name: 'PanelFooter',
@@ -119,25 +119,6 @@ export default defineComponent({
     showPopover: {
       type: Boolean,
       default: () => false
-    }
-  },
-  data() {
-    return {
-      activeAccordion: 'query-criteria',
-      timeOutRecords: null,
-      isLoadingRecords: false,
-      timeOutFields: null,
-      isLoadingFields: false,
-      unsubscribe: () => {}
-    }
-  },
-
-  methods: {
-    closeList() {
-      store.commit('setGeneralInfoShow', {
-        containerUuid: this.uuidForm,
-        show: false
-      })
     }
   },
 
