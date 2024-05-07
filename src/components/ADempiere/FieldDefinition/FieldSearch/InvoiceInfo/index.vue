@@ -63,6 +63,7 @@ import store from '@/store'
 // Components and Mixins
 import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
 import fieldSearchMixin from '@/components/ADempiere/FieldDefinition/FieldSearch/mixinFieldSearch.js'
+import invoiceMixin from './mixinInvoice'
 import ButtonGeneralInfoSearch from './button.vue'
 
 // Constants
@@ -80,7 +81,8 @@ export default {
 
   mixins: [
     fieldMixin,
-    fieldSearchMixin
+    fieldSearchMixin,
+    invoiceMixin
   ],
 
   props: {

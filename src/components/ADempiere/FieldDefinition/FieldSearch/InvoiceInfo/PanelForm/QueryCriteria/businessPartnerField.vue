@@ -16,7 +16,7 @@
   along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 <template>
-  <el-form-item :label="$t('field.invoice.businessParnet')">
+  <el-form-item :label="$t('field.invoice.businessPartner')">
     <el-select
       v-model="businessPartnerField"
       clearable

@@ -17,12 +17,12 @@
 -->
 <template>
   <el-form-item
-    :label="$t('field.invoice.saleTransaction')"
+    :label="$t('field.invoice.salesTransaction')"
     style="align-items: center;"
   >
     <el-select
-      v-model="saleTransactionField"
-      @change="currentValue()"
+      v-model="currentValue"
+      @change="changeValue()"
     >
       <el-option
         v-for="(option, key) in YES_NO_OPTIONS_LIST"
@@ -35,17 +35,21 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
+
 import store from '@/store'
 
 // Constants
 import { YES_NO_OPTIONS_LIST } from '@/utils/ADempiere/dictionary/field/yesNo'
+
 // Utils and Helper Methods
 import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
+import { convertBooleanToString } from '@/utils/ADempiere/formatValue/booleanFormat'
 // import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({
   name: 'saleTransactionField',
+
   props: {
     uuidForm: {
       required: true,
@@ -62,40 +66,61 @@ export default defineComponent({
   },
 
   setup(props) {
-    const saleTransactionField = ref('')
-
-    const currentValue = () => {
-      store.dispatch('searchInvociesInfos', {
-        is_sales_transaction: saleTransactionField.value
-      })
-    }
+    const ATTRIBUTE_KEY = 'is_sales_transaction'
 
     const isSalesTransactionContext = computed(() => {
-      return isSalesTransaction({
+      const booleanValue = isSalesTransaction({
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid
       })
+      return convertBooleanToString(booleanValue)
     })
-    function changeValue() {
-      const response = isSalesTransactionContext.value
-      if (response === true) {
-        saleTransactionField.value = 'Y'
-        return
-      } else if (response === false) {
-        saleTransactionField.value = 'N'
-        return
-      } else {
-        saleTransactionField.value = ''
+
+    const currentValue = computed({
+      set(newValue) {
+        store.commit('setInvoiceSearchQueryFilterByAttribute', {
+          containerUuid: props.uuidForm,
+          attributeKey: ATTRIBUTE_KEY,
+          value: newValue
+        })
+      },
+      get() {
+        return store.getters.getInvoiceSearchQueryFilterByAttribute({
+          containerUuid: props.uuidForm,
+          attributeKey: ATTRIBUTE_KEY
+        })
       }
-      currentValue()
-      return
+    })
+
+    // const currentValue = () => {
+    //   store.dispatch('searchInvociesInfos', {
+    //     is_sales_transaction: saleTransactionField.value
+    //   })
+    // }
+
+    function changeValue() {
+      // const response = isSalesTransactionContext.value
+      // if (response === true) {
+      //   saleTransactionField.value = 'Y'
+      //   return
+      // } else if (response === false) {
+      //   saleTransactionField.value = 'N'
+      //   return
+      // } else {
+      //   saleTransactionField.value = ''
+      // }
+      // currentValue()
+      // return
     }
 
-    changeValue()
+    // changeValue()
+    currentValue.value = isSalesTransactionContext.value
+    console.log(currentValue.value)
 
     return {
-      saleTransactionField,
+      // saleTransactionField,
       YES_NO_OPTIONS_LIST,
+      //
       isSalesTransactionContext,
       //
       currentValue,

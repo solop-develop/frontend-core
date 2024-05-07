@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <el-form label-position="top" size="mini" class="form-base">
+  <el-form label-position="top" size="mini" class="form-base invoice-search-query-criteria">
     <el-row :gutter="10">
       <el-col :span="8">
         <document-field
@@ -30,7 +30,7 @@
         />
       </el-col>
       <el-col :span="8">
-        <sale-transaction-field
+        <sales-transaction-field
           :uuid-form="uuidForm"
           :parent-uuid="metadata.parentUuid"
           :container-uuid="metadata.containerUuid"
@@ -49,7 +49,7 @@
         />
       </el-col>
       <el-col :span="8">
-        <invoice-field
+        <order-field
           :uuid-form="uuidForm"
         />
       </el-col>
@@ -68,24 +68,25 @@
     </el-row>
   </el-form>
 </template>
+
 <script>
 import { defineComponent } from '@vue/composition-api'
 
 // Components and Mixins
 import DocumentField from './documentField.vue'
 import BusinessPartnerField from './businessPartnerField.vue'
-import SaleTransactionField from './SaleTransactionField.vue'
+import SalesTransactionField from './SalesTransactionField.vue'
 import PaidField from './PaidFieldInvoice.vue'
 import BillingDateField from './billingDateField.vue'
 import DescriptionField from './descriptionField.vue'
-import InvoiceField from './InvoiceField.vue'
+import OrderField from './OrderField.vue'
 import GrandTotalField from './grandTotalField.vue'
 
 // Constants
 import {
   INVOICE_LIST_FORM,
   COLUMN_NAME
-} from '@/utils/ADempiere/dictionary/field/search/invoice.ts'
+} from '@/utils/ADempiere/dictionary/field/search/invoice'
 
 export default defineComponent({
   name: 'QueryCriteria',
@@ -93,11 +94,11 @@ export default defineComponent({
   components: {
     DocumentField,
     BusinessPartnerField,
-    SaleTransactionField,
+    SalesTransactionField,
     PaidField,
     BillingDateField,
     DescriptionField,
-    InvoiceField,
+    OrderField,
     GrandTotalField
   },
 
@@ -118,3 +119,16 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss">
+.invoice-search-query-criteria {
+  .el-form-item--mini {
+    margin-bottom: 5px !important;
+
+    .el-form-item__label {
+      font-size: 12px !important;
+      line-height: 22px !important;
+    }
+  }
+}
+</style>

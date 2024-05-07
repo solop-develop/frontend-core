@@ -20,14 +20,14 @@
   <el-main
     v-shortkey="shortsKey"
     v-loading="isLoadingFields"
-    class="general-info-list-container"
+    class="invoice-info-list-container"
     style="padding-top: 0px"
     @shortkey.native="keyAction"
   >
     <el-collapse
       v-model="activeAccordion"
       accordion
-      class="general-info-list-query-criteria"
+      class="invoice-info-list-query-criteria"
     >
       <el-collapse-item name="query-criteria">
         <template slot="title">
@@ -59,15 +59,16 @@
 import store from '@/store'
 
 // Constants
-import { INVOICE_LIST_FORM } from '@/utils/ADempiere/dictionary/field/search/invoice.ts'
+import { INVOICE_LIST_FORM } from '@/utils/ADempiere/dictionary/field/search/invoice'
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 import { OPERATOR_LIKE } from '@/utils/ADempiere/dataUtils'
 
 // Components and Mixins
 import MixinFieldSearch from '../../mixinFieldSearch'
-import QueryCriteria from '@/components/ADempiere/FieldDefinition/FieldSearch/InvoiceInfo/PanelForm/QueryCriteria'
+import QueryCriteria from '@/components/ADempiere/FieldDefinition/FieldSearch/InvoiceInfo/PanelForm/QueryCriteria/index.vue'
 import TableRecords from '@/components/ADempiere/FieldDefinition/FieldSearch/InvoiceInfo/tableRecords.vue'
 import PanelFooter from '@/components/ADempiere/FieldDefinition/FieldSearch/InvoiceInfo/panelFooter.vue'
+
 // Utils and Helper Methods
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
 import { containerManager as containerManagerForm } from '@/utils/ADempiere/dictionary/form'
@@ -291,7 +292,7 @@ export default {
     },
     subscribeChanges() {
       return store.subscribe((mutation, state) => {
-        if (mutation.type === 'updateValueOfField') {
+        if (mutation.type === 'setInvoiceSearchQueryFilterByAttribute') {
           if (mutation.payload.containerUuid === this.uuidForm) {
             if (!isEmptyValue(mutation.payload.columnName)) {
               this.getListSearchRecords()
@@ -384,14 +385,14 @@ export default {
 </script>
 
 <style lang="scss">
-.general-info-list-container {
-  .general-info-list-query-criteria {
+.invoice-info-list-container {
+  .invoice-info-list-query-criteria {
     // space between quey criteria and table
     .el-collapse-item__content {
       padding-bottom: 0px !important;
     }
   }
-  .general-info-table {
+  .invoice-info-table {
     .el-table__cell {
       padding: 0px !important;
       &.is-leaf {

@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
+
 <template>
   <el-form-item
     :label="$t('field.invoice.invoiceDate')"
@@ -23,16 +24,16 @@
     <div class="date-picker-container">
       <el-date-picker
         v-model="billingDateFieldFrom"
-        type="datetime"
+        type="date"
         placeholder="Select date and time"
         @change="currentValue()"
       />
       <b style="color: #c0c4cc;padding: 0px 5px;font-weight: bold;">
-        {{ '-' }}
+        —
       </b>
       <el-date-picker
         v-model="billingDateFieldTo"
-        type="datetime"
+        type="date"
         placeholder="Select date and time"
         @change="currentValue"
       />
@@ -42,6 +43,7 @@
 
 <script>
 import { defineComponent, ref } from '@vue/composition-api'
+
 import store from '@/store'
 
 export default defineComponent({

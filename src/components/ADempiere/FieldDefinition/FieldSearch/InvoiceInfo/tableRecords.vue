@@ -30,14 +30,123 @@
       @row-dblclick="changeRecord"
     >
       <index-column />
+
       <el-table-column
-        v-for="(header, key) in headerList"
-        :key="key"
-        :align="header.align"
-        :width="header.width"
-        :label="header.label"
-        :prop="header.columnName"
+        prop="business_partner"
+        :label="$t('field.invoice.businessPartner')"
+        sortable
         header-align="center"
+        width="220"
+      />
+
+      <el-table-column
+        prop="date_invoiced"
+        :label="$t('field.invoice.invoiceDate')"
+        sortable
+        header-align="center"
+        width="170"
+      >
+        <span slot-scope="scope" class="cell-align-right">
+          {{ formatDate({ value: scope.row.date_invoiced }) }}
+        </span>
+      </el-table-column>
+
+      <el-table-column
+        prop="document_no"
+        :label="$t('field.invoice.documentNo')"
+        sortable
+        header-align="center"
+        width="135"
+      />
+
+      <el-table-column
+        prop="currency"
+        :label="$t('field.invoice.currency')"
+        sortable
+        header-align="center"
+        width="95"
+      />
+
+      <el-table-column
+        prop="grand_total"
+        :label="$t('field.invoice.grandTotal')"
+        sortable
+        header-align="center"
+        width="120"
+      >
+        <span slot-scope="scope" class="cell-align-right">
+          {{ formatQuantity({ value: scope.row.grand_total }) }}
+        </span>
+      </el-table-column>
+
+      <el-table-column
+        prop="converted_amount"
+        :label="$t('field.invoice.convertedAmount')"
+        sortable
+        header-align="center"
+        width="120"
+      >
+        <span slot-scope="scope" class="cell-align-right">
+          {{ formatQuantity({ value: scope.row.converted_amount }) }}
+        </span>
+      </el-table-column>
+
+      <el-table-column
+        prop="open_amount"
+        :label="$t('field.invoice.openAmount')"
+        sortable
+        header-align="center"
+        width="120"
+      >
+        <span slot-scope="scope" class="cell-align-right">
+          {{ formatQuantity({ value: scope.row.open_amount }) }}
+        </span>
+      </el-table-column>
+
+      <el-table-column
+        prop="payment_term"
+        :label="$t('field.invoice.paymentTerm')"
+        sortable
+        header-align="center"
+        width="150"
+      />
+
+      <el-table-column
+        prop="is_paid"
+        :label="$t('field.invoice.paid')"
+        sortable
+        header-align="center"
+        width="120"
+      >
+        <span slot-scope="scope" class="cell-align-right">
+          {{ convertBooleanToTranslationLang(scope.row.is_paid) }}
+        </span>
+      </el-table-column>
+
+      <el-table-column
+        prop="is_sales_transaction"
+        :label="$t('field.invoice.salesTransaction')"
+        sortable
+        header-align="center"
+        width="170"
+      >
+        <span slot-scope="scope" class="cell-align-right">
+          {{ convertBooleanToTranslationLang(scope.row.is_sales_transaction) }}
+        </span>
+      </el-table-column>
+
+      <el-table-column
+        prop="description"
+        :label="$t('field.invoice.description')"
+        header-align="center"
+        width="200"
+      />
+
+      <el-table-column
+        prop="po_reference"
+        :label="$t('field.invoice.reference')"
+        header-align="center"
+        width="265"
       />
     </el-table>
   </div>
@@ -45,12 +154,11 @@
 
 <script>
 import store from '@/store'
-import lang from '@/lang'
 
 import { computed, defineComponent, ref } from '@vue/composition-api'
 
 // Constants
-import { INVOICE_LIST_FORM, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/invoice.ts'
+import { INVOICE_LIST_FORM, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/invoice.js'
 
 // Components and Mixins
 import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
@@ -127,102 +235,31 @@ export default defineComponent({
       containerManager: props.containerManager,
       fieldAttributes: props.metadata
     })
-    const headerList = ref([
-      {
-        label: lang.t('field.invoice.businessParnet'),
-        columnName: 'business_partner',
-        width: '150',
-        align: 'center'
-      },
-      {
-        label: lang.t('field.invoice.invoiceDate'),
-        columnName: 'date_invoiced',
-        width: '145',
-        align: 'right'
-      },
-      {
-        label: lang.t('field.invoice.documentNo'),
-        columnName: 'document_no',
-        width: '120',
-        align: 'right'
-      },
-      {
-        label: lang.t('field.invoice.currency'),
-        columnName: 'currency',
-        width: '70',
-        align: 'center'
-      },
-      {
-        label: lang.t('field.invoice.grandTotal'),
-        columnName: 'grand_total',
-        width: '90',
-        align: 'right'
-      },
-      {
-        label: lang.t('field.invoice.converted'),
-        columnName: 'converted_amount',
-        width: '90',
-        align: 'right'
-      },
-      {
-        label: lang.t('field.invoice.open'),
-        columnName: 'open_amount',
-        width: '90',
-        align: 'right'
-      },
-      {
-        label: lang.t('field.invoice.payment'),
-        columnName: 'payment_term',
-        width: '120',
-        align: 'center'
-      },
-      {
-        label: lang.t('field.invoice.paid'),
-        columnName: 'is_paid',
-        width: '70',
-        align: 'right'
-      },
-      {
-        label: lang.t('field.invoice.saleTransaction'),
-        columnName: 'is_sales_transaction',
-        width: '155',
-        align: 'right'
-      },
-      {
-        label: lang.t('field.invoice.description'),
-        columnName: 'description',
-        width: '100',
-        align: 'center'
-      },
-      {
-        label: lang.t('field.invoice.reference'),
-        columnName: 'po_reference',
-        width: '265',
-        align: 'center'
-      }
-    ])
 
     const SearchList = computed(() => {
       const invoiceList = store.getters.getInvoicesSearchFieldRecordsList
       setTime()
-      if (isEmptyValue(invoiceList)) return []
-      return invoiceList.map((list) => {
-        return {
-          ...list,
-          business_partner: list.business_partner,
-          date_invoiced: formatDate({ value: list.date_invoiced }),
-          document_no: list.document_no,
-          currency: list.currency,
-          grand_total: formatQuantity({ value: list.grand_total }),
-          converted_amount: formatQuantity({ value: list.converted_amount }),
-          open_amount: formatQuantity({ value: list.open_amount }),
-          payment_term: list.payment_term,
-          is_paid: convertBooleanToTranslationLang(list.is_paid),
-          is_sales_transaction: convertBooleanToTranslationLang(list.is_sales_transaction),
-          description: list.description,
-          po_reference: list.po_reference
-        }
-      })
+      if (isEmptyValue(invoiceList)) {
+        return []
+      }
+      // return invoiceList.map((list) => {
+      //   return {
+      //     ...list,
+      //     business_partner: list.business_partner,
+      //     date_invoiced: formatDate({ value: list.date_invoiced }),
+      //     document_no: list.document_no,
+      //     currency: list.currency,
+      //     grandTotal: formatQuantity({ value: list.grand_total }),
+      //     converted_amount: formatQuantity({ value: list.converted_amount }),
+      //     openAmount: formatQuantity({ value: list.open_amount }),
+      //     payment_term: list.payment_term,
+      //     isPaid: convertBooleanToTranslationLang(list.is_paid),
+      //     isSalesTransaction: convertBooleanToTranslationLang(list.is_sales_transaction),
+      //     description: list.description,
+      //     po_reference: list.po_reference
+      //   }
+      // })
+      return invoiceList
     })
 
     function setTime() {
@@ -268,8 +305,10 @@ export default defineComponent({
       isLoadingRecords,
       currentRow,
       //
+      convertBooleanToTranslationLang,
+      formatDate,
+      formatQuantity,
       SearchList,
-      headerList,
       listSummary,
       //
       searchRecordsList,
