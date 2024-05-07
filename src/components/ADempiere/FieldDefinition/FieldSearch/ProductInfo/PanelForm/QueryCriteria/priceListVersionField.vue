@@ -57,6 +57,7 @@ import {
 import EmptyOptionSelect from '@/components/ADempiere/FieldDefinition/FieldSelect/emptyOptionSelect.vue'
 
 // Utils and Helper Methods
+import { getContext } from '@/utils/ADempiere/contextUtils'
 import { isEmptyValue, getTypeOfValue } from '@/utils/ADempiere/valueUtils'
 import { getValidDate } from '@/utils/ADempiere/formatValue/dateFormat'
 
@@ -90,12 +91,12 @@ export default defineComponent({
     const optionsList = ref([])
 
     const priceListId = computed(() => {
-      const value = store.getters.getValueOfField({
+      return getContext({
         parentUuid: props.parentUuid,
-        // containerUuid: props.containerUuid,
-        columnName: 'M_PriceList_ID'
+        containerUuid: props.containerUuid,
+        columnName: 'M_PriceList_ID',
+        isForceSession: true
       })
-      return value
     })
 
     const dateOrdered = computed(() => {

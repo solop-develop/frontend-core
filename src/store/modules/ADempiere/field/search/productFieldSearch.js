@@ -45,7 +45,8 @@ const emptyQueryFilters = {
   is_stocked: undefined,
   attribute_set_id: undefined,
   attribute_set_instance_id: undefined,
-  vendor_id: undefined
+  vendor_id: undefined,
+  search_value: undefined
 }
 
 const initState = {
