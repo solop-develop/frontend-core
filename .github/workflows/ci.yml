@@ -15,6 +15,7 @@ on:
       - README.es.md
       - 'docs/**'
       - .github/workflows/docs.yml
+      - .github/**.md # Templates
 
   pull_request:
     paths-ignore:
@@ -22,6 +23,7 @@ on:
       - README.es.md
       - 'docs/**'
       - .github/workflows/docs.yml
+      - .github/**.md # Templates
 
 jobs:
 
