@@ -23,7 +23,7 @@
     :required="isMandatory"
   >
     <template slot="label">
-      <span class="field-title-name">
+      <span class="field-title-name" style="color:#606266 !important">
         {{ regionName }}
       </span>
     </template>
@@ -100,7 +100,6 @@ export default defineComponent({
       }
       return lang.t('field.locationsAddress.region')
     })
-
     const storedRegionsList = computed(() => {
       return store.getters.getListRegions
     })

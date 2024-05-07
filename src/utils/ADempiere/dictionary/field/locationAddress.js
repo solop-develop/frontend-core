@@ -198,7 +198,7 @@ export function setComponentSequence(country) {
           component = CitiesListFieldComponent
         }
         break
-      case sequence.includes('@R@'):
+      case sequence.includes('@R@') && country.is_has_region:
         component = RegionsListFieldComponent
         break
       case sequence.includes('@CO@'):
