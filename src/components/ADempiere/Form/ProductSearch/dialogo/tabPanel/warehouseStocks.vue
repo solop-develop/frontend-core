@@ -20,6 +20,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
   <el-table
     v-loading="isLoadingTable"
     :data="recordList"
+    class="products-table-avalaible"
     border
     height="300"
     style="width: 100%"
@@ -33,28 +34,45 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       prop="available_quantity"
       header-align="center"
       :label="$t('field.product.wrehouseTables.availableQuantity')"
-    />
+    >
+      <span slot-scope="scope" class="cell-align-right">
+        {{ formatQuantity({ value: scope.row.available_quantity }) }}
+      </span>
+    </el-table-column>
     <el-table-column
       prop="on_hand_quantity"
       header-align="center"
       :label="$t('field.product.wrehouseTables.reservedQuantity')"
-    />
+    >
+      <span slot-scope="scope" class="cell-align-right">
+        {{ formatQuantity({ value: scope.row.on_hand_quantity }) }}
+      </span>
+    </el-table-column>
     <el-table-column
       prop="reserved_quantity"
       header-align="center"
       :label="$t('field.product.wrehouseTables.orderedQuantity')"
-    />
+    >
+      <span slot-scope="scope" class="cell-align-right">
+        {{ formatQuantity({ value: scope.row.reserved_quantity }) }}
+      </span>
+    </el-table-column>
     <el-table-column
       prop="ordered_quantity"
       header-align="center"
       :label="$t('field.product.wrehouseTables.onHandQuantity')"
-    />
+    >
+      <span slot-scope="scope" class="cell-align-right">
+        {{ formatQuantity({ value: scope.row.ordered_quantity }) }}
+      </span>
+    </el-table-column>
   </el-table>
 </template>
 
 <script>
 import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
+import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 
 export default defineComponent({
   name: 'WarehouseStocks',
@@ -78,7 +96,8 @@ export default defineComponent({
       // Computed
       warehouseStocks,
       isLoadingTable,
-      recordList
+      recordList,
+      formatQuantity
     }
   }
 })

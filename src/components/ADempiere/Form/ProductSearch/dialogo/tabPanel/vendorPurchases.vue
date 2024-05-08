@@ -20,6 +20,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
   <el-table
     v-loading="isLoadingTable"
     :data="recordList"
+    class="products-table-avalaible"
     border
     height="300"
     style="width: 100%"

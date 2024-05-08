@@ -33,7 +33,7 @@
       highlight-current-row
       :border="true"
       max-height="500"
-      class="products-table"
+      class="products-table-avalaible"
       fit
       @current-change="addProduct"
       @row-dblclick="openProductInfo"
