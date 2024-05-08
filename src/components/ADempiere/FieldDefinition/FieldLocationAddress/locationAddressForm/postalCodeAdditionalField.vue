@@ -18,11 +18,15 @@
 
 <template>
   <el-form-item
-    :title="$t('field.locationsAddress.additionalPostalCode')"
     class="field-standard"
     style="margin: 0px;width: 100%;"
-    :required="isMandatory"
   >
+    <template slot="label">
+      <span class="field-title-name" style="color:#606266 !important; width: 100%;">
+        {{ $t('field.locationsAddress.additionalPostalCode') }}
+      </span>
+      <span v-if="isMandatory" style="color: #f34b4b"> * </span>
+    </template>
     <el-input
       v-model="posalCodeAdditional"
       size="mini"

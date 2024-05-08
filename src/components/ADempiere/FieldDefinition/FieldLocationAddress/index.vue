@@ -22,7 +22,7 @@
     v-model="isShowedLocationForm"
     class="popover-location"
     placement="left-end"
-    width="350"
+    width="385"
     trigger="click"
   >
     <location-address-form
