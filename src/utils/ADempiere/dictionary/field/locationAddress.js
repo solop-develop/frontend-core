@@ -188,7 +188,7 @@ export function setComponentSequence(country) {
       case sequence.includes('@P@'):
         component = PostalCodeFieldComponent
         break
-      case sequence.includes('@A@'):
+      case sequence.includes('@A@') && country.is_has_postal_code_additional:
         component = PostalCodeAdditionalFieldComponent
         break
       case sequence.includes('@C@'):

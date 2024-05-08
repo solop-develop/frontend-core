@@ -21,12 +21,13 @@
     <el-card
       shadow="never"
       :body-style="{ padding: '5px' }"
+      style="width: 360px !important;"
     >
       <el-form
         v-shortkey="{ closeForm: ['esc'] }"
         label-position="left"
         size="small"
-        label-width="150px"
+        label-width="185px"
         @shortkey.native="keyAction"
       >
         <el-row :gutter="0">
