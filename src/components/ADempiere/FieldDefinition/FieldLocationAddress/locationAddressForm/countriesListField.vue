@@ -22,7 +22,7 @@
     style="margin: 0px;width: 100%;"
   >
     <template slot="label">
-      <span class="field-title-name">
+      <span class="field-title-name" style="color:#606266 !important">
         {{ $t('field.locationsAddress.country') }}
       </span>
       <span style="color: #f34b4b"> * </span>

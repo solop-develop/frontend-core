@@ -18,11 +18,15 @@
 
 <template>
   <el-form-item
-    :label="$t('field.locationsAddress.city')"
     class="field-standard"
     style="margin: 0px;width: 100%;"
-    :required="isMandatory"
   >
+    <template slot="label">
+      <span class="field-title-name" style="color:#606266 !important">
+        {{ $t('field.locationsAddress.city') }}
+      </span>
+      <span v-if="isMandatory" style="color: #f34b4b"> * </span>
+    </template>
     <el-input
       v-model="currentCityName"
       size="mini"
