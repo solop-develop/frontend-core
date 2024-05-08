@@ -68,7 +68,7 @@
           prop="standard_price"
           :label="$t('field.product.standardPrice')"
           header-align="center"
-          min-width="127"
+          min-width="129"
         >
           <span slot-scope="scope" class="cell-align-right">
             {{ formatQuantity({ value: scope.row.standard_price }) }}
@@ -85,7 +85,7 @@
         prop="is_stocked"
         :label="$t('field.product.stocked')"
         header-align="center"
-        min-width="100"
+        min-width="105"
       >
         <span slot-scope="scope">
           {{ convertBooleanToTranslationLang(scope.row.is_stocked) }}
@@ -107,7 +107,7 @@
           prop="on_hand_quantity"
           :label="$t('field.product.onHandQuantity')"
           header-align="center"
-          min-width="120"
+          min-width="130"
         >
           <span slot-scope="scope" class="cell-align-right">
             {{ formatQuantity({ value: scope.row.on_hand_quantity }) }}
@@ -118,7 +118,7 @@
         prop="product_category"
         :label="$t('field.product.productCategory')"
         header-align="center"
-        min-width="165"
+        min-width="180"
       />
       <el-table-column
         prop="product_group"
@@ -454,24 +454,34 @@ export default defineComponent({
     }
 
     function setContextValue() {
-      store.commit('setProductSearchFieldQueryFilterByAttribute', {
-        containerUuid: uuidForm,
-        attributeKey: 'warehouse_id',
-        value: getContext({
-          parentUuid: uuidForm,
-          columnName: '#M_Warehouse_ID',
-          isForceSession: true
-        })
+      const warehouse = getContext({
+        parentUuid: uuidForm,
+        columnName: '#M_Warehouse_ID',
+        isForceSession: true
       })
-      store.commit('setProductSearchFieldQueryFilterByAttribute', {
-        containerUuid: uuidForm,
-        attributeKey: 'price_list_version_id',
-        value: getContext({
-          parentUuid: uuidForm,
-          columnName: '#M_PriceList_ID',
-          isForceSession: true
-        })
+      const priceListVersion = getContext({
+        parentUuid: uuidForm,
+        columnName: '#M_PriceList_ID',
+        isForceSession: true
       })
+      if (warehouse > 0) {
+        store.dispatch('loadWarehouses')
+          .then(() => {
+            store.commit('setProductSearchFieldQueryFilterByAttribute', {
+              containerUuid: uuidForm,
+              attributeKey: 'warehouse_id',
+              value: warehouse
+            })
+          })
+      }
+
+      if (!isEmptyValue(priceListVersion)) {
+        store.commit('setProductSearchFieldQueryFilterByAttribute', {
+          containerUuid: uuidForm,
+          attributeKey: 'price_list_version_id',
+          value: priceListVersion
+        })
+      }
     }
 
     /**

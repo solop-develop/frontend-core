@@ -19,7 +19,7 @@
 import Vue from 'vue'
 
 // API Request Methods
-import { requestListProducts } from '@/api/ADempiere/field/search/product.ts'
+import { requestListProducts, requestListWarehouses } from '@/api/ADempiere/field/search/product.ts'
 
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
@@ -74,6 +74,7 @@ const initState = {
       ...emptyQueryFilters
     }
   },
+  warehouseList: [],
   productData: {},
   productShow: {}
 }
@@ -201,6 +202,16 @@ const productFieldSearch = {
      */
     changePopoverListProductSearchField(state, isShowed = false) {
       state.productPopoverList = isShowed
+    },
+
+    /**
+     * Set List Warehouse The Query Criteria
+     * TODO: Create a store for select type fields for search criteria
+     * @param {object} state
+     * @param {array} list
+     */
+    setWarehouseList(state, list) {
+      state.warehouseList = list
     }
   },
 
@@ -311,6 +322,26 @@ const productFieldSearch = {
             }, 500)
           })
       })
+    },
+    loadWarehouses({ commit }, search) {
+      return new Promise(resolve => {
+        requestListWarehouses({
+          search,
+          pageSize: 100
+        })
+          .then(response => {
+            const { records } = response
+            commit('setWarehouseList', records)
+            resolve(records)
+          })
+          .catch(error => {
+            console.warn(error)
+            showMessage({
+              type: 'info',
+              message: error.message
+            })
+          })
+      })
     }
   },
 
@@ -385,6 +416,9 @@ const productFieldSearch = {
     },
     getProductSearchFieldShow: (state) => ({ containerUuid }) => {
       return state.productShow[containerUuid] || false
+    },
+    getWarehouseList: (state) => {
+      return state.warehouseList
     }
   }
 }

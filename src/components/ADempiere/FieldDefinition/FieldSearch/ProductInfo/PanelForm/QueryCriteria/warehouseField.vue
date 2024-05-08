@@ -43,12 +43,9 @@
 </template>
 
 <script>
-import { computed, defineComponent, ref } from '@vue/composition-api'
+import { computed, defineComponent } from '@vue/composition-api'
 
 import store from '@/store'
-
-// API Request Methods
-import { requestListWarehouses } from '@/api/ADempiere/field/search/product.ts'
 
 // Components and Mixins
 import EmptyOptionSelect from '@/components/ADempiere/FieldDefinition/FieldSelect/emptyOptionSelect.vue'
@@ -80,7 +77,9 @@ export default defineComponent({
   setup(props) {
     const ATTRIBUTE_KEY = 'warehouse_id'
 
-    const optionsList = ref([])
+    const optionsList = computed(() => {
+      return store.getters.getWarehouseList
+    })
 
     const currentValue = computed({
       set(newValue) {
@@ -103,22 +102,11 @@ export default defineComponent({
       if (!isShowList) {
         return
       }
-      requestListWarehouses({
-        pageSize: 100
-      })
-        .then(response => {
-          optionsList.value = response.records
-        })
+      remoteSearch()
     }
 
     function remoteSearch(searchValue) {
-      requestListWarehouses({
-        searchValue,
-        pageSize: 100
-      })
-        .then(response => {
-          optionsList.value = response.records
-        })
+      store.dispatch('loadWarehouses', searchValue)
     }
 
     return {
