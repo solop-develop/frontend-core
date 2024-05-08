@@ -43,7 +43,7 @@
               :location-address="currentAddressLocationValues"
             />
           </el-col>
-          <!-- <el-col>
+          <el-col>
             <el-collapse accordion>
               <el-collapse-item name="1">
                 <template slot="title">
@@ -71,11 +71,11 @@
                   class="field-standard"
                   style="margin: 0px; width: 100%"
                 >
-                  <el-input size="mini" />
+                  <el-input v-model="altura" size="mini" />
                 </el-form-item>
               </el-collapse-item>
             </el-collapse>
-          </el-col> -->
+          </el-col>
           <el-col :span="24" class="location-address-footer">
             <samp style="float: right; padding-top: 4px;">
               <el-button
@@ -152,13 +152,13 @@ export default defineComponent({
     const { columnName, containerUuid, parentUuid } = props.metadata
     const latitude = ref('')
     const longitude = ref('')
-
+    const altura = ref('')
     function openCoordinatesMap() {
       let baseUrlMap = URL_BASE_MAP
       if (!isEmptyValue(latitude.value) && !isEmptyValue(longitude.value)) {
-        const latitudeFormat = formatCoordinateByDecimal(latitude.value)
-        const longitudeFormat = formatCoordinateByDecimal(longitude.value)
-        baseUrlMap += latitudeFormat + ',' + longitudeFormat
+        const aaa = formatCoordinateByDecimal(latitude.value)
+        console.log(aaa)
+        baseUrlMap += `@${latitude.value},${longitude.value},${altura.value}z/data=!3m1!4b1?entry=ttu`
       } else {
         baseUrlMap += setLocation.value
       }
@@ -170,31 +170,31 @@ export default defineComponent({
       let addres = ''
       if (!isEmptyValue(location)) {
         if (location.address1) {
-          addres = location.address1
+          addres = location.address1 + ' '
         }
         if (location.address2) {
-          addres += location.address2
+          addres += location.address2 + ' '
         }
         if (location.address3) {
-          addres += location.address3
+          addres += location.address3 + ' '
         }
         if (location.address4) {
-          addres += location.address4
+          addres += location.address4 + ' '
         }
         if (location.city) {
-          addres += ' , ' + location.city
+          addres += location.city + ' '
         }
         if (location.state) {
-          addres += ' , ' + location.state
+          addres += location.state + ' '
         }
         if (location.postal_code) {
-          addres += ' , ' + location.postal_code
+          addres += location.postal_code + ' '
         }
         if (location.posal_code_additional) {
-          addres += ' , ' + location.posal_code_additional
+          addres += location.posal_code_additional + ' '
         }
         if (location.country_name) {
-          addres += ' , ' + location.country_name
+          addres += location.country_name + ' '
         }
         return addres
       } else {
@@ -347,8 +347,9 @@ export default defineComponent({
 
     return {
       // Ref
-      // latitude,
-      // longitude,
+      latitude,
+      longitude,
+      altura,
       //
       currentAddressLocationValues,
       countryId,

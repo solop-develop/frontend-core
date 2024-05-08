@@ -96,7 +96,7 @@ export function getSequenceAsList(captureSequence) {
   return sequenceWithMandatory
 }
 
-export const URL_BASE_MAP = 'https://www.google.com/maps?q='
+export const URL_BASE_MAP = 'https://www.google.com/maps/search/'
 
 export const COORDENATES_COLUMN_NAMES = [
   COLUMNNAME_Altitude,
