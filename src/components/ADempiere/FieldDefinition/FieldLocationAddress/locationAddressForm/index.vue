@@ -52,27 +52,9 @@
                   </b>
                   <svg-icon icon-class="international" />
                 </template>
-                <el-form-item
-                  :label="$t('field.locationsAddress.latitude')"
-                  class="field-standard"
-                  style="margin: 0px; width: 100%"
-                >
-                  <el-input v-model="latitude" size="mini" />
-                </el-form-item>
-                <el-form-item
-                  :label="$t('field.locationsAddress.logitude')"
-                  class="field-standard"
-                  style="margin: 0px; width: 100%"
-                >
-                  <el-input v-model="longitude" size="mini" />
-                </el-form-item>
-                <el-form-item
-                  :label="$t('field.locationsAddress.altitude')"
-                  class="field-standard"
-                  style="margin: 0px; width: 100%"
-                >
-                  <el-input v-model="altura" size="mini" />
-                </el-form-item>
+                <LatitudeField />
+                <LongitudeField />
+                <AltitudeField />
               </el-collapse-item>
             </el-collapse>
           </el-col>
@@ -117,7 +99,7 @@
 </template>
 
 <script>
-import { defineComponent, computed, ref } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
 
 import store from '@/store'
 
@@ -133,11 +115,21 @@ import {
 // Utils and Helper Methods
 import { isEmptyValue, isIdentifierEmpty } from '@/utils/ADempiere/valueUtils.js'
 import { setDefaultComponentSequence } from '@/utils/ADempiere/dictionary/field/locationAddress'
-import { formatCoordinateByDecimal } from '@/utils/ADempiere/dictionary/field/locationAddress'
+import { formatCoordinateByDecimal, removeDecimals } from '@/utils/ADempiere/dictionary/field/locationAddress'
+
+//
+import LatitudeField from './latitudeField.vue'
+import LongitudeField from './longitudeField.vue'
+import AltitudeField from './altitudeField.vue'
 
 export default defineComponent({
   name: 'LocationAddressForm',
 
+  components: {
+    LatitudeField,
+    LongitudeField,
+    AltitudeField
+  },
   props: {
     containerManager: {
       type: Object,
@@ -150,16 +142,11 @@ export default defineComponent({
   },
   setup(props) {
     const { columnName, containerUuid, parentUuid } = props.metadata
-    const latitude = ref('')
-    const longitude = ref('')
-    const altura = ref('')
     function openCoordinatesMap() {
       let baseUrlMap = URL_BASE_MAP
-      if (!isEmptyValue(latitude.value) && !isEmptyValue(longitude.value)) {
-        const aaa = formatCoordinateByDecimal(latitude.value)
-        console.log(aaa)
-        baseUrlMap += `@${latitude.value},${longitude.value},${altura.value}z/data=!3m1!4b1?entry=ttu`
-      } else {
+      if (!isEmptyValue(coordinates.value)) {
+        baseUrlMap += coordinates.value
+      } else if (!isEmptyValue(setLocation.value)) {
         baseUrlMap += setLocation.value
       }
       window.open(baseUrlMap, '_blank')
@@ -201,6 +188,18 @@ export default defineComponent({
         return addres
       }
     })
+
+    const coordinates = computed(() => {
+      const location = currentAddressLocationValues.value
+      const latitude = location.latitude
+      const longitude = location.longitude
+      const altura = location.altitude
+      if (!isEmptyValue(latitude) && !isEmptyValue(longitude) && !isEmptyValue(altura)) {
+        return `@${formatCoordinateByDecimal(latitude)},${formatCoordinateByDecimal(longitude)},${removeDecimals(altura)}z/data=!3m1!4b1?entry=ttu`
+      }
+      return
+    })
+
     const countryId = computed(() => {
       return store.getters.getAttributeFieldLocations({
         attribute: 'country_id'
@@ -239,7 +238,6 @@ export default defineComponent({
         }
         if (sequeceCaptureItem.isMandatory) {
           const properties = ATTRIBUTES_BY_CAPTURE[sequeceCaptureItem.capture]
-          console.log(properties)
           for (const property of properties) {
             if (isAllowCities && property === 'city_id') {
               continue
@@ -346,15 +344,13 @@ export default defineComponent({
     }
 
     return {
-      // Ref
-      latitude,
-      longitude,
-      altura,
       //
       currentAddressLocationValues,
       countryId,
       fieldSequenceLocations,
       isEmptyMandatory,
+      coordinates,
+      setLocation,
       // Actions Buttons
       close,
       sendValue,
