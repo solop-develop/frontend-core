@@ -147,6 +147,8 @@ export default defineComponent({
         baseUrlMap += coordinates.value
       } if (!isEmptyValue(getCountry.value.name) || !isEmptyValue(setLocation.value)) {
         baseUrlMap += setLocation.value + ',' + getCountry.value.name
+      } else if (!isEmptyValue(setLocation.value)) {
+        baseUrlMap += setLocation.value
       }
       window.open(baseUrlMap, '_blank')
     }
@@ -185,6 +187,9 @@ export default defineComponent({
         if (location.posal_code_additional) {
           addres += location.posal_code_additional + ' '
         }
+        if (location.country_name) {
+          addres += location.country_name + ' '
+        }
         return addres
       } else {
         return addres
@@ -192,6 +197,9 @@ export default defineComponent({
     })
 
     const coordinates = computed(() => {
+      const { latitude, longitude, altitude } = currentAddressLocationValues.value
+      if (!isEmptyValue(latitude) && !isEmptyValue(longitude) && !isEmptyValue(altitude)) {
+        return `@${formatCoordinateByDecimal(latitude)},${formatCoordinateByDecimal(longitude)},${removeDecimals(altitude)}z/data=!3m1!4b1?entry=ttu`
       const { latitude, longitude, altitude } = currentAddressLocationValues.value
       if (!isEmptyValue(latitude) && !isEmptyValue(longitude) && !isEmptyValue(altitude)) {
         return `@${formatCoordinateByDecimal(latitude)},${formatCoordinateByDecimal(longitude)},${removeDecimals(altitude)}z/data=!3m1!4b1?entry=ttu`
