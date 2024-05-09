@@ -96,7 +96,7 @@ export function getSequenceAsList(captureSequence) {
   return sequenceWithMandatory
 }
 
-export const URL_BASE_MAP = 'https://www.google.com/maps?q='
+export const URL_BASE_MAP = 'https://www.google.com/maps/search/'
 
 export const COORDENATES_COLUMN_NAMES = [
   COLUMNNAME_Altitude,
@@ -133,10 +133,14 @@ export const ATTRIBUTES_BY_CAPTURE = {
  * @param {number} coordenate
  * @returns {string}
  */
-export function formatCoordinateByDecimal(coordenate) {
+export function formatCoordinateByDecimal(value) {
   return new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 6
-  }).format(coordenate)
+  }).format(value)
+}
+
+export function removeDecimals(num) {
+  return Math.trunc(num)
 }
 
 const Address1FieldComponent = () => import('@/components/ADempiere/FieldDefinition/FieldLocationAddress/locationAddressForm/address1Field.vue')
