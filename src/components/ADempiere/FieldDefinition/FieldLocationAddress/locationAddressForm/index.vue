@@ -145,11 +145,9 @@ export default defineComponent({
       let baseUrlMap = URL_BASE_MAP
       if (!isEmptyValue(coordinates.value)) {
         baseUrlMap += coordinates.value
-      } 
+      }
       if (!isEmptyValue(getCountry.value) || !isEmptyValue(setLocation.value)) {
         baseUrlMap += setLocation.value + ',' + getCountry.value.name
-      } else if (!isEmptyValue(setLocation.value)) {
-        baseUrlMap += setLocation.value
       }
       window.open(baseUrlMap, '_blank')
     }
