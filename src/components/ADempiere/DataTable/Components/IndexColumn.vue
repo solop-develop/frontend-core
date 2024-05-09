@@ -22,7 +22,7 @@
     :index="indexTable"
     label="#"
     class-name="number-align"
-    min-width="30"
+    min-width="10"
     header-align="center"
   />
 </template>

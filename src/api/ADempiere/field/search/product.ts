@@ -369,20 +369,28 @@ export function requestListWarehouseStocks({
 }
 
 export function requestListSubstituteProducts({
-  productId
+  productId,
+  priceList
 }) {
   return request({
     url: `/field/products/${productId}/substitutes`,
-    method: 'get'
+    method: 'get',
+    params: {
+      price_list_version_id: priceList
+    }
   })
 }
 
 export function requestListRelatedProducts({
-  productId
+  productId,
+  priceList
 }) {
   return request({
     url: `/field/products/${productId}/relateds`,
-    method: 'get'
+    method: 'get',
+    params: {
+      price_list_version_id: priceList
+    }
   })
 }
 

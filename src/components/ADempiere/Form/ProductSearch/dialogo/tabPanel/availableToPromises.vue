@@ -22,62 +22,118 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     :data="recordList"
     border
     height="300"
+    class="products-table-avalaible"
     style="width: 100%"
   >
     <el-table-column
       prop="name"
       header-align="center"
-      :label="$t('field.product.availableToPromisesTables.value')"
+      min-width="120"
+      :label="$t('field.product.availableToPromisesTables.warehouse')"
     />
     <el-table-column
       prop="locator"
       header-align="center"
+      min-width="120"
       :label="$t('field.product.availableToPromisesTables.locator')"
     />
     <el-table-column
-      prop="available_quantity"
-      :label="$t('field.product.availableToPromisesTables.availableQuantity')"
+      prop="document_no"
+      :label="$t('field.product.availableToPromisesTables.documentNo')"
+      min-width="170"
     />
+    <el-table-column
+      v-if="showDetails"
+      prop="date"
+      header-align="center"
+      :label="$t('field.product.availableToPromisesTables.date')"
+      min-width="120"
+    >
+      <span slot-scope="scope" class="cell-align-right">
+        {{ formatDate({ value: scope.row.date }) }}
+      </span>
+    </el-table-column>
     <el-table-column
       prop="on_hand_quantity"
       header-align="center"
-      :label="$t('field.product.availableToPromisesTables.onHandQuantity')"
-    />
+      :label="$t('field.product.availableToPromisesTables.quantityStock')"
+      min-width="175"
+    >
+      <span slot-scope="scope" class="cell-align-right">
+        {{ formatQuantity({ value: scope.row.on_hand_quantity }) }}
+      </span>
+    </el-table-column>
     <el-table-column
-      prop="expected_change_quantity"
+      prop="reserved_quantity"
       header-align="center"
-      :label="$t('field.product.availableToPromisesTables.expectedChangeQuantity')"
-      width="220"
-    />
+      min-width="160"
+      :label="$t('field.product.availableToPromisesTables.onHandQuantity')"
+    >
+      <span slot-scope="scope" class="cell-align-right">
+        {{ formatQuantity({ value: scope.row.reserved_quantity }) }}
+      </span>
+    </el-table-column>
+    <el-table-column
+      prop="available_quantity"
+      header-align="center"
+      min-width="160"
+      :label="$t('field.product.availableToPromisesTables.availableQuantity')"
+    >
+      <span slot-scope="scope" class="cell-align-right">
+        {{ formatQuantity({ value: scope.row.available_quantity }) }}
+      </span>
+    </el-table-column>
+    <el-table-column
+      prop="ordered_quantity"
+      header-align="center"
+      min-width="150"
+      :label="$t('field.product.availableToPromisesTables.quantityOrdered')"
+    >
+      <span slot-scope="scope" class="cell-align-right">
+        {{ formatQuantity({ value: scope.row.ordered_quantity }) }}
+      </span>
+    </el-table-column>
+    <el-table-column
+      prop="available_to_promise_quantity"
+      header-align="center"
+      min-width="190"
+      :label="$t('field.product.availableToPromisesTables.availablePromise')"
+    >
+      <span slot-scope="scope" class="cell-align-right">
+        {{ formatQuantity({ value: scope.row.available_to_promise_quantity }) }}
+      </span>
+    </el-table-column>
     <el-table-column
       prop="business_partner"
       header-align="center"
       :label="$t('field.product.availableToPromisesTables.businessPartner')"
+      min-width="150"
     />
     <el-table-column
-      prop="reserved_quantity"
-      header-align="center"
-      :label="$t('field.product.availableToPromisesTables.reservedQuantity')"
-    />
-    <el-table-column
-      prop="document_no"
-      header-align="center"
-      :label="$t('field.product.availableToPromisesTables.documentNo')"
-    />
-    <el-table-column
+      v-if="showDetails"
       prop="attribute_set_instance"
       header-align="center"
-      :label="$t('field.product.availableToPromisesTables.attributeSetInstance')"
+      min-width="180"
+      :label="$t('field.product.availableToPromisesTables.instanceAttributeSet')"
     />
   </el-table>
 </template>
 
 <script>
 import { defineComponent, computed } from '@vue/composition-api'
+import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
+import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import store from '@/store'
 
 export default defineComponent({
   name: 'AvailableToPromise',
+
+  props: {
+    showDetails: {
+      typeof: 'boolean',
+      default: false
+    }
+  },
 
   setup() {
     /**
@@ -98,7 +154,10 @@ export default defineComponent({
       // Computed
       availableToPromises,
       isLoadingTable,
-      recordList
+      recordList,
+      // Methods
+      formatQuantity,
+      formatDate
     }
   }
 })
@@ -112,3 +171,40 @@ export default defineComponent({
   text-align: end;
 }
 </style>
+<style lang="scss">
+.products-table-avalaible {
+  &.el-table {
+    .el-table__header {
+      th.el-table__cell {
+        padding: 0px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        .cell {
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+      }
+    }
+    .el-table__body {
+      .el-table__row {
+        .el-table__cell {
+          padding-top: 5px;
+          padding-bottom: 3px;
+          .cell {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+            word-break: break-all;
+            line-height: 15px;
+            padding-left: 5px;
+            padding-right: 5px;
+          }
+        }
+      }
+    }
+  }
+}
+</style>
+

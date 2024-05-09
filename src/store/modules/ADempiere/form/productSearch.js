@@ -181,9 +181,14 @@ const formProductSearch = {
           return resolve()
         }
         const { id } = product
+        const priceList = getters.getProductSearchFieldQueryFilterByAttribute({
+          containerUuid: 'product_search_form',
+          attributeKey: 'price_list_version_id'
+        })
         let listSubstitute
         requestListSubstituteProducts({
-          productId: id
+          productId: id,
+          priceList
         })
           .then(response => {
             const { records } = response
@@ -218,9 +223,14 @@ const formProductSearch = {
           return resolve()
         }
         const { id } = product
+        const priceList = getters.getProductSearchFieldQueryFilterByAttribute({
+          containerUuid: 'product_search_form',
+          attributeKey: 'price_list_version_id'
+        })
         let listRecords
         requestListRelatedProducts({
-          productId: id
+          productId: id,
+          priceList
         })
           .then(response => {
             const { records } = response

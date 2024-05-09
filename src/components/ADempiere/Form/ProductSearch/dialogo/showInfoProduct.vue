@@ -22,7 +22,8 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     :center="true"
     :modal="false"
     :custom-class="'product-search-details'"
-    width="81%"
+    width="90%"
+    top="10vh"
     :title="title"
   >
     <span v-if="!isEmptyValue(product)">

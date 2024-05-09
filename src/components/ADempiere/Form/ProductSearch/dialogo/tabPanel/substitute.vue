@@ -20,6 +20,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
   <el-table
     v-loading="isLoadingTable"
     :data="recordList"
+    class="products-table-avalaible"
     border
     height="300"
     style="width: 100%"
@@ -27,44 +28,68 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     <el-table-column
       prop="value"
       header-align="center"
+      min-width="130"
       :label="$t('field.product.substituteTables.value')"
     />
     <el-table-column
       prop="name"
       header-align="center"
+      min-width="130"
       :label="$t('field.product.substituteTables.name')"
     />
     <el-table-column
       prop="warehouse"
       header-align="center"
+      min-width="130"
       :label="$t('field.product.substituteTables.warehouse')"
     />
     <el-table-column
       prop="available_quantity"
       header-align="center"
+      min-width="160"
       :label="$t('field.product.substituteTables.availableQuantity')"
-    />
+    >
+      <span slot-scope="scope" class="cell-align-right">
+        {{ formatQuantity({ value: scope.row.available_quantity }) }}
+      </span>
+    </el-table-column>
     <el-table-column
       prop="reserved_quantity"
       header-align="center"
+      min-width="160"
       :label="$t('field.product.substituteTables.reservedQuantity')"
-    />
+    >
+      <span slot-scope="scope" class="cell-align-right">
+        {{ formatQuantity({ value: scope.row.reserved_quantity }) }}
+      </span>
+    </el-table-column>
     <el-table-column
       prop="on_hand_quantity"
       header-align="center"
+      min-width="160"
       :label="$t('field.product.substituteTables.onHandQuantity')"
-    />
+    >
+      <span slot-scope="scope" class="cell-align-right">
+        {{ formatQuantity({ value: scope.row.on_hand_quantity }) }}
+      </span>
+    </el-table-column>
     <el-table-column
       prop="standard_price"
       header-align="center"
+      min-width="160"
       :label="$t('field.product.substituteTables.standardPrice')"
-    />
+    >
+      <span slot-scope="scope" class="cell-align-right">
+        {{ formatQuantity({ value: scope.row.standard_price }) }}
+      </span>
+    </el-table-column>
   </el-table>
 </template>
 
 <script>
 import { defineComponent, computed } from '@vue/composition-api'
 import store from '@/store'
+import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 
 export default defineComponent({
   name: 'Substitute',
@@ -88,7 +113,8 @@ export default defineComponent({
       // Computed
       substitute,
       isLoadingTable,
-      recordList
+      recordList,
+      formatQuantity
     }
   }
 })

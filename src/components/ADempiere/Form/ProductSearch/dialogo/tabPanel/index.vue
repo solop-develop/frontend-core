@@ -32,7 +32,27 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       <relateds />
     </el-tab-pane>
     <el-tab-pane :label="$t('field.product.availableToPromises')" name="availableToPromises">
-      <availableToPromises />
+      <el-form
+        label-position="left"
+        size="mini"
+        class="form-base"
+        @submit.native.prevent="notSubmitForm"
+      >
+        <el-form-item
+          :label="$t('field.product.availableToPromisesTables.showDetails')"
+          class="form-item-criteria"
+          style="margin: 0px;width: 100%;"
+        >
+          <el-switch
+            v-model="showDetails"
+            @change="loadAvailable"
+          />
+        </el-form-item>
+      </el-form>
+      <br>
+      <availableToPromises
+        :show-details="showDetails"
+      />
     </el-tab-pane>
     <el-tab-pane :label="$t('field.product.vendorPurchases')" name="vendorPurchases">
       <vendorPurchases />
@@ -49,10 +69,6 @@ import substitute from '@/components/ADempiere//Form/ProductSearch/dialogo/tabPa
 import relateds from '@/components/ADempiere//Form/ProductSearch/dialogo/tabPanel/relateds.vue'
 import availableToPromises from '@/components/ADempiere//Form/ProductSearch/dialogo/tabPanel/availableToPromises.vue'
 import vendorPurchases from '@/components/ADempiere//Form/ProductSearch/dialogo/tabPanel/vendorPurchases.vue'
-// import store from '@/store'
-// // Utils and Helper Methods
-// import { convertBooleanToTranslationLang } from '@/utils/ADempiere/formatValue/booleanFormat'
-// import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({
   name: 'TabPanel',
@@ -70,6 +86,7 @@ export default defineComponent({
      * Ref
      */
 
+    const showDetails = ref(false)
     const activeName = ref('warehouseStocks')
 
     selectTabs(activeName.value)
@@ -95,9 +112,15 @@ export default defineComponent({
       }
     }
 
+    function loadAvailable() {
+      store.dispatch('requestListAvailable')
+    }
+
     return {
       activeName,
-      selectTabs
+      showDetails,
+      selectTabs,
+      loadAvailable
     }
   }
 })
