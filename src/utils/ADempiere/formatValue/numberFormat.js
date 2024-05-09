@@ -350,7 +350,7 @@ export function formatExponential(value) {
       exponential = getStandardPrecision()
     }
 
-    // TODO: Verify with formatQuantity
+    // TODO: Verify with spot
     return Number.parseFloat(value)
       .toFixed(exponential)
   }

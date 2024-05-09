@@ -28,7 +28,6 @@
         label-position="left"
         size="small"
         label-width="185px"
-        @shortkey.native="keyAction"
       >
         <el-row :gutter="0">
           <!-- List Fields -->
@@ -146,12 +145,16 @@ export default defineComponent({
       let baseUrlMap = URL_BASE_MAP
       if (!isEmptyValue(coordinates.value)) {
         baseUrlMap += coordinates.value
-      } else if (!isEmptyValue(setLocation.value)) {
-        baseUrlMap += setLocation.value
+      }
+      if (!isEmptyValue(getCountry.value) || !isEmptyValue(setLocation.value)) {
+        baseUrlMap += setLocation.value + ',' + getCountry.value.name
       }
       window.open(baseUrlMap, '_blank')
     }
 
+    const getCountry = computed(() => {
+      return store.getters.getStoredCountryDefinition(countryId.value)
+    })
     const setLocation = computed(() => {
       const location = currentAddressLocationValues.value
       let addres = ''
@@ -174,6 +177,9 @@ export default defineComponent({
         if (location.state) {
           addres += location.state + ' '
         }
+        if (location.region_name) {
+          addres += location.region_name + ' '
+        }
         if (location.postal_code) {
           addres += location.postal_code + ' '
         }
@@ -190,12 +196,9 @@ export default defineComponent({
     })
 
     const coordinates = computed(() => {
-      const location = currentAddressLocationValues.value
-      const latitude = location.latitude
-      const longitude = location.longitude
-      const altura = location.altitude
-      if (!isEmptyValue(latitude) && !isEmptyValue(longitude) && !isEmptyValue(altura)) {
-        return `@${formatCoordinateByDecimal(latitude)},${formatCoordinateByDecimal(longitude)},${removeDecimals(altura)}z/data=!3m1!4b1?entry=ttu`
+      const { latitude, longitude, altitude } = currentAddressLocationValues.value
+      if (!isEmptyValue(latitude) && !isEmptyValue(longitude) && !isEmptyValue(altitude)) {
+        return `@${formatCoordinateByDecimal(latitude)},${formatCoordinateByDecimal(longitude)},${removeDecimals(altitude)}z/data=!3m1!4b1?entry=ttu`
       }
       return
     })
@@ -344,7 +347,6 @@ export default defineComponent({
     }
 
     return {
-      //
       currentAddressLocationValues,
       countryId,
       fieldSequenceLocations,
