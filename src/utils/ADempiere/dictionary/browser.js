@@ -556,7 +556,7 @@ export const containerManager = {
       parentUuid,
       containerUuid,
       contextColumnNames,
-      fieldId: id,
+      browseFieldId: id,
       tableName,
       columnName,
       filters,
