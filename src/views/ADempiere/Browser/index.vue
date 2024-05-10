@@ -23,12 +23,12 @@
     key="browser-loaded"
     class="view-base browser-view"
   >
-    <el-card class="content-collapse card-browser" style="overflow: auto;position: absolute;height: -webkit-fill-available !important;padding-bottom: 2%!important">
+    <el-card class="content-collapse card-browser" style="overflow: auto;position: absolute;height: -webkit-fill-available !important;">
       <title-and-help
         :name="browserMetadata.name"
         :help="browserMetadata.help"
       />
-      <p style="text-align: end;">
+      <p style="margin-top:0px; padding-top:0px; text-align: end;">
         <action-menu
           :container-manager="containerManager"
           :container-uuid="browserMetadata.uuid"
