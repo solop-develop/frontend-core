@@ -25,7 +25,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       <span style="margin-left:0px; margin-bottom:10px; font-weight: 700; font-size:medium;">
         {{ metadata.reference }}
       </span>
-      <span style="position:absolute; float:right">
+      <span style="margin-left: 60%">
         <el-switch />
       </span>
     </el-descriptions-item>
