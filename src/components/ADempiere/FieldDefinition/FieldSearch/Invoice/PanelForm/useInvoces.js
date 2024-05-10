@@ -32,7 +32,6 @@ import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-// import { generateDisplayedValue } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'

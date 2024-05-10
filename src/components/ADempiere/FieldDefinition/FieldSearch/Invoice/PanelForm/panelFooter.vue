@@ -28,6 +28,7 @@
         :page-size="pageSize"
         :handle-change-page-number="setPageNumber"
         :handle-change-page-size="setPageSize"
+        style="float: left;"
       />
     </el-col>
 
@@ -81,7 +82,7 @@ import {
 
 // Components and Mixins
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
-import useBusinessPartner from './useBusinessPartner'
+import useBusinessPartner from './useInvoces'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'

@@ -29,7 +29,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       @visible-change="showListBP"
     >
       <empty-option-select
-        :current-value="currentSaleOrder"
+        :current-value="currentValue"
         :is-allows-zero="false"
       />
       <el-option

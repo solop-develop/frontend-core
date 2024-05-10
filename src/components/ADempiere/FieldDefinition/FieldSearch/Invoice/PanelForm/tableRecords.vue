@@ -166,7 +166,7 @@ import {
 
 // Components and Mixins
 import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
-import useBusinessPartner from './useBusinessPartner'
+import useBusinessPartner from './useInvoces'
 
 // Utils and Helper Methods
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
