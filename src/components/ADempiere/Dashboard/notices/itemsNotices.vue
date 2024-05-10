@@ -20,48 +20,40 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
   <el-descriptions
     direction="horizontal"
     :column="1"
-    border
   >
     <el-descriptions-item>
+      <span style="margin-left:0px; margin-bottom:10px; font-weight: 700; font-size:medium;">
+        {{ metadata.reference }}
+      </span>
+      <span style="position:absolute; float:right">
+        <el-switch />
+      </span>
+    </el-descriptions-item>
+    <el-descriptions-item>
       <template slot="label">
-        <svg-icon
-          icon-class="user"
-          class="icon-window"
-          style="font-size: 16px;"
-        />
-        {{ $t('window.containerInfo.notices.user') }}
+        <!-- {{ $t('window.containerInfo.notices.user') }} -->
       </template>
-      <el-tag>
-        <svg-icon
-          icon-class="user"
-          class="icon-window"
-          style="font-size: 16px;"
-        />
+      <svg-icon
+        icon-class="user"
+        class="icon-window"
+        style="font-size: 16px;"
+      />
+      <span style="margin-left:20px; margin-bottom:10px; font-weight: 600">
         {{ metadata.user.name }}
-      </el-tag>
+      </span>
     </el-descriptions-item>
-    <el-descriptions-item label="Username">
+    <el-descriptions-item>
+      <span style="margin-left:42px; margin-bottom:10px; font-weight: 500">
+        {{ metadata.text_message }}
+      </span>
+    </el-descriptions-item>
+    <el-descriptions-item>
       <template slot="label">
-        <svg-icon
-          icon-class="calendar"
-          class="icon-window"
-          style="font-size: 16px;"
-        />
-        {{ $t('window.containerInfo.log.created') }}
+        <!-- {{ $t('window.containerInfo.log.created') }} -->
       </template>
-      {{ translateDate( {value: metadata.created, format: 'long' }) }}
-    </el-descriptions-item>
-    <el-descriptions-item
-      :label="$t('page.processActivity.logs')"
-      label-style="{ color: #606266; font-weight: bold; }"
-    >
-      {{ metadata.text_message }}
-    </el-descriptions-item>
-    <el-descriptions-item
-      label="Referencia"
-      label-style="{ color: #606266; font-weight: bold; }"
-    >
-      {{ metadata.reference }}
+      <span style="margin-left:10px; padding-bottom:10px">
+        {{ translateDate( {value: metadata.created, format: 'long' }) }}
+      </span>
     </el-descriptions-item>
     <!-- <el-descriptions-item
       :label="$t('window.containerInfo.log.recordID')"
@@ -139,8 +131,11 @@ export default defineComponent({
   .icon-window {
     font-size: large;
     color: #36a3f7;
+    margin-left: 5px;
+    margin-top:2px
   }
   .action-tag {
     float: right;
   }
+
 </style>
