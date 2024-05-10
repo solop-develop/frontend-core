@@ -541,4 +541,37 @@ export default defineComponent({
     padding-right: 10px;
   }
 }
+
+:root {
+  --base-table: auto
+}
+@media screen and (min-height: 720px) {
+  :root {
+    --base-table: 35vh;
+  }
+}
+@media screen and (min-height: 800px) {
+  :root {
+    --base-table: 45vh;
+  }
+}
+@media screen and (min-height: 1080px) {
+  :root {
+    --base-table: 55vh;
+  }
+}
+@media screen and (min-height: 1200px) {
+  :root {
+    --base-table: 60vh;
+  }
+}
+@media screen and (min-height: 1400px) {
+  :root {
+    --base-table: 65vh;
+  }
+}
+.el-table__body-wrapper {
+  overflow-y: auto;
+  height: var(--base-table)!important;
+}
 </style>
