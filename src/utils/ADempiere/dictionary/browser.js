@@ -551,6 +551,21 @@ export const containerManager = {
     })
   },
 
+  getInvoiceSearchFieldRecordList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, id, filters, searchValue, pageNumber, pageSize }) {
+    return store.dispatch('gridInvoices', {
+      parentUuid,
+      containerUuid,
+      contextColumnNames,
+      fieldId: id,
+      tableName,
+      columnName,
+      filters,
+      searchValue,
+      pageNumber,
+      pageSize
+    })
+  },
+
   warehouseLocatorSearch({
     containerUuid,
     parentUuid,

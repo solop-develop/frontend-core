@@ -26,23 +26,23 @@ import {
   UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX
 } from '@/utils/ADempiere/dictionaryUtils'
 import {
-  INVOICE_LIST_FORM,
-  COLUMN_NAME
-} from '@/utils/ADempiere/dictionary/field/search/invoice.js'
+  BUSINESS_PARTNERS_LIST_FORM
+} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import { generateDisplayedValue } from '@/utils/ADempiere/dictionary/field/search/invoice.js'
+// import { generateDisplayedValue } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
-
+import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
+import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
 /**
- * Use Business Partner as mixin
+ * Use Invoces as mixin
  * @param {*} recordRow
  * @returns
  */
 export default ({
-  uuidForm = INVOICE_LIST_FORM,
+  uuidForm = BUSINESS_PARTNERS_LIST_FORM,
   parentUuid,
   containerUuid,
   containerManager,
@@ -51,26 +51,17 @@ export default ({
   const timeOutRecords = ref(null)
 
   const blankValues = computed(() => {
-    const { column_name, elementColumnName } = this.metadata
     return {
-      [column_name]: undefined,
-      [elementColumnName]: undefined,
-      [COLUMN_NAME]: undefined,
-      id: undefined,
-      uuid: undefined,
-      business_partner: undefined,
-      date_invoiced: undefined,
-      document_no: undefined,
-      currency: undefined,
-      grand_total: undefined,
-      converted_amount: undefined,
-      open_amount: undefined,
-      payment_term: undefined,
-      is_paid: undefined,
-      is_sales_transaction: undefined,
+      documentNo: undefined,
+      isSalesTransaction: undefined,
+      businessPartnerId: undefined,
+      isPaid: undefined,
       description: undefined,
-      po_reference: undefined,
-      document_status: undefined
+      invoiceDateFrom: undefined,
+      invoiceDateTo: undefined,
+      orderId: undefined,
+      grandTotalFrom: undefined,
+      grandTotalTo: undefined
     }
   })
 
@@ -92,13 +83,13 @@ export default ({
 
   const currentRow = computed({
     set(rowSelected) {
-      store.commit('setBusinessPartnerSelectedRow', {
+      store.commit('setInvoiceFieldSelectedRow', {
         containerUuid: uuidForm,
         currentRow: rowSelected
       })
     },
     get() {
-      return store.getters.getBusinessPartnerCurrentRow({
+      return store.getters.getInvoiceCurrentRow({
         containerUuid: uuidForm
       })
     }
@@ -106,13 +97,13 @@ export default ({
 
   const showQueryFields = computed({
     set(newValue) {
-      store.commit('setBusinessPartnerShowQueryFields', {
+      store.commit('setInvoiceFieldShowQueryFields', {
         containerUuid: uuidForm,
         showQueryFields: newValue
       })
     },
     get() {
-      return store.getters.getBusinessPartnerShowQueryFields({
+      return store.getters.getInvoiceShowQueryFields({
         containerUuid: uuidForm
       })
     }
@@ -132,18 +123,21 @@ export default ({
   }
 
   function closeList() {
-    store.commit('setInoviceShow', {
+    store.commit('setInvoiceFieldShow', {
       containerUuid: uuidForm,
       show: false
     })
   }
+
   function setValues(recordRow) {
     const { columnName, elementName, isSameColumnElement } = fieldAttributes
-    const { uuid, id } = recordRow
+    const { uuid, id, document_no, date_invoiced, grand_total } = recordRow
 
-    const displayValue = generateDisplayedValue(recordRow)
-
+    let displayValue = document_no
+    if (!isEmptyValue(date_invoiced)) displayValue += '_' + formatDate({ value: date_invoiced })
+    if (!isEmptyValue(grand_total)) displayValue += '_' + formatQuantity({ value: grand_total })
     // console.log(displayValue)
+
     store.commit('updateValueOfField', {
       parentUuid,
       containerUuid,
@@ -218,7 +212,7 @@ export default ({
     clearTimeout(timeOutRecords.value)
     timeOutRecords.value = setTimeout(() => {
       // search on server
-      containerManager.getSearchRecordsList({
+      containerManager.getInvoiceSearchFieldRecordList({
         parentUuid,
         containerUuid: uuidForm,
         contextColumnNames: fieldAttributes.reference.context_column_names,
@@ -229,24 +223,8 @@ export default ({
         pageNumber,
         pageSize
       })
-        .then(response => {
-          // store.commit('setFiltersList', {
-          //   containerUuid: uuidForm,
-          //   isSOTrx: this.isSOTrx
-          // })
-          if (isEmptyValue(response)) {
-            // this.$message({
-            //   type: 'warning',
-            //   showClose: true,
-            //   message: this.$t('businessPartner.notFound')
-            // })
-          }
-
-          nextTick(() => {
-            // if (this.$refs.businessPartnerTable) {
-            //   this.$refs.businessPartnerTable.setCurrentRow(this.currentRow)
-            // }
-          })
+        .then(() => {
+          nextTick(() => {})
         })
     }, 500)
   }
@@ -281,7 +259,7 @@ export default ({
     //
     clearValues,
     closeList,
-    generateDisplayedValue,
+    // generateDisplayedValue,
     keyAction,
     setValues,
     loadRecordsList

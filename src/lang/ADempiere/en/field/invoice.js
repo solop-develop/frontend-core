@@ -31,7 +31,8 @@ const invoice = {
   convertedAmount: 'Converted',
   openAmount: 'Open',
   paymentTerm: 'Payment Term',
-  reference: 'Business Partner Order Reference'
+  reference: 'Business Partner Order Reference',
+  emptyInvoice: 'Use the Filters to Perform the Search'
 }
 
 export default invoice

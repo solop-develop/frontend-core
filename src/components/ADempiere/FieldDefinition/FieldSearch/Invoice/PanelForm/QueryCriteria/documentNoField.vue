@@ -15,40 +15,55 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
+
 <template>
   <el-form-item
-    :label="$t('field.invoice.description')"
+    :label="$t('field.invoice.document')"
   >
     <el-input
-      v-model="descriptionFieldValue"
+      v-model="currentValue"
       clearable
-      @input="currentValue()"
     />
   </el-form-item>
 </template>
 
 <script>
-import { defineComponent, ref } from '@vue/composition-api'
+import { computed, defineComponent } from '@vue/composition-api'
+
 import store from '@/store'
 
 export default defineComponent({
-  name: 'DescriptionField',
+  name: 'DocumentNo',
 
-  setup() {
-    const descriptionFieldValue = ref('')
-
-    const currentValue = () => {
-      store.dispatch('searchInvociesInfos', {
-        description: descriptionFieldValue.value
-      })
+  props: {
+    uuidForm: {
+      required: true,
+      type: String
     }
+  },
+
+  setup(props) {
+    const ATTRIBUTE_KEY = 'documentNo'
+
+    const currentValue = computed({
+      set(newValue) {
+        store.commit('setInvoiceFieldQueryFilterByAttribute', {
+          containerUuid: props.uuidForm,
+          attributeKey: ATTRIBUTE_KEY,
+          value: newValue
+        })
+      },
+      get() {
+        return store.getters.getInvoicesQueryFilterByAttribute({
+          containerUuid: props.uuidForm,
+          attributeKey: ATTRIBUTE_KEY
+        })
+      }
+    })
 
     return {
-      descriptionFieldValue,
-      //
       currentValue
     }
   }
-
 })
 </script>

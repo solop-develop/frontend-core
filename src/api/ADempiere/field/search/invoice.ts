@@ -80,35 +80,57 @@ export function requestListBusinessPartners({
 }
 
 export function requestListInvoicesInfo({
-  page_size,
-  page_token,
-  document_no,
-  is_sales_transaction,
-  business_partner_id,
-  is_paid,
+  // Page Data
+  pageSize,
+  pageToken,
+  searchValue,
+  contextAttributes,
+  // references
+  processParameterId,
+  fieldId,
+  browseFieldId,
+  referenceId,
+  columnId,
+  columnName,
+  // Custom Filter
+  documentNo,
+  businessPartnerId,
+  isSalesTransaction,
+  isPaid,
   description,
-  invoice_date_from,
-  invoice_date_to,
-  order_id,
-  grand_total_from,
-  grand_total_to
+  invoiceDateFrom,
+  invoiceDateTo,
+  orderId,
+  grandTotalFrom,
+  grandTotalTo
 }) {
   return request({
     url: '/field/invoices',
     method: 'get',
     params: {
-      page_size,
-      page_token,
-      document_no,
-      is_sales_transaction,
-      business_partner_id,
-      is_paid,
+      // Page Data
+      page_size: pageSize,
+      page_token: pageToken,
+      search_value: searchValue,
+      context_attributes: contextAttributes,
+      // References
+      process_parameter_id: processParameterId,
+      field_id: fieldId,
+      browse_field_id: browseFieldId,
+      reference_id: referenceId,
+      column_id: columnId,
+      column_name: columnName,
+      // Custom Filter
+      document_no: documentNo,
+      business_partner_id: businessPartnerId,
+      is_sales_transaction: isSalesTransaction,
+      is_paid: isPaid,
       description,
-      invoice_date_from,
-      invoice_date_to,
-      order_id,
-      grand_total_from,
-      grand_total_to
+      invoice_date_from: invoiceDateFrom,
+      invoice_date_to: invoiceDateTo,
+      order_id: orderId,
+      grand_total_from: grandTotalFrom,
+      grand_total_to: grandTotalTo
     }
   })
 }

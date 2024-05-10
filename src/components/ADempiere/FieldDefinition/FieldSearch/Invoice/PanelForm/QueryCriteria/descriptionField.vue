@@ -18,58 +18,52 @@
 
 <template>
   <el-form-item
-    :label="$t('field.invoice.invoiceDate')"
-    style="align-items: center;"
+    :label="$t('field.invoice.description')"
   >
-    <div class="date-picker-container">
-      <el-date-picker
-        v-model="billingDateFieldFrom"
-        type="date"
-        placeholder="Select date and time"
-        @change="currentValue()"
-      />
-      <b style="color: #c0c4cc;padding: 0px 5px;font-weight: bold;">
-        —
-      </b>
-      <el-date-picker
-        v-model="billingDateFieldTo"
-        type="date"
-        placeholder="Select date and time"
-        @change="currentValue"
-      />
-    </div>
+    <el-input
+      v-model="currentValue"
+      clearable
+    />
   </el-form-item>
 </template>
 
 <script>
-import { defineComponent, ref } from '@vue/composition-api'
+import { computed, defineComponent } from '@vue/composition-api'
 
 import store from '@/store'
 
 export default defineComponent({
-  name: 'BillingDateField',
-  setup() {
-    const billingDateFieldFrom = ref(null)
-    const billingDateFieldTo = ref(null)
+  name: 'Description',
 
-    const currentValue = () => {
-      store.dispatch('searchInvociesInfos', {
-        invoice_date_from: billingDateFieldFrom.value,
-        invoice_date_to: billingDateFieldTo.value
-      })
+  props: {
+    uuidForm: {
+      required: true,
+      type: String
     }
+  },
+
+  setup(props) {
+    const ATTRIBUTE_KEY = 'description'
+
+    const currentValue = computed({
+      set(newValue) {
+        store.commit('setInvoiceFieldQueryFilterByAttribute', {
+          containerUuid: props.uuidForm,
+          attributeKey: ATTRIBUTE_KEY,
+          value: newValue
+        })
+      },
+      get() {
+        return store.getters.getInvoicesQueryFilterByAttribute({
+          containerUuid: props.uuidForm,
+          attributeKey: ATTRIBUTE_KEY
+        })
+      }
+    })
 
     return {
-      billingDateFieldFrom,
-      billingDateFieldTo,
-      //
       currentValue
     }
   }
 })
 </script>
-  <style scoped>
-  .date-picker-container {
-    display: flex
-  }
-  </style>
