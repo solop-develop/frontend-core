@@ -350,10 +350,20 @@ export function formatExponential(value) {
       exponential = getStandardPrecision()
     }
 
-    // TODO: Verify with formatQuantity
+    // TODO: Verify with spot
     return Number.parseFloat(value)
       .toFixed(exponential)
   }
 
   return value
 }
+
+/**
+ * Replace comma with period
+ * @param {number} value ej: 1,2345
+ * @returns ej: 1.2345
+ */
+export function replaceComma(value) {
+  return value.replace(/,/g, '.')
+}
+

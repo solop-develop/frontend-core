@@ -23,7 +23,7 @@
   >
     <template slot="label">
       <span class="field-title-name" style="color:#606266 !important">
-        {{ regionName }}
+        {{ regionTitle }}
       </span>
       <span v-if="isMandatory" style="color: #f34b4b"> * </span>
     </template>
@@ -36,6 +36,7 @@
       size="mini"
       :default-first-option="true"
       @visible-change="showRegions"
+      @change="changeRegion()"
     >
       <empty-option-select
         :current-value="currentRegionId"
@@ -88,7 +89,7 @@ export default defineComponent({
       })
     })
 
-    const regionName = computed(() => {
+    const regionTitle = computed(() => {
       const countryDefinition = store.getters.getStoredCountryDefinition(
         currentCountryId.value
       )
@@ -135,6 +136,19 @@ export default defineComponent({
       }
     })
 
+    function changeRegion() {
+      const region = regionsList.value.find(item => item.id === currentRegionId.value)
+      if (!isEmptyValue(region)) {
+        const regionName = region.name
+        store.commit('setAttributeFieldLocations', {
+          attribute: 'region_name',
+          value: regionName
+        })
+      } else {
+        return
+      }
+    }
+
     function showRegions(show) {
       if (!show) {
         return
@@ -145,8 +159,9 @@ export default defineComponent({
     return {
       // Computed
       currentRegionId,
-      regionName,
+      regionTitle,
       regionsList,
+      changeRegion,
       // Methods
       showRegions
     }

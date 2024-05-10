@@ -26,10 +26,11 @@
   >
     <el-form-item :label="$t('form.productInfo.codeProduct')">
       <el-input
-        v-model="searchValue"
+        v-model="currentValue"
         :placeholder="$t('quickAccess.searchWithEnter')"
         clearable
         @input="hangleChange"
+        @change="hangle"
       />
       <el-row :gutter="10">
         <el-col :span="6">
@@ -50,6 +51,7 @@
         <el-col :span="6">
           <price-list-version-field
             :uuid-form="uuidForm"
+            :parent-uuid="uuidForm"
           />
         </el-col>
         <el-col :span="6">
@@ -81,8 +83,8 @@
 </template>
 
 <script>
-import { defineComponent, ref } from '@vue/composition-api'
-
+import { defineComponent, ref, computed } from '@vue/composition-api'
+import store from '@/store'
 // Components and Mixins
 import VendorField from '@/components/ADempiere/FieldDefinition/FieldSearch/ProductInfo/PanelForm/QueryCriteria/vendorField.vue'
 import WarehouseField from '@/components/ADempiere/FieldDefinition/FieldSearch/ProductInfo/PanelForm/QueryCriteria/warehouseField.vue'
@@ -121,14 +123,43 @@ export default defineComponent({
     }
   },
 
-  setup() {
+  setup(props) {
     /**
      * Ref
      */
     const searchValue = ref('')
 
+    /**
+     * Computed
+     */
+    const currentValue = computed({
+      set(newValue) {
+        store.commit('setProductSearchFieldQueryFilterByAttribute', {
+          containerUuid: props.uuidForm,
+          attributeKey: 'search_value',
+          value: newValue
+        })
+      },
+      get() {
+        return store.getters.getProductSearchFieldQueryFilterByAttribute({
+          containerUuid: props.uuidForm,
+          attributeKey: 'search_value'
+        })
+      }
+    })
+
+    function hangle(value) {
+      store.commit('setProductSearchFieldQueryFilterByAttribute', {
+        containerUuid: props.uuidForm,
+        attributeKey: 'search_value',
+        value: value
+      })
+    }
+
     return {
-      searchValue
+      hangle,
+      searchValue,
+      currentValue
     }
   }
 })

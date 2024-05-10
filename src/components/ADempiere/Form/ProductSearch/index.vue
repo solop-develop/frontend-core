@@ -25,15 +25,18 @@
       :hangle-change="searchProduct"
     />
     <el-table
+      id="productInfoTable"
+      ref="productInfoTable"
       v-loading="isLoading"
       :data="listProducto"
       :empty-text="$t('quickAccess.searchWithEnter')"
       highlight-current-row
       :border="true"
       max-height="500"
-      class="products-table"
+      class="products-table-avalaible"
       fit
       @current-change="addProduct"
+      @row-dblclick="openProductInfo"
     >
       <index-column
         :page-number="1"
@@ -65,7 +68,7 @@
           prop="standard_price"
           :label="$t('field.product.standardPrice')"
           header-align="center"
-          min-width="127"
+          min-width="129"
         >
           <span slot-scope="scope" class="cell-align-right">
             {{ formatQuantity({ value: scope.row.standard_price }) }}
@@ -82,7 +85,7 @@
         prop="is_stocked"
         :label="$t('field.product.stocked')"
         header-align="center"
-        min-width="100"
+        min-width="105"
       >
         <span slot-scope="scope">
           {{ convertBooleanToTranslationLang(scope.row.is_stocked) }}
@@ -104,7 +107,7 @@
           prop="on_hand_quantity"
           :label="$t('field.product.onHandQuantity')"
           header-align="center"
-          min-width="120"
+          min-width="130"
         >
           <span slot-scope="scope" class="cell-align-right">
             {{ formatQuantity({ value: scope.row.on_hand_quantity }) }}
@@ -115,7 +118,7 @@
         prop="product_category"
         :label="$t('field.product.productCategory')"
         header-align="center"
-        min-width="165"
+        min-width="180"
       />
       <el-table-column
         prop="product_group"
@@ -139,7 +142,7 @@
 
     <p>
       <custom-pagination
-        style="float: right;"
+        style="text-align: left;float: left;"
         :total-records="recordCount"
         :selection="selection"
         :page-number="pageTokenNumber"
@@ -147,6 +150,38 @@
         :handle-change-page-number="handleChangePage"
         :handle-change-page-size="handleSizeChange"
       />
+      <span style="text-align: right; float: right;">
+        <el-button
+          type="danger"
+          class="button-base-icon"
+          icon="el-icon-close"
+          @click="close()"
+        />
+        <el-button
+          type="info"
+          class="button-base-icon"
+          plain
+          @click="cleanQueryCriteria()"
+        >
+          <svg-icon icon-class="layers-clear" />
+        </el-button>
+
+        <el-button
+          :loading="isLoading"
+          type="success"
+          class="button-base-icon"
+          icon="el-icon-refresh-right"
+          @click="searchProduct()"
+        />
+
+        <el-button
+          v-if="!isEmptyValue(product)"
+          type="primary"
+          class="button-base-icon"
+          icon="el-icon-check"
+          @click="openProductInfo"
+        />
+      </span>
     </p>
     <show-info-product
       :is-show="isDetail"
@@ -155,9 +190,9 @@
 </template>
 
 <script>
-import { defineComponent, computed, watch, ref } from '@vue/composition-api'
-
+import { defineComponent, onMounted, computed, watch, ref } from '@vue/composition-api'
 import store from '@/store'
+
 // Components and Mixins
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
@@ -166,13 +201,16 @@ import QueryCriteria from '@/components/ADempiere/Form/ProductSearch/queryCriter
 import ShowInfoProduct from '@/components/ADempiere/Form/ProductSearch/dialogo/showInfoProduct'
 
 // Utils and Helper Methods
+import { getContext } from '@/utils/ADempiere/contextUtils'
 import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
+import { closeTagView } from '@/utils/ADempiere/componentUtils.js'
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 import { convertBooleanToTranslationLang } from '@/utils/ADempiere/formatValue/booleanFormat'
 // API Request Methods
 import {
   requestListProducts
 } from '@/api/ADempiere/field/search/product.ts'
+import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({
   name: 'ProductSearch',
@@ -200,13 +238,14 @@ export default defineComponent({
     /**
      * Ref
      */
-    const searchValue = ref('')
+    // const searchValue = ref('')
     const isDetail = ref(false)
     const isLoading = ref(false)
     const pageSizeNumber = ref(15)
     const pageTokenNumber = ref('')
     const selection = ref(0)
     const recordCount = ref(0)
+    const productInfoTable = ref(null)
 
     let timeoutSearch
 
@@ -220,6 +259,13 @@ export default defineComponent({
           ...list,
           quantity_on_hand: formatQuantity({ value: Number(list.quantity_on_hand) })
         }
+      })
+    })
+
+    const searchValue = computed(() => {
+      return store.getters.getProductSearchFieldQueryFilterByAttribute({
+        containerUuid: uuidForm,
+        attributeKey: 'SearchValue'
       })
     })
 
@@ -283,6 +329,10 @@ export default defineComponent({
       return store.getters.getProductSearchFieldQueryFilters({ containerUuid: uuidForm })
     })
 
+    const product = computed(() => {
+      return store.getters.getCurrentProduct
+    })
+
     // Methods
     function copyCode(row) {
       copyToClipboard({
@@ -300,7 +350,7 @@ export default defineComponent({
           columnName: 'M_Product_ID',
           ...queryCriteria.value,
           // Query
-          searchValue: search,
+          searchValue: queryCriteria.value.search_value,
           pageSize: pageSizeNumber.value,
           pageToken: pageTokenNumber.value
         })
@@ -318,8 +368,11 @@ export default defineComponent({
 
     function addProduct(row) {
       isDetail.value = true
-      store.dispatch('changeShowDialog', true)
       store.commit('setCurrentProduct', row)
+    }
+
+    function openProductInfo(params) {
+      store.dispatch('changeShowDialog', true)
       store.dispatch('requestListWarehouseStocks')
     }
 
@@ -341,7 +394,95 @@ export default defineComponent({
       })
     }
 
+    function cleanQueryCriteria() {
+      store.commit('setProductSearchFieldQueryFilterByAttribute', {
+        containerUuid: uuidForm,
+        attributeKey: 'product_category_id',
+        value: undefined
+      })
+      store.commit('setProductSearchFieldQueryFilterByAttribute', {
+        containerUuid: uuidForm,
+        attributeKey: 'product_class_id',
+        value: undefined
+      })
+      store.commit('setProductSearchFieldQueryFilterByAttribute', {
+        containerUuid: uuidForm,
+        attributeKey: 'product_classification_id',
+        value: undefined
+      })
+      store.commit('setProductSearchFieldQueryFilterByAttribute', {
+        containerUuid: uuidForm,
+        attributeKey: 'product_group_id',
+        value: undefined
+      })
+      store.commit('setProductSearchFieldQueryFilterByAttribute', {
+        containerUuid: uuidForm,
+        attributeKey: 'price_list_version_id',
+        value: undefined
+      })
+      store.commit('setProductSearchFieldQueryFilterByAttribute', {
+        containerUuid: uuidForm,
+        attributeKey: 'is_stocked',
+        value: undefined
+      })
+      store.commit('setProductSearchFieldQueryFilterByAttribute', {
+        containerUuid: uuidForm,
+        attributeKey: 'warehouse_id',
+        value: undefined
+      })
+      store.commit('setProductSearchFieldQueryFilterByAttribute', {
+        containerUuid: uuidForm,
+        attributeKey: 'vendor_id',
+        value: undefined
+      })
+      store.commit('setProductSearchFieldQueryFilterByAttribute', {
+        containerUuid: uuidForm,
+        attributeKey: 'search_value',
+        value: ''
+      })
+      searchProduct()
+    }
+
     setQuery()
+
+    function setCurrent(row) {
+      productInfoTable.value.setCurrentRow(row)
+    }
+
+    function close() {
+      closeTagView()
+    }
+
+    function setContextValue() {
+      const warehouse = getContext({
+        parentUuid: uuidForm,
+        columnName: '#M_Warehouse_ID',
+        isForceSession: true
+      })
+      const priceListVersion = getContext({
+        parentUuid: uuidForm,
+        columnName: '#M_PriceList_ID',
+        isForceSession: true
+      })
+      if (warehouse > 0) {
+        store.dispatch('loadWarehouses')
+          .then(() => {
+            store.commit('setProductSearchFieldQueryFilterByAttribute', {
+              containerUuid: uuidForm,
+              attributeKey: 'warehouse_id',
+              value: warehouse
+            })
+          })
+      }
+
+      if (!isEmptyValue(priceListVersion)) {
+        store.commit('setProductSearchFieldQueryFilterByAttribute', {
+          containerUuid: uuidForm,
+          attributeKey: 'price_list_version_id',
+          value: priceListVersion
+        })
+      }
+    }
 
     /**
      * Watch - watch works directly on a ref
@@ -396,6 +537,14 @@ export default defineComponent({
         searchProduct()
       }
     })
+    setContextValue()
+
+    onMounted(() => {
+      if (isEmptyValue(listProducto.value)) {
+        searchProduct()
+        if (!isEmptyValue(product.value)) setCurrent(product.value)
+      }
+    })
 
     return {
       uuidForm,
@@ -406,6 +555,7 @@ export default defineComponent({
       pageTokenNumber,
       searchValue,
       pageSizeNumber,
+      productInfoTable,
       // Computed
       listProducto,
       recordCount,
@@ -418,15 +568,21 @@ export default defineComponent({
       getProductClassificationField,
       getProductGroupField,
       queryCriteria,
+      product,
       // Methods
       convertBooleanToTranslationLang,
+      cleanQueryCriteria,
       handleChangePage,
       handleSizeChange,
+      openProductInfo,
       formatQuantity,
       searchProduct,
+      closeTagView,
       addProduct,
+      getContext,
       copyCode,
-      setQuery
+      setQuery,
+      close
     }
   }
 })

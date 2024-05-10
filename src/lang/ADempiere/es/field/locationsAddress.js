@@ -27,7 +27,10 @@ const locationsAddress = {
   postalCode: 'Código Postal',
   locationName: 'Nombre de la Dirección',
   additionalPostalCode: 'Código Postal Adicional',
-  reference: 'Nombre de Referencia'
+  reference: 'Nombre de Referencia',
+  altitude: 'Altitud',
+  latitude: 'Latitud',
+  logitude: 'Longitud'
 }
 
 export default locationsAddress

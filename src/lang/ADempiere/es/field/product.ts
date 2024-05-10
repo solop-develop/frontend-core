@@ -85,17 +85,18 @@ const product = {
     onHandQuantity: 'Cantidad Pedida'
   },
   availableToPromisesTables: {
-    name: 'Nombre',
-    value: 'Código',
-    locator: 'localización',
-    availableQuantity: 'Cantidad Disponible',
-    onHandQuantity: 'Cantidad Pedida',
-    expectedChangeQuantity: 'Cantidad de Cambio Prevista',
-    businessPartner: 'Socio de Negocios',
-    reservedQuantity: 'Cantidad Disponible',
-    standardPrice: 'Precio Estandar',
+    showDetails: 'Mostrar Detalle',
+    warehouse: 'Almacén',
+    locator: 'Ubicacion',
     documentNo: 'Número de Documento',
-    attributeSetInstance: 'Attributo'
+    date: 'Fecha',
+    quantityStock: 'Cantidad en Existencia',
+    onHandQuantity: 'Cantidad Reservada',
+    availableQuantity: 'Cantidad Disponible',
+    quantityOrdered: 'Cantidad Ordenada',
+    businessPartner: 'Socio de Negocios',
+    availablePromise: 'Disponible para Promesa',
+    instanceAttributeSet: 'Instancia Conjunto de Atributos'
   },
   vendorPurchasesTables: {
     name: 'Nombre',

@@ -28,7 +28,6 @@
         label-position="left"
         size="small"
         label-width="185px"
-        @shortkey.native="keyAction"
       >
         <el-row :gutter="0">
           <!-- List Fields -->
@@ -43,7 +42,7 @@
               :location-address="currentAddressLocationValues"
             />
           </el-col>
-          <!-- <el-col>
+          <el-col>
             <el-collapse accordion>
               <el-collapse-item name="1">
                 <template slot="title">
@@ -52,30 +51,12 @@
                   </b>
                   <svg-icon icon-class="international" />
                 </template>
-                <el-form-item
-                  :label="$t('field.locationsAddress.latitude')"
-                  class="field-standard"
-                  style="margin: 0px; width: 100%"
-                >
-                  <el-input v-model="latitude" size="mini" />
-                </el-form-item>
-                <el-form-item
-                  :label="$t('field.locationsAddress.logitude')"
-                  class="field-standard"
-                  style="margin: 0px; width: 100%"
-                >
-                  <el-input v-model="longitude" size="mini" />
-                </el-form-item>
-                <el-form-item
-                  :label="$t('field.locationsAddress.altitude')"
-                  class="field-standard"
-                  style="margin: 0px; width: 100%"
-                >
-                  <el-input size="mini" />
-                </el-form-item>
+                <LatitudeField />
+                <LongitudeField />
+                <AltitudeField />
               </el-collapse-item>
             </el-collapse>
-          </el-col> -->
+          </el-col>
           <el-col :span="24" class="location-address-footer">
             <samp style="float: right; padding-top: 4px;">
               <el-button
@@ -117,7 +98,7 @@
 </template>
 
 <script>
-import { defineComponent, computed, ref } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
 
 import store from '@/store'
 
@@ -133,11 +114,21 @@ import {
 // Utils and Helper Methods
 import { isEmptyValue, isIdentifierEmpty } from '@/utils/ADempiere/valueUtils.js'
 import { setDefaultComponentSequence } from '@/utils/ADempiere/dictionary/field/locationAddress'
-import { formatCoordinateByDecimal } from '@/utils/ADempiere/dictionary/field/locationAddress'
+import { formatCoordinateByDecimal, removeDecimals } from '@/utils/ADempiere/dictionary/field/locationAddress'
+
+//
+import LatitudeField from './latitudeField.vue'
+import LongitudeField from './longitudeField.vue'
+import AltitudeField from './altitudeField.vue'
 
 export default defineComponent({
   name: 'LocationAddressForm',
 
+  components: {
+    LatitudeField,
+    LongitudeField,
+    AltitudeField
+  },
   props: {
     containerManager: {
       type: Object,
@@ -150,57 +141,68 @@ export default defineComponent({
   },
   setup(props) {
     const { columnName, containerUuid, parentUuid } = props.metadata
-    const latitude = ref('')
-    const longitude = ref('')
-
     function openCoordinatesMap() {
       let baseUrlMap = URL_BASE_MAP
-      if (!isEmptyValue(latitude.value) && !isEmptyValue(longitude.value)) {
-        const latitudeFormat = formatCoordinateByDecimal(latitude.value)
-        const longitudeFormat = formatCoordinateByDecimal(longitude.value)
-        baseUrlMap += latitudeFormat + ',' + longitudeFormat
-      } else {
-        baseUrlMap += setLocation.value
+      if (!isEmptyValue(coordinates.value)) {
+        baseUrlMap += coordinates.value
+      }
+      if (!isEmptyValue(getCountry.value) || !isEmptyValue(setLocation.value)) {
+        baseUrlMap += setLocation.value + ',' + getCountry.value.name
       }
       window.open(baseUrlMap, '_blank')
     }
 
+    const getCountry = computed(() => {
+      return store.getters.getStoredCountryDefinition(countryId.value)
+    })
     const setLocation = computed(() => {
       const location = currentAddressLocationValues.value
       let addres = ''
       if (!isEmptyValue(location)) {
         if (location.address1) {
-          addres = location.address1
+          addres = location.address1 + ' '
         }
         if (location.address2) {
-          addres += location.address2
+          addres += location.address2 + ' '
         }
         if (location.address3) {
-          addres += location.address3
+          addres += location.address3 + ' '
         }
         if (location.address4) {
-          addres += location.address4
+          addres += location.address4 + ' '
         }
         if (location.city) {
-          addres += ' , ' + location.city
+          addres += location.city + ' '
         }
         if (location.state) {
-          addres += ' , ' + location.state
+          addres += location.state + ' '
+        }
+        if (location.region_name) {
+          addres += location.region_name + ' '
         }
         if (location.postal_code) {
-          addres += ' , ' + location.postal_code
+          addres += location.postal_code + ' '
         }
         if (location.posal_code_additional) {
-          addres += ' , ' + location.posal_code_additional
+          addres += location.posal_code_additional + ' '
         }
         if (location.country_name) {
-          addres += ' , ' + location.country_name
+          addres += location.country_name + ' '
         }
         return addres
       } else {
         return addres
       }
     })
+
+    const coordinates = computed(() => {
+      const { latitude, longitude, altitude } = currentAddressLocationValues.value
+      if (!isEmptyValue(latitude) && !isEmptyValue(longitude) && !isEmptyValue(altitude)) {
+        return `@${formatCoordinateByDecimal(latitude)},${formatCoordinateByDecimal(longitude)},${removeDecimals(altitude)}z/data=!3m1!4b1?entry=ttu`
+      }
+      return
+    })
+
     const countryId = computed(() => {
       return store.getters.getAttributeFieldLocations({
         attribute: 'country_id'
@@ -239,7 +241,6 @@ export default defineComponent({
         }
         if (sequeceCaptureItem.isMandatory) {
           const properties = ATTRIBUTES_BY_CAPTURE[sequeceCaptureItem.capture]
-          console.log(properties)
           for (const property of properties) {
             if (isAllowCities && property === 'city_id') {
               continue
@@ -346,14 +347,12 @@ export default defineComponent({
     }
 
     return {
-      // Ref
-      // latitude,
-      // longitude,
-      //
       currentAddressLocationValues,
       countryId,
       fieldSequenceLocations,
       isEmptyMandatory,
+      coordinates,
+      setLocation,
       // Actions Buttons
       close,
       sendValue,
