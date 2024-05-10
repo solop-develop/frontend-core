@@ -1,7 +1,7 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
  * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -26,8 +26,8 @@ import {
   UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX
 } from '@/utils/ADempiere/dictionaryUtils'
 import {
-  BUSINESS_PARTNERS_LIST_FORM
-} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+  INVOICE_LIST_FORM
+} from '@/utils/ADempiere/dictionary/field/search/invoice.js'
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 // Utils and Helper Methods
@@ -42,7 +42,7 @@ import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
  * @returns
  */
 export default ({
-  uuidForm = BUSINESS_PARTNERS_LIST_FORM,
+  uuidForm = INVOICE_LIST_FORM,
   parentUuid,
   containerUuid,
   containerManager,
@@ -136,7 +136,6 @@ export default ({
     let displayValue = document_no
     if (!isEmptyValue(date_invoiced)) displayValue += '_' + formatDate({ value: date_invoiced })
     if (!isEmptyValue(grand_total)) displayValue += '_' + formatQuantity({ value: grand_total })
-    // console.log(displayValue)
 
     store.commit('updateValueOfField', {
       parentUuid,
@@ -171,7 +170,6 @@ export default ({
       store.commit('updateValueOfField', {
         parentUuid,
         containerUuid,
-        // DisplayColumn_'ColumnName'
         columnName: DISPLAY_COLUMN_PREFIX + elementName,
         value: displayValue
       })

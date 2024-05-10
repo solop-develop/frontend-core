@@ -1,7 +1,7 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
  * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -304,12 +304,7 @@ const fieldInvoice = {
         })
           .then(response => {
             const { records } = response
-            list = records.map((list) => {
-              return {
-                ...list,
-                displayColumn: list.values.DisplayColumn
-              }
-            })
+            list = records
             commit('setOptionsListBusinessPartner', list)
             resolve(list)
           })
