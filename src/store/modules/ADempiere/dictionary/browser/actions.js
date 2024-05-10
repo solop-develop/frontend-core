@@ -158,7 +158,6 @@ export default {
           }
 
           resolve(browserDefinition)
-
           const { process } = browserDefinition
           if (!isEmptyValue(process)) {
             dispatch('setModalDialog', {
@@ -177,20 +176,21 @@ export default {
                   })
                   return
                 }
-
                 store.dispatch('startProcessOfBrowser', {
                   parentUuid: browserDefinition.uuid,
                   containerUuid: process.uuid
                 }).then(processOutputResponse => {
                   // close current page
-                  const currentRoute = router.app._route
-                  const tabViewsVisited = rootGetters.visitedViews
-                  dispatch('tagsView/delView', currentRoute)
-                  // go to back page
-                  const oldRouter = tabViewsVisited[tabViewsVisited.length - 1]
-                  router.push({
-                    path: oldRouter.path
-                  }, () => {})
+                  if (isEmptyValue(parentUuid)) {
+                    const currentRoute = router.app._route
+                    const tabViewsVisited = rootGetters.visitedViews
+                    dispatch('tagsView/delView', currentRoute)
+                    // go to back page
+                    const oldRouter = tabViewsVisited[tabViewsVisited.length - 1]
+                    router.push({
+                      path: oldRouter.path
+                    }, () => {})
+                  }
                 })
               },
               beforeOpen: ({ parentUuid: browserUuid, containerUuid }) => {
