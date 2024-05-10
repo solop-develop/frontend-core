@@ -28,6 +28,10 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       :remote-method="remoteMethod"
       @visible-change="showListBP"
     >
+      <empty-option-select
+        :current-value="currentSaleOrder"
+        :is-allows-zero="false"
+      />
       <el-option
         v-for="(option, key) in optionsList"
         :key="key"
@@ -42,11 +46,17 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 import { computed, defineComponent, ref } from '@vue/composition-api'
 
 import store from '@/store'
+// Components and Mixins
+import EmptyOptionSelect from '@/components/ADempiere/FieldDefinition/FieldSelect/emptyOptionSelect.vue'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'BusinessPartner',
+
+  components: {
+    EmptyOptionSelect
+  },
 
   props: {
     uuidForm: {
@@ -73,7 +83,7 @@ export default defineComponent({
         store.commit('setInvoiceFieldQueryFilterByAttribute', {
           containerUuid: props.uuidForm,
           attributeKey: ATTRIBUTE_KEY,
-          value: newValue
+          value: isEmptyValue(newValue) ? -1 : newValue
         })
       },
       get() {

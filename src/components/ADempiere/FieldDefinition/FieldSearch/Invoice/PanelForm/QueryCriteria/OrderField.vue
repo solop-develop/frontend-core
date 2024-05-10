@@ -26,10 +26,14 @@
       :remote-method="remoteMethod"
       @visible-change="showOrder"
     >
+      <empty-option-select
+        :current-value="currentSaleOrder"
+        :is-allows-zero="false"
+      />
       <el-option
         v-for="item in optionsListOrder"
         :key="item.id"
-        :label="item.displayColumn"
+        :label="item.values.DisplayColumn"
         :value="item.id"
       />
     </el-select>
@@ -44,15 +48,20 @@ import {
 import lang from '@/lang'
 import store from '@/store'
 
+// Components and Mixins
+import EmptyOptionSelect from '@/components/ADempiere/FieldDefinition/FieldSelect/emptyOptionSelect.vue'
+
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-
-//
 import { requestListOrders } from '@/api/ADempiere/field/search/invoice.ts'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
 
 export default defineComponent({
   name: 'OrderField',
+
+  components: {
+    EmptyOptionSelect
+  },
 
   props: {
     uuidForm: {
@@ -77,11 +86,10 @@ export default defineComponent({
 
     const currentSaleOrder = computed({
       set(newValue) {
-        console.log({ newValue })
         store.commit('setInvoiceFieldQueryFilterByAttribute', {
           containerUuid: props.uuidForm,
           attributeKey: 'orderId',
-          value: newValue
+          value: isEmptyValue(newValue) ? -1 : newValue
         })
       },
       get() {
@@ -100,7 +108,6 @@ export default defineComponent({
     })
 
     function showOrder(show) {
-      console.log(store.getters.getInvoceQueryFilters)
       if (show && isEmptyValue(optionsListOrder.value)) remoteMethod()
     }
 
@@ -113,12 +120,7 @@ export default defineComponent({
         })
           .then(response => {
             const { records } = response
-            optionsListOrder.value = records.map((list) => {
-              return {
-                ...list,
-                displayColumn: list.values.DisplayColumn
-              }
-            })
+            optionsListOrder.value = records
           })
           .finally(() => {
             isLoading.value = false
