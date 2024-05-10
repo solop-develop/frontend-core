@@ -1,7 +1,7 @@
 <!--
   ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
   Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
-  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <el-row :gutter="24">
+  <el-row :gutter="24" class="business-partners-footer">
     <el-col :span="14">
       <custom-pagination
         :container-manager="containerManager"
@@ -28,35 +28,41 @@
         :page-size="pageSize"
         :handle-change-page-number="setPageNumber"
         :handle-change-page-size="setPageSize"
+        style="float: left;"
       />
     </el-col>
+
     <el-col :span="10">
-      <samp style="float: right; padding-top: 10px">
+      <samp style="float: right; padding-top: 4px;">
         <el-button
           type="info"
           class="button-base-icon"
           plain
+          @click="clearCriteriaValues();"
         >
           <svg-icon icon-class="layers-clear" />
         </el-button>
+
         <el-button
           :loading="isLoadingRecords"
           type="success"
           class="button-base-icon"
           icon="el-icon-refresh-right"
-          @click="searchRecordsList({})"
+          @click="loadRecordsList({});"
         />
+
         <el-button
           type="danger"
           class="button-base-icon"
           icon="el-icon-close"
-          @click="closeList(); clearValues();"
+          @click="clearParentValues();"
         />
+
         <el-button
           type="primary"
           class="button-base-icon"
           icon="el-icon-check"
-          @click="changeRecord()"
+          @click="changeBusinessPartner()"
         />
       </samp>
     </el-col>
@@ -64,41 +70,35 @@
 </template>
 
 <script>
-import { computed, defineComponent, ref } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
+
 import store from '@/store'
+
+// Constants
+import {
+  BUSINESS_PARTNERS_LIST_FORM,
+  COLUMN_NAME
+} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 
 // Components and Mixins
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
-import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
-import useInvoice from './PanelForm/useInvoice.js'
-import fieldSearchMixin from '../mixinFieldSearch'
+import useBusinessPartner from './useInvoces'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import { INVOICE_LIST_FORM, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/invoice.js'
 
 export default defineComponent({
   name: 'PanelFooter',
 
   components: {
-    CustomPagination,
-    IndexColumn
-  },
-
-  mixins: [
-    fieldSearchMixin
-  ],
-
-  computed: {
-    uuidForm() {
-      if (!isEmptyValue(this.metadata.containerUuid)) {
-        return this.metadata.columnName + '_' + this.metadata.containerUuid
-      }
-      return INVOICE_LIST_FORM
-    }
+    CustomPagination
   },
 
   props: {
+    uuidForm: {
+      required: true,
+      type: String
+    },
     containerManager: {
       type: Object,
       default: () => ({
@@ -111,7 +111,7 @@ export default defineComponent({
       type: Object,
       default: () => {
         return {
-          containerUuid: INVOICE_LIST_FORM,
+          containerUuid: BUSINESS_PARTNERS_LIST_FORM,
           columnName: COLUMN_NAME
         }
       }
@@ -123,34 +123,22 @@ export default defineComponent({
   },
 
   setup(props) {
-    const invoicesData = ref(0)
-    const currentRow = ref(0)
-    const isLoadingRecords = ref(false)
-    const timeOutRecords = ref(null)
-
     const {
+      blankValues,
+      businessPartnerData,
+      currentRow,
+      isLoadingRecords,
+      //
       closeList,
+      loadRecordsList,
       setValues
-    } = useInvoice({
+    } = useBusinessPartner({
       uuidForm: props.uuidForm,
       parentUuid: props.metadata.parentUuid,
       containerUuid: props.metadata.containerUuid,
       containerManager: props.containerManager,
       fieldAttributes: props.metadata
     })
-
-    function searchRecordsList() {
-      store.dispatch('searchInvociesInfos', {
-        page_size: 0
-      })
-        .then(() => {
-          clearTimeout(timeOutRecords.value)
-          isLoadingRecords.value = true
-          timeOutRecords.value = setTimeout(() => {
-            isLoadingRecords.value = false
-          }, 1000)
-        })
-    }
 
     const selectedRecords = computed(() => {
       if (!isEmptyValue(currentRow.value)) {
@@ -160,50 +148,64 @@ export default defineComponent({
     })
 
     const recordCount = computed(() => {
-      return store.getters.getCountInvocies
+      return store.getters.getInvoiceRecordCount({
+        containerUuid: props.uuidForm
+      })
     })
 
     const pageNumber = computed(() => {
-      return invoicesData.value.pageNumber
+      return businessPartnerData.value.pageNumber
     })
 
     const pageSize = computed(() => {
-      return invoicesData.value.pageSize
+      return businessPartnerData.value.pageSize
     })
-    function setPageNumber(page_token) {
-      store.dispatch('searchInvociesInfos', {
-        page_token
-      })
-    }
-    function setPageSize(page_size) {
-      store.dispatch('searchInvociesInfos', {
-        page_size
+
+    function clearCriteriaValues() {
+      store.commit('setBusinessPartnerQueryFilters', {
+        containerUuid: props.uuidForm,
+        queryFilters: {}
       })
     }
 
-    function changeRecord(row) {
-      if (!isEmptyValue(row)) {
-        setValues(row)
-        store.commit('setGeneralInfoShow', {
-          containerUuid: props.uuidForm,
-          show: false
-        })
-      }
+    function clearParentValues() {
+      setValues(
+        blankValues.value
+      )
+      closeList()
+    }
+
+    function changeBusinessPartner() {
+      setValues(
+        currentRow.value
+      )
+      closeList()
+    }
+
+    function setPageNumber(pageNumber) {
+      loadRecordsList({
+        pageNumber
+      })
+    }
+    function setPageSize(pageSize) {
+      loadRecordsList({
+        pageSize
+      })
     }
 
     return {
       isLoadingRecords,
-      //
-      searchRecordsList,
-      setPageNumber,
-      setPageSize,
-      closeList,
-      //
-      recordCount,
       pageNumber,
       pageSize,
+      recordCount,
       selectedRecords,
-      changeRecord
+      //
+      changeBusinessPartner,
+      clearCriteriaValues,
+      clearParentValues,
+      loadRecordsList,
+      setPageNumber,
+      setPageSize
     }
   }
 })

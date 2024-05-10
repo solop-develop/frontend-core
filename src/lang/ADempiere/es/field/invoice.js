@@ -31,7 +31,8 @@ const invoice = {
   convertedAmount: 'Convertido',
   openAmount: 'Abierto',
   paymentTerm: 'Término de Pago',
-  reference: 'Referencia de Orden de Socio del Negocio'
+  reference: 'Referencia de Orden de Socio del Negocio',
+  emptyInvoice: 'Utilice los Filtros para Realizar la Búsqueda'
 }
 
 export default invoice

@@ -1,7 +1,7 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
  * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -21,13 +21,13 @@ import store from '@/store'
 // Constants
 import {
   COLUMN_NAME
-} from '@/utils/ADempiere/dictionary/field/search/invoice.js'
+} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 
 // Utils and Helper Methods
-import { generateDisplayedValue } from '@/utils/ADempiere/dictionary/field/search/invoice.js'
+import { generateDisplayedValue } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 
 export default {
-  name: 'MixinInvoice',
+  name: 'MixinBusinessPartner',
 
   props: {
     metadata: {
@@ -52,19 +52,11 @@ export default {
         [COLUMN_NAME]: undefined,
         id: undefined,
         uuid: undefined,
-        business_partner: undefined,
-        date_invoiced: undefined,
-        document_no: undefined,
-        currency: undefined,
-        grand_total: undefined,
-        converted_amount: undefined,
-        open_amount: undefined,
-        payment_term: undefined,
-        is_paid: undefined,
-        is_sales_transaction: undefined,
-        description: undefined,
-        po_reference: undefined,
-        document_status: undefined
+        value: undefined,
+        tax_id: undefined,
+        name: undefined,
+        name2: undefined,
+        description: undefined
       }
     },
     recordsList() {

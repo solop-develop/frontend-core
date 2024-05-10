@@ -1,7 +1,7 @@
 <!--
   ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
   Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
-  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -18,19 +18,22 @@
 <template>
   <el-form-item :label="orderTitle">
     <el-select
-      v-model="saleOrderField"
-      clearable
+      v-model="currentSaleOrder"
       filterable
-      size="mini"
-      :filter-method="filterSearchOrder"
-      style="margin: 0px; width: 100%"
-      @visible-change="showList"
-      @change="currentValue()"
+      clearable
+      remote
+      :loading="isLoading"
+      :remote-method="remoteMethod"
+      @visible-change="showOrder"
     >
+      <empty-option-select
+        :current-value="currentSaleOrder"
+        :is-allows-zero="false"
+      />
       <el-option
         v-for="item in optionsListOrder"
         :key="item.id"
-        :label="item.displayColumn"
+        :label="item.values.DisplayColumn"
         :value="item.id"
       />
     </el-select>
@@ -45,15 +48,20 @@ import {
 import lang from '@/lang'
 import store from '@/store'
 
+// Components and Mixins
+import EmptyOptionSelect from '@/components/ADempiere/FieldDefinition/FieldSelect/emptyOptionSelect.vue'
+
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-
-//
 import { requestListOrders } from '@/api/ADempiere/field/search/invoice.ts'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
 
 export default defineComponent({
   name: 'OrderField',
+
+  components: {
+    EmptyOptionSelect
+  },
 
   props: {
     uuidForm: {
@@ -64,14 +72,32 @@ export default defineComponent({
 
   setup(props) {
     const optionsListOrder = ref([])
+    const isLoading = ref(false)
     const saleOrderField = ref('')
+    const timeOut = ref(null)
 
     const isSalesTransaction = computed(() => {
-      const stringValue = store.getters.getInvoiceSearchQueryFilterByAttribute({
+      const stringValue = store.getters.getInvoicesQueryFilterByAttribute({
         containerUuid: props.uuidForm,
         attributeKey: 'is_sales_transaction'
       })
       return convertStringToBoolean(stringValue)
+    })
+
+    const currentSaleOrder = computed({
+      set(newValue) {
+        store.commit('setInvoiceFieldQueryFilterByAttribute', {
+          containerUuid: props.uuidForm,
+          attributeKey: 'orderId',
+          value: isEmptyValue(newValue) ? -1 : newValue
+        })
+      },
+      get() {
+        return store.getters.getInvoicesQueryFilterByAttribute({
+          containerUuid: props.uuidForm,
+          attributeKey: 'orderId'
+        })
+      }
     })
 
     const orderTitle = computed(() => {
@@ -81,42 +107,41 @@ export default defineComponent({
       return lang.t('field.invoice.purchaseOrder')
     })
 
-    function showList(isShow) {
-      if (isShow && isEmptyValue(optionsListOrder.value)) { filterSearchOrder({}) }
+    function showOrder(show) {
+      if (show && isEmptyValue(optionsListOrder.value)) remoteMethod()
     }
 
-    function filterSearchOrder(
-      searchQuery
-    ) {
-      requestListOrders({
-        search_value: searchQuery
-      })
-        .then(response => {
-          const { records } = response
-          optionsListOrder.value = records.map((list) => {
-            return {
-              ...list,
-              displayColumn: list.values.DisplayColumn
-            }
-          })
+    function remoteMethod(searchValue) {
+      clearTimeout(timeOut.value)
+      timeOut.value = setTimeout(() => {
+        isLoading.value = true
+        requestListOrders({
+          search_value: searchValue
         })
-    }
-
-    const currentValue = () => {
-      store.dispatch('searchInvociesInfos', {
-        order_id: saleOrderField.value
-      })
+          .then(response => {
+            const { records } = response
+            optionsListOrder.value = records
+          })
+          .finally(() => {
+            isLoading.value = false
+          })
+      }, 500)
     }
 
     return {
       optionsListOrder,
       saleOrderField,
+      currentSaleOrder,
+      isLoading,
+      timeOut,
       //
       orderTitle,
+      showOrder,
+      remoteMethod
       //
-      filterSearchOrder,
-      showList,
-      currentValue
+      // filterSearchOrder,
+      // showOrder,
+      // currentValue
     }
   }
 })

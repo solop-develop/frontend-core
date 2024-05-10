@@ -1,7 +1,7 @@
 <!--
   ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
   Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
-  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -17,12 +17,11 @@
 -->
 <template>
   <el-form-item
-    :label="$t('field.invoice.salesTransaction')"
+    :label="$t('field.invoice.paid')"
     style="align-items: center;"
   >
     <el-select
       v-model="currentValue"
-      @change="changeValue()"
     >
       <el-option
         v-for="(option, key) in YES_NO_OPTIONS_LIST"
@@ -48,7 +47,7 @@ import { convertBooleanToString } from '@/utils/ADempiere/formatValue/booleanFor
 // import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({
-  name: 'saleTransactionField',
+  name: 'PaidField',
 
   props: {
     uuidForm: {
@@ -58,64 +57,36 @@ export default defineComponent({
     parentUuid: {
       type: String,
       default: undefined
-    },
-    containerUuid: {
-      required: true,
-      type: String
     }
   },
 
   setup(props) {
-    const ATTRIBUTE_KEY = 'is_sales_transaction'
+    const ATTRIBUTE_KEY = 'isPaid'
 
     const isSalesTransactionContext = computed(() => {
       const booleanValue = isSalesTransaction({
         parentUuid: props.parentUuid,
-        containerUuid: props.containerUuid
+        containerUuid: ''
       })
       return convertBooleanToString(booleanValue)
     })
 
     const currentValue = computed({
       set(newValue) {
-        store.commit('setInvoiceSearchQueryFilterByAttribute', {
+        store.commit('setInvoiceFieldQueryFilterByAttribute', {
           containerUuid: props.uuidForm,
           attributeKey: ATTRIBUTE_KEY,
           value: newValue
         })
       },
       get() {
-        return store.getters.getInvoiceSearchQueryFilterByAttribute({
+        return store.getters.getInvoicesQueryFilterByAttribute({
           containerUuid: props.uuidForm,
           attributeKey: ATTRIBUTE_KEY
         })
       }
     })
-
-    // const currentValue = () => {
-    //   store.dispatch('searchInvociesInfos', {
-    //     is_sales_transaction: saleTransactionField.value
-    //   })
-    // }
-
-    function changeValue() {
-      // const response = isSalesTransactionContext.value
-      // if (response === true) {
-      //   saleTransactionField.value = 'Y'
-      //   return
-      // } else if (response === false) {
-      //   saleTransactionField.value = 'N'
-      //   return
-      // } else {
-      //   saleTransactionField.value = ''
-      // }
-      // currentValue()
-      // return
-    }
-
-    // changeValue()
-    currentValue.value = isSalesTransactionContext.value
-    console.log(currentValue.value)
+    // currentValue.value = isSalesTransactionContext.value
 
     return {
       // saleTransactionField,
@@ -123,8 +94,7 @@ export default defineComponent({
       //
       isSalesTransactionContext,
       //
-      currentValue,
-      changeValue
+      currentValue
     }
   }
 })

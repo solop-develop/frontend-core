@@ -1,7 +1,7 @@
 <!--
   ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
   Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
-  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -26,7 +26,6 @@
         v-model="billingDateFieldFrom"
         type="date"
         placeholder="Select date and time"
-        @change="currentValue()"
       />
       <b style="color: #c0c4cc;padding: 0px 5px;font-weight: bold;">
         —
@@ -35,35 +34,60 @@
         v-model="billingDateFieldTo"
         type="date"
         placeholder="Select date and time"
-        @change="currentValue"
       />
     </div>
   </el-form-item>
 </template>
 
 <script>
-import { defineComponent, ref } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
 
 import store from '@/store'
 
 export default defineComponent({
   name: 'BillingDateField',
-  setup() {
-    const billingDateFieldFrom = ref(null)
-    const billingDateFieldTo = ref(null)
-
-    const currentValue = () => {
-      store.dispatch('searchInvociesInfos', {
-        invoice_date_from: billingDateFieldFrom.value,
-        invoice_date_to: billingDateFieldTo.value
-      })
+  props: {
+    uuidForm: {
+      required: true,
+      type: String
     }
+  },
+  setup(props) {
+    const billingDateFieldFrom = computed({
+      set(newValue) {
+        store.commit('setInvoiceFieldQueryFilterByAttribute', {
+          containerUuid: props.uuidForm,
+          attributeKey: 'invoiceDateFrom',
+          value: newValue
+        })
+      },
+      get() {
+        return store.getters.getInvoicesQueryFilterByAttribute({
+          containerUuid: props.uuidForm,
+          attributeKey: 'invoiceDateFrom'
+        })
+      }
+    })
+
+    const billingDateFieldTo = computed({
+      set(newValue) {
+        store.commit('setInvoiceFieldQueryFilterByAttribute', {
+          containerUuid: props.uuidForm,
+          attributeKey: 'invoiceDateTo',
+          value: newValue
+        })
+      },
+      get() {
+        return store.getters.getInvoicesQueryFilterByAttribute({
+          containerUuid: props.uuidForm,
+          attributeKey: 'invoiceDateTo'
+        })
+      }
+    })
 
     return {
       billingDateFieldFrom,
-      billingDateFieldTo,
-      //
-      currentValue
+      billingDateFieldTo
     }
   }
 })
