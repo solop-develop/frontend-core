@@ -21,7 +21,7 @@
     <el-menu
       default-active="2"
       class="el-menu-vertical-demo"
-      style="display: block;width: -webkit-fill-available;"
+      style="display: block;width: -webkit-fill-available; margin-top:50px"
       @select="runAction"
     >
       <span
@@ -297,12 +297,12 @@ export default defineComponent({
   display: flex;
 }
 
-.auxiliary-menu-mobile-table {
-  height: 39px !important;
-  position: absolute;
-  right: 28px;
-  top: 5px;
-}
+// .auxiliary-menu-mobile-table {
+//   height: 39px !important;
+//   position: absolute;
+//   right: 28px;
+//   top: 5px;
+// }
 
 .scroll-child {
   // max-height: 30px;
