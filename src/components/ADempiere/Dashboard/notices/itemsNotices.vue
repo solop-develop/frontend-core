@@ -25,9 +25,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       <span style="margin-left:0px; margin-bottom:10px; font-weight: 700; font-size:medium;">
         {{ metadata.reference }}
       </span>
-      <span style="margin-left: 60%">
-        <el-switch />
-      </span>
+      <!-- <span style="margin-left: 60%">
+        <el-switch v-model="valueSwitch" />
+      </span> -->
     </el-descriptions-item>
     <el-descriptions-item>
       <template slot="label">
@@ -43,7 +43,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       </span>
     </el-descriptions-item>
     <el-descriptions-item>
-      <span style="margin-left:42px; margin-bottom:10px; font-weight: 500">
+      <span style="margin-left:42px; margin-bottom:10px; font-weight: 600">
         {{ metadata.text_message }}
       </span>
     </el-descriptions-item>
@@ -51,8 +51,11 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       <template slot="label">
         <!-- {{ $t('window.containerInfo.log.created') }} -->
       </template>
-      <span style="margin-left:10px; padding-bottom:10px">
+      <!-- <span style="margin-left:10px; padding-bottom:10px">
         {{ translateDate( {value: metadata.created, format: 'long' }) }}
+      </span> -->
+      <span style="margin-left:10px; padding-bottom:10px">
+        {{ diffInDays }}
       </span>
     </el-descriptions-item>
     <!-- <el-descriptions-item
@@ -81,7 +84,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <script>
 import {
-  defineComponent
+  defineComponent,
+  computed,
+  ref
 } from '@vue/composition-api'
 // Utils and Helper Methods
 import { translateDate } from '@/utils/ADempiere/formatValue/dateFormat'
@@ -94,8 +99,21 @@ export default defineComponent({
       required: true
     }
   },
-  setup() {
+  setup(props) {
+    const valueSwitch = ref(true)
+
+    const diffInDays = computed(() => {
+      console.log(props.metadata.created)
+      const dateCreated = new Date(props.metadata.created).getTime()
+      const newDate = new Date().getTime()
+      const diff = newDate - dateCreated
+      const integerDiff = Math.floor(diff / (1000 * 60 * 60 * 24))
+      return integerDiff + ' Days ago'
+    })
+
     return {
+      diffInDays,
+      valueSwitch,
       translateDate
     }
   }
@@ -137,5 +155,9 @@ export default defineComponent({
   .action-tag {
     float: right;
   }
-
+</style>
+<style>
+.el-descriptions-item__label.has-colon::after {
+  content: "";
+}
 </style>
