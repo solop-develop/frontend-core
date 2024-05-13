@@ -24,6 +24,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+import { convertArrayKeyValueToObject } from '@/utils/ADempiere/formatValue/iterableFormat'
 
 export function requestGridGeneralInfo({
   contextAttributesList,
@@ -52,22 +53,21 @@ export function requestGridGeneralInfo({
 
   let contextAttributes = []
   if (!isEmptyValue(contextAttributesList)) {
-    contextAttributes = contextAttributesList.map(attribute => {
-      return {
-        key: attribute.columnName,
-        value: attribute.value
-      }
-    })
+    // contextAttributes = contextAttributesList.map(attribute => {
+    //   return {
+    //     key: attribute.columnName,
+    //     value: attribute.value
+    //   }
+    // })
+    contextAttributes = JSON.stringify(
+      convertArrayKeyValueToObject({
+        array: contextAttributesList
+      })
+    )
   }
 
   let url
   switch (true) {
-    case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
-      url = `/user-interface/search-records/${tableName}/${columnName}`
-      break
-    case !isEmptyValue(columnId):
-      url = `/user-interface/search-records/column/${columnId}`
-      break
     case !isEmptyValue(fieldId):
       url = `/user-interface/search-records/field/${fieldId}`
       break
@@ -76,6 +76,12 @@ export function requestGridGeneralInfo({
       break
     case !isEmptyValue(browseFieldId):
       url = `/user-interface/search-records/query-criteria/${browseFieldId}`
+      break
+    case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
+      url = `/user-interface/search-records/${tableName}/${columnName}`
+      break
+    case !isEmptyValue(columnId):
+      url = `/user-interface/search-records/column/${columnId}`
       break
   }
 

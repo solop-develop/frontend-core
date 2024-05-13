@@ -103,7 +103,7 @@ import TitleAndHelp from '@/components/ADempiere/TitleAndHelp'
 import {
   containerManager,
   isReadOnlyColumn
-} from '@/utils/ADempiere/dictionary/browser.js'
+} from '@/utils/ADempiere/dictionary/browser/index.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 export default defineComponent({

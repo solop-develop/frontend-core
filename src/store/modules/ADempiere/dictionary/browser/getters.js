@@ -26,7 +26,7 @@ import { FIELDS_DATE } from '@/utils/ADempiere/references'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import {
   isDisplayedColumn, isDisplayedField, isMandatoryColumn, isMandatoryField
-} from '@/utils/ADempiere/dictionary/browser.js'
+} from '@/utils/ADempiere/dictionary/browser/index.js'
 import { isNumberField } from '@/utils/ADempiere/references'
 
 /**

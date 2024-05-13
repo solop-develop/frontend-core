@@ -42,7 +42,7 @@ import {
   clearQueryCriteria,
   refreshBrowserSearh, runProcessOfBrowser,
   zoomWindow, runDeleteable
-} from '@/utils/ADempiere/dictionary/browser.js'
+} from '@/utils/ADempiere/dictionary/browser/index.js'
 import { showMessage, showNotification } from '@/utils/ADempiere/notification.js'
 import { isLookup } from '@/utils/ADempiere/references'
 import { getCurrentClient, getCurrentRole } from '@/utils/ADempiere/auth'
