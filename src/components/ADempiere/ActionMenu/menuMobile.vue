@@ -17,11 +17,10 @@
 -->
 
 <template>
-  <div :class="isClassOptions">
+  <div>
     <el-menu
       default-active="2"
-      class="el-menu-vertical-demo"
-      style="display: block;width: -webkit-fill-available; margin-top:50px"
+      style="display: block;width: -webkit-fill-available;"
       @select="runAction"
     >
       <span
@@ -38,6 +37,7 @@
               containerUuid,
               containerManager
             })"
+            style="display:flex;"
           >
             <b>
               <svg-icon
@@ -391,4 +391,14 @@ export default defineComponent({
     // background: #c4cbd1;
   }
 }
+.el-drawer__body{
+  margin: 0 auto;
+}
+.el-menu-item.is-disabled{
+  opacity: 0.5 !important;
+}
+.el-submenu.is-disabled .el-submenu__title, .el-submenu.is-disabled .el-menu-item{
+  opacity: 0.5 !important;
+}
 </style>
+
