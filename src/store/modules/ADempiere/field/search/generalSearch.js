@@ -23,17 +23,18 @@ import {
   requestIdentifierColumns,
   requestSearchFields
 } from '@/api/ADempiere/dictionary/field.ts'
-import { requestGridGeneralInfo } from '@/api/ADempiere/field/search/index.ts'
+import { requestGridGeneralInfo } from '@/api/ADempiere/field/search/index.js'
 
 // Constants
 import { TABLE_NAME as TABLE_NAME_BPartner } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 import { TABLE_NAME as TABLE_NAME_PRODUCT } from '@/utils/ADempiere/dictionary/field/search/product.ts'
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+import { OPERATOR_LIKE } from '@/utils/ADempiere/dataUtils'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
-import { OPERATOR_LIKE, generatePageToken } from '@/utils/ADempiere/dataUtils'
+import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 import { generateField } from '@/utils/ADempiere/dictionaryUtils'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import { isSameSize } from '@/utils/ADempiere/formatValue/iterableFormat'
@@ -357,9 +358,15 @@ const generalInfoSearch = {
           pageNumber = storedPage
         }
         const pageToken = generatePageToken({ pageNumber })
+
+        let originContainerUuid = containerUuid
+        if (containerUuid.includes('_')) {
+          const containers = containerUuid.split('_')
+          originContainerUuid = containers.pop()
+        }
         const contextAttributesList = getContextAttributes({
           parentUuid,
-          containerUuid,
+          containerUuid: originContainerUuid,
           contextColumnNames,
           isBooleanToString: true
         })

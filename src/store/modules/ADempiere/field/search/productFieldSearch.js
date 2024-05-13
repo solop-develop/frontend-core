@@ -30,6 +30,7 @@ import { COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/product.t
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
+import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 
 const emptyQueryFilters = {
   value: undefined,
@@ -257,8 +258,20 @@ const productFieldSearch = {
           queryFilters = storedProductData.queryFilters
         }
 
-        requestListProducts({
+        let originContainerUuid = containerUuid
+        if (containerUuid.includes('_')) {
+          const containers = containerUuid.split('_')
+          originContainerUuid = containers.pop()
+        }
+        const contextAttributesList = getContextAttributes({
+          parentUuid,
+          containerUuid: originContainerUuid,
           contextColumnNames,
+          isBooleanToString: true
+        })
+
+        requestListProducts({
+          contextAttributesList,
           //
           fieldId,
           processParameterId,

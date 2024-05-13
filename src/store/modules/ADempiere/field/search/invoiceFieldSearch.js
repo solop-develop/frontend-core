@@ -31,6 +31,7 @@ import { COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/businessP
 
 // Utils and Helper Methods
 import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
+import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
@@ -229,8 +230,21 @@ const fieldInvoice = {
           ...storedBusinessPartnerData,
           containerUuid
         })
-        requestListInvoicesInfo({
+
+        let originContainerUuid = containerUuid
+        if (containerUuid.includes('_')) {
+          const containers = containerUuid.split('_')
+          originContainerUuid = containers.pop()
+        }
+        const contextAttributesList = getContextAttributes({
+          parentUuid,
+          containerUuid: originContainerUuid,
           contextColumnNames,
+          isBooleanToString: true
+        })
+
+        requestListInvoicesInfo({
+          contextAttributesList,
           // References
           processParameterId,
           browseFieldId,
