@@ -128,6 +128,11 @@ export function formatField({
       break
 
     case NUMBER.id:
+      formattedValue = formatQuantity({
+        value,
+        precision: 12
+      })
+      break
     case QUANTITY.id:
       formattedValue = formatQuantity({
         value
