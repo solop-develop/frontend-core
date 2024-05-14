@@ -37,6 +37,7 @@
           class="col-panel-svg"
         >
           <svg-icon
+            :style="classPanel ? { 'width': '10px', 'height': '10px' } : ''"
             :icon-class="item.icon"
             class="icon-window"
           />
@@ -47,6 +48,7 @@
         >
           <span
             class="label-iten"
+            :style="classPanel ? { 'font-size': '10px;' } : ''"
           >
             {{ item.display_name }}
           </span>
@@ -63,6 +65,11 @@
 </template>
 
 <script>
+import {
+  computed
+} from '@vue/composition-api'
+import store from '@/store'
+
 import { requestListRecentItems } from '@/api/ADempiere/logs/index.ts'
 
 // Components and Mixins
@@ -145,6 +152,20 @@ export default {
           this.getRecentItems()
         }
       })
+    }
+  },
+
+  setup() {
+    const isMobile = computed(() => {
+      return store.state.app.device === 'mobile'
+    })
+
+    const classPanel = computed(() => {
+      if (isMobile.value) return true
+    })
+
+    return {
+      classPanel
     }
   }
 }

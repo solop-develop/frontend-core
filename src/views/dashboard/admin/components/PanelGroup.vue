@@ -290,6 +290,13 @@ export default defineComponent({
 
   .card-panel-col {
     margin-bottom: 5px;
+    .card-panel{
+      .card-panel-icon-wrapper{
+        p {
+          font-size: 12px !important;
+        }
+      }
+    }
   }
 
   .card-panel {
@@ -302,7 +309,6 @@ export default defineComponent({
     background: #fff;
     box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
     border-color: rgba(0, 0, 0, .05);
-
     &:hover {
       .card-panel-icon-wrapper {
         color: #fff;

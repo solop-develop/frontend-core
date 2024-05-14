@@ -21,6 +21,7 @@
     v-if="!UNSUPPORTED_DASHBOARDS.includes(metadata.fileName)"
     style="height: auto;padding: 0px !important"
     :body-style="{ padding: '0px' }"
+    :class="classPanel"
   >
     <div class="clearfix">
       <el-row :gutter="2">
@@ -98,6 +99,13 @@ export default defineComponent({
 
   setup(props) {
     const activeDashboard = props.metadata.isOpenByDefault ? props.metadata.name : undefined
+    const isMobile = computed(() => {
+      return store.state.app.device === 'mobile'
+    })
+
+    const classPanel = computed(() => {
+      if (isMobile.value) return 'panel-group-taks-mobile'
+    })
 
     // load the component that is indicated in the attributes of received property
     const renderDashboard = computed(() => {
@@ -179,6 +187,7 @@ export default defineComponent({
       renderDashboard,
       labelDashboard,
       ClassDashboardTransitio,
+      classPanel,
       // methods
       sendMain
     }
@@ -241,9 +250,14 @@ export default defineComponent({
     font-size: large;
     padding-left: 1%;
   }
-</style>
-<!-- <style>
-  .el-card__body {
-    padding: 5px;
+.panel-group-taks-mobile{
+  overflow-y: scroll;
+  .clearfix{
+    .label-dashboard{
+      font-size: 11px !important
+    }
   }
-</style> -->
+}
+
+</style>
+

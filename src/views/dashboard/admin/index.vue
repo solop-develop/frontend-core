@@ -52,7 +52,7 @@
       >
         <panel-group-portlet />
       </el-col>
-      <el-col :span="16">
+      <el-col :span="classPanel ? 24 : 16">
         <template v-for="(dashboardAttributes, index) in panelRight">
           <el-col
             v-if="(isEmptyValue(mainDashboard.chartType) || mainDashboard.name !== dashboardAttributes.name)"
@@ -68,7 +68,7 @@
           </el-col>
         </template>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="classPanel ? 24 : 8">
         <template v-for="(dashboardAttributes, key) in panelLeft">
           <el-col
             :key="key"
@@ -132,7 +132,13 @@ export default defineComponent({
 
   setup() {
     const showSettings = ref(false)
+    const isMobile = computed(() => {
+      return store.state.app.device === 'mobile'
+    })
 
+    const classPanel = computed(() => {
+      if (isMobile.value) return true
+    })
     const colNum = computed({
       // getter
       get() {
@@ -376,6 +382,7 @@ export default defineComponent({
       panelMain,
       tagsView,
       colNum,
+      classPanel,
       themeChange
     }
   }
