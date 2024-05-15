@@ -182,7 +182,11 @@ export const exportRecords = ({ parentUuid, containerUuid, containerManager, for
   }).filter(fieldItem => {
     // TODO: Verify with containerManager.isDisplayedColumn
     // Hide not displayed fields
-    if (!(fieldItem.is_displayed && fieldItem.is_displayed_grid)) {
+    if (
+      !isEmptyValue(fieldItem.is_displayed) &&
+      !isEmptyValue(fieldItem.is_displayed_grid) &&
+      !(fieldItem.is_displayed && fieldItem.is_displayed_grid)
+    ) {
       return false
     }
     // Hide encrypted fields
@@ -198,12 +202,10 @@ export const exportRecords = ({ parentUuid, containerUuid, containerManager, for
     }
     return false
   }).sort((a, b) => a.sequence - b.sequence)
-
   const headerList = fieldsListAvailable.map(fieldItem => {
     // decode html entities
     return decodeHtmlEntities(fieldItem.name)
   })
-
   // filter only showed columns
   const data = selection.map(row => {
     const newRow = {}
@@ -214,7 +216,6 @@ export const exportRecords = ({ parentUuid, containerUuid, containerManager, for
         value: row[columnName],
         displayedValue: row[displayColumnName]
       })
-
       newRow[columnName] = value
     })
     return newRow
@@ -224,7 +225,6 @@ export const exportRecords = ({ parentUuid, containerUuid, containerManager, for
     parentUuid,
     containerUuid
   }).name
-
   exportFileFromJson({
     header: headerList,
     data,
