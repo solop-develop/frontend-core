@@ -51,6 +51,7 @@ export function templateFields(field) {
 }
 
 export function convertRelationTabs(itemTab) {
+  const array_context_column_names = []
   if (isEmptyValue(itemTab)) {
     return {
       id: '',
@@ -69,9 +70,20 @@ export function convertRelationTabs(itemTab) {
     table_name,
     sequence,
     tab_level,
-    context_column_names
+    link_column_name,
+    parent_column_name
   } = itemTab
+  if (
+    isEmptyValue(itemTab.context_column_names) &&
+    (!isEmptyValue(link_column_name) || !isEmptyValue(parent_column_name))
+  ) {
+    const value_column_name = !isEmptyValue(link_column_name) ? link_column_name : parent_column_name
+    array_context_column_names.push(value_column_name)
+    itemTab.context_column_names = array_context_column_names
+  }
+
   return {
+    ...itemTab,
     id,
     name,
     uuid,
@@ -79,6 +91,6 @@ export function convertRelationTabs(itemTab) {
     tableName: table_name,
     sequence,
     tabLevel: tab_level,
-    contextColumnNames: context_column_names
+    contextColumnNames: itemTab.context_column_names
   }
 }
