@@ -68,6 +68,11 @@ import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.
 // Constants
 import { INPUT_NUMBER_PATTERN } from '@/utils/ADempiere/formatValue/numberFormat.js'
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
+import {
+  NUMBER
+} from '@/utils/ADempiere/references.js'
+
+import { NUMBER_PRECISION } from '@/utils/ADempiere/formatValue/numberFormat.js'
 
 // Utils and Helper Methods
 import { isDecimalField } from '@/utils/ADempiere/references.js'
@@ -111,6 +116,9 @@ export default {
       // Amount, Costs+Prices, Number, Quantity
       if (!isEmptyValue(this.metadata.precision)) {
         return this.metadata.precision
+      }
+      if (this.metadata.display_type === NUMBER.id) {
+        return NUMBER_PRECISION
       }
       if (isDecimalField(this.metadata.display_type)) {
         return store.getters.getStandardPrecision

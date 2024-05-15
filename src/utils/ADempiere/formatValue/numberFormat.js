@@ -29,6 +29,9 @@ import {
 } from '@/utils/ADempiere/references.js'
 import { charInText, getTypeOfValue, isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
+// Precision tool number display time
+export const NUMBER_PRECISION = 12
+
 /**
  * Is Number Value
  * @param {mixed} value
@@ -99,6 +102,9 @@ export function formatNumber({
       break
 
     case NUMBER.id:
+      formattedNumber = formatQuantity({ value, precision: NUMBER_PRECISION })
+      break
+    // Quantity
     case QUANTITY.id:
       formattedNumber = formatQuantity({ value, precision })
       break
@@ -122,9 +128,10 @@ export function formatQuantity({ value, isInteger = false, precision }) {
   if (isEmptyValue(value)) {
     value = 0
   }
-
   // TODO: Evaluate if currentPrecision overwrite precision
-  precision = currentPrecision
+  if (isEmptyValue(precision)) {
+    precision = currentPrecision
+  }
   if (isEmptyValue(precision) || precision === 0) {
     precision = getStandardPrecision()
   }
@@ -133,7 +140,6 @@ export function formatQuantity({ value, isInteger = false, precision }) {
   if (isInteger) {
     precision = 0
   }
-
   // get formatted decimal number
   return new Intl.NumberFormat(undefined, {
     useGrouping: true, // thousands separator
