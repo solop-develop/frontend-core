@@ -30,6 +30,7 @@ import {
   IMAGE, // file lookups
   YES_NO
 } from '@/utils/ADempiere/references.js'
+import { NUMBER_PRECISION } from '@/utils/ADempiere/formatValue/numberFormat.js'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -130,7 +131,7 @@ export function formatField({
     case NUMBER.id:
       formattedValue = formatQuantity({
         value,
-        precision: 12
+        precision: NUMBER_PRECISION
       })
       break
     case QUANTITY.id:

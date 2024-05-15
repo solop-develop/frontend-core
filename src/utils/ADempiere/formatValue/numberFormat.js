@@ -29,6 +29,9 @@ import {
 } from '@/utils/ADempiere/references.js'
 import { charInText, getTypeOfValue, isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
+// Precision tool number display time
+export const NUMBER_PRECISION = 12
+
 /**
  * Is Number Value
  * @param {mixed} value
@@ -99,7 +102,7 @@ export function formatNumber({
       break
 
     case NUMBER.id:
-      formattedNumber = formatQuantity({ value, precision: 12 })
+      formattedNumber = formatQuantity({ value, precision: NUMBER_PRECISION })
       break
     // Quantity
     case QUANTITY.id:
