@@ -109,9 +109,15 @@ export function getCurrentDocumentDisplayedValue({
  * @returns {Boolean}
  */
 export function isRunableDocumentAction({ parentUuid, containerUuid }) {
+  if (isEmptyValue(parentUuid) || isEmptyValue(containerUuid)) {
+    return false
+  }
   // table not document or multi record
   const storedTab = store.getters.getStoredTab(parentUuid, containerUuid)
-  if (!storedTab.table.is_document || storedTab.isShowedTableRecords) {
+  if (isEmptyValue(storedTab)) {
+    return false
+  }
+  if (storedTab.isShowedTableRecords || (isEmptyValue(storedTab.table) || !storedTab.table.is_document)) {
     return false
   }
 
