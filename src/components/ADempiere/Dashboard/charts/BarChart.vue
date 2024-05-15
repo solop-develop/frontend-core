@@ -188,9 +188,8 @@ export default {
           }
         },
         grid: {
-          top: 10,
-          left: '0%',
-          right: '0%',
+          left: '100%',
+          right: '100%',
           bottom: '0%',
           containLabel: true
         },
