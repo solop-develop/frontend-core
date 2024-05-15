@@ -28,7 +28,7 @@
         filter: parameters
       }"
       :height="'450px'"
-      :width="'53vw'"
+      :width="'100%'"
     />
   </el-card>
 </template>

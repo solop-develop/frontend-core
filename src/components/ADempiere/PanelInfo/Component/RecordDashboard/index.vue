@@ -74,6 +74,7 @@
                 }"
                 :title="''"
                 :main="false"
+                width="100%"
               />
             </el-collapse-item>
           </el-collapse>
