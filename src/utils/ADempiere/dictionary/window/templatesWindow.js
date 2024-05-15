@@ -73,7 +73,7 @@ export function convertRelationTabs(itemTab) {
     parent_column_name
   } = itemTab
   let array_context_column_names = []
-  if (!isEmptyValue(itemTab.context_column_names) {
+  if (!isEmptyValue(itemTab.context_column_names)) {
     array_context_column_names = itemTab.context_column_names
   }
   if (!array_context_column_names.includes(parent_column_name) && !isEmptyValue(parent_column_name)) {
