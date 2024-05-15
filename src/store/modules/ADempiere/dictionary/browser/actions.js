@@ -181,7 +181,7 @@ export default {
                   containerUuid: process.uuid
                 }).then(processOutputResponse => {
                   // close current page
-                  if (isEmptyValue(parentUuid)) {
+                  if (!isEmptyValue(parentUuid)) {
                     const currentRoute = router.app._route
                     const tabViewsVisited = rootGetters.visitedViews
                     dispatch('tagsView/delView', currentRoute)
