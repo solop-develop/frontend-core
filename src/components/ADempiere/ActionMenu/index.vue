@@ -376,7 +376,7 @@ export default defineComponent({
 .auxiliary-menu-mobile-table {
   height: 39px !important;
   position: absolute;
-  right: 28px;
+  right: 47px;
   top: 5px;
 }
 
