@@ -175,7 +175,6 @@ export default {
           })
         }
       }
-
       if (this.metadata.process.browser_id) {
         return {
           is: 'svg-icon',
@@ -184,7 +183,7 @@ export default {
             parentUuid: this.parentUuid,
             containerUuid: this.containerUuid,
             uuid: this.metadata.process.uuid,
-            browserUuid: this.metadata.process.browse.uuid
+            browserUuid: this.metadata.process.browser_id
           }),
           isEnabled: () => generateReportOfWindow.enabled({
             parentUuid: this.parentUuid,
