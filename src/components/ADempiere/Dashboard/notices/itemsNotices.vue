@@ -103,7 +103,6 @@ export default defineComponent({
     const valueSwitch = ref(true)
 
     const diffInDays = computed(() => {
-      console.log(props.metadata.created)
       const dateCreated = new Date(props.metadata.created).getTime()
       const newDate = new Date().getTime()
       const diff = newDate - dateCreated
