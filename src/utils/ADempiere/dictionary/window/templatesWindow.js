@@ -69,9 +69,22 @@ export function convertRelationTabs(itemTab) {
     table_name,
     sequence,
     tab_level,
-    context_column_names
+    link_column_name,
+    parent_column_name
   } = itemTab
+  let array_context_column_names = []
+  if (!isEmptyValue(itemTab.context_column_names)) {
+    array_context_column_names = itemTab.context_column_names
+  }
+  if (!array_context_column_names.includes(parent_column_name) && !isEmptyValue(parent_column_name)) {
+    array_context_column_names.push(parent_column_name)
+  }
+  if (!array_context_column_names.includes(link_column_name) && !isEmptyValue(link_column_name)) {
+    array_context_column_names.push(link_column_name)
+  }
+
   return {
+    ...itemTab,
     id,
     name,
     uuid,
@@ -79,6 +92,7 @@ export function convertRelationTabs(itemTab) {
     tableName: table_name,
     sequence,
     tabLevel: tab_level,
-    contextColumnNames: context_column_names
+    context_column_names: array_context_column_names,
+    contextColumnNames: array_context_column_names
   }
 }
