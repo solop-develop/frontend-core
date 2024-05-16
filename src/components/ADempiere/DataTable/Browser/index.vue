@@ -543,31 +543,31 @@ export default defineComponent({
 }
 
 :root {
-  --base-table: 100%
+  --base-table: 100vh
 }
 @media screen and (min-height: 720px) {
   :root {
-    --base-table: 52vh;
+    --base-table: 63vh;
   }
 }
 @media screen and (min-height: 800px) {
   :root {
-    --base-table: 58vh;
+    --base-table: 65vh;
   }
 }
 @media screen and (min-height: 1080px) {
   :root {
-    --base-table: 66vh;
+    --base-table: 73vh;
   }
 }
 @media screen and (min-height: 1200px) {
   :root {
-    --base-table: 70vh;
+    --base-table: 76vh;
   }
 }
 @media screen and (min-height: 1400px) {
   :root {
-    --base-table: 75vh;
+    --base-table: 80vh;
   }
 }
 .el-table__body-wrapper {

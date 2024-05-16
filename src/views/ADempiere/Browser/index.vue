@@ -51,7 +51,6 @@
             :is-tab-panel="true"
           />
         </collapse-criteria>
-        <br>
       </div>
       <div id="browser-table">
         <!-- Result of Records in the Table -->
@@ -422,6 +421,16 @@ export default defineComponent({
   }
   .el-card__body {
     height: 100%;
+    padding-top: 4px !important;
+    .el-button--medium{
+      padding-top: 7px !important;
+    }
+    #browser-query-criteria{
+      .el-main{
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+      }
+    }
   }
 
   /* removes the title link effect on collapse */
@@ -454,4 +463,5 @@ export default defineComponent({
 .center {
   text-align: center;
 }
+
 </style>
