@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'Adempiere Vue',
+  title: 'Solop',
 
   /**
    * @type {boolean} true | false

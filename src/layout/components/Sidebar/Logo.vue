@@ -24,7 +24,7 @@
           <div slot="content">
             {{ getRole.name }} | {{ getRole.client.name }} | {{ storedOrganization.name }}
           </div>
-          <img v-if="clientLogo" :src="clientLogo" class="sidebar-logo" style="height: 50px;width: 50px;">
+          <img v-if="defaultImageLogo" :src="defaultImageLogo" class="sidebar-logo" style="height: 50px;width: 50px;">
           <img v-else src="https://avatars1.githubusercontent.com/u/1263359?s=200&v=4" class="sidebar-logo" style="height: 50px;width: 50px;">
           <!-- <svg-icon v-else icon-class="AD" class="standard-logo" /> -->
           <b style="margin-left: 5px;">{{ title }}</b>
@@ -33,7 +33,7 @@
 
       <span v-else>
         <p key="expand" style="display: flex;text-align: center;width: 100%;padding: 0px 15px;margin-top: 0px;">
-          <img v-if="clientLogo" :src="clientLogo" class="sidebar-logo" style="height: 50px;width: 50px;" @click="dashboard()">
+          <img v-if="defaultImageLogo" :src="defaultImageLogo" class="sidebar-logo" style="height: 50px;width: 50px;" @click="dashboard()">
           <img v-else src="https://avatars1.githubusercontent.com/u/1263359?s=200&v=4" class="sidebar-logo" style="height: 50px;width: 50px;" @click="dashboard()">
           <!-- <svg-icon v-else icon-class="AD" class="standard-logo" /> -->
           <b style="color: white;font-size: 18px;padding-top: 15px;cursor: pointer; margin-left: 5px;" @click="dashboard()">
@@ -80,6 +80,10 @@ export default defineComponent({
     // Computed
     const getRole = computed(() => {
       return store.getters['user/getRole']
+    })
+
+    const defaultImageLogo = computed(() => {
+      return require('@/image/ADempiere/logo.jpg')
     })
 
     const systemName = computed(() => {
@@ -130,10 +134,10 @@ export default defineComponent({
     return {
       // Ref
       title,
-      clientLogo,
       // Computed
       getRole,
       systemName,
+      defaultImageLogo,
       storedOrganization,
       // Methods
       dashboard,
