@@ -261,6 +261,12 @@ const processManager = {
             dispatch('setBrowserDefaultValues', {
               containerUuid: parentUuid
             })
+            if (isEmptyValue(recordId) || isEmptyValue(windowsUuid)) {
+              commit('setBrowserData', {
+                containerUuid: parentUuid,
+                isLoaded: true
+              })
+            }
           })
           .catch(error => {
             isProcessedError = true
