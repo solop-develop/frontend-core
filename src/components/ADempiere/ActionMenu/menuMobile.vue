@@ -392,6 +392,7 @@ export default defineComponent({
   }
 }
 .el-drawer__body{
+  width:100% !important;
   margin: 0 auto;
 }
 .el-menu-item.is-disabled{
