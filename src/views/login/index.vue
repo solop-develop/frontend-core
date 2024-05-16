@@ -30,13 +30,13 @@
       label-position="left"
     >
       <el-row>
-        <el-col :span="3">
+        <el-col :span="7">
           <img
             :src="logo"
-            class="image"
+            style="width: 150px;"
           >
         </el-col>
-        <el-col :span="20">
+        <el-col :span="17">
           <div class="title-container">
             <h3 class="title">
               {{ $t('login.title') }}
@@ -214,7 +214,7 @@ export default {
       if (logoUrl) {
         return logoUrl
       }
-      return 'https://avatars1.githubusercontent.com/u/1263359?s=200&v=4'
+      return require('@/image/ADempiere/logo_solop.jpg')
     }
   },
 
@@ -519,6 +519,7 @@ $light_gray:#eee;
       margin: 10px auto 40px auto;
       text-align: center;
       font-weight: bold;
+      padding-right: 10px;
     }
 
     .set-language {

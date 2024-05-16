@@ -2,10 +2,13 @@
   <div class="login-container">
     <el-form ref="enrollmentUserForm" :rules="passwordResetRules" :model="enrollmentUserForm" class="login-form" auto-complete="off" label-position="left">
       <el-row>
-        <el-col :span="3">
-          <img src="https://avatars1.githubusercontent.com/u/1263359?s=200&v=4" class="image">
+        <el-col :span="4">
+          <img
+            :src="logo"
+            style="width: 100px;height: 80px;"
+          >
         </el-col>
-        <el-col :span="20">
+        <el-col :span="20" style="margin-top: 15px;">
           <div class="title-container">
             <h3 class="title">
               {{ $t('page.login.userEnrollment') }}
@@ -189,6 +192,13 @@ export default {
     }
   },
   computed: {
+    logo() {
+      const { logoUrl } = this.$store.getters['user/getSystem']
+      if (logoUrl) {
+        return logoUrl
+      }
+      return require('@/image/ADempiere/logo_solop.jpg')
+    },
     isReadyFormSubmit() {
       const { name, userName, eMail, password, passwordConfirm } = this.enrollmentUserForm
       if (this.isEmptyValue(name)) {

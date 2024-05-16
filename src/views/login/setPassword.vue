@@ -2,10 +2,13 @@
   <div v-if="verifyToken()" class="login-container">
     <el-form ref="changePasswordForm" :rules="passwordResetRules" :model="changePasswordForm" class="login-form" auto-complete="off" label-position="left">
       <el-row>
-        <el-col :span="3">
-          <img src="https://avatars1.githubusercontent.com/u/1263359?s=200&v=4" class="image">
+        <el-col :span="4">
+          <img
+            :src="logo"
+            style="width: 100px;height: 80px;"
+          >
         </el-col>
-        <el-col :span="20">
+        <el-col :span="20" style="margin-top: 15px;">
           <div class="title-container">
             <h3 class="title">
               {{ $t(`login.${formName}`) }}
@@ -120,6 +123,13 @@ export default {
   computed: {
     formName() {
       return this.$route.name
+    },
+    logo() {
+      const { logoUrl } = this.$store.getters['user/getSystem']
+      if (logoUrl) {
+        return logoUrl
+      }
+      return require('@/image/ADempiere/logo_solop.jpg')
     },
     isDisabled() {
       if (this.isEmptyValue(this.changePasswordForm.password)) {
@@ -311,7 +321,7 @@ $light_gray:#eee;
     .title {
       font-size: 26px;
       color: $light_gray;
-      margin: 10px auto 40px auto;
+      // margin: 10px auto 40px auto;
       text-align: center;
       font-weight: bold;
     }
