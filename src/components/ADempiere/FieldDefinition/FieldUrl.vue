@@ -36,6 +36,9 @@
       slot="prefix"
       class="el-icon-link el-input__icon"
     />
+    <el-link slot="suffix" :href="value" target="_blank">
+      <svg-icon icon-class="link-portal" />
+    </el-link>
   </el-input>
 </template>
 

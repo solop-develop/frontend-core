@@ -286,6 +286,9 @@ export default {
         case 'FieldTextLong':
           field = () => import('@/components/ADempiere/FieldDefinition/FieldTextLong')
           break
+        case 'FieldUrl':
+          field = () => import('@/components/ADempiere/FieldDefinition/FieldUrl')
+          break
       }
       return field
     },
