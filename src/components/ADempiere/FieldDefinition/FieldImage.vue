@@ -371,15 +371,15 @@ export default {
     presignedUrl({ file, reference }) {
       return new Promise((resolve, reject) => {
         const clientId = this.$store.getters.getSessionContextClientId
-        const { action_id, type } = this.$route.meta
+        const { action_id } = this.$route.meta
         const { table_name } = this.currentTab
         this.isLoadImageUpload = true
         requestPresignedUrl({
           clientId: clientId,
           containerId: action_id,
-          containerType: type,
-          columnName: this.metadata.columnName,
-          fileName: file.name,
+          containerType: 'resource',
+          // columnName: this.metadata.columnName,
+          fileName: this.metadata.columnName.toLowerCase().replace('_', ''),
           recordId: this.recordId,
           tableName: table_name
         })
@@ -472,12 +472,12 @@ export default {
     getListResources() {
       return new Promise((resolve, reject) => {
         const clientId = this.$store.getters.getSessionContextClientId
-        const { action_id, type } = this.$route.meta
+        const { action_id } = this.$route.meta
         const { table_name } = this.currentTab
         requestListResources({
           clientId: clientId,
           containerId: action_id,
-          containerType: type,
+          containerType: 'resource',
           columnName: this.metadata.columnName,
           recordId: this.recordId,
           tableName: table_name
