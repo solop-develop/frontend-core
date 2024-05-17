@@ -966,7 +966,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 // Tab Manager
 .tab-manager-container {
   .el-badge__content.is-fixed {
