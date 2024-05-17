@@ -2179,7 +2179,7 @@ export const containerManager = {
   },
 
   getInvoiceSearchFieldRecordList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, id, filters, searchValue, pageNumber, pageSize }) {
-    return store.dispatch('getSearchRecorgridInvoicesdsFromServer', {
+    return store.dispatch('gridInvoices', {
       parentUuid,
       containerUuid,
       contextColumnNames,
