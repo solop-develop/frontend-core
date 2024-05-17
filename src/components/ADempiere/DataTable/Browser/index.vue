@@ -25,7 +25,7 @@
     :onLoad="adjustSize()"
     :onresize="setTableHeight()"
   >
-    <el-row>
+    <!-- <el-row>
       <el-col :span="24">
         <filter-fields
           :container-uuid="panelMetadata.uuid"
@@ -38,7 +38,7 @@
           :container-manager="containerManager"
         />
       </el-col>
-    </el-row>
+    </el-row> -->
 
     <el-table
       id="multipleTable"
@@ -543,31 +543,31 @@ export default defineComponent({
 }
 
 :root {
-  --base-table: auto
+  --base-table: 100vh
 }
 @media screen and (min-height: 720px) {
   :root {
-    --base-table: 35vh;
+    --base-table: 63vh;
   }
 }
 @media screen and (min-height: 800px) {
   :root {
-    --base-table: 45vh;
+    --base-table: 65vh;
   }
 }
 @media screen and (min-height: 1080px) {
   :root {
-    --base-table: 55vh;
+    --base-table: 73vh;
   }
 }
 @media screen and (min-height: 1200px) {
   :root {
-    --base-table: 60vh;
+    --base-table: 76vh;
   }
 }
 @media screen and (min-height: 1400px) {
   :root {
-    --base-table: 65vh;
+    --base-table: 80vh;
   }
 }
 .el-table__body-wrapper {

@@ -24,18 +24,18 @@
     class="view-base browser-view"
   >
     <el-card class="content-collapse card-browser" style="overflow: auto;position: absolute;height: -webkit-fill-available !important;">
-      <title-and-help
-        :name="browserMetadata.name"
-        :help="browserMetadata.help"
-      />
-      <p style="margin-top:0px; padding-top:0px; text-align: end;">
+      <div style="display:flex; justify-content: space-between;">
+        <div />
+        <title-and-help
+          :name="browserMetadata.name"
+          :help="browserMetadata.help"
+        />
         <action-menu
           :container-manager="containerManager"
           :container-uuid="browserMetadata.uuid"
           :actions-manager="actionsManager"
         />
-      </p>
-
+      </div>
       <div id="browser-query-criteria">
         <!-- Query Criteria -->
         <collapse-criteria
@@ -51,7 +51,6 @@
             :is-tab-panel="true"
           />
         </collapse-criteria>
-        <br>
       </div>
       <div id="browser-table">
         <!-- Result of Records in the Table -->
@@ -422,6 +421,16 @@ export default defineComponent({
   }
   .el-card__body {
     height: 100%;
+    padding-top: 4px !important;
+    .el-button--medium{
+      padding-top: 7px !important;
+    }
+    #browser-query-criteria{
+      .el-main{
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+      }
+    }
   }
 
   /* removes the title link effect on collapse */
@@ -454,4 +463,5 @@ export default defineComponent({
 .center {
   text-align: center;
 }
+
 </style>
