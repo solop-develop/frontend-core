@@ -38,6 +38,7 @@ const product = {
   attributeSet: 'Conjunto de Atributos',
   attributeSetInstance: 'Instancia de Conjunto de Atributos',
   vendor: 'Proveedor',
+  description: 'Descripción',
   // amount
   listPrice: 'Precio de Lista',
   standardPrice: 'Precio Estándar',
@@ -101,7 +102,12 @@ const product = {
   vendorPurchasesTables: {
     name: 'Nombre',
     isCurrentVendor: 'Proveedor Actual',
-    uom: 'UOM'
+    uom: 'UOM',
+  },
+  infoProduct:{
+    infoProductCategory: 'Categoria',
+    infoProductClass: 'Clase',
+    infoProductGroup: 'Grupo'
   }
 }
 

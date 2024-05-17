@@ -600,8 +600,12 @@ export default defineComponent({
   line-height: 20px;
 }
 .product-search-details {
+  .el-dialog__body{
+    padding-top: 0px !important;
+  }
   .el-dialog__header {
     background: transparent;
+    padding-bottom: 0px !important;
     .el-dialog__title {
       line-height: 24px;
       font-size: 18px;

@@ -28,7 +28,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
   >
     <span v-if="!isEmptyValue(product)">
       <info-product />
-      <el-divider />
+      <el-divider
+        style="margin: 0px !important; padding:0px !important"
+      />
       <tab-panel />
     </span>
     <loading-view
@@ -111,3 +113,8 @@ export default defineComponent({
   }
 })
 </script>
+<style scoped>
+.el-divider{
+  margin: 7px !important
+}
+</style>
