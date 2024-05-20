@@ -53,7 +53,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           <span v-if="isEmptyValue(product.uom)" class="class-empty-value"> {{ '-' }}</span>
           {{ product.uom }}
         </el-descriptions-item>
-        <el-descriptions-item :label="$t('Disponible')" :content-style="{'justify-content': 'flex-end !important'}">
+        <el-descriptions-item :label="$t('field.product.available')" :content-style="{'justify-content': 'flex-end !important'}">
           <span v-if="isEmptyValue(product.available_quantity)" class="class-empty-value"> {{ '-' }}</span>
           {{ formatQuantity({ value: product.available_quantity }) }}
         </el-descriptions-item>
@@ -69,7 +69,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           <span v-if="isEmptyValue(product.sku)" class="class-empty-value"> {{ '-' }}</span>
           {{ product.sku }}
         </el-descriptions-item>
-        <el-descriptions-item :label="$t('Reservado')" :content-style="{'justify-content': 'flex-end !important'}">
+        <el-descriptions-item :label="$t('field.product.reservedQuantity')" :content-style="{'justify-content': 'flex-end !important'}">
           <span v-if="isEmptyValue(product.reserved_quantity)" class="class-empty-value"> {{ '-' }}</span>
           {{ formatQuantity ({ value: product.reserved_quantity }) }}
         </el-descriptions-item>
