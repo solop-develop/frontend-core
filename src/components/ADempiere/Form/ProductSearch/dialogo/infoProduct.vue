@@ -18,7 +18,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <template>
   <el-row :gutter="20">
-    <el-col :span="19">
+    <el-col :span="18">
       <el-descriptions :column="4" :label-style="{'font-weight': 'bold'}">
         <el-descriptions-item :label="$t('form.productInfo.code')">
           {{ product.value }}
@@ -31,16 +31,17 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           {{ product.vendor }}
         </el-descriptions-item>
         <el-descriptions-item :label="$t('field.product.infoProduct.infoProductoclassification')">
-          {{ }}
+          <span v-if="isEmptyValue(product.classification)" class="class-empty-value"> {{ '-' }}</span>
+          {{ '' }}
         </el-descriptions-item>
         <el-descriptions-item :label="$t('field.product.description')">
           <span v-if="isEmptyValue(product.description)" class="class-empty-value"> {{ '-' }}</span>
           {{ product.description }}
         </el-descriptions-item>
-        <el-descriptions-item :label="$t('field.product.onHandQuantity')">
+        <el-descriptions-item :label="$t('field.product.onHandQuantity')" :content-style="{'justify-content': 'flex-end !important'}">
           {{ product.on_hand_quantity }}
         </el-descriptions-item>
-        <el-descriptions-item :label="$t('field.product.standardPrice')">
+        <el-descriptions-item :label="$t('field.product.standardPrice')" :content-style="{'justify-content': 'flex-end !important'}">
           <span v-if="isEmptyValue(product.standardPrice)" class="class-empty-value"> {{ '-' }}</span>
           {{ formatQuantity({ value: product.standard_price }) }}
         </el-descriptions-item>
@@ -52,11 +53,11 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           <span v-if="isEmptyValue(product.uom)" class="class-empty-value"> {{ '-' }}</span>
           {{ product.uom }}
         </el-descriptions-item>
-        <el-descriptions-item :label="$t('Disponible')">
+        <el-descriptions-item :label="$t('Disponible')" :content-style="{'justify-content': 'flex-end !important'}">
           <span v-if="isEmptyValue(product.available_quantity)" class="class-empty-value"> {{ '-' }}</span>
           {{ formatQuantity({ value: product.available_quantity }) }}
         </el-descriptions-item>
-        <el-descriptions-item :label="$t('field.product.listPrice')">
+        <el-descriptions-item :label="$t('field.product.listPrice')" :content-style="{'justify-content': 'flex-end !important'}">
           <span v-if="isEmptyValue(product.listPrice)" class="class-empty-value"> {{ '-' }}</span>
           {{ formatQuantity({ value: product.list_price }) }}
         </el-descriptions-item>
@@ -64,15 +65,15 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           <span v-if="isEmptyValue(product.product_category)" class="class-empty-value"> {{ '-' }}</span>
           {{ product.product_category }}
         </el-descriptions-item>
-        <el-descriptions-item :label="$t('field.product.sku')">
+        <el-descriptions-item :label="$t('field.product.sku')" :content-style="{'justify-content': 'flex-end !important'}">
           <span v-if="isEmptyValue(product.sku)" class="class-empty-value"> {{ '-' }}</span>
           {{ product.sku }}
         </el-descriptions-item>
-        <el-descriptions-item :label="$t('Reservado')">
+        <el-descriptions-item :label="$t('Reservado')" :content-style="{'justify-content': 'flex-end !important'}">
           <span v-if="isEmptyValue(product.reserved_quantity)" class="class-empty-value"> {{ '-' }}</span>
           {{ formatQuantity ({ value: product.reserved_quantity }) }}
         </el-descriptions-item>
-        <el-descriptions-item :label="$t('field.product.limitPrice')">
+        <el-descriptions-item :label="$t('field.product.limitPrice')" :content-style="{'justify-content': 'flex-end !important'}">
           <span v-if="isEmptyValue(product.limit_price)" class="class-empty-value"> {{ '-' }}</span>
           {{ formatQuantity({ value: product.limit_price }) }}
         </el-descriptions-item>
@@ -139,12 +140,6 @@ export default defineComponent({
 .label-value{
   text-align: end;
 }
-.el-descriptions-item__label.has-colon::after {
-  content: "";
-}
-.el-descriptions__body .el-descriptions__table{
-  table-layout:'' !important
-}
 
 .image-conten{
   .image-slot{
@@ -153,5 +148,4 @@ export default defineComponent({
     }
   }
 }
-
 </style>
