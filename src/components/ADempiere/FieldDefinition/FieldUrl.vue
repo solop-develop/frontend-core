@@ -98,7 +98,7 @@ export default {
   },
   methods: {
     redirectToUrl() {
-      if (this.value) {
+      if (!isEmptyValue(this.value)) {
         window.open(this.value, '_blank')
       }
     }
