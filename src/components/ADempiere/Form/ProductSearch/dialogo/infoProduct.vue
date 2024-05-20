@@ -18,13 +18,27 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <template>
   <el-row :gutter="20">
-    <el-col :span="18">
+    <el-col :span="19">
       <el-descriptions :column="4" :label-style="{'font-weight': 'bold'}">
         <el-descriptions-item :label="$t('form.productInfo.code')">
           {{ product.value }}
         </el-descriptions-item>
         <el-descriptions-item :label="$t('field.product.stocked')">
           {{ convertBooleanToTranslationLang(product.is_stocked) }}
+        </el-descriptions-item>
+        <el-descriptions-item :label="$t('field.product.vendor')">
+          <span v-if="isEmptyValue(product.vendor)" class="class-empty-value"> {{ '-' }}</span>
+          {{ product.vendor }}
+        </el-descriptions-item>
+        <el-descriptions-item :label="$t('field.product.infoProduct.infoProductoclassification')">
+          {{ }}
+        </el-descriptions-item>
+        <el-descriptions-item :label="$t('field.product.description')">
+          <span v-if="isEmptyValue(product.description)" class="class-empty-value"> {{ '-' }}</span>
+          {{ product.description }}
+        </el-descriptions-item>
+        <el-descriptions-item :label="$t('field.product.onHandQuantity')">
+          {{ product.on_hand_quantity }}
         </el-descriptions-item>
         <el-descriptions-item :label="$t('field.product.standardPrice')">
           <span v-if="isEmptyValue(product.standardPrice)" class="class-empty-value"> {{ '-' }}</span>
@@ -34,12 +48,13 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           <span v-if="isEmptyValue(product.product_group)" class="class-empty-value"> {{ '-' }}</span>
           {{ product.product_group }}
         </el-descriptions-item>
-        <el-descriptions-item :label="$t('field.product.description')">
-          <span v-if="isEmptyValue(product.description)" class="class-empty-value"> {{ '-' }}</span>
-          {{ product.description }}
+        <el-descriptions-item :label="$t('field.product.uom')">
+          <span v-if="isEmptyValue(product.uom)" class="class-empty-value"> {{ '-' }}</span>
+          {{ product.uom }}
         </el-descriptions-item>
-        <el-descriptions-item :label="$t('field.product.onHandQuantity')">
-          {{ product.on_hand_quantity }}
+        <el-descriptions-item :label="$t('Disponible')">
+          <span v-if="isEmptyValue(product.available_quantity)" class="class-empty-value"> {{ '-' }}</span>
+          {{ formatQuantity({ value: product.available_quantity }) }}
         </el-descriptions-item>
         <el-descriptions-item :label="$t('field.product.listPrice')">
           <span v-if="isEmptyValue(product.listPrice)" class="class-empty-value"> {{ '-' }}</span>
@@ -49,13 +64,13 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           <span v-if="isEmptyValue(product.product_category)" class="class-empty-value"> {{ '-' }}</span>
           {{ product.product_category }}
         </el-descriptions-item>
-        <el-descriptions-item :label="$t('field.product.uom')">
-          <span v-if="isEmptyValue(product.uom)" class="class-empty-value"> {{ '-' }}</span>
-          {{ product.uom }}
+        <el-descriptions-item :label="$t('field.product.sku')">
+          <span v-if="isEmptyValue(product.sku)" class="class-empty-value"> {{ '-' }}</span>
+          {{ product.sku }}
         </el-descriptions-item>
-        <el-descriptions-item :label="$t('Disponible')">
-          <span v-if="isEmptyValue(product.available_quantity)" class="class-empty-value"> {{ '-' }}</span>
-          {{ formatQuantity({ value: product.available_quantity }) }}
+        <el-descriptions-item :label="$t('Reservado')">
+          <span v-if="isEmptyValue(product.reserved_quantity)" class="class-empty-value"> {{ '-' }}</span>
+          {{ formatQuantity ({ value: product.reserved_quantity }) }}
         </el-descriptions-item>
         <el-descriptions-item :label="$t('field.product.limitPrice')">
           <span v-if="isEmptyValue(product.limit_price)" class="class-empty-value"> {{ '-' }}</span>
@@ -65,24 +80,17 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           <span v-if="isEmptyValue(product.product_class)" class="class-empty-value"> {{ '-' }}</span>
           {{ product.product_class }}
         </el-descriptions-item>
-        <el-descriptions-item :label="$t('field.product.vendor')">
-          <span v-if="isEmptyValue(product.vendor)" class="class-empty-value"> {{ '-' }}</span>
-          {{ product.vendor }}
-        </el-descriptions-item>
-        <el-descriptions-item :label="$t('Reservado')">
-          <span v-if="isEmptyValue(product.reserved_quantity)" class="class-empty-value"> {{ '-' }}</span>
-          {{ formatQuantity ({ value: product.reserved_quantity }) }}
-        </el-descriptions-item>
       </el-descriptions>
     </el-col>
-    <el-col :span="6">
+    <el-col :span="4">
       <el-image
-        style="width: 80px; height: 80px;margin: -5px auto 0; display: block "
+        style="width: 80px; height: 80px;margin: 0 auto 0; display: block "
         :src="url"
         :preview-src-list="srcList"
         fit="cover"
+        class="image-conten"
       >
-        <div v-if="isEmptyValue(url)" slot="error" class="image-slot">
+        <div slot="error" class="image-slot">
           <i class="el-icon-picture-outline" />
         </div>
       </el-image>
@@ -100,9 +108,9 @@ export default defineComponent({
   name: 'InfoProduct',
   data() {
     return {
-      url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+      url: '',
       srcList: [
-        'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
+        ''
       ]
     }
   },
@@ -136,6 +144,14 @@ export default defineComponent({
 }
 .el-descriptions__body .el-descriptions__table{
   table-layout:'' !important
+}
+
+.image-conten{
+  .image-slot{
+    .el-icon-picture-outline{
+      font-size:30px !important
+    }
+  }
 }
 
 </style>

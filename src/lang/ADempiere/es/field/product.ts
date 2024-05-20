@@ -102,9 +102,10 @@ const product = {
   vendorPurchasesTables: {
     name: 'Nombre',
     isCurrentVendor: 'Proveedor Actual',
-    uom: 'UOM',
+    uom: 'UOM'
   },
-  infoProduct:{
+  infoProduct: {
+    infoProductoclassification: 'Clasificación',
     infoProductCategory: 'Categoria',
     infoProductClass: 'Clase',
     infoProductGroup: 'Grupo'
