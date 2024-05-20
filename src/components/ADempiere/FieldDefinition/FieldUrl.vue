@@ -32,10 +32,13 @@
     @keyup.native.enter="actionKeyPerformed"
     @submit="false"
   >
-    <i
-      slot="prefix"
-      class="el-icon-link el-input__icon"
-    />
+    <el-button
+      slot="append"
+      class="button-show-popover"
+      @click="redirectToUrl"
+    >
+      <svg-icon icon-class="travel-explore" />
+    </el-button>
   </el-input>
 </template>
 
@@ -54,7 +57,6 @@ export default {
     fieldMixin,
     fieldMixinText
   ],
-
   props: {
     inTable: {
       type: Boolean,
@@ -72,7 +74,6 @@ export default {
       patternValidate: '((ht|f)tp(s?)\:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)'
     }
   },
-
   computed: {
     cssClassCustomField() {
       return ' custom-field-url '
@@ -93,6 +94,13 @@ export default {
         return Number(this.metadata.fieldLength)
       }
       return undefined
+    }
+  },
+  methods: {
+    redirectToUrl() {
+      if (!isEmptyValue(this.value)) {
+        window.open(this.value, '_blank')
+      }
     }
   }
 }
