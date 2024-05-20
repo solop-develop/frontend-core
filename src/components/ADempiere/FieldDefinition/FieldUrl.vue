@@ -37,7 +37,7 @@
       class="button-show-popover"
       @click="redirectToUrl"
     >
-      <i class="el-icon-search" />
+      <svg-icon icon-class="travel-explore" />
     </el-button>
   </el-input>
 </template>
