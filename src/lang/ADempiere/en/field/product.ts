@@ -102,6 +102,12 @@ const product = {
     name: 'Name',
     isCurrentVendor: 'Current Vendor',
     uom: 'UOM'
+  },
+  infoProduct: {
+    infoProductoclassification: 'Classification',
+    infoProductCategory: 'Category',
+    infoProductClass: 'Class',
+    infoProductGroup: 'Groups'
   }
 }
 
