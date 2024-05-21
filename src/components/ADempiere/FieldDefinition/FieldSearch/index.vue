@@ -86,14 +86,13 @@ export default {
         case 'C_BPartner':
           fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/BusinessPartnerInfo')
           break
-        // case 'C_Invoice':
         case 'M_Product':
           fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/ProductInfo')
           break
         // case 'A_Asset':
         // case 'C_Order':
         case 'C_Invoice':
-          fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/Invoice')
+          fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/InvoiceInfo')
           break
         default:
           fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/GeneralInfoSearch')

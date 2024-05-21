@@ -24,7 +24,7 @@ import {
 } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 
 // Utils and Helper Methods
-import { generateDisplayedValue } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+import { generateDisplayedValue } from '@/utils/ADempiere/dictionary/field/search/invoice.js'
 
 export default {
   name: 'MixinBusinessPartner',

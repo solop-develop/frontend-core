@@ -20,11 +20,11 @@
   <el-collapse
     v-model="activeAccordion"
     accordion
-    class="business-partners-query-criteria"
+    class="invoices-query-criteria"
   >
     <el-collapse-item
       :name="ACCORDION_KEY"
-      class="business-partners-query-criteria-collapse"
+      class="invoices-query-criteria-collapse"
     >
       <template slot="title">
         {{ title }}
@@ -62,7 +62,6 @@
               :uuid-form="uuidForm"
               :parent-uuid="metadata.parentUuid"
               :container-uuid="metadata.containerUuid"
-              :list-options="YES_NO_OPTIONS_LIST"
             />
           </el-col>
 
@@ -104,25 +103,19 @@ import store from '@/store'
 
 // Constants
 import {
-  BUSINESS_PARTNERS_LIST_FORM,
+  INVOICES_LIST_FORM,
   COLUMN_NAME
-} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
-import { YES_NO_OPTIONS_LIST } from '@/utils/ADempiere/dictionary/field/yesNo'
+} from '@/utils/ADempiere/dictionary/field/search/invoice.js'
 
 // Components and Mixins
-// import ContactField from './contactField.vue'
-// import CustomerVendorField from './customerVendorField.vue'
-// import EmailField from './emailField.vue'
-// import NameField from './nameField.vue'
-// import PhoneField from './phoneField.vue'
 import DocumentNo from './documentNoField.vue'
 import Description from './descriptionField.vue'
 import BusinessPartner from './businessPartner.vue'
-import SaleTransactionField from './SalesTransactionField.vue'
-import PaidField from './PaidFieldInvoice.vue'
+import SalesTransactionField from './SalesTransactionField.vue'
+import PaidField from './PaidField.vue'
 import OrderField from './OrderField.vue'
 import billingDateField from './billingDateField.vue'
-import GrandTotalField from './grandTotalField'
+import GrandTotalField from './grandTotalField.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
@@ -134,7 +127,7 @@ export default defineComponent({
     DocumentNo,
     Description,
     BusinessPartner,
-    SaleTransactionField,
+    SalesTransactionField,
     PaidField,
     OrderField,
     billingDateField,
@@ -150,7 +143,7 @@ export default defineComponent({
       type: Object,
       default: () => {
         return {
-          containerUuid: BUSINESS_PARTNERS_LIST_FORM,
+          containerUuid: INVOICES_LIST_FORM,
           columnName: COLUMN_NAME
         }
       }
@@ -204,7 +197,6 @@ export default defineComponent({
     return {
       isLoadingFields,
       ACCORDION_KEY,
-      YES_NO_OPTIONS_LIST,
       //
       activeAccordion,
       title,
@@ -215,8 +207,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.business-partners-query-criteria {
-  .business-partners-query-criteria-collapse {
+.invoices-query-criteria {
+  .invoices-query-criteria-collapse {
     .el-form-item {
       &.el-form-item--mini {
         margin-bottom: 6px;

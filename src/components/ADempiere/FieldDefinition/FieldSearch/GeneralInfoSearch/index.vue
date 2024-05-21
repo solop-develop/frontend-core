@@ -72,7 +72,7 @@ import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default {
-  name: 'GeneralInfoSearch',
+  name: 'GeneralInfoSearchField',
 
   components: {
     ButtonGeneralInfoSearch

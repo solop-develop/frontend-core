@@ -15,21 +15,27 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
+
 <template>
   <el-form-item
-    :label="$t('field.invoice.salesTransaction')"
+    :label="$t('field.invoice.invoiceDate')"
     style="align-items: center;"
   >
-    <el-select
-      v-model="currentValue"
-    >
-      <el-option
-        v-for="(option, key) in listOptions"
-        :key="key"
-        :value="option.stringValue"
-        :label="option.displayValue"
+    <div class="date-picker-container">
+      <el-date-picker
+        v-model="billingDateFieldFrom"
+        type="date"
+        placeholder="Select date and time"
       />
-    </el-select>
+      <b style="color: #c0c4cc;padding: 0px 5px;font-weight: bold;">
+        —
+      </b>
+      <el-date-picker
+        v-model="billingDateFieldTo"
+        type="date"
+        placeholder="Select date and time"
+      />
+    </div>
   </el-form-item>
 </template>
 
@@ -38,75 +44,59 @@ import { defineComponent, computed } from '@vue/composition-api'
 
 import store from '@/store'
 
-// Constants
-// import { YES_NO_OPTIONS_LIST } from '@/utils/ADempiere/dictionary/field/yesNo'
-
-// Utils and Helper Methods
-import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
-import { convertBooleanToString } from '@/utils/ADempiere/formatValue/booleanFormat'
-import { isEmptyValue } from '@/utils/ADempiere'
-
 export default defineComponent({
-  name: 'saleTransactionField',
+  name: 'BillingDateField',
 
   props: {
     uuidForm: {
       required: true,
       type: String
-    },
-    parentUuid: {
-      type: String,
-      default: undefined
-    },
-    containerUuid: {
-      required: true,
-      type: String
-    },
-    listOptions: {
-      required: true,
-      type: Array
     }
   },
 
   setup(props) {
-    const ATTRIBUTE_KEY = 'isSalesTransaction'
-
-    const isSalesTransactionContext = computed(() => {
-      const booleanValue = isSalesTransaction({
-        parentUuid: props.parentUuid,
-        containerUuid: props.containerUuid
-      })
-      return convertBooleanToString(booleanValue)
-    })
-
-    // const listOptions = computed(() => {
-    //   return YES_NO_OPTIONS_LIST
-    // })
-
-    const currentValue = computed({
+    const billingDateFieldFrom = computed({
       set(newValue) {
         store.commit('setInvoiceFieldQueryFilterByAttribute', {
           containerUuid: props.uuidForm,
-          attributeKey: ATTRIBUTE_KEY,
+          attributeKey: 'invoiceDateFrom',
           value: newValue
         })
       },
       get() {
         return store.getters.getInvoicesQueryFilterByAttribute({
           containerUuid: props.uuidForm,
-          attributeKey: ATTRIBUTE_KEY
+          attributeKey: 'invoiceDateFrom'
         })
       }
     })
 
-    if (!isEmptyValue(props.listOptions) && !isEmptyValue(isSalesTransactionContext.value)) currentValue.value = isSalesTransactionContext.value
+    const billingDateFieldTo = computed({
+      set(newValue) {
+        store.commit('setInvoiceFieldQueryFilterByAttribute', {
+          containerUuid: props.uuidForm,
+          attributeKey: 'invoiceDateTo',
+          value: newValue
+        })
+      },
+      get() {
+        return store.getters.getInvoicesQueryFilterByAttribute({
+          containerUuid: props.uuidForm,
+          attributeKey: 'invoiceDateTo'
+        })
+      }
+    })
 
     return {
-      isSalesTransactionContext,
-      // YES_NO_OPTIONS_LIST,
-      // listOptions,
-      currentValue
+      billingDateFieldFrom,
+      billingDateFieldTo
     }
   }
 })
 </script>
+
+<style scoped>
+  .date-picker-container {
+    display: flex
+  }
+</style>

@@ -46,13 +46,15 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 import { computed, defineComponent, ref } from '@vue/composition-api'
 
 import store from '@/store'
+
 // Components and Mixins
 import EmptyOptionSelect from '@/components/ADempiere/FieldDefinition/FieldSelect/emptyOptionSelect.vue'
+
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
-  name: 'BusinessPartner',
+  name: 'BusinessPartnerField',
 
   components: {
     EmptyOptionSelect

@@ -18,7 +18,7 @@
 
 <template>
   <el-autocomplete
-    ref="autocompleteBPartner"
+    ref="autocompleteInvoice"
     v-model="displayedValue"
     v-bind="commonsProperties"
     value-key="name"
@@ -46,7 +46,7 @@
       </span>
     </template>
 
-    <button-business-partners-list
+    <button-list
       slot="append"
       :parent-metadata="metadata"
       :container-manager="containerManager"
@@ -59,11 +59,11 @@
 // Components and Mixins
 import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
 import fieldSearchMixin from '@/components/ADempiere/FieldDefinition/FieldSearch/mixinFieldSearch.js'
-import businessPartnerMixin from './mixinBusinessPartner'
-import ButtonBusinessPartnersList from './buttonBusinessPartnersList.vue'
+import invoiceMixin from './mixinInvoice'
+import ButtonList from './buttonList.vue'
 
 // Constants
-import { TABLE_NAME, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+import { TABLE_NAME, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/invoice.js'
 import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
 import {
   DISPLAY_COLUMN_PREFIX,
@@ -76,16 +76,16 @@ import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
 
 export default {
-  name: 'BusinessPartnerInfo',
+  name: 'InvoiceInfoField',
 
   components: {
-    ButtonBusinessPartnersList
+    ButtonList
   },
 
   mixins: [
     fieldMixin,
     fieldSearchMixin,
-    businessPartnerMixin
+    invoiceMixin
   ],
 
   props: {
@@ -127,27 +127,27 @@ export default {
       // TODO: Implement key enter event.
     },
     setInitialValues() {
-      const storedBusinessPartnerData = this.$store.getters.getInvoceData({
+      const storedInvoiceData = this.$store.getters.getInvoceData({
         containerUuid: this.metadata.containerUuid
       })
       this.$store.commit('setInvoiceFieldData', {
-        ...storedBusinessPartnerData,
+        ...storedInvoiceData,
         containerUuid: this.metadata.containerUuid
       })
     },
     searchFocus() {
       // if (this.recordsList.length <= 1) {
-      //   this.$refs.autocompleteBPartner.close()
+      //   this.$refs.autocompleteInvoice.close()
       // } else {
-      //   this.$refs.autocompleteBPartner.getData()
+      //   this.$refs.autocompleteInvoice.getData()
       // }
       if (!isEmptyValue(this.displayedValue)) {
-        this.$refs.autocompleteBPartner.$el.firstElementChild.firstElementChild.select()
+        this.$refs.autocompleteInvoice.$el.firstElementChild.firstElementChild.select()
       }
       this.setNewDisplayedValue()
     },
     keyPressField() {
-      if (!this.isEmptyValue(this.$refs['autocompleteBPartner' + this.metadata.columnName])) {
+      if (!this.isEmptyValue(this.$refs['autocompleteInvoice' + this.metadata.columnName])) {
         this.remoteSearch(this.displayedValue, true)
       }
     },
@@ -161,7 +161,7 @@ export default {
 
       // prevent losing display value with focus
       this.controlDisplayed = this.generateDisplayedValue(recordSelected)
-      this.$refs.autocompleteBPartner.activated = false
+      this.$refs.autocompleteInvoice.activated = false
     },
     setValues(recordRow) {
       const { columnName, elementName, isSameColumnElement, containerUuid, parentUuid } = this.metadata

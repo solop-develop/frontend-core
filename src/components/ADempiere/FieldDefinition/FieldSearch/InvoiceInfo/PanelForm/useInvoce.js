@@ -26,22 +26,22 @@ import {
   UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX
 } from '@/utils/ADempiere/dictionaryUtils'
 import {
-  INVOICE_LIST_FORM
+  INVOICES_LIST_FORM
 } from '@/utils/ADempiere/dictionary/field/search/invoice.js'
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
-import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
-import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
+import { generateDisplayedValue } from '@/utils/ADempiere/dictionary/field/search/invoice.js'
+
 /**
  * Use Invoces as mixin
  * @param {*} recordRow
  * @returns
  */
 export default ({
-  uuidForm = INVOICE_LIST_FORM,
+  uuidForm = INVOICES_LIST_FORM,
   parentUuid,
   containerUuid,
   containerManager,
@@ -64,19 +64,19 @@ export default ({
     }
   })
 
-  const businessPartnerData = computed(() => {
-    return store.getters.getBusinessPartnerData({
+  const invoiceData = computed(() => {
+    return store.getters.getInvoceData({
       containerUuid: uuidForm
     })
   })
 
   const isLoadedRecords = computed(() => {
-    const { isLoaded } = businessPartnerData.value
+    const { isLoaded } = invoiceData.value
     return isLoaded
   })
 
   const isLoadingRecords = computed(() => {
-    const { isLoading } = businessPartnerData.value
+    const { isLoading } = invoiceData.value
     return isLoading
   })
 
@@ -130,11 +130,9 @@ export default ({
 
   function setValues(recordRow) {
     const { columnName, elementName, isSameColumnElement } = fieldAttributes
-    const { uuid, id, document_no, date_invoiced, grand_total } = recordRow
+    const { uuid, id } = recordRow
 
-    let displayValue = document_no
-    if (!isEmptyValue(date_invoiced)) displayValue += '_' + formatDate({ value: date_invoiced })
-    if (!isEmptyValue(grand_total)) displayValue += '_' + formatQuantity({ value: grand_total })
+    const displayValue = generateDisplayedValue(recordRow)
 
     store.commit('updateValueOfField', {
       parentUuid,
@@ -247,7 +245,7 @@ export default ({
 
   return {
     blankValues,
-    businessPartnerData,
+    invoiceData,
     currentRow,
     isLoadedRecords,
     isLoadingRecords,
