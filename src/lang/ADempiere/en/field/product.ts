@@ -38,6 +38,7 @@ const product = {
   attributeSet: 'Attribute Set',
   attributeSetInstance: 'Attribute Set Instance',
   vendor: 'Vendor',
+  description: 'Description',
   // amount
   listPrice: 'List Price',
   standardPrice: 'Standard Price',
@@ -101,6 +102,12 @@ const product = {
     name: 'Name',
     isCurrentVendor: 'Current Vendor',
     uom: 'UOM'
+  },
+  infoProduct: {
+    infoProductoclassification: 'Classification',
+    infoProductCategory: 'Category',
+    infoProductClass: 'Class',
+    infoProductGroup: 'Groups'
   }
 }
 

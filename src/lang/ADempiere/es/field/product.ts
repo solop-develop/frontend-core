@@ -38,14 +38,15 @@ const product = {
   attributeSet: 'Conjunto de Atributos',
   attributeSetInstance: 'Instancia de Conjunto de Atributos',
   vendor: 'Proveedor',
+  description: 'Descripción',
   // amount
-  listPrice: 'Precio de Lista',
+  listPrice: 'Precio Lista',
   standardPrice: 'Precio Estándar',
   limitPrice: 'Precio Límite',
   margin: 'Margen',
   // quantity
   stocked: 'Almacenado',
-  available: 'Disponible',
+  available: 'Cant. Disponible',
   onHandQuantity: 'Cant. Existencia',
   reservedQuantity: 'Cant. Reservada',
   orderedQuantity: 'Cant. Ordenada',
@@ -102,6 +103,12 @@ const product = {
     name: 'Nombre',
     isCurrentVendor: 'Proveedor Actual',
     uom: 'UOM'
+  },
+  infoProduct: {
+    infoProductoclassification: 'Clasificación',
+    infoProductCategory: 'Categoría',
+    infoProductClass: 'Clase',
+    infoProductGroup: 'Grupo'
   }
 }
 
