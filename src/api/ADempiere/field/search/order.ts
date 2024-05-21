@@ -32,7 +32,7 @@ export function requestListBusinessPartners({
   is_sales_transaction
 }) {
   return request({
-    url: '/field/order/customers',
+    url: '/field/orders/customers',
     method: 'get',
     params: {
       filters,
@@ -75,7 +75,7 @@ export function requestListOrderInfo({
   orderId
 }) {
   return request({
-    url: '/field/order',
+    url: '/field/orders',
     method: 'get',
     params: {
       // Page Data
@@ -109,7 +109,7 @@ export function requestGetOrderInfo({
   id
 }) {
   return request({
-    url: `/field/order/${id}`,
+    url: `/field/orders/${id}`,
     method: 'get'
   })
 }
