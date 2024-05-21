@@ -18,6 +18,7 @@
 
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export function requestListBusinessPartners({
   filters,
@@ -59,6 +60,7 @@ export function requestListOrderInfo({
   processParameterId,
   browseFieldId,
   referenceId,
+  tableName,
   fieldId,
   columnId,
   columnName,
@@ -74,8 +76,31 @@ export function requestListOrderInfo({
   documentNo,
   orderId
 }) {
+
+  let url
+  switch (true) {
+    case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
+      url = `/field/orders/table/${tableName}/${columnName}`
+      break
+    case !isEmptyValue(columnId):
+      url = `/field/orders/column/${columnId}`
+      break
+    case !isEmptyValue(fieldId):
+      url = `/field/orders/field/${fieldId}`
+      break
+    case !isEmptyValue(processParameterId):
+      url = `/field/orders/parameter/${processParameterId}`
+      break
+    case !isEmptyValue(browseFieldId):
+      url = `/field/orders/query-criteria/${browseFieldId}`
+      break
+    default:
+      url = `/field/orders`
+      break
+  }
+
   return request({
-    url: '/field/orders',
+    url,
     method: 'get',
     params: {
       // Page Data
