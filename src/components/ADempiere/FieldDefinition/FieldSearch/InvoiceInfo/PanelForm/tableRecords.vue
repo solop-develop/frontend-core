@@ -19,9 +19,9 @@
 <template>
   <div>
     <el-table
-      ref="businessPartnerTable"
+      ref="invoiceTable"
       v-loading="isLoadingRecords"
-      class="business-partners-table"
+      class="invoices-table"
       highlight-current-row
       :border="true"
       fit
@@ -29,7 +29,7 @@
       :max-height="300"
       size="mini"
       @current-change="handleCurrentChange"
-      @row-dblclick="changeBusinessPartner"
+      @row-dblclick="changeInvoice"
     >
       <p slot="empty" style="width: 100%;">
         {{ 'Utilice los filtros para realizar la Búsqueda' }}
@@ -160,13 +160,13 @@ import store from '@/store'
 
 // Constants
 import {
-  BUSINESS_PARTNERS_LIST_FORM,
+  INVOICES_LIST_FORM,
   COLUMN_NAME
-} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+} from '@/utils/ADempiere/dictionary/field/search/invoice.js'
 
 // Components and Mixins
 import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
-import useBusinessPartner from './useInvoces'
+import useInvoice from './useInvoce'
 
 // Utils and Helper Methods
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
@@ -198,7 +198,7 @@ export default defineComponent({
       type: Object,
       default: () => {
         return {
-          containerUuid: BUSINESS_PARTNERS_LIST_FORM,
+          containerUuid: INVOICES_LIST_FORM,
           columnName: COLUMN_NAME
         }
       }
@@ -206,14 +206,14 @@ export default defineComponent({
   },
 
   setup(props) {
-    const businessPartnerTable = ref(null)
+    const invoiceTable = ref(null)
 
     const {
       currentRow,
       isLoadingRecords,
       closeList,
       setValues
-    } = useBusinessPartner({
+    } = useInvoice({
       uuidForm: props.uuidForm,
       parentUuid: props.metadata.parentUuid,
       containerUuid: props.metadata.containerUuid,
@@ -231,7 +231,7 @@ export default defineComponent({
       currentRow.value = recordRow
     }
 
-    function changeBusinessPartner() {
+    function changeInvoice() {
       const recordRow = currentRow.value
       if (!isEmptyValue(recordRow)) {
         setValues(recordRow)
@@ -240,8 +240,8 @@ export default defineComponent({
     }
 
     watch(currentRow, (newValue, oldValue) => {
-      if (businessPartnerTable.value) {
-        businessPartnerTable.value.setCurrentRow(
+      if (invoiceTable.value) {
+        invoiceTable.value.setCurrentRow(
           newValue
         )
       }
@@ -249,8 +249,8 @@ export default defineComponent({
 
     onMounted(() => {
       nextTick(() => {
-        if (businessPartnerTable.value) {
-          businessPartnerTable.value.setCurrentRow(
+        if (invoiceTable.value) {
+          invoiceTable.value.setCurrentRow(
             currentRow.value
           )
         }
@@ -258,14 +258,14 @@ export default defineComponent({
     })
 
     return {
-      businessPartnerTable,
+      invoiceTable,
       //
       currentRow,
       isLoadingRecords,
       recordsList,
       //
       handleCurrentChange,
-      changeBusinessPartner,
+      changeInvoice,
       formatDate,
       formatQuantity,
       convertBooleanToTranslationLang
@@ -275,7 +275,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.business-partners-table {
+.invoices-table {
   &.el-table {
     .el-table__body {
       .el-table__row {

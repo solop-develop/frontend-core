@@ -18,78 +18,51 @@
 
 <template>
   <el-form-item
-    :label="$t('field.invoice.grandTotal')"
-    style="align-items: center;"
+    :label="$t('field.invoice.document')"
   >
-    <div style="display: flex;">
-      <el-input-number
-        v-model="grandTotalFieldFrom"
-        controls-position="right"
-        :precision="2"
-        clearable
-      />
-      <b style="color: #c0c4cc;padding: 0px 5px;font-weight: bold;">
-        —
-      </b>
-      <el-input-number
-        v-model="grandTotalFieldTo"
-        controls-position="right"
-        :precision="2"
-        clearable
-      />
-    </div>
+    <el-input
+      v-model="currentValue"
+      clearable
+    />
   </el-form-item>
 </template>
 
 <script>
-import { defineComponent, computed } from '@vue/composition-api'
+import { computed, defineComponent } from '@vue/composition-api'
 
 import store from '@/store'
 
 export default defineComponent({
-  name: 'GrandTotalField',
+  name: 'DocumentNoField',
+
   props: {
     uuidForm: {
       required: true,
       type: String
     }
   },
-  setup(props) {
-    const grandTotalFieldFrom = computed({
-      set(newValue) {
-        store.commit('setInvoiceFieldQueryFilterByAttribute', {
-          containerUuid: props.uuidForm,
-          attributeKey: 'grandTotalFrom',
-          value: newValue
-        })
-      },
-      get() {
-        return store.getters.getInvoicesQueryFilterByAttribute({
-          containerUuid: props.uuidForm,
-          attributeKey: 'grandTotalFrom'
-        })
-      }
-    })
 
-    const grandTotalFieldTo = computed({
+  setup(props) {
+    const ATTRIBUTE_KEY = 'documentNo'
+
+    const currentValue = computed({
       set(newValue) {
         store.commit('setInvoiceFieldQueryFilterByAttribute', {
           containerUuid: props.uuidForm,
-          attributeKey: 'grandTotalTo',
+          attributeKey: ATTRIBUTE_KEY,
           value: newValue
         })
       },
       get() {
         return store.getters.getInvoicesQueryFilterByAttribute({
           containerUuid: props.uuidForm,
-          attributeKey: 'grandTotalTo'
+          attributeKey: ATTRIBUTE_KEY
         })
       }
     })
 
     return {
-      grandTotalFieldFrom,
-      grandTotalFieldTo
+      currentValue
     }
   }
 })

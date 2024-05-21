@@ -197,14 +197,14 @@ const fieldInvoice = {
       pageSize
     }) {
       return new Promise(resolve => {
-        const storedBusinessPartnerData = getters.getInvoceData({
+        const storedInvoiceData = getters.getInvoceData({
           containerUuid
         })
 
         if (isEmptyValue(pageNumber) || pageNumber < 1) {
           const {
             pageNumber: storedPageNumber
-          } = storedBusinessPartnerData.pageNumber
+          } = storedInvoiceData.pageNumber
           // refresh with same page
           pageNumber = storedPageNumber
         }
@@ -220,14 +220,14 @@ const fieldInvoice = {
           containerUuid: containerUuid
         })
 
-        const { queryFilters } = storedBusinessPartnerData
+        const { queryFilters } = storedInvoiceData
         if (isSalesTransactionContext) {
           queryFilters.is_vendor = undefined
         } else {
           queryFilters.is_customer = undefined
         }
         commit('setInvoiceFieldData', {
-          ...storedBusinessPartnerData,
+          ...storedInvoiceData,
           containerUuid
         })
 
@@ -278,7 +278,7 @@ const fieldInvoice = {
             }
 
             commit('setInvoiceFieldData', {
-              ...storedBusinessPartnerData,
+              ...storedInvoiceData,
               containerUuid,
               currentRow,
               recordsList,

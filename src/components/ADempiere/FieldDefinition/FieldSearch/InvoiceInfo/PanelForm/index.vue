@@ -19,7 +19,7 @@
 <template>
   <el-main
     v-shortkey="QUICK_KEY_ACCESS"
-    class="business-partners-container"
+    class="invoices-container"
     @shortkey.native="keyAction"
   >
     <query-criteria
@@ -51,9 +51,9 @@ import store from '@/store'
 
 // Constants
 import {
-  BUSINESS_PARTNERS_LIST_FORM,
+  INVOICES_LIST_FORM,
   COLUMN_NAME
-} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+} from '@/utils/ADempiere/dictionary/field/search/invoice.js'
 import {
   QUICK_KEY_ACCESS
 } from '@/utils/ADempiere/dictionary/field/search/index.ts'
@@ -65,7 +65,7 @@ import PanelFooter from './panelFooter.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import useBusinessPartner from './useInvoces'
+import useInvoice from './useInvoce'
 
 export default defineComponent({
   name: 'PanelForm',
@@ -89,7 +89,7 @@ export default defineComponent({
       type: Object,
       default: () => {
         return {
-          containerUuid: BUSINESS_PARTNERS_LIST_FORM,
+          containerUuid: INVOICES_LIST_FORM,
           columnName: COLUMN_NAME
         }
       }
@@ -105,17 +105,17 @@ export default defineComponent({
       if (!isEmptyValue(props.metadata.containerUuid)) {
         return props.metadata.columnName + '_' + props.metadata.containerUuid
       }
-      return BUSINESS_PARTNERS_LIST_FORM
+      return INVOICES_LIST_FORM
     })
 
     const {
-      businessPartnerData,
+      invoiceData,
       isLoadedRecords,
       isLoadingRecords,
       isSalesTransactionContext,
       keyAction,
       loadRecordsList
-    } = useBusinessPartner({
+    } = useInvoice({
       uuidForm: uuidForm.value,
       parentUuid: props.metadata.parentUuid,
       containerUuid: props.metadata.containerUuid,
@@ -133,7 +133,7 @@ export default defineComponent({
       }
     })
 
-    if (isReadyFromGetData.value || isSalesTransactionContext.value !== businessPartnerData.value.isSalesTransaction) {
+    if (isReadyFromGetData.value || isSalesTransactionContext.value !== invoiceData.value.isSalesTransaction) {
       loadRecordsList({})
     }
 
@@ -149,11 +149,11 @@ export default defineComponent({
     const unsubscribeAccoutingFacts = subscribeAccoutingFacts()
 
     function setInitialValues() {
-      const storedBusinessPartnerData = store.getters.getInvoceData({
+      const storedInvoiceData = store.getters.getInvoceData({
         containerUuid: props.metadata.containerUuid
       })
       store.commit('setInvoiceFieldData', {
-        ...storedBusinessPartnerData,
+        ...storedInvoiceData,
         containerUuid: props.metadata.containerUuid
       })
     }
@@ -177,7 +177,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.business-partners-container {
+.invoices-container {
   padding-top: 0px;
   padding-bottom: 0px;
 }

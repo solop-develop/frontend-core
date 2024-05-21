@@ -18,16 +18,16 @@
 
 <template>
   <el-popover
-    ref="businessPartnerListPopover"
-    v-model="showedPopoverBusinessPartnerList"
-    popper-class="business-partners-popover"
+    ref="invoicesListPopover"
+    v-model="showedPopoverInvoiceList"
+    popper-class="invoices-popover"
     placement="top"
     width="1200"
     trigger="click"
   >
-    <business-partner-panel
-      v-if="showedPopoverBusinessPartnerList"
-      :show-popover="showedPopoverBusinessPartnerList"
+    <panel-form
+      v-if="showedPopoverInvoiceList"
+      :show-popover="showedPopoverInvoiceList"
       :container-manager="containerManager"
       :metadata="parentMetadata"
     />
@@ -48,20 +48,19 @@
 import store from '@/store'
 
 // Components and Mixins
-import BusinessPartnerPanel from './PanelForm/index.vue'
-// import BusinessPartnerPanel from './businessPartnersList.vue'
+import PanelForm from './PanelForm/index.vue'
 
 // Constants
 import {
-  BUSINESS_PARTNERS_LIST_FORM,
+  INVOICES_LIST_FORM,
   COLUMN_NAME
-} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+} from '@/utils/ADempiere/dictionary/field/search/invoice'
 
 export default {
-  name: 'ButtonBusinessPartnersList',
+  name: 'ButtonList',
 
   components: {
-    BusinessPartnerPanel
+    PanelForm
   },
 
   props: {
@@ -91,9 +90,9 @@ export default {
       if (!this.isEmptyValue(this.parentMetadata.containerUuid)) {
         return this.parentMetadata.columnName + '_' + this.parentMetadata.containerUuid
       }
-      return BUSINESS_PARTNERS_LIST_FORM
+      return INVOICES_LIST_FORM
     },
-    showedPopoverBusinessPartnerList: {
+    showedPopoverInvoiceList: {
       get() {
         return store.getters.getFieldInvoceShow({
           containerUuid: this.uuidForm
