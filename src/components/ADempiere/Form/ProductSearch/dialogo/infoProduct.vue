@@ -101,12 +101,16 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <script>
 import { defineComponent, computed } from '@vue/composition-api'
+
 import store from '@/store'
+
 // Utils and Helper Methods
 import { convertBooleanToTranslationLang } from '@/utils/ADempiere/formatValue/booleanFormat'
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
+
 export default defineComponent({
   name: 'InfoProduct',
+
   data() {
     return {
       url: '',
@@ -115,6 +119,7 @@ export default defineComponent({
       ]
     }
   },
+
   setup() {
     /**
      * Computed
