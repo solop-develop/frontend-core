@@ -79,12 +79,6 @@ export function requestListOrderInfo({
 
   let url
   switch (true) {
-    case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
-      url = `/field/orders/table/${tableName}/${columnName}`
-      break
-    case !isEmptyValue(columnId):
-      url = `/field/orders/column/${columnId}`
-      break
     case !isEmptyValue(fieldId):
       url = `/field/orders/field/${fieldId}`
       break
@@ -93,6 +87,12 @@ export function requestListOrderInfo({
       break
     case !isEmptyValue(browseFieldId):
       url = `/field/orders/query-criteria/${browseFieldId}`
+      break
+    case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
+      url = `/field/orders/table/${tableName}/${columnName}`
+      break
+    case !isEmptyValue(columnId):
+      url = `/field/orders/column/${columnId}`
       break
     default:
       url = `/field/orders`
