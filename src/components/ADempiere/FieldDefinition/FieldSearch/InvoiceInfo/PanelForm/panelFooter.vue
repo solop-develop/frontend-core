@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <el-row :gutter="24" class="business-partners-footer">
+  <el-row :gutter="24" class="invoices-footer">
     <el-col :span="14">
       <custom-pagination
         :container-manager="containerManager"
@@ -82,7 +82,7 @@ import {
 
 // Components and Mixins
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
-import useBusinessPartner from './useInvoces'
+import useInvoice from './useInvoce'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -125,14 +125,14 @@ export default defineComponent({
   setup(props) {
     const {
       blankValues,
-      businessPartnerData,
+      invoiceData,
       currentRow,
       isLoadingRecords,
       //
       closeList,
       loadRecordsList,
       setValues
-    } = useBusinessPartner({
+    } = useInvoice({
       uuidForm: props.uuidForm,
       parentUuid: props.metadata.parentUuid,
       containerUuid: props.metadata.containerUuid,
@@ -154,11 +154,11 @@ export default defineComponent({
     })
 
     const pageNumber = computed(() => {
-      return businessPartnerData.value.pageNumber
+      return invoiceData.value.pageNumber
     })
 
     const pageSize = computed(() => {
-      return businessPartnerData.value.pageSize
+      return invoiceData.value.pageSize
     })
 
     function clearCriteriaValues() {

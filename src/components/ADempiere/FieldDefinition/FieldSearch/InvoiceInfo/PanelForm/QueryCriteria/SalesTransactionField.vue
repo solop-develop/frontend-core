@@ -18,32 +18,63 @@
 
 <template>
   <el-form-item
-    :label="$t('field.invoice.document')"
+    :label="$t('field.invoice.salesTransaction')"
+    style="align-items: center;"
   >
-    <el-input
+    <el-select
       v-model="currentValue"
-      clearable
-    />
+    >
+      <el-option
+        v-for="(option, key) in YES_NO_OPTIONS_LIST"
+        :key="key"
+        :value="option.stringValue"
+        :label="option.displayValue"
+      />
+    </el-select>
   </el-form-item>
 </template>
 
 <script>
-import { computed, defineComponent } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
 
 import store from '@/store'
 
+// Constants
+import { YES_NO_OPTIONS_LIST } from '@/utils/ADempiere/dictionary/field/yesNo'
+
+// Utils and Helper Methods
+import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
+import { convertBooleanToString } from '@/utils/ADempiere/formatValue/booleanFormat'
+import { isEmptyValue } from '@/utils/ADempiere'
+
 export default defineComponent({
-  name: 'DocumentNo',
+  name: 'SalesTransactionField',
 
   props: {
     uuidForm: {
+      required: true,
+      type: String
+    },
+    parentUuid: {
+      type: String,
+      default: undefined
+    },
+    containerUuid: {
       required: true,
       type: String
     }
   },
 
   setup(props) {
-    const ATTRIBUTE_KEY = 'documentNo'
+    const ATTRIBUTE_KEY = 'isSalesTransaction'
+
+    const isSalesTransactionContext = computed(() => {
+      const booleanValue = isSalesTransaction({
+        parentUuid: props.parentUuid,
+        containerUuid: props.containerUuid
+      })
+      return convertBooleanToString(booleanValue)
+    })
 
     const currentValue = computed({
       set(newValue) {
@@ -61,7 +92,13 @@ export default defineComponent({
       }
     })
 
+    if (!isEmptyValue(isSalesTransactionContext.value)) {
+      currentValue.value = isSalesTransactionContext.value
+    }
+
     return {
+      isSalesTransactionContext,
+      YES_NO_OPTIONS_LIST,
       currentValue
     }
   }

@@ -18,82 +18,52 @@
 
 <template>
   <el-form-item
-    :label="$t('field.invoice.invoiceDate')"
-    style="align-items: center;"
+    :label="$t('field.invoice.description')"
   >
-    <div class="date-picker-container">
-      <el-date-picker
-        v-model="billingDateFieldFrom"
-        type="date"
-        placeholder="Select date and time"
-      />
-      <b style="color: #c0c4cc;padding: 0px 5px;font-weight: bold;">
-        —
-      </b>
-      <el-date-picker
-        v-model="billingDateFieldTo"
-        type="date"
-        placeholder="Select date and time"
-      />
-    </div>
+    <el-input
+      v-model="currentValue"
+      clearable
+    />
   </el-form-item>
 </template>
 
 <script>
-import { defineComponent, computed } from '@vue/composition-api'
+import { computed, defineComponent } from '@vue/composition-api'
 
 import store from '@/store'
 
 export default defineComponent({
-  name: 'BillingDateField',
+  name: 'DescriptionField',
+
   props: {
     uuidForm: {
       required: true,
       type: String
     }
   },
-  setup(props) {
-    const billingDateFieldFrom = computed({
-      set(newValue) {
-        store.commit('setInvoiceFieldQueryFilterByAttribute', {
-          containerUuid: props.uuidForm,
-          attributeKey: 'invoiceDateFrom',
-          value: newValue
-        })
-      },
-      get() {
-        return store.getters.getInvoicesQueryFilterByAttribute({
-          containerUuid: props.uuidForm,
-          attributeKey: 'invoiceDateFrom'
-        })
-      }
-    })
 
-    const billingDateFieldTo = computed({
+  setup(props) {
+    const ATTRIBUTE_KEY = 'description'
+
+    const currentValue = computed({
       set(newValue) {
         store.commit('setInvoiceFieldQueryFilterByAttribute', {
           containerUuid: props.uuidForm,
-          attributeKey: 'invoiceDateTo',
+          attributeKey: ATTRIBUTE_KEY,
           value: newValue
         })
       },
       get() {
         return store.getters.getInvoicesQueryFilterByAttribute({
           containerUuid: props.uuidForm,
-          attributeKey: 'invoiceDateTo'
+          attributeKey: ATTRIBUTE_KEY
         })
       }
     })
 
     return {
-      billingDateFieldFrom,
-      billingDateFieldTo
+      currentValue
     }
   }
 })
 </script>
-  <style scoped>
-  .date-picker-container {
-    display: flex
-  }
-  </style>
