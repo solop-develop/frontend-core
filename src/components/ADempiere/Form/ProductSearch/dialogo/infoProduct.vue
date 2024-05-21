@@ -85,7 +85,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     </el-col>
     <el-col :span="4">
       <el-image
-        style="width: 80px; height: 80px;margin: 0 auto 0; display: block "
+        style="width: 80px; height: 80px;margin: 0 auto 0; display: flex; justify-content:center; align-items:center; background: #f5f7fa"
         :src="url"
         :preview-src-list="srcList"
         fit="cover"
