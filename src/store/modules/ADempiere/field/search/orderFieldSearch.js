@@ -34,7 +34,6 @@ import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
-import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 
 const initState = {
   orderDataPopoverList: false,
@@ -197,6 +196,7 @@ const fieldOrder = {
       pageSize
     }) {
       return new Promise(resolve => {
+        let pageToken
         const storedBusinessPartnerData = getters.getOrderData({
           containerUuid
         })
@@ -208,7 +208,7 @@ const fieldOrder = {
           // refresh with same page
           pageNumber = storedPageNumber
         }
-        const pageToken = generatePageToken({ pageNumber })
+        if (!isEmptyValue(storedBusinessPartnerData.nextPageToken)) pageToken = storedBusinessPartnerData.nextPageToken + pageNumber
 
         commit('setBusinessPartnerIsLoading', {
           containerUuid,
@@ -259,8 +259,13 @@ const fieldOrder = {
           pageToken,
           pageSize
         })
-          .then(responseBusinessPartnerList => {
-            const recordsList = responseBusinessPartnerList.records.map((row, rowIndex) => {
+          .then(responseOrderList => {
+            const {
+              records,
+              record_count,
+              next_page_token
+            } = responseOrderList
+            const recordsList = records.map((row, rowIndex) => {
               return {
                 [COLUMN_NAME]: row.id,
                 ...row,
@@ -282,12 +287,12 @@ const fieldOrder = {
               containerUuid,
               currentRow,
               recordsList,
-              nextPageToken: responseBusinessPartnerList.next_page_token,
+              nextPageToken: !isEmptyValue(next_page_token) ? next_page_token.slice(0, -1) : '',
               pageNumber,
               pageSize,
               isSalesTransaction: isSalesTransactionContext,
               isLoaded: true,
-              recordCount: Number(responseBusinessPartnerList.record_count)
+              recordCount: Number(record_count)
             })
 
             resolve(recordsList)
