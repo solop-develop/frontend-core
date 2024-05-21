@@ -31,8 +31,8 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           {{ product.vendor }}
         </el-descriptions-item>
         <el-descriptions-item :label="$t('field.product.infoProduct.infoProductoclassification')">
-          <span v-if="isEmptyValue(product.classification)" class="class-empty-value"> {{ '-' }}</span>
-          {{ '' }}
+          <span v-if="isEmptyValue(product.product_classification)" class="class-empty-value"> {{ '-' }}</span>
+          {{ product_classification }}
         </el-descriptions-item>
         <el-descriptions-item :label="$t('field.product.description')">
           <span v-if="isEmptyValue(product.description)" class="class-empty-value"> {{ '-' }}</span>
@@ -41,8 +41,8 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         <el-descriptions-item :label="$t('field.product.onHandQuantity')" :content-style="{'justify-content': 'center !important'}">
           {{ formatQuantity(product.on_hand_quantity) }}
         </el-descriptions-item>
-        <el-descriptions-item :label="$t('field.product.standardPrice')" :content-style="{'justify-content': 'center !important'}">
-          <span v-if="isEmptyValue(product.standardPrice)" class="class-empty-value"> {{ '-' }}</span>
+        <el-descriptions-item :label="$t('field.product.standardPrice')" :content-style="{'justify-content': 'center !important', 'margin-left': '-20px'}">
+          <span v-if="isEmptyValue(product.standard_price)" class="class-empty-value">{{ '-' }}</span>
           {{ formatQuantity({ value: product.standard_price }) }}
         </el-descriptions-item>
         <el-descriptions-item :label="$t('field.product.infoProduct.infoProductGroup')">
@@ -134,6 +134,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.el-descriptions-item__content {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
 .class-empty-value {
   color: transparent;
 }
