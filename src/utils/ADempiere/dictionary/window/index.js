@@ -2193,6 +2193,21 @@ export const containerManager = {
     })
   },
 
+  getOrdersSearchFieldRecordList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, id, filters, searchValue, pageNumber, pageSize }) {
+    return store.dispatch('gridOrders', {
+      parentUuid,
+      containerUuid,
+      contextColumnNames,
+      fieldId: id,
+      tableName,
+      columnName,
+      filters,
+      searchValue,
+      pageNumber,
+      pageSize
+    })
+  },
+
   getRecordLogs({ tableName, recordId, recordUuid }) {
     return store.dispatch('listRecordLogs', {
       tableName,

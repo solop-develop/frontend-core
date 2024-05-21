@@ -164,34 +164,34 @@ const orderInfo = {
     * Used by result in Order List
     * @param {string} containerUuid
     */
-    getOrderData: (state) => ({ containerUuid }) => {
+    getOrderInfoData: (state) => ({ containerUuid }) => {
       return state.orderData[containerUuid] || {
         ...state.emtpyOrderData,
         containerUuid
       }
     },
     getIsLoadedOrderRecord: (state, getters) => ({ containerUuid }) => {
-      return getters.getOrderData({
+      return getters.getOrderInfoData({
         containerUuid
       }).isLoaded
     },
     getOrderList: (state, getters) => ({ containerUuid }) => {
-      return getters.getOrderData({
+      return getters.getOrderInfoData({
         containerUuid
       }).ordersList
     },
     getOrderListRecordCount: (state, getters) => ({ containerUuid }) => {
-      return getters.getOrderData({
+      return getters.getOrderInfoData({
         containerUuid
       }).recordCount
     },
     getOrderPageNumber: (state, getters) => ({ containerUuid }) => {
-      return getters.getOrderData({
+      return getters.getOrderInfoData({
         containerUuid
       }).pageNumber
     },
-    getOrderCurrentRow: (state, getters) => ({ containerUuid }) => {
-      return getters.getOrderData({
+    getOrderInfoCurrentRow: (state, getters) => ({ containerUuid }) => {
+      return getters.getOrderInfoData({
         containerUuid
       }).currentRow
     },
