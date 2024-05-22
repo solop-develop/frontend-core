@@ -60,6 +60,7 @@ const product = {
   relateds: 'Related',
   availableToPromises: 'AvailableToPromises',
   vendorPurchases: 'Vendor Purchases',
+  searchCriteria: 'Search Criteria',
   wrehouseTables: {
     name: 'Name',
     availableQuantity: 'AvailableQuantity',
