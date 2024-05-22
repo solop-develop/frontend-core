@@ -25,75 +25,6 @@ import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
-export function requestListBusinessPartner2({
-  fieldUuid,
-  processParameterUuid,
-  browseFieldUuid,
-  //
-  referenceUuid,
-  //
-  tableName,
-  columnName,
-  columnUuid,
-  // dsl query
-  contextAttributesList,
-  searchValue,
-  filters,
-  // Page Data
-  pageSize = ROWS_OF_RECORDS_BY_PAGE,
-  pageToken
-}) {
-  let contextAttributes = []
-  if (!isEmptyValue(contextAttributesList)) {
-    contextAttributes = contextAttributesList.map(attribute => {
-      return {
-        key: attribute.columnName,
-        value: attribute.value
-      }
-    })
-  }
-
-  // used as where clause
-  if (!isEmptyValue(filters)) {
-    filters = filters.map(condition => {
-      const { value, operator, columnName, valueTo, values } = condition
-      return {
-        column_name: columnName,
-        value,
-        operator,
-        value_to: valueTo,
-        values
-      }
-    })
-  }
-
-  return request({
-    url: '/business-partner/grid',
-    method: 'get',
-    params: {
-      field_uuid: fieldUuid,
-      process_parameter_uuid: processParameterUuid,
-      browse_field_uuid: browseFieldUuid,
-      reference_uuid: referenceUuid,
-      //
-      table_name: tableName,
-      column_name: columnName,
-      column_uuid: columnUuid,
-      //
-      context_attributes: contextAttributes,
-      search_value: searchValue,
-      filters,
-      //
-      page_size: pageSize,
-      page_token: pageToken
-    }
-  })
-    .then(businessPartnersResponse => {
-      const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
-      return convertEntityList(businessPartnersResponse)
-    })
-}
-
 export function requestListBusinessPartner({
   contextAttributesList,
   filters = [],
@@ -140,12 +71,6 @@ export function requestListBusinessPartner({
 
   let url
   switch (true) {
-    case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
-      url = `/field/business-partners/table/${tableName}/${columnName}`
-      break
-    case !isEmptyValue(columnId):
-      url = `/field/business-partners/column/${columnId}`
-      break
     case !isEmptyValue(fieldId):
       url = `/field/business-partners/field/${fieldId}`
       break
@@ -154,6 +79,12 @@ export function requestListBusinessPartner({
       break
     case !isEmptyValue(browseFieldId):
       url = `/field/business-partners/query-criteria/${browseFieldId}`
+      break
+    case !isEmptyValue(columnId):
+      url = `/field/business-partners/column/${columnId}`
+      break
+    case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
+      url = `/field/business-partners/table/${tableName}/${columnName}`
       break
   }
 
