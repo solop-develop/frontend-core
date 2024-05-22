@@ -253,7 +253,6 @@ export default defineComponent({
     DraggableElements,
     ProgressPercentage
   },
-
   props: {
     tableName: {
       type: String,
@@ -262,10 +261,14 @@ export default defineComponent({
     recordId: {
       type: Number,
       required: false
+    },
+    isAll: {
+      type: Boolean,
+      default: false
     }
   },
 
-  setup() {
+  setup(props) {
     const updateDragStatus = ref('')
     const filter = ref('')
     const priority = ref('')
@@ -280,7 +283,7 @@ export default defineComponent({
     const statusesExpand = ref([])
 
     const listIssues = computed(() => {
-      return store.getters.getListIssues
+      return store.getters.getListIssues(props.isAll)
     })
 
     const isNewIssues = computed({

@@ -106,7 +106,8 @@ export default defineComponent({
           form = import('@/components/ADempiere/FormDefinition/VBankStatementMatch')
           break
         case 'IssueManagement':
-          form = import('@/components/ADempiere/FormDefinition/IssueManagement')
+          // form = import('@/components/ADempiere/FormDefinition/IssueManagement')
+          form = import('@/components/ADempiere/FormDefinition/IssueManagement/IssuesAll.vue')
           break
         case 'ExpressReceipt':
           form = import('@/components/ADempiere/FormDefinition/ExpressReceipt')
