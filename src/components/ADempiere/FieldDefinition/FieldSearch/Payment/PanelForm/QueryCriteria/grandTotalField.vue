@@ -18,7 +18,7 @@
 
 <template>
   <el-form-item
-    :label="$t('field.order.grandTotal')"
+    :label="$t('field.payment.totalPayment')"
     style="align-items: center;"
   >
     <div style="display: flex;">

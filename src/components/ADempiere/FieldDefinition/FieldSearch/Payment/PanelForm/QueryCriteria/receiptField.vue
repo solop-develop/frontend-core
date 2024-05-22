@@ -17,7 +17,7 @@
 -->
 <template>
   <el-form-item
-    :label="$t('field.order.salesTransaction')"
+    :label="$t('field.payment.isReceipt')"
     style="align-items: center;"
   >
     <el-select
@@ -42,12 +42,12 @@ import store from '@/store'
 // import { YES_NO_OPTIONS_LIST } from '@/utils/ADempiere/dictionary/field/yesNo'
 
 // Utils and Helper Methods
-import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
-import { convertBooleanToString } from '@/utils/ADempiere/formatValue/booleanFormat'
-import { isEmptyValue } from '@/utils/ADempiere'
+// import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
+// import { convertBooleanToString } from '@/utils/ADempiere/formatValue/booleanFormat'
+// import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({
-  name: 'saleTransactionField',
+  name: 'Receipt',
 
   props: {
     uuidForm: {
@@ -69,20 +69,7 @@ export default defineComponent({
   },
 
   setup(props) {
-    const ATTRIBUTE_KEY = 'isSalesTransaction'
-
-    const isSalesTransactionContext = computed(() => {
-      const booleanValue = isSalesTransaction({
-        parentUuid: props.parentUuid,
-        containerUuid: props.containerUuid
-      })
-      return convertBooleanToString(booleanValue)
-    })
-
-    // const listOptions = computed(() => {
-    //   return YES_NO_OPTIONS_LIST
-    // })
-
+    const ATTRIBUTE_KEY = 'isReceipt'
     const currentValue = computed({
       set(newValue) {
         store.commit('setPaymentFieldQueryFilterByAttribute', {
@@ -99,12 +86,7 @@ export default defineComponent({
       }
     })
 
-    if (!isEmptyValue(props.listOptions) && !isEmptyValue(isSalesTransactionContext.value)) currentValue.value = isSalesTransactionContext.value
-
     return {
-      isSalesTransactionContext,
-      // YES_NO_OPTIONS_LIST,
-      // listOptions,
       currentValue
     }
   }

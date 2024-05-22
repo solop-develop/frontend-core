@@ -28,6 +28,7 @@ const payment = {
   documentNo: 'Document No',
   receivable: 'Receivable',
   currency: 'Currency',
+  isReceipt: 'Receipt',
   totalPayment: 'Total of Payment',
   converted: 'Converted',
   totalDiscount: 'Total Discount',

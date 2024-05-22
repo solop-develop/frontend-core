@@ -27,6 +27,7 @@ const payment = {
   transactionDate: 'Fecha de la Transacción',
   documentNo: 'Documento No',
   receivable: 'Cobros',
+  isReceipt: 'Recibo',
   currency: 'Moneda',
   totalPayment: 'Total del Pago',
   converted: 'Convertido',

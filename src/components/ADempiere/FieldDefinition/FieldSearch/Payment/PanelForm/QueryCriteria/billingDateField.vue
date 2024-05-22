@@ -18,7 +18,7 @@
 
 <template>
   <el-form-item
-    :label="$t('field.order.orderDate')"
+    :label="$t('field.payment.transactionDate')"
     style="align-items: center;"
   >
     <div class="date-picker-container">

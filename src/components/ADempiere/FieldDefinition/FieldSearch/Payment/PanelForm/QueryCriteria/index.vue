@@ -44,12 +44,6 @@
           </el-col>
 
           <el-col :span="6">
-            <description
-              :uuid-form="uuidForm"
-            />
-          </el-col>
-
-          <el-col :span="6">
             <business-partner
               :uuid-form="uuidForm"
               :parent-uuid="metadata.parentUuid"
@@ -58,7 +52,15 @@
           </el-col>
 
           <el-col :span="6">
-            <sale-transaction-field
+            <bank-account
+              :uuid-form="uuidForm"
+              :parent-uuid="metadata.parentUuid"
+              :container-uuid="metadata.containerUuid"
+            />
+          </el-col>
+
+          <el-col :span="6">
+            <receipt
               :uuid-form="uuidForm"
               :parent-uuid="metadata.parentUuid"
               :container-uuid="metadata.containerUuid"
@@ -66,11 +68,11 @@
             />
           </el-col>
 
-          <el-col :span="6">
+          <!-- <el-col :span="6">
             <delivered-field
               :uuid-form="uuidForm"
             />
-          </el-col>
+          </el-col> -->
 
           <el-col :span="6">
             <billing-date-field
@@ -107,7 +109,8 @@ import { YES_NO_OPTIONS_LIST } from '@/utils/ADempiere/dictionary/field/yesNo'
 import DocumentNo from './documentNoField.vue'
 import Description from './descriptionField.vue'
 import BusinessPartner from './businessPartner.vue'
-import SaleTransactionField from './SalesTransactionField.vue'
+import BankAccount from './bankAccount.vue'
+import Receipt from './receiptField.vue'
 import DeliveredField from './DeliveredField.vue'
 import OrderField from './OrderField.vue'
 import billingDateField from './billingDateField.vue'
@@ -123,9 +126,10 @@ export default defineComponent({
     DocumentNo,
     Description,
     BusinessPartner,
-    SaleTransactionField,
+    Receipt,
     DeliveredField,
     OrderField,
+    BankAccount,
     billingDateField,
     GrandTotalField
   },
