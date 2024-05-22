@@ -393,10 +393,14 @@ export default defineComponent({
       let tabOptions = tab.name
       if (tab.name === 'accountingInformation') {
         const { currentTab } = store.getters.getContainerInfo
+        const recordId = currentRecordId.value
+        if (isEmptyValue(recordId)) {
+          return
+        }
         store.dispatch('getAccoutingFactsFromServer', {
           searchValue: '',
           tableName: currentTab.table_name,
-          recordId: currentRecordId.value,
+          recordId,
           recordUuid: currentRecordUuid.value
         })
         return
