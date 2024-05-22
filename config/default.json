@@ -48,9 +48,6 @@
     "movement": "/express-movement",
     "shipment": "/express-shipment"
   },
-  "issuesManagement": {
-    "endpoint": "/issue-management"
-  },
   "generalGedger": {
     "accounts": "/general-ledger/accounts",
     "organizations": "/general-ledger/organizations",
