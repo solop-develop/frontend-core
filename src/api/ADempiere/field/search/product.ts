@@ -309,14 +309,8 @@ export function requestListProducts({
     })
   }
 
-  let url
+  let url = '/field/products'
   switch (true) {
-    case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
-      url = `/field/products/table/${tableName}/${columnName}`
-      break
-    case !isEmptyValue(columnId):
-      url = `/field/products/column/${columnId}`
-      break
     case !isEmptyValue(fieldId):
       url = `/field/products/field/${fieldId}`
       break
@@ -325,6 +319,12 @@ export function requestListProducts({
       break
     case !isEmptyValue(browseFieldId):
       url = `/field/products/query-criteria/${browseFieldId}`
+      break
+    case !isEmptyValue(columnId):
+      url = `/field/products/column/${columnId}`
+      break
+    case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
+      url = `/field/products/table/${tableName}/${columnName}`
       break
   }
 

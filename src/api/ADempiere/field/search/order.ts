@@ -18,6 +18,11 @@
 
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
+
+// Constants
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export function requestListBusinessPartners({
@@ -52,7 +57,7 @@ export function requestListBusinessPartners({
 
 export function requestListOrderInfo({
   // Page Data
-  pageSize,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken,
   searchValue,
   contextAttributes,
@@ -76,8 +81,7 @@ export function requestListOrderInfo({
   documentNo,
   orderId
 }) {
-
-  let url
+  let url = '/field/orders'
   switch (true) {
     case !isEmptyValue(fieldId):
       url = `/field/orders/field/${fieldId}`

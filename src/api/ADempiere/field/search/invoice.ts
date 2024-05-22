@@ -19,6 +19,12 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
+// Constants
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+
 export function requestListOrders({
   filters,
   sort_by,
@@ -81,7 +87,7 @@ export function requestListBusinessPartners({
 
 export function requestListInvoicesInfo({
   // Page Data
-  pageSize,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken,
   searchValue,
   contextAttributes,
@@ -91,6 +97,7 @@ export function requestListInvoicesInfo({
   browseFieldId,
   referenceId,
   columnId,
+  tableName,
   columnName,
   // Custom Filter
   documentNo,
@@ -104,8 +111,27 @@ export function requestListInvoicesInfo({
   grandTotalFrom,
   grandTotalTo
 }) {
+  let url = '/field/invoices'
+  switch (true) {
+    case !isEmptyValue(fieldId):
+      url = `/field/invoices/field/${fieldId}`
+      break
+    case !isEmptyValue(processParameterId):
+      url = `/field/invoices/parameter/${processParameterId}`
+      break
+    case !isEmptyValue(browseFieldId):
+      url = `/field/invoices/query-criteria/${browseFieldId}`
+      break
+    case !isEmptyValue(columnId):
+      url = `/field/invoices/column/${columnId}`
+      break
+    case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
+      url = `/field/invoices/table/${tableName}/${columnName}`
+      break
+  }
+
   return request({
-    url: '/field/invoices',
+    url: url,
     method: 'get',
     params: {
       // Page Data

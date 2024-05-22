@@ -334,10 +334,10 @@ const formProductSearch = {
     getCurrentProduct: (state) => {
       return state.currentProduct
     },
-    getRecordList: (state) => {
+    getProductRecordList: (state) => {
       return state.record.list
     },
-    getRecordCount: (state) => {
+    getProductInfoRecordCount: (state) => {
       return state.record.recordCount
     },
     getPageToken: (state) => {

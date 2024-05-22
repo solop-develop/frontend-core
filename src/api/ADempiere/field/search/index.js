@@ -66,7 +66,7 @@ export function requestGridGeneralInfo({
     )
   }
 
-  let url
+  let url = 'user-interface/search-records'
   switch (true) {
     case !isEmptyValue(fieldId):
       url = `/user-interface/search-records/field/${fieldId}`
