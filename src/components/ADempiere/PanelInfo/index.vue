@@ -394,14 +394,12 @@ export default defineComponent({
       if (tab.name === 'accountingInformation') {
         const { currentTab } = store.getters.getContainerInfo
         const recordId = currentRecordId.value
-        if (isEmptyValue(recordId)) {
-          return
-        }
+        if (isEmptyValue(recordId)) return
         store.dispatch('getAccoutingFactsFromServer', {
-          searchValue: '',
+          recordUuid: currentRecordUuid.value,
           tableName: currentTab.table_name,
-          recordId,
-          recordUuid: currentRecordUuid.value
+          searchValue: '',
+          recordId
         })
         return
       }
