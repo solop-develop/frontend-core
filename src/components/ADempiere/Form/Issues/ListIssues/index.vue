@@ -242,6 +242,7 @@ import {
   requestListStatuses
 } from '@/api/ADempiere/user-interface/component/issue'
 import { isEmptyValue } from '@/utils/ADempiere'
+import router from '@/router'
 
 export default defineComponent({
   name: 'Issues',
@@ -261,14 +262,10 @@ export default defineComponent({
     recordId: {
       type: Number,
       required: false
-    },
-    isAll: {
-      type: Boolean,
-      default: false
     }
   },
 
-  setup(props) {
+  setup() {
     const updateDragStatus = ref('')
     const filter = ref('')
     const priority = ref('')
@@ -281,9 +278,11 @@ export default defineComponent({
     const listStatuses = ref([])
     const listStatusesKanban = ref([])
     const statusesExpand = ref([])
-
+    const isAll = computed(() => {
+      return router.app._route.meta.isAll
+    })
     const listIssues = computed(() => {
-      return store.getters.getListIssues(props.isAll)
+      return store.getters.getListIssues(isAll.value)
     })
 
     const isNewIssues = computed({

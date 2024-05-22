@@ -19,6 +19,7 @@
 const issues = {
   documentNo: 'Número de Documento',
   issues: 'Asunto',
+  issuesAll: 'Todos los Asuntos',
   summary: 'Resumen',
   created: 'Creado Por',
   priority: 'Prioridad',

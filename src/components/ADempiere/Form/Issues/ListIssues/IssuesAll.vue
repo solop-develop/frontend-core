@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <Issues :is-all="true" />
+  <Issues />
 </template>
 
 <script>
@@ -28,11 +28,6 @@ export default defineComponent({
   name: 'IssuesAll',
   components: {
     Issues
-  },
-  setup() {
-    return {
-      isAll: true
-    }
   }
 })
 </script>

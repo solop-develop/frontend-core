@@ -19,6 +19,7 @@
 const issues = {
   documentNo: 'Document No',
   issues: 'Issues',
+  issuesAll: 'All Issues',
   subject: 'Subject',
   summary: 'Summary',
   created: 'Created',
