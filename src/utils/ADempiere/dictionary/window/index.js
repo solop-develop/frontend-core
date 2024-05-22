@@ -2208,6 +2208,21 @@ export const containerManager = {
     })
   },
 
+  getPaymentSearchFieldRecordList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, id, filters, searchValue, pageNumber, pageSize }) {
+    return store.dispatch('gridPayments', {
+      parentUuid,
+      containerUuid,
+      contextColumnNames,
+      fieldId: id,
+      tableName,
+      columnName,
+      filters,
+      searchValue,
+      pageNumber,
+      pageSize
+    })
+  },
+
   getRecordLogs({ tableName, recordId, recordUuid }) {
     return store.dispatch('listRecordLogs', {
       tableName,

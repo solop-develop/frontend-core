@@ -82,6 +82,7 @@ export default {
       if (isEmptyValue(this.metadata.referenceTableName)) {
         return fieldRender
       }
+      console.log(this.metadata.referenceTableName)
       switch (this.metadata.referenceTableName) {
         case 'C_BPartner':
           fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/BusinessPartnerInfo')
@@ -95,6 +96,9 @@ export default {
           break
         case 'C_Invoice':
           fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/InvoiceInfo')
+          break
+        case 'C_Payment':
+          fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/Payment')
           break
         default:
           fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/GeneralInfoSearch')
