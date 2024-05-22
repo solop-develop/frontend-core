@@ -35,7 +35,7 @@ const issues = {
   preview: 'Vista Previa',
   newRequest: 'Nueva Solicitud',
   backToList: 'Regresar a la Lista',
-  allRequest: 'Todas las Solicitudes',
+  allRequest: 'Lista de Solicitudes',
   createNewRequest: 'Crear Nueva Solicitud',
   edit: 'Editar',
   delete: 'Eliminar',
