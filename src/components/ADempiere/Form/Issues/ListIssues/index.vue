@@ -242,6 +242,7 @@ import {
   requestListStatuses
 } from '@/api/ADempiere/user-interface/component/issue'
 import { isEmptyValue } from '@/utils/ADempiere'
+import router from '@/router'
 
 export default defineComponent({
   name: 'Issues',
@@ -253,7 +254,6 @@ export default defineComponent({
     DraggableElements,
     ProgressPercentage
   },
-
   props: {
     tableName: {
       type: String,
@@ -278,9 +278,11 @@ export default defineComponent({
     const listStatuses = ref([])
     const listStatusesKanban = ref([])
     const statusesExpand = ref([])
-
+    const isAll = computed(() => {
+      return router.app._route.meta.isAll
+    })
     const listIssues = computed(() => {
-      return store.getters.getListIssues
+      return store.getters.getListIssues(isAll.value)
     })
 
     const isNewIssues = computed({

@@ -105,6 +105,9 @@ export default defineComponent({
         case 'org.spin.apps.form.VBankStatementMatch':
           form = import('@/components/ADempiere/FormDefinition/VBankStatementMatch')
           break
+        case 'issuesAll':
+          form = import('@/components/ADempiere/FormDefinition/IssueManagement/IssuesAll.vue')
+          break
         case 'IssueManagement':
           form = import('@/components/ADempiere/FormDefinition/IssueManagement')
           break

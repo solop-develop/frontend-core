@@ -19,6 +19,7 @@
 const issues = {
   documentNo: 'Número de Documento',
   issues: 'Asunto',
+  issuesAll: 'Todos los Asuntos',
   summary: 'Resumen',
   created: 'Creado Por',
   priority: 'Prioridad',
@@ -34,7 +35,7 @@ const issues = {
   preview: 'Vista Previa',
   newRequest: 'Nueva Solicitud',
   backToList: 'Regresar a la Lista',
-  allRequest: 'Todas las Solicitudes',
+  allRequest: 'Lista de Solicitudes',
   createNewRequest: 'Crear Nueva Solicitud',
   edit: 'Editar',
   delete: 'Eliminar',

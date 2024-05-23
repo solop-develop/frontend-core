@@ -18,6 +18,7 @@
 
 // API Request Methods
 import {
+  requestListIssuesAll,
   requestListIssues,
   requestCreateIssue,
   requestUpdateIssue,
@@ -34,6 +35,7 @@ import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
 
 const initStateIssueManagement = {
   listIssues: [],
+  listIssuesAll: [],
   isLoaded: false,
   isNewIssues: false,
   currentIssues: {},
@@ -47,6 +49,9 @@ export default {
     // new
     setListIssues(state, payload) {
       state.listIssues = payload
+    },
+    setListIssuesAll(state, payload) {
+      state.listIssuesAll = payload
     },
     setIsLoadListIssues(state, loading) {
       state.isLoaded = loading
@@ -65,6 +70,56 @@ export default {
     }
   },
   actions: {
+    listRequestAll({ commit }, {
+      tableName,
+      recordId,
+      recordUuid,
+      pageSize,
+      pageToken
+    }) {
+      return new Promise((resolve, reject) => {
+        commit('setIsLoadListIssuesAll', true)
+        return requestListIssuesAll({
+          tableName,
+          recordId,
+          recordUuid,
+          pageSize,
+          pageToken
+        })
+          .then(responseList => {
+            const { records } = responseList
+
+            if (isEmptyValue(records)) {
+              commit('setListIssuesAll', [])
+            }
+            const list = records.map(issues => {
+              let date = ''
+              if (issues.date_next_action !== 0) {
+                date = formatDate(
+                  {
+                    value: issues.date_next_action,
+                    isTime: true,
+                    format: 'YYYY-MM-DDTHH:MM:SS'
+                  }
+                )
+              }
+              return {
+                ...issues,
+                dateNextAction: date,
+                isEdit: false
+              }
+            })
+            commit('setListIssuesAll', list)
+            commit('setIsLoadListIssues', false)
+            resolve(list)
+          })
+          .catch(error => {
+            commit('setIsLoadListIssues', false)
+            console.warn(`Error getting List Issues: ${error.message}. Code: ${error.code}.`)
+            reject(error)
+          })
+      })
+    },
     listRequest({ commit }, {
       tableName,
       recordId,
@@ -393,7 +448,10 @@ export default {
 
   },
   getters: {
-    getListIssues: (state) => {
+    getListIssues: (state) => (isAll) => {
+      if (isAll) {
+        return state.listIssuesAll
+      }
       return state.listIssues
     },
     getIsLoadListIssues: (state) => {

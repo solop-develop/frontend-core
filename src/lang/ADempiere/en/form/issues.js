@@ -19,6 +19,7 @@
 const issues = {
   documentNo: 'Document No',
   issues: 'Issues',
+  issuesAll: 'All Issues',
   subject: 'Subject',
   summary: 'Summary',
   created: 'Created',
@@ -34,7 +35,7 @@ const issues = {
   preview: 'Preview',
   newRequest: 'New Request',
   backToList: 'Back to List',
-  allRequest: 'All Requests',
+  allRequest: 'List of Requests',
   createNewRequest: 'Create New Request',
   edit: 'Edit',
   delete: 'Delete',

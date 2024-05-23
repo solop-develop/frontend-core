@@ -314,10 +314,24 @@ const staticRoutes = [
         component: () => import('@/views/ADempiere/Form'),
         name: 'Issues',
         meta: {
-          title: 'Issues',
+          title: language.t('form.issues.issues'),
           icon: 'el-icon-s-promotion',
           fileName: 'IssueManagement',
           isIndex: true,
+          isAll: false,
+          type: 'from'
+        }
+      },
+      {
+        path: '/Issues/All',
+        component: () => import('@/views/ADempiere/Form'),
+        name: 'Issues All',
+        meta: {
+          title: language.t('form.issues.issuesAll'),
+          icon: 'el-icon-s-promotion',
+          fileName: 'issuesAll',
+          isIndex: true,
+          isAll: true,
           type: 'from'
         }
       }

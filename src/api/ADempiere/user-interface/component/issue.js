@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 // CONST
-import { config } from '@/utils/ADempiere/config'
 
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
@@ -34,7 +33,7 @@ export function requestExistsIssues({
   recordId
 }) {
   return request({
-    url: `${config.issuesManagement.endpoint}/issues/${tableName}/${recordId}/exists`,
+    url: `/issue-management/issues/${tableName}/${recordId}/exists`,
     // url: `/issue-management/issues/${tableName}/${recordId}/exists`,
     method: 'get',
     params: {
@@ -56,7 +55,30 @@ export function requestListIssues({
   searchValue
 }) {
   return request({
-    url: `${config.issuesManagement.endpoint}/issues`,
+    url: `/issue-management/issues`,
+    method: 'get',
+    params: {
+      record_id: recordId,
+      table_name: tableName,
+      search_value: searchValue
+    }
+  })
+}
+
+/**
+ * Issues List All from Window
+ * @param {string} tableName
+ * @param {number} recordId
+ * @param {string} searchValue
+ */
+
+export function requestListIssuesAll({
+  tableName,
+  recordId,
+  searchValue
+}) {
+  return request({
+    url: `/issue-management/issues/all`,
     method: 'get',
     params: {
       record_id: recordId,
@@ -74,7 +96,7 @@ export function requestListSalesRepresentatives({
   pageSize
 }) {
   return request({
-    url: `${config.issuesManagement.endpoint}/sales-representatives`,
+    url: `/issue-management/sales-representatives`,
     // url: '/issue-management/sales-representatives',
     method: 'get',
     params: {
@@ -92,7 +114,7 @@ export function requestListRequestTypes({
 }) {
   return request({
     // url: '/issue-management/request-types',
-    url: `${config.issuesManagement.endpoint}/request-types`,
+    url: `/issue-management/request-types`,
     method: 'get',
     params: {
       search_value: searchValue
@@ -109,7 +131,7 @@ export function requestListStatuses({
 }) {
   return request({
     // url: '/issue-management/statuses',
-    url: `${config.issuesManagement.endpoint}/statuses`,
+    url: `/issue-management/statuses`,
     method: 'get',
     params: {
       request_type_id: requestTypeId,
@@ -126,7 +148,7 @@ export function requestListPriorities({
 }) {
   return request({
     // url: '/issue-management/priorities',
-    url: `${config.issuesManagement.endpoint}/priorities`,
+    url: `/issue-management/priorities`,
     method: 'get',
     params: {
       search_value: searchValue
@@ -152,7 +174,7 @@ export function listCategoriesRequest({
   pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
-    url: `${config.issuesManagement.endpoint}/categories`,
+    url: `/issue-management/categories`,
     method: 'get',
     params: {
       page_size: pageSize,
@@ -180,7 +202,7 @@ export function listGroupsRequest({
   pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
-    url: `${config.issuesManagement.endpoint}/groups`,
+    url: `/issue-management/groups`,
     method: 'get',
     params: {
       page_size: pageSize,
@@ -208,7 +230,7 @@ export function listBusinessPartners({
   pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
-    url: `${config.issuesManagement.endpoint}/business-partners`,
+    url: `/issue-management/business-partners`,
     method: 'get',
     params: {
       page_size: pageSize,
@@ -236,7 +258,7 @@ export function listProjects({
   pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
-    url: `${config.issuesManagement.endpoint}/projects`,
+    url: `/issue-management/projects`,
     method: 'get',
     params: {
       page_size: pageSize,
@@ -255,7 +277,7 @@ export function listTaskStatuses({
   pageSize = RECORD_ROWS_BY_LIST
 }) {
   return request({
-    url: `${config.issuesManagement.endpoint}/task-statuses`,
+    url: `/issue-management/task-statuses`,
     method: 'get',
     params: {
       page_size: pageSize,
@@ -293,7 +315,7 @@ export function requestCreateIssue({
 }) {
   return request({
     // url: '/issue-management/issues',
-    url: `${config.issuesManagement.endpoint}/issues`,
+    url: `/issue-management/issues`,
     method: 'post',
     data: {
       record_id: recordId,
@@ -351,7 +373,7 @@ export function requestUpdateIssue({
   dateNextAction
 }) {
   return request({
-    url: `${config.issuesManagement.endpoint}/issues/${id}`,
+    url: `/issue-management/issues/${id}`,
     method: 'put',
     data: {
       record_id: recordId,
@@ -387,7 +409,7 @@ export function requestDeleteIssue({
   uuid
 }) {
   return request({
-    url: `${config.issuesManagement.endpoint}/issues/${id}`,
+    url: `/issue-management/issues/${id}`,
     method: 'delete',
     params: {
       id,
@@ -413,7 +435,7 @@ export function requestListIssueComments({
 }) {
   return request({
     // url: `/issue-management/issues/${issueId}/comments`,
-    url: `${config.issuesManagement.endpoint}/issues/${issueId}/comments`,
+    url: `/issue-management/issues/${issueId}/comments`,
     method: 'get',
     params: {
       issue_id: issueId,
@@ -438,7 +460,7 @@ export function requestCreateIssueComment({
   result
 }) {
   return request({
-    url: `${config.issuesManagement.endpoint}/issues/${issueId}/comments`,
+    url: `/issue-management/issues/${issueId}/comments`,
     method: 'post',
     data: {
       issue_id: issueId,
@@ -463,7 +485,7 @@ export function requestUpdateIssueComment({
   result
 }) {
   return request({
-    url: `${config.issuesManagement.endpoint}/issues/${issueId}/comments`,
+    url: `/issue-management/issues/${issueId}/comments`,
     method: 'put',
     data: {
       id: issueId,
@@ -486,7 +508,7 @@ export function requestDeleteIssueComment({
   issueUuid
 }) {
   return request({
-    url: `${config.issuesManagement.endpoint}/issues/${issueId}/comments`,
+    url: `/issue-management/issues/${issueId}/comments`,
     method: 'delete',
     params: {
       id: issueId,
