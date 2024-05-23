@@ -17,7 +17,9 @@
  */
 
 export const REQUEST_WINDOW_UUID = 'a5216792-fb40-11e8-a479-7a0060f0aa01'
-export const ISSUES_ID = 233
+
+export const REQUEST_ALL_WINDOW_ID = 233
+
 export function dueTypeColor(issue) {
   const { due_type } = issue
   const { value } = due_type
