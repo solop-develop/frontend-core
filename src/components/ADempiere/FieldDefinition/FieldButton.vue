@@ -140,7 +140,7 @@ export default {
             store.dispatch('getAccoutingFactsFromServer', {
               searchValue: '',
               tableName: this.metadata.tabTableName,
-              // recordId: props.recordId
+              recordId: this.currentRecord[this.metadata.tabTableName + '_ID'],
               recordUuid: recordUuid
             })
           },
