@@ -21,6 +21,7 @@ import product from './product.ts'
 import productAttribute from './productAttribute'
 import warehouseLocator from './warehouseLocator'
 import locationsAddress from './locationsAddress'
+import payment from './payment.ts'
 import invoice from './invoice'
 import order from './order.ts'
 
@@ -44,5 +45,6 @@ export default {
   warehouseLocator,
   locationsAddress,
   invoice,
+  payment,
   order
 }

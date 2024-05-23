@@ -581,6 +581,21 @@ export const containerManager = {
     })
   },
 
+  getPaymentSearchFieldRecordList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, id, filters, searchValue, pageNumber, pageSize }) {
+    return store.dispatch('gridPayments', {
+      parentUuid,
+      containerUuid,
+      contextColumnNames,
+      browseFieldId: id,
+      tableName,
+      columnName,
+      filters,
+      searchValue,
+      pageNumber,
+      pageSize
+    })
+  },
+
   warehouseLocatorSearch({
     containerUuid,
     parentUuid,

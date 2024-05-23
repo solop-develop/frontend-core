@@ -23,6 +23,7 @@ import warehouseLocator from './warehouseLocator'
 import locationsAddress from './locationsAddress'
 import invoice from './invoice'
 import order from './order.ts'
+import payment from './payment.ts'
 
 export default {
   businessPartner,
@@ -44,5 +45,6 @@ export default {
   warehouseLocator,
   locationsAddress,
   invoice,
+  payment,
   order
 }
