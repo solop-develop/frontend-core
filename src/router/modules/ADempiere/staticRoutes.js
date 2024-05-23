@@ -67,6 +67,34 @@ const staticRoutes = [
     },
     children: [
       {
+        path: '/Issues/All',
+        component: () => import('@/views/ADempiere/Form'),
+        name: 'Issues All',
+        hidden: false,
+        validateToEnable: ({ role }) => {
+          const menuTree = store.getters.permission_routes
+          const viewSearch = recursiveTreeSearch({
+            treeData: menuTree,
+            attributeValue: 'window_' + REQUEST_ALL_WINDOW_ID,
+            attributeName: 'meta',
+            secondAttribute: false,
+            attributeChilds: 'children'
+          })
+          if (isEmptyValue(viewSearch)) {
+            return false
+          }
+          return true
+        },
+        meta: {
+          title: language.t('form.issues.issuesAll'),
+          icon: 'el-icon-s-promotion',
+          fileName: 'issuesAll',
+          isIndex: true,
+          isAll: true,
+          type: 'from'
+        }
+      },
+      {
         path: '/documentation',
         component: () => import('@/views/documentation/index'),
         hidden: false,
@@ -326,34 +354,6 @@ const staticRoutes = [
           fileName: 'IssueManagement',
           isIndex: true,
           isAll: false,
-          type: 'from'
-        }
-      },
-      {
-        path: '/Issues/All',
-        component: () => import('@/views/ADempiere/Form'),
-        name: 'Issues All',
-        hidden: false,
-        validateToEnable: ({ role }) => {
-          const menuTree = store.getters.permission_routes
-          const viewSearch = recursiveTreeSearch({
-            treeData: menuTree,
-            attributeValue: 'window_' + REQUEST_ALL_WINDOW_ID,
-            attributeName: 'meta',
-            secondAttribute: false,
-            attributeChilds: 'children'
-          })
-          if (isEmptyValue(viewSearch)) {
-            return false
-          }
-          return true
-        },
-        meta: {
-          title: language.t('form.issues.issuesAll'),
-          icon: 'el-icon-s-promotion',
-          fileName: 'issuesAll',
-          isIndex: true,
-          isAll: true,
           type: 'from'
         }
       }
