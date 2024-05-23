@@ -22,9 +22,8 @@ import language from '@/lang'
 import store from '@/store'
 // Constants
 import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
-import { recursiveTreeSearch } from '@/utils/ADempiere/valueUtils.js'
-
-const ISSUES_ID = 233
+import { isEmptyValue, recursiveTreeSearch } from '@/utils/ADempiere/valueUtils.js'
+import { ISSUES_ID } from '@/utils/ADempiere/dictionary/form/Issues'
 
 const staticRoutes = [
   {
@@ -340,7 +339,8 @@ const staticRoutes = [
             secondAttribute: false,
             attributeChilds: 'children'
           })
-          if (!viewSearch) return false
+          if (isEmptyValue(viewSearch)) return false
+          return true
         },
         meta: {
           title: language.t('form.issues.issuesAll'),
