@@ -28,6 +28,9 @@ import { requestGridGeneralInfo } from '@/api/ADempiere/field/search/index.js'
 // Constants
 import { TABLE_NAME as TABLE_NAME_BPartner } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 import { TABLE_NAME as TABLE_NAME_PRODUCT } from '@/utils/ADempiere/dictionary/field/search/product.ts'
+import { TABLE_NAME as TABLE_NAME_ORDER } from '@/utils/ADempiere/dictionary/field/search/order'
+import { TABLE_NAME as TABLE_NAME_INVOICE } from '@/utils/ADempiere/dictionary/field/search/invoice'
+import { TABLE_NAME as TABLE_NAME_PAYMENT } from '@/utils/ADempiere/dictionary/field/search/payment'
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 import { OPERATOR_LIKE } from '@/utils/ADempiere/dataUtils'
 
@@ -261,72 +264,65 @@ const generalInfoSearch = {
       pageSize
     }) {
       return new Promise(resolve => {
-        if (tableName === TABLE_NAME_BPartner) {
-          return dispatch('gridBusinessPartners', {
-            parentUuid,
-            containerUuid,
-            contextColumnNames,
-            //
-            columnId,
-            fieldId,
-            processParameterId,
-            browseFieldId,
-            //
-            tableName,
-            columnName,
-            //
-            isForm,
-            filters,
-            searchValue,
-            pageNumber,
-            pageSize
-          }).then(response => {
-            resolve(response)
-          })
-        } else if (tableName === TABLE_NAME_PRODUCT) {
-          return dispatch('gridProducts', {
-            parentUuid,
-            containerUuid,
-            contextColumnNames,
-            //
-            columnId,
-            fieldId,
-            processParameterId,
-            browseFieldId,
-            //
-            tableName,
-            columnName,
-            //
-            isForm,
-            filters,
-            searchValue,
-            pageNumber,
-            pageSize
-          }).then(response => {
-            resolve(response)
-          })
-        }
-        return dispatch('getGeneralSearchRecordsFromServer', {
-          containerUuid,
+        const queryField = {
           parentUuid,
+          containerUuid,
           contextColumnNames,
-          filters,
-          //
+          // References
           columnId,
           fieldId,
           processParameterId,
           browseFieldId,
-          //
-          searchValue,
-          //
+          // Query
           tableName,
           columnName,
-          //
+          isForm,
+          filters,
+          searchValue,
+          // Page Data
           pageNumber,
           pageSize
-        }).then(response => {
-          resolve(response)
-        })
+        }
+
+        // Load the Service indicated in the received attributes.
+        switch (tableName) {
+          case TABLE_NAME_BPartner:
+            dispatch('gridBusinessPartners', queryField)
+              .then(response => {
+                resolve(response)
+              })
+            break
+          case TABLE_NAME_PRODUCT:
+            dispatch('gridProducts', queryField)
+              .then(response => {
+                resolve(response)
+              })
+            break
+          case TABLE_NAME_INVOICE:
+            dispatch('gridInvoices', queryField)
+              .then(response => {
+                resolve(response)
+              })
+            break
+          case TABLE_NAME_ORDER:
+            dispatch('gridOrders', queryField)
+              .then(response => {
+                resolve(response)
+              })
+            break
+          case TABLE_NAME_PAYMENT:
+            dispatch('gridPayments', queryField)
+              .then(response => {
+                resolve(response)
+              })
+            break
+          default:
+            dispatch('getGeneralSearchRecordsFromServer', queryField)
+              .then(response => {
+                resolve(response)
+              })
+            break
+        }
       })
     },
 

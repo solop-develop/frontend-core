@@ -502,7 +502,7 @@ export default {
       clearTimeout(this.timeOutRecords)
       this.timeOutRecords = setTimeout(() => {
         // search on server
-        this.containerManager.getOrdersSearchFieldRecordList({
+        this.containerManager.getSearchRecordsList({
           parentUuid,
           containerUuid: this.uuidForm,
           contextColumnNames: this.metadata.reference.context_column_names,

@@ -82,7 +82,6 @@ export default {
       if (isEmptyValue(this.metadata.referenceTableName)) {
         return fieldRender
       }
-      console.log(this.metadata.referenceTableName)
       switch (this.metadata.referenceTableName) {
         case 'C_BPartner':
           fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/BusinessPartnerInfo')
