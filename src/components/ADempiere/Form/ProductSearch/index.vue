@@ -20,10 +20,17 @@
   <div
     class="product-list-content"
   >
-    <query-criteria
-      :uuid-form="uuidForm"
-      :hangle-change="searchProduct"
-    />
+    <el-collapse v-model="activeName" accordion style="margin-top: 15px;">
+      <el-collapse-item name="1">
+        <span slot="title" style="font-size: 15px !important; font-weight: bold !important">
+          {{ $t('field.product.searchCriteria') }}
+        </span>
+        <query-criteria
+          :uuid-form="uuidForm"
+          :hangle-change="searchProduct"
+        />
+      </el-collapse-item>
+    </el-collapse>
     <el-table
       id="productInfoTable"
       ref="productInfoTable"
@@ -192,7 +199,6 @@
 <script>
 import { defineComponent, onMounted, computed, watch, ref } from '@vue/composition-api'
 import store from '@/store'
-
 // Components and Mixins
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
@@ -222,7 +228,11 @@ export default defineComponent({
     QueryCriteria,
     ShowInfoProduct
   },
-
+  data() {
+    return {
+      activeName: '1'
+    }
+  },
   props: {
     height: {
       type: String,

@@ -60,6 +60,7 @@ const product = {
   relateds: 'Relacionados',
   availableToPromises: 'Disponibles para Promesas',
   vendorPurchases: 'Compras de Proveedores',
+  searchCriteria: 'Criterios de Búsqueda',
   wrehouseTables: {
     name: 'Nombre',
     availableQuantity: 'Cantidad Disponible',
