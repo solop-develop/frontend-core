@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or   FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -18,12 +18,16 @@
 
 /* Layout  */
 import Layout from '@/layout'
+
 import language from '@/lang'
 import store from '@/store'
+
 // Constants
 import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
+import { REQUEST_ALL_WINDOW_ID } from '@/utils/ADempiere/dictionary/form/Issues'
+
+// Utils and Helper Methods
 import { isEmptyValue, recursiveTreeSearch } from '@/utils/ADempiere/valueUtils.js'
-import { ISSUES_ID } from '@/utils/ADempiere/dictionary/form/Issues'
 
 const staticRoutes = [
   {
@@ -334,12 +338,14 @@ const staticRoutes = [
           const menuTree = store.getters.permission_routes
           const viewSearch = recursiveTreeSearch({
             treeData: menuTree,
-            attributeValue: 'window_' + ISSUES_ID,
+            attributeValue: 'window_' + REQUEST_ALL_WINDOW_ID,
             attributeName: 'meta',
             secondAttribute: false,
             attributeChilds: 'children'
           })
-          if (isEmptyValue(viewSearch)) return false
+          if (isEmptyValue(viewSearch)) {
+            return false
+          }
           return true
         },
         meta: {
