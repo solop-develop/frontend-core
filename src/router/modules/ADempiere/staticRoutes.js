@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or   FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -19,9 +19,12 @@
 /* Layout  */
 import Layout from '@/layout'
 import language from '@/lang'
-
+import store from '@/store'
 // Constants
 import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
+import { recursiveTreeSearch } from '@/utils/ADempiere/valueUtils.js'
+
+const ISSUES_ID = 233
 
 const staticRoutes = [
   {
@@ -307,12 +310,13 @@ const staticRoutes = [
   {
     path: '/Issues',
     component: Layout,
-    hidden: true,
+    hidden: false,
     children: [
       {
         path: '/Issues',
         component: () => import('@/views/ADempiere/Form'),
         name: 'Issues',
+        hidden: true,
         meta: {
           title: language.t('form.issues.issues'),
           icon: 'el-icon-s-promotion',
@@ -326,6 +330,18 @@ const staticRoutes = [
         path: '/Issues/All',
         component: () => import('@/views/ADempiere/Form'),
         name: 'Issues All',
+        hidden: false,
+        validateToEnable: ({ role }) => {
+          const menuTree = store.getters.permission_routes
+          const viewSearch = recursiveTreeSearch({
+            treeData: menuTree,
+            attributeValue: 'window_' + ISSUES_ID,
+            attributeName: 'meta',
+            secondAttribute: false,
+            attributeChilds: 'children'
+          })
+          if (!viewSearch) return false
+        },
         meta: {
           title: language.t('form.issues.issuesAll'),
           icon: 'el-icon-s-promotion',
