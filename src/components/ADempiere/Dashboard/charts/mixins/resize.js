@@ -1,4 +1,5 @@
 import { debounce } from '@/utils'
+import { isEmptyValue } from '@/utils/ADempiere'
 
 export default {
   data() {
@@ -9,7 +10,7 @@ export default {
   },
   mounted() {
     this.$_resizeHandler = debounce(() => {
-      if (this.chart) {
+      if (!isEmptyValue(this.chart) && !isEmptyValue(this.chart.ECharts)) {
         this.chart.resize()
       }
     }, 100)
