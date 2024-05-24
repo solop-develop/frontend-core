@@ -197,7 +197,7 @@ export default {
       if (logoUrl) {
         return logoUrl
       }
-      return require('@/image/ADempiere/logo_solop.jpg')
+      return 'https://avatars1.githubusercontent.com/u/1263359?s=200&v=4'
     },
     isReadyFormSubmit() {
       const { name, userName, eMail, password, passwordConfirm } = this.enrollmentUserForm
