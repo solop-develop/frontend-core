@@ -19,7 +19,7 @@
 import Vue from 'vue'
 
 import router from '@/router'
-import language from '@/lang'
+import lang from '@/lang'
 
 // Constants
 import { CONTAINER_FORM_PREFIX } from '@/utils/ADempiere/dictionary/form/index.js'
@@ -30,6 +30,9 @@ import { requestForm } from '@/api/ADempiere/dictionary/index.ts'
 // Utils and Helper Methods
 import { showMessage } from '@/utils/ADempiere/notification'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import {
+  getCurrentClient, getCurrentRole
+} from '@/utils/ADempiere/auth'
 
 const form = {
   state: {
@@ -63,13 +66,23 @@ const form = {
         commit('addForm', metadataForm)
       }
     },
-    getFormFromServer({ commit, dispatch }, {
+
+    getFormFromServer({ commit, dispatch, rootGetters }, {
       id,
       routeToDelete
     }) {
       return new Promise(resolve => {
+        const language = rootGetters['getCurrentLanguage']
+        const clientId = getCurrentClient()
+        const roleId = getCurrentRole()
+        const userId = rootGetters['user/getUserId']
+
         requestForm({
-          id
+          id,
+          language,
+          clientId,
+          roleId,
+          userId
         })
           .then(formResponse => {
             // Panel for save on store
@@ -89,13 +102,14 @@ const form = {
             }, () => {})
             dispatch('tagsView/delView', routeToDelete)
             showMessage({
-              message: language.t('page.login.unexpectedError'),
+              message: lang.t('page.login.unexpectedError'),
               type: 'error'
             })
             console.warn(`Dictionary form - Error ${error.code}: ${error.message}.`)
           })
       })
     },
+
     changeFormAttribute({ commit, getters }, {
       containerUuid,
       form,

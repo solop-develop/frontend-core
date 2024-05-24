@@ -75,11 +75,22 @@ export function requestProcessMetadata({
  * @param {number} id, identifier
  */
 export function requestForm({
-  id
+  id,
+  // mandatory to open search
+  language,
+  clientId,
+  roleId,
+  userId
 }) {
   return request({
     url: `/dictionary/forms/${id}`,
-    method: 'get'
+    method: 'get',
+    params: {
+      language,
+      client_id: clientId,
+      role_id: roleId,
+      user_id: userId
+    }
   })
 }
 
