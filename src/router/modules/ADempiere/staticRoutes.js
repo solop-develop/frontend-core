@@ -18,10 +18,16 @@
 
 /* Layout  */
 import Layout from '@/layout'
+
 import language from '@/lang'
+import store from '@/store'
 
 // Constants
 import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
+import { REQUEST_ALL_WINDOW_ID } from '@/utils/ADempiere/dictionary/form/Issues'
+
+// Utils and Helper Methods
+import { isEmptyValue, recursiveTreeSearch } from '@/utils/ADempiere/valueUtils.js'
 
 const staticRoutes = [
   {
@@ -60,6 +66,34 @@ const staticRoutes = [
       icon: 'nested'
     },
     children: [
+      {
+        path: '/Issues/All',
+        component: () => import('@/views/ADempiere/Form'),
+        name: 'Issues All',
+        hidden: false,
+        validateToEnable: ({ role }) => {
+          const menuTree = store.getters.permission_routes
+          const viewSearch = recursiveTreeSearch({
+            treeData: menuTree,
+            attributeValue: 'window_' + REQUEST_ALL_WINDOW_ID,
+            attributeName: 'meta',
+            secondAttribute: false,
+            attributeChilds: 'children'
+          })
+          if (isEmptyValue(viewSearch)) {
+            return false
+          }
+          return true
+        },
+        meta: {
+          title: language.t('form.issues.issuesAll'),
+          icon: 'el-icon-s-promotion',
+          fileName: 'issuesAll',
+          isIndex: true,
+          isAll: true,
+          type: 'from'
+        }
+      },
       {
         path: '/documentation',
         component: () => import('@/views/documentation/index'),
@@ -307,31 +341,19 @@ const staticRoutes = [
   {
     path: '/Issues',
     component: Layout,
-    hidden: true,
+    hidden: false,
     children: [
       {
         path: '/Issues',
         component: () => import('@/views/ADempiere/Form'),
         name: 'Issues',
+        hidden: true,
         meta: {
           title: language.t('form.issues.issues'),
           icon: 'el-icon-s-promotion',
           fileName: 'IssueManagement',
           isIndex: true,
           isAll: false,
-          type: 'from'
-        }
-      },
-      {
-        path: '/Issues/All',
-        component: () => import('@/views/ADempiere/Form'),
-        name: 'Issues All',
-        meta: {
-          title: language.t('form.issues.issuesAll'),
-          icon: 'el-icon-s-promotion',
-          fileName: 'issuesAll',
-          isIndex: true,
-          isAll: true,
           type: 'from'
         }
       }
