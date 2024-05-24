@@ -205,7 +205,7 @@ export default ({
     clearTimeout(timeOutRecords.value)
     timeOutRecords.value = setTimeout(() => {
       // search on server
-      containerManager.getOrdersSearchFieldRecordList({
+      containerManager.getSearchRecordsList({
         parentUuid,
         containerUuid: uuidForm,
         contextColumnNames: fieldAttributes.reference.context_column_names,

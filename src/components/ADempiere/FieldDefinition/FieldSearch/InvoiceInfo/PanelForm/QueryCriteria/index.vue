@@ -58,7 +58,7 @@
           </el-col>
 
           <el-col :span="6">
-            <sale-transaction-field
+            <sales-transaction-field
               :uuid-form="uuidForm"
               :parent-uuid="metadata.parentUuid"
               :container-uuid="metadata.containerUuid"

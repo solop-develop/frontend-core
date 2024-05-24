@@ -63,7 +63,7 @@ import OrderFieldMixin from './mixinOrder'
 import ButtonBusinessPartnersList from './buttonBusinessPartnersList.vue'
 
 // Constants
-import { TABLE_NAME, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+import { TABLE_NAME, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/order'
 import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
 import {
   DISPLAY_COLUMN_PREFIX,
@@ -242,7 +242,7 @@ export default {
         }
 
         this.isLoading = true
-        this.containerManager.getOrdersSearchFieldRecordList({
+        this.containerManager.getSearchRecordsList({
           parentUuid,
           containerUuid: this.metadata.containerUuid,
           contextColumnNames: this.metadata.reference.context_column_names,

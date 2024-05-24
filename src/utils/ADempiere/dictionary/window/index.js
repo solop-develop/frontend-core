@@ -2178,51 +2178,6 @@ export const containerManager = {
     })
   },
 
-  getInvoiceSearchFieldRecordList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, id, filters, searchValue, pageNumber, pageSize }) {
-    return store.dispatch('gridInvoices', {
-      parentUuid,
-      containerUuid,
-      contextColumnNames,
-      fieldId: id,
-      tableName,
-      columnName,
-      filters,
-      searchValue,
-      pageNumber,
-      pageSize
-    })
-  },
-
-  getOrdersSearchFieldRecordList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, id, filters, searchValue, pageNumber, pageSize }) {
-    return store.dispatch('gridOrders', {
-      parentUuid,
-      containerUuid,
-      contextColumnNames,
-      fieldId: id,
-      tableName,
-      columnName,
-      filters,
-      searchValue,
-      pageNumber,
-      pageSize
-    })
-  },
-
-  getPaymentSearchFieldRecordList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, id, filters, searchValue, pageNumber, pageSize }) {
-    return store.dispatch('gridPayments', {
-      parentUuid,
-      containerUuid,
-      contextColumnNames,
-      fieldId: id,
-      tableName,
-      columnName,
-      filters,
-      searchValue,
-      pageNumber,
-      pageSize
-    })
-  },
-
   getRecordLogs({ tableName, recordId, recordUuid }) {
     return store.dispatch('listRecordLogs', {
       tableName,

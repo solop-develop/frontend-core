@@ -242,7 +242,7 @@ export default {
         }
 
         this.isLoading = true
-        this.containerManager.getInvoiceSearchFieldRecordList({
+        this.containerManager.getSearchRecordsList({
           parentUuid,
           containerUuid: this.metadata.containerUuid,
           contextColumnNames: this.metadata.reference.context_column_names,

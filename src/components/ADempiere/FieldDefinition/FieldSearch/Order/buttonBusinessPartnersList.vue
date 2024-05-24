@@ -37,9 +37,10 @@
       class="button-show-popover"
       :disabled="isDisabled"
     >
-      <i
+      <!-- <i
         class="el-icon-s-order"
-      />
+      /> -->
+      <svg-icon icon-class="clipboard" />
     </el-button>
   </el-popover>
 </template>
