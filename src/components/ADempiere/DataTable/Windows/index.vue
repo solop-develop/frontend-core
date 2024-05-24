@@ -111,7 +111,7 @@ import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 import useFullScreenContainer from '@/components/ADempiere/ContainerOptions/FullScreenContainer/useFullScreenContainer'
 
 // Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { isEmptyValue, setRecordPath } from '@/utils/ADempiere/valueUtils.js'
 
 export default defineComponent({
   name: 'WindowsTable',
@@ -388,6 +388,12 @@ export default defineComponent({
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid
       })
+      const { table_name } = props.panelMetadata
+      if (!isEmptyValue(table_name) && !isEmptyValue(row[table_name + '_ID'])) {
+        setRecordPath({
+          recordId: row[table_name + '_ID']
+        })
+      }
 
       // if (isMobile.value) {
       //   changeTable(false)
