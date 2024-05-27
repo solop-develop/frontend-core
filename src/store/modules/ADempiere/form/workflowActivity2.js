@@ -175,7 +175,7 @@ export default {
     getActivity: (state) => {
       return state.listActivity
     },
-    getRecordCount: (state) => {
+    getWorkflowRecordCount: (state) => {
       return state.recordCount
     },
     getIsLoadActivity: (state) => {
