@@ -40,13 +40,7 @@ const system = {
       state.systemDefinition = payload
     },
     setLanguagesList: (state, payload) => {
-      const languagesList = payload.map(language => {
-        return {
-          ...language,
-          datePattern: convertDateFormat(language.datePattern),
-          timePattern: convertDateFormat(language.timePattern)
-        }
-      })
+      const languagesList = payload
 
       state.languagesList = Object.freeze(languagesList)
     }
