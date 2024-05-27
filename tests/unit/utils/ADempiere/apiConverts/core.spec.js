@@ -1,23 +1,24 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Sofia Calderon sofia.ester.calderon@gmail.com www.westfalia-it.com
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Sofia Calderon sofia.ester.calderon@gmail.com www.westfalia-it.com
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 import {
   convertContextInfo,
   convertOrganization,
-  convertLanguage,
   convertCountry,
   convertBusinessPartner,
   convertConversionRate,
@@ -35,8 +36,6 @@ import contextInfoWithoutMessage from './objects/fromApi/contextInfoWithoutMessa
 import convertedContextInfoWithoutMessage from './objects/converted/contextInfoWithoutMessage.json'
 import organization from './objects/fromApi/organization.json'
 import convertedOrganization from './objects/converted/organization.json'
-import language from './objects/fromApi/language.json'
-import convertedLanguage from './objects/converted/language.json'
 import country from './objects/fromApi/country.json'
 import convertedCountry from './objects/converted/country.json'
 import countryWithNoCurrency from './objects/fromApi/countryNoCurrency.json'
@@ -83,13 +82,6 @@ describe('organization', () => {
   it('should return a converted organization object', () => {
     const actualOrganization = convertOrganization(organization)
     expect(actualOrganization).toEqual(convertedOrganization)
-  })
-})
-
-describe('language', () => {
-  it('should return a converted language object', () => {
-    const actualLanguage = convertLanguage(language)
-    expect(actualLanguage).toEqual(convertedLanguage)
   })
 })
 

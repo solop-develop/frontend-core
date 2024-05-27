@@ -17,7 +17,7 @@
  */
 
 // API Request Methods
-import { requestLanguagesList } from '@/api/ADempiere/common/index.ts'
+import { requestLanguagesList } from '@/api/ADempiere/system-core.js'
 import {
   requestRunBusinessProcess as runResetCache
 } from '@/api/ADempiere/businessData/runBusinessProcess.ts'
@@ -32,8 +32,7 @@ import { convertDateFormat } from '@/utils/ADempiere/formatValue/dateFormat.js'
 const system = {
   state: {
     systemDefinition: {},
-    languagesList: [],
-    languages: []
+    languagesList: []
   },
 
   mutations: {
@@ -41,18 +40,9 @@ const system = {
       state.systemDefinition = payload
     },
     setLanguagesList: (state, payload) => {
-      const languagesList = payload.map(language => {
-        return {
-          ...language,
-          datePattern: convertDateFormat(language.datePattern),
-          timePattern: convertDateFormat(language.timePattern)
-        }
-      })
+      const languagesList = payload
 
       state.languagesList = Object.freeze(languagesList)
-    },
-    setLanguages(state, list) {
-      state.languages = list
     }
   },
 
@@ -65,9 +55,11 @@ const system = {
         })
           .then(languageResponse => {
             dispatch('serverListActivity', {})
-            const languagesList = languageResponse.languagesList.map(language => {
+            const languagesList = languageResponse.languages.map(language => {
               return {
                 ...language,
+                languageISO: language.language_iso,
+                languageName: language.language_name,
                 datePattern: convertDateFormat(language.datePattern),
                 timePattern: convertDateFormat(language.timePattern)
               }
@@ -89,20 +81,6 @@ const system = {
         .then(() => {
           location.reload(true)
         })
-    },
-    requestLanguagesLoaded({ commit }) {
-      return new Promise((resolve, reject) => {
-        requestLanguagesList({})
-          .then(response => {
-            const { languages } = response
-            commit('setLanguages', languages)
-            resolve(languages)
-          })
-          .catch(error => {
-            console.warn(`Error getting Languages List: ${error.message}. Code: ${error.code}.`)
-            reject(error)
-          })
-      })
     }
 
   },
@@ -147,9 +125,6 @@ const system = {
       return state.languagesList.find(definition => {
         return definition.language === language
       })
-    },
-    getLanguages: (state) => {
-      return state.languages
     }
   }
 }
