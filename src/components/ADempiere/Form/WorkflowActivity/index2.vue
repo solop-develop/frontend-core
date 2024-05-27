@@ -493,7 +493,7 @@ export default {
       return []
     },
     recordCount() {
-      return this.$store.getters.getRecordCount
+      return this.$store.getters.getWorkflowRecordCount
     },
     currentActivity() {
       return this.$store.getters.getCurrentActivity

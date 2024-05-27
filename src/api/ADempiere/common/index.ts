@@ -118,7 +118,7 @@ export function requestWarehousesList({
       page_size: pageSize
     }
   })
-}s
+}
 
 /**
  * GET Business Partners
