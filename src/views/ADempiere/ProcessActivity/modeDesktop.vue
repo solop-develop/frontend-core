@@ -450,3 +450,10 @@
     padding-bottom: 1%;
   }
 </style>
+
+<style scope>
+.el-tabs__content{
+  height: calc(100vh - 170px) !important;
+  overflow-y: auto;
+}
+</style>
