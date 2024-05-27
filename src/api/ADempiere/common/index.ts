@@ -136,6 +136,17 @@ export function requestLanguagesList({
       page_size: pageSize
     }
   })
+    .then(languagesListResponse => {
+      const { convertLanguage } = require('@/utils/ADempiere/apiConverts/core.js')
+
+      return {
+        nextPageToken: languagesListResponse.next_page_token,
+        recordCount: languagesListResponse.record_count,
+        languagesList: languagesListResponse.languages.map(language => {
+          return convertLanguage(language)
+        })
+      }
+    })
 }
 
 /**

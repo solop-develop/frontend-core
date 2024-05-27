@@ -32,8 +32,7 @@ import { convertDateFormat } from '@/utils/ADempiere/formatValue/dateFormat.js'
 const system = {
   state: {
     systemDefinition: {},
-    languagesList: [],
-    languages: []
+    languagesList: []
   },
 
   mutations: {
@@ -50,9 +49,6 @@ const system = {
       })
 
       state.languagesList = Object.freeze(languagesList)
-    },
-    setLanguages(state, list) {
-      state.languages = list
     }
   },
 
@@ -89,20 +85,6 @@ const system = {
         .then(() => {
           location.reload(true)
         })
-    },
-    requestLanguagesLoaded({ commit }) {
-      return new Promise((resolve, reject) => {
-        requestLanguagesList({})
-          .then(response => {
-            const { languages } = response
-            commit('setLanguages', languages)
-            resolve(languages)
-          })
-          .catch(error => {
-            console.warn(`Error getting Languages List: ${error.message}. Code: ${error.code}.`)
-            reject(error)
-          })
-      })
     }
 
   },
@@ -147,9 +129,6 @@ const system = {
       return state.languagesList.find(definition => {
         return definition.language === language
       })
-    },
-    getLanguages: (state) => {
-      return state.languages
     }
   }
 }
