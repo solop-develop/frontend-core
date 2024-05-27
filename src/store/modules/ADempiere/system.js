@@ -17,7 +17,7 @@
  */
 
 // API Request Methods
-import { requestLanguagesList } from '@/api/ADempiere/common/index.ts'
+import { requestLanguagesList } from '@/api/ADempiere/system-core.js'
 import {
   requestRunBusinessProcess as runResetCache
 } from '@/api/ADempiere/businessData/runBusinessProcess.ts'
@@ -55,9 +55,11 @@ const system = {
         })
           .then(languageResponse => {
             dispatch('serverListActivity', {})
-            const languagesList = languageResponse.languagesList.map(language => {
+            const languagesList = languageResponse.languages.map(language => {
               return {
                 ...language,
+                languageISO: language.language_iso,
+                languageName: language.language_name,
                 datePattern: convertDateFormat(language.datePattern),
                 timePattern: convertDateFormat(language.timePattern)
               }

@@ -118,25 +118,7 @@ export function requestWarehousesList({
       page_size: pageSize
     }
   })
-}
-
-/**
- * Get Languages from Api
- */
-export function requestLanguagesList({
-  pageToken,
-  pageSize = ROWS_OF_RECORDS_BY_PAGE
-}) {
-  return request({
-    url: '/core-functionality/languages',
-    method: 'get',
-    params: {
-      // Page Data
-      page_token: pageToken,
-      page_size: pageSize
-    }
-  })
-}
+}s
 
 /**
  * GET Business Partners
