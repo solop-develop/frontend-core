@@ -163,12 +163,8 @@ const defaultValueManager = {
         requestDefaultValue({
           contextAttributes,
           id,
-          fieldUuid,
           browseFieldId,
           processParameterId,
-          processParameterUuid,
-          browseFieldUuid,
-          columnUuid,
           value
         })
           .then(valueResponse => {

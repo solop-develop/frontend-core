@@ -139,7 +139,6 @@ import {
 } from '@/components/ADempiere/FieldDefinition/FieldOptions/fieldOptionsList.js'
 import { isSupportLookup } from '@/utils/ADempiere/references.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
-
 export default defineComponent({
   name: 'FieldOptions',
 
@@ -147,7 +146,6 @@ export default defineComponent({
     LabelField,
     LabelPopoverOption
   },
-
   props: {
     metadata: {
       type: Object
@@ -183,7 +181,7 @@ export default defineComponent({
     const showPopoverPath = ref(false)
     const triggerMenu = ref('click')
     const optionColumnName = ref(root.$route.query.fieldColumnName)
-
+    const zoom = ref(null)
     // focus element with tab key
     const tabIndex = ref(9999)
 
@@ -266,7 +264,6 @@ export default defineComponent({
 
       return false
     })
-
     const optionsList = computed(() => {
       const field = props.metadata
       const menuOptions = []
@@ -287,12 +284,15 @@ export default defineComponent({
       if (isDocuemntStatus.value) {
         menuOptions.push(documentStatusOptionItem)
       }
-
       if (isSupportLookup(field.display_type)) {
         menuOptions.push(refreshLookup)
-        if (field.reference && !isEmptyValue(field.reference.zoom_windows)) {
+        if (field.reference && !isEmptyValue(field.id)) {
+          searchZoom(field)
           menuOptions.push(zoomInOptionItem)
         }
+        // if (field.reference && !isEmptyValue(field.reference.zoom_windows)) {
+        //   menuOptions.push(zoomInOptionItem)
+        // }
       }
 
       if (field.componentPath === 'FieldButton') {
@@ -301,7 +301,6 @@ export default defineComponent({
         ]
         return optionsButton.concat(menuOptions)
       }
-
       // destruct to avoid deleting the reference to the original variable and to avoid mutating
       const optionsList = [
         ...optionsListStandad
@@ -316,6 +315,19 @@ export default defineComponent({
 
       return sortOptions(optionsList.concat(menuOptions))
     })
+
+    function searchZoom(field) {
+      store.dispatch('getListZoomWindowsRequest', {
+        process_parameter_id: field.process_id,
+        field_id: field.id,
+        column_name: field.columnName,
+        table_name: field.tabTableName
+      }).then(response => {
+        zoom.value = response
+      }).finally(() => {
+        return false
+      })
+    }
 
     const openOptionField = computed({
       get() {
@@ -407,7 +419,8 @@ export default defineComponent({
       option.executeMethod({
         containerManager: props.containerManager,
         fieldAttributes: props.metadata,
-        value: valueField.value
+        value: valueField.value,
+        zoom: zoom.value
       })
 
       if (isMobile.value) {
@@ -447,6 +460,7 @@ export default defineComponent({
       popoverOption,
       tabIndex,
       isButton,
+      zoom,
       // computed
       currentFieldOption,
       isMobile,
@@ -465,7 +479,8 @@ export default defineComponent({
       handleClose,
       handleCommand,
       handleOpen,
-      handleSelect
+      handleSelect,
+      searchZoom
     }
   }
 })
