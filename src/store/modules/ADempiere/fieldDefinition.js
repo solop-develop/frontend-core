@@ -23,7 +23,7 @@ import { DEFAULT_COLUMNS_PER_ROW } from '@/utils/ADempiere/componentUtils'
 
 // API Request Methods
 import { requestFieldMetadata } from '@/api/ADempiere/dictionary/field.ts'
-
+import { listZoomWindowsRequest } from '@/api/ADempiere/zoom'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'
 
@@ -76,6 +76,33 @@ const field = {
   },
 
   actions: {
+    getListZoomWindowsRequest({ commit }, {
+      process_parameter_id,
+      field_id,
+      browse_field_id,
+      reference_id,
+      column_id,
+      table_name,
+      column_name
+    }) {
+      return listZoomWindowsRequest({
+        process_parameter_id,
+        field_id,
+        browse_field_id,
+        reference_id,
+        column_id,
+        table_name,
+        column_name
+      })
+        .then(fieldResponse => {
+          if (!isEmptyValue(fieldResponse.zoom_windows)) {
+            return fieldResponse
+          }
+        })
+        .catch(error => {
+          console.warn(`Get Field - Error ${error.code}: ${error.message}.`)
+        })
+    },
     // Get Reference from Server based on criteria
     getFieldFromServer({ commit }, {
       id,

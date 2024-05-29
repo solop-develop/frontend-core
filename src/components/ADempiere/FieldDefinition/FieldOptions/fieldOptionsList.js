@@ -53,10 +53,12 @@ export const zoomInOptionItem = {
   index: 0,
   isRender: false,
   componentRender: () => import('@/components/ADempiere/FieldDefinition/FieldOptions/EmptyOption'),
-  executeMethod: ({ containerManager, window, fieldAttributes, value }) => {
+  executeMethod: ({ containerManager, window, fieldAttributes, value, zoom }) => {
     const { parentUuid, containerUuid, reference } = fieldAttributes
-    const { zoom_windows } = reference
-
+    let zoom_windows = reference.zoom_windows
+    if (isEmptyValue(zoom_windows)) {
+      zoom_windows = zoom.zoom_windows
+    }
     let windowToZoom = window
     if (isEmptyValue(windowToZoom)) {
       const isSOTrx = isSalesTransaction({
@@ -73,12 +75,14 @@ export const zoomInOptionItem = {
     }
 
     let currentValue = value
-
     let columnName = reference.key_column_name
+    if (isEmptyValue(columnName)) {
+      columnName = zoom.key_column_name
+    }
+    columnName = columnName
       .match(/(\.)(\b\w*)/ig)
       .toString()
       .replace('.', '')
-
     if (isEmptyValue(columnName)) {
       columnName = fieldAttributes.column_name
       // to Smart Browser
