@@ -98,7 +98,6 @@ const field = {
           column_name
         })
           .then(fieldResponse => {
-            // const { zoom_windows } = fieldResponse
             zoomWindow = fieldResponse.zoom_windows[0]
             if (!isEmptyValue(zoomWindow)) {
               if (zoomWindow.is_parent_tab) {
@@ -120,12 +119,10 @@ const field = {
                   resolve(fieldResponse)
                   return zoomWindow
                 })
-
-              // return fieldResponse
             }
           })
           .catch(error => {
-            console.warn(`Get Field - Error ${error.code}: ${error.message}.`)
+            console.warn(`Get Zoom Field - Error ${error.code}: ${error.message}.`)
             reject({})
           })
       })
@@ -145,7 +142,7 @@ const field = {
             resolve(response)
           })
           .catch(error => {
-            console.warn(`Get Field - Error ${error.code}: ${error.message}.`)
+            console.warn(`Get Windows To Zoom From field - Error ${error.code}: ${error.message}.`)
             reject(error)
           })
       })
