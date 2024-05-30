@@ -55,11 +55,23 @@ export function listZoomWindowsRequest({
     case !isEmptyValue(column_id):
       url = `/field/zooms/column/${column_id}`
       break
-    default:
-      break
   }
   return request({
     url: url,
     method: 'get'
+  })
+}
+
+export function getZoomParentRecord({
+  window_id,
+  tab_id,
+  value
+}) {
+  return request({
+    url: `/field/zooms/record/${window_id}/${tab_id}`,
+    method: 'get',
+    params: {
+      value
+    }
   })
 }

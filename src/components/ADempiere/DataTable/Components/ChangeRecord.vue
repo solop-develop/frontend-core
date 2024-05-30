@@ -45,11 +45,10 @@
 <script>
 import { defineComponent, computed } from '@vue/composition-api'
 
-import router from '@/router'
 import store from '@/store'
 
 // Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { isEmptyValue, setRecordPath } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'ChangeRecord',
@@ -127,19 +126,6 @@ export default defineComponent({
       return []
     })
 
-    function setRecordPath(recordId) {
-      router.push({
-        query: {
-          ...root.$route.query,
-          recordId
-        },
-        params: {
-          ...root.$route.params,
-          recordId
-        }
-      }, () => {})
-    }
-
     /**
      * changePreviousRecord
      */
@@ -167,7 +153,15 @@ export default defineComponent({
         containerUuid: props.containerUuid,
         row: previosRecord
       })
-      setRecordPath(recordId)
+      if (tabAttributes.value.isParentTab) {
+        setRecordPath({
+          recordId: recordId
+        })
+        return
+      }
+      setRecordPath({
+        recordChildId: recordId
+      })
     }
 
     /**
@@ -198,8 +192,15 @@ export default defineComponent({
         containerUuid: props.containerUuid,
         row: nextRecord
       })
-
-      setRecordPath(recordId)
+      if (tabAttributes.value.isParentTab) {
+        setRecordPath({
+          recordId: recordId
+        })
+        return
+      }
+      setRecordPath({
+        recordChildId: recordId
+      })
     }
 
     function hangleChangeRecord(action) {

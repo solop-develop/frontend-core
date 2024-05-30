@@ -286,13 +286,6 @@ export default defineComponent({
       }
       if (isSupportLookup(field.display_type)) {
         menuOptions.push(refreshLookup)
-        if (field.reference && !isEmptyValue(field.id)) {
-          searchZoom(field)
-          menuOptions.push(zoomInOptionItem)
-        }
-        // if (field.reference && !isEmptyValue(field.reference.zoom_windows)) {
-        //   menuOptions.push(zoomInOptionItem)
-        // }
       }
 
       if (field.componentPath === 'FieldButton') {
@@ -321,12 +314,27 @@ export default defineComponent({
         process_parameter_id: field.process_id,
         field_id: field.id,
         column_name: field.columnName,
-        table_name: field.tabTableName
+        table_name: field.tabTableName,
+        valueField: valueField.value
       }).then(response => {
         zoom.value = response
       }).finally(() => {
         return false
       })
+    }
+
+    function addOptionsZoom(field) {
+      const {
+        id,
+        reference,
+        display_type
+      } = field
+      if (isSupportLookup(display_type)) {
+        if (reference && !isEmptyValue(id)) {
+          searchZoom(field)
+          optionsList.value.unshift(zoomInOptionItem)
+        }
+      }
     }
 
     const openOptionField = computed({
@@ -377,6 +385,7 @@ export default defineComponent({
     }
 
     const handleOpen = (key, keyPath) => {
+      addOptionsZoom(props.metadata)
       triggerMenu.value = 'hover'
     }
     const handleClose = (key, keyPath) => {

@@ -23,7 +23,7 @@ import { DEFAULT_COLUMNS_PER_ROW } from '@/utils/ADempiere/componentUtils'
 
 // API Request Methods
 import { requestFieldMetadata } from '@/api/ADempiere/dictionary/field.ts'
-import { listZoomWindowsRequest } from '@/api/ADempiere/zoom'
+import { listZoomWindowsRequest, getZoomParentRecord } from '@/api/ADempiere/field/zoom'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'
 
@@ -76,32 +76,79 @@ const field = {
   },
 
   actions: {
-    getListZoomWindowsRequest({ commit }, {
+    getListZoomWindowsRequest({ dispatch }, {
       process_parameter_id,
       field_id,
+      valueField,
       browse_field_id,
       reference_id,
       column_id,
       table_name,
       column_name
     }) {
-      return listZoomWindowsRequest({
-        process_parameter_id,
-        field_id,
-        browse_field_id,
-        reference_id,
-        column_id,
-        table_name,
-        column_name
+      return new Promise((resolve, reject) => {
+        let zoomWindow
+        listZoomWindowsRequest({
+          process_parameter_id,
+          field_id,
+          browse_field_id,
+          reference_id,
+          column_id,
+          table_name,
+          column_name
+        })
+          .then(fieldResponse => {
+            // const { zoom_windows } = fieldResponse
+            zoomWindow = fieldResponse.zoom_windows[0]
+            if (!isEmptyValue(zoomWindow)) {
+              if (zoomWindow.is_parent_tab) {
+                zoomWindow.key_column = fieldResponse.key_columns
+                resolve(fieldResponse)
+                return zoomWindow
+              }
+              const {
+                id,
+                tab_id
+              } = zoomWindow
+              dispatch('getZoomParentTabRecord', {
+                window_id: id,
+                tab_id: tab_id,
+                value: valueField
+              })
+                .then(responseRecordParentTab => {
+                  fieldResponse.parentTab = responseRecordParentTab
+                  resolve(fieldResponse)
+                  return zoomWindow
+                })
+
+              // return fieldResponse
+            }
+          })
+          .catch(error => {
+            console.warn(`Get Field - Error ${error.code}: ${error.message}.`)
+            reject({})
+          })
       })
-        .then(fieldResponse => {
-          if (!isEmptyValue(fieldResponse.zoom_windows)) {
-            return fieldResponse
-          }
+    },
+    getZoomParentTabRecord({ commit }, {
+      window_id,
+      tab_id,
+      value
+    }) {
+      return new Promise((resolve, reject) => {
+        getZoomParentRecord({
+          window_id,
+          tab_id,
+          value
         })
-        .catch(error => {
-          console.warn(`Get Field - Error ${error.code}: ${error.message}.`)
-        })
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(`Get Field - Error ${error.code}: ${error.message}.`)
+            reject(error)
+          })
+      })
     },
     // Get Reference from Server based on criteria
     getFieldFromServer({ commit }, {

@@ -209,7 +209,7 @@ import { requestListResources } from '@/api/ADempiere/file-management/resource-r
 import { requestExistsIssues } from '@/api/ADempiere/logs/tabInfo/windowIssues.ts'
 
 // Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { isEmptyValue, setRecordPath } from '@/utils/ADempiere/valueUtils.js'
 // import { showMessage } from '@/utils/ADempiere/notification'
 
 export default defineComponent({
@@ -473,6 +473,10 @@ export default defineComponent({
           })
         }
       }
+
+      setRecordPath({
+        tab: tabindex
+      })
     }
 
     const setTabNumber = (tabNumber = '0') => {
@@ -482,9 +486,11 @@ export default defineComponent({
       if (tabNumber !== currentTab.value) {
         currentTab.value = tabNumber
       }
+
       setValuesPath({
         query: {
           ...currentRoute.query,
+          tab: currentTab.value,
           [queryProperty]: currentTab.value
         },
         params: {

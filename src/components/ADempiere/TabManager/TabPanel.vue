@@ -133,7 +133,7 @@ import PanelDefinition from '@/components/ADempiere/PanelDefinition/index.vue'
 import TabOptions from './TabOptions.vue'
 
 // Utils and Methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { isEmptyValue, setRecordPath } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'TabPanel',
@@ -387,7 +387,15 @@ export default defineComponent({
         containerUuid: props.currentTabUuid,
         row: previosRecord
       })
-      setRecordPath(recordId)
+      if (currentTab.value.isParentTab) {
+        setRecordPath({
+          recordId: recordId
+        })
+        return
+      }
+      setRecordPath({
+        recordChildId: recordId
+      })
     }
 
     /**
@@ -418,20 +426,15 @@ export default defineComponent({
         row: nextRecord
       })
 
-      setRecordPath(recordId)
-    }
-
-    function setRecordPath(recordId) {
-      router.push({
-        query: {
-          ...root.$route.query,
-          recordId
-        },
-        params: {
-          ...root.$route.params,
-          recordId
-        }
-      }, () => {})
+      if (currentTab.value.isParentTab) {
+        setRecordPath({
+          recordId: recordId
+        })
+        return
+      }
+      setRecordPath({
+        recordChildId: recordId
+      })
     }
 
     return {
@@ -458,8 +461,7 @@ export default defineComponent({
       handleChangePage,
       handleChangeSizePage,
       changePreviousRecord,
-      changeNextRecord,
-      setRecordPath
+      changeNextRecord
     }
   }
 
