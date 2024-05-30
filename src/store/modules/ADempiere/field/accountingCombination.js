@@ -135,15 +135,6 @@ const AccountCombinations = {
             isBooleanToString: true
           })
         }
-        console.log({
-          id,
-          uuid,
-          attributes,
-          accountId,
-          organizationId,
-          accountingSchemaId,
-          contextAttributesList
-        })
 
         return requestSaveAccountingCombination({
           id,

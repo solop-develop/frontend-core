@@ -390,9 +390,19 @@ export default defineComponent({
       })
       const { table_name } = props.panelMetadata
       if (!isEmptyValue(table_name) && !isEmptyValue(row[table_name + '_ID'])) {
-        setRecordPath({
-          recordId: row[table_name + '_ID']
-        })
+        const currentTab = store.getters.getStoredTab(
+          props.parentUuid,
+          props.containerUuid
+        )
+        if (currentTab.isParentTab) {
+          setRecordPath({
+            recordId: row[table_name + '_ID']
+          })
+        } else {
+          setRecordPath({
+            recordChildId: row[table_name + '_ID']
+          })
+        }
       }
 
       // if (isMobile.value) {

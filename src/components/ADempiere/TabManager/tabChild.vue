@@ -135,7 +135,7 @@ import TabOptions from './TabOptions.vue'
 import { UUID } from '@/utils/ADempiere/constants/systemColumns.js'
 
 // utils and helper methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { isEmptyValue, setRecordPath } from '@/utils/ADempiere/valueUtils.js'
 import { isDisplayedTab } from '@/utils/ADempiere/dictionary/window'
 import { getContextAttributes, generateContextKey } from '@/utils/ADempiere/contextUtils/contextAttributes'
 
@@ -174,6 +174,7 @@ export default defineComponent({
 
   setup(props, { root }) {
     const queryProperty = 'tabChild'
+    const currentRoute = router.app._route
 
     // if tabParent is present in path set this
     const tabNo = root.$route.query[queryProperty] || '0'
@@ -269,6 +270,9 @@ export default defineComponent({
     }
 
     function changeTab({ uuid, index }) {
+      setRecordPath({
+        tabChild: index
+      })
       setTabNumber(index)
 
       // set metadata tab
@@ -481,6 +485,25 @@ export default defineComponent({
     if (!isEmptyValue(recordUuidTabParent.value) && !tabData.value.isLoading) {
       getData()
     }
+
+    setTimeout(() => {
+      if (
+        !isEmptyValue(currentRoute.params) &&
+        !isEmptyValue(currentRoute.params.children) &&
+        !isEmptyValue(currentRoute.params.children.tab_id)
+      ) {
+        const children = currentRoute.params.children
+        const indexTab = showedTabsList.value.findIndex(items => {
+          if (items.id === children.tab_id) {
+            return items
+          }
+        })
+        changeTab({
+          uuid: children.tab_uuid,
+          index: indexTab
+        })
+      }
+    }, 2000)
 
     watch(showedTabsList, (newValue, oldValue) => {
       if (newValue) {

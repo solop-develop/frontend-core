@@ -963,17 +963,26 @@ export function getListKeyColumnsTab({
 
 /**
  * Assign record id to path
+ * @param {string} tab
  * @param {number} recordId
+ * @param {string} tabChild
+ * @param {number} recordChildId
  */
 export function setRecordPath({
-  recordId
+  tab,
+  recordId,
+  tabChild,
+  recordChildId
 }) {
   const currentRoute = router.app._route
   const { query } = currentRoute
   router.replace({
     query: {
       ...query,
-      recordId
+      tab,
+      recordId,
+      tabChild,
+      recordChildId
     }
   })
 }
