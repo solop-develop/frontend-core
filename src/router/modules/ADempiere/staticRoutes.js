@@ -20,7 +20,6 @@
 import Layout from '@/layout'
 
 import language from '@/lang'
-import store from '@/store'
 
 // Constants
 import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
@@ -71,13 +70,13 @@ const staticRoutes = [
         component: () => import('@/views/ADempiere/Form'),
         name: 'Issues All',
         hidden: false,
-        validateToEnable: ({ role }) => {
-          const menuTree = store.getters.permission_routes
+        validateToEnable: ({ role, dynamicRoutes }) => {
+          const menuTree = dynamicRoutes
           const viewSearch = recursiveTreeSearch({
             treeData: menuTree,
             attributeValue: 'window_' + REQUEST_ALL_WINDOW_ID,
             attributeName: 'meta',
-            secondAttribute: false,
+            secondAttribute: 'containerKey',
             attributeChilds: 'children'
           })
           if (isEmptyValue(viewSearch)) {

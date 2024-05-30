@@ -30,6 +30,7 @@ import { requestMenu } from '@/api/ADempiere/security/index.ts'
 // Utils and Helper Methods
 import { convertAction } from '@/utils/ADempiere/dictionary/menu'
 import { getCurrentClient, getCurrentOrganization, getCurrentRole } from '@/utils/ADempiere/auth'
+import { isEmptyValue } from '@/utils/ADempiere'
 
 /**
  * Get Menu from server
@@ -95,8 +96,8 @@ export function loadMainMenu({
 
         asyncRoutesMap.push(optionMenu)
       })
-
       const permiseStactiRoutes = hidenStaticRoutes({
+        dynamicRoutes: asyncRoutesMap,
         staticRoutes,
         permiseRole: role
       })
@@ -223,15 +224,23 @@ function getRouteFromMenuItem({ menu, clientId, roleId, organizationId }) {
  * @param {object} permiseRole role permissions
  * @returns {object} routes with hidden/show
  */
-function hidenStaticRoutes({ staticRoutes, permiseRole }) {
+function hidenStaticRoutes({ dynamicRoutes, staticRoutes, permiseRole }) {
   if (!permiseRole) {
     return staticRoutes
   }
-
   return staticRoutes.map(route => {
+    if (!isEmptyValue(route.children)) {
+      const hiddenStaticChildren = hidenStaticRoutes({
+        permiseRole,
+        dynamicRoutes,
+        staticRoutes: route.children
+      })
+      route.children = hiddenStaticChildren
+    }
     if (route.validateToEnable) {
       const isShow = route.validateToEnable({
-        role: permiseRole
+        role: permiseRole,
+        dynamicRoutes
       })
       return {
         ...route,

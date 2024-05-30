@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 export const REQUEST_WINDOW_UUID = 'a5216792-fb40-11e8-a479-7a0060f0aa01'
 
-export const REQUEST_ALL_WINDOW_ID = 233
+export const REQUEST_ALL_WINDOW_ID = 232
 
 export function dueTypeColor(issue) {
   const { due_type } = issue
