@@ -289,6 +289,9 @@ export default {
         case 'FieldUrl':
           field = () => import('@/components/ADempiere/FieldDefinition/FieldUrl')
           break
+        case 'FieldProductAttribute':
+          field = () => import('@/components/ADempiere/FieldDefinition/FieldProductAttribute')
+          break
       }
       return field
     },
