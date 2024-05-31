@@ -32,6 +32,7 @@ import VFileImport from './VFileImport'
 import timeRecord from './timeRecord'
 import match from './match'
 import tasks from './tasks'
+import issues from './issues'
 
 export default {
   accountingViewer,
@@ -49,5 +50,6 @@ export default {
   VFileImport,
   timeRecord,
   match,
-  tasks
+  tasks,
+  issues
 }
