@@ -216,7 +216,7 @@ export default defineComponent({
 
     const headerList = computed(() => {
       return props.header.filter(fieldItem => {
-        if (props.containerManager.isDisplayedColumn(fieldItem)) {
+        if (props.containerManager.isDisplayedColumn(fieldItem) && !fieldItem.is_generate_range) {
           const isMandatoryGenerated = props.containerManager.isMandatoryColumn(fieldItem)
           const isDisplayedDefault = props.containerManager.isDisplayedDefaultTable({
             ...fieldItem,
@@ -322,6 +322,11 @@ export default defineComponent({
      */
     function handleRowDblClick(row, column, event) {
       // disable edit mode
+      console.log({ row, column })
+      console.log({
+        isSelectedRow: row.isSelectedRow,
+        isEditRow: row.isEditRow
+      })
       if (props.containerManager.confirmRowChanges && row.isSelectedRow && row.isEditRow) {
         row.isEditRow = false
         props.containerManager.confirmRowChanges({

@@ -279,11 +279,12 @@ export function generateField({
   // Overwrite some values
   if (field.is_range) {
     field.operator = OPERATOR_BETWEEN.operator
+    field.is_generate_range = false
     if (field.isNumericField) {
       field.operator = OPERATOR_GREATER_EQUAL.operator
     }
-
     if (typeRange) {
+      field.is_generate_range = true
       field.operator = OPERATOR_LESS_EQUAL.operator
       field.uuid = `${field.uuid}_To`
       field.columnName = field.columnNameTo
