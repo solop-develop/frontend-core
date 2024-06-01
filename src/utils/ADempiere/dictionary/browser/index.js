@@ -124,9 +124,9 @@ export function evaluateDefaultColumnShowed({
 /**
  * Is displayed column in table multi record
  */
-export function isDisplayedColumn({ display_type, is_displayed, is_key }) {
+export function isDisplayedColumn({ display_type, is_displayed, is_key, isGeneratedRange }) {
   // column check to selection or button field not showed
-  if (is_key || isHiddenField(display_type)) {
+  if (is_key || isGeneratedRange || isHiddenField(display_type)) {
     return false
   }
 
