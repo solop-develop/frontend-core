@@ -19,11 +19,13 @@
 import login from './login.js'
 import processActivity from './processActivity'
 import settings from './settings.js'
+import exportDictionaryDefinition from './process/exportDictionary.js'
 
 const page = {
   login,
+  settings,
   processActivity,
-  settings
+  exportDictionaryDefinition
 }
 
 export default page

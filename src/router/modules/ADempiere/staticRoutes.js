@@ -452,6 +452,23 @@ const staticRoutes = [
         }
       }
     ]
+  },
+  {
+    path: '/export-dictionary',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/export-dictionary',
+        component: () => import('@/components/ADempiere/Process/ExportDictionaryDefinition.vue'),
+        title: language.t('page.exportDictionaryDefinition.title'),
+        meta: {
+          icon: 'component',
+          title: language.t('page.exportDictionaryDefinition.title'),
+          type: 'component'
+        }
+      }
+    ]
   }
 ]
 

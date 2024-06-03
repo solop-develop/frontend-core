@@ -1,7 +1,7 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
  * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/ElsioSanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -16,16 +16,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import login from './login.js'
-import processActivity from './processActivity'
-import settings from './settings.js'
-import exportDictionaryDefinition from './process/exportDictionary.js'
-
-const page = {
-  login,
-  settings,
-  processActivity,
-  exportDictionaryDefinition
+const exportDictionaryDefinition = {
+  // tab
+  title: 'Export Dictionary Definition',
+  help: 'This process uses a queue to export the entire application dictionary definition, note that many definitions can be exported',
+  // fields
+  menus: 'Export Menu',
+  windows: 'Export Windows',
+  process: 'Export Processes',
+  browsers: 'Export Viewers'
 }
 
-export default page
+export default exportDictionaryDefinition
