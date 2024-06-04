@@ -1359,7 +1359,7 @@ export function generateWindow(responseWindow) {
     tabsList, tabsListParent, tabsListChild,
     firstTab, firstTabUuid
   } = generateTabs({
-    tabs: sortTabs(responseWindow.tabs),
+    tabs: responseWindow.tabs,
     parentUuid: responseWindow.uuid
   })
 
@@ -1403,6 +1403,10 @@ export function generateTabs({
 
   // indexes related to visualization
   const tabsList = tabs.filter((itemTab, index) => {
+    if (isEmptyValue(itemTab.uuid)) {
+      console.warn(`${itemTab.name} (${itemTab.id}) tab without uuid, so it will not be displayed.`)
+      return false
+    }
     if (itemTab.is_sort_tab) {
       sequenceTabsListOnWindow.push({
         ...itemTab,
@@ -1420,16 +1424,16 @@ export function generateTabs({
     const parentTabs = listTabs
       .filter(currentItemTab => {
         return currentItemTab.uuid !== currentTab.uuid &&
-        currentItemTab.sequence < currentTab.sequence &&
-        currentItemTab.tab_level < currentTab.tab_level
+          currentItemTab.sequence < currentTab.sequence &&
+          currentItemTab.tab_level < currentTab.tab_level
       })
       .map(item => convertRelationTabs(item))
 
     const childTabs = listTabs
       .filter(currentItemTab => {
         return currentItemTab.uuid !== currentTab.uuid &&
-        currentItemTab.sequence > currentTab.sequence &&
-        currentItemTab.tab_level > currentTab.tab_level
+          currentItemTab.sequence > currentTab.sequence &&
+          currentItemTab.tab_level > currentTab.tab_level
       })
       .map(item => convertRelationTabs(item))
 
@@ -1441,7 +1445,7 @@ export function generateTabs({
     const sequenceTabsList = sequenceTabsListOnWindow
       .filter(currentItemTab => {
         return currentItemTab.is_sort_tab &&
-        currentItemTab.table_name === currentTab.table_name
+          currentItemTab.table_name === currentTab.table_name
       })
       .map(currentItemTab => {
         return {
@@ -1454,7 +1458,6 @@ export function generateTabs({
         }
       })
 
-    // let tab = tabItem
     const tab = {
       ...currentTab,
       parentUuid,
@@ -2261,15 +2264,4 @@ export const containerManager = {
       fieldAttributes
     })
   }
-}
-
-/**
- * Sort Tabs by tab_level and sequence
- * @param {array} tabsList
- * returns {array}
- */
-export function sortTabs(tabsList) {
-  return tabsList.sort((tabItemA, tabItemB) => {
-    return tabItemA.sequence - tabItemB.sequence
-  })
 }
