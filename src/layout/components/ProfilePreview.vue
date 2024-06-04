@@ -3,7 +3,7 @@
     <el-row>
       <el-col :span="24" style="text-align: center;">
         <el-image
-          :src="userAvatar"
+          :src="imageURL"
           fit="scale-down"
           class="circle-image"
         />
@@ -41,8 +41,8 @@ import { config } from '@/utils/ADempiere/config'
 
 // Utils and Helper Methods
 // import { getImagePath } from '@/utils/ADempiere/resource.js'
-import { requestListResources } from '@/api/ADempiere/file-management/resource-reference.ts'
-import { isEmptyValue } from '@/utils/ADempiere'
+// import { requestListResources } from '@/api/ADempiere/file-management/resource-reference.ts'
+import { getResourcePath } from '@/utils/ADempiere/resource'
 
 export default defineComponent({
   name: 'ProfilePreview',
@@ -72,6 +72,8 @@ export default defineComponent({
     }
   },
   setup() {
+    // Ref
+    const imageURL = ref('')
     // Computed
     const userInfo = computed(() => {
       return store.getters['user/userInfo']
@@ -98,37 +100,22 @@ export default defineComponent({
 
     avatarResize.value = require('@/image/ADempiere/avatar/no-avatar.png')
 
+    imageURL.value = require('@/image/ADempiere/avatar/no-avatar.png')
+
     async function loadImage() {
-      // const { image } = userInfo.value
-      if (userInfo.value.image) {
-        // const blobImage = await getImagePath({
-        //   file: image,
-        //   width: 200,
-        //   height: 200
-        // })
-        // avatarResize.value = blobImage.href
-        const clientId = store.getters.getSessionContextClientId
-        // const { table_name } = this.currentTab
-        requestListResources({
-          clientId: clientId,
-          containerId: 108,
-          containerType: 'window',
-          columnName: 'logo_id',
-          recordId: userInfo.value.id,
-          tableName: 'AD_User'
+      getResourcePath({
+        clientId: store.getters.getSessionContextClientId,
+        containerId: 108,
+        containerType: 'resource',
+        columnName: 'Logo_ID',
+        recordId: userInfo.value.id,
+        tableName: 'AD_User'
+      })
+        .then(response => {
+          imageURL.value = config.adempiere.resource.url + response
+          return config.adempiere.resource.url + response
         })
-          .then(response => {
-            const { resources } = response
-            if (isEmptyValue(resources)) {
-              avatarResize.value = require('@/image/ADempiere/avatar/no-avatar.png')
-              return
-            }
-            const image = response.resources[0].name
-            avatarResize.value = config.adempiere.resource.url + image
-            return config.adempiere.resource.url + image
-          })
-        return avatarResize.value
-      }
+      return avatarResize.value
     }
 
     function handleClick() {
@@ -141,6 +128,7 @@ export default defineComponent({
 
     return {
       // Ref
+      imageURL,
       avatarResize,
       // Computed
       userInfo,
