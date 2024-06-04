@@ -184,7 +184,7 @@ export default {
             parentUuid: this.parentUuid,
             containerUuid: this.containerUuid,
             uuid: this.metadata.process.uuid,
-            browserUuid: this.metadata.process.browse_uuid
+            browserId: this.metadata.process.browser.id
           }),
           isEnabled: () => generateReportOfWindow.enabled({
             parentUuid: this.parentUuid,
@@ -201,6 +201,7 @@ export default {
             parentUuid: this.parentUuid,
             containerUuid: this.containerUuid,
             uuid: this.metadata.process.uuid,
+            formId: this.metadata.process.form.id,
             formUuid: this.metadata.process.form.uuid
           }),
           isEnabled: () => openFormAssociated.enabled({
