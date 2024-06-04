@@ -882,15 +882,14 @@ export const openBrowserAssociated = {
   icon: 'search',
   actionName: 'openBrowserAssociated',
   openBrowserAssociated: function({ parentUuid, containerUuid, uuid, browserId }) {
-    if (isEmptyValue(browserId) && browserId > 0) {
+    if (isEmptyValue(browserId) || browserId <= 0) {
       const process = store.getters.getStoredProcessFromTab({
         windowUuid: parentUuid,
         tabUuid: containerUuid,
         processUuid: uuid
       })
-      browserId = process.browser_id
+      browserId = process.browser.id
     }
-
     const browserUuid = store.getters.getStoredBrowserUuidById(browserId)
     const storedBrowser = store.getters.getStoredBrowser(browserUuid)
     if (!isEmptyValue(storedBrowser)) {
