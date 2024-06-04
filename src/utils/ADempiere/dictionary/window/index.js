@@ -882,15 +882,14 @@ export const openBrowserAssociated = {
   icon: 'search',
   actionName: 'openBrowserAssociated',
   openBrowserAssociated: function({ parentUuid, containerUuid, uuid, browserId }) {
-    if (isEmptyValue(browserId)) {
+    if (isEmptyValue(browserId) || browserId <= 0) {
       const process = store.getters.getStoredProcessFromTab({
         windowUuid: parentUuid,
         tabUuid: containerUuid,
         processUuid: uuid
       })
-      browserId = process.browser_id
+      browserId = process.browser.id
     }
-
     const browserUuid = store.getters.getStoredBrowserUuidById(browserId)
     const storedBrowser = store.getters.getStoredBrowser(browserUuid)
     if (!isEmptyValue(storedBrowser)) {
@@ -1032,14 +1031,14 @@ export const openFormAssociated = {
   isSvgIcon: true,
   icon: 'form',
   actionName: 'openFormAssociated',
-  openFormAssociated: function({ parentUuid, containerUuid, uuid, formUuid }) {
-    if (isEmptyValue(formUuid)) {
+  openFormAssociated: function({ parentUuid, containerUuid, uuid, formId, formUuid }) {
+    if (isEmptyValue(formId) || formId <= 0) {
       const process = store.getters.getStoredProcessFromTab({
         windowUuid: parentUuid,
         tabUuid: containerUuid,
         processUuid: uuid
       })
-      formUuid = process.formUuid
+      formId = process.form.id
     }
 
     // set record id from window
