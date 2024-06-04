@@ -727,19 +727,6 @@ const actions = {
             ...info,
             name: systemName
           })
-          // tab browser title
-          window.document.title = response.name
-
-          // tab browser favicon
-          if (!isEmptyValue(info.logoUrl)) {
-            let link = document.querySelector("link[rel~='icon']")
-            if (!link) {
-              link = document.createElement('link')
-              link.rel = 'icon'
-              document.head.appendChild(link)
-            }
-            link.href = info.logoUrl
-          }
 
           resolve(info)
         })
