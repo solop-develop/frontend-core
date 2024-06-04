@@ -105,7 +105,7 @@ export default {
       if (this.metadata.display_type === TEXT.id) {
         typeInput = 'textarea'
       }
-      if (this.metadata.isEncrypted) {
+      if (this.metadata.is_encrypted) {
         typeInput = 'password'
       }
       return typeInput
