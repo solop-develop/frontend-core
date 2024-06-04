@@ -31,6 +31,11 @@ export default {
     },
     defaultImageLogo() {
       return require('@/image/ADempiere/logo.jpg')
+    },
+    nameSystem() {
+      const { name } = this.$store.getters['user/getSystem']
+      if (name) return name
+      return 'ADempiere'
     }
   },
   watch: {
@@ -43,6 +48,7 @@ export default {
     link.rel = 'shortcut icon'
     link.type = 'image/x-icon'
     link.href = this.defaultImageLogo
+    document.title = this.nameSystem
     document.head.appendChild(link)
 
     this.$nextTick(() => {
@@ -63,6 +69,7 @@ export default {
       link.rel = 'shortcut icon'
       link.type = 'image/x-icon'
       link.href = this.defaultImageLogo
+      document.title = this.nameSystem
       document.head.appendChild(link)
     },
     getWindowWidth(event) {
