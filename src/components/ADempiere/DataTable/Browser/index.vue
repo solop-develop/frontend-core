@@ -57,7 +57,7 @@
       @row-click="handleRowClick"
       @row-dblclick="handleRowDblClick"
       @select="handleSelection"
-      @select-all="handleSelectionAll"
+      @select-all="activateAll"
     >
       <!-- column with the checkbox -->
       <el-table-column
@@ -386,7 +386,15 @@ export default defineComponent({
         recordsSelected: selections
       })
     }
-
+    function activateAll() {
+      let index = 0
+      recordsWithFilter.value.forEach((row) => {
+        row.isSelectedRow = !row.isSelectedRow
+        row.rowSelectedIndex = index++
+        row.isEditRow = row.isSelectedRow
+      })
+      handleSelectionAll(recordsWithFilter.value)
+    }
     /**
      * Select or unselect rows
      * USE ONLY MOUNTED
@@ -513,7 +521,8 @@ export default defineComponent({
       handleSelection,
       handleSelectionAll,
       loadSelection,
-      handleChangeSizePage
+      handleChangeSizePage,
+      activateAll
     }
   }
 })
