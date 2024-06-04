@@ -142,7 +142,7 @@ import {
   requestRunBusinessProcess
 } from '@/api/ADempiere/businessData/runBusinessProcess.ts'
 
-// // Utils and Helper Methods
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
