@@ -49,7 +49,7 @@
           <div @click="zoomInProfile()">
             <profile-preview
               :user="user"
-              :avatar="avatar"
+              :avatar="avatarResize"
             />
           </div>
           <el-button type="text" style="float: left;" @click="cacheReset()"> {{ $t('navbar.resetCache') }}</el-button>
@@ -57,8 +57,8 @@
         </div>
         <el-button slot="reference" type="text" style="padding-top: 5px;padding-right: 10px;">
           <el-image
-            v-if="!isEmptyValue(avatar)"
-            :src="userAvatar"
+            v-if="!isEmptyValue(avatarResize)"
+            :src="avatarResize"
             fit="contain"
             style="
               width: 40px;
@@ -88,9 +88,11 @@ import Screenfull from '@/components/Screenfull'
 import LangSelect from '@/components/LangSelect'
 import Search from '@/components/HeaderSearch'
 import HeaderNotification from '@/components/ADempiere/HeaderNotification'
-import { getImagePath } from '@/utils/ADempiere/resource.js'
 import Driver from 'driver.js' // import driver.js
 import 'driver.js/dist/driver.min.css' // import driver.js css
+import { getResourcePath } from '@/utils/ADempiere/resource'
+// Constants
+import { config } from '@/utils/ADempiere/config'
 
 export default {
   components: {
@@ -119,6 +121,9 @@ export default {
     },
     isMobile() {
       return this.$store.state.app.device === 'mobile'
+    },
+    userInfo() {
+      return this.$store.getters['user/userInfo']
     },
     showGuide() {
       const typeViews = this.$route.meta.type
@@ -194,6 +199,20 @@ export default {
     this.driver = new Driver()
   },
   methods: {
+    async loadImage() {
+      getResourcePath({
+        clientId: this.$store.getters.getSessionContextClientId,
+        containerId: 108,
+        containerType: 'resource',
+        columnName: 'Logo_ID',
+        recordId: this.userInfo.id,
+        tableName: 'AD_User'
+      })
+        .then(response => {
+          this.avatarResize = config.adempiere.resource.url + response
+          return config.adempiere.resource.url + response
+        })
+    },
     zoomInProfile() {
       this.$router.push({
         path: '/profile/index'
@@ -298,17 +317,6 @@ export default {
           break
       }
       return field
-    },
-    async loadImage() {
-      const { image } = this.$store.getters['user/userInfo']
-      if (image) {
-        const blobImage = await getImagePath({
-          file: image,
-          width: 200,
-          height: 200
-        })
-        this.avatarResize = blobImage.href
-      }
     }
   }
 }
