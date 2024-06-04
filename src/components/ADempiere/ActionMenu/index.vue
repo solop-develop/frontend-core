@@ -447,6 +447,7 @@ export default defineComponent({
       color: #0080ff;
       border-color: #0080ff;
       background: #ecf5ff;
+      border: solid #0080ff 1px;
     }
 
     // light blue style of the drop down menu section
