@@ -1032,7 +1032,7 @@ export const openFormAssociated = {
   icon: 'form',
   actionName: 'openFormAssociated',
   openFormAssociated: function({ parentUuid, containerUuid, uuid, formId, formUuid }) {
-    if (isEmptyValue(formId)) {
+    if (isEmptyValue(formId) || formId <= 0) {
       const process = store.getters.getStoredProcessFromTab({
         windowUuid: parentUuid,
         tabUuid: containerUuid,
