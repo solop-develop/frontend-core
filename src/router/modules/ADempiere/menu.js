@@ -107,6 +107,15 @@ export function loadMainMenu({
       resolve(menuRoutes)
     }).catch(error => {
       console.warn(`Error getting menu: ${error.message}. Code: ${error.code}.`)
+      const permiseStactiRoutes = hidenStaticRoutes({
+        dynamicRoutes: [],
+        staticRoutes,
+        permiseRole: role
+      })
+      const menuRoutes = permiseStactiRoutes
+        .concat([])
+
+      resolve(menuRoutes)
     })
   })
 }
