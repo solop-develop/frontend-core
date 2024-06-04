@@ -1,17 +1,19 @@
 <!--
-ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A.
-Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https:www.gnu.org/licenses/>.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A.
+  Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -130,9 +132,7 @@ import {
 import lang from '@/lang'
 import store from '@/store'
 import router from '@/router'
-// // import router from '@/router'
-// // Const
-// import keyListCommant from '@/components/ADempiere/Form/VPOS2/Options/cashManagement/mnemonicCommand/keyListCommant'
+
 // Component and Mixins
 import TitleAndHelp from '@/components/ADempiere/TitleAndHelp/index.vue'
 import PanelFooter from '@/components/ADempiere/PanelFooter/index.vue'
@@ -141,20 +141,24 @@ import PanelFooter from '@/components/ADempiere/PanelFooter/index.vue'
 import {
   requestRunBusinessProcess
 } from '@/api/ADempiere/businessData/runBusinessProcess.ts'
+
 // // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'ExportDictionaryDefinition',
+
   components: {
     TitleAndHelp,
     PanelFooter
   },
+
   setup() {
     /**
      * Constants
      */
     const UUID = 'EXPORT_DICTIONARY_DEFINITION'
+
     /**
      * Ref
      */
@@ -162,6 +166,7 @@ export default defineComponent({
     const isWindows = ref(true)
     const isProcess = ref(true)
     const isBrowsers = ref(true)
+
     /**
      * Computed
      */
@@ -171,6 +176,7 @@ export default defineComponent({
     const spanColumn = computed(() => {
       return isMobile.value ? 12 : 6
     })
+
     /**
      * Methods
      */
@@ -229,6 +235,7 @@ export default defineComponent({
       isProcess.value = true
       isBrowsers.value = true
     }
+
     return {
       // Constants
       UUID,
