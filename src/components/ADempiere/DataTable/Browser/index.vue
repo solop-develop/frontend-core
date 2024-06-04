@@ -64,7 +64,6 @@
         v-if="isTableSelection"
         type="selection"
         :prop="keyColumn"
-        fixed
         min-width="50"
       />
 
