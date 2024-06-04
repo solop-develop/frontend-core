@@ -4,8 +4,7 @@ import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
-import getPageTitle from '@/utils/get-page-title'
-import getPageFavicon from '@/utils/get-page-favicon'
+import { setSystemValues, setSessionValues } from '@/utils/set-value-page.js'
 import { isEmptyValue } from '@/utils/ADempiere'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
@@ -15,15 +14,15 @@ const whiteList = ['/login', '/userEnrollment', '/createPassword', '/forgotPassw
 router.beforeEach(async(to, from, next) => {
   // start progress bar
   NProgress.start()
-  const link = getPageFavicon()
-  document.head.appendChild(link)
-  // set page title
-  document.title = getPageTitle(to.meta.title)
 
   // determine whether the user has logged in
   const hasToken = getToken()
 
   if (hasToken) {
+    // Set Page Title and Favicon
+    setSessionValues({
+      routeName: to.meta.title
+    })
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
       next({ path: '/' })
@@ -66,6 +65,10 @@ router.beforeEach(async(to, from, next) => {
       }
     }
   } else {
+    // Set Page Title and Favicon
+    setSystemValues({
+      routeName: to.meta.title
+    })
     /* has no token*/
     if (whiteList.includes(to.path)) {
       // in the free login whitelist, go directly

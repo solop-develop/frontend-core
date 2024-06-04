@@ -38,19 +38,7 @@ export default {
       return 'ADempiere'
     }
   },
-  watch: {
-    getResourceName(value) {
-      this.loadImage()
-    }
-  },
   async mounted() {
-    const link = document.createElement('link')
-    link.rel = 'shortcut icon'
-    link.type = 'image/x-icon'
-    link.href = this.defaultImageLogo
-    document.title = this.nameSystem
-    document.head.appendChild(link)
-
     this.$nextTick(() => {
       window.addEventListener('resize', this.getWindowWidth)
       window.addEventListener('resize', this.getWindowHeight)
@@ -64,14 +52,6 @@ export default {
     window.removeEventListener('resize', this.getWindowHeight)
   },
   methods: {
-    async loadImage() {
-      const link = document.createElement('link')
-      link.rel = 'shortcut icon'
-      link.type = 'image/x-icon'
-      link.href = this.defaultImageLogo
-      document.title = this.nameSystem
-      document.head.appendChild(link)
-    },
     getWindowWidth(event) {
       this.$store.dispatch('setWidth', document.documentElement.clientWidth)
     },
