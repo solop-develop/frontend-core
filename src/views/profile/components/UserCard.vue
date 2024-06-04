@@ -9,7 +9,7 @@
         <el-col :span="12">
           <div class="box-center">
             <pan-thumb
-              :image="userAvatar"
+              :image="avatarResize"
               :hoverable="true"
             >
               {{ currentRole.name }}
@@ -46,9 +46,11 @@ import store from '@/store'
 import PanThumb from '@/components/PanThumb'
 
 // Constants
-// import { config } from '@/utils/ADempiere/config'
+import { config } from '@/utils/ADempiere/config'
 
 // Utils and Helper Methods
+import { getResourcePath } from '@/utils/ADempiere/resource'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 // import { getImagePath } from '@/utils/ADempiere/resource.js'
 
 export default defineComponent({
@@ -93,15 +95,30 @@ export default defineComponent({
 
     async function loadImage() {
       // const { image } = userInfo.value
-      if (userAvatar.value) {
-        // const blobImage = await getImagePath({
-        //   file: image,
-        //   width: 200,
-        //   height: 200
-        // })
-        // avatarResize.value = blobImage.href
-        avatarResize.value = userAvatar.value
-      }
+      getResourcePath({
+        clientId: store.getters.getSessionContextClientId,
+        containerId: 108,
+        containerType: 'resource',
+        columnName: 'Logo_ID',
+        recordId: userInfo.value.id,
+        tableName: 'AD_User'
+      })
+        .then(response => {
+          avatarResize.value = config.adempiere.resource.url + response
+          if (isEmptyValue(response)) {
+            avatarResize.value = userAvatar.value
+            return
+          }
+        })
+      // if (userAvatar.value) {
+      //   // const blobImage = await getImagePath({
+      //   //   file: image,
+      //   //   width: 200,
+      //   //   height: 200
+      //   // })
+      //   // avatarResize.value = blobImage.href
+      //   avatarResize.value = userAvatar.value
+      // }
     }
 
     loadImage()

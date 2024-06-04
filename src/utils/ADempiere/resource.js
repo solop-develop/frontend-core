@@ -422,8 +422,9 @@ export function getResourcePath({
       .then(response => {
         const { resources } = response
         if (!isEmptyValue(resources)) {
-          const resource = resources.find(resource => resource.name.includes(resourceName))
-          if (!isEmptyValue(resource)) resolve(resource.name)
+          // const resource = resources.find(resource => resource.name.includes(resourceName))
+          // if (!isEmptyValue(resource)) resolve(resource.name)
+          resolve(resources[0].name)
         }
         resolve('')
       })

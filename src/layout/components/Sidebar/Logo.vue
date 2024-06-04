@@ -96,20 +96,22 @@ export default defineComponent({
     async function loadImage() {
       const { client } = getRole.value
       if (client.logo) {
-        const fileName = await getResourcePath({
+        getResourcePath({
           clientId: client.id,
           containerId: '109',
-          containerType: 'window',
+          containerType: 'resource',
           columnName: 'Logo_ID',
           recordId: client.id,
           tableName: 'AD_ClientInfo',
           resourceName: client.logo
         })
-        if (isEmptyValue(fileName)) {
-          clientLogo.value = 'https://avatars1.githubusercontent.com/u/1263359?s=200&v=4'
-          return
-        }
-        clientLogo.value = config.adempiere.resource.url + fileName
+          .then(response => {
+            clientLogo.value = config.adempiere.resource.url + response
+            if (isEmptyValue(response)) {
+              clientLogo.value = 'https://avatars1.githubusercontent.com/u/1263359?s=200&v=4'
+              return
+            }
+          })
       }
     }
 
