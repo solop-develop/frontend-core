@@ -30,7 +30,7 @@ import { requestMenu } from '@/api/ADempiere/security/index.ts'
 // Utils and Helper Methods
 import { convertAction } from '@/utils/ADempiere/dictionary/menu'
 import { getCurrentClient, getCurrentOrganization, getCurrentRole } from '@/utils/ADempiere/auth'
-import { isEmptyValue } from '@/utils/ADempiere'
+import { isEmptyValue, recursiveTreeSearch } from '@/utils/ADempiere'
 
 /**
  * Get Menu from server
@@ -245,6 +245,24 @@ function hidenStaticRoutes({ dynamicRoutes, staticRoutes, permiseRole }) {
         staticRoutes: route.children
       })
       route.children = hiddenStaticChildren
+    }
+    const noticeShow = recursiveTreeSearch({
+      treeData: dynamicRoutes,
+      attributeValue: 'window_' + 193,
+      attributeName: 'meta',
+      secondAttribute: 'containerKey',
+      attributeChilds: 'children'
+    })
+    if (isEmptyValue(noticeShow)) {
+      store.dispatch('settings/changeSetting', {
+        key: 'panelRight',
+        value: ['BC', 'LC']
+      })
+    } else {
+      store.dispatch('settings/changeSetting', {
+        key: 'panelRight',
+        value: ['BC', 'LC', 'notices']
+      })
     }
     if (route.validateToEnable) {
       const isShow = route.validateToEnable({
