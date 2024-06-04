@@ -33,7 +33,7 @@ import {
   LOG_COLUMNS_NAME_LIST
 } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
-import { BUTTON, ID, LOCATION_ADDRESS, YES_NO } from '@/utils/ADempiere/references'
+import { BUTTON, ID, IMAGE, LOCATION_ADDRESS, YES_NO, isLookup } from '@/utils/ADempiere/references'
 import { containerManager as CONTAINER_MANAGER_BROWSER } from '@/utils/ADempiere/dictionary/browser'
 
 // API Request Methods
@@ -474,16 +474,16 @@ export const createNewRecord = {
       return false
     }
 
-    const tab = store.getters.getStoredTab(parentUuid, containerUuid)
-    if (!tab.is_insert_record) {
+    const storedTab = store.getters.getStoredTab(parentUuid, containerUuid)
+    if (!storedTab.is_insert_record) {
       return false
     }
     // TODO: Verify index Parent Tab
-    if (tab.isParentTab && tab.index > 0) {
+    if (storedTab.isParentTab && storedTab.index > 0) {
       return false
     }
 
-    // if (tab.value.isShowedTableRecords) {
+    // if (storedTab.value.isShowedTableRecords) {
     //   store.dispatch('changeTabAttribute', {
     //     attributeName: 'isShowedTableRecords',
     //     attributeNameControl: undefined,
@@ -494,33 +494,39 @@ export const createNewRecord = {
     // }
     const currentValues = {}
     if (isCopyValues) {
-      const copyableFields = tab.fieldsList.filter(field => {
-        if (field.isVirtualColumn || field.is_key) {
+      const copyableFields = storedTab.fieldsList.filter(fieldItem => {
+        if (fieldItem.isVirtualColumn || fieldItem.is_key) {
           return false
         }
-        if ([ID.id, LOCATION_ADDRESS.id].includes(field.display_type)) {
+        if ([ID.id, LOCATION_ADDRESS.id].includes(fieldItem.display_type)) {
           return false
         }
         // Ignore Standard Values
-        const { columnName } = field
+        const { columnName } = fieldItem
         if (LOG_COLUMNS_NAME_LIST.includes(columnName)) {
           return false
         }
         if ([CLIENT, ACTIVE, PROCESSING, PROCESSED, UUID].includes(columnName)) {
           return false
         }
-        return field.is_allow_copy
+        return fieldItem.is_allow_copy
       })
+
       const tabContext = store.getters.getValuesView({
         containerUuid,
         format: 'object'
       })
-      copyableFields.forEach(field => {
-        const { columnName } = field
+      copyableFields.forEach(fieldItem => {
+        const { columnName, display_type, displayColumnName } = fieldItem
         const value = tabContext[columnName]
 
         if (!isEmptyValue(value)) {
           currentValues[columnName] = value
+
+          // display value
+          if (isLookup(storedTab) || [ID.id, IMAGE.id].includes(display_type)) {
+            currentValues[displayColumnName] = tabContext[displayColumnName]
+          }
         }
       })
     }

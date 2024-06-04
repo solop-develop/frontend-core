@@ -742,13 +742,13 @@ export default {
     isOverWriteParent = true
   }) {
     return new Promise(resolve => {
-      const tab = rootGetters.getStoredTab(parentUuid, containerUuid)
+      const storedTab = rootGetters.getStoredTab(parentUuid, containerUuid)
 
       const currentRoute = router.app._route
       delete currentRoute.query.filters
 
       const query = currentRoute.query
-      if (tab.isParentTab) {
+      if (storedTab.isParentTab) {
         query.action = 'create-new'
       }
       // set action
@@ -769,7 +769,7 @@ export default {
         parentUuid,
         containerUuid,
         isSOTrxDictionary: isSalesTransactionContext,
-        fieldsList: tab.fieldsList
+        fieldsList: storedTab.fieldsList
       })
 
       // set vales with permant link
@@ -779,7 +779,7 @@ export default {
         if (!isEmptyValue(parsedFilters)) {
           // merge values
           defaultAttributes = defaultAttributes.map(attribute => {
-            const filterValue = parsedFilters[attribute.column_name]
+            const filterValue = parsedFilters[attribute.columnName]
             return {
               ...attribute,
               value: filterValue
@@ -795,7 +795,7 @@ export default {
       // with copy values
       if (!isEmptyValue(overwriteValues)) {
         defaultAttributes = defaultAttributes.map(attribute => {
-          const filterValue = overwriteValues[attribute.column_name]
+          const filterValue = overwriteValues[attribute.columnName]
           if (isEmptyValue(filterValue)) {
             return attribute
           }
@@ -825,9 +825,9 @@ export default {
         root: true
       })
 
-      if (tab.table.is_document) {
+      if (storedTab.table.is_document) {
         // get displayed value on status
-        const fieldDocumentStatus = tab.fieldsList.find(field => {
+        const fieldDocumentStatus = storedTab.fieldsList.find(field => {
           return field.column_name === DOCUMENT_STATUS
         })
         if (!isEmptyValue(fieldDocumentStatus)) {
@@ -885,7 +885,7 @@ export default {
           // activate logics
           dispatch('changeDependentFieldsList', {
             field,
-            fieldsList: tab.fieldsList,
+            fieldsList: storedTab.fieldsList,
             containerManager
           })
         }
@@ -918,7 +918,7 @@ export default {
       })
 
       // update records and logics on child tabs
-      tab.childTabs
+      storedTab.childTabs
         .filter(tabItem => {
           const { hasBeenRendered } = rootGetters.getStoredTab(parentUuid, tabItem.uuid)
           if (hasBeenRendered) {
