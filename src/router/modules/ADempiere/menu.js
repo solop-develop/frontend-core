@@ -31,7 +31,7 @@ import { requestMenu } from '@/api/ADempiere/security/index.ts'
 import { convertAction } from '@/utils/ADempiere/dictionary/menu'
 import { getCurrentClient, getCurrentOrganization, getCurrentRole } from '@/utils/ADempiere/auth'
 import { isEmptyValue, recursiveTreeSearch } from '@/utils/ADempiere'
-
+import { NOTICE_ID } from '@/utils/ADempiere/dictionary/dashboard'
 /**
  * Get Menu from server
  * @author Elsio Sanchez <elsiosanches@gmail.com>
@@ -234,6 +234,7 @@ function getRouteFromMenuItem({ menu, clientId, roleId, organizationId }) {
  * @returns {object} routes with hidden/show
  */
 function hidenStaticRoutes({ dynamicRoutes, staticRoutes, permiseRole }) {
+  validateShow(dynamicRoutes)
   if (!permiseRole) {
     return staticRoutes
   }
@@ -245,24 +246,6 @@ function hidenStaticRoutes({ dynamicRoutes, staticRoutes, permiseRole }) {
         staticRoutes: route.children
       })
       route.children = hiddenStaticChildren
-    }
-    const noticeShow = recursiveTreeSearch({
-      treeData: dynamicRoutes,
-      attributeValue: 'window_' + 193,
-      attributeName: 'meta',
-      secondAttribute: 'containerKey',
-      attributeChilds: 'children'
-    })
-    if (isEmptyValue(noticeShow)) {
-      store.dispatch('settings/changeSetting', {
-        key: 'panelRight',
-        value: ['BC', 'LC']
-      })
-    } else {
-      store.dispatch('settings/changeSetting', {
-        key: 'panelRight',
-        value: ['BC', 'LC', 'notices']
-      })
     }
     if (route.validateToEnable) {
       const isShow = route.validateToEnable({
@@ -278,5 +261,23 @@ function hidenStaticRoutes({ dynamicRoutes, staticRoutes, permiseRole }) {
     return {
       ...route
     }
+  })
+}
+
+function validateShow(dynamicRoutes) {
+  const noticeShow = recursiveTreeSearch({
+    treeData: dynamicRoutes,
+    attributeValue: 'window_' + NOTICE_ID,
+    attributeName: 'meta',
+    secondAttribute: 'containerKey',
+    attributeChilds: 'children'
+  })
+  let valueObjt = ['BC', 'LC', 'notices']
+  if (isEmptyValue(noticeShow)) {
+    valueObjt = valueObjt.filter(item => item !== 'notices')
+  }
+  store.dispatch('settings/changeSetting', {
+    key: 'panelRight',
+    value: valueObjt
   })
 }
