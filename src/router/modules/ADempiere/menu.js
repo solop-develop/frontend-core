@@ -31,7 +31,7 @@ import { requestMenu } from '@/api/ADempiere/security/index.ts'
 import { convertAction } from '@/utils/ADempiere/dictionary/menu'
 import { getCurrentClient, getCurrentOrganization, getCurrentRole } from '@/utils/ADempiere/auth'
 import { isEmptyValue, recursiveTreeSearch } from '@/utils/ADempiere'
-import { NOTICE_ID } from '@/utils/ADempiere/dictionary/dashboard'
+import { NOTICE_WINDOW_ID } from '@/utils/ADempiere/dictionary/dashboard'
 /**
  * Get Menu from server
  * @author Elsio Sanchez <elsiosanches@gmail.com>
@@ -267,7 +267,7 @@ function hidenStaticRoutes({ dynamicRoutes, staticRoutes, permiseRole }) {
 function validateShow(dynamicRoutes) {
   const noticeShow = recursiveTreeSearch({
     treeData: dynamicRoutes,
-    attributeValue: 'window_' + NOTICE_ID,
+    attributeValue: 'window_' + NOTICE_WINDOW_ID,
     attributeName: 'meta',
     secondAttribute: 'containerKey',
     attributeChilds: 'children'
