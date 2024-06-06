@@ -16,6 +16,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+export const NOTICE_WINDOW_ID = 193
+
 export const UNSUPPORTED_DASHBOARDS = [
   'favourites',
   'performance',

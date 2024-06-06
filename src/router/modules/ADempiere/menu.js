@@ -23,6 +23,7 @@ import Layout from '@/layout'
 
 // Constants
 import staticRoutes from '@/router/modules/ADempiere/staticRoutes.js'
+import { NOTICE_WINDOW_ID } from '@/utils/ADempiere/dictionary/dashboard'
 
 // API Request Methods
 import { requestMenu } from '@/api/ADempiere/security/index.ts'
@@ -30,7 +31,7 @@ import { requestMenu } from '@/api/ADempiere/security/index.ts'
 // Utils and Helper Methods
 import { convertAction } from '@/utils/ADempiere/dictionary/menu'
 import { getCurrentClient, getCurrentOrganization, getCurrentRole } from '@/utils/ADempiere/auth'
-import { isEmptyValue } from '@/utils/ADempiere'
+import { isEmptyValue, recursiveTreeSearch } from '@/utils/ADempiere'
 
 /**
  * Get Menu from server
@@ -103,6 +104,9 @@ export function loadMainMenu({
       })
       const menuRoutes = permiseStactiRoutes
         .concat(asyncRoutesMap)
+
+      // hidden/show dashboards
+      validateShow(asyncRoutesMap)
 
       resolve(menuRoutes)
     }).catch(error => {
@@ -260,5 +264,23 @@ function hidenStaticRoutes({ dynamicRoutes, staticRoutes, permiseRole }) {
     return {
       ...route
     }
+  })
+}
+
+function validateShow(dynamicRoutes) {
+  const isNoticeWindowAccess = recursiveTreeSearch({
+    treeData: dynamicRoutes,
+    attributeValue: 'window_' + NOTICE_WINDOW_ID,
+    attributeName: 'meta',
+    secondAttribute: 'containerKey',
+    attributeChilds: 'children'
+  })
+  let dashboardsAccess = ['BC', 'LC', 'notices']
+  if (isEmptyValue(isNoticeWindowAccess)) {
+    dashboardsAccess = dashboardsAccess.filter(item => item !== 'notices')
+  }
+  store.dispatch('settings/changeSetting', {
+    key: 'panelRight',
+    value: dashboardsAccess
   })
 }
