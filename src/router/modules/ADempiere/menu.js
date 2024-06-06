@@ -23,6 +23,7 @@ import Layout from '@/layout'
 
 // Constants
 import staticRoutes from '@/router/modules/ADempiere/staticRoutes.js'
+import { NOTICE_WINDOW_ID } from '@/utils/ADempiere/dictionary/dashboard'
 
 // API Request Methods
 import { requestMenu } from '@/api/ADempiere/security/index.ts'
@@ -31,7 +32,7 @@ import { requestMenu } from '@/api/ADempiere/security/index.ts'
 import { convertAction } from '@/utils/ADempiere/dictionary/menu'
 import { getCurrentClient, getCurrentOrganization, getCurrentRole } from '@/utils/ADempiere/auth'
 import { isEmptyValue, recursiveTreeSearch } from '@/utils/ADempiere'
-import { NOTICE_WINDOW_ID } from '@/utils/ADempiere/dictionary/dashboard'
+
 /**
  * Get Menu from server
  * @author Elsio Sanchez <elsiosanches@gmail.com>
@@ -103,6 +104,9 @@ export function loadMainMenu({
       })
       const menuRoutes = permiseStactiRoutes
         .concat(asyncRoutesMap)
+
+      // hidden/show dashboards
+      validateShow(dynamicRoutes)
 
       resolve(menuRoutes)
     }).catch(error => {
@@ -234,7 +238,6 @@ function getRouteFromMenuItem({ menu, clientId, roleId, organizationId }) {
  * @returns {object} routes with hidden/show
  */
 function hidenStaticRoutes({ dynamicRoutes, staticRoutes, permiseRole }) {
-  validateShow(dynamicRoutes)
   if (!permiseRole) {
     return staticRoutes
   }
@@ -265,19 +268,19 @@ function hidenStaticRoutes({ dynamicRoutes, staticRoutes, permiseRole }) {
 }
 
 function validateShow(dynamicRoutes) {
-  const noticeShow = recursiveTreeSearch({
+  const isNoticeWindowAccess = recursiveTreeSearch({
     treeData: dynamicRoutes,
     attributeValue: 'window_' + NOTICE_WINDOW_ID,
     attributeName: 'meta',
     secondAttribute: 'containerKey',
     attributeChilds: 'children'
   })
-  let valueObjt = ['BC', 'LC', 'notices']
-  if (isEmptyValue(noticeShow)) {
-    valueObjt = valueObjt.filter(item => item !== 'notices')
+  let dashboardsAccess = ['BC', 'LC', 'notices']
+  if (isEmptyValue(isNoticeWindowAccess)) {
+    dashboardsAccess = dashboardsAccess.filter(item => item !== 'notices')
   }
   store.dispatch('settings/changeSetting', {
     key: 'panelRight',
-    value: valueObjt
+    value: dashboardsAccess
   })
 }
