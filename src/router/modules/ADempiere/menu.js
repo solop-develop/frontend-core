@@ -106,7 +106,7 @@ export function loadMainMenu({
         .concat(asyncRoutesMap)
 
       // hidden/show dashboards
-      validateShow(dynamicRoutes)
+      validateShow(asyncRoutesMap)
 
       resolve(menuRoutes)
     }).catch(error => {
