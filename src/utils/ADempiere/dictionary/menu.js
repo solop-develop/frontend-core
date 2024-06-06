@@ -100,8 +100,8 @@ export function getReferenceByMenu(menu) {
       reference_uuid = menu.process.uuid
       break
     case 'S':
-      reference_id = menu.browse.id
-      reference_uuid = menu.browse.uuid
+      reference_id = menu.browser.id
+      reference_uuid = menu.browser.uuid
       break
     case 'W':
       reference_id = menu.window.id
