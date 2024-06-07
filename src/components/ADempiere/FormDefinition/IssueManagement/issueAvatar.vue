@@ -25,7 +25,7 @@
 
     <el-image
       v-else
-      :src="avatarSrc"
+      :src="imageURL"
       fit="contain"
       style="
         width: 20px;
@@ -48,9 +48,12 @@
 import {
   defineComponent, computed, onMounted, ref
 } from '@vue/composition-api'
+import store from '@/store'
 
 // Utils and Helper Methods
-import { getImagePath } from '@/utils/ADempiere/resource.js'
+import { pathImageWindows } from '@/utils/ADempiere/resource.js'
+// Constants
+import { COLUMN_NAME, TABLE_NAME_USER } from '@/utils/ADempiere/constants/resoucer.ts'
 
 export default defineComponent({
   name: 'IssueAvatar',
@@ -69,29 +72,28 @@ export default defineComponent({
       return require('@/image/ADempiere/avatar/no-avatar.png')
     })
 
-    function loadImage() {
-      if (props.user.avatar) {
-        getImagePath({
-          file: props.user.avatar,
-          width: 20,
-          height: 20,
-          operation: 'resize'
-        })
-          .then(response => {
-            avatarSrc.value = response.href
-          })
-      }
-    }
+    const clientId = computed(() => {
+      return store.getters.getSessionContextClientId
+    })
+
+    const imageURL = computed(() => {
+      return pathImageWindows({
+        clientId: clientId.value,
+        tableName: TABLE_NAME_USER,
+        recordId: props.user.id,
+        columnName: COLUMN_NAME,
+        resourceName: `${COLUMN_NAME}.png`
+      })
+    })
 
     onMounted(() => {
       avatarSrc.value = imageDefault.value
-      // loadImage()
     })
 
     return {
       avatarSrc,
-      // Methods
-      loadImage
+      clientId,
+      imageURL
     }
   }
 })
