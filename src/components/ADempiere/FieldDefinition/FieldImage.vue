@@ -303,9 +303,7 @@ export default {
   },
 
   mounted() {
-    if (!isEmptyValue(this.displayedValue) && isEmptyValue(this.imageSourceSmall) && !this.isLoadImage) {
-      this.valideImage(this.displayedValue)
-    }
+    this.valideImage()
   },
   updated() {
     if (!isEmptyValue(this.displayedValue) && isEmptyValue(this.imageSourceSmall) && !this.isLoadImage) {
