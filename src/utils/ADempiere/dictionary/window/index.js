@@ -1038,15 +1038,17 @@ export const openFormAssociated = {
   icon: 'form',
   actionName: 'openFormAssociated',
   openFormAssociated: function({ parentUuid, containerUuid, uuid, formId, formUuid }) {
-    if (isEmptyValue(formId) || formId <= 0) {
+    if (isEmptyValue(formId) || isEmptyValue(formUuid)) {
       const process = store.getters.getStoredProcessFromTab({
         windowUuid: parentUuid,
         tabUuid: containerUuid,
         processUuid: uuid
       })
-      formId = process.form.id
+      if (!isEmptyValue(process)) {
+        formId = process.form_id || process.form.id
+        formUuid = process.form.uuid
+      }
     }
-
     // set record id from window
     const storedTab = store.getters.getStoredTab(parentUuid, containerUuid)
     const { keyColumn } = storedTab
@@ -1077,7 +1079,6 @@ export const openFormAssociated = {
       },
       isShowMessage: false
     })
-
     if (!inMenu) {
       router.push({
         name: 'Form',

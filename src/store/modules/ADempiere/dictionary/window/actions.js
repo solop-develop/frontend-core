@@ -254,7 +254,7 @@ export default {
           defaultAction = {
             ...openBrowserAssociated
           }
-        } else if (!isEmptyValue(process.form_id) && process.form_id > 0) {
+        } else if ((!isEmptyValue(process.form_id) && process.form_id > 0) || (!isEmptyValue(process.form) && !isEmptyValue(process.form.id))) {
           defaultAction = {
             ...openFormAssociated
           }
