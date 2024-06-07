@@ -1,15 +1,11 @@
 <template>
   <el-card style="margin-bottom: 5px; padding: 0px;">
-    <!-- <div slot="header" class="clearfix">
-      <span>{{ $t('profile.aboutMe') }}</span>
-    </div> -->
-
     <div class="user-profile">
       <el-row>
         <el-col :span="12">
           <div class="box-center">
             <pan-thumb
-              :image="avatarResize"
+              :image="imageUrl"
               :hoverable="true"
             >
               {{ currentRole.name }}
@@ -41,17 +37,14 @@
 import { defineComponent, computed, ref } from '@vue/composition-api'
 
 import store from '@/store'
-
 // Components and Mixins
 import PanThumb from '@/components/PanThumb'
 
 // Constants
-import { config } from '@/utils/ADempiere/config'
+import { COLUMN_NAME, TABLE_NAME_USER } from '@/utils/ADempiere/constants/resoucer.ts'
 
-// Utils and Helper Methods
-import { getResourcePath } from '@/utils/ADempiere/resource'
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-// import { getImagePath } from '@/utils/ADempiere/resource.js'
+// // Utils and Helper Methods
+import { pathImageWindows } from '@/utils/ADempiere/resource.js'
 
 export default defineComponent({
   components: {
@@ -91,37 +84,21 @@ export default defineComponent({
       return store.getters['user/getUserAvatar']
     })
 
-    avatarResize.value = require('@/image/ADempiere/avatar/no-avatar.png')
+    const clientId = computed(() => {
+      return store.getters.getSessionContextClientId
+    })
 
-    async function loadImage() {
-      // const { image } = userInfo.value
-      getResourcePath({
-        clientId: store.getters.getSessionContextClientId,
-        containerId: 108,
-        containerType: 'resource',
-        columnName: 'Logo_ID',
+    const imageUrl = computed(() => {
+      return pathImageWindows({
+        clientId: clientId.value,
+        tableName: TABLE_NAME_USER,
         recordId: userInfo.value.id,
-        tableName: 'AD_User'
+        columnName: COLUMN_NAME,
+        resourceName: `${COLUMN_NAME}.png`
       })
-        .then(response => {
-          avatarResize.value = config.adempiere.resource.url + response
-          if (isEmptyValue(response)) {
-            avatarResize.value = userAvatar.value
-            return
-          }
-        })
-      // if (userAvatar.value) {
-      //   // const blobImage = await getImagePath({
-      //   //   file: image,
-      //   //   width: 200,
-      //   //   height: 200
-      //   // })
-      //   // avatarResize.value = blobImage.href
-      //   avatarResize.value = userAvatar.value
-      // }
-    }
+    })
 
-    loadImage()
+    avatarResize.value = require('@/image/ADempiere/avatar/no-avatar.png')
 
     return {
       // Ref
@@ -130,10 +107,9 @@ export default defineComponent({
       // Computed
       currentRole,
       rolesList,
+      clientId,
       userInfo,
-      // Methods
-      // getImagePath,
-      loadImage
+      imageUrl
     }
   }
 })

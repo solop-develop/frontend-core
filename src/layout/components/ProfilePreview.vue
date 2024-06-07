@@ -4,23 +4,10 @@
       <el-col :span="24" style="text-align: center;">
         <el-image
           :src="imageURL"
+          crossorigin="anonymous"
           fit="scale-down"
           class="circle-image"
         />
-        <!-- <br>
-        <el-button round style="margin-top: 3%;" @click="handleClick">
-          <b>
-            {{ userName }}
-          </b>
-        </el-button> -->
-        <!-- <el-button
-          round
-          style="margin-top: 3%;"
-        >
-          <b>
-            {{ currentRole.client.name }}
-          </b>
-        </el-button> -->
       </el-col>
     </el-row>
     <roles-navbar />
@@ -36,13 +23,11 @@ import store from '@/store'
 // Components and Mixins
 import RolesNavbar from '@/views/profile/components/RolesNavbar'
 
-// Constants
-import { config } from '@/utils/ADempiere/config'
-
 // Utils and Helper Methods
-// import { getImagePath } from '@/utils/ADempiere/resource.js'
-// import { requestListResources } from '@/api/ADempiere/file-management/resource-reference.ts'
-import { getResourcePath } from '@/utils/ADempiere/resource'
+import { pathImageWindows } from '@/utils/ADempiere/resource'
+
+// Constants
+import { COLUMN_NAME, TABLE_NAME_USER } from '@/utils/ADempiere/constants/resoucer.ts'
 
 export default defineComponent({
   name: 'ProfilePreview',
@@ -72,8 +57,7 @@ export default defineComponent({
     }
   },
   setup() {
-    // Ref
-    const imageURL = ref('')
+    const isLoaded = ref(false)
     // Computed
     const userInfo = computed(() => {
       return store.getters['user/userInfo']
@@ -96,27 +80,23 @@ export default defineComponent({
       return store.getters['user/getUserAvatar']
     })
 
+    const clientId = computed(() => {
+      return store.getters.getSessionContextClientId
+    })
+
+    const imageURL = computed(() => {
+      return pathImageWindows({
+        clientId: clientId.value,
+        tableName: TABLE_NAME_USER,
+        recordId: userInfo.value.id,
+        columnName: COLUMN_NAME,
+        resourceName: `${COLUMN_NAME}.png`
+      })
+    })
+
     const avatarResize = ref('')
 
     avatarResize.value = require('@/image/ADempiere/avatar/no-avatar.png')
-
-    imageURL.value = require('@/image/ADempiere/avatar/no-avatar.png')
-
-    async function loadImage() {
-      getResourcePath({
-        clientId: store.getters.getSessionContextClientId,
-        containerId: 108,
-        containerType: 'resource',
-        columnName: 'Logo_ID',
-        recordId: userInfo.value.id,
-        tableName: 'AD_User'
-      })
-        .then(response => {
-          imageURL.value = config.adempiere.resource.url + response
-          return config.adempiere.resource.url + response
-        })
-      return avatarResize.value
-    }
 
     function handleClick() {
       router.push({
@@ -124,20 +104,20 @@ export default defineComponent({
       }, () => {})
     }
 
-    loadImage()
-
     return {
       // Ref
-      imageURL,
+      isLoaded,
       avatarResize,
       // Computed
       userInfo,
+      clientId,
+      imageURL,
       userName,
       userAvatar,
       currentRole,
       // Methods
       handleClick,
-      loadImage
+      pathImageWindows
     }
   }
 })

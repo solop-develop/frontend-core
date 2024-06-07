@@ -25,6 +25,7 @@
     <el-col v-if="isShowImage" :span="24" :offset="0" class="image-with-file">
       <el-card :body-style="{ padding: '0px', height: '-webkit-fill-available !important' }">
         <el-image
+          v-if="!isLoadImageUpload"
           class="image-file"
           :alt="altImage"
           :src="pathImage"
@@ -47,6 +48,19 @@
             </template>
           </el-skeleton>
         </el-image>
+        <el-skeleton
+          v-else
+          :loading="true"
+          animated
+        >
+          <template slot="template">
+            <el-skeleton-item
+              variant="image"
+              class="image-file"
+              style="text-align: center ; height: 100px"
+            />
+          </template>
+        </el-skeleton>
 
         <div class="image-footer">
           <file-info

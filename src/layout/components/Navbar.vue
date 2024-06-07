@@ -49,7 +49,7 @@
           <div @click="zoomInProfile()">
             <profile-preview
               :user="user"
-              :avatar="avatarResize"
+              :avatar="imageUrl"
             />
           </div>
           <el-button type="text" style="float: left;" @click="cacheReset()"> {{ $t('navbar.resetCache') }}</el-button>
@@ -57,8 +57,8 @@
         </div>
         <el-button slot="reference" type="text" style="padding-top: 5px;padding-right: 10px;">
           <el-image
-            v-if="!isEmptyValue(avatarResize)"
-            :src="avatarResize"
+            v-if="!isEmptyValue(imageUrl)"
+            :src="imageUrl"
             fit="contain"
             style="
               width: 40px;
@@ -90,9 +90,10 @@ import Search from '@/components/HeaderSearch'
 import HeaderNotification from '@/components/ADempiere/HeaderNotification'
 import Driver from 'driver.js' // import driver.js
 import 'driver.js/dist/driver.min.css' // import driver.js css
-import { getResourcePath } from '@/utils/ADempiere/resource'
 // Constants
-import { config } from '@/utils/ADempiere/config'
+import { COLUMN_NAME, TABLE_NAME_USER } from '@/utils/ADempiere/constants/resoucer.ts'
+// Utils and Helper Methods
+import { pathImageWindows } from '@/utils/ADempiere/resource.js'
 
 export default {
   components: {
@@ -118,6 +119,15 @@ export default {
   computed: {
     userAvatar() {
       return this.$store.getters['user/getUserAvatar']
+    },
+    imageUrl() {
+      return pathImageWindows({
+        clientId: this.$store.getters.getSessionContextClientId,
+        tableName: TABLE_NAME_USER,
+        recordId: this.userInfo.id,
+        columnName: COLUMN_NAME,
+        resourceName: `${COLUMN_NAME}.png`
+      })
     },
     isMobile() {
       return this.$store.state.app.device === 'mobile'
@@ -195,24 +205,9 @@ export default {
     }
   },
   mounted() {
-    this.loadImage()
     this.driver = new Driver()
   },
   methods: {
-    async loadImage() {
-      getResourcePath({
-        clientId: this.$store.getters.getSessionContextClientId,
-        containerId: 108,
-        containerType: 'resource',
-        columnName: 'Logo_ID',
-        recordId: this.userInfo.id,
-        tableName: 'AD_User'
-      })
-        .then(response => {
-          this.avatarResize = config.adempiere.resource.url + response
-          return config.adempiere.resource.url + response
-        })
-    },
     zoomInProfile() {
       this.$router.push({
         path: '/profile/index'
