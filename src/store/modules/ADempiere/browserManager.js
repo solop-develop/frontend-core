@@ -225,7 +225,7 @@ const browserControl = {
           type: 'info'
         })
         // page size
-        const storedSize = getters.getTabPageSize({
+        const storedSize = getters.getBrowserPageSize({
           containerUuid
         })
         if (isEmptyValue(pageSize) && !isEmptyValue(storedSize)) {
