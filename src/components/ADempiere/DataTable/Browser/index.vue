@@ -25,7 +25,7 @@
     :onLoad="adjustSize()"
     :onresize="setTableHeight()"
   >
-    <!-- <el-row>
+    <el-row>
       <el-col :span="24">
         <filter-fields
           :container-uuid="panelMetadata.uuid"
@@ -38,7 +38,7 @@
           :container-manager="containerManager"
         />
       </el-col>
-    </el-row> -->
+    </el-row>
 
     <el-table
       id="multipleTable"
@@ -550,7 +550,7 @@ export default defineComponent({
   }
   .el-table__body-wrapper {
     overflow: auto;
-    height: calc(100vh - 280px);
+    height: calc(100vh - 310px);
   }
 }
 </style>
