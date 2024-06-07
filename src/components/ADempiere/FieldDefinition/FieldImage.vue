@@ -22,12 +22,13 @@
     class="custom-field-image"
     @submit.prevent="notSubmitForm"
   >
-    <el-col v-if="!isEmptyValue(value) && !isEmptyValue(imageSourceSmall)" :span="24" :offset="0" class="image-with-file">
+    <el-col v-if="isShowImage" :span="24" :offset="0" class="image-with-file">
       <el-card :body-style="{ padding: '0px', height: '-webkit-fill-available !important' }">
         <el-image
+          v-if="!isLoadImageUpload"
           class="image-file"
           :alt="altImage"
-          :src="imageSourceSmall"
+          :src="pathImage"
           lazy
           fit="contain"
           style="text-align: center ; height: 100px"
@@ -47,6 +48,19 @@
             </template>
           </el-skeleton>
         </el-image>
+        <el-skeleton
+          v-else
+          :loading="true"
+          animated
+        >
+          <template slot="template">
+            <el-skeleton-item
+              variant="image"
+              class="image-file"
+              style="text-align: center ; height: 100px"
+            />
+          </template>
+        </el-skeleton>
 
         <div class="image-footer">
           <file-info
@@ -84,6 +98,7 @@
 
           <el-upload
             ref="replaceFileComponent"
+            v-bind="commonsProperties"
             :action="endPointUploadResource"
             :data="additionalData"
             :headers="additionalHeaders"
@@ -136,7 +151,6 @@
       :before-upload="isValidUploadHandler"
       :on-success="loadedSucess"
     >
-      <!-- <i v-else class="el-icon-plus icon-image-upload" /> -->
       <svg-icon icon-class="cloud_upload" class="icon-image-upload" style="font-size: 45px;" />
     </el-upload>
   </form>
@@ -171,7 +185,7 @@ import {
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { getToken } from '@/utils/auth'
-// import { getImagePath } from '@/utils/ADempiere/resource'
+import { pathImageWindows } from '@/utils/ADempiere/resource'
 import { showMessage } from '@/utils/ADempiere/notification'
 
 export default {
@@ -205,6 +219,7 @@ export default {
       isLoadImage: false,
       infoImage: {},
       isLoadImageUpload: false,
+      isShowImage: false,
       valuesImage: [{
         identifier: 'undefined',
         value: '',
@@ -253,6 +268,27 @@ export default {
       if (!isEmptyValue(this.currentRecord[table_name + '_ID'])) return this.currentRecord[table_name + '_ID']
       if (!isEmptyValue(key_columns)) return this.currentRecord[key_columns[0]]
       return 1
+    },
+    clientId() {
+      return this.$store.getters.getSessionContextClientId
+    },
+    tableNameImage() {
+      return this.currentTab.table_name.toLowerCase()
+    },
+    columnNameImage() {
+      return this.metadata.columnName.toLowerCase()
+    },
+    nameImage() {
+      return this.columnNameImage + '.png'
+    },
+    pathImage() {
+      return pathImageWindows({
+        clientId: this.clientId,
+        tableName: this.tableNameImage,
+        recordId: this.recordId,
+        columnName: this.columnNameImage,
+        resourceName: this.nameImage
+      })
     }
   },
 
@@ -261,42 +297,54 @@ export default {
       if (isEmptyValue(newValue)) {
         this.imageSourceSmall = undefined
       } else {
-        this.loadImage(this.displayedValue)
+        this.valideImage(this.displayedValue)
       }
     }
   },
 
   mounted() {
-    if (!isEmptyValue(this.displayedValue) && isEmptyValue(this.imageSourceSmall) && !this.isLoadImage) {
-      this.loadImage(this.displayedValue)
-    }
+    this.valideImage()
   },
   updated() {
     if (!isEmptyValue(this.displayedValue) && isEmptyValue(this.imageSourceSmall) && !this.isLoadImage) {
-      this.loadImage(this.displayedValue)
+      this.valideImage(this.displayedValue)
     }
+    this.valideImage()
   },
 
   methods: {
-    async loadImage(file) {
-      this.isLoadImage = true
-      if (file) {
-        const fileName = await this.getListResources()
-        const getUrl = config.adempiere.resource.url + fileName
-        this.imageSourceSmall = getUrl
-        this.isLoadImage = false
-      }
-      return ''
+    valideImage() {
+      fetch(this.pathImage)
+        .then(response => {
+          this.isShowImage = response.status === 200
+        })
     },
     isValidUploadHandler(file) {
       return new Promise((resolve, reject) => {
+        const isLt2M = file.size / 1024 / 1024 < 2
+        if (file.type !== 'image/png') {
+          showMessage({
+            message: lang.t('component.attachment.fieldImage.errorFormat'),
+            type: 'error'
+          })
+          reject(false)
+          return
+        } else if (!isLt2M) {
+          showMessage({
+            message: lang.t('component.attachment.fieldImage.errorSize'),
+            type: 'error'
+          })
+          reject(false)
+          return
+        }
         if (this.isDisabled) {
           reject(false)
           return
         }
+        this.presignedUrl({ file })
         // TODO: Replace and separate requests in different functions
-        if (!this.isEmptyValue(this.value)) this.presignedUrl({ file })
-        this.handleReference(file)
+        // if (!this.isEmptyValue(this.value)) this.presignedUrl({ file })
+        // this.handleReference(file)
       })
     },
     handleChange(file, fileList) {
@@ -370,18 +418,14 @@ export default {
      */
     presignedUrl({ file, reference }) {
       return new Promise((resolve, reject) => {
-        const clientId = this.$store.getters.getSessionContextClientId
-        const { action_id } = this.$route.meta
-        const { table_name } = this.currentTab
         this.isLoadImageUpload = true
         requestPresignedUrl({
-          clientId: clientId,
-          containerId: action_id,
-          containerType: 'resource',
-          // columnName: this.metadata.columnName,
-          fileName: this.metadata.columnName.toLowerCase().replace('_', ''),
+          clientId: this.clientId,
+          containerType: 'window',
+          columnName: this.columnNameImage,
+          fileName: this.nameImage,
           recordId: this.recordId,
-          tableName: table_name
+          tableName: this.tableNameImage
         })
           .then(responseUrl => {
             const { url, file_name } = responseUrl
@@ -390,11 +434,8 @@ export default {
               body: file
             }).then(() => {
               setTimeout(() => {
-                if (this.isEmptyValue(this.value)) {
-                  this.value = reference.resource_id
-                }
-                this.loadImage(file)
-                this.preHandleChange(this.value)
+                this.imageSourceSmall = this.pathImage
+                this.valideImage(file)
                 this.displayedValue = file_name
               }, 1500)
               resolve(true)

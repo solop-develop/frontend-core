@@ -51,16 +51,14 @@
 
 <script>
 import { defineComponent, computed, ref } from '@vue/composition-api'
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-
 import router from '@/router'
 import store from '@/store'
 
 // Utils and Helper Methods
-import { getResourcePath } from '@/utils/ADempiere/resource'
+import { pathImageWindows } from '@/utils/ADempiere/resource'
 
 // Constants
-import { config } from '@/utils/ADempiere/config'
+import { COLUMN_NAME, TABLE_NAME_CLIENT } from '@/utils/ADempiere/constants/resoucer.ts'
 
 export default defineComponent({
   name: 'SidebarLogo',
@@ -92,27 +90,30 @@ export default defineComponent({
       return store.getters['user/getOrganization']
     })
 
+    const clientId = computed(() => {
+      return store.getters.getSessionContextClientId
+    })
+
+    const imageUrl = computed(() => {
+      return pathImageWindows({
+        clientId: clientId.value,
+        tableName: TABLE_NAME_CLIENT,
+        recordId: clientId.value,
+        columnName: COLUMN_NAME,
+        resourceName: `${COLUMN_NAME}.png`
+      })
+    })
+
     // Methods
     async function loadImage() {
-      const { client } = getRole.value
-      if (client.logo) {
-        getResourcePath({
-          clientId: client.id,
-          containerId: '109',
-          containerType: 'resource',
-          columnName: 'Logo_ID',
-          recordId: client.id,
-          tableName: 'AD_ClientInfo',
-          resourceName: client.logo
+      clientLogo.value = 'https://avatars1.githubusercontent.com/u/1263359?s=200&v=4'
+      fetch(imageUrl.value)
+        .then(response => {
+          if (response.status === 200) {
+            clientLogo.value = imageUrl.value
+            return
+          }
         })
-          .then(response => {
-            clientLogo.value = config.adempiere.resource.url + response
-            if (isEmptyValue(response)) {
-              clientLogo.value = 'https://avatars1.githubusercontent.com/u/1263359?s=200&v=4'
-              return
-            }
-          })
-      }
     }
 
     function profile() {
@@ -133,6 +134,8 @@ export default defineComponent({
       // Ref
       title,
       clientLogo,
+      imageUrl,
+      clientId,
       // Computed
       getRole,
       systemName,

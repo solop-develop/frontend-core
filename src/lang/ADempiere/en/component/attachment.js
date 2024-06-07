@@ -43,6 +43,10 @@ const attachment = {
       day: 'Day',
       days: 'Days'
     }
+  },
+  fieldImage: {
+    errorFormat: 'Image must be in PNG format!',
+    errorSize: 'The image exceeds 2MB!'
   }
 }
 

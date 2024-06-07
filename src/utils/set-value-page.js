@@ -1,9 +1,9 @@
 import store from '@/store'
 // Constants
-import { config } from '@/utils/ADempiere/config'
+import { COLUMN_NAME, TABLE_NAME_CLIENT } from '@/utils/ADempiere/constants/resoucer.ts'
 // Utils and Helper Methods
 import getPageTitle from '@/utils/get-page-title'
-import { getResourcePath } from '@/utils/ADempiere/resource'
+import { pathImageWindows } from '@/utils/ADempiere/resource'
 import { isEmptyValue } from '@/utils/ADempiere'
 
 function getPageFavicon({
@@ -59,18 +59,14 @@ export function setSessionValues({
   })
 
   if (isEmptyValue(client)) return
-  getResourcePath({
-    clientId: client.id,
-    containerId: '109',
-    containerType: 'resource',
-    columnName: 'Logo_ID',
-    recordId: client.id,
-    tableName: 'AD_ClientInfo'
-  })
-    .then(response => {
-      if (isEmptyValue(response)) return
-      // Set Page Favicon
-      const link = getPageFavicon({ logo: config.adempiere.resource.url + response })
-      document.head.appendChild(link)
+  const link = getPageFavicon({
+    logo: pathImageWindows({
+      clientId: client.id,
+      tableName: TABLE_NAME_CLIENT,
+      recordId: client.id,
+      columnName: COLUMN_NAME,
+      resourceName: `${COLUMN_NAME}.png`
     })
+  })
+  document.head.appendChild(link)
 }

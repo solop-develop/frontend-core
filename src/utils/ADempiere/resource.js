@@ -433,3 +433,14 @@ export function getResourcePath({
       })
   })
 }
+
+export function pathImageWindows({
+  clientId,
+  tableName,
+  recordId,
+  columnName,
+  resourceName
+}) {
+  const url = config.adempiere.resource.url
+  return `${url}${clientId}/client/window/${tableName}/${recordId}/${columnName}/${resourceName}`
+}
