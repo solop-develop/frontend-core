@@ -281,10 +281,14 @@ export default defineComponent({
     // Current Record ID
     const currentRecordId = computed(() => {
       if (currentTab.value) {
-        return store.getters.getIdOfContainer({
-          containerUuid: currentTab.value.containerUuid,
-          tableName: currentTab.value.table_name
+        const { table } = currentTab.value
+        const { key_columns, table_name } = table
+        const currentRecord = store.getters.getTabCurrentRow({
+          containerUuid: currentTab.value.containerUuid
         })
+        if (!isEmptyValue(currentRecord[table_name + '_ID'])) return currentRecord[table_name + '_ID']
+        if (!isEmptyValue(key_columns)) return currentRecord[key_columns[0]]
+        return 1
       }
       return ''
     })

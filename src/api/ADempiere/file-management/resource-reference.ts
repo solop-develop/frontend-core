@@ -30,31 +30,30 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 /**
  * Presigned Url
- * @param {string} file_name
+ * @param {Object} options
  */
-export function requestPresignedUrl({
-  containerType,
-  containerId,
-  columnName,
-  clientId,
-  tableName,
-  recordId,
-  fileName
-}) {
-  let baseURL = config.adempiere.resource.url
-  if (baseURL.endsWith('/')) {
-    baseURL = config.adempiere.resource.url.substring(0, baseURL.length - 1)
+export function requestPresignedUrl(options) {
+  const { containerType, containerId, columnName, clientId, tableName, recordId, fileName } = options
+  const baseURL = config.adempiere.resource.url.replace(/\/$/, '') // remove trailing slash
+  const path = [baseURL, 'presigned-url']
+
+  // Add parameters to the route only if they exist
+  if (clientId) path.push(clientId)
+  if (containerId) path.push(containerId)
+  if (fileName) path.push(fileName)
+
+  const params = {
+    table_name: tableName,
+    record_id: recordId,
+    column_name: columnName,
+    container_type: containerType
   }
+
   return request({
-    url: `${baseURL}/presigned-url/${clientId}/${containerId}/${fileName}`,
+    url: path.join('/'),
     method: 'get',
     isWithoutAuthorization: true,
-    params: {
-      table_name: tableName,
-      record_id: recordId,
-      column_name: columnName,
-      container_type: containerType
-    }
+    params
   })
 }
 
