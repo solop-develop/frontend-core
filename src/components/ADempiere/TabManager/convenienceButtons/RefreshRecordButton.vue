@@ -101,8 +101,7 @@ export default defineComponent({
       if (tabAttributes.value.isShowedTableRecords) {
         refreshRecords.refreshRecords({
           parentUuid: props.parentUuid,
-          containerUuid: props.containerUuid,
-          pageSize: store.getters.getTabPageSize({ containerUuid: props.containerUuid })
+          containerUuid: props.containerUuid
         })
         return
       }
