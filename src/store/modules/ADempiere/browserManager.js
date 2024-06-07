@@ -224,7 +224,13 @@ const browserControl = {
           message: language.t('notifications.searching'),
           type: 'info'
         })
-
+        // page size
+        const storedSize = getters.getTabPageSize({
+          containerUuid
+        })
+        if (isEmptyValue(pageSize) && !isEmptyValue(storedSize)) {
+          pageSize = storedSize
+        }
         if (isEmptyValue(pageNumber) || pageNumber < 1) {
           // refresh with same page
           const storedPage = getters.getBrowserPageNumber({

@@ -1259,15 +1259,11 @@ export const refreshRecords = {
   icon: 'el-icon-refresh',
   actionName: 'refreshRecords',
   refreshRecords: ({ parentUuid, containerUuid }) => {
-    const pageSize = store.getters.getTabPageSize({
-      containerUuid
-    })
     nprogress.start()
     // refresh records on current tab
     store.dispatch('getEntities', {
       parentUuid,
       containerUuid,
-      pageSize,
       filters: []
     })
       .finally(() => {
