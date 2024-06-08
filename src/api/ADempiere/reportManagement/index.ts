@@ -55,3 +55,55 @@ export function generateReportRequest({
     }
   })
 }
+
+// Get report output from parameters
+export function getReportOutputRequest({
+  processId,
+  processUuid,
+  tableName,
+  printFormatUuid,
+  reportViewUuid,
+  isSummary,
+  reportName,
+  reportType,
+  parametersList = [],
+  // query criteria
+  query,
+  whereClause,
+  orderByClause
+}) {
+  const filters = parametersList.map(parameter => {
+    return {
+      column_name: parameter.columnName,
+      value: parameter.value
+    }
+  })
+
+  return request({
+    url: '/user-interface/process/report-output',
+    method: 'get',
+    params: {
+      process_id: processId,
+      process_uuid: processUuid,
+      table_name: tableName,
+      // reference
+      print_format_uuid: printFormatUuid,
+      report_view_uuid: reportViewUuid,
+      is_summary: isSummary,
+      report_name: reportName,
+      report_type: reportType,
+      // DSL Query
+      filters,
+      criteria: filters,
+      // Custom Query
+      query,
+      where_clause: whereClause,
+      order_by_clause: orderByClause
+    }
+  })
+    .then(reportOutpuResponse => {
+      const { convertReportOutput } = require('@/utils/ADempiere/apiConverts/report.js')
+
+      return convertReportOutput(reportOutpuResponse)
+    })
+}

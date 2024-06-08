@@ -22,10 +22,7 @@ import router from '@/router'
 import language from '@/lang'
 
 // API Request Methods
-import {
-  requestGetReportOutput
-} from '@/api/ADempiere/report'
-import { generateReportRequest } from '@/api/ADempiere/reportManagement/index.ts'
+import { generateReportRequest, getReportOutputRequest } from '@/api/ADempiere/reportManagement/index.ts'
 import { listPrintFormatsRequest } from '@/api/ADempiere/reportManagement/printFormat.ts'
 import { listReportViewsRequest } from '@/api/ADempiere/reportManagement/reportView.ts'
 import { listDrillTablesRequest } from '@/api/ADempiere/reportManagement/drillTable.ts'
@@ -492,7 +489,7 @@ const reportManager = {
             containerUuid: uuid
           })
         }
-        requestGetReportOutput({
+        getReportOutputRequest({
           processUuid: uuid,
           parametersList,
           printFormatId,
