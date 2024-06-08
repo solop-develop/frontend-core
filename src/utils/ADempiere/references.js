@@ -370,6 +370,9 @@ export function getTableNameFromReference(columnName, displayTypeId) {
   }
   if ([ID.id, SEARCH.id, TABLE.id, TABLE_DIRECT.id].includes(displayTypeId)) {
     tableName = columnName.replaceAll(/(_ID_To|_ID)$/g, '')
+    if (columnName.endsWith('_Acct')) {
+      tableName = 'C_ElementValue'
+    }
   } else if (LIST.id === displayTypeId) {
     tableName = 'AD_Reference'
   } else if (LOCATION_ADDRESS.id === displayTypeId) {
