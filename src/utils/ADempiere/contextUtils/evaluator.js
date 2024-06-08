@@ -192,7 +192,11 @@ export class evaluator {
       firstEval = firstEval.replace(/['"]/g, '').trim() // strip ' and "
     }
     // Handling of ID compare (null => 0)
-    if (first.endsWith('_ID') && isEmptyValue(firstEval)) {
+    if (isEmptyValue(firstEval) &&
+      (firstEval.endsWith('_ID') || firstEval.endsWith('_ID_To') ||
+      firstEval === 'AD_Key' || firstEval === 'AD_Display' ||
+      firstEval.endsWith('atedBy') || firstEval.endsWith('_Acct'))
+    ) {
       // TODO: Evaluate with -1
       firstEval = '0'
     }
@@ -220,7 +224,10 @@ export class evaluator {
       secondEval = secondEval.replace(/['"]/g, '').trim() // strip ' and " for string values
     }
     if (isEmptyValue(secondEval) &&
-      (second.endsWith('_ID') || second.endsWith('ID_To') || second.endsWith('atedBy') || second.endsWith('_Acct'))) {
+      (second.endsWith('_ID') || second.endsWith('_ID_To') ||
+      second === 'AD_Key' || second === 'AD_Display' ||
+      second.endsWith('atedBy') || second.endsWith('_Acct'))
+    ) {
       // TODO: Evaluate with -1
       secondEval = '0'
     }

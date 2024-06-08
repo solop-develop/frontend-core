@@ -22,7 +22,11 @@ import store from '@/store'
 
 // Constants
 import { SPECIAL_ZERO_ID_TABLES } from '@/utils/ADempiere//constants/systemColumns'
-import { LIST, TABLE, TABLE_DIRECT } from '@/utils/ADempiere/references.js'
+import {
+  ACCOUNT_ELEMENT, IMAGE,
+  LOCATOR_WAREHOUSE, PRODUCT_ATTRIBUTE, RESOURCE_ASSIGNMENT,
+  LIST, SEARCH, TABLE, TABLE_DIRECT
+} from '@/utils/ADempiere/references.js'
 import { DISPLAY_COLUMN_PREFIX, IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
 import { OPERATION_PATTERN } from '@/utils/ADempiere/formatValue/numberFormat.js'
 
@@ -415,6 +419,7 @@ export function parsedValueComponent({
       break
 
     case 'FieldAccount':
+    case 'FieldImage':
     case 'FieldLocationAddress':
     case 'FieldProductAttribute':
     case 'FieldSearch':
@@ -425,10 +430,19 @@ export function parsedValueComponent({
       if (typeof value === 'boolean') {
         value = convertBooleanToString(value)
       }
-      // Table (18) or Table Direct (19)
-      if (TABLE_DIRECT.id === displayType || TABLE.id === displayType &&
-        (columnName.endsWith('_ID_To') || columnName.endsWith(IDENTIFIER_COLUMN_SUFFIX))) {
-        if (!isEmptyValue(value)) {
+      if (!isEmptyValue(value)) {
+        // Table (18) or Table Direct (19)
+        if (
+          TABLE_DIRECT.id === displayType || IMAGE.id || ACCOUNT_ELEMENT.id ||
+          LOCATOR_WAREHOUSE.id || PRODUCT_ATTRIBUTE.id || RESOURCE_ASSIGNMENT.id
+        ) {
+          value = Number(value)
+        } else if (
+          (TABLE.id === displayType || SEARCH.id) &&
+          (columnName.endsWith('_ID') || columnName.endsWith('_ID_To') ||
+          columnName === 'AD_Key' || columnName === 'AD_Display' ||
+          columnName.endsWith('atedBy') || columnName.endsWith('_Acct'))
+        ) {
           value = Number(value)
         }
       }
