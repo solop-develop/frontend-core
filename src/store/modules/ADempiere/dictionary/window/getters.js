@@ -17,7 +17,9 @@
  */
 
 // Constants
-import { ACTIVE, PROCESSED, PROCESSING } from '@/utils/ADempiere/constants/systemColumns'
+import {
+  ACTIVE, PROCESSED, PROCESSING, ORGANIZATION, WAREHOUSE
+} from '@/utils/ADempiere/constants/systemColumns'
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils.js'
 import { ID, YES_NO } from '@/utils/ADempiere/references'
 
@@ -216,7 +218,7 @@ export default {
       fieldsList = storedTab.fieldsList
     }
 
-    const { isParentTab, link_column_name, parent_column_name } = storedTab
+    const { isParentTab, link_column_name, parent_column_name, is_document } = storedTab
 
     const attributesDisplayColumn = []
     const attributesObject = {}
@@ -256,6 +258,10 @@ export default {
             parentUuid,
             columnName
           })
+        }
+
+        if (is_document && [ORGANIZATION, WAREHOUSE].includes(columnName)) {
+          // parsedDefaultValue = -1
         }
 
         attributesObject[columnName] = parsedDefaultValue

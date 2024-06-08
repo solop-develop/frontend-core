@@ -29,6 +29,7 @@ import {
   ACTIVE, CLIENT, DOCUMENT_ACTION,
   DOCUMENT_NO, DOCUMENT_STATUS, CURRENCY,
   PROCESSING, PROCESSED, UUID, VALUE, // READ_ONLY_FORM_COLUMNS
+  ORGANIZATION, WAREHOUSE,
   RECORD_ID,
   LOG_COLUMNS_NAME_LIST
 } from '@/utils/ADempiere/constants/systemColumns'
@@ -202,8 +203,11 @@ export function evaluateDefaultFieldShowed({
     return true
   }
 
-  const { isParentTab, link_column_name, parent_column_name } = store.getters.getStoredTab(parentUuid, containerUuid)
+  const { isParentTab, link_column_name, parent_column_name, is_document } = store.getters.getStoredTab(parentUuid, containerUuid)
   if (!isParentTab && (link_column_name === column_name || parent_column_name === column_name)) {
+    return true
+  }
+  if (is_document && [ORGANIZATION, WAREHOUSE].includes(column_name)) {
     return true
   }
 
