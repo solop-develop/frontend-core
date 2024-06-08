@@ -372,6 +372,10 @@ export function getTableNameFromReference(columnName, displayTypeId) {
     tableName = columnName.replaceAll(/(_ID_To|_ID)$/g, '')
     if (columnName.endsWith('_Acct')) {
       tableName = 'C_ElementValue'
+    } else if (columnName.endsWith('atedBy')) {
+      tableName = 'AD_User'
+    } else if (columnName === 'AD_Display' || columnName === 'AD_Key') {
+      tableName = 'AD_Column'
     }
   } else if (LIST.id === displayTypeId) {
     tableName = 'AD_Reference'
