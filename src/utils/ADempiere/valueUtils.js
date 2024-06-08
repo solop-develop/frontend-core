@@ -430,16 +430,19 @@ export function parsedValueComponent({
       if (typeof value === 'boolean') {
         value = convertBooleanToString(value)
       }
-      // Table (18) or Table Direct (19)
-      if (
-        (TABLE_DIRECT.id === displayType || TABLE.id === displayType ||
-        SEARCH.id || IMAGE.id || ACCOUNT_ELEMENT.id ||
-        LOCATOR_WAREHOUSE.id || PRODUCT_ATTRIBUTE.id || RESOURCE_ASSIGNMENT.id) &&
-        (columnName.endsWith('_ID') || columnName.endsWith('_ID_To') ||
-        columnName === 'AD_Key' || columnName === 'AD_Display' ||
-        columnName.endsWith('atedBy') || columnName.endsWith('_Acct'))
-      ) {
-        if (!isEmptyValue(value)) {
+      if (!isEmptyValue(value)) {
+        // Table (18) or Table Direct (19)
+        if (
+          TABLE_DIRECT.id === displayType || IMAGE.id || ACCOUNT_ELEMENT.id ||
+          LOCATOR_WAREHOUSE.id || PRODUCT_ATTRIBUTE.id || RESOURCE_ASSIGNMENT.id
+        ) {
+          value = Number(value)
+        } else if (
+          (TABLE.id === displayType || SEARCH.id) &&
+          (columnName.endsWith('_ID') || columnName.endsWith('_ID_To') ||
+          columnName === 'AD_Key' || columnName === 'AD_Display' ||
+          columnName.endsWith('atedBy') || columnName.endsWith('_Acct'))
+        ) {
           value = Number(value)
         }
       }
