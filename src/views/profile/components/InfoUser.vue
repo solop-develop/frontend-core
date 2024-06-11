@@ -87,6 +87,24 @@
             </el-tag>
           </el-col>
         </el-row>
+        <el-row style="margin-bottom: 2.5px;">
+          <el-col :span="12">
+            <p
+              class="label-system"
+            >
+              <svg-icon icon-class="dictionary" />
+              {{ $t('profile.systemInformation.srVersion') + ': ' }}
+            </p>
+          </el-col>
+          <el-col :span="12">
+            <el-tag>
+              <b>
+                <svg-icon icon-class="tag" />
+                {{ rsVersion.version }}
+              </b>
+            </el-tag>
+          </el-col>
+        </el-row>
         <!-- <el-row style="margin-bottom: 10px;">
           <el-col :span="12">
             <p
@@ -403,6 +421,8 @@ export default defineComponent({
       }
     })
 
+    const rsVersion = store.getters['user/getSrVersion']
+    console.log(store.getters['user/getSrVersion'])
     const vueVersion = config.server.vueVersion
 
     const notifications = computed(() => {
@@ -469,6 +489,7 @@ export default defineComponent({
       organization,
       currentRole,
       systemInfo,
+      rsVersion,
       vueVersion,
       warehouse,
       userInfo,

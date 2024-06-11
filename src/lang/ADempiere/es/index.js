@@ -236,7 +236,8 @@ export default {
       dateVersion: 'Fecha Versión',
       frontEndVersion: 'Versión del Front-End',
       proxyVersion: 'Versión del Proxy',
-      deploymentName: 'Nombre de Implementación'
+      deploymentName: 'Nombre de Implementación',
+      srVersion: 'Versión del Dictionary RS'
     }
   },
   window,

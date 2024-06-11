@@ -40,7 +40,8 @@ import {
 import {
   requestOrganizationsList,
   requestWarehousesList,
-  systemInfo
+  systemInfo,
+  systemInfoDictionaryRs
 } from '@/api/ADempiere/common/index.ts'
 
 // Utils and Helper Methods
@@ -76,7 +77,8 @@ const state = {
   sessionInfo: {},
   corporateBrandingImage: '',
   activityLogs: [],
-  systemInfo: {}
+  systemInfo: {},
+  srVersion: {}
 }
 
 const mutations = {
@@ -136,6 +138,9 @@ const mutations = {
   },
   setSystem(state, info) {
     state.systemInfo = info
+  },
+  setSystemRs(state, info) {
+    state.srVersion = info
   }
 }
 
@@ -206,6 +211,7 @@ const actions = {
             defaultContext
           } = sessionInfo
           dispatch('system')
+          dispatch('systemRs')
           commit('setIsSession', true)
           commit('setSessionInfo', {
             id,
@@ -736,6 +742,33 @@ const actions = {
           resolve({})
         })
     })
+  },
+  systemRs({ commit }) {
+    return new Promise(resolve => {
+      systemInfoDictionaryRs()
+        .then(response => {
+          if (isEmptyValue(response)) {
+            resolve()
+            return
+          }
+          const info = camelizeObjectKeys(response)
+          let systemName = title
+          if (!isEmptyValue(info.name)) {
+            systemName = info.name
+          }
+          commit('setSystemRs', {
+            ...info,
+            name: systemName
+          })
+
+          resolve(info)
+        })
+        .catch(error => {
+          commit('setSystem', {})
+          console.warn(`Error getting System Info: ${error.message}. Code: ${error.code}.`)
+          resolve({})
+        })
+    })
   }
 }
 
@@ -785,6 +818,9 @@ const getters = {
   },
   getSystem: (state) => {
     return state.systemInfo
+  },
+  getSrVersion: (state) => {
+    return state.srVersion
   }
 }
 

@@ -235,7 +235,8 @@ export default {
       dateVersion: 'Date Versión',
       frontEndVersion: 'Front-End Version',
       proxyVersion: 'Proxy Version',
-      deploymentName: 'Deployment Name'
+      deploymentName: 'Deployment Name',
+      srVersion: 'RS dictionary version'
     }
   },
   window,

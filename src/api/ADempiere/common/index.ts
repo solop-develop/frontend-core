@@ -51,6 +51,16 @@ export function systemInfo() {
     })
 }
 
+export function systemInfoDictionaryRs() {
+  return request({
+    url: '/dictionary/system-info',
+    method: 'get'
+  })
+    .then(response => {
+      return camelizeObjectKeys(response)
+    })
+}
+
 /**
  * Get Country definition from server using id or uuid for record
  * @param {number} id
