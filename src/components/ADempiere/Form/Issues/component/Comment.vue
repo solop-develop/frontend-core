@@ -1597,7 +1597,7 @@ export default defineComponent({
     const isLoadingNewIssues = ref(false)
     const centerDialogVisible = ref(false)
 
-    currentSalesReps.value = store.getters['user/userInfo'].id
+    currentSalesReps.value = store.getters['user/userInfo'].name
 
     const storedMailTemplatesList = computed(() => {
       return store.getters.getListMailTemplates
@@ -1764,44 +1764,50 @@ export default defineComponent({
       if (!isEmptyValue(currentIssues.value) && !isPanelNewRequest.value) {
         requestTypeId = currentIssues.value.request_type.id
       }
-      requestListStatuses({
-        requestTypeId
-      })
-        .then(response => {
-          const { records } = response
-          listStatuses.value = records
+      return new Promise(resolve => {
+        requestListStatuses({
+          requestTypeId
         })
-        .catch(error => {
-          let message = error.message
-          if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
-            message = error.response.data.message
-          }
-          showMessage({
-            message,
-            type: 'warning'
+          .then(response => {
+            const { records } = response
+            listStatuses.value = records
+            resolve(response)
           })
-        })
+          .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+            showMessage({
+              message,
+              type: 'warning'
+            })
+          })
+      })
     }
 
     function findPriority(isVisible) {
       if (!isVisible) {
         return
       }
-      requestListPriorities({})
-        .then(response => {
-          const { records } = response
-          listPriority.value = records
-        })
-        .catch(error => {
-          let message = error.message
-          if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
-            message = error.response.data.message
-          }
-          showMessage({
-            message,
-            type: 'warning'
+      return new Promise(resolve => {
+        requestListPriorities({})
+          .then(response => {
+            const { records } = response
+            listPriority.value = records
+            resolve(response)
           })
-        })
+          .catch(error => {
+            let message = error.message
+            if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
+              message = error.response.data.message
+            }
+            showMessage({
+              message,
+              type: 'warning'
+            })
+          })
+      })
     }
 
     function saveIssues() {
@@ -2243,15 +2249,26 @@ export default defineComponent({
       // refs.updateDate.showPopper = false
     }
 
-    function exitPopover(popoverOption) {
+    async function exitPopover(popoverOption) {
       if (popoverOption === 'newtypeOfRequest') {
-        findStatus(true)
-        const requestType = this.listIssuesTypes.find(list => list.id === this.currentRequestTypes)
+        await findStatus(true)
+        await findPriority(true)
+        const requestType = listIssuesTypes.value.find(list => list.id === currentRequestTypes.value)
         const { default_status } = requestType
         // if (isEmptyValue(default_status.name)) return this.currentStatus = ''
-        this.currentStatus = default_status.id
+        currentStatus.value = default_status.id
+        valueDef(default_status)
       }
       if (isEmptyValue(popoverOption)) return
+    }
+
+    function valueDef(default_status) {
+      if ((isEmptyValue(default_status) || default_status.id <= 0) && !isEmptyValue(listStatuses.value)) {
+        currentStatus.value = listStatuses.value[0].id
+      }
+      if ((isEmptyValue(currentPriority) || currentPriority.id <= 0) && !isEmptyValue(listPriority.value)) {
+        currentPriority.value = listPriority.value[0].value
+      }
     }
 
     function SelectionIssue(issues) {
@@ -2716,7 +2733,8 @@ export default defineComponent({
       updateIssuesProyect,
       updateIssuesGroup,
       //
-      markdownContent
+      markdownContent,
+      valueDef
     }
   }
 })
