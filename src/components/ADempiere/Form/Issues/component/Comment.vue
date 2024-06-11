@@ -2266,7 +2266,7 @@ export default defineComponent({
       if ((isEmptyValue(default_status) || default_status.id <= 0) && !isEmptyValue(listStatuses.value)) {
         currentStatus.value = listStatuses.value[0].id
       }
-      if ((isEmptyValue(currentPriority) || currentPriority.id <= 0) && !isEmptyValue(listPriority.value)) {
+      if ((isEmptyValue(currentPriority.value) || currentPriority.value.id <= 0) && !isEmptyValue(listPriority.value)) {
         currentPriority.value = listPriority.value[0].value
       }
     }
