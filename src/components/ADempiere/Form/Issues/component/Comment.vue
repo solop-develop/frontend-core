@@ -343,7 +343,7 @@
                         />
                       </el-select>
                     </el-form-item>
-                    <el-form-item :label="$t('issues.status')">
+                    <el-form-item required :label="$t('issues.status')">
                       <el-select
                         v-model="currentStatus"
                         filterable
@@ -763,7 +763,7 @@
                         />
                       </el-select>
                     </el-form-item>
-                    <el-form-item :label="$t('issues.status')" style="margin: 0px;">
+                    <el-form-item required :label="$t('issues.status')" style="margin: 0px;">
                       <el-select
                         v-model="currentStatus"
                         filterable
@@ -1112,7 +1112,7 @@
                         />
                       </el-select>
                     </el-form-item>
-                    <el-form-item :label="$t('issues.status')" style="margin: 0px;">
+                    <el-form-item required :label="$t('issues.status')" style="margin: 0px;">
                       <el-select
                         v-model="currentIssues.status.name"
                         filterable
