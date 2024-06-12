@@ -98,7 +98,7 @@ export function formatField({
         value,
         isTime: false,
         format: getDateFormat({
-          format: 'YYYY-MM-DD',
+          format: optionalFormat,
           isTime: false,
           isDate: true
         })
