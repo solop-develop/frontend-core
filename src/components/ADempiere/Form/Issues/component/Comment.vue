@@ -1695,7 +1695,6 @@ export default defineComponent({
     const getFixedHeader = computed(() => {
       return store.getters['settings/getFixedHeader']
     })
-
     function findSalesReps(isVisible, searchValue) {
       return new Promise((resolve, reject) => {
         if (!isVisible) {
@@ -1726,7 +1725,12 @@ export default defineComponent({
           })
       })
     }
-
+    const salesReps = computed(() => {
+      if (currentSalesReps.value === store.getters['user/userInfo'].name) {
+        return store.getters['user/userInfo'].id
+      }
+      return currentSalesReps.value
+    })
     const loadingSales = ref(false)
 
     function remoteMethodSales(query) {
@@ -1824,7 +1828,7 @@ export default defineComponent({
         subject: subject.value,
         summary: summary.value,
         requestTypeId: currentRequestTypes.value,
-        salesRepresentativeId: currentSalesReps.value,
+        salesRepresentativeId: salesReps.value,
         statusId: currentStatus.value,
         priorityValue: currentPriority.value,
         dateNextAction: newDateNextAction.value
@@ -2460,7 +2464,6 @@ export default defineComponent({
 
     const currentCategory = ref(0)
     const listCategory = ref([])
-
     function findCategory(isVisible, searchValue) {
       return new Promise((resolve, reject) => {
         if (!isVisible) {
