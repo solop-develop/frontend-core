@@ -97,7 +97,11 @@ export function formatField({
       formattedValue = formatDateTemp({
         value,
         isTime: false,
-        format: optionalFormat
+        format: getDateFormat({
+          format: optionalFormat,
+          isTime: false,
+          isDate: true
+        })
       })
       break
 

@@ -41,7 +41,6 @@ const system = {
     },
     setLanguagesList: (state, payload) => {
       const languagesList = payload
-
       state.languagesList = Object.freeze(languagesList)
     }
   },
@@ -60,8 +59,8 @@ const system = {
                 ...language,
                 languageISO: language.language_iso,
                 languageName: language.language_name,
-                datePattern: convertDateFormat(language.datePattern),
-                timePattern: convertDateFormat(language.timePattern)
+                datePattern: convertDateFormat(language.date_pattern),
+                timePattern: convertDateFormat(language.time_pattern)
               }
             })
 
