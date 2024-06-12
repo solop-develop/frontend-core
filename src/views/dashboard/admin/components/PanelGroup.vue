@@ -147,7 +147,7 @@ export default defineComponent({
         attributeName: 'containerKey',
         query: {
           tabParent: 0,
-          referenceUuid: taks.referenceUuid
+          referenceUuid: taks.recordReferenceUuid
         }
       })
     }
