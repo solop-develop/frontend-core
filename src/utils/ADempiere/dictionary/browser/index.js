@@ -591,5 +591,18 @@ export const containerManager = {
       levelValue,
       fieldAttributes
     })
+  },
+  searchFieldZoom({
+    id,
+    columnName,
+    tabTableName,
+    valueField
+  }) {
+    return store.dispatch('getListZoomWindowsRequest', {
+      browse_field_id: id,
+      column_name: columnName,
+      table_name: tabTableName,
+      valueField
+    })
   }
 }
