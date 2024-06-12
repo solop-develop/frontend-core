@@ -310,11 +310,10 @@ export default defineComponent({
     })
 
     function searchZoom(field) {
-      store.dispatch('getListZoomWindowsRequest', {
-        process_parameter_id: field.process_id,
-        field_id: field.id,
-        column_name: field.columnName,
-        table_name: field.tabTableName,
+      props.containerManager.searchFieldZoom({
+        id: field.id,
+        columnName: field.columnName,
+        tabTableName: field.tabTableName,
         valueField: valueField.value
       }).then(response => {
         zoom.value = response
