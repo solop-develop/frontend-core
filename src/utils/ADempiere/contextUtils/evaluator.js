@@ -192,7 +192,9 @@ export class evaluator {
       firstEval = firstEval.replace(/['"]/g, '').trim() // strip ' and "
     }
     // Handling of ID compare (null => 0)
-    if (isEmptyValue(firstEval) &&
+    if (
+      !isEmptyValue(firstEval) &&
+      typeof firstEval === 'string' &&
       (firstEval.endsWith('_ID') || firstEval.endsWith('_ID_To') ||
       firstEval === 'AD_Key' || firstEval === 'AD_Display' ||
       firstEval.endsWith('atedBy') || firstEval.endsWith('_Acct'))

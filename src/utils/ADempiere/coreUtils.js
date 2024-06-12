@@ -62,11 +62,10 @@ export function zoomIn({
     secondAttribute: attributeName,
     attributeChilds: 'children'
   })
-  if (query.filters) {
-    const parseFilter = JSON.stringify(query.filters[0])
-    query.filters = [parseFilter]
-  }
-
+  // if (query.filters) {
+  //   const parseFilter = JSON.stringify(query.filters[0])
+  //   query.filters = [parseFilter]
+  // }
   if (!isEmptyValue(viewSearch)) {
     router.push({
       name: viewSearch.name,
