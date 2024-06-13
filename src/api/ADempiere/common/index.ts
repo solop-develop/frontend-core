@@ -56,9 +56,6 @@ export function systemInfoDictionaryRs() {
     url: '/dictionary/system-info',
     method: 'get'
   })
-    .then(response => {
-      return response
-    })
 }
 
 /**
