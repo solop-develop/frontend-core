@@ -271,7 +271,10 @@ export default defineComponent({
     const organizationsId = computed({
       // getter
       get() {
-        const { organizationId } = store.getters.getSearchFilter
+        let { organizationId } = store.getters.getSearchFilter
+        if (isEmptyValue(organizationId) || organizationId.id <= 0) {
+          organizationId = store.getters['user/getOrganization'].id
+        }
         return organizationId
       },
       // setter
@@ -321,7 +324,6 @@ export default defineComponent({
         // return store.commit('setTransactionType', type)
       }
     })
-
     function findOrganizations(isFind, searchValue) {
       if (!isFind) {
         return
