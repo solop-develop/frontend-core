@@ -199,8 +199,22 @@ export default defineComponent({
       }
     })
 
+    const { parentUuid, containerUuid, columnName } = props.metadata
+    const zoomField = computed({
+      get() {
+        return store.getters.getZoomField({
+          containerUuid: containerUuid + '_' + columnName
+        })
+      },
+      set(zoom) {
+        store.commit('setZoomField', {
+          containerUuid: containerUuid + '_' + columnName,
+          zoom
+        })
+      }
+    })
+
     const valueField = computed(() => {
-      const { parentUuid, containerUuid, columnName } = props.metadata
       return store.getters.getValueOfFieldOnContainer({
         parentUuid,
         containerUuid,
@@ -316,7 +330,7 @@ export default defineComponent({
         tabTableName: field.tabTableName,
         valueField: valueField.value
       }).then(response => {
-        zoom.value = response
+        zoomField.value = response
       }).finally(() => {
         return false
       })
@@ -428,7 +442,7 @@ export default defineComponent({
         containerManager: props.containerManager,
         fieldAttributes: props.metadata,
         value: valueField.value,
-        zoom: zoom.value
+        zoom: zoomField.value
       })
 
       if (isMobile.value) {
@@ -480,6 +494,7 @@ export default defineComponent({
       valueField,
       triggerMenu,
       shortsKey,
+      zoomField,
       showPanelFieldOption,
       // methods
       closePopover,

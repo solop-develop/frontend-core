@@ -33,7 +33,8 @@ const initStateLookup = {
   fieldsList: [],
   validationRuleList: [],
   defaultSizeField: {},
-  isShowNewSequence: false
+  isShowNewSequence: false,
+  zoomAttributes: {}
 }
 
 const field = {
@@ -72,6 +73,12 @@ const field = {
     },
     setShowNewSequence(state, isShowed = false) {
       state.isShowNewSequence = isShowed
+    },
+    setZoomField(state, {
+      containerUuid,
+      zoom
+    }) {
+      Vue.set(state.zoomAttributes, containerUuid, zoom)
     }
   },
 
@@ -245,6 +252,9 @@ const field = {
     },
     getShowNewSequence(state) {
       return state.isShowNewSequence
+    },
+    getZoomField: (state) => ({ containerUuid }) => {
+      return state.zoomAttributes[containerUuid]
     }
   }
 }
