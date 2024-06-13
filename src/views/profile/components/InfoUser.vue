@@ -93,7 +93,7 @@
               class="label-system"
             >
               <svg-icon icon-class="dictionary" />
-              {{ $t('profile.systemInformation.srVersion') + ': ' }}
+              {{ $t('profile.systemInformation.dictionaryVersion') + ': ' }}
             </p>
           </el-col>
           <el-col :span="12">
@@ -422,7 +422,6 @@ export default defineComponent({
     })
 
     const rsVersion = store.getters['user/getSrVersion']
-    console.log(store.getters['user/getSrVersion'])
     const vueVersion = config.server.vueVersion
 
     const notifications = computed(() => {

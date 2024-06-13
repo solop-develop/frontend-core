@@ -78,7 +78,7 @@ const state = {
   corporateBrandingImage: '',
   activityLogs: [],
   systemInfo: {},
-  srVersion: {}
+  dictionary: {}
 }
 
 const mutations = {
@@ -140,7 +140,7 @@ const mutations = {
     state.systemInfo = info
   },
   setSystemRs(state, info) {
-    state.srVersion = info
+    state.dictionary = info
   }
 }
 
@@ -820,7 +820,7 @@ const getters = {
     return state.systemInfo
   },
   getSrVersion: (state) => {
-    return state.srVersion
+    return state.dictionary
   }
 }
 

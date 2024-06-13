@@ -57,7 +57,7 @@ export function systemInfoDictionaryRs() {
     method: 'get'
   })
     .then(response => {
-      return camelizeObjectKeys(response)
+      return response
     })
 }
 
