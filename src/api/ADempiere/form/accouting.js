@@ -102,16 +102,14 @@ export function requestAccountingFacts({
       value: attribute.value
     }
   })
-
   return request({
-    url: '/general-ledger/accounts/facts',
+    url: `/general-ledger/accounts/facts/${accoutingSchemaId}`,
     method: 'get',
     params: {
       //  DSL Query
       table_name: tableName,
       record_id: recordId,
       record_uuid: recordUuid,
-      accounting_schema_id: accoutingSchemaId,
       posting_type: postingType,
       organization_id: organizationId,
       //  Page Data
@@ -129,17 +127,16 @@ export function requestStartRePost({
   tableName,
   recordId,
   recordUuid,
+  accoutingSchemaId,
   isForce,
   pageSize = ROWS_OF_RECORDS_BY_PAGE,
   pageToken
 }) {
   return request({
-    url: '/general-ledger/re-post',
+    url: `/general-ledger/accounts/facts/${tableName}/${recordId}`,
     method: 'post',
     data: {
       //  DSL Query
-      table_name: tableName,
-      record_id: recordId,
       record_uuid: recordUuid,
       is_force: isForce,
       //  Page Data
