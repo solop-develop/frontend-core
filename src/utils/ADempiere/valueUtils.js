@@ -433,12 +433,13 @@ export function parsedValueComponent({
       if (!isEmptyValue(value)) {
         // Table (18) or Table Direct (19)
         if (
-          TABLE_DIRECT.id === displayType || IMAGE.id || ACCOUNT_ELEMENT.id ||
-          LOCATOR_WAREHOUSE.id || PRODUCT_ATTRIBUTE.id || RESOURCE_ASSIGNMENT.id
+          [TABLE_DIRECT.id, IMAGE.id, ACCOUNT_ELEMENT.id,
+            LOCATOR_WAREHOUSE.id, PRODUCT_ATTRIBUTE.id, RESOURCE_ASSIGNMENT.id
+          ].includes(displayType)
         ) {
           value = Number(value)
         } else if (
-          (TABLE.id === displayType || SEARCH.id) &&
+          ([TABLE.id, SEARCH.id].includes(displayType)) &&
           (columnName.endsWith('_ID') || columnName.endsWith('_ID_To') ||
           columnName === 'AD_Key' || columnName === 'AD_Display' ||
           columnName.endsWith('atedBy') || columnName.endsWith('_Acct'))
