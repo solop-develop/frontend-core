@@ -127,10 +127,7 @@ export function requestStartRePost({
   tableName,
   recordId,
   recordUuid,
-  accoutingSchemaId,
-  isForce,
-  pageSize = ROWS_OF_RECORDS_BY_PAGE,
-  pageToken
+  isForce
 }) {
   return request({
     url: `/general-ledger/accounts/facts/${tableName}/${recordId}`,
@@ -138,13 +135,7 @@ export function requestStartRePost({
     data: {
       //  DSL Query
       record_uuid: recordUuid,
-      is_force: isForce,
-      //  Page Data
-      page_size: pageSize,
-      page_token: pageToken
+      is_force: isForce
     }
   })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
 }
