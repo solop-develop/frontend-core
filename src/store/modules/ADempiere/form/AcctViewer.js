@@ -21,7 +21,8 @@ import {
   requestListAccoutingSchemas,
   requestPostingTypesList,
   requestListOrganizations,
-  requestAccountingFacts
+  requestAccountingFacts,
+  requestExistsAccoutingDocument
 } from '@/api/ADempiere/form/accouting.js'
 
 // Utils and Helper Methods
@@ -41,7 +42,8 @@ const initState = {
   // user interface
   isDisplayDocumentInfo: false,
   isDisplaySourceInfo: false,
-  isDisplayQuantity: false
+  isDisplayQuantity: false,
+  isShowRecontabilize: false
 }
 
 const acctViewer = {
@@ -80,6 +82,9 @@ const acctViewer = {
     },
     setIsDisplayQuantity(state, isShow = false) {
       state.isDisplayQuantity = isShow
+    },
+    setIsShowContabiRecontabilize(state, isShow = false) {
+      state.isShowRecontabilize = isShow
     }
   },
 
@@ -219,12 +224,29 @@ const acctViewer = {
                 tableName
               }
             })
-
             commit('setAccoutingRecordsList', recordsList)
             resolve(recordsList)
           })
           .finally(() => {
             commit('setIsLoadingAccoutingRecords', false)
+          })
+      })
+    },
+
+    getExistsAccoutingDocument({ commit, getters }, {
+      accoutingSchemaId,
+      tableName,
+      recordId
+    }) {
+      return new Promise(resolve => {
+        requestExistsAccoutingDocument({
+          accoutingSchemaId,
+          tableName,
+          recordId
+        })
+          .then(response => {
+            commit('setIsShowContabiRecontabilize', response)
+            resolve(response)
           })
       })
     }
@@ -255,7 +277,6 @@ const acctViewer = {
     getAccoutingRecordsList: (state) => {
       return state.accoutingRecordsList
     },
-
     getIsDisplayDocumentInfo: (state) => {
       return state.isDisplayDocumentInfo
     },
@@ -264,6 +285,9 @@ const acctViewer = {
     },
     getIsDisplayQuantity: (state) => {
       return state.isDisplayQuantity
+    },
+    getIsShowContabiRecontabilize: (state) => {
+      return state.isShowRecontabilize
     }
   }
 }

@@ -85,7 +85,6 @@ import { listProductStorage } from '@/api/ADempiere/form/storeProduct.js'
 import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import { isEmptyValue } from '@/utils/ADempiere'
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
-import { isDisplayedField } from '@/utils/ADempiere/dictionary/window'
 
 export default defineComponent({
   name: 'ContainerInfo',
@@ -346,23 +345,30 @@ export default defineComponent({
     const isLoadingIssuessRecord = computed(() => {
       return store.getters.getIsLoadListIssues
     })
-
+    const accoutingSchemaId = computed(() => {
+      return store.getters.getSessionContext({
+        columnName: '$C_AcctSchema_ID'
+      })
+    })
     const isAccountingInfo = computed(() => {
       const { currentTab } = store.getters.getContainerInfo
+      const { is_show_accouting } = store.getters.getIsShowContabiRecontabilize
       if (!currentTab.table.is_document) {
         return false
       }
-      const { fieldsList } = currentTab
-      if (isEmptyValue(fieldsList)) {
-        return false
-      }
-      const isPostedField = fieldsList.find(field => field.columnName === 'Posted')
-      if (isEmptyValue(isPostedField)) {
-        return false
-      }
-      return isDisplayedField({
-        ...isPostedField
-      })
+      return is_show_accouting
+      // const { fieldsList } = currentTab
+      // if (isEmptyValue(fieldsList)) {
+      //   return false
+      // }
+      // const isPostedField = fieldsList.find(field => field.columnName === 'Posted')
+      // if (isEmptyValue(isPostedField)) {
+      //   return false
+      // }
+      // console.log(isPostedField)
+      // return isDisplayedField({
+      //   ...isPostedField
+      // })
     })
 
     /**
@@ -437,6 +443,11 @@ export default defineComponent({
         }
       }
       if (tab.name === 'listReference') {
+        store.dispatch('getExistsAccoutingDocument', {
+          accoutingSchemaId: accoutingSchemaId.value,
+          tableName: currentTab.value.table_name,
+          recordId: currentRecordId.value
+        })
         tabOptions = 'listReference'
         isLoadingListReference.value = true
         store.dispatch('getReferencesFromServer', {
