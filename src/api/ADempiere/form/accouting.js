@@ -23,6 +23,7 @@ import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
+import { isEmptyValue } from '@/utils/ADempiere'
 
 export function requestListAccoutingSchemas({
   searchValue,
@@ -102,16 +103,18 @@ export function requestAccountingFacts({
       value: attribute.value
     }
   })
-
+  let url = `/general-ledger/accounts/facts/${accoutingSchemaId}`
+  if (!isEmptyValue(tableName) && !isEmptyValue(recordId)) {
+    url = `/general-ledger/accounts/facts/${accoutingSchemaId}/document/${tableName}/${recordId}`
+  }
   return request({
-    url: '/general-ledger/accounts/facts',
+    url: url,
     method: 'get',
     params: {
       //  DSL Query
       table_name: tableName,
       record_id: recordId,
       record_uuid: recordUuid,
-      accounting_schema_id: accoutingSchemaId,
       posting_type: postingType,
       organization_id: organizationId,
       //  Page Data
@@ -129,25 +132,15 @@ export function requestStartRePost({
   tableName,
   recordId,
   recordUuid,
-  isForce,
-  pageSize = ROWS_OF_RECORDS_BY_PAGE,
-  pageToken
+  isForce
 }) {
   return request({
-    url: '/general-ledger/re-post',
+    url: `/general-ledger/accounts/facts/${tableName}/${recordId}`,
     method: 'post',
     data: {
       //  DSL Query
-      table_name: tableName,
-      record_id: recordId,
       record_uuid: recordUuid,
-      is_force: isForce,
-      //  Page Data
-      page_size: pageSize,
-      page_token: pageToken
+      is_force: isForce
     }
   })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
 }
