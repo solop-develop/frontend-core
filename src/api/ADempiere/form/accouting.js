@@ -23,6 +23,7 @@ import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
+import { isEmptyValue } from '@/utils/ADempiere'
 
 export function requestListAccoutingSchemas({
   searchValue,
@@ -102,8 +103,12 @@ export function requestAccountingFacts({
       value: attribute.value
     }
   })
+  let url = `/general-ledger/accounts/facts/${accoutingSchemaId}`
+  if (!isEmptyValue(tableName) && !isEmptyValue(recordId)) {
+    url = `/general-ledger/accounts/facts/${accoutingSchemaId}/document/${tableName}/${recordId}`
+  }
   return request({
-    url: `/general-ledger/accounts/facts/${accoutingSchemaId}`,
+    url: url,
     method: 'get',
     params: {
       //  DSL Query
