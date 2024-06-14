@@ -398,7 +398,6 @@ export default defineComponent({
         typeAction.value = index
       }
     }
-
     function handleClick(tab, event) {
       let tabOptions = tab.name
       if (tab.name === 'accountingInformation') {
@@ -443,11 +442,6 @@ export default defineComponent({
         }
       }
       if (tab.name === 'listReference') {
-        store.dispatch('getExistsAccoutingDocument', {
-          accoutingSchemaId: accoutingSchemaId.value,
-          tableName: currentTab.value.table_name,
-          recordId: currentRecordId.value
-        })
         tabOptions = 'listReference'
         isLoadingListReference.value = true
         store.dispatch('getReferencesFromServer', {
@@ -529,9 +523,12 @@ export default defineComponent({
         name: props.defaultOpenedTab
       })
     }
-
     store.dispatch('findListMailTemplates')
-
+    store.dispatch('getExistsAccoutingDocument', {
+      accoutingSchemaId: accoutingSchemaId.value,
+      tableName: currentTab.value.table_name,
+      recordId: currentRecordId.value
+    })
     findRecordLogs(props.allTabsList[parseInt(currentTabLogs.value)])
 
     return {
