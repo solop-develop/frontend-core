@@ -524,13 +524,18 @@ export default defineComponent({
       })
     }
     store.dispatch('findListMailTemplates')
-    store.dispatch('getExistsAccoutingDocument', {
-      accoutingSchemaId: accoutingSchemaId.value,
-      tableName: currentTab.value.table_name,
-      recordId: currentRecordId.value
-    })
+    function showAccouting() {
+      const { currentTab } = store.getters.getContainerInfo
+      if (!isEmptyValue(currentTab) && currentTab.table.is_document) {
+        store.dispatch('getExistsAccoutingDocument', {
+          accoutingSchemaId: accoutingSchemaId.value,
+          tableName: currentTab.table_name,
+          recordId: currentRecordId.value
+        })
+      }
+    }
     findRecordLogs(props.allTabsList[parseInt(currentTabLogs.value)])
-
+    showAccouting()
     return {
       // Ref
       currentRecordLogs,
@@ -562,7 +567,8 @@ export default defineComponent({
       showkey,
       findRecordLogs,
       handleClick,
-      findListStoreProduct
+      findListStoreProduct,
+      showAccouting
     }
   }
 
