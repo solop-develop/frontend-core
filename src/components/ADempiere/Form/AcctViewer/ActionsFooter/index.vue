@@ -246,6 +246,9 @@ export default defineComponent({
     const recordsList = computed(() => {
       return store.getters.getAccoutingRecordsList
     })
+    const accoutingSchemaId = computed(() => {
+      return store.getters.getCurrentStoredAccoutingSchemaId
+    })
     function exportAccounting() {
       const header = headerAccounting.value
         .filter(list => {
@@ -328,10 +331,10 @@ export default defineComponent({
           isLoadingRePost.value = false
           store.dispatch('getAccoutingFactsFromServer', {
             searchValue: '',
+            accoutingSchemaId: accoutingSchemaId.value,
             tableName: props.tableName,
             recordId: props.recordId,
-            recordUuid: props.recordUuid,
-            isForce: force.value
+            recordUuid: props.recordUuid
           })
         })
     }
