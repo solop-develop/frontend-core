@@ -85,6 +85,7 @@ import { listProductStorage } from '@/api/ADempiere/form/storeProduct.js'
 import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import { isEmptyValue } from '@/utils/ADempiere'
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
+// import { isDisplayedField } from '@/utils/ADempiere/dictionary/window'
 
 export default defineComponent({
   name: 'ContainerInfo',
@@ -345,18 +346,22 @@ export default defineComponent({
     const isLoadingIssuessRecord = computed(() => {
       return store.getters.getIsLoadListIssues
     })
+
     const accoutingSchemaId = computed(() => {
       return store.getters.getSessionContext({
         columnName: '$C_AcctSchema_ID'
       })
     })
+
     const isAccountingInfo = computed(() => {
       const { currentTab } = store.getters.getContainerInfo
-      const { is_show_accouting } = store.getters.getIsShowContabiRecontabilize
       if (!currentTab.table.is_document) {
         return false
       }
-      return is_show_accouting
+      if (isEmptyValue(currentRecordId.value)) {
+        return false
+      }
+
       // const { fieldsList } = currentTab
       // if (isEmptyValue(fieldsList)) {
       //   return false
@@ -365,10 +370,12 @@ export default defineComponent({
       // if (isEmptyValue(isPostedField)) {
       //   return false
       // }
-      // console.log(isPostedField)
       // return isDisplayedField({
       //   ...isPostedField
       // })
+
+      const isShowAccouting = store.getters.getIsShowContabiRecontabilize
+      return isShowAccouting
     })
 
     /**
@@ -524,9 +531,10 @@ export default defineComponent({
       })
     }
     store.dispatch('findListMailTemplates')
-    function showAccouting() {
+
+    function showAccoutingFacts() {
       const { currentTab } = store.getters.getContainerInfo
-      if (!isEmptyValue(currentTab) && currentTab.table.is_document) {
+      if (!isEmptyValue(currentTab) && currentTab.table.is_document && !isEmptyValue(currentRecordId.value)) {
         store.dispatch('getExistsAccoutingDocument', {
           accoutingSchemaId: accoutingSchemaId.value,
           tableName: currentTab.table_name,
@@ -534,8 +542,10 @@ export default defineComponent({
         })
       }
     }
+
     findRecordLogs(props.allTabsList[parseInt(currentTabLogs.value)])
-    showAccouting()
+    showAccoutingFacts()
+
     return {
       // Ref
       currentRecordLogs,
@@ -568,7 +578,7 @@ export default defineComponent({
       findRecordLogs,
       handleClick,
       findListStoreProduct,
-      showAccouting
+      showAccoutingFacts
     }
   }
 

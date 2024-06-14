@@ -43,7 +43,7 @@ const initState = {
   isDisplayDocumentInfo: false,
   isDisplaySourceInfo: false,
   isDisplayQuantity: false,
-  isShowRecontabilize: false
+  isShowAccoutingFacts: false
 }
 
 const acctViewer = {
@@ -83,8 +83,8 @@ const acctViewer = {
     setIsDisplayQuantity(state, isShow = false) {
       state.isDisplayQuantity = isShow
     },
-    setIsShowContabiRecontabilize(state, isShow = false) {
-      state.isShowRecontabilize = isShow
+    setIsShowAccoutingFacts(state, isShow = false) {
+      state.isShowAccoutingFacts = isShow
     }
   },
 
@@ -239,14 +239,24 @@ const acctViewer = {
       recordId
     }) {
       return new Promise(resolve => {
+        if (isEmptyValue(tableName) || isEmptyValue(recordId)) {
+          resolve(false)
+          return
+        }
+
         requestExistsAccoutingDocument({
           accoutingSchemaId,
           tableName,
           recordId
         })
           .then(response => {
-            commit('setIsShowContabiRecontabilize', response)
-            resolve(response)
+            const { is_show_accouting } = response
+            commit('setIsShowAccoutingFacts', is_show_accouting)
+            resolve(is_show_accouting)
+          })
+          .catch(error => {
+            commit('setIsShowAccoutingFacts', false)
+            resolve(false)
           })
       })
     }
@@ -286,8 +296,8 @@ const acctViewer = {
     getIsDisplayQuantity: (state) => {
       return state.isDisplayQuantity
     },
-    getIsShowContabiRecontabilize: (state) => {
-      return state.isShowRecontabilize
+    getIsShowAccoutingFacts: (state) => {
+      return state.isShowAccoutingFacts
     }
   }
 }
