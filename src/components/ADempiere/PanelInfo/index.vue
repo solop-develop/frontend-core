@@ -374,7 +374,7 @@ export default defineComponent({
       //   ...isPostedField
       // })
 
-      const isShowAccouting = store.getters.getIsShowContabiRecontabilize
+      const isShowAccouting = store.getters.getIsShowAccoutingFacts
       return isShowAccouting
     })
 
