@@ -83,7 +83,7 @@ const acctViewer = {
     setIsDisplayQuantity(state, isShow = false) {
       state.isDisplayQuantity = isShow
     },
-    setIsShowAccoutingFacts(state, isShow = false) {
+    setShowAcconting(state, isShow = false) {
       state.isShowAccoutingFacts = isShow
     }
   },
@@ -251,11 +251,11 @@ const acctViewer = {
         })
           .then(response => {
             const { is_show_accouting } = response
-            commit('setIsShowAccoutingFacts', is_show_accouting)
+            commit('setShowAcconting', is_show_accouting)
             resolve(is_show_accouting)
           })
           .catch(error => {
-            commit('setIsShowAccoutingFacts', false)
+            commit('setShowAcconting', false)
             resolve(false)
           })
       })
