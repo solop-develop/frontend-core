@@ -21,7 +21,8 @@ import {
   requestListAccoutingSchemas,
   requestPostingTypesList,
   requestListOrganizations,
-  requestAccountingFacts
+  requestAccountingFacts,
+  requestExistsAccoutingDocument
 } from '@/api/ADempiere/form/accouting.js'
 
 // Utils and Helper Methods
@@ -41,7 +42,8 @@ const initState = {
   // user interface
   isDisplayDocumentInfo: false,
   isDisplaySourceInfo: false,
-  isDisplayQuantity: false
+  isDisplayQuantity: false,
+  isShowAccoutingFacts: false
 }
 
 const acctViewer = {
@@ -80,6 +82,9 @@ const acctViewer = {
     },
     setIsDisplayQuantity(state, isShow = false) {
       state.isDisplayQuantity = isShow
+    },
+    setIsShowAccoutingFacts(state, isShow = false) {
+      state.isShowAccoutingFacts = isShow
     }
   },
 
@@ -219,12 +224,41 @@ const acctViewer = {
                 tableName
               }
             })
-
             commit('setAccoutingRecordsList', recordsList)
             resolve(recordsList)
           })
           .finally(() => {
             commit('setIsLoadingAccoutingRecords', false)
+          })
+      })
+    },
+
+    getExistsAccoutingDocument({ commit, getters }, {
+      accoutingSchemaId,
+      tableName,
+      recordId
+    }) {
+      return new Promise(resolve => {
+        if (isEmptyValue(tableName) || isEmptyValue(recordId)) {
+          commit('setIsShowAccoutingFacts', false)
+          resolve(false)
+          return
+        }
+
+        requestExistsAccoutingDocument({
+          accoutingSchemaId,
+          tableName,
+          recordId
+        })
+          .then(response => {
+            const { is_show_accouting } = response
+            commit('setIsShowAccoutingFacts', is_show_accouting)
+            resolve(is_show_accouting)
+          })
+          .catch(error => {
+            console.warn(error)
+            commit('setIsShowAccoutingFacts', false)
+            resolve(false)
           })
       })
     }
@@ -255,7 +289,6 @@ const acctViewer = {
     getAccoutingRecordsList: (state) => {
       return state.accoutingRecordsList
     },
-
     getIsDisplayDocumentInfo: (state) => {
       return state.isDisplayDocumentInfo
     },
@@ -264,6 +297,9 @@ const acctViewer = {
     },
     getIsDisplayQuantity: (state) => {
       return state.isDisplayQuantity
+    },
+    getIsShowAccoutingFacts: (state) => {
+      return state.isShowAccoutingFacts
     }
   }
 }

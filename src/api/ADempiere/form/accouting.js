@@ -128,6 +128,17 @@ export function requestAccountingFacts({
   })
 }
 
+export function requestExistsAccoutingDocument({
+  accoutingSchemaId,
+  tableName,
+  recordId
+}) {
+  return request({
+    url: `/general-ledger/accounts/facts/${accoutingSchemaId}/document/${tableName}/${recordId}/exists`,
+    method: 'get'
+  })
+}
+
 export function requestStartRePost({
   tableName,
   recordId,
