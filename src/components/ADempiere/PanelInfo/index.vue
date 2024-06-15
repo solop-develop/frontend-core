@@ -538,7 +538,7 @@ export default defineComponent({
         return
       }
       const { currentTab } = store.getters.getContainerInfo
-      if (isEmptyValue(currentTab) || currentTab.table.is_document) {
+      if (isEmptyValue(currentTab) || !currentTab.table.is_document) {
         store.commit('setIsShowAccoutingFacts', false)
         return
       }
