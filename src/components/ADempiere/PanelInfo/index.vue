@@ -533,14 +533,20 @@ export default defineComponent({
     store.dispatch('findListMailTemplates')
 
     function showAccoutingFacts() {
-      const { currentTab } = store.getters.getContainerInfo
-      if (!isEmptyValue(currentTab) && currentTab.table.is_document && !isEmptyValue(currentRecordId.value)) {
-        store.dispatch('getExistsAccoutingDocument', {
-          accoutingSchemaId: accoutingSchemaId.value,
-          tableName: currentTab.table_name,
-          recordId: currentRecordId.value
-        })
+      if (isEmptyValue(currentRecordId.value)) {
+        store.commit('setIsShowAccoutingFacts', false)
+        return
       }
+      const { currentTab } = store.getters.getContainerInfo
+      if (isEmptyValue(currentTab) || currentTab.table.is_document) {
+        store.commit('setIsShowAccoutingFacts', false)
+        return
+      }
+      store.dispatch('getExistsAccoutingDocument', {
+        accoutingSchemaId: accoutingSchemaId.value,
+        tableName: currentTab.table_name,
+        recordId: currentRecordId.value
+      })
     }
 
     findRecordLogs(props.allTabsList[parseInt(currentTabLogs.value)])

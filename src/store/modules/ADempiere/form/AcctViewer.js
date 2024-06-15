@@ -83,7 +83,7 @@ const acctViewer = {
     setIsDisplayQuantity(state, isShow = false) {
       state.isDisplayQuantity = isShow
     },
-    setShowAcconting(state, isShow = false) {
+    setIsShowAccoutingFacts(state, isShow = false) {
       state.isShowAccoutingFacts = isShow
     }
   },
@@ -240,6 +240,7 @@ const acctViewer = {
     }) {
       return new Promise(resolve => {
         if (isEmptyValue(tableName) || isEmptyValue(recordId)) {
+          commit('setIsShowAccoutingFacts', false)
           resolve(false)
           return
         }
@@ -251,11 +252,12 @@ const acctViewer = {
         })
           .then(response => {
             const { is_show_accouting } = response
-            commit('setShowAcconting', is_show_accouting)
+            commit('setIsShowAccoutingFacts', is_show_accouting)
             resolve(is_show_accouting)
           })
           .catch(error => {
-            commit('setShowAcconting', false)
+            console.warn(error)
+            commit('setIsShowAccoutingFacts', false)
             resolve(false)
           })
       })
