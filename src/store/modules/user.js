@@ -819,7 +819,7 @@ const getters = {
   getSystem: (state) => {
     return state.systemInfo
   },
-  getSrVersion: (state) => {
+  getDictionaryVersion: (state) => {
     return state.dictionary
   }
 }
