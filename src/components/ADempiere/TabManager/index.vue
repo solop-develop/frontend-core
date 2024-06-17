@@ -367,9 +367,11 @@ export default defineComponent({
     })
 
     const isCreateNew = computed(() => {
-      return Boolean(currentRoute.query.action === 'create-new') || Boolean(currentRoute.query.options === 'create-new')
+      if (!isEmptyValue(currentRoute.query)) {
+        return currentRoute.query.action === 'create-new' || currentRoute.query.options === 'create-new'
+      }
+      return
     })
-
     const isWithChildsTab = computed(() => {
       return store.getters.getStoredWindow(props.parentUuid).tabsListChild
     })
