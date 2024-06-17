@@ -80,7 +80,7 @@ const state = {
   activityLogs: [],
   systemInfo: {},
   dictionary: {},
-  s3: {}
+  s3Version: {}
 }
 
 const mutations = {
@@ -145,7 +145,7 @@ const mutations = {
     state.dictionary = info
   },
   setSystemS3(state, info) {
-    state.s3 = info
+    state.s3Version = info
   }
 }
 
@@ -781,7 +781,6 @@ const actions = {
       }
       systemInfoS3()
         .then(response => {
-          console.log(response)
           if (!isEmptyValue(response) && !isEmptyValue(response.version)) {
             sistemInfo = response
           }
@@ -853,7 +852,7 @@ const getters = {
     return state.dictionary
   },
   getS3Version: (state) => {
-    return state.s3
+    return state.s3Version
   }
 }
 
