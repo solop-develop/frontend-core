@@ -367,9 +367,11 @@ export default defineComponent({
     })
 
     const isCreateNew = computed(() => {
-      return Boolean(currentRoute.query.action === 'create-new')
+      if (!isEmptyValue(currentRoute.query)) {
+        return currentRoute.query.action === 'create-new' || currentRoute.query.options === 'create-new'
+      }
+      return false
     })
-
     const isWithChildsTab = computed(() => {
       return store.getters.getStoredWindow(props.parentUuid).tabsListChild
     })
@@ -564,7 +566,13 @@ export default defineComponent({
       if (!isEmptyValue(routerParams.filters)) {
         filters = routerParams.filters
       }
-
+      if (isCreateNew.value) {
+        store.commit('setTabData', {
+          parentUuid: props.parentUuid,
+          isLoaded: false,
+          containerUuid
+        })
+      }
       store.dispatch('getEntities', {
         parentUuid: props.parentUuid,
         tabUuid: routerParams.containerUuid,
@@ -576,7 +584,7 @@ export default defineComponent({
         pageNumber
       }).then(responseData => {
         if (isCreateNew.value || isEmptyValue(responseData)) {
-          // set values in panel
+        // set values in panel
           props.containerManager.seekRecord({
             parentUuid: props.parentUuid,
             containerUuid,
@@ -584,7 +592,6 @@ export default defineComponent({
           })
           return
         }
-
         let row = {}
         const { action } = query
         // uuid into action query
@@ -606,7 +613,7 @@ export default defineComponent({
           row = responseData[0]
         }
 
-        // set values in panel
+        //  set values in panel
         props.containerManager.seekRecord({
           parentUuid: props.parentUuid,
           containerUuid,
@@ -652,7 +659,7 @@ export default defineComponent({
         }
       })
     })
-    // if changed tab and not records in stored, get records from server
+    //  if changed tab and not records in stored, get records from server
     watch(tabUuid, (newValue, oldValue) => {
       if (newValue !== oldValue && !isEmptyValue(recordUuidTabParent.value) && !tabData.value.isLoaded) {
         getData()
