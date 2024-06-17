@@ -51,7 +51,7 @@ export function systemInfo() {
     })
 }
 
-export function systemInfoDictionaryRs() {
+export function systemInfoDictionary() {
   return request({
     url: '/dictionary/system-info',
     method: 'get'

@@ -41,7 +41,7 @@ import {
   requestOrganizationsList,
   requestWarehousesList,
   systemInfo,
-  systemInfoDictionaryRs
+  systemInfoDictionary
 } from '@/api/ADempiere/common/index.ts'
 
 // Utils and Helper Methods
@@ -139,7 +139,7 @@ const mutations = {
   setSystem(state, info) {
     state.systemInfo = info
   },
-  setSystemRs(state, info) {
+  setSystemDictionary(state, info) {
     state.dictionary = info
   }
 }
@@ -745,7 +745,7 @@ const actions = {
   },
   systemRs({ commit }) {
     return new Promise(resolve => {
-      systemInfoDictionaryRs()
+      systemInfoDictionary()
         .then(response => {
           if (isEmptyValue(response)) {
             resolve()
@@ -756,7 +756,7 @@ const actions = {
           if (!isEmptyValue(info.name)) {
             systemName = info.name
           }
-          commit('setSystemRs', {
+          commit('setSystemDictionary', {
             ...info,
             name: systemName
           })
