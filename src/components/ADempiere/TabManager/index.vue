@@ -564,7 +564,10 @@ export default defineComponent({
       if (!isEmptyValue(routerParams.filters)) {
         filters = routerParams.filters
       }
-
+      if (isCreateNew.value) {
+        store.getters.getTabData(containerUuid)
+        return
+      }
       store.dispatch('getEntities', {
         parentUuid: props.parentUuid,
         tabUuid: routerParams.containerUuid,
@@ -576,7 +579,7 @@ export default defineComponent({
         pageNumber
       }).then(responseData => {
         if (isCreateNew.value || isEmptyValue(responseData)) {
-          // set values in panel
+        // set values in panel
           props.containerManager.seekRecord({
             parentUuid: props.parentUuid,
             containerUuid,
