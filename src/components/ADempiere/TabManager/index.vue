@@ -565,8 +565,11 @@ export default defineComponent({
         filters = routerParams.filters
       }
       if (isCreateNew.value) {
-        store.getters.getTabData(containerUuid)
-        return
+        store.commit('setTabData', {
+          parentUuid: props.parentUuid,
+          isLoaded: false,
+          containerUuid
+        })
       }
       store.dispatch('getEntities', {
         parentUuid: props.parentUuid,
