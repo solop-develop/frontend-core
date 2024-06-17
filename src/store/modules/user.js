@@ -745,19 +745,24 @@ const actions = {
   },
   systemDictionary({ commit }) {
     return new Promise(resolve => {
+      let version = {
+        version: '0.0.1'
+      }
       systemInfoDictionary()
         .then(response => {
-          let info = '0.0.1'
           if (!isEmptyValue(response) && !isEmptyValue(response.version)) {
-            info = response.version
+            version = response
           }
-          commit('setSystemDictionary', info)
-          resolve(info)
+          commit('setSystemDictionary', {
+            ...response,
+            ...version
+          })
+          resolve(version)
         })
         .catch(error => {
-          commit('setSystem', {})
+          commit('setSystemDictionary', {})
           console.warn(`Error getting System Info: ${error.message}. Code: ${error.code}.`)
-          resolve({})
+          resolve({ version })
         })
     })
   }
