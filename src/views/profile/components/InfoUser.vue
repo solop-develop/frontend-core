@@ -100,7 +100,7 @@
             <el-tag>
               <b>
                 <svg-icon icon-class="tag" />
-                {{ dictionaryVersion.version }}
+                {{ dictionaryVersion }}
               </b>
             </el-tag>
           </el-col>
@@ -422,6 +422,7 @@ export default defineComponent({
     })
 
     const dictionaryVersion = store.getters['user/getDictionaryVersion']
+    console.log(dictionaryVersion)
     const vueVersion = config.server.vueVersion
 
     const notifications = computed(() => {

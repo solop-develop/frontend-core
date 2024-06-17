@@ -747,20 +747,11 @@ const actions = {
     return new Promise(resolve => {
       systemInfoDictionary()
         .then(response => {
-          if (isEmptyValue(response)) {
-            resolve()
-            return
+          let info = '0.0.1'
+          if (!isEmptyValue(response) && !isEmptyValue(response.version)) {
+            info = response.version
           }
-          const info = camelizeObjectKeys(response)
-          let systemName = title
-          if (!isEmptyValue(info.name)) {
-            systemName = info.name
-          }
-          commit('setSystemDictionary', {
-            ...info,
-            name: systemName
-          })
-
+          commit('setSystemDictionary', info)
           resolve(info)
         })
         .catch(error => {
