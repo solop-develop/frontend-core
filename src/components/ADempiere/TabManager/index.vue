@@ -370,7 +370,7 @@ export default defineComponent({
       if (!isEmptyValue(currentRoute.query)) {
         return currentRoute.query.action === 'create-new' || currentRoute.query.options === 'create-new'
       }
-      return
+      return false
     })
     const isWithChildsTab = computed(() => {
       return store.getters.getStoredWindow(props.parentUuid).tabsListChild
