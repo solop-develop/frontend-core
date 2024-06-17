@@ -367,7 +367,7 @@ export default defineComponent({
     })
 
     const isCreateNew = computed(() => {
-      return Boolean(currentRoute.query.action === 'create-new')
+      return Boolean(currentRoute.query.action === 'create-new') || Boolean(currentRoute.query.options === 'create-new')
     })
 
     const isWithChildsTab = computed(() => {
@@ -584,7 +584,6 @@ export default defineComponent({
           })
           return
         }
-
         let row = {}
         const { action } = query
         // uuid into action query
@@ -606,7 +605,7 @@ export default defineComponent({
           row = responseData[0]
         }
 
-        // set values in panel
+        //  set values in panel
         props.containerManager.seekRecord({
           parentUuid: props.parentUuid,
           containerUuid,
@@ -652,7 +651,7 @@ export default defineComponent({
         }
       })
     })
-    // if changed tab and not records in stored, get records from server
+    //  if changed tab and not records in stored, get records from server
     watch(tabUuid, (newValue, oldValue) => {
       if (newValue !== oldValue && !isEmptyValue(recordUuidTabParent.value) && !tabData.value.isLoaded) {
         getData()
