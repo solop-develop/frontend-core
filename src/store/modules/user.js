@@ -40,7 +40,8 @@ import {
 import {
   requestOrganizationsList,
   requestWarehousesList,
-  systemInfo
+  systemInfo,
+  systemInfoDictionary
 } from '@/api/ADempiere/common/index.ts'
 
 // Utils and Helper Methods
@@ -76,7 +77,8 @@ const state = {
   sessionInfo: {},
   corporateBrandingImage: '',
   activityLogs: [],
-  systemInfo: {}
+  systemInfo: {},
+  dictionary: {}
 }
 
 const mutations = {
@@ -136,6 +138,9 @@ const mutations = {
   },
   setSystem(state, info) {
     state.systemInfo = info
+  },
+  setSystemDictionary(state, info) {
+    state.dictionary = info
   }
 }
 
@@ -206,6 +211,7 @@ const actions = {
             defaultContext
           } = sessionInfo
           dispatch('system')
+          dispatch('systemDictionary')
           commit('setIsSession', true)
           commit('setSessionInfo', {
             id,
@@ -736,6 +742,31 @@ const actions = {
           resolve({})
         })
     })
+  },
+  systemDictionary({ commit }) {
+    return new Promise(resolve => {
+      let sistemInfo = {
+        version: '0.0.1'
+      }
+      systemInfoDictionary()
+        .then(response => {
+          if (!isEmptyValue(response) && !isEmptyValue(response.version)) {
+            sistemInfo = response
+          }
+          commit('setSystemDictionary', {
+            ...sistemInfo,
+            ...response
+          })
+          resolve(sistemInfo)
+        })
+        .catch(error => {
+          commit('setSystemDictionary', {
+            ...sistemInfo
+          })
+          console.warn(`Error getting System Info: ${error.message}. Code: ${error.code}.`)
+          resolve(sistemInfo)
+        })
+    })
   }
 }
 
@@ -785,6 +816,9 @@ const getters = {
   },
   getSystem: (state) => {
     return state.systemInfo
+  },
+  getDictionaryVersion: (state) => {
+    return state.dictionary
   }
 }
 
