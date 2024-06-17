@@ -211,7 +211,7 @@ const actions = {
             defaultContext
           } = sessionInfo
           dispatch('system')
-          dispatch('systemRs')
+          dispatch('systemDictionary')
           commit('setIsSession', true)
           commit('setSessionInfo', {
             id,
@@ -743,7 +743,7 @@ const actions = {
         })
     })
   },
-  systemRs({ commit }) {
+  systemDictionary({ commit }) {
     return new Promise(resolve => {
       systemInfoDictionary()
         .then(response => {
