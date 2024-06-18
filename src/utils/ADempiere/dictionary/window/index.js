@@ -1744,13 +1744,13 @@ export const containerManager = {
   },
   isDisplayedColumn,
   isDisplayedDefaultTable: ({ is_mandatory, is_parent, default_value, display_type, parsedDefaultValue }) => {
-    if (is_mandatory && !is_parent && isEmptyValue(default_value)) {
-      // Yes/No field always boolean value (as default value)
-      if (display_type === YES_NO.id) {
-        return false
-      }
-      return true
-    }
+    // if (is_mandatory && !is_parent && isEmptyValue(default_value)) {
+    //   // Yes/No field always boolean value (as default value)
+    //   if (display_type === YES_NO.id) {
+    //     return false
+    //   }
+    //   return true
+    // }
     return false
   },
 
