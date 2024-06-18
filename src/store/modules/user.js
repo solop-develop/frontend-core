@@ -774,6 +774,7 @@ const actions = {
         })
     })
   },
+
   systemS3({ commit }) {
     return new Promise(resolve => {
       let sistemInfo = {
@@ -781,19 +782,17 @@ const actions = {
       }
       systemInfoS3()
         .then(response => {
-          if (!isEmptyValue(response) && !isEmptyValue(response.version)) {
-            sistemInfo = response
+          if (!isEmptyValue(response)) {
+            sistemInfo = {
+              ...systemInfo,
+              ...response
+            }
           }
-          commit('setSystemS3', {
-            ...sistemInfo,
-            ...response
-          })
+          commit('setSystemS3', systemInfo)
           resolve(sistemInfo)
         })
         .catch(error => {
-          commit('setSystemS3', {
-            ...sistemInfo
-          })
+          commit('setSystemS3', sistemInfo)
           console.warn(`Error getting System Info: ${error.message}. Code: ${error.code}.`)
           resolve(sistemInfo)
         })

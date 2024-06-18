@@ -105,6 +105,7 @@
             </el-tag>
           </el-col>
         </el-row>
+
         <el-row style="margin-bottom: 2.5px;">
           <el-col :span="12">
             <p
@@ -123,6 +124,7 @@
             </el-tag>
           </el-col>
         </el-row>
+
         <!-- <el-row style="margin-bottom: 10px;">
           <el-col :span="12">
             <p
