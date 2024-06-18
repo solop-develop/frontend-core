@@ -105,6 +105,26 @@
             </el-tag>
           </el-col>
         </el-row>
+
+        <el-row style="margin-bottom: 2.5px;">
+          <el-col :span="12">
+            <p
+              class="label-system"
+            >
+              <svg-icon icon-class="s3" />
+              {{ $t('profile.systemInformation.s3Version') + ': ' }}
+            </p>
+          </el-col>
+          <el-col :span="12">
+            <el-tag>
+              <b>
+                <svg-icon icon-class="tag" />
+                {{ s3Version.version }}
+              </b>
+            </el-tag>
+          </el-col>
+        </el-row>
+
         <!-- <el-row style="margin-bottom: 10px;">
           <el-col :span="12">
             <p
@@ -422,6 +442,7 @@ export default defineComponent({
     })
 
     const dictionaryVersion = store.getters['user/getDictionaryVersion']
+    const s3Version = store.getters['user/getS3Version']
     const vueVersion = config.server.vueVersion
 
     const notifications = computed(() => {
@@ -489,6 +510,7 @@ export default defineComponent({
       currentRole,
       systemInfo,
       dictionaryVersion,
+      s3Version,
       vueVersion,
       warehouse,
       userInfo,

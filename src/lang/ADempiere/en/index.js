@@ -236,7 +236,8 @@ export default {
       frontEndVersion: 'Front-End Version',
       proxyVersion: 'Proxy Version',
       deploymentName: 'Deployment Name',
-      dictionaryVersion: 'Dictionary RS version'
+      dictionaryVersion: 'Dictionary RS version',
+      s3Version: 'S3 Gateway RS Version'
     }
   },
   window,
