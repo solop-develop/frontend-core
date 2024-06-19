@@ -475,3 +475,10 @@ export default defineComponent({
   padding-right: 5px;
 }
 </style>
+
+<style scope>
+  .el-table{
+    overflow: auto;
+    height: calc(100vh - 45vh) !important
+  }
+</style>
