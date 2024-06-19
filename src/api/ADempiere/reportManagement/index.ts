@@ -107,3 +107,35 @@ export function getReportOutputRequest({
       return convertReportOutput(reportOutpuResponse)
     })
 }
+
+export function generateReport({
+  reportId,
+  reportType,
+  filters,
+  sortBy,
+  pageSize,
+  pageToken,
+  printFormatId,
+  reportViewId,
+  isSummary,
+  // window
+  tableName,
+  recordId
+}) {
+  return request({
+    url: `/report-engine/reports/${reportId}`,
+    method: 'get',
+    params: {
+      report_type: reportType,
+      filters,
+      sort_by: sortBy,
+      page_size: pageSize,
+      page_token: pageToken,
+      print_format_id: printFormatId,
+      report_view_id: reportViewId,
+      is_summary: isSummary,
+      table_name: tableName,
+      record_id: recordId
+    }
+  })
+}
