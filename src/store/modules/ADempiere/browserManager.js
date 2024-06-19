@@ -214,16 +214,6 @@ const browserControl = {
         //   resolve(currentRecordsList)
         //   return
         // }
-        commit('setBrowserData', {
-          containerUuid,
-          isLoaded: false
-        })
-
-        showMessage({
-          title: language.t('notifications.loading'),
-          message: language.t('notifications.searching'),
-          type: 'info'
-        })
         // page size
         const storedSize = getters.getBrowserPageSize({
           containerUuid
@@ -231,6 +221,17 @@ const browserControl = {
         if (isEmptyValue(pageSize) && !isEmptyValue(storedSize)) {
           pageSize = storedSize
         }
+        commit('setBrowserData', {
+          containerUuid,
+          isLoaded: false,
+          pageSize
+        })
+
+        showMessage({
+          title: language.t('notifications.loading'),
+          message: language.t('notifications.searching'),
+          type: 'info'
+        })
         if (isEmptyValue(pageNumber) || pageNumber < 1) {
           // refresh with same page
           const storedPage = getters.getBrowserPageNumber({

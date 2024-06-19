@@ -381,11 +381,18 @@ const windowManager = {
             value: filtersRecord.value
           })
         }
-
+        // page size
+        const storedSize = getters.getTabPageSize({
+          containerUuid
+        })
+        if (isEmptyValue(pageSize) && !isEmptyValue(storedSize)) {
+          pageSize = storedSize
+        }
         commit('setTabData', {
           parentUuid,
           isLoaded: false,
-          containerUuid
+          containerUuid,
+          pageSize
         })
 
         commit('setIsLoadingTabRecordsList', {
@@ -420,13 +427,6 @@ const windowManager = {
         }
         if (!isEmptyValue(searchValue)) {
           searchValue = encodeURI(searchValue)
-        }
-        // page size
-        const storedSize = getters.getTabPageSize({
-          containerUuid
-        })
-        if (isEmptyValue(pageSize) && !isEmptyValue(storedSize)) {
-          pageSize = storedSize
         }
         // page token
         const storedPage = getters.getTabPageNumber({
