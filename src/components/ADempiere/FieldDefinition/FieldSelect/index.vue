@@ -115,16 +115,12 @@ export default {
         const { column_name, containerUuid, inTable } = this.metadata
         // table records values
         if (inTable) {
-          // implement container manager row
-          if (this.containerManager && this.containerManager.getCell) {
-            return this.containerManager.getCell({
-              containerUuid,
-              rowIndex: this.metadata.rowIndex,
-              columnName: column_name
-            })
-          }
+          return this.containerManager.getCell({
+            containerUuid,
+            rowIndex: this.metadata.rowIndex,
+            columnName: column_name
+          })
         }
-
         return this.$store.getters.getValueOfFieldOnContainer({
           parentUuid: this.metadata.parentUuid,
           containerUuid,
@@ -136,35 +132,32 @@ export default {
 
         // table records values
         if (inTable) {
-          // implement container manager row
-          if (this.containerManager && this.containerManager.setCell) {
-            this.containerManager.setCell({
-              containerUuid,
-              rowIndex: this.metadata.rowIndex,
-              columnName: column_name,
-              value
-            })
-          }
-        }
+          this.containerManager.setCell({
+            containerUuid,
+            rowIndex: this.metadata.rowIndex,
+            columnName: column_name,
+            value
+          })
+        } else {
+          const option = this.findOption(value)
+          // always update uuid
+          this.uuidValue = option.uuid
 
-        const option = this.findOption(value)
-        // always update uuid
-        this.uuidValue = option.uuid
-
-        this.$store.commit('updateValueOfField', {
-          parentUuid: this.metadata.parentUuid,
-          containerUuid,
-          columnName: column_name,
-          value
-        })
-        // update element column name
-        if (!this.metadata.isSameColumnElement) {
           this.$store.commit('updateValueOfField', {
             parentUuid: this.metadata.parentUuid,
             containerUuid,
-            columnName: this.metadata.element_name,
+            columnName: column_name,
             value
           })
+          // update element column name
+          if (!this.metadata.isSameColumnElement) {
+            this.$store.commit('updateValueOfField', {
+              parentUuid: this.metadata.parentUuid,
+              containerUuid,
+              columnName: this.metadata.element_name,
+              value
+            })
+          }
         }
       }
     },

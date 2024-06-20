@@ -211,7 +211,7 @@ export default {
       }
 
       // implement container manager row
-      if (this.metadata.inTable && this.containerManager && this.containerManager.setCell) {
+      if (this.metadata.inTable) {
         this.containerManager.setCell({
           containerUuid,
           rowIndex: this.metadata.rowIndex,
@@ -224,6 +224,7 @@ export default {
           columnName: DISPLAY_COLUMN_PREFIX + columnName,
           value: displayValue
         })
+        return
       }
 
       this.$store.dispatch('notifyFieldChange', {

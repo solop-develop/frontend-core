@@ -56,17 +56,11 @@ export default ({ fieldMetadata, containerManager }) => {
       const { displayColumnName, containerUuid, inTable } = fieldMetadata
       // table records values
       if (inTable) {
-        // implement container manager row
-        if (containerManager && containerManager.getCell) {
-          const currentValue = containerManager.getCell({
-            containerUuid,
-            rowIndex: fieldMetadata.rowIndex,
-            columnName: displayColumnName
-          })
-          if (!isEmptyValue(currentValue)) {
-            return currentValue
-          }
-        }
+        return containerManager.getCell({
+          containerUuid,
+          rowIndex: fieldMetadata.rowIndex,
+          columnName: displayColumnName
+        })
       }
 
       // return store.getters.getValueOfFieldOnContainer({
@@ -85,15 +79,12 @@ export default ({ fieldMetadata, containerManager }) => {
 
       // table records values
       if (inTable) {
-        // implement container manager row
-        if (containerManager && containerManager.setCell) {
-          containerManager.setCell({
-            containerUuid,
-            rowIndex: fieldMetadata.rowIndex,
-            columnName: displayColumnName,
-            value: newValue
-          })
-        }
+        return containerManager.setCell({
+          containerUuid,
+          rowIndex: fieldMetadata.rowIndex,
+          columnName: displayColumnName,
+          value: newValue
+        })
       }
 
       store.commit('updateValueOfField', {
