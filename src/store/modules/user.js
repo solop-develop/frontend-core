@@ -751,50 +751,50 @@ const actions = {
   },
   systemDictionary({ commit }) {
     return new Promise(resolve => {
-      let sistemInfo = {
+      let systemInfo = {
         version: '0.0.1'
       }
       systemInfoDictionary()
         .then(response => {
           if (!isEmptyValue(response) && !isEmptyValue(response.version)) {
-            sistemInfo = response
+            systemInfo = response
           }
           commit('setSystemDictionary', {
-            ...sistemInfo,
+            ...systemInfo,
             ...response
           })
-          resolve(sistemInfo)
+          resolve(systemInfo)
         })
         .catch(error => {
           commit('setSystemDictionary', {
-            ...sistemInfo
+            ...systemInfo
           })
           console.warn(`Error getting System Info: ${error.message}. Code: ${error.code}.`)
-          resolve(sistemInfo)
+          resolve(systemInfo)
         })
     })
   },
 
   systemS3({ commit }) {
     return new Promise(resolve => {
-      let sistemInfo = {
+      let systemInfo = {
         version: '0.0.1'
       }
       systemInfoS3()
         .then(response => {
           if (!isEmptyValue(response)) {
-            sistemInfo = {
+            systemInfo = {
               ...systemInfo,
               ...response
             }
           }
           commit('setSystemS3', systemInfo)
-          resolve(sistemInfo)
+          resolve(systemInfo)
         })
         .catch(error => {
-          commit('setSystemS3', sistemInfo)
+          commit('setSystemS3', systemInfo)
           console.warn(`Error getting System Info: ${error.message}. Code: ${error.code}.`)
-          resolve(sistemInfo)
+          resolve(systemInfo)
         })
     })
   }
