@@ -497,9 +497,12 @@ export default defineComponent({
       } else if (!isEmptyValue(sumPayment) && isEmptyValue(sumAllInvoce)) {
         return sumAllPayments
       }
+      if (alo < 0) {
+        const positive = Math.abs(alo)
+        return positive
+      }
       return alo
     })
-
     /**
      * Methods
      */

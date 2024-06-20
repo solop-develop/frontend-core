@@ -180,7 +180,6 @@ export default defineComponent({
       }
       row.isSelect = !isSelect
       row.applied = appliedPay(row)
-      console.log({ qlq: appliedPay(row) }, num(appliedPay(row)))
       row.amountApplied = appliedPay(row)
       addRowSelect(row)
     }
