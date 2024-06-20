@@ -22,58 +22,39 @@ import { request } from '@/utils/ADempiere/request'
 /**
  * Save tab sequences changes
  * @param {string} tabUuid
- * @param {array} contextAttributesList
- * @param {number} pageSize
- * @param {string} pageToken
+ * @param {array} contextAttributes
  * @returns {promise}
  */
+
 export function requestListTabSequences({
-  tabUuid,
-  // dsl query
-  contextAttributesList,
-  // Page Data
-  pageSize = 999,
-  pageToken
+  tabId,
+  contextAttributes
 }) {
   return request({
-    url: '/user-interface/component/tab-sequence/list-tab-sequences',
-    method: 'post',
+    url: `/user-interface/tab-sequences/${tabId}`,
+    method: 'get',
     params: {
-      //
-      page_size: pageSize,
-      page_token: pageToken
-    },
-    data: {
-      tab_uuid: tabUuid,
-      context_attributes: contextAttributesList
+      context_attributes: contextAttributes
     }
   })
-    .then(response => {
-      const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
-      return convertEntityList(response)
-    })
 }
 
 /**
  * Save tab sequences changes
  * @param {string} tabUuid
- * @param {array} contextAttributesList
- * @param {array} entitiesList
+ * @param {array} contextAttributes
  * @returns {promise}
  */
 export function requestSaveTabSequences({
-  tabUuid,
+  tabId,
   // dsl query
-  contextAttributesList,
-  entitiesList
+  contextAttributes
 }) {
   return request({
-    url: '/user-interface/component/tab-sequence/save-tab-sequences',
+    url: `/user-interface/tab-sequences/${tabId}`,
     method: 'post',
     data: {
-      tab_uuid: tabUuid,
-      context_attributes: contextAttributesList,
-      entities_list: entitiesList
+      context_attributes: contextAttributes
     }
   })
     .then(response => {
