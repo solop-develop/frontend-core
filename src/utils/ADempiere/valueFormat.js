@@ -33,7 +33,7 @@ import {
 import { NUMBER_PRECISION } from '@/utils/ADempiere/formatValue/numberFormat.js'
 
 // Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { getTypeOfValue, isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertBooleanToTranslationLang } from './formatValue/booleanFormat'
 export { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
 import { decodeHtmlEntities } from '@/utils/ADempiere/formatValue/stringFormat.js'
@@ -94,6 +94,10 @@ export function formatField({
       break
 
     case DATE.id:
+      // date is object { value, type }
+      if (getTypeOfValue(value) === 'OBJECT' && Object.prototype.hasOwnProperty.call(value, 'value')) {
+        value = value.value
+      }
       formattedValue = formatDateTemp({
         value,
         isTime: false,
@@ -106,6 +110,10 @@ export function formatField({
       break
 
     case DATE_PLUS_TIME.id:
+      // date is object { value, type }
+      if (getTypeOfValue(value) === 'OBJECT' && Object.prototype.hasOwnProperty.call(value, 'value')) {
+        value = value.value
+      }
       formattedValue = formatDateTemp({
         value,
         isTime: true,
@@ -113,6 +121,10 @@ export function formatField({
       })
       break
     case TIME.id:
+      // date is object { value, type }
+      if (getTypeOfValue(value) === 'OBJECT' && Object.prototype.hasOwnProperty.call(value, 'value')) {
+        value = value.value
+      }
       formattedValue = formatDateTemp({
         value,
         isTime: true,
@@ -126,6 +138,10 @@ export function formatField({
 
     case AMOUNT.id:
     case COSTS_PLUS_PRICES.id:
+      // number is object { value, type }
+      if (getTypeOfValue(value) === 'OBJECT' && Object.prototype.hasOwnProperty.call(value, 'value')) {
+        value = value.value
+      }
       formattedValue = formatPriceTemp({
         value,
         currency
@@ -133,12 +149,20 @@ export function formatField({
       break
 
     case NUMBER.id:
+      // number is object { value, type }
+      if (getTypeOfValue(value) === 'OBJECT' && Object.prototype.hasOwnProperty.call(value, 'value')) {
+        value = value.value
+      }
       formattedValue = formatQuantity({
         value,
         precision: NUMBER_PRECISION
       })
       break
     case QUANTITY.id:
+      // number is object { value, type }
+      if (getTypeOfValue(value) === 'OBJECT' && Object.prototype.hasOwnProperty.call(value, 'value')) {
+        value = value.value
+      }
       formattedValue = formatQuantity({
         value
       })
