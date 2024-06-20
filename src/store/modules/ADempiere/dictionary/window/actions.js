@@ -502,8 +502,9 @@ export default {
 
     actionsList.push(deleteRecord)
     actionsList.push(refreshRecords)
-
     const { sequenceTabsList } = tabDefinition
+    const storedTab = rootGetters.getStoredTab(windowUuid, tabUuid)
+    const sequenceId = storedTab.sequenceTabsList[0]
     if (!isEmptyValue(sequenceTabsList)) {
       sequenceTabsList.forEach(sequenceTab => {
         actionsList.push({
@@ -514,7 +515,6 @@ export default {
         })
 
         const relatedColumns = sequenceTab.context_column_names
-
         dispatch('setModalDialog', {
           containerUuid: sequenceTab.uuid,
           title: sequenceTab.name,
@@ -563,7 +563,8 @@ export default {
                 parentUuid: windowUuid,
                 containerUuid: tabUuid,
                 contextColumnNames: sequenceTab.context_column_names,
-                tabUuid: sequenceTab.uuid
+                tabUuid: sequenceTab.uuid,
+                tabId: sequenceId.id
               })
               resolve([])
             })
@@ -572,7 +573,9 @@ export default {
             dispatch('saveTabSequence', {
               parentUuid: windowUuid,
               containerUuid: tabAssociatedUuid,
-              tabUuid: sequenceTab.uuid
+              tabUuid: sequenceTab.uuid,
+              contextColumnNames: sequenceTab.context_column_names,
+              tabId: sequenceId.id
             })
           },
           isDisabledDone: ({ parentUuid: tabAssociatedUuid, containerUuid }) => {
