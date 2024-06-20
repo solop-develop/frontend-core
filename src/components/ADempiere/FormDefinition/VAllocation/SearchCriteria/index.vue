@@ -267,13 +267,14 @@ export default defineComponent({
     //     columnName: 'C_BPartner_ID'
     //   })
     // })
-
+    const infoOrganization = store.getters['user/getOrganization']
     const organizationsId = computed({
       // getter
       get() {
         let { organizationId } = store.getters.getSearchFilter
-        if (isEmptyValue(organizationId) || organizationId.id <= 0) {
-          organizationId = store.getters['user/getOrganization'].id
+        if (
+          isEmptyValue(organizationId) || organizationId.id <= 0) {
+          organizationId = infoOrganization.name
         }
         return organizationId
       },
@@ -290,7 +291,6 @@ export default defineComponent({
         })
       }
     })
-
     const currentDate = computed({
       // getter
       get() {

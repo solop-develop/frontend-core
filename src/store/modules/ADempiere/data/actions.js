@@ -16,8 +16,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import store from '@/store'
 import language from '@/lang'
-
 // Constants
 import { TABLE, TABLE_DIRECT } from '@/utils/ADempiere/references'
 
@@ -432,6 +432,7 @@ const actions = {
     commit('resetStateProcessControl')
     commit('resetStateUtils')
     commit('resetStateWindowControl')
+    store.dispatch('resetStateFormData')
   }
 }
 

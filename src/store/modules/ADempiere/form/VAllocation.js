@@ -85,6 +85,9 @@ export default {
   state: VAllocation,
 
   mutations: {
+    resetStateVallocationCriteria(state) {
+      state = VAllocation
+    },
     setTransactionTypes(state, payload) {
       state.transactionTypes = payload
     },
@@ -193,7 +196,7 @@ export default {
               const { KeyColumn, DisplayColumn } = values
               transactionTypes[KeyColumn] = DisplayColumn
             })
-
+            commit('resetStateVallocationCriteria')
             commit('setTransactionTypes', transactionTypes)
 
             resolve(transactionTypes)
