@@ -491,17 +491,17 @@ export default defineComponent({
       const initialValueAll = 0
       const sumAllInvoce = sumInvoce.reduce((accumulator, currentValue) => accumulator + currentValue, initialValue)
       const sumAllPayments = sumPayment.reduce((accumulator, currentValue) => accumulator + currentValue, initialValuePayment)
-      const alo = [sumAllPayments, sumAllInvoce].reduce((accumulator, currentValue) => accumulator + currentValue, initialValueAll)
+      const totalSum = [sumAllPayments, sumAllInvoce].reduce((accumulator, currentValue) => accumulator + currentValue, initialValueAll)
       if (isEmptyValue(sumAllPayments) && !isEmptyValue(sumAllInvoce)) {
         return sumAllInvoce
       } else if (!isEmptyValue(sumPayment) && isEmptyValue(sumAllInvoce)) {
         return sumAllPayments
       }
-      if (alo < 0) {
-        const positive = Math.abs(alo)
-        return positive
+      if (totalSum < 0) {
+        const totalSumPositive = Math.abs(totalSum)
+        return totalSumPositive
       }
-      return alo
+      return totalSum
     })
     /**
      * Methods
