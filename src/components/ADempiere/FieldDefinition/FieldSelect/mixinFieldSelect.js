@@ -75,6 +75,14 @@ export default {
         columnName: this.metadata.columnName
       })
     },
+    getTableOption() {
+      return {
+        value: this.value,
+        displayedValue: this.displayedValue,
+        uuid: undefined,
+        reason: 'Table option'
+      }
+    },
     getStoredLookupAll() {
       const allOptions = store.getters.getStoredLookupAll({
         parentUuid: this.metadata.parentUuid,
@@ -94,6 +102,13 @@ export default {
       if (isEmptyValue(allOptions) || (!isEmptyValue(allOptions) &&
         (!this.blankValues.includes(allOptions.at().value)))) {
         allOptions.unshift(this.blankOption)
+      }
+      if (this.metadata.inTable) {
+        if (!allOptions.some(option => option.value === this.getTableOption.value)) {
+          allOptions.push(
+            this.getTableOption
+          )
+        }
       }
 
       return allOptions

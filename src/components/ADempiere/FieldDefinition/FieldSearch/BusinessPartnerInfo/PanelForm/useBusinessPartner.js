@@ -179,7 +179,7 @@ export default ({
     }
 
     // implement container manager row
-    if (fieldAttributes.inTable && containerManager && containerManager.setCell) {
+    if (fieldAttributes.inTable) {
       containerManager.setCell({
         containerUuid,
         rowIndex: fieldAttributes.rowIndex,
@@ -192,6 +192,7 @@ export default ({
         columnName: DISPLAY_COLUMN_PREFIX + columnName,
         value: displayValue
       })
+      return
     }
 
     store.dispatch('notifyFieldChange', {
