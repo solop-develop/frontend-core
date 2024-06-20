@@ -175,7 +175,7 @@ export default defineComponent({
       return panelMetadata.value.sort_yes_no_column_name
     })
     const sortColumnName = computed(() => {
-      return panelMetadata.value.sortOrderColumnName
+      return panelMetadata.value.sort_order_column_name
     })
 
     const isMobile = computed(() => {
