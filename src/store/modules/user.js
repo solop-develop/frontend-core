@@ -788,7 +788,7 @@ const actions = {
               ...response
             }
           }
-          commit('setSystemS3', systemInfo)
+          commit('setSystemS3', sistemInfo)
           resolve(sistemInfo)
         })
         .catch(error => {
