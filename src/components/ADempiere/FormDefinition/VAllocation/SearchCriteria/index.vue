@@ -271,16 +271,20 @@ export default defineComponent({
       // getter
       get() {
         let { organizationId } = store.getters.getSearchFilter
-        if (
-          isEmptyValue(organizationId) || organizationId.id <= 0) {
-          const infoOrganization = store.getters['user/getOrganization']
+        const infoOrganization = store.getters['user/getOrganization']
+        if (isEmptyValue(organizationId) || organizationId.id < 0 || organizationId.id === infoOrganization.ids) {
           organizationId = infoOrganization.name
-          store.commit('updateAttributeCriteriaVallocation', {
-            attribute: 'organizationId',
-            criteria: 'searchCriteria',
-            value: infoOrganization.id
-          })
         }
+        requestListOrganizations({
+          searchValue: undefined
+        })
+          .then(response => {
+            store.commit('updateAttributeCriteriaVallocation', {
+              attribute: 'organizationId',
+              criteria: 'searchCriteria',
+              value: infoOrganization.id
+            })
+          })
         return organizationId
       },
       // setter
