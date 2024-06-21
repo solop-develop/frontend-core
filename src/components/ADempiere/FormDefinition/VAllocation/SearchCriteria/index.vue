@@ -276,10 +276,10 @@ export default defineComponent({
     }
     const defaultValue = computed(() => {
       const infoGetter = store.getters.getSearchFilter
-      const infoOrganization = store.getters['user/getOrganization']
+      const infoOrganization = store.getters['user/getOrganization'].id
       let organizationId = infoGetter.organizationId
       if (organizationId < 0) {
-        organizationId = infoOrganization.id
+        organizationId = infoOrganization
       }
       return organizationId
     })
