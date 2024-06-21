@@ -267,13 +267,13 @@ export default defineComponent({
     //     columnName: 'C_BPartner_ID'
     //   })
     // })
-    const infoOrganization = store.getters['user/getOrganization']
     const organizationsId = computed({
       // getter
       get() {
         let { organizationId } = store.getters.getSearchFilter
         if (
           isEmptyValue(organizationId) || organizationId.id <= 0) {
+          const infoOrganization = store.getters['user/getOrganization']
           organizationId = infoOrganization.name
           store.commit('updateAttributeCriteriaVallocation', {
             attribute: 'organizationId',

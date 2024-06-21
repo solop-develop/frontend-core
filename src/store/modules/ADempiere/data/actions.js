@@ -17,7 +17,6 @@
  */
 
 import language from '@/lang'
-import store from '@/store'
 // Constants
 import { TABLE, TABLE_DIRECT } from '@/utils/ADempiere/references'
 
@@ -421,7 +420,7 @@ const actions = {
     }
   },
 
-  resetStateBusinessData({ commit }) {
+  resetStateBusinessData({ commit, dispatch }) {
     commit('resetStateContainerInfo')
     commit('setInitialContext', {})
     commit('resetStateTranslations')
@@ -432,7 +431,7 @@ const actions = {
     commit('resetStateProcessControl')
     commit('resetStateUtils')
     commit('resetStateWindowControl')
-    store.dispatch('resetStateFormData')
+    dispatch('resetStateFormData')
   }
 }
 

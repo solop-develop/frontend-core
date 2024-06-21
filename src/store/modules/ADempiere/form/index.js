@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import store from '@/store'
 
 export default {
   state: {},
@@ -24,7 +23,7 @@ export default {
 
   actions: {
     resetStateFormData({ commit }) {
-      store.commit('resetStateVallocation')
+      commit('resetStateVallocation')
     }
   },
 

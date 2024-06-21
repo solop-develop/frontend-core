@@ -29,7 +29,7 @@ import { isEmptyValue } from '@/utils/ADempiere'
 import { dateTimeFormats } from '@/utils/ADempiere/formatValue/dateFormat'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 
-const VAllocation = {
+const initState = {
   transactionTypes: {},
   searchCriteria: {
     businessPartnerId: '',
@@ -82,7 +82,7 @@ const VAllocation = {
 }
 
 export default {
-  state: VAllocation,
+  state: initState,
 
   mutations: {
     setTransactionTypes(state, payload) {
@@ -179,7 +179,7 @@ export default {
       state.listSelectAll = list
     },
     resetStateVallocation(state) {
-      state = VAllocation
+      state = initState
     }
   },
 
