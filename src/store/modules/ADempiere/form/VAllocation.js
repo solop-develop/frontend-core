@@ -29,6 +29,18 @@ import { isEmptyValue } from '@/utils/ADempiere'
 import { dateTimeFormats } from '@/utils/ADempiere/formatValue/dateFormat'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 
+const Criteria = {
+  businessPartnerId: '',
+  organizationId: -1,
+  currencyId: -1,
+  listOrganization: [],
+  listCurrency: [],
+  date: '',
+  transactionType: '',
+  description: '',
+  chargeId: -1
+}
+
 const initState = {
   transactionTypes: {},
   searchCriteria: {
@@ -179,10 +191,9 @@ export default {
       state.listSelectAll = list
     },
     resetStateVallocation(state) {
-      state = initState
+      Object.assign(state.searchCriteria, Criteria)
     }
   },
-
   actions: {
     loadTransactonsTypesFromServer({ commit, state }) {
       return new Promise(resolve => {

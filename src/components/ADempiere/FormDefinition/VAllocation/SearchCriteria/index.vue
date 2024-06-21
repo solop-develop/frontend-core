@@ -267,25 +267,26 @@ export default defineComponent({
     //     columnName: 'C_BPartner_ID'
     //   })
     // })
+    function updateOrganization(id) {
+      store.commit('updateAttributeCriteriaVallocation', {
+        attribute: 'organizationId',
+        criteria: 'searchCriteria',
+        value: id
+      })
+    }
+    const defaultValue = computed(() => {
+      const infoGetter = store.getters.getSearchFilter
+      const infoOrganization = store.getters['user/getOrganization']
+      let organizationId = infoGetter.organizationId
+      if (organizationId < 0) {
+        organizationId = infoOrganization.id
+      }
+      return organizationId
+    })
     const organizationsId = computed({
-      // getter
       get() {
-        let { organizationId } = store.getters.getSearchFilter
-        const infoOrganization = store.getters['user/getOrganization']
-        if (isEmptyValue(organizationId) || organizationId.id < 0 || organizationId.id === infoOrganization.id) {
-          organizationId = infoOrganization.name
-        }
-        requestListOrganizations({
-          searchValue: undefined
-        })
-          .then(response => {
-            store.commit('updateAttributeCriteriaVallocation', {
-              attribute: 'organizationId',
-              criteria: 'searchCriteria',
-              value: infoOrganization.id
-            })
-          })
-        return organizationId
+        updateOrganization(defaultValue.value)
+        return defaultValue.value
       },
       // setter
       set(id) {
@@ -293,11 +294,7 @@ export default defineComponent({
           attribute: 'transactionOrganizationId',
           value: id
         })
-        store.commit('updateAttributeCriteriaVallocation', {
-          attribute: 'organizationId',
-          criteria: 'searchCriteria',
-          value: id
-        })
+        updateOrganization(id)
       }
     })
     const currentDate = computed({
@@ -446,7 +443,7 @@ export default defineComponent({
     })
 
     loadTransactonsTypes()
-
+    findOrganizations(true)
     return {
       storedTransactionTypes,
       // Refs
@@ -475,7 +472,9 @@ export default defineComponent({
       isDisplayedDefault,
       isReadOnlyField,
       getLookupList,
-      getSearchRecordsList
+      getSearchRecordsList,
+      defaultValue,
+      updateOrganization
     }
   }
 })
