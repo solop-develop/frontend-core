@@ -585,8 +585,8 @@ export default defineComponent({
 
     function widthColumn(fieldAttributes) {
       const { componentPath } = fieldAttributes
-      if (['FieldSearch', 'FieldAccountingCombination'].includes(componentPath)) return '450'
-      return '210'
+      if (['FieldSearch', 'FieldAccountingCombination'].includes(componentPath)) return '500'
+      return '250'
     }
 
     /**
@@ -722,6 +722,9 @@ export default defineComponent({
   .el-table .cell:hover {
     border: 1px solid blue;
     overflow: hidden;
+  }
+  .el-table thead tr {
+    height: 40px!important
   }
 }
 </style>
