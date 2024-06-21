@@ -272,7 +272,7 @@ export default defineComponent({
       get() {
         let { organizationId } = store.getters.getSearchFilter
         const infoOrganization = store.getters['user/getOrganization']
-        if (isEmptyValue(organizationId) || organizationId.id < 0 || organizationId.id === infoOrganization.ids) {
+        if (isEmptyValue(organizationId) || organizationId.id < 0 || organizationId.id === infoOrganization.id) {
           organizationId = infoOrganization.name
         }
         requestListOrganizations({
