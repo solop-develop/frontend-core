@@ -219,7 +219,6 @@ const processManager = {
           .then(runProcessRepsonse => {
             isProcessedError = runProcessRepsonse.is_error
             summary = runProcessRepsonse.summary
-
             // window refresh data
             const windowsUuid = router.app._route.query.parentUuid
             if (!isEmptyValue(recordId) && !isEmptyValue(windowsUuid)) {
@@ -254,18 +253,23 @@ const processManager = {
             }
 
             resolve(runProcessRepsonse)
-
-            commit('clearBrowserData', {
-              containerUuid: parentUuid
-            })
-            dispatch('setBrowserDefaultValues', {
-              containerUuid: parentUuid
-            })
-            if (isEmptyValue(recordId) || isEmptyValue(windowsUuid)) {
-              commit('setBrowserData', {
-                containerUuid: parentUuid,
-                isLoaded: true
+            if (isEmptyValue(windowsUuid)) {
+              dispatch('getBrowserSearch', {
+                containerUuid: browserDefinition.containerUuid,
+                isClearSelection: true
               })
+              // commit('clearBrowserData', {
+              //   containerUuid: parentUuid
+              // })
+              // dispatch('setBrowserDefaultValues', {
+              //   containerUuid: parentUuid
+              // })
+              // if (isEmptyValue(recordId) || isEmptyValue(windowsUuid)) {
+              //   commit('setBrowserData', {
+              //     containerUuid: parentUuid,
+              //     isLoaded: true
+              //   })
+              // }
             }
           })
           .catch(error => {
