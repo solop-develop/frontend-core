@@ -16,8 +16,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import store from '@/store'
 import language from '@/lang'
+import store from '@/store'
 // Constants
 import { TABLE, TABLE_DIRECT } from '@/utils/ADempiere/references'
 

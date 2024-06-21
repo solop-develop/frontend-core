@@ -275,6 +275,11 @@ export default defineComponent({
         if (
           isEmptyValue(organizationId) || organizationId.id <= 0) {
           organizationId = infoOrganization.name
+          store.commit('updateAttributeCriteriaVallocation', {
+            attribute: 'organizationId',
+            criteria: 'searchCriteria',
+            value: infoOrganization.id
+          })
         }
         return organizationId
       },
