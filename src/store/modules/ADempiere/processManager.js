@@ -253,23 +253,20 @@ const processManager = {
             }
 
             resolve(runProcessRepsonse)
-            if (isEmptyValue(windowsUuid)) {
+
+            // clear data and set default values or refresh query
+            commit('clearBrowserData', {
+              containerUuid: browserDefinition.uuid
+            })
+            if (isEmptyValue(recordId) || isEmptyValue(windowsUuid)) {
               dispatch('getBrowserSearch', {
-                containerUuid: browserDefinition.containerUuid,
+                containerUuid: browserDefinition.uuid,
                 isClearSelection: true
               })
-              // commit('clearBrowserData', {
-              //   containerUuid: parentUuid
-              // })
-              // dispatch('setBrowserDefaultValues', {
-              //   containerUuid: parentUuid
-              // })
-              // if (isEmptyValue(recordId) || isEmptyValue(windowsUuid)) {
-              //   commit('setBrowserData', {
-              //     containerUuid: parentUuid,
-              //     isLoaded: true
-              //   })
-              // }
+            } else {
+              dispatch('setBrowserDefaultValues', {
+                containerUuid: browserDefinition.uuid
+              })
             }
           })
           .catch(error => {
