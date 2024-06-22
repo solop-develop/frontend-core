@@ -73,7 +73,7 @@
         :column-key="fieldAttributes.columnName"
         :prop="fieldAttributes.columnName"
         sortable
-        min-width="210"
+        :min-width="widthColumn(fieldAttributes)"
         :fixed="fieldAttributes.isFixedTableColumn"
       >
         <template slot="header">
@@ -233,7 +233,11 @@ export default defineComponent({
         return false
       })
     })
-
+    function widthColumn(fieldAttributes) {
+      const { componentPath } = fieldAttributes
+      if (['FieldSearch', 'FieldAccountingCombination'].includes(componentPath)) return '500'
+      return '250'
+    }
     const selectionsLength = computed(() => {
       return props.containerManager.getSelection({
         containerUuid: props.containerUuid
@@ -522,7 +526,8 @@ export default defineComponent({
       handleSelectionAll,
       loadSelection,
       handleChangeSizePage,
-      activateAll
+      activateAll,
+      widthColumn
     }
   }
 })
@@ -551,6 +556,9 @@ export default defineComponent({
   .el-table__body-wrapper {
     overflow: auto;
     height: calc(100vh - 310px);
+  }
+  .el-table thead tr {
+    height: 40px!important
   }
 }
 </style>
