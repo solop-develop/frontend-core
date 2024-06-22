@@ -219,6 +219,7 @@ const processManager = {
           .then(runProcessRepsonse => {
             isProcessedError = runProcessRepsonse.is_error
             summary = runProcessRepsonse.summary
+
             // window refresh data
             const windowsUuid = router.app._route.query.parentUuid
             if (!isEmptyValue(recordId) && !isEmptyValue(windowsUuid)) {
