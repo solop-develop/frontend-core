@@ -343,6 +343,10 @@ const actions = {
       requestLogout().catch(error => {
         console.warn(error)
       }).finally(() => {
+        dispatch('resetStateBusinessData', null, {
+          root: true
+        })
+
         // clear sesion cookies
         removeCurrentRole()
         removeCurrentOrganization()
@@ -500,7 +504,6 @@ const actions = {
 
         // Update user info and context associated with session
         // dispatch('getSessionInfo', tokenSession)
-
         // refresh warehouses
         if (!isSameOrganization) {
           dispatch('getWarehousesList', {
@@ -528,6 +531,10 @@ const actions = {
       })
       .finally(() => {
         dispatch('permission/sendRequestMenu', null, {
+          root: true
+        })
+
+        dispatch('resetStateBusinessData', null, {
           root: true
         })
         // location.href = '/'
@@ -675,6 +682,10 @@ const actions = {
       })
       .finally(() => {
         dispatch('permission/sendRequestMenu', null, {
+          root: true
+        })
+
+        dispatch('resetStateBusinessData', null, {
           root: true
         })
       })

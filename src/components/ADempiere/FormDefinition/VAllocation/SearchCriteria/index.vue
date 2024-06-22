@@ -29,33 +29,13 @@
             >
               <el-row :gutter="20">
                 <el-col :span="12">
-                  <business-partner
+                  <business-partner-field
                     :metadata="metadata"
                   />
                 </el-col>
+
                 <el-col :span="12">
-                  <el-form-item
-                    :label="$t('form.VAllocation.searchCriteria.organization')"
-                  >
-                    <el-select
-                      v-model="organizationsId"
-                      filterable
-                      clearable
-                      :default-first-option="true"
-                      :remote-method="remoteSearchOrganizations"
-                      @visible-change="findOrganizations"
-                    >
-                      <empty-option-select
-                        :current-value="organizationsId"
-                      />
-                      <el-option
-                        v-for="item in optionsOrganizations"
-                        :key="item.id"
-                        :label="item.label"
-                        :value="item.id"
-                      />
-                    </el-select>
-                  </el-form-item>
+                  <organization-field />
                 </el-col>
               </el-row>
 
@@ -154,11 +134,12 @@ import {
 import store from '@/store'
 
 // Components and Mixins
-import BusinessPartner from '@/components/ADempiere/FormDefinition/VAllocation/SearchCriteria/businessPartner.vue'
+import BusinessPartnerField from '@/components/ADempiere/FormDefinition/VAllocation/SearchCriteria/businessPartnerField.vue'
 import Carousel from '@/components/ADempiere/Carousel'
 import CurrencyField from '@/components/ADempiere/FormDefinition/VAllocation/SearchCriteria/currencyField.vue'
 import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
 import EmptyOptionSelect from '@/components/ADempiere/FieldDefinition/FieldSelect/emptyOptionSelect.vue'
+import OrganizationField from '@/components/ADempiere/FormDefinition/VAllocation/SearchCriteria/organizationField.vue'
 
 // Constants
 import {
@@ -167,23 +148,19 @@ import {
   RECEIVABLES_AND_PAYABLES
 } from '@/utils/ADempiere/dictionary/form/VAllocation'
 
-// API Request Methods
-import {
-  requestListOrganizations
-} from '@/api/ADempiere/form/VAllocation.ts'
-
 // Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'SearchCriteria',
 
   components: {
-    BusinessPartner,
+    BusinessPartnerField,
     Carousel,
     CurrencyField,
     FieldDefinition,
-    EmptyOptionSelect
+    EmptyOptionSelect,
+    OrganizationField
   },
 
   props: {
@@ -204,10 +181,6 @@ export default defineComponent({
 
     const receivablesOnly = ref(false)
     const payablesOnly = ref(false)
-
-    // Value the Select
-    const organizations = ref('')
-    const currency = ref('')
 
     const storedTransactionTypes = computed(() => {
       return store.getters.getStoredTransactionTypes
@@ -243,23 +216,6 @@ export default defineComponent({
       return ''
     })
 
-    const optionsOrganizations = computed({
-      // getter
-      get() {
-        const { listOrganization } = store.getters.getSearchFilter
-        return listOrganization
-      },
-      // setter
-      set(list) {
-        store.commit('updateAttributeCriteriaVallocation', {
-          attribute: 'listOrganization',
-          criteria: 'searchCriteria',
-          value: list
-        })
-        // store.commit('setBusinessPartner', id)
-      }
-    })
-
     // const businessPartner = computed(() => {
     //   return store.getters.getValueOfFieldOnContainer({
     //     parentUuid: '',
@@ -267,29 +223,6 @@ export default defineComponent({
     //     columnName: 'C_BPartner_ID'
     //   })
     // })
-
-    const organizationsId = computed({
-      // getter
-      get() {
-        let { organizationId } = store.getters.getSearchFilter
-        if (isEmptyValue(organizationId) || organizationId.id <= 0) {
-          organizationId = store.getters['user/getOrganization'].id
-        }
-        return organizationId
-      },
-      // setter
-      set(id) {
-        store.commit('setProcess', {
-          attribute: 'transactionOrganizationId',
-          value: id
-        })
-        store.commit('updateAttributeCriteriaVallocation', {
-          attribute: 'organizationId',
-          criteria: 'searchCriteria',
-          value: id
-        })
-      }
-    })
 
     const currentDate = computed({
       // getter
@@ -324,40 +257,6 @@ export default defineComponent({
         // return store.commit('setTransactionType', type)
       }
     })
-    function findOrganizations(isFind, searchValue) {
-      if (!isFind) {
-        return
-      }
-      requestListOrganizations({
-        searchValue
-      })
-        .then(response => {
-          const { records } = response
-          optionsOrganizations.value = records.map(organizations => {
-            const { id, values } = organizations
-            return {
-              id,
-              label: values.DisplayColumn
-            }
-          })
-        })
-    }
-
-    function remoteSearchOrganizations(query) {
-      if (!isEmptyValue(query) && query.length > 2) {
-        const result = optionsOrganizations.value.filter(findFilter(query))
-        if (isEmptyValue(result)) {
-          findOrganizations(true, query)
-        }
-      }
-    }
-
-    function findFilter(queryString) {
-      return (query) => {
-        const search = queryString.toLowerCase()
-        return query.label.toLowerCase().includes(search)
-      }
-    }
 
     function loadTransactonsTypes() {
       if (!isEmptyValue(storedTransactionTypes.value)) {
@@ -448,20 +347,12 @@ export default defineComponent({
       receivablesPayables,
       // List Option
       currentTypeTransaction,
-      optionsOrganizations,
       // businessPartners,
-      organizations,
-      currency,
       // Computed
       labelReceivablesOnly,
       labelPayablesOnly,
-      organizationsId,
       currentDate,
       // Methods,
-      remoteSearchOrganizations,
-      findOrganizations,
-      findFilter,
-      //
       isMandatoryField,
       isDisplayedDefault,
       isReadOnlyField,

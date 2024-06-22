@@ -16,6 +16,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import Vue from 'vue'
+
 // API Request Methods
 import {
   requestListTransactionTypes,
@@ -29,18 +31,22 @@ import { isEmptyValue } from '@/utils/ADempiere'
 import { dateTimeFormats } from '@/utils/ADempiere/formatValue/dateFormat'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 
-const VAllocation = {
+const initStateCriteria = {
+  businessPartnerId: '',
+  organizationId: -1,
+  currencyId: -1,
+  listOrganization: [],
+  listCurrency: [],
+  date: '',
+  transactionType: '',
+  description: '',
+  chargeId: -1
+}
+
+const initStateVAllocation = {
   transactionTypes: {},
   searchCriteria: {
-    businessPartnerId: '',
-    organizationId: -1,
-    currencyId: -1,
-    listOrganization: [],
-    listCurrency: [],
-    date: '',
-    transactionType: '',
-    description: '',
-    chargeId: -1
+    ...initStateCriteria
   },
   listRecord: {
     payments: [],
@@ -82,7 +88,9 @@ const VAllocation = {
 }
 
 export default {
-  state: VAllocation,
+  state: {
+    ...initStateVAllocation
+  },
 
   mutations: {
     setTransactionTypes(state, payload) {
@@ -177,6 +185,14 @@ export default {
     },
     setListSelectInvoceandPayment(state, list) {
       state.listSelectAll = list
+    },
+    resetStateVAllocation(state) {
+      Vue.set(state, 'searchCriteria', {
+        ...initStateCriteria
+      })
+      state = {
+        ...initStateVAllocation
+      }
     }
   },
 
