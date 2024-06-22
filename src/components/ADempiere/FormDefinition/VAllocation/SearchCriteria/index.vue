@@ -134,7 +134,7 @@ import {
 import store from '@/store'
 
 // Components and Mixins
-import BusinessPartnerField from '@/components/ADempiere/FormDefinition/VAllocation/SearchCriteria/businessPartner.vue'
+import BusinessPartnerField from '@/components/ADempiere/FormDefinition/VAllocation/SearchCriteria/businessPartnerField.vue'
 import Carousel from '@/components/ADempiere/Carousel'
 import CurrencyField from '@/components/ADempiere/FormDefinition/VAllocation/SearchCriteria/currencyField.vue'
 import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
