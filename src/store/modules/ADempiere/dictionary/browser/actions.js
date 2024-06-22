@@ -38,11 +38,14 @@ import {
   containerManager,
   isDisplayedField, isMandatoryField,
   evaluateDefaultFieldShowed,
-  evaluateDefaultColumnShowed,
-  clearQueryCriteria,
-  refreshBrowserSearh, runProcessOfBrowser,
-  zoomWindow, runDeleteable
+  evaluateDefaultColumnShowed
 } from '@/utils/ADempiere/dictionary/browser/index.js'
+import {
+  clearQueryCriteria,
+  refreshBrowserSearh, exportAllRecords,
+  runProcessOfBrowser,
+  zoomWindow, runDeleteable
+} from '@/utils/ADempiere/dictionary/browser/actionsMenu'
 import { showMessage, showNotification } from '@/utils/ADempiere/notification.js'
 import { isLookup } from '@/utils/ADempiere/references'
 import { getCurrentClient, getCurrentRole } from '@/utils/ADempiere/auth'
@@ -272,6 +275,8 @@ export default {
 
     // export selected records
     actionsList.push(exportRecordsSelected)
+    // export all records
+    actionsList.push(exportAllRecords)
 
     actionsList.push(clearQueryCriteria)
     // action refresh browser search

@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -20,9 +20,12 @@ import language from '@/lang'
 import store from '@/store'
 import router from '@/router'
 
+// Constants
+import { EXPORT_SUPPORTED_TYPES } from '@/utils/ADempiere/exportUtil.js'
+
 // utils and helpers methods
 import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
-import { exportRecords, supportedTypes } from '@/utils/ADempiere/exportUtil.js'
+import { exportRecords } from '@/utils/ADempiere/exportUtil.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 /**
@@ -84,9 +87,9 @@ export const exportRecordsSelected = {
   actionName: 'exportRecordsSelected',
   exportRecordsSelected: exportRecords,
   // generate export formats
-  childs: Object.keys(supportedTypes).map(format => {
+  childs: Object.keys(EXPORT_SUPPORTED_TYPES).map(format => {
     return {
-      name: supportedTypes[format],
+      name: EXPORT_SUPPORTED_TYPES[format],
       enabled: ({ containerUuid, containerManager }) => {
         return true
       },

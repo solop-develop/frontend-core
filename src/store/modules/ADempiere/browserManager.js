@@ -20,8 +20,12 @@ import Vue from 'vue'
 import language from '@/lang'
 
 // API Request Methods
-import { updateBrowserEntity, requestDeleteBrowser } from '@/api/ADempiere/browser'
-import { requestBrowserSearch } from '@/api/ADempiere/userInterface/browserList.ts'
+import {
+  requestBrowserSearch,
+  browserExportRequest,
+  updateBrowserEntity,
+  requestDeleteBrowser
+} from '@/api/ADempiere/user-interface/browser'
 
 // Constants
 import {
@@ -284,6 +288,125 @@ const browserControl = {
               containerUuid,
               isLoaded: true
             })
+            resolve([])
+
+            showMessage({
+              title: language.t('notifications.error'),
+              message: language.t('notifications.errorSearch'),
+              summary: error.message,
+              type: 'error'
+            })
+            console.warn(`Error getting browser search: ${error.message}. Code: ${error.code}.`)
+          })
+      })
+    },
+
+    // Search with query criteria
+    getBrowserExportRecords({ commit, getters, rootGetters }, {
+      containerUuid
+    }) {
+      return new Promise(resolve => {
+        const currentRecordsList = getters.getBrowserRecordsList({
+          containerUuid
+        })
+
+        const {
+          id, fieldsList, contextColumnNames
+        } = rootGetters.getStoredBrowser(containerUuid)
+        if (isEmptyValue(id) && isEmptyValue(fieldsList) && isEmptyValue(contextColumnNames)) {
+          resolve(currentRecordsList)
+          return
+        }
+
+        const fieldsEmpty = rootGetters.getBrowserFieldsEmptyMandatory({
+          containerUuid,
+          fieldsList
+        })
+        if (!isEmptyValue(fieldsEmpty)) {
+          showMessage({
+            message: language.t('notifications.mandatoryFieldMissing') + fieldsEmpty,
+            type: 'info'
+          })
+          resolve(currentRecordsList)
+          return
+        }
+
+        // parameters Query Criteria
+        const queryCriteriaFilters = rootGetters.getBrowserQueryCriteria({
+          containerUuid,
+          fieldsList
+        })
+        const filtersList = queryCriteriaFilters.map(parameter => {
+          const {
+            columnName,
+            operator,
+            value,
+            valueTo,
+            values
+          } = parameter
+          return JSON.stringify({
+            name: columnName,
+            operator,
+            // values > value, valueTo > value
+            values: !isEmptyValue(values) ? values : !isEmptyValue(valueTo) ? [value, valueTo] : value
+          })
+        }).toString()
+        let filters
+        if (!isEmptyValue(filtersList)) {
+          filters = '[' + filtersList + ']'
+        }
+
+        // get context values
+        const contextAttributesList = getContextAttributes({
+          containerUuid,
+          contextColumnNames,
+          format: 'object'
+        })
+        let contextAttributes = '{}'
+        if (!isEmptyValue(contextAttributesList)) {
+          contextAttributes = JSON.stringify(contextAttributesList)
+        }
+
+        // const isWithoutValues = contextAttributesList.find(attribute => isEmptyValue(attribute.value))
+        // if (isWithoutValues) {
+        //   console.warn(`Without response, fill the ${isWithoutValues.columnName} field.`)
+        //   showMessage({
+        //     message: language.t('notifications.mandatoryFieldMissing') + isWithoutValues.columnName,
+        //     type: 'info'
+        //   })
+        //   resolve(currentRecordsList)
+        //   return
+        // }
+
+        showMessage({
+          title: language.t('notifications.loading'),
+          message: language.t('notifications.searching'),
+          type: 'info'
+        })
+
+        browserExportRequest({
+          id,
+          contextAttributes,
+          filters
+        })
+          .then(browserExportResponse => {
+            const { records, record_count } = browserExportResponse
+
+            const recordsList = records.map((record, rowIndex) => {
+              return {
+                ...record.values
+              }
+            })
+
+            resolve(recordsList)
+
+            showNotification({
+              title: language.t('smartBrowser.exportAllRecords.successful'),
+              message: language.t('smartBrowser.exportAllRecords.quantityExport') + record_count,
+              type: 'success'
+            })
+          })
+          .catch(error => {
             resolve([])
 
             showMessage({
