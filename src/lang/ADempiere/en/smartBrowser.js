@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,14 @@ const smartBrowser = {
   },
   smartBrowser: 'Smart Browser',
   // dictionary
-  dictionaryError: 'Error loading smart browser definition'
+  dictionaryError: 'Error loading smart browser definition',
+  // export
+  exportRecords: {
+    title: 'Export All Records',
+    description: 'Records matching the query criteria.',
+    successful: 'Successful export',
+    quantityExport: 'Quantity of exported records: '
+  }
 }
 
 export default smartBrowser
