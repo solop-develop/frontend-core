@@ -255,16 +255,18 @@ const processManager = {
 
             resolve(runProcessRepsonse)
 
+            // clear data and set default values or refresh query
             commit('clearBrowserData', {
-              containerUuid: parentUuid
-            })
-            dispatch('setBrowserDefaultValues', {
-              containerUuid: parentUuid
+              containerUuid: browserDefinition.uuid
             })
             if (isEmptyValue(recordId) || isEmptyValue(windowsUuid)) {
-              commit('setBrowserData', {
-                containerUuid: parentUuid,
-                isLoaded: true
+              dispatch('getBrowserSearch', {
+                containerUuid: browserDefinition.uuid,
+                isClearSelection: true
+              })
+            } else {
+              dispatch('setBrowserDefaultValues', {
+                containerUuid: browserDefinition.uuid
               })
             }
           })
