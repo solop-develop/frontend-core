@@ -23,7 +23,7 @@ export default {
 
   actions: {
     resetStateFormData({ commit }) {
-      commit('resetStateVallocation')
+      commit('resetStateVAllocation')
     }
   },
 

@@ -16,6 +16,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import Vue from 'vue'
+
 // API Request Methods
 import {
   requestListTransactionTypes,
@@ -29,7 +31,7 @@ import { isEmptyValue } from '@/utils/ADempiere'
 import { dateTimeFormats } from '@/utils/ADempiere/formatValue/dateFormat'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 
-const Criteria = {
+const initStateCriteria = {
   businessPartnerId: '',
   organizationId: -1,
   currencyId: -1,
@@ -41,18 +43,10 @@ const Criteria = {
   chargeId: -1
 }
 
-const initState = {
+const initStateVAllocation = {
   transactionTypes: {},
   searchCriteria: {
-    businessPartnerId: '',
-    organizationId: -1,
-    currencyId: -1,
-    listOrganization: [],
-    listCurrency: [],
-    date: '',
-    transactionType: '',
-    description: '',
-    chargeId: -1
+    ...initStateCriteria
   },
   listRecord: {
     payments: [],
@@ -94,7 +88,9 @@ const initState = {
 }
 
 export default {
-  state: initState,
+  state: {
+    ...initStateVAllocation
+  },
 
   mutations: {
     setTransactionTypes(state, payload) {
@@ -190,10 +186,16 @@ export default {
     setListSelectInvoceandPayment(state, list) {
       state.listSelectAll = list
     },
-    resetStateVallocation(state) {
-      Object.assign(state.searchCriteria, Criteria)
+    resetStateVAllocation(state) {
+      Vue.set(state, 'searchCriteria', {
+        ...initStateCriteria
+      })
+      state = {
+        ...initStateVAllocation
+      }
     }
   },
+
   actions: {
     loadTransactonsTypesFromServer({ commit, state }) {
       return new Promise(resolve => {
@@ -207,6 +209,7 @@ export default {
               const { KeyColumn, DisplayColumn } = values
               transactionTypes[KeyColumn] = DisplayColumn
             })
+
             commit('setTransactionTypes', transactionTypes)
 
             resolve(transactionTypes)
