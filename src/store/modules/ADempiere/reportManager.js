@@ -22,18 +22,23 @@ import router from '@/router'
 import language from '@/lang'
 
 // API Request Methods
-import { generateReportRequest, getReportOutputRequest } from '@/api/ADempiere/reportManagement/index.ts'
+import { generateReport, generateReportRequest, getReportOutputRequest } from '@/api/ADempiere/reportManagement/index.ts'
 import { listPrintFormatsRequest } from '@/api/ADempiere/reportManagement/printFormat.ts'
 import { listReportViewsRequest } from '@/api/ADempiere/reportManagement/reportView.ts'
 import { listDrillTablesRequest } from '@/api/ADempiere/reportManagement/drillTable.ts'
 
 // Constants
-import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
-import { REPORT_VIEWER_SUPPORTED_FORMATS, DEFAULT_REPORT_TYPE } from '@/utils/ADempiere/dictionary/report.js'
+import {
+  // REPORT_VIEWER_SUPPORTED_FORMATS,
+  DEFAULT_REPORT_TYPE
+} from '@/utils/ADempiere/dictionary/report.js'
 
 // Utils and Helper Methods
 import { getToken } from '@/utils/auth'
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import {
+  isEmptyValue,
+  getOperatorAndValue
+} from '@/utils/ADempiere/valueUtils.js'
 import {
   buildLinkHref
 } from '@/utils/ADempiere/resource.js'
@@ -129,23 +134,11 @@ const reportManager = {
           return
         }
 
-        const parameters = rootGetters.getReportParameters({
+        const filters = getOperatorAndValue({
+          format: 'array',
           containerUuid,
           fieldsList
         })
-
-        let reportingNotification = {
-          close: () => false
-        }
-        const isSession = !isEmptyValue(getToken())
-        if (isSession) {
-          reportingNotification = showNotification({
-            title: language.t('notifications.processing'),
-            message: reportDefinition.name,
-            summary: reportDefinition.description,
-            type: 'info'
-          })
-        }
 
         if (isEmptyValue(recordUuid)) {
           // close current page
@@ -165,96 +158,16 @@ const reportManager = {
           containerUuid,
           tableName
         })
-        generateReportRequest({
-          id: reportDefinition.id,
-          reportType,
-          parameters,
+        dispatch('generateReportViwer', {
+          reportId: reportDefinition.id,
+          reportUuid: reportDefinition.uuid,
+          filters,
           printFormatId,
           reportViewId,
-          // isSummary,
-          // window
+          isSummary,
           tableName,
           recordId
         })
-          .then(runReportRepsonse => {
-            const { instance_id, output, is_error } = runReportRepsonse
-
-            if (is_error) {
-              showNotification({
-                title: language.t('notifications.error'),
-                message: reportDefinition.name,
-                summary: runReportRepsonse.summary,
-                type: 'error'
-              })
-              console.warn(`Error running the process. ${runReportRepsonse.summary}.`)
-            }
-
-            let link = {
-              href: undefined,
-              download: undefined
-            }
-            if (output && output.output_stream) {
-              link = buildLinkHref({
-                fileName: output.file_name,
-                outputStream: output.output_stream,
-                mimeType: output.mime_type
-              })
-
-              // donwloaded not support render report
-              if (!REPORT_VIEWER_SUPPORTED_FORMATS.includes(reportType)) {
-                link.click()
-              }
-
-              router.push({
-                path: `/report-viewer/${reportDefinition.id}/${instance_id}`,
-                name: REPORT_VIEWER_NAME,
-                params: {
-                  reportId: reportDefinition.id,
-                  reportUuid: reportDefinition.uuid,
-                  instanceUuid: instance_id,
-                  fileName: output.file_name + instance_id,
-                  // menuParentUuid,
-                  name: output.name + instance_id,
-                  tableName: output.table_name
-                }
-              }, () => {})
-            }
-
-            commit('setReportOutput', {
-              ...output,
-              instanceUuid: instance_id,
-              reportUuid: containerUuid,
-              link,
-              parameters,
-              url: link.href,
-              download: link.download
-            })
-
-            resolve(runReportRepsonse)
-          })
-          .catch(error => {
-            showNotification({
-              title: language.t('notifications.error'),
-              message: error.message,
-              type: 'error'
-            })
-            console.warn(`Error getting print formats: ${error.message}. Code: ${error.code}.`)
-          })
-          .finally(() => {
-            // close runing report notification
-            if (!isEmptyValue(reportingNotification)) {
-              setTimeout(() => {
-                reportingNotification.close()
-              }, 1000)
-            }
-            commit('setReportGenerated', {
-              containerUuid,
-              parameters,
-              reportType,
-              printFormatId,
-              reportViewId
-            })
-          })
       })
     },
 
@@ -641,7 +554,79 @@ const reportManager = {
             })
           })
       })
+    },
+    /**
+     * Get report output
+     * @param {number} id report identifier
+     * @param {string} uuid report universal unique identifier
+     * @returns
+     */
+    generateReportViwer({ commit, getters, rootGetters }, {
+      reportId,
+      reportType,
+      filters,
+      sortBy,
+      pageSize,
+      pageToken,
+      printFormatId,
+      reportViewId,
+      reportUuid,
+      isSummary,
+      // window
+      tableName,
+      recordId
+    }) {
+      return new Promise(resolve => {
+        generateReport({
+          reportId,
+          reportType,
+          filters,
+          sortBy,
+          pageSize,
+          pageToken,
+          printFormatId,
+          reportViewId,
+          isSummary,
+          tableName,
+          recordId
+        })
+          .then(reportResponse => {
+            const {
+              id,
+              name,
+              instance_id,
+              report_view_id
+            } = reportResponse
+            router.push({
+              path: `report-viewer-engine/${id}/${instance_id}/${report_view_id}`,
+              name: 'Report Viewer Engine',
+              params: {
+                reportId: id,
+                instanceUuid: instance_id,
+                fileName: name,
+                reportUuid,
+                // menuParentUuid,
+                name: name + instance_id,
+                tableName
+              }
+            }, () => {})
+            commit('setReportOutput', {
+              ...reportResponse,
+              instanceUuid: id
+            })
+            resolve(reportResponse)
+          })
+          .catch(error => {
+            showNotification({
+              title: language.t('notifications.error'),
+              message: error.message,
+              type: 'error'
+            })
+            console.warn(`Error getting Get Report: ${error.message}. Code: ${error.code}.`)
+          })
+      })
     }
+
   },
 
   getters: {

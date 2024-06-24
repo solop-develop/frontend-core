@@ -121,6 +121,7 @@ export function generateProcess({
   }
 
   const additionalAttributes = {
+    isAdvancedQuery: processToGenerate.is_report,
     containerUuid: processToGenerate.uuid,
     parentUuid: containerUuidAssociated,
     panelName: processToGenerate.name,
@@ -139,7 +140,8 @@ export function generateProcess({
         const field = generateField({
           fieldToGenerate: fieldItem,
           moreAttributes: additionalAttributes,
-          evaluateDefaultFieldShowed
+          evaluateDefaultFieldShowed,
+          isQueryCriteria: processToGenerate.is_report
         })
         // Add new field if is range number
         if (isAddRangeField(field)) {
@@ -152,6 +154,8 @@ export function generateProcess({
 
           fieldsRangeList.push(fieldRange)
         }
+
+        // field.is_query_criteria = processToGenerate.is_report
 
         return field
       })

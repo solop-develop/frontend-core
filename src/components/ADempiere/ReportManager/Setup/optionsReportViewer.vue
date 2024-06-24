@@ -246,7 +246,7 @@ export default defineComponent({
     })
 
     const tableName = computed(() => {
-      const { tableName } = store.getters.getReportOutput(root.$route.params.instanceUuid)
+      const { tableName } = store.getters.getReportOutput(root.$route.params.reportId)
       if (!isEmptyValue(tableName)) {
         return tableName
       }
@@ -278,7 +278,7 @@ export default defineComponent({
     })
 
     const defaultParams = computed(() => {
-      return store.getters.getReportOutput(root.$route.params.instanceUuid)
+      return store.getters.getReportOutput(root.$route.params.reportId)
     })
 
     const isShowSetupReport = computed(() => {
@@ -358,7 +358,7 @@ export default defineComponent({
         containerUuid: props.containerUuid,
         fieldsList: reportDefinition.fieldsList
       })
-      const { name, description } = store.getters.getReportOutput(root.$route.params.instanceUuid)
+      const { name, description } = store.getters.getReportOutput(root.$route.params.reportId)
       showNotification({
         title: lang.t('notifications.processing'),
         message: name,
