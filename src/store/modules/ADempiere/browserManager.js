@@ -31,7 +31,9 @@ import {
 import {
   ROW_ATTRIBUTES, ROW_KEY_ATTRIBUTES, ROWS_OF_RECORDS_BY_PAGE
 } from '@/utils/ADempiere/tableUtils'
-import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
+import {
+  DISPLAY_COLUMN_PREFIX, SORT_COLUMN_PREFIX
+} from '@/utils/ADempiere/dictionaryUtils'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -277,6 +279,20 @@ const browserControl = {
           .then(browserSearchResponse => {
             const recordsList = browserSearchResponse.records.map((record, rowIndex) => {
               const { values } = record
+
+              // TODO: Test peformance.
+              Object.keys(values).forEach(key => {
+                const currentValue = values[key]
+                if (key.startsWith(DISPLAY_COLUMN_PREFIX)) {
+                  // Add column with sort values to correct sorting
+                  let sortValue = ''
+                  if (!isEmptyValue(currentValue)) {
+                    sortValue = currentValue.toLowerCase()
+                  }
+                  values[SORT_COLUMN_PREFIX + key] = sortValue
+                }
+              })
+
               return {
                 ...values,
                 // datatables app attributes

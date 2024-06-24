@@ -44,6 +44,11 @@ import {
 export const DISPLAY_COLUMN_PREFIX = `DisplayColumn_`
 
 /**
+ * Sort Column Prefix on Column Name: "SortColumn_ColumnName"
+ */
+export const SORT_COLUMN_PREFIX = `SortColumn_`
+
+/**
  * Identifier Column Suffix on Column Name: "_ID"
  */
 export const IDENTIFIER_COLUMN_SUFFIX = `_ID`
@@ -243,7 +248,7 @@ export function generateField({
     isSupported: componentReference.isSupported,
     size: componentReference.size || DEFAULT_SIZE,
     displayColumnName: DISPLAY_COLUMN_PREFIX + columnName, // key to display column
-    sortByProperty: !isSupportLookup(fieldToGenerate.display_type) ? columnName : DISPLAY_COLUMN_PREFIX + columnName,
+    sortByProperty: !isSupportLookup(fieldToGenerate.display_type) ? columnName : SORT_COLUMN_PREFIX + DISPLAY_COLUMN_PREFIX + columnName,
     // value attributes
     parsedDefaultValue,
     parsedDefaultValueTo,

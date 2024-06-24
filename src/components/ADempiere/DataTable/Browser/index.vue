@@ -73,6 +73,7 @@
         :column-key="fieldAttributes.columnName"
         :prop="fieldAttributes.columnName"
         sortable
+        :sort-by="fieldAttributes.sortByProperty"
         :min-width="widthColumn(fieldAttributes)"
         :fixed="fieldAttributes.isFixedTableColumn"
       >
