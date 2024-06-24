@@ -26,14 +26,14 @@
             :name="name"
             :help="help"
           />
-          <!-- <div v-if="!isEmptyValue(storedReportDefinition)" style="float: right;padding-left: 1%;">
-            <action-menu
+          <div v-if="!isEmptyValue(storedReportDefinition)" style="float: right;padding-left: 1%;">
+            <!-- <action-menu
               :container-manager="containerManager"
               :container-uuid="reportUuid"
               :actions-manager="actionsManager"
               :relations-manager="relationsManager"
-            />
-          </div> -->
+            /> -->
+          </div>
           <!-- <file-render
             :format="reportType"
             :content="reportContent"
@@ -52,7 +52,7 @@
 
     <modal-dialog
       :container-manager="containerManager"
-      :container-uuid="reportUuid"
+      :container-uuid="reportId"
     />
     <el-drawer
       :visible.sync="isShowPanelConfig"
@@ -63,13 +63,13 @@
       :title="$t('report.reportSettings')"
     >
       <options-report
-        :container-uuid="reportUuid"
+        :container-uuid="reportId"
         :container-manager="containerManager"
         :is-show-title="false"
       />
     </el-drawer>
     <el-button
-      v-if="!isEmptyValue(storedReportDefinition)"
+      v-if="!isShowPanelConfig"
       type="primary"
       icon="el-icon-arrow-left"
       circle
@@ -329,9 +329,10 @@ export default defineComponent({
       link,
       isMobile,
       reportRow,
+      reportId,
       reportColumns,
-      containerManager,
       storedReportOutput,
+      containerManager,
       storedReportDefinition,
       // Methods
       handleOpem,

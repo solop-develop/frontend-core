@@ -17,29 +17,35 @@
 -->
 
 <template>
-  <el-table
-    :data="data"
-    border
-    style="width: 100%"
-  >
-    <el-table-column
-      v-for="(fieldAttributes, key) in columns"
-      :key="key"
-      :column-key="fieldAttributes.code"
-      :min-width="'180'"
-    >
-      <template slot="header">
-        {{ fieldAttributes.title }}
-      </template>
-      <template slot-scope="scope">
-        {{ displayLabel(fieldAttributes.code, scope.row) }}
-      </template>
-    </el-table-column>
-  </el-table>
+  <div>
+    <el-card shadow="never">
+      <el-table
+        :data="dataList"
+        row-key="level"
+        :border="true"
+        default-expand-all
+        style="width: 100%"
+      >
+        <el-table-column
+          v-for="(fieldAttributes, key) in columns"
+          :key="key"
+          :column-key="fieldAttributes.code"
+          :min-width="'180'"
+        >
+          <template slot="header">
+            {{ fieldAttributes.title }}
+          </template>
+          <template slot-scope="scope">
+            {{ displayLabel(fieldAttributes.code, scope.row) }}
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
+  </div>
 </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 export default defineComponent({
@@ -56,7 +62,7 @@ export default defineComponent({
     }
   },
 
-  setup(props, { root }) {
+  setup(props) {
     function displayLabel(prop, row) {
       const { display_value, value } = row.cells[prop]
       if (
@@ -69,7 +75,17 @@ export default defineComponent({
       return display_value
     }
 
+    const dataList = computed(() => {
+      return props.data.map((row, index) => {
+        return {
+          ...row,
+          level: index
+        }
+      })
+    })
+
     return {
+      dataList,
       displayLabel
     }
   }
