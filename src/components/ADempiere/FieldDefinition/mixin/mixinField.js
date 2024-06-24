@@ -247,6 +247,10 @@ export default {
           contextColumnNames: this.metadata.contextColumnNames,
           defaultValue: this.metadata.default_value,
           //
+          inTable: this.metadata.inTable,
+          rowIndex: this.metadata.rowIndex,
+          rowUid: this.metadata.rowUid,
+          //
           uuid: this.metadata.uuid,
           id: this.metadata.id,
           columnName: this.metadata.column_name,

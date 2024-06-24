@@ -29,7 +29,7 @@ import { requestSaveBrowseCustomization } from '@/api/ADempiere/user-customizati
 
 // Utils and Helpers Methods
 import { isHiddenField } from '@/utils/ADempiere/references'
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils.js'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
 
 /**
@@ -319,7 +319,7 @@ export const containerManager = {
   /**
    * @returns Promisse with value and displayedValue
    */
-  getDefaultValue({ parentUuid, containerUuid, name, uuid, id, contextColumnNames, columnName, value }) {
+  getDefaultValue({ parentUuid, containerUuid, name, uuid, id, contextColumnNames, inTable, rowUid, columnName, value }) {
     return store.dispatch('getDefaultValueFromServer', {
       parentUuid,
       containerUuid,
@@ -332,34 +332,45 @@ export const containerManager = {
       columnName,
       value
     }).then(response => {
-      if (!isEmptyValue(response.value)) {
-        const field = store.getters.getStoredBrowserFieldFromColumnName({
+      let newValueByServer, newDisplayValueByServer
+      if (!isEmptyValue(response) && !isEmptyValue(response.value)) {
+        newValueByServer = response.value
+      }
+
+      if (inTable) {
+        return store.commit('setBrowserCell', {
           containerUuid,
-          columnName
+          rowUid,
+          columnName,
+          value
+        })
+      }
+      const field = store.getters.getStoredBrowserFieldFromColumnName({
+        containerUuid,
+        columnName
+      })
+
+      // update element column name
+      if (!field.isSameColumnElement) {
+        store.commit('updateValueOfField', {
+          containerUuid,
+          columnName: field.element_name,
+          value: newValueByServer
         })
 
-        // update element column name
-        if (!field.isSameColumnElement) {
-          store.commit('updateValueOfField', {
-            containerUuid,
-            columnName: field.element_name,
-            value: response.value
-          })
+        store.commit('updateValueOfField', {
+          containerUuid,
+          columnName: DISPLAY_COLUMN_PREFIX + field.element_name,
+          value: newDisplayValueByServer
+        })
+      }
 
-          store.commit('updateValueOfField', {
-            containerUuid,
-            columnName: DISPLAY_COLUMN_PREFIX + field.element_name,
-            value: response.displayedValue
-          })
-        }
-
-        if (field.isGetServerValue) {
-          store.dispatch('browserActionPerformed', {
-            containerUuid,
-            field,
-            value: response.value
-          })
-        }
+      if (field.isGetServerValue || (response.reason === 'Successful default value' && !isSameValues(value, newValueByServer))) {
+        store.dispatch('browserActionPerformed', {
+          containerUuid,
+          field,
+          value: newValueByServer
+        })
       }
       return response
     })
