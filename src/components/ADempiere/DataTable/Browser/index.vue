@@ -135,6 +135,9 @@ import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
+/**
+ * TODO: Reindex with `rowIndex` property when sorting by Column without refreshing records
+ */
 export default defineComponent({
   name: 'BrowserTable',
 
@@ -207,10 +210,11 @@ export default defineComponent({
     })
 
     const keyColumn = computed(() => {
-      if (props.panelMetadata) {
-        return props.panelMetadata.keyColumn
-      }
-      return undefined
+      // if (props.panelMetadata) {
+      //   return props.panelMetadata.keyColumn
+      // }
+      // return undefined
+      return 'rowUid'
     })
 
     const headerList = computed(() => {

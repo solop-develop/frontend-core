@@ -39,6 +39,7 @@ import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttr
 import { showMessage, showNotification } from '@/utils/ADempiere/notification'
 import { isReadOnlyColumn, containerManager } from '@/utils/ADempiere/dictionary/browser'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
+import { getUuidv4 } from '@/utils/ADempiere/recordUtil'
 
 const initState = {
   browserData: {}
@@ -86,21 +87,41 @@ const browserControl = {
 
     setBrowserRow(state, {
       containerUuid,
-      rowIndex,
+      rowUid,
       row
     }) {
-      Vue.set(state.browserData[containerUuid].recordsList, rowIndex, row)
+      let recordIndex = -1
+      const newIndex = state.browserData[containerUuid].recordsList.findIndex(rowItem => {
+        return rowItem.rowUid === rowUid
+      })
+      if (newIndex >= 0) {
+        recordIndex = newIndex
+      }
+      Vue.set(state.browserData[containerUuid].recordsList, recordIndex, row)
     },
 
     setBrowserCell(state, {
       containerUuid,
-      rowIndex,
+      rowUid,
       columnName,
       value
     }) {
-      Vue.set(state.browserData[containerUuid].recordsList[rowIndex], columnName, value)
+      let recordIndex = -1
+      const newIndex = state.browserData[containerUuid].recordsList.findIndex(rowItem => {
+        return rowItem.rowUid === rowUid
+      })
+      if (newIndex >= 0) {
+        recordIndex = newIndex
+      }
+      Vue.set(state.browserData[containerUuid].recordsList[recordIndex], columnName, value)
+
       // TODO: Change selection columns
-      // Vue.set(state.browserData[containerUuid].selectionsList[rowIndex], columnName, value)
+      // const selectionIndex = state.browserData[containerUuid].selectionsList.findIndex(rowItem => {
+      //   return rowItem.rowUid === rowUid
+      // })
+      // if (selectionIndex >= 0) {
+      //   Vue.set(state.browserData[containerUuid].selectionsList[selectionIndex], columnName, value)
+      // }
     },
 
     resetStateBrowserManager(state) {
@@ -255,11 +276,13 @@ const browserControl = {
         })
           .then(browserSearchResponse => {
             const recordsList = browserSearchResponse.records.map((record, rowIndex) => {
+              const { values } = record
               return {
-                ...record.values,
+                ...values,
                 // datatables app attributes
                 ...ROW_ATTRIBUTES,
-                rowIndex
+                rowIndex,
+                rowUid: getUuidv4()
               }
             })
 
@@ -392,7 +415,7 @@ const browserControl = {
           .then(browserExportResponse => {
             const { records, record_count } = browserExportResponse
 
-            const recordsList = records.map((record, rowIndex) => {
+            const recordsList = records.map((record) => {
               return {
                 ...record.values
               }
@@ -558,18 +581,25 @@ const browserControl = {
     getBrowserPageToken: (state, getters) => ({ containerUuid }) => {
       return getters.getBrowserData(containerUuid).nextPageToken
     },
-    getBrowserRowData: (state, getters) => ({ containerUuid, rowIndex }) => {
-      const recordsList = getters.getBrowserRecordsList({
-        containerUuid
-      })
-      return recordsList[rowIndex]
-    },
-    getBrowserCellData: (state, getters) => ({ containerUuid, rowIndex, columnName }) => {
+    getBrowserRowData: (state, getters) => ({ containerUuid, rowUid }) => {
       const recordsList = getters.getBrowserRecordsList({
         containerUuid
       })
 
-      const row = recordsList[rowIndex]
+      let recordIndex = -1
+      const newIndex = recordsList.findIndex(rowItem => {
+        return rowItem.rowUid === rowUid
+      })
+      if (newIndex >= 0) {
+        recordIndex = newIndex
+      }
+      return recordsList[recordIndex]
+    },
+    getBrowserCellData: (state, getters) => ({ containerUuid, rowUid, columnName }) => {
+      const row = getters.getBrowserRowData({
+        containerUuid,
+        rowUid
+      })
       if (!isEmptyValue(row)) {
         return row[columnName]
       }

@@ -40,6 +40,7 @@ export default {
           return this.containerManager.getCell({
             containerUuid,
             rowIndex: this.metadata.rowIndex,
+            rowUid: this.metadata.rowUid,
             columnName: column_name
           })
         }
@@ -57,6 +58,7 @@ export default {
           return this.containerManager.setCell({
             containerUuid,
             rowIndex: this.metadata.rowIndex,
+            rowUid: this.metadata.rowUid,
             columnName: column_name,
             value: newValue
           })
@@ -103,6 +105,7 @@ export default {
           return this.containerManager.getCell({
             containerUuid,
             rowIndex: this.metadata.rowIndex,
+            rowUid: this.metadata.rowUid,
             columnName: displayColumnName
           })
         }
@@ -125,6 +128,7 @@ export default {
           return this.containerManager.setCell({
             containerUuid,
             rowIndex: this.metadata.rowIndex,
+            rowUid: this.metadata.rowUid,
             columnName: displayColumnName,
             value: newValue
           })

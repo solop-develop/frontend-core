@@ -71,7 +71,7 @@ import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 import {
   NUMBER
 } from '@/utils/ADempiere/references.js'
-
+import { CURRENCY } from '@/utils/ADempiere/constants/systemColumns'
 import { NUMBER_PRECISION } from '@/utils/ADempiere/formatValue/numberFormat.js'
 
 // Utils and Helper Methods
@@ -156,27 +156,33 @@ export default {
       }
     },
     currencyDocument() {
-      const columnName = DISPLAY_COLUMN_PREFIX + 'C_Currency_ID'
+      const columnName = DISPLAY_COLUMN_PREFIX + CURRENCY
       // table records values
       if (this.metadata.inTable) {
         // implement container manager row
-        if (this.metadata.containerManager && this.metadata.containerManager.getCell) {
-          const currentValue = this.metadata.containerManager.getCell({
-            containerUuid: this.metadata.containerUuid,
-            rowIndex: this.metadata.rowIndex,
-            columnName
-          })
-          if (!isEmptyValue(currentValue)) {
-            return currentValue
-          }
+        const value = this.containerManager.getCell({
+          containerUuid: this.metadata.containerUuid,
+          rowIndex: this.metadata.rowIndex,
+          rowUid: this.metadata.rowUid,
+          columnName
+        })
+        // types `decimal` and `date` is a object struct
+        if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
+          return value.value
         }
+        return value
       }
 
-      return store.getters.getValueOfField({
+      const value = this.$store.getters.getValueOfField({
         parentUuid: this.metadata.parentUuid,
         containerUuid: this.metadata.containerUuid,
         columnName
       })
+      // types `decimal` and `date` is a object struct
+      if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
+        return value.value
+      }
+      return value
     },
     currencyCode() {
       if (!isEmptyValue(this.metadata.labelCurrency)) {

@@ -151,18 +151,17 @@ export default {
         // table records values
         if (inTable) {
           // implement container manager row
-          if (this.containerManager && this.containerManager.getCell) {
-            const value = this.containerManager.getCell({
-              containerUuid,
-              rowIndex: this.metadata.rowIndex,
-              columnName
-            })
-            // types `decimal` and `date` is a object struct
-            if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
-              return value.value
-            }
-            return value
+          const value = this.containerManager.getCell({
+            containerUuid,
+            rowIndex: this.metadata.rowIndex,
+            rowUid: this.metadata.rowUid,
+            columnName
+          })
+          // types `decimal` and `date` is a object struct
+          if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
+            return value.value
           }
+          return value
         }
 
         // main panel values
@@ -201,14 +200,18 @@ export default {
         // table records values
         if (inTable) {
           // implement container manager row
-          if (this.containerManager && this.containerManager.setCell) {
-            this.containerManager.setCell({
-              containerUuid,
-              rowIndex: this.metadata.rowIndex,
-              columnName,
-              value
-            })
+          const value = this.containerManager.setCell({
+            containerUuid,
+            rowIndex: this.metadata.rowIndex,
+            rowUid: this.metadata.rowUid,
+            columnName,
+            value
+          })
+          // types `decimal` and `date` is a object struct
+          if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
+            return value.value
           }
+          return value
         }
 
         let startValue, endValue

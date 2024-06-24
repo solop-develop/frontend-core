@@ -92,6 +92,7 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
         const value = containerManager.getCell({
           containerUuid,
           rowIndex: fieldMetadata.rowIndex,
+          rowUid: fieldMetadata.rowUid,
           columnName: column_name
         })
         // types `decimal` and `date` is a object struct
@@ -120,6 +121,7 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
         return containerManager.setCell({
           containerUuid,
           rowIndex: fieldMetadata.rowIndex,
+          rowUid: fieldMetadata.rowUid,
           columnName: column_name,
           value: newValue
         })
@@ -189,6 +191,7 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
         //
         inTable: fieldMetadata.inTable,
         rowIndex: fieldMetadata.rowIndex,
+        rowUid: fieldMetadata.rowUid,
         //
         uuid: fieldMetadata.uuid,
         id: fieldMetadata.id,

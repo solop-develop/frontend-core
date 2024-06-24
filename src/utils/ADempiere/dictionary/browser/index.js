@@ -255,32 +255,38 @@ export const containerManager = {
     })
   },
 
-  setRow: ({ containerUuid, rowIndex, row }) => {
-    return store.commit('setBrowserRow', {
-      containerUuid,
-      rowIndex,
-      row
-    })
-  },
-  getRow: ({ containerUuid, rowIndex }) => {
-    return store.getters.getBrowserRowData({
-      containerUuid,
-      rowIndex
+  getRecordsList: ({ containerUuid }) => {
+    return store.getters.getBrowserRecordsList({
+      containerUuid: containerUuid
     })
   },
 
-  setCell: ({ containerUuid, rowIndex, columnName, value }) => {
+  setRow: ({ containerUuid, rowUid, row }) => {
+    return store.commit('setBrowserRow', {
+      containerUuid,
+      rowUid,
+      row
+    })
+  },
+  getRow: ({ containerUuid, rowUid }) => {
+    return store.getters.getBrowserRowData({
+      containerUuid,
+      rowUid
+    })
+  },
+
+  setCell: ({ containerUuid, rowUid, columnName, value }) => {
     return store.commit('setBrowserCell', {
       containerUuid,
-      rowIndex,
+      rowUid,
       columnName,
       value
     })
   },
-  getCell: ({ containerUuid, rowIndex, columnName }) => {
+  getCell: ({ containerUuid, rowUid, columnName }) => {
     return store.getters.getBrowserCellData({
       containerUuid,
-      rowIndex,
+      rowUid,
       columnName
     })
   },

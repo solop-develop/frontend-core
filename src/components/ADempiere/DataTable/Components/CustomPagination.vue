@@ -1,7 +1,7 @@
 <!--
   ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A.
-  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com www.erpya.com
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -89,6 +89,10 @@ export default defineComponent({
     rowIndex: {
       type: [Number, String],
       default: -1
+    },
+    rowUid: {
+      type: String,
+      default: null
     },
     totalRecords: {
       type: [Number, String],
@@ -184,9 +188,10 @@ export default defineComponent({
     })
 
     const currentIndex = computed(() => {
-      if (!isEmptyValue(props.rowIndex)) {
+      if (!isEmptyValue(props.rowIndex) || !isEmptyValue(props.rowUid)) {
         return indexRowByPage({
           indexRow: props.rowIndex,
+          rowUid: props.rowUid,
           pageNumber: currentPageNumber.value,
           pageSize: currentPageSize.value
         })

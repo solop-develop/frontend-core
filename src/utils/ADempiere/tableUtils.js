@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Utils and Helper Methods
+import { getUuidv4 } from '@/utils/ADempiere/recordUtil'
+
 /**
  * Row default app attributes
  */
@@ -29,7 +32,9 @@ export const ROW_ATTRIBUTES = {
   // row index to fast manager
   rowIndex: 0,
   // indicate if is read only row (same isReadOnlyForm)
-  isReadOnlyFromRow: false
+  isReadOnlyFromRow: false,
+  // unique universal identifier to key
+  rowUid: getUuidv4()
 }
 
 /**
