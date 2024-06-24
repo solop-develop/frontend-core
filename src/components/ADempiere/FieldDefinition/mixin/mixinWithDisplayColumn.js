@@ -37,19 +37,13 @@ export default {
         const { column_name, containerUuid, inTable } = this.metadata
         // table records values
         if (inTable) {
-          // implement container manager row
-          if (this.containerManager && this.containerManager.getCell) {
-            const value = this.containerManager.getCell({
-              containerUuid,
-              rowIndex: this.metadata.rowIndex,
-              columnName: column_name
-            })
-            if (!isEmptyValue(value)) {
-              return value
-            }
-          }
+          return this.containerManager.getCell({
+            containerUuid,
+            rowIndex: this.metadata.rowIndex,
+            rowUid: this.metadata.rowUid,
+            columnName: column_name
+          })
         }
-
         return store.getters.getValueOfFieldOnContainer({
           parentUuid: this.metadata.parentUuid,
           containerUuid,
@@ -61,15 +55,13 @@ export default {
 
         // table records values
         if (inTable) {
-          // implement container manager row
-          if (this.containerManager && this.containerManager.setCell) {
-            this.containerManager.setCell({
-              containerUuid,
-              rowIndex: this.metadata.rowIndex,
-              columnName: column_name,
-              value: newValue
-            })
-          }
+          return this.containerManager.setCell({
+            containerUuid,
+            rowIndex: this.metadata.rowIndex,
+            rowUid: this.metadata.rowUid,
+            columnName: column_name,
+            value: newValue
+          })
         }
 
         store.commit('updateValueOfField', {
@@ -110,19 +102,13 @@ export default {
         // DisplayColumn_'ColumnName'
         // table records values
         if (inTable) {
-          // implement container manager row
-          if (this.containerManager && this.containerManager.getCell) {
-            const value = this.containerManager.getCell({
-              containerUuid,
-              rowIndex: this.metadata.rowIndex,
-              columnName: displayColumnName
-            })
-            if (!isEmptyValue(value)) {
-              return value
-            }
-          }
+          return this.containerManager.getCell({
+            containerUuid,
+            rowIndex: this.metadata.rowIndex,
+            rowUid: this.metadata.rowUid,
+            columnName: displayColumnName
+          })
         }
-
         // return store.getters.getValueOfFieldOnContainer({
         //   parentUuid: this.metadata.parentUuid,
         //   containerUuid,
@@ -139,15 +125,13 @@ export default {
 
         // table records values
         if (inTable) {
-          // implement container manager row
-          if (this.containerManager && this.containerManager.setCell) {
-            this.containerManager.setCell({
-              containerUuid,
-              rowIndex: this.metadata.rowIndex,
-              columnName: displayColumnName,
-              value: newValue
-            })
-          }
+          return this.containerManager.setCell({
+            containerUuid,
+            rowIndex: this.metadata.rowIndex,
+            rowUid: this.metadata.rowUid,
+            columnName: displayColumnName,
+            value: newValue
+          })
         }
 
         store.commit('updateValueOfField', {

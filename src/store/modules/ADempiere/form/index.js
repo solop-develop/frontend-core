@@ -16,21 +16,16 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-const smartBrowser = {
-  clearFields: {
-    title: 'Limpiar Criterios de Búsqueda',
-    description: 'Limpia los valores estableciendo los valores por defecto'
-  },
-  smartBrowser: 'Consulta Inteligente',
-  // dictionary
-  dictionaryError: 'Error al cargar la definición de la consulta inteligente',
-  // export
-  exportAllRecords: {
-    title: 'Exportar Todos Los Registros',
-    description: 'Registros que coincidan con el criterio de búsqueda',
-    successful: 'Exportación exitosa',
-    quantityExport: 'Cantidad de registros exportados: '
-  }
-}
+export default {
+  state: {},
 
-export default smartBrowser
+  mutations: {},
+
+  actions: {
+    resetStateFormData({ commit }) {
+      commit('resetStateVAllocation')
+    }
+  },
+
+  getters: {}
+}

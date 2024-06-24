@@ -172,11 +172,10 @@ export default defineComponent({
     })
 
     const includedColumnName = computed(() => {
-      return panelMetadata.value.sortYesNoColumnName
+      return panelMetadata.value.sort_yes_no_column_name
     })
-
     const sortColumnName = computed(() => {
-      return panelMetadata.value.sortOrderColumnName
+      return panelMetadata.value.sort_order_column_name
     })
 
     const isMobile = computed(() => {
@@ -204,30 +203,27 @@ export default defineComponent({
           parentUuid: props.parentUuid,
           containerUuid: props.containerUuid,
           tabUuid: panelMetadata.value.uuid,
-          contextColumnNames: panelMetadata.value.contextColumnNames
+          contextColumnNames: panelMetadata.value.context_column_names
         })
-
         return generateOrder(list)
       },
       set(newList) {
         store.commit('setTabSequence', {
           parentUuid: props.parentUuid,
-          contextColumnNames: panelMetadata.value.contextColumnNames,
+          contextColumnNames: panelMetadata.value.context_column_names,
           tabUuid: panelMetadata.value.uuid,
           recordsList: newList
         })
       }
     })
-
     const oldRecordsList = computed(() => {
       return store.getters.getTabSequenceOldRecordsList({
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid,
         tabUuid: panelMetadata.value.uuid,
-        contextColumnNames: panelMetadata.value.contextColumnNames
+        contextColumnNames: panelMetadata.value.context_column_names
       })
     })
-
     const availableList = computed({
       get() {
         return recordsList.value.filter(item => {
@@ -237,7 +233,6 @@ export default defineComponent({
       set(value) {
       }
     })
-
     const availableListShowed = computed({
       get() {
         if (isEmptyValue(searchValue.value)) {
@@ -250,7 +245,6 @@ export default defineComponent({
       set(value) {
       }
     })
-
     const sequenceList = computed({
       get() {
         return recordsList.value.filter(item => {
@@ -275,7 +269,6 @@ export default defineComponent({
       set(value) {
       }
     })
-
     const isDifferentClientRecord = computed(() => {
       // client id value of record
       const clientIdRecord = store.getters.getValueOfField({
@@ -335,10 +328,8 @@ export default defineComponent({
     function insertItem({ element, newIndex }) {
       const includedColumn = includedColumnName.value
       const orderColumn = sortColumnName.value
-
       // if added to the end of the list does not require reordering
       const isRequireSort = (newIndex + 1) <= sequenceList.value.length
-
       const newSequence = (newIndex + 1) * 10
       element[includedColumn] = true // !element[includedColumn]
       element[orderColumn] = newSequence
@@ -362,7 +353,6 @@ export default defineComponent({
         }
         return itemSequence
       })
-
       let sortSequence = dataSequence
       if (isRequireSort) {
         sortSequence = generateOrder(dataSequence)
@@ -531,7 +521,6 @@ export default defineComponent({
           break
       }
     }
-
     return {
       group,
       // computeds

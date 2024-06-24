@@ -40,7 +40,9 @@ import {
 import {
   requestOrganizationsList,
   requestWarehousesList,
-  systemInfo
+  systemInfo,
+  systemInfoDictionary,
+  systemInfoS3
 } from '@/api/ADempiere/common/index.ts'
 
 // Utils and Helper Methods
@@ -76,7 +78,9 @@ const state = {
   sessionInfo: {},
   corporateBrandingImage: '',
   activityLogs: [],
-  systemInfo: {}
+  systemInfo: {},
+  dictionary: {},
+  s3Version: {}
 }
 
 const mutations = {
@@ -136,6 +140,12 @@ const mutations = {
   },
   setSystem(state, info) {
     state.systemInfo = info
+  },
+  setSystemDictionary(state, info) {
+    state.dictionary = info
+  },
+  setSystemS3(state, info) {
+    state.s3Version = info
   }
 }
 
@@ -206,6 +216,8 @@ const actions = {
             defaultContext
           } = sessionInfo
           dispatch('system')
+          dispatch('systemDictionary')
+          dispatch('systemS3')
           commit('setIsSession', true)
           commit('setSessionInfo', {
             id,
@@ -331,6 +343,10 @@ const actions = {
       requestLogout().catch(error => {
         console.warn(error)
       }).finally(() => {
+        dispatch('resetStateBusinessData', null, {
+          root: true
+        })
+
         // clear sesion cookies
         removeCurrentRole()
         removeCurrentOrganization()
@@ -488,7 +504,6 @@ const actions = {
 
         // Update user info and context associated with session
         // dispatch('getSessionInfo', tokenSession)
-
         // refresh warehouses
         if (!isSameOrganization) {
           dispatch('getWarehousesList', {
@@ -516,6 +531,10 @@ const actions = {
       })
       .finally(() => {
         dispatch('permission/sendRequestMenu', null, {
+          root: true
+        })
+
+        dispatch('resetStateBusinessData', null, {
           root: true
         })
         // location.href = '/'
@@ -665,6 +684,10 @@ const actions = {
         dispatch('permission/sendRequestMenu', null, {
           root: true
         })
+
+        dispatch('resetStateBusinessData', null, {
+          root: true
+        })
       })
   },
 
@@ -736,6 +759,55 @@ const actions = {
           resolve({})
         })
     })
+  },
+  systemDictionary({ commit }) {
+    return new Promise(resolve => {
+      let systemInfo = {
+        version: '0.0.1'
+      }
+      systemInfoDictionary()
+        .then(response => {
+          if (!isEmptyValue(response) && !isEmptyValue(response.version)) {
+            systemInfo = response
+          }
+          commit('setSystemDictionary', {
+            ...systemInfo,
+            ...response
+          })
+          resolve(systemInfo)
+        })
+        .catch(error => {
+          commit('setSystemDictionary', {
+            ...systemInfo
+          })
+          console.warn(`Error getting System Info: ${error.message}. Code: ${error.code}.`)
+          resolve(systemInfo)
+        })
+    })
+  },
+
+  systemS3({ commit }) {
+    return new Promise(resolve => {
+      let systemInfo = {
+        version: '0.0.1'
+      }
+      systemInfoS3()
+        .then(response => {
+          if (!isEmptyValue(response)) {
+            systemInfo = {
+              ...systemInfo,
+              ...response
+            }
+          }
+          commit('setSystemS3', systemInfo)
+          resolve(systemInfo)
+        })
+        .catch(error => {
+          commit('setSystemS3', systemInfo)
+          console.warn(`Error getting System Info: ${error.message}. Code: ${error.code}.`)
+          resolve(systemInfo)
+        })
+    })
   }
 }
 
@@ -785,6 +857,12 @@ const getters = {
   },
   getSystem: (state) => {
     return state.systemInfo
+  },
+  getDictionaryVersion: (state) => {
+    return state.dictionary
+  },
+  getS3Version: (state) => {
+    return state.s3Version
   }
 }
 

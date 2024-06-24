@@ -29,7 +29,7 @@ export const DEFAULT_SIZE = {
 // Account Element
 export const ACCOUNT_ELEMENT = {
   id: 25,
-  isSupported: false,
+  isSupported: true,
   valueType: 'INTEGER',
   componentPath: 'FieldAccountingCombination',
   size: DEFAULT_SIZE
@@ -228,7 +228,7 @@ export const PRINTER_NAME = {
 // Product Attribute
 export const PRODUCT_ATTRIBUTE = {
   id: 35,
-  isSupported: false,
+  isSupported: true,
   valueType: 'INTEGER',
   componentPath: 'FieldProductAttribute',
   size: DEFAULT_SIZE

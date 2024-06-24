@@ -51,6 +51,20 @@ export function systemInfo() {
     })
 }
 
+export function systemInfoDictionary() {
+  return request({
+    url: '/dictionary/system-info',
+    method: 'get'
+  })
+}
+
+export function systemInfoS3() {
+  return request({
+    url: '/resources/system-info',
+    method: 'get'
+  })
+}
+
 /**
  * Get Country definition from server using id or uuid for record
  * @param {number} id

@@ -71,27 +71,31 @@ const tabSequence = {
       parentUuid,
       containerUuid,
       tabUuid,
-      contextColumnNames
+      contextColumnNames,
+      tabId
     }) {
       const contextAttributesList = getContextAttributes({
         parentUuid,
         containerUuid,
         contextColumnNames,
-        keyName: 'key'
+        format: 'object'
       })
-
+      let contextAttributes = '{}'
+      if (!isEmptyValue(contextAttributesList)) {
+        contextAttributes = JSON.stringify(contextAttributesList)
+      }
       return new Promise(resolve => {
         requestListTabSequences({
           tabUuid,
-          contextAttributesList
+          contextAttributes,
+          tabId
         })
           .then(response => {
-            const oldRecordsList = response.recordsList.map(record => {
+            const oldRecordsList = response.records.map(record => {
               return {
-                ...record.attributes
+                ...record.values
               }
             })
-
             const recordsList = oldRecordsList.map(recordRow => {
               return {
                 ...recordRow,
@@ -100,7 +104,6 @@ const tabSequence = {
             })
 
             const contextKey = generateContextKey(contextAttributesList, 'key')
-
             commit('setTabSequence', {
               parentUuid,
               containerUuid,
@@ -124,19 +127,19 @@ const tabSequence = {
     saveTabSequence({ dispatch, getters, rootGetters }, {
       parentUuid,
       containerUuid,
-      tabUuid
+      tabUuid,
+      tabId
     }) {
       const { sequenceTabsList } = rootGetters.getStoredTab(parentUuid, containerUuid)
       const sortTab = sequenceTabsList.find(itemTab => {
         return itemTab.uuid === tabUuid
       })
-      const { contextColumnNames, tableName, sortOrderColumnName, sortYesNoColumnName } = sortTab
-
+      const { context_column_names, table_name, sort_order_column_name, sort_yes_no_column_name } = sortTab
       const { recordsList, oldRecordsList } = getters.getTabSequenceData({
         parentUuid,
         containerUuid,
         tabUuid,
-        contextColumnNames
+        contextColumnNames: context_column_names
       })
       const entitiesList = []
       recordsList.filter(recordRow => {
@@ -145,20 +148,20 @@ const tabSequence = {
         const oldRecordRow = oldRecordsList.find(oldRow => oldRow.UUID === recordRow.UUID)
 
         const attributesList = [{
-          columnName: sortOrderColumnName,
-          value: recordRow[sortOrderColumnName]
+          columnName: sort_order_column_name,
+          value: recordRow[sort_order_column_name]
         }]
 
-        const newYesNo = recordRow[sortYesNoColumnName]
-        const oldYesNo = oldRecordRow[sortYesNoColumnName]
+        const newYesNo = recordRow[sort_yes_no_column_name]
+        const oldYesNo = oldRecordRow[sort_yes_no_column_name]
         if (oldYesNo !== newYesNo) {
           attributesList.push({
-            columnName: sortYesNoColumnName,
+            columnName: sort_yes_no_column_name,
             value: newYesNo
           })
         }
 
-        const recordId = recordRow[tableName + '_ID']
+        const recordId = recordRow[table_name + '_ID']
         entitiesList.push({
           recordId,
           recordUuid: recordRow.UUID,
@@ -177,14 +180,16 @@ const tabSequence = {
       const contextAttributesList = getContextAttributes({
         parentUuid,
         containerUuid,
-        contextColumnNames,
-        keyName: 'key'
+        contextColumnNames: context_column_names,
+        format: 'object'
       })
-
+      const contextAttributes = contextAttributesList
+      // if (!isEmptyValue(contextAttributesList)) {
+      //   contextAttributes = JSON.stringify(contextAttributesList)
+      // }
       requestSaveTabSequences({
-        tabUuid,
-        contextAttributesList,
-        entitiesList
+        tabId,
+        contextAttributes
       })
         .then(response => {
           dispatch('getEntities', {
@@ -192,10 +197,11 @@ const tabSequence = {
             containerUuid
           })
           dispatch('listTabSequences', {
+            tabId,
             parentUuid,
             containerUuid,
             tabUuid,
-            contextColumnNames
+            context_column_names
           })
 
           showMessage({
@@ -269,7 +275,6 @@ const tabSequence = {
         tabUuid,
         contextColumnNames
       })
-
       if (tabSequenceData) {
         return tabSequenceData.recordsList
       }

@@ -20,14 +20,20 @@ import Vue from 'vue'
 import language from '@/lang'
 
 // API Request Methods
-import { updateBrowserEntity, requestDeleteBrowser } from '@/api/ADempiere/browser'
-import { requestBrowserSearch } from '@/api/ADempiere/userInterface/browserList.ts'
+import {
+  requestBrowserSearch,
+  browserExportRequest,
+  updateBrowserEntity,
+  requestDeleteBrowser
+} from '@/api/ADempiere/user-interface/browser'
 
 // Constants
 import {
   ROW_ATTRIBUTES, ROW_KEY_ATTRIBUTES, ROWS_OF_RECORDS_BY_PAGE
 } from '@/utils/ADempiere/tableUtils'
-import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
+import {
+  DISPLAY_COLUMN_PREFIX, SORT_COLUMN_PREFIX
+} from '@/utils/ADempiere/dictionaryUtils'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -35,6 +41,7 @@ import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttr
 import { showMessage, showNotification } from '@/utils/ADempiere/notification'
 import { isReadOnlyColumn, containerManager } from '@/utils/ADempiere/dictionary/browser'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
+import { getUuidv4 } from '@/utils/ADempiere/recordUtil'
 
 const initState = {
   browserData: {}
@@ -82,21 +89,41 @@ const browserControl = {
 
     setBrowserRow(state, {
       containerUuid,
-      rowIndex,
+      rowUid,
       row
     }) {
-      Vue.set(state.browserData[containerUuid].recordsList, rowIndex, row)
+      let recordIndex = -1
+      const newIndex = state.browserData[containerUuid].recordsList.findIndex(rowItem => {
+        return rowItem.rowUid === rowUid
+      })
+      if (newIndex >= 0) {
+        recordIndex = newIndex
+      }
+      Vue.set(state.browserData[containerUuid].recordsList, recordIndex, row)
     },
 
     setBrowserCell(state, {
       containerUuid,
-      rowIndex,
+      rowUid,
       columnName,
       value
     }) {
-      Vue.set(state.browserData[containerUuid].recordsList[rowIndex], columnName, value)
+      let recordIndex = -1
+      const newIndex = state.browserData[containerUuid].recordsList.findIndex(rowItem => {
+        return rowItem.rowUid === rowUid
+      })
+      if (newIndex >= 0) {
+        recordIndex = newIndex
+      }
+      Vue.set(state.browserData[containerUuid].recordsList[recordIndex], columnName, value)
+
       // TODO: Change selection columns
-      // Vue.set(state.browserData[containerUuid].selectionsList[rowIndex], columnName, value)
+      // const selectionIndex = state.browserData[containerUuid].selectionsList.findIndex(rowItem => {
+      //   return rowItem.rowUid === rowUid
+      // })
+      // if (selectionIndex >= 0) {
+      //   Vue.set(state.browserData[containerUuid].selectionsList[selectionIndex], columnName, value)
+      // }
     },
 
     resetStateBrowserManager(state) {
@@ -214,16 +241,6 @@ const browserControl = {
         //   resolve(currentRecordsList)
         //   return
         // }
-        commit('setBrowserData', {
-          containerUuid,
-          isLoaded: false
-        })
-
-        showMessage({
-          title: language.t('notifications.loading'),
-          message: language.t('notifications.searching'),
-          type: 'info'
-        })
         // page size
         const storedSize = getters.getBrowserPageSize({
           containerUuid
@@ -231,6 +248,17 @@ const browserControl = {
         if (isEmptyValue(pageSize) && !isEmptyValue(storedSize)) {
           pageSize = storedSize
         }
+        commit('setBrowserData', {
+          containerUuid,
+          isLoaded: false,
+          pageSize
+        })
+
+        showMessage({
+          title: language.t('notifications.loading'),
+          message: language.t('notifications.searching'),
+          type: 'info'
+        })
         if (isEmptyValue(pageNumber) || pageNumber < 1) {
           // refresh with same page
           const storedPage = getters.getBrowserPageNumber({
@@ -250,11 +278,27 @@ const browserControl = {
         })
           .then(browserSearchResponse => {
             const recordsList = browserSearchResponse.records.map((record, rowIndex) => {
+              const { values } = record
+
+              // TODO: Test peformance.
+              Object.keys(values).forEach(key => {
+                const currentValue = values[key]
+                if (key.startsWith(DISPLAY_COLUMN_PREFIX)) {
+                  // Add column with sort values to correct sorting
+                  let sortValue = ''
+                  if (!isEmptyValue(currentValue)) {
+                    sortValue = currentValue.toLowerCase()
+                  }
+                  values[SORT_COLUMN_PREFIX + key] = sortValue
+                }
+              })
+
               return {
-                ...record.values,
+                ...values,
                 // datatables app attributes
                 ...ROW_ATTRIBUTES,
-                rowIndex
+                rowIndex,
+                rowUid: getUuidv4()
               }
             })
 
@@ -283,6 +327,125 @@ const browserControl = {
               containerUuid,
               isLoaded: true
             })
+            resolve([])
+
+            showMessage({
+              title: language.t('notifications.error'),
+              message: language.t('notifications.errorSearch'),
+              summary: error.message,
+              type: 'error'
+            })
+            console.warn(`Error getting browser search: ${error.message}. Code: ${error.code}.`)
+          })
+      })
+    },
+
+    // Search with query criteria
+    getBrowserExportRecords({ commit, getters, rootGetters }, {
+      containerUuid
+    }) {
+      return new Promise(resolve => {
+        const currentRecordsList = getters.getBrowserRecordsList({
+          containerUuid
+        })
+
+        const {
+          id, fieldsList, contextColumnNames
+        } = rootGetters.getStoredBrowser(containerUuid)
+        if (isEmptyValue(id) && isEmptyValue(fieldsList) && isEmptyValue(contextColumnNames)) {
+          resolve(currentRecordsList)
+          return
+        }
+
+        const fieldsEmpty = rootGetters.getBrowserFieldsEmptyMandatory({
+          containerUuid,
+          fieldsList
+        })
+        if (!isEmptyValue(fieldsEmpty)) {
+          showMessage({
+            message: language.t('notifications.mandatoryFieldMissing') + fieldsEmpty,
+            type: 'info'
+          })
+          resolve(currentRecordsList)
+          return
+        }
+
+        // parameters Query Criteria
+        const queryCriteriaFilters = rootGetters.getBrowserQueryCriteria({
+          containerUuid,
+          fieldsList
+        })
+        const filtersList = queryCriteriaFilters.map(parameter => {
+          const {
+            columnName,
+            operator,
+            value,
+            valueTo,
+            values
+          } = parameter
+          return JSON.stringify({
+            name: columnName,
+            operator,
+            // values > value, valueTo > value
+            values: !isEmptyValue(values) ? values : !isEmptyValue(valueTo) ? [value, valueTo] : value
+          })
+        }).toString()
+        let filters
+        if (!isEmptyValue(filtersList)) {
+          filters = '[' + filtersList + ']'
+        }
+
+        // get context values
+        const contextAttributesList = getContextAttributes({
+          containerUuid,
+          contextColumnNames,
+          format: 'object'
+        })
+        let contextAttributes = '{}'
+        if (!isEmptyValue(contextAttributesList)) {
+          contextAttributes = JSON.stringify(contextAttributesList)
+        }
+
+        // const isWithoutValues = contextAttributesList.find(attribute => isEmptyValue(attribute.value))
+        // if (isWithoutValues) {
+        //   console.warn(`Without response, fill the ${isWithoutValues.columnName} field.`)
+        //   showMessage({
+        //     message: language.t('notifications.mandatoryFieldMissing') + isWithoutValues.columnName,
+        //     type: 'info'
+        //   })
+        //   resolve(currentRecordsList)
+        //   return
+        // }
+
+        showMessage({
+          title: language.t('notifications.loading'),
+          message: language.t('notifications.searching'),
+          type: 'info'
+        })
+
+        browserExportRequest({
+          id,
+          contextAttributes,
+          filters
+        })
+          .then(browserExportResponse => {
+            const { records, record_count } = browserExportResponse
+
+            const recordsList = records.map((record) => {
+              return {
+                ...record.values
+              }
+            })
+
+            resolve(recordsList)
+
+            showNotification({
+              title: language.t('smartBrowser.exportAllRecords.successful'),
+              message: language.t('smartBrowser.exportAllRecords.quantityExport') + record_count,
+              type: 'success'
+            })
+          })
+          .catch(error => {
             resolve([])
 
             showMessage({
@@ -434,18 +597,25 @@ const browserControl = {
     getBrowserPageToken: (state, getters) => ({ containerUuid }) => {
       return getters.getBrowserData(containerUuid).nextPageToken
     },
-    getBrowserRowData: (state, getters) => ({ containerUuid, rowIndex }) => {
-      const recordsList = getters.getBrowserRecordsList({
-        containerUuid
-      })
-      return recordsList[rowIndex]
-    },
-    getBrowserCellData: (state, getters) => ({ containerUuid, rowIndex, columnName }) => {
+    getBrowserRowData: (state, getters) => ({ containerUuid, rowUid }) => {
       const recordsList = getters.getBrowserRecordsList({
         containerUuid
       })
 
-      const row = recordsList[rowIndex]
+      let recordIndex = -1
+      const newIndex = recordsList.findIndex(rowItem => {
+        return rowItem.rowUid === rowUid
+      })
+      if (newIndex >= 0) {
+        recordIndex = newIndex
+      }
+      return recordsList[recordIndex]
+    },
+    getBrowserCellData: (state, getters) => ({ containerUuid, rowUid, columnName }) => {
+      const row = getters.getBrowserRowData({
+        containerUuid,
+        rowUid
+      })
       if (!isEmptyValue(row)) {
         return row[columnName]
       }

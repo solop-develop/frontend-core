@@ -230,7 +230,8 @@ const defaultValueManager = {
               displayedValue: displayValue,
               value: valueOfServer,
               uuid: values.UUID,
-              isActive: is_active
+              isActive: is_active,
+              reason: 'Successful default value'
             })
           })
           .catch(error => {
@@ -252,6 +253,11 @@ const defaultValueManager = {
               containerUuid,
               columnName: columnName + UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX,
               value: undefined
+            })
+
+            resolve({
+              ...defaultEmptyResponse,
+              reason: 'Error request default value'
             })
             console.warn(`Error getting default value (${columnName}) from server. Error code ${error.code}: ${error.message}.`)
           })

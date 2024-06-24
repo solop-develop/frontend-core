@@ -89,21 +89,18 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
 
       // table records values
       if (inTable) {
-        // implement container manager row
-        if (containerManager && containerManager.getCell) {
-          const value = containerManager.getCell({
-            containerUuid,
-            rowIndex: fieldMetadata.rowIndex,
-            columnName: column_name
-          })
-          // types `decimal` and `date` is a object struct
-          if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
-            return value.value
-          }
-          return value
+        const value = containerManager.getCell({
+          containerUuid,
+          rowIndex: fieldMetadata.rowIndex,
+          rowUid: fieldMetadata.rowUid,
+          columnName: column_name
+        })
+        // types `decimal` and `date` is a object struct
+        if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
+          return value.value
         }
+        return value
       }
-
       // main panel values
       const value = store.getters.getValueOfFieldOnContainer({
         parentUuid: fieldMetadata.parentUuid,
@@ -121,30 +118,28 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
 
       // table records values
       if (inTable) {
-        // implement container manager row
-        if (containerManager && containerManager.setCell) {
-          return containerManager.setCell({
-            containerUuid,
-            rowIndex: fieldMetadata.rowIndex,
-            columnName: column_name,
-            value: newValue
-          })
-        }
-      }
-
-      store.commit('updateValueOfField', {
-        parentUuid: fieldMetadata.parentUuid,
-        containerUuid,
-        columnName: column_name,
-        value: newValue
-      })
-      if (!fieldMetadata.isSameColumnElement) {
+        return containerManager.setCell({
+          containerUuid,
+          rowIndex: fieldMetadata.rowIndex,
+          rowUid: fieldMetadata.rowUid,
+          columnName: column_name,
+          value: newValue
+        })
+      } else {
         store.commit('updateValueOfField', {
           parentUuid: fieldMetadata.parentUuid,
           containerUuid,
-          columnName: fieldMetadata.element_name,
+          columnName: column_name,
           value: newValue
         })
+        if (!fieldMetadata.isSameColumnElement) {
+          store.commit('updateValueOfField', {
+            parentUuid: fieldMetadata.parentUuid,
+            containerUuid,
+            columnName: fieldMetadata.element_name,
+            value: newValue
+          })
+        }
       }
     }
   })
@@ -193,6 +188,10 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
         parentUuid: fieldMetadata.parentUuid,
         containerUuid: fieldMetadata.containerUuid,
         contextColumnNames: fieldMetadata.contextColumnNames,
+        //
+        inTable: fieldMetadata.inTable,
+        rowIndex: fieldMetadata.rowIndex,
+        rowUid: fieldMetadata.rowUid,
         //
         uuid: fieldMetadata.uuid,
         id: fieldMetadata.id,
@@ -377,7 +376,7 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
         uuid: uuidOfSserver,
         value: valueOfServer,
         displayedValue: displayedValueOfServer
-      } = await this.loadDefaultValueFromServer()
+      } = await loadDefaultValueFromServer()
 
       // set value into component and fieldValue store
       uuidValue.value = uuidOfSserver

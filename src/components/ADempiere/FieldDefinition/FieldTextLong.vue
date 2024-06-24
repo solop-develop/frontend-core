@@ -1,19 +1,19 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -71,26 +71,26 @@ export default {
         const { column_name, containerUuid, inTable } = this.metadata
         // table records values
         if (inTable) {
-          // implement container manager row
-          if (this.containerManager && this.containerManager.getCell) {
-            const value = this.containerManager.getCell({
-              containerUuid,
-              rowIndex: this.metadata.rowIndex,
-              columnName: column_name
-            })
-            if (!isEmptyValue(value)) {
-              return value
-            }
+          const value = this.containerManager.getCell({
+            containerUuid,
+            rowIndex: this.metadata.rowIndex,
+            rowUid: this.metadata.rowUid,
+            columnName: column_name
+          })
+          if (!isEmptyValue(value)) {
+            return value
           }
+          return ''
         }
-
         const valueEditor = store.getters.getValueOfFieldOnContainer({
           parentUuid: this.metadata.parentUuid,
           containerUuid,
           columnName: column_name
         })
 
-        if (this.isEmptyValue(valueEditor)) return ''
+        if (isEmptyValue(valueEditor)) {
+          return ''
+        }
         return valueEditor
       },
       set(newValue) {
@@ -98,31 +98,29 @@ export default {
 
         // table records values
         if (inTable) {
-          // implement container manager row
-          if (this.containerManager && this.containerManager.setCell) {
-            this.containerManager.setCell({
-              containerUuid,
-              rowIndex: this.metadata.rowIndex,
-              columnName: column_name,
-              value: newValue
-            })
-          }
-        }
-
-        store.commit('updateValueOfField', {
-          parentUuid: this.metadata.parentUuid,
-          containerUuid,
-          columnName: column_name,
-          value: newValue
-        })
-        // update element column name
-        if (!this.metadata.isSameColumnElement) {
+          this.containerManager.setCell({
+            containerUuid,
+            rowIndex: this.metadata.rowIndex,
+            rowUid: this.metadata.rowUid,
+            columnName: column_name,
+            value: newValue
+          })
+        } else {
           store.commit('updateValueOfField', {
             parentUuid: this.metadata.parentUuid,
             containerUuid,
-            columnName: this.metadata.element_name,
+            columnName: column_name,
             value: newValue
           })
+          // update element column name
+          if (!this.metadata.isSameColumnElement) {
+            store.commit('updateValueOfField', {
+              parentUuid: this.metadata.parentUuid,
+              containerUuid,
+              columnName: this.metadata.element_name,
+              value: newValue
+            })
+          }
         }
         this.preHandleChange(newValue)
       }

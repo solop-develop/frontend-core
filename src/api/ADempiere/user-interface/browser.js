@@ -1,7 +1,7 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
  * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- * Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -44,8 +44,71 @@ export function requestBrowserSearch({
       page_size: pageSize
     }
   })
-    .then(responseBrowserSearch => {
-      // const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
-      return responseBrowserSearch
-    })
+}
+
+/**
+ * Request dictionary Smart Browser metadata
+ * @param {string} uuid universally unique identifier
+ * @param {number} id, identifier
+ */
+export function browserExportRequest({
+  id,
+  filters,
+  contextAttributes
+}) {
+  return request({
+    url: `/user-interface/browser-items/${id}/export`,
+    method: 'get',
+    params: {
+      filters,
+      context_attributes: contextAttributes
+    }
+  })
+}
+
+/**
+ * Update browser entity
+ * @param {number} id smart browser identifier
+ * @param {string}uuid universally unique identifier
+ * @param {array} attributesList
+ */
+export function updateBrowserEntity({
+  id,
+  uuid,
+  recordId,
+  attributesList
+}) {
+  return request({
+    url: `/user-interface/browser-items/${id}/${recordId}`,
+    method: 'patch',
+    data: {
+      id,
+      uuid,
+      record_id: recordId,
+      attributes: attributesList
+    }
+  })
+}
+
+/**
+ * Delete Record Browser
+ * @param {string}  tableName
+ * @param {number}  recordId
+ * @param {string}  recordUuid
+ * @param {array}  listRecordId
+ */
+export function requestDeleteBrowser({
+  tableName,
+  recordId,
+  recordUuid,
+  listRecordId
+}) {
+  const { requestDeleteEntity } = require('@/api/ADempiere/business-data/entities.ts')
+
+  return requestDeleteEntity({
+    tableName,
+    recordId,
+    recordUuid,
+    listRecordId
+  })
 }

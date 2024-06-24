@@ -36,6 +36,7 @@ import {
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { BUTTON, ID, IMAGE, LOCATION_ADDRESS, YES_NO, isLookup } from '@/utils/ADempiere/references'
 import { containerManager as CONTAINER_MANAGER_BROWSER } from '@/utils/ADempiere/dictionary/browser'
+import { EXPORT_SUPPORTED_TYPES } from '@/utils/ADempiere/exportUtil.js'
 
 // API Request Methods
 import { requestGetTabEntity } from '@/api/ADempiere/user-interface/entities.ts'
@@ -52,7 +53,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { isDecimalField, isHiddenField } from '@/utils/ADempiere/references'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import { zoomIn } from '@/utils/ADempiere/coreUtils'
-import { exportRecords, supportedTypes } from '@/utils/ADempiere/exportUtil.js'
+import { exportRecords } from '@/utils/ADempiere/exportUtil.js'
 import { isRunableDocumentAction } from '@/utils/ADempiere/dictionary/workflow'
 import { convertRelationTabs } from '@/utils/ADempiere/dictionary/window/templatesWindow.js'
 
@@ -815,9 +816,9 @@ export const exportCurrentRecord = {
     exportRecords({ parentUuid, containerUuid, containerManager, currrentRecord })
   },
   // generate export formats
-  childs: Object.keys(supportedTypes).map(format => {
+  childs: Object.keys(EXPORT_SUPPORTED_TYPES).map(format => {
     return {
-      name: supportedTypes[format],
+      name: EXPORT_SUPPORTED_TYPES[format],
       enabled: ({ containerUuid, containerManager }) => {
         return true
       },
@@ -1744,13 +1745,13 @@ export const containerManager = {
   },
   isDisplayedColumn,
   isDisplayedDefaultTable: ({ is_mandatory, is_parent, default_value, display_type, parsedDefaultValue }) => {
-    if (is_mandatory && !is_parent && isEmptyValue(default_value)) {
-      // Yes/No field always boolean value (as default value)
-      if (display_type === YES_NO.id) {
-        return false
-      }
-      return true
-    }
+    // if (is_mandatory && !is_parent && isEmptyValue(default_value)) {
+    //   // Yes/No field always boolean value (as default value)
+    //   if (display_type === YES_NO.id) {
+    //     return false
+    //   }
+    //   return true
+    // }
     return false
   },
 
@@ -1988,17 +1989,19 @@ export const containerManager = {
     })
   },
 
-  getRow: ({ containerUuid, rowIndex, recordUuid }) => {
+  getRow: ({ containerUuid, rowIndex, rowUid, recordUuid }) => {
     return store.getters.getTabRowData({
       containerUuid,
       rowIndex,
+      rowUid,
       recordUuid
     })
   },
-  setCell: ({ containerUuid, rowIndex, columnName, value }) => {
+  setCell: ({ containerUuid, rowIndex, rowUid, columnName, value }) => {
     return store.commit('setTabCell', {
       containerUuid,
       rowIndex,
+      rowUid,
       columnName,
       value
     })
@@ -2013,10 +2016,11 @@ export const containerManager = {
     })
   },
 
-  getCell: ({ containerUuid, rowIndex, recordUuid, columnName }) => {
+  getCell: ({ containerUuid, rowIndex, rowUid, recordUuid, columnName }) => {
     return store.getters.getTabCellData({
       containerUuid,
       rowIndex,
+      rowUid,
       recordUuid,
       columnName
     })

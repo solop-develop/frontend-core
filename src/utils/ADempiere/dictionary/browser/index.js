@@ -16,7 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import language from '@/lang'
 import store from '@/store'
 
 // Constants
@@ -24,16 +23,13 @@ import {
   DISPLAY_COLUMN_PREFIX
 } from '@/utils/ADempiere/dictionaryUtils'
 import { BUTTON } from '@/utils/ADempiere/references'
-import { OPERATOR_IN } from '@/utils/ADempiere/dataUtils.js'
 
 // API Request Methods
 import { requestSaveBrowseCustomization } from '@/api/ADempiere/user-customization/browsers'
 
 // Utils and Helpers Methods
 import { isHiddenField } from '@/utils/ADempiere/references'
-import { showNotification } from '@/utils/ADempiere/notification.js'
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
-import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
+import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils.js'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
 
 /**
@@ -96,6 +92,9 @@ export function evaluateDefaultColumnShowed({
   isShowedTableFromUser, is_displayed_as_table,
   is_mandatory, isMandatoryFromLogic, mandatory_logic
 }) {
+  // if (!is_displayed) {
+  //   return false;
+  // }
   if (!isEmptyValue(is_displayed_as_table)) {
     return convertStringToBoolean(is_displayed_as_table)
   }
@@ -147,170 +146,6 @@ export function isMandatoryColumn({ display_type, is_mandatory, isMandatoryFromL
  */
 export function isReadOnlyColumn({ is_read_only }) {
   return is_read_only
-}
-
-export const refreshBrowserSearh = {
-  name: language.t('actionMenu.refreshRecords'),
-  enabled: () => {
-    return true
-  },
-  svg: false,
-  icon: 'el-icon-refresh',
-  actionName: 'refreshRecords',
-  refreshRecords: ({ containerUuid }) => {
-    // used to browser
-    store.dispatch('getBrowserSearch', {
-      containerUuid
-    })
-  }
-}
-
-export const runProcessOfBrowser = {
-  name: language.t('actionMenu.runProcess'),
-  enabled: ({ containerUuid, containerManager }) => {
-    const selection = containerManager.getSelection({
-      containerUuid
-    })
-
-    return !isEmptyValue(selection)
-  },
-  svg: false,
-  icon: 'el-icon-setting',
-  actionName: 'runProcessOfBrowser',
-  uuid: null,
-  runProcessOfBrowser: ({ containerUuid, containerManager }) => {
-    const selection = containerManager.getSelection({
-      containerUuid
-    })
-    if (isEmptyValue(selection)) {
-      showNotification({
-        title: language.t('data.selectionRequired'),
-        type: 'warning'
-      })
-      return
-    }
-
-    const process = store.getters.getProcessOfBrowser(containerUuid)
-    /*
-    const storedProcess = store.getters.getStoredProcess(process.uuid)
-    if (isEmptyValue(storedProcess)) {
-      store.dispatch('getProcessDefinitionFromServer', {
-        uuid: process.uuid
-      })
-    }
-    */
-
-    store.commit('setShowedModalDialog', {
-      containerUuid: process.uuid,
-      isShowed: true
-    })
-  }
-}
-
-/**
- * TableName
- * isDeleteable
- */
-export const runDeleteable = {
-  name: language.t('actionMenu.delete'),
-  enabled: ({ containerUuid, containerManager }) => {
-    const { is_deleteable, table_name } = store.getters.getStoredBrowser(containerUuid)
-    if (!is_deleteable || isEmptyValue(table_name)) {
-      return false
-    }
-    const selection = containerManager.getSelection({
-      containerUuid
-    })
-
-    return !isEmptyValue(selection)
-  },
-  svg: false,
-  icon: 'el-icon-delete',
-  actionName: 'deleteRecordOfBrowser',
-  uuid: null,
-  deleteRecordOfBrowser: ({ containerUuid, containerManager }) => {
-    const selection = containerManager.getSelection({
-      containerUuid
-    })
-    if (isEmptyValue(selection)) {
-      showNotification({
-        title: language.t('data.selectionRequired'),
-        type: 'warning'
-      })
-      return
-    }
-    store.dispatch('deleteRecordOfBrowser', {
-      containerUuid,
-      selection
-    })
-  }
-}
-
-export const clearQueryCriteria = {
-  name: language.t('smartBrowser.clearFields.title'),
-  description: language.t('smartBrowser.clearFields.description'),
-  enabled: ({ containerUuid }) => {
-    return true
-  },
-  isSvgIcon: true,
-  icon: 'layers-clear',
-  actionName: 'clearQueryCriteria',
-  uuid: null,
-  clearQueryCriteria: ({ containerUuid }) => {
-    store.dispatch('setBrowserDefaultValues', {
-      containerUuid
-    })
-
-    const emptyMandatory = store.getters.getBrowserFieldsEmptyMandatory({
-      containerUuid
-    })
-    if (isEmptyValue(emptyMandatory)) {
-      store.dispatch('getBrowserSearch', {
-        containerUuid
-      })
-    }
-  }
-}
-
-/**
- * Zoom in on the window associated with the smart browser
- * @param {string} uuid of window
- */
-export const zoomWindow = {
-  name: language.t('actionMenu.zoomWindow'),
-  enabled: ({ containerUuid }) => {
-    const browser = store.getters.getStoredBrowser(containerUuid)
-    if (!isEmptyValue(browser)) {
-      return !isEmptyValue(browser.window)
-    }
-    return false
-  },
-  svg: false,
-  icon: 'el-icon-zoom-in',
-  type: 'zoom',
-  actionName: 'zoomWindow',
-  uuid: null,
-  zoomWindow: ({ uuid, containerUuid }) => {
-    let filters
-    const browser = store.getters.getStoredBrowser(containerUuid)
-    const selection = store.getters.getBrowserSelectionsList({ containerUuid })
-    if (!isEmptyValue(selection) && !isEmptyValue(browser)) {
-      const keyColumn = browser.keyColumn
-      const elementColumn = browser.elementsList[keyColumn]
-      const listRecord = selection.map(list => list[keyColumn])
-      filters = [{
-        columnName: elementColumn,
-        values: listRecord,
-        operator: OPERATOR_IN.operator
-      }]
-    }
-    zoomIn({
-      query: {
-        filters
-      },
-      uuid
-    })
-  }
 }
 
 /**
@@ -420,32 +255,38 @@ export const containerManager = {
     })
   },
 
-  setRow: ({ containerUuid, rowIndex, row }) => {
-    return store.commit('setBrowserRow', {
-      containerUuid,
-      rowIndex,
-      row
-    })
-  },
-  getRow: ({ containerUuid, rowIndex }) => {
-    return store.getters.getBrowserRowData({
-      containerUuid,
-      rowIndex
+  getRecordsList: ({ containerUuid }) => {
+    return store.getters.getBrowserRecordsList({
+      containerUuid: containerUuid
     })
   },
 
-  setCell: ({ containerUuid, rowIndex, columnName, value }) => {
+  setRow: ({ containerUuid, rowUid, row }) => {
+    return store.commit('setBrowserRow', {
+      containerUuid,
+      rowUid,
+      row
+    })
+  },
+  getRow: ({ containerUuid, rowUid }) => {
+    return store.getters.getBrowserRowData({
+      containerUuid,
+      rowUid
+    })
+  },
+
+  setCell: ({ containerUuid, rowUid, columnName, value }) => {
     return store.commit('setBrowserCell', {
       containerUuid,
-      rowIndex,
+      rowUid,
       columnName,
       value
     })
   },
-  getCell: ({ containerUuid, rowIndex, columnName }) => {
+  getCell: ({ containerUuid, rowUid, columnName }) => {
     return store.getters.getBrowserCellData({
       containerUuid,
-      rowIndex,
+      rowUid,
       columnName
     })
   },
@@ -478,7 +319,7 @@ export const containerManager = {
   /**
    * @returns Promisse with value and displayedValue
    */
-  getDefaultValue({ parentUuid, containerUuid, name, uuid, id, contextColumnNames, columnName, value }) {
+  getDefaultValue({ parentUuid, containerUuid, name, uuid, id, contextColumnNames, inTable, rowUid, columnName, value }) {
     return store.dispatch('getDefaultValueFromServer', {
       parentUuid,
       containerUuid,
@@ -491,34 +332,45 @@ export const containerManager = {
       columnName,
       value
     }).then(response => {
-      if (!isEmptyValue(response.value)) {
-        const field = store.getters.getStoredBrowserFieldFromColumnName({
+      let newValueByServer, newDisplayValueByServer
+      if (!isEmptyValue(response) && !isEmptyValue(response.value)) {
+        newValueByServer = response.value
+      }
+
+      if (inTable) {
+        return store.commit('setBrowserCell', {
           containerUuid,
-          columnName
+          rowUid,
+          columnName,
+          value
+        })
+      }
+      const field = store.getters.getStoredBrowserFieldFromColumnName({
+        containerUuid,
+        columnName
+      })
+
+      // update element column name
+      if (!field.isSameColumnElement) {
+        store.commit('updateValueOfField', {
+          containerUuid,
+          columnName: field.element_name,
+          value: newValueByServer
         })
 
-        // update element column name
-        if (!field.isSameColumnElement) {
-          store.commit('updateValueOfField', {
-            containerUuid,
-            columnName: field.element_name,
-            value: response.value
-          })
+        store.commit('updateValueOfField', {
+          containerUuid,
+          columnName: DISPLAY_COLUMN_PREFIX + field.element_name,
+          value: newDisplayValueByServer
+        })
+      }
 
-          store.commit('updateValueOfField', {
-            containerUuid,
-            columnName: DISPLAY_COLUMN_PREFIX + field.element_name,
-            value: response.displayedValue
-          })
-        }
-
-        if (field.isGetServerValue) {
-          store.dispatch('browserActionPerformed', {
-            containerUuid,
-            field,
-            value: response.value
-          })
-        }
+      if (field.isGetServerValue || (response.reason === 'Successful default value' && !isSameValues(value, newValueByServer))) {
+        store.dispatch('browserActionPerformed', {
+          containerUuid,
+          field,
+          value: newValueByServer
+        })
       }
       return response
     })

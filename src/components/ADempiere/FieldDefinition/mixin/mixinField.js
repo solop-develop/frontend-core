@@ -109,62 +109,58 @@ export default {
         const { column_name, containerUuid, inTable } = this.metadata
         // table records values
         if (inTable) {
-          // implement container manager row
-          if (this.containerManager && this.containerManager.getCell) {
-            const value = this.containerManager.getCell({
-              containerUuid,
-              rowIndex: this.metadata.rowIndex,
-              columnName: column_name
-            })
-            // types `decimal` and `date` is a object struct
-            if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
-              return value.value
-            }
-            return value
+          const value = this.containerManager.getCell({
+            containerUuid,
+            rowIndex: this.metadata.rowIndex,
+            rowUid: this.metadata.rowUid,
+            columnName: column_name
+          })
+          // types `decimal` and `date` is a object struct
+          if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
+            return value.value
           }
+          return value
+        } else {
+          const value = store.getters.getValueOfFieldOnContainer({
+            parentUuid: this.metadata.parentUuid,
+            containerUuid,
+            columnName: column_name
+          })
+          // types `decimal` and `date` is a object struct
+          if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
+            return value.value
+          }
+          return value
         }
-
-        const value = store.getters.getValueOfFieldOnContainer({
-          parentUuid: this.metadata.parentUuid,
-          containerUuid,
-          columnName: column_name
-        })
-        // types `decimal` and `date` is a object struct
-        if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
-          return value.value
-        }
-        return value
       },
       set(newValue) {
         const { column_name, containerUuid, inTable } = this.metadata
 
         // table records values
         if (inTable) {
-          // implement container manager row
-          if (this.containerManager && this.containerManager.setCell) {
-            this.containerManager.setCell({
-              containerUuid,
-              rowIndex: this.metadata.rowIndex,
-              columnName: column_name,
-              value: newValue
-            })
-          }
-        }
-
-        store.commit('updateValueOfField', {
-          parentUuid: this.metadata.parentUuid,
-          containerUuid,
-          columnName: column_name,
-          value: newValue
-        })
-        // update element column name
-        if (!this.metadata.isSameColumnElement) {
+          this.containerManager.setCell({
+            containerUuid,
+            rowIndex: this.metadata.rowIndex,
+            rowUid: this.metadata.rowUid,
+            columnName: column_name,
+            value: newValue
+          })
+        } else {
           store.commit('updateValueOfField', {
             parentUuid: this.metadata.parentUuid,
             containerUuid,
-            columnName: this.metadata.element_name,
+            columnName: column_name,
             value: newValue
           })
+          // update element column name
+          if (!this.metadata.isSameColumnElement) {
+            store.commit('updateValueOfField', {
+              parentUuid: this.metadata.parentUuid,
+              containerUuid,
+              columnName: this.metadata.element_name,
+              value: newValue
+            })
+          }
         }
       }
     },
@@ -250,6 +246,10 @@ export default {
           containerUuid: this.metadata.containerUuid,
           contextColumnNames: this.metadata.contextColumnNames,
           defaultValue: this.metadata.default_value,
+          //
+          inTable: this.metadata.inTable,
+          rowIndex: this.metadata.rowIndex,
+          rowUid: this.metadata.rowUid,
           //
           uuid: this.metadata.uuid,
           id: this.metadata.id,

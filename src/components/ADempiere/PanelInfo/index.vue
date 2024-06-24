@@ -85,7 +85,7 @@ import { listProductStorage } from '@/api/ADempiere/form/storeProduct.js'
 import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import { isEmptyValue } from '@/utils/ADempiere'
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
-import { isDisplayedField } from '@/utils/ADempiere/dictionary/window'
+// import { isDisplayedField } from '@/utils/ADempiere/dictionary/window'
 
 export default defineComponent({
   name: 'ContainerInfo',
@@ -347,22 +347,35 @@ export default defineComponent({
       return store.getters.getIsLoadListIssues
     })
 
+    const accoutingSchemaId = computed(() => {
+      return store.getters.getSessionContext({
+        columnName: '$C_AcctSchema_ID'
+      })
+    })
+
     const isAccountingInfo = computed(() => {
       const { currentTab } = store.getters.getContainerInfo
       if (!currentTab.table.is_document) {
         return false
       }
-      const { fieldsList } = currentTab
-      if (isEmptyValue(fieldsList)) {
+      if (isEmptyValue(currentRecordId.value)) {
         return false
       }
-      const isPostedField = fieldsList.find(field => field.columnName === 'Posted')
-      if (isEmptyValue(isPostedField)) {
-        return false
-      }
-      return isDisplayedField({
-        ...isPostedField
-      })
+
+      // const { fieldsList } = currentTab
+      // if (isEmptyValue(fieldsList)) {
+      //   return false
+      // }
+      // const isPostedField = fieldsList.find(field => field.columnName === 'Posted')
+      // if (isEmptyValue(isPostedField)) {
+      //   return false
+      // }
+      // return isDisplayedField({
+      //   ...isPostedField
+      // })
+
+      const isShowAccouting = store.getters.getIsShowAccoutingFacts
+      return isShowAccouting
     })
 
     /**
@@ -392,7 +405,6 @@ export default defineComponent({
         typeAction.value = index
       }
     }
-
     function handleClick(tab, event) {
       let tabOptions = tab.name
       if (tab.name === 'accountingInformation') {
@@ -518,10 +530,27 @@ export default defineComponent({
         name: props.defaultOpenedTab
       })
     }
-
     store.dispatch('findListMailTemplates')
 
+    function showAccoutingFacts() {
+      if (isEmptyValue(currentRecordId.value)) {
+        store.commit('setIsShowAccoutingFacts', false)
+        return
+      }
+      const { currentTab } = store.getters.getContainerInfo
+      if (isEmptyValue(currentTab) || !currentTab.table.is_document) {
+        store.commit('setIsShowAccoutingFacts', false)
+        return
+      }
+      store.dispatch('getExistsAccoutingDocument', {
+        accoutingSchemaId: accoutingSchemaId.value,
+        tableName: currentTab.table_name,
+        recordId: currentRecordId.value
+      })
+    }
+
     findRecordLogs(props.allTabsList[parseInt(currentTabLogs.value)])
+    showAccoutingFacts()
 
     return {
       // Ref
@@ -554,7 +583,8 @@ export default defineComponent({
       showkey,
       findRecordLogs,
       handleClick,
-      findListStoreProduct
+      findListStoreProduct,
+      showAccoutingFacts
     }
   }
 

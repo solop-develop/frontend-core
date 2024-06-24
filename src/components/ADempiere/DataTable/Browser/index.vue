@@ -73,7 +73,8 @@
         :column-key="fieldAttributes.columnName"
         :prop="fieldAttributes.columnName"
         sortable
-        min-width="210"
+        :sort-by="fieldAttributes.sortByProperty"
+        :min-width="widthColumn(fieldAttributes)"
         :fixed="fieldAttributes.isFixedTableColumn"
       >
         <template slot="header">
@@ -135,6 +136,9 @@ import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
+/**
+ * TODO: Reindex with `rowIndex` property when sorting by Column without refreshing records
+ */
 export default defineComponent({
   name: 'BrowserTable',
 
@@ -207,10 +211,11 @@ export default defineComponent({
     })
 
     const keyColumn = computed(() => {
-      if (props.panelMetadata) {
-        return props.panelMetadata.keyColumn
-      }
-      return undefined
+      // if (props.panelMetadata) {
+      //   return props.panelMetadata.keyColumn
+      // }
+      // return undefined
+      return 'rowUid'
     })
 
     const headerList = computed(() => {
@@ -233,7 +238,11 @@ export default defineComponent({
         return false
       })
     })
-
+    function widthColumn(fieldAttributes) {
+      const { componentPath } = fieldAttributes
+      if (['FieldSearch', 'FieldAccountingCombination'].includes(componentPath)) return '500'
+      return '250'
+    }
     const selectionsLength = computed(() => {
       return props.containerManager.getSelection({
         containerUuid: props.containerUuid
@@ -522,7 +531,8 @@ export default defineComponent({
       handleSelectionAll,
       loadSelection,
       handleChangeSizePage,
-      activateAll
+      activateAll,
+      widthColumn
     }
   }
 })
@@ -551,6 +561,9 @@ export default defineComponent({
   .el-table__body-wrapper {
     overflow: auto;
     height: calc(100vh - 310px);
+  }
+  .el-table thead tr {
+    height: 40px!important
   }
 }
 </style>

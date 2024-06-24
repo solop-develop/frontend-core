@@ -32,6 +32,7 @@
       :metadata-field="{
         ...fieldAttributes,
         rowIndex: scope.$index,
+        rowUid: dataRow.rowUid,
         recordUuid: dataRow.UUID
       }"
       size="mini"
@@ -39,13 +40,14 @@
     />
   </span>
 
-  <cell-display-info
-    v-else
-    key="info-value"
-    :class="cellCssClass"
-    :field-attributes="fieldAttributes"
-    :data-row="dataRow"
-  />
+  <span v-else key="cell-info">
+    <cell-display-info
+      key="info-value"
+      :class="cellCssClass"
+      :field-attributes="fieldAttributes"
+      :data-row="dataRow"
+    />
+  </span>
 </template>
 
 <script>
@@ -56,7 +58,7 @@ import CellDisplayInfo from '@/components/ADempiere/DataTable/Components/CellDis
 import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
 
 // Constants
-import { BINARY_DATA, IMAGE } from '@/utils/ADempiere/references'
+import { BINARY_DATA, BUTTON, IMAGE } from '@/utils/ADempiere/references'
 
 // Utils and Helpers Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -116,7 +118,7 @@ export default defineComponent({
     })
 
     const isRowChangeEdited = computed(() => {
-      if ([BINARY_DATA.id, IMAGE.id].includes(props.fieldAttributes.display_type)) {
+      if ([BINARY_DATA.id, BUTTON.id, IMAGE.id].includes(props.fieldAttributes.display_type)) {
         return false
       }
       if (props.dataRow.isEditRow && !isReadOnly.value) {

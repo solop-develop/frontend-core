@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { formatField } from '@/utils/ADempiere/valueFormat'
 
 // export file with records
-export const supportedTypes = {
+export const EXPORT_SUPPORTED_TYPES = {
   csv: language.t('extensionFile.csv'),
   html: language.t('extensionFile.html'),
   json: language.t('extensionFile.json'),
@@ -169,54 +169,67 @@ export function exportZipFile({
  * @param {string} formatToExport
  * @param {array} formatToExport
  */
-export const exportRecords = ({ parentUuid, containerUuid, containerManager, formatToExport = 'json', currrentRecord = { }}) => {
-  let selection = [currrentRecord]
+export const exportRecords = ({ parentUuid, containerUuid, containerManager, formatToExport = 'json', selection = [], currrentRecord = { }}) => {
+  let currentSelection = [currrentRecord]
   if (isEmptyValue(currrentRecord)) {
-    selection = containerManager.getSelection({
+    currentSelection = containerManager.getSelection({
       containerUuid
     })
   }
-  const fieldsListAvailable = containerManager.getFieldsList({
+  if (!isEmptyValue(selection)) {
+    currentSelection = selection
+  }
+
+  const fieldsList = containerManager.getFieldsList({
     parentUuid,
     containerUuid
-  }).filter(fieldItem => {
+  })
+
+  const fieldsListAvailable = fieldsList.filter(fieldItem => {
+    const {
+      is_displayed, is_displayed_grid,
+      is_encrypted, display_type, is_key,
+      sequence
+    } = fieldItem
     // TODO: Verify with containerManager.isDisplayedColumn
     // Hide not displayed fields
     if (
-      !isEmptyValue(fieldItem.is_displayed) &&
-      !isEmptyValue(fieldItem.is_displayed_grid) &&
-      !(fieldItem.is_displayed && fieldItem.is_displayed_grid)
+      !isEmptyValue(is_displayed) &&
+      !isEmptyValue(is_displayed_grid) &&
+      !(is_displayed && is_displayed_grid)
     ) {
       return false
     }
     // Hide encrypted fields
-    if (fieldItem.is_encrypted) {
+    if (is_encrypted) {
       return false
     }
     // Hide simple button fields without a value
-    if (fieldItem.displayType === BUTTON.id) { // && fieldItem.referenceValue === 0) {
+    if (display_type === BUTTON.id) { // && fieldItem.referenceValue === 0) {
       return false
     }
-    if (!fieldItem.is_key && fieldItem.sequence > 0) {
+    if (!is_key && sequence > 0) {
       return true
     }
     return false
   }).sort((a, b) => a.sequence - b.sequence)
+
   const headerList = fieldsListAvailable.map(fieldItem => {
     // decode html entities
     return decodeHtmlEntities(fieldItem.name)
   })
+
   // filter only showed columns
-  const data = selection.map(row => {
+  const data = currentSelection.map(row => {
     const newRow = {}
     fieldsListAvailable.forEach(field => {
-      const { columnName, displayColumnName, displayType } = field
+      const { column_name, displayColumnName, display_type } = field
       const value = formatField({
-        displayType,
-        value: row[columnName],
+        displayType: display_type,
+        value: row[column_name],
         displayedValue: row[displayColumnName]
       })
-      newRow[columnName] = value
+      newRow[column_name] = value
     })
     return newRow
   })

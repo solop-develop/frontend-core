@@ -107,19 +107,22 @@ export default ({
     }
 
     // implement container manager row
-    if (fieldAttributes.inTable && containerManager && containerManager.setCell) {
+    if (fieldAttributes.inTable) {
       containerManager.setCell({
         containerUuid,
         rowIndex: fieldAttributes.rowIndex,
+        rowUid: fieldAttributes.rowUid,
         columnName: column_name,
         value: id
       })
       containerManager.setCell({
         containerUuid,
         rowIndex: fieldAttributes.rowIndex,
+        rowUid: fieldAttributes.rowUid,
         columnName: DISPLAY_COLUMN_PREFIX + column_name,
         value: description
       })
+      return
     }
 
     store.dispatch('notifyFieldChange', {
