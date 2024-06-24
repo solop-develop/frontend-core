@@ -215,12 +215,14 @@ export default {
         this.containerManager.setCell({
           containerUuid,
           rowIndex: this.metadata.rowIndex,
+          rowUid: this.metadata.rowUid,
           columnName,
           value: id
         })
         this.containerManager.setCell({
           containerUuid,
           rowIndex: this.metadata.rowIndex,
+          rowUid: this.metadata.rowUid,
           columnName: DISPLAY_COLUMN_PREFIX + columnName,
           value: displayValue
         })

@@ -118,6 +118,7 @@ export default {
           return this.containerManager.getCell({
             containerUuid,
             rowIndex: this.metadata.rowIndex,
+            rowUid: this.metadata.rowUid,
             columnName: column_name
           })
         }
@@ -135,6 +136,7 @@ export default {
           this.containerManager.setCell({
             containerUuid,
             rowIndex: this.metadata.rowIndex,
+            rowUid: this.metadata.rowUid,
             columnName: column_name,
             value
           })

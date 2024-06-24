@@ -112,6 +112,7 @@ export default {
           const value = this.containerManager.getCell({
             containerUuid,
             rowIndex: this.metadata.rowIndex,
+            rowUid: this.metadata.rowUid,
             columnName: column_name
           })
           // types `decimal` and `date` is a object struct
@@ -140,6 +141,7 @@ export default {
           this.containerManager.setCell({
             containerUuid,
             rowIndex: this.metadata.rowIndex,
+            rowUid: this.metadata.rowUid,
             columnName: column_name,
             value: newValue
           })

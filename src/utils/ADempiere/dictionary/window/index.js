@@ -1989,17 +1989,19 @@ export const containerManager = {
     })
   },
 
-  getRow: ({ containerUuid, rowIndex, recordUuid }) => {
+  getRow: ({ containerUuid, rowIndex, rowUid, recordUuid }) => {
     return store.getters.getTabRowData({
       containerUuid,
       rowIndex,
+      rowUid,
       recordUuid
     })
   },
-  setCell: ({ containerUuid, rowIndex, columnName, value }) => {
+  setCell: ({ containerUuid, rowIndex, rowUid, columnName, value }) => {
     return store.commit('setTabCell', {
       containerUuid,
       rowIndex,
+      rowUid,
       columnName,
       value
     })
@@ -2014,10 +2016,11 @@ export const containerManager = {
     })
   },
 
-  getCell: ({ containerUuid, rowIndex, recordUuid, columnName }) => {
+  getCell: ({ containerUuid, rowIndex, rowUid, recordUuid, columnName }) => {
     return store.getters.getTabCellData({
       containerUuid,
       rowIndex,
+      rowUid,
       recordUuid,
       columnName
     })

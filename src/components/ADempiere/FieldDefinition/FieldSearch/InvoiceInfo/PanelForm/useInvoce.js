@@ -177,12 +177,14 @@ export default ({
       containerManager.setCell({
         containerUuid,
         rowIndex: fieldAttributes.rowIndex,
+        rowUid: fieldAttributes.rowUid,
         columnName,
         value: id
       })
       containerManager.setCell({
         containerUuid,
         rowIndex: fieldAttributes.rowIndex,
+        rowUid: fieldAttributes.rowUid,
         columnName: DISPLAY_COLUMN_PREFIX + columnName,
         value: displayValue
       })

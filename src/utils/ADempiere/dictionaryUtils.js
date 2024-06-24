@@ -17,7 +17,7 @@
  */
 
 // Constants
-import REFERENCES, { YES_NO, DEFAULT_SIZE, getTableNameFromReference } from '@/utils/ADempiere/references'
+import REFERENCES, { YES_NO, DEFAULT_SIZE } from '@/utils/ADempiere/references'
 import {
   FIELD_OPERATORS_LIST, OPERATOR_EQUAL,
   OPERATOR_LIKE, OPERATOR_GREATER_EQUAL, OPERATOR_LESS_EQUAL, OPERATOR_BETWEEN
@@ -28,6 +28,7 @@ import {
 
 // Utils and Helpers Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { getTableNameFromReference, isSupportLookup } from '@/utils/ADempiere/references'
 import { decodeHtmlEntities } from '@/utils/ADempiere/formatValue/stringFormat'
 import {
   getContextDefaultValue, getEvaluatedFieldLogics, getParentFields
@@ -242,6 +243,7 @@ export function generateField({
     isSupported: componentReference.isSupported,
     size: componentReference.size || DEFAULT_SIZE,
     displayColumnName: DISPLAY_COLUMN_PREFIX + columnName, // key to display column
+    sortByProperty: !isSupportLookup(fieldToGenerate.display_type) ? columnName : DISPLAY_COLUMN_PREFIX + columnName,
     // value attributes
     parsedDefaultValue,
     parsedDefaultValueTo,
