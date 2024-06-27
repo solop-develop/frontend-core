@@ -151,7 +151,7 @@ export default defineComponent({
           })
       }
       store.dispatch('getWindowDefinitionFromServer', {
-        id: root.$route.meta.id
+        id: root.$route.meta.action_uuid
       })
         .then(windowResponse => {
           // add apps properties

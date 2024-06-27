@@ -476,7 +476,7 @@ const actions = {
         containerUuid = field.containerUuid
       } else {
         // new implementation
-        fieldId = fieldDependentDefinition.id
+        fieldId = fieldDependentDefinition.internal_id
         columnName = fieldDependentDefinition.column_name
         containerUuid = fieldDependentDefinition.parent_uuid
         containerName = fieldDependentDefinition.parent_name

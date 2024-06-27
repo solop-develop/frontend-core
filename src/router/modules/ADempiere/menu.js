@@ -30,7 +30,7 @@ import { requestMenu } from '@/api/ADempiere/security/index.ts'
 
 // Utils and Helper Methods
 import { convertAction } from '@/utils/ADempiere/dictionary/menu'
-import { getCurrentClient, getCurrentOrganization, getCurrentRole } from '@/utils/ADempiere/auth'
+import { getCurrentOrganization } from '@/utils/ADempiere/auth'
 import { isEmptyValue, recursiveTreeSearch } from '@/utils/ADempiere'
 
 /**
@@ -44,8 +44,9 @@ export function loadMainMenu({
   role
 }) {
   const language = store.getters['getCurrentLanguage']
-  const clientId = getCurrentClient()
-  const roleId = getCurrentRole()
+  // const { uuid, client } = store.getters['user/getRole']
+  const clientId = store.getters['user/getRole'].client.uuid
+  const roleId = store.getters['user/getRole'].uuid
   const userId = store.getters['user/getUserId']
   const organizationId = getCurrentOrganization()
 
@@ -182,6 +183,7 @@ function getChildFromAction({ menu, index, clientId, roleId, organizationId }) {
       option.meta.childs.push(menuConverted)
     })
   }
+  // console.log({ option }, option.meta.title)
 
   return option
 }
@@ -196,7 +198,7 @@ function getChildFromAction({ menu, index, clientId, roleId, organizationId }) {
  * @param {number} organizationId
  */
 function getRouteFromMenuItem({ menu, clientId, roleId, organizationId }) {
-  const { action, action_id, action_uuid } = menu
+  const { action, action_id, action_uuid, internal_id } = menu
   // use component of convertAction
   const { icon, name: type } = convertAction(action)
 
@@ -216,7 +218,7 @@ function getRouteFromMenuItem({ menu, clientId, roleId, organizationId }) {
       parentId: menu.parent_id,
       // parentUuid: menu.parent_uuid,
       noCache: true,
-      id: action_id,
+      id: internal_id,
       uuid: action_uuid,
       action_id: action_id,
       action_uuid: action_uuid,

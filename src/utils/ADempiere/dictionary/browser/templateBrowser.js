@@ -26,12 +26,14 @@ export function templateBrowser(browser) {
   const {
     fields,
     table_name,
+    internal_id,
     context_column_names
   } = browser
   return {
     ...browser,
-    tableName: table_name,
     fields: fields,
+    id: internal_id,
+    tableName: table_name,
     contextColumnNames: context_column_names
   }
 }
