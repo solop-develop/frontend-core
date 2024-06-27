@@ -247,17 +247,14 @@ const persistence = {
           containerUuid,
           recordUuid
         })
-
         if (isEmptyValue(attributesList)) {
           attributesList = persistenceAttributesList
             .filter(attribute => {
               const { columnName } = attribute
-
               // omit send to server (to create or update) columns manage by backend
               if (columnName.startsWith(DISPLAY_COLUMN_PREFIX)) {
                 return false
               }
-
               const field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
               if (!isEmptyValue(field)) {
                 if (field.is_always_updateable) {
@@ -485,6 +482,9 @@ const persistence = {
           // only changes
           .filter(attribute => {
             const { value, oldValue } = attribute
+            if (value === 0) {
+              return true
+            }
             return !isSameValues(value, oldValue)
           })
       }
@@ -505,7 +505,6 @@ const persistence = {
     }) => {
       const key = containerUuid + '_' + recordUuid
       const changes = state.persistence[key]
-
       if (!isEmptyValue(changes)) {
         const valuesList = Object.values(changes)
         if (isEmptyValue(recordUuid) || recordUuid === 'create-new') {
@@ -515,7 +514,6 @@ const persistence = {
             isAddDisplayColumn: true,
             formatToReturn: 'object'
           })
-
           return valuesList
             // only changes with default value
             .filter(attribute => {
@@ -523,11 +521,13 @@ const persistence = {
               return !isSameValues(value, defaultRow[columnName])
             })
         }
-
         return valuesList
           // only changes
           .filter(attribute => {
             const { value, oldValue } = attribute
+            if (value === 0) {
+              return true
+            }
             return !isSameValues(value, oldValue)
           })
       }
