@@ -18,5 +18,6 @@
 
 export default {
   storedBrowsers: {},
-  storedBrowsersUuid: {}
+  storedBrowsersUuid: {},
+  storedBrowsersProcessAll: {}
 }
