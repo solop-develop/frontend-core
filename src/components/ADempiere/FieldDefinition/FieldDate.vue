@@ -125,9 +125,6 @@ export default {
         format = format + ' hh:mm:ss A'
       }
       return format
-        .replace(/[Y]/gi, 'y')
-        .replace(/[m]/gi, 'M')
-        .replace(/[D]/gi, 'd')
     },
     formatSend() {
       let format = 'yyyy-MM-dd'
