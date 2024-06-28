@@ -175,6 +175,10 @@ export const runProcessOfBrowser = {
   actionName: 'runProcessOfBrowser',
   uuid: null,
   runProcessOfBrowser: ({ containerUuid, containerManager }) => {
+    store.commit('setBrowserProcessAll', {
+      uuid: containerUuid,
+      isAll: false
+    })
     const selection = containerManager.getSelection({
       containerUuid
     })
@@ -195,6 +199,62 @@ export const runProcessOfBrowser = {
       })
     }
     */
+
+    store.commit('setShowedModalDialog', {
+      containerUuid: process.uuid,
+      isShowed: true
+    })
+  }
+}
+
+export const runProcessOfBrowserAllRecords = {
+  name: language.t('smartBrowser.processAllRecords.title'),
+  description: language.t('smartBrowser.processAllRecords.description'),
+  enabled: ({ containerUuid, containerManager }) => {
+    const emptyMandatory = store.getters.getBrowserFieldsEmptyMandatory({
+      containerUuid
+    })
+    if (!isEmptyValue(emptyMandatory)) {
+      return false
+    }
+    const recordCount = store.getters.getBrowserRecordCount({
+      containerUuid
+    })
+    if (isEmptyValue(recordCount) || recordCount <= 0) {
+      return false
+    }
+    return true
+  },
+  svg: false,
+  icon: 'el-icon-setting',
+  actionName: 'runProcessOfBrowser',
+  uuid: null,
+  runProcessOfBrowser: ({ containerUuid, containerManager }) => {
+    const recordCount = store.getters.getBrowserRecordCount({
+      containerUuid
+    })
+    if (isEmptyValue(recordCount) || recordCount <= 0) {
+      showNotification({
+        title: language.t('smartBrowser.processAllRecords.withoutResults'),
+        type: 'warning'
+      })
+      return
+    }
+
+    const process = store.getters.getProcessOfBrowser(containerUuid)
+    /*
+    const storedProcess = store.getters.getStoredProcess(process.uuid)
+    if (isEmptyValue(storedProcess)) {
+      store.dispatch('getProcessDefinitionFromServer', {
+        uuid: process.uuid
+      })
+    }
+    */
+
+    store.commit('setBrowserProcessAll', {
+      uuid: containerUuid,
+      isAll: true
+    })
 
     store.commit('setShowedModalDialog', {
       containerUuid: process.uuid,

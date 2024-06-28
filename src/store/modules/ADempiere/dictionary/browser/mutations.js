@@ -33,6 +33,10 @@ export default {
     Vue.set(state.storedBrowsersUuid, id, uuid)
   },
 
+  setBrowserProcessAll(state, { uuid, isAll = false }) {
+    Vue.set(state.storedBrowsersProcessAll, uuid, isAll)
+  },
+
   changeBrowserAttribute(state, {
     uuid,
     attributeName,

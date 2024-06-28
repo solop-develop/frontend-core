@@ -43,7 +43,7 @@ import {
 import {
   clearQueryCriteria,
   refreshBrowserSearh, exportAllRecords,
-  runProcessOfBrowser,
+  runProcessOfBrowser, runProcessOfBrowserAllRecords,
   zoomWindow, runDeleteable
 } from '@/utils/ADempiere/dictionary/browser/actionsMenu'
 import { showMessage, showNotification } from '@/utils/ADempiere/notification.js'
@@ -179,9 +179,13 @@ export default {
                   })
                   return
                 }
+
+                const isAllSelection = rootGetters.getStoredBrowserProcessAll(browserDefinition.uuid)
+
                 store.dispatch('startProcessOfBrowser', {
                   parentUuid: browserDefinition.uuid,
-                  containerUuid: process.uuid
+                  containerUuid: process.uuid,
+                  isAllSelection
                 }).then(processOutputResponse => {
                   // close current page
                   if (!isEmptyValue(parentUuid)) {
@@ -269,6 +273,13 @@ export default {
         description
       }
       actionsList.push(actionProcess)
+
+      const actionProcessAll = {
+        ...runProcessOfBrowserAllRecords,
+        uuid,
+        name: name + lang.t('smartBrowser.processAllRecords.all')
+      }
+      actionsList.push(actionProcessAll)
     }
 
     actionsList.push(runDeleteable)
