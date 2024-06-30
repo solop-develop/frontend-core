@@ -1394,9 +1394,10 @@ export function generateTabs({
       })
       return false
     }
-    return !(
-      itemTab.is_translation_tab
-    )
+    if (itemTab.is_translation_tab || (itemTab.table.table_name.endsWith('_Trl'))) {
+      return false
+    }
+    return true
   }).map((currentTab, index, listTabs) => {
     const isParentTab = Boolean(firstTabTableName === currentTab.table_name)
     const parentTabs = listTabs
