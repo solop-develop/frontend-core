@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -34,7 +34,8 @@ export function requestListTabSequences({
     url: `/user-interface/tab-sequences/${tabId}`,
     method: 'get',
     params: {
-      context_attributes: contextAttributes
+      context_attributes: contextAttributes,
+      page_size: 500
     }
   })
 }
@@ -48,17 +49,15 @@ export function requestListTabSequences({
 export function requestSaveTabSequences({
   tabId,
   // dsl query
-  contextAttributes
+  contextAttributes,
+  entities
 }) {
   return request({
     url: `/user-interface/tab-sequences/${tabId}`,
     method: 'post',
     data: {
-      context_attributes: contextAttributes
+      context_attributes: contextAttributes,
+      entities
     }
   })
-    .then(response => {
-      const { convertEntityList } = require('@/utils/ADempiere/apiConverts/persistence.js')
-      return convertEntityList(response)
-    })
 }

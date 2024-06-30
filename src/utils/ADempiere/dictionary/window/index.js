@@ -1126,39 +1126,6 @@ export const openDocumentAction = {
 }
 
 /**
- * Run process associated on table or button field
- * @param {string} parentUuid
- * @param {string} containerUuid
- * @param {number} recordId
- * @param {string} recordUuid
- */
-export const openSequenceTab = {
-  name: language.t('window.tab.sequenceTab'),
-  enabled: ({ parentUuid, containerUuid }) => {
-    const recordUuid = store.getters.getUuidOfContainer(containerUuid)
-    return !isEmptyValue(recordUuid)
-  },
-  svg: false,
-  icon: 'el-icon-sort',
-  actionName: 'openSequenceTab',
-  openSequenceTab: ({ parentUuid, containerUuid, uuid, contextColumnNames }) => {
-    const currentTab = store.getters.getStoredTab(parentUuid, containerUuid)
-    const { sequenceTabsList } = currentTab
-    const sequenceTab = sequenceTabsList.find(itemTab => {
-      return itemTab.uuid === uuid
-    })
-
-    store.commit('setSelectProcessWindows', sequenceTab.uuid)
-
-    store.commit('setShowedModalDialog', {
-      parentUuid,
-      containerUuid: sequenceTab.uuid,
-      isShowed: true
-    })
-  }
-}
-
-/**
  * Get current record and refresh values on panel and table
  * @param {string} parentUuid
  * @param {string} containerUuid
@@ -1454,13 +1421,13 @@ export function generateTabs({
     }
 
     const sequenceTabsList = sequenceTabsListOnWindow
-      .filter(currentItemTab => {
-        return currentItemTab.is_sort_tab &&
-          currentItemTab.table_name === currentTab.table_name
+      .filter(currentItemSortTab => {
+        return currentItemSortTab.is_sort_tab &&
+        currentItemSortTab.table_name === currentTab.table_name
       })
-      .map(currentItemTab => {
+      .map(currentItemSortTab => {
         return {
-          ...currentItemTab,
+          ...currentItemSortTab,
           parentUuid,
           parentTabs: [
             ...parentTabs,
