@@ -43,7 +43,7 @@
             <component
               :is="tab.component"
               :container-uuid="currentTab.containerUuid"
-              :table-name="allTabsList[0].table_name"
+              :table-name="changeTableName"
               :container-manager="containerManager"
               :parent-uuid="currentTab.parentUuid"
               :record-uuid="currentRecordUuid"
@@ -261,7 +261,13 @@ export default defineComponent({
       }
       return {}
     })
-
+    const changeTableName = computed(() => {
+      if (!isEmptyValue(containerInfo.value) && !isEmptyValue(containerInfo.value.currentTab)) {
+        const current = containerInfo.value.currentTab
+        return current.table_name
+      }
+      return props.allTabsList[0].table_name
+    })
     // Current Tab
     const currentTab = computed(() => {
       if (containerInfo.value.currentTab) {
@@ -573,6 +579,7 @@ export default defineComponent({
       isAccountingInfo,
       currentRecordUuid,
       showPanelDashboard,
+      changeTableName,
       // IsLoading
       isLoadingNotesRecord,
       isLoadingListAttachment,
