@@ -2148,6 +2148,17 @@ export const containerManager = {
       blankValue
     })
   },
+  getSearchDefinition({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, uuid, id }) {
+    return store.dispatch('getSearchFieldsFromServer', {
+      parentUuid,
+      containerUuid,
+      contextColumnNames,
+      uuid,
+      fieldId: id,
+      tableName,
+      columnName
+    })
+  },
   getSearchRecordsList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, id, filters, searchValue, pageNumber, pageSize }) {
     return store.dispatch('getSearchRecordsFromServer', {
       parentUuid,

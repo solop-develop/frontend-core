@@ -2,6 +2,7 @@
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
  * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanchez@gmail.com https://github.com/elsiosanchez
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -26,6 +27,7 @@ import {
 import { requestGridGeneralInfo } from '@/api/ADempiere/field/search/index.js'
 
 // Constants
+import { CUSTOMIZED_SEARCH_TABLES } from '@/utils/ADempiere/dictionary/field/search/index.ts'
 import { TABLE_NAME as TABLE_NAME_BPartner } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 import { TABLE_NAME as TABLE_NAME_PRODUCT } from '@/utils/ADempiere/dictionary/field/search/product.ts'
 import { TABLE_NAME as TABLE_NAME_ORDER } from '@/utils/ADempiere/dictionary/field/search/order'
@@ -63,6 +65,7 @@ const initState = {
     pageNumber: 1
   },
 
+  tableNameField: {},
   setIdentifierColumns: {},
   searchQueryFields: {},
   searchTableFields: {},
@@ -78,6 +81,10 @@ const generalInfoSearch = {
   state: initState,
 
   mutations: {
+    setTableNameByField(state, { uuid, tableName }) {
+      Vue.set(state.tableNameField, uuid, tableName)
+    },
+
     setSearchIdentifierFields(state, {
       tableName,
       fieldsList
@@ -189,14 +196,42 @@ const generalInfoSearch = {
      * @returns
      */
     getSearchFieldsFromServer({ commit }, {
-      tableName
+      uuid,
+      //
+      columnId,
+      fieldId,
+      processParameterId,
+      browseFieldId,
+      //
+      tableName,
+      columnName
     }) {
       return new Promise((resolve, reject) => {
         requestSearchFields({
-          tableName
+          columnId,
+          fieldId,
+          processParameterId,
+          browseFieldId,
+          //
+          tableName,
+          columnName
         })
           .then(response => {
-            const { query_fields, table_columns } = response
+            const { query_fields, table_columns, table_name } = response
+
+            commit('setTableNameByField', {
+              uuid: uuid,
+              tableName: table_name
+            })
+
+            if (CUSTOMIZED_SEARCH_TABLES.includes(table_name)) {
+              resolve({
+                table_name,
+                query_fields: [],
+                table_columns: []
+              })
+              return
+            }
 
             const fieldsList = query_fields.map(queryField => {
               const field = generateField({
@@ -212,16 +247,17 @@ const generalInfoSearch = {
               }
             })
             commit('setSearchQueryFields', {
-              tableName,
+              tableName: table_name,
               fieldsList: fieldsList
             })
 
             commit('setSearchTableFields', {
-              tableName,
+              tableName: table_name,
               fieldsList: table_columns
             })
 
             resolve({
+              table_name,
               query_fields: fieldsList,
               table_columns
             })
@@ -449,6 +485,9 @@ const generalInfoSearch = {
   },
 
   getters: {
+    getTableNameByField: (state) => ({ uuid }) => {
+      return state.tableNameField[uuid]
+    },
     getIdentifierColumns: (state) => ({ tableName }) => {
       return state.setIdentifierColumns[tableName] || []
     },

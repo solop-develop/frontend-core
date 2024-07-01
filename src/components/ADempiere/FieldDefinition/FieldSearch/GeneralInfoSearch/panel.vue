@@ -388,8 +388,8 @@ export default {
     loadSearchFields() {
       const fieldsListTable = this.storedColumnsListTable
       if (isEmptyValue(fieldsListTable)) {
-        store.dispatch('getSearchFieldsFromServer', {
-          tableName: this.tableName
+        this.containerManager.getSearchDefinition({
+          id: this.metadata.id
         })
           .finally(() => {
             this.isLoadingFields = false
