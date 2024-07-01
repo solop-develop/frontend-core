@@ -120,11 +120,14 @@ export default {
           }
         }
       }
-
+      let formattedFormat = format
+        .replace(/[Y]/gi, 'y')
+        .replace(/[m]/gi, 'M')
+        .replace(/[D]/gi, 'd')
       if (this.metadata.display_type === DATE_PLUS_TIME.id) {
-        format = format + ' hh:mm:ss A'
+        formattedFormat = formattedFormat + ' hh:mm:ss A'
       }
-      return format
+      return formattedFormat
     },
     formatSend() {
       let format = 'yyyy-MM-dd'
