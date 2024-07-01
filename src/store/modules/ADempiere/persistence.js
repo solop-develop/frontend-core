@@ -243,18 +243,20 @@ const persistence = {
         const { fieldsList, table } = tabDefinition
         const { key_columns, identifier_columns } = table
 
-        const persistenceAttributesList = getters.getPersistenceAttributes({
-          containerUuid,
-          recordUuid
-        })
         if (isEmptyValue(attributesList)) {
+          const persistenceAttributesList = getters.getPersistenceAttributes({
+            containerUuid,
+            recordUuid
+          })
           attributesList = persistenceAttributesList
             .filter(attribute => {
               const { columnName } = attribute
+
               // omit send to server (to create or update) columns manage by backend
               if (columnName.startsWith(DISPLAY_COLUMN_PREFIX)) {
                 return false
               }
+
               const field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
               if (!isEmptyValue(field)) {
                 if (field.is_always_updateable) {
@@ -482,9 +484,6 @@ const persistence = {
           // only changes
           .filter(attribute => {
             const { value, oldValue } = attribute
-            if (value === 0) {
-              return true
-            }
             return !isSameValues(value, oldValue)
           })
       }
@@ -525,9 +524,6 @@ const persistence = {
           // only changes
           .filter(attribute => {
             const { value, oldValue } = attribute
-            if (value === 0) {
-              return true
-            }
             return !isSameValues(value, oldValue)
           })
       }
