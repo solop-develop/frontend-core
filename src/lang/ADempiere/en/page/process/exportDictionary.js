@@ -24,7 +24,8 @@ const exportDictionaryDefinition = {
   menus: 'Export Menu',
   windows: 'Export Windows',
   process: 'Export Processes',
-  browsers: 'Export Viewers'
+  browsers: 'Export Viewers',
+  form: 'Exportar Form'
 }
 
 export default exportDictionaryDefinition

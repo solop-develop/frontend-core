@@ -107,12 +107,12 @@ export default {
      */
     formatView() {
       let format = ''
+      const currentLanguageDefinition = this.$store.getters['getCurrentLanguageDefinition']
       if (!isEmptyValue(this.metadata.vFormat)) {
         format = this.metadata.vFormat
       }
       if (isEmptyValue(format)) {
         format = 'yyyy-MM-dd'
-        const currentLanguageDefinition = this.$store.getters['getCurrentLanguageDefinition']
         if (!isEmptyValue(currentLanguageDefinition)) {
           const { datePattern } = currentLanguageDefinition
           if (!isEmptyValue(datePattern)) {
@@ -120,14 +120,22 @@ export default {
           }
         }
       }
-
-      if (this.metadata.display_type === DATE_PLUS_TIME.id) {
-        format = format + ' hh:mm:ss A'
-      }
-      return format
+      let formattedFormat = format
         .replace(/[Y]/gi, 'y')
         .replace(/[m]/gi, 'M')
         .replace(/[D]/gi, 'd')
+      if (this.metadata.display_type === DATE_PLUS_TIME.id) {
+        if (!isEmptyValue(currentLanguageDefinition)) {
+          const { time_pattern } = currentLanguageDefinition
+          if (!isEmptyValue(time_pattern)) {
+            formattedFormat = formattedFormat + ' ' + time_pattern
+            return formattedFormat
+              .replace(/[z]/gi, '')
+          }
+        }
+        formattedFormat = formattedFormat + ' hh:mm:ss A'
+      }
+      return formattedFormat
     },
     formatSend() {
       let format = 'yyyy-MM-dd'

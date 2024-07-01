@@ -77,11 +77,11 @@ export function requestGridGeneralInfo({
     case !isEmptyValue(browseFieldId):
       url = `/user-interface/search-records/query-criteria/${browseFieldId}`
       break
-    case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
-      url = `/user-interface/search-records/${tableName}/${columnName}`
-      break
     case !isEmptyValue(columnId):
       url = `/user-interface/search-records/column/${columnId}`
+      break
+    case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
+      url = `/user-interface/search-records/${tableName}/${columnName}`
       break
   }
 

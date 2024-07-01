@@ -45,7 +45,10 @@ export function requestRunBusinessProcessAsBrowser({
   parametersList,
   browserId,
   recordId,
-  selectionsList
+  selectionsList,
+  isAllSelection,
+  browserContextAttributes,
+  browserCriteriaFilters
 }) {
   return request({
     url: `/business-data/process/${id}/smart-browse/${browserId}`,
@@ -53,7 +56,10 @@ export function requestRunBusinessProcessAsBrowser({
     data: {
       record_id: recordId,
       parameters: parametersList,
-      selections: selectionsList
+      selections: selectionsList,
+      is_all_selection: isAllSelection,
+      browser_context_attributes: browserContextAttributes,
+      criteria_filters: browserCriteriaFilters
     }
   })
 }
