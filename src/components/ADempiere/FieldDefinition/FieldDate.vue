@@ -204,7 +204,7 @@ export default {
       },
       set(value) {
         const { columnName, containerUuid, inTable } = this.metadata
-
+        const valueParam = value
         // table records values
         if (inTable) {
           // implement container manager row
@@ -213,7 +213,7 @@ export default {
             rowIndex: this.metadata.rowIndex,
             rowUid: this.metadata.rowUid,
             columnName,
-            value
+            value: valueParam
           })
           // types `decimal` and `date` is a object struct
           if ((getTypeOfValue(value) === 'OBJECT') && !isEmptyValue(value.type)) {
@@ -320,7 +320,6 @@ export default {
     preHandleChange(value) {
       let startValue, endValue
       startValue = value
-
       if (this.typePicker === 'dates') {
         if (Array.isArray(value)) {
           value = value.map(itemValue => new Date(itemValue))
@@ -343,7 +342,6 @@ export default {
         startValue = new Date(startValue)
         endValue = new Date(endValue)
       }
-
       this.handleFieldChange({
         value: startValue,
         valueTo: endValue
