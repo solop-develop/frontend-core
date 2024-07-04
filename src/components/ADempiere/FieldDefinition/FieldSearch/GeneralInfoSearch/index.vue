@@ -136,7 +136,7 @@ export default {
           containerUuid: this.metadata.containerUuid,
           parentUuid: this.metadata.containerUuid,
           contextColumnNames: this.metadata.reference.context_column_names,
-          tableName: this.metadata.referenceTableName,
+          tableName: this.searchTableName,
           columnName: this.metadata.column_name,
           uuid: this.metadata.uuid,
           id: this.metadata.id,
