@@ -68,6 +68,19 @@ export default ({
     }
   })
 
+  const storedReferenceTableName = computed(() => {
+    return store.getters.getTableNameByField({
+      uuid: fieldAttributes.uuid
+    })
+  })
+
+  const searchTableName = computed(() => {
+    if (!isEmptyValue(storedReferenceTableName.value)) {
+      return storedReferenceTableName.value
+    }
+    return fieldAttributes.referenceTableName
+  })
+
   const businessPartnerData = computed(() => {
     return store.getters.getBusinessPartnerData({
       containerUuid: uuidForm
@@ -220,7 +233,7 @@ export default ({
         parentUuid,
         containerUuid: uuidForm,
         contextColumnNames: fieldAttributes.reference.context_column_names,
-        tableName: fieldAttributes.referenceTableName,
+        tableName: searchTableName.value,
         uuid: fieldAttributes.uuid,
         id: fieldAttributes.id,
         // filters,
