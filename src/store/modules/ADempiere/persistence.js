@@ -484,6 +484,9 @@ const persistence = {
           // only changes
           .filter(attribute => {
             const { value, oldValue } = attribute
+            if (value === 0) {
+              return true
+            }
             return !isSameValues(value, oldValue)
           })
       }
@@ -524,6 +527,9 @@ const persistence = {
           // only changes
           .filter(attribute => {
             const { value, oldValue } = attribute
+            if (value === 0) {
+              return true
+            }
             return !isSameValues(value, oldValue)
           })
       }
