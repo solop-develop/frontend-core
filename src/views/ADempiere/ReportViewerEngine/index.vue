@@ -45,6 +45,9 @@
           <report-panel
             :columns="reportColumns"
             :data="reportRow"
+            :instance-uuid="storedReportOutput.instanceUuid"
+            :container-manager="containerManager"
+            :container-uuid="containerUuid"
           />
         </div>
       </el-col>
@@ -139,12 +142,13 @@ export default defineComponent({
     const isLoading = ref(false)
     const reportType = ref(DEFAULT_REPORT_TYPE)
     const reportContent = ref('')
-
     const name = computed(() => {
       if (isEmptyValue(storedReportDefinition.value) && !isEmptyValue(storedReportOutput.value)) return storedReportOutput.value.name
       return storedReportDefinition.value.name
     })
-
+    const containerUuid = computed(() => {
+      return storedReportDefinition.value.containerUuid
+    })
     const help = computed(() => {
       if (isEmptyValue(storedReportDefinition.value) && !isEmptyValue(storedReportOutput.value)) return storedReportOutput.value.name
       return storedReportDefinition.value.help
@@ -167,19 +171,16 @@ export default defineComponent({
       if (isEmptyValue(columns)) return []
       return columns
     })
-
     const reportRow = computed(() => {
-      const { rows } = storedReportOutput.value
-      if (isEmptyValue(rows)) return []
-      return rows
+      const { rowCells } = storedReportOutput.value
+      if (isEmptyValue(rowCells)) return []
+      return rowCells
     })
-
     const isShowPanelConfig = computed(() => {
       return store.getters.getShowPanelConfig({
         containerUuid: reportUuid
       })
     })
-
     function displayReport(reportOutput) {
       if (root.$route.params.isPos) {
         isLoading.value = true
@@ -334,6 +335,7 @@ export default defineComponent({
       storedReportOutput,
       containerManager,
       storedReportDefinition,
+      containerUuid,
       // Methods
       handleOpem,
       handleClose,

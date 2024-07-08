@@ -17,7 +17,9 @@
  */
 
 import store from '@/store'
-
+import {
+  getOperatorAndValue
+} from '@/utils/ADempiere/valueUtils.js'
 import {
   containerManager as containerManagerProcess
 } from '@/utils/ADempiere/dictionary/process'
@@ -145,6 +147,39 @@ export const containerManager = {
   setDefaultValues: ({ containerUuid }) => {
     store.dispatch('setReportDefaultValues', {
       containerUuid
+    })
+  },
+  setPageNumber: ({ reportId, containerUuid, pageNumber }) => {
+    const reportDefinition = store.getters.getStoredReport(containerUuid)
+    const { fieldsList } = reportDefinition
+    const filters = getOperatorAndValue({
+      format: 'array',
+      containerUuid,
+      fieldsList
+    })
+    store.dispatch('generateReportViwer', {
+      containerUuid,
+      pageNumber,
+      filters,
+      reportId,
+      is_summary: true
+    })
+  },
+  setPageSize: ({ reportId, containerUuid, pageSize, pageNumber = 1 }) => {
+    const reportDefinition = store.getters.getStoredReport(containerUuid)
+    const { fieldsList } = reportDefinition
+    const filters = getOperatorAndValue({
+      format: 'array',
+      containerUuid,
+      fieldsList
+    })
+    store.dispatch('generateReportViwer', {
+      containerUuid,
+      pageSize,
+      pageNumber,
+      filters,
+      reportId,
+      is_summary: true
     })
   }
 }

@@ -18,19 +18,21 @@
 
 <template>
   <div>
-    <el-card shadow="never">
+    <el-card>
       <el-table
         :data="dataList"
         row-key="level"
-        :border="true"
-        default-expand-all
+        :border="false"
         style="width: 100%"
+        :header-cell-style="{ background: 'gainsboro' }"
+        height="calc(100vh - 190px)"
       >
         <el-table-column
           v-for="(fieldAttributes, key) in columns"
           :key="key"
           :column-key="fieldAttributes.code"
-          :min-width="'180'"
+          :min-width="'280'"
+          :align="getAlignment(fieldAttributes.display_type)"
         >
           <template slot="header">
             {{ fieldAttributes.title }}
@@ -40,18 +42,34 @@
           </template>
         </el-table-column>
       </el-table>
+      <custom-pagination
+        :total-records="recordData.record_count"
+        :page-size="currentPageSize"
+        :page-number="currentPageNumber"
+        :handle-change-page-size="handleChangeSizePage"
+        :handle-change-page-number="handleChangePage"
+      />
     </el-card>
   </div>
 </template>
 
 <script>
+import store from '@/store'
 import { defineComponent, computed } from '@vue/composition-api'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
+import { isNumberField } from '@/utils/ADempiere/references'
 
 export default defineComponent({
   name: 'reportPanel',
-
+  components: {
+    CustomPagination
+  },
   props: {
+    containerManager: {
+      type: Object,
+      default: () => []
+    },
     columns: {
       type: Array,
       default: () => []
@@ -59,11 +77,22 @@ export default defineComponent({
     data: {
       type: Array,
       default: () => []
+    },
+    instanceUuid: {
+      type: Number,
+      default: 0
+    },
+    containerUuid: {
+      type: Number,
+      default: 0
     }
   },
 
   setup(props) {
     function displayLabel(prop, row) {
+      if (isEmptyValue(row.cells)) {
+        return
+      }
       const { display_value, value } = row.cells[prop]
       if (
         isEmptyValue(display_value) &&
@@ -74,7 +103,12 @@ export default defineComponent({
       }
       return display_value
     }
-
+    function getAlignment(displayType) {
+      if (isNumberField(displayType)) {
+        return 'right'
+      }
+      return 'left'
+    }
     const dataList = computed(() => {
       return props.data.map((row, index) => {
         return {
@@ -83,10 +117,39 @@ export default defineComponent({
         }
       })
     })
-
+    const recordData = computed(() => {
+      return store.getters.getReportOutput(props.instanceUuid)
+    })
+    const currentPageSize = computed(() => {
+      return parseInt(store.getters.getPageSize, 10)
+    })
+    const currentPageNumber = computed(() => {
+      return parseInt(recordData.value.next_page_token, 10)
+    })
+    function handleChangeSizePage(pageSize) {
+      props.containerManager.setPageSize({
+        containerUuid: props.containerUuid,
+        reportId: 54319,
+        pageSize
+      })
+    }
+    function handleChangePage(pageNumber) {
+      props.containerManager.setPageNumber({
+        parentUuid: props.parentUuid,
+        containerUuid: props.containerUuid,
+        pageNumber,
+        pageSize: currentPageSize.value
+      })
+    }
     return {
       dataList,
-      displayLabel
+      recordData,
+      currentPageSize,
+      currentPageNumber,
+      displayLabel,
+      getAlignment,
+      handleChangeSizePage,
+      handleChangePage
     }
   }
 })

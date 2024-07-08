@@ -26,6 +26,8 @@ import { generateReport, generateReportRequest, getReportOutputRequest } from '@
 import { listPrintFormatsRequest } from '@/api/ADempiere/reportManagement/printFormat.ts'
 import { listReportViewsRequest } from '@/api/ADempiere/reportManagement/reportView.ts'
 import { listDrillTablesRequest } from '@/api/ADempiere/reportManagement/drillTable.ts'
+import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
+import { getUuidv4 } from '@/utils/ADempiere/recordUtil'
 
 // Constants
 import {
@@ -53,13 +55,18 @@ const initState = {
   drillTablesList: {},
   reportsOutput: {},
   reportsGenerated: {},
-  isShowPanelConfig: {}
+  isShowPanelConfig: {},
+  pageSize: 15,
+  pageNumber: 1
 }
 
 const reportManager = {
   state: initState,
 
   mutations: {
+    setPageSize(state, pageSize) {
+      state.pageSize = pageSize
+    },
     setPrintFormatsList(state, { reportId, printFormatList }) {
       Vue.set(state.printFormatList, reportId, printFormatList)
     },
@@ -116,7 +123,9 @@ const reportManager = {
       reportViewId,
       tableName,
       isSummary,
-      recordUuid
+      recordUuid,
+      pageSize = 15,
+      pageNumber
     }) {
       return new Promise(resolve => {
         const reportDefinition = rootGetters.getStoredReport(containerUuid)
@@ -166,7 +175,9 @@ const reportManager = {
           reportViewId,
           isSummary,
           tableName,
-          recordId
+          recordId,
+          pageSize,
+          pageToken: pageNumber
         })
       })
     },
@@ -610,8 +621,21 @@ const reportManager = {
                 tableName
               }
             }, () => {})
+            const rowCells = reportResponse.rows.map((row, rowIndex) => {
+              const { cells, children, level } = row
+              return {
+                ...cells,
+                ...ROW_ATTRIBUTES,
+                rowIndex,
+                rowUid: getUuidv4(),
+                children,
+                level
+              }
+            })
+            commit('setPageSize', pageSize)
             commit('setReportOutput', {
               ...reportResponse,
+              rowCells,
               instanceUuid: id
             })
             resolve(reportResponse)
@@ -630,6 +654,9 @@ const reportManager = {
   },
 
   getters: {
+    getPageSize: (state) => {
+      return state.pageSize
+    },
     getReportGenerated: (state) => (containerUuid) => {
       return state.reportsGenerated[containerUuid]
     },
