@@ -81,6 +81,10 @@ export default {
         if (isEmptyValue(accoutingSchemaId)) {
           return resolve()
         }
+        const accoutingElements = getters.getFieldsListAccount
+        if (!isEmptyValue(accoutingElements)) {
+          return resolve()
+        }
         requestListAccoutingElements({
           accoutingSchemaId: accoutingSchemaId
         })

@@ -185,7 +185,7 @@ export default defineComponent({
         }
         listAccoutingElementValues({
           accoutingSchemaId: accoutingSchemaId.value,
-          elementType: props.metadata.elementType,
+          elementType: props.metadata.element_type,
           searchValue: searchQuery,
           contextAttributes: attributes
         })
@@ -198,9 +198,9 @@ export default defineComponent({
                 displayColumn: list.values.DisplayColumn
               }
             })
-            // if (!isEmptyValue(optionsList.value) && optionsList.value.length <= 1) {
-            //   displayValue.value = optionsList.value[0].id
-            // }
+            if (!isEmptyValue(optionsList.value) && optionsList.value.length <= 1) {
+              displayValue.value = optionsList.value[0].id
+            }
           })
       }, 500)
       return
@@ -229,8 +229,8 @@ export default defineComponent({
       }, 500)
     }
 
-    if (!isEmptyValue(props.defaultValue['DisplayColumn_' + props.metadata.columnName])) {
-      loadSearch(props.defaultValue['DisplayColumn_' + props.metadata.columnName])
+    if (!isEmptyValue(props.defaultValue['DisplayColumn_' + props.metadata.column_name])) {
+      loadSearch(props.defaultValue['DisplayColumn_' + props.metadata.column_name])
     }
 
     return {
