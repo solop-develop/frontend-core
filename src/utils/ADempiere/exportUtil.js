@@ -189,16 +189,22 @@ export const exportRecords = ({ parentUuid, containerUuid, containerManager, for
       display_type, is_key,
       sequence
     } = fieldItem
-    // TODO: Verify with containerManager.isDisplayedColumn
-    // Hide not displayed fields
-    // Hide simple button fields without a value
-    if (!fieldItem.isShowedTableFromUser) {
-      return false
+    const shoUser = fieldItem.isShowedTableFromUser
+    if (containerManager.isDisplayedColumn(fieldItem)) {
+      const isMandatoryGenerated = containerManager.isMandatoryColumn(fieldItem)
+      const isDisplayedDefault = containerManager.isDisplayedDefaultTable({
+        ...fieldItem,
+        isMandatory: isMandatoryGenerated
+      })
+      if (isDisplayedDefault) {
+        return true
+      }
+      return shoUser
     }
     if (display_type === BUTTON.id) { // && fieldItem.referenceValue === 0) {
       return false
     }
-    if (!is_key && sequence > 0) {
+    if ((shoUser) && (!is_key && sequence > 0)) {
       return true
     }
     return false
