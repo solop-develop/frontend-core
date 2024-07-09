@@ -170,3 +170,13 @@ export function getView({
     }
   })
 }
+
+export function runExport({
+  format = 'xlsx',
+  reportId
+}) {
+  return request({
+    baseURL: `/report-engine/export/${reportId}/${format}`,
+    method: 'post'
+  })
+}

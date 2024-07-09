@@ -47,6 +47,7 @@
             :data="reportRow"
             :instance-uuid="storedReportOutput.instanceUuid"
             :container-manager="containerManager"
+            :report-output="storedReportOutput"
             :container-uuid="containerUuid"
           />
         </div>

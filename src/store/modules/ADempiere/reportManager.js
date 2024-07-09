@@ -22,16 +22,22 @@ import router from '@/router'
 import language from '@/lang'
 
 // API Request Methods
-import { generateReport, getView, generateReportRequest, getReportOutputRequest } from '@/api/ADempiere/reportManagement/index.ts'
+import {
+  getView,
+  runExport,
+  generateReport,
+  generateReportRequest,
+  getReportOutputRequest
+} from '@/api/ADempiere/reportManagement/index.ts'
 import { listPrintFormatsRequest } from '@/api/ADempiere/reportManagement/printFormat.ts'
 import { listReportViewsRequest } from '@/api/ADempiere/reportManagement/reportView.ts'
 import { listDrillTablesRequest } from '@/api/ADempiere/reportManagement/drillTable.ts'
 
 // Constants
 import {
-  // REPORT_VIEWER_SUPPORTED_FORMATS,
   DEFAULT_REPORT_TYPE
 } from '@/utils/ADempiere/dictionary/report.js'
+import { config } from '@/utils/ADempiere/config'
 
 // Utils and Helper Methods
 import { getToken } from '@/utils/auth'
@@ -654,8 +660,42 @@ const reportManager = {
             console.warn(`Error getting Get Report: ${error.message}. Code: ${error.code}.`)
           })
       })
+    },
+    /**
+     * Export Report
+     * @param {number} recordId
+     * @param {string} format
+     * @returns {files}
+     */
+    exportReport({
+      getters
+    }, {
+      reportId,
+      reportName
+    }) {
+      return new Promise(resolve => {
+        runExport({
+          reportId
+        })
+          .then(response => {
+            console.log({ response })
+            const { file_name } = response
+            const file = document.createElement('a')
+            file.href = `${config.adempiere.resource.url}${file_name}`
+            file.download = `${reportName}` // name of the file to be downloaded
+            file.click()
+            resolve(response)
+          })
+          .catch(error => {
+            showNotification({
+              title: language.t('notifications.error'),
+              message: error.message,
+              type: 'error'
+            })
+            console.warn(`Error exporting report: ${error.message}. Code: ${error.code}.`)
+          })
+      })
     }
-
   },
 
   getters: {
