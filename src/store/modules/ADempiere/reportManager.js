@@ -53,13 +53,18 @@ const initState = {
   drillTablesList: {},
   reportsOutput: {},
   reportsGenerated: {},
-  isShowPanelConfig: {}
+  isShowPanelConfig: {},
+  pageSize: 15,
+  pageNumber: 1
 }
 
 const reportManager = {
   state: initState,
 
   mutations: {
+    setPageSize(state, pageSize) {
+      state.pageSize = pageSize
+    },
     setPrintFormatsList(state, { reportId, printFormatList }) {
       Vue.set(state.printFormatList, reportId, printFormatList)
     },
@@ -116,7 +121,9 @@ const reportManager = {
       reportViewId,
       tableName,
       isSummary,
-      recordUuid
+      recordUuid,
+      pageSize = 15,
+      pageNumber
     }) {
       return new Promise(resolve => {
         const reportDefinition = rootGetters.getStoredReport(containerUuid)
@@ -161,12 +168,15 @@ const reportManager = {
         dispatch('generateReportViwer', {
           reportId: reportDefinition.id,
           reportUuid: reportDefinition.uuid,
+          containerUuid,
           filters,
           printFormatId,
           reportViewId,
           isSummary,
           tableName,
-          recordId
+          recordId,
+          pageSize,
+          pageToken: pageNumber
         })
       })
     },
@@ -380,6 +390,7 @@ const reportManager = {
     getReportOutputFromServer({ commit, getters, rootGetters }, {
       uuid,
       id,
+      containerUuid,
       instanceUuid,
       tableName,
       printFormatId,
@@ -496,64 +507,65 @@ const reportManager = {
         reportName = action.name
       }
 
-      if (isEmptyValue(instanceUuid)) {
-        dispatch('startReport', {
-          containerUuid,
-          reportType,
-          printFormatId,
-          reportViewId,
-          isSummary
-        })
-        return
-      }
-
-      return new Promise((resolve) => {
-        dispatch('getReportOutputFromServer', {
-          uuid: uuid || containerUuid,
-          reportType,
-          reportName,
-          tableName,
-          printFormatId,
-          parametersList,
-          instanceUuid,
-          reportViewId,
-          isSummary
-        })
-          .then(reportOutput => {
-            dispatch('tagsView/updateVisitedView', {
-              processUuid: uuid || containerUuid,
-              instanceUuid,
-              ...currentRoute,
-              title: `${language.t('route.reportViewer')}: ${reportOutput.name} - ${instanceUuid}`
-            })
-
-            if (!isEmptyValue(reportOutput)) {
-              if (isEmptyValue(parametersList)) {
-                parametersList = reportOutput.parametersList
-              }
-              if (isEmptyValue(tableName)) {
-                tableName = reportOutput.tableName
-              }
-              if (isEmptyValue(printFormatId) || printFormatId <= 0) {
-                printFormatId = reportOutput.printFormatId
-              }
-              if (isEmptyValue(reportViewId) || reportViewId <= 0) {
-                reportViewId = reportOutput.reportViewId
-              }
-            }
-
-            resolve(reportOutput)
-          })
-          .finally(() => {
-            commit('setReportGenerated', {
-              containerUuid,
-              parametersList,
-              reportType,
-              printFormatId,
-              reportViewId
-            })
-          })
+      // if (isEmptyValue(instanceUuid)) {
+      dispatch('startReport', {
+        containerUuid,
+        reportType,
+        printFormatId,
+        reportViewId,
+        isSummary
       })
+      return
+      // }
+
+      // return new Promise((resolve) => {
+      //   dispatch('getReportOutputFromServer', {
+      //     uuid: uuid || containerUuid,
+      //     containerUuid,
+      //     reportType,
+      //     reportName,
+      //     tableName,
+      //     printFormatId,
+      //     parametersList,
+      //     instanceUuid,
+      //     reportViewId,
+      //     isSummary
+      //   })
+      //     .then(reportOutput => {
+      //       dispatch('tagsView/updateVisitedView', {
+      //         processUuid: uuid || containerUuid,
+      //         instanceUuid,
+      //         ...currentRoute,
+      //         title: `${language.t('route.reportViewer')}: ${reportOutput.name} - ${instanceUuid}`
+      //       })
+
+      //       if (!isEmptyValue(reportOutput)) {
+      //         if (isEmptyValue(parametersList)) {
+      //           parametersList = reportOutput.parametersList
+      //         }
+      //         if (isEmptyValue(tableName)) {
+      //           tableName = reportOutput.tableName
+      //         }
+      //         if (isEmptyValue(printFormatId) || printFormatId <= 0) {
+      //           printFormatId = reportOutput.printFormatId
+      //         }
+      //         if (isEmptyValue(reportViewId) || reportViewId <= 0) {
+      //           reportViewId = reportOutput.reportViewId
+      //         }
+      //       }
+
+      //       resolve(reportOutput)
+      //     })
+      //     .finally(() => {
+      //       commit('setReportGenerated', {
+      //         containerUuid,
+      //         parametersList,
+      //         reportType,
+      //         printFormatId,
+      //         reportViewId
+      //       })
+      //     })
+      // })
     },
     /**
      * Get report output
@@ -568,6 +580,7 @@ const reportManager = {
       sortBy,
       pageSize,
       pageToken,
+      containerUuid,
       printFormatId,
       reportViewId,
       reportUuid,
@@ -610,8 +623,19 @@ const reportManager = {
                 tableName
               }
             }, () => {})
+            // const rowCells = reportResponse.rows.map((row, rowIndex) => {
+            //   const { cells, children } = row
+            //   return {
+            //     ...cells,
+            //     children: children.length === 0 ? children : ,
+            //     level: rowIndex
+            //   }
+            // })
+            commit('setPageSize', pageSize)
             commit('setReportOutput', {
               ...reportResponse,
+              containerUuid,
+              rowCells: reportResponse.rows,
               instanceUuid: id
             })
             resolve(reportResponse)
@@ -630,6 +654,9 @@ const reportManager = {
   },
 
   getters: {
+    getPageSize: (state) => {
+      return state.pageSize
+    },
     getReportGenerated: (state) => (containerUuid) => {
       return state.reportsGenerated[containerUuid]
     },
