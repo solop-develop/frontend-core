@@ -21,7 +21,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     style="margin: 0px;width: 100%;"
   >
     <el-input
-      v-model="metadata.value"
+      v-model="metadata.fieldValue"
       disabled
       :placeholder="titleField"
     />
