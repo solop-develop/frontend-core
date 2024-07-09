@@ -32,7 +32,25 @@ const operators = {
   null: 'No tiene valor',
   not_null: 'Tiene un valor',
   in: 'Incluye "()"',
-  not_in: 'No incluye "!()"'
+  not_in: 'No incluye "!()"',
+  onlyOperators: {
+    compareSearch: 'Comparar la Búsqueda',
+    operator: 'Operador de comparación',
+    equal: '"="',
+    not_equal: '"<>"',
+    like: '"~"',
+    not_like: '"!~"',
+    greater: '">"',
+    greater_equal: '">="',
+    less: '"<"',
+    less_equal: '"<="',
+    between: '">-<"',
+    not_between: '"<->"',
+    null: 'No tiene valor',
+    not_null: 'Tiene un valor',
+    in: '"()"',
+    not_in: '"!()"'
+  }
 }
 
 export default operators
