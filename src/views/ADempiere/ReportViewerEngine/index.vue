@@ -68,6 +68,7 @@
       <options-report
         :container-uuid="storedReportOutput.containerUuid"
         :container-manager="containerManager"
+        :report-output="storedReportOutput"
         :is-show-title="false"
       />
     </el-drawer>

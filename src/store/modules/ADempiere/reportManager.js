@@ -22,7 +22,7 @@ import router from '@/router'
 import language from '@/lang'
 
 // API Request Methods
-import { generateReport, generateReportRequest, getReportOutputRequest } from '@/api/ADempiere/reportManagement/index.ts'
+import { generateReport, getView, generateReportRequest, getReportOutputRequest } from '@/api/ADempiere/reportManagement/index.ts'
 import { listPrintFormatsRequest } from '@/api/ADempiere/reportManagement/printFormat.ts'
 import { listReportViewsRequest } from '@/api/ADempiere/reportManagement/reportView.ts'
 import { listDrillTablesRequest } from '@/api/ADempiere/reportManagement/drillTable.ts'
@@ -470,6 +470,9 @@ const reportManager = {
       reportType,
       isSummary,
       action,
+      pageToken,
+      pageSize,
+      sortBy,
       parametersList = []
     }) {
       const currentRoute = router.app._route
@@ -507,65 +510,75 @@ const reportManager = {
         reportName = action.name
       }
 
-      // if (isEmptyValue(instanceUuid)) {
-      dispatch('startReport', {
-        containerUuid,
-        reportType,
-        printFormatId,
-        reportViewId,
-        isSummary
+      if (isEmptyValue(instanceUuid)) {
+        dispatch('startReport', {
+          containerUuid,
+          reportType,
+          printFormatId,
+          reportViewId,
+          isSummary
+        })
+        return
+      }
+
+      return new Promise((resolve, reject) => {
+        const reportDefinition = getters.getStoredReport(containerUuid)
+        const { fieldsList } = reportDefinition
+
+        const filters = getOperatorAndValue({
+          format: 'array',
+          containerUuid,
+          fieldsList
+        })
+
+        getView({
+          printFormatId,
+          reportViewId,
+          reportType,
+          pageToken,
+          isSummary,
+          tableName,
+          pageSize,
+          filters,
+          sortBy
+        })
+          .then(reportResponse => {
+            const {
+              id,
+              name,
+              instance_id,
+              report_view_id
+            } = reportResponse
+            router.push({
+              path: `report-viewer-engine/${id}/${instance_id}/${report_view_id}`,
+              name: 'Report Viewer Engine',
+              params: {
+                instanceUuid: instance_id,
+                name: name + instance_id,
+                fileName: name,
+                reportId: id,
+                reportUuid: reportDefinition.uuid,
+                tableName
+              }
+            }, () => {})
+            commit('setPageSize', pageSize)
+            commit('setReportOutput', {
+              ...reportResponse,
+              containerUuid,
+              rowCells: reportResponse.rows,
+              instanceUuid: id
+            })
+            resolve(reportResponse)
+          })
+          .catch(error => {
+            showNotification({
+              title: language.t('notifications.error'),
+              message: error.message,
+              type: 'error'
+            })
+            console.warn(`Error getting Get Report: ${error.message}. Code: ${error.code}.`)
+          })
       })
-      return
-      // }
-
-      // return new Promise((resolve) => {
-      //   dispatch('getReportOutputFromServer', {
-      //     uuid: uuid || containerUuid,
-      //     containerUuid,
-      //     reportType,
-      //     reportName,
-      //     tableName,
-      //     printFormatId,
-      //     parametersList,
-      //     instanceUuid,
-      //     reportViewId,
-      //     isSummary
-      //   })
-      //     .then(reportOutput => {
-      //       dispatch('tagsView/updateVisitedView', {
-      //         processUuid: uuid || containerUuid,
-      //         instanceUuid,
-      //         ...currentRoute,
-      //         title: `${language.t('route.reportViewer')}: ${reportOutput.name} - ${instanceUuid}`
-      //       })
-
-      //       if (!isEmptyValue(reportOutput)) {
-      //         if (isEmptyValue(parametersList)) {
-      //           parametersList = reportOutput.parametersList
-      //         }
-      //         if (isEmptyValue(tableName)) {
-      //           tableName = reportOutput.tableName
-      //         }
-      //         if (isEmptyValue(printFormatId) || printFormatId <= 0) {
-      //           printFormatId = reportOutput.printFormatId
-      //         }
-      //         if (isEmptyValue(reportViewId) || reportViewId <= 0) {
-      //           reportViewId = reportOutput.reportViewId
-      //         }
-      //       }
-
-      //       resolve(reportOutput)
-      //     })
-      //     .finally(() => {
-      //       commit('setReportGenerated', {
-      //         containerUuid,
-      //         parametersList,
-      //         reportType,
-      //         printFormatId,
-      //         reportViewId
-      //       })
-      //     })
-      // })
     },
     /**
      * Get report output
@@ -623,14 +636,6 @@ const reportManager = {
                 tableName
               }
             }, () => {})
-            // const rowCells = reportResponse.rows.map((row, rowIndex) => {
-            //   const { cells, children } = row
-            //   return {
-            //     ...cells,
-            //     children: children.length === 0 ? children : ,
-            //     level: rowIndex
-            //   }
-            // })
             commit('setPageSize', pageSize)
             commit('setReportOutput', {
               ...reportResponse,

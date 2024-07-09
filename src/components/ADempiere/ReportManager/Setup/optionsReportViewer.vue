@@ -87,6 +87,7 @@
                     >
                       <el-option
                         v-for="(item, key) in reportTypeFormat.childs"
+
                         :key="key"
                         :label="item.name"
                         :value="item.type"
@@ -193,6 +194,10 @@ export default defineComponent({
     isShowTitle: {
       type: Boolean,
       default: true
+    },
+    reportOutput: {
+      type: Object,
+      required: false
     }
   },
 
@@ -278,12 +283,13 @@ export default defineComponent({
     })
 
     const defaultParams = computed(() => {
-      return store.getters.getReportOutput(root.$route.params.reportId)
+      return props.reportOutput
     })
 
     const isShowSetupReport = computed(() => {
       return store.getters.getShowPanelConfig({ containerUuid: props.containerUuid })
     })
+
     const containerManagerReportViwer = computed(() => {
       const modalDialogStored = storedPanelReport.value
       if (!isEmptyValue(modalDialogStored) && !isEmptyValue(modalDialogStored.containerManager)) {
@@ -402,14 +408,14 @@ export default defineComponent({
     }
 
     function defaultReport(report) {
-      const { reportViewId, printFormatId, reportType } = report
-      reportAsViewValue.value = reportViewId
-      reportAsPrintFormatValue.value = printFormatId
+      const { report_view_id, print_format_id, reportType } = report
+      reportAsViewValue.value = report_view_id
+      reportAsPrintFormatValue.value = print_format_id
       reportTypeFormatValue.value = reportType
       store.commit('setReportGenerated', {
         containerUuid: props.containerUuid,
-        reportViewId,
-        printFormatId,
+        reportViewId: report_view_id,
+        printFormatId: print_format_id,
         reportType
       })
     }
@@ -418,9 +424,9 @@ export default defineComponent({
       store.dispatch('setReportDefaultValues', {
         containerUuid: props.containerUuid
       })
-      const { reportViewId, printFormatId, reportType } = defaultParams.value
-      reportAsViewValue.value = reportViewId
-      reportAsPrintFormatValue.value = printFormatId
+      const { report_view_id, print_format_id, reportType } = defaultParams.value
+      reportAsViewValue.value = report_view_id
+      reportAsPrintFormatValue.value = print_format_id
       reportTypeFormatValue.value = reportType
     }
 
