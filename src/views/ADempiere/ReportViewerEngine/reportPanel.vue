@@ -187,7 +187,6 @@ export default defineComponent({
     }
 
     function exportFile() {
-      console.log({ qlq: props.reportOutput })
       store.dispatch('exportReport', {
         reportId: props.reportOutput.id,
         reportName: props.reportOutput.name
