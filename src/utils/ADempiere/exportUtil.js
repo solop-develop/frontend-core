@@ -186,10 +186,8 @@ export const exportRecords = ({ parentUuid, containerUuid, containerManager, for
   })
   const fieldsListAvailable = fieldsList.filter(fieldItem => {
     const {
-      display_type, is_key,
-      sequence
+      display_type
     } = fieldItem
-    const shoUser = fieldItem.isShowedTableFromUser
     if (containerManager.isDisplayedColumn(fieldItem)) {
       const isMandatoryGenerated = containerManager.isMandatoryColumn(fieldItem)
       const isDisplayedDefault = containerManager.isDisplayedDefaultTable({
@@ -199,13 +197,10 @@ export const exportRecords = ({ parentUuid, containerUuid, containerManager, for
       if (isDisplayedDefault) {
         return true
       }
-      return shoUser
+      return fieldItem.isShowedTableFromUser
     }
     if (display_type === BUTTON.id) { // && fieldItem.referenceValue === 0) {
       return false
-    }
-    if ((shoUser) && (!is_key && sequence > 0)) {
-      return true
     }
     return false
   }).sort((a, b) => a.sequence - b.sequence)
