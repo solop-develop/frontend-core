@@ -678,7 +678,6 @@ const reportManager = {
           reportId
         })
           .then(response => {
-            console.log({ response })
             const { file_name } = response
             const file = document.createElement('a')
             file.href = `${config.adempiere.resource.url}${file_name}`
