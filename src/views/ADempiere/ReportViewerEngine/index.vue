@@ -47,6 +47,7 @@
             :data="reportRow"
             :instance-uuid="storedReportOutput.instanceUuid"
             :container-manager="containerManager"
+            :report-output="storedReportOutput"
             :container-uuid="containerUuid"
           />
         </div>
@@ -68,6 +69,7 @@
       <options-report
         :container-uuid="storedReportOutput.containerUuid"
         :container-manager="containerManager"
+        :report-output="storedReportOutput"
         :is-show-title="false"
       />
     </el-drawer>

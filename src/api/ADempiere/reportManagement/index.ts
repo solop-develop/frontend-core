@@ -139,3 +139,44 @@ export function generateReport({
     }
   })
 }
+
+export function getView({
+  reportType,
+  filters,
+  sortBy,
+  pageSize,
+  pageToken,
+  printFormatId,
+  reportViewId,
+  isSummary,
+  // window
+  tableName,
+  recordId
+}) {
+  return request({
+    url: `/report-engine/views/${printFormatId}`,
+    method: 'get',
+    params: {
+      report_type: reportType,
+      filters,
+      sort_by: sortBy,
+      page_size: pageSize,
+      page_token: pageToken,
+      print_format_id: printFormatId,
+      report_view_id: reportViewId,
+      is_summary: isSummary,
+      table_name: tableName,
+      record_id: recordId
+    }
+  })
+}
+
+export function runExport({
+  format = 'xlsx',
+  reportId
+}) {
+  return request({
+    baseURL: `/report-engine/export/${reportId}/${format}`,
+    method: 'post'
+  })
+}

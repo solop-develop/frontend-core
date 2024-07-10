@@ -19,6 +19,30 @@
 <template>
   <div>
     <el-card>
+      <el-row :gutter="20">
+        <el-col
+          :span="24"
+          style="text-align: end;"
+        >
+          <el-button
+            plain
+            size="mini"
+            type="primary"
+            style="float: right;font-weight: bold;"
+            @click="exportFile"
+          >
+            {{ $t('excel.export') }}
+            <el-divider
+              direction="vertical"
+              style="margin-right: 0px;font-weight: bold;"
+            />
+            <i
+              class="el-icon-arrow-down"
+              style="font-weight: bold;"
+            />
+          </el-button>
+        </el-col>
+      </el-row>
       <el-table
         :data="dataList"
         row-key="level"
@@ -88,6 +112,10 @@ export default defineComponent({
     containerUuid: {
       type: String,
       required: true
+    },
+    reportOutput: {
+      type: Object,
+      required: false
     }
   },
 
@@ -145,7 +173,7 @@ export default defineComponent({
     function handleChangeSizePage(pageSize) {
       props.containerManager.setPageSize({
         containerUuid: props.containerUuid,
-        reportId: 54319,
+        reportId: props.reportOutput.id,
         pageSize
       })
     }
@@ -158,11 +186,19 @@ export default defineComponent({
       })
     }
 
+    function exportFile() {
+      store.dispatch('exportReport', {
+        reportId: props.reportOutput.id,
+        reportName: props.reportOutput.name
+      })
+    }
+
     return {
       dataList,
       recordData,
       currentPageSize,
       currentPageNumber,
+      exportFile,
       displayLabel,
       getAlignment,
       handleChangeSizePage,
