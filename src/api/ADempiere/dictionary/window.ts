@@ -22,23 +22,17 @@ import { request } from '@/utils/ADempiere/request'
 /**
  * Request dictionary Window metadata
  * @param {number} id, identifier
+ * @param {string} language
  */
 export function requestWindowMetadata({
   id,
-  // mandatory to open search
-  language,
-  clientId,
-  roleId,
-  userId
+  language
 }) {
   return request({
     url: `/dictionary/windows/${id}`,
     method: 'get',
     params: {
-      language,
-      client_id: clientId,
-      role_id: roleId,
-      user_id: userId
+      language
     }
   })
 }

@@ -442,7 +442,7 @@ export default defineComponent({
         if (isEmptyValue(dashboardList)) {
           store.dispatch('listWindowDashboard', {
             tabId: currentTab.id,
-            windowId: storedWindow.value.id,
+            windowId: storedWindow.value.internal_id,
             recordId: currentRecordId.value,
             tableName: currentTab.table_name
           })

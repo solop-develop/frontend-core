@@ -856,7 +856,7 @@ export default defineComponent({
       }
       store.dispatch('isWindowDashboard', {
         tabId: currentTab.id,
-        windowId: storedWindow.id
+        windowId: storedWindow.internal_id
       })
         .then(responseDashboard => {
           if (responseDashboard > 0) {
