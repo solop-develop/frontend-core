@@ -286,6 +286,7 @@ export default defineComponent({
           defaultSearch()
         })
     }
+    const pageSize = store.getters['settings/getPanelPageSize']
 
     function defaultSearch() {
       // if (isLoadedRecords.value) {
@@ -295,7 +296,8 @@ export default defineComponent({
       if (isReadyToSearch.value) {
         // first search by default
         store.dispatch('getBrowserSearch', {
-          containerUuid: browserUuid.value
+          containerUuid: browserUuid.value,
+          pageSize
         })
 
         // hide showed criteria

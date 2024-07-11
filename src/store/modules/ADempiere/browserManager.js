@@ -29,7 +29,7 @@ import {
 
 // Constants
 import {
-  ROW_ATTRIBUTES, ROW_KEY_ATTRIBUTES, ROWS_OF_RECORDS_BY_PAGE
+  ROW_ATTRIBUTES, ROW_KEY_ATTRIBUTES
 } from '@/utils/ADempiere/tableUtils'
 import {
   DISPLAY_COLUMN_PREFIX, SORT_COLUMN_PREFIX
@@ -61,7 +61,7 @@ const browserControl = {
       isLoadedContext = false,
       selectionsList = [],
       pageNumber = 1,
-      pageSize = ROWS_OF_RECORDS_BY_PAGE
+      pageSize = 15
     }) {
       const dataBrowser = {
         containerUuid,

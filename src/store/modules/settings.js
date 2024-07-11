@@ -19,7 +19,8 @@ const state = {
   fullGridMode: !isEmptyValue(localStorage.getItem('fullGridMode')) ? convertStringToBoolean(localStorage.getItem('fullGridMode')) : fullGridMode,
   showMenu: true,
   panelLeft: ['PC', 'userfavorites', 'recentItems'],
-  panelRight: []
+  panelRight: [],
+  panelPageSize: 15
 }
 
 const mutations = {
@@ -64,6 +65,9 @@ const getters = {
   },
   getPanelRight: (state) => {
     return state.panelRight
+  },
+  getPanelPageSize: (state) => {
+    return state.panelPageSize
   }
 }
 

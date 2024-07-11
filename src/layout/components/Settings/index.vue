@@ -134,6 +134,21 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item
+        :label="$t('page.settings.numberColumnsDashboard')"
+        class="drawer-title"
+      >
+        <el-select
+          v-model="panelPageSize"
+        >
+          <el-option
+            v-for="item in optionsPageSize"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
     </el-form>
     <!-- </div> -->
   </div>
@@ -461,6 +476,18 @@ export default {
         })
       }
     })
+    const panelPageSize = computed({
+      get() {
+        return store.getters['settings/getPanelPageSize']
+      },
+      // setter
+      set(newValue) {
+        store.dispatch('settings/changeSetting', {
+          key: 'panelPageSize',
+          value: newValue
+        })
+      }
+    })
     const optionsPanelRight = ref([
       {
         value: 'BC',
@@ -473,6 +500,36 @@ export default {
       {
         value: 'notices',
         label: 'Panel de Avisos'
+      }
+    ])
+    const optionsPageSize = ref([
+      {
+        value: '15',
+        label: '15/páginas'
+      },
+      {
+        value: '25',
+        label: '25/páginas'
+      },
+      {
+        value: '50',
+        label: '50/páginas'
+      },
+      {
+        value: '100',
+        label: '100/páginas'
+      },
+      {
+        value: '150',
+        label: '150/páginas'
+      },
+      {
+        value: '200',
+        label: '200/páginas'
+      },
+      {
+        value: '300',
+        label: '300/páginas'
       }
     ])
     return {
@@ -503,6 +560,8 @@ export default {
       numColDashboard,
       showFullGridMode,
       supportPinyinSearch,
+      optionsPageSize,
+      panelPageSize,
       // methods
       themeChange,
       changeDisplatedTitle

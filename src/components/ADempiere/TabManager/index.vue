@@ -573,6 +573,7 @@ export default defineComponent({
           containerUuid
         })
       }
+      const pageSize = store.getters['settings/getPanelPageSize']
       store.dispatch('getEntities', {
         parentUuid: props.parentUuid,
         tabUuid: routerParams.containerUuid,
@@ -581,7 +582,8 @@ export default defineComponent({
         tabId: currentTabMetadata.value.id,
         referenceUuid: query.referenceUuid,
         filtersRecord,
-        pageNumber
+        pageNumber,
+        pageSize
       }).then(responseData => {
         if (isCreateNew.value || isEmptyValue(responseData)) {
         // set values in panel
