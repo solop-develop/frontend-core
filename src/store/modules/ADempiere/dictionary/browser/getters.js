@@ -41,6 +41,10 @@ export default {
     return state.storedBrowsersUuid[browserId]
   },
 
+  getStoredBrowserProcessAll: (state) => (browserUuid) => {
+    return state.storedBrowsersProcessAll[browserUuid]
+  },
+
   getStoredFieldsFromBrowser: (state, getters) => (browserUuid) => {
     const browser = getters.getStoredBrowser(browserUuid)
     if (!isEmptyValue(browser)) {

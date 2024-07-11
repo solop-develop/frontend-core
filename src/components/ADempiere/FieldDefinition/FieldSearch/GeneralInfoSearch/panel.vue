@@ -230,9 +230,6 @@ export default {
       }
       return GENERAL_INFO_SEARCH_LIST_FORM
     },
-    tableName() {
-      return this.metadata.referenceTableName
-    },
     shortsKey() {
       return {
         close: ['esc'],
@@ -260,7 +257,7 @@ export default {
     },
     storedFieldsListQuery() {
       return store.getters.getSearchQueryFields({
-        tableName: this.tableName
+        tableName: this.searchTableName
       })
         .map(fieldItem => {
           return {
@@ -271,7 +268,7 @@ export default {
     },
     storedColumnsListTable() {
       return store.getters.getSearchTableFields({
-        tableName: this.tableName
+        tableName: this.searchTableName
       })
         .filter(fieldItem => {
           return fieldItem.sequence > 0
@@ -388,8 +385,8 @@ export default {
     loadSearchFields() {
       const fieldsListTable = this.storedColumnsListTable
       if (isEmptyValue(fieldsListTable)) {
-        store.dispatch('getSearchFieldsFromServer', {
-          tableName: this.tableName
+        this.containerManager.getSearchDefinition({
+          id: this.metadata.id
         })
           .finally(() => {
             this.isLoadingFields = false
@@ -425,7 +422,7 @@ export default {
         this.containerManager.getSearchRecordsList({
           containerUuid: this.uuidForm,
           parentUuid: this.metadata.parentUuid,
-          tableName: this.metadata.referenceTableName,
+          tableName: this.searchTableName,
           columnName: this.metadata.columnName,
           id: this.metadata.id,
           contextColumnNames: this.metadata.reference.context_column_names,

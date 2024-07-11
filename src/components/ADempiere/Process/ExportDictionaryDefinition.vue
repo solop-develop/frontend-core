@@ -28,18 +28,26 @@
             :help="$t('page.exportDictionaryDefinition.help')"
           />
         </el-col>
+        <el-col :span="24">
+          <el-button
+            plain
+            size="mini"
+            type="primary"
+            style="float: right;font-weight: bold;"
+            @click="runProcess"
+          >
+            {{ $t('actionMenu.runProcess') }}
+            <el-divider
+              direction="vertical"
+              style="margin-right: 0px;font-weight: bold;"
+            />
+            <i
+              class="el-icon-arrow-down"
+              style="font-weight: bold;"
+            />
+          </el-button>
+        </el-col>
       </el-row>
-      <p style="text-align: end;">
-        <el-dropdown
-          :split-button="true"
-          type="primary"
-          size="mini"
-          trigger="click"
-          :class="{ 'action-container': true }"
-        >
-          {{ $t('actionMenu.runProcess') }}
-        </el-dropdown>
-      </p>
       <el-card
         shadow="hover"
         class="box-card"
@@ -50,7 +58,6 @@
           class="form-base"
           :inline="true"
           size="mini"
-          @submit.native.prevent="notSubmitForm"
         >
           <el-row :gutter="10">
             <el-col :span="spanColumn">
@@ -98,6 +105,19 @@
               >
                 <el-switch
                   v-model="isBrowsers"
+                  :active-text="$t('components.switchActiveText')"
+                  :inactive-text="$t('components.switchInactiveText')"
+                  active-color="#1890ff"
+                  inactive-color="#DCDFE6"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="spanColumn">
+              <el-form-item
+                :label="$t('page.exportDictionaryDefinition.form')"
+              >
+                <el-switch
+                  v-model="isForm"
                   :active-text="$t('components.switchActiveText')"
                   :inactive-text="$t('components.switchInactiveText')"
                   active-color="#1890ff"
@@ -166,6 +186,7 @@ export default defineComponent({
     const isWindows = ref(true)
     const isProcess = ref(true)
     const isBrowsers = ref(true)
+    const isForm = ref(true)
 
     /**
      * Computed
@@ -198,6 +219,7 @@ export default defineComponent({
         id: 54692,
         parameters: {
           ECA56_ExportMenu: isMenu.value,
+          ECA56_ExportForms: isForm.value,
           ECA56_ExportWindows: isWindows.value,
           ECA56_ExportProcess: isProcess.value,
           ECA56_ExportBrowsers: isBrowsers.value
@@ -234,6 +256,7 @@ export default defineComponent({
       isWindows.value = true
       isProcess.value = true
       isBrowsers.value = true
+      isForm.value = true
     }
 
     return {
@@ -241,6 +264,7 @@ export default defineComponent({
       UUID,
       // Ref
       isMenu,
+      isForm,
       isWindows,
       isProcess,
       isBrowsers,
@@ -273,5 +297,8 @@ export default defineComponent({
 }
 .panel-main {
   padding-left: 0px;
+}
+.el-button--primary.is-plain {
+  font-weight: bold;
 }
 </style>

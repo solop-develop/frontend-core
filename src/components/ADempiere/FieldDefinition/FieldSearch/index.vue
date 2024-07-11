@@ -29,6 +29,11 @@
 </template>
 
 <script>
+import store from '@/store'
+
+// Constants
+import { CUSTOMIZED_SEARCH_TABLES } from '@/utils/ADempiere/dictionary/field/search/index.ts'
+
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { iconSearchFieldByTable } from '@/utils/ADempiere/dictionary/field/search/index.ts'
@@ -75,14 +80,26 @@ export default {
   },
 
   computed: {
+    storedReferenceTableName() {
+      return store.getters.getTableNameByField({
+        uuid: this.metadata.uuid
+      })
+    },
+    searchTableName() {
+      if (!isEmptyValue(this.storedReferenceTableName)) {
+        return this.storedReferenceTableName
+      }
+      return this.metadata.referenceTableName
+    },
+
     // load the component that is indicated in the attributes of received property
     componentRender() {
       // let fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/GeneralInfoSearch')
       let fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSelect')
-      if (isEmptyValue(this.metadata.referenceTableName)) {
+      if (isEmptyValue(this.searchTableName)) {
         return fieldRender
       }
-      switch (this.metadata.referenceTableName) {
+      switch (this.searchTableName) {
         case 'C_BPartner':
           fieldRender = () => import('@/components/ADempiere/FieldDefinition/FieldSearch/BusinessPartnerInfo')
           break
@@ -111,12 +128,22 @@ export default {
         type: 'svg',
         class: 'search'
       }
-      if (isEmptyValue(this.metadata.referenceTableName)) {
+      if (isEmptyValue(this.searchTableName)) {
         return icon
       }
       return iconSearchFieldByTable(
-        this.metadata.referenceTableName
+        this.searchTableName
       )
+    }
+  },
+
+  created() {
+    if (isEmptyValue(this.storedReferenceTableName) && !CUSTOMIZED_SEARCH_TABLES.includes(this.searchTableName)) {
+      // load definition
+      this.containerManager.getSearchDefinition({
+        uuid: this.metadata.uuid,
+        id: this.metadata.id
+      })
     }
   }
 }

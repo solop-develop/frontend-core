@@ -243,12 +243,11 @@ const persistence = {
         const { fieldsList, table } = tabDefinition
         const { key_columns, identifier_columns } = table
 
-        const persistenceAttributesList = getters.getPersistenceAttributes({
-          containerUuid,
-          recordUuid
-        })
-
         if (isEmptyValue(attributesList)) {
+          const persistenceAttributesList = getters.getPersistenceAttributes({
+            containerUuid,
+            recordUuid
+          })
           attributesList = persistenceAttributesList
             .filter(attribute => {
               const { columnName } = attribute
@@ -485,6 +484,9 @@ const persistence = {
           // only changes
           .filter(attribute => {
             const { value, oldValue } = attribute
+            if (value === 0) {
+              return true
+            }
             return !isSameValues(value, oldValue)
           })
       }
@@ -505,7 +507,6 @@ const persistence = {
     }) => {
       const key = containerUuid + '_' + recordUuid
       const changes = state.persistence[key]
-
       if (!isEmptyValue(changes)) {
         const valuesList = Object.values(changes)
         if (isEmptyValue(recordUuid) || recordUuid === 'create-new') {
@@ -515,7 +516,6 @@ const persistence = {
             isAddDisplayColumn: true,
             formatToReturn: 'object'
           })
-
           return valuesList
             // only changes with default value
             .filter(attribute => {
@@ -523,11 +523,13 @@ const persistence = {
               return !isSameValues(value, defaultRow[columnName])
             })
         }
-
         return valuesList
           // only changes
           .filter(attribute => {
             const { value, oldValue } = attribute
+            if (value === 0) {
+              return true
+            }
             return !isSameValues(value, oldValue)
           })
       }

@@ -24,7 +24,7 @@ import lang from '@/lang'
 import {
   requestListTabSequences,
   requestSaveTabSequences
-} from '@/api/ADempiere/user-interface/component/tab-sequence'
+} from '@/api/ADempiere/user-interface/component/tab-sequences'
 
 // utils and helper methods
 import { getContextAttributes, generateContextKey } from '@/utils/ADempiere/contextUtils/contextAttributes'
@@ -124,7 +124,7 @@ const tabSequence = {
      * @param {string} containerUuid
      * @param {string} parentUuid
      */
-    saveTabSequence({ dispatch, getters, rootGetters }, {
+    saveTabSequence({ commit, dispatch, getters, rootGetters }, {
       parentUuid,
       containerUuid,
       tabUuid,
@@ -161,11 +161,16 @@ const tabSequence = {
           })
         }
 
+        const valuesRow = {
+          [sort_order_column_name]: recordRow[sort_order_column_name],
+          [sort_yes_no_column_name]: newYesNo
+        }
+
         const recordId = recordRow[table_name + '_ID']
         entitiesList.push({
-          recordId,
-          recordUuid: recordRow.UUID,
-          attributesList
+          selection_id: recordId,
+          // recordUuid: recordRow.UUID,
+          values: valuesRow
         })
       })
 
@@ -189,20 +194,33 @@ const tabSequence = {
       // }
       requestSaveTabSequences({
         tabId,
-        contextAttributes
+        contextAttributes,
+        entities: entitiesList
       })
         .then(response => {
+          const contextKey = generateContextKey(contextAttributesList, 'key')
+          commit('setTabSequence', {
+            parentUuid,
+            containerUuid,
+            tabUuid,
+            recordsList: [],
+            oldRecordsList: [],
+            contextAttributesList,
+            contextKey
+          })
+
           dispatch('getEntities', {
             parentUuid,
             containerUuid
           })
-          dispatch('listTabSequences', {
-            tabId,
-            parentUuid,
-            containerUuid,
-            tabUuid,
-            context_column_names
-          })
+
+          // dispatch('listTabSequences', {
+          //   tabId,
+          //   parentUuid,
+          //   containerUuid,
+          //   tabUuid,
+          //   context_column_names
+          // })
 
           showMessage({
             message: lang.t('component.sequenceSort.updateSequencesSuccessfully'),

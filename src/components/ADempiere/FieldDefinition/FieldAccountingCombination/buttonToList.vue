@@ -103,6 +103,13 @@ export default {
         })
       }
     }
+  },
+  watch: {
+    showedPopoverGeneralInfoPanel(value) {
+      if (value) {
+        store.dispatch('listAccoutingElementsFromServer')
+      }
+    }
   }
 }
 </script>

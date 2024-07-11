@@ -438,7 +438,7 @@ export default {
           parentUuid,
           containerUuid: this.uuidForm,
           contextColumnNames: this.metadata.reference.context_column_names,
-          tableName: this.metadata.referenceTableName,
+          tableName: this.searchTableName,
           uuid: this.metadata.uuid,
           id: this.metadata.id,
           filters,

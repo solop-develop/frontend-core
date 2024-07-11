@@ -27,9 +27,16 @@ const smartBrowser = {
   // export
   exportAllRecords: {
     title: 'Exportar Todos Los Registros',
-    description: 'Registros que coincidan con el criterio de búsqueda',
+    description: 'Registros que coincidan con el criterio de búsqueda.',
     successful: 'Exportación exitosa',
     quantityExport: 'Cantidad de registros exportados: '
+  },
+  // process
+  processAllRecords: {
+    all: ' (TODOS)',
+    title: 'Procesar Todos Los Registros',
+    description: 'Procesar todos los registros que coincidan con el criterio de búsqueda.',
+    withoutResults: 'No existe ningún registro con el criterio de búsqueda actual.'
   }
 }
 

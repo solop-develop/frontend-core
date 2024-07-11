@@ -22,6 +22,17 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 export const GENERAL_INFO_SEARCH_LIST_FORM = 'General-Info-Search-List'
 
 /**
+ * Customized (and supported) search tables
+ */
+export const CUSTOMIZED_SEARCH_TABLES = [
+  'C_BPartner',
+  'M_Product',
+  'C_Order',
+  'C_Invoice',
+  'C_Payment'
+]
+
+/**
  * Generic quick access keys to actions
  */
 export const QUICK_KEY_ACCESS = {

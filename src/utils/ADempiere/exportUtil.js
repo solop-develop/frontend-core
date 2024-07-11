@@ -184,41 +184,30 @@ export const exportRecords = ({ parentUuid, containerUuid, containerManager, for
     parentUuid,
     containerUuid
   })
-
   const fieldsListAvailable = fieldsList.filter(fieldItem => {
     const {
-      is_displayed, is_displayed_grid,
-      is_encrypted, display_type, is_key,
-      sequence
+      display_type
     } = fieldItem
-    // TODO: Verify with containerManager.isDisplayedColumn
-    // Hide not displayed fields
-    if (
-      !isEmptyValue(is_displayed) &&
-      !isEmptyValue(is_displayed_grid) &&
-      !(is_displayed && is_displayed_grid)
-    ) {
-      return false
+    if (containerManager.isDisplayedColumn(fieldItem)) {
+      const isMandatoryGenerated = containerManager.isMandatoryColumn(fieldItem)
+      const isDisplayedDefault = containerManager.isDisplayedDefaultTable({
+        ...fieldItem,
+        isMandatory: isMandatoryGenerated
+      })
+      if (isDisplayedDefault) {
+        return true
+      }
+      return fieldItem.isShowedTableFromUser
     }
-    // Hide encrypted fields
-    if (is_encrypted) {
-      return false
-    }
-    // Hide simple button fields without a value
     if (display_type === BUTTON.id) { // && fieldItem.referenceValue === 0) {
       return false
     }
-    if (!is_key && sequence > 0) {
-      return true
-    }
     return false
   }).sort((a, b) => a.sequence - b.sequence)
-
   const headerList = fieldsListAvailable.map(fieldItem => {
     // decode html entities
     return decodeHtmlEntities(fieldItem.name)
   })
-
   // filter only showed columns
   const data = currentSelection.map(row => {
     const newRow = {}
