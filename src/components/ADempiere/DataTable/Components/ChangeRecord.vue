@@ -204,7 +204,6 @@ export default defineComponent({
     }
 
     function hangleChangeRecord(action) {
-      console.log(isExistsChanges.value)
       if (action !== 'changeNextRecord' &&
         isExistsChanges.value) {
         store.dispatch('flushPersistenceQueue', {
