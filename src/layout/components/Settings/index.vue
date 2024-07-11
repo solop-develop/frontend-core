@@ -135,7 +135,7 @@
         </el-select>
       </el-form-item>
       <el-form-item
-        :label="$t('page.settings.numberColumnsDashboard')"
+        :label="$t('page.settings.panelPageSize')"
         class="drawer-title"
       >
         <el-select
