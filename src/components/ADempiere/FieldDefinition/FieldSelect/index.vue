@@ -368,8 +368,7 @@ export default {
       })
     },
     loadListFromServer(searchQuery = '') {
-      this.isLoading = true
-
+      const withoutValidation = this.metadata.isAdvancedQuery
       this.containerManager.getLookupList({
         parentUuid: this.metadata.parentUuid,
         containerUuid: this.metadata.containerUuid,
@@ -384,7 +383,8 @@ export default {
         referenceUuid: this.metadata.reference.uuid,
         // app attributes
         isAddBlankValue: !this.metadata.required,
-        blankValue: this.blankOption.value
+        blankValue: this.blankOption.value,
+        withoutValidation
       })
         .then(responseLookupList => {
           if (!isEmptyValue(responseLookupList)) {

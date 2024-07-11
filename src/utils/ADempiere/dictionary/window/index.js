@@ -2133,7 +2133,7 @@ export const containerManager = {
       return response
     })
   },
-  getLookupList({ parentUuid, containerUuid, uuid, id, tableName, contextColumnNames, columnName, searchValue, isAddBlankValue, blankValue }) {
+  getLookupList({ parentUuid, containerUuid, uuid, id, tableName, contextColumnNames, columnName, searchValue, isAddBlankValue, blankValue, withoutValidation = false }) {
     return store.dispatch('getLookupListFromServer', {
       parentUuid,
       containerUuid,
@@ -2145,7 +2145,8 @@ export const containerManager = {
       tableName,
       // app attributes
       isAddBlankValue,
-      blankValue
+      blankValue,
+      withoutValidation
     })
   },
   getSearchDefinition({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, uuid, id }) {
