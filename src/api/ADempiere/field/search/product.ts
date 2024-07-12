@@ -289,7 +289,8 @@ export function requestListProducts({
   vendor_id,
   //
   pageToken,
-  pageSize = ROWS_OF_RECORDS_BY_PAGE
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
+  isWithoutValidation
 }) {
   // filters = filters.map(attribute => {
   //   return {
@@ -333,6 +334,7 @@ export function requestListProducts({
     method: 'get',
     params: {
       context_attributes: contextAttributes,
+      is_without_validation: isWithoutValidation,
       is_only_active_records: true,
       filters,
       //

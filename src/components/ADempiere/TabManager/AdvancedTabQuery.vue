@@ -272,6 +272,37 @@ export default defineComponent({
         getFieldsToHidden({ parentUuid, containerUuid }) {
           const fieldsListTab = store.getters.getStoredFieldsFromTab(parentUuid, containerUuid)
           return fieldsListTab || []
+        },
+        getLookupList({ parentUuid, containerUuid, uuid, id, tableName, contextColumnNames, columnName, searchValue, isAddBlankValue, blankValue }) {
+          return store.dispatch('getLookupListFromServer', {
+            parentUuid,
+            containerUuid,
+            contextColumnNames,
+            fieldUuid: uuid,
+            fieldId: id,
+            columnName,
+            searchValue,
+            tableName,
+            // app attributes
+            isAddBlankValue,
+            blankValue,
+            isWithoutValidation: true
+          })
+        },
+        getSearchRecordsList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, id, filters, searchValue, pageNumber, pageSize }) {
+          return store.dispatch('getSearchRecordsFromServer', {
+            parentUuid,
+            containerUuid,
+            contextColumnNames,
+            fieldId: id,
+            tableName,
+            columnName,
+            filters,
+            searchValue,
+            pageNumber,
+            pageSize,
+            isWithoutValidation: true
+          })
         }
       }
     })
