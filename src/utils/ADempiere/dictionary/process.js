@@ -296,7 +296,7 @@ export const containerManager = {
       contextColumnNames,
       processParameterId: id,
       tableName,
-      columnName,
+      // columnName,
       filters,
       searchValue,
       pageNumber,

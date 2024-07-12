@@ -189,6 +189,7 @@ const fieldInvoice = {
       browseFieldId,
       referenceId,
       columnName,
+      tableName,
       columnId,
       fieldId,
       //
@@ -251,6 +252,7 @@ const fieldInvoice = {
           browseFieldId,
           referenceId,
           columnName,
+          tableName,
           columnId,
           fieldId,
           // Query

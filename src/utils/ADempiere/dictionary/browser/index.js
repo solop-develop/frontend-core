@@ -406,7 +406,7 @@ export const containerManager = {
       contextColumnNames,
       browseFieldId: id,
       tableName,
-      columnName,
+      // columnName,
       filters,
       searchValue,
       pageNumber,

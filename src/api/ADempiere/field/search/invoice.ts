@@ -112,23 +112,38 @@ export function requestListInvoicesInfo({
   grandTotalTo,
   isWithoutValidation
 }) {
-  let url = '/field/invoices'
-  switch (true) {
-    case !isEmptyValue(fieldId):
-      url = `/field/invoices/field/${fieldId}`
-      break
-    case !isEmptyValue(processParameterId):
-      url = `/field/invoices/parameter/${processParameterId}`
-      break
-    case !isEmptyValue(browseFieldId):
-      url = `/field/invoices/query-criteria/${browseFieldId}`
-      break
-    case !isEmptyValue(columnId):
-      url = `/field/invoices/column/${columnId}`
-      break
-    case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
-      url = `/field/invoices/table/${tableName}/${columnName}`
-      break
+  // TODO: Search for a more optimal way to compare and build the route.
+  let url
+
+  if (!isEmptyValue(fieldId)) {
+    url = generateUrl({
+      query: fieldId,
+      path: 'field'
+    })
+  }
+  if (!isEmptyValue(processParameterId)) {
+    url = generateUrl({
+      query: processParameterId,
+      path: 'parameter'
+    })
+  }
+  if (!isEmptyValue(browseFieldId)) {
+    url = generateUrl({
+      query: browseFieldId,
+      path: 'query-criteria'
+    })
+  }
+  if (!isEmptyValue(columnId)) {
+    url = generateUrl({
+      query: columnId,
+      path: 'column'
+    })
+  }
+  if (!isEmptyValue(tableName) && !isEmptyValue(columnName)) {
+    url = generateUrl({
+      query: `${tableName}/${columnName}`,
+      path: 'table'
+    })
   }
 
   return request({
@@ -143,7 +158,7 @@ export function requestListInvoicesInfo({
       is_without_validation: isWithoutValidation,
       // References
       process_parameter_id: processParameterId,
-      field_id: fieldId,
+      // field_id: fieldId,
       browse_field_id: browseFieldId,
       reference_id: referenceId,
       column_id: columnId,
@@ -161,4 +176,11 @@ export function requestListInvoicesInfo({
       grand_total_to: grandTotalTo
     }
   })
+}
+
+function generateUrl({
+  query,
+  path
+}) {
+  return `/field/invoices/${path}/${query}`
 }
