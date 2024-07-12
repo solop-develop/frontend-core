@@ -233,7 +233,7 @@ const productFieldSearch = {
       searchValue,
       pageNumber,
       pageSize,
-      withoutValidation = false
+      isWithoutValidation = false
     }) {
       return new Promise(resolve => {
         if (isEmptyValue(pageNumber) || pageNumber < 1) {
@@ -287,7 +287,7 @@ const productFieldSearch = {
           //
           pageToken,
           pageSize,
-          withoutValidation
+          isWithoutValidation
         })
           .then(responseProductList => {
             const recordsList = responseProductList.records.map((row, rowIndex) => {

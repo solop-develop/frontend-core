@@ -368,6 +368,7 @@ export default {
       })
     },
     loadListFromServer(searchQuery = '') {
+      this.isLoading = true
       this.containerManager.getLookupList({
         parentUuid: this.metadata.parentUuid,
         containerUuid: this.metadata.containerUuid,

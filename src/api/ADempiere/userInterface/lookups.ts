@@ -50,7 +50,7 @@ export function requestLookupList({
   //
   pageToken,
   pageSize = RECORD_ROWS_BY_LIST,
-  withoutValidation
+  isWithoutValidation
 }) {
   let url
   switch (true) {
@@ -76,6 +76,7 @@ export function requestLookupList({
     method: 'get',
     params: {
       context_attributes: contextAttributesList,
+      is_without_validation: isWithoutValidation,
       is_only_active_records: true,
       //
       reference_uuid: referenceUuid,
@@ -87,7 +88,6 @@ export function requestLookupList({
       // Page Data
       page_token: pageToken,
       page_size: pageSize,
-      is_without_validation: withoutValidation
     }
   })
 }

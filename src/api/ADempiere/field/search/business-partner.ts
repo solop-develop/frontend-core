@@ -50,7 +50,7 @@ export function requestListBusinessPartner({
   //
   pageToken,
   pageSize = ROWS_OF_RECORDS_BY_PAGE,
-  withoutValidation
+  isWithoutValidation
 }) {
   // filters = filters.map(attribute => {
   //   return {
@@ -94,6 +94,7 @@ export function requestListBusinessPartner({
     method: 'get',
     params: {
       context_attributes: contextAttributes,
+      is_without_validation: isWithoutValidation,
       is_only_active_records: true,
       filters,
       //
@@ -109,8 +110,7 @@ export function requestListBusinessPartner({
       is_customer,
       // Page Data
       page_token: pageToken,
-      page_size: pageSize,
-      is_without_validation: withoutValidation
+      page_size: pageSize
     }
   })
 }

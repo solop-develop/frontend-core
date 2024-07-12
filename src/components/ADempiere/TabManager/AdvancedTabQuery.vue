@@ -286,7 +286,7 @@ export default defineComponent({
             // app attributes
             isAddBlankValue,
             blankValue,
-            withoutValidation: true
+            isWithoutValidation: true
           })
         },
         getSearchRecordsList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, id, filters, searchValue, pageNumber, pageSize }) {
@@ -301,7 +301,7 @@ export default defineComponent({
             searchValue,
             pageNumber,
             pageSize,
-            withoutValidation: true
+            isWithoutValidation: true
           })
         }
       }

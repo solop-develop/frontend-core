@@ -187,7 +187,7 @@ const businessPartner = {
       searchValue,
       pageNumber,
       pageSize,
-      withoutValidation = false
+      isWithoutValidation = false
     }) {
       return new Promise(resolve => {
         const storedBusinessPartnerData = getters.getBusinessPartnerData({
@@ -248,7 +248,7 @@ const businessPartner = {
           //
           pageToken,
           pageSize,
-          withoutValidation
+          isWithoutValidation
         })
           .then(responseBusinessPartnerList => {
             const recordsList = responseBusinessPartnerList.records.map((row, rowIndex) => {

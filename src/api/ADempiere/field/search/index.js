@@ -42,7 +42,7 @@ export function requestGridGeneralInfo({
   //
   pageToken,
   pageSize = ROWS_OF_RECORDS_BY_PAGE,
-  withoutValidation
+  isWithoutValidation
 }) {
   // filters = filters.map(attribute => {
   //   return {
@@ -91,6 +91,7 @@ export function requestGridGeneralInfo({
     method: 'get',
     params: {
       context_attributes: contextAttributes,
+      is_without_validation: isWithoutValidation,
       is_only_active_records: true,
       filters,
       //
@@ -98,8 +99,7 @@ export function requestGridGeneralInfo({
       search_value: searchValue,
       // Page Data
       page_token: pageToken,
-      page_size: pageSize,
-      is_without_validation: withoutValidation
+      page_size: pageSize
     }
   })
 }

@@ -195,7 +195,7 @@ const fieldInvoice = {
       searchValue,
       pageNumber,
       pageSize,
-      withoutValidation = false
+      isWithoutValidation = false
     }) {
       return new Promise(resolve => {
         const storedInvoiceData = getters.getInvoceData({
@@ -259,7 +259,7 @@ const fieldInvoice = {
           // Page Data
           pageToken,
           pageSize,
-          withoutValidation
+          isWithoutValidation
         })
           .then(responseBusinessPartnerList => {
             const recordsList = responseBusinessPartnerList.records.map((row, rowIndex) => {

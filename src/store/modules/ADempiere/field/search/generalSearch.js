@@ -380,7 +380,7 @@ const generalInfoSearch = {
       //
       pageNumber,
       pageSize,
-      withoutValidation = false
+      isWithoutValidation = false
     }) {
       return new Promise((resolve, reject) => {
         if (isEmptyValue(pageNumber) || pageNumber < 1) {
@@ -440,7 +440,7 @@ const generalInfoSearch = {
           //
           pageToken,
           pageSize,
-          withoutValidation
+          isWithoutValidation
         })
           .then(response => {
             let recordsList = []

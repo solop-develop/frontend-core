@@ -141,7 +141,7 @@ const lookupManager = {
       tableName,
       columnName,
       columnId,
-      withoutValidation
+      isWithoutValidation
     }) {
       return new Promise(resolve => {
         // if (isEmptyValue(referenceUuid) && isEmptyValue(fieldUuid) && isEmptyValue(processParameterUuid) && isEmptyValue(browseFieldUuid) &&
@@ -192,7 +192,7 @@ const lookupManager = {
           tableName,
           columnName,
           columnId,
-          withoutValidation
+          isWithoutValidation
         })
           .then(lookupListResponse => {
             const optionsList = getOptionsList({

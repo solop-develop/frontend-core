@@ -80,7 +80,7 @@ export function requestListOrderInfo({
   isDelivered,
   documentNo,
   orderId,
-  withoutValidation
+  isWithoutValidation
 }) {
   let url = '/field/orders'
   switch (true) {
@@ -113,6 +113,7 @@ export function requestListOrderInfo({
       page_token: pageToken,
       search_value: searchValue,
       context_attributes: contextAttributes,
+      is_without_validation: isWithoutValidation,
       // References
       process_parameter_id: processParameterId,
       field_id: fieldId,
@@ -130,8 +131,7 @@ export function requestListOrderInfo({
       order_date_to: orderDateTo,
       order_id: orderId,
       grand_total_from: grandTotalFrom,
-      grand_total_to: grandTotalTo,
-      is_without_validation: withoutValidation
+      grand_total_to: grandTotalTo
     }
   })
 }
