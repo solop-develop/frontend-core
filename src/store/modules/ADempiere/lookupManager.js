@@ -278,6 +278,9 @@ const lookupManager = {
       uuid
     }) => {
       let key = rootGetters.getSessionContextClientId
+      if (!isEmptyValue(containerUuid)) {
+        key += `|${containerUuid}`
+      }
       if (!isEmptyValue(uuid)) {
         key += `|${uuid}`
       }
@@ -292,7 +295,6 @@ const lookupManager = {
       }
       const contextKey = generateContextKey(contextAttributesList)
       key += contextKey
-
       const lookupList = state.lookupList[key]
       if (lookupList) {
         return lookupList
