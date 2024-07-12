@@ -41,7 +41,8 @@ export function requestGridGeneralInfo({
   columnId,
   //
   pageToken,
-  pageSize = ROWS_OF_RECORDS_BY_PAGE
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
+  withoutValidation
 }) {
   // filters = filters.map(attribute => {
   //   return {
@@ -97,7 +98,8 @@ export function requestGridGeneralInfo({
       search_value: searchValue,
       // Page Data
       page_token: pageToken,
-      page_size: pageSize
+      page_size: pageSize,
+      is_without_validation: withoutValidation
     }
   })
 }

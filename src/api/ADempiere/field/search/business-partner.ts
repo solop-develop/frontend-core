@@ -49,7 +49,8 @@ export function requestListBusinessPartner({
   is_customer,
   //
   pageToken,
-  pageSize = ROWS_OF_RECORDS_BY_PAGE
+  pageSize = ROWS_OF_RECORDS_BY_PAGE,
+  withoutValidation
 }) {
   // filters = filters.map(attribute => {
   //   return {
@@ -108,7 +109,8 @@ export function requestListBusinessPartner({
       is_customer,
       // Page Data
       page_token: pageToken,
-      page_size: pageSize
+      page_size: pageSize,
+      is_without_validation: withoutValidation
     }
   })
 }

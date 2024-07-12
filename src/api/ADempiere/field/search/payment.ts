@@ -110,7 +110,8 @@ export function requestListPaymentsInfo({
   documentNo,
   isPayments,
   isReceipt,
-  orderId
+  orderId,
+  withoutValidation
 }) {
   let url = '/field/payments'
   switch (true) {
@@ -161,7 +162,8 @@ export function requestListPaymentsInfo({
       payment_date_to: paymentDateTo,
       order_id: orderId,
       grand_total_from: grandTotalFrom,
-      grand_total_to: grandTotalTo
+      grand_total_to: grandTotalTo,
+      is_without_validation: withoutValidation
     }
   })
 }

@@ -79,7 +79,8 @@ export function requestListOrderInfo({
   description,
   isDelivered,
   documentNo,
-  orderId
+  orderId,
+  withoutValidation
 }) {
   let url = '/field/orders'
   switch (true) {
@@ -129,7 +130,8 @@ export function requestListOrderInfo({
       order_date_to: orderDateTo,
       order_id: orderId,
       grand_total_from: grandTotalFrom,
-      grand_total_to: grandTotalTo
+      grand_total_to: grandTotalTo,
+      is_without_validation: withoutValidation
     }
   })
 }

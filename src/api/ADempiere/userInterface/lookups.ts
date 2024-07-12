@@ -49,7 +49,8 @@ export function requestLookupList({
   columnId,
   //
   pageToken,
-  pageSize = RECORD_ROWS_BY_LIST
+  pageSize = RECORD_ROWS_BY_LIST,
+  withoutValidation
 }) {
   let url
   switch (true) {
@@ -85,7 +86,8 @@ export function requestLookupList({
       column_id: columnId,
       // Page Data
       page_token: pageToken,
-      page_size: pageSize
+      page_size: pageSize,
+      is_without_validation: withoutValidation
     }
   })
 }
