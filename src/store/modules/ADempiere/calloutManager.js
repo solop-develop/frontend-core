@@ -75,21 +75,22 @@ const calloutManager = {
           const { columnName, value } = attribute
           let currentValue = value
 
-          const field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
+          const field = fieldsList.find(fieldItem => fieldItem.column_name === columnName)
           let currentDisplayType = null
           if (!isEmptyValue(field)) {
             currentDisplayType = field.display_type
           } else {
             // find on parent tab (first tab)
             const parentField = fieldsListParent.find(fieldItem => {
-              return fieldItem.columnName === columnName
+              return fieldItem.column_name === columnName
             })
             if (!isEmptyValue(parentField)) {
               currentDisplayType = parentField.display_type
             }
           }
+
           if (getTypeOfValue(currentValue) !== 'OBJECT') {
-            if (isDateField(displayType)) {
+            if (isDateField(currentDisplayType)) {
               currentValue = {
                 type: 'date',
                 value
@@ -103,6 +104,7 @@ const calloutManager = {
           }
           contextAttributesList[columnName] = currentValue
         })
+
         if (getTypeOfValue(value) !== 'OBJECT') {
           if (isDateField(displayType)) {
             value = {
