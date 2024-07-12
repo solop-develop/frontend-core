@@ -87,7 +87,7 @@ export function requestLookupList({
       column_id: columnId,
       // Page Data
       page_token: pageToken,
-      page_size: pageSize,
+      page_size: pageSize
     }
   })
 }
