@@ -161,6 +161,9 @@ const lookupManager = {
         const clientId = rootGetters.getSessionContextClientId
 
         let key = clientId
+        if (!isEmptyValue(containerUuid)) {
+          key += `|${containerUuid}`
+        }
         if (!isEmptyValue(fieldId)) {
           key += `|${fieldUuid}`
         } else if (!isEmptyValue(processParameterId)) {
@@ -172,7 +175,6 @@ const lookupManager = {
         } else if (!isEmptyValue(tableName) && !isEmptyValue(columnName)) {
           key += `|${tableName}.${columnName}`
         }
-
         const contextKey = generateContextKey(contextAttributesList)
         key += contextKey
         let contextAttributes
