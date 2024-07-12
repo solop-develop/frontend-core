@@ -40,7 +40,9 @@ import {
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import { getContextDefaultValue } from '@/utils/ADempiere/contextUtils/contextField'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
-import { isSupportLookup } from '@/utils/ADempiere/references'
+import {
+  isDateField, isDecimalField, isSupportLookup
+} from '@/utils/ADempiere/references'
 
 const persistence = {
   state: {
@@ -280,12 +282,37 @@ const persistence = {
             // if (key_columns.length > 1) {
             //   reccordId = 0
             // }
+            const recordAttributes = {}
+            attributesList.forEach(attribute => {
+              const { columnName, value } = attribute
+              let currentValue = value
+
+              const field = fieldsList.find(fieldItem => fieldItem.column_name === columnName)
+              if (!isEmptyValue(field)) {
+                const { display_type } = field
+                if (getTypeOfValue(currentValue) !== 'OBJECT') {
+                  if (isDateField(display_type)) {
+                    currentValue = {
+                      type: 'date',
+                      value
+                    }
+                  } else if (isDecimalField(display_type)) {
+                    currentValue = {
+                      type: 'decimal',
+                      value
+                    }
+                  }
+                }
+              }
+
+              recordAttributes[columnName] = currentValue
+            })
             return updateEntity({
               tabUuid: containerUuid,
               reccordId,
               tabId,
               recordUuid,
-              attributesList
+              recordAttributes
             })
               .then(response => {
                 // TODO: Get list record log
@@ -323,13 +350,40 @@ const persistence = {
               })
               .catch(error => reject(error))
           } else {
-            attributesList = attributesList.filter(itemAttribute => !isEmptyValue(itemAttribute.value))
+            const recordAttributes = {}
+            attributesList
+              .filter(itemAttribute => {
+                return !isEmptyValue(itemAttribute.value)
+              })
+              .forEach(attribute => {
+                const { columnName, value } = attribute
+                let currentValue = value
+
+                const field = fieldsList.find(fieldItem => fieldItem.column_name === columnName)
+                if (!isEmptyValue(field)) {
+                  const { display_type } = field
+                  if (getTypeOfValue(currentValue) !== 'OBJECT') {
+                    if (isDateField(display_type)) {
+                      currentValue = {
+                        type: 'date',
+                        value
+                      }
+                    } else if (isDecimalField(display_type)) {
+                      currentValue = {
+                        type: 'decimal',
+                        value
+                      }
+                    }
+                  }
+                }
+                recordAttributes[columnName] = currentValue
+              })
 
             // Create new entity
             return createEntity({
               tabUuid: containerUuid,
               tabId,
-              attributesList
+              recordAttributes
             })
               .then(response => {
                 showMessage({
