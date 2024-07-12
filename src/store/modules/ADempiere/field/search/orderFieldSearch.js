@@ -188,6 +188,7 @@ const fieldOrder = {
       browseFieldId,
       referenceId,
       columnName,
+      tableName,
       columnId,
       fieldId,
       //
@@ -251,6 +252,7 @@ const fieldOrder = {
           browseFieldId,
           referenceId,
           columnName,
+          tableName,
           columnId,
           fieldId,
           // Query

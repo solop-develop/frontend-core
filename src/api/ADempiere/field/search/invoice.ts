@@ -139,12 +139,12 @@ export function requestListInvoicesInfo({
       path: 'column'
     })
   }
-  if (!isEmptyValue(tableName) && !isEmptyValue(columnName)) {
-    url = generateUrl({
-      query: `${tableName}/${columnName}`,
-      path: 'table'
-    })
-  }
+  // if (!isEmptyValue(tableName) && !isEmptyValue(columnName)) {
+  //   url = generateUrl({
+  //     query: `${tableName}/${columnName}`,
+  //     path: 'table'
+  //   })
+  // }
 
   return request({
     url: url,
@@ -158,10 +158,11 @@ export function requestListInvoicesInfo({
       is_without_validation: isWithoutValidation,
       // References
       process_parameter_id: processParameterId,
-      // field_id: fieldId,
+      field_id: fieldId,
       browse_field_id: browseFieldId,
       reference_id: referenceId,
       column_id: columnId,
+      table_name: tableName,
       column_name: columnName,
       // Custom Filter
       document_no: documentNo,
