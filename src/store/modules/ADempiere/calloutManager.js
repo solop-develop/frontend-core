@@ -140,24 +140,24 @@ const calloutManager = {
 
             const recordUuid = rootGetters.getUuidOfContainer(containerUuid)
             attributesList.forEach(attribute => {
-              const { value, columnName } = attribute
+              const { value: attributeValue, columnName: attributeColumnName } = attribute
 
-              const oldValue = rootGetters.getValueOfFieldOnContainer({
+              const attributeOldValue = rootGetters.getValueOfFieldOnContainer({
                 parentUuid,
                 containerUuid,
-                columnName
+                columnName: attributeColumnName
               })
 
               // add changes to send
-              if (!isSameValues(value, oldValue)) {
-                const field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
+              if (!isSameValues(attributeValue, attributeOldValue)) {
+                const field = fieldsList.find(fieldItem => fieldItem.column_name === attributeColumnName)
                 if (!isEmptyValue(field)) {
                   commit('addChangeToPersistenceQueue', {
                     containerUuid,
                     recordUuid,
-                    columnName,
-                    oldValue,
-                    value
+                    columnName: attributeColumnName,
+                    oldValue: attributeOldValue,
+                    value: attributeValue
                   })
                 }
               }
