@@ -145,7 +145,9 @@ export default {
 
     fieldsList.forEach(fieldItem => {
       // default operator
-      const { is_info_only, column_name, columnNameTo, operator, display_type } = fieldItem
+      const {
+        is_info_only, column_name, columnNameTo, operator, display_type
+      } = fieldItem
       if (is_info_only) {
         return false
       }
