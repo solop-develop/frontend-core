@@ -265,9 +265,9 @@ const persistence = {
                   return true
                 }
                 // prevent `PO.set_Value: Column not updateable`
-                if (!isEmptyValue(recordUuid) && recordUuid !== 'create-new' && !field.is_updateable) {
-                  return false
-                }
+                // if (!isEmptyValue(recordUuid) && recordUuid !== 'create-new' && !field.is_updateable) {
+                //   return false
+                // }
                 if (LOG_COLUMNS_NAME_LIST.includes(columnName)) {
                   return false
                 }

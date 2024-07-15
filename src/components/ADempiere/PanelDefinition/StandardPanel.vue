@@ -66,13 +66,15 @@ import { defineComponent, ref, computed, watch } from '@vue/composition-api'
 
 import store from '@/store'
 
+// Constants
+import { FOCUSABLE_FIELDS_LIST } from '@/utils/ADempiere/componentUtils'
+
 // Components and Mixins
 import FieldDefinition from '@/components/ADempiere/FieldDefinition/index.vue'
 import FilterFields from '@/components/ADempiere/FilterFields/index.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import { FOCUSABLE_FIELDS_LIST } from '@/utils/ADempiere/componentUtils'
 
 export default defineComponent({
   name: 'StandardPanel',
@@ -120,6 +122,7 @@ export default defineComponent({
 
   setup(props, { root }) {
     const fieldIndex = ref()
+
     const isActiveCurrentTab = computed(() => {
       if (
         !isEmptyValue(props.panelMetadata.name) &&
@@ -131,6 +134,7 @@ export default defineComponent({
       }
       return false
     })
+
     const fieldsList = computed(() => {
       if (!isEmptyValue(props.panelMetadata) && !isEmptyValue(props.panelMetadata.fieldsList)) {
         setFocus(props.panelMetadata.fieldsList)
@@ -228,6 +232,7 @@ export default defineComponent({
       }
       return 500 + 'px'
     })
+
     const styleScrollPanelTab = computed(() => {
       if (props.panelMetadata.isParentTab) {
         const isFullScreenTabsParent = store.getters.getStoredWindow(props.panelMetadata.parentUuid).isFullScreenTabsParent
