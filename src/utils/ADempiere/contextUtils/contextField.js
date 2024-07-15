@@ -19,12 +19,13 @@
 // Constants
 import {
   ACCOUNTING_COLUMNS,
-  READ_ONLY_FORM_COLUMNS
+  READ_ONLY_FORM_COLUMNS,
+  SALES_TRANSACTION_COLUMNS
 } from '@/utils/ADempiere/constants/systemColumns'
 
 // Utils and Helper Methods
 import evaluator from '@/utils/ADempiere/contextUtils/evaluator'
-import { getContext, parseContext, getPreference } from '@/utils/ADempiere/contextUtils'
+import { getContext, parseContext, getPreference, isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { arrayMatches, isEmptyValue, parsedValueComponent } from '@/utils/ADempiere/valueUtils'
 import { isNumberField, isIdentifierField } from '@/utils/ADempiere/references'
 
@@ -211,6 +212,14 @@ export function getContextDefaultValue({
         parsedDefaultValue = -1
       }
     }
+  }
+
+  if (isEmptyValue(parsedDefaultValue) && SALES_TRANSACTION_COLUMNS.includes(element_name)) {
+    parsedDefaultValue = isSalesTransaction({
+      parentUuid,
+      containerUuid,
+      isRecord: true
+    })
   }
 
   // convert to element-ui compatible value

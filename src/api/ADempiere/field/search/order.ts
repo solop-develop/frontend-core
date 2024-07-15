@@ -79,7 +79,8 @@ export function requestListOrderInfo({
   description,
   isDelivered,
   documentNo,
-  orderId
+  orderId,
+  isWithoutValidation
 }) {
   let url = '/field/orders'
   switch (true) {
@@ -112,6 +113,7 @@ export function requestListOrderInfo({
       page_token: pageToken,
       search_value: searchValue,
       context_attributes: contextAttributes,
+      is_without_validation: isWithoutValidation,
       // References
       process_parameter_id: processParameterId,
       field_id: fieldId,

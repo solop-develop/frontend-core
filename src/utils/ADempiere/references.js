@@ -496,15 +496,15 @@ export function isRangeField(displayType) {
 /**
  * Is manage range to in other field
  * @param {boolean} is_range
- * @param {number} displayType
+ * @param {number} display_type
  * @returns {boolean}
  */
-export function isAddRangeField({ is_range, displayType }) {
+export function isAddRangeField({ is_range, display_type }) {
   if (!is_range) {
     return false
   }
 
-  return isNumberField(displayType)
+  return isNumberField(display_type)
 }
 
 /**

@@ -16,6 +16,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import lang from '@/lang'
+
 // Constants
 import REFERENCES, { YES_NO, DEFAULT_SIZE } from '@/utils/ADempiere/references'
 import {
@@ -297,7 +299,7 @@ export function generateField({
       field.column_name = field.columnNameTo
       field.elementName = field.elementNameTo
       field.element_name = field.elementNameTo
-      field.name = `${field.name} To`
+      field.name = `${field.name} ${lang.t('field.to')}`
       field.value = parsedDefaultValueTo
       field.default_value = field.default_value_to
       field.parsedDefaultValue = field.parsedDefaultValueTo

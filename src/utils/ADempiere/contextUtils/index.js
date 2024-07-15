@@ -105,6 +105,11 @@ export const getContext = ({
   // get by menu sales transaction
   if (isEmptyValue(value) && SALES_TRANSACTION_COLUMNS.includes(columnName)) {
     value = isSalesTransactionMenu()
+    // value = isSalesTransaction({
+    //   parentUuid,
+    //   containerUuid,
+    //   isRecord: true
+    // })
   }
 
   if (isBooleanToString) {
@@ -140,18 +145,18 @@ export function getPreference({
   }
 
   // USER PREFERENCES
-  // View Preferences
-  // TODO: Verify it, never gets values
-  if (parentUuid) {
-    value = getContext({
-      parentUuid: PREFERENCE_CONTEXT_PREFIX + parentUuid,
-      containerUuid: PREFERENCE_CONTEXT_PREFIX + containerUuid,
-      columnName
-    })
-    if (!isEmptyValue(value)) {
-      return value
-    }
-  }
+  // // View Preferences
+  // // TODO: Verify it, never gets values
+  // if (parentUuid) {
+  //   value = getContext({
+  //     parentUuid: PREFERENCE_CONTEXT_PREFIX + parentUuid,
+  //     containerUuid: PREFERENCE_CONTEXT_PREFIX + containerUuid,
+  //     columnName
+  //   })
+  //   if (!isEmptyValue(value)) {
+  //     return value
+  //   }
+  // }
 
   // Global Preferences
   value = getContext({
@@ -371,8 +376,10 @@ export function isSalesTransactionContainer({
     containerUuid,
     columnName: IS_SO_TRX
   })
-
-  return convertStringToBoolean(isSOTrx)
+  if (!isEmptyValue(isSOTrx)) {
+    return convertStringToBoolean(isSOTrx)
+  }
+  return undefined
 }
 
 /**

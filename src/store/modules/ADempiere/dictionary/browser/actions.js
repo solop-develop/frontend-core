@@ -34,8 +34,8 @@ import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { generatePanelAndFields } from '@/utils/ADempiere/dictionary/panel.js'
+import { copyWindowContextOnBrowser } from '@/utils/ADempiere/contextUtils/contextBrowser'
 import {
-  containerManager,
   isDisplayedField, isMandatoryField,
   evaluateDefaultFieldShowed,
   evaluateDefaultColumnShowed
@@ -122,41 +122,11 @@ export default {
 
           // set parent context
           if (!isEmptyValue(parentUuid) || !isEmptyValue(containerUuid)) {
-            const parentContext = rootGetters.getValuesView({
-              parentUuid,
-              containerUuid,
-              format: 'object'
-            })
-            dispatch('updateValuesOfContainer', {
-              containerUuid: browserUuid,
-              attributes: parentContext
-            })
-
-            browserDefinition.fieldsList.forEach(itemField => {
-              const { isSameColumnElement, column_name, element_name } = itemField
-              if (!isSameColumnElement) {
-                // const currentContextValue = parentContext.find(itemAttribute => {
-                //   return itemAttribute.columnName === itemField.element_name
-                // })
-                const currentContextValue = parentContext[element_name]
-                if (!isEmptyValue(currentContextValue)) {
-                  commit('updateValueOfField', {
-                    containerUuid: browserUuid,
-                    columnName: element_name,
-                    value: currentContextValue
-                  })
-                  commit('updateValueOfField', {
-                    containerUuid: browserUuid,
-                    columnName: column_name,
-                    value: currentContextValue
-                  })
-                }
-                // change Dependents
-                dispatch('changeDependentFieldsList', {
-                  field: itemField,
-                  containerManager
-                })
-              }
+            copyWindowContextOnBrowser({
+              browserUuid,
+              fieldsList: browserDefinition.fieldsList,
+              windowUuid: parentUuid,
+              tabUuid: containerUuid
             })
           }
 
@@ -344,9 +314,10 @@ export default {
 
       // elements of colums
       const defaultAttributesWithElement = defaultAttributesWithColumn.map(attribute => {
+        const columnName = browserDefinition.elementsList[attribute.columnName]
         return {
           ...attribute,
-          columnName: browserDefinition.elementsList[attribute.columnName]
+          columnName: columnName
         }
       })
 

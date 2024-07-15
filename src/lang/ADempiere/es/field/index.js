@@ -46,5 +46,6 @@ export default {
   locationsAddress,
   invoice,
   payment,
-  order
+  order,
+  to: 'Hasta'
 }

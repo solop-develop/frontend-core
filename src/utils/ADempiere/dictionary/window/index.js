@@ -35,7 +35,6 @@ import {
 } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { BUTTON, ID, IMAGE, LOCATION_ADDRESS, YES_NO, isLookup } from '@/utils/ADempiere/references'
-import { containerManager as CONTAINER_MANAGER_BROWSER } from '@/utils/ADempiere/dictionary/browser'
 import { EXPORT_SUPPORTED_TYPES } from '@/utils/ADempiere/exportUtil.js'
 
 // API Request Methods
@@ -45,7 +44,6 @@ import { requestSaveWindowCustomization } from '@/api/ADempiere/user-customizati
 // Utils and Helpers Methods
 import evaluator from '@/utils/ADempiere/contextUtils/evaluator'
 import { getContext, isSalesTransaction } from '@/utils/ADempiere/contextUtils'
-import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
 import { generatePanelAndFields } from '@/utils/ADempiere/dictionary/panel.js'
@@ -877,156 +875,6 @@ export const generateReportOfWindow = {
       containerUuid: uuid,
       isShowed: true
     })
-  }
-}
-
-/**
- * Open Smart Browser Associated in Process
- */
-export const openBrowserAssociated = {
-  name: language.t('actionMenu.openSmartBrowser'),
-  enabled: ({ parentUuid, containerUuid }) => {
-    const recordUuid = store.getters.getUuidOfContainer(containerUuid)
-    return !isEmptyValue(recordUuid)
-  },
-  isSvgIcon: true,
-  icon: 'search',
-  actionName: 'openBrowserAssociated',
-  openBrowserAssociated: function({ parentUuid, containerUuid, uuid, browserId }) {
-    if (isEmptyValue(browserId) || browserId <= 0) {
-      const process = store.getters.getStoredProcessFromTab({
-        windowUuid: parentUuid,
-        tabUuid: containerUuid,
-        processUuid: uuid
-      })
-      browserId = process.browser.id
-    }
-    const browserUuid = store.getters.getStoredBrowserUuidById(browserId)
-    const storedBrowser = store.getters.getStoredBrowser(browserUuid)
-    if (!isEmptyValue(storedBrowser)) {
-      // overwrite values
-      store.dispatch('setBrowserDefaultValues', {
-        containerUuid: browserUuid
-      })
-      const tabContext = store.getters.getValuesView({
-        containerUuid,
-        format: 'object'
-      })
-
-      store.dispatch('updateValuesOfContainer', {
-        containerUuid: browserUuid,
-        attributes: tabContext
-      })
-
-      // load the tab fields
-      storedBrowser.fieldsList.forEach(itemField => {
-        const { isSameColumnElement, column_name, element_name } = itemField
-        if (!isSameColumnElement) {
-          const currentContextValue = tabContext[element_name]
-          if (!isEmptyValue(currentContextValue)) {
-            store.commit('updateValueOfField', {
-              containerUuid: browserUuid,
-              columnName: element_name,
-              value: currentContextValue
-            })
-            store.commit('updateValueOfField', {
-              containerUuid: browserUuid,
-              columnName: column_name,
-              value: currentContextValue
-            })
-          }
-          // change Dependents
-          store.dispatch('changeDependentFieldsList', {
-            field: itemField,
-            containerManager: CONTAINER_MANAGER_BROWSER
-          })
-        }
-      })
-
-      // clear resutls
-      store.dispatch('clearBrowserData', {
-        containerUuid: browserUuid
-      })
-    }
-
-    // set record id from window
-    const storedTab = store.getters.getStoredTab(parentUuid, containerUuid)
-    const { keyColumn, table, parent_column_name, link_column_name } = storedTab
-    const { key_columns } = table
-
-    let relatedColumns = key_columns
-    // TODO: Validate element columns
-    const parentColumns = storedTab.fieldsList
-      .filter(fieldItem => {
-        return fieldItem.is_parent || fieldItem.is_key || fieldItem.is_mandatory
-      })
-      .map(fieldItem => {
-        return fieldItem.column_name
-      })
-
-    if (!isEmptyValue(parent_column_name)) {
-      relatedColumns.push(parent_column_name)
-    }
-    if (!isEmptyValue(link_column_name)) {
-      relatedColumns.push(link_column_name)
-    }
-    relatedColumns = relatedColumns.concat(parentColumns).sort()
-
-    // set context values
-    const parentValues = getContextAttributes({
-      parentUuid: parentUuid,
-      containerUuid: containerUuid,
-      contextColumnNames: relatedColumns
-    })
-
-    const recordId = store.getters.getValueOfField({
-      parentUuid,
-      containerUuid,
-      columnName: keyColumn
-    })
-
-    if (!isEmptyValue(recordId)) {
-      store.commit('updateValueOfField', {
-        containerUuid: browserUuid,
-        columnName: RECORD_ID,
-        value: recordId
-      })
-    }
-    parentValues.push({
-      columnName: RECORD_ID,
-      value: recordId
-    })
-    store.dispatch('updateValuesOfContainer', {
-      containerUuid: browserUuid,
-      attributes: parentValues
-    })
-
-    const containerIdentifier = 'browser_' + browserId
-    const inMenu = zoomIn({
-      attributeValue: containerIdentifier,
-      attributeName: 'containerKey',
-      query: {
-        parentUuid,
-        containerUuid,
-        recordId
-      },
-      isShowMessage: false
-    })
-
-    if (!inMenu) {
-      router.push({
-        name: 'Smart Browser',
-        params: {
-          browserId: browserId
-          // browserUuid
-        },
-        query: {
-          parentUuid,
-          containerUuid,
-          recordId
-        }
-      }, () => {})
-    }
   }
 }
 

@@ -60,22 +60,17 @@ export function requestGetEntities({
 /**
  * Create Tab Entity
  * @param {number} tabId
- * @param {array} attributesList
+ * @param {object} attributesList
  */
 export function createEntity({
   tabId,
-  attributesList
+  recordAttributes
 }) {
-  const attributesObject = {}
-  attributesList.forEach(element => {
-    attributesObject[element.columnName] = element.value
-  })
-
   return request({
     url: `/user-interface/entities/${tabId}`,
     method: 'post',
     data: {
-      attributes: attributesObject
+      attributes: recordAttributes
     }
   })
 }
@@ -83,25 +78,20 @@ export function createEntity({
 /**
  * Update Tab Entity
  * @param {number} tabId
- * @param {array} attributesList
+ * @param {object} recordAttributes
  */
 export function updateEntity({
   reccordId,
   tabId,
-  attributesList,
+  recordAttributes,
   keyColumnsList
 }) {
-  const attributesObject = {}
-  attributesList.forEach(element => {
-    attributesObject[element.columnName] = element.value
-  })
-
   return request({
     url: `/user-interface/entities/${tabId}/${reccordId}`,
     method: 'patch',
     data: {
       attributes: {
-        ...attributesObject,
+        ...recordAttributes,
         ...keyColumnsList
       }
     }

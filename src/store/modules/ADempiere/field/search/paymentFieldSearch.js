@@ -175,7 +175,8 @@ const fieldPayment = {
       //
       searchValue,
       pageNumber,
-      pageSize
+      pageSize,
+      isWithoutValidation = false
     }) {
       return new Promise(resolve => {
         let pageToken
@@ -239,7 +240,8 @@ const fieldPayment = {
           ...queryFilters,
           // Page Data
           pageToken,
-          pageSize
+          pageSize,
+          isWithoutValidation
         })
           .then(responseOrderList => {
             const {

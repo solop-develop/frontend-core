@@ -68,10 +68,12 @@ import { RECORD_ID } from '@/utils/ADempiere/constants/systemColumns'
 import {
   runProcessOfWindow,
   generateReportOfWindow,
-  openBrowserAssociated,
   openDocumentAction,
   openFormAssociated
 } from '@/utils/ADempiere/dictionary/window'
+import {
+  openBrowserAssociated
+} from '@/utils/ADempiere/dictionary/window/actionsMenu'
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
 import { getContextAttributes, generateContextKey } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import {

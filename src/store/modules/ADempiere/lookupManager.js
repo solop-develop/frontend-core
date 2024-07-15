@@ -140,7 +140,8 @@ const lookupManager = {
       //
       tableName,
       columnName,
-      columnId
+      columnId,
+      isWithoutValidation
     }) {
       return new Promise(resolve => {
         // if (isEmptyValue(referenceUuid) && isEmptyValue(fieldUuid) && isEmptyValue(processParameterUuid) && isEmptyValue(browseFieldUuid) &&
@@ -160,6 +161,9 @@ const lookupManager = {
         const clientId = rootGetters.getSessionContextClientId
 
         let key = clientId
+        if (!isEmptyValue(containerUuid)) {
+          key += `|${containerUuid}`
+        }
         if (!isEmptyValue(fieldId)) {
           key += `|${fieldUuid}`
         } else if (!isEmptyValue(processParameterId)) {
@@ -171,7 +175,6 @@ const lookupManager = {
         } else if (!isEmptyValue(tableName) && !isEmptyValue(columnName)) {
           key += `|${tableName}.${columnName}`
         }
-
         const contextKey = generateContextKey(contextAttributesList)
         key += contextKey
         let contextAttributes
@@ -190,7 +193,8 @@ const lookupManager = {
           searchValue,
           tableName,
           columnName,
-          columnId
+          columnId,
+          isWithoutValidation
         })
           .then(lookupListResponse => {
             const optionsList = getOptionsList({
@@ -274,6 +278,9 @@ const lookupManager = {
       uuid
     }) => {
       let key = rootGetters.getSessionContextClientId
+      if (!isEmptyValue(containerUuid)) {
+        key += `|${containerUuid}`
+      }
       if (!isEmptyValue(uuid)) {
         key += `|${uuid}`
       }
@@ -288,7 +295,6 @@ const lookupManager = {
       }
       const contextKey = generateContextKey(contextAttributesList)
       key += contextKey
-
       const lookupList = state.lookupList[key]
       if (lookupList) {
         return lookupList

@@ -110,7 +110,8 @@ export function requestListPaymentsInfo({
   documentNo,
   isPayments,
   isReceipt,
-  orderId
+  orderId,
+  isWithoutValidation
 }) {
   let url = '/field/payments'
   switch (true) {
@@ -143,6 +144,7 @@ export function requestListPaymentsInfo({
       page_token: pageToken,
       search_value: searchValue,
       context_attributes: contextAttributes,
+      is_without_validation: isWithoutValidation,
       // References
       process_parameter_id: processParameterId,
       field_id: fieldId,

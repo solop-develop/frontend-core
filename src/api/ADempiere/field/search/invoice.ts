@@ -109,7 +109,8 @@ export function requestListInvoicesInfo({
   invoiceDateTo,
   orderId,
   grandTotalFrom,
-  grandTotalTo
+  grandTotalTo,
+  isWithoutValidation
 }) {
   let url = '/field/invoices'
   switch (true) {
@@ -139,6 +140,7 @@ export function requestListInvoicesInfo({
       page_token: pageToken,
       search_value: searchValue,
       context_attributes: contextAttributes,
+      is_without_validation: isWithoutValidation,
       // References
       process_parameter_id: processParameterId,
       field_id: fieldId,
