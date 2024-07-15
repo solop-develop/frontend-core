@@ -360,9 +360,12 @@ export default {
           date,
           chargeId,
           description,
-          totalDifference,
-          transactionOrganizationId
+          totalDifference
         } = state.process
+        let transactionOrganizationId = state.process.transactionOrganizationId
+        if (isEmptyValue(transactionOrganizationId)) {
+          transactionOrganizationId = state.searchCriteria.organizationId
+        }
         let listInvoce, listPayments
         if (!isEmptyValue(state.listSelectAll)) {
           listInvoce = state.listSelectAll.filter(list => list.type === 'isInvoce')
