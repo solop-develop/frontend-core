@@ -344,9 +344,10 @@ export default {
 
       // elements of colums
       const defaultAttributesWithElement = defaultAttributesWithColumn.map(attribute => {
+        const columnName = browserDefinition.elementsList[attribute.columnName]
         return {
           ...attribute,
-          columnName: browserDefinition.elementsList[attribute.columnName]
+          columnName: columnName
         }
       })
 

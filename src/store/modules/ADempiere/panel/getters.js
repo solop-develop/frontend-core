@@ -19,7 +19,8 @@
 // Constants
 import { IGNORE_VALUE_OPERATORS_LIST } from '@/utils/ADempiere/dataUtils'
 import {
-  LOG_COLUMNS_NAME_LIST
+  LOG_COLUMNS_NAME_LIST,
+  SALES_TRANSACTION_COLUMNS
 } from '@/utils/ADempiere/constants/systemColumns'
 
 // Utils and Helper Methods
@@ -299,9 +300,11 @@ const getters = {
     const attributesObject = {}
     let attributesList = fieldsList
       .map(fieldItem => {
-        const { id, uuid, columnName, default_value } = fieldItem
+        const { id, uuid, columnName, isSameColumnElement, element_name, default_value } = fieldItem
         let contextColumnNames = fieldItem.contextColumnNames
-        if (isEmptyValue(contextColumnNames)) contextColumnNames = fieldItem.context_column_names
+        if (isEmptyValue(contextColumnNames)) {
+          contextColumnNames = fieldItem.context_column_names
+        }
         const isSQL = String(default_value).startsWith('@SQL=') && isGetServer
 
         let parsedDefaultValue
@@ -315,6 +318,18 @@ const getters = {
         }
         attributesObject[columnName] = parsedDefaultValue
 
+        if (isEmptyValue(default_value) && !isSameColumnElement) {
+          if (SALES_TRANSACTION_COLUMNS.includes(element_name)) {
+            parsedDefaultValue = getContextDefaultValue({
+              ...fieldItem,
+              column_name: element_name,
+              parentUuid,
+              contextColumnNames,
+              isSOTrxDictionary
+            })
+          }
+        }
+
         if (fieldItem.is_range && fieldItem.componentPath !== 'FieldNumber') {
           const { columnNameTo, elementNameTo, default_value_to } = fieldItem
           const isSQLTo = String(default_value_to).startsWith('@SQL=') && isGetServer
@@ -326,8 +341,8 @@ const getters = {
               parentUuid,
               contextColumnNames,
               isSOTrxDictionary,
-              columnName: columnNameTo,
-              elementName: elementNameTo
+              column_name: columnNameTo,
+              element_name: elementNameTo
             })
           }
 
