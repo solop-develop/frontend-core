@@ -1,4 +1,4 @@
-FROM nginx:1.25.3-alpine3.18
+FROM nginx:1.27.0-alpine3.19
 
 LABEL maintainer="Elsiosanches@gmail.com; EdwinBetanc0urt@outlook.com;" \
 	description="ADempiere-Vue."
