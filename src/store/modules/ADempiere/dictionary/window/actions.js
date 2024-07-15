@@ -41,7 +41,6 @@ import {
   exportCurrentRecord,
   runProcessOfWindow,
   generateReportOfWindow,
-  openBrowserAssociated,
   openDocumentAction,
   openFormAssociated,
   refreshRecord,
@@ -50,6 +49,7 @@ import {
   undoChange
 } from '@/utils/ADempiere/dictionary/window'
 import {
+  openBrowserAssociated,
   openSequenceTab
 } from '@/utils/ADempiere/dictionary/window/actionsMenu'
 import {

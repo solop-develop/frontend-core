@@ -17,10 +17,13 @@
  */
 
 import language from '@/lang'
+import router from '@/router'
 import store from '@/store'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { copyWindowContextOnBrowser } from '@/utils/ADempiere/contextUtils/contextBrowser'
+import { zoomIn } from '@/utils/ADempiere/coreUtils'
 
 /**
  * Run process associated on table or button field
@@ -52,5 +55,88 @@ export const openSequenceTab = {
       containerUuid: sequenceTab.uuid,
       isShowed: true
     })
+  }
+}
+
+/**
+ * Open Smart Browser Associated in Process
+ */
+export const openBrowserAssociated = {
+  name: language.t('actionMenu.openSmartBrowser'),
+  enabled: ({ parentUuid, containerUuid }) => {
+    const recordUuid = store.getters.getUuidOfContainer(containerUuid)
+    return !isEmptyValue(recordUuid)
+  },
+  isSvgIcon: true,
+  icon: 'search',
+  actionName: 'openBrowserAssociated',
+  openBrowserAssociated: function({ parentUuid, containerUuid, uuid, browserId }) {
+    if (isEmptyValue(browserId) || browserId <= 0) {
+      const process = store.getters.getStoredProcessFromTab({
+        windowUuid: parentUuid,
+        tabUuid: containerUuid,
+        processUuid: uuid
+      })
+      browserId = process.browser.id
+    }
+    const browserUuid = store.getters.getStoredBrowserUuidById(browserId)
+    const storedBrowser = store.getters.getStoredBrowser(browserUuid)
+    if (!isEmptyValue(storedBrowser)) {
+      // overwrite values
+      store.dispatch('setBrowserDefaultValues', {
+        containerUuid: browserUuid
+      })
+
+      // copy context values
+      copyWindowContextOnBrowser({
+        browserUuid,
+        fieldsList: storedBrowser.fieldsList,
+        windowUuid: parentUuid,
+        tabUuid: containerUuid
+      })
+
+      // clear resutls
+      store.dispatch('clearBrowserData', {
+        containerUuid: browserUuid
+      })
+    }
+
+    // set record id from window
+    const storedTab = store.getters.getStoredTab(parentUuid, containerUuid)
+    const { keyColumn } = storedTab
+
+    // Set Record ID
+    const recordId = store.getters.getValueOfField({
+      parentUuid,
+      containerUuid,
+      columnName: keyColumn
+    })
+
+    const containerIdentifier = 'browser_' + browserId
+    const inMenu = zoomIn({
+      attributeValue: containerIdentifier,
+      attributeName: 'containerKey',
+      query: {
+        parentUuid,
+        containerUuid,
+        recordId
+      },
+      isShowMessage: false
+    })
+
+    if (!inMenu) {
+      router.push({
+        name: 'Smart Browser',
+        params: {
+          browserId: browserId
+          // browserUuid
+        },
+        query: {
+          parentUuid,
+          containerUuid,
+          recordId
+        }
+      }, () => {})
+    }
   }
 }
