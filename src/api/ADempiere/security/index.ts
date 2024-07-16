@@ -146,6 +146,7 @@ export function requestChangeRole({
  */
 export function requestMenu({
   language,
+  dictionaryCode,
   clientId,
   roleId,
   userUuid
@@ -155,6 +156,7 @@ export function requestMenu({
     method: 'get',
     params: {
       language,
+      dictionary_code: dictionaryCode,
       role_id: roleId,
       client_id: clientId,
       user_id: userUuid,

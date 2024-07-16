@@ -44,18 +44,19 @@ export function loadMainMenu({
   role
 }) {
   const language = store.getters['getCurrentLanguage']
-  // const { uuid, client } = store.getters['user/getRole']
-  const clientId = store.getters['user/getRole'].client.uuid
-  const roleId = store.getters['user/getRole'].uuid
-  const userId = store.getters['user/getUserId']
+  const dictionaryCode = store.getters['user/getDictionaryCode']
+  const { id: roleId, uuid: roleUuid, client } = store.getters['user/getRole']
+  const { id: clientId, uuid: clientUuid } = client
   const organizationId = getCurrentOrganization()
+  const { uuid: userUuid } = store.getters['user/userInfo']
 
   return new Promise(resolve => {
     requestMenu({
-      roleId,
       language,
-      clientId,
-      userId
+      dictionaryCode,
+      clientId: clientUuid,
+      roleId: roleUuid,
+      userUuid: userUuid
     }).then(menuResponse => {
       const { menus } = menuResponse
       const asyncRoutesMap = []

@@ -42,9 +42,6 @@ import {
 import { generateProcess as generateReport, isDisplayedField } from '@/utils/ADempiere/dictionary/process.js'
 import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
-import {
-  getCurrentClient, getCurrentRole
-} from '@/utils/ADempiere/auth'
 
 export default {
   addReportToList({ commit, dispatch }, reportResponse) {
@@ -74,17 +71,11 @@ export default {
     return new Promise((resolve, reject) => {
       const language = rootGetters['getCurrentLanguage']
       const dictionaryCode = rootGetters['user/getDictionaryCode']
-      const clientId = getCurrentClient()
-      const roleId = getCurrentRole()
-      const userId = rootGetters['user/getUserId']
 
       requestReportMetadata({
         id,
         language,
-        dictionaryCode,
-        clientId,
-        roleId,
-        userId
+        dictionaryCode
       })
         .then(async reportResponse => {
           const { uuid } = reportResponse
