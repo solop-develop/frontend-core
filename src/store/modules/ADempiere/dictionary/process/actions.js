@@ -17,7 +17,7 @@
  */
 
 // API Request Methods
-import { requestProcessMetadata } from '@/api/ADempiere/dictionary/index.ts'
+import { requestProcessMetadata } from '@/api/ADempiere/dictionary/process'
 
 // Constants
 import {
@@ -64,6 +64,7 @@ export default {
     containerUuidAssociated
   }) {
     const language = rootGetters['getCurrentLanguage']
+    const dictionaryCode = rootGetters['user/getDictionaryCode']
     const clientId = getCurrentClient()
     const roleId = getCurrentRole()
     const userId = rootGetters['user/getUserId']
@@ -72,6 +73,7 @@ export default {
       requestProcessMetadata({
         id,
         language,
+        dictionaryCode,
         clientId,
         roleId,
         userId

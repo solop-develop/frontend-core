@@ -98,6 +98,7 @@ export default {
     id
   }) {
     const language = rootGetters['getCurrentLanguage']
+    const dictionaryCode = rootGetters['user/getDictionaryCode']
     const clientId = getCurrentClient()
     const roleId = getCurrentRole()
     const userId = rootGetters['user/getUserId']
@@ -106,6 +107,7 @@ export default {
       requestWindowMetadata({
         id,
         language,
+        dictionaryCode,
         clientId,
         roleId,
         userId

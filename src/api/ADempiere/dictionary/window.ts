@@ -25,14 +25,16 @@ import { request } from '@/utils/ADempiere/request'
  * @param {string} language
  */
 export function requestWindowMetadata({
-  id,
-  language
+  id: uuid,
+  language,
+  dictionaryCode
 }) {
   return request({
-    url: `/dictionary/windows/${id}`,
+    url: `/dictionary/windows/${uuid}`,
     method: 'get',
     params: {
-      language
+      language,
+      dictionary_code: dictionaryCode
     }
   })
 }
@@ -42,11 +44,15 @@ export function requestWindowMetadata({
  * @param {number} id
  */
 export function requestTabMetadata({
-  id,
-  windowId
+  id: uuid,
+  windowId,
+  dictionaryCode
 }) {
   return request({
-    url: `/dictionary/windows/${windowId}/tabs/${id}`,
-    method: 'get'
+    url: `/dictionary/windows/${windowId}/tabs/${uuid}`,
+    method: 'get',
+    params: {
+      dictionary_code: dictionaryCode
+    }
   })
 }

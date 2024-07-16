@@ -59,15 +59,18 @@ export default {
   }) {
     return new Promise(resolve => {
       const language = rootGetters['getCurrentLanguage']
+      const dictionaryCode = rootGetters['user/getDictionaryCode']
       const clientId = getCurrentClient()
       const roleId = getCurrentRole()
       const userId = rootGetters['user/getUserId']
+
       requestBrowserMetadata({
         id,
-        roleId,
-        userId,
         language,
-        clientId
+        dictionaryCode,
+        clientId,
+        roleId,
+        userId
       })
         .then(browserResponse => {
           const browser = templateBrowser(browserResponse)

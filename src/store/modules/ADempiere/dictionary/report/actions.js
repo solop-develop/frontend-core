@@ -20,7 +20,7 @@ import router from '@/router'
 import store from '@/store'
 
 // API Request Methods
-import { requestProcessMetadata as requestReportMetadata } from '@/api/ADempiere/dictionary/index.ts'
+import { requestProcessMetadata as requestReportMetadata } from '@/api/ADempiere/dictionary/process'
 
 // Constants
 import {
@@ -73,6 +73,7 @@ export default {
   }) {
     return new Promise((resolve, reject) => {
       const language = rootGetters['getCurrentLanguage']
+      const dictionaryCode = rootGetters['user/getDictionaryCode']
       const clientId = getCurrentClient()
       const roleId = getCurrentRole()
       const userId = rootGetters['user/getUserId']
@@ -80,6 +81,7 @@ export default {
       requestReportMetadata({
         id,
         language,
+        dictionaryCode,
         clientId,
         roleId,
         userId
