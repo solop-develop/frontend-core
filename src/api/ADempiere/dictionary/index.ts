@@ -42,59 +42,6 @@ export function requestReference({
 }
 
 /**
- * GET Process or Report dictionary metadata definition
- * @param {Number} id identifier
- * @param {String} language language
- * @param {Number} clientId client identifier
- * @param {Number} roleId role identifier
- * @param {Number} userId user identifier
- * @returns
- */
-export function requestProcessMetadata({
-  id,
-  // mandatory to open search
-  language,
-  clientId,
-  roleId,
-  userId
-}) {
-  return request({
-    url: `/dictionary/processes/${id}`,
-    method: 'get',
-    params: {
-      language,
-      client_id: clientId,
-      role_id: roleId,
-      user_id: userId
-    }
-  })
-}
-
-/**
- * Request dictionary Forms metadata
- * @param {number} id, identifier
- */
-export function requestForm({
-  id,
-  // mandatory to open search
-  language,
-  clientId,
-  roleId,
-  userId
-}) {
-  return request({
-    url: `/dictionary/forms/${id}`,
-    method: 'get',
-    params: {
-      language,
-      client_id: clientId,
-      role_id: roleId,
-      user_id: userId
-    }
-  })
-}
-
-/**
  * Reques GET Search Info Fields
  */
 export function tableSearchFields({
@@ -116,4 +63,3 @@ export function tableSearchFields({
       }
     })
 }
-

@@ -858,6 +858,15 @@ const getters = {
   getSystem: (state) => {
     return state.systemInfo
   },
+  getDictionaryCode: (state) => {
+    if (isEmptyValue(state.role)) {
+      return ''
+    }
+    if (isEmptyValue(state.role.client)) {
+      return ''
+    }
+    return state.role.client.dictionary_code
+  },
   getDictionaryVersion: (state) => {
     return state.dictionary
   },

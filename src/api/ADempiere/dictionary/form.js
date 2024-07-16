@@ -20,12 +20,12 @@
 import { request } from '@/utils/ADempiere/request'
 
 /**
- * Request dictionary Smart Browser metadata
- * @param {string} uuid universally unique identifier
+ * Request dictionary Forms metadata
  * @param {number} id, identifier
  */
-export function requestBrowserMetadata({
+export function requestForm({
   id: uuid,
+  // mandatory to open search
   language,
   dictionaryCode,
   clientId,
@@ -33,7 +33,7 @@ export function requestBrowserMetadata({
   userId
 }) {
   return request({
-    url: `/dictionary/browsers/${uuid}`,
+    url: `/dictionary/forms/${uuid}`,
     method: 'get',
     params: {
       language,

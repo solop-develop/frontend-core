@@ -19,21 +19,33 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
-export function requestReference({
-  uuid,
-  columnName
+/**
+ * GET Process or Report dictionary metadata definition
+ * @param {Number} id identifier
+ * @param {String} language language
+ * @param {Number} clientId client identifier
+ * @param {Number} roleId role identifier
+ * @param {Number} userId user identifier
+ * @returns
+ */
+export function requestProcessMetadata({
+  id: uuid,
+  // mandatory to open search
+  language,
+  dictionaryCode,
+  clientId,
+  roleId,
+  userId
 }) {
   return request({
-    url: '/dictionary/reference',
+    url: `/dictionary/processes/${uuid}`,
     method: 'get',
     params: {
-      uuid,
-      column_name: columnName
+      language,
+      dictionary_code: dictionaryCode,
+      client_id: clientId,
+      role_id: roleId,
+      user_id: userId
     }
   })
-    .then(validationResponse => {
-      const { convertReference } = require('@/utils/ADempiere/apiConverts/field.js')
-
-      return convertReference(validationResponse)
-    })
 }
