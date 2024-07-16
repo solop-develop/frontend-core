@@ -27,20 +27,14 @@ import { request } from '@/utils/ADempiere/request'
 export function requestBrowserMetadata({
   id: uuid,
   language,
-  dictionaryCode,
-  clientId,
-  roleId,
-  userId
+  dictionaryCode
 }) {
   return request({
     url: `/dictionary/browsers/${uuid}`,
     method: 'get',
     params: {
       language,
-      dictionary_code: dictionaryCode,
-      client_id: clientId,
-      role_id: roleId,
-      user_id: userId
+      dictionary_code: dictionaryCode
     }
   })
 }

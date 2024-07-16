@@ -46,12 +46,14 @@ export function requestWindowMetadata({
 export function requestTabMetadata({
   id: uuid,
   windowId,
+  language,
   dictionaryCode
 }) {
   return request({
     url: `/dictionary/windows/${windowId}/tabs/${uuid}`,
     method: 'get',
     params: {
+      language,
       dictionary_code: dictionaryCode
     }
   })

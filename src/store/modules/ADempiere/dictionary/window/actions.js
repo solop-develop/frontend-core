@@ -52,9 +52,6 @@ import {
   openBrowserAssociated,
   openSequenceTab
 } from '@/utils/ADempiere/dictionary/window/actionsMenu'
-import {
-  getCurrentClient, getCurrentRole
-} from '@/utils/ADempiere/auth'
 import { panelAdvanceQuery } from '@/utils/ADempiere/dictionary/panel.js'
 import {
   exportRecordsSelected,
@@ -99,18 +96,12 @@ export default {
   }) {
     const language = rootGetters['getCurrentLanguage']
     const dictionaryCode = rootGetters['user/getDictionaryCode']
-    const clientId = getCurrentClient()
-    const roleId = getCurrentRole()
-    const userId = rootGetters['user/getUserId']
 
     return new Promise(resolve => {
       requestWindowMetadata({
         id,
         language,
-        dictionaryCode,
-        clientId,
-        roleId,
-        userId
+        dictionaryCode
       })
         .then(async windowResponse => {
           const window = generateWindow(windowResponse)

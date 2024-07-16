@@ -32,20 +32,14 @@ export function requestProcessMetadata({
   id: uuid,
   // mandatory to open search
   language,
-  dictionaryCode,
-  clientId,
-  roleId,
-  userId
+  dictionaryCode
 }) {
   return request({
     url: `/dictionary/processes/${uuid}`,
     method: 'get',
     params: {
       language,
-      dictionary_code: dictionaryCode,
-      client_id: clientId,
-      role_id: roleId,
-      user_id: userId
+      dictionary_code: dictionaryCode
     }
   })
 }
