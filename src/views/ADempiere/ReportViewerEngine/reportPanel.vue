@@ -53,7 +53,7 @@
         :default-expand-all="false"
         :tree-props="{children: 'children'}"
         height="calc(100vh - 210px)"
-        :cell-style="{padding: '0', height: '30px'}"
+        :cell-style="{padding: '0', height: '30px', border: 'none'}"
         @row-click="handleRowClick"
       >
         <!-- <el-table-column
