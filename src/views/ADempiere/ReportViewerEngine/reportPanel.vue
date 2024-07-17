@@ -54,6 +54,7 @@
         :tree-props="{children: 'children'}"
         height="calc(100vh - 210px)"
         :cell-style="{padding: '0', height: '30px', border: 'none'}"
+        :cell-class-name="getRowClassName"
         @row-click="handleRowClick"
       >
         <!-- <el-table-column
@@ -157,6 +158,29 @@ export default defineComponent({
       if (row.children && row.children.length > 0) {
         this.$refs.elTable.toggleRowExpansion(row)
       }
+    },
+    getRowClassName({ row, rowIndex }) {
+      const parent = this.findParent(row)
+      if (parent && parent.children[parent.children.length - 1] === row) {
+        return 'last-child-row'
+      }
+      return ''
+    },
+    findParent(row) {
+      // Find parent row logic here
+      let parentRow = null
+      const stack = [...this.dataList]
+      while (stack.length) {
+        const current = stack.pop()
+        if (current.children && current.children.includes(row)) {
+          parentRow = current
+          break
+        }
+        if (current.children) {
+          stack.push(...current.children)
+        }
+      }
+      return parentRow
     }
   },
   setup(props) {
@@ -203,18 +227,12 @@ export default defineComponent({
 
     function hasChildren(children, parentLevel) {
       if (children.length < 1) return children
-      const childData = children.map((child, indexChild) => {
+      return children.map((child, indexChild) => {
         return {
           ...child,
           level: parentLevel + indexChild
         }
       })
-      childData.push({
-        level: parentLevel + children.length,
-        expanded: false,
-        cells: {}
-      })
-      return childData
     }
 
     function handleChangeSizePage(pageSize) {
@@ -347,5 +365,7 @@ export default defineComponent({
   border-left: 8px solid #ddd;
   content: '';
 }
-
+.last-child-row {
+    border-bottom: 1px solid #f0eeee !important;
+}
 </style>
