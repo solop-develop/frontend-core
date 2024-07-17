@@ -57,36 +57,6 @@
         :cell-class-name="getRowClassName"
         @row-click="handleRowClick"
       >
-        <!-- <el-table-column
-          align="center"
-        >
-          <template slot-scope="scope">
-            <div
-              :style="{
-                'border-left': '3px solid #ddd',
-                'height': '50%',
-                'position': 'absolute',
-                'left': '0',
-                'top': '0'
-              }"
-              :class="{'expanded': scope.row.expanded}"
-            >
-              <div
-                :style="{
-                  'border-bottom': '3px solid #ddd',
-                  'position': 'absolute',
-                  'bottom': '-5px',
-                  'width': '40px',
-                  'height': '10px',
-                  'padding-right': '10px',
-                  'overflow': 'visible'
-                }"
-              >
-                <div class="arrow-right" />
-              </div>
-            </div>
-          </template>
-        </el-table-column> -->
         <el-table-column
           v-for="(fieldAttributes, key) in columns"
           :key="key"
@@ -258,18 +228,16 @@ export default defineComponent({
       })
     }
     function getCellStyle(code, row) {
-      if (!isEmptyValue(row) && isEmptyValue(code)) {
-        const { value } = row.cells[code]
-        if (typeof value === 'string') {
-          const parsedValue = parseFloat(value)
-          if (!isNaN(parsedValue)) {
-            return { fontSize: '11px' }
-          } else {
-            return { fontSize: '14px' }
-          }
+      const { value } = row.cells[code]
+      if (typeof value === 'string') {
+        const parsedValue = parseFloat(value)
+        if (!isNaN(parsedValue)) {
+          return { fontSize: '10px' }
         } else {
-          return { fontSize: '11px' }
+          return { fontSize: '14px' }
         }
+      } else {
+        return { fontSize: '10px' }
       }
     }
     return {
@@ -318,27 +286,6 @@ export default defineComponent({
 .el-table__row--level-0 {
   font-weight: 700;
 }
-/*
-.el-table__expand-icon {
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 15px
-} */
-
-/* .el-table__expand-icon i::before {
-  content: '\e7a0';
-  font-family: 'element-icons';
-  display: inline-block;
-  transform: rotate(0deg)
-}
-.el-table__expand-icon--expanded i::before {
-  content: '\e7a2';
-  font-family: 'element-icons';
-  display: inline-block;
-  transform: rotate(90deg);
-} */
 .expanded {
   border-left: 3px solid #ddd;
   height: 50%;
