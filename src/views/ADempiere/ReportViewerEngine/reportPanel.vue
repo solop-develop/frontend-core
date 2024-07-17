@@ -28,13 +28,13 @@
             plain
             size="mini"
             type="primary"
-            style="float: right;font-weight: bold;"
+            style="float: right;font-weight: bold"
             @click="exportFile"
           >
             {{ $t('excel.export') }}
             <el-divider
               direction="vertical"
-              style="margin-right: 0px;font-weight: bold;"
+              style="margin-right: 0px;font-weight: bold"
             />
             <i
               class="el-icon-arrow-down"
@@ -44,16 +44,47 @@
         </el-col>
       </el-row>
       <el-table
+        ref="elTable"
         :data="dataList"
         row-key="level"
-        :border="true"
-        style="width: 100%"
-        :header-cell-style="{ background: 'gainsboro' }"
+        :border="false"
+        style="width: 100%; border-top: 2px solid black"
         lazy
-        :default-expand-all="true"
+        :default-expand-all="false"
         :tree-props="{children: 'children'}"
-        height="calc(100vh - 190px)"
+        height="calc(100vh - 210px)"
+        @row-click="handleRowClick"
       >
+        <!-- <el-table-column
+          align="center"
+        >
+          <template slot-scope="scope">
+            <div
+              :style="{
+                'border-left': '3px solid #ddd',
+                'height': '50%',
+                'position': 'absolute',
+                'left': '0',
+                'top': '0'
+              }"
+              :class="{'expanded': scope.row.expanded}"
+            >
+              <div
+                :style="{
+                  'border-bottom': '3px solid #ddd',
+                  'position': 'absolute',
+                  'bottom': '-5px',
+                  'width': '40px',
+                  'height': '10px',
+                  'padding-right': '10px',
+                  'overflow': 'visible'
+                }"
+              >
+                <div class="arrow-right" />
+              </div>
+            </div>
+          </template>
+        </el-table-column> -->
         <el-table-column
           v-for="(fieldAttributes, key) in columns"
           :key="key"
@@ -65,7 +96,9 @@
             {{ fieldAttributes.title }}
           </template>
           <template slot-scope="scope">
-            {{ displayLabel(fieldAttributes.code, scope.row) }}
+            <span :style="getCellStyle(fieldAttributes.code, scope.row)">
+              {{ displayLabel(fieldAttributes.code, scope.row) }}
+            </span>
           </template>
         </el-table-column>
       </el-table>
@@ -118,7 +151,13 @@ export default defineComponent({
       required: false
     }
   },
-
+  methods: {
+    handleRowClick(row, column, event) {
+      if (row.children && row.children.length > 0) {
+        this.$refs.elTable.toggleRowExpansion(row)
+      }
+    }
+  },
   setup(props) {
     function displayLabel(prop, row) {
       if (isEmptyValue(row.cells)) {
@@ -143,11 +182,12 @@ export default defineComponent({
     const dataList = computed(() => {
       return props.data.map((row, rowIndex) => {
         const index = rowIndex + 1
-        return {
+        const newRow = {
           ...row,
           children: hasChildren(row.children, index.toString()),
           level: index
         }
+        return newRow
       })
     })
     const recordData = computed(() => {
@@ -162,12 +202,18 @@ export default defineComponent({
 
     function hasChildren(children, parentLevel) {
       if (children.length < 1) return children
-      return children.map((child, indexChild) => {
+      const childData = children.map((child, indexChild) => {
         return {
           ...child,
           level: parentLevel + indexChild
         }
       })
+      childData.push({
+        level: parentLevel + children.length,
+        expanded: false,
+        cells: {}
+      })
+      return childData
     }
 
     function handleChangeSizePage(pageSize) {
@@ -192,7 +238,19 @@ export default defineComponent({
         reportName: props.reportOutput.name
       })
     }
-
+    function getCellStyle(code, row) {
+      const { value } = row.cells[code]
+      if (typeof value === 'string') {
+        const parsedValue = parseFloat(value)
+        if (!isNaN(parsedValue)) {
+          return { fontSize: '11px' }
+        } else {
+          return { fontSize: '14px' }
+        }
+      } else {
+        return { fontSize: '11px' }
+      }
+    }
     return {
       dataList,
       recordData,
@@ -202,7 +260,8 @@ export default defineComponent({
       displayLabel,
       getAlignment,
       handleChangeSizePage,
-      handleChangePage
+      handleChangePage,
+      getCellStyle
     }
   }
 })
@@ -226,4 +285,61 @@ export default defineComponent({
       text-align: right;
     }
   }
+</style>
+<style>
+.el-table__row--level-[n] {
+  transform: translateX(calc(20px * [n]));
+}
+
+.el-table__row--level-0 {
+  font-weight: 700;
+}
+/*
+.el-table__expand-icon {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px
+} */
+
+/* .el-table__expand-icon i::before {
+  content: '\e7a0';
+  font-family: 'element-icons';
+  display: inline-block;
+  transform: rotate(0deg)
+}
+.el-table__expand-icon--expanded i::before {
+  content: '\e7a2';
+  font-family: 'element-icons';
+  display: inline-block;
+  transform: rotate(90deg);
+} */
+.expanded {
+  border-left: 3px solid #ddd;
+  height: 50%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-bottom: 5px solid transparent;
+  border-top: 5px solid #ddd;
+  width: 0;
+  height: 0;
+  position: absolute;
+  left: -5px;
+}
+
+.arrow-right {
+  position: absolute;
+  bottom: -6px;
+  left: 100%;
+  margin-left: 5px;
+  width: 5px;
+  height: 5px;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 8px solid #ddd;
+  content: '';
+}
+
 </style>
