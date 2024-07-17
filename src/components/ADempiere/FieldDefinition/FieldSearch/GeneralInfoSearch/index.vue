@@ -139,7 +139,7 @@ export default {
           tableName: this.searchTableName,
           columnName: this.metadata.column_name,
           uuid: this.metadata.uuid,
-          id: this.metadata.id,
+          id: this.metadata.internal_id,
           searchValue,
           pageNumber: 1,
           pageSize: RECORD_ROWS_BY_LIST

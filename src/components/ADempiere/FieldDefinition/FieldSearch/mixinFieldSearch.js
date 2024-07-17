@@ -109,7 +109,7 @@ export default {
         contextColumnNames: this.metadata.reference.context_column_names,
         contextColumnNamesByDefaultValue: this.metadata.context_column_names,
         uuid: this.metadata.uuid,
-        id: this.metadata.id,
+        id: this.metadata.internal_id,
         //
         tableName: this.searchTableName,
         columnName: this.metadata.column_name,

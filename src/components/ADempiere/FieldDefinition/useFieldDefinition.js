@@ -151,7 +151,7 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
       contextColumnNames: fieldMetadata.contextColumnNames,
       //
       uuid: fieldMetadata.uuid,
-      id: fieldMetadata.id,
+      id: fieldMetadata.internal_id,
       value: value.value
     })
   })
@@ -194,7 +194,7 @@ export default function useFieldDefinition({ fieldMetadata, containerManager }) 
         rowUid: fieldMetadata.rowUid,
         //
         uuid: fieldMetadata.uuid,
-        id: fieldMetadata.id,
+        id: fieldMetadata.internal_id,
         columnName: fieldMetadata.column_name,
         value: value.value
       })

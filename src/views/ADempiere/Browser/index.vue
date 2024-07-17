@@ -277,7 +277,8 @@ export default defineComponent({
       }
 
       store.dispatch('getBrowserDefinitionFromServer', {
-        id: browserId,
+        // id: browserId,
+        id: browserUuid,
         parentUuid,
         containerUuid
       })

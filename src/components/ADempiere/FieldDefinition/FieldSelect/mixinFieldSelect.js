@@ -69,7 +69,7 @@ export default {
         containerUuid: this.metadata.containerUuid,
         contextColumnNames: this.metadata.reference.context_column_names,
         uuid: this.metadata.uuid,
-        id: this.metadata.id,
+        id: this.metadata.internal_id,
         //
         tableName: this.metadata.referenceTableName,
         columnName: this.metadata.columnName
@@ -90,7 +90,7 @@ export default {
         contextColumnNames: this.metadata.reference.context_column_names,
         contextColumnNamesByDefaultValue: this.metadata.context_column_names,
         uuid: this.metadata.uuid,
-        id: this.metadata.id,
+        id: this.metadata.internal_id,
         //
         tableName: this.metadata.referenceTableName,
         columnName: this.metadata.columnName,
