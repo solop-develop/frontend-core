@@ -290,8 +290,11 @@ export default defineComponent({
   }
 </style>
 <style>
+:root {
+  --level-offset: 20px;
+}
 .el-table__row--level-[n] {
-  transform: translateX(calc(20px * [n]));
+  transform: translateX(calc(var(--level-offset) * var(--level, 1)));
 }
 
 .el-table__row--level-0 {
