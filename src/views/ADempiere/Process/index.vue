@@ -146,7 +146,8 @@ export default defineComponent({
       // }
 
       store.dispatch('getProcessDefinitionFromServer', {
-        id: processId
+        // id: processId
+        id: processUuid
       })
         .then(processResponse => {
           processMetadata.value = processResponse
