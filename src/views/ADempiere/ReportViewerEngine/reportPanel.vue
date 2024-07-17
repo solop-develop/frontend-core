@@ -48,11 +48,12 @@
         :data="dataList"
         row-key="level"
         :border="false"
-        style="width: 100%; border-top: 2px solid black"
+        style="width: 100%"
         lazy
         :default-expand-all="false"
         :tree-props="{children: 'children'}"
         height="calc(100vh - 210px)"
+        :cell-style="{padding: '0', height: '30px'}"
         @row-click="handleRowClick"
       >
         <!-- <el-table-column
@@ -239,16 +240,18 @@ export default defineComponent({
       })
     }
     function getCellStyle(code, row) {
-      const { value } = row.cells[code]
-      if (typeof value === 'string') {
-        const parsedValue = parseFloat(value)
-        if (!isNaN(parsedValue)) {
-          return { fontSize: '11px' }
+      if (!isEmptyValue(row) && isEmptyValue(code)) {
+        const { value } = row.cells[code]
+        if (typeof value === 'string') {
+          const parsedValue = parseFloat(value)
+          if (!isNaN(parsedValue)) {
+            return { fontSize: '11px' }
+          } else {
+            return { fontSize: '14px' }
+          }
         } else {
-          return { fontSize: '14px' }
+          return { fontSize: '11px' }
         }
-      } else {
-        return { fontSize: '11px' }
       }
     }
     return {
