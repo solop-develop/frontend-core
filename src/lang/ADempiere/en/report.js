@@ -81,13 +81,13 @@ const report = {
     }
   },
   reportEnginer: {
-    summation: 'Summation Σ:',
-    average: 'Average μ:',
-    Count: 'Count №:',
-    min: 'Minimum ↓:',
-    max: 'Maximum ↑:',
-    variance: 'Variance σ²:',
-    standardDeviation: 'Standard Deviation σ:'
+    summation: 'Summation (Σ):',
+    average: 'Average (μ):',
+    Count: 'Count (№):',
+    min: 'Minimum (↓):',
+    max: 'Maximum (↑):',
+    variance: 'Variance (σ²):',
+    standardDeviation: 'Standard Deviation (σ):'
   }
 }
 
