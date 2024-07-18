@@ -355,6 +355,7 @@ export default defineComponent({
 }
 .reportInfo .el-popover .el-descriptions-item__container .el-descriptions-item__content{
   display: flex;
-  justify-content: flex-end
+  justify-content: flex-end;
+  margin-right:20px;
 }
 </style>
