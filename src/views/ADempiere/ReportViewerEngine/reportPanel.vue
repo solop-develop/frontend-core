@@ -15,45 +15,35 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
-
 <template>
   <div>
     <el-card>
       <el-row :gutter="20">
-        <el-col
-          :span="24"
-          style="text-align: end;"
-        >
+        <el-col :span="24" style="text-align: end;">
           <el-button
             plain
             size="mini"
             type="primary"
-            style="float: right;font-weight: bold"
+            style="float: right; font-weight: bold"
             @click="exportFile"
           >
             {{ $t('excel.export') }}
-            <el-divider
-              direction="vertical"
-              style="margin-right: 0px;font-weight: bold"
-            />
-            <i
-              class="el-icon-arrow-down"
-              style="font-weight: bold;"
-            />
+            <el-divider direction="vertical" style="margin-right: 0px; font-weight: bold" />
+            <i class="el-icon-arrow-down" style="font-weight: bold;" />
           </el-button>
         </el-col>
       </el-row>
       <el-table
-        ref="TableReportEngine"
+        ref="tableReportEngine"
         :data="dataList"
         row-key="level"
         style="width: 100%"
         lazy
         :row-class-name="tableRowClassName"
         :default-expand-all="false"
-        :tree-props="{children: 'children'}"
+        :tree-props="{ children: 'children' }"
         height="calc(100vh - 210px)"
-        :cell-style="{padding: '0', height: '30px', border: 'none'}"
+        :cell-style="{ padding: '0', height: '30px', border: 'none' }"
         :cell-class-name="getRowClassName"
         @row-click="handleRowClick"
       >
@@ -70,17 +60,20 @@
           <template slot-scope="scope">
             <span :style="getCellStyle(fieldAttributes.code, scope.row)">
               {{ displayLabel(fieldAttributes.code, scope.row) }}
+              <el-popover
+                v-if="selectedRow === scope.row && selectedColumn === fieldAttributes.code"
+                v-model="showPopover"
+                placement="top"
+                class="reportInfo"
+              >
+                <InfoReport
+                  :data="dataModal"
+                />
+              </el-popover>
             </span>
           </template>
         </el-table-column>
       </el-table>
-      <el-dialog
-        class="reportInfo"
-        :visible.sync="showModal"
-        title="Información del Reporte"
-      >
-        <InfoReport :data="dataModal" />
-      </el-dialog>
       <custom-pagination
         :total-records="recordData.record_count"
         :page-size="currentPageSize"
@@ -91,7 +84,6 @@
     </el-card>
   </div>
 </template>
-
 <script>
 import store from '@/store'
 import { defineComponent, computed, ref } from '@vue/composition-api'
@@ -132,17 +124,23 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const showModal = ref(false)
     const dataModal = ref({})
+    const showPopover = ref(false)
+    const selectedRow = ref(undefined)
+    const selectedColumn = ref(undefined)
+    const tableReportEngine = ref(undefined)
     function handleRowClick(row, column, event) {
       if (row.children && row.children.length > 0) {
-        this.$refs.TableReportEngine.toggleRowExpansion(row)
+        tableReportEngine.value.toggleRowExpansion(row)
+        showPopover.value = false
       } else {
         Object.entries(row.cells).forEach(data => {
-          data.map(variante => {
-            if (variante.sum_value) {
-              dataModal.value = variante
-              showModal.value = true
+          data.map(dataCell => {
+            if (dataCell.sum_value && !isEmptyValue(column) && !isEmptyValue(row)) {
+              selectedColumn.value = column.columnKey
+              selectedRow.value = row
+              dataModal.value = dataCell
+              showPopover.value = true
             }
           })
         })
@@ -265,8 +263,11 @@ export default defineComponent({
       return parentRow
     }
     return {
+      tableReportEngine,
+      selectedRow,
+      selectedColumn,
+      showPopover,
       dataModal,
-      showModal,
       dataList,
       recordData,
       currentPageSize,
@@ -344,12 +345,16 @@ export default defineComponent({
   content: '';
 }
 .last-child-row {
-    border-bottom: 1px solid #dad8d8 !important;
+    border-bottom: 1px solid #afaeae !important;
 }
 .el-table .success-row {
   background: #ecf5ff;
 }
-.reportInfo .el-dialog__body .el-row .el-col{
-  width: 100% !important;
+.reportInfo .el-popover {
+  width: 750px !important;
+}
+.reportInfo .el-popover .el-descriptions-item__container .el-descriptions-item__content{
+  display: flex;
+  justify-content: flex-end
 }
 </style>

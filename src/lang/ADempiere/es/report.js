@@ -79,6 +79,15 @@ const report = {
       description: 'arxml - Archivo de Definición de Reporte ADempiere',
       type: 'arxml'
     }
+  },
+  reportEnginer: {
+    summation: 'Sumatoria Σ:',
+    average: 'Promedio μ:',
+    Count: 'Conteo №:',
+    min: 'Mínimo ↓:',
+    max: 'Máximo ↑:',
+    variance: 'Varianza σ²:',
+    standardDeviation: 'Desviación Estándar σ:'
   }
 }
 
