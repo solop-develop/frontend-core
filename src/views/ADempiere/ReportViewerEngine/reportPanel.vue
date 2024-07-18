@@ -44,12 +44,13 @@
         </el-col>
       </el-row>
       <el-table
-        ref="elTable"
+        ref="TableReportEngine"
         :data="dataList"
         row-key="level"
         :border="false"
         style="width: 100%"
         lazy
+        :row-class-name="tableRowClassName"
         :default-expand-all="false"
         :tree-props="{children: 'children'}"
         height="calc(100vh - 210px)"
@@ -126,7 +127,7 @@ export default defineComponent({
   methods: {
     handleRowClick(row, column, event) {
       if (row.children && row.children.length > 0) {
-        this.$refs.elTable.toggleRowExpansion(row)
+        this.$refs.TableReportEngine.toggleRowExpansion(row)
       }
     },
     getRowClassName({ row, rowIndex }) {
@@ -159,14 +160,12 @@ export default defineComponent({
         return
       }
       const { display_value, value } = row.cells[prop]
-      if (
-        isEmptyValue(display_value) &&
-        !isEmptyValue(value) &&
-        typeof value === 'string'
-      ) {
-        return value
+      if (!isEmptyValue(display_value)) {
+        return display_value
       }
-      return display_value
+      if (!isEmptyValue(value)) {
+        return value.value
+      }
     }
     function getAlignment(displayType) {
       if (isNumberField(displayType)) {
@@ -198,9 +197,11 @@ export default defineComponent({
     function hasChildren(children, parentLevel) {
       if (children.length < 1) return children
       return children.map((child, indexChild) => {
+        const index = parentLevel + indexChild
         return {
           ...child,
-          level: parentLevel + indexChild
+          children: hasChildren(child.children, index.toString()),
+          level: index
         }
       })
     }
@@ -228,6 +229,9 @@ export default defineComponent({
       })
     }
     function getCellStyle(code, row) {
+      if (isEmptyValue(row.cells[code])) {
+        return {}
+      }
       const { value } = row.cells[code]
       if (typeof value === 'string') {
         const parsedValue = parseFloat(value)
@@ -240,6 +244,15 @@ export default defineComponent({
         return { fontSize: '10px' }
       }
     }
+
+    function tableRowClassName({ row, rowIndex }) {
+      const { children } = row
+      if (!isEmptyValue(children)) {
+        return 'success-row'
+      }
+      return ''
+    }
+
     return {
       dataList,
       recordData,
@@ -248,6 +261,7 @@ export default defineComponent({
       exportFile,
       displayLabel,
       getAlignment,
+      tableRowClassName,
       handleChangeSizePage,
       handleChangePage,
       getCellStyle
@@ -314,5 +328,8 @@ export default defineComponent({
 }
 .last-child-row {
     border-bottom: 1px solid #f0eeee !important;
+}
+.el-table .success-row {
+  background: #ecf5ff;
 }
 </style>
