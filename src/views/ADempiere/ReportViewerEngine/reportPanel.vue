@@ -47,7 +47,6 @@
         ref="TableReportEngine"
         :data="dataList"
         row-key="level"
-        :border="false"
         style="width: 100%"
         lazy
         :row-class-name="tableRowClassName"
@@ -62,8 +61,8 @@
           v-for="(fieldAttributes, key) in columns"
           :key="key"
           :column-key="fieldAttributes.code"
-          :min-width="'280'"
           :align="getAlignment(fieldAttributes.display_type)"
+          :min-width="'280'"
         >
           <template slot="header">
             {{ fieldAttributes.title }}
@@ -75,6 +74,13 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-dialog
+        class="reportInfo"
+        :visible.sync="showModal"
+        title="Información del Reporte"
+      >
+        <InfoReport :data="dataModal" />
+      </el-dialog>
       <custom-pagination
         :total-records="recordData.record_count"
         :page-size="currentPageSize"
@@ -88,15 +94,16 @@
 
 <script>
 import store from '@/store'
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed, ref } from '@vue/composition-api'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 import { isNumberField } from '@/utils/ADempiere/references'
-
+import InfoReport from './infoReport'
 export default defineComponent({
   name: 'reportPanel',
   components: {
-    CustomPagination
+    CustomPagination,
+    InfoReport
   },
   props: {
     containerManager: {
@@ -124,37 +131,23 @@ export default defineComponent({
       required: false
     }
   },
-  methods: {
-    handleRowClick(row, column, event) {
+  setup(props) {
+    const showModal = ref(false)
+    const dataModal = ref({})
+    function handleRowClick(row, column, event) {
       if (row.children && row.children.length > 0) {
         this.$refs.TableReportEngine.toggleRowExpansion(row)
+      } else {
+        Object.entries(row.cells).forEach(data => {
+          data.map(variante => {
+            if (variante.sum_value) {
+              dataModal.value = variante
+              showModal.value = true
+            }
+          })
+        })
       }
-    },
-    getRowClassName({ row, rowIndex }) {
-      const parent = this.findParent(row)
-      if (parent && parent.children[parent.children.length - 1] === row) {
-        return 'last-child-row'
-      }
-      return ''
-    },
-    findParent(row) {
-      // Find parent row logic here
-      let parentRow = null
-      const stack = [...this.dataList]
-      while (stack.length) {
-        const current = stack.pop()
-        if (current.children && current.children.includes(row)) {
-          parentRow = current
-          break
-        }
-        if (current.children) {
-          stack.push(...current.children)
-        }
-      }
-      return parentRow
     }
-  },
-  setup(props) {
     function displayLabel(prop, row) {
       if (isEmptyValue(row.cells)) {
         return
@@ -233,16 +226,13 @@ export default defineComponent({
         return {}
       }
       const { value } = row.cells[code]
-      if (typeof value === 'string') {
-        const parsedValue = parseFloat(value)
-        if (!isNaN(parsedValue)) {
-          return { fontSize: '10px' }
-        } else {
-          return { fontSize: '14px' }
+      if (!isEmptyValue(value) && value.type) {
+        if (value.type === 'decimal' && value.value < 0) {
+          return { fontSize: '10px', color: 'red' }
         }
-      } else {
         return { fontSize: '10px' }
       }
+      return { fontSize: '14px' }
     }
 
     function tableRowClassName({ row, rowIndex }) {
@@ -252,8 +242,31 @@ export default defineComponent({
       }
       return ''
     }
-
+    function getRowClassName({ row, rowIndex }) {
+      const parent = this.findParent(row)
+      if (parent && parent.children[parent.children.length - 1] === row) {
+        return 'last-child-row'
+      }
+      return ''
+    }
+    function findParent(row) {
+      let parentRow = null
+      const stack = [...this.dataList]
+      while (stack.length) {
+        const current = stack.pop()
+        if (current.children && current.children.includes(row)) {
+          parentRow = current
+          break
+        }
+        if (current.children) {
+          stack.push(...current.children)
+        }
+      }
+      return parentRow
+    }
     return {
+      dataModal,
+      showModal,
       dataList,
       recordData,
       currentPageSize,
@@ -264,7 +277,10 @@ export default defineComponent({
       tableRowClassName,
       handleChangeSizePage,
       handleChangePage,
-      getCellStyle
+      getCellStyle,
+      handleRowClick,
+      getRowClassName,
+      findParent
     }
   }
 })
@@ -288,6 +304,7 @@ export default defineComponent({
       text-align: right;
     }
   }
+
 </style>
 <style>
 :root {
@@ -327,9 +344,12 @@ export default defineComponent({
   content: '';
 }
 .last-child-row {
-    border-bottom: 1px solid #f0eeee !important;
+    border-bottom: 1px solid #dad8d8 !important;
 }
 .el-table .success-row {
   background: #ecf5ff;
+}
+.reportInfo .el-dialog__body .el-row .el-col{
+  width: 100% !important;
 }
 </style>
