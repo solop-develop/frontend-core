@@ -15,46 +15,35 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
-
 <template>
   <div>
     <el-card>
       <el-row :gutter="20">
-        <el-col
-          :span="24"
-          style="text-align: end;"
-        >
+        <el-col :span="24" style="text-align: end;">
           <el-button
             plain
             size="mini"
             type="primary"
-            style="float: right;font-weight: bold"
+            style="float: right; font-weight: bold"
             @click="exportFile"
           >
             {{ $t('excel.export') }}
-            <el-divider
-              direction="vertical"
-              style="margin-right: 0px;font-weight: bold"
-            />
-            <i
-              class="el-icon-arrow-down"
-              style="font-weight: bold;"
-            />
+            <el-divider direction="vertical" style="margin-right: 0px; font-weight: bold" />
+            <i class="el-icon-arrow-down" style="font-weight: bold;" />
           </el-button>
         </el-col>
       </el-row>
       <el-table
-        ref="TableReportEngine"
+        ref="tableReportEngine"
         :data="dataList"
         row-key="level"
-        :border="false"
         style="width: 100%"
         lazy
         :row-class-name="tableRowClassName"
         :default-expand-all="false"
-        :tree-props="{children: 'children'}"
+        :tree-props="{ children: 'children' }"
         height="calc(100vh - 210px)"
-        :cell-style="{padding: '0', height: '30px', border: 'none'}"
+        :cell-style="{ padding: '0', height: '30px', border: 'none' }"
         :cell-class-name="getRowClassName"
         @row-click="handleRowClick"
       >
@@ -62,8 +51,8 @@
           v-for="(fieldAttributes, key) in columns"
           :key="key"
           :column-key="fieldAttributes.code"
-          :min-width="'280'"
           :align="getAlignment(fieldAttributes.display_type)"
+          :min-width="'280'"
         >
           <template slot="header">
             {{ fieldAttributes.title }}
@@ -71,6 +60,16 @@
           <template slot-scope="scope">
             <span :style="getCellStyle(fieldAttributes.code, scope.row)">
               {{ displayLabel(fieldAttributes.code, scope.row) }}
+              <el-popover
+                v-if="selectedRow === scope.row && selectedColumn === fieldAttributes.code"
+                v-model="showPopover"
+                placement="top"
+                class="reportInfo"
+              >
+                <InfoReport
+                  :data="dataModal"
+                />
+              </el-popover>
             </span>
           </template>
         </el-table-column>
@@ -85,18 +84,18 @@
     </el-card>
   </div>
 </template>
-
 <script>
 import store from '@/store'
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed, ref } from '@vue/composition-api'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 import { isNumberField } from '@/utils/ADempiere/references'
-
+import InfoReport from './infoReport'
 export default defineComponent({
   name: 'reportPanel',
   components: {
-    CustomPagination
+    CustomPagination,
+    InfoReport
   },
   props: {
     containerManager: {
@@ -124,37 +123,29 @@ export default defineComponent({
       required: false
     }
   },
-  methods: {
-    handleRowClick(row, column, event) {
-      if (row.children && row.children.length > 0) {
-        this.$refs.TableReportEngine.toggleRowExpansion(row)
-      }
-    },
-    getRowClassName({ row, rowIndex }) {
-      const parent = this.findParent(row)
-      if (parent && parent.children[parent.children.length - 1] === row) {
-        return 'last-child-row'
-      }
-      return ''
-    },
-    findParent(row) {
-      // Find parent row logic here
-      let parentRow = null
-      const stack = [...this.dataList]
-      while (stack.length) {
-        const current = stack.pop()
-        if (current.children && current.children.includes(row)) {
-          parentRow = current
-          break
-        }
-        if (current.children) {
-          stack.push(...current.children)
-        }
-      }
-      return parentRow
-    }
-  },
   setup(props) {
+    const dataModal = ref({})
+    const showPopover = ref(false)
+    const selectedRow = ref(undefined)
+    const selectedColumn = ref(undefined)
+    const tableReportEngine = ref(undefined)
+    function handleRowClick(row, column, event) {
+      if (row.children && row.children.length > 0) {
+        tableReportEngine.value.toggleRowExpansion(row)
+        showPopover.value = false
+      } else {
+        Object.entries(row.cells).forEach(data => {
+          data.map(dataCell => {
+            if (dataCell.sum_value && !isEmptyValue(column) && !isEmptyValue(row)) {
+              selectedColumn.value = column.columnKey
+              selectedRow.value = row
+              dataModal.value = dataCell
+              showPopover.value = true
+            }
+          })
+        })
+      }
+    }
     function displayLabel(prop, row) {
       if (isEmptyValue(row.cells)) {
         return
@@ -233,16 +224,13 @@ export default defineComponent({
         return {}
       }
       const { value } = row.cells[code]
-      if (typeof value === 'string') {
-        const parsedValue = parseFloat(value)
-        if (!isNaN(parsedValue)) {
-          return { fontSize: '10px' }
-        } else {
-          return { fontSize: '14px' }
+      if (!isEmptyValue(value) && value.type) {
+        if (value.type === 'decimal' && value.value < 0) {
+          return { fontSize: '10px', color: 'red' }
         }
-      } else {
         return { fontSize: '10px' }
       }
+      return { fontSize: '14px' }
     }
 
     function tableRowClassName({ row, rowIndex }) {
@@ -252,8 +240,34 @@ export default defineComponent({
       }
       return ''
     }
-
+    function getRowClassName({ row, rowIndex }) {
+      const parent = this.findParent(row)
+      if (parent && parent.children[parent.children.length - 1] === row) {
+        return 'last-child-row'
+      }
+      return ''
+    }
+    function findParent(row) {
+      let parentRow = null
+      const stack = [...this.dataList]
+      while (stack.length) {
+        const current = stack.pop()
+        if (current.children && current.children.includes(row)) {
+          parentRow = current
+          break
+        }
+        if (current.children) {
+          stack.push(...current.children)
+        }
+      }
+      return parentRow
+    }
     return {
+      tableReportEngine,
+      selectedRow,
+      selectedColumn,
+      showPopover,
+      dataModal,
       dataList,
       recordData,
       currentPageSize,
@@ -264,7 +278,10 @@ export default defineComponent({
       tableRowClassName,
       handleChangeSizePage,
       handleChangePage,
-      getCellStyle
+      getCellStyle,
+      handleRowClick,
+      getRowClassName,
+      findParent
     }
   }
 })
@@ -288,6 +305,7 @@ export default defineComponent({
       text-align: right;
     }
   }
+
 </style>
 <style>
 :root {
@@ -327,9 +345,17 @@ export default defineComponent({
   content: '';
 }
 .last-child-row {
-    border-bottom: 1px solid #f0eeee !important;
+    border-bottom: 1px solid #afaeae !important;
 }
 .el-table .success-row {
   background: #ecf5ff;
+}
+.reportInfo .el-popover {
+  width: 780px !important;
+}
+.reportInfo .el-popover .el-descriptions-item__container .el-descriptions-item__content{
+  display: flex;
+  justify-content: flex-end;
+  margin-right:20px;
 }
 </style>

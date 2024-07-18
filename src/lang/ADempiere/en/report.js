@@ -79,6 +79,15 @@ const report = {
       description: 'arxml - Adempiere Report Definition',
       type: 'arxml'
     }
+  },
+  reportEnginer: {
+    summation: 'Summation (Σ):',
+    average: 'Average (μ):',
+    Count: 'Count (№):',
+    min: 'Minimum (↓):',
+    max: 'Maximum (↑):',
+    variance: 'Variance (σ²):',
+    standardDeviation: 'Standard Deviation (σ):'
   }
 }
 
