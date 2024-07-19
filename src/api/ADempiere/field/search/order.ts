@@ -84,37 +84,23 @@ export function requestListOrderInfo({
 }) {
   // TODO: Search for a more optimal way to compare and build the route.
   let url
-
-  if (!isEmptyValue(fieldId)) {
-    url = generateUrl({
-      query: fieldId,
-      path: 'field'
-    })
+  switch (true) {
+    case !isEmptyValue(fieldId):
+      url = `/field/orders/field/${fieldId}`
+      break
+    case !isEmptyValue(processParameterId):
+      url = `/field/orders/parameter/${processParameterId}`
+      break
+    case !isEmptyValue(browseFieldId):
+      url = `/field/orders/query-criteria/${browseFieldId}`
+      break
+    case !isEmptyValue(columnId):
+      url = `/field/orders/column/${columnId}`
+      break
+    case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
+      url = `/field/orders/table/${tableName}/${columnName}`
+      break
   }
-  if (!isEmptyValue(processParameterId)) {
-    url = generateUrl({
-      query: processParameterId,
-      path: 'parameter'
-    })
-  }
-  if (!isEmptyValue(browseFieldId)) {
-    url = generateUrl({
-      query: browseFieldId,
-      path: 'query-criteria'
-    })
-  }
-  if (!isEmptyValue(columnId)) {
-    url = generateUrl({
-      query: columnId,
-      path: 'column'
-    })
-  }
-  // if (!isEmptyValue(tableName) && !isEmptyValue(columnName)) {
-  //   url = generateUrl({
-  //     query: `${tableName}/${columnName}`,
-  //     path: 'table'
-  //   })
-  // }
 
   return request({
     url,
@@ -156,11 +142,4 @@ export function requestGetOrderInfo({
     url: `/field/orders/${id}`,
     method: 'get'
   })
-}
-
-function generateUrl({
-  query,
-  path
-}) {
-  return `/field/orders/${path}/${query}`
 }

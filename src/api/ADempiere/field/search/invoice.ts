@@ -114,37 +114,23 @@ export function requestListInvoicesInfo({
 }) {
   // TODO: Search for a more optimal way to compare and build the route.
   let url
-
-  if (!isEmptyValue(fieldId)) {
-    url = generateUrl({
-      query: fieldId,
-      path: 'field'
-    })
+  switch (true) {
+    case !isEmptyValue(fieldId):
+      url = `/field/invoices/field/${fieldId}`
+      break
+    case !isEmptyValue(processParameterId):
+      url = `/field/invoices/parameter/${processParameterId}`
+      break
+    case !isEmptyValue(browseFieldId):
+      url = `/field/invoices/query-criteria/${browseFieldId}`
+      break
+    case !isEmptyValue(columnId):
+      url = `/field/invoices/column/${columnId}`
+      break
+    case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
+      url = `/field/invoices/table/${tableName}/${columnName}`
+      break
   }
-  if (!isEmptyValue(processParameterId)) {
-    url = generateUrl({
-      query: processParameterId,
-      path: 'parameter'
-    })
-  }
-  if (!isEmptyValue(browseFieldId)) {
-    url = generateUrl({
-      query: browseFieldId,
-      path: 'query-criteria'
-    })
-  }
-  if (!isEmptyValue(columnId)) {
-    url = generateUrl({
-      query: columnId,
-      path: 'column'
-    })
-  }
-  // if (!isEmptyValue(tableName) && !isEmptyValue(columnName)) {
-  //   url = generateUrl({
-  //     query: `${tableName}/${columnName}`,
-  //     path: 'table'
-  //   })
-  // }
 
   return request({
     url: url,
@@ -177,11 +163,4 @@ export function requestListInvoicesInfo({
       grand_total_to: grandTotalTo
     }
   })
-}
-
-function generateUrl({
-  query,
-  path
-}) {
-  return `/field/invoices/${path}/${query}`
 }

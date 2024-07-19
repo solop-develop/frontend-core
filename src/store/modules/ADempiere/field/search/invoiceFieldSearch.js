@@ -242,11 +242,16 @@ const fieldInvoice = {
           parentUuid,
           containerUuid: originContainerUuid,
           contextColumnNames,
-          isBooleanToString: true
+          isBooleanToString: true,
+          format: 'object'
         })
+        let contextAttributes = '{}'
+        if (!isEmptyValue(contextAttributesList)) {
+          contextAttributes = JSON.stringify(contextAttributesList)
+        }
 
         requestListInvoicesInfo({
-          contextAttributesList,
+          contextAttributes: contextAttributes,
           // References
           processParameterId,
           browseFieldId,
