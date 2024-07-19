@@ -26,7 +26,7 @@ import {
   requestRunBusinessProcess,
   requestRunBusinessProcessAsBrowser,
   requestRunBusinessProcessAsWindow
-} from '@/api/ADempiere/businessData/runBusinessProcess.ts'
+} from '@/api/ADempiere/business-data/runBusinessProcess.ts'
 
 // Constants
 import { RECORD_ID } from '@/utils/ADempiere/constants/systemColumns'
@@ -126,7 +126,7 @@ const processManager = {
         }, () => {})
 
         requestRunBusinessProcess({
-          id: processDefinition.id,
+          id: processDefinition.internal_id,
           parameters
         })
           .then(runProcessRepsonse => {
