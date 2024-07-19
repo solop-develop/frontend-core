@@ -113,20 +113,16 @@
                     >
                       {{ logs.responsible_name }}
                     </el-descriptions-item>
-                    <!-- <el-descriptions-item label="Telephone">18100000000</el-descriptions-item>
-                    <el-descriptions-item label="Place" :span="2">Suzhou</el-descriptions-item>
-                    <el-descriptions-item label="Remarks">
-                      <el-tag size="small">School</el-tag>
-                    </el-descriptions-item>
-                    <el-descriptions-item label="Address">No.1188, Wuzhong Avenue, Wuzhong District, Suzhou, Jiangsu Province</el-descriptions-item> -->
                   </el-descriptions>
-                  <!-- <span>
+                  <!--
+                  span>
                     <b> {{ $t('page.login.userName') }} : </b>{{ logs.user_name }} <i class="el-icon-user-solid" />
                   </span>
                   <br>
                   <b v-show="!isEmptyValue(logs.text_message)"> {{ $t('report.summary') }} :</b> {{ logs.text_message }}
                   <br>
-                  <b v-show="!isEmptyValue(logs.responsible_name)"> {{ $t('window.containerInfo.logWorkflow.responsible') }} :</b> {{ logs.responsible_name }} -->
+                  <b v-show="!isEmptyValue(logs.responsible_name)"> {{ $t('window.containerInfo.logWorkflow.responsible') }} :</b> {{ logs.responsible_name }}
+                  -->
                 </el-card>
               </el-timeline-item>
             </el-timeline>
