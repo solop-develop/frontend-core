@@ -1,37 +1,39 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
   <el-container class="panel_main">
     <el-header>
       <title-and-help
-        :name="workflowFileName"
+        :name="workflowName"
         :help="$route.meta.description"
       />
     </el-header>
+
     <el-main v-if="isLoadedMetadata">
       <workflow-diagram
-        v-if="!isEmptyValue(node)"
-        :node-transition-list="listWorkflowTransition"
-        :node-list="node"
-        :current-node="currentNode"
+        v-if="!isEmptyValue(getStoredWorkflow)"
+        :node-transition-list="getStoredWorkflow.diagramMetadata.transitionsList"
+        :node-list="getStoredWorkflow.diagramMetadata.statesList"
+        :current-node="getStoredWorkflow.diagramMetadata.stateSemanticsList"
       />
     </el-main>
+
     <div
       v-else
       key="form-loading"
@@ -45,14 +47,20 @@
 </template>
 
 <script>
+import { defineComponent, computed, ref, onBeforeMount } from '@vue/composition-api'
+
+import router from '@/router'
+import store from '@/store'
+
 // Components and Mixins
 import TitleAndHelp from '@/components/ADempiere/TitleAndHelp'
 import WorkflowDiagram from '@/components/ADempiere/WorkflowManager/WorkflowDiagram.vue'
 
 // API Request Methods
-import { getWorkflow } from '@/api/ADempiere/workflow.js'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+// import { getWorkflow } from '@/api/ADempiere/workflow.js'
 
-export default {
+export default defineComponent({
   name: 'WorkflowView',
 
   components: {
@@ -67,151 +75,66 @@ export default {
     }
   },
 
-  data() {
-    return {
-      size: {
-        width: '20px',
-        height: '2px'
-      },
-      workflowMetadata: {},
-      node: [],
-      currentNode: [{
-        classname: 'delete',
-        id: ''
-      }],
-      transitions: [],
-      listWorkflowTransition: [],
-      isLoadedMetadata: false,
-      panelType: 'workflow'
-    }
-  },
+  setup() {
+    const isLoadedMetadata = ref(false)
 
-  computed: {
-    workflowUuid() {
-      return this.$route.meta.uuid
-    },
-    workflowFileName() {
-      return this.workflowMetadata.fileName || this.$route.meta.title
-    },
-    getWorkflow() {
-      return this.$store.getters.getWorkflowUuid(this.workflowUuid)
-    },
-    nodoWorkflow() {
-      return this.workflowMetadata.node.map(node => {
-        return {
-          id: node.id,
-          label: node.name
-        }
-      })
-    }
-  },
+    const currentRoute = router.app._route
 
-  created() {
-    this.gettWorkflow()
-  },
+    const workflowUuid = computed(() => {
+      return currentRoute.meta.uuid
+    })
+    const workflowId = computed(() => {
+      return currentRoute.meta.id
+    })
+    const workflowName = computed(() => {
+      return getStoredWorkflow.value.name || currentRoute.meta.title
+    })
+    const getStoredWorkflow = computed(() => {
+      return store.getters.getStoredWorkflowByUuid(workflowUuid.value)
+    })
 
-  methods: {
-    gettWorkflow() {
-      const workflow = this.getWorkflow
-      if (workflow) {
-        this.workflowMetadata = workflow
-        this.isLoadedMetadata = true
-        this.listWorkflow(workflow)
-      } else {
-        this.$store.dispatch('getPanelAndFields', {
-          containerUuid: this.workflowUuid,
-          panelType: this.panelType,
-          routeToDelete: this.$route
-        }).then(workflowResponse => {
-          this.workflowMetadata = workflowResponse
-          this.listWorkflow(workflowResponse)
+    function loadWorkflow() {
+      isLoadedMetadata.value = false
+      const workflow = getStoredWorkflow.value
+      if (isEmptyValue(workflow)) {
+        store.dispatch('getWorkflowFromServer', {
+          containerUuid: workflowUuid.value,
+          id: workflowId.value,
+          routeToDelete: currentRoute
         }).finally(() => {
-          this.isLoadedMetadata = true
-        })
-        // this.listWorkflow(this.getWorkflow)
-        this.isLoadedMetadata = true
-      }
-      this.serverWorkflow(this.workflowMetadata)
-    },
-    serverWorkflow({ tableName }) {
-      if (this.isEmptyValue(tableName)) {
-        return ''
-      }
-      getWorkflow({
-        tableName
-      })
-        .then(response => {
-          this.listWorkflow(response.records)
-        })
-        .catch(error => {
-          console.warn(`serverWorkflow: ${error.message}. Code: ${error.code}.`)
-        })
-    },
-    listWorkflow(workflow) {
-      // Highlight Current Node
-      this.transitions = []
-      if (!this.isEmptyValue(workflow.node) && !this.isEmptyValue(workflow.node.uuid)) {
-        this.currentNode = [{
-          classname: 'delete',
-          id: workflow.start_node.uuid
-        }]
-      }
-      const nodes = workflow.workflow_nodes // .filter(node => !this.isEmptyValue(node.uuid))
-
-      this.listNodeTransitions(nodes)
-      if (!this.isEmptyValue(nodes)) {
-        this.node = nodes.map((workflow, key) => {
-          return {
-            ...workflow,
-            transitions: workflow.transitions,
-            id: workflow.uuid,
-            key,
-            label: workflow.name
-          }
+          isLoadedMetadata.value = true
         })
       } else {
-        this.node = []
+        isLoadedMetadata.value = true
       }
-    },
-    listNodeTransitions(nodes) {
-      nodes.forEach(element => {
-        const uuid = element.uuid
-        const id = element.value
-        if (!this.isEmptyValue(element.transitions)) {
-          element.transitions.forEach((nextNode, key) => {
-            if (!this.isEmptyValue(nextNode.node_next_uuid)) {
-              if (this.isEmptyValue(nextNode.description)) {
-                this.transitions.push({
-                  id: id + key,
-                  target: nextNode.node_next_uuid,
-                  source: uuid
-                })
-              } else {
-                this.transitions.push({
-                  id: id + key,
-                  label: nextNode.description,
-                  target: nextNode.node_next_uuid,
-                  source: uuid
-                })
-              }
-            }
-          })
-        }
-      })
-      const blon = nodes.map(item => {
-        return {
-          uuid: item.uuid
-        }
-      })
-      this.listWorkflowTransition = this.transitions.filter(data => {
-        const verificar = blon.find(mode => mode.uuid === data.source)
-        if (!this.isEmptyValue(verificar)) {
-          return data
-        }
-      })
+    }
+
+    // function serverWorkflow({ tableName }) {
+    //   if (isEmptyValue(tableName)) {
+    //     return ''
+    //   }
+    //   getWorkflow({
+    //     tableName
+    //   })
+    //     .then(response => {
+    //       listWorkflow(response.records)
+    //     })
+    //     .catch(error => {
+    //       console.warn(`serverWorkflow: ${error.message}. Code: ${error.code}.`)
+    //     })
+    // }
+
+    onBeforeMount(() => {
+      loadWorkflow()
+    })
+
+    return {
+      isLoadedMetadata,
+      workflowName,
+      getStoredWorkflow
     }
   }
-}
+})
 </script>
 
 <style scoped>
