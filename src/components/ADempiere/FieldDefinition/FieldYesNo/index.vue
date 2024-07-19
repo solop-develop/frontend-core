@@ -27,7 +27,9 @@
 </template>
 
 <script>
-export default {
+import { defineComponent, computed } from '@vue/composition-api'
+
+export default defineComponent({
   name: 'FieldYesNo',
 
   props: {
@@ -49,14 +51,17 @@ export default {
     }
   },
 
-  computed: {
-    yesNoComponentRender() {
-      if (this.metadata.isAdvancedQuery || (this.metadata.is_query_criteria && !this.metadata.required)) {
+  setup(props) {
+    const yesNoComponentRender = computed(() => {
+      if (props.metadata.isAdvancedQuery || (props.metadata.is_query_criteria && !props.metadata.required) || props.metadata.panelType === 'report') {
         return () => import('@/components/ADempiere/FieldDefinition/FieldYesNo/SelectTemplate.vue')
       }
       return () => import('@/components/ADempiere/FieldDefinition/FieldYesNo/SwitchTemplate.vue')
+    })
+
+    return {
+      yesNoComponentRender
     }
   }
-
-}
+})
 </script>
