@@ -90,9 +90,6 @@ export default {
     workflowUuid() {
       return this.$route.meta.uuid
     },
-    workflowId() {
-      return this.$route.meta.id
-    },
     workflowFileName() {
       return this.workflowMetadata.fileName || this.$route.meta.title
     },
@@ -123,7 +120,6 @@ export default {
       } else {
         this.$store.dispatch('getPanelAndFields', {
           containerUuid: this.workflowUuid,
-          id: this.workflowId,
           panelType: this.panelType,
           routeToDelete: this.$route
         }).then(workflowResponse => {

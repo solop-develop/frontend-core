@@ -701,7 +701,6 @@ const actions = {
   getPanelAndFields({ dispatch }, {
     parentUuid,
     containerUuid,
-    id,
     panelType,
     panelMetadata,
     routeToDelete,
@@ -732,7 +731,6 @@ const actions = {
     return dispatch(executeAction, {
       parentUuid,
       containerUuid,
-      id,
       panelType,
       panelMetadata,
       isAdvancedQuery,
