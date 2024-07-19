@@ -29,16 +29,11 @@ import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
  * @param {number} id, identifier
  */
 export function requestWorkflowMetadata({
-  uuid,
   id
 }) {
   return request({
-    url: '/workflow/workflow',
-    method: 'get',
-    params: {
-      uuid,
-      id
-    }
+    url: `/workflow/workflows/${id}`,
+    method: 'get'
   })
 }
 
