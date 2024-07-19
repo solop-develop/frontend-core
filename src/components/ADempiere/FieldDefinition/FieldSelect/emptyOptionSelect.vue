@@ -20,6 +20,7 @@
   <el-option
     :value="currentEmptyValue"
     :label="' '"
+    :disabled="disabled"
   />
 </template>
 
@@ -30,6 +31,10 @@ export default defineComponent({
   name: 'EmptyOptionSelect',
 
   props: {
+    disabled: {
+      type: Boolean,
+      defaullt: false
+    },
     currentValue: {
       type: [Number, String],
       defaullt() {

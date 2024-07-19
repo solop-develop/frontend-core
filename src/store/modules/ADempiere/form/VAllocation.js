@@ -36,6 +36,7 @@ const initStateCriteria = {
   organizationId: -1,
   currencyId: -1,
   listOrganization: [],
+  transactionOrganizationsList: [],
   listCurrency: [],
   date: '',
   transactionType: '',
