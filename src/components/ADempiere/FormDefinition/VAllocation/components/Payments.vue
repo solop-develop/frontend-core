@@ -39,11 +39,12 @@
           <el-form
             :inline="true"
             label-position="top"
-            class="field-payments"
+            class="form-base"
+            size="small"
           >
             <el-row :gutter="20">
               <el-col
-                :span="2"
+                :span="3"
                 style="text-align: center;"
               >
                 <el-form-item
@@ -59,7 +60,7 @@
                 </el-form-item>
               </el-col>
               <el-col
-                :span="4"
+                :span="3"
                 style="text-align: center;"
               >
                 <el-form-item
@@ -109,31 +110,7 @@
                 :span="5"
                 style="text-align: center;"
               >
-                <el-form-item
-                  :label="$t('form.VAllocation.footer.organization')"
-                  label-width="120px"
-                  style="margin: 0px;padding: 0px;"
-                >
-                  <el-select
-                    v-model="transactionOrganizationId"
-                    style="width: 100%;"
-                    filterable
-                    clearable
-                    :filter-method="remoteSearchOrganizations"
-                    @visible-change="findOrganizations"
-                  >
-                    <empty-option-select
-                      :current-value="transactionOrganizationId"
-                      :is-allows-zero="false"
-                    />
-                    <el-option
-                      v-for="item in optionsOrganizations"
-                      :key="item.id"
-                      :label="item.label"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
+                <organization-transaction-field />
               </el-col>
               <el-col
                 :span="5"
@@ -151,6 +128,7 @@
                   />
                 </el-form-item>
               </el-col>
+
               <el-col
                 :span="3"
                 style="padding-left: 0px;padding-right: 0px;text-align: center;"
@@ -185,14 +163,14 @@ import headersInvoice from './headersInvoice.js'
 import headersPayments from './headersPayments.js'
 import InvoceTable from './InvoceTable.vue'
 import PaymentsTable from './PaymentsTable.vue'
+import OrganizationTransactionField from '@/components/ADempiere/FormDefinition/VAllocation/ProcessFooter/organizationTransactionField.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 // API Request Methods
 import {
-  requestListCharges,
-  requestListTransactionOrganizations
+  requestListCharges
 } from '@/api/ADempiere/form/VAllocation.ts'
 
 export default defineComponent({
@@ -201,6 +179,7 @@ export default defineComponent({
   components: {
     EmptyOptionSelect,
     InvoceTable,
+    OrganizationTransactionField,
     PaymentsTable
   },
 
@@ -208,7 +187,6 @@ export default defineComponent({
     /**
      * Refs
      */
-    // const optionsOrganizations = ref([])
     const listPaymentsTable = ref(null)
     const listInvocesTable = ref(null)
     const optionsCharges = ref([])
@@ -369,22 +347,6 @@ export default defineComponent({
       }
     })
 
-    const transactionOrganizationId = computed({
-      // getter
-      get() {
-        const { transactionOrganizationId } = store.getters.getProcess
-        // return date
-        return transactionOrganizationId
-      },
-      // setter
-      set(value) {
-        store.commit('setProcess', {
-          attribute: 'transactionOrganizationId',
-          value
-        })
-      }
-    })
-
     const paymentAssignment = computed(() => {
       return store.getters.getPaymentAssignment
     })
@@ -431,22 +393,6 @@ export default defineComponent({
       const currentViews = listViews.find(list => list.name === currentRoute.name)
       setToggleSelection()
       return currentViews
-    })
-
-    const optionsOrganizations = computed({
-      // getter
-      get() {
-        const { listOrganization } = store.getters.getSearchFilter
-        return listOrganization
-      },
-      // setter
-      set(list) {
-        store.commit('updateAttributeCriteriaVallocation', {
-          attribute: 'listOrganization',
-          criteria: 'searchCriteria',
-          value: list
-        })
-      }
     })
 
     const maximumDefiniteDate = computed(() => {
@@ -540,35 +486,6 @@ export default defineComponent({
         const search = queryString.toLowerCase()
         return query.label.toLowerCase().includes(search)
       }
-    }
-
-    function remoteSearchOrganizations(query) {
-      if (!isEmptyValue(query) && query.length > 2) {
-        const result = optionsOrganizations.value.filter(findFilter(query))
-        if (isEmptyValue(result)) {
-          findOrganizations(true, query)
-        }
-      }
-    }
-
-    function findOrganizations(isFind, searchValue) {
-      if (!isFind) {
-        return
-      }
-      requestListTransactionOrganizations({
-        searchValue
-      })
-        .then(response => {
-          const { records } = response
-          optionsOrganizations.value = records.map(organizations => {
-            const { id, uuid, values } = organizations
-            return {
-              id,
-              uuid,
-              label: values.DisplayColumn
-            }
-          })
-        })
     }
 
     function handleSelectionPayments(selection, row) {
@@ -822,8 +739,6 @@ export default defineComponent({
       headersInvoice,
       optionsCharges,
       charges,
-      transactionOrganizationId,
-      optionsOrganizations,
       listInvocesTable,
       listPaymentsTable,
       description,
@@ -839,13 +754,11 @@ export default defineComponent({
       // Methods
       handleSelectionPaymentsAll,
       handleSelectionInvocesAll,
-      remoteSearchOrganizations,
       handleSelectionPayments,
       handleSelectionInvoces,
       toggleSelectionPayments,
       toggleSelectionInvoce,
       remoteSearchCharges,
-      findOrganizations,
       // toggleSelection,
       isCellInput,
       findCharges,
