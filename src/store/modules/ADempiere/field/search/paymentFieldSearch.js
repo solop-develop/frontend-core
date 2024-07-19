@@ -225,9 +225,13 @@ const fieldPayment = {
           contextColumnNames,
           isBooleanToString: true
         })
+        let contextAttributes = '{}'
+        if (!isEmptyValue(contextAttributesList)) {
+          contextAttributes = JSON.stringify(contextAttributesList)
+        }
 
         requestListPaymentsInfo({
-          contextAttributesList,
+          contextAttributes: contextAttributes,
           // References
           processParameterId,
           browseFieldId,

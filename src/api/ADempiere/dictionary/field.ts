@@ -35,9 +35,6 @@ export function requestFieldMetadata({
     case !isEmptyValue(id):
       url = `/dictionary/fields/${id}`
       break
-    case (!isEmptyValue(tableName) && isEmptyValue(columnName)):
-      url = `/dictionary/fields/${tableName}/${columnName}`
-      break
     case !isEmptyValue(columnId):
       url = `/dictionary/fields/column/${columnId}`
       break
@@ -46,6 +43,9 @@ export function requestFieldMetadata({
       break
     case !isEmptyValue(elementColumnName):
       url = `/dictionary/fields/element/column/${elementColumnName}`
+      break
+    case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
+      url = `/dictionary/fields/${tableName}/${columnName}`
       break
   }
   return request({

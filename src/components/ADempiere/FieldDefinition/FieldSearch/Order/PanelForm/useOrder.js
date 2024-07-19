@@ -226,6 +226,7 @@ export default ({
         containerUuid: uuidForm,
         contextColumnNames: fieldAttributes.reference.context_column_names,
         tableName: searchTableName.value,
+        columnName: fieldAttributes.column_name,
         uuid: fieldAttributes.uuid,
         id: fieldAttributes.id,
         // filters,
