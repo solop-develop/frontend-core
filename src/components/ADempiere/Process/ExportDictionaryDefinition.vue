@@ -160,7 +160,7 @@ import PanelFooter from '@/components/ADempiere/PanelFooter/index.vue'
 // API Request Methods
 import {
   requestRunBusinessProcess
-} from '@/api/ADempiere/businessData/runBusinessProcess.ts'
+} from '@/api/ADempiere/business-data/runBusinessProcess.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
