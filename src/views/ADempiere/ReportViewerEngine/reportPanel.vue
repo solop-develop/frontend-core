@@ -18,23 +18,20 @@
 <template>
   <div>
     <el-card>
-      <el-row :gutter="20">
-        <el-col :span="24" style="text-align: end;">
-          <el-button
-            plain
-            size="mini"
-            type="primary"
-            style="float: right; font-weight: bold"
-            @click="exportFile"
-          >
-            {{ $t('excel.export') }}
-            <el-divider direction="vertical" style="margin-right: 0px; font-weight: bold" />
-            <i class="el-icon-arrow-down" style="font-weight: bold;" />
-          </el-button>
-        </el-col>
-      </el-row>
+      <reportSearchCriteria
+        :container-uuid="reportOutput.containerUuid"
+        :report-output="reportOutput"
+      />
+      <el-dialog
+        :visible.sync="showDialog"
+        :container-uuid="containerUuid"
+        :title="$t('report.reportEnginer.optionsImport.title')"
+      >
+        <dialogShareReport />
+      </el-dialog>
       <el-table
         ref="tableReportEngine"
+        v-loading="isLoadingReport"
         :data="dataList"
         row-key="level"
         style="width: 100%"
@@ -42,7 +39,7 @@
         :row-class-name="tableRowClassName"
         :default-expand-all="false"
         :tree-props="{ children: 'children' }"
-        height="calc(100vh - 210px)"
+        height="calc(100vh - 285px)"
         :cell-style="{ padding: '0', height: '30px', border: 'none' }"
         :cell-class-name="getRowClassName"
         @row-click="handleRowClick"
@@ -86,16 +83,20 @@
 </template>
 <script>
 import store from '@/store'
-import { defineComponent, computed, ref } from '@vue/composition-api'
+import { defineComponent, computed, ref, watch, onMounted, nextTick } from '@vue/composition-api'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 import { isNumberField } from '@/utils/ADempiere/references'
 import InfoReport from './infoReport'
+import dialogShareReport from './dialogShare'
+import reportSearchCriteria from './searchCriteria'
 export default defineComponent({
   name: 'reportPanel',
   components: {
     CustomPagination,
-    InfoReport
+    InfoReport,
+    dialogShareReport,
+    reportSearchCriteria
   },
   props: {
     containerManager: {
@@ -146,6 +147,7 @@ export default defineComponent({
         })
       }
     }
+
     function displayLabel(prop, row) {
       if (isEmptyValue(row.cells)) {
         return
@@ -196,7 +198,9 @@ export default defineComponent({
         }
       })
     }
-
+    const showDialog = computed(() => {
+      return store.getters.getReportShowDialog
+    })
     function handleChangeSizePage(pageSize) {
       props.containerManager.setPageSize({
         containerUuid: props.containerUuid,
@@ -262,7 +266,32 @@ export default defineComponent({
       }
       return parentRow
     }
+    const expanded = computed(() => {
+      return store.getters.getExpandedAll
+    })
+    watch(expanded, () => {
+      expandedRowAll()
+    })
+
+    function expandedRowAll() {
+      dataList.value.forEach(function expandRecursively(row) {
+        if (row.children && row.children.length > 0) {
+          tableReportEngine.value.toggleRowExpansion(row)
+          row.children.forEach(expandRecursively)
+        }
+      })
+    }
+    onMounted(() => {
+      nextTick(() => {
+        expandedRowAll()
+      })
+    })
+
+    const isLoadingReport = computed(() => {
+      return store.getters.getReportIsLoading
+    })
     return {
+      showDialog,
       tableReportEngine,
       selectedRow,
       selectedColumn,
@@ -272,6 +301,8 @@ export default defineComponent({
       recordData,
       currentPageSize,
       currentPageNumber,
+      expanded,
+      isLoadingReport,
       exportFile,
       displayLabel,
       getAlignment,
@@ -281,7 +312,8 @@ export default defineComponent({
       getCellStyle,
       handleRowClick,
       getRowClassName,
-      findParent
+      findParent,
+      expandedRowAll
     }
   }
 })

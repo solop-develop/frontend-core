@@ -87,7 +87,23 @@ const report = {
     min: 'Mínimo (↓):',
     max: 'Máximo (↑):',
     variance: 'Varianza (σ²):',
-    standardDeviation: 'Desviación Estándar (σ):'
+    standardDeviation: 'Desviación Estándar (σ):',
+    share: 'Compartir/Descargar',
+    optionsImport: {
+      title: 'Opciones para Importar y Compartir',
+      format: 'Opciones del Formato',
+      actualPage: 'Página Actual',
+      fullReport: 'Todo el Reporte',
+      sendDownload: 'Enviar/Descargar',
+      download: 'Descargar',
+      send: 'Enviar',
+      copyLink: 'Copiar Link',
+      typeNotify: 'Tipo de Notificación',
+      contactsSend: 'Contactos para Enviar'
+    },
+    printFormat: 'Formato de Impresión',
+    viewReport: 'Vista del Informe',
+    Detail: 'Detalle'
   }
 }
 

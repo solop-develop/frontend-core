@@ -61,15 +61,26 @@ const initState = {
   reportsGenerated: {},
   isShowPanelConfig: {},
   pageSize: 15,
-  pageNumber: 1
+  pageNumber: 1,
+  isLoading: false,
+  showDialog: false,
+  expandedAll: false
 }
-
 const reportManager = {
   state: initState,
 
   mutations: {
     setPageSize(state, pageSize) {
       state.pageSize = pageSize
+    },
+    setShowDialog(state, showDialog) {
+      state.showDialog = showDialog
+    },
+    setExpandedAll(state, expandedAll) {
+      state.expandedAll = expandedAll
+    },
+    setReportIsLoading(state, isLoading) {
+      state.isLoading = isLoading
     },
     setPrintFormatsList(state, { reportId, printFormatList }) {
       Vue.set(state.printFormatList, reportId, printFormatList)
@@ -701,14 +712,21 @@ const reportManager = {
     getPageSize: (state) => {
       return state.pageSize
     },
+    getExpandedAll: (state) => {
+      return state.expandedAll
+    },
     getReportGenerated: (state) => (containerUuid) => {
       return state.reportsGenerated[containerUuid]
     },
-
+    getReportShowDialog: (state) => {
+      return state.showDialog
+    },
     getReportOutput: (state) => (instanceUuid) => {
       return state.reportsOutput[instanceUuid]
     },
-
+    getReportIsLoading: (state) => {
+      return state.isLoading
+    },
     getPrintFormatList: (state) => (reportId) => {
       return state.printFormatList[reportId] || []
     },
