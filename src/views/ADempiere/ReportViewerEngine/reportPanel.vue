@@ -37,7 +37,7 @@
         :row-class-name="tableRowClassName"
         :default-expand-all="false"
         :tree-props="{ children: 'children' }"
-        height="calc(100vh - 210px)"
+        height="calc(100vh - 285px)"
         :cell-style="{ padding: '0', height: '30px', border: 'none' }"
         :cell-class-name="getRowClassName"
         @row-click="handleRowClick"
