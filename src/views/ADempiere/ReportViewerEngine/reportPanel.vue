@@ -18,21 +18,16 @@
 <template>
   <div>
     <el-card>
-      <el-row :gutter="20">
-        <el-col :span="24" style="text-align: end;">
-          <el-button
-            plain
-            size="mini"
-            type="primary"
-            style="float: right; font-weight: bold"
-            @click="exportFile"
-          >
-            {{ $t('excel.export') }}
-            <el-divider direction="vertical" style="margin-right: 0px; font-weight: bold" />
-            <i class="el-icon-arrow-down" style="font-weight: bold;" />
-          </el-button>
-        </el-col>
-      </el-row>
+      <reportSearchCriteria
+        :container-uuid="reportOutput.containerUuid"
+      />
+      <el-dialog
+        :visible.sync="showDialog"
+        :container-uuid="containerUuid"
+        :title="$t('report.reportEnginer.optionsImport.title')"
+      >
+        <dialogShareReport />
+      </el-dialog>
       <el-table
         ref="tableReportEngine"
         :data="dataList"
@@ -91,11 +86,15 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 import { isNumberField } from '@/utils/ADempiere/references'
 import InfoReport from './infoReport'
+import dialogShareReport from './dialogShare'
+import reportSearchCriteria from './searchCriteria'
 export default defineComponent({
   name: 'reportPanel',
   components: {
     CustomPagination,
-    InfoReport
+    InfoReport,
+    dialogShareReport,
+    reportSearchCriteria
   },
   props: {
     containerManager: {
@@ -146,6 +145,7 @@ export default defineComponent({
         })
       }
     }
+
     function displayLabel(prop, row) {
       if (isEmptyValue(row.cells)) {
         return
@@ -196,7 +196,9 @@ export default defineComponent({
         }
       })
     }
-
+    const showDialog = computed(() => {
+      return store.getters.getReportShowDialog
+    })
     function handleChangeSizePage(pageSize) {
       props.containerManager.setPageSize({
         containerUuid: props.containerUuid,
@@ -263,6 +265,7 @@ export default defineComponent({
       return parentRow
     }
     return {
+      showDialog,
       tableReportEngine,
       selectedRow,
       selectedColumn,

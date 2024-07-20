@@ -87,7 +87,20 @@ const report = {
     min: 'Minimum (↓):',
     max: 'Maximum (↑):',
     variance: 'Variance (σ²):',
-    standardDeviation: 'Standard Deviation (σ):'
+    standardDeviation: 'Standard Deviation (σ):',
+    share: 'Share/Download',
+    optionsImport: {
+      title: 'Import and Share Options',
+      format: 'Format Options',
+      actualPage: 'Current Page',
+      fullReport: 'Full Report',
+      sendDownload: 'Send/Download',
+      download: 'Download',
+      send: 'Send',
+      copyLink: 'Copy Link',
+      typeNotify: 'Type of Notification',
+      contactsSend: 'Contacts to Send'
+    }
   }
 }
 
