@@ -101,7 +101,7 @@ const report = {
       typeNotify: 'Tipo de Notificación',
       contactsSend: 'Contactos para Enviar'
     },
-    printFormat: 'Formato de Impresion',
+    printFormat: 'Formato de Impresión',
     viewReport: 'Vista del Informe',
     Detail: 'Detalle'
   }
