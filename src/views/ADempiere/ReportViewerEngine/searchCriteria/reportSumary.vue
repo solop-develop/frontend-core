@@ -1,41 +1,44 @@
 <template>
-  <div class="select-container" style="margin-top: 0px; margin-left: 200px">
-    <label for="report-format-switch" class="select-label">{{ $t('report.summary') }}</label>
+  <div class="select-container" style="margin-top: 10px; margin-left: 50px; display: flex; align-items: center;">
+    <label for="report-format-switch" class="select-label" style="margin-right: 15px;">{{ $t('report.summary') }}</label>
     <el-switch
       id="report-format-switch"
       v-model="showChildren"
       style="font-weight: bold;"
-      @change="changeAllChildren"
+      @change="expandedAll"
     />
+    <label for="report-format-switch" class="select-label" style="margin-left: 15px;">{{ $t('report.reportEnginer.Detail') }}</label>
   </div>
 </template>
 
 <script>
 import store from '@/store'
-import { defineComponent, ref } from '@vue/composition-api'
+import { defineComponent, ref, watch } from '@vue/composition-api'
 
 export default defineComponent({
   setup() {
-    const showChildren = ref(false)
+    const showChildren = ref(store.getters.getExpandedAll)
 
-    function changeAllChildren() {
-      store.commit('setAllChildren', showChildren.value)
+    function expandedAll() {
+      store.commit('setExpandedAll', showChildren.value)
     }
+
+    watch(
+      () => store.getters.getExpandedAll,
+      (newValue) => {
+        showChildren.value = newValue
+      }
+    )
 
     return {
       showChildren,
-      changeAllChildren
+      expandedAll
     }
   }
 })
 </script>
 
 <style scoped>
-.select-container {
-  display: flex;
-  flex-direction: column;
-}
-
 .select-label {
   margin-bottom: 5px;
   font-weight: bold;

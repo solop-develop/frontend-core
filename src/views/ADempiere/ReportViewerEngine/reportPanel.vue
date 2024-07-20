@@ -20,6 +20,7 @@
     <el-card>
       <reportSearchCriteria
         :container-uuid="reportOutput.containerUuid"
+        :report-output="reportOutput"
       />
       <el-dialog
         :visible.sync="showDialog"
@@ -30,6 +31,7 @@
       </el-dialog>
       <el-table
         ref="tableReportEngine"
+        v-loading="isLoadingReport"
         :data="dataList"
         row-key="level"
         style="width: 100%"
@@ -81,7 +83,7 @@
 </template>
 <script>
 import store from '@/store'
-import { defineComponent, computed, ref } from '@vue/composition-api'
+import { defineComponent, computed, ref, watch, onMounted, nextTick } from '@vue/composition-api'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 import { isNumberField } from '@/utils/ADempiere/references'
@@ -264,6 +266,30 @@ export default defineComponent({
       }
       return parentRow
     }
+    const expanded = computed(() => {
+      return store.getters.getExpandedAll
+    })
+    watch(expanded, () => {
+      expandedRowAll()
+    })
+
+    function expandedRowAll() {
+      dataList.value.forEach(function expandRecursively(row) {
+        if (row.children && row.children.length > 0) {
+          tableReportEngine.value.toggleRowExpansion(row)
+          row.children.forEach(expandRecursively)
+        }
+      })
+    }
+    onMounted(() => {
+      nextTick(() => {
+        expandedRowAll()
+      })
+    })
+
+    const isLoadingReport = computed(() => {
+      return store.getters.getReportIsLoading
+    })
     return {
       showDialog,
       tableReportEngine,
@@ -275,6 +301,8 @@ export default defineComponent({
       recordData,
       currentPageSize,
       currentPageNumber,
+      expanded,
+      isLoadingReport,
       exportFile,
       displayLabel,
       getAlignment,
@@ -284,7 +312,8 @@ export default defineComponent({
       getCellStyle,
       handleRowClick,
       getRowClassName,
-      findParent
+      findParent,
+      expandedRowAll
     }
   }
 })

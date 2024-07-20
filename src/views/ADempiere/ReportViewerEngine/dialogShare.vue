@@ -68,7 +68,6 @@
             <el-col :span="6" style="width: 60%;">
               <p>{{ $t('report.reportEnginer.optionsImport.typeNotify') }}</p>
               <el-select
-                v-model="selectedOption"
                 @visible-change="getOptionFormat"
               >
                 <el-option
@@ -82,7 +81,6 @@
             <el-col :span="6" style="width: 30%;">
               <p>{{ $t('report.reportEnginer.optionsImport.contactsSend') }}</p>
               <el-select
-                v-model="selectedOption"
                 placeholder="Select an option"
                 @visible-change="getOptionFormat"
               >
@@ -126,7 +124,7 @@ export default defineComponent({
   props: {
     containerUuid: {
       type: String,
-      required: true
+      required: false
     }
   },
   setup(props) {

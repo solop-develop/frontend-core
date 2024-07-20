@@ -63,7 +63,8 @@ const initState = {
   pageSize: 15,
   pageNumber: 1,
   isLoading: false,
-  showDialog: false
+  showDialog: false,
+  expandedAll: false
 }
 const reportManager = {
   state: initState,
@@ -74,6 +75,9 @@ const reportManager = {
     },
     setShowDialog(state, showDialog) {
       state.showDialog = showDialog
+    },
+    setExpandedAll(state, expandedAll) {
+      state.expandedAll = expandedAll
     },
     setReportIsLoading(state, isLoading) {
       state.isLoading = isLoading
@@ -707,6 +711,9 @@ const reportManager = {
   getters: {
     getPageSize: (state) => {
       return state.pageSize
+    },
+    getExpandedAll: (state) => {
+      return state.expandedAll
     },
     getReportGenerated: (state) => (containerUuid) => {
       return state.reportsGenerated[containerUuid]

@@ -100,7 +100,10 @@ const report = {
       copyLink: 'Copiar Link',
       typeNotify: 'Tipo de Notificación',
       contactsSend: 'Contactos para Enviar'
-    }
+    },
+    printFormat: 'Formato de Impresion',
+    viewReport: 'Vista del Informe',
+    Detail: 'Detalle'
   }
 }
 

@@ -1,21 +1,21 @@
 <template>
   <el-card>
-    <el-row :gutter="24">
-      <el-col :span="6">
-        <PrintOptions :container-uuid="containerUuid" />
-      </el-col>
-      <el-col :span="6">
-        <reportView :container-uuid="containerUuid" />
+    <el-row :gutter="24" align="middle">
+      <el-col :span="14">
+        <PrintOptions
+          :container-uuid="containerUuid"
+          :report-output="reportOutput"
+        />
       </el-col>
       <el-col :span="6">
         <reportSumary />
       </el-col>
-      <el-col :span="6" style="margin-top: 15px;">
+      <el-col :span="4">
         <el-button
           plain
           size="mini"
           type="primary"
-          style="font-weight: bold; height: 40px; margin-left: 50px"
+          style="font-weight: bold; height: 40px;"
           @click="viewShowDialog"
         >
           {{ $t('report.reportEnginer.share') }}
@@ -28,18 +28,20 @@
 import store from '@/store'
 import { defineComponent } from '@vue/composition-api'
 import PrintOptions from './printFormatReport.vue'
-import reportView from './reportView.vue'
 import reportSumary from './reportSumary.vue'
 export default defineComponent({
   name: 'reportSearchCriteria',
   components: {
     PrintOptions,
-    reportView,
     reportSumary
   },
   props: {
     containerUuid: {
       type: String,
+      required: true
+    },
+    reportOutput: {
+      type: Object,
       required: true
     }
   },

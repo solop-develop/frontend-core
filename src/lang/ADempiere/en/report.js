@@ -100,7 +100,10 @@ const report = {
       copyLink: 'Copy Link',
       typeNotify: 'Type of Notification',
       contactsSend: 'Contacts to Send'
-    }
+    },
+    printFormat: 'Print Format',
+    viewReport: 'Report View',
+    Detail: 'Detail'
   }
 }
 
