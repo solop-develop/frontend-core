@@ -229,7 +229,12 @@ export default defineComponent({
     const reportAsView = computed(() => {
       const options = store.getters.getStoredActionsMenu({
         containerUuid: props.containerUuid
-      })
+      }).find(repoortOptions => repoortOptions.actionName === 'runReportAsView')
+      if (isEmptyValue(options)) {
+        return {
+          childs: []
+        }
+      }
       return options
     })
 
