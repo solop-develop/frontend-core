@@ -31,12 +31,11 @@ import { request } from '@/utils/ADempiere/request'
  * @param {google.protobuf.Struct} additional_attributes
  * @param {int32} pos_id
  */
-export function requestCreateCustomer({
+export function createCustomerRequest({
   additionalAttributes,
   addresses,
   description,
   duns,
-  id,
   name,
   naics,
   posId,
@@ -45,7 +44,7 @@ export function requestCreateCustomer({
   lastName
 }) {
   return request({
-    url: `point-of-sales/customers`,
+    url: `/point-of-sales/customers`,
     method: 'post',
     data: {
       duns,
@@ -60,11 +59,6 @@ export function requestCreateCustomer({
       additional_attributes: additionalAttributes
     }
   })
-  // .then(businessPartnerResponse => {
-  //   const { convertBusinessPartner } = require('@/utils/ADempiere/apiConverts/core.js')
-
-  //   return convertBusinessPartner(businessPartnerResponse)
-  // })
 }
 
 /**
@@ -95,7 +89,7 @@ export function requestUpdateCustomer({
   lastName
 }) {
   return request({
-    url: `point-of-sales/customers/${id}`,
+    url: `/point-of-sales/customers/${id}`,
     method: 'put',
     data: {
       id,
@@ -142,7 +136,7 @@ export function requestListCustomers({
   pageSize = 15
 }) {
   return request({
-    url: `point-of-sales/customers`,
+    url: `/point-of-sales/customers`,
     method: 'get',
     params: {
       filters,
@@ -156,6 +150,34 @@ export function requestListCustomers({
       name,
       email,
       value
+    }
+  })
+}
+
+/**
+ * Get Customers
+ */
+export function getCustomerRequest({
+  posId,
+  searchValue,
+  value,
+  name,
+  contactName,
+  eMail,
+  phone,
+  postalCode
+}) {
+  return request({
+    url: `/point-of-sales/customers/${searchValue}`,
+    method: 'get',
+    params: {
+      pos_id: posId,
+      value,
+      name,
+      contact_name: contactName,
+      e_mail: eMail,
+      phone,
+      postal_code: postalCode
     }
   })
 }
