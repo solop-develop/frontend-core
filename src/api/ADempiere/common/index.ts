@@ -20,23 +20,9 @@ import { request } from '@/utils/ADempiere/request'
 
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
-import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
 
 // Utils and Helper Methods
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
-
-/**
- * Conversion Rate
- */
-export function requestGetConversionRate() {
-  return request({
-    url: '/common/conversion-rates',
-    method: 'get'
-  })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
-}
 
 /**
  * Get System Info
@@ -83,58 +69,6 @@ export function requestGetCountryDefinition({
 }
 
 /**
- * Get Organization list from role
- * @param param0
- * @returns
- */
-export function requestOrganizationsList({
-  roleId,
-  pageToken,
-  pageSize = RECORD_ROWS_BY_LIST
-}) {
-  return request({
-    url: '/security/organizations',
-    method: 'get',
-    params: {
-      role_id: roleId,
-      page_token: pageToken,
-      page_size: pageSize
-    }
-  })
-    .then(organizationsListResponse => {
-      return {
-        nextPageToken: organizationsListResponse.next_page_token,
-        recordCount: organizationsListResponse.record_count,
-        organizationsList: organizationsListResponse.organizations.map(organization => {
-          return camelizeObjectKeys(organization)
-        })
-      }
-    })
-}
-
-/**
- * Get Warehouses of Organization
- * @param organizationId
- * @returns
- */
-export function requestWarehousesList({
-  organizationId,
-  pageToken,
-  pageSize = RECORD_ROWS_BY_LIST
-}) {
-  return request({
-    url: '/security/warehouses',
-    method: 'get',
-    params: {
-      organization_id: organizationId,
-      // Page Data
-      page_token: pageToken,
-      page_size: pageSize
-    }
-  })
-}
-
-/**
  * GET Business Partners
  */
 export function requestListBusinessPartner({
@@ -168,111 +102,4 @@ export function requestListBusinessPartner({
       page_token: pageToken
     }
   })
-}
-
-/**
- * GET Product Conversions
- */
-export function productConversions({
-  id
-}) {
-  return request({
-    url: `/common/product-conversions/${id}`,
-    method: 'get'
-  })
-    .then(responseProductConversions => {
-      return {
-        nextPageToken: responseProductConversions.next_page_token,
-        recordCount: responseProductConversions.record_count,
-        businessPartnersList: responseProductConversions.product_conversion.map(list => {
-          return camelizeObjectKeys(list)
-        })
-      }
-    })
-}
-
-/**
- * GET Business Partne
- */
-export function businessPartner({
-  searchValue
-}) {
-  return request({
-    url: `/core-functionality/business-partners`,
-    method: 'get',
-    params: {
-      search_value: searchValue
-    }
-  })
-    .then(businessPartnerResponse => {
-      return {
-        nextPageToken: businessPartnerResponse.next_page_token,
-        recordCount: businessPartnerResponse.record_count,
-        businessPartnersList: businessPartnerResponse.business_partners.map(list => {
-          return camelizeObjectKeys(list)
-        })
-      }
-    })
-}
-
-/**
- * POST Business Partner
- */
-export function requestCreateBusinessPartner({
-  value,
-  taxId,
-  duns,
-  naics,
-  name,
-  name2,
-  description,
-  contactName,
-  eMail,
-  phone,
-  businessPartnerGroupUuid,
-  // Location
-  address1,
-  address2,
-  address3,
-  address4,
-  cityUuid,
-  cityName,
-  postalCode,
-  regionUuid,
-  regionName,
-  countryUuid,
-  posUuid
-}) {
-  return request({
-    url: '/core-functionality/create-business-partner',
-    method: 'post',
-    data: {
-      value,
-      tax_id: taxId,
-      duns,
-      naics,
-      name,
-      last_name: name2,
-      description,
-      contact_name: contactName,
-      e_mail: eMail,
-      phone,
-      business_partner_group_uid: businessPartnerGroupUuid,
-      // Location
-      address1,
-      address2,
-      address3,
-      address4,
-      city_uuid: cityUuid,
-      city_name: cityName,
-      postal_code: postalCode,
-      region_uuid: regionUuid,
-      region_name: regionName,
-      country_uuid: countryUuid,
-      pos_uuid: posUuid
-    }
-  })
-    .then(businessPartnerResponse => {
-      return camelizeObjectKeys(businessPartnerResponse)
-    })
 }
