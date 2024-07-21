@@ -21,65 +21,6 @@ import { request } from '@/utils/ADempiere/request'
 
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
-import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
-
-// Get Organization list from role
-export function requestOrganizationsList({
-  roleUuid,
-  roleId,
-  pageToken,
-  pageSize = RECORD_ROWS_BY_LIST
-}) {
-  return request({
-    url: '/security/organizations',
-    method: 'get',
-    params: {
-      role_id: roleId,
-      role_uuid: roleUuid,
-      // Page Data
-      page_token: pageToken,
-      page_size: pageSize
-    }
-  })
-    .then(organizationsListResponse => {
-      const { convertOrganization } = require('@/utils/ADempiere/apiConverts/core.js')
-
-      return {
-        nextPageToken: organizationsListResponse.next_page_token,
-        recordCount: organizationsListResponse.record_count,
-        organizationsList: organizationsListResponse.records.map(organization => {
-          return convertOrganization(organization)
-        })
-      }
-    })
-}
-
-// Get Warehouses of Organization
-export function requestWarehousesList({
-  organizationUuid,
-  organizationId,
-  pageToken,
-  pageSize = RECORD_ROWS_BY_LIST
-}) {
-  return request({
-    url: '/security/warehouses',
-    method: 'get',
-    params: {
-      organization_id: organizationId,
-      organization_uuid: organizationUuid,
-      // Page Data
-      page_token: pageToken,
-      page_size: pageSize
-    }
-  })
-    .then(warehousesListResponse => {
-      return {
-        nextPageToken: warehousesListResponse.next_page_token,
-        recordCount: warehousesListResponse.record_count,
-        warehousesList: warehousesListResponse.records
-      }
-    })
-}
 
 /**
  * Get Country definition from server using id or uuid for record
@@ -121,67 +62,6 @@ export function requestLanguagesList({
   })
 }
 
-export function requestCreateBusinessPartner({
-  value,
-  taxId,
-  duns,
-  naics,
-  name,
-  name2,
-  description,
-  contactName,
-  eMail,
-  phone,
-  businessPartnerGroupUuid,
-  // Location
-  address1,
-  address2,
-  address3,
-  address4,
-  cityUuid,
-  cityName,
-  postalCode,
-  regionUuid,
-  regionName,
-  countryUuid,
-  posUuid
-}) {
-  return request({
-    url: '/core-functionality/create-business-partner',
-    method: 'post',
-    data: {
-      value,
-      tax_id: taxId,
-      duns,
-      naics,
-      name,
-      last_name: name2,
-      description,
-      contact_name: contactName,
-      e_mail: eMail,
-      phone,
-      business_partner_group_uid: businessPartnerGroupUuid,
-      // Location
-      address1,
-      address2,
-      address3,
-      address4,
-      city_uuid: cityUuid,
-      city_name: cityName,
-      postal_code: postalCode,
-      region_uuid: regionUuid,
-      region_name: regionName,
-      country_uuid: countryUuid,
-      pos_uuid: posUuid
-    }
-  })
-    .then(businessPartnerResponse => {
-      const { convertBusinessPartner } = require('@/utils/ADempiere/apiConverts/core.js')
-
-      return convertBusinessPartner(businessPartnerResponse)
-    })
-}
-
 export function requestGetBusinessPartner({
   posUuid,
   searchValue
@@ -201,83 +81,6 @@ export function requestGetBusinessPartner({
     })
 }
 
-export function requestListBusinessPartner({
-  posUuid,
-  searchValue,
-  value,
-  name,
-  contactName,
-  eMail,
-  postalCode,
-  phone,
-  // Query
-  // criteria,
-  pageSize = ROWS_OF_RECORDS_BY_PAGE,
-  pageToken
-}) {
-  return request({
-    url: '/core-functionality/business-partners',
-    method: 'get',
-    params: {
-      pos_uuid: posUuid,
-      search_value: searchValue,
-      value,
-      name,
-      contact_name: contactName,
-      e_mail: eMail,
-      phone,
-      // Location
-      postal_code: postalCode,
-      page_size: pageSize,
-      page_token: pageToken
-    }
-  })
-    .then(businessPartnerResponse => {
-      const { convertBusinessPartner } = require('@/utils/ADempiere/apiConverts/core.js')
-
-      return {
-        nextPageToken: businessPartnerResponse.next_page_token,
-        recordCount: businessPartnerResponse.record_count,
-        businessPartnersList: businessPartnerResponse.records.map(businessPartner => {
-          return convertBusinessPartner(businessPartner)
-        })
-      }
-    })
-}
-
-/**
- * Get currency rate
- * @param {string} conversionTypeUuid
- * @param {string} currencyFromUuid
- * @param {string} currencyToUuid
- * @param {date}   conversionDate
- * @returns {promise}
- */
-export function requestGetConversionRate({
-  posUuid,
-  conversionTypeUuid,
-  currencyFromUuid,
-  currencyToUuid,
-  conversionDate
-}) {
-  return request({
-    url: '/core-functionality/conversion-rate',
-    method: 'get',
-    params: {
-      pos_uuid: posUuid,
-      conversion_type_uuid: conversionTypeUuid,
-      currency_from_uuid: currencyFromUuid,
-      currency_to_uuid: currencyToUuid,
-      conversion_date: conversionDate
-    }
-  })
-    .then(conversionRateResponse => {
-      const { convertConversionRate } = require('@/utils/ADempiere/apiConverts/core.js')
-
-      return convertConversionRate(conversionRateResponse)
-    })
-}
-
 /**
  * Get System Info
  */
@@ -292,4 +95,41 @@ export function systemInfo() {
     .catch(error => {
       console.info(error)
     })
+}
+
+/**
+ * Get Currency Rate
+ * @param {int32} conversion_type_id
+ * @param {int32} currency_from_id
+ * @param {int32} currency_to_id
+ * @param {google.protobuf.Timestamp} conversion_date
+ */
+export function getConversionRateRequest({
+  conversionTypeId,
+  currencyFromId,
+  currencyToId,
+  conversionDate
+}) {
+  return request({
+    url: '/core-functionality/conversion-rates',
+    method: 'get',
+    params: {
+      conversion_type_id: conversionTypeId,
+      currency_from_id: currencyFromId,
+      currency_to_id: currencyToId,
+      conversion_date: conversionDate
+    }
+  })
+}
+
+/**
+ * List Product Conversion UOM
+ */
+export function listProductConversionsRequest({
+  id
+}) {
+  return request({
+    url: `core-functionality/product-conversions/${id}`,
+    method: 'get'
+  })
 }

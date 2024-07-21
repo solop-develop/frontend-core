@@ -19,6 +19,9 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
+// Constants
+import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
+
 // Utils and Helper Methods
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 import { getLanguage } from '@/lang/index'
@@ -198,3 +201,54 @@ export function requestLogout() {
   })
 }
 
+/**
+ * Get Organizations list by Role
+ * @param param0
+ * @returns
+ */
+export function organizationsListRequest({
+  roleId,
+  pageToken,
+  pageSize = RECORD_ROWS_BY_LIST
+}) {
+  return request({
+    url: '/security/organizations',
+    method: 'get',
+    params: {
+      role_id: roleId,
+      page_token: pageToken,
+      page_size: pageSize
+    }
+  })
+    .then(organizationsListResponse => {
+      return {
+        nextPageToken: organizationsListResponse.next_page_token,
+        recordCount: organizationsListResponse.record_count,
+        organizationsList: organizationsListResponse.organizations.map(organization => {
+          return camelizeObjectKeys(organization)
+        })
+      }
+    })
+}
+
+/**
+ * Get Warehouses by Organization
+ * @param organizationId
+ * @returns
+ */
+export function warehousesListRequest({
+  organizationId,
+  pageToken,
+  pageSize = RECORD_ROWS_BY_LIST
+}) {
+  return request({
+    url: '/security/warehouses',
+    method: 'get',
+    params: {
+      organization_id: organizationId,
+      // Page Data
+      page_token: pageToken,
+      page_size: pageSize
+    }
+  })
+}

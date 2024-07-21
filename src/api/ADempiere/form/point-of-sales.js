@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -19,7 +19,9 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 import { config } from '@/utils/ADempiere/config'
-import { isEmptyValue } from '@/utils/ADempiere'
+
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 // Constants
@@ -31,7 +33,6 @@ import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
  * @author elsiosanchez <elsiosanches@gmail.com>
  */
 export { getProductPrice as findProduct } from '@/api/ADempiere/form/price-checking.js'
-export { requestGetConversionRate } from '@/api/ADempiere/common/index.ts'
 
 // List Point of sales
 export function getPointOfSales({
@@ -1602,23 +1603,6 @@ export function listStocks({
       pos_uuid: posUuid,
       value,
       sku
-    }
-  })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
-}
-
-export function listUom({
-  posUuid,
-  productId
-}) {
-  return request({
-    url: 'common/list-product-conversion',
-    method: 'get',
-    params: {
-      pos_uuid: posUuid,
-      product_id: productId
     }
   })
     .then(response => {

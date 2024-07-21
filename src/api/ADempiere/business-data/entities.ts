@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 201-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -139,32 +139,3 @@ export function requestDeleteEntities({
     return response
   })
 }
-
-// /**
-//  * Rollback entity (Create, Update, Delete)
-//  * @param {string} tableName
-//  * @param {number} recordId
-//  * @param {string} eventType
-//  */
-// export function rollbackEntity({
-//   tableName,
-//   recordId,
-//   recordUuid,
-//   eventType
-// }) {
-//   return request({
-//     url: '/common/api/rollback-entity',
-//     method: 'post',
-//     data: {
-//       table_name: tableName,
-//       id: recordId,
-//       uuid: recordUuid,
-//       event_type: eventType
-//     }
-//   })
-//     .then(entityResponse => {
-//       const { convertEntity } = require('@/utils/ADempiere/apiConverts/persistence.js')
-
-//       return convertEntity(entityResponse)
-//     })
-// }
