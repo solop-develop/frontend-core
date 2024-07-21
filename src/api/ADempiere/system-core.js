@@ -62,25 +62,6 @@ export function requestLanguagesList({
   })
 }
 
-export function requestGetBusinessPartner({
-  posUuid,
-  searchValue
-}) {
-  return request({
-    url: '/core-functionality/business-partner',
-    method: 'get',
-    params: {
-      pos_uuid: posUuid,
-      search_value: searchValue
-    }
-  })
-    .then(businessPartnerResponse => {
-      const { convertBusinessPartner } = require('@/utils/ADempiere/apiConverts/core.js')
-
-      return convertBusinessPartner(businessPartnerResponse)
-    })
-}
-
 /**
  * Get System Info
  */

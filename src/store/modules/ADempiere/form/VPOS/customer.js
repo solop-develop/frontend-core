@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -21,7 +21,7 @@ import {
   updateOrder as changeCustomerOrder
 } from '@/api/ADempiere/form/VPOS'
 import {
-  requestCreateCustomer,
+  createCustomerRequest,
   requestUpdateCustomer,
   requestListCustomers
 } from '@/api/ADempiere/form/VPOS/customer'
@@ -450,7 +450,7 @@ export default {
         const lastName = getters.getAttributeFieldCustomer({
           attribute: 'name2'
         })
-        requestCreateCustomer({
+        createCustomerRequest({
           additionalAttributes,
           addresses,
           name,
