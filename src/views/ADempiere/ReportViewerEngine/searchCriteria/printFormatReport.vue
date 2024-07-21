@@ -36,7 +36,6 @@
 <script>
 import store from '@/store'
 import lang from '@/lang'
-import router from '@/router'
 
 import { defineComponent, computed, ref, watch } from '@vue/composition-api'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -129,23 +128,15 @@ export default defineComponent({
           summary: description,
           type: 'info'
         })
-        store.dispatch('buildReport', {
+        store.dispatch('generateReportViwer', {
           containerUuid: props.containerUuid || root.$route.params.processUuid,
-          instanceUuid: root.$route.params.instanceUuid,
           isSummary: true,
-          tableName: tableName.value,
           parametersList: reportOutputParams,
-          printFormatId: reportAsPrintFormatValue.value
+          printFormatId: reportAsPrintFormatValue.value,
+          reportId: reportDefinition.id,
+          isView: true
         })
           .then(response => {
-            store.dispatch('tagsView/delCachedView', findTagViwer.value).then(() => {
-              const { fullPath } = findTagViwer.value
-              this.$nextTick(() => {
-                router.replace({
-                  path: '/redirect' + fullPath
-                })
-              })
-            })
             showNotification({
               title: lang.t('notifications.succesful'),
               message: name,

@@ -7,22 +7,14 @@
             <p>{{ $t('report.reportEnginer.optionsImport.format') }}</p>
           </template>
           <el-row :gutter="12">
-            <el-col :span="6" style="width: 50%; text-align: center;">
-              <el-checkbox
-                :value="checkedItem === 0"
-                :label="$t('report.reportEnginer.optionsImport.actualPage')"
-                label-position="right"
+            <el-col style="width: 100%; text-align: center;">
+              <el-switch
+                v-model="checkedItem"
+                :active-value="1"
+                :inactive-value="0"
+                :active-text="$t('report.reportEnginer.optionsImport.fullReport')"
+                :inactive-text="$t('report.reportEnginer.optionsImport.actualPage')"
                 style="font-size: 18px;"
-                @change="setCheckedItem(0)"
-              />
-            </el-col>
-            <el-col :span="6" style="width: 30%; text-align: center;">
-              <el-checkbox
-                :value="checkedItem === 1"
-                :label="$t('report.reportEnginer.optionsImport.fullReport')"
-                label-position="right"
-                style="font-size: 18px;"
-                @change="setCheckedItem(1)"
               />
             </el-col>
           </el-row>

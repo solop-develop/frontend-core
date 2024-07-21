@@ -39,7 +39,8 @@
         :row-class-name="tableRowClassName"
         :default-expand-all="false"
         :tree-props="{ children: 'children' }"
-        height="calc(100vh - 285px)"
+        height="calc(100vh - 265px)"
+        border
         :cell-style="{ padding: '0', height: '30px', border: 'none' }"
         :cell-class-name="getRowClassName"
         @row-click="handleRowClick"
@@ -49,7 +50,7 @@
           :key="key"
           :column-key="fieldAttributes.code"
           :align="getAlignment(fieldAttributes.display_type)"
-          :min-width="'280'"
+          :width="widthColumn(fieldAttributes.display_type)"
         >
           <template slot="header">
             {{ fieldAttributes.title }}
@@ -86,7 +87,7 @@ import store from '@/store'
 import { defineComponent, computed, ref, watch, onMounted, nextTick } from '@vue/composition-api'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
-import { isNumberField } from '@/utils/ADempiere/references'
+import { isNumberField, isDateField, isCurrencyField2, isBooleanField, isDecimalField } from '@/utils/ADempiere/references'
 import InfoReport from './infoReport'
 import dialogShareReport from './dialogShare'
 import reportSearchCriteria from './searchCriteria'
@@ -283,13 +284,27 @@ export default defineComponent({
     }
     onMounted(() => {
       nextTick(() => {
-        expandedRowAll()
+        if (!isLoadingReport.value) {
+          expandedRowAll()
+        }
       })
     })
 
     const isLoadingReport = computed(() => {
       return store.getters.getReportIsLoading
     })
+    function widthColumn(data) {
+      if (
+        isNumberField(data) ||
+        isDateField(data) ||
+        isCurrencyField2(data) ||
+        isBooleanField(data) ||
+        isDecimalField(data)
+      ) {
+        return '200'
+      }
+      return '360'
+    }
     return {
       showDialog,
       tableReportEngine,
@@ -303,6 +318,7 @@ export default defineComponent({
       currentPageNumber,
       expanded,
       isLoadingReport,
+      widthColumn,
       exportFile,
       displayLabel,
       getAlignment,
