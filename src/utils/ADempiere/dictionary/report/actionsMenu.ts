@@ -68,7 +68,7 @@ export const runReportAsPrintFormat = {
   name: language.t('actionMenu.printFormats'),
   description: language.t('actionMenu.generateReportWithPrintFormat'),
   enabled: ({ containerId: reportId }) => {
-    const printFormatsList = store.getters.getPrintFormatList(reportId)
+    const printFormatsList = store.getters.getPrintFormatsList(reportId)
     return !isEmptyValue(printFormatsList)
   },
   isSvgIcon: false,
