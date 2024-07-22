@@ -617,8 +617,7 @@ const reportManager = {
       isSummary,
       // window
       tableName,
-      recordId,
-      isView
+      recordId
     }) {
       return new Promise(resolve => {
         generateReport({
@@ -641,21 +640,19 @@ const reportManager = {
               instance_id,
               report_view_id
             } = reportResponse
-            if (!isView) {
-              router.push({
-                path: `report-viewer-engine/${id}/${instance_id}/${report_view_id}`,
-                name: 'Report Viewer Engine',
-                params: {
-                  reportId: id,
-                  instanceUuid: instance_id,
-                  fileName: name,
-                  reportUuid,
-                  // menuParentUuid,
-                  name: name + instance_id,
-                  tableName
-                }
-              }, () => {})
-            }
+            router.push({
+              path: `report-viewer-engine/${id}/${instance_id}/${report_view_id}`,
+              name: 'Report Viewer Engine',
+              params: {
+                reportId: id,
+                instanceUuid: instance_id,
+                fileName: name,
+                reportUuid,
+                // menuParentUuid,
+                name: name + instance_id,
+                tableName
+              }
+            }, () => {})
             commit('setPageSize', pageSize)
             commit('setReportOutput', {
               ...reportResponse,

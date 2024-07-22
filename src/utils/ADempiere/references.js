@@ -620,7 +620,3 @@ export function isDateField(displayType) {
 export function isBooleanField(displayType) {
   return displayType === YES_NO.id
 }
-
-export function isCurrencyField2(displayType) {
-  return displayType === TABLE_DIRECT.id
-}
