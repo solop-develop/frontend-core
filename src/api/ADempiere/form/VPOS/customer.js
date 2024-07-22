@@ -181,3 +181,47 @@ export function getCustomerRequest({
     }
   })
 }
+
+/**
+ * List Bank Accounts
+ */
+export function listCustomerBankAccountsRequest({
+  posId,
+  customerId,
+  bankId
+}) {
+  return request({
+    url: `point-of-sales/${posId}/customers/${customerId}/bank-accounts`,
+    method: 'get',
+    params: {
+      page_size: 100,
+      bank_id: bankId
+    }
+  })
+}
+
+/**
+ * Create Customer Account
+ */
+export function createCustomerBankAccount({
+  posId,
+  customerId,
+  accountNo,
+  driverLicense,
+  bankId,
+  bankAccountType = 'C',
+  isAch = true
+}) {
+  return request({
+    url: `point-of-sales/${posId}/customers/${customerId}/bank-accounts`,
+    method: 'post',
+    data: {
+      account_no: accountNo,
+      driver_license: driverLicense,
+      bank_id: bankId,
+      bank_account_type: bankAccountType,
+      social_security_number: driverLicense,
+      is_ach: isAch
+    }
+  })
+}
