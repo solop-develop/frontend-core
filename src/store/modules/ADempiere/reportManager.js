@@ -64,7 +64,7 @@ const initState = {
   pageNumber: 1,
   isLoading: false,
   showDialog: false,
-  expandedAll: false
+  expandedAll: true
 }
 const reportManager = {
   state: initState,
@@ -617,7 +617,8 @@ const reportManager = {
       isSummary,
       // window
       tableName,
-      recordId
+      recordId,
+      isView
     }) {
       return new Promise(resolve => {
         generateReport({
@@ -635,30 +636,32 @@ const reportManager = {
         })
           .then(reportResponse => {
             const {
-              id,
+              // id,
               name,
               instance_id,
               report_view_id
             } = reportResponse
-            router.push({
-              path: `report-viewer-engine/${id}/${instance_id}/${report_view_id}`,
-              name: 'Report Viewer Engine',
-              params: {
-                reportId: id,
-                instanceUuid: instance_id,
-                fileName: name,
-                reportUuid,
-                // menuParentUuid,
-                name: name + instance_id,
-                tableName
-              }
-            }, () => {})
+            if (!isView) {
+              router.push({
+                path: `report-viewer-engine/${reportId}/${instance_id}/${report_view_id}`,
+                name: 'Report Viewer Engine',
+                params: {
+                  reportId,
+                  instanceUuid: instance_id,
+                  fileName: name,
+                  reportUuid,
+                  // menuParentUuid,
+                  name: name + instance_id,
+                  tableName
+                }
+              }, () => {})
+            }
             commit('setPageSize', pageSize)
             commit('setReportOutput', {
               ...reportResponse,
               containerUuid,
               rowCells: reportResponse.rows,
-              instanceUuid: id
+              instanceUuid: reportId
             })
             resolve(reportResponse)
           })

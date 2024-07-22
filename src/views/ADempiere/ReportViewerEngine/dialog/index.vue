@@ -6,7 +6,7 @@
           <template #header>
             <p>{{ $t('report.reportEnginer.optionsImport.format') }}</p>
           </template>
-          <el-row :gutter="12">
+          <el-row :gutter="12" style="height: 30px;">
             <el-col style="width: 100%; text-align: center;">
               <el-switch
                 v-model="checkedItem"
@@ -21,7 +21,7 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-row :gutter="12" style="margin-top: 20px;">
+    <el-row :gutter="12" style="margin-top: 20px; height: 50px">
       <el-col :span="24">
         <el-card>
           <template #header>
@@ -68,30 +68,44 @@
             </el-col>
           </el-row>
           <el-row v-if="checkedItemGeneral === 1" :gutter="12" style="margin-top: 25px; display: flex; justify-content: center;">
-            <el-col :span="6" style="width: 60%;">
-              <p>{{ $t('report.reportEnginer.optionsImport.typeNotify') }}</p>
-              <el-select @visible-change="getOptionFormat">
-                <el-option
-                  v-for="(item, key) in optionTypeFormat.childs"
-                  :key="key"
-                  :label="item.name"
-                  :value="item.type"
-                />
-              </el-select>
-            </el-col>
-            <el-col :span="6" style="width: 30%;">
-              <p>{{ $t('report.reportEnginer.optionsImport.contactsSend') }}</p>
-              <el-select
-                placeholder="Select an option"
-                @visible-change="getOptionFormat"
-              >
-                <el-option
-                  v-for="(item, key) in optionTypeFormat.childs"
-                  :key="key"
-                  :label="item.name"
-                  :value="item.type"
-                />
-              </el-select>
+            <el-col :span="18">
+              <el-form>
+                <el-row :gutter="12">
+                  <el-col :span="12">
+                    <el-form-item>
+                      <template slot="label">
+                        {{ $t('report.reportEnginer.optionsImport.typeNotify') }}
+                      </template>
+                      <el-select @visible-change="getOptionFormat">
+                        <el-option
+                          v-for="(item, key) in optionTypeFormat.childs"
+                          :key="key"
+                          :label="item.name"
+                          :value="item.type"
+                        />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item>
+                      <template slot="label">
+                        {{ $t('report.reportEnginer.optionsImport.contactsSend') }}
+                      </template>
+                      <el-select
+                        placeholder="Select an option"
+                        @visible-change="getOptionFormat"
+                      >
+                        <el-option
+                          v-for="(item, key) in optionTypeFormat.childs"
+                          :key="key"
+                          :label="item.name"
+                          :value="item.type"
+                        />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-form>
             </el-col>
           </el-row>
           <el-row v-if="checkedItemGeneral === 3" :gutter="12" style="margin-top: 50px; text-align: center;">
@@ -141,7 +155,7 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-row :gutter="12" style="margin-top: 20px;">
+    <el-row :gutter="12" style="margin-top: 70px;">
       <el-button
         class="button-base-icon"
         icon="el-icon-check"
