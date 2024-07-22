@@ -59,8 +59,9 @@
       fit
       :max-height="300"
       size="mini"
+      :row-class-name="tableRowClassName"
       @current-change="handleCurrentChange"
-      @row-dblclick="changeRecord"
+      @row-dblclick="changeCurrentRecord"
     >
       <p slot="empty" style="width: 100%;">
         {{ $t('businessPartner.emptyBusinessPartner') }}
@@ -140,7 +141,7 @@
             type="primary"
             class="button-base-icon"
             icon="el-icon-check"
-            @click="changeRecord()"
+            @click="changeCurrentRecord()"
           />
         </samp>
       </el-col>
@@ -149,6 +150,7 @@
 </template>
 
 <script>
+import lang from '@/lang'
 import store from '@/store'
 
 // Constants
@@ -166,6 +168,8 @@ import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn
 // Utils and Helper Methods
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
 import { containerManager as containerManagerForm } from '@/utils/ADempiere/dictionary/form'
+import { showMessage } from '@/utils/ADempiere/notification'
+import { tableRowClassName } from '@/utils/ADempiere/dictionary/field/search/index.ts'
 
 /**
  * TODO: Disable select inactive records.
@@ -338,8 +342,12 @@ export default {
   },
 
   methods: {
-    handleCurrentChange(row) {
-      this.currentRow = row
+    tableRowClassName,
+    handleCurrentChange(newCurrentRow, oldCurrentRow) {
+      if (newCurrentRow.is_active === false || newCurrentRow.IsActive === false) {
+        return
+      }
+      this.currentRow = newCurrentRow
     },
     keyAction(event) {
       switch (event.srcKey) {
@@ -356,9 +364,20 @@ export default {
           break
       }
     },
-    changeRecord() {
-      if (!isEmptyValue(this.currentRow)) {
-        this.setValues(this.currentRow)
+    changeCurrentRecord(row, column, event) {
+      let recordRow = row
+      if (isEmptyValue(recordRow)) {
+        recordRow = this.currentRow
+      }
+      if (recordRow.is_active === false || recordRow.IsActive === false) {
+        showMessage({
+          type: 'warning',
+          message: lang.t('field.inactiveRecordNoSelect')
+        })
+        return
+      }
+      if (!isEmptyValue(recordRow)) {
+        this.setValues(recordRow)
         this.closeList()
       }
     },

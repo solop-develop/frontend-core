@@ -28,8 +28,9 @@
       :data="recordsList"
       :max-height="300"
       size="mini"
+      :row-class-name="tableRowClassName"
       @current-change="handleCurrentChange"
-      @row-dblclick="changeBusinessPartner"
+      @row-dblclick="changeCurrentRecord"
     >
       <p slot="empty" style="width: 100%;">
         {{ $t('field.businessPartner.emptyBusinessPartner') }}
@@ -109,6 +110,7 @@ import {
   defineComponent, computed, nextTick, onMounted, ref, watch
 } from '@vue/composition-api'
 
+import lang from '@/lang'
 import store from '@/store'
 
 // Constants
@@ -123,6 +125,8 @@ import useBusinessPartner from './useBusinessPartner'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { showMessage } from '@/utils/ADempiere/notification'
+import { tableRowClassName } from '@/utils/ADempiere/dictionary/field/search/index.ts'
 
 export default defineComponent({
   name: 'TableRecords',
@@ -177,12 +181,22 @@ export default defineComponent({
       })
     })
 
-    function handleCurrentChange(recordRow) {
-      currentRow.value = recordRow
+    function handleCurrentChange(newCurrentRow, oldCurrentRow) {
+      if (newCurrentRow.is_active === false || newCurrentRow.IsActive === false) {
+        return
+      }
+      currentRow.value = newCurrentRow
     }
 
-    function changeBusinessPartner() {
-      const recordRow = currentRow.value
+    function changeCurrentRecord(row, column, event) {
+      const recordRow = row
+      if (recordRow.is_active === false || recordRow.IsActive === false) {
+        showMessage({
+          type: 'warning',
+          message: lang.t('field.inactiveRecordNoSelect')
+        })
+        return
+      }
       if (!isEmptyValue(recordRow)) {
         setValues(recordRow)
         closeList()
@@ -215,7 +229,8 @@ export default defineComponent({
       recordsList,
       //
       handleCurrentChange,
-      changeBusinessPartner
+      changeCurrentRecord,
+      tableRowClassName
     }
   }
 })
