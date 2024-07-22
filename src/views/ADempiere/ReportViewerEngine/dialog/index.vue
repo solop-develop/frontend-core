@@ -109,7 +109,7 @@
             </el-col>
           </el-row>
           <el-row v-if="checkedItemGeneral === 3" :gutter="12" style="margin-top: 50px; text-align: center;">
-            <p style="width: 630px; margin: 0 auto; font-size: 14px; text-align: center;">
+            <p class="infoLink" style="width: 630px; margin: 0 auto; font-size: 14px; text-align: center;">
               {{ $t('component.attachment.share.description') }}
             </p>
             <p style="text-align: center;">
@@ -269,5 +269,10 @@ export default defineComponent({
 <style>
 .el-card__header {
   padding: 0px 20px !important;
+}
+@media screen and (min-width: 800px) {
+  .infoLink{
+    width: auto !important;
+  }
 }
 </style>

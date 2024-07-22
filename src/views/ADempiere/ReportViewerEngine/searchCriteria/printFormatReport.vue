@@ -1,38 +1,43 @@
 <template>
-  <div>
-    <label for="report-format-select" class="select-label">{{ $t('report.reportEnginer.printFormat') }} </label>
-    <el-select
-      id="report-format-select"
-      v-model="reportAsPrintFormatValue"
-      class="selectReportFormat"
-      :placeholder="$t('report.printFormats')"
-      @visible-change="showListOptions"
-      @change="runReport"
-    >
-      <el-option
-        v-for="(item, key) in reportOptions.childs"
-        :key="key"
-        :label="item.name"
-        :value="item.id"
-      />
-    </el-select>
-    <label for="report-format-select" style="margin-left: 50px;" class="select-label">{{ $t('report.reportEnginer.viewReport') }} </label>
-    <el-select
-      id="report-format-select"
-      v-model="reportAsPrintViewValue"
-      :placeholder="$t('route.reportViews')"
-      @visible-change="showListView"
-      @change="runReport"
-    >
-      <el-option
-        v-for="(item, key) in reportView.childs"
-        :key="key"
-        :label="item.name"
-        :value="item.id"
-      />
-    </el-select>
+  <div class="container">
+    <div class="containerPrint">
+      <label for="report-format-select" class="select-label">{{ $t('report.reportEnginer.printFormat') }}</label>
+      <el-select
+        id="report-format-select"
+        v-model="reportAsPrintFormatValue"
+        class="selectReportFormat"
+        :placeholder="$t('report.printFormats')"
+        @visible-change="showListOptions"
+        @change="runReport"
+      >
+        <el-option
+          v-for="(item, key) in reportOptions.childs"
+          :key="key"
+          :label="item.name"
+          :value="item.id"
+        />
+      </el-select>
+    </div>
+    <div class="containerPrint">
+      <label for="report-view-select" class="select-label">{{ $t('report.reportEnginer.viewReport') }}</label>
+      <el-select
+        id="report-view-select"
+        v-model="reportAsPrintViewValue"
+        :placeholder="$t('route.reportViews')"
+        @visible-change="showListView"
+        @change="runReport"
+      >
+        <el-option
+          v-for="(item, key) in reportView.childs"
+          :key="key"
+          :label="item.name"
+          :value="item.id"
+        />
+      </el-select>
+    </div>
   </div>
 </template>
+
 <script>
 import store from '@/store'
 import lang from '@/lang'
@@ -187,8 +192,37 @@ export default defineComponent({
   }
 })
 </script>
+
 <style>
   .selectReportFormat {
-    width: 300px
+    width: 300px;
   }
+@media screen and (min-width:1200px) {
+  .container {
+    display: flex;
+    align-items: center;
+  }
+
+  .containerPrint {
+    margin-right: 20px;
+  }
+
+  .select-label {
+    margin-right: 10px;
+  }
+}
+@media screen and (min-width:1050px) {
+  .container {
+    display: flex;
+    align-items: center;
+  }
+
+  .containerPrint {
+    margin-right: 20px;
+  }
+
+  .select-label {
+    margin-right: 10px;
+  }
+}
 </style>

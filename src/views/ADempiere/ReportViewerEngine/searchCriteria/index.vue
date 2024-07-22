@@ -1,21 +1,22 @@
 <template>
   <el-card>
     <el-row :gutter="24" align="middle">
-      <el-col :span="14">
+      <el-col :xs="24" :md="14">
         <PrintOptions
           :container-uuid="containerUuid"
           :report-output="reportOutput"
         />
       </el-col>
-      <el-col :span="6">
+      <el-col :xs="24" :md="6">
         <reportSumary />
       </el-col>
-      <el-col :span="4">
+      <el-col :xs="24" :md="4" class="containerButtom">
         <el-button
           plain
           size="mini"
           type="primary"
           style="font-weight: bold; height: 40px;"
+          class="buttonReport"
           @click="viewShowDialog"
         >
           {{ $t('report.reportEnginer.share') }}
@@ -55,3 +56,19 @@ export default defineComponent({
   }
 })
 </script>
+<style>
+@media screen and (min-width: 1050px) {
+  .containerButtom{
+    margin-left: -20px;
+    margin-top: 1px
+  }
+}
+
+@media screen and (min-width: 1080px) {
+  .containerButtom{
+    margin-left: -14px;
+    margin-top: 1px
+  }
+}
+
+</style>
