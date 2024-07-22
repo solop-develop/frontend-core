@@ -154,10 +154,6 @@ export default defineComponent({
           .finally(() => {
             store.commit('setReportIsLoading', false)
           })
-        store.commit('setShowPanelConfig', {
-          containerUuid: props.containerUuid,
-          value: false
-        })
       }, 500)
     }
     watch(reportAsPrintFormatValue, (newValue) => {

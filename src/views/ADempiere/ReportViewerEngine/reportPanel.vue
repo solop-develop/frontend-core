@@ -23,8 +23,11 @@
         :report-output="reportOutput"
       />
       <el-dialog
+        v-shortkey="shortsKey"
         :visible.sync="showDialog"
         :title="$t('report.reportEnginer.optionsImport.title')"
+        @shortkey.native="keyAction"
+        @close="viewShowDialog"
       >
         <dialogShareReport
           :report-output="reportOutput"
@@ -86,7 +89,7 @@
 </template>
 <script>
 import store from '@/store'
-import { defineComponent, computed, ref, watch, onMounted, nextTick } from '@vue/composition-api'
+import { defineComponent, computed, ref, watch, nextTick, onMounted } from '@vue/composition-api'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 import { isNumberField, isDateField, isBooleanField, isDecimalField } from '@/utils/ADempiere/references'
@@ -125,6 +128,17 @@ export default defineComponent({
     const selectedRow = ref(undefined)
     const selectedColumn = ref(undefined)
     const tableReportEngine = ref(undefined)
+    const shortsKey = computed(() => {
+      return {
+        close: ['esc']
+      }
+    })
+    function keyAction(event) {
+      switch (event.srcKey) {
+        case 'close':
+          viewShowDialog()
+      }
+    }
     const data = computed(() => {
       const { rowCells } = props.reportOutput
       if (isEmptyValue(rowCells)) return []
@@ -203,6 +217,9 @@ export default defineComponent({
         }
       })
     }
+    function viewShowDialog() {
+      store.commit('setShowDialog', false)
+    }
     const showDialog = computed(() => {
       return store.getters.getReportShowDialog
     })
@@ -274,28 +291,31 @@ export default defineComponent({
     const expanded = computed(() => {
       return store.getters.getExpandedAll
     })
-    watch(expanded, () => {
-      expandedRowAll()
-    })
-
     function expandedRowAll() {
       dataList.value.forEach(function expandRecursively(row) {
         if (row.children && row.children.length > 0) {
-          tableReportEngine.value.toggleRowExpansion(row)
+          tableReportEngine.value.toggleRowExpansion(row, expanded.value)
           row.children.forEach(expandRecursively)
         }
       })
     }
-    onMounted(() => {
-      nextTick(() => {
-        if (!isLoadingReport.value) {
-          expandedRowAll()
-        }
-      })
-    })
-
     const isLoadingReport = computed(() => {
       return store.getters.getReportIsLoading
+    })
+    watch(data, () => {
+      nextTick(() => {
+        expandedRowAll()
+      })
+    })
+    watch(expanded, () => {
+      nextTick(() => {
+        expandedRowAll()
+      })
+    })
+    onMounted(() => {
+      nextTick(() => {
+        expandedRowAll()
+      })
     })
     function widthColumn(data) {
       if (
@@ -304,7 +324,7 @@ export default defineComponent({
         isBooleanField(data) ||
         isDecimalField(data)
       ) {
-        return '290'
+        return '250'
       }
       return '360'
     }
@@ -323,6 +343,8 @@ export default defineComponent({
       isLoadingReport,
       data,
       columns,
+      shortsKey,
+      keyAction,
       widthColumn,
       exportFile,
       displayLabel,
@@ -334,7 +356,8 @@ export default defineComponent({
       handleRowClick,
       getRowClassName,
       findParent,
-      expandedRowAll
+      expandedRowAll,
+      viewShowDialog
     }
   }
 })
