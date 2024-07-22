@@ -27,6 +27,7 @@
         :visible.sync="showDialog"
         :title="$t('report.reportEnginer.optionsImport.title')"
         @shortkey.native="keyAction"
+        @close="viewShowDialog"
       >
         <dialogShareReport
           :report-output="reportOutput"
@@ -135,7 +136,7 @@ export default defineComponent({
     function keyAction(event) {
       switch (event.srcKey) {
         case 'close':
-          store.commit('setShowDialog', false)
+          viewShowDialog()
       }
     }
     const data = computed(() => {
@@ -215,6 +216,9 @@ export default defineComponent({
           level: index
         }
       })
+    }
+    function viewShowDialog() {
+      store.commit('setShowDialog', false)
     }
     const showDialog = computed(() => {
       return store.getters.getReportShowDialog
@@ -352,7 +356,8 @@ export default defineComponent({
       handleRowClick,
       getRowClassName,
       findParent,
-      expandedRowAll
+      expandedRowAll,
+      viewShowDialog
     }
   }
 })
