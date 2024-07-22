@@ -280,10 +280,10 @@ import router from '@/router'
 import {
   listOrders,
   listBusinessPartnersReceipt
-} from '@/api/ADempiere/form/ExpressReceipt.js'
+} from '@/api/ADempiere/form/express-receipt.js'
 
 // Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { dateTimeFormats } from '@/utils/ADempiere/formatValue/dateFormat'
 
@@ -404,7 +404,6 @@ export default defineComponent({
       store.dispatch('createReceipt', {
         id: order
       })
-      console.log({ order })
       const currentOrder = listOrder.value.find(list => list.id === order)
       store.commit('setCurrentOrdersReceipt', currentOrder)
       if (!isEmptyValue(refs.searchValue)) {
@@ -417,9 +416,9 @@ export default defineComponent({
     function querySearchAsync(queryString, callBack) {
       let results = listProdcut.value.filter(createFilter(queryString))
       if (isEmptyValue(results)) {
-        store.dispatch('findListProductReceipt', {
+        store.dispatch('listProductsReceipt', {
           searchValue: queryString,
-          receiptId: salesOrder.value
+          orderId: salesOrder.value
         })
           .then(response => {
             results = response
