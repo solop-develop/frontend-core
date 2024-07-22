@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,10 +29,10 @@ import {
   updateShipmentLineRequest,
   deleteShipmentLineRequest,
   listShipmentLinesRequest
-} from '@/api/ADempiere/form/ExpressShipment.js'
-import { isEmptyValue } from '@/utils/ADempiere'
+} from '@/api/ADempiere/form/express-shipment.js'
 
 // Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 
 const expressShipment = {
@@ -63,13 +63,13 @@ export default {
     }
   },
   actions: {
-    findListProduct({ commit }, {
+    listProductsShipment({ commit }, {
       namue,
       upc,
       searchValue,
       sku,
       value,
-      shipmentId
+      orderId
     }) {
       return new Promise(resolve => {
         listProductRequest({
@@ -78,7 +78,7 @@ export default {
           searchValue,
           sku,
           value,
-          shipmentId
+          orderId
         })
           .then(response => {
             const { records } = response
@@ -256,7 +256,7 @@ export default {
             resolve(response)
             showMessage({
               type: 'success',
-              message: lang.t('form.ExpressShipment.shipmentComplete'),
+              message: lang.t('form.expressShipment.shipmentComplete'),
               showClose: true
             })
           })

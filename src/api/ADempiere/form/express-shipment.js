@@ -69,19 +69,20 @@ export function listProductRequest({
   sku,
   value,
   pageSize,
-  shipmentId
+  pageToken,
+  orderId
 }) {
   return request({
-    url: `${config.express.shipment}/products`,
+    url: `${config.express.shipment}/orders/${orderId}/products`,
     method: 'get',
     params: {
       page_size: pageSize,
+      page_token: pageToken,
       namue,
       upc,
       sku,
       value,
-      search_value: searchValue,
-      order_id: shipmentId
+      search_value: searchValue
     }
   })
     .then(response => {

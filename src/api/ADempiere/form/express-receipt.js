@@ -70,19 +70,19 @@ export function listProductRequest({
   value,
   pageToken,
   pageSize,
-  receiptId
+  orderId
 }) {
   return request({
-    url: `${config.express.receipt}/products`,
+    url: `${config.express.receipt}/orders/${orderId}/products`,
     method: 'get',
     params: {
       page_size: pageSize,
+      page_token: pageToken,
       namue,
       upc,
       sku,
       value,
-      search_value: searchValue,
-      order_id: receiptId
+      search_value: searchValue
     }
   })
     .then(response => {

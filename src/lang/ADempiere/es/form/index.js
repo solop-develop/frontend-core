@@ -18,11 +18,11 @@
 
 import VBankStatementMatch from './VBankStatementMatch'
 import mnemonicCommand from './mnemonicCommand.js'
+import expressReceipt from './expressReceipt.js'
 import expressShipment from './expressShipment.js'
 import expressMovement from './expressMovement.js'
 import workflowActivity from './workflowActivity'
 import accountingViewer from './accountingViewer'
-import expressReceipt from './expressReceipt.js'
 import WTrialBalance from './WTrialBalance.js'
 import priceChecking from './priceChecking'
 import pointOfSales from './pointOfSales'
