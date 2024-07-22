@@ -24,10 +24,12 @@
       />
       <el-dialog
         :visible.sync="showDialog"
-        :container-uuid="containerUuid"
         :title="$t('report.reportEnginer.optionsImport.title')"
       >
-        <dialogShareReport />
+        <dialogShareReport
+          :report-output="reportOutput"
+          :container-uuid="containerUuid"
+        />
       </el-dialog>
       <el-table
         ref="tableReportEngine"
@@ -39,7 +41,8 @@
         :row-class-name="tableRowClassName"
         :default-expand-all="false"
         :tree-props="{ children: 'children' }"
-        height="calc(100vh - 285px)"
+        height="calc(100vh - 265px)"
+        border
         :cell-style="{ padding: '0', height: '30px', border: 'none' }"
         :cell-class-name="getRowClassName"
         @row-click="handleRowClick"
@@ -49,7 +52,7 @@
           :key="key"
           :column-key="fieldAttributes.code"
           :align="getAlignment(fieldAttributes.display_type)"
-          :min-width="'280'"
+          :width="widthColumn(fieldAttributes.display_type)"
         >
           <template slot="header">
             {{ fieldAttributes.title }}
@@ -86,9 +89,9 @@ import store from '@/store'
 import { defineComponent, computed, ref, watch, onMounted, nextTick } from '@vue/composition-api'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
-import { isNumberField } from '@/utils/ADempiere/references'
+import { isNumberField, isDateField, isBooleanField, isDecimalField } from '@/utils/ADempiere/references'
 import InfoReport from './infoReport'
-import dialogShareReport from './dialogShare'
+import dialogShareReport from './dialog'
 import reportSearchCriteria from './searchCriteria'
 export default defineComponent({
   name: 'reportPanel',
@@ -101,14 +104,6 @@ export default defineComponent({
   props: {
     containerManager: {
       type: Object,
-      default: () => []
-    },
-    columns: {
-      type: Array,
-      default: () => []
-    },
-    data: {
-      type: Array,
       default: () => []
     },
     instanceUuid: {
@@ -130,6 +125,16 @@ export default defineComponent({
     const selectedRow = ref(undefined)
     const selectedColumn = ref(undefined)
     const tableReportEngine = ref(undefined)
+    const data = computed(() => {
+      const { rowCells } = props.reportOutput
+      if (isEmptyValue(rowCells)) return []
+      return rowCells
+    })
+    const columns = computed(() => {
+      const { columns } = props.reportOutput
+      if (isEmptyValue(columns)) return []
+      return columns
+    })
     function handleRowClick(row, column, event) {
       if (row.children && row.children.length > 0) {
         tableReportEngine.value.toggleRowExpansion(row)
@@ -167,7 +172,7 @@ export default defineComponent({
       return 'left'
     }
     const dataList = computed(() => {
-      return props.data.map((row, rowIndex) => {
+      return data.value.map((row, rowIndex) => {
         const index = rowIndex + 1
         const newRow = {
           ...row,
@@ -283,13 +288,26 @@ export default defineComponent({
     }
     onMounted(() => {
       nextTick(() => {
-        expandedRowAll()
+        if (!isLoadingReport.value) {
+          expandedRowAll()
+        }
       })
     })
 
     const isLoadingReport = computed(() => {
       return store.getters.getReportIsLoading
     })
+    function widthColumn(data) {
+      if (
+        isNumberField(data) ||
+        isDateField(data) ||
+        isBooleanField(data) ||
+        isDecimalField(data)
+      ) {
+        return '290'
+      }
+      return '360'
+    }
     return {
       showDialog,
       tableReportEngine,
@@ -303,6 +321,9 @@ export default defineComponent({
       currentPageNumber,
       expanded,
       isLoadingReport,
+      data,
+      columns,
+      widthColumn,
       exportFile,
       displayLabel,
       getAlignment,

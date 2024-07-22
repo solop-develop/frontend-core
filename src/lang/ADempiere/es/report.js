@@ -103,7 +103,8 @@ const report = {
     },
     printFormat: 'Formato de Impresión',
     viewReport: 'Vista del Informe',
-    Detail: 'Detalle'
+    Detail: 'Ver Detallado',
+    summary: 'Ver Resumido'
   }
 }
 

@@ -43,8 +43,6 @@
             :stream="storedReportOutput.output_stream"
           /> -->
           <report-panel
-            :columns="reportColumns"
-            :data="reportRow"
             :instance-uuid="storedReportOutput.instanceUuid"
             :container-manager="containerManager"
             :report-output="storedReportOutput"
@@ -169,17 +167,6 @@ export default defineComponent({
 
     const isMobile = computed(() => {
       return store.state.app.device === 'mobile'
-    })
-
-    const reportColumns = computed(() => {
-      const { columns } = storedReportOutput.value
-      if (isEmptyValue(columns)) return []
-      return columns
-    })
-    const reportRow = computed(() => {
-      const { rowCells } = storedReportOutput.value
-      if (isEmptyValue(rowCells)) return []
-      return rowCells
     })
     const isShowPanelConfig = computed(() => {
       return store.getters.getShowPanelConfig({
@@ -334,9 +321,7 @@ export default defineComponent({
       help,
       link,
       isMobile,
-      reportRow,
       reportId,
-      reportColumns,
       storedReportOutput,
       containerManager,
       storedReportDefinition,

@@ -616,3 +616,7 @@ export const FIELDS_DATE = [
 export function isDateField(displayType) {
   return FIELDS_DATE.includes(displayType)
 }
+
+export function isBooleanField(displayType) {
+  return displayType === YES_NO.id
+}
