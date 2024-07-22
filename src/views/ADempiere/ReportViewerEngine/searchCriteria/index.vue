@@ -1,13 +1,13 @@
 <template>
   <el-card>
     <el-row :gutter="24" align="middle">
-      <el-col :xs="24" :md="14">
+      <el-col :xs="24" :md="14" class="containerPrint">
         <PrintOptions
           :container-uuid="containerUuid"
           :report-output="reportOutput"
         />
       </el-col>
-      <el-col :xs="24" :md="6">
+      <el-col :xs="24" :md="6" class="containerSumary">
         <reportSumary />
       </el-col>
       <el-col :xs="24" :md="4" class="containerButtom">
@@ -57,16 +57,25 @@ export default defineComponent({
 })
 </script>
 <style>
-@media screen and (min-width: 1050px) {
+@media screen and (min-width: 800px) {
+  .containerPrint{
+    width: 100%
+  }
+  .containerSumary {
+    margin-top: 10px;
+  }
   .containerButtom{
-    margin-left: -20px;
-    margin-top: 1px
+    margin-top: 10px
+  }
+  .containerButtom, .containerSumary{
+    display: flex;
+    justify-content: center
   }
 }
 
-@media screen and (min-width: 1080px) {
+@media screen and (min-width: 1050px) {
   .containerButtom{
-    margin-left: -14px;
+    margin-left: -20px;
     margin-top: 1px
   }
 }

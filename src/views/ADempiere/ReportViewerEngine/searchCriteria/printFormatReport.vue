@@ -197,6 +197,14 @@ export default defineComponent({
   .selectReportFormat {
     width: 300px;
   }
+@media screen and (min-width: 800px) {
+  .container {
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+    justify-content: center;
+  }
+}
 @media screen and (min-width:1200px) {
   .container {
     display: flex;
@@ -211,6 +219,7 @@ export default defineComponent({
     margin-right: 10px;
   }
 }
+
 @media screen and (min-width:1050px) {
   .container {
     display: flex;
