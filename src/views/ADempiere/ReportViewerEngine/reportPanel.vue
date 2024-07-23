@@ -49,6 +49,7 @@
         :cell-style="{ padding: '0', height: '30px', border: 'none' }"
         :cell-class-name="getRowClassName"
         @row-click="handleRowClick"
+        @cell-dblclick="showPopover = true"
       >
         <el-table-column
           v-for="(fieldAttributes, key) in columns"
@@ -61,7 +62,7 @@
             {{ fieldAttributes.title }}
           </template>
           <template slot-scope="scope">
-            <span>
+            <span :style="getCellStyle(fieldAttributes.code, scope.row)">
               {{ displayLabel(fieldAttributes.code, scope.row) }}
               <el-popover
                 v-if="selectedRow === scope.row && selectedColumn === fieldAttributes.code"
@@ -160,13 +161,11 @@ export default defineComponent({
               selectedColumn.value = column.columnKey
               selectedRow.value = row
               dataModal.value = dataCell
-              showPopover.value = true
             }
           })
         })
       }
     }
-
     function displayLabel(prop, row) {
       if (isEmptyValue(row.cells)) {
         return
@@ -200,7 +199,7 @@ export default defineComponent({
       return store.getters.getReportOutput(props.instanceUuid)
     })
     const currentPageSize = computed(() => {
-      return parseInt(store.getters.getPageSize, 10)
+      return parseInt(recordData.value.record_count, 10)
     })
     const currentPageNumber = computed(() => {
       return parseInt(recordData.value.next_page_token, 10)
@@ -223,20 +222,30 @@ export default defineComponent({
     const showDialog = computed(() => {
       return store.getters.getReportShowDialog
     })
+    const reportDefinition = store.getters.getStoredReport(props.reportOutput.containerUuid)
     function handleChangeSizePage(pageSize) {
       props.containerManager.setPageSize({
-        containerUuid: props.containerUuid,
-        reportId: props.reportOutput.id,
-        pageSize
+        containerUuid: props.reportOutput.containerUuid,
+        pageNumber: currentPageNumber.value,
+        pageSize,
+        parametersList: reportDefinition,
+        reportId: reportDefinition.id,
+        printFormatId: props.reportOutput.print_format_id,
+        reportViewId: props.reportOutput.report_view_id
       })
+      getFields()
     }
     function handleChangePage(pageNumber) {
       props.containerManager.setPageNumber({
-        parentUuid: props.parentUuid,
-        containerUuid: props.containerUuid,
+        containerUuid: props.reportOutput.containerUuid,
         pageNumber,
-        pageSize: currentPageSize.value
+        pageSize: currentPageSize.value,
+        parametersList: reportDefinition,
+        reportId: reportDefinition.id,
+        printFormatId: props.reportOutput.print_format_id,
+        reportViewId: props.reportOutput.report_view_id
       })
+      getFields()
     }
 
     function exportFile() {
@@ -314,7 +323,25 @@ export default defineComponent({
       }
       return '360'
     }
+    function getCellStyle(code, row) {
+      if (isEmptyValue(row.cells[code])) {
+        return {}
+      }
+      const { value } = row.cells[code]
+      if (!isEmptyValue(value) && value.type) {
+        if (value.type === 'decimal' && value.value < 0) {
+          return { color: 'red' }
+        }
+      }
+    }
+    function getFields() {
+      store.commit('setReportIsLoading', true)
+      setTimeout(() => {
+        store.commit('setReportIsLoading', false)
+      }, 1000)
+    }
     return {
+      getFields,
       showDialog,
       tableReportEngine,
       selectedRow,
@@ -330,6 +357,7 @@ export default defineComponent({
       data,
       columns,
       shortsKey,
+      reportDefinition,
       keyAction,
       widthColumn,
       exportFile,
@@ -342,7 +370,8 @@ export default defineComponent({
       getRowClassName,
       findParent,
       expandedRowAll,
-      viewShowDialog
+      viewShowDialog,
+      getCellStyle
     }
   }
 })
@@ -375,10 +404,6 @@ export default defineComponent({
 .el-table__row--level-[n] {
   transform: translateX(calc(var(--level-offset) * var(--level, 1)));
 }
-
-.el-table__row--level-0 {
-  font-weight: 700;
-}
 .expanded {
   border-left: 3px solid #ddd;
   height: 50%;
@@ -409,6 +434,7 @@ export default defineComponent({
     border-bottom: 1px solid #afaeae !important;
 }
 .el-table .success-row {
+  font-weight: 700;
   background: #ecf5ff;
 }
 .reportInfo .el-popover {
