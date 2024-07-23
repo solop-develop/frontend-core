@@ -80,7 +80,7 @@
         </el-form-item>
         <el-form-item
           v-if="fieldAttributes.is_range && !isEmptyValue(fieldAttributes.default_value_to)"
-          :label="$t('fieldOptions.info.defaultValue')"
+          :label="$t('fieldOptions.info.defaultValueTo')"
           class="justify-text"
         >
           <pre>{{ fieldAttributes.default_value_to }}</pre>
@@ -99,7 +99,7 @@
           :label="$t('fieldOptions.info.readOnlyLogic')"
           class="justify-text"
         >
-          <pre>{{ fieldAttributes.default_value }}</pre>
+          <pre>{{ fieldAttributes.read_only_logic }}</pre>
         </el-form-item>
 
         <el-form-item
