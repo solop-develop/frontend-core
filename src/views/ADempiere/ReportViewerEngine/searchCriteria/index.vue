@@ -71,6 +71,7 @@ export default defineComponent({
     margin-left: 25px;
   }
   .containerSumary {
+    margin-left:100px;
     width: 70%;
   }
   .containerButtom {
