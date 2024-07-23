@@ -61,7 +61,7 @@
             {{ fieldAttributes.title }}
           </template>
           <template slot-scope="scope">
-            <span :style="getCellStyle(fieldAttributes.code, scope.row)">
+            <span>
               {{ displayLabel(fieldAttributes.code, scope.row) }}
               <el-popover
                 v-if="selectedRow === scope.row && selectedColumn === fieldAttributes.code"
@@ -245,20 +245,6 @@ export default defineComponent({
         reportName: props.reportOutput.name
       })
     }
-    function getCellStyle(code, row) {
-      if (isEmptyValue(row.cells[code])) {
-        return {}
-      }
-      const { value } = row.cells[code]
-      if (!isEmptyValue(value) && value.type) {
-        if (value.type === 'decimal' && value.value < 0) {
-          return { fontSize: '10px', color: 'red' }
-        }
-        return { fontSize: '10px' }
-      }
-      return { fontSize: '14px' }
-    }
-
     function tableRowClassName({ row, rowIndex }) {
       const { children } = row
       if (!isEmptyValue(children)) {
@@ -352,7 +338,6 @@ export default defineComponent({
       tableRowClassName,
       handleChangeSizePage,
       handleChangePage,
-      getCellStyle,
       handleRowClick,
       getRowClassName,
       findParent,
