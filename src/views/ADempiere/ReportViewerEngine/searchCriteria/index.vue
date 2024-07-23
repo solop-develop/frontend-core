@@ -60,7 +60,10 @@ export default defineComponent({
 .containerReport {
   margin-bottom: 20px;
 }
-
+.containerReport .el-col {
+  vertical-align: middle;
+  display: inline-block;
+}
 @media screen and (max-width: 800px) {
   .containerSumary, .containerButtom {
     margin-top: 20px;

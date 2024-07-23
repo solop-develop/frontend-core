@@ -139,7 +139,9 @@ export default defineComponent({
           parametersList: reportOutputParams,
           printFormatId: reportAsPrintFormatValue.value,
           reportId: reportDefinition.id,
-          isView: true
+          isView: true,
+          pageSize: props.reportOutput.record_count,
+          pageToken: props.reportOutput.next_page_token
         })
           .then(response => {
             showNotification({
@@ -199,7 +201,9 @@ export default defineComponent({
   gap: 20px;
   margin: 0 auto;
 }
-
+.select-label {
+  padding-right: 1%;
+}
 @media screen and (min-width: 800px) {
   .container {
     flex-direction: row;

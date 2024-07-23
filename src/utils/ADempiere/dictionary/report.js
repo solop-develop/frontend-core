@@ -146,5 +146,49 @@ export const containerManager = {
     store.dispatch('setReportDefaultValues', {
       containerUuid
     })
+  },
+
+  setPageSize: ({
+    containerUuid,
+    pageNumber,
+    pageSize,
+    parametersList,
+    reportId,
+    printFormatId,
+    reportViewId
+  }) => {
+    store.dispatch('generateReportViwer', {
+      containerUuid,
+      isSummary: true,
+      parametersList,
+      reportId,
+      pageSize,
+      pageNumber,
+      isView: true,
+      printFormatId,
+      reportViewId
+    })
+  },
+
+  setPageNumber: ({
+    containerUuid,
+    pageNumber,
+    pageSize,
+    parametersList,
+    reportId,
+    printFormatId,
+    reportViewId
+  }) => {
+    store.dispatch('generateReportViwer', {
+      containerUuid,
+      isSummary: true,
+      parametersList,
+      reportId,
+      pageSize,
+      pageNumber,
+      isView: true,
+      printFormatId,
+      reportViewId
+    })
   }
 }

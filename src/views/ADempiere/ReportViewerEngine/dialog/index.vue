@@ -1,7 +1,29 @@
 <template>
   <div>
     <el-row :gutter="12">
-      <el-col :span="24">
+      <el-col :span="12">
+        <el-card>
+          <template #header>
+            <p>{{ $t('report.reportEnginer.printFormat') }}</p>
+          </template>
+          <el-row :gutter="12" style="height: 30px;">
+            <el-col style="width: 100%; text-align: center;">
+              <el-select
+                v-model="printFormatValue"
+                @visible-change="optionPrintFormat"
+              >
+                <el-option
+                  v-for="(item, key) in printFormat"
+                  :key="key"
+                  :label="item.name"
+                  :value="item.type"
+                />
+              </el-select>
+            </el-col>
+          </el-row>
+        </el-card>
+      </el-col>
+      <el-col :span="12">
         <el-card>
           <template #header>
             <p>{{ $t('report.reportEnginer.optionsImport.format') }}</p>
@@ -76,9 +98,12 @@
                       <template slot="label">
                         {{ $t('report.reportEnginer.optionsImport.typeNotify') }}
                       </template>
-                      <el-select @visible-change="getOptionFormat">
+                      <el-select
+                        v-model="typeNotification"
+                        @visible-change="optionPrintFormat"
+                      >
                         <el-option
-                          v-for="(item, key) in optionTypeFormat.childs"
+                          v-for="(item, key) in printFormat"
                           :key="key"
                           :label="item.name"
                           :value="item.type"
@@ -92,11 +117,11 @@
                         {{ $t('report.reportEnginer.optionsImport.contactsSend') }}
                       </template>
                       <el-select
-                        placeholder="Select an option"
-                        @visible-change="getOptionFormat"
+                        v-model="contactSend"
+                        @visible-change="optionPrintFormat"
                       >
                         <el-option
-                          v-for="(item, key) in optionTypeFormat.childs"
+                          v-for="(item, key) in printFormat"
                           :key="key"
                           :label="item.name"
                           :value="item.type"
@@ -155,7 +180,7 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-row :gutter="12" style="margin-top: 70px;">
+    <el-row :gutter="12" style="margin-top: 270px;">
       <el-button
         class="button-base-icon"
         icon="el-icon-check"
@@ -183,6 +208,7 @@ import {
 } from '@/api/ADempiere/file-management/resource-reference.ts'
 import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 import { config } from '@/utils/ADempiere/config'
+import { REPORT_EXPORT_TYPES } from '@/utils/ADempiere/constants/report'
 export default defineComponent({
   name: 'dialogShareReport',
   props: {
@@ -198,10 +224,13 @@ export default defineComponent({
   setup(props) {
     const checkedItemGeneral = ref(0)
     const checkedItem = ref(0)
-    const optionTypeFormat = ref([])
     const validTime = ref(3600)
     const linkShare = ref('')
     const isLoading = ref(false)
+    const printFormat = ref([])
+    const printFormatValue = ref('')
+    const typeNotification = ref('')
+    const contactSend = ref('')
     function setCheckedItemGeneral(check) {
       checkedItemGeneral.value = check
     }
@@ -247,20 +276,28 @@ export default defineComponent({
       link.download = props.reportOutput.name
       link.click()
     }
+    function optionPrintFormat() {
+      const xlsTypes = REPORT_EXPORT_TYPES.filter(type => type.type === 'xls')
+      printFormat.value = xlsTypes
+    }
     loadData()
     return {
-      optionTypeFormat,
       checkedItemGeneral,
       checkedItem,
       validTime,
       linkShare,
       isLoading,
+      printFormat,
+      printFormatValue,
+      typeNotification,
+      contactSend,
       handleDownload,
       getOptionFormat,
       viewShowDialog,
       setCheckedItemGeneral,
       loadData,
-      copyValue
+      copyValue,
+      optionPrintFormat
     }
   }
 })

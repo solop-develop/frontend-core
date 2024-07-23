@@ -61,7 +61,6 @@ const initState = {
   reportsGenerated: {},
   isShowPanelConfig: {},
   pageSize: 15,
-  pageNumber: 1,
   isLoading: false,
   showDialog: false,
   expandedAll: true
@@ -70,9 +69,6 @@ const reportManager = {
   state: initState,
 
   mutations: {
-    setPageSize(state, pageSize) {
-      state.pageSize = pageSize
-    },
     setShowDialog(state, showDialog) {
       state.showDialog = showDialog
     },
@@ -578,7 +574,6 @@ const reportManager = {
                 tableName
               }
             }, () => {})
-            commit('setPageSize', pageSize)
             commit('setReportOutput', {
               ...reportResponse,
               containerUuid,
@@ -656,7 +651,6 @@ const reportManager = {
                 }
               }, () => {})
             }
-            commit('setPageSize', pageSize)
             commit('setReportOutput', {
               ...reportResponse,
               containerUuid,
@@ -712,9 +706,6 @@ const reportManager = {
   },
 
   getters: {
-    getPageSize: (state) => {
-      return state.pageSize
-    },
     getExpandedAll: (state) => {
       return state.expandedAll
     },
