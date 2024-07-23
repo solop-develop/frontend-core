@@ -29,6 +29,7 @@
       :data="recordsList"
       :max-height="300"
       size="mini"
+      :row-class-name="tableRowClassName"
       @current-change="handleCurrentChange"
       @row-dblclick="changeCurrentRecord"
     >
@@ -266,6 +267,7 @@ import {
   defineComponent, computed, nextTick, onMounted, ref, watch
 } from '@vue/composition-api'
 
+import lang from '@/lang'
 import store from '@/store'
 
 // Constants
@@ -282,6 +284,8 @@ import useProduct from './useProduct'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { convertBooleanToTranslationLang } from '@/utils/ADempiere/formatValue/booleanFormat'
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
+import { showMessage } from '@/utils/ADempiere/notification'
+import { tableRowClassName } from '@/utils/ADempiere/dictionary/field/search/index.ts'
 
 export default defineComponent({
   name: 'TableRecords',
@@ -355,12 +359,21 @@ export default defineComponent({
       return !isEmptyValue(priceListVersionId) && priceListVersionId > 0
     })
 
-    function handleCurrentChange(recordRow) {
-      currentRow.value = recordRow
+    function handleCurrentChange(newCurrentRow, oldCurrentRow) {
+      if (newCurrentRow.is_active === false || newCurrentRow.IsActive === false) {
+        return
+      }
     }
 
-    function changeCurrentRecord() {
-      const recordRow = currentRow.value
+    function changeCurrentRecord(row, column, event) {
+      const recordRow = row
+      if (recordRow.is_active === false || recordRow.IsActive === false) {
+        showMessage({
+          type: 'warning',
+          message: lang.t('field.inactiveRecordNoSelect')
+        })
+        return
+      }
       if (!isEmptyValue(recordRow)) {
         setValues(recordRow)
         closeList()
@@ -409,7 +422,8 @@ export default defineComponent({
       convertBooleanToTranslationLang,
       formatQuantity,
       handleCurrentChange,
-      changeCurrentRecord
+      changeCurrentRecord,
+      tableRowClassName
     }
   }
 })

@@ -113,3 +113,10 @@ export function iconSearchFieldByTable(tableName) {
 
   return icon
 }
+
+export function tableRowClassName({ row, rowIndex }) {
+  if (row.is_active === false || row.IsActive === false) {
+    return 'disabled-record'
+  }
+  return ''
+}

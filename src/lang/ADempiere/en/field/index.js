@@ -40,6 +40,7 @@ export default {
     defaultValue: 'Default Value',
     description: 'Description'
   },
+  inactiveRecordNoSelect: 'Inactive record cannot be selected',
   product,
   productAttribute,
   warehouseLocator,

@@ -40,14 +40,16 @@
     @keyup.enter.native="getBPartnerWithEnter"
       -->
     <template slot-scope="recordRow">
-      <div class="header">
-        {{ recordRow.item.value }}
-        -
-        {{ recordRow.item.name }}
-      </div>
-      <span class="info">
-        {{ recordRow.item.uom }}
-        {{ recordRow.item.description }} ({{ recordRow.item.product_category }})
+      <span :class="{ 'disabled-record': !recordRow.item.is_active }">
+        <div class="header">
+          {{ recordRow.item.value }}
+          -
+          {{ recordRow.item.name }}
+        </div>
+        <span class="info">
+          {{ recordRow.item.uom }}
+          {{ recordRow.item.description }} ({{ recordRow.item.product_category }})
+        </span>
       </span>
     </template>
 
