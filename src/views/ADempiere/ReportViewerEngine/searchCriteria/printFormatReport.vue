@@ -192,46 +192,23 @@ export default defineComponent({
   }
 })
 </script>
-
 <style>
-  .selectReportFormat {
-    width: 300px;
-  }
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 0 auto;
+}
+
 @media screen and (min-width: 800px) {
   .container {
-    display: flex;
     flex-direction: row;
-    margin: 0 auto;
-    justify-content: center;
-  }
-}
-@media screen and (min-width:1200px) {
-  .container {
-    display: flex;
+    justify-content: space-between;
     align-items: center;
   }
 
   .containerPrint {
-    margin-right: 20px;
-  }
-
-  .select-label {
-    margin-right: 10px;
-  }
-}
-
-@media screen and (min-width:1050px) {
-  .container {
-    display: flex;
-    align-items: center;
-  }
-
-  .containerPrint {
-    margin-right: 20px;
-  }
-
-  .select-label {
-    margin-right: 10px;
+    flex: 1;
   }
 }
 </style>
