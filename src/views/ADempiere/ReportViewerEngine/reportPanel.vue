@@ -62,7 +62,7 @@
             {{ fieldAttributes.title }}
           </template>
           <template slot-scope="scope">
-            <span>
+            <span :style="getCellStyle(fieldAttributes.code, scope.row)">
               {{ displayLabel(fieldAttributes.code, scope.row) }}
               <el-popover
                 v-if="selectedRow === scope.row && selectedColumn === fieldAttributes.code"
@@ -323,7 +323,17 @@ export default defineComponent({
       }
       return '360'
     }
-
+    function getCellStyle(code, row) {
+      if (isEmptyValue(row.cells[code])) {
+        return {}
+      }
+      const { value } = row.cells[code]
+      if (!isEmptyValue(value) && value.type) {
+        if (value.type === 'decimal' && value.value < 0) {
+          return { color: 'red' }
+        }
+      }
+    }
     function getFields() {
       store.commit('setReportIsLoading', true)
       setTimeout(() => {
@@ -360,7 +370,8 @@ export default defineComponent({
       getRowClassName,
       findParent,
       expandedRowAll,
-      viewShowDialog
+      viewShowDialog,
+      getCellStyle
     }
   }
 })
