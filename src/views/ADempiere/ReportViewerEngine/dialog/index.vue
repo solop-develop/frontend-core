@@ -224,7 +224,7 @@ export default defineComponent({
       return store.getters.getContactSend
     })
     const disableButtom = computed(() => {
-      return checkedItemGeneral.value === 1 && (isEmptyValue(typeNotify.value))
+      return checkedItemGeneral.value === 1 && (isEmptyValue(typeNotify.value) || isEmptyValue(contactSend.value))
     })
     function sendLink() {
       const user_id = store.getters['user/userInfo'].id
