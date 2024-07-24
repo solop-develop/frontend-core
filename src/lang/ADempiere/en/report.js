@@ -109,7 +109,8 @@ const report = {
     download: 'Generated Download Link',
     sharedReport: 'Shared Report',
     mesajeDownload: 'Click on the Following lLnk to go to Download',
-    openLink: 'Open Link'
+    openLink: 'Open Link',
+    mesajeShear: 'Your Link has been wSuccessfully Copied to the Clipboard'
   }
 }
 
