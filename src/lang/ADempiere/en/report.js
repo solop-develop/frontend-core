@@ -108,7 +108,9 @@ const report = {
     exportFormat: 'Export Format',
     download: 'Generated Download Link',
     sharedReport: 'Shared Report',
-    mesajeDownload: 'Click on the Following lLnk to go to Download '
+    mesajeDownload: 'Click on the Following lLnk to go to Download',
+    openLink: 'Open Link',
+    mesajeShear: 'Your Link has been Successfully Copied to the Clipboard'
   }
 }
 

@@ -104,9 +104,25 @@
             </el-col>
           </el-row>
           <el-row v-if="checkedItemGeneral === 3" :gutter="12" style="margin-top: 50px; text-align: center;">
-            <copyLink
-              :report-output="reportOutput"
-            />
+            <p style="width: 630px; margin: 0 auto; font-size: 14px; text-align: center;">
+              {{ $t('component.attachment.share.description') }}
+            </p>
+            <p style="text-align: center;">
+              <b>
+                {{ $t('component.attachment.share.timeText') }}
+              </b>
+            </p>
+            <el-radio-group
+              v-model="validTime"
+              style="display: flex; justify-content: center;"
+              @change="loadData"
+            >
+              <el-radio :label="3600">1 {{ ' ' + $t('component.attachment.share.time.hour') }}</el-radio>
+              <el-radio :label="21600">6 {{ ' ' + $t('component.attachment.share.time.hours') }}</el-radio>
+              <el-radio :label="86400">1 {{ ' ' + $t('component.attachment.share.time.day') }}</el-radio>
+              <el-radio :label="259200">3 {{ ' ' + $t('component.attachment.share.time.days') }}</el-radio>
+              <el-radio :label="604800">7 {{ ' ' + $t('component.attachment.share.time.days') }}</el-radio>
+            </el-radio-group>
           </el-row>
         </el-card>
       </el-col>
@@ -138,14 +154,16 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { config } from '@/utils/ADempiere/config'
 import { REPORT_EXPORT_TYPES } from '@/utils/ADempiere/constants/report'
 import { showNotificationReport } from '@/utils/ADempiere/notification.js'
+import {
+  requestShareResources
+} from '@/api/ADempiere/file-management/resource-reference.ts'
+import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 import contactSend from './contactSend'
 import typeNotify from './typeNotify'
-import copyLink from './copyLink'
 export default defineComponent({
   name: 'dialogShareReport',
   components: {
     contactSend,
-    copyLink,
     typeNotify
   },
   props: {
@@ -164,6 +182,22 @@ export default defineComponent({
     const printFormat = ref([])
     const printFormatValue = ref('')
     const typeNotification = ref('')
+    const linkShare = ref('')
+    const isLoading = ref(false)
+    const validTime = ref(3600)
+    function loadData() {
+      isLoading.value = true
+      requestShareResources({
+        fileName: props.reportOutput.name,
+        seconds: validTime.value
+      })
+        .then(response => {
+          linkShare.value = response
+        })
+        .finally(() => {
+          isLoading.value = false
+        })
+    }
     function setCheckedItemGeneral(check) {
       checkedItemGeneral.value = check
     }
@@ -182,7 +216,7 @@ export default defineComponent({
     function sendNotify() {
       let link = 'https://www.google.com'
       let title = ''
-      let message = 'Documento procesado'
+      let message = ''
       if (!isEmptyValue(exportData.value)) {
         link = exportData.value.file_name
       }
@@ -192,6 +226,11 @@ export default defineComponent({
           title = this.$t('report.reportEnginer.sharedReport')
           message = this.$t('report.reportEnginer.mesajeDownload')
           break
+        case 3:
+          copyValue()
+          message = this.$t('report.reportEnginer.mesajeShear')
+          link = linkShare.value
+          break
         default:
           title = this.$t('report.reportEnginer.download')
           break
@@ -199,7 +238,8 @@ export default defineComponent({
       showNotificationReport({
         title,
         message,
-        link
+        link,
+        openLink: this.$t('report.reportEnginer.openLink')
       })
       store.commit('setShowDialog', false)
     }
@@ -236,6 +276,18 @@ export default defineComponent({
         attachments: exportData.file_name
       })
     }
+
+    function copyValue() {
+      let textToCopy = linkShare.value
+      if (isEmptyValue(textToCopy)) {
+        textToCopy = ''
+      }
+      copyToClipboard({
+        text: textToCopy,
+        isShowMessage: false
+      })
+    }
+    loadData()
     return {
       checkedItemGeneral,
       checkedItem,
@@ -246,13 +298,19 @@ export default defineComponent({
       disableButtom,
       typeNotify,
       contactSend,
+      linkShare,
+      isLoading,
+      validTime,
+      copyToClipboard,
       handleDownload,
       getOptionFormat,
       viewShowDialog,
       setCheckedItemGeneral,
       optionPrintFormat,
       sendNotify,
-      sendLink
+      sendLink,
+      copyValue,
+      loadData
     }
   }
 })
