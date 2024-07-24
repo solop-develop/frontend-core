@@ -225,10 +225,10 @@ export default defineComponent({
       store.commit('setShowDialog', false)
     }
     function sendNotify() {
-      const link = isEmptyValue(exportData.value) ? 'https://www.google.com' : exportData.value.file_name
+      let link = isEmptyValue(exportData.value) ? 'https://www.google.com' : exportData.value.file_name
       let title = this.$t('report.reportEnginer.download')
-      let message = 'Documento procesado'
-
+      let message = this.$t('report.reportEnginer.mesajeDownload')
+      console.log(checkedItemGeneral.value)
       switch (checkedItemGeneral.value) {
         case 1:
           sendLink()
@@ -236,13 +236,13 @@ export default defineComponent({
           message = this.$t('report.reportEnginer.mesajeDownload')
           break
         case 3:
-          copyValue()
-          store.commit('setShowDialog', false)
-          return
+          title = this.$t('report.reportEnginer.copyLink')
+          message = ''
+          link = linkShare.value
+          break
         default:
           break
       }
-
       showNotificationReport({
         title,
         message,
