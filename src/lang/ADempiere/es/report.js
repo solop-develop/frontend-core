@@ -104,7 +104,8 @@ const report = {
     printFormat: 'Formato de Impresión',
     viewReport: 'Vista del Informe',
     Detail: 'Ver Detallado',
-    summary: 'Ver Resumido'
+    summary: 'Ver Resumido',
+    exportFormat: 'Formato de Exportación'
   }
 }
 

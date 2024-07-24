@@ -4,7 +4,7 @@
       <el-col :span="12">
         <el-card>
           <template #header>
-            <p>{{ $t('report.reportEnginer.printFormat') }}</p>
+            <p>{{ $t('report.reportEnginer.exportFormat') }}</p>
           </template>
           <el-row :gutter="12" style="height: 30px;">
             <el-col style="width: 100%; text-align: center;">
@@ -92,23 +92,15 @@
           <el-row v-if="checkedItemGeneral === 1" :gutter="12" style="margin-top: 25px; display: flex; justify-content: center;">
             <el-col :span="18">
               <el-form>
-                <el-row :gutter="12">
+                <el-row :gutter="10">
                   <el-col :span="12">
                     <el-form-item>
                       <template slot="label">
                         {{ $t('report.reportEnginer.optionsImport.typeNotify') }}
                       </template>
-                      <el-select
+                      <el-input
                         v-model="typeNotification"
-                        @visible-change="optionPrintFormat"
-                      >
-                        <el-option
-                          v-for="(item, key) in printFormat"
-                          :key="key"
-                          :label="item.name"
-                          :value="item.type"
-                        />
-                      </el-select>
+                      />
                     </el-form-item>
                   </el-col>
                   <el-col :span="12">
@@ -116,17 +108,9 @@
                       <template slot="label">
                         {{ $t('report.reportEnginer.optionsImport.contactsSend') }}
                       </template>
-                      <el-select
+                      <el-input
                         v-model="contactSend"
-                        @visible-change="optionPrintFormat"
-                      >
-                        <el-option
-                          v-for="(item, key) in printFormat"
-                          :key="key"
-                          :label="item.name"
-                          :value="item.type"
-                        />
-                      </el-select>
+                      />
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -179,22 +163,22 @@
           </el-row>
         </el-card>
       </el-col>
-    </el-row>
-    <el-row :gutter="12" style="margin-top: 270px;">
-      <el-button
-        class="button-base-icon"
-        icon="el-icon-check"
-        style="float: right;"
-        type="primary"
-        @click="checkedItemGeneral === 0 ? handleDownload() : viewShowDialog()"
-      />
-      <el-button
-        class="button-base-icon"
-        icon="el-icon-close"
-        style="float: right; margin-right: 1%;"
-        type="danger"
-        @click="viewShowDialog"
-      />
+      <el-col style="margin-top: 1%">
+        <el-button
+          class="button-base-icon"
+          icon="el-icon-check"
+          style="float: right;"
+          type="primary"
+          @click="checkedItemGeneral === 0 ? handleDownload() : viewShowDialog()"
+        />
+        <el-button
+          class="button-base-icon"
+          icon="el-icon-close"
+          style="float: right; margin-right: 1%;"
+          type="danger"
+          @click="viewShowDialog"
+        />
+      </el-col>
     </el-row>
   </div>
 </template>

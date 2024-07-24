@@ -176,7 +176,7 @@ export function runExport({
   reportId
 }) {
   return request({
-    baseURL: `/report-engine/export/${reportId}/${format}`,
+    url: `/report-engine/export/${reportId}/${format}`,
     method: 'post'
   })
 }
