@@ -180,3 +180,39 @@ export function runExport({
     method: 'post'
   })
 }
+
+export function ListNotificationsTypes() {
+  return request({
+    url: '/send_notifications/notifications_types',
+    method: 'get'
+  })
+}
+
+export function ListUsers() {
+  return request({
+    url: '/send_notifications/user',
+    method: 'get'
+  })
+}
+
+export function SendNotification({
+  user_id,
+  title,
+  recipients,
+  subject,
+  notification_type,
+  attachments
+}) {
+  return request({
+    url: '/send_notifications/notification',
+    method: 'post',
+    params: {
+      user_id,
+      title,
+      recipients,
+      subject,
+      notification_type,
+      attachments
+    }
+  })
+}

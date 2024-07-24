@@ -81,22 +81,22 @@ export function showNotification({ type = 'success', title, message = '', summar
   })
 }
 export function showNotificationReport({ type = 'success', title, message, link }) {
+  title = hasTranslation(title)
+  if (message) {
+    message = hasTranslation(message)
+  }
   return Notification({
     title,
     message: `
       <div style="max-height: 100px;max-width: 250px; overflow-y: auto;">
         ${message}
+        <br><br>
+        <a href="${link}" target="_blank" style="text-decoration: underline;">Link</a>
       </div>
     `,
     type,
     position: 'bottom-right',
-    dangerouslyUseHTMLString: true,
-    onClick() {
-      router.push({
-        name: title,
-        path: link
-      }, () => {})
-    }
+    dangerouslyUseHTMLString: true
   })
 }
 /**

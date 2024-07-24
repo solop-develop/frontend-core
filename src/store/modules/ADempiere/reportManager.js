@@ -27,7 +27,10 @@ import {
   runExport,
   generateReport,
   generateReportRequest,
-  getReportOutputRequest
+  getReportOutputRequest,
+  ListNotificationsTypes,
+  ListUsers,
+  SendNotification
 } from '@/api/ADempiere/reportManagement/index.ts'
 import { listPrintFormatsRequest } from '@/api/ADempiere/reportManagement/printFormat.ts'
 import { listReportViewsRequest } from '@/api/ADempiere/reportManagement/reportView.ts'
@@ -63,12 +66,24 @@ const initState = {
   pageSize: 15,
   isLoading: false,
   showDialog: false,
-  expandedAll: true
+  expandedAll: true,
+  exportReport: {},
+  contactSend: '',
+  typeNotify: ''
 }
 const reportManager = {
   state: initState,
 
   mutations: {
+    setContactSend(state, contactSend) {
+      state.contactSend = contactSend
+    },
+    setTypeNotify(state, typeNotify) {
+      state.typeNotify = typeNotify
+    },
+    setExportReport(state, exportReport) {
+      state.exportReport = exportReport
+    },
     setShowDialog(state, showDialog) {
       state.showDialog = showDialog
     },
@@ -676,7 +691,7 @@ const reportManager = {
      * @returns {files}
      */
     exportReport({
-      getters
+      commit
     }, {
       reportId,
       reportName
@@ -689,8 +704,69 @@ const reportManager = {
             const { file_name } = response
             const file = document.createElement('a')
             file.href = `${config.adempiere.resource.url}${file_name}`
-            file.download = `${reportName}` // name of the file to be downloaded
-            file.click()
+            file.download = `${reportName}`
+            commit('setExportReport', response)
+            resolve(response)
+          })
+          .catch(error => {
+            showNotification({
+              title: language.t('notifications.error'),
+              message: error.message,
+              type: 'error'
+            })
+            console.warn(`Error exporting report: ${error.message}. Code: ${error.code}.`)
+          })
+      })
+    },
+    ListNotifications() {
+      return new Promise(resolve => {
+        ListNotificationsTypes()
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => {
+            showNotification({
+              title: language.t('notifications.error'),
+              message: error.message,
+              type: 'error'
+            })
+            console.warn(`Error exporting report: ${error.message}. Code: ${error.code}.`)
+          })
+      })
+    },
+    ListUser() {
+      return new Promise(resolve => {
+        ListUsers()
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => {
+            showNotification({
+              title: language.t('notifications.error'),
+              message: error.message,
+              type: 'error'
+            })
+            console.warn(`Error exporting report: ${error.message}. Code: ${error.code}.`)
+          })
+      })
+    },
+    getSendNotification({ commit }, {
+      user_id,
+      title,
+      recipients,
+      notification_type,
+      attachments
+    }) {
+      return new Promise(resolve => {
+        SendNotification({
+          user_id,
+          title,
+          recipients,
+          notification_type,
+          attachments
+        })
+          .then(response => {
+            commit('setSendNotification', response)
             resolve(response)
           })
           .catch(error => {
@@ -706,6 +782,15 @@ const reportManager = {
   },
 
   getters: {
+    getContactSend: (state) => {
+      return state.contactSend
+    },
+    getTypeNotify: (state) => {
+      return state.typeNotify
+    },
+    getExportReport: (state) => {
+      return state.exportReport
+    },
     getExpandedAll: (state) => {
       return state.expandedAll
     },
