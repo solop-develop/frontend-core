@@ -104,25 +104,9 @@
             </el-col>
           </el-row>
           <el-row v-if="checkedItemGeneral === 3" :gutter="12" style="margin-top: 50px; text-align: center;">
-            <p style="width: 630px; margin: 0 auto; font-size: 14px; text-align: center;">
-              {{ $t('component.attachment.share.description') }}
-            </p>
-            <p style="text-align: center;">
-              <b>
-                {{ $t('component.attachment.share.timeText') }}
-              </b>
-            </p>
-            <el-radio-group
-              v-model="validTime"
-              style="display: flex; justify-content: center;"
-              @change="loadData"
-            >
-              <el-radio :label="3600">1 {{ ' ' + $t('component.attachment.share.time.hour') }}</el-radio>
-              <el-radio :label="21600">6 {{ ' ' + $t('component.attachment.share.time.hours') }}</el-radio>
-              <el-radio :label="86400">1 {{ ' ' + $t('component.attachment.share.time.day') }}</el-radio>
-              <el-radio :label="259200">3 {{ ' ' + $t('component.attachment.share.time.days') }}</el-radio>
-              <el-radio :label="604800">7 {{ ' ' + $t('component.attachment.share.time.days') }}</el-radio>
-            </el-radio-group>
+            <copyLink
+              :report-output="reportOutput"
+            />
           </el-row>
         </el-card>
       </el-col>
@@ -154,16 +138,14 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { config } from '@/utils/ADempiere/config'
 import { REPORT_EXPORT_TYPES } from '@/utils/ADempiere/constants/report'
 import { showNotificationReport } from '@/utils/ADempiere/notification.js'
-import {
-  requestShareResources
-} from '@/api/ADempiere/file-management/resource-reference.ts'
-import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 import contactSend from './contactSend'
 import typeNotify from './typeNotify'
+import copyLink from './copyLink'
 export default defineComponent({
   name: 'dialogShareReport',
   components: {
     contactSend,
+    copyLink,
     typeNotify
   },
   props: {
@@ -182,33 +164,6 @@ export default defineComponent({
     const printFormat = ref([])
     const printFormatValue = ref('')
     const typeNotification = ref('')
-    const isLoading = ref(false)
-    const linkShare = ref('')
-    const validTime = ref(3600)
-    function loadData() {
-      isLoading.value = true
-      requestShareResources({
-        fileName: props.reportOutput.name,
-        seconds: validTime.value
-      })
-        .then(response => {
-          linkShare.value = response
-        })
-        .finally(() => {
-          isLoading.value = false
-        })
-    }
-    function copyValue() {
-      let textToCopy = linkShare.value
-      if (isEmptyValue(textToCopy)) {
-        textToCopy = ''
-      }
-      console.log(textToCopy)
-      copyToClipboard({
-        text: textToCopy,
-        isShowMessage: true
-      })
-    }
     function setCheckedItemGeneral(check) {
       checkedItemGeneral.value = check
     }
@@ -225,32 +180,30 @@ export default defineComponent({
       store.commit('setShowDialog', false)
     }
     function sendNotify() {
-      let link = isEmptyValue(exportData.value) ? 'https://www.google.com' : exportData.value.file_name
-      let title = this.$t('report.reportEnginer.download')
-      let message = this.$t('report.reportEnginer.mesajeDownload')
-      console.log(checkedItemGeneral.value)
+      let link = 'https://www.google.com'
+      let title = ''
+      let message = ''
+      if (!isEmptyValue(exportData.value)) {
+        link = exportData.value.file_name
+      }
       switch (checkedItemGeneral.value) {
         case 1:
           sendLink()
           title = this.$t('report.reportEnginer.sharedReport')
           message = this.$t('report.reportEnginer.mesajeDownload')
           break
-        case 3:
-          title = this.$t('report.reportEnginer.copyLink')
-          message = ''
-          link = linkShare.value
-          break
         default:
+          title = this.$t('report.reportEnginer.download')
           break
       }
       showNotificationReport({
         title,
         message,
-        link
+        link,
+        openLink: this.$t('report.reportEnginer.openLink')
       })
       store.commit('setShowDialog', false)
     }
-
     function handleDownload() {
       const link = document.createElement('a')
       const imageURL = config.adempiere.resource.url + props.reportOutput.name
@@ -284,7 +237,6 @@ export default defineComponent({
         attachments: exportData.file_name
       })
     }
-    loadData()
     return {
       checkedItemGeneral,
       checkedItem,
@@ -295,18 +247,13 @@ export default defineComponent({
       disableButtom,
       typeNotify,
       contactSend,
-      isLoading,
-      linkShare,
-      validTime,
       handleDownload,
       getOptionFormat,
       viewShowDialog,
       setCheckedItemGeneral,
       optionPrintFormat,
       sendNotify,
-      sendLink,
-      copyValue,
-      loadData
+      sendLink
     }
   }
 })
