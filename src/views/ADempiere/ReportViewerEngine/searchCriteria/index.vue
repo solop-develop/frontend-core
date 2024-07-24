@@ -52,9 +52,6 @@ export default defineComponent({
         reportId: root.$route.params.reportId,
         reportName: props.reportOutput.name
       })
-        .then(response => {
-          console.log(response)
-        })
     }
     return {
       viewShowDialog
