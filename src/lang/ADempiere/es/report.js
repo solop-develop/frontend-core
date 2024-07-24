@@ -105,7 +105,10 @@ const report = {
     viewReport: 'Vista del Informe',
     Detail: 'Ver Detallado',
     summary: 'Ver Resumido',
-    exportFormat: 'Formato de Exportación'
+    exportFormat: 'Formato de Exportación',
+    download: 'Link de Descarga Generado',
+    sharedReport: 'Reporte Compartido',
+    mesajeDownload: 'Haga clic en el Siguiente Enlace para ir a la Descarga '
   }
 }
 

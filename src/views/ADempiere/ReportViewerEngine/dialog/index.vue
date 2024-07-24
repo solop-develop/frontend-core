@@ -94,71 +94,18 @@
               <el-form>
                 <el-row :gutter="10">
                   <el-col :span="12">
-                    <el-form-item>
-                      <template slot="label">
-                        {{ $t('report.reportEnginer.optionsImport.typeNotify') }}
-                      </template>
-                      <el-input
-                        v-model="typeNotification"
-                      />
-                    </el-form-item>
+                    <typeNotify />
                   </el-col>
                   <el-col :span="12">
-                    <el-form-item>
-                      <template slot="label">
-                        {{ $t('report.reportEnginer.optionsImport.contactsSend') }}
-                      </template>
-                      <el-input
-                        v-model="contactSend"
-                      />
-                    </el-form-item>
+                    <contactSend />
                   </el-col>
                 </el-row>
               </el-form>
             </el-col>
           </el-row>
           <el-row v-if="checkedItemGeneral === 3" :gutter="12" style="margin-top: 50px; text-align: center;">
-            <p style="width: 630px; margin: 0 auto; font-size: 14px; text-align: center;">
-              {{ $t('component.attachment.share.description') }}
-            </p>
-            <p style="text-align: center;">
-              <b>
-                {{ $t('component.attachment.share.timeText') }}
-              </b>
-            </p>
-            <el-radio-group
-              v-model="validTime"
-              style="display: flex; justify-content: center;"
-              @change="loadData"
-            >
-              <el-radio :label="3600">1 {{ ' ' + $t('component.attachment.share.time.hour') }}</el-radio>
-              <el-radio :label="21600">6 {{ ' ' + $t('component.attachment.share.time.hours') }}</el-radio>
-              <el-radio :label="86400">1 {{ ' ' + $t('component.attachment.share.time.day') }}</el-radio>
-              <el-radio :label="259200">3 {{ ' ' + $t('component.attachment.share.time.days') }}</el-radio>
-              <el-radio :label="604800">7 {{ ' ' + $t('component.attachment.share.time.days') }}</el-radio>
-            </el-radio-group>
-            <el-input
-              v-model="linkShare"
-              disabled
-              style="margin-top: 10px"
-            >
-              <i
-                v-if="isLoading"
-                slot="prefix"
-                class="el-icon-loading"
-              />
-              <i
-                v-else
-                slot="prefix"
-                class="el-input__icon el-icon-document-copy"
-                @click="copyValue"
-              />
-            </el-input>
-            <el-button
-              slot="reference"
-              icon="el-icon-share"
-              plain
-              @click="loadData()"
+            <copyLink
+              :report-output="reportOutput"
             />
           </el-row>
         </el-card>
@@ -169,7 +116,8 @@
           icon="el-icon-check"
           style="float: right;"
           type="primary"
-          @click="checkedItemGeneral === 0 ? handleDownload() : viewShowDialog()"
+          :disabled="disableButtom"
+          @click="sendNotify"
         />
         <el-button
           class="button-base-icon"
@@ -185,16 +133,21 @@
 
 <script>
 import store from '@/store'
-import { defineComponent, ref } from '@vue/composition-api'
+import { defineComponent, computed, ref } from '@vue/composition-api'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import {
-  requestShareResources
-} from '@/api/ADempiere/file-management/resource-reference.ts'
-import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 import { config } from '@/utils/ADempiere/config'
 import { REPORT_EXPORT_TYPES } from '@/utils/ADempiere/constants/report'
+import { showNotificationReport } from '@/utils/ADempiere/notification.js'
+import contactSend from './contactSend'
+import typeNotify from './typeNotify'
+import copyLink from './copyLink'
 export default defineComponent({
   name: 'dialogShareReport',
+  components: {
+    contactSend,
+    copyLink,
+    typeNotify
+  },
   props: {
     containerUuid: {
       type: String,
@@ -208,13 +161,9 @@ export default defineComponent({
   setup(props) {
     const checkedItemGeneral = ref(0)
     const checkedItem = ref(0)
-    const validTime = ref(3600)
-    const linkShare = ref('')
-    const isLoading = ref(false)
     const printFormat = ref([])
     const printFormatValue = ref('')
     const typeNotification = ref('')
-    const contactSend = ref('')
     function setCheckedItemGeneral(check) {
       checkedItemGeneral.value = check
     }
@@ -230,28 +179,29 @@ export default defineComponent({
     function viewShowDialog() {
       store.commit('setShowDialog', false)
     }
-    function loadData() {
-      isLoading.value = true
-      requestShareResources({
-        fileName: props.reportOutput.name,
-        seconds: validTime.value
-      })
-        .then(response => {
-          linkShare.value = response
-        })
-        .finally(() => {
-          isLoading.value = false
-        })
-    }
-    function copyValue() {
-      let textToCopy = linkShare.value
-      if (isEmptyValue(textToCopy)) {
-        textToCopy = ''
+    function sendNotify() {
+      let link = 'https://www.google.com'
+      let title = ''
+      let message = 'Documento procesado'
+      if (!isEmptyValue(exportData.value)) {
+        link = exportData.value.file_name
       }
-      copyToClipboard({
-        text: textToCopy,
-        isShowMessage: true
+      switch (checkedItemGeneral.value) {
+        case 1:
+          sendLink()
+          title = this.$t('report.reportEnginer.sharedReport')
+          message = this.$t('report.reportEnginer.mesajeDownload')
+          break
+        default:
+          title = this.$t('report.reportEnginer.download')
+          break
+      }
+      showNotificationReport({
+        title,
+        message,
+        link
       })
+      store.commit('setShowDialog', false)
     }
     function handleDownload() {
       const link = document.createElement('a')
@@ -264,24 +214,45 @@ export default defineComponent({
       const xlsTypes = REPORT_EXPORT_TYPES.filter(type => type.type === 'xls')
       printFormat.value = xlsTypes
     }
-    loadData()
+    const exportData = computed(() => {
+      return store.getters.getExportReport
+    })
+    const typeNotify = computed(() => {
+      return store.getters.getTypeNotify
+    })
+    const contactSend = computed(() => {
+      return store.getters.getContactSend
+    })
+    const disableButtom = computed(() => {
+      return checkedItemGeneral.value === 1 && (isEmptyValue(typeNotify.value) || isEmptyValue(contactSend.value))
+    })
+    function sendLink() {
+      const user_id = store.getters['user/userInfo'].id
+      store.dispatch('getSendNotification', {
+        user_id,
+        title: props.reportOutput.name,
+        recipients: contactSend.value,
+        notification_type: typeNotify.value,
+        attachments: exportData.file_name
+      })
+    }
     return {
       checkedItemGeneral,
       checkedItem,
-      validTime,
-      linkShare,
-      isLoading,
       printFormat,
       printFormatValue,
       typeNotification,
+      exportData,
+      disableButtom,
+      typeNotify,
       contactSend,
       handleDownload,
       getOptionFormat,
       viewShowDialog,
       setCheckedItemGeneral,
-      loadData,
-      copyValue,
-      optionPrintFormat
+      optionPrintFormat,
+      sendNotify,
+      sendLink
     }
   }
 })

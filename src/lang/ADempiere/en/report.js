@@ -105,7 +105,10 @@ const report = {
     viewReport: 'Report View',
     Detail: 'View Detailed',
     summary: 'View Summary',
-    exportFormat: 'Export Format'
+    exportFormat: 'Export Format',
+    download: 'Generated Download Link',
+    sharedReport: 'Shared Report',
+    mesajeDownload: 'Click on the Following lLnk to go to Download '
   }
 }
 
