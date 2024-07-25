@@ -442,7 +442,7 @@ export default defineComponent({
   background: #ecf5ff;
 }
 .reportInfo .el-popover {
-  width: 780px !important;
+  width: 850px !important;
 }
 .reportInfo .el-popover .el-descriptions-item__container .el-descriptions-item__content{
   display: flex;
