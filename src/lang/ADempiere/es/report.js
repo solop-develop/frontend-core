@@ -110,7 +110,8 @@ const report = {
     sharedReport: 'Reporte Compartido',
     mesajeDownload: 'Haga clic en el Siguiente Enlace para ir a la Descarga ',
     openLink: 'Abrir Enlace',
-    mesajeShear: 'Su Enlace a Sido Copiado Exitosamente al Portapapeles'
+    mesajeShear: 'Su Enlace a Sido Copiado Exitosamente al Portapapeles',
+    refreshRecord: 'Refrescar Registro'
   }
 }
 
