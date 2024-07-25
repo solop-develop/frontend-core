@@ -180,7 +180,7 @@ export default defineComponent({
     const checkedItemGeneral = ref(0)
     const checkedItem = ref(0)
     const printFormat = ref([])
-    const printFormatValue = ref('')
+    const printFormatValue = ref('xlsx')
     const typeNotification = ref('')
     const linkShare = ref('')
     const isLoading = ref(false)
@@ -251,7 +251,7 @@ export default defineComponent({
       link.click()
     }
     function optionPrintFormat() {
-      const xlsTypes = REPORT_EXPORT_TYPES.filter(type => type.type === 'xls')
+      const xlsTypes = REPORT_EXPORT_TYPES.filter(type => type.type === 'xlsx')
       printFormat.value = xlsTypes
     }
     const exportData = computed(() => {
