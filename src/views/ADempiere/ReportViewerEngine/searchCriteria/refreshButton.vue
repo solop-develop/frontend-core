@@ -1,9 +1,10 @@
 <template>
-  <div class="select-container" style="margin-left: -40px; display: flex; align-items: center;">
+  <div class="select-container" style="margin-left: -10px; display: flex; align-items: center;">
     <el-button
       :loading="isLoading"
       type="success"
       class="button-base-icon"
+      icon="el-icon-refresh-right"
       style="font-size:20px"
       @click="runReport"
     >
