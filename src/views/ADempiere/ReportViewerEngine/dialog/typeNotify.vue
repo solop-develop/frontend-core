@@ -35,8 +35,8 @@ export default defineComponent({
             const { records } = response
             listNotify.value = records.map(item => {
               return {
-                label: item.values.DisplayColumn,
-                value: item.id
+                label: item.name,
+                value: item.value
               }
             })
           }
