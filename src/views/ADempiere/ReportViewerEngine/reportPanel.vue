@@ -157,6 +157,7 @@ export default defineComponent({
       }
     }
     function activatePopover(row, column) {
+      event.preventDefault()
       dataList.value.forEach(data => {
         Object.values(data.cells).forEach(dataCell => {
           if (dataCell && 'sum_value' in dataCell) {
