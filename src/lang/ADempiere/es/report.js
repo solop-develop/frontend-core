@@ -111,7 +111,8 @@ const report = {
     mesajeDownload: 'Descargando Reporte ',
     openLink: 'Abrir Enlace',
     mesajeShear: 'Su Enlace a Sido Copiado Exitosamente al Portapapeles',
-    refreshRecord: 'Refrescar'
+    refreshRecord: 'Refrescar',
+    shippingDetails: 'Detalles del Envío'
   }
 }
 
