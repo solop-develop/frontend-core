@@ -203,9 +203,7 @@ export default defineComponent({
   gap: 20px;
   margin: 0 auto;
 }
-.select-label {
-  padding-right: 1%;
-}
+
 @media screen and (min-width: 800px) {
   .container {
     flex-direction: row;
@@ -213,8 +211,5 @@ export default defineComponent({
     align-items: center;
   }
 
-  .containerPrint {
-    flex: 1;
-  }
 }
 </style>

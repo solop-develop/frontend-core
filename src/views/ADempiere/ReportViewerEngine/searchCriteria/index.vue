@@ -1,41 +1,47 @@
 <template>
-  <div class="containerReportEnginer">
-    <el-row :gutter="24" align="middle" class="containerReport">
-      <el-col :xs="24" :md="14" class="containerPrint">
-        <PrintOptions
-          :container-uuid="containerUuid"
-          :report-output="reportOutput"
-        />
-      </el-col>
-      <el-col :xs="24" :md="6" :offset-md="2" class="containerSumary">
-        <reportSumary />
-      </el-col>
-      <el-col :xs="24" :md="2" class="containerButtom">
-        <el-button
-          plain
-          size="mini"
-          type="primary"
-          class="custom-button"
-          @click="viewShowDialog"
-        >
-          {{ $t('report.reportEnginer.share') }}
-        </el-button>
-      </el-col>
-    </el-row>
-  </div>
+  <el-row :gutter="24" align="middle" class="containerReport">
+    <el-col :xs="24" :md="14" class="containerPrint">
+      <PrintOptions
+        :container-uuid="containerUuid"
+        :report-output="reportOutput"
+      />
+    </el-col>
+    <el-col :xs="24" :md="5" class="containerSummary">
+      <reportSummary />
+    </el-col>
+    <el-col :xs="24" :md="3" class="containerRefreshButton">
+      <refreshButton
+        :container-uuid="containerUuid"
+        :report-output="reportOutput"
+      />
+    </el-col>
+    <el-col :xs="24" :md="2" class="containerButton">
+      <el-button
+        plain
+        size="mini"
+        type="primary"
+        class="custom-button"
+        @click="viewShowDialog"
+      >
+        {{ $t('report.reportEnginer.share') }}
+      </el-button>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
 import store from '@/store'
 import { defineComponent } from '@vue/composition-api'
 import PrintOptions from './printFormatReport.vue'
-import reportSumary from './reportSumary.vue'
+import reportSummary from './reportSumary.vue'
+import refreshButton from './refreshButton.vue'
 
 export default defineComponent({
   name: 'reportSearchCriteria',
   components: {
     PrintOptions,
-    reportSumary
+    reportSummary,
+    refreshButton
   },
   props: {
     containerUuid: {
@@ -59,69 +65,44 @@ export default defineComponent({
 </script>
 
 <style>
-.containerReportEnginer {
-  position: relative;
-}
-.containerReport, .containerSumary, .containerButtom{
-  top: 50%;
-}
 .containerReport {
   margin-bottom: 20px;
+  margin-right: 90px !important
+}
+.containerRefreshButton {
+  padding-right: 5px;
 }
 .containerReport .el-col {
-  vertical-align: middle;
-  display: inline-block;
+  display: flex;
+  align-items: center;
 }
+
 @media screen and (max-width: 800px) {
-  .containerSumary, .containerButtom {
-    margin-top: 20px;
-    display: inline-block;
-    vertical-align: top;
-  }
-  .containerPrint{
-    margin-left: 25px;
-  }
-  .containerSumary {
-    margin-left:100px;
-    width: 70%;
-  }
-  .containerButtom {
-    width: 20%;
+  .containerSummary, .containerButton {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
   }
 }
-@media screen and (max-width: 1000px) {
-  .containerReportEnginer {
-    margin-right: 70px
-  }
-  .containerSumary, .containerReport {
-    margin-right: 50px
-  }
-}
+
 @media screen and (max-width: 1080px) {
-  .containerSumary, .containerButtom {
+  .containerSummary, .containerButton {
     margin-top: 10px;
-    display: inline-block;
-    vertical-align: top;
+    display: flex;
+    justify-content: center;
   }
-  .containerPrint{
-    margin-left: 25px;
-  }
-  .containerSumary {
-    margin-left: -30px;
+  .containerSummary {
     font-size: 12px;
   }
 }
+
 @media screen and (max-width: 1200px) {
-  .containerSumary, .containerButtom {
+  .containerSummary, .containerButton {
     margin-top: 10px;
-    display: inline-block;
-    vertical-align: top;
+    display: flex;
+    justify-content: center;
   }
-  .containerPrint{
-    margin-left: 25px;
-  }
-  .containerSumary {
-    margin-left: -50px;
+  .containerSummary {
     font-size: 12px;
   }
 }
