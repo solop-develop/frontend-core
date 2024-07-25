@@ -122,7 +122,7 @@
           </el-row>
         </el-card>
       </el-col>
-      <el-col v-if="showMarkDown" :span="24" style="margin-top: 1%">
+      <el-col v-if="checkedItemGeneral === 1" :span="24" style="margin-top: 1%">
         <el-card>
           <template #header>
             <p>{{ $t('report.reportEnginer.sendDetails') }}</p>
@@ -197,12 +197,6 @@ export default defineComponent({
     const isLoading = ref(false)
     const validTime = ref(3600)
     const markdownContent = ref('')
-    const showMarkDown = computed(() => {
-      if (checkedItemGeneral.value === 1 && (!isEmptyValue(contactSend.value) && !isEmptyValue(typeNotify.value))) {
-        return true
-      }
-      return false
-    })
     const getStoreReport = computed(() => {
       return store.getters.getStoredReport(props.reportOutput.containerUuid)
     })
@@ -370,7 +364,6 @@ export default defineComponent({
       copyValue,
       loadData,
       downloadFile,
-      showMarkDown,
       markdownContent
     }
   }
