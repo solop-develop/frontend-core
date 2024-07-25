@@ -48,10 +48,6 @@ export default defineComponent({
   setup(props, { root }) {
     function viewShowDialog() {
       store.commit('setShowDialog', true)
-      store.dispatch('exportReport', {
-        reportId: root.$route.params.reportId,
-        reportName: props.reportOutput.name
-      })
     }
     return {
       viewShowDialog

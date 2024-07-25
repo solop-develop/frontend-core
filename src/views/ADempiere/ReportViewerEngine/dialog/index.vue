@@ -115,7 +115,6 @@
             <el-radio-group
               v-model="validTime"
               style="display: flex; justify-content: center;"
-              @change="loadData"
             >
               <el-radio :label="3600">1 {{ ' ' + $t('component.attachment.share.time.hour') }}</el-radio>
               <el-radio :label="21600">6 {{ ' ' + $t('component.attachment.share.time.hours') }}</el-radio>
@@ -154,9 +153,6 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { config } from '@/utils/ADempiere/config'
 import { REPORT_EXPORT_TYPES } from '@/utils/ADempiere/constants/report'
 import { showNotificationReport } from '@/utils/ADempiere/notification.js'
-import {
-  requestShareResources
-} from '@/api/ADempiere/file-management/resource-reference.ts'
 import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 import contactSend from './contactSend'
 import typeNotify from './typeNotify'
@@ -185,19 +181,6 @@ export default defineComponent({
     const linkShare = ref('')
     const isLoading = ref(false)
     const validTime = ref(3600)
-    function loadData() {
-      isLoading.value = true
-      requestShareResources({
-        fileName: props.reportOutput.name,
-        seconds: validTime.value
-      })
-        .then(response => {
-          linkShare.value = response
-        })
-        .finally(() => {
-          isLoading.value = false
-        })
-    }
     function setCheckedItemGeneral(check) {
       checkedItemGeneral.value = check
     }
@@ -214,6 +197,7 @@ export default defineComponent({
       store.commit('setShowDialog', false)
     }
     function sendNotify() {
+      validTime.value
       let link = 'https://www.google.com'
       let title = ''
       let message = ''
@@ -287,7 +271,7 @@ export default defineComponent({
         isShowMessage: false
       })
     }
-    loadData()
+
     return {
       checkedItemGeneral,
       checkedItem,
@@ -309,8 +293,7 @@ export default defineComponent({
       optionPrintFormat,
       sendNotify,
       sendLink,
-      copyValue,
-      loadData
+      copyValue
     }
   }
 })
