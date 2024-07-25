@@ -49,7 +49,7 @@
         :cell-style="{ padding: '0', height: '30px', border: 'none' }"
         :cell-class-name="getRowClassName"
         @row-click="handleRowClick"
-        @cell-dblclick="showPopover = true"
+        @cell-contextmenu="activatePopover"
       >
         <el-table-column
           v-for="(fieldAttributes, key) in columns"
@@ -150,21 +150,23 @@ export default defineComponent({
       if (isEmptyValue(columns)) return []
       return columns
     })
-    function handleRowClick(row, column, event) {
+    function handleRowClick(row) {
       if (row.children && row.children.length > 0) {
         tableReportEngine.value.toggleRowExpansion(row)
         showPopover.value = false
-      } else {
-        Object.entries(row.cells).forEach(data => {
-          data.map(dataCell => {
-            if (dataCell.sum_value && !isEmptyValue(column) && !isEmptyValue(row)) {
-              selectedColumn.value = column.columnKey
-              selectedRow.value = row
-              dataModal.value = dataCell
-            }
-          })
-        })
       }
+    }
+    function activatePopover(row, column) {
+      dataList.value.forEach(data => {
+        Object.values(data.cells).forEach(dataCell => {
+          if (dataCell && 'sum_value' in dataCell) {
+            selectedColumn.value = column.columnKey
+            selectedRow.value = row
+            dataModal.value = dataCell
+            showPopover.value = true
+          }
+        })
+      })
     }
     function displayLabel(prop, row) {
       if (isEmptyValue(row.cells)) {
@@ -175,7 +177,7 @@ export default defineComponent({
         return display_value
       }
       if (!isEmptyValue(value)) {
-        return value.value
+        return value
       }
     }
     function getAlignment(displayType) {
@@ -230,7 +232,6 @@ export default defineComponent({
         pageSize,
         parametersList: reportDefinition,
         reportId: reportDefinition.id,
-        instanceUuid: props.reportOutput.instance_id,
         printFormatId: props.reportOutput.print_format_id,
         reportViewId: props.reportOutput.report_view_id
       })
@@ -243,7 +244,6 @@ export default defineComponent({
         pageSize: currentPageSize.value,
         parametersList: reportDefinition,
         reportId: reportDefinition.id,
-        instanceUuid: props.reportOutput.instance_id,
         printFormatId: props.reportOutput.print_format_id,
         reportViewId: props.reportOutput.report_view_id
       })
@@ -373,7 +373,8 @@ export default defineComponent({
       findParent,
       expandedRowAll,
       viewShowDialog,
-      getCellStyle
+      getCellStyle,
+      activatePopover
     }
   }
 })
