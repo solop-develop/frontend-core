@@ -69,7 +69,7 @@ export function loadMainMenu({
         })
 
         const children = []
-        if (optionMenu.meta.isSummary) {
+        if (optionMenu.meta.isSummary && !isEmptyValue(menuElement.children)) {
           menuElement.children.forEach(menu => {
             const childsSumaryConverted = getChildFromAction({
               menu,
@@ -112,7 +112,7 @@ export function loadMainMenu({
 
       resolve(menuRoutes)
     }).catch(error => {
-      console.warn(`Error getting menu: ${error.message}. Code: ${error.code}.`)
+      console.error(`Error getting menu: ${error.message}. Code: ${error.code}.`)
       const permiseStactiRoutes = hidenStaticRoutes({
         dynamicRoutes: [],
         staticRoutes,
@@ -171,7 +171,7 @@ function getChildFromAction({ menu, index, clientId, roleId, organizationId }) {
     children: []
   }
 
-  if (isIndex) {
+  if (isIndex && !isEmptyValue(menu.children)) {
     menu.children.forEach(child => {
       const menuConverted = getChildFromAction({
         menu: child,
