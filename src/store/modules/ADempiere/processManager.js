@@ -16,8 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Vue from 'vue'
-
 import lang from '@/lang'
 import router from '@/router'
 
@@ -40,21 +38,10 @@ import {
   containerManager
 } from '@/utils/ADempiere/dictionary/process.js'
 
-const initState = {
-  printFormatList: {}
-}
-
 const processManager = {
-  state: initState,
+  state: {},
 
-  mutations: {
-    setPrintFormatsList(state, { containerUuid, printFormatList }) {
-      Vue.set(state.printFormatList, containerUuid, printFormatList)
-    },
-    resetStateProcessManager(state) {
-      state = initState
-    }
-  },
+  mutations: {},
 
   actions: {
     processActionPerformed({ dispatch, getters }, {

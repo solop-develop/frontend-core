@@ -250,6 +250,7 @@ export default {
           containerUuid: this.metadata.containerUuid,
           contextColumnNames: this.metadata.reference.context_column_names,
           tableName: TABLE_NAME,
+          columnName: this.metadata.column_name,
           uuid: this.metadata.uuid,
           id: this.metadata.internal_id,
           searchValue,

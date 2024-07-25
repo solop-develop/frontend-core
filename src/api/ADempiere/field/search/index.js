@@ -24,10 +24,9 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 // Constants
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
-import { convertArrayKeyValueToObject } from '@/utils/ADempiere/formatValue/iterableFormat'
 
 export function requestGridGeneralInfo({
-  contextAttributesList,
+  contextAttributes,
   filters = [],
   fieldId,
   processParameterId,
@@ -51,21 +50,6 @@ export function requestGridGeneralInfo({
   //     value: attribute.value
   //   }
   // })
-
-  let contextAttributes = []
-  if (!isEmptyValue(contextAttributesList)) {
-    // contextAttributes = contextAttributesList.map(attribute => {
-    //   return {
-    //     key: attribute.columnName,
-    //     value: attribute.value
-    //   }
-    // })
-    contextAttributes = JSON.stringify(
-      convertArrayKeyValueToObject({
-        array: contextAttributesList
-      })
-    )
-  }
 
   let url = 'user-interface/search-records'
   switch (true) {

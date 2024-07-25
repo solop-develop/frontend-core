@@ -112,7 +112,8 @@ export function requestListInvoicesInfo({
   grandTotalTo,
   isWithoutValidation
 }) {
-  let url = '/field/invoices'
+  // TODO: Search for a more optimal way to compare and build the route.
+  let url
   switch (true) {
     case !isEmptyValue(fieldId):
       url = `/field/invoices/field/${fieldId}`
@@ -147,6 +148,7 @@ export function requestListInvoicesInfo({
       browse_field_id: browseFieldId,
       reference_id: referenceId,
       column_id: columnId,
+      table_name: tableName,
       column_name: columnName,
       // Custom Filter
       document_no: documentNo,

@@ -277,7 +277,7 @@ import {
   listOrders,
   listBusinessPartnersShipment
   // Shipment
-} from '@/api/ADempiere/form/ExpressShipment.js'
+} from '@/api/ADempiere/form/express-shipment.js'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'
@@ -423,9 +423,9 @@ export default defineComponent({
     function querySearchAsync(queryString, callBack) {
       let results = listProdcut.value.filter(createFilter(queryString))
       if (isEmptyValue(results)) {
-        store.dispatch('findListProduct', {
+        store.dispatch('listProductsShipment', {
           searchValue: queryString,
-          shipmentId: salesOrder.value
+          orderId: salesOrder.value
         })
           .then(response => {
             results = response

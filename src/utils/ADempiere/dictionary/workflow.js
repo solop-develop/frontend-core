@@ -217,51 +217,45 @@ export function generateTransitions(nodesList) {
   const transitionsList = []
 
   nodesList.forEach(element => {
-    // const uuid = element.uuid
-    const id = element.value
-
     if (!isEmptyValue(element.transitions)) {
       element.transitions.forEach((nextNode, key) => {
         if (!isEmptyValue(nextNode.node_next_id)) {
           transitionsList.push({
-            id: id + key,
+            id: element.value,
             label: nextNode.description,
-            target: nextNode.id,
-            source: id
+            target: nextNode.node_next_id,
+            source: element.id
           })
         }
       })
     }
   })
   const blon = nodesList.map(item => {
-    return {
-      id: item.id
-    }
+    return item.id
   })
 
   const workflowTranstitionsList = transitionsList.filter(data => {
-    const isExists = blon.find(mode => mode.id === data.source)
-    if (!isEmptyValue(isExists)) {
-      return data
+    const isExists = blon.includes(data.source)
+    if (isExists) {
+      return true
     }
+    return false
   })
 
   return workflowTranstitionsList
 }
 
 export function generateStates(nodesList) {
-  // TODO: Verify it filter or replace with id
-  // nodesList = nodesList.filter(node => !isEmptyValue(node.uuid))
   let statesList = []
 
   if (!isEmptyValue(nodesList)) {
     statesList = nodesList.map((node, key) => {
       return {
         id: node.id,
-        label: node.name,
-        key,
-        description: node.description,
-        help: node.help
+        label: node.name
+        // key,
+        // description: node.description,
+        // help: node.help
       }
     })
   }

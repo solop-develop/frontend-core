@@ -227,6 +227,7 @@ export default ({
         parentUuid,
         containerUuid: uuidForm,
         contextColumnNames: fieldAttributes.reference.context_column_names,
+        columnName: fieldAttributes.column_name,
         tableName: searchTableName.value,
         uuid: fieldAttributes.uuid,
         id: fieldAttributes.id,

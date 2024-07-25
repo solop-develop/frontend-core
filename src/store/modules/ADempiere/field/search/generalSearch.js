@@ -403,6 +403,10 @@ const generalInfoSearch = {
           contextColumnNames,
           isBooleanToString: true
         })
+        let contextAttributes = '{}'
+        if (!isEmptyValue(contextAttributesList)) {
+          contextAttributes = JSON.stringify(contextAttributesList)
+        }
         // fill context value to continue
         if (!isSameSize(contextColumnNames, contextAttributesList)) {
           resolve([])
@@ -425,7 +429,7 @@ const generalInfoSearch = {
           }).toString() + ']'
         }
         return requestGridGeneralInfo({
-          contextAttributesList,
+          contextAttributes: contextAttributes,
           filters: filtersList,
           //
           columnId,

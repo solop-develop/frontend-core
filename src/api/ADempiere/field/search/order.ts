@@ -82,7 +82,8 @@ export function requestListOrderInfo({
   orderId,
   isWithoutValidation
 }) {
-  let url = '/field/orders'
+  // TODO: Search for a more optimal way to compare and build the route.
+  let url
   switch (true) {
     case !isEmptyValue(fieldId):
       url = `/field/orders/field/${fieldId}`
@@ -93,14 +94,11 @@ export function requestListOrderInfo({
     case !isEmptyValue(browseFieldId):
       url = `/field/orders/query-criteria/${browseFieldId}`
       break
-    case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
-      url = `/field/orders/table/${tableName}/${columnName}`
-      break
     case !isEmptyValue(columnId):
       url = `/field/orders/column/${columnId}`
       break
-    default:
-      url = `/field/orders`
+    case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
+      url = `/field/orders/table/${tableName}/${columnName}`
       break
   }
 
@@ -120,6 +118,7 @@ export function requestListOrderInfo({
       browse_field_id: browseFieldId,
       reference_id: referenceId,
       column_id: columnId,
+      table_name: tableName,
       column_name: columnName,
       // Custom Filter
       document_no: documentNo,

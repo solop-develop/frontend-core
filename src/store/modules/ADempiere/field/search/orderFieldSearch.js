@@ -188,6 +188,7 @@ const fieldOrder = {
       browseFieldId,
       referenceId,
       columnName,
+      tableName,
       columnId,
       fieldId,
       //
@@ -243,14 +244,19 @@ const fieldOrder = {
           contextColumnNames,
           isBooleanToString: true
         })
+        let contextAttributes = '{}'
+        if (!isEmptyValue(contextAttributesList)) {
+          contextAttributes = JSON.stringify(contextAttributesList)
+        }
 
         requestListOrderInfo({
-          contextAttributesList,
+          contextAttributes: contextAttributes,
           // References
           processParameterId,
           browseFieldId,
           referenceId,
           columnName,
+          tableName,
           columnId,
           fieldId,
           // Query

@@ -217,8 +217,13 @@ const businessPartner = {
           parentUuid,
           containerUuid: originContainerUuid,
           contextColumnNames,
-          isBooleanToString: true
+          isBooleanToString: true,
+          format: 'object'
         })
+        let contextAttributes = '{}'
+        if (!isEmptyValue(contextAttributesList)) {
+          contextAttributes = JSON.stringify(contextAttributesList)
+        }
 
         const isSalesTransactionContext = isSalesTransaction({
           parentUuid: parentUuid,
@@ -233,7 +238,7 @@ const businessPartner = {
         }
 
         requestListBusinessPartner({
-          contextAttributesList,
+          contextAttributes: contextAttributes,
           //
           fieldId,
           processParameterId,

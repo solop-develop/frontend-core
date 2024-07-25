@@ -1,30 +1,38 @@
-// ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-// Copyright (C) 2023-Present E.R.P. Consultores y Asociados, C.A.
-// Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 import lang from '@/lang'
+
 // API Request Methods
 import {
   listAvailablePaymentMethods,
   listAvailableCurrencies,
-  createCustomerBankAccount,
   listCustomerCredits,
-  listBankAccounts,
-  validatePIN,
-  listBanks
+  validatePIN
 } from '@/api/ADempiere/form/VPOS'
+import {
+  createCustomerBankAccount,
+  listCustomerBankAccountsRequest
+} from '@/api/ADempiere/form/VPOS/customer'
+import {
+  listBanksRequest
+} from '@/api/ADempiere/form/VPOS/banks'
+
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { showMessage } from '@/utils/ADempiere/notification'
@@ -204,8 +212,10 @@ export default {
     }) {
       return new Promise(resolve => {
         const currentPos = getters.getVPOS
-        if (isEmptyValue(currentPos.id)) resolve({})
-        listBanks({
+        if (isEmptyValue(currentPos.id)) {
+          resolve({})
+        }
+        listBanksRequest({
           posId: currentPos.id
         })
           .then(response => {
@@ -236,7 +246,7 @@ export default {
           })
       })
     },
-    listAccounts({
+    listCustomerBankAccounts({
       commit,
       getters
     }) {
@@ -244,13 +254,17 @@ export default {
         const currentPos = getters.getVPOS
         const currentOrder = getters.getCurrentOrder
         let bankId
-        const banck = getters.getAttributeField({
+        const bank = getters.getAttributeField({
           field: 'banks',
           attribute: 'recipientBank'
         })
-        if (banck) bankId = banck.id
-        if (isEmptyValue(currentPos.id)) resolve({})
-        listBankAccounts({
+        if (bank) {
+          bankId = bank.id
+        }
+        if (isEmptyValue(currentPos.id)) {
+          resolve({})
+        }
+        listCustomerBankAccountsRequest({
           posId: currentPos.id,
           bankId,
           customerId: currentOrder.customer.id

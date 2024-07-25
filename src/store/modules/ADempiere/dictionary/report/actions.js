@@ -179,7 +179,7 @@ export default {
       ...runReportAsPrintFormat,
       containerId: reportId
     }
-    const printFormats = rootGetters.getPrintFormatList(reportId)
+    const printFormats = rootGetters.getPrintFormatsList(reportId)
     if (!isEmptyValue(printFormats)) {
       const printFormatChilds = []
       printFormats.forEach(printFormat => {

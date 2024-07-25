@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 201-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -20,13 +20,13 @@ import { request } from '@/utils/ADempiere/request'
 import { config } from '@/utils/ADempiere/config'
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
-export function listBusinessPartnersReceipt({
+export function listWarehouses({
   searchValue,
   pageToken,
   pageSize
 }) {
   return request({
-    url: `${config.express.receipt}/business-partners`,
+    url: `${config.express.movement}/warehouses`,
     method: 'get',
     params: {
       page_size: pageSize,
@@ -40,28 +40,7 @@ export function listBusinessPartnersReceipt({
     })
 }
 
-export function listOrders({
-  searchValue,
-  businessPartnerId,
-  pageToken,
-  pageSize
-}) {
-  return request({
-    url: `${config.express.receipt}/orders`,
-    method: 'get',
-    params: {
-      page_size: pageSize,
-      page_token: pageToken,
-      //  DSL Query
-      business_partner_id: businessPartnerId,
-      search_value: searchValue
-    }
-  })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
-}
-
+// Product
 export function listProductRequest({
   namue,
   upc,
@@ -70,10 +49,10 @@ export function listProductRequest({
   value,
   pageToken,
   pageSize,
-  receiptId
+  orderId
 }) {
   return request({
-    url: `${config.express.receipt}/products`,
+    url: `${config.express.movement}/products`,
     method: 'get',
     params: {
       page_size: pageSize,
@@ -82,24 +61,7 @@ export function listProductRequest({
       sku,
       value,
       search_value: searchValue,
-      order_id: receiptId
-    }
-  })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
-}
-// Shipment
-export function createReceiptRequest({
-  id,
-  uuid
-}) {
-  return request({
-    url: `${config.express.receipt}/receipts`,
-    method: 'post',
-    data: {
-      order_id: id,
-      order_uuid: uuid
+      order_id: orderId
     }
   })
     .then(response => {
@@ -107,60 +69,59 @@ export function createReceiptRequest({
     })
 }
 
-export function processReceiptRequest({
-  id,
-  uuid
-}) {
+// Create Movement
+export function createMovementRequest() {
   return request({
-    url: `${config.express.receipt}/receipts/${id}/process`,
-    method: 'post',
-    data: {
-      // order_id: id,
-      // order_uuid: uuid
-      id,
-      uuid
-    }
+    url: `${config.express.movement}/movements`,
+    method: 'post'
   })
     .then(response => {
       return camelizeObjectKeys(response)
     })
 }
 
-export function deleteShipmentRequest({
-  id,
-  uuid
+export function processMovementRequest({
+  id
 }) {
   return request({
-    url: `${config.express.receipt}/receipts/${id}`,
-    method: 'delete',
-    params: {
-      order_id: id,
-      order_uuid: uuid
-    }
+    url: `${config.express.movement}/movements/${id}/process`,
+    method: 'post'
+  })
+}
+
+export function deleteMovementRequest({
+  id
+}) {
+  return request({
+    url: `${config.express.movement}/movements/${id}`,
+    method: 'delete'
   })
     .then(response => {
       return camelizeObjectKeys(response)
     })
 }
-//	Shipment Line
-export function createReceiptLineRequest({
-  receiptId,
-  receiptUuid,
+
+// Movement Line
+export function createMovementLineRequest({
+  movementId,
+  movementUuid,
   productId,
   productUuid,
-  isQuantityFromOrderLine,
+  warehouseId,
+  warehouseToId,
   description,
   quantity
 }) {
   return request({
-    url: `${config.express.receipt}/receipts/${receiptId}/lines`,
+    url: `${config.express.movement}/movements/${movementId}/lines`,
     method: 'post',
     data: {
-      receipt_id: receiptId,
-      receipt_uuid: receiptUuid,
+      movement_id: movementId,
+      movement_uuid: movementUuid,
       product_id: productId,
       product_uuid: productUuid,
-      is_quantity_from_order_line: isQuantityFromOrderLine,
+      warehouse_id: warehouseId,
+      warehouse_to_id: warehouseToId,
       description,
       quantity: quantity.toString()
     }
@@ -169,32 +130,29 @@ export function createReceiptLineRequest({
       return camelizeObjectKeys(response)
     })
 }
-export function deleteReceiptLineRequest({
+
+export function deleteMovementLineRequest({
   id,
-  uuid,
-  receiptId
+  movementId
 }) {
   return request({
-    url: `${config.express.receipt}/receipts/${receiptId}/lines/${id}`,
-    method: 'delete',
-    params: {
-      id,
-      uuid
-    }
+    url: `${config.express.movement}/movement/${movementId}/lines/${id}`,
+    method: 'delete'
   })
     .then(response => {
       return camelizeObjectKeys(response)
     })
 }
-export function updateReceiptLineRequest({
+
+export function updateMovementLineRequest({
   id,
   uuid,
-  receiptId,
+  movementId,
   description,
   quantity
 }) {
   return request({
-    url: `${config.express.receipt}/receipts/${receiptId}/lines/${id}`,
+    url: `${config.express.movement}/movement/${movementId}/lines/${id}`,
     method: 'patch',
     data: {
       id,
@@ -208,12 +166,17 @@ export function updateReceiptLineRequest({
     })
 }
 
-export function listReceiptLinesRequest({
-  receiptId
+export function listMovementLinesRequest({
+  movementId,
+  movementUuid
 }) {
   return request({
-    url: `${config.express.receipt}/receipts/${receiptId}/lines`,
-    method: 'get'
+    url: `${config.express.movement}/${movementId}/movements/lines`,
+    method: 'get',
+    params: {
+      movement_id: movementId,
+      movement_uuid: movementUuid
+    }
   })
     .then(response => {
       return camelizeObjectKeys(response)

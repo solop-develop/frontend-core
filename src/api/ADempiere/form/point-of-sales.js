@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -19,7 +19,9 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 import { config } from '@/utils/ADempiere/config'
-import { isEmptyValue } from '@/utils/ADempiere'
+
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { camelizeObjectKeys } from '@/utils/ADempiere/transformObject.js'
 
 // Constants
@@ -31,7 +33,6 @@ import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
  * @author elsiosanchez <elsiosanches@gmail.com>
  */
 export { getProductPrice as findProduct } from '@/api/ADempiere/form/price-checking.js'
-export { requestGetConversionRate } from '@/api/ADempiere/common/index.ts'
 
 // List Point of sales
 export function getPointOfSales({
@@ -146,121 +147,6 @@ export function updateOrder({
       const { convertOrder } = require('@/utils/ADempiere/apiConverts/pos.js')
 
       return convertOrder(updateOrderResponse)
-    })
-}
-
-/**
- * Create Customer
- * @deprecated use {requestCreateCustomer} from `@/api/ADempiere/form/VPOS/customer.js`
- */
-export function createCustomer({
-  value,
-  taxId,
-  duns,
-  naics,
-  name,
-  lastName,
-  description,
-  addresses,
-  phone,
-  additionalAttributes,
-  posUuid
-}) {
-  return request({
-    url: 'form/addons/point-of-sales/create-customer',
-    method: 'post',
-    data: {
-      value,
-      tax_id: taxId,
-      name,
-      last_name: lastName,
-      description,
-      phone,
-      addresses,
-      additional_attributes: additionalAttributes,
-      pos_uuid: posUuid
-    }
-  })
-    .then(businessPartnerResponse => {
-      const { convertBusinessPartner } = require('@/utils/ADempiere/apiConverts/core.js')
-
-      return convertBusinessPartner(businessPartnerResponse)
-    })
-}
-
-/**
- * Update Customer
- * @deprecated use {requestUpdateCustomer} from `@/api/ADempiere/form/VPOS/customer.js`
- */
-export function updateCustomer({
-  uuid,
-  value,
-  taxId,
-  duns,
-  naics,
-  name,
-  lastName,
-  description,
-  additionalAttributes,
-  addresses,
-  phone,
-  posUuid
-}) {
-  return request({
-    url: 'form/addons/point-of-sales/update-customer',
-    method: 'post',
-    data: {
-      uuid,
-      value,
-      tax_id: taxId,
-      name,
-      additional_attributes: additionalAttributes,
-      last_name: lastName,
-      description,
-      phone,
-      addresses,
-      pos_uuid: posUuid
-    }
-  })
-    .then(businessPartnerResponse => {
-      const { convertBusinessPartner } = require('@/utils/ADempiere/apiConverts/core.js')
-
-      return convertBusinessPartner(businessPartnerResponse)
-    })
-}
-
-/**
- * List Customers
- * @deprecated use {requestListCustomers} from `@/api/ADempiere/form/VPOS/customer.js`
- */
-export function customer({
-  posUuid,
-  searchValue,
-  value,
-  name,
-  contactName,
-  eMail,
-  phone,
-  postalCode
-}) {
-  return request({
-    url: 'form/addons/point-of-sales/customer',
-    method: 'get',
-    params: {
-      search_value: searchValue,
-      pos_uuid: posUuid,
-      value,
-      name,
-      contact_name: contactName,
-      e_mail: eMail,
-      phone,
-      postal_code: postalCode
-    }
-  })
-    .then(businessPartnerResponse => {
-      const { convertBusinessPartner } = require('@/utils/ADempiere/apiConverts/core.js')
-
-      return convertBusinessPartner(businessPartnerResponse)
     })
 }
 
@@ -1602,23 +1488,6 @@ export function listStocks({
       pos_uuid: posUuid,
       value,
       sku
-    }
-  })
-    .then(response => {
-      return camelizeObjectKeys(response)
-    })
-}
-
-export function listUom({
-  posUuid,
-  productId
-}) {
-  return request({
-    url: 'common/list-product-conversion',
-    method: 'get',
-    params: {
-      pos_uuid: posUuid,
-      product_id: productId
     }
   })
     .then(response => {

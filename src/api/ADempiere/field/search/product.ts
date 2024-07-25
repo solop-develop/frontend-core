@@ -260,7 +260,7 @@ export function requestListVendors({
 }
 
 export function requestListProducts({
-  contextAttributesList,
+  contextAttributes,
   filters = [],
   fieldId,
   processParameterId,
@@ -299,16 +299,6 @@ export function requestListProducts({
   //     value: attribute.value
   //   }
   // })
-
-  let contextAttributes = []
-  if (!isEmptyValue(contextAttributesList)) {
-    contextAttributes = contextAttributesList.map(attribute => {
-      return {
-        key: attribute.columnName,
-        value: attribute.value
-      }
-    })
-  }
 
   let url = '/field/products'
   switch (true) {

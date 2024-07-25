@@ -26,7 +26,7 @@ import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 export function requestListBusinessPartner({
-  contextAttributesList,
+  contextAttributes,
   filters = [],
   fieldId,
   processParameterId,
@@ -59,16 +59,6 @@ export function requestListBusinessPartner({
   //     value: attribute.value
   //   }
   // })
-
-  let contextAttributes = []
-  if (!isEmptyValue(contextAttributesList)) {
-    contextAttributes = contextAttributesList.map(attribute => {
-      return {
-        key: attribute.columnName,
-        value: attribute.value
-      }
-    })
-  }
 
   let url
   switch (true) {

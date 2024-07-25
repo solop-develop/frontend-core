@@ -270,9 +270,13 @@ const productFieldSearch = {
           contextColumnNames,
           isBooleanToString: true
         })
+        let contextAttributes = '{}'
+        if (!isEmptyValue(contextAttributesList)) {
+          contextAttributes = JSON.stringify(contextAttributesList)
+        }
 
         requestListProducts({
-          contextAttributesList,
+          contextAttributes: contextAttributes,
           //
           fieldId,
           processParameterId,

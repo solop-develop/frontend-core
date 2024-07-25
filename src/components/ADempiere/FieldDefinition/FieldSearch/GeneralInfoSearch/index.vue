@@ -38,11 +38,13 @@
     @keyup.enter.native="getRecord"
       -->
     <template slot-scope="recordRow">
-      <div class="header">
-        <b> {{ generateDisplayedValue(recordRow.item) }} </b>
-      </div>
-      <span class="info">
-        {{ generatedDescription(recordRow.item) }}
+      <span :class="{ 'disabled-record': !recordRow.item.IsActive }">
+        <div class="header">
+          <b> {{ generateDisplayedValue(recordRow.item) }} </b>
+        </div>
+        <span class="info">
+          {{ generatedDescription(recordRow.item) }}
+        </span>
       </span>
     </template>
 

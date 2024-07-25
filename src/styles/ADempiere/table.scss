@@ -26,3 +26,21 @@
 .cell-align-center {
   text-align: center !important;
 }
+
+.disabled-record {
+  background: oldlace !important;
+  background-color: oldlace !important;
+  cursor: not-allowed !important;
+
+  >.el-table__cell {
+    background: oldlace !important;
+    background-color: oldlace !important;
+    cursor: not-allowed !important;
+  }
+
+  >.header,>.info {
+    background: oldlace !important;
+    background-color: oldlace !important;
+    cursor: not-allowed !important;
+  }
+}

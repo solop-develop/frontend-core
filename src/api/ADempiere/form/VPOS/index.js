@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -865,19 +865,6 @@ export function processOrder({
  */
 
 /**
- * List Product Conversion UOM
- */
-
-export function listProductConversion({
-  id
-}) {
-  return request({
-    url: `common/product-conversions/${id}`,
-    method: 'get'
-  })
-}
-
-/**
  * List Stock: GET /api/stocks
  * @param {int32} posId
  * @param {string} value
@@ -894,91 +881,6 @@ export function listStocks({
     params: {
       value,
       sku
-    }
-  })
-}
-
-/**
- * Get Currency Rate
- * @param {int32} conversion_type_id
- * @param {int32} currency_from_id
- * @param {int32} currency_to_id
- * @param {google.protobuf.Timestamp} conversion_date
- */
-
-export function getConversionRate({
-  conversionTypeId,
-  currencyFromId,
-  currencyToId,
-  conversionDate
-}) {
-  return request({
-    url: 'common/conversion-rates',
-    method: 'get',
-    params: {
-      conversion_type_id: conversionTypeId,
-      currency_from_id: currencyFromId,
-      currency_to_id: currencyToId,
-      conversion_date: conversionDate
-    }
-  })
-}
-
-/**
- * List Banks
- */
-export function listBanks({
-  posId
-}) {
-  return request({
-    url: `point-of-sales/${posId}/banks`,
-    method: 'get',
-    params: {
-      page_size: 100
-    }
-  })
-}
-
-/**
- * List Bank Accounts
- */
-export function listBankAccounts({
-  posId,
-  customerId,
-  bankId
-}) {
-  return request({
-    url: `point-of-sales/${posId}/customers/${customerId}/bank-accounts`,
-    method: 'get',
-    params: {
-      page_size: 100,
-      bank_id: bankId
-    }
-  })
-}
-
-/**
- * Create Customer Account
- */
-export function createCustomerBankAccount({
-  posId,
-  customerId,
-  accountNo,
-  driverLicense,
-  bankId,
-  bankAccountType = 'C',
-  isAch = true
-}) {
-  return request({
-    url: `point-of-sales/${posId}/customers/${customerId}/bank-accounts`,
-    method: 'post',
-    data: {
-      account_no: accountNo,
-      driver_license: driverLicense,
-      bank_id: bankId,
-      bank_account_type: bankAccountType,
-      social_security_number: driverLicense,
-      is_ach: isAch
     }
   })
 }

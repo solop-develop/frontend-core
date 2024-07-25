@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import Vue from 'vue'
 import language from '@/lang'
 
 // API Request Methods
@@ -27,16 +28,15 @@ import { showMessage } from '@/utils/ADempiere/notification'
 
 const workflow = {
   state: {
-    // TODO: Change array to object key-value to improve performance
-    workflow: []
+    workflowDefinition: {}
   },
 
   mutations: {
-    addWorkflow(state, payload) {
-      state.workflow.push(payload)
+    addWorkflow(state, workflow) {
+      Vue.set(state.workflowDefinition, workflow.uuid, workflow)
     },
     dictionaryResetCacheWorkflow(state) {
-      state.workflow = []
+      state.workflow = {}
     }
   },
 
@@ -59,7 +59,6 @@ const workflow = {
               ...workflowResponse,
               containerUuid,
               diagramMetadata: generateWorkflowDiagram(workflowResponse),
-              // fieldsList: [],
               panelType
             }
 
@@ -91,15 +90,8 @@ const workflow = {
   },
 
   getters: {
-    getWorkflowUuid: (state) => (workflowUuid) => {
-      return state.workflow.find(
-        item => item.uuid === workflowUuid
-      )
-    },
-    getStoredWorkflowById: (state) => (workflowId) => {
-      return state.workflow.find(
-        item => item.id === workflowId
-      )
+    getStoredWorkflowByUuid: (state) => (workflowUuid) => {
+      return state.workflowDefinition[workflowUuid] || {}
     }
   }
 }

@@ -19,7 +19,7 @@
 <template>
   <div style="display: contents;">
     <div style="height: 6% !important;padding: 0px 15px;">
-      <el-steps :active="currentSetp" finish-status="success">
+      <el-steps :active="currentStep" finish-status="success">
         <el-step
           v-for="(list, key) in stepList"
           :key="key"
@@ -30,18 +30,19 @@
 
     <div style="height: 80% !important;padding: 0px 15px;">
       <search-criteria
-        v-show="'searchCriteria' === stepList[currentSetp].key"
+        v-show="'searchCriteria' === stepList[currentStep].key"
         :metadata="metadata"
       />
+
       <payments
-        v-show="'payments' === stepList[currentSetp].key"
+        v-show="'payments' === stepList[currentStep].key"
       >
         <template v-slot:footer>
           <el-button
             type="danger"
             class="button-base-icon"
             icon="el-icon-close"
-            @click="currentSetp--"
+            @click="currentStep--"
           />
           <el-button
             type="primary"
@@ -54,7 +55,7 @@
       </payments>
     </div>
 
-    <div v-show="currentSetp <= 0" style="height: 14% !important;text-align: end;padding: 0px 15px;">
+    <div v-show="currentStep <= 0" style="height: 14% !important;text-align: end;padding: 0px 15px;">
       <el-button
         type="success"
         class="button-base-icon"
@@ -78,8 +79,14 @@ import Payments from './components/Payments'
 // import Summary from './components/Summary'
 
 // Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
+/**
+ * Based on:
+ * org.compiere.apps.form.Allocation
+ * org.compiere.apps.form.VAllocation
+ * org.adempiere.webui.apps.form.WAllocation
+ */
 export default defineComponent({
   name: 'VAllocation',
 
@@ -116,7 +123,7 @@ export default defineComponent({
       }
     ])
 
-    const currentSetp = computed({
+    const currentStep = computed({
       // getter
       get() {
         const step = store.getters.getSteps
@@ -128,26 +135,37 @@ export default defineComponent({
       }
     })
 
+    const transactionOrganizationId = computed(() => {
+      const { transactionOrganizationId } = store.getters.getProcess
+      return transactionOrganizationId
+    })
+
     const isDisabledProcess = computed(() => {
       const {
         businessPartnerId,
         currencyId
       } = store.getters.getSearchFilter
+      if (currentStep.value === 1) {
+        // only process
+        if (isEmptyValue(transactionOrganizationId.value) || transactionOrganizationId.value <= 0) {
+          return true
+        }
+      }
       return isEmptyValue(businessPartnerId) || isEmptyValue(currencyId)
     })
 
     function nextStep(step) {
-      if (currentSetp.value === 0) {
+      if (currentStep.value === 0) {
         store.commit('setListSelectInvoceandPayment', [])
       }
-      if (currentSetp.value === 1) {
+      if (currentStep.value === 1) {
         store.dispatch('processSend')
       }
-      if (currentSetp.value >= 1) {
+      if (currentStep.value >= 1) {
         return
       }
-      currentSetp.value++
-      if (currentSetp.value === 1) {
+      currentStep.value++
+      if (currentStep.value === 1) {
         store.dispatch('findListPayment')
         store.dispatch('findListInvoices')
       }
@@ -159,7 +177,7 @@ export default defineComponent({
     return {
       // Refs
       stepList,
-      currentSetp,
+      currentStep,
       // Computed
       isDisabledProcess,
       // Methods

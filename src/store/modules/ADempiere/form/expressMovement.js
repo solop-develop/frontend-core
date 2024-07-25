@@ -24,15 +24,15 @@ import {
   // Movement
   createMovementRequest,
   processMovementRequest,
-  // // Movement Line
+  // Movement Line
   createMovementLineRequest,
   updateMovementLineRequest,
   deleteMovementLineRequest,
   listMovementLinesRequest
-} from '@/api/ADempiere/form/expresMovement.js'
-import { isEmptyValue } from '@/utils/ADempiere'
+} from '@/api/ADempiere/form/expres-movement.js'
 
 // Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 
 const expressMovement = {
