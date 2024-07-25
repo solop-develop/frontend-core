@@ -22,7 +22,7 @@ import store from '@/store'
 import Layout from '@/layout'
 
 // Constants
-import staticRoutes from '@/router/modules/ADempiere/staticRoutes.js'
+import STATIC_ROUTES from '@/router/modules/ADempiere/staticRoutes.js'
 import { NOTICE_WINDOW_ID } from '@/utils/ADempiere/dictionary/dashboard'
 
 // API Request Methods
@@ -31,7 +31,7 @@ import { requestMenu } from '@/api/ADempiere/security/index.ts'
 // Utils and Helper Methods
 import { convertAction } from '@/utils/ADempiere/dictionary/menu'
 import { getCurrentOrganization } from '@/utils/ADempiere/auth'
-import { isEmptyValue, recursiveTreeSearch } from '@/utils/ADempiere'
+import { isEmptyValue, recursiveTreeSearch } from '@/utils/ADempiere/valueUtils'
 
 /**
  * Get Menu from server
@@ -101,7 +101,7 @@ export function loadMainMenu({
       })
       const permiseStactiRoutes = hidenStaticRoutes({
         dynamicRoutes: asyncRoutesMap,
-        staticRoutes,
+        staticRoutes: STATIC_ROUTES,
         permiseRole: role
       })
       const menuRoutes = permiseStactiRoutes
@@ -115,7 +115,7 @@ export function loadMainMenu({
       console.error(`Error getting menu: ${error.message}. Code: ${error.code}.`)
       const permiseStactiRoutes = hidenStaticRoutes({
         dynamicRoutes: [],
-        staticRoutes,
+        staticRoutes: STATIC_ROUTES,
         permiseRole: role
       })
       const menuRoutes = permiseStactiRoutes
