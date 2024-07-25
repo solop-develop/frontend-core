@@ -112,7 +112,9 @@ const report = {
     openLink: 'Abrir Enlace',
     mesajeShear: 'Su Enlace a Sido Copiado Exitosamente al Portapapeles',
     refreshRecord: 'Refrescar',
-    sendDetails: 'Detalles del Envío'
+    sendDetails: 'Detalles del Envío',
+    recipient: 'Destinatarios',
+    urlAddress: 'Dirección Url'
   }
 }
 
