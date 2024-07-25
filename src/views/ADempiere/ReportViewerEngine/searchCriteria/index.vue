@@ -1,26 +1,28 @@
 <template>
-  <el-row :gutter="24" align="middle" class="containerReport">
-    <el-col :xs="24" :md="14" class="containerPrint">
-      <PrintOptions
-        :container-uuid="containerUuid"
-        :report-output="reportOutput"
-      />
-    </el-col>
-    <el-col :xs="24" :md="6" :offset-md="2" class="containerSumary">
-      <reportSumary />
-    </el-col>
-    <el-col :xs="24" :md="2" class="containerButtom">
-      <el-button
-        plain
-        size="mini"
-        type="primary"
-        class="custom-button"
-        @click="viewShowDialog"
-      >
-        {{ $t('report.reportEnginer.share') }}
-      </el-button>
-    </el-col>
-  </el-row>
+  <div class="containerReportEnginer">
+    <el-row :gutter="24" align="middle" class="containerReport">
+      <el-col :xs="24" :md="14" class="containerPrint">
+        <PrintOptions
+          :container-uuid="containerUuid"
+          :report-output="reportOutput"
+        />
+      </el-col>
+      <el-col :xs="24" :md="6" :offset-md="2" class="containerSumary">
+        <reportSumary />
+      </el-col>
+      <el-col :xs="24" :md="2" class="containerButtom">
+        <el-button
+          plain
+          size="mini"
+          type="primary"
+          class="custom-button"
+          @click="viewShowDialog"
+        >
+          {{ $t('report.reportEnginer.share') }}
+        </el-button>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
 <script>
@@ -57,6 +59,12 @@ export default defineComponent({
 </script>
 
 <style>
+.containerReportEnginer {
+  position: relative;
+}
+.containerReport, .containerSumary, .containerButtom{
+  top: 50%;
+}
 .containerReport {
   margin-bottom: 20px;
 }
@@ -79,6 +87,14 @@ export default defineComponent({
   }
   .containerButtom {
     width: 20%;
+  }
+}
+@media screen and (max-width: 1000px) {
+  .containerReportEnginer {
+    margin-right: 70px
+  }
+  .containerSumary, .containerReport {
+    margin-right: 50px
   }
 }
 @media screen and (max-width: 1080px) {
