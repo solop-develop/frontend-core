@@ -5,7 +5,7 @@
       type="success"
       class="button-base-icon"
       icon="el-icon-refresh-right"
-      style="font-size:20px"
+      style="font-size:16px"
       @click="runReport"
     >
       {{ $t('report.reportEnginer.refreshRecord') }}
@@ -92,7 +92,9 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.select-container {
-  width: 80%;
+@media screen and (max-width:1150px) {
+  .button-base-icon {
+    font-size: 12px;
+  }
 }
 </style>

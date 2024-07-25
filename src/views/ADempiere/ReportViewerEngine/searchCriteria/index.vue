@@ -1,6 +1,6 @@
 <template>
   <el-row :gutter="24" align="middle" class="containerReport">
-    <el-col :xs="24" :md="14" class="containerPrint">
+    <el-col :xs="24" :md="12" class="containerPrint">
       <PrintOptions
         :container-uuid="containerUuid"
         :report-output="reportOutput"
@@ -66,44 +66,18 @@ export default defineComponent({
 
 <style>
 .containerReport {
-  margin-bottom: 20px;
-  margin-right: 90px !important
-}
-.containerRefreshButton {
-  padding-right: 5px;
-}
-.containerReport .el-col {
   display: flex;
   align-items: center;
+  margin-bottom: 20px;
 }
-
-@media screen and (max-width: 800px) {
-  .containerSummary, .containerButton {
-    margin-top: 25px;
-    display: flex;
-    justify-content: center;
-  }
-}
-
-@media screen and (max-width: 1080px) {
-  .containerSummary, .containerButton {
-    margin-top: 10px;
-    display: flex;
-    justify-content: center;
-  }
-  .containerSummary {
+@media screen and (max-width:1150px) {
+  .containerReport, .custom-button {
     font-size: 12px;
   }
 }
-
-@media screen and (max-width: 1200px) {
-  .containerSummary, .containerButton {
-    margin-top: 10px;
-    display: flex;
-    justify-content: center;
-  }
-  .containerSummary {
-    font-size: 12px;
+@media screen and (max-width:1100px) {
+  .containerReport {
+    margin-bottom: 22px;
   }
 }
 </style>
