@@ -571,29 +571,11 @@ const reportManager = {
           sortBy
         })
           .then(reportResponse => {
-            const {
-              id,
-              name,
-              instance_id,
-              report_view_id
-            } = reportResponse
-            router.push({
-              path: `report-viewer-engine/${id}/${instance_id}/${report_view_id}`,
-              name: 'Report Viewer Engine',
-              params: {
-                instanceUuid: instance_id,
-                name: name + instance_id,
-                fileName: name,
-                reportId: id,
-                reportUuid: reportDefinition.uuid,
-                tableName
-              }
-            }, () => {})
             commit('setReportOutput', {
               ...reportResponse,
               containerUuid,
               rowCells: reportResponse.rows,
-              instanceUuid: id
+              instanceUuid: reportResponse.id
             })
             resolve(reportResponse)
           })
