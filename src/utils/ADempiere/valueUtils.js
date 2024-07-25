@@ -1027,7 +1027,7 @@ export function getOperatorAndValue({
 
   fieldsList.forEach(field => {
     // default operator
-    const { columnName, operator, valueType } = field
+    const { columnName, columnNameTo, operator, valueType, display_type } = field
 
     let value, valueTo, values
 
@@ -1040,26 +1040,27 @@ export function getOperatorAndValue({
       if (isEmptyValue(contextValue)) {
         return
       }
-      if (FIELDS_DATE.includes(field.display_type)) {
+      if (FIELDS_DATE.includes(display_type)) {
         if (MULTIPLE_VALUES_OPERATORS_LIST.includes(operator)) {
           values = contextValue
         } else if (RANGE_VALUE_OPERATORS_LIST.includes(operator)) {
           [value, valueTo] = Array.isArray(contextValue) ? contextValue : [contextValue, store.getters.getValueOfFieldOnContainer({
             containerUuid: containerUuid,
-            columnName: field.columnNameTo
+            columnName: columnNameTo
           })]
+          values = [value, valueTo]
         } else {
           value = contextValue
         }
       } else {
-        values = contextValue
+        value = contextValue
       }
     }
 
     attributesArray.push({
       name: columnName,
       operator: operator,
-      values: !isEmptyValue(value) ? value : values
+      values: !isEmptyValue(values) ? values : value
     })
 
     attributesObject[columnName] = {
