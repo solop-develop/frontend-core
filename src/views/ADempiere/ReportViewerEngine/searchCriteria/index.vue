@@ -6,14 +6,14 @@
         :report-output="reportOutput"
       />
     </el-col>
+    <el-col :xs="24" :md="5" class="containerSummary">
+      <reportSummary />
+    </el-col>
     <el-col :xs="24" :md="3" class="containerRefreshButton">
       <refreshButton
         :container-uuid="containerUuid"
         :report-output="reportOutput"
       />
-    </el-col>
-    <el-col :xs="24" :md="5" :offset-md="2" class="containerSummary">
-      <reportSummary />
     </el-col>
     <el-col :xs="24" :md="2" class="containerButton">
       <el-button
@@ -67,7 +67,7 @@ export default defineComponent({
 <style>
 .containerReport {
   margin-bottom: 20px;
-  margin-right: 70px !important
+  margin-right: 90px !important
 }
 .containerRefreshButton {
   padding-right: 5px;
@@ -79,7 +79,7 @@ export default defineComponent({
 
 @media screen and (max-width: 800px) {
   .containerSummary, .containerButton {
-    margin-top: 20px;
+    margin-top: 25px;
     display: flex;
     justify-content: center;
   }

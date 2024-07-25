@@ -1,10 +1,10 @@
 <template>
-  <div class="select-container" style="margin-top: 10px; margin-left: 10px; display: flex; align-items: center;">
+  <div class="select-container" style="margin-left: -40px; display: flex; align-items: center;">
     <el-button
-      plain
-      size="mini"
-      type="primary"
-      class="custom-button"
+      :loading="isLoading"
+      type="success"
+      class="button-base-icon"
+      style="font-size:20px"
       @click="runReport"
     >
       {{ $t('report.reportEnginer.refreshRecord') }}
@@ -15,7 +15,7 @@
 <script>
 import store from '@/store'
 import lang from '@/lang'
-import { defineComponent, ref } from '@vue/composition-api'
+import { defineComponent, computed, ref } from '@vue/composition-api'
 import { showNotification } from '@/utils/ADempiere/notification'
 export default defineComponent({
   name: 'refreshButton',
@@ -30,8 +30,10 @@ export default defineComponent({
     }
   },
   setup(props, { root }) {
-    console.log(props)
     const timeOutRecords = ref(null)
+    const isLoading = computed(() => {
+      return store.getters.getReportIsLoading
+    })
     function runReport() {
       const reportDefinition = store.getters.getStoredReport(props.containerUuid)
       const reportOutputParams = store.getters.getReportParameters({
@@ -81,15 +83,15 @@ export default defineComponent({
       }, 500)
     }
     return {
-      runReport
+      runReport,
+      isLoading
     }
   }
 })
 </script>
 
 <style scoped>
-.select-label {
-  margin-bottom: 5px;
-  font-weight: bold;
+.select-container {
+  width: 80%;
 }
 </style>
