@@ -155,17 +155,19 @@ export const containerManager = {
     parametersList,
     reportId,
     printFormatId,
+    instanceUuid,
     reportViewId
   }) => {
-    store.dispatch('generateReportViwer', {
+    store.dispatch('buildReport', {
       containerUuid,
       isSummary: true,
       parametersList,
       reportId,
       pageSize,
-      pageNumber,
+      pageToken: pageNumber,
       isView: true,
       printFormatId,
+      instanceUuid,
       reportViewId
     })
   },
@@ -177,17 +179,19 @@ export const containerManager = {
     parametersList,
     reportId,
     printFormatId,
+    instanceUuid,
     reportViewId
   }) => {
-    store.dispatch('generateReportViwer', {
+    store.dispatch('buildReport', {
       containerUuid,
       isSummary: true,
       parametersList,
       reportId,
       pageSize,
-      pageNumber,
+      pageToken: pageNumber,
       isView: true,
       printFormatId,
+      instanceUuid,
       reportViewId
     })
   }
