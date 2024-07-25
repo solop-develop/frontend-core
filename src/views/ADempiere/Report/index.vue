@@ -34,14 +34,7 @@
         :help="reportMetadata.help"
       />
       <div id="report-view">
-        <action-menu
-          :container-manager="containerManager"
-          :container-uuid="reportUuid"
-          :actions-manager="actionsManager"
-          style="float: right;padding-left: 1%;"
-        />
         <br><br>
-
         <panel-definition
           :container-uuid="reportUuid"
           :panel-metadata="reportMetadata"

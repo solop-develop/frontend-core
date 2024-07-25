@@ -55,7 +55,7 @@
                 v-model="checkedItemGeneral"
                 :label="0"
                 label-position="left"
-                style="font-size: 18px;"
+                style="font-size: 18px; padding-right: 1%; padding-bottom: 2%"
                 @change="setCheckedItemGeneral"
               >
                 {{ $t('report.reportEnginer.optionsImport.download') }}
@@ -69,7 +69,7 @@
                 v-model="checkedItemGeneral"
                 :label="1"
                 label-position="left"
-                style="font-size: 18px;"
+                style="font-size: 18px; padding-right: 1%; padding-bottom: 2%"
                 @change="setCheckedItemGeneral"
               >
                 {{ $t('report.reportEnginer.optionsImport.send') }}
@@ -81,7 +81,7 @@
                 v-model="checkedItemGeneral"
                 :label="3"
                 label-position="left"
-                style="font-size: 18px;"
+                style="font-size: 18px; padding-bottom: 2%"
                 @change="setCheckedItemGeneral"
               >
                 {{ $t('report.reportEnginer.optionsImport.copyLink') }}
@@ -107,22 +107,38 @@
             <p style="width: 630px; margin: 0 auto; font-size: 14px; text-align: center;">
               {{ $t('component.attachment.share.description') }}
             </p>
-            <p style="text-align: center;">
+            <p style="text-align: center; padding-bottom: 1%">
               <b>
                 {{ $t('component.attachment.share.timeText') }}
               </b>
             </p>
             <el-radio-group
               v-model="validTime"
-              style="display: flex; justify-content: center;"
+              style="display: flex; justify-content: center; padding-bottom: 1%;"
+              @change="loadData"
             >
-              <el-radio :label="3600">1 {{ ' ' + $t('component.attachment.share.time.hour') }}</el-radio>
-              <el-radio :label="21600">6 {{ ' ' + $t('component.attachment.share.time.hours') }}</el-radio>
-              <el-radio :label="86400">1 {{ ' ' + $t('component.attachment.share.time.day') }}</el-radio>
-              <el-radio :label="259200">3 {{ ' ' + $t('component.attachment.share.time.days') }}</el-radio>
-              <el-radio :label="604800">7 {{ ' ' + $t('component.attachment.share.time.days') }}</el-radio>
+              <el-radio class="radio-padding" :label="3600">1 {{ ' ' + $t('component.attachment.share.time.hour') }}</el-radio>
+              <el-radio class="radio-padding" :label="21600">6 {{ ' ' + $t('component.attachment.share.time.hours') }}</el-radio>
+              <el-radio class="radio-padding" :label="86400">1 {{ ' ' + $t('component.attachment.share.time.day') }}</el-radio>
+              <el-radio class="radio-padding" :label="259200">3 {{ ' ' + $t('component.attachment.share.time.days') }}</el-radio>
+              <el-radio class="radio-padding" :label="604800">7 {{ ' ' + $t('component.attachment.share.time.days') }}</el-radio>
             </el-radio-group>
           </el-row>
+        </el-card>
+      </el-col>
+      <el-col v-if="markdownContent" :span="24" style="margin-top: 1%">
+        <el-card>
+          <template #header>
+            <p>{{ reportOutput.name }}</p>
+          </template>
+          <v-md-editor
+            v-model="markdownContent"
+            left-toolbar="undo redo clear h bold italic strikethrough quote ul ol table hr link image code | emoji listMailTemplates"
+            right-toolbar="sync-scroll fullscreen"
+            mode="edit"
+            height="150px"
+            :placeholder="$t('window.containerInfo.logWorkflow.addNote')"
+          />
         </el-card>
       </el-col>
       <el-col style="margin-top: 1%">
@@ -153,6 +169,9 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { config } from '@/utils/ADempiere/config'
 import { REPORT_EXPORT_TYPES } from '@/utils/ADempiere/constants/report'
 import { showNotificationReport } from '@/utils/ADempiere/notification.js'
+import {
+  requestShareResources
+} from '@/api/ADempiere/file-management/resource-reference.ts'
 import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 import contactSend from './contactSend'
 import typeNotify from './typeNotify'
@@ -176,11 +195,30 @@ export default defineComponent({
     const checkedItemGeneral = ref(0)
     const checkedItem = ref(0)
     const printFormat = ref([])
-    const printFormatValue = ref('xlsx')
+    const printFormatValue = ref('')
     const typeNotification = ref('')
     const linkShare = ref('')
     const isLoading = ref(false)
     const validTime = ref(3600)
+    const markdownContent = computed(() => {
+      if (!isEmptyValue(contactSend.value) || !isEmptyValue(typeNotify.isEmptyValue)) {
+        return true
+      }
+      return true
+    })
+    function loadData() {
+      isLoading.value = true
+      requestShareResources({
+        fileName: props.reportOutput.name,
+        seconds: validTime.value
+      })
+        .then(response => {
+          linkShare.value = response
+        })
+        .finally(() => {
+          isLoading.value = false
+        })
+    }
     function setCheckedItemGeneral(check) {
       checkedItemGeneral.value = check
     }
@@ -197,7 +235,6 @@ export default defineComponent({
       store.commit('setShowDialog', false)
     }
     function sendNotify() {
-      validTime.value
       let link = 'https://www.google.com'
       let title = ''
       let message = ''
@@ -235,7 +272,7 @@ export default defineComponent({
       link.click()
     }
     function optionPrintFormat() {
-      const xlsTypes = REPORT_EXPORT_TYPES.filter(type => type.type === 'xlsx')
+      const xlsTypes = REPORT_EXPORT_TYPES.filter(type => type.type === 'xls')
       printFormat.value = xlsTypes
     }
     const exportData = computed(() => {
@@ -271,7 +308,7 @@ export default defineComponent({
         isShowMessage: false
       })
     }
-
+    loadData()
     return {
       checkedItemGeneral,
       checkedItem,
@@ -293,7 +330,9 @@ export default defineComponent({
       optionPrintFormat,
       sendNotify,
       sendLink,
-      copyValue
+      copyValue,
+      loadData,
+      markdownContent
     }
   }
 })
@@ -302,5 +341,8 @@ export default defineComponent({
 <style>
 .el-card__header {
   padding: 0px 20px !important;
+}
+.radio-padding {
+  padding-left: 5%;
 }
 </style>
