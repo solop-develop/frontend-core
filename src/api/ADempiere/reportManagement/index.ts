@@ -209,22 +209,21 @@ export function SendNotification({
   notification_type,
   attachments
 }) {
-  const recipientsList = recipients.map(recipient => {
-    return {
-      account_name: recipient.label,
-      contact_id: recipient.value
-    }
-  })
   return request({
     url: '/send_notifications/notification',
     method: 'post',
-    params: {
+    data: {
       user_id,
       title,
-      recipients: recipientsList,
       body: subject,
       notification_type,
-      attachments
+      attachments,
+      recipients: recipients.map(parameter => {
+        return {
+          account_name: parameter.label,
+          contact_id: parameter.value
+        }
+      })
     }
   })
 }

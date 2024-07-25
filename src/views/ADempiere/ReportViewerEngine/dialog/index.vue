@@ -126,6 +126,19 @@
           <template #header>
             <p>{{ $t('report.reportEnginer.sendDetails') }}</p>
           </template>
+          <div style="margin-bottom: 3%;">
+            <label>Destinatario</label>
+            <el-input
+              v-model="toUser"
+              disabled
+            />
+          </div>
+          <div style="margin-bottom: 3%;">
+            <label>Asunto</label>
+            <el-input
+              v-model="titleDocument"
+            />
+          </div>
           <v-md-editor
             v-model="markdownContent"
             left-toolbar="undo redo clear h bold italic strikethrough quote ul ol table hr link image code | emoji listMailTemplates"
@@ -134,6 +147,13 @@
             height="150px"
             :placeholder="$t('window.containerInfo.logWorkflow.addNote')"
           />
+          <div style="margin-top: 3%;">
+            <label>Dirección Url</label>
+            <el-input
+              value="www.google.com"
+              disabled
+            />
+          </div>
         </el-card>
       </el-col>
       <el-col style="margin-top: 1%">
@@ -197,7 +217,11 @@ export default defineComponent({
     const linkShare = ref('')
     const isLoading = ref(false)
     const validTime = ref(3600)
+    const titleDocument = ref(props.reportOutput.name)
     const markdownContent = ref('')
+    const toUser = computed(() => {
+      return contactSend.value ? contactSend.value.map(item => item.label).join(', ') : ''
+    })
     const getStoreReport = computed(() => {
       return store.getters.getStoredReport(props.reportOutput.containerUuid)
     })
@@ -323,7 +347,8 @@ export default defineComponent({
             title: props.reportOutput.name,
             recipients: contactSend.value,
             notification_type: typeNotify.value,
-            attachments: fileNameResource
+            attachments: fileNameResource,
+            subject: markdownContent.value
           })
         })
     }
@@ -350,6 +375,7 @@ export default defineComponent({
       linkShare,
       isLoading,
       validTime,
+      titleDocument,
       copyToClipboard,
       handleDownload,
       getOptionFormat,
@@ -360,7 +386,8 @@ export default defineComponent({
       copyValue,
       loadData,
       downloadFile,
-      markdownContent
+      markdownContent,
+      toUser
     }
   }
 })
