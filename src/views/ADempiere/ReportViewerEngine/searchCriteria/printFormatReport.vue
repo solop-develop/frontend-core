@@ -133,12 +133,14 @@ export default defineComponent({
           summary: description,
           type: 'info'
         })
-        store.dispatch('generateReportViwer', {
+        store.dispatch('buildReport', {
           containerUuid: props.containerUuid || root.$route.params.processUuid,
           isSummary: true,
           parametersList: reportOutputParams,
           printFormatId: reportAsPrintFormatValue.value,
           reportId: reportDefinition.id,
+          instanceUuid: defaultParams.value.instance_id,
+          reportViewId: defaultParams.value.report_view_id,
           isView: true,
           pageSize: props.reportOutput.record_count,
           pageToken: props.reportOutput.next_page_token
