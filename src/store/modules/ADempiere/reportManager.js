@@ -501,7 +501,8 @@ const reportManager = {
       pageToken,
       pageSize,
       sortBy,
-      parametersList = []
+      parametersList = [],
+      isView
     }) {
       const currentRoute = router.app._route
       // generated with refresh web browser
@@ -552,7 +553,7 @@ const reportManager = {
       return new Promise((resolve, reject) => {
         const reportDefinition = getters.getStoredReport(containerUuid)
         const { fieldsList } = reportDefinition
-
+        const reportId = getters.getStoredReport(containerUuid).id
         const filters = getOperatorAndValue({
           format: 'array',
           containerUuid,
@@ -572,28 +573,29 @@ const reportManager = {
         })
           .then(reportResponse => {
             const {
-              id,
               name,
               instance_id,
               report_view_id
             } = reportResponse
-            router.push({
-              path: `report-viewer-engine/${id}/${instance_id}/${report_view_id}`,
-              name: 'Report Viewer Engine',
-              params: {
-                instanceUuid: instance_id,
-                name: name + instance_id,
-                fileName: name,
-                reportId: id,
-                reportUuid: reportDefinition.uuid,
-                tableName
-              }
-            }, () => {})
+            if (!isView) {
+              router.push({
+                path: `report-viewer-engine/${reportId}/${instance_id}/${report_view_id}`,
+                name: 'Report Viewer Engine',
+                params: {
+                  instanceUuid: instance_id,
+                  name: name + instance_id,
+                  fileName: name,
+                  reportId,
+                  reportUuid: reportDefinition.uuid,
+                  tableName
+                }
+              }, () => {})
+            }
             commit('setReportOutput', {
               ...reportResponse,
               containerUuid,
               rowCells: reportResponse.rows,
-              instanceUuid: id
+              instanceUuid: reportId
             })
             resolve(reportResponse)
           })

@@ -134,7 +134,6 @@ export default defineComponent({
           isSummary: true,
           parametersList: reportOutputParams,
           printFormatId: reportAsPrintFormatValue.value,
-          reportId: reportDefinition.id,
           instanceUuid: defaultParams.value.instance_id,
           reportViewId: defaultParams.value.report_view_id,
           isView: true,
