@@ -290,13 +290,36 @@ export default defineComponent({
       return store.getters.getExpandedAll
     })
     function expandedRowAll() {
-      dataList.value.forEach(function expandRecursively(row) {
+      function expandRecursively(row) {
+        tableReportEngine.value.toggleRowExpansion(row, true)
         if (row.children && row.children.length > 0) {
-          tableReportEngine.value.toggleRowExpansion(row, expanded.value)
           row.children.forEach(expandRecursively)
+        }
+      }
+      function collapseRecursively(row) {
+        let hideRow = false
+        if (row.children && row.children.length > 0) {
+          row.children.forEach(child => {
+            if (!child.is_parent) {
+              hideRow = true
+            }
+            collapseRecursively(child)
+          })
+        }
+        if (!row.is_parent || hideRow) {
+          tableReportEngine.value.toggleRowExpansion(row, false)
+        }
+      }
+
+      dataList.value.forEach(row => {
+        if (expanded.value) {
+          expandRecursively(row)
+        } else {
+          collapseRecursively(row)
         }
       })
     }
+
     const isLoadingReport = computed(() => {
       return store.getters.getReportIsLoading
     })
