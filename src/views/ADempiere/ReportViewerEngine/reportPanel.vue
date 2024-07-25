@@ -228,6 +228,7 @@ export default defineComponent({
     const reportDefinition = store.getters.getStoredReport(props.reportOutput.containerUuid)
     function handleChangeSizePage(pageSize) {
       props.containerManager.setPageSize({
+        instanceUuid: props.reportOutput.instance_id,
         containerUuid: props.reportOutput.containerUuid,
         pageNumber: currentPageNumber.value,
         pageSize,
@@ -240,6 +241,7 @@ export default defineComponent({
     }
     function handleChangePage(pageNumber) {
       props.containerManager.setPageNumber({
+        instanceUuid: props.reportOutput.instance_id,
         containerUuid: props.reportOutput.containerUuid,
         pageNumber,
         pageSize: currentPageSize.value,
