@@ -111,7 +111,8 @@ const report = {
     mesajeDownload: 'Click on the Following lLnk to go to Download',
     openLink: 'Open Link',
     mesajeShear: 'Your Link has been Successfully Copied to the Clipboard',
-    refreshRecord: 'Refresh'
+    refreshRecord: 'Refresh',
+    sendDetails: 'Send Details'
   }
 }
 

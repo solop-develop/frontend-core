@@ -122,10 +122,10 @@
           </el-row>
         </el-card>
       </el-col>
-      <el-col v-if="markdownContent" :span="24" style="margin-top: 1%">
+      <el-col v-if="checkedItemGeneral === 1" :span="24" style="margin-top: 1%">
         <el-card>
           <template #header>
-            <p>{{ reportOutput.name }}</p>
+            <p>{{ $t('report.reportEnginer.sendDetails') }}</p>
           </template>
           <v-md-editor
             v-model="markdownContent"
@@ -193,16 +193,10 @@ export default defineComponent({
     const checkedItem = ref(0)
     const printFormat = ref([])
     const printFormatValue = ref('xlsx')
-    const typeNotification = ref('')
     const linkShare = ref('')
     const isLoading = ref(false)
     const validTime = ref(3600)
-    const markdownContent = computed(() => {
-      if (!isEmptyValue(contactSend.value) || !isEmptyValue(typeNotify.isEmptyValue)) {
-        return true
-      }
-      return true
-    })
+    const markdownContent = ref('')
     const getStoreReport = computed(() => {
       return store.getters.getStoredReport(props.reportOutput.containerUuid)
     })
@@ -347,13 +341,11 @@ export default defineComponent({
         isShowMessage: false
       })
     }
-    loadData()
     return {
       checkedItemGeneral,
       checkedItem,
       printFormat,
       printFormatValue,
-      typeNotification,
       exportData,
       disableButtom,
       typeNotify,
