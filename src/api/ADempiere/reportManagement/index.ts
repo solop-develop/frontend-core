@@ -173,11 +173,17 @@ export function getView({
 
 export function runExport({
   format = 'xlsx',
+  reportViewId,
+  printFormatId,
   reportId
 }) {
   return request({
     url: `/report-engine/export/${reportId}/${format}`,
     method: 'post'
+    // data: {
+    //   print_format_id: printFormatId,
+    //   report_view_id: reportViewId,
+    // }
   })
 }
 
@@ -203,14 +209,20 @@ export function SendNotification({
   notification_type,
   attachments
 }) {
+  const recipientsList = recipients.map(recipient => {
+    return {
+      account_name: recipient.label,
+      contact_id: recipient.value
+    }
+  })
   return request({
     url: '/send_notifications/notification',
     method: 'post',
     params: {
       user_id,
       title,
-      recipients,
-      subject,
+      recipients: recipientsList,
+      body: subject,
       notification_type,
       attachments
     }

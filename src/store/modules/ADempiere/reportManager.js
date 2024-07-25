@@ -571,11 +571,29 @@ const reportManager = {
           sortBy
         })
           .then(reportResponse => {
+            const {
+              id,
+              name,
+              instance_id,
+              report_view_id
+            } = reportResponse
+            router.push({
+              path: `report-viewer-engine/${id}/${instance_id}/${report_view_id}`,
+              name: 'Report Viewer Engine',
+              params: {
+                instanceUuid: instance_id,
+                name: name + instance_id,
+                fileName: name,
+                reportId: id,
+                reportUuid: reportDefinition.uuid,
+                tableName
+              }
+            }, () => {})
             commit('setReportOutput', {
               ...reportResponse,
               containerUuid,
               rowCells: reportResponse.rows,
-              instanceUuid: reportResponse.id
+              instanceUuid: id
             })
             resolve(reportResponse)
           })
@@ -676,27 +694,36 @@ const reportManager = {
       commit
     }, {
       reportId,
-      reportName
+      reportName,
+      printFormatId,
+      reportViewId,
+      isDownload = true
     }) {
       return new Promise(resolve => {
         runExport({
-          reportId
+          reportId,
+          printFormatId,
+          reportViewId
         })
           .then(response => {
             const { file_name } = response
-            const file = document.createElement('a')
-            file.href = `${config.adempiere.resource.url}${file_name}`
-            file.download = `${reportName}`
-            commit('setExportReport', response)
-            resolve(response)
+            if (isDownload) {
+              const file = document.createElement('a')
+              file.href = `${config.adempiere.resource.url}${file_name}`
+              file.download = `${reportName}`
+              file.target = '_blank'
+              file.click()
+            }
+            resolve(file_name)
           })
           .catch(error => {
             showNotification({
               title: language.t('notifications.error'),
-              message: error.message,
+              message: `Error exporting report: ${error.message}. Code: ${error.code}.`,
               type: 'error'
             })
             console.warn(`Error exporting report: ${error.message}. Code: ${error.code}.`)
+            resolve(error)
           })
       })
     },
@@ -732,7 +759,7 @@ const reportManager = {
           })
       })
     },
-    getSendNotification({ commit }, {
+    sendNotification({ commit }, {
       user_id,
       title,
       recipients,

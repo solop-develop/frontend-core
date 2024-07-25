@@ -7,6 +7,7 @@
       v-model="contantSend"
       filterable
       allow-create
+      multiple
       @change="setUser"
       @visible-change="searchUser"
     >
@@ -14,7 +15,7 @@
         v-for="(item, key) in listUserSend"
         :key="key"
         :label="item.label"
-        :value="item.value"
+        :value="item"
       />
     </el-select>
   </el-form-item>
@@ -26,7 +27,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 export default defineComponent({
   name: 'contactSend',
   setup() {
-    const contantSend = ref('')
+    const contantSend = ref([])
     const listUserSend = ref([])
     function searchUser() {
       store.dispatch('ListUser')
