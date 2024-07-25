@@ -10,7 +10,6 @@
             <el-col style="width: 100%; text-align: center;">
               <el-select
                 v-model="printFormatValue"
-                @visible-change="optionPrintFormat"
               >
                 <el-option
                   v-for="(item, key) in printFormat"
@@ -191,7 +190,9 @@ export default defineComponent({
   setup(props) {
     const checkedItemGeneral = ref(0)
     const checkedItem = ref(0)
-    const printFormat = ref([])
+    const printFormat = computed(() => {
+      return REPORT_EXPORT_TYPES.filter(type => type.type === 'xlsx')
+    })
     const printFormatValue = ref('xlsx')
     const linkShare = ref('')
     const isLoading = ref(false)
@@ -294,10 +295,6 @@ export default defineComponent({
       link.download = props.reportOutput.name
       link.click()
     }
-    function optionPrintFormat() {
-      const xlsTypes = REPORT_EXPORT_TYPES.filter(type => type.type === 'xlsx')
-      printFormat.value = xlsTypes
-    }
     const exportData = computed(() => {
       return store.getters.getExportReport
     })
@@ -358,7 +355,6 @@ export default defineComponent({
       getOptionFormat,
       viewShowDialog,
       setCheckedItemGeneral,
-      optionPrintFormat,
       sendNotify,
       sendLink,
       copyValue,
