@@ -56,7 +56,6 @@
                 :label="0"
                 label-position="left"
                 style="font-size: 18px; padding-right: 1%; padding-bottom: 2%"
-                @change="setCheckedItemGeneral"
               >
                 {{ $t('report.reportEnginer.optionsImport.download') }}
                 <svg-icon
@@ -70,7 +69,6 @@
                 :label="1"
                 label-position="left"
                 style="font-size: 18px; padding-right: 1%; padding-bottom: 2%"
-                @change="setCheckedItemGeneral"
               >
                 {{ $t('report.reportEnginer.optionsImport.send') }}
                 <i class="el-icon-upload" />
@@ -79,10 +77,9 @@
             <el-col :span="6" style="width: 30%; text-align: center;">
               <el-radio
                 v-model="checkedItemGeneral"
-                :label="3"
+                :label="2"
                 label-position="left"
                 style="font-size: 18px; padding-bottom: 2%"
-                @change="setCheckedItemGeneral"
               >
                 {{ $t('report.reportEnginer.optionsImport.copyLink') }}
                 <i class="el-icon-share" />
@@ -103,7 +100,7 @@
               </el-form>
             </el-col>
           </el-row>
-          <el-row v-if="checkedItemGeneral === 3" :gutter="12" style="margin-top: 50px; text-align: center;">
+          <el-row v-if="checkedItemGeneral === 2" :gutter="12" style="margin-top: 50px; text-align: center;">
             <p style="width: 630px; margin: 0 auto; font-size: 14px; text-align: center;">
               {{ $t('component.attachment.share.description') }}
             </p>
@@ -115,7 +112,6 @@
             <el-radio-group
               v-model="validTime"
               style="display: flex; justify-content: center; padding-bottom: 1%;"
-              @change="loadData"
             >
               <el-radio class="radio-padding" :label="3600">1 {{ ' ' + $t('component.attachment.share.time.hour') }}</el-radio>
               <el-radio class="radio-padding" :label="21600">6 {{ ' ' + $t('component.attachment.share.time.hours') }}</el-radio>
@@ -169,6 +165,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { config } from '@/utils/ADempiere/config'
 import { REPORT_EXPORT_TYPES } from '@/utils/ADempiere/constants/report'
 import { showNotificationReport } from '@/utils/ADempiere/notification.js'
+import { showNotification } from '@/utils/ADempiere/notification'
 import {
   requestShareResources
 } from '@/api/ADempiere/file-management/resource-reference.ts'
@@ -195,7 +192,7 @@ export default defineComponent({
     const checkedItemGeneral = ref(0)
     const checkedItem = ref(0)
     const printFormat = ref([])
-    const printFormatValue = ref('')
+    const printFormatValue = ref('xlsx')
     const typeNotification = ref('')
     const linkShare = ref('')
     const isLoading = ref(false)
@@ -205,6 +202,9 @@ export default defineComponent({
         return true
       }
       return true
+    })
+    const getStoreReport = computed(() => {
+      return store.getters.getStoredReport(props.reportOutput.containerUuid)
     })
     function loadData() {
       isLoading.value = true
@@ -235,35 +235,64 @@ export default defineComponent({
       store.commit('setShowDialog', false)
     }
     function sendNotify() {
-      let link = 'https://www.google.com'
-      let title = ''
-      let message = ''
-      if (!isEmptyValue(exportData.value)) {
-        link = exportData.value.file_name
+      if (checkedItemGeneral.value === 0) {
+        downloadFile()
+      } else if (checkedItemGeneral.value === 1) {
+        sendLink()
+      } else if (checkedItemGeneral.value === 2) {
+        shareUrl()
       }
-      switch (checkedItemGeneral.value) {
-        case 1:
-          sendLink()
-          title = this.$t('report.reportEnginer.sharedReport')
-          message = this.$t('report.reportEnginer.mesajeDownload')
-          break
-        case 3:
-          copyValue()
-          message = this.$t('report.reportEnginer.mesajeShear')
-          link = linkShare.value
-          break
-        default:
-          title = this.$t('report.reportEnginer.download')
-          break
-      }
-      showNotificationReport({
-        title,
-        message,
-        link,
-        openLink: this.$t('report.reportEnginer.openLink')
+      showNotification({
+        title: this.$t('notifications.processing'),
+        message: props.reportOutput.name,
+        type: 'info'
       })
       store.commit('setShowDialog', false)
     }
+
+    function downloadFile() {
+      store.dispatch('exportReport', {
+        reportId: getStoreReport.value.id,
+        reportName: props.reportOutput.name,
+        printFormatId: props.reportOutput.print_format_id,
+        reportViewId: props.reportOutput.report_view_id
+      })
+    }
+
+    function shareUrl() {
+      store.dispatch('exportReport', {
+        reportId: getStoreReport.value.id,
+        reportName: props.reportOutput.name,
+        printFormatId: props.reportOutput.print_format_id,
+        reportViewId: props.reportOutput.report_view_id,
+        seconds: validTime.value,
+        isDownload: false
+      })
+        .then(fileNameResource => {
+          requestShareResources({
+            fileName: fileNameResource,
+            seconds: validTime.value
+          })
+            .then(response => {
+              linkShare.value = response
+              copyValue()
+              showNotificationReport({
+                title: 'Reporte Compartido',
+                message: 'Su Enlace a Sido Copiado Exitosamente al Portapapeles',
+                link: response,
+                openLink: 'Abrir Enlace'
+              })
+            })
+            .catch(error => {
+              showNotification({
+                title: 'Error',
+                message: `Error exporting report: ${error.message}.`,
+                type: 'error'
+              })
+            })
+        })
+    }
+
     function handleDownload() {
       const link = document.createElement('a')
       const imageURL = config.adempiere.resource.url + props.reportOutput.name
@@ -272,7 +301,7 @@ export default defineComponent({
       link.click()
     }
     function optionPrintFormat() {
-      const xlsTypes = REPORT_EXPORT_TYPES.filter(type => type.type === 'xls')
+      const xlsTypes = REPORT_EXPORT_TYPES.filter(type => type.type === 'xlsx')
       printFormat.value = xlsTypes
     }
     const exportData = computed(() => {
@@ -289,13 +318,23 @@ export default defineComponent({
     })
     function sendLink() {
       const user_id = store.getters['user/userInfo'].id
-      store.dispatch('getSendNotification', {
-        user_id,
-        title: props.reportOutput.name,
-        recipients: contactSend.value,
-        notification_type: typeNotify.value,
-        attachments: exportData.file_name
+      store.dispatch('exportReport', {
+        reportId: getStoreReport.value.id,
+        reportName: props.reportOutput.name,
+        printFormatId: props.reportOutput.print_format_id,
+        reportViewId: props.reportOutput.report_view_id,
+        seconds: validTime.value,
+        isDownload: false
       })
+        .then(fileNameResource => {
+          store.dispatch('sendNotification', {
+            user_id,
+            title: props.reportOutput.name,
+            recipients: contactSend.value,
+            notification_type: typeNotify.value,
+            attachments: fileNameResource
+          })
+        })
     }
 
     function copyValue() {
@@ -332,6 +371,7 @@ export default defineComponent({
       sendLink,
       copyValue,
       loadData,
+      downloadFile,
       markdownContent
     }
   }

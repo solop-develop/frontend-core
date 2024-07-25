@@ -106,9 +106,9 @@ const report = {
     Detail: 'Ver Detallado',
     summary: 'Ver Resumido',
     exportFormat: 'Formato de Exportación',
-    download: 'Link de Descarga Generado',
+    download: 'Descargando Archivo',
     sharedReport: 'Reporte Compartido',
-    mesajeDownload: 'Haga clic en el Siguiente Enlace para ir a la Descarga ',
+    mesajeDownload: 'Descargando Reporte ',
     openLink: 'Abrir Enlace',
     mesajeShear: 'Su Enlace a Sido Copiado Exitosamente al Portapapeles'
   }
