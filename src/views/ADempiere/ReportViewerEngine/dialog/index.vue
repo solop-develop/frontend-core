@@ -125,7 +125,7 @@
       <el-col v-if="showMarkDown" :span="24" style="margin-top: 1%">
         <el-card>
           <template #header>
-            <p>{{ $t('report.reportEnginer.shippingDetails') }}</p>
+            <p>{{ $t('report.reportEnginer.sendDetails') }}</p>
           </template>
           <v-md-editor
             v-model="markdownContent"

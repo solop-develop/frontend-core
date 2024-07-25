@@ -112,7 +112,7 @@ const report = {
     openLink: 'Open Link',
     mesajeShear: 'Your Link has been Successfully Copied to the Clipboard',
     refreshRecord: 'Refresh',
-    shippingDetails: 'Shipping Details'
+    sendDetails: 'Send Details'
   }
 }
 
