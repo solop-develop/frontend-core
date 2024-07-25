@@ -722,6 +722,7 @@ const reportManager = {
               message: `Error exporting report: ${error.message}. Code: ${error.code}.`,
               type: 'error'
             })
+            commit('setShowDialog', true)
             console.warn(`Error exporting report: ${error.message}. Code: ${error.code}.`)
             resolve(error)
           })
@@ -764,7 +765,8 @@ const reportManager = {
       title,
       recipients,
       notification_type,
-      attachments
+      attachments,
+      subject
     }) {
       return new Promise(resolve => {
         SendNotification({
@@ -772,7 +774,8 @@ const reportManager = {
           title,
           recipients,
           notification_type,
-          attachments
+          attachments,
+          subject
         })
           .then(response => {
             commit('setSendNotification', response)
