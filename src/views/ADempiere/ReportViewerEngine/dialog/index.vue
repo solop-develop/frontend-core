@@ -150,7 +150,7 @@
           <div style="margin-top: 3%;">
             <label>Dirección Url</label>
             <el-input
-              value="www.google.com"
+              v-model="linkShare.value"
               disabled
             />
           </div>
