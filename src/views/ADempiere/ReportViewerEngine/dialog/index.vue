@@ -298,6 +298,7 @@ export default defineComponent({
       const xlsTypes = REPORT_EXPORT_TYPES.filter(type => type.type === 'xlsx')
       printFormat.value = xlsTypes
     }
+    optionPrintFormat()
     const exportData = computed(() => {
       return store.getters.getExportReport
     })
