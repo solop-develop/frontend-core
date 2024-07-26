@@ -74,11 +74,11 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style scoped>
 .containerReport {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
+  display: flex !important;
+  align-items: center !important;
+  margin-bottom: 1% !important;
 }
 @media screen and (max-width:1150px) {
   .containerReport, .custom-button {

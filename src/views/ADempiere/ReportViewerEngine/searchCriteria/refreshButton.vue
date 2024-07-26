@@ -1,5 +1,5 @@
 <template>
-  <div class="select-container" style="margin-left: -10px; display: flex; align-items: center;">
+  <div style="margin-left: -10px; display: flex; align-items: center;">
     <el-button
       :loading="isLoading"
       type="success"

@@ -17,7 +17,7 @@
 -->
 <template>
   <div>
-    <el-card>
+    <el-card class="containerReportEnginer">
       <reportSearchCriteria
         :container-uuid="reportOutput.containerUuid"
         :report-output="reportOutput"
@@ -44,7 +44,7 @@
         :row-class-name="tableRowClassName"
         :default-expand-all="false"
         :tree-props="{ children: 'children' }"
-        height="calc(100vh - 265px)"
+        height="calc(100vh - 275px)"
         border
         :cell-style="{ padding: '0', height: '30px', border: 'none' }"
         :cell-class-name="getRowClassName"
@@ -420,9 +420,11 @@ export default defineComponent({
       text-align: right;
     }
   }
-
 </style>
 <style>
+.containerReportEnginer .el-card__body {
+  padding: 20px !important
+}
 :root {
   --level-offset: 20px;
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="PrimtFormatcontainer">
     <label for="report-format-select" class="select-label">{{ $t('report.reportEnginer.printFormat') }}</label>
     <el-select
       id="report-format-select"
@@ -162,7 +162,7 @@ export default defineComponent({
 })
 </script>
 <style>
-.container {
+.PrimtFormatcontainer {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -170,7 +170,7 @@ export default defineComponent({
 }
 
 @media screen and (min-width: 800px) {
-  .container {
+  .PrimtFormatcontainer {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
