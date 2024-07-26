@@ -114,7 +114,8 @@ const report = {
     refreshRecord: 'Refrescar',
     sendDetails: 'Detalles del Envío',
     recipient: 'Destinatarios',
-    urlAddress: 'Dirección Url'
+    urlAddress: 'Dirección Url',
+    Subject: 'Asunto'
   }
 }
 
