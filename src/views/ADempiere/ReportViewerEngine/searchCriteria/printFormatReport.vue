@@ -36,11 +36,9 @@
 
 <script>
 import store from '@/store'
-import lang from '@/lang'
 
 import { defineComponent, computed, ref, watch } from '@vue/composition-api'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import { showNotification } from '@/utils/ADempiere/notification'
 export default defineComponent({
   name: 'PrintOptions',
   props: {
@@ -119,47 +117,18 @@ export default defineComponent({
         containerUuid: props.containerUuid,
         fieldsList: reportDefinition.fieldsList
       })
-      store.commit('setReportIsLoading', true)
-      clearTimeout(timeOutRecords.value)
-      timeOutRecords.value = setTimeout(() => {
-        const { name, description } = store.getters.getReportOutput(root.$route.params.reportId)
-        showNotification({
-          title: lang.t('notifications.processing'),
-          message: name,
-          summary: description,
-          type: 'info'
-        })
-        store.dispatch('buildReport', {
-          containerUuid: props.containerUuid || root.$route.params.processUuid,
-          isSummary: true,
-          parametersList: reportOutputParams,
-          printFormatId: reportAsPrintFormatValue.value,
-          reportId: reportDefinition.id,
-          instanceUuid: defaultParams.value.instance_id,
-          reportViewId: defaultParams.value.report_view_id,
-          isView: true,
-          pageSize: props.reportOutput.record_count,
-          pageToken: props.reportOutput.next_page_token
-        })
-          .then(response => {
-            showNotification({
-              title: lang.t('notifications.succesful'),
-              message: name,
-              type: 'success'
-            })
-          })
-          .catch(error => {
-            showNotification({
-              title: lang.t('notifications.error'),
-              message: name,
-              summary: error,
-              type: 'error'
-            })
-          })
-          .finally(() => {
-            store.commit('setReportIsLoading', false)
-          })
-      }, 500)
+      store.dispatch('buildReport', {
+        containerUuid: props.containerUuid || root.$route.params.processUuid,
+        isSummary: true,
+        parametersList: reportOutputParams,
+        printFormatId: reportAsPrintFormatValue.value,
+        reportId: reportDefinition.id,
+        instanceUuid: defaultParams.value.instance_id,
+        reportViewId: defaultParams.value.report_view_id,
+        isView: true,
+        pageSize: props.reportOutput.record_count,
+        pageToken: props.reportOutput.next_page_token
+      })
     }
     watch(reportAsPrintFormatValue, (newValue) => {
       updatePrintFormat(newValue)

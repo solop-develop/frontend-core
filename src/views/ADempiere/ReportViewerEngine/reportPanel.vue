@@ -241,7 +241,6 @@ export default defineComponent({
         printFormatId: props.reportOutput.print_format_id,
         reportViewId: props.reportOutput.report_view_id
       })
-      getFields()
     }
     function handleChangePage(pageNumber) {
       props.containerManager.setPageNumber({
@@ -254,7 +253,6 @@ export default defineComponent({
         printFormatId: props.reportOutput.print_format_id,
         reportViewId: props.reportOutput.report_view_id
       })
-      getFields()
     }
 
     function exportFile() {
@@ -366,14 +364,8 @@ export default defineComponent({
         }
       }
     }
-    function getFields() {
-      store.commit('setReportIsLoading', true)
-      setTimeout(() => {
-        store.commit('setReportIsLoading', false)
-      }, 1000)
-    }
+
     return {
-      getFields,
       showDialog,
       tableReportEngine,
       selectedRow,

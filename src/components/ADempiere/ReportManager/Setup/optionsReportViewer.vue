@@ -387,19 +387,6 @@ export default defineComponent({
               })
             })
           })
-          showNotification({
-            title: lang.t('notifications.succesful'),
-            message: name,
-            type: 'success'
-          })
-        })
-        .catch(error => {
-          showNotification({
-            title: lang.t('notifications.error'),
-            message: name,
-            summary: error,
-            type: 'error'
-          })
         })
       store.commit('setShowPanelConfig', {
         containerUuid: props.containerUuid,
