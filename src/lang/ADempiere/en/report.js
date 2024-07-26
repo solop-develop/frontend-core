@@ -115,7 +115,8 @@ const report = {
     sendDetails: 'Send Details',
     recipient: 'Recipient',
     urlAddress: 'Url Address',
-    subject: 'Subject'
+    subject: 'Subject',
+    urlPublic: 'Click to go to the Link'
   }
 }
 
