@@ -147,9 +147,6 @@ export default defineComponent({
       return storedReportDefinition.value.name
     })
     const containerUuid = computed(() => {
-      // const reportDefinition = storedReportDefinition.value
-      // if (isEmptyValue(reportDefinition) && isEmptyValue(reportDefinition.containerUuid)) return reportId.toString()
-      // return reportDefinition.containerUuid
       return reportId.toString()
     })
     const help = computed(() => {
@@ -229,7 +226,7 @@ export default defineComponent({
           const fileName = root.$route.params.fileName
           const instanceUuid = root.$route.params.instanceUuid
           const currentReportLog = runsList.find(runReport => {
-            return runReport.uuid === reportUuid
+            return runReport.id === reportId
           })
 
           // empty report log
@@ -272,12 +269,6 @@ export default defineComponent({
         })
     }
 
-    // function findActionsMenu() {
-    //   store.dispatch('setReportActionsMenu', {
-    //     containerUuid: reportUuid
-    //   })
-    // }
-
     function handleClose() {
       showPanelConfigReport(false)
     }
@@ -298,6 +289,8 @@ export default defineComponent({
     })
 
     const drawer = ref(false)
+
+    store.dispatch('findListMailTemplates')
 
     onMounted(() => {
       getReport()

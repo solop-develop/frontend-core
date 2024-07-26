@@ -69,7 +69,8 @@ const initState = {
   expandedAll: true,
   exportReport: {},
   contactSend: '',
-  typeNotify: ''
+  typeNotify: '',
+  defaultBody: ''
 }
 const reportManager = {
   state: initState,
@@ -120,9 +121,11 @@ const reportManager = {
     },
     setShowPanelConfig(state, { containerUuid, value }) {
       Vue.set(state.isShowPanelConfig, containerUuid, value)
+    },
+    setDefaultBody(state, message) {
+      state.defaultBody = message
     }
   },
-
   actions: {
     reportActionPerformed({ dispatch, getters }, {
       containerUuid,
@@ -872,6 +875,9 @@ const reportManager = {
 
     getShowPanelConfig: (state) => ({ containerUuid }) => {
       return state.isShowPanelConfig[containerUuid]
+    },
+    getDefaultBody: (state) => {
+      return state.defaultBody
     }
   }
 }

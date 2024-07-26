@@ -133,12 +133,21 @@
             />
           </div>
           <v-md-editor
+            v-if="!isShowVIwer"
             v-model="markdownContent"
             left-toolbar="undo redo clear h bold italic strikethrough quote ul ol table hr link image code | emoji listMailTemplates"
             right-toolbar="sync-scroll fullscreen"
             mode="edit"
             height="150px"
             :placeholder="$t('window.containerInfo.logWorkflow.addNote')"
+            :toolbar="editorToolbarList"
+          />
+          <v-md-preview
+            v-else
+            :text="markdownContent"
+            class="previwer-disable"
+            style="padding: 0px"
+            height="150px"
           />
         </el-card>
       </el-col>
@@ -157,6 +166,13 @@
           style="float: right; margin-right: 1%;"
           type="danger"
           @click="viewShowDialog"
+        />
+        <el-checkbox
+          v-model="isShowVIwer"
+          :label="$t('issues.preview')"
+          :border="true"
+          style="float: right; margin-right: 1%;"
+          class="button-base-icon"
         />
       </el-col>
     </el-row>
@@ -194,6 +210,31 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const storedMailTemplatesList = computed(() => {
+      return store.getters.getListMailTemplates
+    })
+    const editorToolbarList = computed(() => {
+      return {
+        listMailTemplates: storedMailTemplatesList.value,
+        isCollapseUp: {
+          icon: 'el-icon-arrow-up',
+          title: 'Collapse',
+          action(editor) {
+            isCollapseComments.value = !isCollapseComments.value
+          }
+        },
+        isCollapseDown: {
+          icon: 'el-icon-arrow-down',
+          title: 'Collapse',
+          action(editor) {
+            isCollapseComments.value = !isCollapseComments.value
+          }
+        }
+      }
+    })
+
+    const isCollapseComments = ref(false)
+    const isShowVIwer = ref(false)
     const checkedItemGeneral = ref(0)
     const checkedItem = ref(0)
     const printFormat = computed(() => {
@@ -204,7 +245,16 @@ export default defineComponent({
     const isLoading = ref(false)
     const validTime = ref(3600)
     const titleDocument = ref(props.reportOutput.name)
-    const markdownContent = ref('')
+    const markdownContent = computed({
+      // getter
+      get() {
+        return store.getters.getDefaultBody
+      },
+      // setter
+      set(newValue) {
+        store.commit('setDefaultBody', newValue)
+      }
+    })
     const toUser = computed(() => {
       return contactSend.value ? contactSend.value.map(item => item.label).join(', ') : ''
     })
@@ -349,9 +399,17 @@ export default defineComponent({
         isShowMessage: false
       })
     }
+
+    function previwerBody() {
+      isShowVIwer.value = !isShowVIwer.value
+    }
+
     return {
+      isCollapseComments,
+      editorToolbarList,
       checkedItemGeneral,
       checkedItem,
+      isShowVIwer,
       printFormat,
       printFormatValue,
       exportData,
@@ -371,6 +429,7 @@ export default defineComponent({
       sendLink,
       copyValue,
       loadData,
+      previwerBody,
       downloadFile,
       markdownContent,
       toUser
