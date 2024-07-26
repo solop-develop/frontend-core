@@ -37,7 +37,8 @@ export default defineComponent({
             listUserSend.value = records.map(item => {
               return {
                 label: item.values.DisplayColumn,
-                value: item.id
+                value: item.id,
+                gmail: item.values.ValueColumn
               }
             })
           }

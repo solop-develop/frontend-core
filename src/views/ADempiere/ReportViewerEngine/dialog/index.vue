@@ -143,6 +143,15 @@
         </el-card>
       </el-col>
       <el-col style="margin-top: 1%">
+        <div v-if="checkedItemGeneral === 1" style="float:left; width: 85%">
+          <el-input
+            v-model="previwGmail"
+            type="textarea"
+            autosize
+            style="border: none !important"
+            disabled
+          />
+        </div>
         <el-button
           class="button-base-icon"
           icon="el-icon-check"
@@ -205,8 +214,8 @@ export default defineComponent({
     const validTime = ref(3600)
     const titleDocument = ref(props.reportOutput.name)
     const markdownContent = ref('')
-    const toUser = computed(() => {
-      return contactSend.value ? contactSend.value.map(item => item.label).join(', ') : ''
+    const previwGmail = computed(() => {
+      return contactSend.value ? contactSend.value.map(item => item.gmail).join(', ') : ''
     })
     const getStoreReport = computed(() => {
       return store.getters.getStoredReport(props.reportOutput.containerUuid)
@@ -373,7 +382,7 @@ export default defineComponent({
       loadData,
       downloadFile,
       markdownContent,
-      toUser
+      previwGmail
     }
   }
 })
