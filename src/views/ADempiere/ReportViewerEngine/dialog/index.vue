@@ -127,14 +127,7 @@
             <p>{{ $t('report.reportEnginer.sendDetails') }}</p>
           </template>
           <div style="margin-bottom: 3%;">
-            <label>{{ $t('report.reportEnginer.recipient') }}</label>
-            <el-input
-              v-model="toUser"
-              disabled
-            />
-          </div>
-          <div style="margin-bottom: 3%;">
-            <label>{{ $t('issues.issues') }}</label>
+            <label>{{ $t('report.reportEnginer.subject') }}</label>
             <el-input
               v-model="titleDocument"
             />
@@ -147,13 +140,6 @@
             height="150px"
             :placeholder="$t('window.containerInfo.logWorkflow.addNote')"
           />
-          <div style="margin-top: 3%;">
-            <label>{{ $t('report.reportEnginer.urlAddress') }}</label>
-            <el-input
-              v-model="linkShare.value"
-              disabled
-            />
-          </div>
         </el-card>
       </el-col>
       <el-col style="margin-top: 1%">
