@@ -152,6 +152,11 @@
         </el-card>
       </el-col>
       <el-col style="margin-top: 1%">
+        <span v-if="checkedItemGeneral === 1" style="float:left">
+          <a :href="link" target="_blank">
+            {{ $t('report.reportEnginer.urlPublic') }}
+          </a>
+        </span>
         <el-button
           class="button-base-icon"
           icon="el-icon-check"
@@ -245,6 +250,10 @@ export default defineComponent({
     const isLoading = ref(false)
     const validTime = ref(3600)
     const titleDocument = ref(props.reportOutput.name)
+    const markdownContent = ref('')
+    const link = computed(() => {
+      return linkShare.value ? linkShare.value : 'www.010203923023/.com'
+    })
     const markdownContent = computed({
       // getter
       get() {
@@ -432,7 +441,8 @@ export default defineComponent({
       previwerBody,
       downloadFile,
       markdownContent,
-      toUser
+      toUser,
+      link
     }
   }
 })
