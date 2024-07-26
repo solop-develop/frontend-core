@@ -1,5 +1,5 @@
 <template>
-  <div class="select-container" style="margin-top: 10px; margin-left: 0px; display: flex; align-items: center;">
+  <div style="margin-top: 10px; margin-left: 0px; display: flex; align-items: center;">
     <label for="report-format-switch" class="select-label" style="margin-right: 15px;">{{ $t('report.reportEnginer.summary') }}</label>
     <el-switch
       id="report-format-switch"
