@@ -57,6 +57,7 @@
           :column-key="fieldAttributes.code"
           :align="getAlignment(fieldAttributes.display_type)"
           :width="widthColumn(fieldAttributes.display_type)"
+          :fixed="fieldAttributes.is_group_column"
         >
           <template slot="header">
             {{ fieldAttributes.title }}
