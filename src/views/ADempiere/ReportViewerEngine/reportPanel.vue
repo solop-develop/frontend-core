@@ -39,7 +39,7 @@
         v-loading="isLoadingReport"
         :data="dataList"
         row-key="level"
-        style="width: 100%"
+        style="width: 100%;"
         lazy
         :row-class-name="tableRowClassName"
         :default-expand-all="false"
@@ -66,10 +66,12 @@
             <span :style="getCellStyle(fieldAttributes.code, scope.row)">
               {{ displayLabel(fieldAttributes.code, scope.row) }}
               <el-popover
-                v-if="selectedRow === scope.row && selectedColumn === fieldAttributes.code"
+                v-if="selectedRow === scope.row && selectedColumn === fieldAttributes.code && scope.row.is_parent"
                 v-model="showPopover"
                 placement="top"
                 class="reportInfo"
+                style="position: fixed; z-index: 1000; background-color: #fff;"
+                @shortkey.native="keyAction"
               >
                 <InfoReport
                   :data="dataModal"
@@ -139,6 +141,7 @@ export default defineComponent({
       switch (event.srcKey) {
         case 'close':
           viewShowDialog()
+          showPopover.value = false
       }
     }
     const data = computed(() => {
