@@ -177,12 +177,15 @@ export default defineComponent({
       if (isEmptyValue(row.cells)) {
         return
       }
-      const { display_value, value } = row.cells[prop]
-      if (!isEmptyValue(display_value)) {
-        return display_value
-      }
-      if (!isEmptyValue(value)) {
-        return value
+      const rowData = row.cells[prop]
+      if (!isEmptyValue(rowData)) {
+        const { display_value, value } = rowData
+        if (!isEmptyValue(display_value)) {
+          return display_value
+        }
+        if (!isEmptyValue(value)) {
+          return value
+        }
       }
     }
     function getAlignment(displayType) {

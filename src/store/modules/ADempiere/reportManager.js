@@ -720,14 +720,16 @@ const reportManager = {
         })
           .then(response => {
             const { file_name } = response
-            if (isDownload) {
-              const file = document.createElement('a')
-              file.href = `${config.adempiere.resource.url}${file_name}`
-              file.download = `${reportName}`
-              file.target = '_blank'
-              file.click()
+            if (!isEmptyValue(file_name)) {
+              if (isDownload) {
+                const file = document.createElement('a')
+                file.href = `${config.adempiere.resource.url}${file_name}`
+                file.download = `${reportName}`
+                file.target = '_blank'
+                file.click()
+              }
+              resolve(file_name)
             }
-            resolve(file_name)
           })
           .catch(error => {
             showNotification({
