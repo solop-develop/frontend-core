@@ -115,7 +115,7 @@ const report = {
     sendDetails: 'Send Details',
     recipient: 'Recipient',
     urlAddress: 'Url Address',
-    Subject: 'Subject'
+    subject: 'Subject'
   }
 }
 

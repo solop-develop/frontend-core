@@ -127,7 +127,7 @@
             <p>{{ $t('report.reportEnginer.sendDetails') }}</p>
           </template>
           <div style="margin-bottom: 3%;">
-            <label>{{ $t('report.reportEnginer.Subject') }}</label>
+            <label>{{ $t('report.reportEnginer.subject') }}</label>
             <el-input
               v-model="titleDocument"
             />
