@@ -32,10 +32,12 @@
 <script>
 import store from '@/store'
 import { defineComponent, computed } from '@vue/composition-api'
+
 import PrintOptions from './printFormatReport.vue'
 import reportSummary from './reportSumary.vue'
 import refreshButton from './refreshButton.vue'
-import { isEmptyValue } from '@/utils/ADempiere'
+
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'reportSearchCriteria',
@@ -59,7 +61,7 @@ export default defineComponent({
       return store.getters.getListMailTemplates
     })
     function viewShowDialog() {
-      if (!isEmptyValue(storedMailTemplatesList.value)) {
+      if (!isEmptyValue(storedMailTemplatesList.value) && !isEmptyValue(storedMailTemplatesList.value.menus)) {
         store.commit('setDefaultBody', storedMailTemplatesList.value.menus[0].mail_text)
       }
       store.commit('setShowDialog', true)
