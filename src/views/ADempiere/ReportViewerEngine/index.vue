@@ -267,9 +267,6 @@ export default defineComponent({
               }).then(reportOutput => {
                 displayReport(reportOutput)
               })
-            } else {
-              // add output to render
-              // displayReport(storedReportOutput.value)
             }
           }
         })

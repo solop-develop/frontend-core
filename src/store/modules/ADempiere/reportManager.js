@@ -510,6 +510,13 @@ const reportManager = {
           containerUuid = currentRoute.params.reportUuid
         }
       }
+      const reportDefinition = getters.getStoredReport(containerUuid)
+      const {
+        id,
+        name,
+        description,
+        fieldsList
+      } = reportDefinition
 
       const storedReportGenerated = getters.getReportGenerated(containerUuid)
 
@@ -538,6 +545,14 @@ const reportManager = {
         reportName = action.name
       }
 
+      showNotification({
+        title: language.t('notifications.processing'),
+        message: name,
+        summary: description,
+        type: 'info'
+      })
+
+      commit('setReportIsLoading', true)
       if (isEmptyValue(instanceUuid)) {
         dispatch('startReport', {
           containerUuid,
@@ -550,9 +565,6 @@ const reportManager = {
       }
 
       return new Promise((resolve, reject) => {
-        const reportDefinition = getters.getStoredReport(containerUuid)
-        const { fieldsList } = reportDefinition
-
         const filters = getOperatorAndValue({
           format: 'array',
           containerUuid,
@@ -571,29 +583,16 @@ const reportManager = {
           sortBy
         })
           .then(reportResponse => {
-            const {
-              id,
-              name,
-              instance_id,
-              report_view_id
-            } = reportResponse
-            router.push({
-              path: `report-viewer-engine/${id}/${instance_id}/${report_view_id}`,
-              name: 'Report Viewer Engine',
-              params: {
-                instanceUuid: instance_id,
-                name: name + instance_id,
-                fileName: name,
-                reportId: id,
-                reportUuid: reportDefinition.uuid,
-                tableName
-              }
-            }, () => {})
             commit('setReportOutput', {
               ...reportResponse,
               containerUuid,
               rowCells: reportResponse.rows,
               instanceUuid: id
+            })
+            showNotification({
+              title: language.t('notifications.succesful'),
+              message: name,
+              type: 'success'
             })
             resolve(reportResponse)
           })
@@ -604,6 +603,9 @@ const reportManager = {
               type: 'error'
             })
             console.warn(`Error getting Get Report: ${error.message}. Code: ${error.code}.`)
+          })
+          .finally(() => {
+            commit('setReportIsLoading', false)
           })
       })
     },
@@ -672,6 +674,11 @@ const reportManager = {
               rowCells: reportResponse.rows,
               instanceUuid: reportId
             })
+            showNotification({
+              title: language.t('notifications.succesful'),
+              message: name,
+              type: 'success'
+            })
             resolve(reportResponse)
           })
           .catch(error => {
@@ -681,6 +688,9 @@ const reportManager = {
               type: 'error'
             })
             console.warn(`Error getting Get Report: ${error.message}. Code: ${error.code}.`)
+          })
+          .finally(() => {
+            commit('setReportIsLoading', false)
           })
       })
     },
