@@ -324,6 +324,14 @@ export default defineComponent({
         isDownload: false
       })
         .then(fileNameResource => {
+          if (isEmptyValue(fileNameResource)) {
+            showNotification({
+              title: 'Error',
+              message: `Error exporting report: URL Found.`,
+              type: 'error'
+            })
+            return
+          }
           requestShareResources({
             fileName: fileNameResource,
             seconds: validTime.value
