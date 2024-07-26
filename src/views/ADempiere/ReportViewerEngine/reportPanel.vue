@@ -17,7 +17,7 @@
 -->
 <template>
   <div>
-    <el-card>
+    <el-card class="containerReportEnginer">
       <reportSearchCriteria
         :container-uuid="reportOutput.containerUuid"
         :report-output="reportOutput"
@@ -39,12 +39,12 @@
         v-loading="isLoadingReport"
         :data="dataList"
         row-key="level"
-        style="width: 100%"
+        style="width: 100%;"
         lazy
         :row-class-name="tableRowClassName"
         :default-expand-all="false"
         :tree-props="{ children: 'children' }"
-        height="calc(100vh - 265px)"
+        height="calc(100vh - 275px)"
         border
         :cell-style="{ padding: '0', height: '30px', border: 'none' }"
         :cell-class-name="getRowClassName"
@@ -66,10 +66,12 @@
             <span :style="getCellStyle(fieldAttributes.code, scope.row)">
               {{ displayLabel(fieldAttributes.code, scope.row) }}
               <el-popover
-                v-if="selectedRow === scope.row && selectedColumn === fieldAttributes.code"
+                v-if="selectedRow === scope.row && selectedColumn === fieldAttributes.code && scope.row.is_parent"
                 v-model="showPopover"
                 placement="top"
                 class="reportInfo"
+                style="position: fixed; z-index: 1000; background-color: #fff;"
+                @shortkey.native="keyAction"
               >
                 <InfoReport
                   :data="dataModal"
@@ -139,6 +141,7 @@ export default defineComponent({
       switch (event.srcKey) {
         case 'close':
           viewShowDialog()
+          showPopover.value = false
       }
     }
     const data = computed(() => {
@@ -238,7 +241,6 @@ export default defineComponent({
         printFormatId: props.reportOutput.print_format_id,
         reportViewId: props.reportOutput.report_view_id
       })
-      getFields()
     }
     function handleChangePage(pageNumber) {
       props.containerManager.setPageNumber({
@@ -251,7 +253,6 @@ export default defineComponent({
         printFormatId: props.reportOutput.print_format_id,
         reportViewId: props.reportOutput.report_view_id
       })
-      getFields()
     }
 
     function exportFile() {
@@ -363,14 +364,8 @@ export default defineComponent({
         }
       }
     }
-    function getFields() {
-      store.commit('setReportIsLoading', true)
-      setTimeout(() => {
-        store.commit('setReportIsLoading', false)
-      }, 1000)
-    }
+
     return {
-      getFields,
       showDialog,
       tableReportEngine,
       selectedRow,
@@ -425,9 +420,11 @@ export default defineComponent({
       text-align: right;
     }
   }
-
 </style>
 <style>
+.containerReportEnginer .el-card__body {
+  padding: 20px !important
+}
 :root {
   --level-offset: 20px;
 }
