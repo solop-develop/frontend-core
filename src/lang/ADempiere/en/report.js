@@ -70,7 +70,7 @@ const report = {
       type: 'xls'
     },
     xlsx: {
-      name: 'Excel (XLSX)',
+      name: 'xlsl - Excel file',
       description: 'xlsx - XLSX file',
       type: 'xlsx'
     },
