@@ -68,8 +68,7 @@ export default defineComponent({
 .containerReport {
   display: flex !important;
   align-items: center !important;
-  margin-top: 20px;
-  margin-bottom: 20px !important;
+  margin-bottom: 1% !important;
 }
 @media screen and (max-width:1150px) {
   .containerReport, .custom-button {
