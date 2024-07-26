@@ -63,8 +63,12 @@ export default defineComponent({
     })
     function viewShowDialog() {
       if (!isEmptyValue(storedMailTemplatesList.value) && !isEmptyValue(storedMailTemplatesList.value.menus)) {
+        let menuDefault = ''
+        if (!isEmptyValue(storedMailTemplatesList.value.menus[0].mail_text)) {
+          menuDefault = storedMailTemplatesList.value.menus[0].mail_text
+        }
         const link = language.t('report.reportEnginer.urlPublic')
-        store.commit('setDefaultBody', storedMailTemplatesList.value.menus[0].mail_text + `\n\n\n[${link}](www.123892138.com)\n`)
+        store.commit('setDefaultBody', menuDefault + `\n\n\n[${link}](www.123892138.com)\n`)
       }
       store.commit('setShowDialog', true)
     }

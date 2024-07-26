@@ -329,8 +329,12 @@ export default defineComponent({
             seconds: validTime.value
           })
             .then(response => {
-              linkShare.value = response
-              markdownContent.replace('www.123892138.com', response)
+              let link = ''
+              if (!isEmptyValue(response)) {
+                link = response
+                markdownContent.replace('www.123892138.com', link)
+              }
+              linkShare.value = link
               copyValue()
               showNotificationReport({
                 title: 'Reporte Compartido',
