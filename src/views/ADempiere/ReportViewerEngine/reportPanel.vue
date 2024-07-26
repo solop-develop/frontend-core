@@ -39,7 +39,7 @@
         v-loading="isLoadingReport"
         :data="dataList"
         row-key="level"
-        style="width: 100%; position: absolute"
+        style="width: 100%;"
         lazy
         :row-class-name="tableRowClassName"
         :default-expand-all="false"
