@@ -168,6 +168,7 @@
           @click="viewShowDialog"
         />
         <el-checkbox
+          v-if="checkedItemGeneral === 1"
           v-model="isShowVIwer"
           :label="$t('issues.preview')"
           :border="true"
