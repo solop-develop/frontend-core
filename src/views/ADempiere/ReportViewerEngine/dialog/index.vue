@@ -392,6 +392,9 @@ export default defineComponent({
         isDownload: false
       })
         .then(fileNameResource => {
+          if (fileNameResource) {
+            markdownContent.value = markdownContent.value.replace('www.123892138.com', fileNameResource)
+          }
           store.dispatch('sendNotification', {
             user_id,
             title: props.reportOutput.name,
