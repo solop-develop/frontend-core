@@ -704,19 +704,33 @@ const reportManager = {
      * @returns {files}
      */
     exportReport({
-      commit
+      commit,
+      rootGetters
     }, {
+      containerUuid,
       reportId,
       reportName,
       printFormatId,
       reportViewId,
+      pageSize,
+      pageToken,
       isDownload = true
     }) {
+      const reportDefinition = rootGetters.getStoredReport(containerUuid)
+      const { fieldsList } = reportDefinition
+      const filters = getOperatorAndValue({
+        format: 'array',
+        containerUuid,
+        fieldsList
+      })
       return new Promise(resolve => {
         runExport({
           reportId,
           printFormatId,
-          reportViewId
+          reportViewId,
+          pageSize,
+          pageToken,
+          filters
         })
           .then(response => {
             const { file_name } = response

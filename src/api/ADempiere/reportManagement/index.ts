@@ -175,15 +175,21 @@ export function runExport({
   format = 'xlsx',
   reportViewId,
   printFormatId,
-  reportId
+  reportId,
+  pageSize,
+  pageToken,
+  filters
 }) {
   return request({
     url: `/report-engine/export/${reportId}/${format}`,
-    method: 'post'
-    // data: {
-    //   print_format_id: printFormatId,
-    //   report_view_id: reportViewId,
-    // }
+    method: 'post',
+    data: {
+      print_format_id: printFormatId,
+      report_view_id: reportViewId,
+      page_size: pageSize,
+      page_token: pageToken,
+      filters
+    }
   })
 }
 
