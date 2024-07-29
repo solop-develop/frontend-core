@@ -4,15 +4,19 @@
       <PrintOptions
         :container-uuid="containerUuid"
         :report-output="reportOutput"
+        :disabled="isLoadingReport"
       />
     </el-col>
-    <el-col :xs="24" :md="5" class="containerSummary">
-      <reportSummary />
+    <el-col :xs="24" :md="5" class="containerSummary" disabled>
+      <reportSummary
+        :disabled="isLoadingReport"
+      />
     </el-col>
     <el-col :xs="24" :md="3" class="containerRefreshButton">
       <refreshButton
         :container-uuid="containerUuid"
         :report-output="reportOutput"
+        :disabled="isLoadingReport"
       />
     </el-col>
     <el-col :xs="24" :md="2" class="containerButton">
@@ -21,6 +25,7 @@
         size="mini"
         type="primary"
         class="custom-button"
+        :disabled="isLoadingReport"
         @click="viewShowDialog"
       >
         {{ $t('report.reportEnginer.share') }}
@@ -70,8 +75,12 @@ export default defineComponent({
       store.commit('setDefaultBody', menuDefault + `\n\n\n[${link}](www.123892138.com)`)
       store.commit('setShowDialog', true)
     }
+    const isLoadingReport = computed(() => {
+      return store.getters.getReportIsLoading
+    })
     return {
       storedMailTemplatesList,
+      isLoadingReport,
       viewShowDialog
     }
   }

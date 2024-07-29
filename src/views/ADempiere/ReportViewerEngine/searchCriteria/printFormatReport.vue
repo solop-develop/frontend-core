@@ -6,6 +6,7 @@
       v-model="reportAsPrintFormatValue"
       class="selectReportFormat"
       :placeholder="$t('report.printFormats')"
+      :disabled="disabled"
       @visible-change="showListOptions"
       @change="runReport"
     >
@@ -21,6 +22,7 @@
       id="report-view-select"
       v-model="reportAsPrintViewValue"
       :placeholder="$t('route.reportViews')"
+      :disabled="disabled"
       @visible-change="showListView"
       @change="runReport"
     >
@@ -49,6 +51,10 @@ export default defineComponent({
     reportOutput: {
       type: Object,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, { root }) {

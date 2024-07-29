@@ -1,6 +1,7 @@
 <template>
   <div style="margin-left: -10px; display: flex; align-items: center;">
     <el-button
+      :disabled="disabled"
       :loading="isLoading"
       type="success"
       class="button-base-icon"
@@ -26,6 +27,10 @@ export default defineComponent({
     reportOutput: {
       type: Object,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, { root }) {
