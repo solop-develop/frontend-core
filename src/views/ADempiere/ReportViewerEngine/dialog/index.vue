@@ -325,7 +325,9 @@ export default defineComponent({
         reportName: props.reportOutput.name,
         printFormatId: props.reportOutput.print_format_id,
         reportViewId: props.reportOutput.report_view_id,
-        containerUuid: props.reportOutput.containerUuid
+        containerUuid: props.reportOutput.containerUuid,
+        pageSize: props.reportOutput.record_count,
+        pageToken: props.reportOutput.next_page_token
       })
     }
 
@@ -337,7 +339,9 @@ export default defineComponent({
         reportViewId: props.reportOutput.report_view_id,
         seconds: validTime.value,
         isDownload: false,
-        containerUuid: props.reportOutput.containerUuid
+        containerUuid: props.reportOutput.containerUuid,
+        pageSize: props.reportOutput.record_count,
+        pageToken: props.reportOutput.next_page_token
       })
         .then(fileNameResource => {
           if (isEmptyValue(fileNameResource)) {
@@ -356,7 +360,7 @@ export default defineComponent({
               let link = ''
               if (!isEmptyValue(response)) {
                 link = response
-                markdownContent.replace('www.123892138.com', link)
+                markdownContent.value.replace('www.123892138.com', link)
               }
               linkShare.value = link
               copyValue()
@@ -405,9 +409,14 @@ export default defineComponent({
         reportViewId: props.reportOutput.report_view_id,
         seconds: validTime.value,
         isDownload: false,
-        containerUuid: props.reportOutput.containerUuid
+        containerUuid: props.reportOutput.containerUuid,
+        pageSize: props.reportOutput.record_count,
+        pageToken: props.reportOutput.next_page_token
       })
         .then(fileNameResource => {
+          if (fileNameResource) {
+            markdownContent.value = markdownContent.value.replace('www.123892138.com', fileNameResource)
+          }
           store.dispatch('sendNotification', {
             user_id,
             title: props.reportOutput.name,
