@@ -215,6 +215,26 @@ export function SendNotification({
   notification_type,
   attachments
 }) {
+  let contact = []
+  if (Array.isArray(recipients)) {
+    contact = recipients.map(parameter => {
+      if (typeof parameter === 'object') {
+        return {
+          account_name: parameter.label,
+          contact_id: parameter.value
+        }
+      } else {
+        return {
+          account_name: parameter
+        }
+      }
+    })
+  } else {
+    contact = [{
+      account_name: recipients
+    }]
+  }
+  console.log(contact)
   return request({
     url: '/send_notifications/notification',
     method: 'post',
@@ -224,12 +244,7 @@ export function SendNotification({
       body: subject,
       notification_type,
       attachments,
-      recipients: recipients.map(parameter => {
-        return {
-          account_name: parameter.label,
-          contact_id: parameter.value
-        }
-      })
+      recipients: contact
     }
   })
 }
