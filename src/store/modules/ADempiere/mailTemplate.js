@@ -61,6 +61,7 @@ export default {
                 editor.insert(selected => {
                   const placeholder = mail_text
                   const content = selected || placeholder
+                  editor.save()
                   return {
                     text: `${content}`,
                     selected: content

@@ -141,6 +141,8 @@
             height="150px"
             :placeholder="$t('window.containerInfo.logWorkflow.addNote')"
             :toolbar="editorToolbarList"
+            @input="updateMardown"
+            @save="isToolbar"
           />
           <v-md-preview
             v-else
@@ -182,7 +184,7 @@
 
 <script>
 import store from '@/store'
-import { defineComponent, computed, ref } from '@vue/composition-api'
+import { defineComponent, computed, ref, nextTick } from '@vue/composition-api'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { config } from '@/utils/ADempiere/config'
 import { REPORT_EXPORT_TYPES } from '@/utils/ADempiere/constants/report'
@@ -246,19 +248,30 @@ export default defineComponent({
     const isLoading = ref(false)
     const validTime = ref(3600)
     const titleDocument = ref(props.reportOutput.name)
-    const markdownContent = computed({
-      // getter
-      get() {
-        return store.getters.getDefaultBody
-      },
-      // setter
-      set(newValue) {
-        store.commit('setDefaultBody', newValue)
+    const isTemplateSelected = ref(false)
+    const markdownContent = ref(store.getters.getDefaultBody)
+    const oldContent = ref(markdownContent.value)
+    function isToolbar() {
+      isTemplateSelected.value = true
+      nextTick(() => {
+        updateMardown(markdownContent.value)
+      })
+    }
+    function updateMardown(newValue) {
+      const newContent = newValue.trim()
+      const value = newContent.replace(oldContent.value.trim(), '').trim()
+      oldContent.value = newContent
+      if (isTemplateSelected.value) {
+        storedMailTemplatesList.value.menus.forEach((data) => {
+          const mailText = data.mail_text ? data.mail_text.trim() : ''
+          if (mailText.includes(value)) {
+            markdownContent.value = mailText
+          }
+        })
       }
-    })
-    const toUser = computed(() => {
-      return contactSend.value ? contactSend.value.map(item => item.label).join(', ') : ''
-    })
+      isTemplateSelected.value = false
+      store.commit('setDefaultBody', markdownContent.value)
+    }
     const getStoreReport = computed(() => {
       return store.getters.getStoredReport(props.reportOutput.containerUuid)
     })
@@ -312,8 +325,6 @@ export default defineComponent({
         reportName: props.reportOutput.name,
         printFormatId: props.reportOutput.print_format_id,
         reportViewId: props.reportOutput.report_view_id,
-        pageSize: props.reportOutput.record_count,
-        pageToken: props.reportOutput.next_page_token,
         containerUuid: props.reportOutput.containerUuid
       })
     }
@@ -326,8 +337,6 @@ export default defineComponent({
         reportViewId: props.reportOutput.report_view_id,
         seconds: validTime.value,
         isDownload: false,
-        pageSize: props.reportOutput.record_count,
-        pageToken: props.reportOutput.next_page_token,
         containerUuid: props.reportOutput.containerUuid
       })
         .then(fileNameResource => {
@@ -396,14 +405,9 @@ export default defineComponent({
         reportViewId: props.reportOutput.report_view_id,
         seconds: validTime.value,
         isDownload: false,
-        pageSize: props.reportOutput.record_count,
-        pageToken: props.reportOutput.next_page_token,
         containerUuid: props.reportOutput.containerUuid
       })
         .then(fileNameResource => {
-          if (fileNameResource) {
-            markdownContent.value = markdownContent.value.replace('www.123892138.com', fileNameResource)
-          }
           store.dispatch('sendNotification', {
             user_id,
             title: props.reportOutput.name,
@@ -446,6 +450,8 @@ export default defineComponent({
       isLoading,
       validTime,
       titleDocument,
+      oldContent,
+      updateMardown,
       copyToClipboard,
       handleDownload,
       getOptionFormat,
@@ -457,8 +463,9 @@ export default defineComponent({
       loadData,
       previwerBody,
       downloadFile,
+      isToolbar,
       markdownContent,
-      toUser
+      isTemplateSelected
     }
   }
 })
