@@ -44,7 +44,7 @@
         :row-class-name="tableRowClassName"
         :default-expand-all="false"
         :tree-props="{ children: 'children' }"
-        height="calc(100vh - 275px)"
+        :height="height"
         border
         :cell-style="{ padding: '0', height: '30px', border: 'none' }"
         :cell-class-name="getRowClassName"
@@ -132,6 +132,12 @@ export default defineComponent({
     const selectedRow = ref(undefined)
     const selectedColumn = ref(undefined)
     const tableReportEngine = ref(undefined)
+    const height = computed(() => {
+      if (store.getters.device !== 'mobile') {
+        return 'calc(100vh - 275px)'
+      }
+      return 'calc(100vh - 385px)'
+    })
     const shortsKey = computed(() => {
       return {
         close: ['esc']
@@ -385,6 +391,7 @@ export default defineComponent({
       columns,
       shortsKey,
       reportDefinition,
+      height,
       keyAction,
       widthColumn,
       exportFile,
