@@ -5,6 +5,7 @@
       id="report-format-switch"
       v-model="showChildren"
       style="font-weight: bold;"
+      :disabled="disabled"
       @change="expandedAll"
     />
     <label for="report-format-switch" class="select-label" style="margin-left: 15px;">{{ $t('report.reportEnginer.Detail') }}</label>
@@ -16,13 +17,18 @@ import store from '@/store'
 import { defineComponent, ref, watch } from '@vue/composition-api'
 
 export default defineComponent({
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
   setup() {
     const showChildren = ref(store.getters.getExpandedAll)
 
     function expandedAll() {
       store.commit('setExpandedAll', showChildren.value)
     }
-
     watch(
       () => store.getters.getExpandedAll,
       (newValue) => {
