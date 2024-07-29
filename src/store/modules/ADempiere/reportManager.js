@@ -793,7 +793,11 @@ const reportManager = {
           subject
         })
           .then(response => {
-            commit('setSendNotification', response)
+            showNotification({
+              title: language.t('notifications.succesful'),
+              message: title,
+              type: 'success'
+            })
             resolve(response)
           })
           .catch(error => {
