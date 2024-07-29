@@ -311,7 +311,10 @@ export default defineComponent({
         reportId: getStoreReport.value.id,
         reportName: props.reportOutput.name,
         printFormatId: props.reportOutput.print_format_id,
-        reportViewId: props.reportOutput.report_view_id
+        reportViewId: props.reportOutput.report_view_id,
+        pageSize: props.reportOutput.record_count,
+        pageToken: props.reportOutput.next_page_token,
+        containerUuid: props.reportOutput.containerUuid
       })
     }
 
@@ -322,7 +325,10 @@ export default defineComponent({
         printFormatId: props.reportOutput.print_format_id,
         reportViewId: props.reportOutput.report_view_id,
         seconds: validTime.value,
-        isDownload: false
+        isDownload: false,
+        pageSize: props.reportOutput.record_count,
+        pageToken: props.reportOutput.next_page_token,
+        containerUuid: props.reportOutput.containerUuid
       })
         .then(fileNameResource => {
           if (isEmptyValue(fileNameResource)) {
@@ -389,7 +395,10 @@ export default defineComponent({
         printFormatId: props.reportOutput.print_format_id,
         reportViewId: props.reportOutput.report_view_id,
         seconds: validTime.value,
-        isDownload: false
+        isDownload: false,
+        pageSize: props.reportOutput.record_count,
+        pageToken: props.reportOutput.next_page_token,
+        containerUuid: props.reportOutput.containerUuid
       })
         .then(fileNameResource => {
           store.dispatch('sendNotification', {
