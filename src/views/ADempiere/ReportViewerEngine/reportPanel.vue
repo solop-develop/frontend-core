@@ -56,8 +56,8 @@
           :key="fieldAttributes.code + key"
           :column-key="fieldAttributes.code"
           :align="getAlignment(fieldAttributes.display_type)"
-          :width="widthColumn(fieldAttributes.display_type)"
           :fixed="fieldAttributes.is_group_column"
+          :width="widthColumn()"
         >
           <template slot="header">
             {{ fieldAttributes.title }}
@@ -96,7 +96,7 @@ import store from '@/store'
 import { defineComponent, computed, ref, watch, nextTick, onMounted } from '@vue/composition-api'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
-import { isNumberField, isDateField, isBooleanField, isDecimalField } from '@/utils/ADempiere/references'
+import { isNumberField } from '@/utils/ADempiere/references'
 import InfoReport from './infoReport'
 import dialogShareReport from './dialog'
 import reportSearchCriteria from './searchCriteria'
@@ -351,16 +351,12 @@ export default defineComponent({
         expandedRowAll()
       })
     })
-    function widthColumn(data) {
-      if (
-        isNumberField(data) ||
-        isDateField(data) ||
-        isBooleanField(data) ||
-        isDecimalField(data)
-      ) {
-        return '250'
-      }
-      return '360'
+    function widthColumn() {
+      dataList.value.forEach(data => {
+        Object.values(data.cells).forEach(dataCell => {
+          return dataCell.display_value.length
+        })
+      })
     }
     function getCellStyle(code, row) {
       if (isEmptyValue(row.cells[code])) {
