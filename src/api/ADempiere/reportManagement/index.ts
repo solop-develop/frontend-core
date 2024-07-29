@@ -234,7 +234,6 @@ export function SendNotification({
       account_name: recipients
     }]
   }
-  console.log(contact)
   return request({
     url: '/send_notifications/notification',
     method: 'post',
