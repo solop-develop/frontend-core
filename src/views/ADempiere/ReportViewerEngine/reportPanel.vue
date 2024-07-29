@@ -53,7 +53,7 @@
       >
         <el-table-column
           v-for="(fieldAttributes, key) in columns"
-          :key="key"
+          :key="fieldAttributes.code + key"
           :column-key="fieldAttributes.code"
           :align="getAlignment(fieldAttributes.display_type)"
           :width="widthColumn(fieldAttributes.display_type)"
