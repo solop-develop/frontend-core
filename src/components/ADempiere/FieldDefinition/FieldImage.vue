@@ -532,7 +532,7 @@ export default {
         })
           .then(response => {
             let image = ''
-            const resources = response.resources.find(resource => resource.name.includes('logo_id.png'))
+            const resources = response.resources.find(resource => resource.name.includes(this.columnNameImage))
             if (!this.isEmptyValue(resources)) {
               image = resources.name
               this.infoImage = resources
