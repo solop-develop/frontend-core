@@ -168,15 +168,13 @@ export default defineComponent({
     }
     function activatePopover(row, column) {
       event.preventDefault()
-      dataList.value.forEach(data => {
-        Object.values(data.cells).forEach(dataCell => {
-          if (dataCell && 'sum_value' in dataCell) {
-            selectedColumn.value = column.columnKey
-            selectedRow.value = row
-            dataModal.value = dataCell
-            showPopover.value = true
-          }
-        })
+      Object.values(row.cells).forEach(dataCell => {
+        if (dataCell && 'sum_value' in dataCell) {
+          selectedColumn.value = column.columnKey
+          selectedRow.value = row
+          dataModal.value = dataCell
+          showPopover.value = true
+        }
       })
     }
     function displayLabel(prop, row) {
