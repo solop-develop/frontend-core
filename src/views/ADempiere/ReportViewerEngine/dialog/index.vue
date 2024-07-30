@@ -445,7 +445,7 @@ export default defineComponent({
                 title: props.reportOutput.name,
                 recipients: contactSend.value,
                 notification_type: typeNotify.value,
-                attachments: link,
+                attachments: fileNameResource,
                 subject: markdownContent.value
               })
             })
