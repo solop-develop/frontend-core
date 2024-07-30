@@ -215,9 +215,9 @@ export function SendNotification({
   notification_type,
   attachments
 }) {
-  let contact = []
+  let contacts = []
   if (Array.isArray(recipients)) {
-    contact = recipients.map(parameter => {
+    contacts = recipients.map(parameter => {
       if (typeof parameter === 'object') {
         return {
           account_name: parameter.label,
@@ -230,7 +230,7 @@ export function SendNotification({
       }
     })
   } else {
-    contact = [{
+    contacts = [{
       account_name: recipients
     }]
   }
@@ -243,7 +243,7 @@ export function SendNotification({
       body: subject,
       notification_type,
       attachments,
-      recipients: contact
+      recipients: contacts
     }
   })
 }
