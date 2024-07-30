@@ -132,8 +132,8 @@ export default defineComponent({
         instanceUuid: defaultParams.value.instance_id,
         reportViewId: defaultParams.value.report_view_id,
         isView: true,
-        pageSize: props.reportOutput.record_count,
-        pageToken: props.reportOutput.next_page_token
+        pageSize: props.reportOutput.pageSize,
+        pageToken: props.reportOutput.pageToken
       })
     }
     watch(reportAsPrintFormatValue, (newValue) => {

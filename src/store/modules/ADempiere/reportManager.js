@@ -152,9 +152,7 @@ const reportManager = {
       reportViewId,
       tableName,
       isSummary,
-      recordUuid,
-      pageSize = 15,
-      pageNumber
+      recordUuid
     }) {
       return new Promise(resolve => {
         const reportDefinition = rootGetters.getStoredReport(containerUuid)
@@ -205,9 +203,7 @@ const reportManager = {
           reportViewId,
           isSummary,
           tableName,
-          recordId,
-          pageSize,
-          pageToken: pageNumber
+          recordId
         })
       })
     },
@@ -590,7 +586,9 @@ const reportManager = {
               ...reportResponse,
               containerUuid,
               rowCells: reportResponse.rows,
-              instanceUuid: id
+              instanceUuid: id,
+              pageSize,
+              pageToken
             })
             showNotification({
               title: language.t('notifications.succesful'),
@@ -623,8 +621,8 @@ const reportManager = {
       reportType,
       filters,
       sortBy,
-      pageSize,
-      pageToken,
+      pageSize = 15,
+      pageToken = 1,
       containerUuid,
       printFormatId,
       reportViewId,
@@ -675,7 +673,9 @@ const reportManager = {
               ...reportResponse,
               containerUuid,
               rowCells: reportResponse.rows,
-              instanceUuid: reportId
+              instanceUuid: reportId,
+              pageSize,
+              pageToken
             })
             showNotification({
               title: language.t('notifications.succesful'),

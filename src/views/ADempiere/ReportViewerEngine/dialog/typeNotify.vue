@@ -7,7 +7,7 @@
       v-model="notify"
       filterable
       allow-create
-      style="width: 400px;"
+      style="width: 100%;"
       @visible-change="searchNotify"
       @change="setNotify"
     >

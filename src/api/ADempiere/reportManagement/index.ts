@@ -187,7 +187,7 @@ export function runExport({
       print_format_id: printFormatId,
       report_view_id: reportViewId,
       page_size: pageSize,
-      page_token: pageToken,
+      page_token: `${pageToken}`,
       filters
     }
   })
