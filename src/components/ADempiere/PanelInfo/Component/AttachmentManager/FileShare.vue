@@ -128,6 +128,10 @@ export default defineComponent({
     fileName: {
       type: String,
       default: undefined
+    },
+    fileUrl: {
+      type: String,
+      default: undefined
     }
   },
 
@@ -137,7 +141,7 @@ export default defineComponent({
     const isShowed = ref(false)
     const validTime = ref(3600)
     function loadData() {
-      linkShare.value = config.adempiere.resource.url + props.file.fullName
+      linkShare.value = config.adempiere.resource.url + props.fileUrl
     }
 
     function copyValue() {

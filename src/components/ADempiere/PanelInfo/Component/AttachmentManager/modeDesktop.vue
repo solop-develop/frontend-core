@@ -180,6 +180,7 @@
                   :resource-name="file.file_name"
                   :file="file"
                   :file-name="file.name"
+                  :file-url="file.fullName"
                   class="class-group-botton-option"
                 />
                 <el-button

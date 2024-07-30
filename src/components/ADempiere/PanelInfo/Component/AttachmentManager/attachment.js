@@ -28,8 +28,7 @@ import {
 } from '@/api/ADempiere/user-interface/component/resource'
 import {
   requestDeleteResourceReference,
-  requestDeleteResources,
-  requestShareResources
+  requestDeleteResources
 } from '@/api/ADempiere/file-management/resource-reference.ts'
 
 // Components and Mixins
@@ -208,17 +207,16 @@ export default defineComponent({
      * @param {Boolean} isDownload
      */
     const handleDownload = async(file, isDownload = true) => {
+      const imageURL = config.adempiere.resource.url + file.fullName
       if (!isEmptyValue(file.content_type) && file.content_type.includes('image')) {
-        const link = document.createElement('a')
-        link.target = '_blank'
-        link.href = urlDownload({ fileName: file.name })
-        link.download = this.displayedValue
-        link.style.display = 'none'
-        link.click()
+        const linkImage = document.createElement('a')
+        linkImage.href = config.adempiere.resource.url + file.fullName
+        linkImage.download = `${file.fullName}`
+        linkImage.target = '_blank'
+        linkImage.click()
         return
       }
       const link = document.createElement('a')
-      const imageURL = config.adempiere.resource.url + file.fullName
       link.href = imageURL
       link.download = file.fullName
       link.click()
@@ -230,22 +228,22 @@ export default defineComponent({
       return
     }
 
-    function urlDownload({
-      fileName
-    }) {
-      return new Promise((resolve, reject) => {
-        requestShareResources({
-          fileName,
-          seconds: 3600
-        })
-          .then(response => {
-            resolve(response)
-          })
-          .catch(() => {
-            reject('')
-          })
-      })
-    }
+    // function urlDownload({
+    //   fileName
+    // }) {
+    //   return new Promise((resolve, reject) => {
+    //     requestShareResources({
+    //       fileName,
+    //       seconds: 3600
+    //     })
+    //       .then(response => {
+    //         resolve(response)
+    //       })
+    //       .catch(() => {
+    //         reject('')
+    //       })
+    //   })
+    // }
 
     /**
      * Get Surce File

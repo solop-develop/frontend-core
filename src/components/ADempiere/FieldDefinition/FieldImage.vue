@@ -75,6 +75,7 @@
             :resource-name="displayedValue"
             :file="fileResource"
             :file-name="displayedValue"
+            :file-url="infoImage.name"
             class="popover-info"
           />
 
@@ -530,13 +531,11 @@ export default {
           tableName: table_name
         })
           .then(response => {
-            let resource
             let image = ''
-            const resources = this.sortResource(response.resources)
+            const resources = response.resources.find(resource => resource.name.includes(this.columnNameImage))
             if (!this.isEmptyValue(resources)) {
-              resource = resources[resources.length - 1]
-              image = resource.name
-              this.infoImage = resource
+              image = resources.name
+              this.infoImage = resources
             }
             resolve(image)
           })
