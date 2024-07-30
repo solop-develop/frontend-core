@@ -444,7 +444,7 @@ export default defineComponent({
               linkShare.value = link
               store.dispatch('sendNotification', {
                 user_id,
-                title: props.reportOutput.name,
+                title: titleDocument.value,
                 recipients: contactSend.value,
                 notification_type: typeNotify.value,
                 attachments: fileNameResource,
@@ -457,6 +457,7 @@ export default defineComponent({
     function blankValue() {
       store.commit('setContactSend', '')
       store.commit('setTypeNotify', '')
+      titleDocument.value = props.reportOutput.name
       let menuDefault = ''
       if (!isEmptyValue(storedMailTemplatesList.value) && !isEmptyValue(storedMailTemplatesList.value.menus)) {
         menuDefault = storedMailTemplatesList.value.menus[0].mail_text
