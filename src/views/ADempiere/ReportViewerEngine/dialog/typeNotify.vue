@@ -22,12 +22,14 @@
 </template>
 <script>
 import store from '@/store'
-import { defineComponent, ref } from '@vue/composition-api'
+import { defineComponent, computed, ref } from '@vue/composition-api'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 export default defineComponent({
   name: 'typeNotify',
   setup() {
-    const notify = ref('')
+    const notify = computed(() => {
+      return store.getters.getTypeNotify
+    })
     const listNotify = ref([])
     function searchNotify() {
       store.dispatch('ListNotifications')

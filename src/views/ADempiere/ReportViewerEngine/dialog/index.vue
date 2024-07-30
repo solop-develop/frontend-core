@@ -184,6 +184,8 @@
 
 <script>
 import store from '@/store'
+import language from '@/lang'
+
 import { defineComponent, computed, ref, nextTick } from '@vue/composition-api'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { config } from '@/utils/ADempiere/config'
@@ -448,10 +450,20 @@ export default defineComponent({
                 attachments: fileNameResource,
                 subject: markdownContent.value
               })
+              blankValue()
             })
         })
     }
-
+    function blankValue() {
+      store.commit('setContactSend', '')
+      store.commit('setTypeNotify', '')
+      let menuDefault = ''
+      if (!isEmptyValue(storedMailTemplatesList.value) && !isEmptyValue(storedMailTemplatesList.value.menus)) {
+        menuDefault = storedMailTemplatesList.value.menus[0].mail_text
+      }
+      const link = language.t('report.reportEnginer.urlPublic')
+      markdownContent.value = menuDefault + `\n\n\n[${link}](www.123892138.com)`
+    }
     function copyValue() {
       let textToCopy = linkShare.value
       if (isEmptyValue(textToCopy)) {
@@ -497,6 +509,7 @@ export default defineComponent({
       previwerBody,
       downloadFile,
       isToolbar,
+      blankValue,
       markdownContent,
       isTemplateSelected,
       allReport,
