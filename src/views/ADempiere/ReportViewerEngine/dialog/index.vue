@@ -30,7 +30,7 @@
           <el-row :gutter="12" style="height: 30px;">
             <el-col style="width: 100%; text-align: center;">
               <el-switch
-                v-model="checkedItem"
+                v-model="allReport"
                 :active-value="1"
                 :inactive-value="0"
                 :active-text="$t('report.reportEnginer.optionsImport.fullReport')"
@@ -86,9 +86,9 @@
             </el-col>
           </el-row>
           <el-row v-if="checkedItemGeneral === 1" :gutter="12" style="margin-top: 25px; display: flex; justify-content: center;">
-            <el-col :span="18">
+            <el-col :span="24">
               <el-form>
-                <el-row :gutter="10">
+                <el-row :gutter="24">
                   <el-col :span="12">
                     <typeNotify />
                   </el-col>
@@ -251,6 +251,13 @@ export default defineComponent({
     const isTemplateSelected = ref(false)
     const markdownContent = ref(store.getters.getDefaultBody)
     const oldContent = ref(markdownContent.value)
+    const allReport = ref(false)
+    const pageSize = computed(() => {
+      if (!allReport.value) {
+        return props.reportOutput.pageSize
+      }
+      return props.reportOutput.record_count
+    })
     function isToolbar() {
       isTemplateSelected.value = true
       nextTick(() => {
@@ -326,8 +333,8 @@ export default defineComponent({
         printFormatId: props.reportOutput.print_format_id,
         reportViewId: props.reportOutput.report_view_id,
         containerUuid: props.reportOutput.containerUuid,
-        pageSize: props.reportOutput.record_count,
-        pageToken: props.reportOutput.next_page_token
+        pageSize: pageSize.value,
+        pageToken: props.reportOutput.pageToken
       })
     }
 
@@ -340,8 +347,8 @@ export default defineComponent({
         seconds: validTime.value,
         isDownload: false,
         containerUuid: props.reportOutput.containerUuid,
-        pageSize: props.reportOutput.record_count,
-        pageToken: props.reportOutput.next_page_token
+        pageSize: pageSize.value,
+        pageToken: props.reportOutput.pageToken
       })
         .then(fileNameResource => {
           if (isEmptyValue(fileNameResource)) {
@@ -410,8 +417,8 @@ export default defineComponent({
         seconds: validTime.value,
         isDownload: false,
         containerUuid: props.reportOutput.containerUuid,
-        pageSize: props.reportOutput.record_count,
-        pageToken: props.reportOutput.next_page_token
+        pageSize: pageSize.value,
+        pageToken: props.reportOutput.pageToken
       })
         .then(fileNameResource => {
           if (isEmptyValue(fileNameResource)) {
@@ -491,7 +498,9 @@ export default defineComponent({
       downloadFile,
       isToolbar,
       markdownContent,
-      isTemplateSelected
+      isTemplateSelected,
+      allReport,
+      pageSize
     }
   }
 })

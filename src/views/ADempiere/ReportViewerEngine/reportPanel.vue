@@ -215,10 +215,10 @@ export default defineComponent({
       return store.getters.getReportOutput(props.instanceUuid)
     })
     const currentPageSize = computed(() => {
-      return parseInt(recordData.value.record_count, 10)
+      return parseInt(props.reportOutput.pageSize, 10)
     })
     const currentPageNumber = computed(() => {
-      return parseInt(recordData.value.next_page_token, 10)
+      return parseInt(props.reportOutput.pageToken, 10)
     })
 
     function hasChildren(children, parentLevel) {

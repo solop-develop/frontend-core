@@ -54,8 +54,8 @@ export default defineComponent({
         instanceUuid: props.reportOutput.instance_id,
         reportViewId: props.reportOutput.report_view_id,
         isView: true,
-        pageSize: props.reportOutput.record_count,
-        pageToken: props.reportOutput.next_page_token
+        pageSize: props.reportOutput.pageSize,
+        pageToken: props.reportOutput.pageToken
       })
     }
     return {
