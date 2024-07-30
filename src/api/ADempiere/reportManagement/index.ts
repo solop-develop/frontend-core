@@ -242,7 +242,7 @@ export function SendNotification({
       title,
       body: subject,
       notification_type,
-      attachments,
+      attachments: [attachments],
       recipients: contacts
     }
   })
