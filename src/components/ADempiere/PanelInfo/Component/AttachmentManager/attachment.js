@@ -18,7 +18,7 @@
 
 import { defineComponent, computed, ref } from '@vue/composition-api'
 
-import router from '@/router'
+// import router from '@/router'
 import store from '@/store'
 
 // API Request Methods
@@ -169,12 +169,10 @@ export default defineComponent({
         fileName: file.fullName
       })
         .then(() => {
-          const clientId = store.getters.getSessionContextClientId
-          const { action_id, type } = router.app._route.meta
+          const { client } = store.getters['user/getRole']
           store.dispatch('getAttachmentFromServer', {
-            containerType: type,
-            clientId: clientId,
-            containerId: action_id,
+            containerType: 'attachment',
+            clientId: client.uuid,
             recordId: props.recordId,
             tableName: props.tableName
           })
