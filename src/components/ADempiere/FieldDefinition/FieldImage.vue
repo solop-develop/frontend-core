@@ -461,10 +461,8 @@ export default {
      * Handle Download image
      */
     async handleDownload() {
-      console.log({ alo: this.infoImage })
       const {
         name
-        // content_type
       } = this.infoImage
       const file = document.createElement('a')
       file.href = `${config.adempiere.resource.url}${name}`
