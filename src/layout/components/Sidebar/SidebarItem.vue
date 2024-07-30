@@ -28,7 +28,7 @@
       <template slot="title">
         <item
           v-if="sidebar.opened"
-          :icon="item.meta && item.meta.icon"
+          :icon="(item.meta && item.meta.icon && item.meta.icon !=='nested') || 'el-icon-s-tools'"
           :title="generateTitle(item.meta.title)"
           :is-collapsed="isCollapsed"
           :has-child-items="true"
@@ -58,6 +58,7 @@ import AppLink from './Link'
 import FixiOSBug from './FixiOSBug'
 import { mapGetters } from 'vuex'
 import { capitalize } from '@/utils/ADempiere/formatValue/stringFormat'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 
 export default {
   name: 'SidebarItem',
@@ -101,6 +102,11 @@ export default {
         } else {
           // Temp set(will be used if only has one showing child)
           this.onlyOneChild = item
+          if (!isEmptyValue(this.onlyOneChild) && !isEmptyValue(this.onlyOneChild.meta) && !isEmptyValue(this.onlyOneChild.meta.icon)) {
+            if (this.onlyOneChild.meta.icon === 'nested') {
+              this.onlyOneChild.meta.icon = 'el-icon-s-tools'
+            }
+          }
           return true
         }
       })
