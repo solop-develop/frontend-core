@@ -66,6 +66,7 @@
           <file-info
             :image-id="value"
             :resource-name="displayedValue"
+            :info-image="infoImage"
             class="popover-info"
           />
 
@@ -92,7 +93,7 @@
             icon="el-icon-delete"
             class="button-manage-file"
             plain
-            :disabled="isDisabled"
+            :disabled="isEmptyValue(infoImage)"
             @click="handleRemove()"
           />
 
@@ -124,7 +125,7 @@
           <el-button
             class="button-manage-file-svg"
             plain
-            :disabled="!isDownload"
+            :disabled="isEmptyValue(infoImage)"
             @click="handleDownload()"
           >
             <svg-icon
@@ -460,14 +461,16 @@ export default {
      * Handle Download image
      */
     async handleDownload() {
-      const link = document.createElement('a')
-      link.target = '_blank'
-      link.href = this.imageSourceSmall + '?f=' + Date.now()
-      link.download = this.displayedValue
-      link.style.display = 'none'
-      link.click()
-      document.body.appendChild(link)
-      document.body.removeChild(link)
+      console.log({ alo: this.infoImage })
+      const {
+        name
+        // content_type
+      } = this.infoImage
+      const file = document.createElement('a')
+      file.href = `${config.adempiere.resource.url}${name}`
+      file.download = `${name}`
+      file.target = '_blank'
+      file.click()
       return
     },
 
@@ -519,8 +522,6 @@ export default {
 
     getListResources() {
       return new Promise((resolve, reject) => {
-        // const clientId = this.$store.getters.getSessionContextClientId
-        // const { action_id } = this.$route.meta
         const { table_name } = this.currentTab
         requestListResources({
           clientId: this.clientUuid,
