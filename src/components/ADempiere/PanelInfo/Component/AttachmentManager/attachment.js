@@ -218,10 +218,15 @@ export default defineComponent({
         return
       }
       const link = document.createElement('a')
-      const imageURL = config.adempiere.resource.url + file.file_name
+      const imageURL = config.adempiere.resource.url + file.fullName
       link.href = imageURL
-      link.download = file.name
+      link.download = file.fullName
       link.click()
+      // const file = document.createElement('a')
+      // file.href = `${config.adempiere.resource.url}${file.fullName}`
+      // file.download = `${file.name}`
+      // file.target = '_blank'
+      // file.click()
       return
     }
 

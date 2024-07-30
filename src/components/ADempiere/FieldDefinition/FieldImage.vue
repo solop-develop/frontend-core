@@ -66,6 +66,7 @@
           <file-info
             :image-id="value"
             :resource-name="displayedValue"
+            :info-image="infoImage"
             class="popover-info"
           />
 
@@ -92,7 +93,7 @@
             icon="el-icon-delete"
             class="button-manage-file"
             plain
-            :disabled="isDisabled"
+            :disabled="isEmptyValue(infoImage)"
             @click="handleRemove()"
           />
 
@@ -124,7 +125,7 @@
           <el-button
             class="button-manage-file-svg"
             plain
-            :disabled="!isDownload"
+            :disabled="isEmptyValue(infoImage)"
             @click="handleDownload()"
           >
             <svg-icon
@@ -186,6 +187,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { getToken } from '@/utils/auth'
 import { pathImageWindows } from '@/utils/ADempiere/resource'
 import { showMessage } from '@/utils/ADempiere/notification'
+import { refreshRecord } from '@/utils/ADempiere/dictionary/window'
 
 export default {
   name: 'FieldImage',
@@ -303,6 +305,7 @@ export default {
   },
 
   mounted() {
+    this.getListResources()
     this.valideImage()
   },
   updated() {
@@ -433,6 +436,7 @@ export default {
               method: 'PUT',
               body: file
             }).then(() => {
+              this.getListResources()
               setTimeout(() => {
                 this.imageSourceSmall = this.pathImage
                 this.valideImage(file)
@@ -457,14 +461,14 @@ export default {
      * Handle Download image
      */
     async handleDownload() {
-      const link = document.createElement('a')
-      link.target = '_blank'
-      link.href = this.imageSourceSmall + '?f=' + Date.now()
-      link.download = this.displayedValue
-      link.style.display = 'none'
-      link.click()
-      document.body.appendChild(link)
-      document.body.removeChild(link)
+      const {
+        name
+      } = this.infoImage
+      const file = document.createElement('a')
+      file.href = `${config.adempiere.resource.url}${name}`
+      file.download = `${name}`
+      file.target = '_blank'
+      file.click()
       return
     },
 
@@ -489,27 +493,33 @@ export default {
      * Handle Removeya esta actualizado solop
      */
     handleRemove() {
-      // if (this.isDisabled) {
-      //   return
-      // }
-      const resourceName = this.nameImage
-      const { table_name } = this.currentTab
-      const pathImage = `${this.clientUuid}/client/attachment/${table_name}/${this.recordId}/${this.metadata.columnName}/${resourceName}`
-      if (isEmptyValue(pathImage)) {
+      const { name } = this.infoImage
+      if (isEmptyValue(name)) {
+        this.getListResources()
         return
       }
+
+      const {
+        id,
+        parentUuid,
+        containerUuid
+      } = this.currentTab
+
       requestDeleteResources({
-        fileName: pathImage
+        fileName: name
       })
         .then(() => {
-          this.clearValues()
+          refreshRecord.refreshRecord({
+            parentUuid,
+            containerUuid,
+            tabId: id,
+            recordId: this.recordId
+          })
         })
     },
 
     getListResources() {
       return new Promise((resolve, reject) => {
-        // const clientId = this.$store.getters.getSessionContextClientId
-        // const { action_id } = this.$route.meta
         const { table_name } = this.currentTab
         requestListResources({
           clientId: this.clientUuid,
