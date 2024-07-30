@@ -360,7 +360,7 @@ export default defineComponent({
               let link = ''
               if (!isEmptyValue(response)) {
                 link = response
-                markdownContent.value.replace('www.123892138.com', link)
+                markdownContent.value = markdownContent.value.replace('www.123892138.com', link)
               }
               linkShare.value = link
               copyValue()
@@ -414,17 +414,34 @@ export default defineComponent({
         pageToken: props.reportOutput.next_page_token
       })
         .then(fileNameResource => {
-          if (fileNameResource) {
-            markdownContent.value = markdownContent.value.replace('www.123892138.com', fileNameResource)
+          if (isEmptyValue(fileNameResource)) {
+            showNotification({
+              title: 'Error',
+              message: `Error exporting report: URL Found.`,
+              type: 'error'
+            })
+            return
           }
-          store.dispatch('sendNotification', {
-            user_id,
-            title: props.reportOutput.name,
-            recipients: contactSend.value,
-            notification_type: typeNotify.value,
-            attachments: fileNameResource,
-            subject: markdownContent.value
+          requestShareResources({
+            fileName: fileNameResource,
+            seconds: validTime.value
           })
+            .then(response => {
+              let link = ''
+              if (!isEmptyValue(response)) {
+                link = response
+                markdownContent.value = markdownContent.value.replace('www.123892138.com', link)
+              }
+              linkShare.value = link
+              store.dispatch('sendNotification', {
+                user_id,
+                title: props.reportOutput.name,
+                recipients: contactSend.value,
+                notification_type: typeNotify.value,
+                attachments: link,
+                subject: markdownContent.value
+              })
+            })
         })
     }
 
