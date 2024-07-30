@@ -8,6 +8,7 @@
       filterable
       allow-create
       multiple
+      style="width: 400px;"
       @change="setUser"
       @visible-change="searchUser"
     >
