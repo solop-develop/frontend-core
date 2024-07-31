@@ -42,7 +42,7 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-row :gutter="12" style="margin-top: 20px; height: 50px">
+    <el-row :gutter="12" style="margin-top: 20px;">
       <el-col :span="24">
         <el-card>
           <template #header>
@@ -132,7 +132,7 @@
               left-toolbar="undo redo clear h bold italic strikethrough quote ul ol table hr link image code | emoji listMailTemplates"
               right-toolbar="sync-scroll fullscreen"
               mode="edit"
-              height="300px"
+              style="height: 300px; margin-bottom: 10px"
               :placeholder="$t('window.containerInfo.logWorkflow.addNote')"
               :toolbar="editorToolbarList"
               @input="updateMardown"
@@ -270,7 +270,8 @@ export default defineComponent({
         storedMailTemplatesList.value.menus.forEach((data) => {
           const mailText = data.mail_text ? data.mail_text.trim() : ''
           if (mailText.includes(value)) {
-            markdownContent.value = `${mailText}\n\n\n[${link}](http://www.123892138.com)`
+            const padding = '\n'.repeat(10)
+            markdownContent.value = `${mailText}${padding}[${link}](http://www.123892138.com)`
           }
         })
       }
