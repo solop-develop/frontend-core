@@ -1,6 +1,6 @@
 <template>
   <div style="margin-left: 0px; display: flex; align-items: center;">
-    <label for="report-format-switch" class="select-label" style="margin-right: 15px;">{{ $t('report.reportEnginer.Detail') }}</label>
+    <label for="report-format-switch" class="select-label" style="margin-right: 15px;">{{ $t('report.reportEnginer.detail') }}</label>
     <el-switch
       id="report-format-switch"
       v-model="showChildren"

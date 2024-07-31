@@ -103,7 +103,7 @@ const report = {
     },
     printFormat: 'Print Format',
     viewReport: 'Report View',
-    Detail: 'View Detailed',
+    detail: 'View Detailed',
     summary: 'View Summary',
     exportFormat: 'Export Format',
     download: 'Generated Download Link',
