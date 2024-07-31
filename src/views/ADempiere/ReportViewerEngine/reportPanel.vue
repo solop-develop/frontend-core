@@ -16,7 +16,7 @@
   along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 <template>
-  <div>
+  <div @click="showPopover = false">
     <el-card class="containerReportEnginer">
       <reportSearchCriteria
         :container-uuid="reportOutput.containerUuid"
@@ -174,15 +174,8 @@ export default defineComponent({
           selectedRow.value = row
           dataModal.value = dataCell
           showPopover.value = true
-          document.addEventListener('click', handlePopoverClickOutside)
         }
       })
-    }
-    function handlePopoverClickOutside(event) {
-      if (!event.target.closest('.reportInfo')) {
-        showPopover.value = false
-        document.removeEventListener('click', handlePopoverClickOutside)
-      }
     }
     function displayLabel(prop, row) {
       if (isEmptyValue(row.cells)) {
@@ -407,8 +400,7 @@ export default defineComponent({
       expandedRowAll,
       viewShowDialog,
       getCellStyle,
-      activatePopover,
-      handlePopoverClickOutside
+      activatePopover
     }
   }
 })
