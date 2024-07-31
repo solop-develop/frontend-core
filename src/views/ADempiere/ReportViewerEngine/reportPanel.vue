@@ -16,7 +16,7 @@
   along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 <template>
-  <div>
+  <div @click="showPopover = false">
     <el-card class="containerReportEnginer">
       <reportSearchCriteria
         :container-uuid="reportOutput.containerUuid"
@@ -64,7 +64,10 @@
             {{ fieldAttributes.title }}
           </template>
           <template slot-scope="scope">
-            <span :style="getCellStyle(fieldAttributes.code, scope.row)">
+            <span
+              v-if="!shouldHideName(scope.row, fieldAttributes.code, key)"
+              :style="getCellStyle(fieldAttributes.code, scope.row)"
+            >
               {{ displayLabel(fieldAttributes, scope.row) }}
               <el-popover
                 v-if="selectedRow === scope.row && selectedColumn === fieldAttributes.code && scope.row.is_parent"
@@ -369,6 +372,15 @@ export default defineComponent({
       }
     }
 
+    function shouldHideName(row, code, columnIndex) {
+      if (columnIndex !== 0) {
+        return false
+      }
+      if (row.level > 1 && row.is_parent) {
+        return row.children.some(child => displayLabel(code, child) === displayLabel(code, row))
+      }
+      return false
+    }
     return {
       showDialog,
       tableReportEngine,
@@ -401,7 +413,8 @@ export default defineComponent({
       expandedRowAll,
       viewShowDialog,
       getCellStyle,
-      activatePopover
+      activatePopover,
+      shouldHideName
     }
   }
 })
