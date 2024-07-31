@@ -18,7 +18,7 @@
 
 import { defineComponent, computed, ref } from '@vue/composition-api'
 
-import router from '@/router'
+// import router from '@/router'
 import store from '@/store'
 
 // API Request Methods
@@ -28,8 +28,7 @@ import {
 } from '@/api/ADempiere/user-interface/component/resource'
 import {
   requestDeleteResourceReference,
-  requestDeleteResources,
-  requestShareResources
+  requestDeleteResources
 } from '@/api/ADempiere/file-management/resource-reference.ts'
 
 // Components and Mixins
@@ -169,12 +168,10 @@ export default defineComponent({
         fileName: file.fullName
       })
         .then(() => {
-          const clientId = store.getters.getSessionContextClientId
-          const { action_id, type } = router.app._route.meta
+          const { client } = store.getters['user/getRole']
           store.dispatch('getAttachmentFromServer', {
-            containerType: type,
-            clientId: clientId,
-            containerId: action_id,
+            containerType: 'attachment',
+            clientId: client.uuid,
             recordId: props.recordId,
             tableName: props.tableName
           })
@@ -210,39 +207,43 @@ export default defineComponent({
      * @param {Boolean} isDownload
      */
     const handleDownload = async(file, isDownload = true) => {
+      const imageURL = config.adempiere.resource.url + file.fullName
       if (!isEmptyValue(file.content_type) && file.content_type.includes('image')) {
-        const link = document.createElement('a')
-        link.target = '_blank'
-        link.href = urlDownload({ fileName: file.name })
-        link.download = this.displayedValue
-        link.style.display = 'none'
-        link.click()
+        const linkImage = document.createElement('a')
+        linkImage.href = config.adempiere.resource.url + file.fullName
+        linkImage.download = `${file.fullName}`
+        linkImage.target = '_blank'
+        linkImage.click()
         return
       }
       const link = document.createElement('a')
-      const imageURL = config.adempiere.resource.url + file.file_name
       link.href = imageURL
-      link.download = file.name
+      link.download = file.fullName
       link.click()
+      // const file = document.createElement('a')
+      // file.href = `${config.adempiere.resource.url}${file.fullName}`
+      // file.download = `${file.name}`
+      // file.target = '_blank'
+      // file.click()
       return
     }
 
-    function urlDownload({
-      fileName
-    }) {
-      return new Promise((resolve, reject) => {
-        requestShareResources({
-          fileName,
-          seconds: 3600
-        })
-          .then(response => {
-            resolve(response)
-          })
-          .catch(() => {
-            reject('')
-          })
-      })
-    }
+    // function urlDownload({
+    //   fileName
+    // }) {
+    //   return new Promise((resolve, reject) => {
+    //     requestShareResources({
+    //       fileName,
+    //       seconds: 3600
+    //     })
+    //       .then(response => {
+    //         resolve(response)
+    //       })
+    //       .catch(() => {
+    //         reject('')
+    //       })
+    //   })
+    // }
 
     /**
      * Get Surce File

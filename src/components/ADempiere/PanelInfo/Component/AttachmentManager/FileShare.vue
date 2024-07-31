@@ -77,17 +77,13 @@ import {
   ref
 } from '@vue/composition-api'
 
-// API Request Methods
-import {
-  requestShareResources
-} from '@/api/ADempiere/file-management/resource-reference.ts'
-
 // Utils and Helper Methods
 import {
   isEmptyValue
 } from '@/utils/ADempiere/valueUtils'
 import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 // import { formatFileSize } from '@/utils/ADempiere/resource.js'
+import { config } from '@/utils/ADempiere/config'
 
 export default defineComponent({
   name: 'FileShare',
@@ -132,6 +128,10 @@ export default defineComponent({
     fileName: {
       type: String,
       default: undefined
+    },
+    fileUrl: {
+      type: String,
+      default: undefined
     }
   },
 
@@ -141,17 +141,7 @@ export default defineComponent({
     const isShowed = ref(false)
     const validTime = ref(3600)
     function loadData() {
-      isLoading.value = true
-      requestShareResources({
-        fileName: props.resourceName,
-        seconds: validTime.value
-      })
-        .then(response => {
-          linkShare.value = response
-        })
-        .finally(() => {
-          isLoading.value = false
-        })
+      linkShare.value = config.adempiere.resource.url + props.fileUrl
     }
 
     function copyValue() {

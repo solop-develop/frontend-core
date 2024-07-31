@@ -2043,8 +2043,8 @@ export const containerManager = {
       recordId,
       tableName,
       clientId,
-      containerId,
-      containerType: 'window'
+      // containerId,
+      containerType: 'attachment'
     })
   },
   searchWorkflowHistory({ tableName, recordId, recordUuid, containerUuid }) {

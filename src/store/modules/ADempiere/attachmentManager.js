@@ -57,6 +57,7 @@ const attachment = {
       // if (isEmptyValue(tableName) && (isEmptyValue(recordId))) {
       //   return
       // }
+      const { client } = getters['user/getRole']
       if (isEmptyValue(clientId)) {
         clientId = getters.getSessionContextClientId
       }
@@ -64,7 +65,7 @@ const attachment = {
       return requestListResources({
         recordId,
         tableName,
-        clientId,
+        clientId: client.uuid,
         containerId,
         containerType
       })
