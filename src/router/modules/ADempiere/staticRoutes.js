@@ -246,6 +246,24 @@ const staticRoutes = [
   },
 
   {
+    path: '/report-viewer-engine/:reportId/:instance_id',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/report-viewer-engine/:reportId/:instance_id?',
+        component: () => import('@/views/ADempiere/ReportViewerEngine'),
+        name: 'Report Viewer Engine',
+        meta: {
+          title: language.t('route.reportViewer'),
+          type: 'report',
+          reportType: ''
+        }
+      }
+    ]
+  },
+
+  {
     path: '/browser',
     component: Layout,
     hidden: true,

@@ -82,3 +82,143 @@ export function getReportOutputRequest({
     }
   })
 }
+
+export function generateReport({
+  reportId,
+  reportType,
+  filters,
+  sortBy,
+  pageSize,
+  pageToken,
+  printFormatId,
+  reportViewId,
+  isSummary,
+  // window
+  tableName,
+  recordId
+}) {
+  return request({
+    url: `/report-engine/reports/${reportId}`,
+    method: 'get',
+    params: {
+      report_type: reportType,
+      filters,
+      sort_by: sortBy,
+      page_size: pageSize,
+      page_token: pageToken,
+      print_format_id: printFormatId,
+      report_view_id: reportViewId,
+      is_summary: isSummary,
+      table_name: tableName,
+      record_id: recordId
+    }
+  })
+}
+
+export function getView({
+  reportType,
+  filters,
+  sortBy,
+  pageSize,
+  pageToken,
+  printFormatId,
+  reportViewId,
+  isSummary,
+  // window
+  tableName,
+  recordId
+}) {
+  return request({
+    url: `/report-engine/views/${printFormatId}`,
+    method: 'get',
+    params: {
+      report_type: reportType,
+      filters,
+      sort_by: sortBy,
+      page_size: pageSize,
+      page_token: pageToken,
+      print_format_id: printFormatId,
+      report_view_id: reportViewId,
+      is_summary: isSummary,
+      table_name: tableName,
+      record_id: recordId
+    }
+  })
+}
+
+export function runExport({
+  format = 'xlsx',
+  reportViewId,
+  printFormatId,
+  reportId,
+  pageSize,
+  pageToken,
+  filters
+}) {
+  return request({
+    url: `/report-engine/export/${reportId}/${format}`,
+    method: 'post',
+    data: {
+      print_format_id: printFormatId,
+      report_view_id: reportViewId,
+      page_size: pageSize,
+      page_token: `${pageToken}`,
+      filters
+    }
+  })
+}
+
+export function ListNotificationsTypes() {
+  return request({
+    url: '/send_notifications/notifications_types',
+    method: 'get'
+  })
+}
+
+export function ListUsers() {
+  return request({
+    url: '/send_notifications/user',
+    method: 'get'
+  })
+}
+
+export function SendNotification({
+  user_id,
+  title,
+  recipients,
+  subject,
+  notification_type,
+  attachments
+}) {
+  let contacts = []
+  if (Array.isArray(recipients)) {
+    contacts = recipients.map(parameter => {
+      if (typeof parameter === 'object') {
+        return {
+          account_name: parameter.label,
+          contact_id: parameter.value
+        }
+      } else {
+        return {
+          account_name: parameter
+        }
+      }
+    })
+  } else {
+    contacts = [{
+      account_name: recipients
+    }]
+  }
+  return request({
+    url: '/send_notifications/notification',
+    method: 'post',
+    data: {
+      user_id,
+      title,
+      body: subject,
+      notification_type,
+      attachments: [attachments],
+      recipients: contacts
+    }
+  })
+}

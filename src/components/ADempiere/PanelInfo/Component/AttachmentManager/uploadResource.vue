@@ -42,7 +42,6 @@ import { defineComponent, ref } from '@vue/composition-api'
 
 import lang from '@/lang'
 import store from '@/store'
-import router from '@/router'
 
 // Constants
 // import { config } from '@/utils/ADempiere/config'
@@ -121,14 +120,11 @@ export default defineComponent({
     }
 
     function resourceReference(file) {
-      const clientId = store.getters.getSessionContextClientId
-      const { action_id, type } = router.app._route.meta
+      const { client } = store.getters['user/getRole']
       return new Promise((resolve, reject) => {
         const url = presignedUrl({
-          clientId: clientId,
-          containerId: action_id,
-          containerType: type,
-          // fileName: file.name,
+          clientId: client.uuid,
+          containerType: 'attachment',
           file
         })
         resolve(url)
@@ -142,8 +138,7 @@ export default defineComponent({
       return new Promise((resolve, reject) => {
         requestPresignedUrl({
           clientId,
-          containerId,
-          containerType,
+          containerType: 'attachment',
           fileName: file.name,
           recordId: props.recordId,
           tableName: props.tableName
@@ -176,13 +171,11 @@ export default defineComponent({
           method: 'PUT',
           body: file
         }).then(() => {
-          const { action_id, type } = router.app._route.meta
+          const { client } = store.getters['user/getRole']
           if (!props.containerManager) {
-            const clientId = store.getters.getSessionContextClientId
             store.dispatch('getAttachmentFromServer', {
-              containerType: type,
-              clientId: clientId,
-              containerId: action_id,
+              containerType: 'attachment',
+              clientId: client.uuid,
               recordId: props.recordId,
               tableName: props.tableName
             })
@@ -196,11 +189,10 @@ export default defineComponent({
             return file
           }
           props.containerManager.getAttachment({
-            containerUuid: props.containerUuid,
-            containerId: action_id,
-            parentUuid: props.parentUuid,
-            tableName: props.tableName,
-            recordId: props.recordId
+            containerType: 'attachment',
+            clientId: client.uuid,
+            recordId: props.recordId,
+            tableName: props.tableName
           })
           // store.dispatch('')
           resolve(file_name)
@@ -233,11 +225,12 @@ export default defineComponent({
         })
       }
       additionalData.value = {}
-
+      const { client } = store.getters['user/getRole']
       store.dispatch('getAttachmentFromServer', {
         tableName: props.tableName,
         recordId: props.recordId,
-        recordUuid: props.recordUuid
+        containerType: 'attachment',
+        clientId: client.uuid
       })
     }
 

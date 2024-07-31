@@ -24,6 +24,7 @@ import lang from '@/lang'
 import {
   requestMailTemplates
 } from '@/api/ADempiere/user-interface/component/index.ts'
+import { isEmptyValue } from '@/utils/ADempiere'
 
 const initStateMailTemplate = {
   listMail: {
@@ -43,7 +44,9 @@ export default {
   },
 
   actions: {
-    findListMailTemplates({ commit }) {
+    findListMailTemplates({ commit, getters }) {
+      const listMailTemplates = getters.getListMailTemplates
+      if (isEmptyValue(listMailTemplates)) return
       requestMailTemplates({})
         .then(response => {
           const { records } = response
@@ -53,10 +56,12 @@ export default {
             return {
               name,
               text: subject,
+              mail_text,
               action(editor) {
                 editor.insert(selected => {
                   const placeholder = mail_text
                   const content = selected || placeholder
+                  editor.save()
                   return {
                     text: `${content}`,
                     selected: content

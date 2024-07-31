@@ -146,5 +146,53 @@ export const containerManager = {
     store.dispatch('setReportDefaultValues', {
       containerUuid
     })
+  },
+
+  setPageSize: ({
+    containerUuid,
+    pageNumber,
+    pageSize,
+    parametersList,
+    reportId,
+    printFormatId,
+    instanceUuid,
+    reportViewId
+  }) => {
+    store.dispatch('buildReport', {
+      containerUuid,
+      isSummary: true,
+      parametersList,
+      reportId,
+      pageSize,
+      pageToken: pageNumber,
+      isView: true,
+      printFormatId,
+      instanceUuid,
+      reportViewId
+    })
+  },
+
+  setPageNumber: ({
+    containerUuid,
+    pageNumber,
+    pageSize,
+    parametersList,
+    reportId,
+    printFormatId,
+    instanceUuid,
+    reportViewId
+  }) => {
+    store.dispatch('buildReport', {
+      containerUuid,
+      isSummary: true,
+      parametersList,
+      reportId,
+      pageSize,
+      pageToken: pageNumber,
+      isView: true,
+      printFormatId,
+      instanceUuid,
+      reportViewId
+    })
   }
 }

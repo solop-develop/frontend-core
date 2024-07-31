@@ -20,7 +20,6 @@
   <el-dropdown
     size="small"
     plain
-    :split-button="true"
     type="primary"
     :class="{
       'comparison-operator-container': true,
@@ -31,7 +30,9 @@
     :disabled="isReadOnlyFromField"
     @command="handleOperator"
   >
-    {{ $t('operators.' + currentOperatorValue) }}
+    <el-button type="primary" class="button-operator">
+      {{ $t('operators.onlyOperators.' + currentOperatorValue) }}
+    </el-button>
     <el-dropdown-menu slot="dropdown">
       <el-dropdown-item
         v-for="(operator, index) in operatorList"
@@ -232,4 +233,14 @@ export default defineComponent({
     }
   }
 }
+</style>
+
+<style scope>
+  .button-operator {
+    font-weight: bold;
+    color: #0080ff;
+    border-color: #0080ff;
+    background: #ecf5ff;
+    border: solid #0080ff 1px;
+  }
 </style>
