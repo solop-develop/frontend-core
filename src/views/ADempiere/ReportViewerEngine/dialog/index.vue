@@ -119,38 +119,33 @@
               <el-radio class="radio-padding" :label="604800">7 {{ ' ' + $t('component.attachment.share.time.days') }}</el-radio>
             </el-radio-group>
           </el-row>
-        </el-card>
-      </el-col>
-      <el-col v-if="checkedItemGeneral === 1" :span="24" style="margin-top: 1%">
-        <el-card>
-          <template #header>
-            <p>{{ $t('report.reportEnginer.sendDetails') }}</p>
-          </template>
-          <div style="margin-bottom: 3%;">
-            <label>{{ $t('report.reportEnginer.subject') }}</label>
-            <el-input
-              v-model="titleDocument"
+          <el-col v-if="checkedItemGeneral === 1" :span="24" style="margin-top: 2%">
+            <div style="margin-bottom: 3%;">
+              <label>{{ $t('report.reportEnginer.subject') }}</label>
+              <el-input
+                v-model="titleDocument"
+              />
+            </div>
+            <v-md-editor
+              v-if="!isShowVIwer"
+              v-model="markdownContent"
+              left-toolbar="undo redo clear h bold italic strikethrough quote ul ol table hr link image code | emoji listMailTemplates"
+              right-toolbar="sync-scroll fullscreen"
+              mode="edit"
+              height="300px"
+              :placeholder="$t('window.containerInfo.logWorkflow.addNote')"
+              :toolbar="editorToolbarList"
+              @input="updateMardown"
+              @save="isToolbar"
             />
-          </div>
-          <v-md-editor
-            v-if="!isShowVIwer"
-            v-model="markdownContent"
-            left-toolbar="undo redo clear h bold italic strikethrough quote ul ol table hr link image code | emoji listMailTemplates"
-            right-toolbar="sync-scroll fullscreen"
-            mode="edit"
-            height="150px"
-            :placeholder="$t('window.containerInfo.logWorkflow.addNote')"
-            :toolbar="editorToolbarList"
-            @input="updateMardown"
-            @save="isToolbar"
-          />
-          <v-md-preview
-            v-else
-            :text="markdownContent"
-            class="previwer-disable"
-            style="padding: 0px"
-            height="150px"
-          />
+            <v-md-preview
+              v-else
+              :text="markdownContent"
+              class="previwer-disable"
+              style="padding: 0px"
+              height="150px"
+            />
+          </el-col>
         </el-card>
       </el-col>
       <el-col style="margin-top: 1%">
@@ -470,7 +465,8 @@ export default defineComponent({
         menuDefault = storedMailTemplatesList.value.menus[0].mail_text
       }
       const link = language.t('report.reportEnginer.urlPublic')
-      markdownContent.value = menuDefault + `\n\n\n[${link}](www.123892138.com)`
+      const padding = '\n'.repeat(10)
+      markdownContent.value = menuDefault + `${padding}[${link}](www.123892138.com)`
     }
     function copyValue() {
       let textToCopy = linkShare.value

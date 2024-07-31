@@ -1,8 +1,6 @@
 <template>
-  <el-form-item>
-    <template slot="label">
-      {{ $t('report.reportEnginer.optionsImport.contactsSend') }}
-    </template>
+  <div>
+    <label>{{ $t('report.reportEnginer.optionsImport.contactsSend') }}</label>
     <el-select
       v-model="contantSend"
       filterable
@@ -19,7 +17,7 @@
         :value="item"
       />
     </el-select>
-  </el-form-item>
+  </div>
 </template>
 <script>
 import store from '@/store'

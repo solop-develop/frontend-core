@@ -26,6 +26,7 @@
         v-shortkey="shortsKey"
         :visible.sync="showDialog"
         :title="$t('report.reportEnginer.optionsImport.title')"
+        top="2vh"
         @shortkey.native="keyAction"
         @close="viewShowDialog"
       >
