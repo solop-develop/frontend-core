@@ -269,12 +269,13 @@ export default defineComponent({
     function updateMardown(newValue) {
       const newContent = newValue.trim()
       const value = newContent.replace(oldContent.value.trim(), '').trim()
+      const link = language.t('report.reportEnginer.urlPublic')
       oldContent.value = newContent
       if (isTemplateSelected.value) {
         storedMailTemplatesList.value.menus.forEach((data) => {
           const mailText = data.mail_text ? data.mail_text.trim() : ''
           if (mailText.includes(value)) {
-            markdownContent.value = mailText
+            markdownContent.value = `${mailText}\n\n\n[${link}](http://www.123892138.com)`
           }
         })
       }
