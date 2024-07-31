@@ -103,7 +103,7 @@ const report = {
     },
     printFormat: 'Formato de Impresión',
     viewReport: 'Vista del Informe',
-    Detail: 'Ver Detallado',
+    detail: 'Ver Detallado',
     summary: 'Ver Resumido',
     exportFormat: 'Formato de Exportación',
     download: 'Descargando Archivo',

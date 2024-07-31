@@ -66,7 +66,7 @@ const initState = {
   pageSize: 15,
   isLoading: false,
   showDialog: false,
-  expandedAll: true,
+  expandedAll: false,
   exportReport: {},
   contactSend: '',
   typeNotify: '',

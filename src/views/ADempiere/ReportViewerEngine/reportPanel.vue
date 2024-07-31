@@ -328,9 +328,9 @@ export default defineComponent({
 
       dataList.value.forEach(row => {
         if (expanded.value) {
-          expandRecursively(row)
-        } else {
           collapseRecursively(row)
+        } else {
+          expandRecursively(row)
         }
       })
     }
