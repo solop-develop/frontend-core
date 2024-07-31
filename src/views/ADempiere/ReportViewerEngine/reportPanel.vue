@@ -68,7 +68,7 @@
               v-if="!shouldHideName(scope.row, fieldAttributes.code, key)"
               :style="getCellStyle(fieldAttributes.code, scope.row)"
             >
-              {{ displayLabel(fieldAttributes, scope.row) }}
+              {{ displayLabel(fieldAttributes.code, scope.row) }}
               <el-popover
                 v-if="selectedRow === scope.row && selectedColumn === fieldAttributes.code && scope.row.is_parent"
                 v-model="showPopover"
@@ -100,7 +100,7 @@ import store from '@/store'
 import { defineComponent, computed, ref, watch, nextTick, onMounted } from '@vue/composition-api'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
-import { isNumberField, isLookup } from '@/utils/ADempiere/references'
+import { isNumberField } from '@/utils/ADempiere/references'
 import InfoReport from './infoReport'
 import dialogShareReport from './dialog'
 import reportSearchCriteria from './searchCriteria'
@@ -181,14 +181,14 @@ export default defineComponent({
         }
       })
     }
-    function displayLabel(field, row) {
+    function displayLabel(prop, row) {
       if (isEmptyValue(row.cells)) {
         return
       }
-      const rowData = row.cells[field.code]
+      const rowData = row.cells[prop]
       if (!isEmptyValue(rowData)) {
         const { display_value, value } = rowData
-        if (!isEmptyValue(display_value) || isLookup(field.display_type)) {
+        if (!isEmptyValue(display_value)) {
           return display_value
         }
         if (!isEmptyValue(value)) {
@@ -328,9 +328,9 @@ export default defineComponent({
 
       dataList.value.forEach(row => {
         if (expanded.value) {
-          expandRecursively(row)
-        } else {
           collapseRecursively(row)
+        } else {
+          expandRecursively(row)
         }
       })
     }
