@@ -66,6 +66,7 @@
           <file-info
             :image-id="value"
             :resource-name="displayedValue"
+            :info-image="infoImage"
             class="popover-info"
           />
 
@@ -74,6 +75,7 @@
             :resource-name="displayedValue"
             :file="fileResource"
             :file-name="displayedValue"
+            :file-url="infoImage.name"
             class="popover-info"
           />
 
@@ -92,7 +94,7 @@
             icon="el-icon-delete"
             class="button-manage-file"
             plain
-            :disabled="isDisabled || isEmptyValue(value)"
+            :disabled="isEmptyValue(infoImage)"
             @click="handleRemove()"
           />
 
@@ -124,7 +126,7 @@
           <el-button
             class="button-manage-file-svg"
             plain
-            :disabled="!isDownload"
+            :disabled="isEmptyValue(infoImage)"
             @click="handleDownload()"
           >
             <svg-icon
@@ -178,8 +180,7 @@ import {
   requestListResources,
   requestShareResources,
   requestDeleteResources,
-  requestSetResourceReference,
-  requestDeleteResourceReference
+  requestSetResourceReference
 } from '@/api/ADempiere/file-management/resource-reference.ts'
 
 // Utils and Helper Methods
@@ -187,6 +188,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { getToken } from '@/utils/auth'
 import { pathImageWindows } from '@/utils/ADempiere/resource'
 import { showMessage } from '@/utils/ADempiere/notification'
+import { refreshRecord } from '@/utils/ADempiere/dictionary/window'
 
 export default {
   name: 'FieldImage',
@@ -269,8 +271,9 @@ export default {
       if (!isEmptyValue(key_columns)) return this.currentRecord[key_columns[0]]
       return 1
     },
-    clientId() {
-      return this.$store.getters.getSessionContextClientId
+    clientUuid() {
+      const { client } = this.$store.getters['user/getRole']
+      return client.uuid
     },
     tableNameImage() {
       return this.currentTab.table_name.toLowerCase()
@@ -283,7 +286,7 @@ export default {
     },
     pathImage() {
       return pathImageWindows({
-        clientId: this.clientId,
+        clientId: this.clientUuid,
         tableName: this.tableNameImage,
         recordId: this.recordId,
         columnName: this.columnNameImage,
@@ -303,6 +306,7 @@ export default {
   },
 
   mounted() {
+    this.getListResources()
     this.valideImage()
   },
   updated() {
@@ -420,8 +424,8 @@ export default {
       return new Promise((resolve, reject) => {
         this.isLoadImageUpload = true
         requestPresignedUrl({
-          clientId: this.clientId,
-          containerType: 'window',
+          clientId: this.clientUuid,
+          containerType: 'attachment',
           columnName: this.columnNameImage,
           fileName: this.nameImage,
           recordId: this.recordId,
@@ -433,6 +437,7 @@ export default {
               method: 'PUT',
               body: file
             }).then(() => {
+              this.getListResources()
               setTimeout(() => {
                 this.imageSourceSmall = this.pathImage
                 this.valideImage(file)
@@ -457,14 +462,14 @@ export default {
      * Handle Download image
      */
     async handleDownload() {
-      const link = document.createElement('a')
-      link.target = '_blank'
-      link.href = this.imageSourceSmall + '?f=' + Date.now()
-      link.download = this.displayedValue
-      link.style.display = 'none'
-      link.click()
-      document.body.appendChild(link)
-      document.body.removeChild(link)
+      const {
+        name
+      } = this.infoImage
+      const file = document.createElement('a')
+      file.href = `${config.adempiere.resource.url}${name}`
+      file.download = `${name}`
+      file.target = '_blank'
+      file.click()
       return
     },
 
@@ -489,48 +494,48 @@ export default {
      * Handle Removeya esta actualizado solop
      */
     handleRemove() {
-      if (this.isDisabled) {
+      const { name } = this.infoImage
+      if (isEmptyValue(name)) {
+        this.getListResources()
         return
       }
-      const resourceName = this.displayedValue
-      if (isEmptyValue(resourceName)) {
-        return
-      }
-      requestDeleteResourceReference({
-        resourceName,
-        imageId: this.value
-      }).then(() => {
-        this.clearValues()
-      })
+
+      const {
+        id,
+        parentUuid,
+        containerUuid
+      } = this.currentTab
+
       requestDeleteResources({
-        fileName: resourceName
+        fileName: name
       })
         .then(() => {
-          this.clearValues()
+          refreshRecord.refreshRecord({
+            parentUuid,
+            containerUuid,
+            tabId: id,
+            recordId: this.recordId
+          })
         })
     },
 
     getListResources() {
       return new Promise((resolve, reject) => {
-        const clientId = this.$store.getters.getSessionContextClientId
-        const { action_id } = this.$route.meta
         const { table_name } = this.currentTab
         requestListResources({
-          clientId: clientId,
-          containerId: action_id,
-          containerType: 'resource',
+          clientId: this.clientUuid,
+          // containerId: action_id,
+          containerType: 'attachment',
           columnName: this.metadata.columnName,
           recordId: this.recordId,
           tableName: table_name
         })
           .then(response => {
-            let resource
             let image = ''
-            const resources = this.sortResource(response.resources)
+            const resources = response.resources.find(resource => resource.name.includes(this.columnNameImage))
             if (!this.isEmptyValue(resources)) {
-              resource = resources[resources.length - 1]
-              image = resource.name
-              this.infoImage = resource
+              image = resources.name
+              this.infoImage = resources
             }
             resolve(image)
           })
