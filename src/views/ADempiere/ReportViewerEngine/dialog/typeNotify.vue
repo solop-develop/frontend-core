@@ -1,8 +1,6 @@
 <template>
-  <el-form-item>
-    <template slot="label">
-      {{ $t('report.reportEnginer.optionsImport.typeNotify') }}
-    </template>
+  <div>
+    <label>{{ $t('report.reportEnginer.optionsImport.typeNotify') }}</label>
     <el-select
       v-model="notify"
       filterable
@@ -18,7 +16,7 @@
         :value="item.value"
       />
     </el-select>
-  </el-form-item>
+  </div>
 </template>
 <script>
 import store from '@/store'
