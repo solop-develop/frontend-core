@@ -16,7 +16,7 @@
   along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 <template>
-  <div>
+  <div @click="showPopover = false">
     <el-card class="containerReportEnginer">
       <reportSearchCriteria
         :container-uuid="reportOutput.containerUuid"
