@@ -338,6 +338,7 @@ export default defineComponent({
         pageSize: pageSize.value,
         pageToken: props.reportOutput.pageToken
       })
+      blankValue()
     }
 
     function shareUrl() {
@@ -386,6 +387,9 @@ export default defineComponent({
                 message: `Error exporting report: ${error.message}.`,
                 type: 'error'
               })
+            })
+            .finally(() => {
+              blankValue()
             })
         })
     }
@@ -450,6 +454,8 @@ export default defineComponent({
                 attachments: fileNameResource,
                 subject: markdownContent.value
               })
+            })
+            .finally(() => {
               blankValue()
             })
         })
@@ -479,7 +485,7 @@ export default defineComponent({
     function previwerBody() {
       isShowVIwer.value = !isShowVIwer.value
     }
-
+    blankValue()
     return {
       isCollapseComments,
       editorToolbarList,
