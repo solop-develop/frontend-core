@@ -174,8 +174,15 @@ export default defineComponent({
           selectedRow.value = row
           dataModal.value = dataCell
           showPopover.value = true
+          document.addEventListener('click', handlePopoverClickOutside)
         }
       })
+    }
+    function handlePopoverClickOutside(event) {
+      if (!event.target.closest('.reportInfo')) {
+        showPopover.value = false
+        document.removeEventListener('click', handlePopoverClickOutside)
+      }
     }
     function displayLabel(prop, row) {
       if (isEmptyValue(row.cells)) {
@@ -400,7 +407,8 @@ export default defineComponent({
       expandedRowAll,
       viewShowDialog,
       getCellStyle,
-      activatePopover
+      activatePopover,
+      handlePopoverClickOutside
     }
   }
 })
