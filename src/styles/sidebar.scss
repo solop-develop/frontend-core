@@ -69,14 +69,12 @@
     }
 
     .el-menu-item {
-      height: 40px !important;
-      padding-bottom: 10px;
-      font-size: 13px;
+      height: auto !important;
+      padding: 0;
     }
 
     .el-submenu__title {
-      height: 40px !important;
-      font-size: 13px;
+      height: auto !important;
     }
 
     // menu hover
