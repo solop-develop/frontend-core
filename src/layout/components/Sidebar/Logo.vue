@@ -90,16 +90,16 @@ export default defineComponent({
       return store.getters['user/getOrganization']
     })
 
-    const clientId = computed(() => {
+    const client = computed(() => {
       const { client } = store.getters['user/getRole']
-      return client.uuid
+      return client
     })
 
     const imageUrl = computed(() => {
       return pathImageWindows({
-        clientId: clientId.value,
+        clientId: client.value.uuid,
         tableName: TABLE_NAME_CLIENT,
-        recordId: clientId.value,
+        recordId: client.value.id,
         columnName: COLUMN_NAME,
         resourceName: `${COLUMN_NAME}.png`
       })
@@ -136,7 +136,7 @@ export default defineComponent({
       title,
       clientLogo,
       imageUrl,
-      clientId,
+      client,
       // Computed
       getRole,
       systemName,
