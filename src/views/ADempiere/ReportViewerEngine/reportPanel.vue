@@ -65,7 +65,7 @@
           </template>
           <template slot-scope="scope">
             <span
-              v-if="!shouldHideName(scope.row, fieldAttributes.code, key)"
+              v-if="shouldHideName(scope.row, fieldAttributes.code, key)"
               :style="getCellStyle(fieldAttributes.code, scope.row)"
             >
               {{ displayLabel(fieldAttributes, scope.row) }}
@@ -204,11 +204,16 @@ export default defineComponent({
     }
     const dataList = computed(() => {
       return data.value.map((row, rowIndex) => {
+        let isTopLevel = false
+        if (row.level < 1) {
+          isTopLevel = !isTopLevel
+        }
         const index = rowIndex + 1
         const newRow = {
           ...row,
           children: hasChildren(row.children, index.toString()),
-          level: index
+          level: index,
+          isTopLevel
         }
         return newRow
       })
@@ -372,12 +377,12 @@ export default defineComponent({
       }
     }
 
-    function shouldHideName(row, code, columnIndex) {
-      if (columnIndex !== 0) {
-        return false
+    function shouldHideName(row) {
+      if (row.is_parent && row.isTopLevel) {
+        return true
       }
-      if (row.level > 1 && row.is_parent) {
-        return row.children.some(child => displayLabel(code, child) === displayLabel(code, row))
+      if (!row.is_parent) {
+        return true
       }
       return false
     }
