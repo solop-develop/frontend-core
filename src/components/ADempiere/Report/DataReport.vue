@@ -41,8 +41,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           :column-key="fieldAttributes.code"
           :align="getAlignment(fieldAttributes.display_type)"
           :fixed="fieldAttributes.is_group_column"
-          width="auto"
-          :min-width="widthColumn(fieldAttributes)"
+          :width="widthColumn(fieldAttributes)"
         >
           <template slot="header">
             {{ fieldAttributes.title }}
@@ -255,12 +254,6 @@ export default defineComponent({
         reportViewId: props.reportOutput.report_view_id
       })
     }
-    function exportFile() {
-      store.dispatch('exportReport', {
-        reportId: props.reportOutput.id,
-        reportName: props.reportOutput.name
-      })
-    }
     function tableRowClassName({ row, rowIndex }) {
       const { children } = row
       if (!isEmptyValue(children)) {
@@ -275,54 +268,63 @@ export default defineComponent({
       }
       return ''
     }
+    /**
+     * Searches for the parent of a row in the data list.
+     * @param {Object} row The row for which the parent is searched.
+     * @returns {Object|null} The parent of the row or null if not found.
+     */
     function findParent(row) {
-      let parentRow = null
       const stack = [...this.dataList]
+
       while (stack.length) {
         const current = stack.pop()
         if (current.children && current.children.includes(row)) {
-          parentRow = current
-          break
+          return current
         }
         if (current.children) {
           stack.push(...current.children)
         }
       }
-      return parentRow
+      return null
     }
+    /**
+     * Expands or collapses all table rows
+     */
     function expandedRowAll() {
-      function expandRecursively(row) {
-        tableReportEngine.value.toggleRowExpansion(row, true)
-        if (row.children && row.children.length > 0) {
-          row.children.forEach(expandRecursively)
-        }
+      // Auxiliary function for toggle row expansion.
+      const toggleRowExpansion = (row, expand) => {
+        tableReportEngine.value.toggleRowExpansion(row, expand)
       }
-      function collapseRecursively(row) {
-        let hideRow = false
-        if (row.children && row.children.length > 0) {
-          row.children.forEach(child => {
-            if (!child.is_parent) {
-              hideRow = true
-            }
-            collapseRecursively(child)
-          })
-        }
-        if (!row.is_parent || hideRow) {
-          tableReportEngine.value.toggleRowExpansion(row, false)
+
+      // Recursive function to expand all rows.
+      const expandRecursively = (row) => {
+        toggleRowExpansion(row, true)
+        row.children?.forEach(expandRecursively) // Recursion to expand children.
+      }
+
+      // Recursive function to collapse all rows.
+      const collapseRecursively = (row) => {
+        // Check if the row has children and if any of them is not a parent.
+        const shouldHide = row.children?.some(child => !child.is_parent)
+
+        // Recursion to collapse children.
+        row.children?.forEach(collapseRecursively)
+
+        // Collapses the current row if it is not a parent or if any of its children is not a parent.
+        if (!row.is_parent || shouldHide) {
+          toggleRowExpansion(row, false)
         }
       }
 
+      // Itera sobre todas las filas y expande o colapsa según el estado de `expanded`.
       dataList.value.forEach(row => {
-        if (expanded.value) {
-          collapseRecursively(row)
-        } else {
-          expandRecursively(row)
-        }
+        expanded.value ? collapseRecursively(row) : expandRecursively(row)
       })
     }
     function widthColumn(attributes) {
-      const width = (attributes.title.length + 1) + '9px'
-      return width
+      const width = (attributes.title.length + 1) * 15
+      if (width > 150) return width + 'px'
+      return '150px'
     }
     function getCellStyle(code, row) {
       if (isEmptyValue(row.cells[code])) {
@@ -393,7 +395,6 @@ export default defineComponent({
       currentPageNumber,
       // Methods
       keyAction,
-      exportFile,
       findParent,
       widthColumn,
       hasChildren,
