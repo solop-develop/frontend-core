@@ -53,7 +53,7 @@ import CustomPagination from '@/components/ADempiere/DataTable/Components/Custom
 import InfoReport from '@/views/ADempiere/ReportViewerEngine/infoReport.vue'
 import dialogShareReport from '@/views/ADempiere/ReportViewerEngine/dialog'
 import reportSearchCriteria from '@/views/ADempiere/ReportViewerEngine/searchCriteria'
-import DataReport from '@/components/ADempiere/Report/DataReport.vue'
+import DataReport from '@/components/ADempiere/Report/Data/DataReport.vue'
 
 export default defineComponent({
   name: 'reportPanel',

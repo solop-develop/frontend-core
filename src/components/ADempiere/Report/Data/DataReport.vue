@@ -41,30 +41,22 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           :column-key="fieldAttributes.code"
           :align="getAlignment(fieldAttributes.display_type)"
           :fixed="fieldAttributes.is_group_column"
-          :width="widthColumn(fieldAttributes)"
+          width="auto"
         >
           <template slot="header">
             {{ fieldAttributes.title }}
           </template>
           <template slot-scope="scope">
-            <span
-              v-if="!shouldHideName(scope.row, fieldAttributes.code, key)"
-              :style="getCellStyle(fieldAttributes.code, scope.row)"
-            >
-              {{ displayLabel(fieldAttributes, scope.row) }}
-              <el-popover
-                v-if="selectedRow === scope.row && selectedColumn === fieldAttributes.code && scope.row.is_parent"
-                v-model="showPopover"
-                placement="top"
-                class="reportInfo"
-                style="position: fixed; z-index: 1000; background-color: #fff;"
-                @shortkey.native="keyAction"
-              >
-                <InfoReport
-                  :data="dataModal"
-                />
-              </el-popover>
-            </span>
+            <!-- Show cell only if it should not be hidden -->
+            <data-cells
+              :key-column="key"
+              :row-data="scope.row"
+              :data-modal="dataModal"
+              :show-details="showPopover"
+              :attributes="fieldAttributes"
+              :current-selected-row="selectedRow"
+              :current-selected-column="selectedColumn"
+            />
           </template>
         </el-table-column>
       </el-table>
@@ -91,15 +83,17 @@ import store from '@/store'
 // Components
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 import InfoReport from '@/views/ADempiere/ReportViewerEngine/infoReport.vue'
+import DataCells from '@/components/ADempiere/Report/Data/DataCells.vue'
 // Utility functions
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
-import { isNumberField, isLookup } from '@/utils/ADempiere/references'
+import { isNumberField } from '@/utils/ADempiere/references'
 
 export default defineComponent({
   name: 'DataReport',
   components: {
     CustomPagination,
-    InfoReport
+    InfoReport,
+    DataCells
   },
   props: {
     containerManager: {
@@ -203,21 +197,6 @@ export default defineComponent({
           showPopover.value = true
         }
       })
-    }
-    function displayLabel(field, row) {
-      if (isEmptyValue(row.cells)) {
-        return
-      }
-      const rowData = row.cells[field.code]
-      if (!isEmptyValue(rowData)) {
-        const { display_value, value } = rowData
-        if (!isEmptyValue(display_value) || isLookup(field.display_type)) {
-          return display_value
-        }
-        if (!isEmptyValue(value)) {
-          return value
-        }
-      }
     }
     function hasChildren(children, parentLevel) {
       if (children.length < 1) return children
@@ -326,26 +305,6 @@ export default defineComponent({
       if (width > 150) return width + 'px'
       return '150px'
     }
-    function getCellStyle(code, row) {
-      if (isEmptyValue(row.cells[code])) {
-        return {}
-      }
-      const { value } = row.cells[code]
-      if (!isEmptyValue(value) && value.type) {
-        if (value.type === 'decimal' && value.value < 0) {
-          return { color: 'red' }
-        }
-      }
-    }
-    function shouldHideName(row, code, columnIndex) {
-      if (columnIndex !== 0) {
-        return false
-      }
-      if (row.level > 1 && row.is_parent) {
-        return row.children.some(child => displayLabel(code, child) === displayLabel(code, row))
-      }
-      return false
-    }
     function getAlignment(displayType) {
       if (isNumberField(displayType)) {
         return 'right'
@@ -398,10 +357,7 @@ export default defineComponent({
       findParent,
       widthColumn,
       hasChildren,
-      getCellStyle,
-      displayLabel,
       getAlignment,
-      shouldHideName,
       handleRowClick,
       expandedRowAll,
       activatePopover,
