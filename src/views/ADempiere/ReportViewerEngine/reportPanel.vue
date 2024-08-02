@@ -27,6 +27,7 @@
         :visible.sync="showDialog"
         :title="$t('report.reportEnginer.optionsImport.title')"
         top="2vh"
+        width="70%"
         @shortkey.native="keyAction"
         @close="viewShowDialog"
       >

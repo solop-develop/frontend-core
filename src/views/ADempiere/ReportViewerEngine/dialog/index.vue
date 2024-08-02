@@ -126,29 +126,20 @@
                 v-model="titleDocument"
               />
             </div>
-            <v-md-editor
-              v-if="!isShowVIwer"
-              v-model="markdownContent"
-              left-toolbar="undo redo clear h bold italic strikethrough quote ul ol table hr link image code | emoji listMailTemplates"
-              right-toolbar="sync-scroll fullscreen"
-              mode="edit"
-              style="height: 300px; margin-bottom: 10px"
-              :placeholder="$t('window.containerInfo.logWorkflow.addNote')"
-              :toolbar="editorToolbarList"
-              @input="updateMardown"
-              @save="isToolbar"
-            />
-            <v-md-preview
-              v-else
+            <markdown
               :text="markdownContent"
-              class="previwer-disable"
-              style="padding: 0px"
-              height="150px"
+              :max-height="'250px'"
+              :change-value-text="updateContent"
+              :left-options="'undo redo clear | h bold italic strikethrough quote ul ol table hr link image code | emoji | listMailTemplates'"
+              :is-toolbars="true"
+              :additional-toolbars="editorToolbarList"
+              :action-success="sendNotify"
+              :action-error="viewShowDialog"
             />
           </el-col>
         </el-card>
       </el-col>
-      <el-col style="margin-top: 1%">
+      <el-col v-if="checkedItemGeneral !== 1" style="margin-top: 1%">
         <el-button
           class="button-base-icon"
           icon="el-icon-check"
@@ -193,11 +184,14 @@ import {
 import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 import contactSend from './contactSend'
 import typeNotify from './typeNotify'
+import markdown from '@/components/ADempiere/MarkDown'
+
 export default defineComponent({
   name: 'dialogShareReport',
   components: {
     contactSend,
-    typeNotify
+    typeNotify,
+    markdown
   },
   props: {
     containerUuid: {
@@ -215,21 +209,7 @@ export default defineComponent({
     })
     const editorToolbarList = computed(() => {
       return {
-        listMailTemplates: storedMailTemplatesList.value,
-        isCollapseUp: {
-          icon: 'el-icon-arrow-up',
-          title: 'Collapse',
-          action(editor) {
-            isCollapseComments.value = !isCollapseComments.value
-          }
-        },
-        isCollapseDown: {
-          icon: 'el-icon-arrow-down',
-          title: 'Collapse',
-          action(editor) {
-            isCollapseComments.value = !isCollapseComments.value
-          }
-        }
+        listMailTemplates: storedMailTemplatesList.value
       }
     })
 
@@ -483,6 +463,10 @@ export default defineComponent({
     function previwerBody() {
       isShowVIwer.value = !isShowVIwer.value
     }
+
+    function updateContent(content) {
+      markdownContent.value = content
+    }
     blankValue()
     return {
       isCollapseComments,
@@ -501,6 +485,7 @@ export default defineComponent({
       validTime,
       titleDocument,
       oldContent,
+      updateContent,
       updateMardown,
       copyToClipboard,
       handleDownload,
