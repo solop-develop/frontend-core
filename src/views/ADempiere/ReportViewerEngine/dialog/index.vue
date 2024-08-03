@@ -139,7 +139,7 @@
           </el-col>
         </el-card>
       </el-col>
-      <el-col v-if="checkedItemGeneral !== 1" style="margin-top: 1%">
+      <el-col style="margin-top: 1%">
         <el-button
           class="button-base-icon"
           icon="el-icon-check"
@@ -154,14 +154,6 @@
           style="float: right; margin-right: 1%;"
           type="danger"
           @click="viewShowDialog"
-        />
-        <el-checkbox
-          v-if="checkedItemGeneral === 1"
-          v-model="isShowVIwer"
-          :label="$t('issues.preview')"
-          :border="true"
-          style="float: right; margin-right: 1%;"
-          class="button-base-icon"
         />
       </el-col>
     </el-row>
