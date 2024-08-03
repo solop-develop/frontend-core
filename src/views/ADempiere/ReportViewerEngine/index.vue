@@ -26,22 +26,6 @@
             :name="name"
             :help="help"
           />
-          <div v-if="!isEmptyValue(storedReportDefinition)" style="float: right;padding-left: 1%;">
-            <!-- <action-menu
-              :container-manager="containerManager"
-              :container-uuid="reportUuid"
-              :actions-manager="actionsManager"
-              :relations-manager="relationsManager"
-            /> -->
-          </div>
-          <!-- <file-render
-            :format="reportType"
-            :content="reportContent"
-            :src="link.href"
-            :mime-type="storedReportOutput.mime_type"
-            :name="storedReportOutput.name"
-            :stream="storedReportOutput.output_stream"
-          /> -->
           <report-panel
             :instance-uuid="storedReportOutput.instanceUuid"
             :container-manager="containerManager"
