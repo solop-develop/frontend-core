@@ -47,18 +47,23 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     </el-card>
     <el-row :gutter="12" style="margin-top: 10px;">
       <el-col :span="24">
+        <slot name="footer" />
         <el-button
+          v-show="isShowSuccess"
           class="button-base-icon"
           icon="el-icon-check"
           style="float: right;margin-right: 5px;"
           type="primary"
+          :disabled="disabledSuccess"
           @click="actionSuccess"
         />
         <el-button
+          v-show="isShowError"
           class="button-base-icon"
           icon="el-icon-close"
           style="float: right;margin-right: 5px;margin-left: 0px;"
           type="danger"
+          :disabled="disabledError"
           @click="actionError"
         />
         <el-button
@@ -138,11 +143,27 @@ export default defineComponent({
         console.info('Implement Action Success')
       }
     },
+    disabledSuccess: {
+      type: Boolean,
+      default: false
+    },
+    isShowSuccess: {
+      type: Boolean,
+      default: true
+    },
     actionError: {
       type: Function,
       default: () => {
         console.info('Implement Action Error')
       }
+    },
+    disabledError: {
+      type: Boolean,
+      default: false
+    },
+    isShowError: {
+      type: Boolean,
+      default: true
     }
   },
 
