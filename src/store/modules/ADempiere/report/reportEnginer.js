@@ -23,8 +23,7 @@ import language from '@/lang'
 import {
   getView,
   runExport,
-  generateReport,
-  SendNotification
+  generateReport
 } from '@/api/ADempiere/reportManagement/index.ts'
 
 // Utils
@@ -262,41 +261,6 @@ const reportManager = {
             })
             console.warn(`Error exporting report: ${error.message}. Code: ${error.code}.`)
             resolve(error)
-          })
-      })
-    },
-    notifyReport({ commit }, {
-      user_id,
-      title,
-      recipients,
-      notification_type,
-      attachments,
-      subject
-    }) {
-      return new Promise(resolve => {
-        SendNotification({
-          user_id,
-          title,
-          recipients,
-          notification_type,
-          attachments,
-          subject
-        })
-          .then(response => {
-            showNotification({
-              title: language.t('notifications.succesful'),
-              message: title,
-              type: 'success'
-            })
-            resolve(response)
-          })
-          .catch(error => {
-            showNotification({
-              title: language.t('notifications.error'),
-              message: error.message,
-              type: 'error'
-            })
-            console.warn(`Error exporting report: ${error.message}. Code: ${error.code}.`)
           })
       })
     }

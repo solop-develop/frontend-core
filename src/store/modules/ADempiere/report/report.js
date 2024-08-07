@@ -29,7 +29,6 @@ import {
 } from '@/utils/ADempiere/resource.js'
 import { isEmptyValue } from '@/utils/ADempiere'
 const initState = {
-  reportsGenerated: {},
   reportsOutput: {}
 }
 
