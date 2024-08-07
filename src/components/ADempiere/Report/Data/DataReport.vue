@@ -143,11 +143,16 @@ export default defineComponent({
     })
     const dataList = computed(() => {
       return data.value.map((row, rowIndex) => {
+        let isTopLevel = false
+        if (row.level < 1) {
+          isTopLevel = !isTopLevel
+        }
         const index = rowIndex + 1
         const newRow = {
           ...row,
           children: hasChildren(row.children, index.toString()),
-          level: index
+          level: index,
+          isTopLevel
         }
         return newRow
       })
