@@ -17,9 +17,9 @@
  */
 import language from '@/lang'
 import {
-  SendNotification,
-  ListNotificationsTypes,
-  ListUsers
+  sendNotification,
+  listNotificationsTypes,
+  listUsers
 } from '@/api/ADempiere/reportManagement/index.ts'
 import { showNotification } from '@/utils/ADempiere/notification.js'
 
@@ -41,7 +41,7 @@ const notifyManager = {
   action: {
     notifyUser({ commit }) {
       return new Promise(resolve => {
-        ListUsers()
+        listUsers()
           .then(response => {
             commit('setUserList', response)
             resolve(response)
@@ -58,7 +58,7 @@ const notifyManager = {
     },
     notifyType({ commit }) {
       return new Promise(resolve => {
-        ListNotificationsTypes()
+        listNotificationsTypes()
           .then(response => {
             commit('setNotifyList', response)
             resolve(response)
@@ -82,7 +82,7 @@ const notifyManager = {
       subject
     }) {
       return new Promise(resolve => {
-        SendNotification({
+        sendNotification({
           user_id,
           title,
           recipients,
