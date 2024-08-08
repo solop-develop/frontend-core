@@ -40,3 +40,22 @@ export function listPrintFormatsRequest({
     }
   })
 }
+
+/**
+ * Get default value for a field, parameter or query criteria
+ * @param {Number} reportId, identifier of report
+ */
+export function listPrintFormatsTableRequest({
+  tableName,
+  pageToken,
+  pageSize = ROWS_OF_RECORDS_BY_PAGE
+}) {
+  return request({
+    url: `/report-management/print-formats/table/${tableName}`,
+    method: 'get',
+    params: {
+      page_size: pageSize,
+      page_token: pageToken
+    }
+  })
+}
