@@ -17,7 +17,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 <template>
   <span
-    v-if="!shouldHideName(rowData, attributes.code, keyColumn)"
+    v-if="shouldHideName(rowData, attributes.code, keyColumn)"
     :style="cellStyle(attributes.code, rowData)"
   >
     <!-- Show cell label -->
@@ -104,15 +104,13 @@ export default defineComponent({
      * Should Hide Name
      * (Function to determine if cell should be hidden)
      * @param {Object} row
-     * @param {String} code
-     * @param {Number} columnIndex
      */
-    function shouldHideName(row, code, columnIndex) {
-      if (columnIndex !== 0) {
-        return false
+    function shouldHideName(row) {
+      if (row.is_parent && row.isTopLevel) {
+        return true
       }
-      if (row.level > 1 && row.is_parent) {
-        return row.children.some(child => displayLabel(code, child) === displayLabel(code, row))
+      if (!row.is_parent) {
+        return true
       }
       return false
     }
