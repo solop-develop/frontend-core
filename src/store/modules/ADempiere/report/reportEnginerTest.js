@@ -1,7 +1,7 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
  * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -22,8 +22,8 @@ import language from '@/lang'
 // API Request Methods
 import {
   getView,
-  runExport,
-  generateReport
+  runExport
+  // generateReport
 } from '@/api/ADempiere/reportManagement/index.ts'
 
 // Utils
@@ -135,85 +135,85 @@ const reportManager = {
           })
       })
     },
-    generateReportViwer({ commit, rootGetters }, {
-      containerUuid,
-      reportUuid,
-      reportId,
-      filters,
-      printFormatId,
-      reportViewId,
-      isSummary,
-      tableName,
-      pageSize,
-      pageToken,
-      sortBy,
-      reportType
-    }) {
-      return new Promise(resolve => {
-        const recordId = rootGetters.getIdOfContainer({
-          containerUuid,
-          tableName
-        })
-        generateReport({
-          reportId,
-          reportType,
-          filters,
-          sortBy,
-          pageSize,
-          pageToken,
-          printFormatId,
-          reportViewId,
-          isSummary,
-          tableName,
-          recordId
-        })
-          .then(response => {
-            const {
-              name,
-              instance_id,
-              report_view_id
-            } = response
-            router.push({
-              path: `report-viewer-engine/${reportId}/${instance_id}/${report_view_id}`,
-              name: 'Report Viewer Engine',
-              params: {
-                reportId,
-                instanceUuid: instance_id,
-                fileName: name,
-                reportUuid,
-                // menuParentUuid,
-                name: name + instance_id,
-                tableName
-              }
-            }, () => {})
-            showNotification({
-              title: language.t('notifications.succesful'),
-              message: name,
-              type: 'success'
-            })
-            commit('setReportManager', {
-              ...response,
-              containerUuid,
-              rowCells: response.rows,
-              instanceUuid: reportId,
-              pageSize,
-              pageToken
-            })
-            resolve(response)
-          })
-          .catch(error => {
-            showNotification({
-              title: language.t('notifications.error'),
-              message: error.message,
-              type: 'error'
-            })
-            console.warn(`Error getting Get Report: ${error.message}. Code: ${error.code}.`)
-          })
-          .finally(() => {
-            commit('setReportIsLoading', false)
-          })
-      })
-    },
+    // generateReportViwer({ commit, rootGetters }, {
+    //   containerUuid,
+    //   reportUuid,
+    //   reportId,
+    //   filters,
+    //   printFormatId,
+    //   reportViewId,
+    //   isSummary,
+    //   tableName,
+    //   pageSize,
+    //   pageToken,
+    //   sortBy,
+    //   reportType
+    // }) {
+    //   return new Promise(resolve => {
+    //     const recordId = rootGetters.getIdOfContainer({
+    //       containerUuid,
+    //       tableName
+    //     })
+    //     generateReport({
+    //       reportId,
+    //       reportType,
+    //       filters,
+    //       sortBy,
+    //       pageSize,
+    //       pageToken,
+    //       printFormatId,
+    //       reportViewId,
+    //       isSummary,
+    //       tableName,
+    //       recordId
+    //     })
+    //       .then(response => {
+    //         const {
+    //           name,
+    //           instance_id,
+    //           report_view_id
+    //         } = response
+    //         router.push({
+    //           path: `report-viewer-engine/${reportId}/${instance_id}/${report_view_id}`,
+    //           name: 'Report Viewer Engine',
+    //           params: {
+    //             reportId,
+    //             instanceUuid: instance_id,
+    //             fileName: name,
+    //             reportUuid,
+    //             // menuParentUuid,
+    //             name: name + instance_id,
+    //             tableName
+    //           }
+    //         }, () => {})
+    //         showNotification({
+    //           title: language.t('notifications.succesful'),
+    //           message: name,
+    //           type: 'success'
+    //         })
+    //         commit('setReportManager', {
+    //           ...response,
+    //           containerUuid,
+    //           rowCells: response.rows,
+    //           instanceUuid: reportId,
+    //           pageSize,
+    //           pageToken
+    //         })
+    //         resolve(response)
+    //       })
+    //       .catch(error => {
+    //         showNotification({
+    //           title: language.t('notifications.error'),
+    //           message: error.message,
+    //           type: 'error'
+    //         })
+    //         console.warn(`Error getting Get Report: ${error.message}. Code: ${error.code}.`)
+    //       })
+    //       .finally(() => {
+    //         commit('setReportIsLoading', false)
+    //       })
+    //   })
+    // },
     exportReport({ commit, rootGetters }, {
       containerUuid,
       reportId,
