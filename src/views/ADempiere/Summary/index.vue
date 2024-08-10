@@ -24,7 +24,7 @@
 
     <el-row
       :gutter="10"
-      style="overflow: auto;height: 95%;"
+      style="overflow: auto; height: 95%;"
     >
       <template v-if="!isEmptyValue(optionList.children)">
         <template v-for="(item, key) in optionList.children">
@@ -92,5 +92,8 @@ export default {
   .description {
     text-align: center;
     cursor: default;
+  }
+  .el-row .el-card__body {
+    padding-top: auto !important
   }
 </style>
