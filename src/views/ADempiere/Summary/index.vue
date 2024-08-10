@@ -24,7 +24,7 @@
 
     <el-row
       :gutter="10"
-      style="overflow: auto; align-items: stretch;"
+      style="overflow: auto; height: 95%;"
     >
       <template v-if="!isEmptyValue(optionList.children)">
         <template v-for="(item, key) in optionList.children">
