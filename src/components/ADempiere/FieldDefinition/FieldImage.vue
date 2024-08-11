@@ -94,7 +94,7 @@
             icon="el-icon-delete"
             class="button-manage-file"
             plain
-            :disabled="isEmptyValue(infoImage)"
+            :disabled="isEmptyValue(infoImage) || isDisabled"
             @click="handleRemove()"
           />
 
