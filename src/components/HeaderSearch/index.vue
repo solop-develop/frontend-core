@@ -212,7 +212,6 @@ export default {
         // const uuid = (!isEmptyValue(router.meta) && !isEmptyValue(router.meta.uuid)) ? router.meta.uuid : getUuidv4()
         const data = {
           path: pathGenerated,
-          // key: pathGenerated + '_' + uuid,
           title: [...prefixTitle],
           meta: router.meta,
           name: router.name
