@@ -33,6 +33,7 @@ import { request } from '@/utils/ADempiere/request'
 export function generateReportRequest({
   id,
   reportType,
+  reportFormat,
   parameters,
   printFormatId,
   reportViewId,
@@ -45,7 +46,7 @@ export function generateReportRequest({
     url: `/report-management/report/${id}`,
     method: 'post',
     data: {
-      report_type: reportType,
+      report_type: reportFormat,
       parameters,
       print_format_id: printFormatId,
       report_view_id: reportViewId,
@@ -58,14 +59,16 @@ export function generateReportRequest({
 
 // Get report output from parameters
 export function getReportOutputRequest({
-  processId,
+  reportId,
+  recordId,
   processUuid,
   tableName,
   printFormatUuid,
+  printFormatId,
   reportViewUuid,
   isSummary,
   reportName,
-  reportType,
+  reportFormat,
   parametersList = [],
   // query criteria
   query,
@@ -80,18 +83,20 @@ export function getReportOutputRequest({
   })
 
   return request({
-    url: '/user-interface/process/report-output',
+    url: `/report-management/report-output/${reportId}/${tableName}`,
     method: 'get',
     params: {
-      process_id: processId,
+      report_id: reportId,
       process_uuid: processUuid,
       table_name: tableName,
       // reference
       print_format_uuid: printFormatUuid,
+      print_format_id: printFormatId,
       report_view_uuid: reportViewUuid,
+      record_id: recordId,
       is_summary: isSummary,
       report_name: reportName,
-      report_type: reportType,
+      report_type: reportFormat,
       // DSL Query
       filters,
       criteria: filters,
@@ -193,21 +198,21 @@ export function runExport({
   })
 }
 
-export function ListNotificationsTypes() {
+export function listNotificationsTypes() {
   return request({
     url: '/send-notifications/notifications-types',
     method: 'get'
   })
 }
 
-export function ListUsers() {
+export function listUsers() {
   return request({
     url: '/send-notifications/users',
     method: 'get'
   })
 }
 
-export function SendNotification({
+export function sendNotification({
   user_id,
   title,
   recipients,
