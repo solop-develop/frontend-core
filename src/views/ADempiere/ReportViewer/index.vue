@@ -26,14 +26,14 @@
             :name="name"
             :help="help"
           />
-          <div v-if="!isEmptyValue(storedReportDefinition)" style="float: right;padding-left: 1%;">
+          <!-- <div v-if="!isEmptyValue(storedReportDefinition)" style="float: right;padding-left: 1%;">
             <action-menu
               :container-manager="containerManager"
               :container-uuid="reportUuid"
               :actions-manager="actionsManager"
               :relations-manager="relationsManager"
             />
-          </div>
+          </div> -->
           <file-render
             :format="reportType"
             :content="reportContent"
@@ -64,7 +64,7 @@
         :is-show-title="false"
       />
     </el-drawer>
-    <el-button
+    <!-- <el-button
       v-if="!isEmptyValue(storedReportDefinition)"
       type="primary"
       icon="el-icon-arrow-left"
@@ -75,7 +75,7 @@
         position: absolute;
       "
       @click="handleOpem()"
-    />
+    /> -->
   </div>
 
   <loading-view

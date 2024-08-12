@@ -28,11 +28,11 @@ import {
   generateReport,
   generateReportRequest,
   getReportOutputRequest,
-  ListNotificationsTypes,
-  ListUsers,
-  SendNotification
+  listNotificationsTypes,
+  listUsers,
+  sendNotification
 } from '@/api/ADempiere/reportManagement/index.ts'
-import { listPrintFormatsRequest } from '@/api/ADempiere/reportManagement/printFormat.ts'
+import { listPrintFormatsRequest, listPrintFormatsTableRequest } from '@/api/ADempiere/reportManagement/printFormat.ts'
 import { listReportViewsRequest } from '@/api/ADempiere/reportManagement/reportView.ts'
 import { listDrillTablesRequest } from '@/api/ADempiere/reportManagement/drillTable.ts'
 
@@ -296,11 +296,68 @@ const reportManager = {
      * @param {number} id report identifier
      * @returns
      */
-    getListPrintFormatsFromServer({ commit, dispatch }, {
+    listPrintFormatsFromServer({ commit, dispatch, getters }, {
       reportId
     }) {
       return new Promise(resolve => {
+        const currentListPrintFormat = getters.getPrintFormatList(reportId)
+        if (!isEmptyValue(currentListPrintFormat)) {
+          resolve(currentListPrintFormat)
+          return
+        }
         listPrintFormatsRequest({ reportId })
+          .then(async printFormatResponse => {
+            const printFormatList = await Promise.all(
+              printFormatResponse.print_formats.map(async printFormatItem => {
+                await Promise.allSettled([
+                  dispatch('getReportViewsFromServer', {
+                    reportId,
+                    // TODO: Verify if table name is required
+                    tableName: printFormatItem.table_name
+                  }),
+                  dispatch('getDrillTablesFromServer', {
+                    reportId,
+                    tableName: printFormatItem.table_name
+                  })
+                ])
+
+                return {
+                  ...printFormatItem,
+                  // reportUuid: reportDefinition.uuid,
+                  reportId: reportId
+                }
+              })
+            )
+
+            commit('setPrintFormatsList', {
+              reportId,
+              printFormatList
+            })
+
+            resolve(printFormatList)
+          })
+          .catch(error => {
+            console.warn(`Error getting print formats: ${error.message}. Code: ${error.code}.`)
+          })
+      })
+    },
+
+    /**
+     * Get list prints Windows formats
+     * @param {number} id report identifier
+     * @returns
+     */
+    listPrintFormatWindow({ commit, dispatch, getters }, {
+      tableName,
+      reportId
+    }) {
+      return new Promise(resolve => {
+        const currentListPrintFormat = getters.getPrintFormatList(reportId)
+        if (!isEmptyValue(currentListPrintFormat)) {
+          resolve(currentListPrintFormat)
+          return
+        }
+        listPrintFormatsTableRequest({ tableName })
           .then(async printFormatResponse => {
             const printFormatList = await Promise.all(
               printFormatResponse.print_formats.map(async printFormatItem => {
@@ -503,7 +560,6 @@ const reportManager = {
       parametersList = []
     }) {
       const currentRoute = router.app._route
-      // generated with refresh web browser
       if (isEmptyValue(containerUuid)) {
         if (currentRoute.params && currentRoute.params.reportUuid) {
           containerUuid = currentRoute.params.reportUuid
@@ -759,7 +815,7 @@ const reportManager = {
     },
     ListNotifications() {
       return new Promise(resolve => {
-        ListNotificationsTypes()
+        listNotificationsTypes()
           .then(response => {
             resolve(response)
           })
@@ -775,7 +831,7 @@ const reportManager = {
     },
     ListUser() {
       return new Promise(resolve => {
-        ListUsers()
+        listUsers()
           .then(response => {
             resolve(response)
           })
@@ -798,7 +854,7 @@ const reportManager = {
       subject
     }) {
       return new Promise(resolve => {
-        SendNotification({
+        sendNotification({
           user_id,
           title,
           recipients,

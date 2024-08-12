@@ -22,6 +22,7 @@ import store from '@/store'
 
 // API Request Methods
 import { requestWindowMetadata } from '@/api/ADempiere/dictionary/window.ts'
+import { listPrintFormatsTableRequest } from '@/api/ADempiere/reportManagement/printFormat.ts'
 
 // Constants
 import { CLIENT, DOCUMENT_ACTION, DOCUMENT_STATUS } from '@/utils/ADempiere/constants/systemColumns'
@@ -963,6 +964,24 @@ export default {
     commit('setTabAdvancedQuery', {
       parentUuid: parentUuid + IS_ADVANCED_QUERY,
       tabAdvanceQuery
+    })
+  },
+  setPrintFormatWindow({ commit }, {
+    tableName,
+    reportId
+  }) {
+    return new Promise(resolve => {
+      listPrintFormatsTableRequest({
+        tableName
+      })
+        .then(response => {
+          const { print_formats } = response
+          commit('setPrintFormatsList', {
+            reportId,
+            printFormatList: print_formats
+          })
+          resolve(print_formats)
+        })
     })
   }
 }

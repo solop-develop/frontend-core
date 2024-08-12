@@ -69,7 +69,8 @@ export default {
    * @param {string} uuid of dictionary
    */
   getReportDefinitionFromServer({ dispatch, getters, rootGetters }, {
-    id
+    id,
+    tableName
   }) {
     return new Promise((resolve, reject) => {
       const language = rootGetters['getCurrentLanguage']
@@ -89,10 +90,19 @@ export default {
           const { processDefinition: reportDefinition } = generateReport({
             processToGenerate: reportResponse
           })
-
-          await dispatch('getListPrintFormatsFromServer', {
-            reportId: reportDefinition.id
-          })
+          const {
+            type
+          } = router.app._route.meta
+          if (type === 'window') {
+            await dispatch('listPrintFormatWindow', {
+              tableName,
+              reportId: reportDefinition.id
+            })
+          } else {
+            await dispatch('listPrintFormatsFromServer', {
+              reportId: reportDefinition.id
+            })
+          }
 
           dispatch('addReportToList', reportDefinition)
 
