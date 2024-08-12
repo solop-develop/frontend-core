@@ -212,12 +212,12 @@ export default {
         // const uuid = (!isEmptyValue(router.meta) && !isEmptyValue(router.meta.uuid)) ? router.meta.uuid : getUuidv4()
         const data = {
           path: pathGenerated,
+          // key: pathGenerated + '_' + uuid,
           title: [...prefixTitle],
           meta: router.meta,
           name: router.name
         }
         if (router.meta && router.meta.title) {
-          data.key += router.meta.title
           // generate internationalized title
           const i18ntitle = this.generateTitle(router.meta.title)
           data.title = [...data.title, i18ntitle]
