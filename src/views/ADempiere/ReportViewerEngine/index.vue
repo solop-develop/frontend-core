@@ -238,14 +238,6 @@ export default defineComponent({
               })
 
               const reportFormat = getExtensionFromFile(fileName)
-              console.log({
-                uuid: reportUuid,
-                reportType: reportFormat,
-                reportName: fileName,
-                tableName: root.$route.params.tableName,
-                parametersList,
-                instanceUuid
-              })
               store.dispatch('buildReport', {
                 uuid: reportUuid,
                 reportType: reportFormat,

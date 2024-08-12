@@ -21,14 +21,12 @@
 </template>
 <script>
 import store from '@/store'
-import { defineComponent, computed, ref } from '@vue/composition-api'
+import { defineComponent, ref } from '@vue/composition-api'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 export default defineComponent({
   name: 'contactSend',
   setup() {
-    const contantSend = computed(() => {
-      return store.getters.getContactSend
-    })
+    const contantSend = ref(store.getters.getContactSend)
     const listUserSend = ref([])
     function searchUser() {
       store.dispatch('ListUser')
