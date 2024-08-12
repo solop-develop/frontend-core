@@ -93,7 +93,6 @@ export default {
           const {
             type
           } = router.app._route.meta
-          // console.log({ type, reportDefinition, reportResponse })
           if (type === 'window') {
             await dispatch('listPrintFormatWindow', {
               tableName,

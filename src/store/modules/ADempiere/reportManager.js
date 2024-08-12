@@ -95,11 +95,6 @@ const reportManager = {
       state.isLoading = isLoading
     },
     setPrintFormatsList(state, { reportId, printFormatList }) {
-      console.log({
-        ...state.printFormatList,
-        reportId,
-        printFormatList
-      })
       Vue.set(state.printFormatList, reportId, printFormatList)
     },
     setReportViewsList(state, { containerUuid, reportViewsList }) {
@@ -565,33 +560,12 @@ const reportManager = {
       parametersList = []
     }) {
       const currentRoute = router.app._route
-      // generated with refresh web browser
-      console.log({
-        containerUuid,
-        instanceUuid,
-        uuid,
-        tableName,
-        printFormatId,
-        reportViewId,
-        reportName,
-        reportType,
-        isSummary,
-        action,
-        pageToken,
-        pageSize,
-        sortBy,
-        parametersList
-      })
       if (isEmptyValue(containerUuid)) {
         if (currentRoute.params && currentRoute.params.reportUuid) {
           containerUuid = currentRoute.params.reportUuid
         }
       }
       const reportDefinition = getters.getStoredReport(containerUuid)
-      console.log({
-        containerUuid,
-        reportDefinition
-      })
       const {
         id,
         name,
@@ -646,11 +620,6 @@ const reportManager = {
       }
 
       return new Promise((resolve, reject) => {
-        console.log({
-          qlq: getters.getReportOutputData(containerUuid),
-          alo: getters.getReportOutputData(reportDefinition.id),
-          ale: getters.getReportOutputData(reportDefinition.uuid)
-        })
         const filters = getOperatorAndValue({
           format: 'array',
           containerUuid,
@@ -939,10 +908,6 @@ const reportManager = {
       return state.isLoading
     },
     getPrintFormatList: (state) => (reportId) => {
-      console.log({
-        reportId,
-        printFormatList: state.printFormatList
-      })
       return state.printFormatList[reportId] || []
     },
     getPrintFormat: (state, getters) => ({ reportId, printFormatId }) => {

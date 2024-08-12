@@ -62,8 +62,11 @@
 
 <script>
 import { defineComponent, computed } from '@vue/composition-api'
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import language from '@/lang'
 import store from '@/store'
+// Utils
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { showNotification } from '@/utils/ADempiere/notification.js'
 
 export default defineComponent({
   name: 'PrintProcess',
@@ -131,6 +134,12 @@ export default defineComponent({
     }
 
     function handleCommandActions(command) {
+      showNotification({
+        title: language.t('notifications.processing'),
+        message: process.name,
+        summary: process.description,
+        type: 'info'
+      })
       store.dispatch('generateReportViwer', {
         containerUuid: process.uuid,
         reportUuid: process.uuid,

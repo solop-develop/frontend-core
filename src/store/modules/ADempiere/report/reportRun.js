@@ -38,14 +38,14 @@ import { isEmptyValue } from '@/utils/ADempiere'
 import { showNotification } from '@/utils/ADempiere/notification.js'
 
 const initState = {
-  testStore: {}
+  reportRun: {}
 }
-const test = {
+const reportRun = {
   state: initState,
 
   mutations: {
     scrollByetTest(state, contactSend) {
-      state.testStore = contactSend
+      state.reportRun = contactSend
     }
   },
   actions: {
@@ -60,15 +60,11 @@ const test = {
     }) {
       return new Promise(resolve => {
         const reportDefinition = getters.getStoredReport(containerUuid)
-        console.log({
-          reportDefinition,
-          containerUuid,
-          printFormatId,
-          reportFormat,
-          reportViewId,
-          tableName,
-          reportId,
-          recordId
+        showNotification({
+          title: language.t('notifications.processing'),
+          message: reportDefinition.name,
+          summary: reportDefinition.description,
+          type: 'info'
         })
         generateReportRequest({
           reportFormat,
@@ -120,6 +116,11 @@ const test = {
                   tableName: output.table_name
                 }
               }, () => {})
+              showNotification({
+                title: language.t('notifications.succesful'),
+                message: output.file_name,
+                type: 'success'
+              })
             }
 
             commit('setReportOutput', {
@@ -133,6 +134,14 @@ const test = {
             })
 
             resolve(runReportRepsonse)
+          })
+          .catch(error => {
+            showNotification({
+              title: language.t('notifications.error'),
+              message: error.message,
+              type: 'error'
+            })
+            console.warn(`Error getting Get Report: ${error.message}. Code: ${error.code}.`)
           })
       })
     },
@@ -161,10 +170,10 @@ const test = {
   },
 
   getters: {
-    getTest: (state) => {
-      return state.testStore
+    getReportRun: (state) => {
+      return state.reportRun
     }
   }
 }
 
-export default test
+export default reportRun
