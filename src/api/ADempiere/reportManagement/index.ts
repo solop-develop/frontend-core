@@ -195,14 +195,14 @@ export function runExport({
 
 export function ListNotificationsTypes() {
   return request({
-    url: '/send_notifications/notifications_types',
+    url: '/send-notifications/notifications-types',
     method: 'get'
   })
 }
 
 export function ListUsers() {
   return request({
-    url: '/send_notifications/user',
+    url: '/send-notifications/users',
     method: 'get'
   })
 }
@@ -235,7 +235,7 @@ export function SendNotification({
     }]
   }
   return request({
-    url: '/send_notifications/notification',
+    url: '/send-notifications/notifications',
     method: 'post',
     data: {
       user_id,
