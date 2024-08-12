@@ -15,8 +15,8 @@
       @change="change"
     >
       <el-option
-        v-for="element in options"
-        :key="element.item.path"
+        v-for="(element, key) in options"
+        :key="key"
         :value="element.item"
         :label="element.item.title.join(' > ')"
       >
@@ -34,15 +34,21 @@
 </template>
 
 <script>
+// import i18n from '@/lang'
+
 // fuse is a lightweight fuzzy-search module
 // make search results more in line with expectations
 import Fuse from 'fuse.js'
 import path from 'path'
+
+// Utils and Helper Methods
 import { generateTitle } from '@/utils/i18n'
-// import i18n from '@/lang'
+// import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+// import { getUuidv4 } from '@/utils/ADempiere/recordUtil'
 
 export default {
   name: 'HeaderSearch',
+
   data() {
     return {
       search: '',
@@ -52,6 +58,7 @@ export default {
       fuse: undefined
     }
   },
+
   computed: {
     isMobile() {
       return this.$store.state.app.device === 'mobile'
@@ -72,6 +79,7 @@ export default {
       return ''
     }
   },
+
   watch: {
     lang() {
       this.searchPool = this.generateRoutes(this.routes)
@@ -94,9 +102,13 @@ export default {
       }
     }
   },
+
   mounted() {
-    this.searchPool = this.generateRoutes(this.routes)
+    this.searchPool = this.generateRoutes(
+      this.routes
+    )
   },
+
   methods: {
     openSearch() {
       if (this.show) {
@@ -196,13 +208,17 @@ export default {
       for (const router of routes) {
         // skip hidden router
         // if (router.meta && router.meta.isIndex) { continue }
+        const pathGenerated = path.resolve(basePath, router.path)
+        // const uuid = (!isEmptyValue(router.meta) && !isEmptyValue(router.meta.uuid)) ? router.meta.uuid : getUuidv4()
         const data = {
-          path: path.resolve(basePath, router.path),
+          path: pathGenerated,
+          // key: pathGenerated + '_' + uuid,
           title: [...prefixTitle],
           meta: router.meta,
           name: router.name
         }
         if (router.meta && router.meta.title) {
+          data.key += router.meta.title
           // generate internationalized title
           const i18ntitle = this.generateTitle(router.meta.title)
           data.title = [...data.title, i18ntitle]
@@ -241,6 +257,7 @@ export default {
   }
 }
 </script>
+
 <style>
 .search-menu-mobile {
   position: absolute;
