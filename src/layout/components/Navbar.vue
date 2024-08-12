@@ -121,8 +121,8 @@ export default {
       return this.$store.getters['user/getUserAvatar']
     },
     clientUuid() {
-      const { client } = this.$store.getters['user/getRole']
-      return client.uuid
+      const { client_uuid } = this.userInfo
+      return client_uuid
     },
     imageUrl() {
       return pathImageWindows({
