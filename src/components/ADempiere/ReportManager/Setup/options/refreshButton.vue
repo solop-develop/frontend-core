@@ -1,8 +1,8 @@
 <template>
   <div style="margin-left: -10px; display: flex; align-items: center;">
     <el-button
-      :disabled="disabled"
-      :loading="isLoading"
+      :disabled="isLoadingReport"
+      :loading="isLoadingReport"
       type="success"
       class="button-base-icon"
       icon="el-icon-refresh-right"
@@ -13,16 +13,15 @@
     </el-button>
   </div>
 </template>
-
 <script>
 import store from '@/store'
-import { defineComponent, computed, ref } from '@vue/composition-api'
+import { defineComponent, ref } from '@vue/composition-api'
 export default defineComponent({
   name: 'refreshButton',
   props: {
     containerUuid: {
       type: String,
-      required: true
+      required: false
     },
     reportOutput: {
       type: Object,
@@ -31,13 +30,14 @@ export default defineComponent({
     disabled: {
       type: Boolean,
       default: false
+    },
+    isLoadingReport: {
+      type: Boolean,
+      required: true
     }
   },
   setup(props, { root }) {
     const timeOutRecords = ref(null)
-    const isLoading = computed(() => {
-      return store.getters.getReportIsLoading
-    })
     function runReport() {
       const reportDefinition = store.getters.getStoredReport(props.containerUuid)
       const reportOutputParams = store.getters.getReportParameters({
@@ -59,17 +59,9 @@ export default defineComponent({
       })
     }
     return {
-      runReport,
-      isLoading
+      runReport
     }
   }
 })
 </script>
 
-<style scoped>
-@media screen and (max-width:1150px) {
-  .button-base-icon {
-    font-size: 12px;
-  }
-}
-</style>

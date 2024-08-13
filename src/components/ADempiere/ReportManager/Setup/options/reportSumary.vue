@@ -5,22 +5,21 @@
       id="report-format-switch"
       v-model="showChildren"
       style="font-weight: bold;"
-      :disabled="disabled"
+      :disabled="isLoadingReport"
       @change="expandedAll"
     />
     <label for="report-format-switch" class="select-label" style="margin-left: 15px;">{{ $t('report.reportEnginer.summary') }}</label>
   </div>
 </template>
-
 <script>
 import store from '@/store'
 import { defineComponent, ref, watch } from '@vue/composition-api'
 
 export default defineComponent({
   props: {
-    disabled: {
+    isLoadingReport: {
       type: Boolean,
-      default: false
+      default: true
     }
   },
   setup() {
@@ -43,7 +42,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style scoped>
-
-</style>
