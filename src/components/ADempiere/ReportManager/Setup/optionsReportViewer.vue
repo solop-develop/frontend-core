@@ -40,7 +40,7 @@
               @submit.native.prevent="notSubmitForm"
             >
               <el-row class="report-view-setup-preferences-fields" :gutter="20">
-                <el-col :span="12">
+                <el-col :span="5">
                   <el-form-item
                     :label="$t('report.printFormats')"
                     style="display: grid;"
@@ -48,6 +48,8 @@
                     <el-select
                       v-model="reportAsPrintFormatValue"
                       style="display: contents;"
+                      :disabled="isLoadingReport"
+                      @change="isReportEnginer ? null : runReport()"
                     >
                       <el-option
                         v-for="(item, key) in reportAsPrintFormat.childs"
@@ -58,7 +60,7 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="5">
                   <el-form-item
                     :label="$t('report.reportViews')"
                     style="display: grid;"
@@ -66,6 +68,8 @@
                     <el-select
                       v-model="reportAsViewValue"
                       style="display: contents;"
+                      :disabled="isLoadingReport"
+                      @change="isReportEnginer ? null : runReport()"
                     >
                       <el-option
                         v-for="(item, key) in reportAsView.childs"
@@ -76,7 +80,40 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="4">
+                  <el-form-item
+                    style="display: grid; margin-top: 35px; margin-left:30%"
+                  >
+                    <refresh-button
+                      :container-uuid="containerUuid"
+                      :report-output="reportOutput"
+                      :is-loading-report="isLoadingReport"
+                    />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item
+                    style="display: grid; margin-top: 35px;"
+                  >
+                    <report-summary
+                      :container-uuid="containerUuid"
+                      :report-output="reportOutput"
+                      :is-loading-report="isLoadingReport"
+                    />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="4">
+                  <el-form-item
+                    style="display: grid; margin-top: 35px;"
+                  >
+                    <downloadButtom
+                      :container-uuid="containerUuid"
+                      :report-output="reportOutput"
+                      :is-loading-report="isLoadingReport"
+                    />
+                  </el-form-item>
+                </el-col>
+                <el-col v-if="isReportEnginer" :span="24">
                   <el-form-item
                     :label="$t('report.typeReport')"
                     style="display: grid;"
@@ -95,14 +132,14 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <!-- <el-col :span="12">
                   <el-form-item
                     :label="$t('report.summary')"
                     style="display: grid;"
                   >
                     <el-switch v-model="isSummaryReport" />
                   </el-form-item>
-                </el-col>
+                </el-col> -->
               </el-row>
             </el-form>
           </div>
@@ -110,7 +147,7 @@
       </el-collapse-item>
 
       <!-- report parameters -->
-      <el-collapse-item name="2">
+      <el-collapse-item v-if="isReportEnginer" name="2">
         <template slot="title">
           <b style="font-size: 18px">
             {{ $t('actionMenu.changeParameters') }}
@@ -133,7 +170,10 @@
         right: 2%;
       "
     >
-      <el-col :span="24">
+      <el-col
+        v-if="isReportEnginer"
+        :span="24"
+      >
         <samp class="report-viewer-setup-footer">
           <el-button
             type="info"
@@ -174,12 +214,18 @@ import CollapseCriteria from '@/components/ADempiere/CollapseCriteria/index.vue'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { showNotification } from '@/utils/ADempiere/notification'
+import refreshButton from './options/refreshButton'
+import reportSummary from './options/reportSumary.vue'
+import downloadButtom from './options/downloadButtom.vue'
 
 export default defineComponent({
   name: 'optionsReportViewer',
 
   components: {
-    CollapseCriteria
+    CollapseCriteria,
+    refreshButton,
+    reportSummary,
+    downloadButtom
   },
 
   props: {
@@ -194,6 +240,14 @@ export default defineComponent({
     isShowTitle: {
       type: Boolean,
       default: true
+    },
+    isReportEnginer: {
+      type: Boolean,
+      default: true
+    },
+    isLoadingReport: {
+      type: Boolean,
+      default: false
     },
     reportOutput: {
       type: Object,
@@ -373,10 +427,14 @@ export default defineComponent({
       })
       store.dispatch('buildReport', {
         containerUuid: props.containerUuid || root.$route.params.processUuid,
-        instanceUuid: root.$route.params.instanceUuid,
-        isSummary: isSummaryReport.value,
-        tableName: tableName.value,
-        parametersList: reportOutputParams
+        isSummary: true,
+        parametersList: reportOutputParams,
+        printFormatId: reportAsPrintFormatValue.value,
+        reportId: reportDefinition.id,
+        instanceUuid: defaultParams.value.instance_id,
+        reportViewId: defaultParams.value.report_view_id,
+        pageSize: props.reportOutput.pageSize,
+        pageToken: props.reportOutput.pageToken
       })
         .then(response => {
           store.dispatch('tagsView/delCachedView', findTagViwer.value).then(() => {

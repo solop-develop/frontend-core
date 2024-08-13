@@ -17,9 +17,13 @@
 -->
 <template>
   <el-card class="containerReportEnginer">
-    <reportSearchCriteria
+    <options-report
       :container-uuid="reportOutput.containerUuid"
+      :container-manager="containerManager"
       :report-output="reportOutput"
+      :is-show-title="false"
+      :is-report-enginer="false"
+      :is-loading-report="isLoadingReport"
     />
     <el-dialog
       v-shortkey="shortsKey"
@@ -52,8 +56,8 @@ import store from '@/store'
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 import InfoReport from '@/views/ADempiere/ReportViewerEngine/infoReport.vue'
 import dialogShareReport from '@/views/ADempiere/ReportViewerEngine/dialog'
-import reportSearchCriteria from '@/views/ADempiere/ReportViewerEngine/searchCriteria'
 import DataReport from '@/components/ADempiere/Report/Data/DataReport.vue'
+import OptionsReport from '@/components/ADempiere/ReportManager/Setup/optionsReportViewer.vue'
 
 export default defineComponent({
   name: 'reportPanel',
@@ -62,7 +66,7 @@ export default defineComponent({
     InfoReport,
     DataReport,
     dialogShareReport,
-    reportSearchCriteria
+    OptionsReport
   },
   props: {
     containerManager: {
@@ -104,11 +108,14 @@ export default defineComponent({
     function viewShowDialog() {
       store.commit('setShowDialog', false)
     }
-
+    const isLoadingReport = computed(() => {
+      return store.getters.getReportIsLoading
+    })
     return {
       // Computed
       showDialog,
       shortsKey,
+      isLoadingReport,
       // Methods
       keyAction,
       viewShowDialog

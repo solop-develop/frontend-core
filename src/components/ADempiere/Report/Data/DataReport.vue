@@ -132,7 +132,7 @@ export default defineComponent({
     })
     const height = computed(() => {
       if (store.getters.device !== 'mobile') {
-        return 'calc(100vh - 275px)'
+        return 'calc(100vh - 295px)'
       }
       return 'calc(100vh - 385px)'
     })
