@@ -26,7 +26,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         <span style="margin-left: 0px; margin-bottom: 10px; font-weight: 700; font-size: medium;">
           {{ metadata.reference }}
         </span>
-        <el-button type="success" plain style="margin-left: auto;">Leído</el-button>
+        <el-button type="success" plain style="margin-left: auto;">{{ $t('window.containerInfo.notices.read') }}</el-button>
       </el-descriptions-item>
       <el-descriptions-item>
         <svg-icon
@@ -67,7 +67,6 @@ export default defineComponent({
     }
   },
   setup(props) {
-    console.log(props.metadata)
     const diffInDays = computed(() => {
       const dateCreated = new Date(props.metadata.created).getTime()
       const newDate = new Date().getTime()
