@@ -17,76 +17,43 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
-  <el-descriptions
-    direction="horizontal"
-    :column="1"
-  >
-    <el-descriptions-item>
-      <span style="margin-left:0px; margin-bottom:10px; font-weight: 700; font-size:medium;">
-        {{ metadata.reference }}
-      </span>
-      <!-- <span style="margin-left: 60%">
-        <el-switch v-model="valueSwitch" />
-      </span> -->
-    </el-descriptions-item>
-    <el-descriptions-item>
-      <template slot="label">
-        <!-- {{ $t('window.containerInfo.notices.user') }} -->
-      </template>
-      <svg-icon
-        icon-class="user"
-        class="icon-window"
-        style="font-size: 16px;"
-      />
-      <span style="margin-left:20px; margin-bottom:10px; font-weight: 600">
-        {{ metadata.user.name }}
-      </span>
-    </el-descriptions-item>
-    <el-descriptions-item>
-      <span style="margin-left:42px; margin-bottom:10px; font-weight: 600">
-        {{ metadata.text_message }}
-      </span>
-    </el-descriptions-item>
-    <el-descriptions-item>
-      <template slot="label">
-        <!-- {{ $t('window.containerInfo.log.created') }} -->
-      </template>
-      <!-- <span style="margin-left:10px; padding-bottom:10px">
-        {{ translateDate( {value: metadata.created, format: 'long' }) }}
-      </span> -->
-      <span style="margin-left:10px; padding-bottom:10px">
-        {{ diffInDays }}
-      </span>
-    </el-descriptions-item>
-    <!-- <el-descriptions-item
-      :label="$t('window.containerInfo.log.recordID')"
-      label-style="{ color: #606266; font-weight: bold; }"
+  <div>
+    <el-descriptions
+      direction="horizontal"
+      :column="1"
     >
-      <span style="color: #606266; font-weight: bold;">
-        {{ metadata.record_id }}
-      </span>
-    </el-descriptions-item>
-    <el-descriptions-item>
-      <template slot="label">
+      <el-descriptions-item>
+        <span style="margin-left: 0px; margin-bottom: 10px; font-weight: 700; font-size: medium;">
+          {{ metadata.reference }}
+        </span>
+        <el-button type="success" plain style="margin-left: auto;">Leído</el-button>
+      </el-descriptions-item>
+      <el-descriptions-item>
         <svg-icon
-          icon-class="table"
+          :icon-class="metadata.user.avatar ? metadata.user.avatar : 'user'"
           class="icon-window"
           style="font-size: 16px;"
         />
-        {{ $t('window.containerInfo.log.tableName') }}
-      </template>
-      <span style="color: #606266; font-weight: bold;">
-        {{ metadata.table_name }}
-      </span>
-    </el-descriptions-item> -->
-  </el-descriptions>
+        <span style="margin-left:20px; margin-bottom:10px; font-weight: 600">
+          {{ metadata.user.name }}
+        </span>
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <span style="margin-left:42px; margin-bottom:10px; font-weight: 600" v-html="metadata.text_message" />
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <span style="margin-left:10px; padding-bottom:10px">
+          {{ diffInDays }}
+        </span>
+      </el-descriptions-item>
+    </el-descriptions>
+  </div>
 </template>
 
 <script>
 import {
   defineComponent,
-  computed,
-  ref
+  computed
 } from '@vue/composition-api'
 // Utils and Helper Methods
 import { translateDate } from '@/utils/ADempiere/formatValue/dateFormat'
@@ -100,8 +67,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const valueSwitch = ref(true)
-
+    console.log(props.metadata)
     const diffInDays = computed(() => {
       const dateCreated = new Date(props.metadata.created).getTime()
       const newDate = new Date().getTime()
@@ -112,7 +78,6 @@ export default defineComponent({
 
     return {
       diffInDays,
-      valueSwitch,
       translateDate
     }
   }
