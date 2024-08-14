@@ -677,7 +677,7 @@ const reportManager = {
       reportType,
       filters,
       sortBy,
-      pageSize = 15,
+      pageSize = 50,
       pageToken = 1,
       containerUuid,
       printFormatId,

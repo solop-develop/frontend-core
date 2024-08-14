@@ -24,7 +24,7 @@
         layout="slot, sizes, prev, pager, next"
         :current-page="currentPageNumber"
         :total="recordCount"
-        :page-sizes="NUMBER_RECORDS_PER_PAGE"
+        :page-sizes="pageSizeHight ? NUMBER_RECORDS_PER_PAGE_HIGH : NUMBER_RECORDS_PER_PAGE"
         :page-size="currentPageSize"
         style="float: right;padding-left: 0px;padding-right: 0px;"
         @size-change="handleChangePageSize"
@@ -52,7 +52,7 @@ import store from '@/store'
 
 // Constants
 import {
-  ROWS_OF_RECORDS_BY_PAGE, NUMBER_RECORDS_PER_PAGE, totalRowByPage, indexRowByPage
+  ROWS_OF_RECORDS_BY_PAGE, NUMBER_RECORDS_PER_PAGE, NUMBER_RECORDS_PER_PAGE_HIGH, totalRowByPage, indexRowByPage
 } from '@/utils/ADempiere/tableUtils'
 
 // Utils and Helper Methods
@@ -127,6 +127,10 @@ export default defineComponent({
       }
     },
     isShowedSelected: {
+      type: Boolean,
+      default: false
+    },
+    pageSizeHight: {
       type: Boolean,
       default: false
     }
@@ -221,7 +225,8 @@ export default defineComponent({
       disablePreviousRecord,
       currentIndex,
       // Import
-      NUMBER_RECORDS_PER_PAGE
+      NUMBER_RECORDS_PER_PAGE,
+      NUMBER_RECORDS_PER_PAGE_HIGH
     }
   }
 

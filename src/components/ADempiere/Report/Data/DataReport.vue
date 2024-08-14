@@ -66,6 +66,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         :page-number="currentPageNumber"
         :handle-change-page-size="handleChangeSizePage"
         :handle-change-page-number="handleChangePage"
+        :page-size-hight="true"
       />
     </el-card>
   </div>

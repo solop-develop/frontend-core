@@ -57,7 +57,9 @@ export const NUMBER_RECORDS_PER_PAGE = [
   ROWS_OF_RECORDS_BY_PAGE,
   25, 50, 100
 ]
-
+export const NUMBER_RECORDS_PER_PAGE_HIGH = [
+  50, 100, 150, 200
+]
 /**
  * Generate index to element-ui table
  * @link https://element.eleme.cn/#/es/component/table#indice-personalizado
