@@ -26,7 +26,14 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         <span style="margin-left: 0px; margin-bottom: 10px; font-weight: 700; font-size: medium;">
           {{ metadata.reference }}
         </span>
-        <el-button type="success" plain style="margin-left: auto;">{{ $t('window.containerInfo.notices.read') }}</el-button>
+        <el-button
+          type="success"
+          plain
+          style="margin-left: auto;"
+          @click="ledgeNoyice"
+        >
+          {{ $t('window.containerInfo.notices.read') }}
+        </el-button>
       </el-descriptions-item>
       <el-descriptions-item>
         <svg-icon
@@ -51,12 +58,14 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 </template>
 
 <script>
+import store from '@/store'
 import {
   defineComponent,
   computed
 } from '@vue/composition-api'
 // Utils and Helper Methods
 import { translateDate } from '@/utils/ADempiere/formatValue/dateFormat'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'noticeManagement',
@@ -74,10 +83,17 @@ export default defineComponent({
       const integerDiff = Math.floor(diff / (1000 * 60 * 60 * 24))
       return integerDiff + ' Days ago'
     })
-
+    function ledgeNoyice() {
+      if (!isEmptyValue(props.metadata) && !isEmptyValue(props.metadata.id)) {
+        store.dispatch('isRead', {
+          id: props.metadata.id
+        })
+      }
+    }
     return {
       diffInDays,
-      translateDate
+      translateDate,
+      ledgeNoyice
     }
   }
 })
