@@ -47,17 +47,21 @@ import store from '@/store'
 import {
   defineComponent, ref, computed
 } from '@vue/composition-api'
+
 // Components and Mixins
 import NoticesLogs from '@/components/ADempiere/Dashboard/notices/itemsNotices.vue'
+
 // Utils and Helper Methods
 import { translateDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'noticeManagement',
+
   components: {
     NoticesLogs
   },
+
   setup() {
     const search = ref('')
     const listAllNotices = computed(() => {
@@ -65,6 +69,7 @@ export default defineComponent({
       if (!isEmptyValue(notices)) {
         return notices
       }
+      return []
     })
     const isLoading = computed(() => {
       return store.getters.getNotices.isLoading
@@ -73,6 +78,7 @@ export default defineComponent({
       store.dispatch('listNotices')
     }
     loadListNotices()
+
     return {
       search,
       listAllNotices,
