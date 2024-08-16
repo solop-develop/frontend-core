@@ -67,7 +67,8 @@ const window = {
     },
     notices: {
       user: 'User',
-      read: 'Read'
+      read: 'Read Current',
+      allRead: 'Read All'
     },
     referenceRecords: 'Document Reference'
   },

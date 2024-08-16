@@ -26,14 +26,27 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         <span style="margin-left: 0px; margin-bottom: 10px; font-weight: 700; font-size: medium;">
           {{ metadata.reference }}
         </span>
-        <el-button
-          type="success"
+        <el-dropdown
+          split-button
+          size="small"
           plain
           style="margin-left: auto;"
-          @click="ledgeNoyice"
+          @click="handleCommandActions('read')"
+          @command="handleCommandActions"
         >
-          {{ $t('window.containerInfo.notices.read') }}
-        </el-button>
+          <svg-icon icon-class="read" />
+          <span>
+            {{ $t('window.containerInfo.notices.read') }}
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item
+              command="readAll"
+            >
+              <svg-icon icon-class="read" />
+              {{ $t('window.containerInfo.notices.allRead') }}
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </el-descriptions-item>
       <el-descriptions-item>
         <svg-icon
@@ -90,10 +103,28 @@ export default defineComponent({
         })
       }
     }
+    function readAll() {
+      const { id } = store.getters['user/userInfo']
+      store.dispatch('isReadAll', {
+        id
+      })
+    }
+    function handleCommandActions(command) {
+      if (command === 'read') {
+        ledgeNoyice()
+        return
+      }
+      if (command === 'readAll') {
+        readAll()
+        return
+      }
+    }
     return {
       diffInDays,
       translateDate,
-      ledgeNoyice
+      ledgeNoyice,
+      handleCommandActions,
+      readAll
     }
   }
 })

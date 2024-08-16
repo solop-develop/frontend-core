@@ -18,7 +18,8 @@
 
 import {
   listNotices,
-  acknowledgeNotice
+  acknowledgeNotice,
+  deleteNotices
 } from '@/api/ADempiere/form/notice'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
@@ -47,7 +48,7 @@ const notices = {
       return new Promise(resolve => {
         listNotices()
           .then(response => {
-            if (!isEmptyValue(response) && !isEmptyValue(response.records)) {
+            if (!isEmptyValue(response)) {
               const { records } = response
               commit('setNotices', records)
               resolve(response)
@@ -71,6 +72,28 @@ const notices = {
         acknowledgeNotice({
           id
         })
+          .then(response => {
+            dispatch('listNotices')
+            resolve(response)
+          })
+          .catch(error => {
+            console.warn(error)
+          })
+          .finally(() => {
+            setTimeout(() => {
+              commit('setLoadingNotices', false)
+            }, 500)
+          })
+      })
+    },
+    isReadAll({ commit, dispatch }, {
+      id
+    }) {
+      commit('setLoadingNotices', true)
+      return new Promise(resolve => {
+        deleteNotices(
+          id
+        )
           .then(response => {
             dispatch('listNotices')
             resolve(response)

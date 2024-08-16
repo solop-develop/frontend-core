@@ -16,8 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 // CONST
-import { config } from '@/utils/ADempiere/config'
-
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
@@ -26,7 +24,7 @@ import { request } from '@/utils/ADempiere/request'
  */
 export function listNotices() {
   return request({
-    url: `${config.noticeManagement.endpoint}/notices`,
+    url: `/notice-management/notices`,
     method: 'get'
   })
 }
@@ -38,7 +36,7 @@ export function acknowledgeNotice({
   id
 }) {
   return request({
-    url: `${config.noticeManagement.endpoint}/notices/${id}/acknowledge`,
+    url: `/notice-management/notices/${id}/acknowledge`,
     method: 'patch'
   })
 }
@@ -48,7 +46,7 @@ export function acknowledgeNotice({
  */
 export function listUsers() {
   return request({
-    url: `${config.noticeManagement.endpoint}/users`,
+    url: `/notice-management/users`,
     method: 'get'
   })
 }
@@ -56,9 +54,14 @@ export function listUsers() {
 /**
  * Delete Notices
  */
-export function deleteNotices() {
+export function deleteNotices(
+  id
+) {
   return request({
-    url: `${config.noticeManagement.endpoint}/notices`,
-    method: 'delete'
+    url: `/notice-management/notices`,
+    method: 'delete',
+    params: {
+      user_id: id
+    }
   })
 }
