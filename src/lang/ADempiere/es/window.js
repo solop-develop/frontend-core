@@ -68,7 +68,7 @@ const window = {
     },
     notices: {
       user: 'Usuario',
-      read: 'Leído Actual',
+      read: 'Leer Actual',
       allRead: 'Leer Todos'
     },
     referenceRecords: 'Documentos Relacionados'

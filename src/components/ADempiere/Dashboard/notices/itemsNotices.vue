@@ -98,15 +98,15 @@ export default defineComponent({
     })
     function ledgeNoyice() {
       if (!isEmptyValue(props.metadata) && !isEmptyValue(props.metadata.id)) {
-        store.dispatch('isRead', {
+        store.dispatch('readCurrentNotice', {
           id: props.metadata.id
         })
       }
     }
     function readAll() {
       const { id } = store.getters['user/userInfo']
-      store.dispatch('isReadAll', {
-        id
+      store.dispatch('readAllNotices', {
+        userId: id
       })
     }
     function handleCommandActions(command) {

@@ -63,12 +63,7 @@ export default defineComponent({
     const listAllNotices = computed(() => {
       const notices = store.getters.getNotices.list
       if (!isEmptyValue(notices)) {
-        return notices.map(list => {
-          return {
-            ...list,
-            show: false
-          }
-        })
+        return notices
       }
     })
     const isLoading = computed(() => {

@@ -64,7 +64,7 @@ const notices = {
           })
       })
     },
-    isRead({ commit, dispatch }, {
+    readCurrentNotice({ commit, dispatch }, {
       id
     }) {
       commit('setLoadingNotices', true)
@@ -79,20 +79,15 @@ const notices = {
           .catch(error => {
             console.warn(error)
           })
-          .finally(() => {
-            setTimeout(() => {
-              commit('setLoadingNotices', false)
-            }, 500)
-          })
       })
     },
-    isReadAll({ commit, dispatch }, {
-      id
+    readAllNotices({ commit, dispatch }, {
+      userId
     }) {
       commit('setLoadingNotices', true)
       return new Promise(resolve => {
         deleteNotices(
-          id
+          userId
         )
           .then(response => {
             dispatch('listNotices')
@@ -100,11 +95,6 @@ const notices = {
           })
           .catch(error => {
             console.warn(error)
-          })
-          .finally(() => {
-            setTimeout(() => {
-              commit('setLoadingNotices', false)
-            }, 500)
           })
       })
     }

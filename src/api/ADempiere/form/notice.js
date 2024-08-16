@@ -55,13 +55,13 @@ export function listUsers() {
  * Delete Notices
  */
 export function deleteNotices(
-  id
+  userId
 ) {
   return request({
     url: `/notice-management/notices`,
     method: 'delete',
     params: {
-      user_id: id
+      user_id: userId
     }
   })
 }
