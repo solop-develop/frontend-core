@@ -48,7 +48,7 @@ export default {
     white-space: break-spaces;
     line-height: 20px;
     height: auto;
-    padding: 18px 23px 18px 0;
+    padding: 8px 23px 8px 0;
   }
 
   .item-title {

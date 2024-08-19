@@ -155,7 +155,7 @@
 </template>
 
 <script>
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed, onUnmounted } from '@vue/composition-api'
 
 import lang from '@/lang'
 import store from '@/store'
@@ -248,12 +248,21 @@ export default defineComponent({
         return showQueryFields.value ? ACCORDION_KEY : null
       }
     })
-
+    function clearCriteriaValues() {
+      store.commit('setProductSearchFieldQueryFilters', {
+        containerUuid: props.uuidForm,
+        queryFilters: {}
+      })
+    }
+    onUnmounted(() => {
+      clearCriteriaValues()
+    })
     return {
       ACCORDION_KEY,
       //
       activeAccordion,
-      title
+      title,
+      clearCriteriaValues
     }
   }
 })

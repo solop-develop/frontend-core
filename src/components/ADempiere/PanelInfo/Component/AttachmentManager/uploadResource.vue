@@ -18,9 +18,6 @@
 
 <template>
   <span>
-    <!-- <input id="selector" type="file" multiple>
-    <button @click="upload()">Upload</button>
-    <div id="status">No uploads</div>' -->
     <el-upload
       ref="uploadComponent"
       :action="action"
@@ -28,6 +25,7 @@
       :multiple="false"
       :before-upload="isValidUploadHandler"
       :on-success="loadedSucess"
+      :disabled="isDisabledUpload"
     >
       <el-button slot="trigger" size="small" type="primary" style="font-size: 13px;">
         <i class="el-icon-upload" />
@@ -38,33 +36,22 @@
 </template>
 
 <script>
-import { defineComponent, ref } from '@vue/composition-api'
+import { defineComponent, computed, ref } from '@vue/composition-api'
 
 import lang from '@/lang'
 import store from '@/store'
 import router from '@/router'
 
 // Constants
-// import { config } from '@/utils/ADempiere/config'
-// import { BEARER_TYPE } from '@/utils/auth'
-// import { RESOURCE_TYPE_ATTACHMENT } from '@/utils/ADempiere/resource'
-
-// API Request Methods
-// import {
-//   // requestUploadAttachment
-// } from '@/api/ADempiere/user-interface/component/resource'
+import {
+  CLIENT
+} from '@/utils/ADempiere/constants/systemColumns'
 import {
   requestPresignedUrl
-  // requestDeleteResources,
-  // requestSetResourceReference
-  // requestDeleteResourceReference
 } from '@/api/ADempiere/file-management/resource-reference.ts'
 
-// // Utils and Helper Methods
-// import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+// // Utils and Helper Methods'
 import { showMessage } from '@/utils/ADempiere/notification'
-// import { getToken } from '@/utils/auth'
-// import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
 
 export default defineComponent({
   name: 'UploadResource',
@@ -103,6 +90,24 @@ export default defineComponent({
     const filesList = ref([])
     const additionalData = ref({})
     const fileResource = ref(({}))
+
+    const currentTab = computed(() => {
+      const { currentTab } = store.getters.getContainerInfo
+      return currentTab
+    })
+
+    const isDisabledUpload = computed(() => {
+      const { type } = router.app._route.meta
+      if (type !== 'window') return false
+      const { parentUuid, containerUuid } = currentTab.value
+      const clientIdRecord = store.getters.getValueOfField({
+        parentUuid,
+        containerUuid,
+        columnName: CLIENT
+      })
+      const preferenceClientId = store.getters.getSessionContextClientId
+      return clientIdRecord !== preferenceClientId
+    })
     function upload() {
       // // Get selected files from the input element.
       // var files = document.querySelector('#selector').files
@@ -121,14 +126,11 @@ export default defineComponent({
     }
 
     function resourceReference(file) {
-      const clientId = store.getters.getSessionContextClientId
-      const { action_id, type } = router.app._route.meta
+      const { client } = store.getters['user/getRole']
       return new Promise((resolve, reject) => {
         const url = presignedUrl({
-          clientId: clientId,
-          containerId: action_id,
-          containerType: type,
-          // fileName: file.name,
+          clientId: client.uuid,
+          containerType: 'attachment',
           file
         })
         resolve(url)
@@ -142,8 +144,7 @@ export default defineComponent({
       return new Promise((resolve, reject) => {
         requestPresignedUrl({
           clientId,
-          containerId,
-          containerType,
+          containerType: 'attachment',
           fileName: file.name,
           recordId: props.recordId,
           tableName: props.tableName
@@ -176,13 +177,11 @@ export default defineComponent({
           method: 'PUT',
           body: file
         }).then(() => {
-          const { action_id, type } = router.app._route.meta
+          const { client } = store.getters['user/getRole']
           if (!props.containerManager) {
-            const clientId = store.getters.getSessionContextClientId
             store.dispatch('getAttachmentFromServer', {
-              containerType: type,
-              clientId: clientId,
-              containerId: action_id,
+              containerType: 'attachment',
+              clientId: client.uuid,
               recordId: props.recordId,
               tableName: props.tableName
             })
@@ -196,11 +195,10 @@ export default defineComponent({
             return file
           }
           props.containerManager.getAttachment({
-            containerUuid: props.containerUuid,
-            containerId: action_id,
-            parentUuid: props.parentUuid,
-            tableName: props.tableName,
-            recordId: props.recordId
+            containerType: 'attachment',
+            clientId: client.uuid,
+            recordId: props.recordId,
+            tableName: props.tableName
           })
           // store.dispatch('')
           resolve(file_name)
@@ -233,11 +231,12 @@ export default defineComponent({
         })
       }
       additionalData.value = {}
-
+      const { client } = store.getters['user/getRole']
       store.dispatch('getAttachmentFromServer', {
         tableName: props.tableName,
         recordId: props.recordId,
-        recordUuid: props.recordUuid
+        containerType: 'attachment',
+        clientId: client.uuid
       })
     }
 
@@ -255,6 +254,8 @@ export default defineComponent({
       fileResource,
       filesList,
       action,
+      currentTab,
+      isDisabledUpload,
       // Methods
       upload,
       handleError,

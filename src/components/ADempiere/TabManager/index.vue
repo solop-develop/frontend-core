@@ -331,6 +331,11 @@ export default defineComponent({
       return store.getters.getShowLogs
     })
 
+    const clientUuid = computed(() => {
+      const { client } = store.getters['user/getRole']
+      return client.uuid
+    })
+
     const isShowedTabs = computed(() => {
       const storedWindow = store.getters.getStoredWindow(props.parentUuid)
       return storedWindow.isShowedTabsParent
@@ -815,9 +820,8 @@ export default defineComponent({
       requestListResources({
         recordId: currentRecordId.value,
         tableName: currentTabTableName.value,
-        containerId: router.app._route.meta.action_id,
-        clientId: store.getters.getSessionContextClientId,
-        containerType: 'window'
+        clientId: clientUuid.value,
+        containerType: 'attachment'
       })
         .then(response => {
           countAttachment.value = response.resources.length
@@ -929,6 +933,7 @@ export default defineComponent({
       tableHeaders,
       recordsList,
       drawer,
+      clientUuid,
       currentRecordLogs,
       openPanelInfo,
       showChatAvailable,

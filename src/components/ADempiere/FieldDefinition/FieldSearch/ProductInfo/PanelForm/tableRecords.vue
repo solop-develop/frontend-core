@@ -360,8 +360,10 @@ export default defineComponent({
     })
 
     function handleCurrentChange(newCurrentRow, oldCurrentRow) {
-      if (newCurrentRow.is_active === false || newCurrentRow.IsActive === false) {
-        return
+      if (!isEmptyValue(newCurrentRow)) {
+        if (newCurrentRow.is_active === false || newCurrentRow.IsActive === false) {
+          return
+        }
       }
     }
 

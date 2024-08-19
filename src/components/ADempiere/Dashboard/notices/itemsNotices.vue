@@ -17,79 +17,68 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
-  <el-descriptions
-    direction="horizontal"
-    :column="1"
-  >
-    <el-descriptions-item>
-      <span style="margin-left:0px; margin-bottom:10px; font-weight: 700; font-size:medium;">
-        {{ metadata.reference }}
-      </span>
-      <!-- <span style="margin-left: 60%">
-        <el-switch v-model="valueSwitch" />
-      </span> -->
-    </el-descriptions-item>
-    <el-descriptions-item>
-      <template slot="label">
-        <!-- {{ $t('window.containerInfo.notices.user') }} -->
-      </template>
-      <svg-icon
-        icon-class="user"
-        class="icon-window"
-        style="font-size: 16px;"
-      />
-      <span style="margin-left:20px; margin-bottom:10px; font-weight: 600">
-        {{ metadata.user.name }}
-      </span>
-    </el-descriptions-item>
-    <el-descriptions-item>
-      <span style="margin-left:42px; margin-bottom:10px; font-weight: 600">
-        {{ metadata.text_message }}
-      </span>
-    </el-descriptions-item>
-    <el-descriptions-item>
-      <template slot="label">
-        <!-- {{ $t('window.containerInfo.log.created') }} -->
-      </template>
-      <!-- <span style="margin-left:10px; padding-bottom:10px">
-        {{ translateDate( {value: metadata.created, format: 'long' }) }}
-      </span> -->
-      <span style="margin-left:10px; padding-bottom:10px">
-        {{ diffInDays }}
-      </span>
-    </el-descriptions-item>
-    <!-- <el-descriptions-item
-      :label="$t('window.containerInfo.log.recordID')"
-      label-style="{ color: #606266; font-weight: bold; }"
+  <div>
+    <el-descriptions
+      direction="horizontal"
+      :column="1"
     >
-      <span style="color: #606266; font-weight: bold;">
-        {{ metadata.record_id }}
-      </span>
-    </el-descriptions-item>
-    <el-descriptions-item>
-      <template slot="label">
+      <el-descriptions-item>
+        <span style="margin-left: 0px; margin-bottom: 10px; font-weight: 700; font-size: medium;">
+          {{ metadata.reference }}
+        </span>
+        <el-dropdown
+          split-button
+          size="small"
+          plain
+          style="margin-left: auto;"
+          @click="handleCommandActions('read')"
+          @command="handleCommandActions"
+        >
+          <svg-icon icon-class="read" />
+          <span>
+            {{ $t('window.containerInfo.notices.read') }}
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item
+              command="readAll"
+            >
+              <svg-icon icon-class="read" />
+              {{ $t('window.containerInfo.notices.allRead') }}
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </el-descriptions-item>
+      <el-descriptions-item>
         <svg-icon
-          icon-class="table"
+          :icon-class="metadata.user.avatar ? metadata.user.avatar : 'user'"
           class="icon-window"
           style="font-size: 16px;"
         />
-        {{ $t('window.containerInfo.log.tableName') }}
-      </template>
-      <span style="color: #606266; font-weight: bold;">
-        {{ metadata.table_name }}
-      </span>
-    </el-descriptions-item> -->
-  </el-descriptions>
+        <span style="margin-left:20px; margin-bottom:10px; font-weight: 600">
+          {{ metadata.user.name }}
+        </span>
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <span style="margin-left:42px; margin-bottom:10px; font-weight: 600" v-html="metadata.text_message" />
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <span style="margin-left:10px; padding-bottom:10px">
+          {{ diffInDays }}
+        </span>
+      </el-descriptions-item>
+    </el-descriptions>
+  </div>
 </template>
 
 <script>
+import store from '@/store'
 import {
   defineComponent,
-  computed,
-  ref
+  computed
 } from '@vue/composition-api'
 // Utils and Helper Methods
 import { translateDate } from '@/utils/ADempiere/formatValue/dateFormat'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'noticeManagement',
@@ -100,8 +89,6 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const valueSwitch = ref(true)
-
     const diffInDays = computed(() => {
       const dateCreated = new Date(props.metadata.created).getTime()
       const newDate = new Date().getTime()
@@ -109,11 +96,35 @@ export default defineComponent({
       const integerDiff = Math.floor(diff / (1000 * 60 * 60 * 24))
       return integerDiff + ' Days ago'
     })
-
+    function ledgeNoyice() {
+      if (!isEmptyValue(props.metadata) && !isEmptyValue(props.metadata.id)) {
+        store.dispatch('readCurrentNotice', {
+          id: props.metadata.id
+        })
+      }
+    }
+    function readAll() {
+      const { id } = store.getters['user/userInfo']
+      store.dispatch('readAllNotices', {
+        userId: id
+      })
+    }
+    function handleCommandActions(command) {
+      if (command === 'read') {
+        ledgeNoyice()
+        return
+      }
+      if (command === 'readAll') {
+        readAll()
+        return
+      }
+    }
     return {
       diffInDays,
-      valueSwitch,
-      translateDate
+      translateDate,
+      ledgeNoyice,
+      handleCommandActions,
+      readAll
     }
   }
 })

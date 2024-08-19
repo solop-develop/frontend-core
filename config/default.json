@@ -77,9 +77,6 @@
   "weight": {
     "endpoint": "/form/addons/weight"
   },
-  "noticeManagement": {
-    "endpoint": "/notice-management"
-  },
   "trialBalanceDrillable": {
     "endpoint": "/trial-balance-drillable"
   },

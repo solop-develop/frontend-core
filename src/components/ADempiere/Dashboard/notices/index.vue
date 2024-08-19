@@ -17,7 +17,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
-  <el-card class="box-card" :body-style="{ padding: '0px' }" shadow="never">
+  <el-card v-loading="isLoading" class="box-card" :body-style="{ padding: '0px' }" shadow="never">
     <div class="recent-items">
       <el-card
         v-for="notices in listAllNotices"
@@ -43,54 +43,46 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 </template>
 
 <script>
+import store from '@/store'
 import {
-  defineComponent, ref
+  defineComponent, ref, computed
 } from '@vue/composition-api'
-// Api Request Methods
-import {
-  listNotices
-} from '@/api/ADempiere/form/notice'
+
 // Components and Mixins
 import NoticesLogs from '@/components/ADempiere/Dashboard/notices/itemsNotices.vue'
+
 // Utils and Helper Methods
-import { showMessage } from '@/utils/ADempiere/notification'
 import { translateDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'noticeManagement',
+
   components: {
     NoticesLogs
   },
+
   setup() {
-    const listAllNotices = ref([])
     const search = ref('')
+    const listAllNotices = computed(() => {
+      const notices = store.getters.getNotices.list
+      if (!isEmptyValue(notices)) {
+        return notices
+      }
+      return []
+    })
+    const isLoading = computed(() => {
+      return store.getters.getNotices.isLoading
+    })
     function loadListNotices() {
-      listNotices()
-        .then(response => {
-          const { records } = response
-          listAllNotices.value = records.map(list => {
-            return {
-              ...list,
-              show: false
-            }
-          })
-        })
-        .catch(error => {
-          let message = error.message
-          if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
-            message = error.response.data.message
-          }
-          showMessage({
-            message,
-            type: 'warning'
-          })
-        })
+      store.dispatch('listNotices')
     }
     loadListNotices()
+
     return {
       search,
       listAllNotices,
+      isLoading,
       translateDate,
       loadListNotices
     }

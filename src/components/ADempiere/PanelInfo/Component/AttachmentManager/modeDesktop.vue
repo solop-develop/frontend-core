@@ -102,16 +102,10 @@
                       {{ file.name }}
                     </el-descriptions-item>
                     <el-descriptions-item :label="$t('component.attachment.fileSize')">
-                      {{ formatFileSize(file.file_size) }}
+                      {{ formatFileSize(file.size) }}
                     </el-descriptions-item>
                     <el-descriptions-item :label="$t('component.attachment.fileFormat')">
                       {{ file.content_type }}
-                    </el-descriptions-item>
-                    <el-descriptions-item :label="$t('component.attachment.description')">
-                      {{ file.description }}
-                    </el-descriptions-item>
-                    <el-descriptions-item :label="$t('component.attachment.message')">
-                      {{ file.text_message }}
                     </el-descriptions-item>
                   </el-descriptions>
                   <el-button
@@ -186,6 +180,7 @@
                   :resource-name="file.file_name"
                   :file="file"
                   :file-name="file.name"
+                  :file-url="file.fullName"
                   class="class-group-botton-option"
                 />
                 <el-button

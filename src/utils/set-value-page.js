@@ -61,7 +61,7 @@ export function setSessionValues({
   if (isEmptyValue(client)) return
   const link = getPageFavicon({
     logo: pathImageWindows({
-      clientId: client.id,
+      clientId: client.uuid,
       tableName: TABLE_NAME_CLIENT,
       recordId: client.id,
       columnName: COLUMN_NAME,

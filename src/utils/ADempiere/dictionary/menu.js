@@ -41,7 +41,7 @@ export function convertAction(action) {
       break
     case 'P':
       actionAttributes.name = 'process'
-      actionAttributes.icon = 'component'
+      actionAttributes.icon = 'settings'
       actionAttributes.component = () => import('@/views/ADempiere/Process')
       break
     case 'R':

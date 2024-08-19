@@ -442,5 +442,5 @@ export function pathImageWindows({
   resourceName
 }) {
   const url = config.adempiere.resource.url
-  return `${url}${clientId}/client/window/${tableName}/${recordId}/${columnName}/${resourceName}`
+  return `${url}${clientId}/client/attachment/${tableName}/${recordId}/${columnName}/${resourceName}`
 }

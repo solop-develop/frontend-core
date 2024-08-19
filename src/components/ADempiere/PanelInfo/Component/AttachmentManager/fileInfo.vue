@@ -26,21 +26,21 @@
 
     <el-descriptions v-else class="margin-top" :column="1" border>
       <el-descriptions-item :label="$t('component.attachment.fileName')">
-        {{ resourceReference.name }}
+        {{ infoImage.name }}
       </el-descriptions-item>
       <el-descriptions-item :label="$t('component.attachment.fileSize')">
-        {{ formatFileSize(resourceReference.file_size) }}
+        {{ formatFileSize(infoImage.size) }}
       </el-descriptions-item>
       <el-descriptions-item :label="$t('component.attachment.fileFormat')">
-        {{ resourceReference.content_type }}
+        {{ infoImage.content_type }}
       </el-descriptions-item>
 
-      <el-descriptions-item :label="$t('component.attachment.description')">
+      <!-- <el-descriptions-item :label="$t('component.attachment.description')">
         {{ resourceReference.description }}
-      </el-descriptions-item>
-      <el-descriptions-item :label="$t('component.attachment.message')">
+      </el-descriptions-item> -->
+      <!-- <el-descriptions-item :label="$t('component.attachment.message')">
         {{ resourceReference.text_message }}
-      </el-descriptions-item>
+      </el-descriptions-item> -->
     </el-descriptions>
 
     <el-button
@@ -102,6 +102,10 @@ export default defineComponent({
     isEditDescription: {
       type: Boolean,
       default: false
+    },
+    infoImage: {
+      type: Object,
+      default: undefined
     }
   },
 
