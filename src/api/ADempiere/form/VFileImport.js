@@ -91,14 +91,15 @@ export function saveRecordImport({
 
 export function requestListFilePreview({
   charset,
-  resourceId,
+  resourceName,
   importFormatId
 }) {
   return request({
-    url: `/import-loader/imports/${importFormatId}/${resourceId}/preview`,
+    url: `/import-loader/imports/resource/preview/${importFormatId}`,
     method: 'get',
     params: {
-      charset
+      charset,
+      resource_name: resourceName
     }
   })
 }
