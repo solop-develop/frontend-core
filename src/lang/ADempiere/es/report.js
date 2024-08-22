@@ -116,7 +116,8 @@ const report = {
     recipient: 'Destinatarios',
     urlAddress: 'Dirección Url',
     subject: 'Asunto',
-    urlPublic: 'Click Para ir al Enlace'
+    urlPublic: 'Click Para ir al Enlace',
+    fontSize: 'Tamaño de Letra'
   }
 }
 

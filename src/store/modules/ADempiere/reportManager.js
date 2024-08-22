@@ -70,7 +70,8 @@ const initState = {
   exportReport: {},
   contactSend: '',
   typeNotify: '',
-  defaultBody: ''
+  defaultBody: '',
+  fontSize: 12
 }
 const reportManager = {
   state: initState,
@@ -93,6 +94,9 @@ const reportManager = {
     },
     setReportIsLoading(state, isLoading) {
       state.isLoading = isLoading
+    },
+    setFontSize(state, fontSize) {
+      state.fontSize = fontSize
     },
     setPrintFormatsList(state, { reportId, printFormatList }) {
       Vue.set(state.printFormatList, reportId, printFormatList)
@@ -883,6 +887,9 @@ const reportManager = {
   },
 
   getters: {
+    getFontSize: (state) => {
+      return state.fontSize
+    },
     getContactSend: (state) => {
       return state.contactSend
     },

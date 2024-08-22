@@ -116,7 +116,8 @@ const report = {
     recipient: 'Recipient',
     urlAddress: 'Url Address',
     subject: 'Subject',
-    urlPublic: 'Click to go to the Link'
+    urlPublic: 'Click to go to the Link',
+    fontSize: 'Font Size'
   }
 }
 

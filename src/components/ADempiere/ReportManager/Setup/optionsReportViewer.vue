@@ -40,7 +40,7 @@
               @submit.native.prevent="notSubmitForm"
             >
               <el-row class="report-view-setup-preferences-fields" :gutter="20">
-                <el-col :span="5">
+                <el-col :span="8">
                   <el-form-item
                     :label="$t('report.printFormats')"
                     style="display: grid;"
@@ -60,7 +60,7 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="5">
+                <el-col :span="8">
                   <el-form-item
                     :label="$t('report.reportViews')"
                     style="display: grid;"
@@ -80,40 +80,7 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="4">
-                  <el-form-item
-                    style="display: grid; margin-top: 35px; margin-left:30%"
-                  >
-                    <refresh-button
-                      :container-uuid="containerUuid"
-                      :report-output="reportOutput"
-                      :is-loading-report="isLoadingReport"
-                    />
-                  </el-form-item>
-                </el-col>
-                <el-col :span="6">
-                  <el-form-item
-                    style="display: grid; margin-top: 35px;"
-                  >
-                    <report-summary
-                      :container-uuid="containerUuid"
-                      :report-output="reportOutput"
-                      :is-loading-report="isLoadingReport"
-                    />
-                  </el-form-item>
-                </el-col>
-                <el-col :span="4">
-                  <el-form-item
-                    style="display: grid; margin-top: 35px;"
-                  >
-                    <downloadButtom
-                      :container-uuid="containerUuid"
-                      :report-output="reportOutput"
-                      :is-loading-report="isLoadingReport"
-                    />
-                  </el-form-item>
-                </el-col>
-                <el-col v-if="isReportEnginer" :span="24">
+                <el-col v-if="isReportEnginer" :span="8">
                   <el-form-item
                     :label="$t('report.typeReport')"
                     style="display: grid;"
@@ -130,6 +97,47 @@
                         :value="item.type"
                       />
                     </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item
+                    :label="$t('report.reportEnginer.fontSize')"
+                    style="display: grid;"
+                  >
+                    <el-input v-model="reportFontSize" style="display: contents;" />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item
+                    style="display: grid; margin-top: 35px; margin-left:30%"
+                  >
+                    <refresh-button
+                      :container-uuid="containerUuid"
+                      :report-output="reportOutput"
+                      :is-loading-report="isLoadingReport"
+                    />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item
+                    style="display: grid; margin-top: 35px;"
+                  >
+                    <report-summary
+                      :container-uuid="containerUuid"
+                      :report-output="reportOutput"
+                      :is-loading-report="isLoadingReport"
+                    />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item
+                    style="display: grid; margin-top: 35px;"
+                  >
+                    <downloadButtom
+                      :container-uuid="containerUuid"
+                      :report-output="reportOutput"
+                      :is-loading-report="isLoadingReport"
+                    />
                   </el-form-item>
                 </el-col>
                 <!-- <el-col :span="12">
@@ -291,7 +299,14 @@ export default defineComponent({
       }
       return options
     })
-
+    const reportFontSize = computed({
+      get() {
+        return store.getters.getFontSize
+      },
+      set(value) {
+        store.commit('setFontSize', value)
+      }
+    })
     const reportAsPrintFormat = computed(() => {
       const options = store.getters.getStoredActionsMenu({
         containerUuid: props.containerUuid
@@ -539,6 +554,7 @@ export default defineComponent({
       containerManagerReportViwer,
       componentRender,
       findTagViwer,
+      reportFontSize,
       // methods
       clearParameters,
       updatePrintFormat,

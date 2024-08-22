@@ -26,7 +26,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         :border="true"
         row-key="level"
         :height="height"
-        style="width: 100%;"
+        :style="{ fontSize: fontSize + 'px', width: '100%' }"
         :default-expand-all="false"
         :row-class-name="tableRowClassName"
         :tree-props="{ children: 'children' }"
@@ -125,6 +125,9 @@ export default defineComponent({
     const tableReportEngine = ref(undefined)
 
     // Components
+    const fontSize = computed(() => {
+      return store.getters.getFontSize
+    })
     const data = computed(() => {
       const { rowCells } = props.reportOutput
       if (isEmptyValue(rowCells)) return []
@@ -357,6 +360,7 @@ export default defineComponent({
       isLoadingReport,
       currentPageSize,
       currentPageNumber,
+      fontSize,
       // Methods
       keyAction,
       findParent,
