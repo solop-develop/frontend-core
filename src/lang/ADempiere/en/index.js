@@ -228,6 +228,7 @@ export default {
     notice: 'Notice',
     request: 'Request',
     workflowActivities: 'Workflow Activities',
+    roleMessage: 'You cannot see this information with your current role',
     systemInformation: {
       tabLabel: 'System Information',
       releaseNumber: 'Release',

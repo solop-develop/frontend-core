@@ -111,9 +111,17 @@ export default {
         userId
       })
         .then(async windowResponse => {
+          if (windowResponse === 'error') {
+            // show the error message
+            showMessage({
+              type: 'error',
+              message: language.t('profile.roleMessage')
+            })
+            navigateBack()
+            return
+          }
           const window = generateWindow(windowResponse)
           dispatch('addWindow', window)
-
           resolve(window)
         })
         .catch(error => {
@@ -121,19 +129,21 @@ export default {
             type: 'error',
             message: error.message
           })
-
-          // close current page
-          const currentRoute = router.app._route
-          const tabViewsVisited = rootGetters.visitedViews
-          dispatch('tagsView/delView', currentRoute)
-          // go to back page
-          const oldRouter = tabViewsVisited[tabViewsVisited.length - 1]
-          if (!isEmptyValue(oldRouter)) {
-            router.push({
-              path: oldRouter.path
-            }, () => {})
-          }
+          navigateBack()
+          return
         })
+      function navigateBack() {
+        const currentRoute = router.app._route
+        const tabViewsVisited = rootGetters.visitedViews
+        dispatch('tagsView/delView', currentRoute)
+        // go to back page
+        const oldRouter = tabViewsVisited[tabViewsVisited.length - 1]
+        if (!isEmptyValue(oldRouter)) {
+          router.push({
+            path: oldRouter.path
+          }, () => {})
+        }
+      }
     })
   },
 

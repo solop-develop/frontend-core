@@ -229,6 +229,7 @@ export default {
     notice: 'Avisos',
     request: 'Solicitudes',
     workflowActivities: 'Flujos de Trabajo',
+    roleMessage: 'No se puede ver esta información con su rol actual',
     systemInformation: {
       tabLabel: 'Información de Sistema',
       releaseNumber: 'Número de versión',
