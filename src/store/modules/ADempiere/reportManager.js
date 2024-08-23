@@ -66,7 +66,7 @@ const initState = {
   pageSize: 15,
   isLoading: false,
   showDialog: false,
-  expandedAll: false,
+  isSummary: false,
   exportReport: {},
   contactSend: '',
   typeNotify: '',
@@ -88,8 +88,8 @@ const reportManager = {
     setShowDialog(state, showDialog) {
       state.showDialog = showDialog
     },
-    setExpandedAll(state, expandedAll) {
-      state.expandedAll = expandedAll
+    setIsSummary(state, isSummary) {
+      state.isSummary = isSummary
     },
     setReportIsLoading(state, isLoading) {
       state.isLoading = isLoading
@@ -770,7 +770,8 @@ const reportManager = {
       reportViewId,
       pageSize,
       pageToken,
-      isDownload = true
+      isDownload = true,
+      isSummary
     }) {
       const reportDefinition = rootGetters.getStoredReport(containerUuid)
       const { fieldsList } = reportDefinition
@@ -786,7 +787,8 @@ const reportManager = {
           reportViewId,
           pageSize,
           pageToken,
-          filters
+          filters,
+          isSummary
         })
           .then(response => {
             const { file_name } = response
@@ -892,8 +894,8 @@ const reportManager = {
     getExportReport: (state) => {
       return state.exportReport
     },
-    getExpandedAll: (state) => {
-      return state.expandedAll
+    getIsSummary: (state) => {
+      return state.isSummary
     },
     getReportGenerated: (state) => (containerUuid) => {
       return state.reportsGenerated[containerUuid]

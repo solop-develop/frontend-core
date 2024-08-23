@@ -158,7 +158,7 @@ export default defineComponent({
       })
     })
     const expanded = computed(() => {
-      return store.getters.getExpandedAll
+      return store.getters.getIsSummary
     })
     const shortsKey = computed(() => {
       return {
