@@ -23,13 +23,13 @@ export default defineComponent({
     }
   },
   setup() {
-    const showChildren = ref(store.getters.getExpandedAll)
+    const showChildren = ref(store.getters.getIsSummary)
 
     function expandedAll() {
-      store.commit('setExpandedAll', showChildren.value)
+      store.commit('setIsSummary', showChildren.value)
     }
     watch(
-      () => store.getters.getExpandedAll,
+      () => store.getters.getIsSummary,
       (newValue) => {
         showChildren.value = newValue
       }

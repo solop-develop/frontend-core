@@ -296,7 +296,9 @@ export default defineComponent({
       })
       store.commit('setShowDialog', false)
     }
-
+    const isSummary = computed(() => {
+      return store.getters.getIsSummary
+    })
     function downloadFile() {
       store.dispatch('exportReport', {
         reportId: getStoreReport.value.id,
@@ -305,7 +307,8 @@ export default defineComponent({
         reportViewId: props.reportOutput.report_view_id,
         containerUuid: props.reportOutput.containerUuid,
         pageSize: pageSize.value,
-        pageToken: props.reportOutput.pageToken
+        pageToken: props.reportOutput.pageToken,
+        isSummary: isSummary.value
       })
       blankValue()
     }
@@ -320,7 +323,8 @@ export default defineComponent({
         isDownload: false,
         containerUuid: props.reportOutput.containerUuid,
         pageSize: pageSize.value,
-        pageToken: props.reportOutput.pageToken
+        pageToken: props.reportOutput.pageToken,
+        isSummary: isSummary.value
       })
         .then(fileNameResource => {
           if (isEmptyValue(fileNameResource)) {
@@ -393,7 +397,8 @@ export default defineComponent({
         isDownload: false,
         containerUuid: props.reportOutput.containerUuid,
         pageSize: pageSize.value,
-        pageToken: props.reportOutput.pageToken
+        pageToken: props.reportOutput.pageToken,
+        isSummary: isSummary.value
       })
         .then(fileNameResource => {
           if (isEmptyValue(fileNameResource)) {
@@ -477,6 +482,7 @@ export default defineComponent({
       validTime,
       titleDocument,
       oldContent,
+      isSummary,
       updateContent,
       updateMardown,
       copyToClipboard,
