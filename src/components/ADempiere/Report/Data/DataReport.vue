@@ -23,6 +23,8 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         v-loading="isLoadingReport"
         :data="dataList"
         lazy
+        show-summary
+        :summary-method="getSummaries"
         :border="true"
         row-key="level"
         :height="height"
@@ -305,10 +307,35 @@ export default defineComponent({
         expanded.value ? collapseRecursively(row) : expandRecursively(row)
       })
     }
-    function widthColumn(attributes) {
-      const width = (attributes.title.length + 1) * 15
-      if (width > 150) return width + 'px'
-      return '150px'
+    function getSummaries(param) {
+      const sums = []
+      if (!isEmptyValue(param)) {
+        const { data } = param
+        columns.value.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = 'Total'
+            return
+          }
+          data.forEach((data) => {
+            Object.values(data.cells).forEach((dataCell) => {
+              if (dataCell && 'sum_value' in dataCell && isNumberField(column.display_type)) {
+                sums[index] = dataCell.value.value
+                nextTick(() => {
+                  const footerCells = document.querySelectorAll('.el-table__footer-wrapper td.el-table__cell')
+                  footerCells.forEach((cell) => {
+                    const num = parseFloat(cell.textContent)
+                    if (!isEmptyValue(num) && num < 0) {
+                      cell.style.color = 'red'
+                    }
+                  })
+                  return
+                })
+              }
+            })
+          })
+        })
+      }
+      return sums
     }
     function getAlignment(displayType) {
       if (isNumberField(displayType)) {
@@ -360,7 +387,6 @@ export default defineComponent({
       // Methods
       keyAction,
       findParent,
-      widthColumn,
       hasChildren,
       getAlignment,
       handleRowClick,
@@ -369,7 +395,8 @@ export default defineComponent({
       getRowClassName,
       handleChangePage,
       tableRowClassName,
-      handleChangeSizePage
+      handleChangeSizePage,
+      getSummaries
     }
   }
 })
