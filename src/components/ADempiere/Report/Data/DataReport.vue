@@ -23,8 +23,6 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         v-loading="isLoadingReport"
         :data="dataList"
         lazy
-        show-summary
-        :summary-method="getSummaries"
         :border="true"
         row-key="level"
         :height="height"
@@ -43,7 +41,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           :column-key="fieldAttributes.code"
           :align="getAlignment(fieldAttributes.display_type)"
           :fixed="fieldAttributes.is_group_column"
-          width="auto"
+          :width="widthColumn(fieldAttributes.display_type)"
         >
           <template slot="header">
             {{ fieldAttributes.title }}
@@ -88,8 +86,7 @@ import InfoReport from '@/views/ADempiere/ReportViewerEngine/infoReport.vue'
 import DataCells from '@/components/ADempiere/Report/Data/DataCells.vue'
 // Utility functions
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
-import { isNumberField } from '@/utils/ADempiere/references'
-
+import { isNumberField, isDateField, isBooleanField, isDecimalField } from '@/utils/ADempiere/references'
 export default defineComponent({
   name: 'DataReport',
   components: {
@@ -307,43 +304,35 @@ export default defineComponent({
         expanded.value ? collapseRecursively(row) : expandRecursively(row)
       })
     }
-    function getSummaries(param) {
-      const sums = []
-      if (!isEmptyValue(param)) {
-        const { data } = param
-        columns.value.forEach((column, index) => {
-          if (index === 0) {
-            sums[index] = 'Total'
-            return
-          }
-          data.forEach((data) => {
-            Object.values(data.cells).forEach((dataCell) => {
-              if (dataCell && 'sum_value' in dataCell && isNumberField(column.display_type)) {
-                sums[index] = dataCell.value.value
-                nextTick(() => {
-                  const footerCells = document.querySelectorAll('.el-table__footer-wrapper td.el-table__cell')
-                  footerCells.forEach((cell) => {
-                    const num = parseFloat(cell.textContent)
-                    if (!isEmptyValue(num) && num < 0) {
-                      cell.style.color = 'red'
-                    }
-                  })
-                  return
-                })
-              }
-            })
-          })
-        })
-      }
-      return sums
-    }
     function getAlignment(displayType) {
       if (isNumberField(displayType)) {
         return 'right'
       }
       return 'left'
     }
-
+    function widthColumn(data) {
+      if (!isEmptyValue(columns.value)) {
+        columns.value.forEach(column => {
+          if (column.is_fixed_width) {
+            return column.column_width
+          }
+          if (column.column_characters_size > 0) {
+            const fontSize = 14
+            const operation = fontSize * column.column_characters_size
+            return operation
+          }
+        })
+      }
+      if (
+        isNumberField(data) ||
+        isDateField(data) ||
+        isBooleanField(data) ||
+        isDecimalField(data)
+      ) {
+        return 250
+      }
+      return 300
+    }
     /**
      * Watch - watch works directly on a ref
      * @param newValue - New Assessed Property value
@@ -386,6 +375,7 @@ export default defineComponent({
       currentPageNumber,
       // Methods
       keyAction,
+      widthColumn,
       findParent,
       hasChildren,
       getAlignment,
@@ -395,8 +385,7 @@ export default defineComponent({
       getRowClassName,
       handleChangePage,
       tableRowClassName,
-      handleChangeSizePage,
-      getSummaries
+      handleChangeSizePage
     }
   }
 })
