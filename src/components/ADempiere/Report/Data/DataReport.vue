@@ -43,7 +43,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           :column-key="fieldAttributes.code"
           :align="getAlignment(fieldAttributes.display_type)"
           :fixed="fieldAttributes.is_group_column"
-          width="auto"
+          :width="widthColumn(fieldAttributes.display_type)"
         >
           <template slot="header">
             {{ fieldAttributes.title }}
@@ -88,8 +88,7 @@ import InfoReport from '@/views/ADempiere/ReportViewerEngine/infoReport.vue'
 import DataCells from '@/components/ADempiere/Report/Data/DataCells.vue'
 // Utility functions
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
-import { isNumberField } from '@/utils/ADempiere/references'
-
+import { isNumberField, isDateField, isBooleanField, isDecimalField } from '@/utils/ADempiere/references'
 export default defineComponent({
   name: 'DataReport',
   components: {
@@ -343,7 +342,29 @@ export default defineComponent({
       }
       return 'left'
     }
-
+    function widthColumn(data) {
+      if (!isEmptyValue(columns.value)) {
+        columns.value.forEach(column => {
+          if (column.is_fixed_width) {
+            return column.column_width
+          }
+          if (column.column_characters_size > 0) {
+            const fontSize = 14
+            const operation = fontSize * column.column_characters_size
+            return operation
+          }
+        })
+      }
+      if (
+        isNumberField(data) ||
+        isDateField(data) ||
+        isBooleanField(data) ||
+        isDecimalField(data)
+      ) {
+        return 250
+      }
+      return 300
+    }
     /**
      * Watch - watch works directly on a ref
      * @param newValue - New Assessed Property value
@@ -386,6 +407,7 @@ export default defineComponent({
       currentPageNumber,
       // Methods
       keyAction,
+      widthColumn,
       findParent,
       hasChildren,
       getAlignment,
