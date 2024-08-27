@@ -38,7 +38,7 @@ export function requestListBusinessPartners({
   is_sales_transaction
 }) {
   return request({
-    url: '/field/orders/customers',
+    url: '/fields/orders/customers',
     method: 'get',
     params: {
       filters,
@@ -86,19 +86,19 @@ export function requestListOrderInfo({
   let url
   switch (true) {
     case !isEmptyValue(fieldId):
-      url = `/field/orders/field/${fieldId}`
+      url = `/fields/orders/field/${fieldId}`
       break
     case !isEmptyValue(processParameterId):
-      url = `/field/orders/parameter/${processParameterId}`
+      url = `/fields/orders/parameter/${processParameterId}`
       break
     case !isEmptyValue(browseFieldId):
-      url = `/field/orders/query-criteria/${browseFieldId}`
+      url = `/fields/orders/query-criteria/${browseFieldId}`
       break
     case !isEmptyValue(columnId):
-      url = `/field/orders/column/${columnId}`
+      url = `/fields/orders/column/${columnId}`
       break
     case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
-      url = `/field/orders/table/${tableName}/${columnName}`
+      url = `/fields/orders/table/${tableName}/${columnName}`
       break
   }
 
@@ -139,7 +139,7 @@ export function requestGetOrderInfo({
   id
 }) {
   return request({
-    url: `/field/orders/${id}`,
+    url: `/fields/orders/${id}`,
     method: 'get'
   })
 }

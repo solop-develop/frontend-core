@@ -53,28 +53,28 @@ export function requestDefaultValue({
   let url
   switch (true) {
     case (!isEmptyValue(column_name) && isEmptyValue(table_name)):
-      url = `/user-interface/default-value/${table_name}/${column_name}`
+      url = `/fields/default-value/${table_name}/${column_name}`
       break
     case !isEmptyValue(column_id):
-      url = `/user-interface/default-value/column/${column_id}`
+      url = `/fields/default-value/column/${column_id}`
       break
     case !isEmptyValue(id):
-      url = `/user-interface/default-value/field/${id}`
+      url = `/fields/default-value/field/${id}`
       break
     case !isEmptyValue(process_parameter_id):
-      url = `/user-interface/default-value/parameter/${process_parameter_id}`
+      url = `/fields/default-value/parameter/${process_parameter_id}`
       break
     case !isEmptyValue(process_parameter_to_id):
-      url = `/user-interface/default-value/parameter/${process_parameter_to_id}/to`
+      url = `/fields/default-value/parameter/${process_parameter_to_id}/to`
       break
     case !isEmptyValue(browse_field_id):
-      url = `/user-interface/default-value/query-criteria/${browse_field_id}`
+      url = `/fields/default-value/query-criteria/${browse_field_id}`
       break
     case !isEmptyValue(browse_field_to_id):
-      url = `/user-interface/default-value/query-criteria/${browse_field_to_id}/to`
+      url = `/fields/default-value/query-criteria/${browse_field_to_id}/to`
       break
     default:
-      url = `/user-interface/default-value/`
+      url = `/fields/default-value/`
       break
   }
   return request({

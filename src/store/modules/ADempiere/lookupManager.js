@@ -21,7 +21,7 @@ import Vue from 'vue'
 import lang from '@/lang'
 
 // API Request Methods
-import { requestLookupList } from '@/api/ADempiere/userInterface/lookups.ts'
+import { requestLookupList } from '@/api/ADempiere/field/lookups.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'

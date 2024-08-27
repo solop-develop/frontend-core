@@ -41,19 +41,19 @@ export function listZoomWindowsRequest({
   let url
   switch (true) {
     case (!isEmptyValue(field_id)):
-      url = `/field/zooms/field/${field_id}`
+      url = `/fields/zooms/field/${field_id}`
       break
     case (!isEmptyValue(process_parameter_id)):
-      url = `/field/zooms/parameter/${process_parameter_id}`
+      url = `/fields/zooms/parameter/${process_parameter_id}`
       break
     case (!isEmptyValue(browse_field_id)):
-      url = `/field/zooms/query-criteria/${browse_field_id}`
+      url = `/fields/zooms/query-criteria/${browse_field_id}`
       break
     case (!isEmptyValue(table_name) && !isEmptyValue(column_name)):
-      url = `/field/zooms/${table_name}/${column_name}`
+      url = `/fields/zooms/${table_name}/${column_name}`
       break
     case !isEmptyValue(column_id):
-      url = `/field/zooms/column/${column_id}`
+      url = `/fields/zooms/column/${column_id}`
       break
   }
   return request({
@@ -68,7 +68,7 @@ export function getZoomParentRecord({
   value
 }) {
   return request({
-    url: `/field/zooms/record/${window_id}/${tab_id}`,
+    url: `/fields/zooms/record/${window_id}/${tab_id}`,
     method: 'get',
     params: {
       value

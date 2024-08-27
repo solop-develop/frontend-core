@@ -51,22 +51,22 @@ export function requestGridGeneralInfo({
   //   }
   // })
 
-  let url = 'user-interface/search-records'
+  let url = 'fields/searchs'
   switch (true) {
     case !isEmptyValue(fieldId):
-      url = `/user-interface/search-records/field/${fieldId}`
+      url = `/fields/searchs/field/${fieldId}`
       break
     case !isEmptyValue(processParameterId):
-      url = `/user-interface/search-records/parameter/${processParameterId}`
+      url = `/fields/searchs/parameter/${processParameterId}`
       break
     case !isEmptyValue(browseFieldId):
-      url = `/user-interface/search-records/query-criteria/${browseFieldId}`
+      url = `/fields/searchs/query-criteria/${browseFieldId}`
       break
     case !isEmptyValue(columnId):
-      url = `/user-interface/search-records/column/${columnId}`
+      url = `/fields/searchs/column/${columnId}`
       break
     case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
-      url = `/user-interface/search-records/${tableName}/${columnName}`
+      url = `/fields/searchs/${tableName}/${columnName}`
       break
   }
 
