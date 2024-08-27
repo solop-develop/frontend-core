@@ -55,19 +55,19 @@ export function requestLookupList({
   let url
   switch (true) {
     case (!isEmptyValue(columnId)):
-      url = `/user-interface/lookups/column/${columnId}`
+      url = `/fields/lookups/column/${columnId}`
       break
     case !isEmptyValue(fieldId):
-      url = `/user-interface/lookups/field/${fieldId}`
+      url = `/fields/lookups/field/${fieldId}`
       break
     case !isEmptyValue(processParameterId):
-      url = `/user-interface/lookups/parameter/${processParameterId}`
+      url = `/fields/lookups/parameter/${processParameterId}`
       break
     case !isEmptyValue(browseFieldId):
-      url = `/user-interface/lookups/query-criteria/${browseFieldId}`
+      url = `/fields/lookups/query-criteria/${browseFieldId}`
       break
     default:
-      url = `/user-interface/lookups/${tableName}/${columnName}`
+      url = `/fields/lookups/${tableName}/${columnName}`
       break
   }
 

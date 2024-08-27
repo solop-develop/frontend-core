@@ -31,7 +31,7 @@ export function requestListProductCategories({
   pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
-    url: `/field/products/categories`,
+    url: `/fields/products/categories`,
     method: 'get',
     params: {
       is_only_active_records: true,
@@ -53,7 +53,7 @@ export function requestListProductGroups({
   pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
-    url: `/field/products/groups`,
+    url: `/fields/products/groups`,
     method: 'get',
     params: {
       is_only_active_records: true,
@@ -75,7 +75,7 @@ export function requestListProductClasess({
   pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
-    url: `/field/products/clasess`,
+    url: `/fields/products/clasess`,
     method: 'get',
     params: {
       is_only_active_records: true,
@@ -97,7 +97,7 @@ export function requestListProductClassifications({
   pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
-    url: `/field/products/classifications`,
+    url: `/fields/products/classifications`,
     method: 'get',
     params: {
       is_only_active_records: true,
@@ -129,7 +129,7 @@ export function requestListWarehouses({
     })
   }
   return request({
-    url: `/field/products/warehouses`,
+    url: `/fields/products/warehouses`,
     method: 'get',
     params: {
       context_attributes: contextAttributes,
@@ -150,7 +150,7 @@ export function requestGetPriceListVersion({
   dateInvoiced
 }) {
   return request({
-    url: `/field/products/prices-lists-versions/${priceListId}`,
+    url: `/fields/products/prices-lists-versions/${priceListId}`,
     method: 'get',
     params: {
       // price_list_id: priceListId,
@@ -178,7 +178,7 @@ export function requestListPricesListVersions({
     })
   }
   return request({
-    url: `/field/products/prices-lists-versions`,
+    url: `/fields/products/prices-lists-versions`,
     method: 'get',
     params: {
       context_attributes: contextAttributes,
@@ -211,7 +211,7 @@ export function requestListAttributeSets({
     })
   }
   return request({
-    url: `/field/products/attribute-sets`,
+    url: `/fields/products/attribute-sets`,
     method: 'get',
     params: {
       context_attributes: contextAttributes,
@@ -244,7 +244,7 @@ export function requestListVendors({
     })
   }
   return request({
-    url: `/field/products/vendors`,
+    url: `/fields/products/vendors`,
     method: 'get',
     params: {
       context_attributes: contextAttributes,
@@ -300,22 +300,22 @@ export function requestListProducts({
   //   }
   // })
 
-  let url = '/field/products'
+  let url = '/fields/products'
   switch (true) {
     case !isEmptyValue(fieldId):
-      url = `/field/products/field/${fieldId}`
+      url = `/fields/products/field/${fieldId}`
       break
     case !isEmptyValue(processParameterId):
-      url = `/field/products/parameter/${processParameterId}`
+      url = `/fields/products/parameter/${processParameterId}`
       break
     case !isEmptyValue(browseFieldId):
-      url = `/field/products/query-criteria/${browseFieldId}`
+      url = `/fields/products/query-criteria/${browseFieldId}`
       break
     case !isEmptyValue(columnId):
-      url = `/field/products/column/${columnId}`
+      url = `/fields/products/column/${columnId}`
       break
     case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
-      url = `/field/products/table/${tableName}/${columnName}`
+      url = `/fields/products/table/${tableName}/${columnName}`
       break
   }
 
@@ -355,7 +355,7 @@ export function requestListWarehouseStocks({
   productId
 }) {
   return request({
-    url: `/field/products/${productId}/warehouse-stocks`,
+    url: `/fields/products/${productId}/warehouse-stocks`,
     method: 'get'
   })
 }
@@ -365,7 +365,7 @@ export function requestListSubstituteProducts({
   priceList
 }) {
   return request({
-    url: `/field/products/${productId}/substitutes`,
+    url: `/fields/products/${productId}/substitutes`,
     method: 'get',
     params: {
       price_list_version_id: priceList
@@ -378,7 +378,7 @@ export function requestListRelatedProducts({
   priceList
 }) {
   return request({
-    url: `/field/products/${productId}/relateds`,
+    url: `/fields/products/${productId}/relateds`,
     method: 'get',
     params: {
       price_list_version_id: priceList
@@ -390,7 +390,7 @@ export function requestListAvailableToPromises({
   productId
 }) {
   return request({
-    url: `/field/products/${productId}/available-to-promises`,
+    url: `/fields/products/${productId}/available-to-promises`,
     method: 'get'
   })
 }
@@ -399,7 +399,7 @@ export function requestListVendorPurchases({
   productId
 }) {
   return request({
-    url: `/field/products/${productId}/vendor-purchases`,
+    url: `/fields/products/${productId}/vendor-purchases`,
     method: 'get'
   })
 }
