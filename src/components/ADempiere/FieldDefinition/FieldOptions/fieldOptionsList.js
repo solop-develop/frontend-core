@@ -57,7 +57,7 @@ export const zoomInOptionItem = {
     const { parentUuid, containerUuid, reference } = fieldAttributes
     let children
     let zoom_windows = reference.zoom_windows
-    if (isEmptyValue(zoom_windows)) {
+    if (isEmptyValue(zoom_windows) && !isEmptyValue(zoom)) {
       zoom_windows = zoom.zoom_windows
     }
     let windowToZoom = window
