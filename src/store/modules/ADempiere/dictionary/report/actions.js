@@ -84,7 +84,7 @@ export default {
           })
 
           await dispatch('getListPrintFormatsFromServer', {
-            reportId: reportDefinition.id
+            reportId: reportDefinition.internal_id
           })
 
           dispatch('addReportToList', reportDefinition)
@@ -133,7 +133,7 @@ export default {
     reportUuid
   }) {
     const reportDefinition = getters.getStoredReport(reportUuid)
-    const reportId = reportDefinition.id
+    const reportId = reportDefinition.internal_id
     // const containerUuid = reportDefinition.uuid
 
     const actionsList = []

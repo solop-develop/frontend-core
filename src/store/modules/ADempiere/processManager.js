@@ -239,7 +239,7 @@ const processManager = {
           uuid: containerUuid,
           parametersList,
           // in browser
-          id: browserDefinition.process.id,
+          id: browserDefinition.process.internal_id,
           browserId: browserDefinition.id,
           selectionsList,
           isAllSelection,
@@ -376,7 +376,7 @@ const processManager = {
         }
 
         requestRunBusinessProcessAsWindow({
-          id: currentProcess.id,
+          id: currentProcess.internal_id,
           parametersList,
           tableName,
           recordId: recordId
