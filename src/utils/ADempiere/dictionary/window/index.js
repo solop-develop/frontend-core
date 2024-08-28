@@ -92,7 +92,10 @@ export function isReadOnlyTab({ parentUuid, containerUuid }) {
   if (isEmptyValue(storeTab)) {
     return true
   }
-  const { is_read_only, read_only_logic } = storeTab
+  const { table, is_read_only, read_only_logic } = storeTab
+  if (!isEmptyValue(table) && table.is_view) {
+    return true
+  }
   // if tab is read only, all fields are read only
   if (is_read_only) {
     return true
@@ -547,6 +550,11 @@ export const undoChange = {
   name: language.t('actionMenu.undo'),
   type: 'undoModifyData',
   enabled: ({ parentUuid, containerUuid }) => {
+    const storedTab = store.getters.getStoredTab(parentUuid, containerUuid)
+    const { table } = storedTab
+    if (!isEmptyValue(table) && table.is_view) {
+      return false
+    }
     return isEmptyValue(
       store.getters.getUuidOfContainer(containerUuid)
     )

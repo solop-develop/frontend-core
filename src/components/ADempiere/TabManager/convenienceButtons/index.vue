@@ -91,6 +91,7 @@ import RefreshRecordButton from '@/components/ADempiere/TabManager/convenienceBu
 import DeleteRecordButton from '@/components/ADempiere/TabManager/convenienceButtons/DeleteRecordButton.vue'
 import OptionsSecuence from '@/components/ADempiere/TabManager/convenienceButtons/OptionsSecuence.vue'
 import PrintProcess from '@/components/ADempiere/TabManager/convenienceButtons/PrintProcess.vue'
+
 export default defineComponent({
   name: 'ConvenienceButtons',
 
