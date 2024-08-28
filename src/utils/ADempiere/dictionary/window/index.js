@@ -209,9 +209,6 @@ export function evaluateDefaultFieldShowed({
   if (!isParentTab && (link_column_name === column_name || parent_column_name === column_name)) {
     return true
   }
-  if (['Record_ID'].includes(column_name)) {
-    return true
-  }
   if (is_document && [ORGANIZATION, WAREHOUSE].includes(column_name)) {
     return true
   }
