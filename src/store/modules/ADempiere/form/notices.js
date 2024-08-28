@@ -102,6 +102,9 @@ const notices = {
   getters: {
     getNotices: (state) => {
       return state.notices
+    },
+    getIsLoadingNotices: (state) => {
+      return state.isLoading
     }
   }
 }
