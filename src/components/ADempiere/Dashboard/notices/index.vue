@@ -72,7 +72,7 @@ export default defineComponent({
       return []
     })
     const isLoading = computed(() => {
-      return store.getters.getNotices.isLoading
+      return store.getters.getIsLoadingNotices
     })
     function loadListNotices() {
       store.dispatch('listNotices')
