@@ -162,6 +162,7 @@ export default {
               tableId: this.currentTableId
             })
             if (isEmptyValue(storedZoomWindowsList)) {
+              this.getZoomWindowsList()
               return
             }
             let windowToOpen = storedZoomWindowsList.at()
