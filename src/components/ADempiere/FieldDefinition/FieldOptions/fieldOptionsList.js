@@ -61,7 +61,7 @@ export const zoomInOptionItem = {
       zoom_windows = zoom.zoom_windows
     }
     let windowToZoom = window
-    if (isEmptyValue(windowToZoom)) {
+    if (isEmptyValue(windowToZoom) && !isEmptyValue(zoom_windows)) {
       const isSOTrx = isSalesTransaction({
         parentUuid,
         containerUuid
@@ -77,13 +77,15 @@ export const zoomInOptionItem = {
 
     let currentValue = value
     let columnName = reference.key_column_name
-    if (isEmptyValue(columnName)) {
+    if (isEmptyValue(columnName) && !isEmptyValue(zoom)) {
       columnName = zoom.key_column_name
     }
-    columnName = columnName
-      .match(/(\.)(\b\w*)/ig)
-      .toString()
-      .replace('.', '')
+    if (!isEmptyValue(columnName)) {
+      columnName = columnName
+        .match(/(\.)(\b\w*)/ig)
+        .toString()
+        .replace('.', '')
+    }
     if (isEmptyValue(columnName)) {
       columnName = fieldAttributes.column_name
       // to Smart Browser
@@ -91,7 +93,6 @@ export const zoomInOptionItem = {
         columnName = fieldAttributes.element_name
       }
     }
-
     // TODO: Evaluate reference.key_column_name: AD_Ref_List.Value
     if (fieldAttributes.display_type === LIST.id) {
       columnName = 'AD_Reference_ID'
@@ -108,18 +109,19 @@ export const zoomInOptionItem = {
       currentValue = zoom.parentTab.record_id
       children = windowToZoom
     }
-
-    zoomIn({
-      attributeValue: `window_${windowToZoom.id}`,
-      attributeName: 'containerKey',
-      query: {
-        [columnName]: currentValue
-      },
-      params: {
-        [columnName]: currentValue,
-        children
-      }
-    })
+    if (!isEmptyValue(windowToZoom)) {
+      zoomIn({
+        attributeValue: `window_${windowToZoom.id}`,
+        attributeName: 'containerKey',
+        query: {
+          [columnName]: currentValue
+        },
+        params: {
+          [columnName]: currentValue,
+          children
+        }
+      })
+    }
   }
 }
 
