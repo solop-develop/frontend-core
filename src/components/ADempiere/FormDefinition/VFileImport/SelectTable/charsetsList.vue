@@ -18,7 +18,7 @@
 
 <template>
   <el-form-item
-    style="width: 100%;margin-left: 10px;margin-right: 10px;text-align: center;"
+    style="width: 100%;margin-left: 10px;margin-right: 10px;"
   >
     <template slot="label">
       <span style="color: #f34b4b"> * </span>
