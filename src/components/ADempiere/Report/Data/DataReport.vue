@@ -32,7 +32,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         :default-expand-all="false"
         :row-class-name="tableRowClassName"
         :tree-props="{ children: 'children' }"
-        :cell-style="{ padding: '0', height: '30px', border: 'none' }"
+        :cell-style="getColumnStyle"
         :cell-class-name="getRowClassName"
         @row-click="handleRowClick"
         @cell-contextmenu="activatePopover"
@@ -178,6 +178,20 @@ export default defineComponent({
     const currentPageNumber = computed(() => {
       return parseInt(props.reportOutput.pageToken, 10)
     })
+    function getColumnStyle(params) {
+      let style = 'padding: 0; height: 30px; border: none; '
+      columns.value.forEach((data, index) => {
+        if (data.code === params.column.columnKey) {
+          if (!isEmptyValue(data.color)) {
+            style += `color: ${data.color};`
+          }
+          if (!isEmptyValue(data.font_code)) {
+            style += `font: ${data.font_code}`
+          }
+        }
+      })
+      return style
+    }
 
     // Methods
     function keyAction(event) {
@@ -405,6 +419,7 @@ export default defineComponent({
       isLoadingReport,
       currentPageSize,
       currentPageNumber,
+      getColumnStyle,
       // Methods
       keyAction,
       widthColumn,
