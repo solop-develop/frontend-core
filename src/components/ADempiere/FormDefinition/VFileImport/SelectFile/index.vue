@@ -18,7 +18,7 @@
 -->
 
 <template>
-  <div class="main-express-receipt">
+  <div class="main-configure-file-import">
     <el-card class="box-card">
       <el-card>
         <el-row :gutter="24">
@@ -33,16 +33,17 @@
                 :label="$t('form.VFileImport.configureToImport.selectFileToImport')"
                 style="width: 100%;text-align: center;margin-bottom: 0px !important;color: transparent !important;"
               >
-                <upload-resource
-                  style="display: inline-block; text-align: center;"
-                  table-name="AD_ImpFormat"
-                  :record-id="importFormat.id"
-                  :load-data="handleSuccess"
-                />
-
-                <select-resource
-                  :import-format-id="importFormat.id"
-                />
+                <span style="display: flex;">
+                  <upload-resource
+                    style="display: inline-block; text-align: center;"
+                    table-name="AD_ImpFormat"
+                    :record-id="importFormat.id"
+                    :load-data="handleSuccess"
+                  />
+                  <select-resource
+                    :import-format-id="importFormat.id"
+                  />
+                </span>
               </el-form-item>
             </el-col>
 
@@ -106,9 +107,23 @@
     <el-card
       v-if="!isEmptyValue(importFormat)"
       shadow="never"
-      style="padding: 0px 10px !important;"
+      :body-style="{ padding: '5px' }"
     >
-      <el-card
+      <div slot="header" class="title-import-format">
+        <p
+          style="font-size: 18px;text-align: center;margin: 5px;"
+        >
+          <b>
+            {{ importFormat.name }}
+          </b>
+        </p>
+        <p
+          style="font-size: 14px;text-align: center;margin: 5px;"
+        >
+          {{ importFormat.description }}
+        </p>
+      </div>
+      <!-- <el-card
         shadow="never"
       >
         <p
@@ -123,7 +138,7 @@
         >
           {{ importFormat.description }}
         </p>
-      </el-card>
+      </el-card> -->
 
       <el-scrollbar wrap-class="scroll-list-field">
         <import-format-fields />
@@ -252,6 +267,13 @@ export default defineComponent({
     cursor: not-allowed;
 }
 .scroll-list-field {
-  max-height: 20vh;
+  max-height: 30vh;
+  padding-bottom: 15px;
+}
+.main-configure-file-import {
+  height: 100%;
+}
+.title-import-format {
+  padding: 5px;
 }
 </style>

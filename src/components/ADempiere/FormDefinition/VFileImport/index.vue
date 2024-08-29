@@ -18,8 +18,11 @@
 -->
 
 <template>
-  <div style="padding: 5px;">
-    <div style="height: 5% !important;">
+  <el-card
+    class="file-import"
+    :body-style="{ padding: '0px' }"
+  >
+    <div slot="header" class="step-file-import">
       <el-steps :active="currentSetp" finish-status="success">
         <el-step
           v-for="(list, key) in stepList"
@@ -28,8 +31,7 @@
         />
       </el-steps>
     </div>
-
-    <div>
+    <div class="content-file-import">
       <transition name="el-fade-in-linear">
         <selectTable
           v-if="currentSetp === 1"
@@ -120,7 +122,7 @@
         </saveProcess>
       </transition>
     </div>
-  </div>
+  </el-card>
 </template>
 
 <script>
@@ -282,6 +284,7 @@ export default defineComponent({
         criteria: 'importFormatId',
         value: ''
       })
+      store.commit('setTableName', '')
     }
 
     function changeNextLine() {
@@ -312,7 +315,7 @@ export default defineComponent({
       const { resource } = store.getters.getFile
       isLoadSave.value = true
       saveRecordImport({
-        id: resource.id,
+        resourceName: resource.id,
         charset: charsets,
         importFormatId: importFormatId
       })
@@ -384,4 +387,13 @@ export default defineComponent({
   box-sizing: border-box;
   margin-right: 20px;
 }
+.file-import {
+  height: 100%;
+  padding: 5px;
+}
+.step-file-import{
+  padding: 5px;
+}
+
+.content-file-import{}
 </style>
