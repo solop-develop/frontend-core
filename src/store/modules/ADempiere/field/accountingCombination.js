@@ -23,7 +23,7 @@ import {
   requestListAccountingCombinations,
   requestGetAccountingCombination,
   requestSaveAccountingCombination
-} from '@/api/ADempiere/field/accoutingCombination'
+} from '@/api/ADempiere/fields/accoutingCombination'
 
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'

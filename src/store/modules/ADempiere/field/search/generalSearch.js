@@ -24,7 +24,7 @@ import {
   requestIdentifierColumns,
   requestSearchFields
 } from '@/api/ADempiere/dictionary/field.ts'
-import { requestGridGeneralInfo } from '@/api/ADempiere/field/search/index.js'
+import { requestGridGeneralInfo } from '@/api/ADempiere/fields/search/index.js'
 
 // Constants
 import { CUSTOMIZED_SEARCH_TABLES } from '@/utils/ADempiere/dictionary/field/search/index.ts'
