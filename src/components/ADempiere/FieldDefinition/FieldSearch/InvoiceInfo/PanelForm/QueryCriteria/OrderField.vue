@@ -51,9 +51,11 @@ import store from '@/store'
 // Components and Mixins
 import EmptyOptionSelect from '@/components/ADempiere/FieldDefinition/FieldSelect/emptyOptionSelect.vue'
 
+// API Request Methods
+import { requestListOrders } from '@/api/ADempiere/fields/search/invoice.ts'
+
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import { requestListOrders } from '@/api/ADempiere/field/search/invoice.ts'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
 
 export default defineComponent({

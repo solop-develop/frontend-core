@@ -15,8 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { isEmptyValue } from '@/utils/ADempiere'
+
+// Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
+
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 /**
  * Windows To Zoom from field

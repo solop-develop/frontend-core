@@ -17,7 +17,7 @@
  */
 
 // API Request Methods
-import { getLocationAddress } from '@/api/ADempiere/field/location.js'
+import { getLocationAddress } from '@/api/ADempiere/fields/location.js'
 
 // Constants
 import FieldsList from './fieldsList.js'

@@ -19,7 +19,7 @@
 import Vue from 'vue'
 
 // API Request Methods
-import { requestListProducts, requestListWarehouses } from '@/api/ADempiere/field/search/product.ts'
+import { requestListProducts, requestListWarehouses } from '@/api/ADempiere/fields/search/product.ts'
 
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'

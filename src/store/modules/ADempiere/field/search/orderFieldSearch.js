@@ -22,7 +22,7 @@ import Vue from 'vue'
 import {
   requestListOrderInfo,
   requestListBusinessPartners
-} from '@/api/ADempiere/field/search/order.ts'
+} from '@/api/ADempiere/fields/search/order.ts'
 
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'

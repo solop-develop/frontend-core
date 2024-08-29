@@ -23,7 +23,7 @@ import {
   requesListBankAccount,
   requestListPaymentsInfo,
   requestListBusinessPartners
-} from '@/api/ADempiere/field/search/payment.ts'
+} from '@/api/ADempiere/fields/search/payment.ts'
 
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'

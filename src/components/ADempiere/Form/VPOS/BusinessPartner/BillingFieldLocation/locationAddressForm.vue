@@ -91,7 +91,7 @@ import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 import {
   createLocationAddress,
   updateLocationAddress
-} from '@/api/ADempiere/field/location.js'
+} from '@/api/ADempiere/fields/location.js'
 
 // Utils and Helper Methods
 import { showNotification } from '@/utils/ADempiere/notification.js'

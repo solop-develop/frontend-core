@@ -22,7 +22,7 @@ import Vue from 'vue'
 import {
   requestListAvailableWarehouses,
   requestListWarehouseLocators
-} from '@/api/ADempiere/field/warehouseLocator'
+} from '@/api/ADempiere/fields/warehouseLocator'
 
 // Constants
 import {

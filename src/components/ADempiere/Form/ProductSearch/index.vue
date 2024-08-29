@@ -198,7 +198,9 @@
 
 <script>
 import { defineComponent, onMounted, computed, watch, ref } from '@vue/composition-api'
+
 import store from '@/store'
+
 // Components and Mixins
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
@@ -206,17 +208,18 @@ import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 import QueryCriteria from '@/components/ADempiere/Form/ProductSearch/queryCriteria'
 import ShowInfoProduct from '@/components/ADempiere/Form/ProductSearch/dialogo/showInfoProduct'
 
+// API Request Methods
+import {
+  requestListProducts
+} from '@/api/ADempiere/fields/search/product.ts'
+
 // Utils and Helper Methods
 import { getContext } from '@/utils/ADempiere/contextUtils'
 import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 import { closeTagView } from '@/utils/ADempiere/componentUtils.js'
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 import { convertBooleanToTranslationLang } from '@/utils/ADempiere/formatValue/booleanFormat'
-// API Request Methods
-import {
-  requestListProducts
-} from '@/api/ADempiere/field/search/product.ts'
-import { isEmptyValue } from '@/utils/ADempiere'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'ProductSearch',
