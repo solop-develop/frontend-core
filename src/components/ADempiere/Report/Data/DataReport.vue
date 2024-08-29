@@ -49,7 +49,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
             {{ fieldAttributes.title }}
           </template>
           <template slot-scope="scope">
-            <!-- contenido de la celda -->
+            <!-- Show cell only if it should not be hidden -->
             <data-cells
               :key-column="key"
               :row-data="scope.row"
