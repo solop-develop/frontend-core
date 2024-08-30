@@ -286,7 +286,9 @@ const persistence = {
             attributesList.forEach(attribute => {
               const { columnName, value } = attribute
               let currentValue = value
-
+              if (isEmptyValue(currentValue)) {
+                currentValue = 0
+              }
               const field = fieldsList.find(fieldItem => fieldItem.column_name === columnName)
               if (!isEmptyValue(field)) {
                 const { display_type } = field
@@ -304,7 +306,6 @@ const persistence = {
                   }
                 }
               }
-
               recordAttributes[columnName] = currentValue
             })
             return updateEntity({
