@@ -18,13 +18,13 @@
 
 <template>
   <el-autocomplete
-    ref="autocompleteBPartner"
+    ref="autocompletePayment"
     v-model="displayedValue"
     v-bind="commonsProperties"
     value-key="name"
     clearable
     style="width: 100%;"
-    popper-class="custom-field-bpartner-info"
+    popper-class="custom-field-payment-info"
     :trigger-on-focus="false"
     :fetch-suggestions="localSearch"
     :select-when-unmatched="true"
@@ -46,7 +46,7 @@
       </span>
     </template>
 
-    <button-business-partners-list
+    <button-payments-list
       slot="append"
       :parent-metadata="metadata"
       :container-manager="containerManager"
@@ -59,8 +59,8 @@
 // Components and Mixins
 import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
 import fieldSearchMixin from '@/components/ADempiere/FieldDefinition/FieldSearch/mixinFieldSearch.js'
-import OrderFieldMixin from './mixinOrder'
-import ButtonBusinessPartnersList from './buttonBusinessPartnersList.vue'
+import PaymentFieldMixin from './mixinPayment'
+import ButtonPaymentsList from './buttonPaymentsList.vue'
 
 // Constants
 import { TABLE_NAME, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/payment'
@@ -79,13 +79,13 @@ export default {
   name: 'PaymentInfo',
 
   components: {
-    ButtonBusinessPartnersList
+    ButtonPaymentsList
   },
 
   mixins: [
     fieldMixin,
     fieldSearchMixin,
-    OrderFieldMixin
+    PaymentFieldMixin
   ],
 
   props: {
@@ -105,7 +105,7 @@ export default {
 
   computed: {
     cssClassCustomField() {
-      return ' custom-field-bpartner-info '
+      return ' custom-field-payment-info '
     },
     // to recrods list overwrite
     uuidForm() {
@@ -127,27 +127,27 @@ export default {
       // TODO: Implement key enter event.
     },
     setInitialValues() {
-      const storedBusinessPartnerData = this.$store.getters.getPaymentData({
+      const storedPaymentData = this.$store.getters.getPaymentData({
         containerUuid: this.metadata.containerUuid
       })
       this.$store.commit('setPaymentFieldData', {
-        ...storedBusinessPartnerData,
+        ...storedPaymentData,
         containerUuid: this.metadata.containerUuid
       })
     },
     searchFocus() {
       // if (this.recordsList.length <= 1) {
-      //   this.$refs.autocompleteBPartner.close()
+      //   this.$refs.autocompletePayment.close()
       // } else {
-      //   this.$refs.autocompleteBPartner.getData()
+      //   this.$refs.autocompletePayment.getData()
       // }
       if (!isEmptyValue(this.displayedValue)) {
-        this.$refs.autocompleteBPartner.$el.firstElementChild.firstElementChild.select()
+        this.$refs.autocompletePayment.$el.firstElementChild.firstElementChild.select()
       }
       this.setNewDisplayedValue()
     },
     keyPressField() {
-      if (!this.isEmptyValue(this.$refs['autocompleteBPartner' + this.metadata.columnName])) {
+      if (!this.isEmptyValue(this.$refs['autocompletePayment' + this.metadata.columnName])) {
         this.remoteSearch(this.displayedValue, true)
       }
     },
@@ -161,14 +161,14 @@ export default {
 
       // prevent losing display value with focus
       this.controlDisplayed = this.generateDisplayedValue(recordSelected)
-      this.$refs.autocompleteBPartner.activated = false
+      this.$refs.autocompletePayment.activated = false
     },
     setValues(recordRow) {
-      const { columnName, elementName, isSameColumnElement, containerUuid, parentUuid } = this.metadata
-      const { uuid, id, document_no, date_ordered, grand_total } = recordRow
-      let displayValue = document_no
-      if (!isEmptyValue(date_ordered)) displayValue += '_' + this.formatDate({ value: date_ordered })
-      if (!isEmptyValue(grand_total)) displayValue += '_' + this.formatQuantity({ value: grand_total })
+      const {
+        columnName, elementName, isSameColumnElement, containerUuid, parentUuid
+      } = this.metadata
+      const { uuid, id } = recordRow
+      const displayValue = this.generateDisplayedValue(recordRow)
       // console.log(displayValue)
 
       this.$store.commit('updateValueOfField', {
@@ -283,7 +283,7 @@ export default {
 </script>
 
 <style lang="scss" scope>
-.custom-field-bpartner-info {
+.custom-field-payment-info {
   // items of lust
   li {
     line-height: normal;

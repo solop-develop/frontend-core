@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <el-row :gutter="24" class="business-partners-footer">
+  <el-row :gutter="24" class="payments-footer">
     <el-col :span="14">
       <custom-pagination
         :container-manager="containerManager"
@@ -62,7 +62,7 @@
           type="primary"
           class="button-base-icon"
           icon="el-icon-check"
-          @click="changeBusinessPartner()"
+          @click="changePayment()"
         />
       </samp>
     </el-col>
@@ -76,9 +76,9 @@ import store from '@/store'
 
 // Constants
 import {
-  BUSINESS_PARTNERS_LIST_FORM,
+  PAYMENT_LIST_FORM,
   COLUMN_NAME
-} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+} from '@/utils/ADempiere/dictionary/field/search/payment'
 
 // Components and Mixins
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
@@ -111,7 +111,7 @@ export default defineComponent({
       type: Object,
       default: () => {
         return {
-          containerUuid: BUSINESS_PARTNERS_LIST_FORM,
+          containerUuid: PAYMENT_LIST_FORM,
           columnName: COLUMN_NAME
         }
       }
@@ -125,7 +125,7 @@ export default defineComponent({
   setup(props) {
     const {
       blankValues,
-      businessPartnerData,
+      paymentData,
       currentRow,
       isLoadingRecords,
       //
@@ -154,11 +154,11 @@ export default defineComponent({
     })
 
     const pageNumber = computed(() => {
-      return businessPartnerData.value.pageNumber
+      return paymentData.value.pageNumber
     })
 
     const pageSize = computed(() => {
-      return businessPartnerData.value.pageSize
+      return paymentData.value.pageSize
     })
 
     function clearCriteriaValues() {
@@ -175,7 +175,7 @@ export default defineComponent({
       closeList()
     }
 
-    function changeBusinessPartner() {
+    function changePayment() {
       setValues(
         currentRow.value
       )
@@ -200,7 +200,7 @@ export default defineComponent({
       recordCount,
       selectedRecords,
       //
-      changeBusinessPartner,
+      changePayment,
       clearCriteriaValues,
       clearParentValues,
       loadRecordsList,

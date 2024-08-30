@@ -19,9 +19,9 @@
 <template>
   <div>
     <el-table
-      ref="businessPartnerTable"
+      ref="paymentTable"
       v-loading="isLoadingRecords"
-      class="business-partners-table"
+      class="payments-table"
       highlight-current-row
       :border="true"
       fit
@@ -29,7 +29,7 @@
       :max-height="300"
       size="mini"
       @current-change="handleCurrentChange"
-      @row-dblclick="changeBusinessPartner"
+      @row-dblclick="changePayment"
     >
       <p slot="empty" style="width: 100%;">
         {{ $t('field.payment.emptyRecords') }}
@@ -155,9 +155,9 @@ import store from '@/store'
 
 // Constants
 import {
-  BUSINESS_PARTNERS_LIST_FORM,
+  PAYMENT_LIST_FORM,
   COLUMN_NAME
-} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+} from '@/utils/ADempiere/dictionary/field/search/payment'
 
 // Components and Mixins
 import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
@@ -193,7 +193,7 @@ export default defineComponent({
       type: Object,
       default: () => {
         return {
-          containerUuid: BUSINESS_PARTNERS_LIST_FORM,
+          containerUuid: PAYMENT_LIST_FORM,
           columnName: COLUMN_NAME
         }
       }
@@ -201,7 +201,7 @@ export default defineComponent({
   },
 
   setup(props) {
-    const businessPartnerTable = ref(null)
+    const paymentTable = ref(null)
 
     const {
       currentRow,
@@ -226,7 +226,7 @@ export default defineComponent({
       currentRow.value = recordRow
     }
 
-    function changeBusinessPartner() {
+    function changePayment() {
       const recordRow = currentRow.value
       if (!isEmptyValue(recordRow)) {
         setValues(recordRow)
@@ -235,8 +235,8 @@ export default defineComponent({
     }
 
     watch(currentRow, (newValue, oldValue) => {
-      if (businessPartnerTable.value) {
-        businessPartnerTable.value.setCurrentRow(
+      if (paymentTable.value) {
+        paymentTable.value.setCurrentRow(
           newValue
         )
       }
@@ -244,8 +244,8 @@ export default defineComponent({
 
     onMounted(() => {
       nextTick(() => {
-        if (businessPartnerTable.value) {
-          businessPartnerTable.value.setCurrentRow(
+        if (paymentTable.value) {
+          paymentTable.value.setCurrentRow(
             currentRow.value
           )
         }
@@ -253,14 +253,14 @@ export default defineComponent({
     })
 
     return {
-      businessPartnerTable,
+      paymentTable,
       //
       currentRow,
       isLoadingRecords,
       recordsList,
       //
       handleCurrentChange,
-      changeBusinessPartner,
+      changePayment,
       formatDate,
       formatQuantity,
       convertBooleanToTranslationLang
@@ -270,7 +270,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.business-partners-table {
+.payments-table {
   &.el-table {
     .el-table__body {
       .el-table__row {

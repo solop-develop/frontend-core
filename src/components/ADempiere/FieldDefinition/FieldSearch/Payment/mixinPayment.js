@@ -21,13 +21,13 @@ import store from '@/store'
 // Constants
 import {
   COLUMN_NAME
-} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+} from '@/utils/ADempiere/dictionary/field/search/payment'
 
 // Utils and Helper Methods
-import { generateDisplayedValue } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+import { generateDisplayedValue } from '@/utils/ADempiere/dictionary/field/search/payment'
 
 export default {
-  name: 'MixinOrder',
+  name: 'MixinPayment',
 
   props: {
     metadata: {
