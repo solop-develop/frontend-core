@@ -175,7 +175,6 @@ const reportManager = {
           containerUuid,
           fieldsList
         })
-
         if (isEmptyValue(recordUuid)) {
           // close current page
           const currentRoute = router.app._route
@@ -557,7 +556,8 @@ const reportManager = {
       pageToken,
       pageSize,
       sortBy,
-      parametersList = []
+      parametersList = [],
+      isChangePanel = false
     }) {
       const currentRoute = router.app._route
       if (isEmptyValue(containerUuid)) {
@@ -572,9 +572,7 @@ const reportManager = {
         description,
         fieldsList
       } = reportDefinition
-
       const storedReportGenerated = getters.getReportGenerated(containerUuid)
-
       if (!isEmptyValue(storedReportGenerated)) {
         if (isEmptyValue(reportType)) {
           reportType = storedReportGenerated.reportType
@@ -606,9 +604,8 @@ const reportManager = {
         summary: description,
         type: 'info'
       })
-
       commit('setReportIsLoading', true)
-      if (isEmptyValue(instanceUuid)) {
+      if ((isEmptyValue(instanceUuid) || reportDefinition.is_process_before_launch) && !isChangePanel) {
         dispatch('startReport', {
           containerUuid,
           reportType,

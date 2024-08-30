@@ -165,10 +165,10 @@ export const containerManager = {
       reportId,
       pageSize,
       pageToken: pageNumber,
-      isView: true,
       printFormatId,
       instanceUuid,
-      reportViewId
+      reportViewId,
+      isChangePanel: true
     })
   },
 
@@ -189,10 +189,10 @@ export const containerManager = {
       reportId,
       pageSize,
       pageToken: pageNumber,
-      isView: true,
       printFormatId,
       instanceUuid,
-      reportViewId
+      reportViewId,
+      isChangePanel: true
     })
   }
 }
