@@ -572,7 +572,6 @@ const reportManager = {
         description,
         fieldsList
       } = reportDefinition
-
       const storedReportGenerated = getters.getReportGenerated(containerUuid)
 
       if (!isEmptyValue(storedReportGenerated)) {
@@ -606,9 +605,8 @@ const reportManager = {
         summary: description,
         type: 'info'
       })
-
       commit('setReportIsLoading', true)
-      if (isEmptyValue(instanceUuid) && !reportDefinition.is_process_before_launch) {
+      if (isEmptyValue(instanceUuid) || reportDefinition.is_process_before_launch) {
         dispatch('startReport', {
           containerUuid,
           reportType,
