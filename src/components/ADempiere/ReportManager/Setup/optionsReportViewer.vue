@@ -434,7 +434,8 @@ export default defineComponent({
         instanceUuid: defaultParams.value.instance_id,
         reportViewId: defaultParams.value.report_view_id,
         pageSize: props.reportOutput.pageSize,
-        pageToken: props.reportOutput.pageToken
+        pageToken: props.reportOutput.pageToken,
+        isChangePanel: true
       })
         .then(response => {
           store.dispatch('tagsView/delCachedView', findTagViwer.value).then(() => {

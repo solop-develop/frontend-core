@@ -53,9 +53,9 @@ export default defineComponent({
         reportId: reportDefinition.id,
         instanceUuid: props.reportOutput.instance_id,
         reportViewId: props.reportOutput.report_view_id,
-        isView: true,
         pageSize: props.reportOutput.pageSize,
-        pageToken: props.reportOutput.pageToken
+        pageToken: props.reportOutput.pageToken,
+        isChangePanel: true
       })
     }
     return {
