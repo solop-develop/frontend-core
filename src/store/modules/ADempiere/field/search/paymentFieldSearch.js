@@ -156,6 +156,12 @@ const fieldPayment = {
       containerUuid,
       queryFilters
     }) {
+      if (isEmptyValue(state.paymentData[containerUuid])) {
+        Vue.set(state.paymentData, containerUuid, {
+          ...state.emtpyPaymentData,
+          containerUuid
+        })
+      }
       Vue.set(state.paymentData[containerUuid], 'queryFilters', queryFilters)
     },
     setPaymentFieldQueryFilterByAttribute(state, {
@@ -163,6 +169,12 @@ const fieldPayment = {
       attributeKey,
       value
     }) {
+      if (isEmptyValue(state.paymentData[containerUuid])) {
+        Vue.set(state.paymentData, containerUuid, {
+          ...state.emtpyPaymentData,
+          containerUuid
+        })
+      }
       Vue.set(state.paymentData[containerUuid].queryFilters, attributeKey, value)
     },
     setOptionsListBusinessPartner(state, list) {

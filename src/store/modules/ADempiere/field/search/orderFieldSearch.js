@@ -154,6 +154,12 @@ const fieldOrder = {
       containerUuid,
       queryFilters
     }) {
+      if (isEmptyValue(state.orderData[containerUuid])) {
+        Vue.set(state.orderData, containerUuid, {
+          ...state.emtpyOrderData,
+          containerUuid
+        })
+      }
       Vue.set(state.orderData[containerUuid], 'queryFilters', queryFilters)
     },
     setOrderFieldQueryFilterByAttribute(state, {
@@ -161,6 +167,12 @@ const fieldOrder = {
       attributeKey,
       value
     }) {
+      if (isEmptyValue(state.orderData[containerUuid])) {
+        Vue.set(state.orderData, containerUuid, {
+          ...state.emtpyOrderData,
+          containerUuid
+        })
+      }
       Vue.set(state.orderData[containerUuid].queryFilters, attributeKey, value)
     },
 
