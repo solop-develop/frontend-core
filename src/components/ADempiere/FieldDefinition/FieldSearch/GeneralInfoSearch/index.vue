@@ -49,7 +49,7 @@
     </template>
 
     <template slot="append">
-      <button-general-info-search
+      <button-list
         :parent-metadata="metadata"
         :is-disabled="isDisabled"
         :container-manager="containerManager"
@@ -65,7 +65,7 @@ import store from '@/store'
 // Components and Mixins
 import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
 import fieldSearchMixin from '@/components/ADempiere/FieldDefinition/FieldSearch/mixinFieldSearch.js'
-import ButtonGeneralInfoSearch from './button.vue'
+import ButtonList from './buttonList.vue'
 
 // Constants
 import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
@@ -77,7 +77,7 @@ export default {
   name: 'GeneralInfoSearchField',
 
   components: {
-    ButtonGeneralInfoSearch
+    ButtonList
   },
 
   mixins: [

@@ -160,6 +160,12 @@ const productFieldSearch = {
       containerUuid,
       queryFilters = {}
     }) {
+      if (isEmptyValue(state.productData[containerUuid])) {
+        Vue.set(state.productData, containerUuid, {
+          ...state.emptyProductData,
+          containerUuid
+        })
+      }
       Vue.set(state.productData[containerUuid], 'queryFilters', queryFilters)
     },
     setProductSearchFieldQueryFilterByAttribute(state, {
@@ -167,6 +173,12 @@ const productFieldSearch = {
       attributeKey,
       value
     }) {
+      if (isEmptyValue(state.productData[containerUuid])) {
+        Vue.set(state.productData, containerUuid, {
+          ...state.emptyProductData,
+          containerUuid
+        })
+      }
       Vue.set(state.productData[containerUuid].queryFilters, attributeKey, value)
     },
 

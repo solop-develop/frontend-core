@@ -19,15 +19,15 @@
 <template>
   <el-popover
     ref="invoicesListPopover"
-    v-model="showedPopoverInvoiceList"
+    v-model="showedPopoverPanel"
     popper-class="invoices-popover"
     placement="top"
     width="1200"
     trigger="click"
   >
     <panel-form
-      v-if="showedPopoverInvoiceList"
-      :show-popover="showedPopoverInvoiceList"
+      v-if="showedPopoverPanel"
+      :show-popover="showedPopoverPanel"
       :container-manager="containerManager"
       :metadata="parentMetadata"
     />
@@ -92,7 +92,7 @@ export default {
       }
       return INVOICES_LIST_FORM
     },
-    showedPopoverInvoiceList: {
+    showedPopoverPanel: {
       get() {
         return store.getters.getFieldInvoceShow({
           containerUuid: this.uuidForm

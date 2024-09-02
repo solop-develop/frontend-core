@@ -1,7 +1,7 @@
 <!--
   ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
   Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
-  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -18,16 +18,16 @@
 
 <template>
   <el-popover
-    ref="businessPartnerListPopover"
-    v-model="showedPopoverBusinessPartnerList"
-    popper-class="business-partners-popover"
+    ref="orderListPopover"
+    v-model="showedPopoverPanel"
+    popper-class="orders-popover"
     placement="top"
-    width="900"
+    width="1200"
     trigger="click"
   >
-    <business-partner-panel
-      v-if="showedPopoverBusinessPartnerList"
-      :show-popover="showedPopoverBusinessPartnerList"
+    <panel-form
+      v-if="showedPopoverPanel"
+      :show-popover="showedPopoverPanel"
       :container-manager="containerManager"
       :metadata="parentMetadata"
     />
@@ -37,9 +37,10 @@
       class="button-show-popover"
       :disabled="isDisabled"
     >
-      <i
-        class="el-icon-user-solid"
-      />
+      <!-- <i
+        class="el-icon-s-order"
+      /> -->
+      <svg-icon icon-class="clipboard" />
     </el-button>
   </el-popover>
 </template>
@@ -48,20 +49,19 @@
 import store from '@/store'
 
 // Components and Mixins
-import BusinessPartnerPanel from './PanelForm/index.vue'
-// import BusinessPartnerPanel from './businessPartnersList.vue'
+import PanelForm from './PanelForm/index.vue'
 
 // Constants
 import {
-  BUSINESS_PARTNERS_LIST_FORM,
+  ORDERS_LIST_FORM,
   COLUMN_NAME
-} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+} from '@/utils/ADempiere/dictionary/field/search/order'
 
 export default {
-  name: 'ButtonBusinessPartnersList',
+  name: 'ButtonOrdersList',
 
   components: {
-    BusinessPartnerPanel
+    PanelForm
   },
 
   props: {
@@ -91,16 +91,16 @@ export default {
       if (!this.isEmptyValue(this.parentMetadata.containerUuid)) {
         return this.parentMetadata.columnName + '_' + this.parentMetadata.containerUuid
       }
-      return BUSINESS_PARTNERS_LIST_FORM
+      return ORDERS_LIST_FORM
     },
-    showedPopoverBusinessPartnerList: {
+    showedPopoverPanel: {
       get() {
-        return store.getters.getBPShow({
+        return store.getters.getFieldOrderShow({
           containerUuid: this.uuidForm
         })
       },
       set(value) {
-        store.commit('setBusinessPartnerShow', {
+        store.commit('setOrderFieldShow', {
           containerUuid: this.uuidForm,
           show: value
         })

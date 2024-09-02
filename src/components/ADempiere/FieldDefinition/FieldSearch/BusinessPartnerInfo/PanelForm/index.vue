@@ -109,7 +109,7 @@ export default defineComponent({
     })
 
     const {
-      businessPartnerData,
+      infoData,
       isLoadedRecords,
       isLoadingRecords,
       isSalesTransactionContext,
@@ -133,7 +133,7 @@ export default defineComponent({
       }
     })
 
-    if (isReadyFromGetData.value || isSalesTransactionContext.value !== businessPartnerData.value.isSalesTransaction) {
+    if (isReadyFromGetData.value || isSalesTransactionContext.value !== infoData.value.isSalesTransaction) {
       loadRecordsList({})
     }
 

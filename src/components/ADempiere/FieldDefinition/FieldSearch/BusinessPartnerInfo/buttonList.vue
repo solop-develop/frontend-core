@@ -1,7 +1,7 @@
 <!--
   ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
   Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
-  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -18,16 +18,16 @@
 
 <template>
   <el-popover
-    ref="paymentListPopover"
-    v-model="showedPopoverPaymentList"
-    popper-class="payments-popover"
+    ref="businessPartnerListPopover"
+    v-model="showedPopoverPanel"
+    popper-class="business-partners-popover"
     placement="top"
-    width="1200"
+    width="900"
     trigger="click"
   >
-    <payment-panel
-      v-if="showedPopoverPaymentList"
-      :show-popover="showedPopoverPaymentList"
+    <panel-form
+      v-if="showedPopoverPanel"
+      :show-popover="showedPopoverPanel"
       :container-manager="containerManager"
       :metadata="parentMetadata"
     />
@@ -38,7 +38,7 @@
       :disabled="isDisabled"
     >
       <i
-        class="el-icon-money"
+        class="el-icon-user-solid"
       />
     </el-button>
   </el-popover>
@@ -48,20 +48,20 @@
 import store from '@/store'
 
 // Components and Mixins
-import PaymentPanel from './PanelForm/index.vue'
-// import PaymentPanel from './paymentsList.vue'
+import PanelForm from './PanelForm/index.vue'
+// import BusinessPartnerPanel from './businessPartnersList.vue'
 
 // Constants
 import {
-  PAYMENT_LIST_FORM,
+  BUSINESS_PARTNERS_LIST_FORM,
   COLUMN_NAME
-} from '@/utils/ADempiere/dictionary/field/search/payment'
+} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 
 export default {
-  name: 'ButtonPaymentsList',
+  name: 'ButtonBusinessPartnersList',
 
   components: {
-    PaymentPanel
+    PanelForm
   },
 
   props: {
@@ -91,16 +91,16 @@ export default {
       if (!this.isEmptyValue(this.parentMetadata.containerUuid)) {
         return this.parentMetadata.columnName + '_' + this.parentMetadata.containerUuid
       }
-      return PAYMENT_LIST_FORM
+      return BUSINESS_PARTNERS_LIST_FORM
     },
-    showedPopoverPaymentList: {
+    showedPopoverPanel: {
       get() {
-        return store.getters.getFielPaymentShow({
+        return store.getters.getBPShow({
           containerUuid: this.uuidForm
         })
       },
       set(value) {
-        store.commit('setPaymentFieldShow', {
+        store.commit('setBusinessPartnerShow', {
           containerUuid: this.uuidForm,
           show: value
         })

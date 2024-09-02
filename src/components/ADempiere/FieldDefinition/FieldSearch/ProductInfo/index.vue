@@ -53,7 +53,7 @@
       </span>
     </template>
 
-    <button-products-list
+    <button-list
       slot="append"
       :parent-metadata="metadata"
       :container-manager="containerManager"
@@ -69,7 +69,7 @@ import store from '@/store'
 import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
 import fieldSearchMixin from '@/components/ADempiere/FieldDefinition/FieldSearch/mixinFieldSearch.js'
 import productMixin from './mixinProduct'
-import ButtonProductsList from './buttonProductList.vue'
+import ButtonList from './buttonList.vue'
 
 // Constants
 import { TABLE_NAME, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/product.ts'
@@ -82,7 +82,7 @@ export default {
   name: 'ProductInfoField',
 
   components: {
-    ButtonProductsList
+    ButtonList
   },
 
   mixins: [

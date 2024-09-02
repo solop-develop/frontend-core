@@ -20,11 +20,11 @@
   <el-collapse
     v-model="activeAccordion"
     accordion
-    class="business-partners-query-criteria"
+    class="orders-query-criteria"
   >
     <el-collapse-item
       :name="ACCORDION_KEY"
-      class="business-partners-query-criteria-collapse"
+      class="orders-query-criteria-collapse"
     >
       <template slot="title">
         {{ title }}
@@ -98,9 +98,9 @@ import store from '@/store'
 
 // Constants
 import {
-  BUSINESS_PARTNERS_LIST_FORM,
+  INVOICES_LIST_FORM,
   COLUMN_NAME
-} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+} from '@/utils/ADempiere/dictionary/field/search/invoice'
 import { YES_NO_OPTIONS_LIST } from '@/utils/ADempiere/dictionary/field/yesNo'
 
 // Components and Mixins
@@ -139,7 +139,7 @@ export default defineComponent({
       type: Object,
       default: () => {
         return {
-          containerUuid: BUSINESS_PARTNERS_LIST_FORM,
+          containerUuid: INVOICES_LIST_FORM,
           columnName: COLUMN_NAME
         }
       }
@@ -204,8 +204,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.business-partners-query-criteria {
-  .business-partners-query-criteria-collapse {
+.orders-query-criteria {
+  .orders-query-criteria-collapse {
     .el-form-item {
       &.el-form-item--mini {
         margin-bottom: 6px;

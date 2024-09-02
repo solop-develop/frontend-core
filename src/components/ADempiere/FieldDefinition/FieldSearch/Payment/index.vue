@@ -46,7 +46,7 @@
       </span>
     </template>
 
-    <button-payments-list
+    <button-list
       slot="append"
       :parent-metadata="metadata"
       :container-manager="containerManager"
@@ -60,7 +60,7 @@
 import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
 import fieldSearchMixin from '@/components/ADempiere/FieldDefinition/FieldSearch/mixinFieldSearch.js'
 import PaymentFieldMixin from './mixinPayment'
-import ButtonPaymentsList from './buttonPaymentsList.vue'
+import ButtonList from './buttonList.vue'
 
 // Constants
 import { TABLE_NAME, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/payment'
@@ -79,7 +79,7 @@ export default {
   name: 'PaymentInfo',
 
   components: {
-    ButtonPaymentsList
+    ButtonList
   },
 
   mixins: [

@@ -18,16 +18,16 @@
 
 <template>
   <el-popover
-    ref="businessPartnerListPopover"
-    v-model="showedPopoverProductList"
-    popper-class="business-partners-popover"
+    ref="productListPopover"
+    v-model="showedPopoverPanel"
+    popper-class="products-popover"
     placement="top"
     width="900"
     trigger="click"
   >
     <panel-form
-      v-if="showedPopoverProductList"
-      :show-popover="showedPopoverProductList"
+      v-if="showedPopoverPanel"
+      :show-popover="showedPopoverPanel"
       :container-manager="containerManager"
       :metadata="parentMetadata"
     />
@@ -92,7 +92,7 @@ export default {
       }
       return PRODUCT_LIST_FORM
     },
-    showedPopoverProductList: {
+    showedPopoverPanel: {
       get() {
         return store.getters.getProductSearchFieldShow({
           containerUuid: this.uuidForm

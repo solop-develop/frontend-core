@@ -149,6 +149,12 @@ const businessPartner = {
       containerUuid,
       queryFilters
     }) {
+      if (isEmptyValue(state.businessPartnerData[containerUuid])) {
+        Vue.set(state.businessPartnerData, containerUuid, {
+          ...state.emtpyBusinessPartnerData,
+          containerUuid
+        })
+      }
       Vue.set(state.businessPartnerData[containerUuid], 'queryFilters', queryFilters)
     },
     setBusinessPartnerQueryFilterByAttribute(state, {
@@ -156,6 +162,12 @@ const businessPartner = {
       attributeKey,
       value
     }) {
+      if (isEmptyValue(state.businessPartnerData[containerUuid])) {
+        Vue.set(state.businessPartnerData, containerUuid, {
+          ...state.emtpyBusinessPartnerData,
+          containerUuid
+        })
+      }
       Vue.set(state.businessPartnerData[containerUuid].queryFilters, attributeKey, value)
     },
 
