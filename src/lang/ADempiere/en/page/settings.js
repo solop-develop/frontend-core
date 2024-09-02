@@ -31,7 +31,8 @@ const settings = {
   mainDashboardCard: 'Main Dashboard Card',
   numberColumnsDashboard: 'Number of Columns in Dashboard',
   rightPanelContent: 'Right Panel Content',
-  leftPanelContent: 'Left Panel Content'
+  leftPanelContent: 'Left Panel Content',
+  panelPageSize: 'Number of Pages'
 }
 
 export default settings

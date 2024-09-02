@@ -246,8 +246,13 @@ const browserControl = {
         const storedSize = getters.getBrowserPageSize({
           containerUuid
         })
-        if (isEmptyValue(pageSize) && !isEmptyValue(storedSize)) {
-          pageSize = storedSize
+        const preferencePageSize = getters.getPreference
+        if (isEmptyValue(pageSize) && (!isEmptyValue(storedSize) || !isEmptyValue(preferencePageSize))) {
+          if (!isEmptyValue(preferencePageSize) && !isEmptyValue(preferencePageSize.value)) {
+            pageSize = preferencePageSize.value
+          } else {
+            pageSize = storedSize
+          }
         }
         commit('setBrowserData', {
           containerUuid,

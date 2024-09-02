@@ -134,6 +134,21 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item
+        :label="$t('page.settings.panelPageSize')"
+        class="drawer-title"
+      >
+        <el-select
+          v-model="pageSize"
+        >
+          <el-option
+            v-for="item in NUMBER_RECORDS_PER_PAGE_STORE"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
     </el-form>
     <!-- </div> -->
   </div>
@@ -143,7 +158,7 @@
 import { computed, ref } from '@vue/composition-api'
 import language from '@/lang'
 import store from '@/store'
-
+import { NUMBER_RECORDS_PER_PAGE_STORE } from '@/utils/ADempiere/tableUtils'
 // components and mixins
 import ThemePicker from '@/components/ThemePicker'
 
@@ -461,6 +476,29 @@ export default {
         })
       }
     })
+    function panelPageSize() {
+      store.dispatch('searchPreference', {
+        type: 'WINDOW',
+        columnName: 'C_Order'
+      })
+    }
+    const pageSize = computed({
+      get() {
+        const storePageSize = store.getters.getValuePreference
+        if (!isEmptyValue(storePageSize)) {
+          return storePageSize
+        }
+        return 15
+      },
+      set(value) {
+        store.dispatch('savePreference', {
+          type: 'WINDOW',
+          columnName: 'C_Order',
+          value
+        })
+      }
+    })
+    panelPageSize()
     const optionsPanelRight = ref([
       {
         value: 'BC',
@@ -476,6 +514,7 @@ export default {
       }
     ])
     return {
+      NUMBER_RECORDS_PER_PAGE_STORE,
       // data
       activeName,
       // Ref
@@ -484,6 +523,8 @@ export default {
       optionsPanelLeft,
       optionsPanelRight,
       // Computed
+      pageSize,
+      panelPageSize,
       lang,
       colNum,
       showMenu,

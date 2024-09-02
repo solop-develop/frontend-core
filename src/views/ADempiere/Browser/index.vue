@@ -264,7 +264,7 @@ export default defineComponent({
       }
     }
 
-    function getBrowserDefinition() {
+    async function getBrowserDefinition() {
       const browser = storedBrowser.value
       if (browser) {
         generateBrowser(browser)
@@ -274,7 +274,10 @@ export default defineComponent({
         }
         return
       }
-
+      await store.dispatch('searchPreference', {
+        type: 'WINDOW',
+        columnName: 'C_Order'
+      })
       store.dispatch('getBrowserDefinitionFromServer', {
         id: browserId,
         parentUuid,

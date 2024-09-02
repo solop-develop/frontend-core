@@ -307,7 +307,6 @@ const windowManager = {
           const parseFilter = JSON.parse(filters)
           filters = [parseFilter]
         }
-
         // add filters with link column name and parent column name
         if (
           !isEmptyValue(link_column_name) &&
@@ -381,12 +380,17 @@ const windowManager = {
             value: filtersRecord.value
           })
         }
+        const preferencePageSize = getters.getPreference
         // page size
         const storedSize = getters.getTabPageSize({
           containerUuid
         })
-        if (isEmptyValue(pageSize) && !isEmptyValue(storedSize)) {
-          pageSize = storedSize
+        if (isEmptyValue(pageSize) && (!isEmptyValue(storedSize) || !isEmptyValue(preferencePageSize))) {
+          if (!isEmptyValue(preferencePageSize) && !isEmptyValue(preferencePageSize.value)) {
+            pageSize = preferencePageSize.value
+          } else {
+            pageSize = storedSize
+          }
         }
         commit('setTabData', {
           parentUuid,

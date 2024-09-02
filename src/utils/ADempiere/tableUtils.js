@@ -58,6 +58,37 @@ export const NUMBER_RECORDS_PER_PAGE = [
   25, 50, 100
 ]
 
+export const NUMBER_RECORDS_PER_PAGE_STORE = [
+  {
+    value: '15',
+    label: '15/páginas'
+  },
+  {
+    value: '25',
+    label: '25/páginas'
+  },
+  {
+    value: '50',
+    label: '50/páginas'
+  },
+  {
+    value: '100',
+    label: '100/páginas'
+  },
+  {
+    value: '150',
+    label: '150/páginas'
+  },
+  {
+    value: '200',
+    label: '200/páginas'
+  },
+  {
+    value: '300',
+    label: '300/páginas'
+  }
+]
+
 /**
  * Generate index to element-ui table
  * @link https://element.eleme.cn/#/es/component/table#indice-personalizado
