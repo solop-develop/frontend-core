@@ -79,11 +79,6 @@ const notices = {
           .catch(error => {
             console.warn(error)
           })
-          .finally(() => {
-            setTimeout(() => {
-              commit('setLoadingNotices', false)
-            }, 500)
-          })
       })
     },
     readAllNotices({ commit, dispatch }, {
@@ -100,11 +95,6 @@ const notices = {
           })
           .catch(error => {
             console.warn(error)
-          })
-          .finally(() => {
-            setTimeout(() => {
-              commit('setLoadingNotices', false)
-            }, 500)
           })
       })
     }
