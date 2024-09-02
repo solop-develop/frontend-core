@@ -79,6 +79,11 @@ const notices = {
           .catch(error => {
             console.warn(error)
           })
+          .finally(() => {
+            setTimeout(() => {
+              commit('setLoadingNotices', false)
+            }, 500)
+          })
       })
     },
     readAllNotices({ commit, dispatch }, {
@@ -96,6 +101,11 @@ const notices = {
           .catch(error => {
             console.warn(error)
           })
+          .finally(() => {
+            setTimeout(() => {
+              commit('setLoadingNotices', false)
+            }, 500)
+          })
       })
     }
   },
@@ -104,7 +114,7 @@ const notices = {
       return state.notices
     },
     getIsLoadingNotices: (state) => {
-      return state.isLoading
+      return state.notices.isLoading
     }
   }
 }
