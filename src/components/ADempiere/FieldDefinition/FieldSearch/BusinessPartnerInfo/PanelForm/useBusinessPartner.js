@@ -81,19 +81,19 @@ export default ({
     return fieldAttributes.referenceTableName
   })
 
-  const businessPartnerData = computed(() => {
+  const infoData = computed(() => {
     return store.getters.getBusinessPartnerData({
       containerUuid: uuidForm
     })
   })
 
   const isLoadedRecords = computed(() => {
-    const { isLoaded } = businessPartnerData.value
+    const { isLoaded } = infoData.value
     return isLoaded
   })
 
   const isLoadingRecords = computed(() => {
-    const { isLoading } = businessPartnerData.value
+    const { isLoading } = infoData.value
     return isLoading
   })
 
@@ -283,7 +283,7 @@ export default ({
 
   return {
     blankValues,
-    businessPartnerData,
+    infoData,
     currentRow,
     isLoadedRecords,
     isLoadingRecords,

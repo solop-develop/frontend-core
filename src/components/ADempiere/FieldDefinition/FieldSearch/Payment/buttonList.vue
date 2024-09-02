@@ -18,16 +18,16 @@
 
 <template>
   <el-popover
-    ref="businessPartnerListPopover"
-    v-model="showedPopoverBusinessPartnerList"
-    popper-class="business-partners-popover"
+    ref="paymentListPopover"
+    v-model="showedPopoverPanel"
+    popper-class="payments-popover"
     placement="top"
     width="1200"
     trigger="click"
   >
-    <business-partner-panel
-      v-if="showedPopoverBusinessPartnerList"
-      :show-popover="showedPopoverBusinessPartnerList"
+    <payment-panel
+      v-if="showedPopoverPanel"
+      :show-popover="showedPopoverPanel"
       :container-manager="containerManager"
       :metadata="parentMetadata"
     />
@@ -37,10 +37,9 @@
       class="button-show-popover"
       :disabled="isDisabled"
     >
-      <!-- <i
-        class="el-icon-s-order"
-      /> -->
-      <svg-icon icon-class="clipboard" />
+      <i
+        class="el-icon-money"
+      />
     </el-button>
   </el-popover>
 </template>
@@ -49,20 +48,20 @@
 import store from '@/store'
 
 // Components and Mixins
-import BusinessPartnerPanel from './PanelForm/index.vue'
-// import BusinessPartnerPanel from './businessPartnersList.vue'
+import PaymentPanel from './PanelForm/index.vue'
+// import PaymentPanel from './paymentsList.vue'
 
 // Constants
 import {
-  BUSINESS_PARTNERS_LIST_FORM,
+  PAYMENT_LIST_FORM,
   COLUMN_NAME
-} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+} from '@/utils/ADempiere/dictionary/field/search/payment'
 
 export default {
-  name: 'ButtonBusinessPartnersList',
+  name: 'ButtonPaymentsList',
 
   components: {
-    BusinessPartnerPanel
+    PaymentPanel
   },
 
   props: {
@@ -92,16 +91,16 @@ export default {
       if (!this.isEmptyValue(this.parentMetadata.containerUuid)) {
         return this.parentMetadata.columnName + '_' + this.parentMetadata.containerUuid
       }
-      return BUSINESS_PARTNERS_LIST_FORM
+      return PAYMENT_LIST_FORM
     },
-    showedPopoverBusinessPartnerList: {
+    showedPopoverPanel: {
       get() {
-        return store.getters.getFieldOrderShow({
+        return store.getters.getFielPaymentShow({
           containerUuid: this.uuidForm
         })
       },
       set(value) {
-        store.commit('setOrderFieldShow', {
+        store.commit('setPaymentFieldShow', {
           containerUuid: this.uuidForm,
           show: value
         })

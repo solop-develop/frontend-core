@@ -19,7 +19,7 @@
 <template>
   <div>
     <el-table
-      ref="recordsTable"
+      ref="tableRecords"
       :key="componentKey"
       v-loading="isLoadingRecords"
       class="products-table"
@@ -319,7 +319,7 @@ export default defineComponent({
   },
 
   setup(props) {
-    const recordsTable = ref(null)
+    const tableRecords = ref(null)
     const componentKey = ref(0)
 
     const {
@@ -383,8 +383,8 @@ export default defineComponent({
     }
 
     watch(currentRow, (newValue, oldValue) => {
-      if (recordsTable.value) {
-        recordsTable.value.setCurrentRow(
+      if (tableRecords.value) {
+        tableRecords.value.setCurrentRow(
           newValue
         )
       }
@@ -401,8 +401,8 @@ export default defineComponent({
 
     onMounted(() => {
       nextTick(() => {
-        if (recordsTable.value) {
-          recordsTable.value.setCurrentRow(
+        if (tableRecords.value) {
+          tableRecords.value.setCurrentRow(
             currentRow.value
           )
         }
@@ -411,7 +411,7 @@ export default defineComponent({
 
     return {
       componentKey,
-      recordsTable,
+      tableRecords,
       //
       currentRow,
       isLoadingRecords,

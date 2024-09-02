@@ -199,18 +199,18 @@ const fieldOrder = {
     }) {
       return new Promise(resolve => {
         let pageToken
-        const storedBusinessPartnerData = getters.getOrderData({
+        const storedInfoData = getters.getOrderData({
           containerUuid
         })
 
         if (isEmptyValue(pageNumber) || pageNumber < 1) {
           const {
             pageNumber: storedPageNumber
-          } = storedBusinessPartnerData.pageNumber
+          } = storedInfoData.pageNumber
           // refresh with same page
           pageNumber = storedPageNumber
         }
-        if (!isEmptyValue(storedBusinessPartnerData.nextPageToken)) pageToken = storedBusinessPartnerData.nextPageToken + pageNumber
+        if (!isEmptyValue(storedInfoData.nextPageToken)) pageToken = storedInfoData.nextPageToken + pageNumber
 
         commit('setBusinessPartnerIsLoading', {
           containerUuid,
@@ -222,14 +222,14 @@ const fieldOrder = {
           containerUuid: containerUuid
         })
 
-        const { queryFilters } = storedBusinessPartnerData
+        const { queryFilters } = storedInfoData
         if (isSalesTransactionContext) {
           queryFilters.is_vendor = undefined
         } else {
           queryFilters.is_customer = undefined
         }
         commit('setOrderFieldData', {
-          ...storedBusinessPartnerData,
+          ...storedInfoData,
           containerUuid
         })
 
@@ -292,7 +292,7 @@ const fieldOrder = {
             }
 
             commit('setOrderFieldData', {
-              ...storedBusinessPartnerData,
+              ...storedInfoData,
               containerUuid,
               currentRow,
               recordsList,

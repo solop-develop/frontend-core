@@ -19,7 +19,7 @@
 <template>
   <div>
     <el-table
-      ref="paymentTable"
+      ref="tableRecords"
       v-loading="isLoadingRecords"
       class="payments-table"
       highlight-current-row
@@ -201,7 +201,7 @@ export default defineComponent({
   },
 
   setup(props) {
-    const paymentTable = ref(null)
+    const tableRecords = ref(null)
 
     const {
       currentRow,
@@ -235,8 +235,8 @@ export default defineComponent({
     }
 
     watch(currentRow, (newValue, oldValue) => {
-      if (paymentTable.value) {
-        paymentTable.value.setCurrentRow(
+      if (tableRecords.value) {
+        tableRecords.value.setCurrentRow(
           newValue
         )
       }
@@ -244,8 +244,8 @@ export default defineComponent({
 
     onMounted(() => {
       nextTick(() => {
-        if (paymentTable.value) {
-          paymentTable.value.setCurrentRow(
+        if (tableRecords.value) {
+          tableRecords.value.setCurrentRow(
             currentRow.value
           )
         }
@@ -253,7 +253,7 @@ export default defineComponent({
     })
 
     return {
-      paymentTable,
+      tableRecords,
       //
       currentRow,
       isLoadingRecords,

@@ -19,7 +19,7 @@
 <template>
   <div>
     <el-table
-      ref="businessPartnerTable"
+      ref="tableRecords"
       v-loading="isLoadingRecords"
       class="business-partners-table"
       highlight-current-row
@@ -160,7 +160,7 @@ export default defineComponent({
   },
 
   setup(props) {
-    const businessPartnerTable = ref(null)
+    const tableRecords = ref(null)
 
     const {
       currentRow,
@@ -204,8 +204,8 @@ export default defineComponent({
     }
 
     watch(currentRow, (newValue, oldValue) => {
-      if (businessPartnerTable.value) {
-        businessPartnerTable.value.setCurrentRow(
+      if (tableRecords.value) {
+        tableRecords.value.setCurrentRow(
           newValue
         )
       }
@@ -213,8 +213,8 @@ export default defineComponent({
 
     onMounted(() => {
       nextTick(() => {
-        if (businessPartnerTable.value) {
-          businessPartnerTable.value.setCurrentRow(
+        if (tableRecords.value) {
+          tableRecords.value.setCurrentRow(
             currentRow.value
           )
         }
@@ -222,7 +222,7 @@ export default defineComponent({
     })
 
     return {
-      businessPartnerTable,
+      tableRecords,
       //
       currentRow,
       isLoadingRecords,

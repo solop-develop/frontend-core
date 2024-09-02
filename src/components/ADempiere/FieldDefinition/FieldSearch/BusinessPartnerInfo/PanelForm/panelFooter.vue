@@ -61,7 +61,7 @@
           type="primary"
           class="button-base-icon"
           icon="el-icon-check"
-          @click="changeBusinessPartner()"
+          @click="changeRecord()"
         />
       </samp>
     </el-col>
@@ -124,7 +124,7 @@ export default defineComponent({
   setup(props) {
     const {
       blankValues,
-      businessPartnerData,
+      infoData,
       currentRow,
       isLoadingRecords,
       //
@@ -153,11 +153,11 @@ export default defineComponent({
     })
 
     const pageNumber = computed(() => {
-      return businessPartnerData.value.pageNumber
+      return infoData.value.pageNumber
     })
 
     const pageSize = computed(() => {
-      return businessPartnerData.value.pageSize
+      return infoData.value.pageSize
     })
 
     function clearCriteriaValues() {
@@ -174,7 +174,7 @@ export default defineComponent({
       closeList()
     }
 
-    function changeBusinessPartner() {
+    function changeRecord() {
       setValues(
         currentRow.value
       )
@@ -199,7 +199,7 @@ export default defineComponent({
       recordCount,
       selectedRecords,
       //
-      changeBusinessPartner,
+      changeRecord,
       clearCriteriaValues,
       clearParentValues,
       loadRecordsList,
