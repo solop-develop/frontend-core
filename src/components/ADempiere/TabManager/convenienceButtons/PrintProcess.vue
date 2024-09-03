@@ -117,7 +117,7 @@ export default defineComponent({
       if (
         isEmptyValue(process)
       ) return []
-      return store.getters.getPrintFormatList(process.id)
+      return store.getters.getPrintFormatsList(process.id)
     })
 
     /**

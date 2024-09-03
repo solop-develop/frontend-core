@@ -300,7 +300,7 @@ const reportManager = {
       reportId
     }) {
       return new Promise(resolve => {
-        const currentListPrintFormat = getters.getPrintFormatList(reportId)
+        const currentListPrintFormat = getters.getPrintFormatsList(reportId)
         if (!isEmptyValue(currentListPrintFormat)) {
           resolve(currentListPrintFormat)
           return
@@ -356,7 +356,7 @@ const reportManager = {
       reportId
     }) {
       return new Promise(resolve => {
-        const currentListPrintFormat = getters.getPrintFormatList(reportId)
+        const currentListPrintFormat = getters.getPrintFormatsList(reportId)
         if (!isEmptyValue(currentListPrintFormat)) {
           resolve(currentListPrintFormat)
           return
