@@ -104,7 +104,7 @@ const notices = {
       return state.notices
     },
     getIsLoadingNotices: (state) => {
-      return state.isLoading
+      return state.notices.isLoading
     }
   }
 }
