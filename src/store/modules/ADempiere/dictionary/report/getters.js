@@ -22,7 +22,6 @@ import { FIELDS_DATE, FIELDS_DECIMALS } from '@/utils/ADempiere/references.js'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { isDisplayedField, isMandatoryField } from '@/utils/ADempiere/dictionary/process.js'
-import { isNumberField } from '@/utils/ADempiere/references.js'
 
 /**
  * Dictionary Report Getters
@@ -117,10 +116,12 @@ export default {
     const reportParameters = {}
 
     fieldsList.forEach(fieldItem => {
-      if (fieldItem.is_info_only) {
+      const {
+        is_info_only, columnName, display_type, is_range, columnNameTo, isGeneratedRange
+      } = fieldItem
+      if (is_info_only) {
         return false
       }
-      const { columnName, display_type } = fieldItem
       const isMandatory = isMandatoryField(fieldItem)
       if (!isMandatory) {
         // evaluate displayed fields
@@ -137,24 +138,20 @@ export default {
       const isDateField = FIELDS_DATE.includes(display_type)
       const isDecimalField = FIELDS_DECIMALS.includes(display_type)
 
-      if (fieldItem.is_range && !isNumberField(display_type)) {
+      if (is_range && !isGeneratedRange) {
         const valueTo = rootGetters.getValueOfField({
           containerUuid: uuid,
-          columnName: fieldItem.columnNameTo
+          columnName: columnNameTo
         })
         if (!isEmptyValue(valueTo)) {
-          // reportParameters.push({
-          //   columnName: fieldItem.columnNameTo,
-          //   value: valueTo
-          // })
-          reportParameters[fieldItem.columnNameTo] = valueTo
+          reportParameters[columnNameTo] = valueTo
           if (isDateField) {
-            reportParameters[columnName] = {
+            reportParameters[columnNameTo] = {
               type: 'date',
               value: valueTo
             }
           } else if (isDecimalField) {
-            reportParameters[columnName] = {
+            reportParameters[columnNameTo] = {
               type: 'decimal',
               value: valueTo
             }

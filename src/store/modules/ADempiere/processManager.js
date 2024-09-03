@@ -16,8 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Vue from 'vue'
-
 import lang from '@/lang'
 import router from '@/router'
 
@@ -34,26 +32,16 @@ import { RECORD_ID } from '@/utils/ADempiere/constants/systemColumns'
 // Utils and Helper Methods
 import { getToken } from '@/utils/auth'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import { showMessage, showNotification } from '@/utils/ADempiere/notification'
 import {
   containerManager
 } from '@/utils/ADempiere/dictionary/process.js'
 
-const initState = {
-  printFormatList: {}
-}
-
 const processManager = {
-  state: initState,
+  state: {},
 
-  mutations: {
-    setPrintFormatsList(state, { containerUuid, printFormatList }) {
-      Vue.set(state.printFormatList, containerUuid, printFormatList)
-    },
-    resetStateProcessManager(state) {
-      state = initState
-    }
-  },
+  mutations: {},
 
   actions: {
     processActionPerformed({ dispatch, getters }, {
@@ -164,11 +152,14 @@ const processManager = {
      */
     startProcessOfBrowser({ commit, dispatch, rootGetters }, {
       parentUuid,
-      containerUuid
+      containerUuid,
+      isAllSelection = false
     }) {
       return new Promise(resolve => {
         const browserDefinition = rootGetters.getStoredBrowser(parentUuid)
-        const { process: processDefinition } = browserDefinition
+        const {
+          process: processDefinition, uuid: browserUuid, context_column_names, fieldsList
+        } = browserDefinition
 
         const parametersList = rootGetters.getProcessParameters({
           containerUuid
@@ -206,15 +197,56 @@ const processManager = {
           }
         }
 
+        let browserContextAttributes = '{}'
+        let browserCriteriaFilters = '[]'
+        if (isAllSelection) {
+          // get context values
+          const contextAttributesList = getContextAttributes({
+            containerUuid: browserUuid,
+            contextColumnNames: context_column_names,
+            format: 'object'
+          })
+          if (!isEmptyValue(contextAttributesList)) {
+            browserContextAttributes = JSON.stringify(contextAttributesList)
+          }
+
+          // parameters Query Criteria
+          const queryCriteriaFilters = rootGetters.getBrowserQueryCriteria({
+            containerUuid: browserUuid,
+            fieldsList
+          })
+          const filtersList = queryCriteriaFilters.map(parameter => {
+            const {
+              columnName,
+              operator,
+              value,
+              valueTo,
+              values
+            } = parameter
+            return JSON.stringify({
+              name: columnName,
+              operator,
+              // values > value, valueTo > value
+              values: !isEmptyValue(values) ? values : !isEmptyValue(valueTo) ? [value, valueTo] : value
+            })
+          }).toString()
+          if (!isEmptyValue(filtersList)) {
+            browserCriteriaFilters = '[' + filtersList + ']'
+          }
+        }
+
         requestRunBusinessProcessAsBrowser({
           uuid: containerUuid,
           parametersList,
           // in browser
           id: browserDefinition.process.id,
           browserId: browserDefinition.id,
+          selectionsList,
+          isAllSelection,
+          browserContextAttributes,
+          browserCriteriaFilters,
           // in window
-          recordId,
-          selectionsList
+          recordId
         })
           .then(runProcessRepsonse => {
             isProcessedError = runProcessRepsonse.is_error
@@ -288,6 +320,11 @@ const processManager = {
                   }, 1000)
                 }
               })
+
+            commit('setBrowserProcessAll', {
+              uuid: browserUuid,
+              isAll: false
+            })
           })
       })
     },

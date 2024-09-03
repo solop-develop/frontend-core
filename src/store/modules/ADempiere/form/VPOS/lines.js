@@ -1,6 +1,6 @@
 /**
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- * Copyright (C) 2017-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanchez15@outlook.com https://github.com/elsiosanchez
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,19 +17,21 @@
  */
 
 import Vue from 'vue'
+
 // API Request Methods
 import {
   listStocks,
   listOrderLines,
   createOrderLine,
   updateOrderLine,
-  deleteOrderLine,
-  listProductConversion
+  deleteOrderLine
 } from '@/api/ADempiere/form/VPOS/index'
-import { isEmptyValue } from '@/utils/ADempiere'
+import {
+  listProductConversionsRequest
+} from '@/api/ADempiere/system-core'
 
 // Utils and Helper Methods
-// import { isEmptyValue } from '@/utils/ADempiere'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import { sumStocksByWarehouse } from '@/utils/ADempiere/dictionary/form/VPOS'
 
@@ -247,7 +249,7 @@ export default {
     }) {
       return new Promise(resolve => {
         if (isEmptyValue(productId)) resolve([])
-        listProductConversion({
+        listProductConversionsRequest({
           id: productId
         })
           .then(response => {
@@ -274,6 +276,7 @@ export default {
           })
       })
     },
+
     findListStocks({
       commit,
       getters

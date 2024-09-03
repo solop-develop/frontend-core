@@ -19,7 +19,7 @@
 <template>
   <div>
     <el-table
-      ref="recordsTable"
+      ref="tableRecords"
       :key="componentKey"
       v-loading="isLoadingRecords"
       class="products-table"
@@ -29,6 +29,7 @@
       :data="recordsList"
       :max-height="300"
       size="mini"
+      :row-class-name="tableRowClassName"
       @current-change="handleCurrentChange"
       @row-dblclick="changeCurrentRecord"
     >
@@ -266,6 +267,7 @@ import {
   defineComponent, computed, nextTick, onMounted, ref, watch
 } from '@vue/composition-api'
 
+import lang from '@/lang'
 import store from '@/store'
 
 // Constants
@@ -282,6 +284,8 @@ import useProduct from './useProduct'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { convertBooleanToTranslationLang } from '@/utils/ADempiere/formatValue/booleanFormat'
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
+import { showMessage } from '@/utils/ADempiere/notification'
+import { tableRowClassName } from '@/utils/ADempiere/dictionary/field/search/index.ts'
 
 export default defineComponent({
   name: 'TableRecords',
@@ -315,7 +319,7 @@ export default defineComponent({
   },
 
   setup(props) {
-    const recordsTable = ref(null)
+    const tableRecords = ref(null)
     const componentKey = ref(0)
 
     const {
@@ -355,12 +359,23 @@ export default defineComponent({
       return !isEmptyValue(priceListVersionId) && priceListVersionId > 0
     })
 
-    function handleCurrentChange(recordRow) {
-      currentRow.value = recordRow
+    function handleCurrentChange(newCurrentRow, oldCurrentRow) {
+      if (!isEmptyValue(newCurrentRow)) {
+        if (newCurrentRow.is_active === false || newCurrentRow.IsActive === false) {
+          return
+        }
+      }
     }
 
-    function changeCurrentRecord() {
-      const recordRow = currentRow.value
+    function changeCurrentRecord(row, column, event) {
+      const recordRow = row
+      if (recordRow.is_active === false || recordRow.IsActive === false) {
+        showMessage({
+          type: 'warning',
+          message: lang.t('field.inactiveRecordNoSelect')
+        })
+        return
+      }
       if (!isEmptyValue(recordRow)) {
         setValues(recordRow)
         closeList()
@@ -368,8 +383,8 @@ export default defineComponent({
     }
 
     watch(currentRow, (newValue, oldValue) => {
-      if (recordsTable.value) {
-        recordsTable.value.setCurrentRow(
+      if (tableRecords.value) {
+        tableRecords.value.setCurrentRow(
           newValue
         )
       }
@@ -386,8 +401,8 @@ export default defineComponent({
 
     onMounted(() => {
       nextTick(() => {
-        if (recordsTable.value) {
-          recordsTable.value.setCurrentRow(
+        if (tableRecords.value) {
+          tableRecords.value.setCurrentRow(
             currentRow.value
           )
         }
@@ -396,7 +411,7 @@ export default defineComponent({
 
     return {
       componentKey,
-      recordsTable,
+      tableRecords,
       //
       currentRow,
       isLoadingRecords,
@@ -409,7 +424,8 @@ export default defineComponent({
       convertBooleanToTranslationLang,
       formatQuantity,
       handleCurrentChange,
-      changeCurrentRecord
+      changeCurrentRecord,
+      tableRowClassName
     }
   }
 })

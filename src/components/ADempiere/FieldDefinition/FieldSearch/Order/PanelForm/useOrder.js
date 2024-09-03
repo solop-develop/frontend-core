@@ -26,7 +26,7 @@ import {
   UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX
 } from '@/utils/ADempiere/dictionaryUtils'
 import {
-  ORDER_LIST_FORM
+  ORDERS_LIST_FORM
 } from '@/utils/ADempiere/dictionary/field/search/order.js'
 import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
 
@@ -39,7 +39,7 @@ import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
  * @returns
  */
 export default ({
-  uuidForm = ORDER_LIST_FORM,
+  uuidForm = ORDERS_LIST_FORM,
   parentUuid,
   containerUuid,
   containerManager,
@@ -62,19 +62,32 @@ export default ({
     }
   })
 
-  const businessPartnerData = computed(() => {
-    return store.getters.getBusinessPartnerData({
+  const storedReferenceTableName = computed(() => {
+    return store.getters.getTableNameByField({
+      uuid: fieldAttributes.uuid
+    })
+  })
+
+  const searchTableName = computed(() => {
+    if (!isEmptyValue(storedReferenceTableName.value)) {
+      return storedReferenceTableName.value
+    }
+    return fieldAttributes.referenceTableName
+  })
+
+  const infoData = computed(() => {
+    return store.getters.getOrderData({
       containerUuid: uuidForm
     })
   })
 
   const isLoadedRecords = computed(() => {
-    const { isLoaded } = businessPartnerData.value
+    const { isLoaded } = infoData.value
     return isLoaded
   })
 
   const isLoadingRecords = computed(() => {
-    const { isLoading } = businessPartnerData.value
+    const { isLoading } = infoData.value
     return isLoading
   })
 
@@ -212,7 +225,8 @@ export default ({
         parentUuid,
         containerUuid: uuidForm,
         contextColumnNames: fieldAttributes.reference.context_column_names,
-        tableName: fieldAttributes.referenceTableName,
+        tableName: searchTableName.value,
+        columnName: fieldAttributes.column_name,
         uuid: fieldAttributes.uuid,
         id: fieldAttributes.id,
         // filters,
@@ -246,7 +260,7 @@ export default ({
 
   return {
     blankValues,
-    businessPartnerData,
+    infoData,
     currentRow,
     isLoadedRecords,
     isLoadingRecords,

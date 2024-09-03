@@ -94,7 +94,7 @@
             icon="el-icon-delete"
             class="button-manage-file"
             plain
-            :disabled="isEmptyValue(infoImage)"
+            :disabled="isEmptyValue(infoImage) || isDisabled"
             @click="handleRemove()"
           />
 
@@ -160,6 +160,7 @@
 
 <script>
 import lang from '@/lang'
+import router from '@/router'
 
 // Components and Mixins
 import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
@@ -173,6 +174,8 @@ import { BEARER_TYPE } from '@/utils/auth'
 import { MIME_TYPE_IMAGE } from '@/utils/ADempiere/resource/image.ts'
 import { UUID_PATTERN } from '@/utils/ADempiere/recordUtil'
 import { RESOURCE_TYPE_IMAGE } from '@/utils/ADempiere/resource'
+import { CLIENT } from '@/utils/ADempiere/constants/systemColumns'
+import { UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
 
 // API Request Methods
 import {
@@ -272,6 +275,16 @@ export default {
       return 1
     },
     clientUuid() {
+      const { type } = router.app._route.meta
+      if (type === 'window') {
+        const { parentUuid, containerUuid } = this.currentTab
+        const clientIdRecord = this.$store.getters.getValueOfFieldOnContainer({
+          parentUuid,
+          containerUuid,
+          columnName: CLIENT + UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX
+        })
+        if (!this.isEmptyValue(clientIdRecord)) return clientIdRecord
+      }
       const { client } = this.$store.getters['user/getRole']
       return client.uuid
     },

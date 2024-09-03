@@ -41,6 +41,10 @@ export default {
     return state.storedBrowsersUuid[browserId]
   },
 
+  getStoredBrowserProcessAll: (state) => (browserUuid) => {
+    return state.storedBrowsersProcessAll[browserUuid]
+  },
+
   getStoredFieldsFromBrowser: (state, getters) => (browserUuid) => {
     const browser = getters.getStoredBrowser(browserUuid)
     if (!isEmptyValue(browser)) {
@@ -141,7 +145,9 @@ export default {
 
     fieldsList.forEach(fieldItem => {
       // default operator
-      const { is_info_only, column_name, columnNameTo, operator, display_type } = fieldItem
+      const {
+        is_info_only, column_name, columnNameTo, operator, display_type
+      } = fieldItem
       if (is_info_only) {
         return false
       }

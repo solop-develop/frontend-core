@@ -284,10 +284,10 @@ import router from '@/router'
 // Api Request Methods
 import {
   listWarehouses
-} from '@/api/ADempiere/form/expresMovement.js'
+} from '@/api/ADempiere/form/expres-movement.js'
 
 // Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { dateTimeFormats } from '@/utils/ADempiere/formatValue/dateFormat'
 

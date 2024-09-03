@@ -40,11 +40,13 @@ export default {
     help: 'Ayuda',
     description: 'Descripción'
   },
+  inactiveRecordNoSelect: 'No se puede seleccionar un registro inactivo',
   product,
   productAttribute,
   warehouseLocator,
   locationsAddress,
   invoice,
   payment,
-  order
+  order,
+  to: 'Hasta'
 }

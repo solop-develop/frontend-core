@@ -73,7 +73,8 @@ export default defineComponent({
     })
 
     const clientId = computed(() => {
-      return store.getters.getSessionContextClientId
+      const { client } = store.getters['user/getRole']
+      return client.uuid
     })
 
     const imageURL = computed(() => {

@@ -23,7 +23,8 @@ import { DEFAULT_COLUMNS_PER_ROW } from '@/utils/ADempiere/componentUtils'
 
 // API Request Methods
 import { requestFieldMetadata } from '@/api/ADempiere/dictionary/field.ts'
-import { listZoomWindowsRequest, getZoomParentRecord } from '@/api/ADempiere/field/zoom'
+import { listZoomWindowsRequest, getZoomParentRecord } from '@/api/ADempiere/fields/zoom'
+
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere'
 

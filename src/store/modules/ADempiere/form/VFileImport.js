@@ -263,7 +263,7 @@ export default {
           value: true
         })
         requestListFilePreview({
-          resourceId: resource.id,
+          resourceName: resource.id,
           charset: charsets,
           importFormatId: importFormatId
         })

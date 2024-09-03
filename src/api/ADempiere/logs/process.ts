@@ -41,12 +41,10 @@ export function listProcessLogsRequest({
       search_value: searchValue
     }
   }).then(processLogResponse => {
-    const { convertProcessLog } = require('@/utils/ADempiere/apiConverts/process.js')
-
     return {
       recordCount: processLogResponse.record_count,
       processLogsList: processLogResponse.process_logs.map(itemProcess => {
-        return convertProcessLog(itemProcess)
+        return itemProcess
       }),
       nextPageToken: processLogResponse.next_page_token
     }

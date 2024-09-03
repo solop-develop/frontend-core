@@ -337,6 +337,7 @@ export const containerManager = {
         newValueByServer = response.value
       }
 
+      // TODO: Evaluate if add `is_query_criteria` to condition
       if (inTable) {
         return store.commit('setBrowserCell', {
           containerUuid,
@@ -365,14 +366,20 @@ export const containerManager = {
         })
       }
 
-      if (field.isGetServerValue || (response.reason === 'Successful default value' && !isSameValues(value, newValueByServer))) {
+      // TODO: Evaluate if add `is_query_criteria` to condition
+      if ((field.isGetServerValue && !response.reason === 'In Request') ||
+        (response.reason === 'Successful default value' && !isSameValues(value, newValueByServer))) {
         store.dispatch('browserActionPerformed', {
           containerUuid,
           field,
           value: newValueByServer
         })
       }
-      return response
+      return {
+        ...response,
+        value: newValueByServer,
+        displayedValue: newDisplayValueByServer
+      }
     })
   },
   getLookupList({ parentUuid, containerUuid, contextColumnNames, uuid, id, searchValue, isAddBlankValue = false, blankValue }) {
@@ -386,6 +393,17 @@ export const containerManager = {
       // app attributes
       isAddBlankValue,
       blankValue
+    })
+  },
+  getSearchDefinition({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, uuid, id }) {
+    return store.dispatch('getSearchFieldsFromServer', {
+      parentUuid,
+      containerUuid,
+      contextColumnNames,
+      uuid,
+      browseFieldId: id,
+      tableName,
+      columnName
     })
   },
   getSearchRecordsList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, id, filters, searchValue, pageNumber, pageSize }) {

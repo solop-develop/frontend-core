@@ -64,6 +64,18 @@ export default {
       return title
     },
 
+    storedReferenceTableName() {
+      return store.getters.getTableNameByField({
+        uuid: this.metadata.uuid
+      })
+    },
+    searchTableName() {
+      if (!isEmptyValue(this.storedReferenceTableName)) {
+        return this.storedReferenceTableName
+      }
+      return this.metadata.referenceTableName
+    },
+
     blankValues() {
       const { column_name, elementColumnName } = this.metadata
       return {
@@ -99,7 +111,7 @@ export default {
         uuid: this.metadata.uuid,
         id: this.metadata.id,
         //
-        tableName: this.metadata.referenceTableName,
+        tableName: this.searchTableName,
         columnName: this.metadata.column_name,
         value: this.value
       })
@@ -308,8 +320,8 @@ export default {
         value = rowData[elementName]
       }
       // when value is referneced as Account_ID -> C_ElementValue_ID, C_Currency_ID_To -> C_Currency_ID
-      if (isEmptyValue(value) && !isEmptyValue(this.metadata.referenceTableName)) {
-        const referenceColumn = this.metadata.referenceTableName + IDENTIFIER_COLUMN_SUFFIX
+      if (isEmptyValue(value) && !isEmptyValue(this.searchTableName)) {
+        const referenceColumn = this.searchTableName + IDENTIFIER_COLUMN_SUFFIX
         value = rowData[referenceColumn]
       }
 

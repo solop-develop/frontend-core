@@ -193,7 +193,7 @@ export class evaluator {
     }
     // Handling of ID compare (null => 0)
     if (
-      !isEmptyValue(firstEval) &&
+      isEmptyValue(firstEval) &&
       (first.endsWith('_ID') || first.endsWith('_ID_To') ||
       first === 'AD_Key' || first === 'AD_Display' ||
       first.endsWith('atedBy') || first.endsWith('_Acct'))

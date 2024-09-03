@@ -42,15 +42,17 @@ import {
   exportCurrentRecord,
   runProcessOfWindow,
   generateReportOfWindow,
-  openBrowserAssociated,
   openDocumentAction,
   openFormAssociated,
-  openSequenceTab,
   refreshRecord,
   refreshRecords,
   recordAccess,
   undoChange
 } from '@/utils/ADempiere/dictionary/window'
+import {
+  openBrowserAssociated,
+  openSequenceTab
+} from '@/utils/ADempiere/dictionary/window/actionsMenu'
 import {
   getCurrentClient, getCurrentRole
 } from '@/utils/ADempiere/auth'
@@ -504,12 +506,12 @@ export default {
     actionsList.push(deleteRecord)
     actionsList.push(refreshRecords)
     const { sequenceTabsList } = tabDefinition
-    const storedTab = rootGetters.getStoredTab(windowUuid, tabUuid)
-    const sequenceId = storedTab.sequenceTabsList[0]
+
     if (!isEmptyValue(sequenceTabsList)) {
       sequenceTabsList.forEach(sequenceTab => {
         actionsList.push({
           ...openSequenceTab,
+          id: sequenceTab.id,
           uuid: sequenceTab.uuid,
           name: sequenceTab.name,
           description: sequenceTab.description
@@ -565,7 +567,7 @@ export default {
                 containerUuid: tabUuid,
                 contextColumnNames: sequenceTab.context_column_names,
                 tabUuid: sequenceTab.uuid,
-                tabId: sequenceId.id
+                tabId: sequenceTab.id
               })
               resolve([])
             })
@@ -576,7 +578,7 @@ export default {
               containerUuid: tabAssociatedUuid,
               tabUuid: sequenceTab.uuid,
               contextColumnNames: sequenceTab.context_column_names,
-              tabId: sequenceId.id
+              tabId: sequenceTab.id
             })
           },
           isDisabledDone: ({ parentUuid: tabAssociatedUuid, containerUuid }) => {

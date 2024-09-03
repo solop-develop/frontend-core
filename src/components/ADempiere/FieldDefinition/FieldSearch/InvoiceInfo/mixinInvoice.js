@@ -52,15 +52,15 @@ export default {
         [COLUMN_NAME]: undefined,
         id: undefined,
         uuid: undefined,
-        value: undefined,
-        tax_id: undefined,
-        name: undefined,
-        name2: undefined,
-        description: undefined
+        document_no: undefined,
+        account_name: undefined,
+        date_invoiced: undefined,
+        grand_total: undefined,
+        business_partner: undefined
       }
     },
     recordsList() {
-      return store.getters.getBusinessPartnerRecordsList({
+      return store.getters.getInvoiceRecordsList({
         containerUuid: this.uuidForm
       })
     }

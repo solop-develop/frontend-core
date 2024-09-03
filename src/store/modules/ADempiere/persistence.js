@@ -40,7 +40,9 @@ import {
 import { showMessage } from '@/utils/ADempiere/notification.js'
 import { getContextDefaultValue } from '@/utils/ADempiere/contextUtils/contextField'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
-import { isSupportLookup } from '@/utils/ADempiere/references'
+import {
+  isDateField, isDecimalField, isSupportLookup
+} from '@/utils/ADempiere/references'
 
 const persistence = {
   state: {
@@ -243,12 +245,11 @@ const persistence = {
         const { fieldsList, table } = tabDefinition
         const { key_columns, identifier_columns } = table
 
-        const persistenceAttributesList = getters.getPersistenceAttributes({
-          containerUuid,
-          recordUuid
-        })
-
         if (isEmptyValue(attributesList)) {
+          const persistenceAttributesList = getters.getPersistenceAttributes({
+            containerUuid,
+            recordUuid
+          })
           attributesList = persistenceAttributesList
             .filter(attribute => {
               const { columnName } = attribute
@@ -264,9 +265,9 @@ const persistence = {
                   return true
                 }
                 // prevent `PO.set_Value: Column not updateable`
-                if (!isEmptyValue(recordUuid) && recordUuid !== 'create-new' && !field.is_updateable) {
-                  return false
-                }
+                // if (!isEmptyValue(recordUuid) && recordUuid !== 'create-new' && !field.is_updateable) {
+                //   return false
+                // }
                 if (LOG_COLUMNS_NAME_LIST.includes(columnName)) {
                   return false
                 }
@@ -281,12 +282,37 @@ const persistence = {
             // if (key_columns.length > 1) {
             //   reccordId = 0
             // }
+            const recordAttributes = {}
+            attributesList.forEach(attribute => {
+              const { columnName, value } = attribute
+              let currentValue = value
+
+              const field = fieldsList.find(fieldItem => fieldItem.column_name === columnName)
+              if (!isEmptyValue(field)) {
+                const { display_type } = field
+                if (getTypeOfValue(currentValue) !== 'OBJECT') {
+                  if (isDateField(display_type)) {
+                    currentValue = {
+                      type: 'date',
+                      value
+                    }
+                  } else if (isDecimalField(display_type)) {
+                    currentValue = {
+                      type: 'decimal',
+                      value
+                    }
+                  }
+                }
+              }
+
+              recordAttributes[columnName] = currentValue
+            })
             return updateEntity({
               tabUuid: containerUuid,
               reccordId,
               tabId,
               recordUuid,
-              attributesList
+              recordAttributes
             })
               .then(response => {
                 // TODO: Get list record log
@@ -324,13 +350,40 @@ const persistence = {
               })
               .catch(error => reject(error))
           } else {
-            attributesList = attributesList.filter(itemAttribute => !isEmptyValue(itemAttribute.value))
+            const recordAttributes = {}
+            attributesList
+              .filter(itemAttribute => {
+                return !isEmptyValue(itemAttribute.value)
+              })
+              .forEach(attribute => {
+                const { columnName, value } = attribute
+                let currentValue = value
+
+                const field = fieldsList.find(fieldItem => fieldItem.column_name === columnName)
+                if (!isEmptyValue(field)) {
+                  const { display_type } = field
+                  if (getTypeOfValue(currentValue) !== 'OBJECT') {
+                    if (isDateField(display_type)) {
+                      currentValue = {
+                        type: 'date',
+                        value
+                      }
+                    } else if (isDecimalField(display_type)) {
+                      currentValue = {
+                        type: 'decimal',
+                        value
+                      }
+                    }
+                  }
+                }
+                recordAttributes[columnName] = currentValue
+              })
 
             // Create new entity
             return createEntity({
               tabUuid: containerUuid,
               tabId,
-              attributesList
+              recordAttributes
             })
               .then(response => {
                 showMessage({
@@ -485,6 +538,9 @@ const persistence = {
           // only changes
           .filter(attribute => {
             const { value, oldValue } = attribute
+            if (value === 0) {
+              return true
+            }
             return !isSameValues(value, oldValue)
           })
       }
@@ -505,7 +561,6 @@ const persistence = {
     }) => {
       const key = containerUuid + '_' + recordUuid
       const changes = state.persistence[key]
-
       if (!isEmptyValue(changes)) {
         const valuesList = Object.values(changes)
         if (isEmptyValue(recordUuid) || recordUuid === 'create-new') {
@@ -515,7 +570,6 @@ const persistence = {
             isAddDisplayColumn: true,
             formatToReturn: 'object'
           })
-
           return valuesList
             // only changes with default value
             .filter(attribute => {
@@ -523,11 +577,13 @@ const persistence = {
               return !isSameValues(value, defaultRow[columnName])
             })
         }
-
         return valuesList
           // only changes
           .filter(attribute => {
             const { value, oldValue } = attribute
+            if (value === 0) {
+              return true
+            }
             return !isSameValues(value, oldValue)
           })
       }

@@ -130,19 +130,25 @@ export function requestAccountingFacts({
 
 export function requestExistsAccoutingDocument({
   accoutingSchemaId,
+  organizationId,
   tableName,
   recordId
 }) {
   return request({
     url: `/general-ledger/accounts/facts/${accoutingSchemaId}/document/${tableName}/${recordId}/exists`,
-    method: 'get'
+    method: 'get',
+    params: {
+      //  DSL Query
+      table_name: tableName,
+      record_id: recordId,
+      organization_id: organizationId
+    }
   })
 }
 
 export function requestStartRePost({
   tableName,
   recordId,
-  recordUuid,
   isForce
 }) {
   return request({
@@ -150,7 +156,7 @@ export function requestStartRePost({
     method: 'post',
     data: {
       //  DSL Query
-      record_uuid: recordUuid,
+      record_id: recordId,
       is_force: isForce
     }
   })

@@ -18,13 +18,13 @@
 
 <template>
   <el-autocomplete
-    ref="autocompleteBPartner"
+    ref="autocompleteOrder"
     v-model="displayedValue"
     v-bind="commonsProperties"
     value-key="name"
     clearable
     style="width: 100%;"
-    popper-class="custom-field-bpartner-info"
+    popper-class="custom-field-order-info"
     :trigger-on-focus="false"
     :fetch-suggestions="localSearch"
     :select-when-unmatched="true"
@@ -46,7 +46,7 @@
       </span>
     </template>
 
-    <button-business-partners-list
+    <button-list
       slot="append"
       :parent-metadata="metadata"
       :container-manager="containerManager"
@@ -60,7 +60,7 @@
 import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
 import fieldSearchMixin from '@/components/ADempiere/FieldDefinition/FieldSearch/mixinFieldSearch.js'
 import OrderFieldMixin from './mixinOrder'
-import ButtonBusinessPartnersList from './buttonBusinessPartnersList.vue'
+import ButtonList from './buttonList.vue'
 
 // Constants
 import { TABLE_NAME, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/order'
@@ -79,7 +79,7 @@ export default {
   name: 'OrderInfo',
 
   components: {
-    ButtonBusinessPartnersList
+    ButtonList
   },
 
   mixins: [
@@ -105,7 +105,7 @@ export default {
 
   computed: {
     cssClassCustomField() {
-      return ' custom-field-bpartner-info '
+      return ' custom-field-order-info '
     },
     // to recrods list overwrite
     uuidForm() {
@@ -127,27 +127,27 @@ export default {
       // TODO: Implement key enter event.
     },
     setInitialValues() {
-      const storedBusinessPartnerData = this.$store.getters.getOrderData({
+      const storedInfoData = this.$store.getters.getOrderData({
         containerUuid: this.metadata.containerUuid
       })
       this.$store.commit('setOrderFieldData', {
-        ...storedBusinessPartnerData,
+        ...storedInfoData,
         containerUuid: this.metadata.containerUuid
       })
     },
     searchFocus() {
       // if (this.recordsList.length <= 1) {
-      //   this.$refs.autocompleteBPartner.close()
+      //   this.$refs.autocompleteOrder.close()
       // } else {
-      //   this.$refs.autocompleteBPartner.getData()
+      //   this.$refs.autocompleteOrder.getData()
       // }
       if (!isEmptyValue(this.displayedValue)) {
-        this.$refs.autocompleteBPartner.$el.firstElementChild.firstElementChild.select()
+        this.$refs.autocompleteOrder.$el.firstElementChild.firstElementChild.select()
       }
       this.setNewDisplayedValue()
     },
     keyPressField() {
-      if (!this.isEmptyValue(this.$refs['autocompleteBPartner' + this.metadata.columnName])) {
+      if (!this.isEmptyValue(this.$refs['autocompleteOrder' + this.metadata.columnName])) {
         this.remoteSearch(this.displayedValue, true)
       }
     },
@@ -161,15 +161,14 @@ export default {
 
       // prevent losing display value with focus
       this.controlDisplayed = this.generateDisplayedValue(recordSelected)
-      this.$refs.autocompleteBPartner.activated = false
+      this.$refs.autocompleteOrder.activated = false
     },
     setValues(recordRow) {
-      const { columnName, elementName, isSameColumnElement, containerUuid, parentUuid } = this.metadata
-      const { uuid, id, document_no, date_ordered, grand_total } = recordRow
-      let displayValue = document_no
-      if (!isEmptyValue(date_ordered)) displayValue += '_' + this.formatDate({ value: date_ordered })
-      if (!isEmptyValue(grand_total)) displayValue += '_' + this.formatQuantity({ value: grand_total })
-      // console.log(displayValue)
+      const {
+        columnName, elementName, isSameColumnElement, containerUuid, parentUuid
+      } = this.metadata
+      const { uuid, id } = recordRow
+      const displayValue = this.generateDisplayedValue(recordRow)
 
       this.$store.commit('updateValueOfField', {
         parentUuid,
@@ -283,7 +282,7 @@ export default {
 </script>
 
 <style lang="scss" scope>
-.custom-field-bpartner-info {
+.custom-field-order-info {
   // items of lust
   li {
     line-height: normal;

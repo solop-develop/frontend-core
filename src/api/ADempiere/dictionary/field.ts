@@ -35,9 +35,6 @@ export function requestFieldMetadata({
     case !isEmptyValue(id):
       url = `/dictionary/fields/${id}`
       break
-    case (!isEmptyValue(tableName) && isEmptyValue(columnName)):
-      url = `/dictionary/fields/${tableName}/${columnName}`
-      break
     case !isEmptyValue(columnId):
       url = `/dictionary/fields/column/${columnId}`
       break
@@ -46,6 +43,9 @@ export function requestFieldMetadata({
       break
     case !isEmptyValue(elementColumnName):
       url = `/dictionary/fields/element/column/${elementColumnName}`
+      break
+    case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
+      url = `/dictionary/fields/${tableName}/${columnName}`
       break
   }
   return request({
@@ -74,10 +74,34 @@ export function requestIdentifierColumns({
  * @returns
  */
 export function requestSearchFields({
-  tableName
+  fieldId,
+  processParameterId,
+  browseFieldId,
+  columnId,
+  tableName,
+  columnName
 }) {
+  let url = `dictionary/search/${tableName}`
+  switch (true) {
+    case !isEmptyValue(fieldId):
+      url = `/dictionary/search/field/${fieldId}`
+      break
+    case !isEmptyValue(processParameterId):
+      url = `/dictionary/search/parameter/${processParameterId}`
+      break
+    case !isEmptyValue(browseFieldId):
+      url = `/dictionary/search/query-criteria/${browseFieldId}`
+      break
+    case !isEmptyValue(columnId):
+      url = `/dictionary/search/column/${columnId}`
+      break
+    case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
+      url = `/dictionary/search/table/${tableName}/${columnName}`
+      break
+  }
+
   return request({
-    url: `/dictionary/search/${tableName}`,
+    url: url,
     method: 'get'
   })
 }

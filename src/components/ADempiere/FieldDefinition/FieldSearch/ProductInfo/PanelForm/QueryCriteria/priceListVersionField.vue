@@ -51,7 +51,7 @@ import store from '@/store'
 import {
   requestGetPriceListVersion,
   requestListPricesListVersions
-} from '@/api/ADempiere/field/search/product.ts'
+} from '@/api/ADempiere/fields/search/product.ts'
 
 // Components and Mixins
 import EmptyOptionSelect from '@/components/ADempiere/FieldDefinition/FieldSelect/emptyOptionSelect.vue'

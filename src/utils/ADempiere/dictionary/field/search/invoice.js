@@ -42,7 +42,9 @@ export function generateDisplayedValue(recordRow) {
   }
 
   // generate with standard columns
-  const { document_no, date_invoiced, grand_total } = recordRow
+  const {
+    business_partner, document_no, date_invoiced, grand_total
+  } = recordRow
 
   if (!isEmptyValue(document_no)) {
     displayedValue = document_no
@@ -72,7 +74,6 @@ export function generateDisplayedValue(recordRow) {
     }
   }
 
-  const { business_partner } = recordRow
   if (!isEmptyValue(business_partner)) {
     if (!isEmptyValue(displayedValue)) {
       displayedValue += ' _ ' + business_partner

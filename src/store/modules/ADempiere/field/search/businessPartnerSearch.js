@@ -19,7 +19,7 @@
 import Vue from 'vue'
 
 // API Request Methods
-import { requestListBusinessPartner } from '@/api/ADempiere/field/search/business-partner.ts'
+import { requestListBusinessPartner } from '@/api/ADempiere/fields/search/business-partner.ts'
 
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
@@ -149,6 +149,12 @@ const businessPartner = {
       containerUuid,
       queryFilters
     }) {
+      if (isEmptyValue(state.businessPartnerData[containerUuid])) {
+        Vue.set(state.businessPartnerData, containerUuid, {
+          ...state.emtpyBusinessPartnerData,
+          containerUuid
+        })
+      }
       Vue.set(state.businessPartnerData[containerUuid], 'queryFilters', queryFilters)
     },
     setBusinessPartnerQueryFilterByAttribute(state, {
@@ -156,6 +162,12 @@ const businessPartner = {
       attributeKey,
       value
     }) {
+      if (isEmptyValue(state.businessPartnerData[containerUuid])) {
+        Vue.set(state.businessPartnerData, containerUuid, {
+          ...state.emtpyBusinessPartnerData,
+          containerUuid
+        })
+      }
       Vue.set(state.businessPartnerData[containerUuid].queryFilters, attributeKey, value)
     },
 
@@ -186,7 +198,8 @@ const businessPartner = {
       //
       searchValue,
       pageNumber,
-      pageSize
+      pageSize,
+      isWithoutValidation = false
     }) {
       return new Promise(resolve => {
         const storedBusinessPartnerData = getters.getBusinessPartnerData({
@@ -216,8 +229,13 @@ const businessPartner = {
           parentUuid,
           containerUuid: originContainerUuid,
           contextColumnNames,
-          isBooleanToString: true
+          isBooleanToString: true,
+          format: 'object'
         })
+        let contextAttributes = '{}'
+        if (!isEmptyValue(contextAttributesList)) {
+          contextAttributes = JSON.stringify(contextAttributesList)
+        }
 
         const isSalesTransactionContext = isSalesTransaction({
           parentUuid: parentUuid,
@@ -232,7 +250,7 @@ const businessPartner = {
         }
 
         requestListBusinessPartner({
-          contextAttributesList,
+          contextAttributes: contextAttributes,
           //
           fieldId,
           processParameterId,
@@ -246,7 +264,8 @@ const businessPartner = {
           ...queryFilters,
           //
           pageToken,
-          pageSize
+          pageSize,
+          isWithoutValidation
         })
           .then(responseBusinessPartnerList => {
             const recordsList = responseBusinessPartnerList.records.map((row, rowIndex) => {

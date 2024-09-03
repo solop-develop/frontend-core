@@ -49,6 +49,118 @@ export const refreshBrowserSearh = {
   }
 }
 
+/**
+ * Export records selected on table Window/Smart Browse
+ */
+export const exportAllRecords = {
+  name: language.t('smartBrowser.exportAllRecords.title'),
+  description: language.t('smartBrowser.exportAllRecords.description'),
+  enabled: ({ containerUuid, containerManager }) => {
+    const emptyMandatory = store.getters.getBrowserFieldsEmptyMandatory({
+      containerUuid
+    })
+    if (!isEmptyValue(emptyMandatory)) {
+      return false
+    }
+    const recordCount = store.getters.getBrowserRecordCount({
+      containerUuid
+    })
+    if (isEmptyValue(recordCount) || recordCount <= 0) {
+      return false
+    }
+    return true
+  },
+  svg: false,
+  icon: 'el-icon-download',
+  actionName: 'exportAllRecords',
+  exportAllRecords: () => null,
+  // generate export formats
+  childs: Object.keys(EXPORT_SUPPORTED_TYPES).map(format => {
+    return {
+      name: EXPORT_SUPPORTED_TYPES[format],
+      enabled: ({ containerUuid, containerManager }) => {
+        return true
+      },
+      svg: false,
+      icon: 'el-icon-download',
+      actionName: 'exportAllRecords',
+      exportAllRecords: ({ root, parentUuid, containerUuid, containerManager }) => {
+        store.dispatch('getBrowserExportRecords', {
+          containerUuid
+        }).then(response => {
+          const currentSelection = response
+
+          const fieldsList = containerManager.getFieldsList({
+            containerUuid
+          })
+
+          const fieldsListAvailable = fieldsList.filter(fieldItem => {
+            const {
+              isShowedTableFromUser,
+              display_type, is_encrypted
+            } = fieldItem
+            // Hide encrypted fields
+            if (is_encrypted) {
+              return false
+            }
+            // Hide simple button fields without a value
+            if (display_type === BUTTON.id) { // && fieldItem.referenceValue === 0) {
+              return false
+            }
+
+            if (containerManager.isDisplayedColumn(fieldItem)) {
+              const isMandatoryGenerated = containerManager.isMandatoryColumn(fieldItem)
+              const isDisplayedDefault = containerManager.isDisplayedDefaultTable({
+                ...fieldItem,
+                is_mandatory: isMandatoryGenerated
+              })
+              // madatory, not parent column and without default value to window, mandatory or with default value to others
+              if (isDisplayedDefault) {
+                return true
+              }
+              // showed by user
+              return isShowedTableFromUser
+            }
+
+            return false
+          }).sort((a, b) => a.sequence - b.sequence)
+
+          const headerList = fieldsListAvailable.map(fieldItem => {
+            // decode html entities
+            return decodeHtmlEntities(fieldItem.name)
+          })
+
+          // filter only showed columns
+          const data = currentSelection.map(row => {
+            const newRow = {}
+            fieldsListAvailable.forEach(field => {
+              const { column_name, displayColumnName, display_type } = field
+              const value = formatField({
+                displayType: display_type,
+                value: row[column_name],
+                displayedValue: row[displayColumnName]
+              })
+              newRow[column_name] = value
+            })
+            return newRow
+          })
+
+          const title = containerManager.getPanel({
+            parentUuid,
+            containerUuid
+          }).name
+          exportFileFromJson({
+            header: headerList,
+            data,
+            fileName: `${title} ${clientDateTime()}`,
+            exportType: format
+          })
+        })
+      }
+    }
+  })
+}
+
 export const runProcessOfBrowser = {
   name: language.t('actionMenu.runProcess'),
   enabled: ({ containerUuid, containerManager }) => {
@@ -63,6 +175,10 @@ export const runProcessOfBrowser = {
   actionName: 'runProcessOfBrowser',
   uuid: null,
   runProcessOfBrowser: ({ containerUuid, containerManager }) => {
+    store.commit('setBrowserProcessAll', {
+      uuid: containerUuid,
+      isAll: false
+    })
     const selection = containerManager.getSelection({
       containerUuid
     })
@@ -83,6 +199,62 @@ export const runProcessOfBrowser = {
       })
     }
     */
+
+    store.commit('setShowedModalDialog', {
+      containerUuid: process.uuid,
+      isShowed: true
+    })
+  }
+}
+
+export const runProcessOfBrowserAllRecords = {
+  name: language.t('smartBrowser.processAllRecords.title'),
+  description: language.t('smartBrowser.processAllRecords.description'),
+  enabled: ({ containerUuid, containerManager }) => {
+    const emptyMandatory = store.getters.getBrowserFieldsEmptyMandatory({
+      containerUuid
+    })
+    if (!isEmptyValue(emptyMandatory)) {
+      return false
+    }
+    const recordCount = store.getters.getBrowserRecordCount({
+      containerUuid
+    })
+    if (isEmptyValue(recordCount) || recordCount <= 0) {
+      return false
+    }
+    return true
+  },
+  svg: false,
+  icon: 'el-icon-setting',
+  actionName: 'runProcessOfBrowser',
+  uuid: null,
+  runProcessOfBrowser: ({ containerUuid, containerManager }) => {
+    const recordCount = store.getters.getBrowserRecordCount({
+      containerUuid
+    })
+    if (isEmptyValue(recordCount) || recordCount <= 0) {
+      showNotification({
+        title: language.t('smartBrowser.processAllRecords.withoutResults'),
+        type: 'warning'
+      })
+      return
+    }
+
+    const process = store.getters.getProcessOfBrowser(containerUuid)
+    /*
+    const storedProcess = store.getters.getStoredProcess(process.uuid)
+    if (isEmptyValue(storedProcess)) {
+      store.dispatch('getProcessDefinitionFromServer', {
+        uuid: process.uuid
+      })
+    }
+    */
+
+    store.commit('setBrowserProcessAll', {
+      uuid: containerUuid,
+      isAll: true
+    })
 
     store.commit('setShowedModalDialog', {
       containerUuid: process.uuid,
@@ -195,112 +367,4 @@ export const zoomWindow = {
       uuid
     })
   }
-}
-
-/**
- * Export records selected on table Window/Smart Browse
- */
-export const exportAllRecords = {
-  name: language.t('smartBrowser.exportAllRecords.title'),
-  description: language.t('smartBrowser.exportAllRecords.description'),
-  enabled: ({ containerUuid, containerManager }) => {
-    // const selection = containerManager.getSelection({
-    //   containerUuid
-    // })
-
-    // return !isEmptyValue(selection)
-    const emptyMandatory = store.getters.getBrowserFieldsEmptyMandatory({
-      containerUuid
-    })
-    return isEmptyValue(emptyMandatory)
-  },
-  svg: false,
-  icon: 'el-icon-download',
-  actionName: 'exportAllRecords',
-  exportAllRecords: () => null,
-  // generate export formats
-  childs: Object.keys(EXPORT_SUPPORTED_TYPES).map(format => {
-    return {
-      name: EXPORT_SUPPORTED_TYPES[format],
-      enabled: ({ containerUuid, containerManager }) => {
-        return true
-      },
-      svg: false,
-      icon: 'el-icon-download',
-      actionName: 'exportAllRecords',
-      exportAllRecords: ({ root, parentUuid, containerUuid, containerManager }) => {
-        store.dispatch('getBrowserExportRecords', {
-          containerUuid
-        }).then(response => {
-          const currentSelection = response
-
-          const fieldsList = containerManager.getFieldsList({
-            containerUuid
-          })
-
-          const fieldsListAvailable = fieldsList.filter(fieldItem => {
-            const {
-              isShowedTableFromUser,
-              display_type, is_encrypted
-            } = fieldItem
-            // Hide encrypted fields
-            if (is_encrypted) {
-              return false
-            }
-            // Hide simple button fields without a value
-            if (display_type === BUTTON.id) { // && fieldItem.referenceValue === 0) {
-              return false
-            }
-
-            if (containerManager.isDisplayedColumn(fieldItem)) {
-              const isMandatoryGenerated = containerManager.isMandatoryColumn(fieldItem)
-              const isDisplayedDefault = containerManager.isDisplayedDefaultTable({
-                ...fieldItem,
-                is_mandatory: isMandatoryGenerated
-              })
-              // madatory, not parent column and without default value to window, mandatory or with default value to others
-              if (isDisplayedDefault) {
-                return true
-              }
-              // showed by user
-              return isShowedTableFromUser
-            }
-
-            return false
-          }).sort((a, b) => a.sequence - b.sequence)
-
-          const headerList = fieldsListAvailable.map(fieldItem => {
-            // decode html entities
-            return decodeHtmlEntities(fieldItem.name)
-          })
-
-          // filter only showed columns
-          const data = currentSelection.map(row => {
-            const newRow = {}
-            fieldsListAvailable.forEach(field => {
-              const { column_name, displayColumnName, display_type } = field
-              const value = formatField({
-                displayType: display_type,
-                value: row[column_name],
-                displayedValue: row[displayColumnName]
-              })
-              newRow[column_name] = value
-            })
-            return newRow
-          })
-
-          const title = containerManager.getPanel({
-            parentUuid,
-            containerUuid
-          }).name
-          exportFileFromJson({
-            header: headerList,
-            data,
-            fileName: `${title} ${clientDateTime()}`,
-            exportType: format
-          })
-        })
-      }
-    }
-  })
 }

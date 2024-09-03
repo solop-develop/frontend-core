@@ -25,11 +25,18 @@ const smartBrowser = {
   // dictionary
   dictionaryError: 'Error loading smart browser definition',
   // export
-  exportRecords: {
+  exportAllRecords: {
     title: 'Export All Records',
     description: 'Records matching the query criteria.',
     successful: 'Successful export',
     quantityExport: 'Quantity of exported records: '
+  },
+  // process
+  processAllRecords: {
+    all: ' (ALL)',
+    title: 'Process All Records',
+    description: 'Process all records matching the query criteria.',
+    withoutResults: 'There is no record with the current search criteria.'
   }
 }
 

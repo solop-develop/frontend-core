@@ -36,12 +36,13 @@ import {
 } from '@/utils/ADempiere/dictionaryUtils'
 
 // Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { isEmptyValue, getTypeOfValue } from '@/utils/ADempiere/valueUtils'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import { showMessage, showNotification } from '@/utils/ADempiere/notification'
 import { isReadOnlyColumn, containerManager } from '@/utils/ADempiere/dictionary/browser'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 import { getUuidv4 } from '@/utils/ADempiere/recordUtil'
+import { isDateField, isDecimalField } from '@/utils/ADempiere/references'
 
 const initState = {
   browserData: {}
@@ -685,7 +686,7 @@ const browserControl = {
         .map(itemField => {
           return {
             columnName: itemField.columnName,
-            valueType: itemField.valueType
+            display_type: itemField.display_type
           }
         })
 
@@ -700,12 +701,22 @@ const browserControl = {
             // evaluate metadata attributes before to convert
             if (!isEmptyValue(currentField)) {
               const value = itemRow[columnName]
-              // attributesList.push({
-              //   columnName,
-              //   valueType: currentField.valueType,
-              //   value: value
-              // })
-              attributesList[columnName] = value
+              let serverValue = value
+              // types `decimal` and `date` is a object struct
+              if (getTypeOfValue(value) !== 'OBJECT' || isEmptyValue(value.type)) {
+                if (isDateField(currentField.display_type)) {
+                  serverValue = {
+                    type: 'date',
+                    value: value
+                  }
+                } else if (isDecimalField(currentField.display_type)) {
+                  serverValue = {
+                    type: 'decimal',
+                    value: value
+                  }
+                }
+              }
+              attributesList[columnName] = serverValue
             }
           }
         })

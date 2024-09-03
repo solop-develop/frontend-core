@@ -75,21 +75,22 @@ const calloutManager = {
           const { columnName, value } = attribute
           let currentValue = value
 
-          const field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
+          const field = fieldsList.find(fieldItem => fieldItem.column_name === columnName)
           let currentDisplayType = null
           if (!isEmptyValue(field)) {
             currentDisplayType = field.display_type
           } else {
             // find on parent tab (first tab)
             const parentField = fieldsListParent.find(fieldItem => {
-              return fieldItem.columnName === columnName
+              return fieldItem.column_name === columnName
             })
             if (!isEmptyValue(parentField)) {
               currentDisplayType = parentField.display_type
             }
           }
+
           if (getTypeOfValue(currentValue) !== 'OBJECT') {
-            if (isDateField(displayType)) {
+            if (isDateField(currentDisplayType)) {
               currentValue = {
                 type: 'date',
                 value
@@ -103,6 +104,7 @@ const calloutManager = {
           }
           contextAttributesList[columnName] = currentValue
         })
+
         if (getTypeOfValue(value) !== 'OBJECT') {
           if (isDateField(displayType)) {
             value = {
@@ -138,24 +140,24 @@ const calloutManager = {
 
             const recordUuid = rootGetters.getUuidOfContainer(containerUuid)
             attributesList.forEach(attribute => {
-              const { value, columnName } = attribute
+              const { value: attributeValue, columnName: attributeColumnName } = attribute
 
-              const oldValue = rootGetters.getValueOfFieldOnContainer({
+              const attributeOldValue = rootGetters.getValueOfFieldOnContainer({
                 parentUuid,
                 containerUuid,
-                columnName
+                columnName: attributeColumnName
               })
 
               // add changes to send
-              if (!isSameValues(value, oldValue)) {
-                const field = fieldsList.find(fieldItem => fieldItem.columnName === columnName)
+              if (!isSameValues(attributeValue, attributeOldValue)) {
+                const field = fieldsList.find(fieldItem => fieldItem.column_name === attributeColumnName)
                 if (!isEmptyValue(field)) {
                   commit('addChangeToPersistenceQueue', {
                     containerUuid,
                     recordUuid,
-                    columnName,
-                    oldValue,
-                    value
+                    columnName: attributeColumnName,
+                    oldValue: attributeOldValue,
+                    value: attributeValue
                   })
                 }
               }

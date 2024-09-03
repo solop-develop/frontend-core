@@ -21,10 +21,10 @@ import store from '@/store'
 // Constants
 import {
   COLUMN_NAME
-} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+} from '@/utils/ADempiere/dictionary/field/search/order'
 
 // Utils and Helper Methods
-import { generateDisplayedValue } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+import { generateDisplayedValue } from '@/utils/ADempiere/dictionary/field/search/order'
 
 export default {
   name: 'MixinOrder',
@@ -52,15 +52,14 @@ export default {
         [COLUMN_NAME]: undefined,
         id: undefined,
         uuid: undefined,
-        value: undefined,
-        tax_id: undefined,
-        name: undefined,
-        name2: undefined,
-        description: undefined
+        document_no: undefined,
+        date_ordered: undefined,
+        grand_total: undefined,
+        business_partner: undefined
       }
     },
     recordsList() {
-      return store.getters.getBusinessPartnerRecordsList({
+      return store.getters.getOrderRecordsList({
         containerUuid: this.uuidForm
       })
     }

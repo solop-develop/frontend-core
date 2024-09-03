@@ -22,7 +22,7 @@ import Vue from 'vue'
 import {
   requestListInvoicesInfo,
   requestListBusinessPartners
-} from '@/api/ADempiere/field/search/invoice.ts'
+} from '@/api/ADempiere/fields/search/invoice.ts'
 
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
@@ -155,6 +155,12 @@ const fieldInvoice = {
       containerUuid,
       queryFilters
     }) {
+      if (isEmptyValue(state.invoiceData[containerUuid])) {
+        Vue.set(state.invoiceData, containerUuid, {
+          ...state.emtpyInvoiceData,
+          containerUuid
+        })
+      }
       Vue.set(state.invoiceData[containerUuid], 'queryFilters', queryFilters)
     },
     setInvoiceFieldQueryFilterByAttribute(state, {
@@ -162,6 +168,12 @@ const fieldInvoice = {
       attributeKey,
       value
     }) {
+      if (isEmptyValue(state.invoiceData[containerUuid])) {
+        Vue.set(state.invoiceData, containerUuid, {
+          ...state.emtpyInvoiceData,
+          containerUuid
+        })
+      }
       Vue.set(state.invoiceData[containerUuid].queryFilters, attributeKey, value)
     },
 
@@ -189,12 +201,14 @@ const fieldInvoice = {
       browseFieldId,
       referenceId,
       columnName,
+      tableName,
       columnId,
       fieldId,
       //
       searchValue,
       pageNumber,
-      pageSize
+      pageSize,
+      isWithoutValidation = false
     }) {
       return new Promise(resolve => {
         const storedInvoiceData = getters.getInvoceData({
@@ -240,16 +254,22 @@ const fieldInvoice = {
           parentUuid,
           containerUuid: originContainerUuid,
           contextColumnNames,
-          isBooleanToString: true
+          isBooleanToString: true,
+          format: 'object'
         })
+        let contextAttributes = '{}'
+        if (!isEmptyValue(contextAttributesList)) {
+          contextAttributes = JSON.stringify(contextAttributesList)
+        }
 
         requestListInvoicesInfo({
-          contextAttributesList,
+          contextAttributes: contextAttributes,
           // References
           processParameterId,
           browseFieldId,
           referenceId,
           columnName,
+          tableName,
           columnId,
           fieldId,
           // Query
@@ -257,7 +277,8 @@ const fieldInvoice = {
           ...queryFilters,
           // Page Data
           pageToken,
-          pageSize
+          pageSize,
+          isWithoutValidation
         })
           .then(responseBusinessPartnerList => {
             const recordsList = responseBusinessPartnerList.records.map((row, rowIndex) => {

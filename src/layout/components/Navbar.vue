@@ -120,9 +120,13 @@ export default {
     userAvatar() {
       return this.$store.getters['user/getUserAvatar']
     },
+    clientUuid() {
+      const { client_uuid } = this.userInfo
+      return client_uuid
+    },
     imageUrl() {
       return pathImageWindows({
-        clientId: this.$store.getters.getSessionContextClientId,
+        clientId: this.clientUuid,
         tableName: TABLE_NAME_USER,
         recordId: this.userInfo.id,
         columnName: COLUMN_NAME,

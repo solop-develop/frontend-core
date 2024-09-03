@@ -68,19 +68,32 @@ export default ({
     }
   })
 
-  const businessPartnerData = computed(() => {
+  const storedReferenceTableName = computed(() => {
+    return store.getters.getTableNameByField({
+      uuid: fieldAttributes.uuid
+    })
+  })
+
+  const searchTableName = computed(() => {
+    if (!isEmptyValue(storedReferenceTableName.value)) {
+      return storedReferenceTableName.value
+    }
+    return fieldAttributes.referenceTableName
+  })
+
+  const infoData = computed(() => {
     return store.getters.getBusinessPartnerData({
       containerUuid: uuidForm
     })
   })
 
   const isLoadedRecords = computed(() => {
-    const { isLoaded } = businessPartnerData.value
+    const { isLoaded } = infoData.value
     return isLoaded
   })
 
   const isLoadingRecords = computed(() => {
-    const { isLoading } = businessPartnerData.value
+    const { isLoading } = infoData.value
     return isLoading
   })
 
@@ -220,7 +233,7 @@ export default ({
         parentUuid,
         containerUuid: uuidForm,
         contextColumnNames: fieldAttributes.reference.context_column_names,
-        tableName: fieldAttributes.referenceTableName,
+        tableName: searchTableName.value,
         uuid: fieldAttributes.uuid,
         id: fieldAttributes.id,
         // filters,
@@ -270,7 +283,7 @@ export default ({
 
   return {
     blankValues,
-    businessPartnerData,
+    infoData,
     currentRow,
     isLoadedRecords,
     isLoadingRecords,

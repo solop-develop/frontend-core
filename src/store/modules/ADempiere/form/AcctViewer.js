@@ -176,9 +176,11 @@ const acctViewer = {
       }
       return new Promise(resolve => {
         commit('setIsLoadingAccoutingRecords', true)
+        const organizationId = getters['user/getOrganization'].id
         const postingType = getters.getCurrentStoredPostingTypeValue
         requestAccountingFacts({
           accoutingSchemaId,
+          organizationId,
           postingType: isEmptyValue(postingType) ? undefined : postingType,
           tableName,
           recordId,
@@ -244,9 +246,11 @@ const acctViewer = {
           resolve(false)
           return
         }
+        const organizationId = getters['user/getOrganization'].id
 
         requestExistsAccoutingDocument({
           accoutingSchemaId,
+          organizationId,
           tableName,
           recordId
         })

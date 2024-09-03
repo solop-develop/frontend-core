@@ -176,7 +176,7 @@ import store from '@/store'
 // Api
 import {
   getAccountingCombination
-} from '@/api/ADempiere/field/generalGedger'
+} from '@/api/ADempiere/fields/generalGedger'
 
 // Constants
 import { TEXT } from '@/utils/ADempiere/references'
@@ -413,19 +413,6 @@ export default defineComponent({
     }
 
     function saveAccoutingCombination() {
-      // const attributes = store.getters.getValuesView({
-      //   containerUuid: uuidForm.value,
-      //   format: 'array'
-      // }).filter(item => {
-      //   return item.columnName !== 'Combination' &&
-      //     fieldsListElements.value.find(itemDefinition => itemDefinition.columnName === item.columnName)
-      // }).map(item => {
-      //   return {
-      //     value: item.value,
-      //     key: item.columnName
-      //   }
-      // })
-
       store.dispatch('saveAccountCombinations', {
         id: store.getters.getValueOfField({
           containerUuid: props.metadata.containerUuid,
@@ -540,10 +527,15 @@ export default defineComponent({
     }
 
     function getAccoutingElements() {
-      const accoutingElements = store.getters.getFieldsListAccount
-      if (isEmptyValue(accoutingElements)) {
-        store.dispatch('listAccoutingElementsFromServer')
-      }
+      // const accoutingElements = store.getters.getFieldsListAccount
+      // if (isEmptyValue(accoutingElements)) {
+      store.dispatch('listAccoutingElementsFromServer')
+        .finally(() => {
+          setTimeout(() => {
+            loadCombinations()
+          }, 500)
+        })
+      // }
     }
 
     function handleCurrentChange(row) {
@@ -562,26 +554,27 @@ export default defineComponent({
           const { values, table_name } = response
           tableNameAccounting.value = table_name
           setValuesCombinations.value = values
-          // combinations.value = values.Combination
-          fieldsListElements.value.map(list => {
-            return {
-              ...list,
-              value: values[list.columnName]
-            }
+          fieldsListElements.value.forEach(element => {
+            store.commit('setFieldsValue', {
+              columnName: element.column_name,
+              value: values[element.column_name]
+            })
           })
-          isLoadingPanel.value = false
-          // setTimeout(() => {
           // isLoadingPanel.value = false
-          // }, 500)
+          setTimeout(() => {
+            isLoadingPanel.value = false
+          }, 500)
         })
         .catch(() => {
-          isLoadingPanel.value = false
+          setTimeout(() => {
+            isLoadingPanel.value = false
+          }, 500)
         })
         .finally(() => {
-          isLoadingPanel.value = false
-          // setTimeout(() => {
-          //   isLoadingPanel.value = false
-          // }, 500)
+          setTimeout(() => {
+            isLoadingPanel.value = false
+            searchRecordsList()
+          }, 500)
         })
     }
 
@@ -592,6 +585,7 @@ export default defineComponent({
     }
 
     function setPageNumber(pageNumber) {
+      if (isEmptyValue(pageNumber)) return
       searchRecordsList(pageNumber)
     }
 
@@ -600,7 +594,6 @@ export default defineComponent({
     })
 
     getAccoutingElements()
-    loadCombinations()
 
     return {
       TEXT,

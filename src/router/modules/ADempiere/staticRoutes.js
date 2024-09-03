@@ -397,7 +397,7 @@ const staticRoutes = [
     ]
   },
   {
-    path: '/ExpressShipment',
+    path: '/express-shipment',
     component: Layout,
     hidden: true,
     children: [

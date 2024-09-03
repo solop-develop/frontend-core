@@ -24,7 +24,7 @@
         id="panel-select-table"
         class="panel-select-table"
       >
-        <div slot="header" class="clearfix" style="padding: 0px;">
+        <div slot="header" class="clearfix" style="padding: 10px;">
           <h3
             v-if="isEmptyValue(currentTable)"
             style="text-align: center;margin: 0px;"
@@ -59,7 +59,7 @@
               label-position="top"
               class="form-min-label"
               inline
-              style="float: right;width: 50%;display: flex;"
+              style="float: right;width: 55%;display: flex;"
             >
               <import-formats-list />
               <charsets-list />
@@ -310,7 +310,7 @@ export default defineComponent({
   }
 }
 
-@media screen and (min-height: 1200px) {
+@media screen and (min-height: 2200px) {
   :root {
     --scroll-list-max-height: 85vh;
     --scroll-current-max-height: 70vh;
@@ -323,7 +323,7 @@ export default defineComponent({
   }
 }
 
-@media screen and (min-height: 1400px) {
+@media screen and (min-height: 2400px) {
   :root {
     --scroll-list-max-height: 100vh;
     --scroll-current-max-height: 100vh;

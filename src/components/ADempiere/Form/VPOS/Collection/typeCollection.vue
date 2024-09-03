@@ -165,8 +165,8 @@ import {
   formatPrice
 } from '@/utils/ADempiere/valueFormat.js'
 import {
-  requestGetConversionRate
-} from '@/api/ADempiere/common/index.ts'
+  getConversionRateRequest
+} from '@/api/ADempiere/system-core'
 import posMixin from '@/components/ADempiere/Form/VPOS/posMixin.js'
 
 export default {
@@ -359,7 +359,8 @@ export default {
     // If there are payments in another currency, search for conversion
     convertingPaymentMethods() {
       if (!this.isEmptyValue(this.paymentCurrency)) {
-        requestGetConversionRate({
+        // TODO: Change by UUID to ID
+        getConversionRateRequest({
           conversionTypeUuid: this.currentPointOfSales.conversionTypeUuid,
           currencyFromUuid: this.currency.uuid,
           currencyToUuid: this.paymentCurrency.currencyUuid

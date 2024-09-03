@@ -38,16 +38,18 @@
     @keyup.enter.native="getRecord"
       -->
     <template slot-scope="recordRow">
-      <div class="header">
-        <b> {{ generateDisplayedValue(recordRow.item) }} </b>
-      </div>
-      <span class="info">
-        {{ generatedDescription(recordRow.item) }}
+      <span :class="{ 'disabled-record': !recordRow.item.IsActive }">
+        <div class="header">
+          <b> {{ generateDisplayedValue(recordRow.item) }} </b>
+        </div>
+        <span class="info">
+          {{ generatedDescription(recordRow.item) }}
+        </span>
       </span>
     </template>
 
     <template slot="append">
-      <button-general-info-search
+      <button-list
         :parent-metadata="metadata"
         :is-disabled="isDisabled"
         :container-manager="containerManager"
@@ -63,7 +65,7 @@ import store from '@/store'
 // Components and Mixins
 import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
 import fieldSearchMixin from '@/components/ADempiere/FieldDefinition/FieldSearch/mixinFieldSearch.js'
-import ButtonGeneralInfoSearch from './button.vue'
+import ButtonList from './buttonList.vue'
 
 // Constants
 import { RECORD_ROWS_BY_LIST } from '@/utils/ADempiere/dictionary/field/lookups'
@@ -75,7 +77,7 @@ export default {
   name: 'GeneralInfoSearchField',
 
   components: {
-    ButtonGeneralInfoSearch
+    ButtonList
   },
 
   mixins: [
@@ -136,7 +138,7 @@ export default {
           containerUuid: this.metadata.containerUuid,
           parentUuid: this.metadata.containerUuid,
           contextColumnNames: this.metadata.reference.context_column_names,
-          tableName: this.metadata.referenceTableName,
+          tableName: this.searchTableName,
           columnName: this.metadata.column_name,
           uuid: this.metadata.uuid,
           id: this.metadata.id,

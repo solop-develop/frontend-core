@@ -32,14 +32,14 @@ import {
   requestLogout,
   requestRolesList,
   requestChangeRole,
+  organizationsListRequest,
+  warehousesListRequest,
   requestSessionInfo,
   loginAuthentication,
   setSessionAttribute,
   requestUserInfoFromSession
 } from '@/api/ADempiere/security/index.ts'
 import {
-  requestOrganizationsList,
-  requestWarehousesList,
   systemInfo,
   systemInfoDictionary,
   systemInfoS3
@@ -431,7 +431,7 @@ const actions = {
       organizationId = getters.getCurrentOrgId
     }
 
-    return requestOrganizationsList({ roleId })
+    return organizationsListRequest({ roleId })
       .then(response => {
         let organization = response.organizationsList.find(orgItem => {
           return orgItem.id === organizationId
@@ -562,7 +562,7 @@ const actions = {
       return
     }
 
-    return requestWarehousesList({
+    return warehousesListRequest({
       organizationId
     })
       .then(response => {

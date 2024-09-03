@@ -62,7 +62,7 @@
           type="primary"
           class="button-base-icon"
           icon="el-icon-check"
-          @click="changeBusinessPartner()"
+          @click="changeRecord()"
         />
       </samp>
     </el-col>
@@ -76,9 +76,9 @@ import store from '@/store'
 
 // Constants
 import {
-  BUSINESS_PARTNERS_LIST_FORM,
+  INVOICES_LIST_FORM,
   COLUMN_NAME
-} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+} from '@/utils/ADempiere/dictionary/field/search/invoice'
 
 // Components and Mixins
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
@@ -111,7 +111,7 @@ export default defineComponent({
       type: Object,
       default: () => {
         return {
-          containerUuid: BUSINESS_PARTNERS_LIST_FORM,
+          containerUuid: INVOICES_LIST_FORM,
           columnName: COLUMN_NAME
         }
       }
@@ -162,7 +162,7 @@ export default defineComponent({
     })
 
     function clearCriteriaValues() {
-      store.commit('setBusinessPartnerQueryFilters', {
+      store.commit('setInvoiceFieldQueryFilters', {
         containerUuid: props.uuidForm,
         queryFilters: {}
       })
@@ -175,7 +175,7 @@ export default defineComponent({
       closeList()
     }
 
-    function changeBusinessPartner() {
+    function changeRecord() {
       setValues(
         currentRow.value
       )
@@ -200,7 +200,7 @@ export default defineComponent({
       recordCount,
       selectedRecords,
       //
-      changeBusinessPartner,
+      changeRecord,
       clearCriteriaValues,
       clearParentValues,
       loadRecordsList,

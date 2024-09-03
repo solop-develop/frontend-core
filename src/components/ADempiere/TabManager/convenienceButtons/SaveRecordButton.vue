@@ -103,6 +103,10 @@ export default defineComponent({
     })
 
     const isSaveRecord = computed(() => {
+      const { table } = tabAttributes.value
+      if (!isEmptyValue(table) && table.is_view) {
+        return false
+      }
       if (isEmptyValue(recordUuid.value) || recordUuid.value === 'create-new') {
         return true
       }

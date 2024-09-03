@@ -19,7 +19,7 @@
 <template>
   <div>
     <el-table
-      ref="businessPartnerTable"
+      ref="tableRecords"
       v-loading="isLoadingRecords"
       class="business-partners-table"
       highlight-current-row
@@ -28,8 +28,9 @@
       :data="recordsList"
       :max-height="300"
       size="mini"
+      :row-class-name="tableRowClassName"
       @current-change="handleCurrentChange"
-      @row-dblclick="changeBusinessPartner"
+      @row-dblclick="changeCurrentRecord"
     >
       <p slot="empty" style="width: 100%;">
         {{ $t('field.businessPartner.emptyBusinessPartner') }}
@@ -109,6 +110,7 @@ import {
   defineComponent, computed, nextTick, onMounted, ref, watch
 } from '@vue/composition-api'
 
+import lang from '@/lang'
 import store from '@/store'
 
 // Constants
@@ -123,6 +125,8 @@ import useBusinessPartner from './useBusinessPartner'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { showMessage } from '@/utils/ADempiere/notification'
+import { tableRowClassName } from '@/utils/ADempiere/dictionary/field/search/index.ts'
 
 export default defineComponent({
   name: 'TableRecords',
@@ -156,7 +160,7 @@ export default defineComponent({
   },
 
   setup(props) {
-    const businessPartnerTable = ref(null)
+    const tableRecords = ref(null)
 
     const {
       currentRow,
@@ -177,12 +181,22 @@ export default defineComponent({
       })
     })
 
-    function handleCurrentChange(recordRow) {
-      currentRow.value = recordRow
+    function handleCurrentChange(newCurrentRow, oldCurrentRow) {
+      if (newCurrentRow.is_active === false || newCurrentRow.IsActive === false) {
+        return
+      }
+      currentRow.value = newCurrentRow
     }
 
-    function changeBusinessPartner() {
-      const recordRow = currentRow.value
+    function changeCurrentRecord(row, column, event) {
+      const recordRow = row
+      if (recordRow.is_active === false || recordRow.IsActive === false) {
+        showMessage({
+          type: 'warning',
+          message: lang.t('field.inactiveRecordNoSelect')
+        })
+        return
+      }
       if (!isEmptyValue(recordRow)) {
         setValues(recordRow)
         closeList()
@@ -190,8 +204,8 @@ export default defineComponent({
     }
 
     watch(currentRow, (newValue, oldValue) => {
-      if (businessPartnerTable.value) {
-        businessPartnerTable.value.setCurrentRow(
+      if (tableRecords.value) {
+        tableRecords.value.setCurrentRow(
           newValue
         )
       }
@@ -199,8 +213,8 @@ export default defineComponent({
 
     onMounted(() => {
       nextTick(() => {
-        if (businessPartnerTable.value) {
-          businessPartnerTable.value.setCurrentRow(
+        if (tableRecords.value) {
+          tableRecords.value.setCurrentRow(
             currentRow.value
           )
         }
@@ -208,14 +222,15 @@ export default defineComponent({
     })
 
     return {
-      businessPartnerTable,
+      tableRecords,
       //
       currentRow,
       isLoadingRecords,
       recordsList,
       //
       handleCurrentChange,
-      changeBusinessPartner
+      changeCurrentRecord,
+      tableRowClassName
     }
   }
 })

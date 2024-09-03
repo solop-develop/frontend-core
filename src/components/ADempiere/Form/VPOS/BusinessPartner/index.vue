@@ -233,7 +233,7 @@
  * This component is made to be the prototype of the Business Partner search field
  * TODO: Before creating you must make a search for all the filled fields.
  */
-import { requestGetBusinessPartner } from '@/api/ADempiere/system-core.js'
+import { getCustomerRequest } from '@/api/ADempiere/system-core.js'
 import BusinessPartnerCreate from './businessPartnerCreate.vue'
 import BusinessPartnerUpdate from './businessPartnerUpdate'
 import { createCustomer } from '@/api/ADempiere/form/point-of-sales.js'
@@ -945,8 +945,9 @@ export default {
         return
       }
 
-      requestGetBusinessPartner({
-        searchValue: value
+      getCustomerRequest({
+        searchValue: value,
+        posId: this.$store.getters.posAttributes.currentPointOfSales.id
       })
         .then(responseBPartner => {
           // set id, uuid and name

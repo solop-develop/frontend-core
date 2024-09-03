@@ -41,7 +41,7 @@
       <el-option
         v-for="item in optionsList"
         :key="item.uuid"
-        :label="item.values.DisplayColumn"
+        :label="item.label"
         :value="item.id"
       />
     </el-select>
@@ -96,6 +96,18 @@ export default defineComponent({
       // getter
       get() {
         const { listOrganization } = store.getters.getSearchFilter
+        if (!isEmptyValue(listOrganization)) {
+          if (listOrganization.some(item => item.label === undefined)) {
+            const listFormData = listOrganization.map(item => {
+              return {
+                id: item.id,
+                label: item.values.DisplayColumn,
+                uuid: item.values.UUID
+              }
+            })
+            return listFormData
+          }
+        }
         return listOrganization
       },
       // setter
@@ -107,7 +119,6 @@ export default defineComponent({
         })
       }
     })
-
     function loadOrganizations(isFind, searchValue) {
       if (!isFind) {
         return

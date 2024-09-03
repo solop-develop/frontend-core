@@ -2,6 +2,7 @@
  * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
  * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
  * Contributor(s): Elsio Sanchez elsiosanchez@gmail.com https://github.com/elsiosanchez
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -23,9 +24,10 @@ import {
   requestIdentifierColumns,
   requestSearchFields
 } from '@/api/ADempiere/dictionary/field.ts'
-import { requestGridGeneralInfo } from '@/api/ADempiere/field/search/index.js'
+import { requestGridGeneralInfo } from '@/api/ADempiere/fields/search/index.js'
 
 // Constants
+import { CUSTOMIZED_SEARCH_TABLES } from '@/utils/ADempiere/dictionary/field/search/index.ts'
 import { TABLE_NAME as TABLE_NAME_BPartner } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
 import { TABLE_NAME as TABLE_NAME_PRODUCT } from '@/utils/ADempiere/dictionary/field/search/product.ts'
 import { TABLE_NAME as TABLE_NAME_ORDER } from '@/utils/ADempiere/dictionary/field/search/order'
@@ -43,9 +45,9 @@ import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttr
 import { isSameSize } from '@/utils/ADempiere/formatValue/iterableFormat'
 
 const initState = {
-  businessPartnerPopoverList: false,
+  generalInfoSearchPopoverList: false,
   // container uuid: record uuid
-  emtpyBusinessPartnerData: {
+  emtpyGeneralData: {
     parentUuid: undefined,
     containerUuid: undefined,
     contextKey: '',
@@ -63,6 +65,7 @@ const initState = {
     pageNumber: 1
   },
 
+  tableNameField: {},
   setIdentifierColumns: {},
   searchQueryFields: {},
   searchTableFields: {},
@@ -78,6 +81,10 @@ const generalInfoSearch = {
   state: initState,
 
   mutations: {
+    setTableNameByField(state, { uuid, tableName }) {
+      Vue.set(state.tableNameField, uuid, tableName)
+    },
+
     setSearchIdentifierFields(state, {
       tableName,
       fieldsList
@@ -189,14 +196,42 @@ const generalInfoSearch = {
      * @returns
      */
     getSearchFieldsFromServer({ commit }, {
-      tableName
+      uuid,
+      //
+      columnId,
+      fieldId,
+      processParameterId,
+      browseFieldId,
+      //
+      tableName,
+      columnName
     }) {
       return new Promise((resolve, reject) => {
         requestSearchFields({
-          tableName
+          columnId,
+          fieldId,
+          processParameterId,
+          browseFieldId,
+          //
+          tableName,
+          columnName
         })
           .then(response => {
-            const { query_fields, table_columns } = response
+            const { query_fields, table_columns, table_name } = response
+
+            commit('setTableNameByField', {
+              uuid: uuid,
+              tableName: table_name
+            })
+
+            if (CUSTOMIZED_SEARCH_TABLES.includes(table_name)) {
+              resolve({
+                table_name,
+                query_fields: [],
+                table_columns: []
+              })
+              return
+            }
 
             const fieldsList = query_fields.map(queryField => {
               const field = generateField({
@@ -212,16 +247,17 @@ const generalInfoSearch = {
               }
             })
             commit('setSearchQueryFields', {
-              tableName,
+              tableName: table_name,
               fieldsList: fieldsList
             })
 
             commit('setSearchTableFields', {
-              tableName,
+              tableName: table_name,
               fieldsList: table_columns
             })
 
             resolve({
+              table_name,
               query_fields: fieldsList,
               table_columns
             })
@@ -343,7 +379,8 @@ const generalInfoSearch = {
       columnName,
       //
       pageNumber,
-      pageSize
+      pageSize,
+      isWithoutValidation = false
     }) {
       return new Promise((resolve, reject) => {
         if (isEmptyValue(pageNumber) || pageNumber < 1) {
@@ -366,6 +403,10 @@ const generalInfoSearch = {
           contextColumnNames,
           isBooleanToString: true
         })
+        let contextAttributes = '{}'
+        if (!isEmptyValue(contextAttributesList)) {
+          contextAttributes = JSON.stringify(contextAttributesList)
+        }
         // fill context value to continue
         if (!isSameSize(contextColumnNames, contextAttributesList)) {
           resolve([])
@@ -388,7 +429,7 @@ const generalInfoSearch = {
           }).toString() + ']'
         }
         return requestGridGeneralInfo({
-          contextAttributesList,
+          contextAttributes: contextAttributes,
           filters: filtersList,
           //
           columnId,
@@ -402,7 +443,8 @@ const generalInfoSearch = {
           columnName,
           //
           pageToken,
-          pageSize
+          pageSize,
+          isWithoutValidation
         })
           .then(response => {
             let recordsList = []
@@ -449,6 +491,9 @@ const generalInfoSearch = {
   },
 
   getters: {
+    getTableNameByField: (state) => ({ uuid }) => {
+      return state.tableNameField[uuid]
+    },
     getIdentifierColumns: (state) => ({ tableName }) => {
       return state.setIdentifierColumns[tableName] || []
     },
@@ -465,7 +510,7 @@ const generalInfoSearch = {
     */
     getGeneralInfoData: (state) => ({ containerUuid }) => {
       return state.generalInfoSearch[containerUuid] || {
-        ...state.emtpyBusinessPartnerData,
+        ...state.emtpyGeneralData,
         containerUuid
       }
     },

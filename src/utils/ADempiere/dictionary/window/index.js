@@ -35,7 +35,6 @@ import {
 } from '@/utils/ADempiere/constants/systemColumns'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { BUTTON, ID, IMAGE, LOCATION_ADDRESS, YES_NO, isLookup } from '@/utils/ADempiere/references'
-import { containerManager as CONTAINER_MANAGER_BROWSER } from '@/utils/ADempiere/dictionary/browser'
 import { EXPORT_SUPPORTED_TYPES } from '@/utils/ADempiere/exportUtil.js'
 
 // API Request Methods
@@ -45,7 +44,6 @@ import { requestSaveWindowCustomization } from '@/api/ADempiere/user-customizati
 // Utils and Helpers Methods
 import evaluator from '@/utils/ADempiere/contextUtils/evaluator'
 import { getContext, isSalesTransaction } from '@/utils/ADempiere/contextUtils'
-import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/formatValue/iterableFormat'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
 import { generatePanelAndFields } from '@/utils/ADempiere/dictionary/panel.js'
@@ -94,7 +92,10 @@ export function isReadOnlyTab({ parentUuid, containerUuid }) {
   if (isEmptyValue(storeTab)) {
     return true
   }
-  const { is_read_only, read_only_logic } = storeTab
+  const { table, is_read_only, read_only_logic } = storeTab
+  if (!isEmptyValue(table) && table.is_view) {
+    return true
+  }
   // if tab is read only, all fields are read only
   if (is_read_only) {
     return true
@@ -549,6 +550,11 @@ export const undoChange = {
   name: language.t('actionMenu.undo'),
   type: 'undoModifyData',
   enabled: ({ parentUuid, containerUuid }) => {
+    const storedTab = store.getters.getStoredTab(parentUuid, containerUuid)
+    const { table } = storedTab
+    if (!isEmptyValue(table) && table.is_view) {
+      return false
+    }
     return isEmptyValue(
       store.getters.getUuidOfContainer(containerUuid)
     )
@@ -881,156 +887,6 @@ export const generateReportOfWindow = {
 }
 
 /**
- * Open Smart Browser Associated in Process
- */
-export const openBrowserAssociated = {
-  name: language.t('actionMenu.openSmartBrowser'),
-  enabled: ({ parentUuid, containerUuid }) => {
-    const recordUuid = store.getters.getUuidOfContainer(containerUuid)
-    return !isEmptyValue(recordUuid)
-  },
-  isSvgIcon: true,
-  icon: 'search',
-  actionName: 'openBrowserAssociated',
-  openBrowserAssociated: function({ parentUuid, containerUuid, uuid, browserId }) {
-    if (isEmptyValue(browserId) || browserId <= 0) {
-      const process = store.getters.getStoredProcessFromTab({
-        windowUuid: parentUuid,
-        tabUuid: containerUuid,
-        processUuid: uuid
-      })
-      browserId = process.browser.id
-    }
-    const browserUuid = store.getters.getStoredBrowserUuidById(browserId)
-    const storedBrowser = store.getters.getStoredBrowser(browserUuid)
-    if (!isEmptyValue(storedBrowser)) {
-      // overwrite values
-      store.dispatch('setBrowserDefaultValues', {
-        containerUuid: browserUuid
-      })
-      const tabContext = store.getters.getValuesView({
-        containerUuid,
-        format: 'object'
-      })
-
-      store.dispatch('updateValuesOfContainer', {
-        containerUuid: browserUuid,
-        attributes: tabContext
-      })
-
-      // load the tab fields
-      storedBrowser.fieldsList.forEach(itemField => {
-        const { isSameColumnElement, column_name, element_name } = itemField
-        if (!isSameColumnElement) {
-          const currentContextValue = tabContext[element_name]
-          if (!isEmptyValue(currentContextValue)) {
-            store.commit('updateValueOfField', {
-              containerUuid: browserUuid,
-              columnName: element_name,
-              value: currentContextValue
-            })
-            store.commit('updateValueOfField', {
-              containerUuid: browserUuid,
-              columnName: column_name,
-              value: currentContextValue
-            })
-          }
-          // change Dependents
-          store.dispatch('changeDependentFieldsList', {
-            field: itemField,
-            containerManager: CONTAINER_MANAGER_BROWSER
-          })
-        }
-      })
-
-      // clear resutls
-      store.dispatch('clearBrowserData', {
-        containerUuid: browserUuid
-      })
-    }
-
-    // set record id from window
-    const storedTab = store.getters.getStoredTab(parentUuid, containerUuid)
-    const { keyColumn, table, parent_column_name, link_column_name } = storedTab
-    const { key_columns } = table
-
-    let relatedColumns = key_columns
-    // TODO: Validate element columns
-    const parentColumns = storedTab.fieldsList
-      .filter(fieldItem => {
-        return fieldItem.is_parent || fieldItem.is_key || fieldItem.is_mandatory
-      })
-      .map(fieldItem => {
-        return fieldItem.column_name
-      })
-
-    if (!isEmptyValue(parent_column_name)) {
-      relatedColumns.push(parent_column_name)
-    }
-    if (!isEmptyValue(link_column_name)) {
-      relatedColumns.push(link_column_name)
-    }
-    relatedColumns = relatedColumns.concat(parentColumns).sort()
-
-    // set context values
-    const parentValues = getContextAttributes({
-      parentUuid: parentUuid,
-      containerUuid: containerUuid,
-      contextColumnNames: relatedColumns
-    })
-
-    const recordId = store.getters.getValueOfField({
-      parentUuid,
-      containerUuid,
-      columnName: keyColumn
-    })
-
-    if (!isEmptyValue(recordId)) {
-      store.commit('updateValueOfField', {
-        containerUuid: browserUuid,
-        columnName: RECORD_ID,
-        value: recordId
-      })
-    }
-    parentValues.push({
-      columnName: RECORD_ID,
-      value: recordId
-    })
-    store.dispatch('updateValuesOfContainer', {
-      containerUuid: browserUuid,
-      attributes: parentValues
-    })
-
-    const containerIdentifier = 'browser_' + browserId
-    const inMenu = zoomIn({
-      attributeValue: containerIdentifier,
-      attributeName: 'containerKey',
-      query: {
-        parentUuid,
-        containerUuid,
-        recordId
-      },
-      isShowMessage: false
-    })
-
-    if (!inMenu) {
-      router.push({
-        name: 'Smart Browser',
-        params: {
-          browserId: browserId
-          // browserUuid
-        },
-        query: {
-          parentUuid,
-          containerUuid,
-          recordId
-        }
-      }, () => {})
-    }
-  }
-}
-
-/**
  * Open Form Associated in Process
  */
 export const openFormAssociated = {
@@ -1120,39 +976,6 @@ export const openDocumentAction = {
     store.commit('setShowedModalDialog', {
       parentUuid: containerUuid,
       containerUuid: uuid,
-      isShowed: true
-    })
-  }
-}
-
-/**
- * Run process associated on table or button field
- * @param {string} parentUuid
- * @param {string} containerUuid
- * @param {number} recordId
- * @param {string} recordUuid
- */
-export const openSequenceTab = {
-  name: language.t('window.tab.sequenceTab'),
-  enabled: ({ parentUuid, containerUuid }) => {
-    const recordUuid = store.getters.getUuidOfContainer(containerUuid)
-    return !isEmptyValue(recordUuid)
-  },
-  svg: false,
-  icon: 'el-icon-sort',
-  actionName: 'openSequenceTab',
-  openSequenceTab: ({ parentUuid, containerUuid, uuid, contextColumnNames }) => {
-    const currentTab = store.getters.getStoredTab(parentUuid, containerUuid)
-    const { sequenceTabsList } = currentTab
-    const sequenceTab = sequenceTabsList.find(itemTab => {
-      return itemTab.uuid === uuid
-    })
-
-    store.commit('setSelectProcessWindows', sequenceTab.uuid)
-
-    store.commit('setShowedModalDialog', {
-      parentUuid,
-      containerUuid: sequenceTab.uuid,
       isShowed: true
     })
   }
@@ -1427,9 +1250,10 @@ export function generateTabs({
       })
       return false
     }
-    return !(
-      itemTab.is_translation_tab
-    )
+    if (itemTab.is_translation_tab || (itemTab.table.table_name.endsWith('_Trl'))) {
+      return false
+    }
+    return true
   }).map((currentTab, index, listTabs) => {
     const isParentTab = Boolean(firstTabTableName === currentTab.table_name)
     const parentTabs = listTabs
@@ -1454,13 +1278,13 @@ export function generateTabs({
     }
 
     const sequenceTabsList = sequenceTabsListOnWindow
-      .filter(currentItemTab => {
-        return currentItemTab.is_sort_tab &&
-          currentItemTab.table_name === currentTab.table_name
+      .filter(currentItemSortTab => {
+        return currentItemSortTab.is_sort_tab &&
+        currentItemSortTab.table_name === currentTab.table_name
       })
-      .map(currentItemTab => {
+      .map(currentItemSortTab => {
         return {
-          ...currentItemTab,
+          ...currentItemSortTab,
           parentUuid,
           parentTabs: [
             ...parentTabs,
@@ -2178,6 +2002,17 @@ export const containerManager = {
       // app attributes
       isAddBlankValue,
       blankValue
+    })
+  },
+  getSearchDefinition({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, uuid, id }) {
+    return store.dispatch('getSearchFieldsFromServer', {
+      parentUuid,
+      containerUuid,
+      contextColumnNames,
+      uuid,
+      fieldId: id,
+      tableName,
+      columnName
     })
   },
   getSearchRecordsList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, id, filters, searchValue, pageNumber, pageSize }) {

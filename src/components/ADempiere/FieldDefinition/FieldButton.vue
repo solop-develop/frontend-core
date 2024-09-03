@@ -63,20 +63,25 @@ import {
   TRUE_STRING, FALSE_STRING
 } from '@/utils/ADempiere/formatValue/booleanFormat'
 import { RECORD_ID } from '@/utils/ADempiere/constants/systemColumns'
+import { IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
 
 // Utils and Helpers Methods
 import {
   runProcessOfWindow,
   generateReportOfWindow,
-  openBrowserAssociated,
   openDocumentAction,
   openFormAssociated
 } from '@/utils/ADempiere/dictionary/window'
+import {
+  openBrowserAssociated
+} from '@/utils/ADempiere/dictionary/window/actionsMenu'
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
+import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { getContextAttributes, generateContextKey } from '@/utils/ADempiere/contextUtils/contextAttributes'
 import {
   convertBooleanToString, convertBooleanToTranslationLang
 } from '@/utils/ADempiere/formatValue/booleanFormat'
+import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 
 export default {
   name: 'FieldButton',
@@ -145,6 +150,56 @@ export default {
             })
           },
           isEnabled: () => true
+        }
+      } else if (this.metadata.columnName === RECORD_ID) {
+        return {
+          // is: 'svg-icon',
+          // 'icon-class': 'zoom-in',
+          is: 'i',
+          class: 'el-icon-zoom-in',
+          start: () => {
+            const storedZoomWindowsList = store.getters.getZoomWindowsList({
+              tableId: this.currentTableId
+            })
+            if (isEmptyValue(storedZoomWindowsList)) {
+              this.getZoomWindowsList()
+              return
+            }
+            let windowToOpen = storedZoomWindowsList.at()
+            if (storedZoomWindowsList.length > 0) {
+              const isSalesTransactionContext = isSalesTransaction({
+                parentUuid: this.metadata.parentUuid,
+                containerUuid: this.metadata.containerUuid
+              })
+              windowToOpen = storedZoomWindowsList.find(windowToZoom => {
+                return windowToZoom.is_sales_transaction === isSalesTransactionContext
+              })
+            }
+            const tableName = store.getters.getTableNameById({
+              tableId: this.currentTableId
+            })
+            zoomIn({
+              attributeValue: `window_${windowToOpen.id}`,
+              attributeName: 'containerKey',
+              query: {
+                recordId: this.value,
+                [tableName + IDENTIFIER_COLUMN_SUFFIX]: this.value
+              },
+              params: {
+                recordId: this.value,
+                [tableName + IDENTIFIER_COLUMN_SUFFIX]: this.value
+              }
+            })
+          },
+          isEnabled: () => {
+            if (isEmptyValue(this.value)) {
+              return false
+            }
+            if (isEmptyValue(this.currentTableId)) {
+              return false
+            }
+            return true
+          }
         }
       }
       // button without process associated
@@ -250,6 +305,30 @@ export default {
         keyName: 'key'
       })
       return generateContextKey(contextAttributesList, 'key')
+    },
+
+    currentTableId() {
+      if (this.metadata.displayed && this.metadata.columnName === RECORD_ID) {
+        const { containerUuid, inTable } = this.metadata
+        // table records values
+        if (inTable) {
+          const value = this.containerManager.getCell({
+            containerUuid,
+            rowIndex: this.metadata.rowIndex,
+            rowUid: this.metadata.rowUid,
+            columnName: 'AD_Table_ID'
+          })
+          return value
+        } else {
+          const value = store.getters.getValueOfFieldOnContainer({
+            parentUuid: this.metadata.parentUuid,
+            containerUuid,
+            columnName: 'AD_Table_ID'
+          })
+          return value
+        }
+      }
+      return -1
     }
   },
 
@@ -258,6 +337,13 @@ export default {
       if (this.metadata.columnName === RECORD_ID && !isSameValues(newValue, oldValue)) {
         if (!isEmptyValue(newValue)) {
           this.setDefaultValue()
+        }
+      }
+    },
+    currentTableId(newValue, oldValue) {
+      if (!isSameValues(newValue, oldValue)) {
+        if (!isEmptyValue(newValue)) {
+          this.getZoomWindowsList()
         }
       }
     }
@@ -270,6 +356,7 @@ export default {
           // request lookup
           this.loadDefaultValueFromServer()
         }
+        this.getZoomWindowsList()
       }
     }
   },
@@ -277,6 +364,17 @@ export default {
   methods: {
     startProcess() {
       this.actionAssociated.start()
+    },
+    getZoomWindowsList() {
+      const storedZoomWindowsList = store.getters.getZoomWindowsList({
+        tableId: this.currentTableId
+      })
+      if (!isEmptyValue(storedZoomWindowsList)) {
+        return
+      }
+      store.dispatch('getZoomWindowsListFromServer', {
+        tableId: this.currentTableId
+      })
     }
   }
 }

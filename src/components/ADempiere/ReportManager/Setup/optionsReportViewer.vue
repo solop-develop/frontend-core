@@ -312,10 +312,10 @@ export default defineComponent({
       const currentPrintFormat = reportAsPrintFormat.value.childs.find(printFormat => {
         return printFormat.id === reportAsPrintFormatValue.value
       })
-      if (isEmptyValue(currentPrintFormat)) {
-        return ''
+      if (!isEmptyValue(currentPrintFormat)) {
+        return currentPrintFormat.tableName
       }
-      return currentPrintFormat.tableName
+      return ''
     })
 
     const reportTypeFormat = computed(() => {

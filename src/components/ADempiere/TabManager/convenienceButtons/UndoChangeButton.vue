@@ -79,6 +79,10 @@ export default defineComponent({
     })
 
     const isUndoChanges = computed(() => {
+      const { table } = tabAttributes.value
+      if (!isEmptyValue(table) && table.is_view) {
+        return false
+      }
       if (!isEmptyValue(recordUuid.value)) {
         return isExistsChanges.value
       }

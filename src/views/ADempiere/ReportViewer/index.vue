@@ -35,6 +35,7 @@
             />
           </div> -->
           <file-render
+            v-if="!isEmptyValue(storedReportOutput)"
             :format="reportType"
             :content="reportContent"
             :src="link.href"
@@ -122,7 +123,18 @@ export default defineComponent({
   },
 
   setup(props, { root }) {
-    const { reportId, reportUuid } = root.$route.params
+    const storedReportOutput = computed(() => {
+      return store.getters.getReportOutput(root.$route.params.instanceUuid)
+    })
+    let { reportId, reportUuid } = root.$route.params
+    if (!isEmptyValue(storedReportOutput.value)) {
+      if (isEmptyValue(reportId) || reportId <= 0) {
+        reportId = storedReportOutput.value.reportId
+      }
+      if (isEmptyValue(reportUuid)) {
+        reportUuid = storedReportOutput.value.reportUuid
+      }
+    }
 
     const {
       containerManager, actionsManager, storedReportDefinition
@@ -142,10 +154,6 @@ export default defineComponent({
     const help = computed(() => {
       if (isEmptyValue(storedReportDefinition.value) && !isEmptyValue(storedReportOutput.value)) return storedReportOutput.value.name
       return storedReportDefinition.value.help
-    })
-
-    const storedReportOutput = computed(() => {
-      return store.getters.getReportOutput(root.$route.params.instanceUuid)
     })
 
     const link = computed(() => {

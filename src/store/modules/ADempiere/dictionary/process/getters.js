@@ -22,7 +22,6 @@ import { FIELDS_DATE, FIELDS_DECIMALS } from '@/utils/ADempiere/references.js'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { isDisplayedField, isMandatoryField } from '@/utils/ADempiere/dictionary/process.js'
-import { isNumberField } from '@/utils/ADempiere/references'
 
 /**
  * Dictionary Process Getters
@@ -106,10 +105,12 @@ export default {
     const processParameters = {}
 
     fieldsList.forEach(fieldItem => {
-      if (fieldItem.is_info_only) {
+      const {
+        is_info_only, columnName, display_type, is_range, columnNameTo, isGeneratedRange
+      } = fieldItem
+      if (is_info_only) {
         return false
       }
-      const { columnName, display_type } = fieldItem
       const isMandatory = isMandatoryField(fieldItem)
       if (!isMandatory) {
         // evaluate displayed fields
@@ -126,24 +127,20 @@ export default {
       const isDateField = FIELDS_DATE.includes(display_type)
       const isDecimalField = FIELDS_DECIMALS.includes(display_type)
 
-      if (fieldItem.is_range && !isNumberField(fieldItem.display_type)) {
+      if (is_range && isGeneratedRange) {
         const valueTo = rootGetters.getValueOfField({
           containerUuid,
-          columnName: fieldItem.columnNameTo
+          columnName: columnNameTo
         })
         if (!isEmptyValue(valueTo)) {
-          // processParameters.push({
-          //   columnName: fieldItem.columnNameTo,
-          //   value: valueTo
-          // })
-          processParameters[fieldItem.columnNameTo] = valueTo
+          processParameters[columnNameTo] = valueTo
           if (isDateField) {
-            processParameters[columnName] = {
+            processParameters[columnNameTo] = {
               type: 'date',
               value: valueTo
             }
           } else if (isDecimalField) {
-            processParameters[columnName] = {
+            processParameters[columnNameTo] = {
               type: 'decimal',
               value: valueTo
             }
