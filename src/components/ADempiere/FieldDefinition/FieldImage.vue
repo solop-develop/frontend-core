@@ -79,7 +79,7 @@
             class="popover-info"
           />
 
-          <el-button
+          <!-- <el-button
             class="button-manage-file-svg"
             plain
             :disabled="isDisabled"
@@ -88,7 +88,7 @@
             <svg-icon
               icon-class="layers-clear"
             />
-          </el-button>
+          </el-button> -->
 
           <el-button
             icon="el-icon-delete"
