@@ -264,7 +264,7 @@ export default defineComponent({
       }
     }
 
-    async function getBrowserDefinition() {
+    function getBrowserDefinition() {
       const browser = storedBrowser.value
       if (browser) {
         generateBrowser(browser)
