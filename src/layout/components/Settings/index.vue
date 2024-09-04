@@ -190,14 +190,14 @@ export default {
     const showNavar = computed({
       // getter
       get() {
-        return store.getters['settings/getShowNavar']
+        return store.getters.getValuePreference
       },
       // setter
-      set(newValue) {
-        // Note: we are using destructuring assignment syntax here.
-        store.dispatch('settings/changeSetting', {
-          key: 'showNavar',
-          value: newValue
+      set(value) {
+        store.dispatch('savePreference', {
+          type: 'WINDOW',
+          columnName: 'showNavar',
+          value
         })
       }
     })
@@ -205,14 +205,15 @@ export default {
     const fixedHeader = computed({
       // getter
       get() {
-        return store.getters['settings/getFixedHeader']
+        return store.getters.getValuePreference
       },
       // setter
-      set(newValue) {
+      set(value) {
         // Note: we are using destructuring assignment syntax here.
-        store.dispatch('settings/changeSetting', {
-          key: 'fixedHeader',
-          value: newValue
+        store.dispatch('savePreference', {
+          type: 'WINDOW',
+          columnName: 'fixedHeader',
+          value
         })
       }
     })
@@ -220,15 +221,16 @@ export default {
     const showMenu = computed({
       // getter
       get() {
-        return store.state.settings.showMenu
+        return store.getters.getValuePreference
       },
       // setter
-      set(newValue) {
-        // Note: we are using destructuring assignment syntax here.
+      set(value) {
+        // Note: we are using destructuring assignment syntax here.\\
         store.dispatch('app/toggleSideBar')
-        store.dispatch('settings/changeSetting', {
-          key: 'showMenu',
-          value: newValue
+        store.dispatch('savePreference', {
+          type: 'WINDOW',
+          columnName: 'showMenu',
+          value
         })
       }
     })
@@ -236,14 +238,15 @@ export default {
     const tagsView = computed({
       // getter
       get() {
-        return store.state.settings.tagsView
+        return store.getters.getValuePreference
       },
       // setter
-      set(newValue) {
+      set(value) {
         // Note: we are using destructuring assignment syntax here.
-        store.dispatch('settings/changeSetting', {
-          key: 'tagsView',
-          value: newValue
+        store.dispatch('savePreference', {
+          type: 'WINDOW',
+          columnName: 'tagsView',
+          value
         })
       }
     })
@@ -251,14 +254,15 @@ export default {
     const showContextMenu = computed({
       // getter
       get() {
-        return store.getters['settings/getShowContextMenu']
+        return store.getters.getValuePreference
       },
       // setter
-      set(newValue) {
+      set(value) {
         // Note: we are using destructuring assignment syntax here.
-        store.dispatch('settings/changeSetting', {
-          key: 'showContextMenu',
-          value: newValue
+        store.dispatch('savePreference', {
+          type: 'WINDOW',
+          columnName: 'showContextMenu',
+          value
         })
       }
     })
@@ -266,14 +270,15 @@ export default {
     const sidebarLogo = computed({
       // getter
       get() {
-        return store.getters['settings/getSidebarLogo']
+        return store.getters.getValuePreference
       },
       // setter
-      set(newValue) {
+      set(value) {
         // Note: we are using destructuring assignment syntax here.
-        store.dispatch('settings/changeSetting', {
-          key: 'sidebarLogo',
-          value: newValue
+        store.dispatch('savePreference', {
+          type: 'WINDOW',
+          columnName: 'sidebarLogo',
+          value
         })
       }
     })
@@ -281,14 +286,15 @@ export default {
     const supportPinyinSearch = computed({
       // getter
       get() {
-        return store.state.settings.supportPinyinSearch
+        return store.getters.getValuePreference
       },
       // setter
-      set(newValue) {
+      set(value) {
         // Note: we are using destructuring assignment syntax here.
-        store.dispatch('settings/changeSetting', {
-          key: 'supportPinyinSearch',
-          value: newValue
+        store.dispatch('savePreference', {
+          type: 'WINDOW',
+          columnName: 'supportPinyinSearch',
+          value
         })
       }
     })
@@ -296,14 +302,14 @@ export default {
     const showAutoSave = computed({
       // getter
       get() {
-        return store.getters['settings/getAutoSave']
+        return store.getters.getValuePreference
       },
       // setter
-      set(newValue) {
-        // Note: we are using destructuring assignment syntax here.
-        store.dispatch('settings/changeSetting', {
-          key: 'autoSave',
-          value: newValue
+      set(value) {
+        store.dispatch('savePreference', {
+          type: 'WINDOW',
+          columnName: 'autoSave',
+          value
         })
       }
     })
@@ -311,14 +317,14 @@ export default {
     const showFullGridMode = computed({
       // getter
       get() {
-        return store.getters['settings/getFullGridMode']
+        return store.getters.getValuePreference
       },
       // setter
-      set(newValue) {
-        // Note: we are using destructuring assignment syntax here.
-        store.dispatch('settings/changeSetting', {
-          key: 'fullGridMode',
-          value: newValue
+      set(value) {
+        store.dispatch('savePreference', {
+          type: 'WINDOW',
+          columnName: 'fullGridMode',
+          value
         })
       }
     })
@@ -367,14 +373,14 @@ export default {
     const colNum = computed({
       // getter
       get() {
-        return store.state.settings.colNum
+        return store.getters.getValuePreference
       },
       // setter
-      set(newValue) {
-        // Note: we are using destructuring assignment syntax here.
-        store.dispatch('settings/changeSetting', {
-          key: 'colNum',
-          value: newValue
+      set(value) {
+        store.dispatch('savePreference', {
+          type: 'WINDOW',
+          columnName: 'colNum',
+          value
         })
       }
     })
@@ -433,14 +439,14 @@ export default {
     const panelLeft = computed({
       // getter
       get() {
-        return store.getters['settings/getPanelLeft']
+        return store.getters.getValuePreference
       },
       // setter
-      set(newValue) {
-        // Note: we are using destructuring assignment syntax here.
-        store.dispatch('settings/changeSetting', {
-          key: 'panelLeft',
-          value: newValue
+      set(value) {
+        store.dispatch('savePreference', {
+          type: 'WINDOW',
+          columnName: 'panelLeft',
+          value
         })
       }
     })
@@ -465,23 +471,17 @@ export default {
     const panelRight = computed({
       // getter
       get() {
-        return store.getters['settings/getPanelRight']
+        return store.getters.getValuePreference
       },
       // setter
-      set(newValue) {
-        // Note: we are using destructuring assignment syntax here.
-        store.dispatch('settings/changeSetting', {
-          key: 'panelRight',
-          value: newValue
+      set(value) {
+        store.dispatch('savePreference', {
+          type: 'WINDOW',
+          columnName: 'panelRight',
+          value
         })
       }
     })
-    function panelPageSize() {
-      store.dispatch('searchPreference', {
-        type: 'WINDOW',
-        columnName: 'C_Order'
-      })
-    }
     const pageSize = computed({
       get() {
         const storePageSize = store.getters.getValuePreference
@@ -493,12 +493,11 @@ export default {
       set(value) {
         store.dispatch('savePreference', {
           type: 'WINDOW',
-          columnName: 'C_Order',
+          columnName: 'pageSize',
           value
         })
       }
     })
-    panelPageSize()
     const optionsPanelRight = ref([
       {
         value: 'BC',
@@ -524,7 +523,6 @@ export default {
       optionsPanelRight,
       // Computed
       pageSize,
-      panelPageSize,
       lang,
       colNum,
       showMenu,

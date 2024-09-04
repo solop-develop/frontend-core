@@ -22,6 +22,7 @@ import language from '@/lang'
 import { CLIENT, ORGANIZATION, WAREHOUSE } from '@/utils/ADempiere/constants/systemColumns'
 import { title } from '@/settings'
 import { config } from '@/utils/ADempiere/config'
+import store from '@/store'
 
 // API Request Methods
 import {
@@ -245,7 +246,10 @@ const actions = {
           }, {
             root: true
           })
-
+          store.dispatch('searchPreference', {
+            type: 'WINDOW',
+            columnName: 'pageSize'
+          })
           const sessionResponse = {
             name: sessionInfo.name,
             defaultContext: defaultContext

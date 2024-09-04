@@ -542,10 +542,6 @@ export default defineComponent({
       )
     })
     const getData = async() => {
-      await store.dispatch('searchPreference', {
-        type: 'WINDOW',
-        columnName: 'C_Order'
-      })
       const containerUuid = tabUuid.value
       let filters, filtersRecord
       const pageNumber = query.page
