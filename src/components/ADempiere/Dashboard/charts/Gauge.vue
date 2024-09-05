@@ -151,6 +151,7 @@ export default {
     loadChartMetrics(metrics) {
       const xAxisValues = []
       const seriesToShow = []
+      const colorPercentage = [0.3, 0.7, 1]
       if (!this.isEmptyValue(metrics.series)) {
         // TODO: Consider color scheme `color_schemas`
         seriesToShow.push({
@@ -168,11 +169,10 @@ export default {
           axisLine: {
             lineStyle: {
               width: 10,
-              color: [
-                [0.3, '#67e0e3'],
-                [0.7, '#37a2da'],
-                [1, '#fd666d']
-              ]
+              color: colorPercentage.map((threshold, index) => [
+                threshold,
+                metrics.colorSchemas[index]?.color ?? '#FF0000'
+              ])
             }
           },
           axisTick: {
