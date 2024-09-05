@@ -70,7 +70,7 @@ export function requestListImportProcesses({
 }
 
 export function saveRecordImport({
-  id: resourceId,
+  resourceName,
   charset,
   importFormatId,
   isProcess,
@@ -78,12 +78,13 @@ export function saveRecordImport({
   parameters
 }) {
   return request({
-    url: `/import-loader/imports/${importFormatId}/${resourceId}`,
+    url: `/import-loader/imports/${importFormatId}`,
     method: 'post',
     data: {
       charset,
       is_process: isProcess,
       process_id: processId,
+      resource_name: resourceName,
       parameters
     }
   })
@@ -91,14 +92,15 @@ export function saveRecordImport({
 
 export function requestListFilePreview({
   charset,
-  resourceId,
+  resourceName,
   importFormatId
 }) {
   return request({
-    url: `/import-loader/imports/${importFormatId}/${resourceId}/preview`,
+    url: `/import-loader/imports/resource/preview/${importFormatId}`,
     method: 'get',
     params: {
-      charset
+      charset,
+      resource_name: resourceName
     }
   })
 }

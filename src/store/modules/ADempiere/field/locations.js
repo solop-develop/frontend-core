@@ -27,7 +27,7 @@ import {
   getLocationAddressRequest,
   listRegionsRequest,
   listCitiesRequest
-} from '@/api/ADempiere/field/location-address.ts'
+} from '@/api/ADempiere/fields/location-address.ts'
 
 // Utils and Helper Methods
 import { showMessage } from '@/utils/ADempiere/notification'

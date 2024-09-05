@@ -24,7 +24,7 @@ import {
   requestIdentifierColumns,
   requestSearchFields
 } from '@/api/ADempiere/dictionary/field.ts'
-import { requestGridGeneralInfo } from '@/api/ADempiere/field/search/index.js'
+import { requestGridGeneralInfo } from '@/api/ADempiere/fields/search/index.js'
 
 // Constants
 import { CUSTOMIZED_SEARCH_TABLES } from '@/utils/ADempiere/dictionary/field/search/index.ts'
@@ -45,9 +45,9 @@ import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttr
 import { isSameSize } from '@/utils/ADempiere/formatValue/iterableFormat'
 
 const initState = {
-  businessPartnerPopoverList: false,
+  generalInfoSearchPopoverList: false,
   // container uuid: record uuid
-  emtpyBusinessPartnerData: {
+  emtpyGeneralData: {
     parentUuid: undefined,
     containerUuid: undefined,
     contextKey: '',
@@ -510,7 +510,7 @@ const generalInfoSearch = {
     */
     getGeneralInfoData: (state) => ({ containerUuid }) => {
       return state.generalInfoSearch[containerUuid] || {
-        ...state.emtpyBusinessPartnerData,
+        ...state.emtpyGeneralData,
         containerUuid
       }
     },

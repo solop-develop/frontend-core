@@ -19,7 +19,7 @@
 import Vue from 'vue'
 
 // API Request Methods
-import { requestListBusinessPartner } from '@/api/ADempiere/field/search/business-partner.ts'
+import { requestListBusinessPartner } from '@/api/ADempiere/fields/search/business-partner.ts'
 
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
@@ -149,6 +149,12 @@ const businessPartner = {
       containerUuid,
       queryFilters
     }) {
+      if (isEmptyValue(state.businessPartnerData[containerUuid])) {
+        Vue.set(state.businessPartnerData, containerUuid, {
+          ...state.emtpyBusinessPartnerData,
+          containerUuid
+        })
+      }
       Vue.set(state.businessPartnerData[containerUuid], 'queryFilters', queryFilters)
     },
     setBusinessPartnerQueryFilterByAttribute(state, {
@@ -156,6 +162,12 @@ const businessPartner = {
       attributeKey,
       value
     }) {
+      if (isEmptyValue(state.businessPartnerData[containerUuid])) {
+        Vue.set(state.businessPartnerData, containerUuid, {
+          ...state.emtpyBusinessPartnerData,
+          containerUuid
+        })
+      }
       Vue.set(state.businessPartnerData[containerUuid].queryFilters, attributeKey, value)
     },
 

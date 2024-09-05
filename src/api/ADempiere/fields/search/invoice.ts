@@ -38,7 +38,7 @@ export function requestListOrders({
   is_sales_transaction
 }) {
   return request({
-    url: '/field/invoices/orders',
+    url: '/fields/invoices/orders',
     method: 'get',
     params: {
       filters,
@@ -68,7 +68,7 @@ export function requestListBusinessPartners({
   is_sales_transaction
 }) {
   return request({
-    url: '/field/invoices/business-partners',
+    url: '/fields/invoices/business-partners',
     method: 'get',
     params: {
       filters,
@@ -116,19 +116,19 @@ export function requestListInvoicesInfo({
   let url
   switch (true) {
     case !isEmptyValue(fieldId):
-      url = `/field/invoices/field/${fieldId}`
+      url = `/fields/invoices/field/${fieldId}`
       break
     case !isEmptyValue(processParameterId):
-      url = `/field/invoices/parameter/${processParameterId}`
+      url = `/fields/invoices/parameter/${processParameterId}`
       break
     case !isEmptyValue(browseFieldId):
-      url = `/field/invoices/query-criteria/${browseFieldId}`
+      url = `/fields/invoices/query-criteria/${browseFieldId}`
       break
     case !isEmptyValue(columnId):
-      url = `/field/invoices/column/${columnId}`
+      url = `/fields/invoices/column/${columnId}`
       break
     case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
-      url = `/field/invoices/table/${tableName}/${columnName}`
+      url = `/fields/invoices/table/${tableName}/${columnName}`
       break
   }
 

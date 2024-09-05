@@ -48,11 +48,13 @@ import { computed, defineComponent, ref } from '@vue/composition-api'
 import store from '@/store'
 
 // API Request Methods
-import { requestListProductCategories } from '@/api/ADempiere/field/search/product.ts'
+import { requestListProductCategories } from '@/api/ADempiere/fields/search/product.ts'
 
 // Components and Mixins
 import EmptyOptionSelect from '@/components/ADempiere/FieldDefinition/FieldSelect/emptyOptionSelect.vue'
-import { isEmptyValue } from '@/utils/ADempiere'
+
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'ProductCategoryField',

@@ -1,7 +1,7 @@
 <!--
   ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
   Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
-  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -19,15 +19,15 @@
 <template>
   <el-popover
     ref="businessPartnerListPopover"
-    v-model="showedPopoverBusinessPartnerList"
+    v-model="showedPopoverPanel"
     popper-class="business-partners-popover"
     placement="top"
-    width="1200"
+    width="900"
     trigger="click"
   >
-    <business-partner-panel
-      v-if="showedPopoverBusinessPartnerList"
-      :show-popover="showedPopoverBusinessPartnerList"
+    <panel-form
+      v-if="showedPopoverPanel"
+      :show-popover="showedPopoverPanel"
       :container-manager="containerManager"
       :metadata="parentMetadata"
     />
@@ -38,7 +38,7 @@
       :disabled="isDisabled"
     >
       <i
-        class="el-icon-money"
+        class="el-icon-user-solid"
       />
     </el-button>
   </el-popover>
@@ -48,7 +48,7 @@
 import store from '@/store'
 
 // Components and Mixins
-import BusinessPartnerPanel from './PanelForm/index.vue'
+import PanelForm from './PanelForm/index.vue'
 // import BusinessPartnerPanel from './businessPartnersList.vue'
 
 // Constants
@@ -61,7 +61,7 @@ export default {
   name: 'ButtonBusinessPartnersList',
 
   components: {
-    BusinessPartnerPanel
+    PanelForm
   },
 
   props: {
@@ -93,14 +93,14 @@ export default {
       }
       return BUSINESS_PARTNERS_LIST_FORM
     },
-    showedPopoverBusinessPartnerList: {
+    showedPopoverPanel: {
       get() {
-        return store.getters.getFielPaymentShow({
+        return store.getters.getBPShow({
           containerUuid: this.uuidForm
         })
       },
       set(value) {
-        store.commit('setPaymentFieldShow', {
+        store.commit('setBusinessPartnerShow', {
           containerUuid: this.uuidForm,
           show: value
         })

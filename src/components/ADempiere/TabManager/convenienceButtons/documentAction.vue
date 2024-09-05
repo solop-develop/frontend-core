@@ -370,7 +370,7 @@ export default defineComponent({
       refreshRecord.refreshRecord({
         parentUuid: props.parentUuid,
         containerUuid,
-        tabId: props.tabAttributes.id,
+        recordUuid: recordUuid.value,
         recordId: recordId.value,
         isRefreshChilds: true
       })

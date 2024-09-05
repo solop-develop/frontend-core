@@ -30,7 +30,7 @@ import {
   getCountryRequest,
   listRegionsRequest,
   listCitiesRequest
-} from '@/api/ADempiere/field/location-address.ts'
+} from '@/api/ADempiere/fields/location-address.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'

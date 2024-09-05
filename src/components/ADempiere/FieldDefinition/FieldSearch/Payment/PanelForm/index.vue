@@ -19,7 +19,7 @@
 <template>
   <el-main
     v-shortkey="QUICK_KEY_ACCESS"
-    class="business-partners-container"
+    class="payments-container"
     @shortkey.native="keyAction"
   >
     <query-criteria
@@ -51,9 +51,9 @@ import store from '@/store'
 
 // Constants
 import {
-  BUSINESS_PARTNERS_LIST_FORM,
+  PAYMENT_LIST_FORM,
   COLUMN_NAME
-} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+} from '@/utils/ADempiere/dictionary/field/search/payment'
 import {
   QUICK_KEY_ACCESS
 } from '@/utils/ADempiere/dictionary/field/search/index.ts'
@@ -89,7 +89,7 @@ export default defineComponent({
       type: Object,
       default: () => {
         return {
-          containerUuid: BUSINESS_PARTNERS_LIST_FORM,
+          containerUuid: PAYMENT_LIST_FORM,
           columnName: COLUMN_NAME
         }
       }
@@ -105,11 +105,11 @@ export default defineComponent({
       if (!isEmptyValue(props.metadata.containerUuid)) {
         return props.metadata.columnName + '_' + props.metadata.containerUuid
       }
-      return BUSINESS_PARTNERS_LIST_FORM
+      return PAYMENT_LIST_FORM
     })
 
     const {
-      businessPartnerData,
+      paymentData,
       isLoadedRecords,
       isLoadingRecords,
       isSalesTransactionContext,
@@ -133,7 +133,7 @@ export default defineComponent({
       }
     })
 
-    if (isReadyFromGetData.value || isSalesTransactionContext.value !== businessPartnerData.value.isSalesTransaction) {
+    if (isReadyFromGetData.value || isSalesTransactionContext.value !== paymentData.value.isSalesTransaction) {
       loadRecordsList({})
     }
 
@@ -149,11 +149,11 @@ export default defineComponent({
     const unsubscribeAccoutingFacts = subscribeAccoutingFacts()
 
     function setInitialValues() {
-      const storedBusinessPartnerData = store.getters.getPaymentData({
+      const storedPaymentData = store.getters.getPaymentData({
         containerUuid: props.metadata.containerUuid
       })
       store.commit('setPaymentFieldData', {
-        ...storedBusinessPartnerData,
+        ...storedPaymentData,
         containerUuid: props.metadata.containerUuid
       })
     }
@@ -177,7 +177,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.business-partners-container {
+.payments-container {
   padding-top: 0px;
   padding-bottom: 0px;
 }

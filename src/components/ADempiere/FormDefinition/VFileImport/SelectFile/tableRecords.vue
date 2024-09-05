@@ -25,10 +25,11 @@
     border
     highlight-current-row
     style="width: 100%"
+    height="350"
+    class="table-data-dile-import"
     :element-loading-text="$t('notifications.loading')"
     element-loading-background="rgba(255, 255, 255, 0.8)"
     :empty-text="$t('form.VFileImport.configureToImport.emptyDataTable')"
-    height="25vh"
     @current-change="changeRow"
   >
     <index-column
@@ -115,3 +116,8 @@ export default defineComponent({
   }
 })
 </script>
+<style lang="scss">
+.el-table--medium .el-table__cell {
+  padding: 2px 0 !important;
+}
+</style>

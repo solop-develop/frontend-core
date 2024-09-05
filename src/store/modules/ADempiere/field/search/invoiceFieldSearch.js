@@ -22,7 +22,7 @@ import Vue from 'vue'
 import {
   requestListInvoicesInfo,
   requestListBusinessPartners
-} from '@/api/ADempiere/field/search/invoice.ts'
+} from '@/api/ADempiere/fields/search/invoice.ts'
 
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
@@ -155,6 +155,12 @@ const fieldInvoice = {
       containerUuid,
       queryFilters
     }) {
+      if (isEmptyValue(state.invoiceData[containerUuid])) {
+        Vue.set(state.invoiceData, containerUuid, {
+          ...state.emtpyInvoiceData,
+          containerUuid
+        })
+      }
       Vue.set(state.invoiceData[containerUuid], 'queryFilters', queryFilters)
     },
     setInvoiceFieldQueryFilterByAttribute(state, {
@@ -162,6 +168,12 @@ const fieldInvoice = {
       attributeKey,
       value
     }) {
+      if (isEmptyValue(state.invoiceData[containerUuid])) {
+        Vue.set(state.invoiceData, containerUuid, {
+          ...state.emtpyInvoiceData,
+          containerUuid
+        })
+      }
       Vue.set(state.invoiceData[containerUuid].queryFilters, attributeKey, value)
     },
 

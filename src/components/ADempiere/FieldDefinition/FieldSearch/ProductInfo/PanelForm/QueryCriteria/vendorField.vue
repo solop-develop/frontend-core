@@ -48,10 +48,11 @@ import { computed, defineComponent, ref } from '@vue/composition-api'
 import store from '@/store'
 
 // API Request Methods
-import { requestListVendors } from '@/api/ADempiere/field/search/product.ts'
+import { requestListVendors } from '@/api/ADempiere/fields/search/product.ts'
 
 // Components and Mixins
 import EmptyOptionSelect from '@/components/ADempiere/FieldDefinition/FieldSelect/emptyOptionSelect.vue'
+
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 

@@ -126,7 +126,7 @@ import preferenceFields from './preferenceValueFieldsList.js'
 import { CLIENT, ORGANIZATION } from '@/utils/ADempiere/constants/systemColumns'
 
 // api request methods
-import { setPreference, deletePreference } from '@/api/ADempiere/field/preference.js'
+import { setPreference, deletePreference } from '@/api/ADempiere/fields/preference.js'
 
 const containerUuid = `field-preference`
 

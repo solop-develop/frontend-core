@@ -52,7 +52,7 @@
       </span>
     </template>
 
-    <button-business-partners-list
+    <button-list
       slot="append"
       :parent-metadata="metadata"
       :container-manager="containerManager"
@@ -66,7 +66,7 @@
 import fieldMixin from '@/components/ADempiere/FieldDefinition/mixin/mixinField.js'
 import fieldSearchMixin from '@/components/ADempiere/FieldDefinition/FieldSearch/mixinFieldSearch.js'
 import businessPartnerMixin from './mixinBusinessPartner'
-import ButtonBusinessPartnersList from './buttonBusinessPartnersList.vue'
+import ButtonList from './buttonList.vue'
 
 // Constants
 import { TABLE_NAME, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
@@ -79,7 +79,7 @@ export default {
   name: 'BusinessPartnerInfoField',
 
   components: {
-    ButtonBusinessPartnersList
+    ButtonList
   },
 
   mixins: [

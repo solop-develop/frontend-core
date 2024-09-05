@@ -655,7 +655,7 @@ const actions = {
           containerUuid,
           contextColumnNames: field.contextColumnNames,
           uuid: field.uuid,
-          id: field.id,
+          id: field.internal_id,
           columnName: column_name,
           defaultValue: field.default_value
         })

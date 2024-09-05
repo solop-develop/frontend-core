@@ -19,7 +19,7 @@
 import Vue from 'vue'
 
 // API Request Methods
-import { requestDefaultValue } from '@/api/ADempiere/userInterface/defaultValue.ts'
+import { requestDefaultValue } from '@/api/ADempiere/fields/defaultValue.ts'
 
 // Constants
 import {

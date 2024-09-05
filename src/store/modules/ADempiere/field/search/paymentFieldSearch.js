@@ -23,7 +23,7 @@ import {
   requesListBankAccount,
   requestListPaymentsInfo,
   requestListBusinessPartners
-} from '@/api/ADempiere/field/search/payment.ts'
+} from '@/api/ADempiere/fields/search/payment.ts'
 
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
@@ -125,6 +125,19 @@ const fieldPayment = {
       Vue.set(state.paymentData[containerUuid], 'currentRow', currentRow)
     },
 
+    setPaymentIsLoading(state, {
+      containerUuid,
+      isLoading = false
+    }) {
+      if (isEmptyValue(state.paymentData[containerUuid])) {
+        Vue.set(state.paymentData, containerUuid, {
+          ...state.emtpyPaymentData,
+          containerUuid
+        })
+      }
+      Vue.set(state.paymentData[containerUuid], 'isLoading', isLoading)
+    },
+
     setPaymentFieldShow(state, {
       containerUuid,
       show = false
@@ -143,6 +156,12 @@ const fieldPayment = {
       containerUuid,
       queryFilters
     }) {
+      if (isEmptyValue(state.paymentData[containerUuid])) {
+        Vue.set(state.paymentData, containerUuid, {
+          ...state.emtpyPaymentData,
+          containerUuid
+        })
+      }
       Vue.set(state.paymentData[containerUuid], 'queryFilters', queryFilters)
     },
     setPaymentFieldQueryFilterByAttribute(state, {
@@ -150,6 +169,12 @@ const fieldPayment = {
       attributeKey,
       value
     }) {
+      if (isEmptyValue(state.paymentData[containerUuid])) {
+        Vue.set(state.paymentData, containerUuid, {
+          ...state.emtpyPaymentData,
+          containerUuid
+        })
+      }
       Vue.set(state.paymentData[containerUuid].queryFilters, attributeKey, value)
     },
     setOptionsListBusinessPartner(state, list) {
@@ -180,20 +205,22 @@ const fieldPayment = {
     }) {
       return new Promise(resolve => {
         let pageToken
-        const storedBusinessPartnerData = getters.getPaymentData({
+        const storedPaymentData = getters.getPaymentData({
           containerUuid
         })
 
         if (isEmptyValue(pageNumber) || pageNumber < 1) {
           const {
             pageNumber: storedPageNumber
-          } = storedBusinessPartnerData.pageNumber
+          } = storedPaymentData.pageNumber
           // refresh with same page
           pageNumber = storedPageNumber
         }
-        if (!isEmptyValue(storedBusinessPartnerData.nextPageToken)) pageToken = storedBusinessPartnerData.nextPageToken + pageNumber
+        if (!isEmptyValue(storedPaymentData.nextPageToken)) {
+          pageToken = storedPaymentData.nextPageToken + pageNumber
+        }
 
-        commit('setBusinessPartnerIsLoading', {
+        commit('setPaymentIsLoading', {
           containerUuid,
           isLoading: true
         })
@@ -203,14 +230,14 @@ const fieldPayment = {
           containerUuid: containerUuid
         })
 
-        const { queryFilters } = storedBusinessPartnerData
+        const { queryFilters } = storedPaymentData
         if (isSalesTransactionContext) {
           queryFilters.is_vendor = undefined
         } else {
           queryFilters.is_customer = undefined
         }
         commit('setPaymentFieldData', {
-          ...storedBusinessPartnerData,
+          ...storedPaymentData,
           containerUuid
         })
 
@@ -271,7 +298,7 @@ const fieldPayment = {
             }
 
             commit('setPaymentFieldData', {
-              ...storedBusinessPartnerData,
+              ...storedPaymentData,
               containerUuid,
               currentRow,
               recordsList,
@@ -294,7 +321,7 @@ const fieldPayment = {
           })
           .finally(() => {
             setTimeout(() => {
-              commit('setBusinessPartnerIsLoading', {
+              commit('setPaymentIsLoading', {
                 containerUuid,
                 isLoading: false
               })

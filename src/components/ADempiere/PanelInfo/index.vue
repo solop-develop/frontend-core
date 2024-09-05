@@ -437,17 +437,17 @@ export default defineComponent({
       }
       if (tab.name === 'listDashboard') {
         const { currentTab } = store.getters.getContainerInfo
-        if (isEmptyValue(storedWindow.value.id) ||
+        if (isEmptyValue(storedWindow.value.internal_id) ||
           (isEmptyValue(currentTab))) {
           return
         }
         const dashboardList = store.getters.getPanelDashboard({
-          tabId: currentTab.id,
+          tabId: currentTab.internal_id,
           recordId: currentRecordId.value
         })
         if (isEmptyValue(dashboardList)) {
           store.dispatch('listWindowDashboard', {
-            tabId: currentTab.id,
+            tabId: currentTab.internal_id,
             windowId: storedWindow.value.internal_id,
             recordId: currentRecordId.value,
             tableName: currentTab.table_name
@@ -460,7 +460,7 @@ export default defineComponent({
         store.dispatch('getReferencesFromServer', {
           tableName: currentTab.value.table_name,
           containerUuid: currentTab.value.containerUuid,
-          tabId: currentTab.value.id,
+          tabId: currentTab.value.internal_id,
           parentUuid: currentTab.value.parentUuid,
           recordId: currentRecordId.value,
           recordUuid: currentRecordUuid.value

@@ -408,7 +408,7 @@ export default {
                 await refreshRecord.refreshRecord({
                   parentUuid: windowUuid,
                   containerUuid: tabAssociatedUuid,
-                  tabId: storedTab.id,
+                  tabId: storedTab.internal_id,
                   recordId,
                   recordUuid
                 })
@@ -847,7 +847,7 @@ export default {
               contextColumnNames: fieldDocumentStatus.context_column_names,
               //
               uuid: fieldDocumentStatus.uuid,
-              id: fieldDocumentStatus.id,
+              id: fieldDocumentStatus.internal_id,
               columnName: fieldDocumentStatus.column_name,
               defaultValue: fieldDocumentStatus.default_value,
               value: value

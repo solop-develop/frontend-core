@@ -103,6 +103,10 @@ export default defineComponent({
     })
 
     const isSaveRecord = computed(() => {
+      const { table } = tabAttributes.value
+      if (!isEmptyValue(table) && table.is_view) {
+        return false
+      }
       if (isEmptyValue(recordUuid.value) || recordUuid.value === 'create-new') {
         return true
       }
@@ -143,7 +147,7 @@ export default defineComponent({
       store.dispatch('flushPersistenceQueue', {
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid,
-        tabId: tabAttributes.value.id,
+        tabId: tabAttributes.value.internal_id,
         tableName: tabAttributes.value.table_name,
         recordUuid: recordUuid.value,
         reccordId: reccordId.value

@@ -75,19 +75,19 @@ export default ({
     return fieldAttributes.referenceTableName
   })
 
-  const businessPartnerData = computed(() => {
-    return store.getters.getBusinessPartnerData({
+  const paymentData = computed(() => {
+    return store.getters.getPaymentData({
       containerUuid: uuidForm
     })
   })
 
   const isLoadedRecords = computed(() => {
-    const { isLoaded } = businessPartnerData.value
+    const { isLoaded } = paymentData.value
     return isLoaded
   })
 
   const isLoadingRecords = computed(() => {
-    const { isLoading } = businessPartnerData.value
+    const { isLoading } = paymentData.value
     return isLoading
   })
 
@@ -227,7 +227,7 @@ export default ({
         contextColumnNames: fieldAttributes.reference.context_column_names,
         tableName: searchTableName.value,
         uuid: fieldAttributes.uuid,
-        id: fieldAttributes.id,
+        id: fieldAttributes.internal_id,
         // filters,
         pageNumber,
         pageSize
@@ -259,7 +259,7 @@ export default ({
 
   return {
     blankValues,
-    businessPartnerData,
+    paymentData,
     currentRow,
     isLoadedRecords,
     isLoadingRecords,

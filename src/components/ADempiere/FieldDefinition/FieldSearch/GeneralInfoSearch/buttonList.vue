@@ -19,14 +19,14 @@
 <template>
   <el-popover
     ref="generalSearchListPopover"
-    v-model="showedPopoverGeneralInfoPanel"
+    v-model="showedPopoverPanel"
     placement="top"
     width="900"
     trigger="click"
   >
-    <panel-general-info-search
-      v-if="showedPopoverGeneralInfoPanel"
-      :show-popover="showedPopoverGeneralInfoPanel"
+    <panel-form
+      v-if="showedPopoverPanel"
+      :show-popover="showedPopoverPanel"
       :metadata="parentMetadata"
       :container-manager="containerManager"
     />
@@ -48,7 +48,7 @@ import { defineComponent, computed, ref } from '@vue/composition-api'
 import store from '@/store'
 
 // Components and Mixins
-import PanelGeneralInfoSearch from './panel.vue'
+import PanelForm from './panel.vue'
 
 // Constants
 import { GENERAL_INFO_SEARCH_LIST_FORM } from '@/utils/ADempiere/dictionary/field/search/index.ts'
@@ -57,10 +57,10 @@ import { GENERAL_INFO_SEARCH_LIST_FORM } from '@/utils/ADempiere/dictionary/fiel
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
-  name: 'GeneralInfoSearch',
+  name: 'ButtonList',
 
   components: {
-    PanelGeneralInfoSearch
+    PanelForm
   },
 
   props: {
@@ -102,7 +102,7 @@ export default defineComponent({
       return GENERAL_INFO_SEARCH_LIST_FORM
     })
 
-    const showedPopoverGeneralInfoPanel = computed({
+    const showedPopoverPanel = computed({
       get() {
         return store.getters.getGeneralInfoShow({
           containerUuid: uuidForm.value
@@ -120,7 +120,7 @@ export default defineComponent({
       generalSearchListPopover,
       // computeds
       uuidForm,
-      showedPopoverGeneralInfoPanel
+      showedPopoverPanel
     }
   }
 })

@@ -53,7 +53,7 @@ import EmptyOptionSelect from '@/components/ADempiere/FieldDefinition/FieldSelec
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import { requestListOrders } from '@/api/ADempiere/field/search/invoice.ts'
+import { requestListOrders } from '@/api/ADempiere/fields/search/invoice.ts'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat'
 
 export default defineComponent({

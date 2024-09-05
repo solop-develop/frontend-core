@@ -25,7 +25,7 @@ export const TABLE_NAME = 'C_Order'
 
 export const COLUMN_NAME = 'C_Order_ID'
 
-export const ORDER_LIST_FORM = 'order-field-search-list'
+export const ORDERS_LIST_FORM = 'order-field-search-list'
 
 /**
  * Generate displayed value from values
@@ -42,7 +42,9 @@ export function generateDisplayedValue(recordRow) {
   }
 
   // generate with standard columns
-  const { document_no, date_ordered, grand_total } = recordRow
+  const {
+    document_no, date_ordered, grand_total, business_partner
+  } = recordRow
 
   if (!isEmptyValue(document_no)) {
     displayedValue = document_no
@@ -72,7 +74,6 @@ export function generateDisplayedValue(recordRow) {
     }
   }
 
-  const { business_partner } = recordRow
   if (!isEmptyValue(business_partner)) {
     if (!isEmptyValue(displayedValue)) {
       displayedValue += ' _ ' + business_partner

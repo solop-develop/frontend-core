@@ -55,7 +55,6 @@
 import { defineComponent, ref, computed } from '@vue/composition-api'
 
 import store from '@/store'
-import router from '@/router'
 
 // Components and Mixins
 import AttachmentManager from '@/components/ADempiere/PanelInfo/Component/AttachmentManager/index.vue'
@@ -92,12 +91,10 @@ export default defineComponent({
       if (isDisabledManageFile.value) {
         return
       }
-      const { action_id, type } = router.app._route.meta
       store.dispatch('getAttachmentFromServer', {
         tableName: 'AD_ImpFormat',
-        containerId: action_id,
         recordId: props.importFormatId,
-        containerType: type
+        containerType: 'attachment'
       })
         .then(response => {
           // isShowedFiles.value = true // Boolean(response)

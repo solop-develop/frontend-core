@@ -23,7 +23,7 @@ import {
   requestListAccountingCombinations,
   requestGetAccountingCombination,
   requestSaveAccountingCombination
-} from '@/api/ADempiere/field/accoutingCombination'
+} from '@/api/ADempiere/fields/accoutingCombination'
 
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
@@ -35,9 +35,9 @@ import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttributes'
 
 const initState = {
-  businessPartnerPopoverList: false,
+  accountCombinationsPopoverList: false,
   // container uuid: record uuid
-  emtpyBusinessPartnerData: {
+  emtpyAccoutingCombinationData: {
     parentUuid: undefined,
     containerUuid: undefined,
     contextKey: '',
@@ -266,7 +266,7 @@ const AccountCombinations = {
    */
     getAccountCombinationsData: (state) => ({ containerUuid }) => {
       return state.accountCombinations[containerUuid] || {
-        ...state.emtpyBusinessPartnerData,
+        ...state.emtpyAccoutingCombinationData,
         containerUuid
       }
     },

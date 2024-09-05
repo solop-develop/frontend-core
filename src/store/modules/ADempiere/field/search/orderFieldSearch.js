@@ -22,7 +22,7 @@ import Vue from 'vue'
 import {
   requestListOrderInfo,
   requestListBusinessPartners
-} from '@/api/ADempiere/field/search/order.ts'
+} from '@/api/ADempiere/fields/search/order.ts'
 
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
@@ -154,6 +154,12 @@ const fieldOrder = {
       containerUuid,
       queryFilters
     }) {
+      if (isEmptyValue(state.orderData[containerUuid])) {
+        Vue.set(state.orderData, containerUuid, {
+          ...state.emtpyOrderData,
+          containerUuid
+        })
+      }
       Vue.set(state.orderData[containerUuid], 'queryFilters', queryFilters)
     },
     setOrderFieldQueryFilterByAttribute(state, {
@@ -161,6 +167,12 @@ const fieldOrder = {
       attributeKey,
       value
     }) {
+      if (isEmptyValue(state.orderData[containerUuid])) {
+        Vue.set(state.orderData, containerUuid, {
+          ...state.emtpyOrderData,
+          containerUuid
+        })
+      }
       Vue.set(state.orderData[containerUuid].queryFilters, attributeKey, value)
     },
 
@@ -199,18 +211,18 @@ const fieldOrder = {
     }) {
       return new Promise(resolve => {
         let pageToken
-        const storedBusinessPartnerData = getters.getOrderData({
+        const storedInfoData = getters.getOrderData({
           containerUuid
         })
 
         if (isEmptyValue(pageNumber) || pageNumber < 1) {
           const {
             pageNumber: storedPageNumber
-          } = storedBusinessPartnerData.pageNumber
+          } = storedInfoData.pageNumber
           // refresh with same page
           pageNumber = storedPageNumber
         }
-        if (!isEmptyValue(storedBusinessPartnerData.nextPageToken)) pageToken = storedBusinessPartnerData.nextPageToken + pageNumber
+        if (!isEmptyValue(storedInfoData.nextPageToken)) pageToken = storedInfoData.nextPageToken + pageNumber
 
         commit('setBusinessPartnerIsLoading', {
           containerUuid,
@@ -222,14 +234,14 @@ const fieldOrder = {
           containerUuid: containerUuid
         })
 
-        const { queryFilters } = storedBusinessPartnerData
+        const { queryFilters } = storedInfoData
         if (isSalesTransactionContext) {
           queryFilters.is_vendor = undefined
         } else {
           queryFilters.is_customer = undefined
         }
         commit('setOrderFieldData', {
-          ...storedBusinessPartnerData,
+          ...storedInfoData,
           containerUuid
         })
 
@@ -292,7 +304,7 @@ const fieldOrder = {
             }
 
             commit('setOrderFieldData', {
-              ...storedBusinessPartnerData,
+              ...storedInfoData,
               containerUuid,
               currentRow,
               recordsList,

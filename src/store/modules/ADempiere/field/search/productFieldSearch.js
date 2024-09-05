@@ -19,7 +19,7 @@
 import Vue from 'vue'
 
 // API Request Methods
-import { requestListProducts, requestListWarehouses } from '@/api/ADempiere/field/search/product.ts'
+import { requestListProducts, requestListWarehouses } from '@/api/ADempiere/fields/search/product.ts'
 
 // Constants
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
@@ -160,6 +160,12 @@ const productFieldSearch = {
       containerUuid,
       queryFilters = {}
     }) {
+      if (isEmptyValue(state.productData[containerUuid])) {
+        Vue.set(state.productData, containerUuid, {
+          ...state.emptyProductData,
+          containerUuid
+        })
+      }
       Vue.set(state.productData[containerUuid], 'queryFilters', queryFilters)
     },
     setProductSearchFieldQueryFilterByAttribute(state, {
@@ -167,6 +173,12 @@ const productFieldSearch = {
       attributeKey,
       value
     }) {
+      if (isEmptyValue(state.productData[containerUuid])) {
+        Vue.set(state.productData, containerUuid, {
+          ...state.emptyProductData,
+          containerUuid
+        })
+      }
       Vue.set(state.productData[containerUuid].queryFilters, attributeKey, value)
     },
 

@@ -63,19 +63,19 @@ export function requestListBusinessPartner({
   let url
   switch (true) {
     case !isEmptyValue(fieldId):
-      url = `/field/business-partners/field/${fieldId}`
+      url = `/fields/business-partners/field/${fieldId}`
       break
     case !isEmptyValue(processParameterId):
-      url = `/field/business-partners/parameter/${processParameterId}`
+      url = `/fields/business-partners/parameter/${processParameterId}`
       break
     case !isEmptyValue(browseFieldId):
-      url = `/field/business-partners/query-criteria/${browseFieldId}`
+      url = `/fields/business-partners/query-criteria/${browseFieldId}`
       break
     case !isEmptyValue(columnId):
-      url = `/field/business-partners/column/${columnId}`
+      url = `/fields/business-partners/column/${columnId}`
       break
     case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
-      url = `/field/business-partners/table/${tableName}/${columnName}`
+      url = `/fields/business-partners/table/${tableName}/${columnName}`
       break
   }
 

@@ -23,9 +23,10 @@ import {
   requestListWarehouseStocks,
   requestListSubstituteProducts,
   requestListAvailableToPromises
-} from '@/api/ADempiere/field/search/product.ts'
+} from '@/api/ADempiere/fields/search/product.ts'
+
 // Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showMessage } from '@/utils/ADempiere/notification'
 
 const productSearch = {

@@ -176,7 +176,7 @@ import store from '@/store'
 // Api
 import {
   getAccountingCombination
-} from '@/api/ADempiere/field/generalGedger'
+} from '@/api/ADempiere/fields/generalGedger'
 
 // Constants
 import { TEXT } from '@/utils/ADempiere/references'

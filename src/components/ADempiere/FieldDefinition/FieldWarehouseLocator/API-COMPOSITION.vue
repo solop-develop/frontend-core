@@ -197,6 +197,7 @@ export default defineComponent({
           contextAttributesList: contextAttributesList.value,
           warehouseId: warehouseId.value,
           uuid: props.metadata.uuid,
+          id: props.metadata.internal_id,
           searchValue,
           pageNumber: 1
         })

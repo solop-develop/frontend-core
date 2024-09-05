@@ -42,42 +42,57 @@ export function generateDisplayedValue(recordRow) {
   }
 
   // generate with standard columns
-  const { document_no, date_ordered, grand_total } = recordRow
+  const {
+    account_name, document_no, document_type, date_payment, info_to, pay_amt
+  } = recordRow
 
-  if (!isEmptyValue(document_no)) {
-    displayedValue = document_no
+  if (!isEmptyValue(document_type)) {
+    displayedValue = document_type
   }
 
-  if (!isEmptyValue(date_ordered)) {
-    const dateOrder = formatDate({
-      value: date_ordered,
+  if (!isEmptyValue(document_no)) {
+    if (!isEmptyValue(displayedValue)) {
+      displayedValue = document_no
+    } else {
+      displayedValue += ' _ ' + document_no
+    }
+  }
+
+  if (!isEmptyValue(info_to)) {
+    if (!isEmptyValue(displayedValue)) {
+      displayedValue = info_to
+    } else {
+      displayedValue += ' _ ' + info_to
+    }
+  } else if (!isEmptyValue(date_payment)) {
+    const paymentDate = formatDate({
+      value: date_payment,
       isDate: true
     })
     if (!isEmptyValue(displayedValue)) {
-      displayedValue += ' _ ' + dateOrder
+      displayedValue += ' _ ' + paymentDate
     } else {
-      displayedValue = dateOrder
+      displayedValue = paymentDate
     }
   }
 
-  if (!isEmptyValue(grand_total)) {
-    const grandTotal = formatQuantity({
-      value: grand_total,
+  if (!isEmptyValue(pay_amt)) {
+    const paymentAmount = formatQuantity({
+      value: pay_amt,
       precision: 2
     })
     if (!isEmptyValue(displayedValue)) {
-      displayedValue += ' _ ' + grandTotal
+      displayedValue += ' _ ' + paymentAmount
     } else {
-      displayedValue = grandTotal
+      displayedValue = paymentAmount
     }
   }
 
-  const { business_partner } = recordRow
-  if (!isEmptyValue(business_partner)) {
+  if (!isEmptyValue(account_name)) {
     if (!isEmptyValue(displayedValue)) {
-      displayedValue += ' _ ' + business_partner
+      displayedValue = account_name
     } else {
-      displayedValue = business_partner
+      displayedValue += ' _ ' + account_name
     }
   }
 

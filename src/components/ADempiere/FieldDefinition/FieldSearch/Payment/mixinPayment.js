@@ -21,13 +21,13 @@ import store from '@/store'
 // Constants
 import {
   COLUMN_NAME
-} from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+} from '@/utils/ADempiere/dictionary/field/search/payment'
 
 // Utils and Helper Methods
-import { generateDisplayedValue } from '@/utils/ADempiere/dictionary/field/search/businessPartner.ts'
+import { generateDisplayedValue } from '@/utils/ADempiere/dictionary/field/search/payment'
 
 export default {
-  name: 'MixinOrder',
+  name: 'MixinPayment',
 
   props: {
     metadata: {
@@ -52,15 +52,16 @@ export default {
         [COLUMN_NAME]: undefined,
         id: undefined,
         uuid: undefined,
-        value: undefined,
-        tax_id: undefined,
-        name: undefined,
-        name2: undefined,
-        description: undefined
+        account_name: undefined,
+        document_no: undefined,
+        document_type: undefined,
+        date_payment: undefined,
+        info_to: undefined,
+        pay_amt: undefined
       }
     },
     recordsList() {
-      return store.getters.getBusinessPartnerRecordsList({
+      return store.getters.getPaymentRecordsList({
         containerUuid: this.uuidForm
       })
     }

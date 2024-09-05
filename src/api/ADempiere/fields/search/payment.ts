@@ -38,7 +38,7 @@ export function requestListBusinessPartners({
   is_sales_transaction
 }) {
   return request({
-    url: '/field/payments/business-partners',
+    url: '/fields/payments/business-partners',
     method: 'get',
     params: {
       filters,
@@ -68,7 +68,7 @@ export function requesListBankAccount({
   is_sales_transaction
 }) {
   return request({
-    url: '/field/payments/bank-account',
+    url: '/fields/payments/bank-account',
     method: 'get',
     params: {
       filters,
@@ -113,25 +113,25 @@ export function requestListPaymentsInfo({
   orderId,
   isWithoutValidation
 }) {
-  let url = '/field/payments'
+  let url = '/fields/payments'
   switch (true) {
     case !isEmptyValue(fieldId):
-      url = `/field/payments/field/${fieldId}`
+      url = `/fields/payments/field/${fieldId}`
       break
     case !isEmptyValue(processParameterId):
-      url = `/field/payments/parameter/${processParameterId}`
+      url = `/fields/payments/parameter/${processParameterId}`
       break
     case !isEmptyValue(browseFieldId):
-      url = `/field/payments/query-criteria/${browseFieldId}`
+      url = `/fields/payments/query-criteria/${browseFieldId}`
       break
     case (!isEmptyValue(tableName) && !isEmptyValue(columnName)):
-      url = `/field/payments/table/${tableName}/${columnName}`
+      url = `/fields/payments/table/${tableName}/${columnName}`
       break
     case !isEmptyValue(columnId):
-      url = `/field/payments/column/${columnId}`
+      url = `/fields/payments/column/${columnId}`
       break
     default:
-      url = `/field/payments`
+      url = `/fields/payments`
       break
   }
 
@@ -172,7 +172,7 @@ export function requestGetOrderInfo({
   id
 }) {
   return request({
-    url: `/field/payments/${id}`,
+    url: `/fields/payments/${id}`,
     method: 'get'
   })
 }
