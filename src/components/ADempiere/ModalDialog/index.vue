@@ -154,7 +154,20 @@ export default defineComponent({
 
   setup(props) {
     const isLoaded = ref(false)
-    const isDisabledDone = ref(false)
+    const isDisabledDone = computed(() => {
+      if (
+        !isEmptyValue(storedModalDialog.value) &&
+        storedModalDialog.value.isDisabledDone
+      ) {
+        return Boolean(
+          storedModalDialog.value.isDisabledDone({
+            parentUuid: props.parentUuid,
+            containerUuid: props.containerUuid
+          })
+        )
+      }
+      return false
+    })
 
     const storedModalDialog = computed(() => {
       return store.getters.getModalDialogManager({
@@ -221,7 +234,18 @@ export default defineComponent({
 
     const closeDialog = () => {
       // close modal dialog
-      isDisabledDone.value = false
+      store.commit('setShowedModalDialog', {
+        containerUuid: props.containerUuid,
+        isShowed: false
+      })
+      setTimeout(() => {
+        store.dispatch('setModalDialog', {
+          ...storedModalDialog.value,
+          isDisabledDone() {
+            return false
+          }
+        })
+      }, 300)
     }
     const cancelButton = () => {
       closeDialog()
@@ -231,10 +255,16 @@ export default defineComponent({
     }
 
     const doneButton = () => {
-      isDisabledDone.value = true
-      setTimeout(() => {
-        sendButton()
-      }, 300)
+      store.dispatch('setModalDialog', {
+        ...storedModalDialog.value,
+        isDisabledDone() {
+          return true
+        }
+      }).then(() => {
+        setTimeout(() => {
+          sendButton()
+        }, 300)
+      })
     }
 
     const sendButton = () => {

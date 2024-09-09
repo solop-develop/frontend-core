@@ -83,17 +83,20 @@ const modalDialogManager = {
       title,
       isShowed = false
     }) {
-      commit('setModalDialog', {
-        containerManager,
-        isDisabledDone,
-        containerUuid,
-        componentPath,
-        cancelMethod,
-        beforeOpen,
-        doneMethod,
-        loadData,
-        isShowed,
-        title
+      return new Promise(resolve => {
+        commit('setModalDialog', {
+          containerManager,
+          isDisabledDone,
+          containerUuid,
+          componentPath,
+          cancelMethod,
+          beforeOpen,
+          doneMethod,
+          loadData,
+          isShowed,
+          title
+        })
+        resolve({})
       })
     }
   },
