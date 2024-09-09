@@ -77,23 +77,23 @@ const modalDialogManager = {
       containerManager = {},
       beforeOpen = function() {},
       doneMethod = function() {},
-      isDisabledDone = function() { return false },
+      isDisabledDone = function({ show = false }) { return show },
       cancelMethod = function() {},
       loadData = function() {},
       title,
       isShowed = false
     }) {
       commit('setModalDialog', {
+        containerManager,
+        isDisabledDone,
         containerUuid,
         componentPath,
-        containerManager,
+        cancelMethod,
         beforeOpen,
         doneMethod,
-        isDisabledDone,
         loadData,
-        cancelMethod,
-        title,
-        isShowed
+        isShowed,
+        title
       })
     }
   },
