@@ -53,6 +53,7 @@ const reportRun = {
       containerUuid,
       reportFormat = DEFAULT_REPORT_TYPE,
       reportId,
+      recordId,
       printFormatId,
       reportViewId,
       tableName
@@ -74,10 +75,12 @@ const reportRun = {
         if (isEmptyValue(reportViewId)) {
           reportViewId = reportDefinition.report_view_id
         }
-        const recordId = rootGetters.getIdOfContainer({
-          containerUuid,
-          tableName
-        })
+        if (isEmptyValue(recordId)) {
+          recordId = rootGetters.getIdOfContainer({
+            containerUuid,
+            tableName
+          })
+        }
         generateReportRequest({
           reportFormat,
           id: reportId,
