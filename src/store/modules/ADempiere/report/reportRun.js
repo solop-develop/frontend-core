@@ -49,10 +49,9 @@ const reportRun = {
     }
   },
   actions: {
-    runReport({ commit, getters }, {
+    runReport({ commit, getters, rootGetters }, {
       containerUuid,
       reportFormat = DEFAULT_REPORT_TYPE,
-      recordId,
       reportId,
       printFormatId,
       reportViewId,
@@ -65,6 +64,19 @@ const reportRun = {
           message: reportDefinition.name,
           summary: reportDefinition.description,
           type: 'info'
+        })
+        if (isEmptyValue(reportId)) {
+          reportId = reportDefinition.id
+        }
+        if (isEmptyValue(printFormatId)) {
+          printFormatId = reportDefinition.print_format_id
+        }
+        if (isEmptyValue(reportViewId)) {
+          reportViewId = reportDefinition.report_view_id
+        }
+        const recordId = rootGetters.getIdOfContainer({
+          containerUuid,
+          tableName
         })
         generateReportRequest({
           reportFormat,
