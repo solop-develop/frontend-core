@@ -60,6 +60,9 @@ const reportRun = {
     }) {
       return new Promise(resolve => {
         const reportDefinition = getters.getStoredReport(containerUuid)
+        const parametersList = rootGetters.getReportParameters({
+          containerUuid
+        })
         showNotification({
           title: language.t('notifications.processing'),
           message: reportDefinition.name,
@@ -87,11 +90,11 @@ const reportRun = {
           printFormatId,
           reportViewId,
           tableName,
-          recordId
+          recordId,
+          parameters: parametersList
         })
           .then(runReportRepsonse => {
             const { instance_id, output, is_error } = runReportRepsonse
-
             if (is_error) {
               showNotification({
                 title: language.t('notifications.error'),
@@ -143,6 +146,7 @@ const reportRun = {
               reportId: reportDefinition.id,
               reportUuid: reportDefinition.uuid,
               instanceUuid: instance_id,
+              parametersList,
               link,
               url: link.href,
               download: link.download
