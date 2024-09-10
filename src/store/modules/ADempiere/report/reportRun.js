@@ -49,34 +49,52 @@ const reportRun = {
     }
   },
   actions: {
-    runReport({ commit, getters }, {
+    runReport({ commit, getters, rootGetters }, {
       containerUuid,
       reportFormat = DEFAULT_REPORT_TYPE,
-      recordId,
       reportId,
+      recordId,
       printFormatId,
       reportViewId,
       tableName
     }) {
       return new Promise(resolve => {
         const reportDefinition = getters.getStoredReport(containerUuid)
+        const parametersList = rootGetters.getReportParameters({
+          containerUuid
+        })
         showNotification({
           title: language.t('notifications.processing'),
           message: reportDefinition.name,
           summary: reportDefinition.description,
           type: 'info'
         })
+        if (isEmptyValue(reportId)) {
+          reportId = reportDefinition.id
+        }
+        if (isEmptyValue(printFormatId)) {
+          printFormatId = reportDefinition.print_format_id
+        }
+        if (isEmptyValue(reportViewId)) {
+          reportViewId = reportDefinition.report_view_id
+        }
+        if (isEmptyValue(recordId)) {
+          recordId = rootGetters.getIdOfContainer({
+            containerUuid,
+            tableName
+          })
+        }
         generateReportRequest({
           reportFormat,
           id: reportId,
           printFormatId,
           reportViewId,
           tableName,
-          recordId
+          recordId,
+          parameters: parametersList
         })
           .then(runReportRepsonse => {
             const { instance_id, output, is_error } = runReportRepsonse
-
             if (is_error) {
               showNotification({
                 title: language.t('notifications.error'),
@@ -128,6 +146,7 @@ const reportRun = {
               reportId: reportDefinition.id,
               reportUuid: reportDefinition.uuid,
               instanceUuid: instance_id,
+              parametersList,
               link,
               url: link.href,
               download: link.download
