@@ -142,7 +142,7 @@ export default {
       // load definition
       this.containerManager.getSearchDefinition({
         uuid: this.metadata.uuid,
-        id: this.metadata.id
+        id: this.metadata.internal_id
       })
     }
   }

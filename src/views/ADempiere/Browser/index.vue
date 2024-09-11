@@ -145,7 +145,7 @@ export default defineComponent({
     let browserId = -1
     // set uuid with linked menu
     if (!isEmptyValue(root.$route.meta) && !isEmptyValue(root.$route.meta.uuid)) {
-      browserId = root.$route.meta.id.toString()
+      browserId = root.$route.meta.action_uuid.toString()
     }
     // set uuid from associated browser without menu
     if (!isEmptyValue(root.$route.params) && !isEmptyValue(root.$route.params.browserId)) {
@@ -165,7 +165,8 @@ export default defineComponent({
     })
 
     const storedBrowser = computed(() => {
-      return store.getters.getStoredBrowser(browserUuid.value)
+      const uuid = isEmptyValue(browserUuid.value) ? browserId : browserUuid.value
+      return store.getters.getStoredBrowser(uuid)
     })
 
     const isLoaded = computed(() => {
@@ -276,7 +277,8 @@ export default defineComponent({
       }
 
       store.dispatch('getBrowserDefinitionFromServer', {
-        id: browserId,
+        // id: browserId,
+        id: browserUuid.value,
         parentUuid,
         containerUuid
       })

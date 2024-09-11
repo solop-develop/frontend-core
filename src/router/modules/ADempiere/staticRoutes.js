@@ -475,6 +475,13 @@ const staticRoutes = [
     path: '/export-dictionary',
     component: Layout,
     hidden: true,
+    validateToEnable: ({ role }) => {
+      if (!role) {
+        return false
+      }
+      // only for System role
+      return Boolean(role.id === 0)
+    },
     children: [
       {
         path: '/export-dictionary',

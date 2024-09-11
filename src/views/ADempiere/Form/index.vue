@@ -157,7 +157,8 @@ export default defineComponent({
           return
         }
         store.dispatch('getFormFromServer', {
-          id: formId,
+          // id: formId,
+          id: formUuid,
           routeToDelete: currentRoute
         })
           .then(responseForm => {

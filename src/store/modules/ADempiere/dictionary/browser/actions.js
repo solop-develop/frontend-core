@@ -48,7 +48,6 @@ import {
 } from '@/utils/ADempiere/dictionary/browser/actionsMenu'
 import { showMessage, showNotification } from '@/utils/ADempiere/notification.js'
 import { isLookup } from '@/utils/ADempiere/references'
-import { getCurrentClient, getCurrentRole } from '@/utils/ADempiere/auth'
 import { templateBrowser } from '@/utils/ADempiere/dictionary/browser/templateBrowser.js'
 
 export default {
@@ -59,15 +58,12 @@ export default {
   }) {
     return new Promise(resolve => {
       const language = rootGetters['getCurrentLanguage']
-      const clientId = getCurrentClient()
-      const roleId = getCurrentRole()
-      const userId = rootGetters['user/getUserId']
+      const dictionaryCode = rootGetters['user/getDictionaryCode']
+
       requestBrowserMetadata({
         id,
-        roleId,
-        userId,
         language,
-        clientId
+        dictionaryCode
       })
         .then(browserResponse => {
           const browser = templateBrowser(browserResponse)

@@ -19,21 +19,22 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
-export function requestReference({
-  uuid,
-  columnName
+/**
+ * Request dictionary Forms metadata
+ * @param {number} id, identifier
+ */
+export function requestForm({
+  id: uuid,
+  // mandatory to open search
+  language,
+  dictionaryCode
 }) {
   return request({
-    url: '/dictionary/reference',
+    url: `/dictionary/forms/${uuid}`,
     method: 'get',
     params: {
-      uuid,
-      column_name: columnName
+      language,
+      dictionary_code: dictionaryCode
     }
   })
-    .then(validationResponse => {
-      const { convertReference } = require('@/utils/ADempiere/apiConverts/field.js')
-
-      return convertReference(validationResponse)
-    })
 }

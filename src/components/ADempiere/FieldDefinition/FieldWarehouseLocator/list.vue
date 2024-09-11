@@ -342,6 +342,7 @@ export default defineComponent({
         contextAttributesList: contextAttributesList.value,
         warehouseId: currentWarehouseId.value,
         uuid: props.metadata.uuid,
+        id: props.metadata.internal_id,
         searchValue: searchValue.value,
         pageNumber,
         pageSize

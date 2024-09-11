@@ -22,7 +22,7 @@
       <span style="word-break: break-word;">
         {{ $t('field.field') }}
         <b>{{ fieldAttributes.name }}</b>
-        ({{ fieldAttributes.id }}, {{ fieldAttributes.column_name }}{{ !fieldAttributes.isSameColumnElement ? ', ' + fieldAttributes.element_name : '' }})
+        ({{ fieldAttributes.internal_id }}, {{ fieldAttributes.column_name }}{{ !fieldAttributes.isSameColumnElement ? ', ' + fieldAttributes.element_name : '' }})
       </span>
     </div>
 

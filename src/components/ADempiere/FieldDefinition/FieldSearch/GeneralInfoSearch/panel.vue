@@ -405,7 +405,7 @@ export default {
       const fieldsListTable = this.storedColumnsListTable
       if (isEmptyValue(fieldsListTable)) {
         this.containerManager.getSearchDefinition({
-          id: this.metadata.id
+          id: this.metadata.internal_id
         })
           .finally(() => {
             this.isLoadingFields = false
@@ -443,7 +443,7 @@ export default {
           parentUuid: this.metadata.parentUuid,
           tableName: this.searchTableName,
           columnName: this.metadata.columnName,
-          id: this.metadata.id,
+          id: this.metadata.internal_id,
           contextColumnNames: this.metadata.reference.context_column_names,
           filters: values,
           pageNumber,

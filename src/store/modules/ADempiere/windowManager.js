@@ -296,7 +296,7 @@ const windowManager = {
           isParentTab,
           is_has_tree,
           fieldsList,
-          id,
+          internal_id,
           table_name,
           link_column_name,
           parent_column_name,
@@ -467,7 +467,7 @@ const windowManager = {
         }
 
         requestGetEntities({
-          tabId: id,
+          tabId: internal_id,
           contextAttributes,
           searchValue,
           referenceUuid,

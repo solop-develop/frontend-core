@@ -99,7 +99,7 @@ export default {
         contextColumnNames: this.metadata.contextColumnNames,
         //
         uuid: this.metadata.uuid,
-        id: this.metadata.id,
+        id: this.metadata.internal_id,
         defaultValue: this.metadata.default_value,
         value: this.value
       })
@@ -252,7 +252,7 @@ export default {
           rowUid: this.metadata.rowUid,
           //
           uuid: this.metadata.uuid,
-          id: this.metadata.id,
+          id: this.metadata.internal_id,
           columnName: this.metadata.column_name,
           value: this.value
         })

@@ -25,14 +25,11 @@ import lang from '@/lang'
 import { CONTAINER_FORM_PREFIX } from '@/utils/ADempiere/dictionary/form/index.js'
 
 // API Request Methods
-import { requestForm } from '@/api/ADempiere/dictionary/index.ts'
+import { requestForm } from '@/api/ADempiere/dictionary/form'
 
 // Utils and Helper Methods
 import { showMessage } from '@/utils/ADempiere/notification'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-import {
-  getCurrentClient, getCurrentRole
-} from '@/utils/ADempiere/auth'
 
 const form = {
   state: {
@@ -73,23 +70,19 @@ const form = {
     }) {
       return new Promise(resolve => {
         const language = rootGetters['getCurrentLanguage']
-        const clientId = getCurrentClient()
-        const roleId = getCurrentRole()
-        const userId = rootGetters['user/getUserId']
+        const dictionaryCode = rootGetters['user/getDictionaryCode']
 
         requestForm({
           id,
           language,
-          clientId,
-          roleId,
-          userId
+          dictionaryCode
         })
           .then(formResponse => {
             // Panel for save on store
             const newForm = {
               ...formResponse,
               containerUuid: formResponse.uuid,
-              containerKey: CONTAINER_FORM_PREFIX + formResponse.id
+              containerKey: CONTAINER_FORM_PREFIX + formResponse.internal_id
             }
 
             commit('addForm', newForm)

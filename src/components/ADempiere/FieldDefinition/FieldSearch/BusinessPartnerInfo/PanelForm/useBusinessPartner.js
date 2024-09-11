@@ -235,7 +235,7 @@ export default ({
         contextColumnNames: fieldAttributes.reference.context_column_names,
         tableName: searchTableName.value,
         uuid: fieldAttributes.uuid,
-        id: fieldAttributes.id,
+        id: fieldAttributes.internal_id,
         // filters,
         pageNumber,
         pageSize

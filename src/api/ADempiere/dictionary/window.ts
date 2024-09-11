@@ -22,23 +22,19 @@ import { request } from '@/utils/ADempiere/request'
 /**
  * Request dictionary Window metadata
  * @param {number} id, identifier
+ * @param {string} language
  */
 export function requestWindowMetadata({
-  id,
-  // mandatory to open search
+  id: uuid,
   language,
-  clientId,
-  roleId,
-  userId
+  dictionaryCode
 }) {
   return request({
-    url: `/dictionary/windows/${id}`,
+    url: `/dictionary/windows/${uuid}`,
     method: 'get',
     params: {
       language,
-      client_id: clientId,
-      role_id: roleId,
-      user_id: userId
+      dictionary_code: dictionaryCode
     }
   })
 }
@@ -48,11 +44,17 @@ export function requestWindowMetadata({
  * @param {number} id
  */
 export function requestTabMetadata({
-  id,
-  windowId
+  id: uuid,
+  windowId,
+  language,
+  dictionaryCode
 }) {
   return request({
-    url: `/dictionary/windows/${windowId}/tabs/${id}`,
-    method: 'get'
+    url: `/dictionary/windows/${windowId}/tabs/${uuid}`,
+    method: 'get',
+    params: {
+      language,
+      dictionary_code: dictionaryCode
+    }
   })
 }

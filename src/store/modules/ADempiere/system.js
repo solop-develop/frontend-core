@@ -20,7 +20,7 @@
 import { requestLanguagesList } from '@/api/ADempiere/system-core.js'
 import {
   requestRunBusinessProcess as runResetCache
-} from '@/api/ADempiere/businessData/runBusinessProcess.ts'
+} from '@/api/ADempiere/business-data/runBusinessProcess.ts'
 
 // Constants
 import { RESET_CACHE_PROCESS_ID } from '@/utils/ADempiere/constants/process'

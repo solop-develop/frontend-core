@@ -48,6 +48,7 @@
           </el-button>
         </el-col>
       </el-row>
+
       <el-card
         shadow="hover"
         class="box-card"
@@ -73,6 +74,7 @@
                 />
               </el-form-item>
             </el-col>
+
             <el-col :span="spanColumn">
               <el-form-item
                 :label="$t('page.exportDictionaryDefinition.windows')"
@@ -86,6 +88,7 @@
                 />
               </el-form-item>
             </el-col>
+
             <el-col :span="spanColumn">
               <el-form-item
                 :label="$t('page.exportDictionaryDefinition.process')"
@@ -99,6 +102,7 @@
                 />
               </el-form-item>
             </el-col>
+
             <el-col :span="spanColumn">
               <el-form-item
                 :label="$t('page.exportDictionaryDefinition.browsers')"
@@ -112,6 +116,7 @@
                 />
               </el-form-item>
             </el-col>
+
             <el-col :span="spanColumn">
               <el-form-item
                 :label="$t('page.exportDictionaryDefinition.form')"
@@ -129,6 +134,7 @@
         </el-form>
       </el-card>
     </el-main>
+
     <el-footer>
       <panel-footer
         :container-uuid="UUID"
@@ -157,10 +163,15 @@ import router from '@/router'
 import TitleAndHelp from '@/components/ADempiere/TitleAndHelp/index.vue'
 import PanelFooter from '@/components/ADempiere/PanelFooter/index.vue'
 
+// Constants
+import {
+  EXPORT_DICTIONARY_DEFINITION_PROCESS_ID
+} from '@/utils/ADempiere/dictionary/process/exportDictionaryDefinition.ts'
+
 // API Request Methods
 import {
   requestRunBusinessProcess
-} from '@/api/ADempiere/businessData/runBusinessProcess.ts'
+} from '@/api/ADempiere/business-data/runBusinessProcess.ts'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -215,8 +226,9 @@ export default defineComponent({
       const procesingNotification = {
         close: () => false
       }
+
       requestRunBusinessProcess({
-        id: 54692,
+        id: EXPORT_DICTIONARY_DEFINITION_PROCESS_ID,
         parameters: {
           ECA56_ExportMenu: isMenu.value,
           ECA56_ExportForms: isForm.value,
@@ -279,15 +291,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.v-pos {
-  height: 90% !important;
-  .buttons-and-options {
-    text-align: left;
-  }
-  .order-info {
-    text-align: right;
-  }
-}
 .buttons-options {
   position: absolute;
   top: 45%;

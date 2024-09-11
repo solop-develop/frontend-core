@@ -376,7 +376,6 @@ export default defineComponent({
       store.dispatch('getEntities', {
         parentUuid: props.parentUuid,
         containerUuid,
-        tabId: currentTabMetadata.value.id,
         filters
       }).then(responseData => {
         if (isCreateNew.value || isEmptyValue(responseData)) {

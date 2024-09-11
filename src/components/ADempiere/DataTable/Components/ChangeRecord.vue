@@ -210,6 +210,7 @@ export default defineComponent({
           parentUuid: props.parentUuid,
           containerUuid: props.containerUuid,
           tableName: tabAttributes.value.tableName,
+          tabId: tabAttributes.value.internal_id,
           recordUuid: recordUuid.value
         })
           .then(() => {

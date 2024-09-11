@@ -165,7 +165,7 @@ export default {
           contextColumnNames: this.metadata.reference.context_column_names,
           tableName: TABLE_NAME,
           uuid: this.metadata.uuid,
-          id: this.metadata.id,
+          id: this.metadata.internal_id,
           searchValue,
           pageNumber: 1,
           pageSize: RECORD_ROWS_BY_LIST

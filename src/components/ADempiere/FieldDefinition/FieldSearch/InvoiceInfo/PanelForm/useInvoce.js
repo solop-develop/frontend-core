@@ -230,7 +230,7 @@ export default ({
         columnName: fieldAttributes.column_name,
         tableName: searchTableName.value,
         uuid: fieldAttributes.uuid,
-        id: fieldAttributes.id,
+        id: fieldAttributes.internal_id,
         // filters,
         pageNumber,
         pageSize

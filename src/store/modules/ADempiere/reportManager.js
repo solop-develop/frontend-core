@@ -194,9 +194,10 @@ const reportManager = {
           tableName
         })
         dispatch('generateReportViwer', {
-          reportId: reportDefinition.id,
+          reportId: reportDefinition.internal_id,
           reportUuid: reportDefinition.uuid,
           containerUuid,
+          reportType,
           filters,
           printFormatId,
           reportViewId,
@@ -232,7 +233,7 @@ const reportManager = {
         }
 
         generateReportRequest({
-          id: reportDefinition.id,
+          id: reportDefinition.internal_id,
           reportType,
           parametersList
         })
@@ -267,7 +268,7 @@ const reportManager = {
             commit('setReportOutput', {
               ...output,
               instanceUuid,
-              reportId: reportDefinition.id,
+              reportId: reportDefinition.internal_id,
               reportUuid: reportDefinition.uuid,
               link,
               parametersList,
@@ -532,7 +533,7 @@ const reportManager = {
         }
 
         getReportOutputRequest({
-          processId: reportDefinition.id,
+          processId: reportDefinition.internal_id,
           filters,
           printFormatId,
           reportViewId,
@@ -554,10 +555,10 @@ const reportManager = {
               })
 
               // router.push({
-              //   path: `/report-viewer/${reportDefinition.id}/${instanceUuid}`,
+              //   path: `/report-viewer/${reportDefinition.internal_id}/${instanceUuid}`,
               //   name: REPORT_VIEWER_NAME,
               //   params: {
-              //     reportId: reportDefinition.id,
+              //     reportId: reportDefinition.internal_id,
               //     reportUuid: reportDefinition.uuid,
               //     instanceUuid,
               //     fileName: response.file_name + instance_id,
@@ -570,7 +571,7 @@ const reportManager = {
 
             const reportOutput = {
               ...response,
-              reportId: reportDefinition.id,
+              reportId: reportDefinition.internal_id,
               reportUuid: reportDefinition.uuid,
               isError: false,
               instanceUuid,

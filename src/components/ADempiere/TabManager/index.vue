@@ -583,7 +583,6 @@ export default defineComponent({
         tabUuid: routerParams.containerUuid,
         containerUuid,
         filters,
-        tabId: currentTabMetadata.value.id,
         referenceUuid: query.referenceUuid,
         filtersRecord,
         pageNumber
@@ -711,7 +710,7 @@ export default defineComponent({
         return
       }
       requestExistsReferences({
-        tabId: tab.id,
+        tabId: tab.internal_id,
         recordId: recordId
       })
         .then(responseReferences => {
@@ -854,13 +853,13 @@ export default defineComponent({
       const storedWindow = store.getters.getStoredWindow(props.parentUuid)
       const { currentTab } = store.getters.getContainerInfo
       showDashboard.value = false
-      if (isEmptyValue(storedWindow.id) ||
+      if (isEmptyValue(storedWindow.internal_id) ||
         (isEmptyValue(currentTab))) {
         return
       }
       store.dispatch('isWindowDashboard', {
-        tabId: currentTab.id,
-        windowId: storedWindow.id
+        tabId: currentTab.internal_id,
+        windowId: storedWindow.internal_id
       })
         .then(responseDashboard => {
           if (responseDashboard > 0) {

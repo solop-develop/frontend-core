@@ -204,7 +204,8 @@ export default defineComponent({
       }
 
       store.dispatch('getReportDefinitionFromServer', {
-        id: reportId
+        // id: reportId
+        id: reportUuid
       }).then(() => {
         getCachedReport()
       })

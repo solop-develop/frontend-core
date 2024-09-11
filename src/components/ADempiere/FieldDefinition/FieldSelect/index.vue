@@ -105,7 +105,7 @@ export default {
           containerUuid: this.metadata.containerUuid,
           contextColumnNames: this.metadata.contextColumnNames,
           uuid: this.metadata.uuid,
-          id: this.metadata.id
+          id: this.metadata.internal_id
         })
       )
     },
@@ -374,7 +374,7 @@ export default {
         containerUuid: this.metadata.containerUuid,
         contextColumnNames: this.metadata.reference.context_column_names,
         uuid: this.metadata.uuid,
-        id: this.metadata.id,
+        id: this.metadata.internal_id,
         //
         tableName: this.metadata.referenceTableName,
         columnName: this.metadata.column_name,

@@ -29,24 +29,22 @@ export function templateFields(field) {
     default_value_to,
     is_query_criteria,
     element_column_name,
+    internal_id,
     context_column_names
   } = field
   return {
     ...field,
+    id: internal_id,
+    isDisplayed: true,
     isAdvancedQuery: false,
     columnName: column_name,
     displayType: display_type,
-    isDisplayed: true,
     isMandatory: is_mandatory,
     defaultValue: default_value,
     default_value_to: default_value_to,
     isQueryCriteria: is_query_criteria,
     elementColumnName: element_column_name,
     contextColumnNames: context_column_names
-    // reference: {
-    //   tableName: '',
-    //   contextColumnNames: context_column_names
-    // }
   }
 }
 

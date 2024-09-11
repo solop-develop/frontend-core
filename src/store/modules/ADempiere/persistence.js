@@ -308,7 +308,6 @@ const persistence = {
               recordAttributes[columnName] = currentValue
             })
             return updateEntity({
-              tabUuid: containerUuid,
               reccordId,
               tabId,
               recordUuid,
@@ -381,7 +380,6 @@ const persistence = {
 
             // Create new entity
             return createEntity({
-              tabUuid: containerUuid,
               tabId,
               recordAttributes
             })

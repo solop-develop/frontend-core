@@ -53,9 +53,6 @@ import {
   openBrowserAssociated,
   openSequenceTab
 } from '@/utils/ADempiere/dictionary/window/actionsMenu'
-import {
-  getCurrentClient, getCurrentRole
-} from '@/utils/ADempiere/auth'
 import { panelAdvanceQuery } from '@/utils/ADempiere/dictionary/panel.js'
 import {
   exportRecordsSelected,
@@ -99,17 +96,13 @@ export default {
     id
   }) {
     const language = rootGetters['getCurrentLanguage']
-    const clientId = getCurrentClient()
-    const roleId = getCurrentRole()
-    const userId = rootGetters['user/getUserId']
+    const dictionaryCode = rootGetters['user/getDictionaryCode']
 
     return new Promise(resolve => {
       requestWindowMetadata({
         id,
         language,
-        clientId,
-        roleId,
-        userId
+        dictionaryCode
       })
         .then(async windowResponse => {
           const window = generateWindow(windowResponse)
@@ -418,7 +411,7 @@ export default {
                 await refreshRecord.refreshRecord({
                   parentUuid: windowUuid,
                   containerUuid: tabAssociatedUuid,
-                  tabId: storedTab.id,
+                  tabId: storedTab.internal_id,
                   recordId,
                   recordUuid
                 })
@@ -857,7 +850,7 @@ export default {
               contextColumnNames: fieldDocumentStatus.context_column_names,
               //
               uuid: fieldDocumentStatus.uuid,
-              id: fieldDocumentStatus.id,
+              id: fieldDocumentStatus.internal_id,
               columnName: fieldDocumentStatus.column_name,
               defaultValue: fieldDocumentStatus.default_value,
               value: value

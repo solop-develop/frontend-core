@@ -16,25 +16,4 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Get Instance for connection
-import { request } from '@/utils/ADempiere/request'
-
-/**
- * Request dictionary Smart Browser metadata
- * @param {string} uuid universally unique identifier
- * @param {number} id, identifier
- */
-export function requestBrowserMetadata({
-  id: uuid,
-  language,
-  dictionaryCode
-}) {
-  return request({
-    url: `/dictionary/browsers/${uuid}`,
-    method: 'get',
-    params: {
-      language,
-      dictionary_code: dictionaryCode
-    }
-  })
-}
+export const EXPORT_DICTIONARY_DEFINITION_PROCESS_ID = 54692

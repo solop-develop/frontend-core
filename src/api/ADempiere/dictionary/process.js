@@ -20,17 +20,22 @@
 import { request } from '@/utils/ADempiere/request'
 
 /**
- * Request dictionary Smart Browser metadata
- * @param {string} uuid universally unique identifier
- * @param {number} id, identifier
+ * GET Process or Report dictionary metadata definition
+ * @param {Number} id identifier
+ * @param {String} language language
+ * @param {Number} clientId client identifier
+ * @param {Number} roleId role identifier
+ * @param {Number} userId user identifier
+ * @returns
  */
-export function requestBrowserMetadata({
+export function requestProcessMetadata({
   id: uuid,
+  // mandatory to open search
   language,
   dictionaryCode
 }) {
   return request({
-    url: `/dictionary/browsers/${uuid}`,
+    url: `/dictionary/processes/${uuid}`,
     method: 'get',
     params: {
       language,

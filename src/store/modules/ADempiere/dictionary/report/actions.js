@@ -20,7 +20,7 @@ import router from '@/router'
 import store from '@/store'
 
 // API Request Methods
-import { requestProcessMetadata as requestReportMetadata } from '@/api/ADempiere/dictionary/index.ts'
+import { requestProcessMetadata as requestReportMetadata } from '@/api/ADempiere/dictionary/process'
 
 // Constants
 import {
@@ -42,9 +42,6 @@ import {
 import { generateProcess as generateReport, isDisplayedField } from '@/utils/ADempiere/dictionary/process.js'
 import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
-import {
-  getCurrentClient, getCurrentRole
-} from '@/utils/ADempiere/auth'
 
 export default {
   addReportToList({ commit, dispatch }, reportResponse) {
@@ -74,33 +71,30 @@ export default {
   }) {
     return new Promise((resolve, reject) => {
       const language = rootGetters['getCurrentLanguage']
-      const clientId = getCurrentClient()
-      const roleId = getCurrentRole()
-      const userId = rootGetters['user/getUserId']
+      const dictionaryCode = rootGetters['user/getDictionaryCode']
 
       requestReportMetadata({
         id,
         language,
-        clientId,
-        roleId,
-        userId
+        dictionaryCode
       })
         .then(async reportResponse => {
           const { uuid } = reportResponse
           const { processDefinition: reportDefinition } = generateReport({
             processToGenerate: reportResponse
           })
+
           const {
             type
           } = router.app._route.meta
           if (type === 'window') {
             await dispatch('listPrintFormatWindow', {
               tableName,
-              reportId: reportDefinition.id
+              reportId: reportDefinition.internal_id
             })
           } else {
             await dispatch('listPrintFormatsFromServer', {
-              reportId: reportDefinition.id
+              reportId: reportDefinition.internal_id
             })
           }
 
@@ -150,7 +144,7 @@ export default {
     reportUuid
   }) {
     const reportDefinition = getters.getStoredReport(reportUuid)
-    const reportId = reportDefinition.id
+    const reportId = reportDefinition.internal_id
     // const containerUuid = reportDefinition.uuid
 
     const actionsList = []

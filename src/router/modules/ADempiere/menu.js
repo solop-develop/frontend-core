@@ -22,7 +22,7 @@ import store from '@/store'
 import Layout from '@/layout'
 
 // Constants
-import staticRoutes from '@/router/modules/ADempiere/staticRoutes.js'
+import STATIC_ROUTES from '@/router/modules/ADempiere/staticRoutes.js'
 import { NOTICE_WINDOW_ID } from '@/utils/ADempiere/dictionary/dashboard'
 
 // API Request Methods
@@ -30,8 +30,8 @@ import { requestMenu } from '@/api/ADempiere/security/index.ts'
 
 // Utils and Helper Methods
 import { convertAction } from '@/utils/ADempiere/dictionary/menu'
-import { getCurrentClient, getCurrentOrganization, getCurrentRole } from '@/utils/ADempiere/auth'
-import { isEmptyValue, recursiveTreeSearch } from '@/utils/ADempiere'
+import { getCurrentOrganization } from '@/utils/ADempiere/auth'
+import { isEmptyValue, recursiveTreeSearch } from '@/utils/ADempiere/valueUtils'
 
 /**
  * Get Menu from server
@@ -44,17 +44,19 @@ export function loadMainMenu({
   role
 }) {
   const language = store.getters['getCurrentLanguage']
-  const clientId = getCurrentClient()
-  const roleId = getCurrentRole()
-  const userId = store.getters['user/getUserId']
+  const dictionaryCode = store.getters['user/getDictionaryCode']
+  const { id: roleId, uuid: roleUuid, client } = store.getters['user/getRole']
+  const { id: clientId, uuid: clientUuid } = client
   const organizationId = getCurrentOrganization()
+  const { uuid: userUuid } = store.getters['user/userInfo']
 
   return new Promise(resolve => {
     requestMenu({
-      roleId,
       language,
-      clientId,
-      userId
+      dictionaryCode,
+      clientId: clientUuid,
+      roleId: roleUuid,
+      userUuid: userUuid
     }).then(menuResponse => {
       const { menus } = menuResponse
       const asyncRoutesMap = []
@@ -67,7 +69,7 @@ export function loadMainMenu({
         })
 
         const children = []
-        if (optionMenu.meta.isSummary) {
+        if (optionMenu.meta.isSummary && !isEmptyValue(menuElement.children)) {
           menuElement.children.forEach(menu => {
             const childsSumaryConverted = getChildFromAction({
               menu,
@@ -99,7 +101,7 @@ export function loadMainMenu({
       })
       const permiseStactiRoutes = hidenStaticRoutes({
         dynamicRoutes: asyncRoutesMap,
-        staticRoutes,
+        staticRoutes: STATIC_ROUTES,
         permiseRole: role
       })
       const menuRoutes = permiseStactiRoutes
@@ -110,10 +112,10 @@ export function loadMainMenu({
 
       resolve(menuRoutes)
     }).catch(error => {
-      console.warn(`Error getting menu: ${error.message}. Code: ${error.code}.`)
+      console.error(`Error getting menu: ${error.message}. Code: ${error.code}.`)
       const permiseStactiRoutes = hidenStaticRoutes({
         dynamicRoutes: [],
-        staticRoutes,
+        staticRoutes: STATIC_ROUTES,
         permiseRole: role
       })
       const menuRoutes = permiseStactiRoutes
@@ -169,7 +171,7 @@ function getChildFromAction({ menu, index, clientId, roleId, organizationId }) {
     children: []
   }
 
-  if (isIndex) {
+  if (isIndex && !isEmptyValue(menu.children)) {
     menu.children.forEach(child => {
       const menuConverted = getChildFromAction({
         menu: child,
@@ -182,6 +184,7 @@ function getChildFromAction({ menu, index, clientId, roleId, organizationId }) {
       option.meta.childs.push(menuConverted)
     })
   }
+  // console.log({ option }, option.meta.title)
 
   return option
 }
@@ -196,7 +199,7 @@ function getChildFromAction({ menu, index, clientId, roleId, organizationId }) {
  * @param {number} organizationId
  */
 function getRouteFromMenuItem({ menu, clientId, roleId, organizationId }) {
-  const { action, action_id, action_uuid } = menu
+  const { action, action_id, action_uuid, internal_id } = menu
   // use component of convertAction
   const { icon, name: type } = convertAction(action)
 
@@ -216,7 +219,7 @@ function getRouteFromMenuItem({ menu, clientId, roleId, organizationId }) {
       parentId: menu.parent_id,
       // parentUuid: menu.parent_uuid,
       noCache: true,
-      id: action_id,
+      id: internal_id,
       uuid: action_uuid,
       action_id: action_id,
       action_uuid: action_uuid,

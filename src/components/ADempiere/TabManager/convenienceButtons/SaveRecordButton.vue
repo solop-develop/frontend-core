@@ -147,7 +147,7 @@ export default defineComponent({
       store.dispatch('flushPersistenceQueue', {
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid,
-        tabId: tabAttributes.value.id,
+        tabId: tabAttributes.value.internal_id,
         tableName: tabAttributes.value.table_name,
         recordUuid: recordUuid.value,
         reccordId: reccordId.value

@@ -1296,6 +1296,7 @@ export function generateTabs({
     const tab = {
       ...currentTab,
       parentUuid,
+      id: currentTab.internal_id,
       containerUuid: currentTab.uuid,
       tabGroup: currentTab.fieldGroup,
       firstTabUuid,
