@@ -154,20 +154,6 @@ export default defineComponent({
 
   setup(props) {
     const isLoaded = ref(false)
-    const isDisabledDone = computed(() => {
-      if (
-        !isEmptyValue(storedModalDialog.value) &&
-        storedModalDialog.value.isDisabledDone
-      ) {
-        return Boolean(
-          storedModalDialog.value.isDisabledDone({
-            parentUuid: props.parentUuid,
-            containerUuid: props.containerUuid
-          })
-        )
-      }
-      return false
-    })
 
     const storedModalDialog = computed(() => {
       return store.getters.getModalDialogManager({
@@ -207,6 +193,21 @@ export default defineComponent({
 
     const isMobile = computed(() => {
       return store.state.app.device === 'mobile'
+    })
+
+    const isDisabledDone = computed(() => {
+      if (
+        !isEmptyValue(storedModalDialog.value) &&
+        storedModalDialog.value.isDisabledDone
+      ) {
+        return Boolean(
+          storedModalDialog.value.isDisabledDone({
+            parentUuid: props.parentUuid,
+            containerUuid: props.containerUuid
+          })
+        )
+      }
+      return false
     })
 
     watch(isShowed, (newValue, oldValue) => {
@@ -269,10 +270,12 @@ export default defineComponent({
 
     const sendButton = () => {
       closeDialog()
+      // call custom function to done
       storedModalDialog.value.doneMethod({
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid
       })
+      props.confirmAction()
     }
 
     if (isShowed.effect && isShowed.value) {
