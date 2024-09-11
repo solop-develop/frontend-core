@@ -39,8 +39,8 @@
 import { defineComponent, computed, ref } from '@vue/composition-api'
 
 import lang from '@/lang'
-import store from '@/store'
 import router from '@/router'
+import store from '@/store'
 
 // Constants
 import {

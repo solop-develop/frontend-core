@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <div v-if="isLoading" key="report-viewer-loaded" style="min-height: inherit;">
+  <div v-if="!isEmptyValue(storedReportOutput)" key="report-viewer-loaded" style="min-height: inherit;">
     <el-row type="flex" style="min-height: inherit;">
       <el-col :span="24">
         <div class="content">
@@ -26,22 +26,11 @@
             :name="name"
             :help="help"
           />
-          <!-- <div v-if="!isEmptyValue(storedReportDefinition)" style="float: right;padding-left: 1%;">
-            <action-menu
-              :container-manager="containerManager"
-              :container-uuid="reportUuid"
-              :actions-manager="actionsManager"
-              :relations-manager="relationsManager"
-            />
-          </div> -->
-          <file-render
-            v-if="!isEmptyValue(storedReportOutput)"
-            :format="reportType"
-            :content="reportContent"
-            :src="link.href"
-            :mime-type="storedReportOutput.mime_type"
-            :name="storedReportOutput.name"
-            :stream="storedReportOutput.output_stream"
+          <report-panel
+            :instance-uuid="storedReportOutput.instanceUuid"
+            :container-manager="containerManager"
+            :report-output="storedReportOutput"
+            :container-uuid="containerUuid"
           />
         </div>
       </el-col>
@@ -49,24 +38,25 @@
 
     <modal-dialog
       :container-manager="containerManager"
-      :container-uuid="reportUuid"
+      :container-uuid="containerUuid"
     />
     <el-drawer
       :visible.sync="isShowPanelConfig"
       :with-header="true"
       :before-close="handleClose"
-      :size="isMobile ? '100%' : '50%'"
+      :size="isMobile ? '100%' : '75%'"
       :show-close="true"
       :title="$t('report.reportSettings')"
     >
       <options-report
-        :container-uuid="reportUuid"
+        :container-uuid="storedReportOutput.containerUuid"
         :container-manager="containerManager"
+        :report-output="storedReportOutput"
         :is-show-title="false"
       />
     </el-drawer>
-    <!-- <el-button
-      v-if="!isEmptyValue(storedReportDefinition)"
+    <el-button
+      v-if="!isShowPanelConfig"
       type="primary"
       icon="el-icon-arrow-left"
       circle
@@ -76,7 +66,7 @@
         position: absolute;
       "
       @click="handleOpem()"
-    /> -->
+    />
   </div>
 
   <loading-view
@@ -100,6 +90,7 @@ import mixinReport from '@/views/ADempiere/Report/mixinReport.js'
 import ModalDialog from '@/components/ADempiere/ModalDialog/index.vue'
 import OptionsReport from '@/components/ADempiere/ReportManager/Setup/optionsReportViewer.vue'
 import TitleAndHelp from '@/components/ADempiere/TitleAndHelp/index.vue'
+import reportPanel from '@/views/ADempiere/ReportViewerEngine/reportPanel.vue'
 
 // Constants
 import { DEFAULT_REPORT_TYPE } from '@/utils/ADempiere/dictionary/report.js'
@@ -111,7 +102,7 @@ import { showNotification } from '@/utils/ADempiere/notification.js'
 import { getExtensionFromFile } from '@/utils/ADempiere/resource.js'
 
 export default defineComponent({
-  name: 'ReportViewer',
+  name: 'ReportViewerEngine',
 
   components: {
     FileRender,
@@ -119,22 +110,12 @@ export default defineComponent({
     ActionMenu,
     ModalDialog,
     TitleAndHelp,
-    OptionsReport
+    OptionsReport,
+    reportPanel
   },
 
   setup(props, { root }) {
-    const storedReportOutput = computed(() => {
-      return store.getters.getReportOutput(root.$route.params.instanceUuid)
-    })
-    let { reportId, reportUuid } = root.$route.params
-    if (!isEmptyValue(storedReportOutput.value)) {
-      if (isEmptyValue(reportId) || reportId <= 0) {
-        reportId = storedReportOutput.value.reportId
-      }
-      if (isEmptyValue(reportUuid)) {
-        reportUuid = storedReportOutput.value.reportUuid
-      }
-    }
+    const { reportId, reportUuid } = root.$route.params
 
     const {
       containerManager, actionsManager, storedReportDefinition
@@ -145,15 +126,20 @@ export default defineComponent({
     const isLoading = ref(false)
     const reportType = ref(DEFAULT_REPORT_TYPE)
     const reportContent = ref('')
-
     const name = computed(() => {
       if (isEmptyValue(storedReportDefinition.value) && !isEmptyValue(storedReportOutput.value)) return storedReportOutput.value.name
       return storedReportDefinition.value.name
     })
-
+    const containerUuid = computed(() => {
+      return reportId.toString()
+    })
     const help = computed(() => {
       if (isEmptyValue(storedReportDefinition.value) && !isEmptyValue(storedReportOutput.value)) return storedReportOutput.value.name
       return storedReportDefinition.value.help
+    })
+
+    const storedReportOutput = computed(() => {
+      return store.getters.getReportOutput(reportId)
     })
 
     const link = computed(() => {
@@ -163,13 +149,11 @@ export default defineComponent({
     const isMobile = computed(() => {
       return store.state.app.device === 'mobile'
     })
-
     const isShowPanelConfig = computed(() => {
       return store.getters.getShowPanelConfig({
         containerUuid: reportUuid
       })
     })
-
     function displayReport(reportOutput) {
       if (root.$route.params.isPos) {
         isLoading.value = true
@@ -226,7 +210,7 @@ export default defineComponent({
           const fileName = root.$route.params.fileName
           const instanceUuid = root.$route.params.instanceUuid
           const currentReportLog = runsList.find(runReport => {
-            return runReport.uuid === reportUuid
+            return runReport.id === reportId
           })
 
           // empty report log
@@ -264,19 +248,10 @@ export default defineComponent({
               }).then(reportOutput => {
                 displayReport(reportOutput)
               })
-            } else {
-              // add output to render
-              // displayReport(storedReportOutput.value)
             }
           }
         })
     }
-
-    // function findActionsMenu() {
-    //   store.dispatch('setReportActionsMenu', {
-    //     containerUuid: reportUuid
-    //   })
-    // }
 
     function handleClose() {
       showPanelConfigReport(false)
@@ -299,6 +274,8 @@ export default defineComponent({
 
     const drawer = ref(false)
 
+    store.dispatch('findListMailTemplates')
+
     onMounted(() => {
       getReport()
       root.$route.meta.reportType = reportType.value
@@ -318,9 +295,11 @@ export default defineComponent({
       help,
       link,
       isMobile,
-      containerManager,
+      reportId,
       storedReportOutput,
+      containerManager,
       storedReportDefinition,
+      containerUuid,
       // Methods
       handleOpem,
       handleClose,

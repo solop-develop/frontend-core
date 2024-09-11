@@ -36,7 +36,7 @@ const attachment = {
   share: {
     title: 'Quick share',
     description: 'Anyone with the URL below will be able to view your file even if it`s set to private read. Updating the sharing duration will generate a new URL below.',
-    timeText: 'Sharing duration',
+    timeText: 'Link Duration',
     time: {
       hour: 'Hour',
       hours: 'Hours',

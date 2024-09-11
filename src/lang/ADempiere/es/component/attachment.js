@@ -36,7 +36,7 @@ const attachment = {
   share: {
     title: 'Compartir Ahora',
     description: 'Cualquiera que tenga la siguiente URL podrá ver su archivo incluso si está configurado como lectura privada. Actualizar la duración del intercambio generará una nueva URL a continuación.',
-    timeText: 'Duración',
+    timeText: 'Duración del Link',
     time: {
       hour: 'Hora',
       hours: 'Horas',

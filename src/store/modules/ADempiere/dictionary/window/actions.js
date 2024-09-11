@@ -22,6 +22,7 @@ import store from '@/store'
 
 // API Request Methods
 import { requestWindowMetadata } from '@/api/ADempiere/dictionary/window.ts'
+import { listPrintFormatsTableRequest } from '@/api/ADempiere/reportManagement/printFormat.ts'
 
 // Constants
 import { CLIENT, DOCUMENT_ACTION, DOCUMENT_STATUS } from '@/utils/ADempiere/constants/systemColumns'
@@ -186,8 +187,7 @@ export default {
 
             const storedTab = rootGetters.getStoredTab(windowUuid, tabAssociatedUuid)
             const { table_name } = storedTab
-
-            dispatch('startReport', {
+            dispatch('runReport', {
               parentUuid: tabUuid,
               containerUuid: process.uuid,
               recordUuid,
@@ -215,6 +215,8 @@ export default {
             },
             loadData: ({ parentUuid: tabAssociatedUuid, containerUuid }) => {
               const reportDefinition = rootGetters.getStoredReport(process.uuid)
+              const storedTab = rootGetters.getStoredTab(windowUuid, tabAssociatedUuid)
+              const { table_name } = storedTab
               if (!isEmptyValue(reportDefinition)) {
                 // auto run report if without parameters
                 if (!reportDefinition.hasParameters || isEmptyValue(reportDefinition.fieldsList)) {
@@ -232,7 +234,8 @@ export default {
               }
 
               return dispatch('getReportDefinitionFromServer', {
-                id: process.id
+                id: process.id,
+                tableName: table_name
               }).then(reportDefinitionResponse => {
                 // auto run report if without parameters
                 if (isEmptyValue(reportDefinitionResponse.fieldsList)) {
@@ -965,6 +968,24 @@ export default {
     commit('setTabAdvancedQuery', {
       parentUuid: parentUuid + IS_ADVANCED_QUERY,
       tabAdvanceQuery
+    })
+  },
+  setPrintFormatWindow({ commit }, {
+    tableName,
+    reportId
+  }) {
+    return new Promise(resolve => {
+      listPrintFormatsTableRequest({
+        tableName
+      })
+        .then(response => {
+          const { print_formats } = response
+          commit('setPrintFormatsList', {
+            reportId,
+            printFormatList: print_formats
+          })
+          resolve(print_formats)
+        })
     })
   }
 }

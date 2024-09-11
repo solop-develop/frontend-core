@@ -70,7 +70,7 @@ const report = {
       type: 'xls'
     },
     xlsx: {
-      name: 'xlsx - XLSX file',
+      name: 'xlsx - Archivo Excel',
       description: 'xlsx - XLSX file',
       type: 'xlsx'
     },
@@ -79,6 +79,44 @@ const report = {
       description: 'arxml - Archivo de Definición de Reporte ADempiere',
       type: 'arxml'
     }
+  },
+  reportEnginer: {
+    summation: 'Sumatoria (Σ):',
+    average: 'Promedio (μ):',
+    Count: 'Conteo (№):',
+    min: 'Mínimo (↓):',
+    max: 'Máximo (↑):',
+    variance: 'Varianza (σ²):',
+    standardDeviation: 'Desviación Estándar (σ):',
+    share: 'Compartir / Descargar',
+    optionsImport: {
+      title: 'Opciones para Importar y Compartir',
+      format: 'Opciones del Formato',
+      actualPage: 'Página Actual',
+      fullReport: 'Todo el Reporte',
+      sendDownload: 'Enviar / Descargar',
+      download: 'Descargar',
+      send: 'Enviar',
+      copyLink: 'Copiar Link',
+      typeNotify: 'Tipo de Notificación',
+      contactsSend: 'Contactos para Enviar'
+    },
+    printFormat: 'Formato de Impresión',
+    viewReport: 'Vista del Informe',
+    detail: 'Ver Detallado',
+    summary: 'Ver Resumido',
+    exportFormat: 'Formato de Exportación',
+    download: 'Descargando Archivo',
+    sharedReport: 'Reporte Compartido',
+    mesajeDownload: 'Descargando Reporte ',
+    openLink: 'Abrir Enlace',
+    mesajeShear: 'Su Enlace a Sido Copiado Exitosamente al Portapapeles',
+    refreshRecord: 'Refrescar',
+    sendDetails: 'Detalles del Envío',
+    recipient: 'Destinatarios',
+    urlAddress: 'Dirección Url',
+    subject: 'Asunto',
+    urlPublic: 'Click Para ir al Enlace'
   }
 }
 

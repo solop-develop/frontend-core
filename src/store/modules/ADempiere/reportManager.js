@@ -22,18 +22,32 @@ import router from '@/router'
 import language from '@/lang'
 
 // API Request Methods
-import { generateReportRequest, getReportOutputRequest } from '@/api/ADempiere/reportManagement/index.ts'
-import { listPrintFormatsRequest } from '@/api/ADempiere/reportManagement/printFormat.ts'
+import {
+  getView,
+  runExport,
+  generateReport,
+  generateReportRequest,
+  getReportOutputRequest,
+  listNotificationsTypes,
+  listUsers,
+  sendNotification
+} from '@/api/ADempiere/reportManagement/index.ts'
+import { listPrintFormatsRequest, listPrintFormatsTableRequest } from '@/api/ADempiere/reportManagement/printFormat.ts'
 import { listReportViewsRequest } from '@/api/ADempiere/reportManagement/reportView.ts'
 import { listDrillTablesRequest } from '@/api/ADempiere/reportManagement/drillTable.ts'
 
 // Constants
-import { REPORT_VIEWER_NAME } from '@/utils/ADempiere/constants/report'
-import { REPORT_VIEWER_SUPPORTED_FORMATS, DEFAULT_REPORT_TYPE } from '@/utils/ADempiere/dictionary/report.js'
+import {
+  DEFAULT_REPORT_TYPE
+} from '@/utils/ADempiere/dictionary/report.js'
+import { config } from '@/utils/ADempiere/config'
 
 // Utils and Helper Methods
 import { getToken } from '@/utils/auth'
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import {
+  isEmptyValue,
+  getOperatorAndValue
+} from '@/utils/ADempiere/valueUtils.js'
 import {
   buildLinkHref
 } from '@/utils/ADempiere/resource.js'
@@ -48,13 +62,38 @@ const initState = {
   drillTablesList: {},
   reportsOutput: {},
   reportsGenerated: {},
-  isShowPanelConfig: {}
+  isShowPanelConfig: {},
+  pageSize: 15,
+  isLoading: false,
+  showDialog: false,
+  isSummary: false,
+  exportReport: {},
+  contactSend: '',
+  typeNotify: '',
+  defaultBody: ''
 }
-
 const reportManager = {
   state: initState,
 
   mutations: {
+    setContactSend(state, contactSend) {
+      state.contactSend = contactSend
+    },
+    setTypeNotify(state, typeNotify) {
+      state.typeNotify = typeNotify
+    },
+    setExportReport(state, exportReport) {
+      state.exportReport = exportReport
+    },
+    setShowDialog(state, showDialog) {
+      state.showDialog = showDialog
+    },
+    setIsSummary(state, isSummary) {
+      state.isSummary = isSummary
+    },
+    setReportIsLoading(state, isLoading) {
+      state.isLoading = isLoading
+    },
     setPrintFormatsList(state, { reportId, printFormatsList }) {
       Vue.set(state.printFormatsList, reportId, printFormatsList)
     },
@@ -82,9 +121,11 @@ const reportManager = {
     },
     setShowPanelConfig(state, { containerUuid, value }) {
       Vue.set(state.isShowPanelConfig, containerUuid, value)
+    },
+    setDefaultBody(state, message) {
+      state.defaultBody = message
     }
   },
-
   actions: {
     reportActionPerformed({ dispatch, getters }, {
       containerUuid,
@@ -129,24 +170,11 @@ const reportManager = {
           return
         }
 
-        const parameters = rootGetters.getReportParameters({
+        const filters = getOperatorAndValue({
+          format: 'array',
           containerUuid,
           fieldsList
         })
-
-        let reportingNotification = {
-          close: () => false
-        }
-        const isSession = !isEmptyValue(getToken())
-        if (isSession) {
-          reportingNotification = showNotification({
-            title: language.t('notifications.processing'),
-            message: reportDefinition.name,
-            summary: reportDefinition.description,
-            type: 'info'
-          })
-        }
-
         if (isEmptyValue(recordUuid)) {
           // close current page
           const currentRoute = router.app._route
@@ -165,97 +193,17 @@ const reportManager = {
           containerUuid,
           tableName
         })
-        generateReportRequest({
-          id: reportDefinition.id,
-          reportType,
-          parameters,
+        dispatch('generateReportViwer', {
+          reportId: reportDefinition.id,
+          reportUuid: reportDefinition.uuid,
+          containerUuid,
+          filters,
           printFormatId,
           reportViewId,
-          // isSummary,
-          // window
+          isSummary,
           tableName,
           recordId
         })
-          .then(runReportRepsonse => {
-            const { instance_id, output, is_error } = runReportRepsonse
-
-            if (is_error) {
-              showNotification({
-                title: language.t('notifications.error'),
-                message: reportDefinition.name,
-                summary: runReportRepsonse.summary,
-                type: 'error'
-              })
-              console.warn(`Error running the process. ${runReportRepsonse.summary}.`)
-            }
-
-            let link = {
-              href: undefined,
-              download: undefined
-            }
-            if (output && output.output_stream) {
-              link = buildLinkHref({
-                fileName: output.file_name,
-                outputStream: output.output_stream,
-                mimeType: output.mime_type
-              })
-
-              // donwloaded not support render report
-              if (!REPORT_VIEWER_SUPPORTED_FORMATS.includes(reportType)) {
-                link.click()
-              }
-
-              router.push({
-                path: `/report-viewer/${reportDefinition.id}/${instance_id}`,
-                name: REPORT_VIEWER_NAME,
-                params: {
-                  reportId: reportDefinition.id,
-                  reportUuid: reportDefinition.uuid,
-                  instanceUuid: instance_id,
-                  fileName: output.file_name + instance_id,
-                  // menuParentUuid,
-                  name: output.name + instance_id,
-                  tableName: output.table_name
-                }
-              }, () => {})
-            }
-
-            commit('setReportOutput', {
-              ...output,
-              reportId: reportDefinition.id,
-              reportUuid: reportDefinition.uuid,
-              instanceUuid: instance_id,
-              link,
-              parameters,
-              url: link.href,
-              download: link.download
-            })
-
-            resolve(runReportRepsonse)
-          })
-          .catch(error => {
-            showNotification({
-              title: language.t('notifications.error'),
-              message: error.message,
-              type: 'error'
-            })
-            console.warn(`Error getting print formats: ${error.message}. Code: ${error.code}.`)
-          })
-          .finally(() => {
-            // close runing report notification
-            if (!isEmptyValue(reportingNotification)) {
-              setTimeout(() => {
-                reportingNotification.close()
-              }, 1000)
-            }
-            commit('setReportGenerated', {
-              containerUuid,
-              parametersList: parameters,
-              reportType,
-              printFormatId,
-              reportViewId
-            })
-          })
       })
     },
 
@@ -348,10 +296,15 @@ const reportManager = {
      * @param {number} id report identifier
      * @returns
      */
-    getListPrintFormatsFromServer({ commit, dispatch }, {
+    listPrintFormatsFromServer({ commit, dispatch, getters }, {
       reportId
     }) {
       return new Promise(resolve => {
+        const currentListPrintFormat = getters.getPrintFormatsList(reportId)
+        if (!isEmptyValue(currentListPrintFormat)) {
+          resolve(currentListPrintFormat)
+          return
+        }
         listPrintFormatsRequest({
           reportId
         })
@@ -386,6 +339,58 @@ const reportManager = {
             )
 
             resolve(printFormatsList)
+          })
+          .catch(error => {
+            console.warn(`Error getting print formats: ${error.message}. Code: ${error.code}.`)
+          })
+      })
+    },
+
+    /**
+     * Get list prints Windows formats
+     * @param {number} id report identifier
+     * @returns
+     */
+    listPrintFormatWindow({ commit, dispatch, getters }, {
+      tableName,
+      reportId
+    }) {
+      return new Promise(resolve => {
+        const currentListPrintFormat = getters.getPrintFormatsList(reportId)
+        if (!isEmptyValue(currentListPrintFormat)) {
+          resolve(currentListPrintFormat)
+          return
+        }
+        listPrintFormatsTableRequest({ tableName })
+          .then(async printFormatResponse => {
+            const printFormatList = await Promise.all(
+              printFormatResponse.print_formats.map(async printFormatItem => {
+                await Promise.allSettled([
+                  dispatch('getReportViewsFromServer', {
+                    reportId,
+                    // TODO: Verify if table name is required
+                    tableName: printFormatItem.table_name
+                  }),
+                  dispatch('getDrillTablesFromServer', {
+                    reportId,
+                    tableName: printFormatItem.table_name
+                  })
+                ])
+
+                return {
+                  ...printFormatItem,
+                  // reportUuid: reportDefinition.uuid,
+                  reportId: reportId
+                }
+              })
+            )
+
+            commit('setPrintFormatsList', {
+              reportId,
+              printFormatList
+            })
+
+            resolve(printFormatList)
           })
           .catch(error => {
             console.warn(`Error getting print formats: ${error.message}. Code: ${error.code}.`)
@@ -473,6 +478,7 @@ const reportManager = {
     getReportOutputFromServer({ commit, getters, rootGetters }, {
       uuid,
       id,
+      containerUuid,
       instanceUuid,
       tableName,
       printFormatId,
@@ -596,18 +602,26 @@ const reportManager = {
       reportType,
       isSummary,
       action,
-      parametersList = []
+      pageToken,
+      pageSize,
+      sortBy,
+      parametersList = [],
+      isChangePanel = false
     }) {
       const currentRoute = router.app._route
-      // generated with refresh web browser
       if (isEmptyValue(containerUuid)) {
         if (currentRoute.params && currentRoute.params.reportUuid) {
           containerUuid = currentRoute.params.reportUuid
         }
       }
-
+      const reportDefinition = getters.getStoredReport(containerUuid)
+      const {
+        id,
+        name,
+        description,
+        fieldsList
+      } = reportDefinition
       const storedReportGenerated = getters.getReportGenerated(containerUuid)
-
       if (!isEmptyValue(storedReportGenerated)) {
         if (isEmptyValue(reportType)) {
           reportType = storedReportGenerated.reportType
@@ -633,7 +647,14 @@ const reportManager = {
         reportName = action.name
       }
 
-      if (isEmptyValue(instanceUuid)) {
+      showNotification({
+        title: language.t('notifications.processing'),
+        message: name,
+        summary: description,
+        type: 'info'
+      })
+      commit('setReportIsLoading', true)
+      if ((isEmptyValue(instanceUuid) || reportDefinition.is_process_before_launch) && !isChangePanel) {
         dispatch('startReport', {
           containerUuid,
           reportType,
@@ -644,65 +665,296 @@ const reportManager = {
         return
       }
 
-      return new Promise((resolve) => {
-        dispatch('getReportOutputFromServer', {
-          uuid: uuid || containerUuid,
-          reportType,
-          reportName,
-          tableName,
-          printFormatId,
-          parametersList,
-          instanceUuid,
-          reportViewId,
-          isSummary
+      return new Promise((resolve, reject) => {
+        const filters = getOperatorAndValue({
+          format: 'array',
+          containerUuid,
+          fieldsList
         })
-          .then(reportOutput => {
-            dispatch('tagsView/updateVisitedView', {
-              processUuid: uuid || containerUuid,
-              instanceUuid,
-              ...currentRoute,
-              title: `${language.t('route.reportViewer')}: ${reportOutput.name} - ${instanceUuid}`
+
+        getView({
+          printFormatId,
+          reportViewId,
+          reportType,
+          pageToken,
+          isSummary,
+          tableName,
+          pageSize,
+          filters,
+          sortBy
+        })
+          .then(reportResponse => {
+            commit('setReportOutput', {
+              ...reportResponse,
+              containerUuid,
+              rowCells: reportResponse.rows,
+              instanceUuid: id,
+              pageSize,
+              pageToken
             })
-
-            if (!isEmptyValue(reportOutput)) {
-              if (isEmptyValue(parametersList)) {
-                parametersList = reportOutput.parametersList
-              }
-              if (isEmptyValue(tableName)) {
-                tableName = reportOutput.tableName
-              }
-              if (isEmptyValue(printFormatId) || printFormatId <= 0) {
-                printFormatId = reportOutput.printFormatId
-              }
-              if (isEmptyValue(reportViewId) || reportViewId <= 0) {
-                reportViewId = reportOutput.reportViewId
-              }
-            }
-
-            resolve(reportOutput)
+            showNotification({
+              title: language.t('notifications.succesful'),
+              message: name,
+              type: 'success'
+            })
+            resolve(reportResponse)
+          })
+          .catch(error => {
+            showNotification({
+              title: language.t('notifications.error'),
+              message: error.message,
+              type: 'error'
+            })
+            console.warn(`Error getting Get Report: ${error.message}. Code: ${error.code}.`)
           })
           .finally(() => {
-            commit('setReportGenerated', {
+            commit('setReportIsLoading', false)
+          })
+      })
+    },
+    /**
+     * Get report output
+     * @param {number} id report identifier
+     * @param {string} uuid report universal unique identifier
+     * @returns
+     */
+    generateReportViwer({ commit, getters, rootGetters }, {
+      reportId,
+      reportType,
+      filters,
+      sortBy,
+      pageSize = 15,
+      pageToken = 1,
+      containerUuid,
+      printFormatId,
+      reportViewId,
+      reportUuid,
+      isSummary,
+      // window
+      tableName,
+      recordId,
+      isView
+    }) {
+      return new Promise(resolve => {
+        generateReport({
+          reportId,
+          reportType,
+          filters,
+          sortBy,
+          pageSize,
+          pageToken,
+          printFormatId,
+          reportViewId,
+          isSummary,
+          tableName,
+          recordId
+        })
+          .then(reportResponse => {
+            const {
+              // id,
+              name,
+              instance_id,
+              report_view_id
+            } = reportResponse
+            if (!isView) {
+              router.push({
+                path: `report-viewer-engine/${reportId}/${instance_id}/${report_view_id}`,
+                name: 'Report Viewer Engine',
+                params: {
+                  reportId,
+                  instanceUuid: instance_id,
+                  fileName: name,
+                  reportUuid,
+                  // menuParentUuid,
+                  name: name + instance_id,
+                  tableName
+                }
+              }, () => {})
+            }
+            commit('setReportOutput', {
+              ...reportResponse,
               containerUuid,
-              parametersList,
-              reportType,
-              printFormatId,
-              reportViewId
+              rowCells: reportResponse.rows,
+              instanceUuid: reportId,
+              pageSize,
+              pageToken
             })
+            showNotification({
+              title: language.t('notifications.succesful'),
+              message: name,
+              type: 'success'
+            })
+            resolve(reportResponse)
+          })
+          .catch(error => {
+            showNotification({
+              title: language.t('notifications.error'),
+              message: error.message,
+              type: 'error'
+            })
+            console.warn(`Error getting Get Report: ${error.message}. Code: ${error.code}.`)
+          })
+          .finally(() => {
+            commit('setReportIsLoading', false)
+          })
+      })
+    },
+    /**
+     * Export Report
+     * @param {number} recordId
+     * @param {string} format
+     * @returns {files}
+     */
+    exportReport({
+      commit,
+      rootGetters
+    }, {
+      containerUuid,
+      reportId,
+      reportName,
+      printFormatId,
+      reportViewId,
+      pageSize,
+      pageToken,
+      isDownload = true,
+      isSummary
+    }) {
+      const reportDefinition = rootGetters.getStoredReport(containerUuid)
+      const { fieldsList } = reportDefinition
+      const filters = getOperatorAndValue({
+        format: 'array',
+        containerUuid,
+        fieldsList
+      })
+      return new Promise(resolve => {
+        runExport({
+          reportId,
+          printFormatId,
+          reportViewId,
+          pageSize,
+          pageToken,
+          filters,
+          isSummary
+        })
+          .then(response => {
+            const { file_name } = response
+            if (!isEmptyValue(file_name)) {
+              if (isDownload) {
+                const file = document.createElement('a')
+                file.href = `${config.adempiere.resource.url}${file_name}`
+                file.download = `${reportName}`
+                file.target = '_blank'
+                file.click()
+              }
+              resolve(file_name)
+            }
+          })
+          .catch(error => {
+            showNotification({
+              title: language.t('notifications.error'),
+              message: `Error exporting report: ${error.message}. Code: ${error.code}.`,
+              type: 'error'
+            })
+            commit('setShowDialog', true)
+            console.warn(`Error exporting report: ${error.message}. Code: ${error.code}.`)
+            resolve(error)
+          })
+      })
+    },
+    ListNotifications() {
+      return new Promise(resolve => {
+        listNotificationsTypes()
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => {
+            showNotification({
+              title: language.t('notifications.error'),
+              message: error.message,
+              type: 'error'
+            })
+            console.warn(`Error exporting report: ${error.message}. Code: ${error.code}.`)
+          })
+      })
+    },
+    ListUser() {
+      return new Promise(resolve => {
+        listUsers()
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => {
+            showNotification({
+              title: language.t('notifications.error'),
+              message: error.message,
+              type: 'error'
+            })
+            console.warn(`Error exporting report: ${error.message}. Code: ${error.code}.`)
+          })
+      })
+    },
+    sendNotification({ commit }, {
+      user_id,
+      title,
+      recipients,
+      notification_type,
+      attachments,
+      subject
+    }) {
+      return new Promise(resolve => {
+        sendNotification({
+          user_id,
+          title,
+          recipients,
+          notification_type,
+          attachments,
+          subject
+        })
+          .then(response => {
+            showNotification({
+              title: language.t('notifications.succesful'),
+              message: title,
+              type: 'success'
+            })
+            resolve(response)
+          })
+          .catch(error => {
+            showNotification({
+              title: language.t('notifications.error'),
+              message: error.message,
+              type: 'error'
+            })
+            console.warn(`Error exporting report: ${error.message}. Code: ${error.code}.`)
           })
       })
     }
   },
 
   getters: {
+    getContactSend: (state) => {
+      return state.contactSend
+    },
+    getTypeNotify: (state) => {
+      return state.typeNotify
+    },
+    getExportReport: (state) => {
+      return state.exportReport
+    },
+    getIsSummary: (state) => {
+      return state.isSummary
+    },
     getReportGenerated: (state) => (containerUuid) => {
       return state.reportsGenerated[containerUuid]
     },
-
+    getReportShowDialog: (state) => {
+      return state.showDialog
+    },
     getReportOutput: (state) => (instanceUuid) => {
       return state.reportsOutput[instanceUuid]
     },
-
+    getReportIsLoading: (state) => {
+      return state.isLoading
+    },
     getPrintFormatsList: (state) => (reportId) => {
       return state.printFormatsList[reportId] || []
     },
@@ -747,6 +999,9 @@ const reportManager = {
 
     getShowPanelConfig: (state) => ({ containerUuid }) => {
       return state.isShowPanelConfig[containerUuid]
+    },
+    getDefaultBody: (state) => {
+      return state.defaultBody
     }
   }
 }

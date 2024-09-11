@@ -27,6 +27,12 @@ import {
   LOCATOR_WAREHOUSE, PRODUCT_ATTRIBUTE, RESOURCE_ASSIGNMENT,
   LIST, SEARCH, TABLE, TABLE_DIRECT
 } from '@/utils/ADempiere/references.js'
+import {
+  RANGE_VALUE_OPERATORS_LIST,
+  IGNORE_VALUE_OPERATORS_LIST,
+  MULTIPLE_VALUES_OPERATORS_LIST
+} from '@/utils/ADempiere/dataUtils'
+import { FIELDS_DATE } from '@/utils/ADempiere/references'
 import { DISPLAY_COLUMN_PREFIX, IDENTIFIER_COLUMN_SUFFIX } from '@/utils/ADempiere/dictionaryUtils'
 import { OPERATION_PATTERN } from '@/utils/ADempiere/formatValue/numberFormat.js'
 
@@ -1000,4 +1006,73 @@ export function setRecordPath({
       recordChildId
     }
   })
+}
+
+/**
+ * Get Operator And Value in String
+ * @param {array} fieldsList
+ * @param {string} format
+ * @return {string} ej: '{ "name":"columnName","operator":"equal","values": value}' || '[{ "name":"columnName","operator":"equal","values": value}]'
+ */
+export function getOperatorAndValue({
+  format = 'object',
+  containerUuid,
+  fieldsList
+}) {
+  const attributesObject = {}
+  const attributesArray = []
+  if (isEmptyValue(fieldsList)) {
+    return format === 'object' ? JSON.stringify(attributesObject) : JSON.stringify(attributesArray)
+  }
+
+  fieldsList.forEach(field => {
+    // default operator
+    const { columnName, columnNameTo, operator, valueType, display_type } = field
+
+    let value, valueTo, values
+
+    const contextValue = store.getters.getValueOfFieldOnContainer({
+      containerUuid: containerUuid,
+      columnName: columnName
+    })
+
+    if (!IGNORE_VALUE_OPERATORS_LIST.includes(operator)) {
+      if (isEmptyValue(contextValue)) {
+        return
+      }
+      if (FIELDS_DATE.includes(display_type)) {
+        if (MULTIPLE_VALUES_OPERATORS_LIST.includes(operator)) {
+          values = contextValue
+        } else if (RANGE_VALUE_OPERATORS_LIST.includes(operator)) {
+          [value, valueTo] = Array.isArray(contextValue) ? contextValue : [contextValue, store.getters.getValueOfFieldOnContainer({
+            containerUuid: containerUuid,
+            columnName: columnNameTo
+          })]
+          values = [value, valueTo]
+        } else {
+          value = contextValue
+        }
+      } else {
+        value = contextValue
+      }
+    }
+
+    attributesArray.push({
+      name: columnName,
+      operator: operator,
+      values: !isEmptyValue(values) ? values : value
+    })
+
+    attributesObject[columnName] = {
+      ...attributesObject[columnName] || {},
+      columnName,
+      operator,
+      value,
+      valueTo,
+      values,
+      valueType
+    }
+  })
+
+  return format === 'object' ? JSON.stringify(attributesObject) : JSON.stringify(attributesArray)
 }

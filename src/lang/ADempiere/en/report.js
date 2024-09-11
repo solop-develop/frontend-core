@@ -70,7 +70,7 @@ const report = {
       type: 'xls'
     },
     xlsx: {
-      name: 'xlsx - XLSX file',
+      name: 'xlsx - Excel file',
       description: 'xlsx - XLSX file',
       type: 'xlsx'
     },
@@ -79,6 +79,44 @@ const report = {
       description: 'arxml - Adempiere Report Definition',
       type: 'arxml'
     }
+  },
+  reportEnginer: {
+    summation: 'Summation (Σ):',
+    average: 'Average (μ):',
+    Count: 'Count (№):',
+    min: 'Minimum (↓):',
+    max: 'Maximum (↑):',
+    variance: 'Variance (σ²):',
+    standardDeviation: 'Standard Deviation (σ):',
+    share: 'Share / Download',
+    optionsImport: {
+      title: 'Import and Share Options',
+      format: 'Format Options',
+      actualPage: 'Current Page',
+      fullReport: 'Full Report',
+      sendDownload: 'Send / Download',
+      download: 'Download',
+      send: 'Send',
+      copyLink: 'Copy Link',
+      typeNotify: 'Type of Notification',
+      contactsSend: 'Contacts to Send'
+    },
+    printFormat: 'Print Format',
+    viewReport: 'Report View',
+    detail: 'View Detailed',
+    summary: 'View Summary',
+    exportFormat: 'Export Format',
+    download: 'Generated Download Link',
+    sharedReport: 'Shared Report',
+    mesajeDownload: 'Click on the Following lLnk to go to Download',
+    openLink: 'Open Link',
+    mesajeShear: 'Your Link has been Successfully Copied to the Clipboard',
+    refreshRecord: 'Refresh',
+    sendDetails: 'Send Details',
+    recipient: 'Recipient',
+    urlAddress: 'Url Address',
+    subject: 'Subject',
+    urlPublic: 'Click to go to the Link'
   }
 }
 
