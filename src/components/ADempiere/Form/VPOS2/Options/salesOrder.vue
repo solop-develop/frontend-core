@@ -90,11 +90,19 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           :body-style="{ padding: '10px' }"
         >
           <p
+            v-if="!isLoadingCompleteOrder"
             :class="isDisableClass"
           >
             <i class="el-icon-success" />
             <br>
             {{ $t('form.pos.optionsPoinSales.salesOrder.completePreparedOrder') }}
+          </p>
+          <p
+            v-else
+            class="card-options-buttons"
+          >
+            <i class="el-icon-loading" />
+            <br>
           </p>
         </el-card>
       </div>
@@ -554,6 +562,7 @@ export default defineComponent({
     const isShowApplyDiscount = ref(false)
     const isLoadingCancelSaleTransaction = ref(false)
     const isLoadingPrintTicket = ref(false)
+    const isLoadingCompleteOrder = ref(false)
     const isLoadingPreviewDocument = ref(false)
     const isLoadingCopyOrder = ref(false)
     const isLoadingCancelOrder = ref(false)
@@ -697,7 +706,12 @@ export default defineComponent({
 
     function completePreparedOrder() {
       if (isEmptyValue(currentOrder.value.id)) return
+      if (isLoadingCompleteOrder.value) return
+      isLoadingCompleteOrder.value = true
       store.dispatch('process', {})
+        .then(() => {
+          isLoadingCompleteOrder.value = false
+        })
     }
 
     function cancelSaleTransaction() {
@@ -893,6 +907,7 @@ export default defineComponent({
       isShowApplyDiscount,
       isLoadingPrintTicket,
       isLoadingCancelOrder,
+      isLoadingCompleteOrder,
       showApplyDiscountOnOrder,
       isLoadingPreviewDocument,
       showApplyDiscountToAllLines,
