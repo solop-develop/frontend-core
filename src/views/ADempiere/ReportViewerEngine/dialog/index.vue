@@ -301,7 +301,7 @@ export default defineComponent({
     })
     function downloadFile() {
       store.dispatch('exportReport', {
-        reportId: getStoreReport.value.id,
+        reportId: getStoreReport.value.internal_id,
         reportName: props.reportOutput.name,
         printFormatId: props.reportOutput.print_format_id,
         reportViewId: props.reportOutput.report_view_id,
@@ -315,7 +315,7 @@ export default defineComponent({
 
     function shareUrl() {
       store.dispatch('exportReport', {
-        reportId: getStoreReport.value.id,
+        reportId: getStoreReport.value.internal_id,
         reportName: props.reportOutput.name,
         printFormatId: props.reportOutput.print_format_id,
         reportViewId: props.reportOutput.report_view_id,
@@ -389,7 +389,7 @@ export default defineComponent({
     function sendLink() {
       const user_id = store.getters['user/userInfo'].id
       store.dispatch('exportReport', {
-        reportId: getStoreReport.value.id,
+        reportId: getStoreReport.value.internal_id,
         reportName: props.reportOutput.name,
         printFormatId: props.reportOutput.print_format_id,
         reportViewId: props.reportOutput.report_view_id,

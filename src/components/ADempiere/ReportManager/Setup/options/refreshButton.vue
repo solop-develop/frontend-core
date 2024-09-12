@@ -50,7 +50,7 @@ export default defineComponent({
         isSummary: true,
         parametersList: reportOutputParams,
         printFormatId: props.reportOutput.print_format_id,
-        reportId: reportDefinition.id,
+        reportId: reportDefinition.internal_id,
         instanceUuid: props.reportOutput.instance_id,
         reportViewId: props.reportOutput.report_view_id,
         pageSize: props.reportOutput.pageSize,

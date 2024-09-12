@@ -617,7 +617,7 @@ const reportManager = {
       }
       const reportDefinition = getters.getStoredReport(containerUuid)
       const {
-        id,
+        internal_id,
         name,
         description,
         fieldsList
@@ -689,7 +689,7 @@ const reportManager = {
               ...reportResponse,
               containerUuid,
               rowCells: reportResponse.rows,
-              instanceUuid: id,
+              instanceUuid: internal_id,
               pageSize,
               pageToken
             })
