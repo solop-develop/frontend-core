@@ -430,7 +430,7 @@ export default defineComponent({
         isSummary: true,
         parametersList: reportOutputParams,
         printFormatId: reportAsPrintFormatValue.value,
-        reportId: reportDefinition.id,
+        reportId: reportDefinition.internal_id,
         instanceUuid: defaultParams.value.instance_id,
         reportViewId: defaultParams.value.report_view_id,
         pageSize: props.reportOutput.pageSize,

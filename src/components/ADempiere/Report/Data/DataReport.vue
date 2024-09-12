@@ -236,7 +236,7 @@ export default defineComponent({
         pageNumber: currentPageNumber.value,
         pageSize,
         parametersList: reportDefinition,
-        reportId: reportDefinition.id,
+        reportId: reportDefinition.internal_id,
         printFormatId: props.reportOutput.print_format_id,
         reportViewId: props.reportOutput.report_view_id
       })
@@ -248,7 +248,7 @@ export default defineComponent({
         pageNumber,
         pageSize: currentPageSize.value,
         parametersList: reportDefinition,
-        reportId: reportDefinition.id,
+        reportId: reportDefinition.internal_id,
         printFormatId: props.reportOutput.print_format_id,
         reportViewId: props.reportOutput.report_view_id
       })

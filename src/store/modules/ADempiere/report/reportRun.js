@@ -70,7 +70,7 @@ const reportRun = {
           type: 'info'
         })
         if (isEmptyValue(reportId)) {
-          reportId = reportDefinition.id
+          reportId = reportDefinition.internal_id
         }
         if (isEmptyValue(printFormatId)) {
           printFormatId = reportDefinition.print_format_id
@@ -122,10 +122,10 @@ const reportRun = {
               }
 
               router.push({
-                path: `/report-viewer/${reportDefinition.id}/${instance_id}`,
+                path: `/report-viewer/${reportDefinition.internal_id}/${instance_id}`,
                 name: REPORT_VIEWER_NAME,
                 params: {
-                  reportId: reportDefinition.id,
+                  reportId: reportDefinition.internal_id,
                   reportUuid: reportDefinition.uuid,
                   instanceUuid: instance_id,
                   fileName: output.file_name + instance_id,
@@ -143,7 +143,7 @@ const reportRun = {
 
             commit('setReportOutput', {
               ...output,
-              reportId: reportDefinition.id,
+              reportId: reportDefinition.internal_id,
               reportUuid: reportDefinition.uuid,
               instanceUuid: instance_id,
               parametersList,
