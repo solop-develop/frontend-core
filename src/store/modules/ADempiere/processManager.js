@@ -18,7 +18,7 @@
 
 import lang from '@/lang'
 import router from '@/router'
-
+import Vue from 'vue'
 // API Request Methods
 import {
   requestRunBusinessProcess,
@@ -39,9 +39,20 @@ import {
 } from '@/utils/ADempiere/dictionary/process.js'
 
 const processManager = {
-  state: {},
+  state: {
+    isLoadingProcessOfBrowser: {}
+  },
 
-  mutations: {},
+  mutations: {
+    setIsloadingProcessOfBrowser(state, {
+      containerUuid,
+      isLoading
+    }) {
+      Vue.set(state.isLoadingProcessOfBrowser, containerUuid, {
+        isLoading
+      })
+    }
+  },
 
   actions: {
     processActionPerformed({ dispatch, getters }, {
@@ -451,6 +462,12 @@ const processManager = {
   },
 
   getters: {
+    getIsloadingProcessOfBrowser: (state) => ({
+      containerUuid
+    }) => {
+      if (isEmptyValue(containerUuid)) return false
+      return state.isLoadingProcessOfBrowser[containerUuid].isLoading
+    }
   }
 }
 

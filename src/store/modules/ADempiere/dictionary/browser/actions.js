@@ -129,6 +129,11 @@ export default {
           resolve(browserDefinition)
           const { process } = browserDefinition
           if (!isEmptyValue(process)) {
+            store.commit('setIsloadingProcessOfBrowser', {
+              isLoading: false,
+              parentUuid: process.id,
+              containerUuid: browserDefinition.containerUuid
+            })
             dispatch('setModalDialog', {
               containerUuid: process.uuid,
               title: process.name,
@@ -148,6 +153,12 @@ export default {
 
                 const isAllSelection = rootGetters.getStoredBrowserProcessAll(browserDefinition.uuid)
 
+                store.commit('setIsloadingProcessOfBrowser', {
+                  isLoading: true,
+                  parentUuid: process.id,
+                  containerUuid: browserDefinition.containerUuid
+                })
+
                 store.dispatch('startProcessOfBrowser', {
                   parentUuid: browserDefinition.uuid,
                   containerUuid: process.uuid,
@@ -164,6 +175,12 @@ export default {
                       path: oldRouter.path
                     }, () => {})
                   }
+                }).finally(() => {
+                  store.commit('setIsloadingProcessOfBrowser', {
+                    isLoading: false,
+                    parentUuid: process.id,
+                    containerUuid: browserDefinition.containerUuid
+                  })
                 })
               },
               beforeOpen: ({ parentUuid: browserUuid, containerUuid }) => {
@@ -185,6 +202,13 @@ export default {
                 return dispatch('getProcessDefinitionFromServer', {
                   id: process.id.toString(),
                   containerUuidAssociated: browserDefinition.uuid
+                })
+              },
+              isDisabledDone() {
+                // validate document status and Processing flag
+                return store.getters.getIsloadingProcessOfBrowser({
+                  parentUuid: process.id,
+                  containerUuid: browserDefinition.containerUuid
                 })
               },
               ...process,
