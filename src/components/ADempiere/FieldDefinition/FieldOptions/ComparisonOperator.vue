@@ -85,6 +85,7 @@ export default defineComponent({
     const currentOperatorValue = computed(() => {
       return props.metadataField.operator
     })
+
     const operatorList = computed(() => {
       const isComparisonField = !['FieldBinary', 'FieldButton', 'FieldImage'].includes(props.metadataField.componentPath)
       if (isComparisonField) {

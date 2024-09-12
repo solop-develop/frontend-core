@@ -89,7 +89,7 @@
                     >
                       <el-dropdown-item
                         :key="index"
-                        :command="process.id + '|' + process.values.UUID"
+                        :command="process.internal_id + '|' + process.values.UUID"
                       >
                         {{ process.values.DisplayColumn }}
                       </el-dropdown-item>

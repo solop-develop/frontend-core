@@ -91,24 +91,24 @@ export function getReferenceByMenu(menu) {
 
   switch (menu.action) {
     case 'F':
-      reference_id = menu.workflow.id
+      reference_id = menu.workflow.internal_id
       reference_uuid = menu.workflow.uuid
       break
     case 'P':
     case 'R':
-      reference_id = menu.process.id
+      reference_id = menu.process.internal_id
       reference_uuid = menu.process.uuid
       break
     case 'S':
-      reference_id = menu.browser.id
+      reference_id = menu.browser.internal_id
       reference_uuid = menu.browser.uuid
       break
     case 'W':
-      reference_id = menu.window.id
+      reference_id = menu.window.internal_id
       reference_uuid = menu.window.uuid
       break
     case 'X':
-      reference_id = menu.form.id
+      reference_id = menu.form.internal_id
       reference_uuid = menu.form.uuid
       break
   }

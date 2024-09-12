@@ -19,7 +19,8 @@
 const report = {
   clearParameters: {
     title: 'Limpiar Parámetros',
-    description: 'Limpia los valores estableciendo los valores por defecto'
+    description: 'Limpia los valores estableciendo los valores por defecto',
+    whithoutAssociatedReport: 'Sin Reporte Asociado'
   }
 }
 
