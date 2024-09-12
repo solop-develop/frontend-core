@@ -38,6 +38,7 @@
         <downloadButtom
           :container-uuid="reportUuid"
           :is-loading-report="false"
+          style="display: flex; justify-content: flex-end; padding-bottom: 10px"
         />
         <dialogShareReport
           :report-metadata="reportMetadata"

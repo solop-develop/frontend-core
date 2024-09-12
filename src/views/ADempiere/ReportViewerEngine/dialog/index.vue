@@ -286,7 +286,10 @@ export default defineComponent({
       store.commit('setDefaultBody', markdownContent.value)
     }
     const getStoreReport = computed(() => {
-      let containerUuid = props.reportMetadata.containerUuid
+      let containerUuid = ''
+      if (!isEmptyValue(props.reportMetadata)) {
+        containerUuid = props.reportMetadata.containerUuid
+      }
       if (isEmptyValue(containerUuid)) {
         containerUuid = props.reportOutput.containerUuid
       }
