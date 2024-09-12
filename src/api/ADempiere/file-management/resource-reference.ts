@@ -34,7 +34,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
  */
 export function requestPresignedUrl(options) {
   const { containerType, containerId, columnName, clientId, tableName, recordId, fileName } = options
-  const baseURL = config.adempiere.resource.url.replace(/\/$/, '') // remove trailing slash
+  const baseURL = `${config.adempiere.api.url}resources/` // remove trailing slash
   const path = [baseURL, 'presigned-url']
 
   // Add parameters to the route only if they exist
@@ -83,7 +83,7 @@ export function requestGetResource({
   fileName
 }) {
   return request({
-    url: `${config.adempiere.resource.url}${fileName}`,
+    url: `${config.adempiere.api.url}resources/${fileName}`,
     method: 'get',
     isWithoutAuthorization: true,
     params: {
@@ -103,7 +103,7 @@ export function requestListResources({
   containerType
 }) {
   return request({
-    url: `${config.adempiere.resource.url}`,
+    url: `${config.adempiere.api.url}resources/`,
     method: 'get',
     isWithoutAuthorization: true,
     params: {
@@ -123,7 +123,7 @@ export function requestDeleteResources({
   fileName
 }) {
   return request({
-    url: `${config.adempiere.resource.url}${fileName}`,
+    url: `${config.adempiere.api.url}resources/${fileName}`,
     method: 'delete',
     isWithoutAuthorization: true
   })
@@ -138,7 +138,7 @@ export function requestShareResources({
   seconds
 }) {
   return request({
-    baseURL: `${config.adempiere.resource.url}download-url/${fileName}`,
+    baseURL: `${config.adempiere.api.url}resources/download-url/${fileName}`,
     isWithoutAuthorization: true,
     method: 'get',
     params: {

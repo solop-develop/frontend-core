@@ -141,7 +141,7 @@ export default defineComponent({
     const isShowed = ref(false)
     const validTime = ref(3600)
     function loadData() {
-      linkShare.value = config.adempiere.resource.url + props.fileUrl
+      linkShare.value = `${config.adempiere.api.url}resources/${props.fileUrl}`
     }
 
     function copyValue() {

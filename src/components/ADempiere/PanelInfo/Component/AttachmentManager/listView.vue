@@ -147,7 +147,7 @@ export default defineComponent({
     function getSurceFile(file) {
       if (isEmptyValue(file.content_type)) return ''
       if (file.content_type.includes('image')) {
-        return config.adempiere.resource.url + file.fullName
+        return `${config.adempiere.api.url}resources/${file.fullName}`
       }
       return getImageFromContentType({
         contentType: file.content_type,

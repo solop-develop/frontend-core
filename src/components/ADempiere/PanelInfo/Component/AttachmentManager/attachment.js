@@ -207,10 +207,10 @@ export default defineComponent({
      * @param {Boolean} isDownload
      */
     const handleDownload = async(file, isDownload = true) => {
-      const imageURL = config.adempiere.resource.url + file.fullName
+      const imageURL = `${config.adempiere.api.url}resources/${file.fullName}`
       if (!isEmptyValue(file.content_type) && file.content_type.includes('image')) {
         const linkImage = document.createElement('a')
-        linkImage.href = config.adempiere.resource.url + file.fullName
+        linkImage.href = `${config.adempiere.api.url}resources/${file.fullName}`
         linkImage.download = `${file.fullName}`
         linkImage.target = '_blank'
         linkImage.click()
@@ -252,7 +252,7 @@ export default defineComponent({
     function getSurceFile(file) {
       if (isEmptyValue(file.content_type)) return ''
       if (file.content_type.includes('image')) {
-        return config.adempiere.resource.url + file.fullName
+        return `${config.adempiere.api.url}resources/${file.fullName}`
       }
       return getImageFromContentType({
         contentType: file.content_type,

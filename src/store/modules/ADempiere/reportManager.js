@@ -842,7 +842,7 @@ const reportManager = {
             if (!isEmptyValue(file_name)) {
               if (isDownload) {
                 const file = document.createElement('a')
-                file.href = `${config.adempiere.resource.url}${file_name}`
+                file.href = `${config.adempiere.api.url}resources/${file_name}`
                 file.download = `${reportName}`
                 file.target = '_blank'
                 file.click()
