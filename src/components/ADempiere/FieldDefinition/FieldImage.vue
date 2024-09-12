@@ -253,7 +253,7 @@ export default {
       if (isEmptyValue(resourceId)) {
         resourceId = -1
       }
-      const getUrl = config.adempiere.resource.url + this.displayedValue
+      const getUrl = config.adempiere.api.url + '/resources/' + this.displayedValue
       return getUrl
     },
     additionalHeaders() {
@@ -479,7 +479,7 @@ export default {
         name
       } = this.infoImage
       const file = document.createElement('a')
-      file.href = `${config.adempiere.resource.url}${name}`
+      file.href = `${config.adempiere.api.url}resources/${name}`
       file.download = `${name}`
       file.target = '_blank'
       file.click()

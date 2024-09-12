@@ -369,7 +369,7 @@ export default defineComponent({
 
     function handleDownload() {
       const link = document.createElement('a')
-      const imageURL = config.adempiere.resource.url + props.reportOutput.name
+      const imageURL = `${config.adempiere.api.url}resources/${props.reportOutput.name}`
       link.href = imageURL
       link.download = props.reportOutput.name
       link.click()

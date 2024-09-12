@@ -180,7 +180,7 @@ export function getResoursePath({
     bearerToken = `${BEARER_TYPE} ${token}`
   }
 
-  const url = config.adempiere.resource.url
+  const url = `${config.adempiere.api.url}resources/`
   const urn = `?token=${bearerToken}&resource_uuid=${resourceUuid}&resource_name=${resourceName}`
   const uri = `${url}${urn}`
 
@@ -441,6 +441,6 @@ export function pathImageWindows({
   columnName,
   resourceName
 }) {
-  const url = config.adempiere.resource.url
+  const url = `${config.adempiere.api.url}resources/`
   return `${url}${clientId}/client/attachment/${tableName}/${recordId}/${columnName}/${resourceName}`
 }
