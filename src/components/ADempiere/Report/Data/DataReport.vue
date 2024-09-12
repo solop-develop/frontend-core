@@ -43,7 +43,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
           :column-key="fieldAttributes.code"
           :align="getAlignment(fieldAttributes.display_type)"
           :fixed="fieldAttributes.is_group_column"
-          :width="widthColumn(fieldAttributes.display_type)"
+          :width="widthColumn(fieldAttributes.display_type)[key]"
         >
           <template slot="header">
             {{ fieldAttributes.title }}
@@ -186,7 +186,9 @@ export default defineComponent({
             style += `color: ${data.color};`
           }
           if (!isEmptyValue(data.font_code)) {
-            style += `font: ${data.font_code}`
+            const fontSize = data.font_code.replace(/[^\d]/g, '')
+            const fontFamily = data.font_code.replace(/\d+/g, '')
+            style += `font-family: ${fontFamily}; font-size: ${fontSize}px;`
           }
         }
       })
@@ -358,26 +360,40 @@ export default defineComponent({
     }
     function widthColumn(data) {
       if (!isEmptyValue(columns.value)) {
-        columns.value.forEach(column => {
-          if (column.is_fixed_width) {
-            return column.column_width
+        const widths = {}
+        columns.value.forEach((column, index) => {
+          let width = 0
+          if (column.column_width > 0) {
+            width = column.column_width
           }
-          if (column.column_characters_size > 0) {
-            const fontSize = 14
-            const operation = fontSize * column.column_characters_size
-            return operation
+          if (column.column_width <= 0 && column.column_characters_size > 0) {
+            let fontCode = 15
+            let character = 15
+            if (column.column_characters_size > 10) {
+              character = column.column_characters_size
+            }
+            if (!isEmptyValue(column.font_code)) {
+              const number = column.font_code.replace(/[^\d]/g, '')
+              fontCode = number
+            }
+            width = character * fontCode
           }
+          if (width === 0) {
+            if (
+              isNumberField(data) ||
+              isDateField(data) ||
+              isBooleanField(data) ||
+              isDecimalField(data)
+            ) {
+              width = 250
+            } else {
+              width = 300
+            }
+          }
+          widths[index] = width
         })
+        return widths
       }
-      if (
-        isNumberField(data) ||
-        isDateField(data) ||
-        isBooleanField(data) ||
-        isDecimalField(data)
-      ) {
-        return 250
-      }
-      return 300
     }
     /**
      * Watch - watch works directly on a ref
