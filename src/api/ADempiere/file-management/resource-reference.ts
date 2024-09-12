@@ -138,7 +138,7 @@ export function requestShareResources({
   seconds
 }) {
   return request({
-    baseURL: `${config.adempiere.api.url}resources/download-url/${fileName}`,
+    baseURL: `${config.adempiere.api.url}/resources/download-url/${fileName}`,
     isWithoutAuthorization: true,
     method: 'get',
     params: {
