@@ -127,7 +127,7 @@ export default defineComponent({
     function printProcess() {
       if (isEmptyValue(process)) {
         showNotification({
-          title: language.t('notifications.processing'),
+          title: language.t('notifications.whithoutAssociatedReport'),
           message: process.name,
           summary: process.description,
           type: 'info'
