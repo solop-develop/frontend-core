@@ -126,12 +126,12 @@ export function generateField({
   let parsedDefaultValue = fieldToGenerate.default_value
   let parsedDefaultValueTo = fieldToGenerate.default_value_to
   let operator
-  let isNumericField = componentReference.componentPath === 'FieldNumber'
+  const isNumericField = componentReference.componentPath === 'FieldNumber'
   let isTranslatedField = fieldToGenerate.is_translated
   let isComparisonField = false // to list operators comparison
   let operatorsList = []
   if (moreAttributes.isAdvancedQuery) {
-    isNumericField = false
+    // isNumericField = false // disable calculator popover
     isTranslatedField = false
     parsedDefaultValue = undefined
     parsedDefaultValueTo = undefined

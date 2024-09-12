@@ -94,7 +94,7 @@ import store from '@/store'
 
 // Components and Mixins
 import FieldOptions from '@/components/ADempiere/FieldDefinition/FieldOptions/index.vue'
-import ComparisonOperator from '@/components/ADempiere/FieldDefinition/FieldOptions/ComparisonOperator'
+import ComparisonOperator from '@/components/ADempiere/FieldDefinition/FieldOptions/ComparisonOperator.vue'
 
 // Constants
 import { UUID } from '@/utils/ADempiere/constants/systemColumns'

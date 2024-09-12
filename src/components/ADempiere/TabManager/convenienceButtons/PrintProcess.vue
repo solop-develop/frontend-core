@@ -62,9 +62,11 @@
 
 <script>
 import { defineComponent, computed } from '@vue/composition-api'
+
 import language from '@/lang'
 import store from '@/store'
-// Utils
+
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showNotification } from '@/utils/ADempiere/notification.js'
 
@@ -106,29 +108,37 @@ export default defineComponent({
     })
 
     const getReportDefinition = computed(() => {
-      if (
-        isEmptyValue(process) ||
-        isEmptyValue(process.uuid)
-      ) return []
+      if (isEmptyValue(process) || isEmptyValue(process.uuid)) {
+        return []
+      }
       return store.getters.getStoredReport(process.uuid)
     })
 
     const printFormats = computed(() => {
-      if (
-        isEmptyValue(process)
-      ) return []
-      return store.getters.getPrintFormatsList(process.id)
+      if (isEmptyValue(process)) {
+        return []
+      }
+      return store.getters.getPrintFormatsList(process.internal_id)
     })
 
     /**
      * Methods
      */
     function printProcess() {
-      if (isEmptyValue(process)) return
+      if (isEmptyValue(process)) {
+        showNotification({
+          title: language.t('notifications.processing'),
+          message: process.name,
+          summary: process.description,
+          type: 'info'
+        })
+        return
+      }
+
       store.dispatch('runReport', {
         containerUuid: process.uuid,
         recordId: recordId.value,
-        reportId: process.id,
+        reportId: process.internal_id,
         tableName: table_name
       })
     }
@@ -143,8 +153,8 @@ export default defineComponent({
       store.dispatch('generateReportViwer', {
         containerUuid: process.uuid,
         reportUuid: process.uuid,
+        reportId: process.internal_id,
         printFormatId: command.id,
-        reportId: process.id,
         tableName: command.table_name,
         filters: `[{\"name\":\"${command.table_name}_ID\",\"operator\":\"equal\",\"values\":${recordId.value}}]`,
         isView: false
@@ -152,8 +162,12 @@ export default defineComponent({
     }
 
     function loadProcessData() {
-      if (isEmptyValue(process) || isEmptyValue(is_document)) return
-      if (!isEmptyValue(getReportDefinition.value)) return
+      if (isEmptyValue(process) || isEmptyValue(is_document)) {
+        return
+      }
+      if (!isEmptyValue(getReportDefinition.value)) {
+        return
+      }
       const { id } = process
       store.dispatch('getReportDefinitionFromServer', {
         id,
