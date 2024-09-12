@@ -369,7 +369,7 @@ export default defineComponent({
           if (column.column_width <= 0 && column.column_characters_size > 0) {
             let fontCode = 15
             let character = 15
-            if (column.column_characters_size > 10) {
+            if (column.column_characters_size > 5) {
               character = column.column_characters_size
             }
             if (!isEmptyValue(column.font_code)) {
