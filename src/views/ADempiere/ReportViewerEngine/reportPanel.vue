@@ -25,19 +25,10 @@
       :is-report-enginer="false"
       :is-loading-report="isLoadingReport"
     />
-    <el-dialog
-      v-shortkey="shortsKey"
-      :visible.sync="showDialog"
-      :title="$t('report.reportEnginer.optionsImport.title')"
-      top="2vh"
-      @shortkey.native="keyAction"
-      @close="viewShowDialog"
-    >
-      <dialogShareReport
-        :report-output="reportOutput"
-        :container-uuid="containerUuid"
-      />
-    </el-dialog>
+    <dialogShareReport
+      :report-output="reportOutput"
+      :container-uuid="containerUuid"
+    />
     <data-report
       :container-manager="containerManager"
       :instance-uuid="instanceUuid"
@@ -87,38 +78,12 @@ export default defineComponent({
     }
   },
   setup() {
-    // Computed
-    const shortsKey = computed(() => {
-      return {
-        close: ['esc']
-      }
-    })
-
-    const showDialog = computed(() => {
-      return store.getters.getReportShowDialog
-    })
-    // Methods
-    function keyAction(event) {
-      switch (event.srcKey) {
-        case 'close':
-          viewShowDialog()
-      }
-    }
-
-    function viewShowDialog() {
-      store.commit('setShowDialog', false)
-    }
     const isLoadingReport = computed(() => {
       return store.getters.getReportIsLoading
     })
     return {
       // Computed
-      showDialog,
-      shortsKey,
-      isLoadingReport,
-      // Methods
-      keyAction,
-      viewShowDialog
+      isLoadingReport
     }
   }
 })

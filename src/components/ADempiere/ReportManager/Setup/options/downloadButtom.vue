@@ -26,10 +26,6 @@ export default defineComponent({
       type: String,
       required: false
     },
-    reportOutput: {
-      type: Object,
-      required: true
-    },
     containerManager: {
       type: Object,
       required: false

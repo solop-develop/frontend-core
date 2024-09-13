@@ -1,7 +1,14 @@
 <template>
-  <div>
+  <el-dialog
+    v-shortkey="shortsKey"
+    :visible.sync="showDialog"
+    :title="$t('report.reportEnginer.optionsImport.title')"
+    top="2vh"
+    @shortkey.native="keyAction"
+    @close="viewShowDialog"
+  >
     <el-row :gutter="12">
-      <el-col :span="12">
+      <el-col :span="!isPanel ? 24 : 12">
         <el-card>
           <template #header>
             <p>{{ $t('report.reportEnginer.exportFormat') }}</p>
@@ -22,7 +29,7 @@
           </el-row>
         </el-card>
       </el-col>
-      <el-col :span="12">
+      <el-col v-if="isPanel" :span="12">
         <el-card>
           <template #header>
             <p>{{ $t('report.reportEnginer.optionsImport.format') }}</p>
@@ -157,7 +164,7 @@
         />
       </el-col>
     </el-row>
-  </div>
+  </el-dialog>
 </template>
 
 <script>
@@ -193,9 +200,26 @@ export default defineComponent({
     reportOutput: {
       type: Object,
       required: false
+    },
+    reportMetadata: {
+      type: Object,
+      required: false
+    },
+    isPanel: {
+      type: Boolean,
+      required: false,
+      default: true
     }
   },
   setup(props) {
+    const shortsKey = computed(() => {
+      return {
+        close: ['esc']
+      }
+    })
+    const showDialog = computed(() => {
+      return store.getters.getReportShowDialog
+    })
     const storedMailTemplatesList = computed(() => {
       return store.getters.getListMailTemplates
     })
@@ -216,16 +240,27 @@ export default defineComponent({
     const linkShare = ref('')
     const isLoading = ref(false)
     const validTime = ref(3600)
-    const titleDocument = ref(props.reportOutput.name)
+    const titleDocument = ref(
+      isEmptyValue(props.reportOutput) ? props.reportMetadata.name : props.reportOutput.name
+    )
     const isTemplateSelected = ref(false)
     const markdownContent = ref(store.getters.getDefaultBody)
     const oldContent = ref(markdownContent.value)
     const allReport = ref(false)
     const pageSize = computed(() => {
+      if (isEmptyValue(props.reportOutput)) {
+        return 25
+      }
       if (!allReport.value) {
         return props.reportOutput.pageSize
       }
       return props.reportOutput.record_count
+    })
+    const pageToken = computed(() => {
+      if (isEmptyValue(props.reportOutput)) {
+        return 1
+      }
+      return props.reportOutput.pageToken
     })
     function isToolbar() {
       isTemplateSelected.value = true
@@ -251,12 +286,19 @@ export default defineComponent({
       store.commit('setDefaultBody', markdownContent.value)
     }
     const getStoreReport = computed(() => {
-      return store.getters.getStoredReport(props.reportOutput.containerUuid)
+      let containerUuid = ''
+      if (!isEmptyValue(props.reportMetadata)) {
+        containerUuid = props.reportMetadata.containerUuid
+      }
+      if (isEmptyValue(containerUuid)) {
+        containerUuid = props.reportOutput.containerUuid
+      }
+      return store.getters.getStoredReport(containerUuid)
     })
     function loadData() {
       isLoading.value = true
       requestShareResources({
-        fileName: props.reportOutput.name,
+        fileName: titleDocument.value,
         seconds: validTime.value
       })
         .then(response => {
@@ -291,7 +333,7 @@ export default defineComponent({
       }
       showNotification({
         title: this.$t('notifications.processing'),
-        message: props.reportOutput.name,
+        message: titleDocument.value,
         type: 'info'
       })
       store.commit('setShowDialog', false)
@@ -302,28 +344,27 @@ export default defineComponent({
     function downloadFile() {
       store.dispatch('exportReport', {
         reportId: getStoreReport.value.internal_id,
-        reportName: props.reportOutput.name,
-        printFormatId: props.reportOutput.print_format_id,
-        reportViewId: props.reportOutput.report_view_id,
-        containerUuid: props.reportOutput.containerUuid,
+        reportName: titleDocument.value,
+        printFormatId: getStoreReport.value.print_format_id,
+        reportViewId: getStoreReport.value.report_view_id,
+        containerUuid: getStoreReport.value.containerUuid,
         pageSize: pageSize.value,
-        pageToken: props.reportOutput.pageToken,
+        pageToken: pageToken.value,
         isSummary: isSummary.value
       })
       blankValue()
     }
-
     function shareUrl() {
       store.dispatch('exportReport', {
         reportId: getStoreReport.value.internal_id,
-        reportName: props.reportOutput.name,
-        printFormatId: props.reportOutput.print_format_id,
-        reportViewId: props.reportOutput.report_view_id,
+        reportName: titleDocument.value,
+        printFormatId: getStoreReport.value.print_format_id,
+        reportViewId: getStoreReport.value.report_view_id,
         seconds: validTime.value,
         isDownload: false,
-        containerUuid: props.reportOutput.containerUuid,
+        containerUuid: getStoreReport.value.containerUuid,
         pageSize: pageSize.value,
-        pageToken: props.reportOutput.pageToken,
+        pageToken: pageToken.value,
         isSummary: isSummary.value
       })
         .then(fileNameResource => {
@@ -369,9 +410,9 @@ export default defineComponent({
 
     function handleDownload() {
       const link = document.createElement('a')
-      const imageURL = `${config.adempiere.api.url}resources/${props.reportOutput.name}`
+      const imageURL = config.adempiere.resource.url + titleDocument.value
       link.href = imageURL
-      link.download = props.reportOutput.name
+      link.download = titleDocument.value
       link.click()
     }
     const exportData = computed(() => {
@@ -390,14 +431,14 @@ export default defineComponent({
       const user_id = store.getters['user/userInfo'].id
       store.dispatch('exportReport', {
         reportId: getStoreReport.value.internal_id,
-        reportName: props.reportOutput.name,
-        printFormatId: props.reportOutput.print_format_id,
-        reportViewId: props.reportOutput.report_view_id,
+        reportName: titleDocument.value,
+        printFormatId: getStoreReport.value.print_format_id,
+        reportViewId: getStoreReport.value.report_view_id,
         seconds: validTime.value,
         isDownload: false,
-        containerUuid: props.reportOutput.containerUuid,
+        containerUuid: getStoreReport.value.containerUuid,
         pageSize: pageSize.value,
-        pageToken: props.reportOutput.pageToken,
+        pageToken: pageToken.value,
         isSummary: isSummary.value
       })
         .then(fileNameResource => {
@@ -437,7 +478,7 @@ export default defineComponent({
     function blankValue() {
       store.commit('setContactSend', '')
       store.commit('setTypeNotify', '')
-      titleDocument.value = props.reportOutput.name
+      titleDocument.value = isEmptyValue(props.reportOutput) ? props.reportMetadata.name : props.reportOutput.name
       let menuDefault = ''
       if (!isEmptyValue(storedMailTemplatesList.value) && !isEmptyValue(storedMailTemplatesList.value.menus)) {
         menuDefault = storedMailTemplatesList.value.menus[0].mail_text
@@ -483,6 +524,9 @@ export default defineComponent({
       titleDocument,
       oldContent,
       isSummary,
+      showDialog,
+      shortsKey,
+      pageToken,
       updateContent,
       updateMardown,
       copyToClipboard,

@@ -35,6 +35,15 @@
       />
       <div id="report-view">
         <br><br>
+        <downloadButtom
+          :container-uuid="reportUuid"
+          :is-loading-report="false"
+          style="display: flex; justify-content: flex-end; padding-bottom: 10px"
+        />
+        <dialogShareReport
+          :report-metadata="reportMetadata"
+          :is-panel="false"
+        />
         <panel-definition
           :container-uuid="reportUuid"
           :panel-metadata="reportMetadata"
@@ -98,6 +107,8 @@ import PanelDefinition from '@/components/ADempiere/PanelDefinition/index.vue'
 import OptionsReport from '@/components/ADempiere/ReportManager/Setup/optionsReport.vue'
 import TitleAndHelp from '@/components/ADempiere/TitleAndHelp/index.vue'
 import PanelFooter from '@/components/ADempiere/PanelFooter/index.vue'
+import downloadButtom from '@/components/ADempiere/ReportManager/Setup/options/downloadButtom'
+import dialogShareReport from '@/views/ADempiere/ReportViewerEngine/dialog'
 
 // Utils and Helper Methods
 import { closeTagView } from '@/utils/ADempiere/componentUtils'
@@ -111,13 +122,14 @@ export default defineComponent({
     PanelDefinition,
     TitleAndHelp,
     OptionsReport,
-    PanelFooter
+    PanelFooter,
+    downloadButtom,
+    dialogShareReport
   },
 
   setup() {
     const isLoadedMetadata = ref(false)
     const reportMetadata = ref({})
-
     const currentRoute = router.app._route
     const reportId = currentRoute.meta.id
     const reportUuid = currentRoute.meta.uuid
