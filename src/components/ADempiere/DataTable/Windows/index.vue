@@ -44,6 +44,7 @@
       @cell-click="handleCellClick"
       @row-click="handleRowClick"
       @select="handleSelection"
+      @sort-change="handleSortChange"
     >
       <!-- column with the checkbox -->
       <el-table-column
@@ -61,6 +62,7 @@
         sortable
         :min-width="widthColumn(fieldAttributes)"
         :fixed="fieldAttributes.isFixedTableColumn"
+        :field-attributes="fieldAttributes"
       >
         <template slot="header">
           <span v-if="containerManager.isMandatoryColumn(fieldAttributes)" style="color: red">
@@ -112,6 +114,7 @@ import useFullScreenContainer from '@/components/ADempiere/ContainerOptions/Full
 
 // Utils and Helper Methods
 import { isEmptyValue, setRecordPath } from '@/utils/ADempiere/valueUtils.js'
+import { isLookup } from '@/utils/ADempiere/references'
 
 export default defineComponent({
   name: 'WindowsTable',
@@ -192,7 +195,6 @@ export default defineComponent({
         containerUuid: props.containerUuid
       })
     })
-
     const currentOption = computed(() => {
       return store.getters.getTableOption(props.containerUuid)
     })
@@ -304,7 +306,6 @@ export default defineComponent({
       }
       return props.dataTable
     })
-
     const currentTabChildren = computed(() => {
       const currentTab = store.getters.getStoredTab(
         props.parentUuid,
@@ -657,7 +658,23 @@ export default defineComponent({
     onMounted(() => {
       loadSelection()
     })
-
+    function handleSortChange({ prop, order }) {
+      let displayType = prop
+      headerList.value.forEach(data => {
+        if (data.columnName === prop && isLookup(data.display_type)) {
+          const displayColumnValues = recordsWithFilter.value.map(record => record.DisplayColumn_C_BPartner_ID).join(', ')
+          displayType = displayColumnValues
+        }
+      })
+      const sortOrder = order === 'ascending' ? 'asc' : 'desc'
+      const objOrder = `"${displayType} ${sortOrder}"`
+      store.dispatch('getEntities', {
+        parentUuid: props.parentUuid,
+        containerUuid: props.containerUuid,
+        tableName: props.panelMetadata.table_name,
+        orderBy: objOrder
+      })
+    }
     return {
       // Refs
       isChangeOptions,
@@ -687,7 +704,8 @@ export default defineComponent({
       widthColumn,
       changeTable,
       adjustSize,
-      loadHeight
+      loadHeight,
+      handleSortChange
     }
   }
 })
