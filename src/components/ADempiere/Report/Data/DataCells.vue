@@ -21,7 +21,39 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     :style="cellStyle(attributes.code, rowData)"
   >
     <!-- Show cell label -->
-    {{ displayLabel(attributes, rowData) }}
+    <el-dropdown
+      v-if="!isEmptyValue(attributes.column_name)"
+      trigger="click"
+      @visible-change="loadZoom"
+      @command="zoomInWindow"
+    >
+      <span class="el-dropdown-link">
+        {{ displayLabel(attributes, rowData) }}
+      </span>
+      <el-dropdown-menu
+        v-if="isLoaded"
+        slot="dropdown"
+      >
+        <el-dropdown-item>
+          <i class="el-icon-loading" />
+        </el-dropdown-item>
+      </el-dropdown-menu>
+      <el-dropdown-menu v-else slot="dropdown">
+        <el-dropdown-item
+          v-for="(zoom, key) in rowData.zoom_windows"
+          :key="key"
+          :command="zoom"
+        >
+          <i class="el-icon-zoom-in" style="font-weight: bolder;" />
+          <b>
+            {{ $t('page.processActivity.zoomIn') }} {{ ' - ' + zoom.name + ' ( ' + displayLabel(attributes, rowData) + ' )' }}
+          </b>
+        </el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
+    <span v-else>
+      {{ displayLabel(attributes, rowData) }}
+    </span>
     <!-- Show popover only if the row is selected and is parent -->
     <el-popover
       v-if="currentSelectedColumn === attributes.code && rowData.is_parent"
@@ -41,13 +73,17 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 <script>
 import {
   defineComponent,
-  computed
+  computed,
+  ref
 } from '@vue/composition-api'
 // Components
 import InfoReport from '@/views/ADempiere/ReportViewerEngine/infoReport.vue'
 // Utility functions
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { isLookup } from '@/utils/ADempiere/references'
+import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
+// Api
+import { listZoomWindowsRequest } from '@//api/ADempiere/fields/zoom.js'
 
 export default defineComponent({
   name: 'DataCells',
@@ -82,9 +118,15 @@ export default defineComponent({
     showDetails: {
       type: Boolean,
       default: false
+    },
+    tableName: {
+      type: String,
+      default: ''
     }
   },
   setup(props) {
+    // Ref
+    const isLoaded = ref(false)
     // Computed
 
     const show = computed({
@@ -155,12 +197,63 @@ export default defineComponent({
       }
     }
 
+    function loadZoom(show) {
+      if (
+        !show ||
+        isEmptyValue(props.tableName) ||
+        isEmptyValue(props.attributes.column_name)
+      ) {
+        isLoaded.value = false
+        return
+      }
+      // props.rowData.isLoadingZoom = true
+      isLoaded.value = true
+      listZoomWindowsRequest({
+        column_name: props.attributes.column_name,
+        table_name: props.tableName
+      })
+        .then(response => {
+          props.rowData.zoom_windows = response.zoom_windows.map(listZoom => {
+            return {
+              ...listZoom,
+              columnName: props.attributes.column_name,
+              currentValue: props.rowData.cells[props.attributes.code]
+            }
+          })
+          isLoaded.value = false
+        })
+        .catch(() => {
+          isLoaded.value = false
+        })
+        .finally(() => {
+          isLoaded.value = false
+        })
+    }
+
+    function zoomInWindow(report) {
+      const { columnName, id, currentValue } = report
+      zoomIn({
+        attributeValue: `window_${id}`,
+        attributeName: 'containerKey',
+        query: {
+          [columnName]: currentValue.value
+        },
+        params: {
+          [columnName]: currentValue.value
+        }
+      })
+    }
+
     return {
+      // Ref
+      isLoaded,
       // Computed
       show,
       // Métodos
+      loadZoom,
       cellStyle,
       displayLabel,
+      zoomInWindow,
       shouldHideName
     }
   }
