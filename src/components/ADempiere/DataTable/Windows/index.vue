@@ -662,8 +662,7 @@ export default defineComponent({
       let displayType = prop
       headerList.value.forEach(data => {
         if (data.columnName === prop && isLookup(data.display_type)) {
-          const displayColumnValues = recordsWithFilter.value.map(record => record.DisplayColumn_C_BPartner_ID).join(', ')
-          displayType = displayColumnValues
+          displayType = recordsWithFilter.value.find(obj => obj.DisplayColumn_C_BPartner_ID)?.DisplayColumn_C_BPartner_ID
         }
       })
       const sortOrder = order === 'ascending' ? 'asc' : 'desc'
