@@ -58,6 +58,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
               :attributes="fieldAttributes"
               :current-selected-row="selectedRow"
               :current-selected-column="selectedColumn"
+              :table-name="reportOutput.table_name"
             />
           </template>
         </el-table-column>
@@ -225,7 +226,9 @@ export default defineComponent({
         return {
           ...child,
           children: hasChildren(child.children, index.toString()),
-          level: index
+          level: index,
+          zoom_windows: [],
+          isLoadingZoom: false
         }
       })
     }
