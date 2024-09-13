@@ -659,12 +659,8 @@ export default defineComponent({
     })
     function handleSortChange({ prop, order }) {
       let displayType = prop
-      headerList.value.forEach(data => {
-        if (data.columnName === prop && isLookup(data.display_type)) {
-          const dynamicPropertyName = `DisplayColumn_${data.columnName}`
-          displayType = recordsWithFilter.value.find(obj => obj[dynamicPropertyName])?.[dynamicPropertyName]
-        }
-      })
+      const column = headerList.value.find(data => data.columnName === prop)
+      displayType = isLookup(column.display_type) ? column.displayColumnName : displayType
       const sortOrder = order === 'ascending' ? 'asc' : 'desc'
       const objOrder = `"${displayType} ${sortOrder}"`
       store.dispatch('getEntities', {
