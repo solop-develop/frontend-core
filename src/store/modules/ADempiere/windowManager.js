@@ -290,7 +290,7 @@ const windowManager = {
       isAdvancedQuery = false,
       pageNumber,
       pageSize,
-      orderBy
+      sortBy
     }) {
       return new Promise(resolve => {
         const {
@@ -475,7 +475,7 @@ const windowManager = {
           filters: listFilters,
           pageToken,
           pageSize,
-          orderBy
+          sortBy
         })
           .then(dataResponse => {
             const dataToStored = dataResponse.records.map((record, rowIndex) => {

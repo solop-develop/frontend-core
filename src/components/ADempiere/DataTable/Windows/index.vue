@@ -662,7 +662,8 @@ export default defineComponent({
       let displayType = prop
       headerList.value.forEach(data => {
         if (data.columnName === prop && isLookup(data.display_type)) {
-          displayType = recordsWithFilter.value.find(obj => obj.DisplayColumn_C_BPartner_ID)?.DisplayColumn_C_BPartner_ID
+          const dynamicPropertyName = `DisplayColumn_${data.columnName}`
+          displayType = recordsWithFilter.value.find(obj => obj[dynamicPropertyName])?.[dynamicPropertyName]
         }
       })
       const sortOrder = order === 'ascending' ? 'asc' : 'desc'
@@ -671,7 +672,7 @@ export default defineComponent({
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid,
         tableName: props.panelMetadata.table_name,
-        orderBy: objOrder
+        sortBy: objOrder
       })
     }
     return {

@@ -34,7 +34,7 @@ export function requestGetEntities({
   pageToken,
   searchValue,
   contextAttributes,
-  orderBy,
+  sortBy,
   pageSize = ROWS_OF_RECORDS_BY_PAGE
 }) {
   return request({
@@ -47,7 +47,7 @@ export function requestGetEntities({
       context_attributes: contextAttributes,
       page_token: pageToken,
       page_size: pageSize,
-      sort_by: orderBy
+      sort_by: sortBy
     }
   })
     .then(response => {
