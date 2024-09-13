@@ -62,7 +62,6 @@
         sortable
         :min-width="widthColumn(fieldAttributes)"
         :fixed="fieldAttributes.isFixedTableColumn"
-        :field-attributes="fieldAttributes"
       >
         <template slot="header">
           <span v-if="containerManager.isMandatoryColumn(fieldAttributes)" style="color: red">
