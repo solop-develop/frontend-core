@@ -467,7 +467,7 @@ export default defineComponent({
       }
 
       let sortType = 'asc' // by default
-      if (sortType === 'descending') {
+      if (order === 'descending') {
         sortType = 'desc'
       }
 
