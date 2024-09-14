@@ -457,6 +457,28 @@ export default defineComponent({
       }
     }
 
+    function handleSortChange({ prop, order }) {
+      const fieldSort = headerList.value.find(fieldItem => {
+        return fieldItem.columnName === prop || fieldItem.displayColumnName === prop
+      })
+      let sortColumn = fieldSort.columnName
+      if (isLookup(fieldSort.display_type)) {
+        sortColumn = fieldSort.displayColumnName
+      }
+
+      let sortType = 'asc' // by default
+      if (sortType === 'descending') {
+        sortType = 'desc'
+      }
+
+      const sortByClause = `${sortColumn} ${sortType}`
+      store.dispatch('getEntities', {
+        parentUuid: props.parentUuid,
+        containerUuid: props.containerUuid,
+        sortBy: sortByClause
+      })
+    }
+
     /**
      * Handle Cell Click
      * @param {object} row
@@ -657,19 +679,7 @@ export default defineComponent({
     onMounted(() => {
       loadSelection()
     })
-    function handleSortChange({ prop, order }) {
-      let displayType = prop
-      const column = headerList.value.find(data => data.columnName === prop)
-      displayType = isLookup(column.display_type) ? column.displayColumnName : displayType
-      const sortOrder = order === 'ascending' ? 'asc' : 'desc'
-      const objOrder = `"${displayType} ${sortOrder}"`
-      store.dispatch('getEntities', {
-        parentUuid: props.parentUuid,
-        containerUuid: props.containerUuid,
-        tableName: props.panelMetadata.table_name,
-        sortBy: objOrder
-      })
-    }
+
     return {
       // Refs
       isChangeOptions,
