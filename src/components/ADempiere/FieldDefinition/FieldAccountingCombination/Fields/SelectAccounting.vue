@@ -126,7 +126,9 @@ export default defineComponent({
      */
 
     function showList(isShow) {
-      if (isShow && isEmptyValue(optionsList.value)) filterSearch(displayValue.value)
+      if (isShow && isEmptyValue(optionsList.value)) {
+        filterSearch(displayValue.value)
+      }
     }
 
     /**
@@ -157,7 +159,9 @@ export default defineComponent({
         })
           .then(response => {
             const { records } = response
-            if (isEmptyValue(records)) return
+            if (isEmptyValue(records)) {
+              return
+            }
             optionsList.value = records.map(list => {
               return {
                 ...list,
@@ -198,7 +202,9 @@ export default defineComponent({
         })
           .then(response => {
             const { records } = response
-            if (isEmptyValue(records)) return
+            if (isEmptyValue(records)) {
+              return
+            }
             optionsList.value = records.map(list => {
               return {
                 ...list,

@@ -171,6 +171,7 @@ import {
   ref
 } from '@vue/composition-api'
 
+import language from '@/lang'
 import store from '@/store'
 
 // Api
@@ -179,8 +180,14 @@ import {
 } from '@/api/ADempiere/fields/generalGedger'
 
 // Constants
+import {
+  DISPLAY_COLUMN_PREFIX,
+  UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX
+} from '@/utils/ADempiere/dictionaryUtils'
 import { TEXT } from '@/utils/ADempiere/references'
-import { ACCOUTING_COMBINATIONS_LIST_FORM, COLUMN_NAME } from '@/utils/ADempiere/dictionary/field/accoutingCombination.js'
+import {
+  ACCOUTING_COMBINATIONS_LIST_FORM, COLUMN_NAME
+} from '@/utils/ADempiere/dictionary/field/accoutingCombination.js'
 
 // Components and Mixins
 import CellDisplayInfo from '@/components/ADempiere/DataTable/Components/CellDisplayInfo.vue'
@@ -192,9 +199,11 @@ import { ORGANIZATION } from '@/utils/ADempiere/constants/systemColumns'
 
 // Utils and Helper Methods
 import { isEmptyValue, isSameValues } from '@/utils/ADempiere/valueUtils'
+import {
+  generateDisplayedValue
+} from '@/utils/ADempiere/dictionary/field/accoutingCombination.js'
 import { containerManager as containerManagerForm } from '@/utils/ADempiere/dictionary/form'
 import { showMessage } from '@/utils/ADempiere/notification'
-import language from '@/lang'
 
 export default defineComponent({
   name: 'TableQueryCriteria',
@@ -245,7 +254,9 @@ export default defineComponent({
     // Computed
     const title = computed(() => {
       let title = props.metadata.panelName
-      if (!isEmptyValue(props.metadata.panelName) && !isSameValues(props.metadata.panelName, props.metadata.name)) title += ` (${props.metadata.name})`
+      if (!isEmptyValue(props.metadata.panelName) && !isSameValues(props.metadata.panelName, props.metadata.name)) {
+        title += ` (${props.metadata.name})`
+      }
       return title
     })
 
@@ -275,7 +286,9 @@ export default defineComponent({
     })
 
     const organizationId = computed(() => {
-      if (isEmptyValue(fieldsListElements.value)) return setValuesCombinations.value['AD_Org_ID']
+      if (isEmptyValue(fieldsListElements.value)) {
+        return setValuesCombinations.value[ORGANIZATION]
+      }
       return store.getters.getFieldsValue(ORGANIZATION)
     })
 
@@ -290,7 +303,9 @@ export default defineComponent({
     })
 
     const filtersAccount = computed(() => {
-      if (isEmptyValue(store.getters.getFiltersAccount)) return null
+      if (isEmptyValue(store.getters.getFiltersAccount)) {
+        return null
+      }
       return JSON.stringify(store.getters.getFiltersAccount)
     })
 
@@ -413,11 +428,12 @@ export default defineComponent({
     }
 
     function saveAccoutingCombination() {
+      const currentValue = store.getters.getValueOfField({
+        containerUuid: props.metadata.containerUuid,
+        columnName: props.metadata.columnName
+      })
       store.dispatch('saveAccountCombinations', {
-        id: store.getters.getValueOfField({
-          containerUuid: props.metadata.containerUuid,
-          columnName: props.metadata.columnName
-        }),
+        id: currentValue,
         organizationId: store.getters.getFieldsValue(ORGANIZATION),
         accountId: store.getters.getFieldsValue('Account_ID'),
         parentUuid: props.metadata.parentUuid,
@@ -507,21 +523,66 @@ export default defineComponent({
     }
 
     function changeRecord() {
-      // if (!isEmptyValue(currentRow.value)) {
-      //   store.dispatch('notifyFieldChange', {
-      //     containerUuid: this.metadata.containerUuid,
-      //     containerManager: this.containerManager,
-      //     field: this.metadata,
-      //     columnName: this.metadata.column_name,
-      //     newValue: value
-      //   })
-      // }
+      const {
+        parentUuid, containerUuid,
+        columnName, elementName, isSameColumnElement
+      } = props.metadata
+
+      const recordRow = currentRow.value
+      const {
+        UUID: uuid,
+        [COLUMN_NAME]: id
+      } = recordRow
+
+      const displayValue = generateDisplayedValue(recordRow)
+      // console.log(displayValue)
+
+      store.commit('updateValueOfField', {
+        parentUuid,
+        containerUuid,
+        columnName,
+        value: id
+      })
+      // set display column (name) value
+      store.commit('updateValueOfField', {
+        parentUuid,
+        containerUuid,
+        // DisplayColumn_'ColumnName'
+        columnName: DISPLAY_COLUMN_PREFIX + columnName,
+        value: displayValue
+      })
+      // set UUID value
+      store.commit('updateValueOfField', {
+        parentUuid,
+        containerUuid,
+        columnName: columnName + UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX,
+        value: uuid
+      })
+
+      // update element column name (smart browse)
+      if (!isSameColumnElement) {
+        store.commit('updateValueOfField', {
+          parentUuid,
+          containerUuid,
+          columnName: elementName,
+          value: id
+        })
+        // set display column (name) value
+        store.commit('updateValueOfField', {
+          parentUuid,
+          containerUuid,
+          // DisplayColumn_'ColumnName'
+          columnName: DISPLAY_COLUMN_PREFIX + elementName,
+          value: displayValue
+        })
+      }
+
       store.dispatch('notifyFieldChange', {
-        containerUuid: props.metadata.containerUuid,
+        containerUuid: containerUuid,
         containerManager: props.containerManager,
         field: props.metadata,
-        columnName: props.metadata.columnName,
-        newValue: currentRow.value[tableNameAccounting.value + '_ID']
+        columnName: columnName,
+        newValue: id
       })
       closeList()
     }
@@ -544,11 +605,12 @@ export default defineComponent({
 
     function loadCombinations() {
       isLoadingPanel.value = true
+      const currentValue = store.getters.getValueOfField({
+        containerUuid: props.metadata.containerUuid,
+        columnName: props.metadata.columnName
+      })
       getAccountingCombination({
-        id: store.getters.getValueOfField({
-          containerUuid: props.metadata.containerUuid,
-          columnName: props.metadata.columnName
-        })
+        id: currentValue
       })
         .then(response => {
           const { values, table_name } = response
@@ -579,18 +641,24 @@ export default defineComponent({
     }
 
     function valuesCombinations(field) {
-      if (isEmptyValue(setValuesCombinations.value)) return ''
+      if (isEmptyValue(setValuesCombinations.value)) {
+        return ''
+      }
       return setValuesCombinations.value[field.columnName]
       // return setValuesCombinations.value['DisplayColumn_' + field.columnName]
     }
 
     function setPageNumber(pageNumber) {
-      if (isEmptyValue(pageNumber)) return
+      if (isEmptyValue(pageNumber)) {
+        return
+      }
       searchRecordsList(pageNumber)
     }
 
     watch(isLoadingTable, (newValue, oldValue) => {
-      if (newValue && newValue !== oldValue) searchRecordsList()
+      if (newValue && newValue !== oldValue) {
+        searchRecordsList()
+      }
     })
 
     getAccoutingElements()

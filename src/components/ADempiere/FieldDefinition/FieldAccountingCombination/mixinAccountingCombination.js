@@ -28,6 +28,11 @@ import {
   DISPLAY_COLUMN_PREFIX
 } from '@/utils/ADempiere/dictionaryUtils'
 
+// Utils and Helper Methods
+import {
+  generateDisplayedValue
+} from '@/utils/ADempiere/dictionary/field/accoutingCombination.js'
+
 export default {
   name: 'mixinAccountingCombination',
 
@@ -102,12 +107,7 @@ export default {
      * Get custom displayed value
      * @returns {string}
      */
-    generateDisplayedValue(recordRow) {
-      // generate with standard columns
-      const { Combination } = recordRow
-
-      return Combination
-    },
+    generateDisplayedValue,
     /**
      * @overwrite
      * Set custom row on fields values
@@ -115,12 +115,13 @@ export default {
      */
     setValues(rowData) {
       const { C_ValidCombination_ID: value, UUID: uuid } = rowData
-      const displayedValue = this.generateDisplayedValue(rowData)
+      const displayValue = this.generateDisplayedValue(rowData)
 
       // set ID value
       this.value = value
       // set display column (name) value
-      this.displayedValue = displayedValue
+      this.displayedValue = displayValue
+
       // set UUID value
       this.uuidValue = uuid
 
