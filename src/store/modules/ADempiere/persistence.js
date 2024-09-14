@@ -43,6 +43,7 @@ import { getContextAttributes } from '@/utils/ADempiere/contextUtils/contextAttr
 import {
   isDateField, isDecimalField, isSupportLookup
 } from '@/utils/ADempiere/references'
+import { getTableKeyValues } from '@/utils/ADempiere/recordUtil'
 
 const persistence = {
   state: {
@@ -307,11 +308,21 @@ const persistence = {
 
               recordAttributes[columnName] = currentValue
             })
+            // table multi-keys
+            let keyColumns = {}
+            if (key_columns.length > 1) {
+              keyColumns = getTableKeyValues({
+                parentUuid,
+                containerUuid,
+                keyColumns: key_columns
+              })
+            }
             return updateEntity({
               reccordId,
               tabId,
               recordUuid,
-              recordAttributes
+              recordAttributes,
+              keyColumns
             })
               .then(response => {
                 // TODO: Get list record log

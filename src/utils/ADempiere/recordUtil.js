@@ -16,6 +16,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import store from '@/store'
+
 export const UUID_PATTERN = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
 
 /**
@@ -26,4 +28,30 @@ export function getUuidv4() {
   return '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, c =>
     (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
   )
+}
+
+/**
+ * Get a List with the values of the key Columns of the Tab
+ * @param {string} parentUuid
+ * @param {string} containerUuid
+ * @param {Array[String]} keyColumns
+ * return {object} keyColumnsList
+ */
+export function getTableKeyValues({
+  parentUuid,
+  containerUuid,
+  keyColumns = []
+}) {
+  const keyColumnValues = {}
+  if (keyColumns) {
+    keyColumns.forEach(keyColumnName => {
+      const value = store.getters.getValueOfField({
+        parentUuid,
+        containerUuid,
+        columnName: keyColumnName
+      })
+      keyColumnValues[keyColumnName] = value
+    })
+  }
+  return keyColumnValues
 }

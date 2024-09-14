@@ -957,32 +957,6 @@ export function getValidInteger(value, is_identifier = false) {
 }
 
 /**
- * Get a List with the values of the key Columns of the Tab
- * @param {string} parentUuid
- * @param {string} containerUuid
- * @param {Array[String]} keyColumns
- * return {object} keyColumnsList
- */
-export function getListKeyColumnsTab({
-  parentUuid,
-  containerUuid,
-  keyColumns
-}) {
-  const keyColumnsList = {}
-  if (keyColumns) {
-    keyColumns.forEach(elementColumnName => {
-      const value = store.getters.getValueOfField({
-        parentUuid,
-        containerUuid,
-        columnName: elementColumnName
-      })
-      keyColumnsList[elementColumnName] = value
-    })
-  }
-  return keyColumnsList
-}
-
-/**
  * Assign record id to path
  * @param {string} tab
  * @param {number} recordId

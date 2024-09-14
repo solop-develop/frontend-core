@@ -79,12 +79,13 @@ export function createEntity({
  * Update Tab Entity
  * @param {number} tabId
  * @param {object} recordAttributes
+ * @param {object} keyColumns
  */
 export function updateEntity({
   reccordId,
   tabId,
   recordAttributes,
-  keyColumnsList
+  keyColumns
 }) {
   return request({
     url: `/user-interface/entities/${tabId}/${reccordId}`,
@@ -92,7 +93,7 @@ export function updateEntity({
     data: {
       attributes: {
         ...recordAttributes,
-        ...keyColumnsList
+        ...keyColumns
       }
     }
   })
