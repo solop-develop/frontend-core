@@ -30,8 +30,14 @@
       @command="handleCommandActions"
     >
       <svg-icon
+        v-if="!isLoading"
         style="font-size: 23px;"
         icon-class="print"
+      />
+      <i
+        v-else
+        style="font-size: 21px;"
+        class="el-icon-loading"
       />
 
       <el-dropdown-menu slot="dropdown">
@@ -50,18 +56,26 @@
       type="info"
       size="small"
       style="margin-left: 5px;padding-top: 1px;padding-right: 5px;padding-bottom: 8px;padding-left: 5px;"
+      :disabled="isLoading"
+      :loading="isLoading"
       @click="printProcess()"
     >
       <svg-icon
+        v-if="!isLoading"
         style="font-size: 21px;"
         icon-class="print"
+      />
+      <i
+        v-else
+        style="font-size: 21px;"
+        class="el-icon-loading"
       />
     </el-button>
   </span>
 </template>
 
 <script>
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent, computed, ref } from '@vue/composition-api'
 
 import language from '@/lang'
 import store from '@/store'
@@ -89,6 +103,10 @@ export default defineComponent({
   },
 
   setup(props) {
+    /**
+     * Ref
+     */
+    const isLoading = ref(false)
     /**
      * Const
      */
@@ -134,13 +152,16 @@ export default defineComponent({
         })
         return
       }
-
+      isLoading.value = true
       store.dispatch('runReport', {
         containerUuid: process.uuid,
         recordId: recordId.value,
         reportId: process.internal_id,
         tableName: table_name
       })
+        .finally(() => {
+          isLoading.value = false
+        })
     }
 
     function handleCommandActions(command) {
@@ -178,6 +199,8 @@ export default defineComponent({
     loadProcessData()
 
     return {
+      // Ref
+      isLoading,
       // Const
       process,
       is_document,
