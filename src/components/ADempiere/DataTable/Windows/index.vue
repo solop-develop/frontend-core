@@ -44,6 +44,7 @@
       @cell-click="handleCellClick"
       @row-click="handleRowClick"
       @select="handleSelection"
+      @sort-change="handleSortChange"
     >
       <!-- column with the checkbox -->
       <el-table-column
@@ -112,6 +113,7 @@ import useFullScreenContainer from '@/components/ADempiere/ContainerOptions/Full
 
 // Utils and Helper Methods
 import { isEmptyValue, setRecordPath } from '@/utils/ADempiere/valueUtils.js'
+import { isLookup } from '@/utils/ADempiere/references'
 
 export default defineComponent({
   name: 'WindowsTable',
@@ -192,7 +194,6 @@ export default defineComponent({
         containerUuid: props.containerUuid
       })
     })
-
     const currentOption = computed(() => {
       return store.getters.getTableOption(props.containerUuid)
     })
@@ -304,7 +305,6 @@ export default defineComponent({
       }
       return props.dataTable
     })
-
     const currentTabChildren = computed(() => {
       const currentTab = store.getters.getStoredTab(
         props.parentUuid,
@@ -455,6 +455,28 @@ export default defineComponent({
           multipleTable.value.toggleRowSelection(row, true)
         })
       }
+    }
+
+    function handleSortChange({ prop, order }) {
+      const fieldSort = headerList.value.find(fieldItem => {
+        return fieldItem.columnName === prop || fieldItem.displayColumnName === prop
+      })
+      let sortColumn = fieldSort.columnName
+      if (isLookup(fieldSort.display_type)) {
+        sortColumn = fieldSort.displayColumnName
+      }
+
+      let sortType = 'asc' // by default
+      if (sortType === 'descending') {
+        sortType = 'desc'
+      }
+
+      const sortByClause = `${sortColumn} ${sortType}`
+      store.dispatch('getEntities', {
+        parentUuid: props.parentUuid,
+        containerUuid: props.containerUuid,
+        sortBy: sortByClause
+      })
     }
 
     /**
@@ -687,7 +709,8 @@ export default defineComponent({
       widthColumn,
       changeTable,
       adjustSize,
-      loadHeight
+      loadHeight,
+      handleSortChange
     }
   }
 })

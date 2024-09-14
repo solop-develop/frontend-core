@@ -289,7 +289,8 @@ const windowManager = {
       filtersRecord = {},
       isAdvancedQuery = false,
       pageNumber,
-      pageSize
+      pageSize,
+      sortBy
     }) {
       return new Promise(resolve => {
         const {
@@ -473,7 +474,8 @@ const windowManager = {
           referenceUuid,
           filters: listFilters,
           pageToken,
-          pageSize
+          pageSize,
+          sortBy
         })
           .then(dataResponse => {
             const dataToStored = dataResponse.records.map((record, rowIndex) => {
