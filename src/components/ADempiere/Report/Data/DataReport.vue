@@ -363,10 +363,10 @@ export default defineComponent({
         const widths = {}
         columns.value.forEach((column, index) => {
           let width = 0
-          if (column.column_width > 0) {
+          if (column.column_width > 0 && column.is_fixed_width) {
             width = column.column_width
           }
-          if (column.column_width <= 0 && column.column_characters_size > 0) {
+          if (column.column_characters_size > 0 && !column.is_fixed_width) {
             let fontCode = 15
             let character = column.column_characters_size
             if (!isEmptyValue(column.title) && column.column_characters_size < column.title.length) {
@@ -389,6 +389,9 @@ export default defineComponent({
             } else {
               width = 300
             }
+          }
+          if (!column.is_fixed_width && column.column_width > 0 && column.column_width > width) {
+            width = column.column_width
           }
           widths[index] = width
         })
