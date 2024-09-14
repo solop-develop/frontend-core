@@ -368,9 +368,9 @@ export default defineComponent({
           }
           if (column.column_width <= 0 && column.column_characters_size > 0) {
             let fontCode = 15
-            let character = 15
-            if (column.column_characters_size > 5) {
-              character = column.column_characters_size
+            let character = column.column_characters_size
+            if (!isEmptyValue(column.title) && column.column_characters_size < column.title.length) {
+              character = column.title.length
             }
             if (!isEmptyValue(column.font_code)) {
               const number = column.font_code.replace(/[^\d]/g, '')
