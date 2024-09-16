@@ -36,20 +36,20 @@ const operators = {
   onlyOperators: {
     compareSearch: 'Compare the Search',
     operator: 'Comparison operator',
-    equal: '"="',
-    not_equal: '"<>"',
-    like: '"~"',
-    not_like: '"!~"',
-    greater: '">"',
-    greater_equal: '">="',
-    less: '"<"',
-    less_equal: '"<="',
-    between: '">-<"',
-    not_between: '"<->"',
+    equal: '=',
+    not_equal: '<>',
+    like: '~',
+    not_like: '!~',
+    greater: '>',
+    greater_equal: '>=',
+    less: '<',
+    less_equal: '<=',
+    between: '>-<',
+    not_between: '<->',
     null: 'Has no value',
     not_null: 'Has a value',
-    in: '"()"',
-    not_in: '"!()"'
+    in: '()',
+    not_in: '!()'
   }
 }
 
