@@ -231,7 +231,7 @@ export default {
         }
       }
 
-      if (this.metadata.process.browser_id) {
+      if (this.metadata.process.browser_id > 0) {
         return {
           is: 'svg-icon',
           'icon-class': 'search',
@@ -239,7 +239,8 @@ export default {
             parentUuid: this.parentUuid,
             containerUuid: this.containerUuid,
             uuid: this.metadata.process.uuid,
-            browserId: this.metadata.process.browser.id
+            browserUuid: this.metadata.process.browser.uuid,
+            browserId: this.metadata.process.browser.internal_id
           }),
           isEnabled: () => generateReportOfWindow.enabled({
             parentUuid: this.parentUuid,
@@ -248,7 +249,7 @@ export default {
         }
       }
 
-      if (this.metadata.process.form_id) {
+      if (this.metadata.process.form_id > 0) {
         return {
           is: 'svg-icon',
           'icon-class': 'search',
@@ -256,7 +257,7 @@ export default {
             parentUuid: this.parentUuid,
             containerUuid: this.containerUuid,
             uuid: this.metadata.process.uuid,
-            formId: this.metadata.process.form.id,
+            formId: this.metadata.process.form.internal_id,
             formUuid: this.metadata.process.form.uuid
           }),
           isEnabled: () => openFormAssociated.enabled({
@@ -266,7 +267,7 @@ export default {
         }
       }
 
-      if (this.metadata.process.workflow_id) {
+      if (this.metadata.process.workflow_id > 0) {
         return {
           is: 'svg-icon',
           'icon-class': 'example',

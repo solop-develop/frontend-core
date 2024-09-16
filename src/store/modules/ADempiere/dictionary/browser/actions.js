@@ -52,7 +52,7 @@ import { templateBrowser } from '@/utils/ADempiere/dictionary/browser/templateBr
 
 export default {
   getBrowserDefinitionFromServer({ commit, state, dispatch, rootGetters }, {
-    id,
+    uuid,
     parentUuid = '', // context of associated
     containerUuid = '' // context of associated
   }) {
@@ -61,7 +61,7 @@ export default {
       const dictionaryCode = rootGetters['user/getDictionaryCode']
 
       requestBrowserMetadata({
-        id,
+        uuid,
         language,
         dictionaryCode
       })
@@ -69,7 +69,7 @@ export default {
           const browser = templateBrowser(browserResponse)
           const browserUuid = browser.uuid
           commit('addBrowserUuidToList', {
-            id: browser.id,
+            id: browser.internal_id,
             uuid: browserUuid
           })
 
