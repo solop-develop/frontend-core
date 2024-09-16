@@ -104,22 +104,26 @@ import store from '@/store'
 
 // Components and Mixins
 import useDisplayedColumn from '@/components/ADempiere/FieldDefinition/useDisplayedColumn.js'
+import LatitudeField from './latitudeField.vue'
+import LongitudeField from './longitudeField.vue'
+import AltitudeField from './altitudeField.vue'
 
 // Constants
-import { ATTRIBUTES_BY_CAPTURE } from '@/utils/ADempiere/dictionary/field/locationAddress'
 import {
+  DISPLAY_COLUMN_PREFIX,
+  UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX
+} from '@/utils/ADempiere/dictionaryUtils'
+import {
+  ATTRIBUTES_BY_CAPTURE,
   URL_BASE_MAP
 } from '@/utils/ADempiere/dictionary/field/locationAddress'
 
 // Utils and Helper Methods
 import { isEmptyValue, isIdentifierEmpty } from '@/utils/ADempiere/valueUtils.js'
 import { setDefaultComponentSequence } from '@/utils/ADempiere/dictionary/field/locationAddress'
-import { formatCoordinateByDecimal, removeDecimals } from '@/utils/ADempiere/dictionary/field/locationAddress'
-
-//
-import LatitudeField from './latitudeField.vue'
-import LongitudeField from './longitudeField.vue'
-import AltitudeField from './altitudeField.vue'
+import {
+  generateDisplayedValue, formatCoordinateByDecimal, removeDecimals
+} from '@/utils/ADempiere/dictionary/field/locationAddress'
 
 export default defineComponent({
   name: 'LocationAddressForm',
@@ -129,6 +133,7 @@ export default defineComponent({
     LongitudeField,
     AltitudeField
   },
+
   props: {
     containerManager: {
       type: Object,
@@ -139,8 +144,10 @@ export default defineComponent({
       default: () => ({})
     }
   },
+
   setup(props) {
     const { columnName, containerUuid, parentUuid } = props.metadata
+
     function openCoordinatesMap() {
       let baseUrlMap = URL_BASE_MAP
       if (!isEmptyValue(coordinates.value)) {
@@ -271,6 +278,7 @@ export default defineComponent({
         parentUuid,
         columnName
       })
+
       if (isEmptyValue(id)) {
         return store.dispatch('newLocation')
           .then(response => {
@@ -309,14 +317,76 @@ export default defineComponent({
      * set context values to parent continer
      * @param {object} values
      */
-    function setParentValues(rowData) {
-      displayedValue.value = rowData.display_value
+    function setParentValues(recordRow) {
+      const { columnName, elementName, isSameColumnElement } = props.metadata
+      const { uuid, id } = recordRow
+      const displayValue = generateDisplayedValue(recordRow)
+      displayedValue.value = displayValue
+
+      store.commit('updateValueOfField', {
+        parentUuid,
+        containerUuid,
+        columnName,
+        value: id
+      })
+      // set display column (name) value
+      store.commit('updateValueOfField', {
+        parentUuid,
+        containerUuid,
+        // DisplayColumn_'ColumnName'
+        columnName: DISPLAY_COLUMN_PREFIX + columnName,
+        value: displayValue
+      })
+      // set UUID value
+      store.commit('updateValueOfField', {
+        parentUuid,
+        containerUuid,
+        columnName: columnName + UNIVERSALLY_UNIQUE_IDENTIFIER_COLUMN_SUFFIX,
+        value: uuid
+      })
+      // update element column name (smart browse)
+      if (!isSameColumnElement) {
+        store.commit('updateValueOfField', {
+          parentUuid,
+          containerUuid,
+          columnName: elementName,
+          value: id
+        })
+        // set display column (name) value
+        store.commit('updateValueOfField', {
+          parentUuid,
+          containerUuid,
+          // DisplayColumn_'ColumnName'
+          columnName: DISPLAY_COLUMN_PREFIX + elementName,
+          value: displayValue
+        })
+      }
+
+      // implement container manager row
+      if (props.metadata.inTable) {
+        props.containerManager.setCell({
+          containerUuid,
+          rowIndex: props.metadata.rowIndex,
+          rowUid: props.metadata.rowUid,
+          columnName,
+          value: id
+        })
+        props.containerManager.setCell({
+          containerUuid,
+          rowIndex: props.metadata.rowIndex,
+          rowUid: props.metadata.rowUid,
+          columnName: DISPLAY_COLUMN_PREFIX + columnName,
+          value: displayValue
+        })
+        return
+      }
+
       store.dispatch('notifyFieldChange', {
         containerUuid,
         containerManager: props.containerManager,
         field: props.metadata,
         columnName,
-        newValue: rowData.id
+        newValue: id
       })
     }
 
