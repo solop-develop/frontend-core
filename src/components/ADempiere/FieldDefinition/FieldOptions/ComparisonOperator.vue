@@ -30,7 +30,7 @@
     :disabled="isReadOnlyFromField"
     @command="handleOperator"
   >
-    <el-button type="primary" class="button-operator">
+    <el-button type="primary" class="button-operator" style="width: 45px;">
       {{ $t('operators.onlyOperators.' + currentOperatorValue) }}
     </el-button>
     <el-dropdown-menu slot="dropdown">
