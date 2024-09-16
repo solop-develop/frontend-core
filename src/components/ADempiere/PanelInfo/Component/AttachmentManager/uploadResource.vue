@@ -18,20 +18,34 @@
 
 <template>
   <span>
-    <el-upload
-      ref="uploadComponent"
-      :action="action"
-      class="upload-demo"
-      :multiple="false"
-      :before-upload="isValidUploadHandler"
-      :on-success="loadedSucess"
-      :disabled="isDisabledUpload"
+    <el-tooltip
+      :disabled="!isDisabledUpload"
+      class="item"
+      effect="dark"
+      :content="$t('component.attachment.noUploadOtherClientRecord')"
+      placement="left"
     >
-      <el-button slot="trigger" size="small" type="primary" style="font-size: 13px;">
-        <i class="el-icon-upload" />
-        {{ $t('component.attachment.uploadFile') }}
-      </el-button>
-    </el-upload>
+      <el-upload
+        ref="uploadComponent"
+        :action="action"
+        class="upload-demo"
+        :multiple="false"
+        :before-upload="isValidUploadHandler"
+        :on-success="loadedSucess"
+        :disabled="isDisabledUpload"
+      >
+        <el-button
+          slot="trigger"
+          :disabled="isDisabledUpload"
+          size="small"
+          type="primary"
+          style="font-size: 13px;"
+        >
+          <i class="el-icon-upload" />
+          {{ $t('component.attachment.uploadFile') }}
+        </el-button>
+      </el-upload>
+    </el-tooltip>
   </span>
 </template>
 
@@ -46,6 +60,8 @@ import store from '@/store'
 import {
   CLIENT
 } from '@/utils/ADempiere/constants/systemColumns'
+
+// API Request Methods
 import {
   requestPresignedUrl
 } from '@/api/ADempiere/file-management/resource-reference.ts'
@@ -98,7 +114,9 @@ export default defineComponent({
 
     const isDisabledUpload = computed(() => {
       const { type } = router.app._route.meta
-      if (type !== 'window') return false
+      if (type !== 'window') {
+        return false
+      }
       const { parentUuid, containerUuid } = currentTab.value
       const clientIdRecord = store.getters.getValueOfField({
         parentUuid,
@@ -108,6 +126,7 @@ export default defineComponent({
       const preferenceClientId = store.getters.getSessionContextClientId
       return clientIdRecord !== preferenceClientId
     })
+
     function upload() {
       // // Get selected files from the input element.
       // var files = document.querySelector('#selector').files

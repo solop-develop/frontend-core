@@ -33,6 +33,7 @@ const attachment = {
   addMessage: 'Add Message',
   addDescription: 'Add Description',
   editDescription: 'Edit Description',
+  noUploadOtherClientRecord: 'Cannot upload files to another client records.',
   share: {
     title: 'Quick share',
     description: 'Anyone with the URL below will be able to view your file even if it`s set to private read. Updating the sharing duration will generate a new URL below.',

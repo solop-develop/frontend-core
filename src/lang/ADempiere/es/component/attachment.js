@@ -33,6 +33,7 @@ const attachment = {
   addMessage: 'Agregar Mensaje',
   addDescription: 'Agregar Descripción',
   editDescription: 'Editar Descripción',
+  noUploadOtherClientRecord: 'No se pueden subir archivos a registros de otra compañía.',
   share: {
     title: 'Compartir Ahora',
     description: 'Cualquiera que tenga la siguiente URL podrá ver su archivo incluso si está configurado como lectura privada. Actualizar la duración del intercambio generará una nueva URL a continuación.',
