@@ -25,7 +25,7 @@ import { request } from '@/utils/ADempiere/request'
  * @param {number} id, identifier
  */
 export function requestBrowserMetadata({
-  id: uuid,
+  uuid,
   language,
   dictionaryCode
 }) {

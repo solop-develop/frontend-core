@@ -70,16 +70,21 @@ export const openBrowserAssociated = {
   isSvgIcon: true,
   icon: 'search',
   actionName: 'openBrowserAssociated',
-  openBrowserAssociated: function({ parentUuid, containerUuid, uuid, browserId }) {
+  openBrowserAssociated: function({ parentUuid, containerUuid, uuid, browserId, browserUuid }) {
     if (isEmptyValue(browserId) || browserId <= 0) {
       const process = store.getters.getStoredProcessFromTab({
         windowUuid: parentUuid,
         tabUuid: containerUuid,
         processUuid: uuid
       })
-      browserId = process.browser.id
+      browserId = process.browser_id
+      if (isEmptyValue(browserUuid)) {
+        browserUuid = process.browser.uuid
+      }
     }
-    const browserUuid = store.getters.getStoredBrowserUuidById(browserId)
+    if (isEmptyValue(browserUuid)) {
+      browserUuid = store.getters.getStoredBrowserUuidById(browserId)
+    }
     const storedBrowser = store.getters.getStoredBrowser(browserUuid)
     if (!isEmptyValue(storedBrowser)) {
       // overwrite values
@@ -128,8 +133,8 @@ export const openBrowserAssociated = {
       router.push({
         name: 'Smart Browser',
         params: {
-          browserId: browserId
-          // browserUuid
+          browserId: browserId,
+          browserUuid: browserUuid
         },
         query: {
           parentUuid,

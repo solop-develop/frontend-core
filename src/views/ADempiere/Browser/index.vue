@@ -86,6 +86,7 @@
 import { computed, defineComponent, ref } from '@vue/composition-api'
 
 import language from '@/lang'
+import router from '@/router'
 import store from '@/store'
 
 // Componets and Mixins
@@ -126,40 +127,45 @@ export default defineComponent({
     }
   },
 
-  setup(props, { root }) {
+  setup() {
     const isLoadedMetadata = ref(false)
     const browserMetadata = ref({})
     const containerManagerProcess = ref({})
+    const currentRoute = router.app._route
 
     // as window source
     let parentUuid = ''
-    if (!isEmptyValue(root.$route.query) && !isEmptyValue(root.$route.query.parentUuid)) {
-      parentUuid = root.$route.query.parentUuid
+    if (!isEmptyValue(currentRoute.query) && !isEmptyValue(currentRoute.query.parentUuid)) {
+      parentUuid = currentRoute.query.parentUuid
     }
     // as tab source
     let containerUuid = ''
-    if (!isEmptyValue(root.$route.query) && !isEmptyValue(root.$route.query.containerUuid)) {
-      containerUuid = root.$route.query.containerUuid
+    if (!isEmptyValue(currentRoute.query) && !isEmptyValue(currentRoute.query.containerUuid)) {
+      containerUuid = currentRoute.query.containerUuid
     }
 
     let browserId = -1
     // set uuid with linked menu
-    if (!isEmptyValue(root.$route.meta) && !isEmptyValue(root.$route.meta.uuid)) {
-      browserId = root.$route.meta.action_uuid.toString()
+    if (!isEmptyValue(currentRoute.meta) && !isEmptyValue(currentRoute.meta.uuid)) {
+      browserId = currentRoute.meta.action_uuid.toString()
     }
     // set uuid from associated browser without menu
-    if (!isEmptyValue(root.$route.params) && !isEmptyValue(root.$route.params.browserId)) {
-      browserId = root.$route.params.browserId.toString()
-    }
-    // set uuid from test
-    if (!isEmptyValue(props.uuid)) {
-      browserId = props.uuid
+    if (!isEmptyValue(currentRoute.params) && !isEmptyValue(currentRoute.params.browserId)) {
+      browserId = currentRoute.params.browserId.toString()
     }
 
     const browserUuid = computed(() => {
-      let uuid = root.$route.meta.uuid
-      if (isEmptyValue(uuid)) {
-        uuid = store.getters.getStoredBrowserUuidById(browserId)
+      let uuid = store.getters.getStoredBrowserUuidById(browserId)
+      if (!isEmptyValue(currentRoute.meta)) {
+        if (isEmptyValue(uuid) && !isEmptyValue(currentRoute.meta.uuid)) {
+          uuid = currentRoute.meta.uuid
+        }
+        if (isEmptyValue(uuid) && !isEmptyValue(currentRoute.meta.action_uuid)) {
+          uuid = currentRoute.meta.action_uuid
+        }
+      }
+      if (isEmptyValue(uuid) && !isEmptyValue(currentRoute.params) && !isEmptyValue(currentRoute.params.browserUuid)) {
+        uuid = currentRoute.params.browserUuid.toString()
       }
       return uuid
     })
@@ -256,10 +262,10 @@ export default defineComponent({
       const { containerManager: containerManagerByProcess } = mixinProcess(processUuid)
       containerManagerProcess.value = containerManagerByProcess
 
-      if (!isEmptyValue(root.$route.params) && !isEmptyValue(root.$route.params.browserId)) {
+      if (!isEmptyValue(currentRoute.params) && !isEmptyValue(currentRoute.params.browserId)) {
         // update name in tag view
         store.dispatch('tagsView/updateVisitedView', {
-          ...root.$route,
+          ...currentRoute,
           title: `${language.t('route.smartBrowser')}: ${browser.name}`
         })
       }
@@ -278,7 +284,7 @@ export default defineComponent({
 
       store.dispatch('getBrowserDefinitionFromServer', {
         // id: browserId,
-        id: browserUuid.value,
+        uuid: browserUuid.value,
         parentUuid,
         containerUuid
       })
