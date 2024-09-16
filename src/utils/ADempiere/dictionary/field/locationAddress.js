@@ -63,6 +63,29 @@ export const COLUMNNAME_Longitude = 'Longitude'
 export const MANDATORY_CHAR = '!'
 
 /**
+ * Generate displayed value from values
+ * @param {Object} recordRow
+ * @returns {String}
+ */
+export function generateDisplayedValue(recordRow) {
+  const { display_value } = recordRow
+  const displayValue = display_value
+  if (!isEmptyValue(displayValue)) {
+    return displayValue
+  }
+
+  // TODO: Generate displayValue with display sequence
+  // let displaySequence = store.getters.getDisplaySequence
+  // const country = this.currentCountryDefinition
+  // if (!isEmptyValue(country)) {
+  //   displaySequence = country.displaySequence
+  // }
+  // const locationDisplayedSequence = getSequenceAsList(displaySequence)
+
+  return displayValue
+}
+
+/**
  * Use this function for get a list of sequence of capture for locations
  * TODO: Evaluate capture sequence by Germany "@A1@ @A2@ @A3@ @A4@ D-@P@ @R@ @C@ @CO@" with "D-" suffix in postal code
  * @param {string} captureSequence
