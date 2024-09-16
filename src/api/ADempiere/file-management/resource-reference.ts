@@ -34,7 +34,7 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
  */
 export function requestPresignedUrl(options) {
   const { containerType, containerId, columnName, clientId, tableName, recordId, fileName } = options
-  const baseURL = `${config.adempiere.api.url}resources/` // remove trailing slash
+  const baseURL = `${config.adempiere.api.url}resources` // remove trailing slash
   const path = [baseURL, 'presigned-url']
 
   // Add parameters to the route only if they exist
@@ -138,7 +138,7 @@ export function requestShareResources({
   seconds
 }) {
   return request({
-    baseURL: `${config.adempiere.api.url}/resources/download-url/${fileName}`,
+    baseURL: `${config.adempiere.api.url}resources/download-url/${fileName}`,
     isWithoutAuthorization: true,
     method: 'get',
     params: {
