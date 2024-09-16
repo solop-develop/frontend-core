@@ -61,7 +61,7 @@ const calloutManager = {
         }
 
         // const window = rootGetters.getStoredWindow(parentUuid)
-        const contextAttributesList = {}
+        const contextAttributes = {}
         rootGetters.getValuesView({
           parentUuid,
           containerUuid
@@ -74,6 +74,9 @@ const calloutManager = {
         }).forEach(attribute => {
           const { columnName, value } = attribute
           let currentValue = value
+          if (isEmptyValue(currentValue)) {
+            currentValue = null
+          }
 
           const field = fieldsList.find(fieldItem => fieldItem.column_name === columnName)
           let currentDisplayType = null
@@ -93,16 +96,16 @@ const calloutManager = {
             if (isDateField(currentDisplayType)) {
               currentValue = {
                 type: 'date',
-                value
+                value: currentValue
               }
             } else if (isDecimalField(currentDisplayType)) {
               currentValue = {
                 type: 'decimal',
-                value
+                value: currentValue
               }
             }
           }
-          contextAttributesList[columnName] = currentValue
+          contextAttributes[columnName] = currentValue
         })
 
         if (getTypeOfValue(value) !== 'OBJECT') {
@@ -127,7 +130,7 @@ const calloutManager = {
           columnName,
           value,
           oldValue,
-          contextAttributesList
+          contextAttributes
         })
           .then(calloutResponse => {
             const { values } = calloutResponse
