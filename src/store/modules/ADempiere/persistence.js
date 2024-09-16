@@ -287,6 +287,9 @@ const persistence = {
             attributesList.forEach(attribute => {
               const { columnName, value } = attribute
               let currentValue = value
+              if (isEmptyValue(currentValue)) {
+                currentValue = null
+              }
 
               const field = fieldsList.find(fieldItem => fieldItem.column_name === columnName)
               if (!isEmptyValue(field)) {
@@ -295,12 +298,12 @@ const persistence = {
                   if (isDateField(display_type)) {
                     currentValue = {
                       type: 'date',
-                      value
+                      value: currentValue
                     }
                   } else if (isDecimalField(display_type)) {
                     currentValue = {
                       type: 'decimal',
-                      value
+                      value: currentValue
                     }
                   }
                 }

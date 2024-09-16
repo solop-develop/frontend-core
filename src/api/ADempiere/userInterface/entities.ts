@@ -86,17 +86,18 @@ export function createEntity({
 export function updateEntity({
   reccordId,
   tabId,
-  recordAttributes,
-  keyColumns
+  recordAttributes = {},
+  keyColumns = {}
 }) {
+  const attributes = {
+    ...recordAttributes,
+    ...keyColumns
+  }
   return request({
     url: `/user-interface/entities/${tabId}/${reccordId}`,
     method: 'patch',
     data: {
-      attributes: {
-        ...recordAttributes,
-        ...keyColumns
-      }
+      attributes: attributes
     }
   })
 }

@@ -27,13 +27,13 @@ import { request } from '@/utils/ADempiere/request'
  * @param {mixed}   value
  * @param {mixed}   oldValue
  * @param {string}  callout
- * @param {array}   attributesList
+ * @param {object}   contextAttributes
  * @returns {Map} Entity
  */
 export function runCallOutRequest({
   tabId,
   tableName,
-  contextAttributesList = [],
+  contextAttributes = {},
   columnName,
   callout,
   value,
@@ -47,7 +47,7 @@ export function runCallOutRequest({
       // window_no: windowNo,
       tab_id: tabId,
       table_name: tableName,
-      context_attributes: contextAttributesList,
+      context_attributes: contextAttributes,
       column_name: columnName,
       callout,
       value,
