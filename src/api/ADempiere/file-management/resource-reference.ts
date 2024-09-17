@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { config } from '@/utils/ADempiere/config'
 
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
@@ -32,15 +31,27 @@ import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
  * Presigned Url
  * @param {Object} options
  */
-export function requestPresignedUrl(options) {
-  const { containerType, containerId, columnName, clientId, tableName, recordId, fileName } = options
-  const baseURL = `${config.adempiere.api.url}resources` // remove trailing slash
-  const path = [baseURL, 'presigned-url']
+export function requestPresignedUrl({
+  clientId,
+  containerType,
+  containerId,
+  tableName,
+  columnName,
+  recordId,
+  fileName
+}) {
+  const path = ['/resources', 'presigned-url']
 
   // Add parameters to the route only if they exist
-  if (clientId) path.push(clientId)
-  if (containerId) path.push(containerId)
-  if (fileName) path.push(fileName)
+  if (clientId) {
+    path.push(clientId)
+  }
+  if (containerId) {
+    path.push(containerId)
+  }
+  if (fileName) {
+    path.push(fileName)
+  }
 
   const params = {
     table_name: tableName,
@@ -49,8 +60,9 @@ export function requestPresignedUrl(options) {
     container_type: containerType
   }
 
+  const url = path.join('/')
   return request({
-    url: path.join('/'),
+    url: url,
     method: 'get',
     isWithoutAuthorization: true,
     params
@@ -83,7 +95,7 @@ export function requestGetResource({
   fileName
 }) {
   return request({
-    url: `${config.adempiere.api.url}resources/${fileName}`,
+    url: `/resources/${fileName}`,
     method: 'get',
     isWithoutAuthorization: true,
     params: {
@@ -103,7 +115,7 @@ export function requestListResources({
   containerType
 }) {
   return request({
-    url: `${config.adempiere.api.url}resources/`,
+    url: `/resources/`,
     method: 'get',
     isWithoutAuthorization: true,
     params: {
@@ -123,7 +135,7 @@ export function requestDeleteResources({
   fileName
 }) {
   return request({
-    url: `${config.adempiere.api.url}resources/${fileName}`,
+    url: `/resources/${fileName}`,
     method: 'delete',
     isWithoutAuthorization: true
   })
@@ -138,7 +150,7 @@ export function requestShareResources({
   seconds
 }) {
   return request({
-    baseURL: `${config.adempiere.api.url}resources/download-url/${fileName}`,
+    url: `/resources/download-url/${fileName}`,
     isWithoutAuthorization: true,
     method: 'get',
     params: {

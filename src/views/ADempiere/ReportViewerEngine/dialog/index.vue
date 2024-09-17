@@ -410,7 +410,7 @@ export default defineComponent({
 
     function handleDownload() {
       const link = document.createElement('a')
-      const imageURL = config.adempiere.resource.url + titleDocument.value
+      const imageURL = config.adempiere.api.url + 'resources/' + titleDocument.value
       link.href = imageURL
       link.download = titleDocument.value
       link.click()

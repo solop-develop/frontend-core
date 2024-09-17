@@ -148,12 +148,8 @@ function getImageUrl({
   width,
   height
 }) {
-  let baseUrl = config.adempiere.images.url
-  if (baseUrl.endsWith('/')) {
-    baseUrl = config.adempiere.images.url.substring(0, baseUrl.length - 1)
-  }
   return request({
-    url: `${baseUrl}/resources/file-name/${file}`,
+    url: `/resources/file-name/${file}`,
     method: 'get',
     params: {
       width,

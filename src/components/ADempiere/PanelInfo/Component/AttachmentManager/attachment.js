@@ -210,7 +210,7 @@ export default defineComponent({
       const imageURL = `${config.adempiere.api.url}resources/${file.fullName}`
       if (!isEmptyValue(file.content_type) && file.content_type.includes('image')) {
         const linkImage = document.createElement('a')
-        linkImage.href = `${config.adempiere.api.url}resources/${file.fullName}`
+        linkImage.href = imageURL
         linkImage.download = `${file.fullName}`
         linkImage.target = '_blank'
         linkImage.click()
@@ -221,7 +221,7 @@ export default defineComponent({
       link.download = file.fullName
       link.click()
       // const file = document.createElement('a')
-      // file.href = `${config.adempiere.resource.url}${file.fullName}`
+      // file.href = imageURL
       // file.download = `${file.name}`
       // file.target = '_blank'
       // file.click()
