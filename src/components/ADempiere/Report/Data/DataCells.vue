@@ -17,7 +17,6 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 <template>
   <span
-    v-if="shouldHideName(rowData, attributes.code, keyColumn)"
     :style="cellStyle(attributes.code, rowData)"
   >
     <!-- Show cell label -->
