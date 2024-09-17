@@ -150,9 +150,10 @@ export default defineComponent({
           isTopLevel = !isTopLevel
         }
         const index = rowIndex + 1
+        const parentColumnKey = Object.keys(row.cells).find(key => row.cells[key].display_value !== '')
         const newRow = {
           ...row,
-          children: hasChildren(row.children, index.toString()),
+          children: hasChildren(row.children, index.toString(), parentColumnKey, row.cells[parentColumnKey].display_value),
           level: index,
           isTopLevel
         }
@@ -221,17 +222,21 @@ export default defineComponent({
         }
       })
     }
-    function hasChildren(children, parentLevel) {
+    function hasChildren(children, parentLevel, parentColumnKey, parentDisplayValue) {
       if (children.length < 1) return children
       return children.map((child, indexChild) => {
         const index = parentLevel + indexChild
-        return {
+        const newRow = {
           ...child,
-          children: hasChildren(child.children, index.toString()),
+          children: hasChildren(child.children, index.toString(), parentColumnKey, child.cells[parentColumnKey].display_value),
           level: index,
           zoom_windows: [],
           isLoadingZoom: false
         }
+        if (child.is_parent && child.cells[parentColumnKey].display_value === parentDisplayValue) {
+          newRow.cells[parentColumnKey].display_value = ''
+        }
+        return newRow
       })
     }
     function handleChangeSizePage(pageSize) {
