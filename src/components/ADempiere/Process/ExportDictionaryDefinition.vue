@@ -275,7 +275,7 @@ export default defineComponent({
       isForm.value = true
     }
 
-    function RedirectProces() {
+    function redirectToProcess() {
       const existProcessMenu = recursiveTreeSearch({
         treeData: store.getters.permission_routes,
         attributeValue: 'process_54692',
@@ -294,7 +294,7 @@ export default defineComponent({
     }
 
     onBeforeMount(() => {
-      RedirectProces()
+      redirectToProcess()
     })
 
     return {
