@@ -151,6 +151,7 @@
 <script>
 import {
   defineComponent,
+  onBeforeMount,
   computed,
   ref
 } from '@vue/composition-api'
@@ -174,7 +175,10 @@ import {
 } from '@/api/ADempiere/business-data/runBusinessProcess.ts'
 
 // Utils and Helper Methods
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import {
+  isEmptyValue,
+  recursiveTreeSearch
+} from '@/utils/ADempiere/valueUtils'
 
 export default defineComponent({
   name: 'ExportDictionaryDefinition',
@@ -270,6 +274,28 @@ export default defineComponent({
       isBrowsers.value = true
       isForm.value = true
     }
+
+    function redirectToProcess() {
+      const existProcessMenu = recursiveTreeSearch({
+        treeData: store.getters.permission_routes,
+        attributeValue: 'process_54692',
+        attributeName: 'meta',
+        secondAttribute: 'containerKey',
+        attributeChilds: 'children'
+      })
+
+      if (!isEmptyValue(existProcessMenu)) {
+        router.push({
+          name: existProcessMenu.name
+        }, () => {})
+
+        return
+      }
+    }
+
+    onBeforeMount(() => {
+      redirectToProcess()
+    })
 
     return {
       // Constants
