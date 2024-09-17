@@ -9,6 +9,12 @@
     "api": {
       "url": "http://localhost/api/",
       "timeout": 99999999
+    },
+    "images": {
+      "url": "http://spdev02.solopapp.com:24814/api/resources/"
+    },
+    "resource": {
+      "url": "http://spdev02.solopapp.com:24814/api/resources/"
     }
   },
   "repository": {

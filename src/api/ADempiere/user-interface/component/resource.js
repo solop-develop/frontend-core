@@ -48,7 +48,7 @@ export function requestImage({
     url: urn,
     method: 'get',
     responseType: 'arraybuffer',
-    baseURL: `${config.adempiere.api.url}resources/`
+    baseURL: `${config.adempiere.resource.url}`
   })
 }
 

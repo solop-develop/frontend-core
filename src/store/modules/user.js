@@ -846,7 +846,7 @@ const getters = {
   },
   getUserAvatar: (state) => {
     if (isEmptyValue(state.avatar)) return ''
-    return `${config.adempiere.api.url}resources/${state.avatar}`
+    return `${config.adempiere.resource.url}/${state.avatar}`
   },
   // TODO: Manage with vuex module to personal lock
   getIsPersonalLock: (state) => {
