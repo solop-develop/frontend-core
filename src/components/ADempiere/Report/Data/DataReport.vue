@@ -339,23 +339,30 @@ export default defineComponent({
             sums[index] = 'Total'
             return
           }
-          data.forEach((data) => {
-            Object.values(data.cells).forEach((dataCell) => {
-              if (dataCell && 'sum_value' in dataCell && isNumberField(column.display_type)) {
-                sums[index] = dataCell.value.value
-                nextTick(() => {
-                  const footerCells = document.querySelectorAll('.el-table__footer-wrapper td.el-table__cell')
-                  footerCells.forEach((cell) => {
-                    const num = parseFloat(cell.textContent)
-                    if (!isEmptyValue(num) && num < 0) {
-                      cell.style.color = 'red'
-                    }
-                  })
-                  return
-                })
-              }
-            })
+          const hasValueValue = data.some((data) => {
+            const dataCell = data.cells[column.code]
+            return dataCell && dataCell.value && dataCell.value.value
           })
+          if (hasValueValue) {
+            data.forEach((data) => {
+              Object.values(data.cells).forEach(dataCell => {
+                const { value } = dataCell
+                if (!isEmptyValue(value)) {
+                  sums[index] = value.value
+                }
+              })
+              nextTick(() => {
+                const footerCells = document.querySelectorAll('.el-table__footer-wrapper td.el-table__cell')
+                footerCells.forEach((cell) => {
+                  const num = parseFloat(cell.textContent)
+                  if (!isEmptyValue(num) && num < 0) {
+                    cell.style.color = 'red'
+                  }
+                })
+                return
+              })
+            })
+          }
         })
       }
       return sums
