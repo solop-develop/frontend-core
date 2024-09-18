@@ -351,7 +351,6 @@ export default defineComponent({
                 if (!isEmptyValue(dataCell) && dataCell.sum_value) {
                   const { value } = dataCell
                   if (!isEmptyValue(value) && isNumber(value.value)) {
-                    console.log(dataCell)
                     sums[index] = value.value
                   }
                 }
