@@ -90,6 +90,8 @@ import DataCells from '@/components/ADempiere/Report/Data/DataCells.vue'
 // Utility functions
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { isNumberField, isDateField, isBooleanField, isDecimalField } from '@/utils/ADempiere/references'
+import { isNumber } from '@/utils/ADempiere/formatValue/numberFormat'
+
 export default defineComponent({
   name: 'DataReport',
   components: {
@@ -346,9 +348,12 @@ export default defineComponent({
           if (hasValueValue) {
             data.forEach((data) => {
               Object.values(data.cells).forEach(dataCell => {
-                const { value } = dataCell
-                if (!isEmptyValue(value)) {
-                  sums[index] = value.value
+                if (!isEmptyValue(dataCell) && dataCell.sum_value) {
+                  const { value } = dataCell
+                  if (!isEmptyValue(value) && isNumber(value.value)) {
+                    console.log(dataCell)
+                    sums[index] = value.value
+                  }
                 }
               })
               nextTick(() => {
