@@ -90,8 +90,9 @@ import DataCells from '@/components/ADempiere/Report/Data/DataCells.vue'
 // Utility functions
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { isNumberField, isDateField, isBooleanField, isDecimalField } from '@/utils/ADempiere/references'
-import { isNumber } from '@/utils/ADempiere/formatValue/numberFormat'
-
+import {
+  formatQuantity
+} from '@/utils/ADempiere/formatValue/numberFormat'
 export default defineComponent({
   name: 'DataReport',
   components: {
@@ -341,32 +342,26 @@ export default defineComponent({
             sums[index] = 'Total'
             return
           }
-          const hasValueValue = data.some((data) => {
+          let sum = 0
+          data.forEach((data) => {
             const dataCell = data.cells[column.code]
-            return dataCell && dataCell.value && dataCell.value.value
+            if (!isEmptyValue(dataCell) && dataCell.sum_value) {
+              const { value } = dataCell
+              if (!isEmptyValue(value) && value.value) {
+                sum += parseFloat(value.value)
+              }
+            }
           })
-          if (hasValueValue) {
-            data.forEach((data) => {
-              Object.values(data.cells).forEach(dataCell => {
-                if (!isEmptyValue(dataCell) && dataCell.sum_value) {
-                  const { value } = dataCell
-                  if (!isEmptyValue(value) && isNumber(value.value)) {
-                    sums[index] = value.value
-                  }
-                }
-              })
-              nextTick(() => {
-                const footerCells = document.querySelectorAll('.el-table__footer-wrapper td.el-table__cell')
-                footerCells.forEach((cell) => {
-                  const num = parseFloat(cell.textContent)
-                  if (!isEmptyValue(num) && num < 0) {
-                    cell.style.color = 'red'
-                  }
-                })
-                return
-              })
-            })
-          }
+          sums[index] = sum === 0 ? '' : formatQuantity({ value: sum })
+        })
+        nextTick(() => {
+          const footerCells = document.querySelectorAll('.el-table__footer-wrapper td.el-table__cell')
+          footerCells.forEach((cell) => {
+            const num = parseFloat(cell.textContent)
+            if (!isEmptyValue(num) && num < 0) {
+              cell.style.color = 'red'
+            }
+          })
         })
       }
       return sums
