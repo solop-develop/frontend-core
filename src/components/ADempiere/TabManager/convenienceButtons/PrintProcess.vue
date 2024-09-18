@@ -23,6 +23,8 @@
     type="info"
     size="small"
     style="margin-left: 5px;padding-top: 1px;padding-right: 5px;padding-bottom: 8px;padding-left: 5px;"
+    :disabled="isLoading"
+    :loading="isLoading"
     @click="printProcess()"
   >
     <svg-icon
@@ -33,7 +35,7 @@
 </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, ref } from '@vue/composition-api'
 
 import store from '@/store'
 
@@ -57,6 +59,10 @@ export default defineComponent({
 
   setup(props) {
     /**
+     * Ref
+     */
+    const isLoading = ref(false)
+    /**
      * Const
      */
     const containerUuid = props.tabAttributes.uuid
@@ -69,15 +75,21 @@ export default defineComponent({
     function printProcess() {
       const { uuid } = process
       store.commit('setSelectProcessWindows', uuid)
+      isLoading.value = true
 
       store.commit('setShowedModalDialog', {
         parentUuid: containerUuid,
         containerUuid: uuid,
         isShowed: true
       })
+        .then(() => {
+          isLoading.value = false
+        })
     }
 
     return {
+      // Ref
+      isLoading,
       // Const
       process,
       is_document,
