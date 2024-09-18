@@ -133,6 +133,11 @@ export default {
           resolve(browserDefinition)
           const { process } = browserDefinition
           if (!isEmptyValue(process)) {
+            store.commit('setIsloadingProcessOfBrowser', {
+              isLoading: false,
+              parentUuid: process.id,
+              containerUuid: browserDefinition.containerUuid
+            })
             dispatch('setModalDialog', {
               containerUuid: process.uuid,
               title: process.name,
@@ -152,23 +157,36 @@ export default {
 
                 const isAllSelection = rootGetters.getStoredBrowserProcessAll(browserDefinition.uuid)
 
+                store.commit('setIsloadingProcessOfBrowser', {
+                  isLoading: true,
+                  parentUuid: process.id,
+                  containerUuid: browserDefinition.containerUuid
+                })
+
                 store.dispatch('startProcessOfBrowser', {
                   parentUuid: browserDefinition.uuid,
                   containerUuid: process.uuid,
                   isAllSelection
-                }).then(processOutputResponse => {
-                  // close current page
-                  if (!isEmptyValue(parentUuid)) {
-                    const currentRoute = router.app._route
-                    const tabViewsVisited = rootGetters.visitedViews
-                    dispatch('tagsView/delView', currentRoute)
-                    // go to back page
-                    const oldRouter = tabViewsVisited[tabViewsVisited.length - 1]
-                    router.push({
-                      path: oldRouter.path
-                    }, () => {})
-                  }
                 })
+                  .then(processOutputResponse => {
+                    // close current page
+                    if (!isEmptyValue(parentUuid)) {
+                      const currentRoute = router.app._route
+                      const tabViewsVisited = rootGetters.visitedViews
+                      dispatch('tagsView/delView', currentRoute)
+                      // go to back page
+                      const oldRouter = tabViewsVisited[tabViewsVisited.length - 1]
+                      router.push({
+                        path: oldRouter.path
+                      }, () => {})
+                    }
+                  }).finally(() => {
+                    store.commit('setIsloadingProcessOfBrowser', {
+                      isLoading: false,
+                      parentUuid: process.id,
+                      containerUuid: browserDefinition.containerUuid
+                    })
+                  })
               },
               beforeOpen: ({ parentUuid: browserUuid, containerUuid }) => {
                 // set context values

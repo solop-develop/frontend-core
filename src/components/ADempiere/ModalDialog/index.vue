@@ -55,6 +55,7 @@
         icon="el-icon-check"
         class="button-base-icon"
         :disabled="isDisabledDone"
+        :loading="isDisabledDone"
         @click="doneButton"
       />
     </span>
@@ -101,6 +102,7 @@
         icon="el-icon-check"
         class="button-base-icon"
         :disabled="isDisabledDone"
+        :loading="isDisabledDone"
         @click="doneButton"
       />
     </div>
