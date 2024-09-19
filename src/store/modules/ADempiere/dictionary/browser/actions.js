@@ -209,6 +209,13 @@ export default {
                   containerUuidAssociated: browserDefinition.uuid
                 })
               },
+              isDisabledDone() {
+                // validate document status and Processing flag
+                return store.getters.getIsloadingProcessOfBrowser({
+                  parentUuid: process.id,
+                  containerUuid: browserDefinition.containerUuid
+                })
+              },
               ...process,
               // TODO: Change to string and import dynamic in component
               componentPath: () => import('@/components/ADempiere/PanelDefinition/index.vue'),
