@@ -387,6 +387,10 @@ export default {
           defaultAction = {
             ...runProcessOfWindow
           }
+          commit('setIsLoadProcessOfWindows', {
+            containerUuid: tabDefinition.containerUuid,
+            isLoading: false
+          })
           dispatch('setModalDialog', {
             containerUuid: process.uuid,
             title: process.name,
@@ -400,6 +404,11 @@ export default {
               const recordId = rootGetters.getIdOfContainer({
                 containerUuid: storedTab.containerUuid,
                 tableName: table_name
+              })
+
+              commit('setIsLoadProcessOfWindows', {
+                containerUuid: tabDefinition.containerUuid,
+                isLoading: true
               })
 
               dispatch('startProcessOfWindows', {
@@ -438,6 +447,11 @@ export default {
                     pageNumber: 1 // reload with first page
                   })
                 })
+              }).finally(() => {
+                commit('setIsLoadProcessOfWindows', {
+                  containerUuid: tabDefinition.containerUuid,
+                  isLoading: false
+                })
               })
             },
             beforeOpen: ({ parentUuid: tabAssociatedUuid, containerUuid }) => {
@@ -463,6 +477,15 @@ export default {
                 id: process.id.toString()
               })
             },
+            isDisabledDone({
+              containerUuid,
+              parentUuid
+            }) {
+              return getters.getIsLoadProcessOfWindows({
+                containerUuid: parentUuid
+              })
+            },
+
             // TODO: Change to string and import dynamic in component
             componentPath: () => import('@/components/ADempiere/PanelDefinition/index.vue'),
             isShowed: false

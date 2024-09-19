@@ -119,5 +119,13 @@ export default {
    */
   setSelectProcessWindows(state, uuid) {
     state.selectProcessUuid = uuid
+  },
+  setIsLoadProcessOfWindows(state, {
+    containerUuid,
+    isLoading
+  }) {
+    Vue.set(state.isLoadingProcessOfWindows, containerUuid, {
+      isLoading
+    })
   }
 }

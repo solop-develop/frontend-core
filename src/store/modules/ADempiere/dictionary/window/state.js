@@ -17,5 +17,6 @@
 export default {
   storedWindows: {},
   storedTableNames: {},
-  selectProcessUuid: ''
+  selectProcessUuid: '',
+  isLoadingProcessOfWindows: {}
 }
