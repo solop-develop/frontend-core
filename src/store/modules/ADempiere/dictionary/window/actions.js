@@ -418,10 +418,6 @@ export default {
                 recordId,
                 recordUuid
               }).then(async processResponse => {
-                commit('setIsLoadProcessOfWindows', {
-                  containerUuid: tabDefinition.containerUuid,
-                  isLoading: false
-                })
                 // if (processResponse.is_error) {
                 //   return
                 // }
