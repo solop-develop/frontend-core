@@ -70,12 +70,16 @@ const initState = {
   exportReport: {},
   contactSend: '',
   typeNotify: '',
-  defaultBody: ''
+  defaultBody: '',
+  activateCollapse: 0
 }
 const reportManager = {
   state: initState,
 
   mutations: {
+    setActivateCollapse(state, activateCollapse) {
+      state.activateCollapse = activateCollapse
+    },
     setContactSend(state, contactSend) {
       state.contactSend = contactSend
     },
@@ -1003,6 +1007,9 @@ const reportManager = {
     },
     getDefaultBody: (state) => {
       return state.defaultBody
+    },
+    getIsActiateCollapse: (state) => {
+      return state.activateCollapse
     }
   }
 }

@@ -135,7 +135,13 @@ export default defineComponent({
       if (isEmptyValue(rowCells)) return []
       return rowCells
     })
+    const tableHeight = computed(() => {
+      return store.getters.getIsActiateCollapse
+    })
     const height = computed(() => {
+      if (tableHeight.value === '1') {
+        return 'calc(100vh - 460px)'
+      }
       if (store.getters.device !== 'mobile') {
         return 'calc(100vh - 295px)'
       }
@@ -452,6 +458,7 @@ export default defineComponent({
       isLoadingReport,
       currentPageSize,
       currentPageNumber,
+      tableHeight,
       getColumnStyle,
       // Methods
       keyAction,
