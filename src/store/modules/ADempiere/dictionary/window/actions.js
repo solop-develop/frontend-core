@@ -451,6 +451,11 @@ export default {
                     pageNumber: 1 // reload with first page
                   })
                 })
+              }).finally(() => {
+                commit('setIsLoadProcessOfWindows', {
+                  containerUuid: tabDefinition.containerUuid,
+                  isLoading: false
+                })
               })
             },
             beforeOpen: ({ parentUuid: tabAssociatedUuid, containerUuid }) => {
