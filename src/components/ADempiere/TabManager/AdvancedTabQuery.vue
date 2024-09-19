@@ -351,7 +351,6 @@ export default defineComponent({
       const query = Object.assign({}, root.$route.query)
       if (!isEmptyValue(query) && !isEmptyValue(query.filters)) {
         delete query.filters
-        router.replace({ query })
       }
 
       isLoadingSearch.value = true
@@ -362,6 +361,7 @@ export default defineComponent({
         isAdvancedQuery: true
       })
         .finally(() => {
+          router.replace({ query: {}})
           isLoadingSearch.value = false
         })
       isShowedAdvancedQuery.value = false
