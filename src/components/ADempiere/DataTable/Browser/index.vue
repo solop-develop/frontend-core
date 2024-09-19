@@ -64,7 +64,8 @@
         v-if="isTableSelection"
         type="selection"
         :prop="keyColumn"
-        min-width="50"
+        aling="center"
+        width="35"
       />
 
       <el-table-column
@@ -75,6 +76,7 @@
         sortable
         :sort-by="fieldAttributes.sortByProperty"
         :min-width="widthColumn(fieldAttributes)"
+        max-width="150"
         :fixed="fieldAttributes.isFixedTableColumn"
       >
         <template slot="header">
@@ -188,35 +190,20 @@ export default defineComponent({
   },
 
   setup(props) {
+    // Const
     const panelMain = document.getElementById('mainBrowseDataTable')
-    const multipleTable = ref(null)
+    const fields = ['FieldSearch', 'FieldSelect', 'FieldAccountingCombination']
+    const columnsMin = 'SeqNo'
+    // Refs
 
-    const heightTable = ref()
-    const timeOut = ref(null)
-    const isChangeOptions = ref(false)
     const heightSize = ref()
+    const timeOut = ref(null)
+    const heightTable = ref()
+    const multipleTable = ref(null)
     const currentRowSelect = ref({})
+    const isChangeOptions = ref(false)
 
-    const isLoadingDataTale = computed(() => {
-      if (props.containerManager && props.containerManager.isLoadedRecords) {
-        return !props.containerManager.isLoadedRecords({
-          containerUuid: props.containerUuid
-        })
-      }
-      return !isEmptyValue(props.dataTable)
-    })
-
-    const currentOption = computed(() => {
-      return store.getters.getTableOption(props.containerUuid)
-    })
-
-    const keyColumn = computed(() => {
-      // if (props.panelMetadata) {
-      //   return props.panelMetadata.keyColumn
-      // }
-      // return undefined
-      return 'rowUid'
-    })
+    // Computeds
 
     const headerList = computed(() => {
       return props.header.filter(fieldItem => {
@@ -238,11 +225,24 @@ export default defineComponent({
         return false
       })
     })
-    function widthColumn(fieldAttributes) {
-      const { componentPath } = fieldAttributes
-      if (['FieldSearch', 'FieldAccountingCombination'].includes(componentPath)) return '500'
-      return '250'
-    }
+
+    const isLoadingDataTale = computed(() => {
+      if (props.containerManager && props.containerManager.isLoadedRecords) {
+        return !props.containerManager.isLoadedRecords({
+          containerUuid: props.containerUuid
+        })
+      }
+      return !isEmptyValue(props.dataTable)
+    })
+
+    const currentOption = computed(() => {
+      return store.getters.getTableOption(props.containerUuid)
+    })
+
+    const keyColumn = computed(() => {
+      return 'rowUid'
+    })
+
     const selectionsLength = computed(() => {
       return props.containerManager.getSelection({
         containerUuid: props.containerUuid
@@ -307,6 +307,20 @@ export default defineComponent({
       }
       return defaultSize.value
     })
+
+    // Methods
+
+    function widthColumn(fieldAttributes) {
+      const {
+        componentPath,
+        columnName
+      } = fieldAttributes
+      if (fields.includes(componentPath)) return '250'
+      if (columnName.includes(columnsMin)) {
+        return '105'
+      }
+      return '175'
+    }
 
     /**
      * Select record row
