@@ -149,10 +149,17 @@ export default {
         .reduce((partialSum, currentvalue) => partialSum + currentvalue)
     },
     loadChartMetrics(metrics) {
+      console.log(metrics)
       const xAxisValues = []
       const seriesToShow = []
-      const colorPercentage = [0.3, 0.7, 1]
       if (!this.isEmptyValue(metrics.series)) {
+        const colorSchemas = metrics.colorSchemas
+        const validColors = colorSchemas.filter(obj => obj.color)
+        const numColors = validColors.length
+        const colorArray = validColors.map((obj, index) => [
+          (100 / numColors) * (index + 1) / 100,
+          obj.color
+        ])
         // TODO: Consider color scheme `color_schemas`
         seriesToShow.push({
           animationDuration,
@@ -169,10 +176,7 @@ export default {
           axisLine: {
             lineStyle: {
               width: 10,
-              color: colorPercentage.map((threshold, index) => [
-                threshold,
-                metrics.colorSchemas[index]?.color ?? '#FF0000'
-              ])
+              color: colorArray
             }
           },
           axisTick: {
