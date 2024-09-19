@@ -410,6 +410,12 @@ export default {
 
         return true
       })
+  },
+  getIsLoadProcessOfWindows: (state) => ({
+    containerUuid
+  }) => {
+    if (isEmptyValue(containerUuid)) return false
+    if (isEmptyValue(state.isLoadingProcessOfWindows)) return false
+    return state.isLoadingProcessOfWindows[containerUuid].isLoading
   }
-
 }
