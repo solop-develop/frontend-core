@@ -63,8 +63,8 @@ const initState = {
     isLoaded: false, // has not been charged the first time
     isLoading: false, // request currently in progress
     pageNumber: 1, // page number of records
-    pageSize: 15
-
+    pageSize: 15,
+    sortBy: ''
   }
 }
 
@@ -85,7 +85,8 @@ const windowManager = {
       isLoaded = true,
       isLoading = false,
       pageNumber = 1,
-      pageSize = 15
+      pageSize = 15,
+      sortBy
     }) {
       const dataTab = {
         parentUuid,
@@ -100,7 +101,8 @@ const windowManager = {
         isLoaded,
         isLoading,
         pageNumber,
-        pageSize
+        pageSize,
+        sortBy
       }
       Vue.set(state.tabData, containerUuid, dataTab)
       Vue.set(state.oldTabData, containerUuid, dataTab)
@@ -389,13 +391,20 @@ const windowManager = {
         if (isEmptyValue(pageSize) && !isEmptyValue(storedSize)) {
           pageSize = storedSize
         }
+        if (isEmptyValue(sortBy)) {
+          const storeSortBy = getters.getTabSortBy({
+            containerUuid
+          })
+          if (!isEmptyValue(storeSortBy)) sortBy = storeSortBy
+          else sortBy = ''
+        }
         commit('setTabData', {
           parentUuid,
           isLoaded: false,
           containerUuid,
-          pageSize
+          pageSize,
+          sortBy
         })
-
         commit('setIsLoadingTabRecordsList', {
           containerUuid,
           isLoading: true
@@ -599,7 +608,8 @@ const windowManager = {
               pageSize,
               isLoaded: true,
               isLoading: false,
-              recordCount: dataResponse.recordCount
+              recordCount: dataResponse.recordCount,
+              sortBy
             })
 
             if (isEmptyValue(dataToStored)) {
@@ -1001,6 +1011,9 @@ const windowManager = {
     },
     getTabPageSize: (state, getters) => ({ containerUuid }) => {
       return getters.getTabData({ containerUuid }).pageSize
+    },
+    getTabSortBy: (state, getters) => ({ containerUuid }) => {
+      return getters.getTabData({ containerUuid }).sortBy
     },
     getTabCurrentRow: (state, getters, rootState, rootGetters) => ({ containerUuid }) => {
       // get current record uuid with container uuid
