@@ -110,15 +110,15 @@
             <p
               class="label-system"
             >
-              <svg-icon icon-class="reportEnginer" />
-              {{ $t('profile.systemInformation.reportEnginer') + ': ' }}
+              <svg-icon icon-class="reportEngine" />
+              {{ $t('profile.systemInformation.reportEngine') + ': ' }}
             </p>
           </el-col>
           <el-col :span="12">
             <el-tag>
               <b>
                 <svg-icon icon-class="tag" />
-                {{ reportEnginerVersion.version }}
+                {{ reportEngineVersion.version }}
               </b>
             </el-tag>
           </el-col>
@@ -460,7 +460,7 @@ export default defineComponent({
 
     const dictionaryVersion = store.getters['user/getDictionaryVersion']
     const s3Version = store.getters['user/getS3Version']
-    const reportEnginerVersion = store.getters['user/getReportEnginerVersion']
+    const reportEngineVersion = store.getters['user/getReportEngineVersion']
     const vueVersion = config.server.vueVersion
 
     const notifications = computed(() => {
@@ -529,7 +529,7 @@ export default defineComponent({
       systemInfo,
       dictionaryVersion,
       s3Version,
-      reportEnginerVersion,
+      reportEngineVersion,
       vueVersion,
       warehouse,
       userInfo,

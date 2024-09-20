@@ -50,7 +50,7 @@ export function systemInfoS3() {
     method: 'get'
   })
 }
-export function systemInfoReportEnginer() {
+export function systemInfoReportEngine() {
   return request({
     url: '/report-engine/system-info',
     method: 'get'

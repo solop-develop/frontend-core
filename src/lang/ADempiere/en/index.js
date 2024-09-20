@@ -238,7 +238,7 @@ export default {
       deploymentName: 'Deployment Name',
       dictionaryVersion: 'Dictionary RS version',
       s3Version: 'S3 Gateway RS Version',
-      reportEnginer: 'Report Engine Version'
+      reportEngine: 'Report Engine Version'
     }
   },
   window,

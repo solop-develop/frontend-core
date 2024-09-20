@@ -239,7 +239,7 @@ export default {
       deploymentName: 'Nombre de Implementación',
       dictionaryVersion: 'Versión del Dictionary RS',
       s3Version: 'Versión del S3 Gateway RS',
-      reportEnginer: 'Versión del Report Engine'
+      reportEngine: 'Versión del Motor de Reporte'
     }
   },
   window,

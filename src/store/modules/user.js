@@ -43,7 +43,7 @@ import {
   systemInfo,
   systemInfoDictionary,
   systemInfoS3,
-  systemInfoReportEnginer
+  systemInfoReportEngine
 } from '@/api/ADempiere/common/index.ts'
 
 // Utils and Helper Methods
@@ -82,7 +82,7 @@ const state = {
   systemInfo: {},
   dictionary: {},
   s3Version: {},
-  reportEnginerVersion: {}
+  reportEngineVersion: {}
 }
 
 const mutations = {
@@ -149,8 +149,8 @@ const mutations = {
   setSystemS3(state, info) {
     state.s3Version = info
   },
-  setSystemReportEnginer(state, info) {
-    state.reportEnginerVersion = info
+  setSystemReportEngine(state, info) {
+    state.reportEngineVersion = info
   }
 }
 
@@ -223,7 +223,7 @@ const actions = {
           dispatch('system')
           dispatch('systemDictionary')
           dispatch('systemS3')
-          dispatch('systemReportEnginer')
+          dispatch('systemReportEngine')
           commit('setIsSession', true)
           commit('setSessionInfo', {
             id,
@@ -815,12 +815,12 @@ const actions = {
         })
     })
   },
-  systemReportEnginer({ commit }) {
+  systemReportEngine({ commit }) {
     return new Promise(resolve => {
       let systemInfo = {
         version: '0.0.1'
       }
-      systemInfoReportEnginer()
+      systemInfoReportEngine()
         .then(response => {
           if (!isEmptyValue(response)) {
             const { main_version: version } = response
@@ -828,11 +828,11 @@ const actions = {
               version
             }
           }
-          commit('setSystemReportEnginer', systemInfo)
+          commit('setSystemReportEngine', systemInfo)
           resolve(systemInfo)
         })
         .catch(error => {
-          commit('setSystemReportEnginer', systemInfo)
+          commit('setSystemReportEngine', systemInfo)
           console.warn(`Error getting System Info: ${error.message}. Code: ${error.code}.`)
           resolve(systemInfo)
         })
@@ -902,8 +902,8 @@ const getters = {
   getS3Version: (state) => {
     return state.s3Version
   },
-  getReportEnginerVersion: (state) => {
-    return state.reportEnginerVersion
+  getReportEngineVersion: (state) => {
+    return state.reportEngineVersion
   }
 }
 
