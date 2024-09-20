@@ -238,7 +238,8 @@ export default {
       proxyVersion: 'Versión del Proxy',
       deploymentName: 'Nombre de Implementación',
       dictionaryVersion: 'Versión del Dictionary RS',
-      s3Version: 'Versión del S3 Gateway RS'
+      s3Version: 'Versión del S3 Gateway RS',
+      reportEngine: 'Versión del Motor de Reporte'
     }
   },
   window,

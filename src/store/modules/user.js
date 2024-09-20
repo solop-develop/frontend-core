@@ -42,7 +42,8 @@ import {
 import {
   systemInfo,
   systemInfoDictionary,
-  systemInfoS3
+  systemInfoS3,
+  systemInfoReportEngine
 } from '@/api/ADempiere/common/index.ts'
 
 // Utils and Helper Methods
@@ -80,7 +81,8 @@ const state = {
   activityLogs: [],
   systemInfo: {},
   dictionary: {},
-  s3Version: {}
+  s3Version: {},
+  reportEngineVersion: {}
 }
 
 const mutations = {
@@ -146,6 +148,9 @@ const mutations = {
   },
   setSystemS3(state, info) {
     state.s3Version = info
+  },
+  setSystemReportEngine(state, info) {
+    state.reportEngineVersion = info
   }
 }
 
@@ -218,6 +223,7 @@ const actions = {
           dispatch('system')
           dispatch('systemDictionary')
           dispatch('systemS3')
+          dispatch('systemReportEngine')
           commit('setIsSession', true)
           commit('setSessionInfo', {
             id,
@@ -808,6 +814,29 @@ const actions = {
           resolve(systemInfo)
         })
     })
+  },
+  systemReportEngine({ commit }) {
+    return new Promise(resolve => {
+      let systemInfo = {
+        version: '0.0.1'
+      }
+      systemInfoReportEngine()
+        .then(response => {
+          if (!isEmptyValue(response)) {
+            const { main_version: version } = response
+            systemInfo = {
+              version
+            }
+          }
+          commit('setSystemReportEngine', systemInfo)
+          resolve(systemInfo)
+        })
+        .catch(error => {
+          commit('setSystemReportEngine', systemInfo)
+          console.warn(`Error getting System Info: ${error.message}. Code: ${error.code}.`)
+          resolve(systemInfo)
+        })
+    })
   }
 }
 
@@ -872,6 +901,9 @@ const getters = {
   },
   getS3Version: (state) => {
     return state.s3Version
+  },
+  getReportEngineVersion: (state) => {
+    return state.reportEngineVersion
   }
 }
 

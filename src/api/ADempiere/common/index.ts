@@ -50,7 +50,12 @@ export function systemInfoS3() {
     method: 'get'
   })
 }
-
+export function systemInfoReportEngine() {
+  return request({
+    url: '/report-engine/system-info',
+    method: 'get'
+  })
+}
 /**
  * Get Country definition from server using id or uuid for record
  * @param {number} id

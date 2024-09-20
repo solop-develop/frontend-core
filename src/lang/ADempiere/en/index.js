@@ -237,7 +237,8 @@ export default {
       proxyVersion: 'Proxy Version',
       deploymentName: 'Deployment Name',
       dictionaryVersion: 'Dictionary RS version',
-      s3Version: 'S3 Gateway RS Version'
+      s3Version: 'S3 Gateway RS Version',
+      reportEngine: 'Report Engine Version'
     }
   },
   window,
