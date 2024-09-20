@@ -191,6 +191,9 @@ export default defineComponent({
           return display_value
         }
         if (!isEmptyValue(value)) {
+          if (!isEmptyValue(value.value)) {
+            return value.value
+          }
           return value
         }
       }
