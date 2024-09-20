@@ -186,12 +186,15 @@ export default defineComponent({
       }
       const rowData = row.cells[field.code]
       if (!isEmptyValue(rowData)) {
-        const { display_value, value } = rowData
+        const { display_value, value: currentValue } = rowData
         if (!isEmptyValue(display_value) || isLookup(field.display_type)) {
           return display_value
         }
-        if (!isEmptyValue(value)) {
-          return value
+        if (!isEmptyValue(currentValue)) {
+          if (!isEmptyValue(currentValue.value)) {
+            return currentValue.value
+          }
+          return currentValue
         }
       }
     }
