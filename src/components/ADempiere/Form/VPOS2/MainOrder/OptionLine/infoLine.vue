@@ -17,7 +17,6 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 <template>
   <el-popover
     placement="right-start"
-    :title="$t('form.productInfo.productInformation')"
     width="850"
     trigger="click"
   >
@@ -25,9 +24,20 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       shadow="never"
       :body-style="{ padding: '5px' }"
     >
+      <p
+        style="text-align: center;font-size: larger;"
+      >
+        <b>
+          {{ $t('form.productInfo.productInformation') }}
+        </b>
+      </p>
       <el-row>
         <el-col :span="6">
-          <el-skeleton style="width: 240px" :loading="true" animated>
+          <el-skeleton
+            style="width: 240px"
+            :loading="true"
+            animated
+          >
             <template slot="template">
               <el-skeleton-item
                 variant="image"
@@ -39,7 +49,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         <el-col :span="18">
           <el-row>
             <el-col :span="14">
-              <p style="text-align: left;">
+              <p
+                style="text-align: left;"
+              >
                 {{ $t('form.productInfo.code') }}:
                 <b>
                   {{ infoLine.product.value }}
@@ -92,7 +104,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         </el-col>
         <el-col :span="24">
           <el-divider>
-            {{ '1 ' + infoLine.uom.uom.name + ' (' + infoLine.uom.uom.symbol + ') ' + ' ~ ' + displayQuantity(infoLine) + ' ' + infoLine.uom.product_uom.name + ' (' + infoLine.uom.product_uom.symbol + ') ' }}
+            {{ '1 ' + displayUOM(infoLine) }}
           </el-divider>
         </el-col>
       </el-row>
@@ -108,16 +120,19 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 </template>
 
 <script>
-import { defineComponent, computed } from '@vue/composition-api'
-// import lang from '@/lang'
 import store from '@/store'
+import {
+  defineComponent,
+  computed,
+  ref
+} from '@vue/composition-api'
 // Utils and Helper Methods
 import { formatPrice, formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 // import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 
 export default defineComponent({
-  name: 'infoLine',
+  name: 'InfoLine',
   props: {
     infoLine: {
       type: Object,
@@ -125,11 +140,16 @@ export default defineComponent({
     }
   },
   setup() {
+    // Ref
+    const activeName = ref('infoProduct')
+    // Computed
     const currency = computed(() => {
       const { price_list } = store.getters.getCurrentOrder
       if (!isEmptyValue(price_list)) return price_list.currency.iso_code
       return ''
     })
+
+    // Methods
 
     function displayQuantity(line) {
       const { uom } = line
@@ -140,8 +160,22 @@ export default defineComponent({
       if (Number(divide_rate.value) >= Number(multiply_rate.value)) return formatQuantity({ value: divide_rate.value })
       return formatQuantity({ value: multiply_rate.value })
     }
+
+    function displayUOM(line) {
+      const {
+        uom,
+        product_uom
+      } = line.uom
+      return uom.name + ' ( ' + uom.symbol + ' ) ' + ' ~ ' + displayQuantity(line) + ' ' + product_uom.name + ' (' + product_uom.symbol + ') '
+    }
+
     return {
+      // Ref
+      activeName,
+      // Computed
       currency,
+      // Methods
+      displayUOM,
       formatPrice,
       formatQuantity,
       displayQuantity

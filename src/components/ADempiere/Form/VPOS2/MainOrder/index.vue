@@ -63,11 +63,6 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
                 :handle-change="updateCurrentPrice"
               />
             </span>
-            <!-- <edit-amount
-              v-if="scope.row.isEditCurrentPrice && valueOrder.columnName === 'CurrentPrice'"
-              :value="Number(scope.row.price)"
-              :handle-change="updateCurrentPrice"
-            /> -->
             <span
               v-else-if="scope.row.isEditQtyEntered && valueOrder.columnName === 'QtyEntered'"
             >
@@ -116,12 +111,10 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         width="150"
         style="padding: 0px !important;"
       >
-        <!-- <template slot-scope="scope"> -->
         <option-line
           slot-scope="scope"
           :line="scope.row"
         />
-        <!-- </template> -->
       </el-table-column>
     </el-table>
   </span>
@@ -243,11 +236,6 @@ export default defineComponent({
 
     function editLine(row, column, cell) {
       const { columnKey } = column
-      // const {
-      //   is_modify_price,
-      //   is_allows_modify_quantity,
-      //   is_allows_modify_discount
-      // } = currentPos.value
       if (columnKey === 'CurrentPrice') row.isEditCurrentPrice = true
       if (columnKey === 'QtyEntered') row.isEditQtyEntered = true
       if (columnKey === 'Discount') row.isEditDiscount = true
