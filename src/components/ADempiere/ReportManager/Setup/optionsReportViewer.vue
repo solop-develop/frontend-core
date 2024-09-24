@@ -113,7 +113,7 @@
                     />
                   </el-form-item>
                 </el-col>
-                <el-col v-if="isReportEnginer" :span="24">
+                <!-- <el-col v-if="isReportEnginer" :span="24">
                   <el-form-item
                     :label="$t('report.typeReport')"
                     style="display: grid;"
@@ -131,7 +131,7 @@
                       />
                     </el-select>
                   </el-form-item>
-                </el-col>
+                </el-col> -->
                 <!-- <el-col :span="12">
                   <el-form-item
                     :label="$t('report.summary')"
