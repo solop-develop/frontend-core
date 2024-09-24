@@ -27,8 +27,8 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       type="danger"
       icon="el-icon-delete"
       style="margin-left: 2px;"
-      :disabled="line.isLoading"
       :loading="line.isLoading"
+      :disabled="line.isLoading"
       @click="deleteLine()"
     />
   </p>
@@ -36,13 +36,10 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 
 <script>
 import { defineComponent } from '@vue/composition-api'
+import store from '@/store'
 // Components and Mixins
 import infoLine from '@/components/ADempiere/Form/VPOS2/MainOrder/OptionLine/infoLine'
 import editLine from '@/components/ADempiere/Form/VPOS2/MainOrder/OptionLine/editLine/index.vue'
-// import lang from '@/lang'
-import store from '@/store'
-// Utils and Helper Methods
-// import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 
 export default defineComponent({
   name: 'OptionLine',
