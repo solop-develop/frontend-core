@@ -139,11 +139,8 @@ export default defineComponent({
       return store.getters.getIsActiateCollapse
     })
     const height = computed(() => {
-      if (tableHeight.value === '1') {
-        return 'calc(100vh - 460px)'
-      }
       if (store.getters.device !== 'mobile') {
-        return 'calc(100vh - 295px)'
+        return 'calc(100vh - 235px)'
       }
       return 'calc(100vh - 385px)'
     })
@@ -200,6 +197,9 @@ export default defineComponent({
             const fontSize = data.font_code.replace(/[^\d]/g, '')
             const fontFamily = data.font_code.replace(/\d+/g, '')
             style += `font-family: ${fontFamily}; font-size: ${fontSize}px;`
+          }
+          if (isEmptyValue(data.font_code)) {
+            style += 'font-size: 10px;'
           }
         }
       })

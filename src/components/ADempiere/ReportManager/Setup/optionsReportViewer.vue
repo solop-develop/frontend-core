@@ -24,7 +24,7 @@
       </b>
     </div>
 
-    <el-collapse @change="activeCollapse">
+    <el-collapse v-model="activeCollapse">
       <el-collapse-item name="1">
         <template slot="title">
           <b style="font-size: 18px">
@@ -266,7 +266,7 @@ export default defineComponent({
     const reportAsViewValue = ref(undefined)
     const reportAsPrintFormatValue = ref(undefined)
     const reportTypeFormatValue = ref('')
-    // const activeCollapse = ref(['1', '2'])
+    const activeCollapse = ref(['1', '2'])
     const isSummaryReport = ref(true)
 
     /**
@@ -280,9 +280,9 @@ export default defineComponent({
      * @containerManagerReportViwer - Container Manager the Report Viwer
      * @componentRender - Import the Panel Definitions component
      */
-    function activeCollapse({ 0: data }) {
-      store.commit('setActivateCollapse', data)
-    }
+    // function activeCollapse({ 0: data }) {
+    //   store.commit('setActivateCollapse', data)
+    // }
     const reportAsView = computed(() => {
       const options = store.getters.getStoredActionsMenu({
         containerUuid: props.containerUuid
