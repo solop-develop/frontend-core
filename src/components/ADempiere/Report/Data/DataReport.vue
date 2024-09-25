@@ -198,9 +198,6 @@ export default defineComponent({
             const fontFamily = data.font_code.replace(/\d+/g, '')
             style += `font-family: ${fontFamily}; font-size: ${fontSize}px;`
           }
-          if (isEmptyValue(data.font_code)) {
-            style += 'font-size: 10px;'
-          }
         }
       })
       return style
