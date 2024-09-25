@@ -82,6 +82,7 @@ import InfoReport from '@/views/ADempiere/ReportViewerEngine/infoReport.vue'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { isLookup } from '@/utils/ADempiere/references'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
+import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 // Api
 import { listZoomWindowsRequest } from '@//api/ADempiere/fields/zoom.js'
 
@@ -231,13 +232,31 @@ export default defineComponent({
         table_name: props.tableName
       })
         .then(response => {
-          props.rowData.zoom_windows = response.zoom_windows.map(listZoom => {
+          const { zoom_windows } = response
+          let listZoom = zoom_windows
+          if (listZoom.length > 1) {
+            listZoom = zoom_windows.filter(zoom => {
+              const {
+                uuid,
+                tab_uuid,
+                is_sales_transaction
+              } = zoom
+              const salesTransaction = Boolean(isSalesTransaction({
+                parentUuid: uuid,
+                containerUuid: tab_uuid
+              }))
+              if (is_sales_transaction === salesTransaction) return zoom
+            })
+          }
+          const listZoomWindows = listZoom.map(listZoom => {
             return {
               ...listZoom,
               columnName: props.attributes.column_name,
               currentValue: props.rowData.cells[props.attributes.code]
             }
           })
+
+          props.rowData.zoom_windows = listZoomWindows
           isLoaded.value = false
         })
         .catch(() => {
