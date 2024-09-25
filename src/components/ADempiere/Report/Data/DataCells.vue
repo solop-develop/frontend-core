@@ -22,6 +22,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     <!-- Show cell label -->
     <el-dropdown
       v-if="!isEmptyValue(attributes.column_name)"
+      :style="styleFont(attributes)"
       trigger="click"
       @visible-change="loadZoom"
       @command="zoomInWindow"
@@ -155,7 +156,22 @@ export default defineComponent({
       }
       return false
     }
-
+    function styleFont(font) {
+      let fontStyle = ''
+      if (!isEmptyValue(font.color)) {
+        fontStyle += `color: ${font.color} !important;`
+      }
+      if (isEmptyValue(font.font_code)) {
+        fontStyle += 'font-size: 10px !important'
+      }
+      if (!isEmptyValue(font.font_code)) {
+        const lastIndex = font.font_code.lastIndexOf('-')
+        const fontFamily = font.font_code.substr(0, lastIndex)
+        const fontSize = font.font_code.substr(lastIndex + 1)
+        fontStyle += `font-family: ${fontFamily} !important; font-size: ${fontSize}px !important;`
+      }
+      return fontStyle
+    }
     /**
      * Cell Style
      * (Function to obtain the cell style)
@@ -256,7 +272,8 @@ export default defineComponent({
       cellStyle,
       displayLabel,
       zoomInWindow,
-      shouldHideName
+      shouldHideName,
+      styleFont
     }
   }
 })

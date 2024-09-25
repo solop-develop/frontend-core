@@ -28,7 +28,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     <el-row>
       <el-col :span="24">
         <el-divider>
-          {{ '1 ' + editLine.uom.uom.name + ' (' + editLine.uom.uom.symbol + ') ' + ' ~ ' + displayQuantity(editLine) + ' ' + editLine.uom.product_uom.name + ' (' + editLine.uom.product_uom.symbol + ') ' }}
+          {{ '1' + displayUOM(editLine) }}
         </el-divider>
       </el-col>
     </el-row>
@@ -406,6 +406,14 @@ export default defineComponent({
       })
     }
 
+    function displayUOM(line) {
+      const {
+        uom,
+        product_uom
+      } = line.uom
+      return uom.name + ' (' + uom.symbol + ') ' + ' ~ ' + displayQuantity(line) + ' ' + product_uom.name + ' (' + product_uom.symbol + ') '
+    }
+
     return {
       visible,
       listUOM,
@@ -419,6 +427,7 @@ export default defineComponent({
       currentPos,
       qtyWarehouseLine,
       updateUOM,
+      displayUOM,
       formatPrice,
       updatePrice,
       showListUOM,

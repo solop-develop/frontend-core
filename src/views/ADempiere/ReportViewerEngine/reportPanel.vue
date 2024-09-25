@@ -17,14 +17,14 @@
 -->
 <template>
   <el-card class="containerReportEnginer">
-    <options-report
+    <!-- <options-report
       :container-uuid="reportOutput.containerUuid"
       :container-manager="containerManager"
       :report-output="reportOutput"
       :is-show-title="false"
       :is-report-enginer="false"
       :is-loading-report="isLoadingReport"
-    />
+    /> -->
     <dialogShareReport
       :report-output="reportOutput"
       :container-uuid="containerUuid"

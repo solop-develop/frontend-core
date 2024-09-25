@@ -28,7 +28,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         :border="true"
         row-key="level"
         :height="height"
-        style="width: 100%;"
+        style="width: 100%; font-size: 12px !important;"
         :default-expand-all="false"
         :row-class-name="tableRowClassName"
         :tree-props="{ children: 'children' }"
@@ -139,11 +139,8 @@ export default defineComponent({
       return store.getters.getIsActiateCollapse
     })
     const height = computed(() => {
-      if (tableHeight.value === '1') {
-        return 'calc(100vh - 460px)'
-      }
       if (store.getters.device !== 'mobile') {
-        return 'calc(100vh - 295px)'
+        return 'calc(100vh - 235px)'
       }
       return 'calc(100vh - 385px)'
     })
@@ -189,21 +186,8 @@ export default defineComponent({
     const currentPageNumber = computed(() => {
       return parseInt(props.reportOutput.pageToken, 10)
     })
-    function getColumnStyle(params) {
-      let style = 'padding: 0; height: 30px; border: none; '
-      columns.value.forEach((data, index) => {
-        if (data.code === params.column.columnKey) {
-          if (!isEmptyValue(data.color)) {
-            style += `color: ${data.color};`
-          }
-          if (!isEmptyValue(data.font_code)) {
-            const fontSize = data.font_code.replace(/[^\d]/g, '')
-            const fontFamily = data.font_code.replace(/\d+/g, '')
-            style += `font-family: ${fontFamily}; font-size: ${fontSize}px;`
-          }
-        }
-      })
-      return style
+    function getColumnStyle() {
+      return 'padding: 0; height: 30px; border: none; '
     }
 
     // Methods
