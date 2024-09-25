@@ -387,7 +387,7 @@ export default defineComponent({
             width = column.column_width
           }
           if (column.column_characters_size > 0 && !column.is_fixed_width) {
-            let fontCode = 15
+            let fontCode = 10
             let character = column.column_characters_size
             if (!isEmptyValue(column.title) && column.column_characters_size < column.title.length) {
               character = column.title.length
@@ -396,6 +396,7 @@ export default defineComponent({
               const number = column.font_code.replace(/[^\d]/g, '')
               fontCode = number
             }
+            fontCode = fontCode * 0.9
             width = character * fontCode
           }
           if (width === 0) {
@@ -413,7 +414,7 @@ export default defineComponent({
           if (!column.is_fixed_width && column.column_width > 0 && column.column_width > width) {
             width = column.column_width
           }
-          widths[index] = width
+          widths[index] = width + 10
         })
         return widths
       }
@@ -529,5 +530,9 @@ export default defineComponent({
   display: flex;
   justify-content: flex-end;
   margin-right:20px;
+}
+.el-table th.el-table__cell > .cell{
+  padding-left: 5px !important;
+  padding-right: 5px !important;
 }
 </style>
