@@ -237,7 +237,6 @@
     </el-card>
     <div style="padding-top: 10px;">
       <el-table
-        height="500"
         :cell-class-name="classChecker"
         :data="listSummary"
         border
@@ -713,5 +712,9 @@ export default defineComponent({
 }
 .redClass {
   color: red;
+}
+.el-table {
+  height: calc(100vh - 170px);
+  overflow: scroll
 }
 </style>
