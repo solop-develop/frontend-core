@@ -180,7 +180,7 @@ export default {
 
             const storedTab = rootGetters.getStoredTab(windowUuid, tabAssociatedUuid)
             const { table_name } = storedTab
-            dispatch('runReport', {
+            dispatch('startReport', {
               parentUuid: tabUuid,
               containerUuid: process.uuid,
               recordUuid,
