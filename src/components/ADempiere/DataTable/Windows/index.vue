@@ -104,6 +104,7 @@ import {
 } from '@vue/composition-api'
 
 import store from '@/store'
+import router from '@/router'
 
 // Components and Mixins
 import CellEditInfo from '@/components/ADempiere/DataTable/Components/CellEditInfo.vue'
@@ -173,6 +174,7 @@ export default defineComponent({
   setup(props) {
     const attributeName = 'isShowedTableRecords'
     const action = 'changeTabAttribute'
+    const currentRoute = router.app._route
 
     const multipleTable = ref(null)
     const {
@@ -470,12 +472,21 @@ export default defineComponent({
       if (order === 'descending') {
         sortType = 'desc'
       }
-
       const sortByClause = `${sortColumn} ${sortType}`
+      const filter = store.getters.getTabDataFilters({
+        parentUuid: props.parentUuid,
+        containerUuid: props.containerUuid
+      })
+      let reference = ''
+      if (!isEmptyValue(currentRoute.query) && !isEmptyValue(currentRoute.query.referenceUuid)) {
+        reference = currentRoute.query.referenceUuid
+      }
       store.dispatch('getEntities', {
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid,
-        sortBy: sortByClause
+        sortBy: sortByClause,
+        filters: filter,
+        referenceUuid: reference
       })
     }
 
