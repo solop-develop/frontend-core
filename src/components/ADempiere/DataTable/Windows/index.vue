@@ -477,12 +477,16 @@ export default defineComponent({
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid
       })
+      let refernece = ''
+      if (!isEmptyValue(currentRoute.query) && !isEmptyValue(currentRoute.query.referenceUuid)) {
+        refernece = currentRoute.query.referenceUuid
+      }
       store.dispatch('getEntities', {
         parentUuid: props.parentUuid,
         containerUuid: props.containerUuid,
         sortBy: sortByClause,
         filters: filter,
-        referenceUuid: currentRoute.query.referenceUuid
+        referenceUuid: refernece
       })
     }
 
