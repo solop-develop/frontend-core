@@ -19,7 +19,7 @@
 import lang from '@/lang'
 
 // Constants
-import REFERENCES, { YES_NO, DEFAULT_SIZE } from '@/utils/ADempiere/references'
+import REFERENCES, { YES_NO, DEFAULT_SIZE, BUTTON, LIST } from '@/utils/ADempiere/references'
 import {
   FIELD_OPERATORS_LIST, OPERATOR_EQUAL,
   OPERATOR_LIKE, OPERATOR_GREATER_EQUAL, OPERATOR_LESS_EQUAL, OPERATOR_BETWEEN
@@ -113,7 +113,16 @@ export function generateField({
   let valueIsReadOnlyForm
 
   let isColumnDocumentStatus = false
-  const componentReference = evalutateTypeField(fieldToGenerate.display_type)
+  let componentReference = evalutateTypeField(fieldToGenerate.display_type)
+  // overwrite `Button` to `List` display type on `PaymentRule`.
+  if ([columnName, fieldToGenerate.element_name].includes('PaymentRule') && fieldToGenerate.display_type === BUTTON.id) {
+    componentReference = LIST
+    fieldToGenerate.display_type = LIST.id
+    fieldToGenerate.reference = {
+      table_name: 'AD_Ref_List',
+      context_column_names: []
+    }
+  }
 
   // evaluate logics (diplayed, mandatory, readOnly)
   let evaluatedLogics = getEvaluatedFieldLogics({
