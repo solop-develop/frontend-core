@@ -20,7 +20,7 @@
 <template>
   <span>
     <el-dropdown
-      v-if="!isEmptyValue(process) && is_document && !isEmptyValue(printFormats)"
+      v-if="(!isEmptyValue(process) && is_document && !isEmptyValue(printFormats)) || table_name === 'PA_Report'"
       split-button
       size="small"
       trigger="click"
@@ -110,6 +110,7 @@ export default defineComponent({
     /**
      * Const
      */
+    console.log(props.tabAttributes)
     const containerUuid = props.tabAttributes.uuid
     const { process } = props.tabAttributes
     const { is_document, table_name } = props.tabAttributes.table

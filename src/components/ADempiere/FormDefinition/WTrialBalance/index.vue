@@ -18,231 +18,20 @@
 
 <template>
   <div>
-    <el-button
-      v-if="isVisible"
-      type="text"
-      style="float: right; z-index: 5; margin-top:10px"
-      :circle="true"
-      icon="el-icon-arrow-up"
-      @click="changeView(false)"
+    <options-wtrial-balance
+      :header-list="headerList"
+      :metadata="metadata"
     />
-    <el-button
-      v-if="!isVisible"
-      type="text"
-      style="float:right; z-index: 5; margin-top:10px"
-      :circle="true"
-      icon="el-icon-arrow-down"
-      @click="changeView(true)"
-    />
-    <el-card
-      v-show="isVisible"
-      shadow="header"
-      :body-style="{ padding: '10px 20px', margin: '0px' }"
-    >
-      <el-row :gutter="20">
-        <el-form
-          inline
-          class="field-from-trial-balance"
-          label-position="top"
-        >
-          <el-col :span="8">
-            <el-form-item class="front-item-w-trial-balance">
-              <template slot="label">
-                {{ $t('form.WTrialBalance.organization') }}
-                <b style="color: #f34b4b"> * </b>
-              </template>
-              <el-select
-                v-model="organization"
-                :placeholder="$t('form.WTrialBalance.organization')"
-                style="width: 100%;"
-                clearable
-                filterable
-                @visible-change="showListOrganization"
-                @change="activateAuto"
-              >
-                <el-option
-                  v-for="item in organizationOptions"
-                  :key="item.id"
-                  :label="item.values.DisplayColumn"
-                  :value="item.id"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item class="front-item-w-trial-balance">
-              <template slot="label">
-                {{ $t('form.WTrialBalance.budget') }}
-              </template>
-              <el-select
-                v-model="budget"
-                :placeholder="$t('form.WTrialBalance.budget')"
-                style="width: 100%;"
-                filterable
-                clearable
-                @visible-change="showListBudgets"
-              >
-                <el-option
-                  v-for="item in budgetOptions"
-                  :key="item.id"
-                  :label="item.values.DisplayColumn"
-                  :value="item.id"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item class="front-item-w-trial-balance">
-              <template slot="label">
-                {{ $t('form.WTrialBalance.untilPeriod') }}
-                <b style="color: #f34b4b"> * </b>
-              </template>
-              <el-select
-                v-model="untilPeriod"
-                :placeholder="$t('form.WTrialBalance.untilPeriod')"
-                style="width: 100%;"
-                filterable
-                clearable
-                @visible-change="showListPeriods"
-                @change="activateAuto"
-              >
-                <el-option
-                  v-for="item in untilPeriodOptions"
-                  :key="item.id"
-                  :label="item.values.DisplayColumn"
-                  :value="item.id"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item class="front-item-w-trial-balance">
-              <template slot="label">
-                {{ $t('form.WTrialBalance.accountingAccount') }}
-              </template>
-              <el-card
-                shadow="never"
-                :body-style="{ padding: '0px', margin: '0px', display: 'flex' }"
-              >
-                <el-select
-                  v-model="accountingAccount1"
-                  :filter-method="filterMethod"
-                  style="width: 100%;"
-                  filterable
-                  clearable
-                  @visible-change="showListAccoutingKeys"
-                >
-                  <el-option
-                    v-for="item in accountingAccountOptions"
-                    :key="item.id"
-                    :label="item.values.DisplayColumn"
-                    :value="item.id"
-                  />
-                </el-select>
-                <b style="color: #c0c4cc;padding: 0px 5px;font-weight: bold;">
-                  {{ '-' }}
-                </b>
-                <el-select
-                  v-model="accountingAccount2"
-                  :filter-method="filterMethod"
-                  style="width: 100%;"
-                  filterable
-                  clearable
-                  @visible-change="showListAccoutingKeys"
-                >
-                  <el-option
-                    v-for="item in accountingAccountOptions"
-                    :key="item.id"
-                    :label="item.values.DisplayColumn"
-                    :value="item.id"
-                  />
-                </el-select>
-              </el-card>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item class="front-item-w-trial-balance">
-              <template slot="label">
-                {{ $t('form.WTrialBalance.cubeReport') }}
-                <b style="color: #f34b4b"> * </b>
-              </template>
-              <el-select
-                v-model="cubeReport"
-                :placeholder="$t('form.WTrialBalance.cubeReport')"
-                style="width: 100%;"
-                filterable
-                clearable
-                @visible-change="showListReportCubes"
-                @change="activateAuto"
-              >
-                <el-option
-                  v-for="item in cubeReportOptions"
-                  :key="item.id"
-                  :label="item.values.DisplayColumn"
-                  :value="item.id"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item
-              style="text-align:center"
-            >
-              <template slot="label">
-                {{ $t('form.WTrialBalance.showPeriod') }}
-              </template>
-              <el-switch
-                v-model="showPeriod"
-                :active-value="false"
-                :inactive-value="true"
-                @change="visibleColumn"
-              />
-            </el-form-item>
-            <el-form-item
-              style="text-align:center; margin-left: 5%;"
-            >
-              <template slot="label">
-                {{ $t('form.WTrialBalance.showAccumulated') }}
-              </template>
-              <el-switch
-                v-model="showAccumulated"
-                :active-value="false"
-                :inactive-value="true"
-                @change="visibleColumn"
-              />
-            </el-form-item>
-            <el-form-item
-              style="text-align: center; margin-top:7%; margin-right:10%; float:right"
-            >
-              <el-button
-                plain
-                type="success"
-                :icon="isLoading ? 'el-icon-loading' : 'el-icon-refresh'"
-                class="button-base-icon"
-                :disabled="validateBeforeSearch"
-                @click="refresh"
-              />
-              <el-button
-                plain
-                type="primary"
-                icon="el-icon-download"
-                class="button-base-icon"
-                :disabled="isEmptyValue(selectedExport)"
-                @click="exportRecords()"
-              />
-            </el-form-item>
-          </el-col>
-        </el-form>
-      </el-row>
-    </el-card>
-    <div style="padding-top: 10px;">
+    <div>
       <el-table
+        v-loading="isLoading"
         :cell-class-name="classChecker"
         :data="listSummary"
         border
-        :show-summary="true"
-        style="width: 100%;"
+        height="calc(100vh - 205px)"
+        style="width: 100%; font-size: 12px"
         :summary-method="getSummaries"
+        :cell-style="getColumnStyle"
         @selection-change="changeSelections"
       >
         <el-table-column
@@ -267,29 +56,21 @@
 import {
   defineComponent,
   computed,
-  ref
+  ref,
+  watch
   // computed
 } from '@vue/composition-api'
 import lang from '@/lang'
-
+import store from '@/store'
 // API Request Methods
-import {
-  listOrganizations,
-  listBudgets,
-  listPeriods,
-  listAccoutingKeys,
-  listReportCubes,
-  listFactAcctSummary
-} from '@/api/ADempiere/form/TrialBalanceDrillable.js'
 
 // Utils and Helper Methods
-import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
-import { exportFileFromJson } from '@/utils/ADempiere/exportUtil.js'
-import { showMessage } from '@/utils/ADempiere/notification'
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
-
+import optionsWtrialBalance from './options'
 export default defineComponent({
   name: 'WTrialBalance',
+  components: {
+    optionsWtrialBalance
+  },
   data() {
     return {
       activeName: 'top'
@@ -304,7 +85,7 @@ export default defineComponent({
   methods: {
     classChecker({ row, column }) {
       const numberRegex = /[^\d.,-]+/g
-      const numberColumns = ['variance_amount', 'period_variance_amount', 'variance_percentage']
+      const numberColumns = ['period_actual_amount', 'period_budget_amount', 'ytd_actual_amount', 'ytd_budget_amount', 'variance_amount', 'period_variance_amount', 'variance_percentage']
       if (numberColumns.includes(column.property)) {
         const val = parseFloat(row[column.property].replace(numberRegex, ''))
         if (val > 0) {
@@ -318,282 +99,89 @@ export default defineComponent({
       this.showListAccoutingKeys(true, query)
     }
   },
-  setup(props) {
+  setup() {
     /**
      * Ref
      */
     const isVisible = ref(true)
-    const showPeriod = ref(false)
-    const showAccumulated = ref(false)
-    // Values
-
-    const porcent = ref(null)
-    const organization = ref(undefined)
-    const budget = ref(undefined)
-    const untilPeriod = ref(undefined)
-    const accountingAccount1 = ref(undefined)
-    const accountingAccount2 = ref(undefined)
-    const cubeReport = ref(undefined)
-    // Options List
-    const organizationOptions = ref([])
-    const budgetOptions = ref([])
-    const untilPeriodOptions = ref([])
-    const accountingAccountOptions = ref([])
-    const cubeReportOptions = ref([])
-
+    const showPeriod = computed(() => {
+      return store.getters.getShowPeriod
+    })
+    const showAccumulated = computed(() => {
+      return store.getters.getShowAccumulated
+    })
     // Data Table
-    const viewList = ref([])
-    const listSummary = ref([])
     const headerList = ref([
       {
         label: lang.t('form.WTrialBalance.accountNo'),
         columnName: 'value',
-        width: '100',
+        width: '35',
         align: 'right'
       },
       {
         label: lang.t('form.WTrialBalance.accounName'),
         columnName: 'name',
-        width: '120px',
-        align: 'center'
+        width: '40px',
+        align: 'left'
       },
       {
         label: lang.t('form.WTrialBalance.periodActual'),
         columnName: 'period_actual_amount',
-        width: 'auto',
+        width: '40',
         align: 'right'
       },
       {
         label: lang.t('form.WTrialBalance.periodBudget'),
         columnName: 'period_budget_amount',
-        width: '120px',
+        width: '40px',
         align: 'right'
       },
       {
         label: lang.t('form.WTrialBalance.periodVariance'),
         columnName: 'period_variance_amount',
-        width: '110px',
+        width: '50px',
         align: 'right'
       },
       {
         label: lang.t('form.WTrialBalance.yTDActual'),
         columnName: 'ytd_actual_amount',
-        width: '120px',
+        width: '50px',
         align: 'right'
       },
       {
         label: lang.t('form.WTrialBalance.yTDBudget'),
         columnName: 'ytd_budget_amount',
-        width: '140px',
+        width: '60px',
         align: 'right'
       },
       {
         label: lang.t('form.WTrialBalance.variance'),
         columnName: 'variance_amount',
-        width: '90px',
+        width: '30px',
         align: 'right'
       },
       {
         label: lang.t('form.WTrialBalance.variancePorcent'),
         columnName: 'variance_percentage',
-        width: '60px',
+        width: '30px',
         align: 'right'
       }
     ])
-
-    const isLoading = ref(false)
+    const viewList = ref(headerList.value)
+    const isLoading = computed(() => {
+      return store.getters.getIsLoading
+    })
     const selectedExport = ref([])
 
     /**
-     * Computed
-     */
-
-    function calculate(period_variation, period_budget) {
-      const period_variation_number = changeFloat(period_variation)
-      const period_budget_number = changeFloat(period_budget)
-      if (period_variation_number !== 0 && period_budget_number !== 0) {
-        porcent.value = (period_variation_number / period_budget_number * 100).toFixed(2)
-        return
-      }
-      porcent.value = 0
-    }
-
-    const changeFloat = (num) => {
-      return parseFloat(num.replace(/[^\d.-]/g, ''))
-    }
-
-    const validateBeforeSearch = computed(() => {
-      return isEmptyValue(organization.value) || isEmptyValue(untilPeriod.value) || isEmptyValue(cubeReport.value)
-    })
-
-    function visibleColumn() {
-      viewList.value = headerList.value
-      if (showPeriod.value === true && showAccumulated.value === true) {
-        visibleAll()
-        return
-      } else if (showPeriod.value === true) {
-        visiblePeriod()
-        return
-      } else if (showAccumulated.value === true) {
-        visibleAccumulated()
-        return
-      }
-    }
-
-    const visiblePeriod = () => {
-      const columnsPeriod = ['period_actual_amount', 'period_budget_amount', 'period_variance_amount']
-      viewList.value = headerList.value.filter((header) => !columnsPeriod.includes(header.columnName))
-    }
-
-    const visibleAccumulated = () => {
-      const columnsAccumulated = ['ytd_actual_amount', 'ytd_budget_amount', 'variance_amount', 'variance_percentage']
-      viewList.value = headerList.value.filter((header) => !columnsAccumulated.includes(header.columnName))
-    }
-
-    const visibleAll = () => {
-      const columAll = ['period_actual_amount', 'period_budget_amount', 'period_variance_amount', 'ytd_actual_amount', 'ytd_budget_amount', 'variance_amount', 'variance_percentage']
-      viewList.value = headerList.value.filter((header) => !columAll.includes(header.columnName))
-    }
-    /**
      * Methods
      */
-    function showListOrganization(show, search = '') {
-      if (!show) return
-      listOrganizations({
-        searchValue: search
-      })
-        .then(response => {
-          const { records } = response
-          organizationOptions.value = records
-        })
-    }
-
-    function showListBudgets(show, search = '') {
-      if (!show) return
-      listBudgets({
-        searchValue: search
-      })
-        .then(response => {
-          const { records } = response
-          budgetOptions.value = records
-        })
-    }
-
-    function showListPeriods(show, search = '') {
-      if (!show) return
-      listPeriods({
-        searchValue: search
-      })
-        .then(response => {
-          const { records } = response
-          untilPeriodOptions.value = records
-        })
-    }
-
-    function showListAccoutingKeys(show, search = '') {
-      if (!show) return
-      listAccoutingKeys({
-        searchValue: search
-      })
-        .then(response => {
-          const { records } = response
-          accountingAccountOptions.value = records
-        })
-    }
-
-    function showListReportCubes(show, search = '') {
-      if (!show) return
-      listReportCubes({
-        searchValue: search
-      })
-        .then(response => {
-          const { records } = response
-          cubeReportOptions.value = records
-        })
-    }
-
-    function refresh() {
-      isLoading.value = true
-      listFactAcctSummary({
-        organizationId: organization.value,
-        budgetId: budget.value,
-        periodId: untilPeriod.value,
-        accoutingFromId: accountingAccount1.value,
-        accoutingToId: accountingAccount2.value,
-        reportCubeId: cubeReport.value
-      })
-        .then(response => {
-          isLoading.value = false
-          const { records } = response
-          listSummary.value = records.map(list => {
-            const priod_variance = formatQuantity({ value: list.period_variance_amount })
-            const period_budget = formatQuantity({ value: list.period_budget_amount })
-            calculate(priod_variance, period_budget)
-            return {
-              ...list,
-              period_actual_amount: formatQuantity({ value: list.period_actual_amount }),
-              period_budget_amount: period_budget,
-              period_variance_amount: priod_variance,
-              ytd_actual_amount: formatQuantity({ value: list.ytd_actual_amount }),
-              ytd_budget_amount: formatQuantity({ value: list.ytd_budget_amount }),
-              variance_amount: formatQuantity({ value: list.variance_amount }),
-              variance_percentage: '% ' + porcent.value
-            }
-          })
-        })
-        .catch(error => {
-          console.warn(`Error Search: ${error.message}. Code: ${error.code}.`)
-          let message = error.message
-          if (!isEmptyValue(error.response) && !isEmptyValue(error.response.data.message)) {
-            message = error.response.data.message
-          }
-
-          isLoading.value = false
-
-          showMessage({
-            type: 'error',
-            message,
-            showClose: true
-          })
-        })
-    }
-
-    function exportRecords() {
-      const data = selectedExport.value.map(list => {
-        const {
-          value,
-          name,
-          user_list_name,
-          period_actual_amount,
-          period_budget_amount,
-          period_variance_amount,
-          ytd_actual_amount,
-          ytd_budget_amount,
-          variance_amount
-        } = list
-        return {
-          value,
-          name,
-          user_list_name,
-          period_actual_amount,
-          period_budget_amount,
-          period_variance_amount,
-          ytd_actual_amount,
-          ytd_budget_amount,
-          variance_amount
-        }
-      })
-
-      exportFileFromJson({
-        header: headerList.value.map(list => list.label),
-        data,
-        fileName: props.metadata.name,
-        exportType: 'xls'
-      })
+    function getColumnStyle() {
+      return 'padding: 0; height: 30px; border: none; font-size: 10px '
     }
 
     function changeSelections(selection) {
-      selectedExport.value = selection
+      store.commit('setSelectedExport', selection)
     }
 
     function getSummaries(param) {
@@ -625,34 +213,37 @@ export default defineComponent({
 
       return sums
     }
-    const activateAuto = () => {
-      if (!isEmptyValue(organization.value) && !isEmptyValue(untilPeriod.value) && !isEmptyValue(cubeReport.value)) {
-        refresh()
+    const COLUMNS_PERIOD = ['period_actual_amount', 'period_budget_amount', 'period_variance_amount']
+    const COLUMNS_ACCUMULATED = ['ytd_actual_amount', 'ytd_budget_amount', 'variance_amount', 'variance_percentage']
+
+    watch(
+      () => [showPeriod.value, showAccumulated.value],
+      (newValue) => {
+        let columnsToExclude = []
+        if (newValue[0] && newValue[1]) {
+          columnsToExclude = [...COLUMNS_PERIOD, ...COLUMNS_ACCUMULATED]
+        } else if (newValue[0]) {
+          columnsToExclude = COLUMNS_PERIOD
+        } else if (newValue[1]) {
+          columnsToExclude = COLUMNS_ACCUMULATED
+        }
+        if (columnsToExclude.length === 0 && newValue[0] && newValue[1]) {
+          columnsToExclude = [...COLUMNS_PERIOD, ...COLUMNS_ACCUMULATED]
+        }
+        viewList.value = headerList.value.filter((header) => !columnsToExclude.includes(header.columnName))
       }
-      return
-    }
+    )
     function changeView(data) {
       isVisible.value = data
     }
-    visibleColumn()
+    const listSummary = computed(() => {
+      return store.getters.getListSummary
+    })
     return {
       //  Values
       isVisible,
       showPeriod,
       showAccumulated,
-      porcent,
-      organization,
-      budget,
-      untilPeriod,
-      accountingAccount1,
-      accountingAccount2,
-      cubeReport,
-      // Options List
-      organizationOptions,
-      budgetOptions,
-      untilPeriodOptions,
-      accountingAccountOptions,
-      cubeReportOptions,
       // Data Table
       listSummary,
       headerList,
@@ -660,26 +251,11 @@ export default defineComponent({
       selectedExport,
       isLoading,
       // Computed
-      calculate,
-      validateBeforeSearch,
-      activateAuto,
       // Methods
       changeSelections,
-      showListOrganization,
-      showListBudgets,
-      showListPeriods,
-      showListAccoutingKeys,
-      showListReportCubes,
-      exportFileFromJson,
-      formatQuantity,
-      exportRecords,
       getSummaries,
-      refresh,
-      visiblePeriod,
-      visibleAccumulated,
-      visibleColumn,
-      visibleAll,
-      changeView
+      changeView,
+      getColumnStyle
     }
   }
 })
@@ -707,14 +283,13 @@ export default defineComponent({
   }
 }
 
-.greenClass {
-  color: green;
-}
 .redClass {
   color: red;
 }
 .el-table {
-  height: calc(100vh - 170px);
   overflow: scroll
+}
+.el-table__body-wrapper {
+  height: calc(100vh - 205px) !important
 }
 </style>
