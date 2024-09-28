@@ -54,6 +54,25 @@ const staticRoutes = [
       }
     ]
   },
+  {
+    path: '/resource-time-line',
+    component: Layout,
+    hidden: false,
+    children: [
+      {
+        path: '/ResourceTimeLine',
+        component: () => import('@/views/ADempiere/CalendarView/resourceTimelineView.vue'),
+        name: 'ResourceTimeLine',
+        meta: {
+          title: language.t('component.calendar.calendarTimeLine'),
+          fileName: 'AcctViewer',
+          icon: 'el-icon-date',
+          noCache: true,
+          isIndex: true
+        }
+      }
+    ]
+  },
 
   {
     path: '/Views',

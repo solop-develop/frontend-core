@@ -73,6 +73,8 @@ VueMarkdownEditor.lang.use('es-ES', esES)
 
 // highlightjs
 import hljs from 'highlight.js'
+// import { SchedulePlugin } from '@syncfusion/ej2-vue-schedule'
+import { SchedulePlugin } from '@syncfusion/ej2-vue-schedule'
 
 /**
  * If you don't want to use mock-server
@@ -107,6 +109,8 @@ Vue.use(Editor)
 Vue.use(VueShortkey)
 Vue.use(VueSplit)
 Vue.use(VueResize)
+// Vue.use(SchedulePlugin)
+Vue.use(SchedulePlugin)
 Vue.use(WorkflowChart)
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
