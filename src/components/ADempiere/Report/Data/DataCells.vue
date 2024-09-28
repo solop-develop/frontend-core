@@ -1,19 +1,19 @@
 <!--
-ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
-Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/ElsioSanchez
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/ElsioSanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 <template>
   <span
@@ -76,20 +76,26 @@ import {
   computed,
   ref
 } from '@vue/composition-api'
-// Components
+
+// Components and Mixins
 import InfoReport from '@/views/ADempiere/ReportViewerEngine/infoReport.vue'
-// Utility functions
+
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { isLookup } from '@/utils/ADempiere/references'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
-// Api
+import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
+
+// API Request Methods
 import { listZoomWindowsRequest } from '@//api/ADempiere/fields/zoom.js'
 
 export default defineComponent({
   name: 'DataCells',
+
   components: {
     InfoReport
   },
+
   props: {
     attributes: {
       type: Object,
@@ -119,11 +125,16 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
+    containerUuid: {
+      type: String,
+      required: true
+    },
     tableName: {
       type: String,
       default: ''
     }
   },
+
   setup(props) {
     // Ref
     const isLoaded = ref(false)
@@ -156,6 +167,7 @@ export default defineComponent({
       }
       return false
     }
+
     function styleFont(font) {
       let fontStyle = ''
       if (!isEmptyValue(font.color)) {
@@ -172,6 +184,7 @@ export default defineComponent({
       }
       return fontStyle
     }
+
     /**
      * Cell Style
      * (Function to obtain the cell style)
@@ -231,13 +244,32 @@ export default defineComponent({
         table_name: props.tableName
       })
         .then(response => {
-          props.rowData.zoom_windows = response.zoom_windows.map(listZoom => {
+          const { zoom_windows } = response
+          let listZoom = zoom_windows
+          if (listZoom.length > 1) {
+            listZoom = zoom_windows.filter(zoom => {
+              const {
+                uuid,
+                is_sales_transaction
+              } = zoom
+              const salesTransaction = isSalesTransaction({
+                parentUuid: uuid,
+                containerUuid: props.containerUuid
+              })
+              if (is_sales_transaction === salesTransaction) {
+                return zoom
+              }
+            })
+          }
+          const listZoomWindows = listZoom.map(listZoom => {
             return {
               ...listZoom,
               columnName: props.attributes.column_name,
               currentValue: props.rowData.cells[props.attributes.code]
             }
           })
+
+          props.rowData.zoom_windows = listZoomWindows
           isLoaded.value = false
         })
         .catch(() => {

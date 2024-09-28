@@ -1,19 +1,19 @@
 <!--
-ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
-Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
-Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/ElsioSanchez
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/ElsioSanchez
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 <template>
   <div @click="!showPopover">
@@ -57,8 +57,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
               :show-details="showPopover"
               :attributes="fieldAttributes"
               :current-selected-row="selectedRow"
-              :current-selected-column="selectedColumn"
               :table-name="reportOutput.table_name"
+              :current-selected-column="selectedColumn"
+              :container-uuid="reportOutput.containerUuid"
             />
           </template>
         </el-table-column>
@@ -73,6 +74,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
     </el-card>
   </div>
 </template>
+
 <script>
 import {
   defineComponent,
@@ -82,24 +84,30 @@ import {
   watch,
   ref
 } from '@vue/composition-api'
+
 import store from '@/store'
-// Components
+
+// Components and Mixins
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 import InfoReport from '@/views/ADempiere/ReportViewerEngine/infoReport.vue'
 import DataCells from '@/components/ADempiere/Report/Data/DataCells.vue'
-// Utility functions
+
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { isNumberField, isDateField, isBooleanField, isDecimalField } from '@/utils/ADempiere/references'
 import {
   formatQuantity
 } from '@/utils/ADempiere/formatValue/numberFormat'
+
 export default defineComponent({
   name: 'DataReport',
+
   components: {
     CustomPagination,
     InfoReport,
     DataCells
   },
+
   props: {
     containerManager: {
       type: Object,
@@ -118,6 +126,7 @@ export default defineComponent({
       required: false
     }
   },
+
   setup(props) {
     // Constants
     const reportDefinition = store.getters.getStoredReport(props.reportOutput.containerUuid)
@@ -135,20 +144,24 @@ export default defineComponent({
       if (isEmptyValue(rowCells)) return []
       return rowCells
     })
+
     const tableHeight = computed(() => {
       return store.getters.getIsActiateCollapse
     })
+
     const height = computed(() => {
       if (store.getters.device !== 'mobile') {
         return 'calc(100vh - 235px)'
       }
       return 'calc(100vh - 385px)'
     })
+
     const columns = computed(() => {
       const { columns } = props.reportOutput
       if (isEmptyValue(columns)) return []
       return columns
     })
+
     const dataList = computed(() => {
       return data.value.map((row, rowIndex) => {
         let isTopLevel = false
@@ -166,26 +179,33 @@ export default defineComponent({
         return newRow
       })
     })
+
     const expanded = computed(() => {
       return store.getters.getIsSummary
     })
+
     const shortsKey = computed(() => {
       return {
         close: ['esc']
       }
     })
+
     const recordData = computed(() => {
       return store.getters.getReportOutput(props.instanceUuid)
     })
+
     const currentPageSize = computed(() => {
       return parseInt(props.reportOutput.pageSize, 10)
     })
+
     const isLoadingReport = computed(() => {
       return store.getters.getReportIsLoading
     })
+
     const currentPageNumber = computed(() => {
       return parseInt(props.reportOutput.pageToken, 10)
     })
+
     function getColumnStyle() {
       return 'padding: 0; height: 30px; border: none; '
     }
@@ -198,12 +218,14 @@ export default defineComponent({
           showPopover.value = false
       }
     }
+
     function handleRowClick(row) {
       if (row.children && row.children.length > 0) {
         tableReportEngine.value.toggleRowExpansion(row)
         showPopover.value = false
       }
     }
+
     function activatePopover(row, column) {
       event.preventDefault()
       Object.values(row.cells).forEach(dataCell => {
@@ -215,6 +237,7 @@ export default defineComponent({
         }
       })
     }
+
     function hasChildren(children, parentLevel, parentColumnKey, parentDisplayValue) {
       if (children.length < 1) return children
       return children.map((child, indexChild) => {
@@ -232,6 +255,7 @@ export default defineComponent({
         return newRow
       })
     }
+
     function handleChangeSizePage(pageSize) {
       props.containerManager.setPageSize({
         instanceUuid: props.reportOutput.instance_id,
@@ -244,6 +268,7 @@ export default defineComponent({
         reportViewId: props.reportOutput.report_view_id
       })
     }
+
     function handleChangePage(pageNumber) {
       props.containerManager.setPageNumber({
         instanceUuid: props.reportOutput.instance_id,
@@ -256,6 +281,7 @@ export default defineComponent({
         reportViewId: props.reportOutput.report_view_id
       })
     }
+
     function tableRowClassName({ row, rowIndex }) {
       const { children } = row
       if (!isEmptyValue(children)) {
@@ -263,6 +289,7 @@ export default defineComponent({
       }
       return ''
     }
+
     function getRowClassName({ row, rowIndex }) {
       const parent = this.findParent(row)
       if (parent && parent.children[parent.children.length - 1] === row) {
@@ -270,6 +297,7 @@ export default defineComponent({
       }
       return ''
     }
+
     /**
      * Searches for the parent of a row in the data list.
      * @param {Object} row The row for which the parent is searched.
@@ -289,6 +317,7 @@ export default defineComponent({
       }
       return null
     }
+
     /**
      * Expands or collapses all table rows
      */
@@ -323,6 +352,7 @@ export default defineComponent({
         expanded.value ? collapseRecursively(row) : expandRecursively(row)
       })
     }
+
     function getSummaries(param) {
       const sums = []
       if (!isEmptyValue(param)) {
@@ -356,12 +386,14 @@ export default defineComponent({
       }
       return sums
     }
+
     function getAlignment(displayType) {
       if (isNumberField(displayType)) {
         return 'right'
       }
       return 'left'
     }
+
     function widthColumn(data) {
       if (!isEmptyValue(columns.value)) {
         const widths = {}
@@ -402,6 +434,7 @@ export default defineComponent({
         return widths
       }
     }
+
     /**
      * Watch - watch works directly on a ref
      * @param newValue - New Assessed Property value
@@ -412,11 +445,13 @@ export default defineComponent({
         expandedRowAll()
       })
     })
+
     watch(expanded, () => {
       nextTick(() => {
         expandedRowAll()
       })
     })
+
     /**
      * On Mounted
      */
@@ -425,6 +460,7 @@ export default defineComponent({
         expandedRowAll()
       })
     })
+
     return {
       // Refs
       dataModal,
