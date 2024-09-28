@@ -19,6 +19,7 @@
 const calendar = {
   allEvents: 'All Events',
   calendar: 'Calendar',
+  calendarTimeLine: 'Calendar TimeLine',
   deleteEventConfirm: 'Are you sure you want to delete the event?',
   titleNewEvent: 'Please enter a new title for your event'
 }
