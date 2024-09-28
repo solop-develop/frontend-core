@@ -57,8 +57,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
               :show-details="showPopover"
               :attributes="fieldAttributes"
               :current-selected-row="selectedRow"
-              :current-selected-column="selectedColumn"
               :table-name="reportOutput.table_name"
+              :current-selected-column="selectedColumn"
+              :container-uuid="reportOutput.containerUuid"
             />
           </template>
         </el-table-column>

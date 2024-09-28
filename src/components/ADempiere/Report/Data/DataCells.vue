@@ -120,6 +120,10 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
+    containerUuid: {
+      type: String,
+      required: true
+    },
     tableName: {
       type: String,
       default: ''
@@ -238,12 +242,11 @@ export default defineComponent({
             listZoom = zoom_windows.filter(zoom => {
               const {
                 uuid,
-                tab_uuid,
                 is_sales_transaction
               } = zoom
               const salesTransaction = Boolean(isSalesTransaction({
                 parentUuid: uuid,
-                containerUuid: tab_uuid
+                containerUuid: props.containerUuid
               }))
               if (is_sales_transaction === salesTransaction) return zoom
             })
