@@ -38,7 +38,7 @@
       element-loading-background="rgba(255, 255, 255, 0.8)"
       :element-loading-text="$t('notifications.loading')"
       :row-class-name="tableRowClassName"
-      style="overflow: auto;"
+      style="overflow: auto"
       @row-dblclick="handleRowDblClick"
       @select-all="handleSelectionAll"
       @cell-click="handleCellClick"
@@ -617,9 +617,13 @@ export default defineComponent({
     }
 
     function widthColumn(fieldAttributes) {
-      const { componentPath } = fieldAttributes
-      if (['FieldSearch', 'FieldAccountingCombination'].includes(componentPath)) return '500'
-      return '250'
+      const { name } = fieldAttributes
+      const size = 12
+      let lenght = name.length
+      if (lenght <= 9) {
+        lenght = 10
+      }
+      return lenght * size
     }
 
     /**
@@ -747,9 +751,6 @@ export default defineComponent({
     text-overflow: ellipsis;
     white-space: normal;
     word-break: break-all;
-    line-height: 15px;
-    padding-left: 10px;
-    padding-right: 10px;
     padding-top: 5px;
     padding-bottom: 5px;
   }
@@ -759,6 +760,9 @@ export default defineComponent({
   }
   .el-table thead tr {
     height: 40px!important
+  }
+  .el-table th.el-table__cell > .cell{
+    padding: 5px !important;
   }
 }
 </style>
