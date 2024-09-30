@@ -140,14 +140,14 @@
                               {{ logItem.log }}
                             </el-descriptions-item>
                           </el-descriptions>
-                          <!-- <li @click="copyLogs(activity.summary)">
+                          <li @click="copyLogs(activity.summary)">
                             {{ activity.summary }}
                           </li>
                           <el-scrollbar wrap-class="popover-scroll">
                             <li v-for="(logItem, key) in activity.logs" :key="key" @click="copyLogs(logItem.log)">
                               {{ logItem.log }}
                             </li>
-                          </el-scrollbar> -->
+                          </el-scrollbar>
                         </ul>
                       </el-form-item>
 
@@ -161,7 +161,7 @@
                     </el-form>
                   </div>
                 </el-collapse-transition>
-                <p style="padding-left: 1%;color: cadetblue;margin: 0px;"> # {{ translateDateByLong(activity.lastRun) }} </p>
+                <p style="padding-left: 1%;color: cadetblue;margin: 0px;"> # {{ translateDateByLong(activity.last_run) }} </p>
               </el-card>
             </el-timeline-item>
           </el-timeline>
@@ -289,7 +289,7 @@
                     </el-form>
                   </div>
                 </el-collapse-transition>
-                <p style="padding-left: 1%;color: cadetblue;margin: 0px;"> # {{ translateDateByLong(activity.lastRun) }} </p>
+                <p style="padding-left: 1%;color: cadetblue;margin: 0px;"> # {{ translateDateByLong(activity.last_run) }} </p>
               </el-card>
             </el-timeline-item>
           </el-timeline>
@@ -412,7 +412,7 @@
                     </el-form>
                   </div>
                 </el-collapse-transition>
-                <p style="padding-left: 1%;color: cadetblue;margin: 0px;"> # {{ translateDateByLong(activity.lastRun) }} </p>
+                <p style="padding-left: 1%;color: cadetblue;margin: 0px;"> # {{ translateDateByLong(activity.last_run) }} </p>
               </el-card>
             </el-timeline-item>
           </el-timeline>

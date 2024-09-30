@@ -102,32 +102,32 @@ export default defineComponent({
     })
     const getProcessLog = computed(() => {
       return getRunProcessAll.value.filter(element => {
-        const { isError, isProcessing } = element
-        if (!isEmptyValue(isError) && !isEmptyValue(isProcessing)) {
+        const { is_error, is_processing } = element
+        if (!isEmptyValue(is_error) && !isEmptyValue(is_processing)) {
           return element
         }
       })
     })
     const getProcessLogSuccess = computed(() => {
       return getProcessLog.value.filter(element => {
-        const { isError, isReport, isProcessing } = element
-        if ((!isError && !isProcessing) || (isError && !isProcessing && isReport && !isEmptyValue(element.instanceUuid))) {
+        const { is_error, isReport, is_processing } = element
+        if ((!is_error && !is_processing) || (is_error && !is_processing && isReport && !isEmptyValue(element.instanceUuid))) {
           return element
         }
       })
     })
     const getProcessLogError = computed(() => {
       return getProcessLog.value.filter(element => {
-        const { isError, isReport, isProcessing } = element
-        if ((isError && !isProcessing && !isReport) || (isError && !isProcessing && isReport && isEmptyValue(element.instanceUuid))) {
+        const { is_error, isReport, is_processing } = element
+        if ((is_error && !is_processing && !isReport) || (is_error && !is_processing && isReport && isEmptyValue(element.instanceUuid))) {
           return element
         }
       })
     })
     const getProcessLogProcessing = computed(() => {
       return getProcessLog.value.filter(element => {
-        const { isProcessing } = element
-        if (isProcessing) {
+        const { is_processing } = element
+        if (is_processing) {
           return element
         }
       })
@@ -141,6 +141,11 @@ export default defineComponent({
       })
         .then(response => {
           pageToken.value = response.nextPageToken
+          isLoadProcess.value = false
+        })
+        .catch(error => {
+          console.error('Error getting process from server:', error)
+          isLoadProcess.value = false
         })
         .finally(() => {
           isLoadProcess.value = false
@@ -164,9 +169,31 @@ export default defineComponent({
           }
         }, () => {})
       } else if (activity.command === 'zoomIn') {
-        const parameters = isEmptyValue(activity.parametersList) ? activity.parameters : activity.parametersList
+        const parameters = isEmptyValue(activity.parametersList) ? activity.process_intance_parameters : activity.parameters
+        if (activity.output) {
+          zoomIn({
+            uuid: activity.uuid,
+            attributeValue: `report_${activity.id}`,
+            attributeName: 'containerKey',
+            params: {
+              ...root.$route.query,
+              ...parameters
+            },
+            query: {
+              ...root.$route.query,
+              ...parameters
+            }
+          })
+          return
+        }
         zoomIn({
           uuid: activity.uuid,
+          attributeValue: `process_${activity.id}`,
+          attributeName: 'containerKey',
+          params: {
+            ...root.$route.query,
+            ...parameters
+          },
           query: {
             ...root.$route.query,
             ...parameters
@@ -196,21 +223,21 @@ export default defineComponent({
       })
     }
 
-    const checkStatus = ({ isError, isProcessing, output, isReport }) => {
+    const checkStatus = ({ is_error, is_processing, output, isReport }) => {
       const status = {
         text: lang.t('notifications.completed'),
         type: 'success',
         color: '#67C23A'
       }
       // is executing
-      if (isProcessing) {
+      if (is_processing) {
         status.text = lang.t('notifications.processing')
         status.type = 'info'
         status.color = '#909399'
         return status
       }
       // is with error
-      if (isError) {
+      if (is_error) {
         status.text = lang.t('notifications.error')
         status.type = 'danger'
         status.color = '#F56C6C'
