@@ -49,7 +49,7 @@
                       v-model="reportAsPrintFormatValue"
                       style="display: contents;"
                       :disabled="isLoadingReport"
-                      @change="isReportEnginer ? null : runReport()"
+                      @change="runReport()"
                     >
                       <el-option
                         v-for="(item, key) in reportAsPrintFormat.childs"
@@ -69,7 +69,7 @@
                       v-model="reportAsViewValue"
                       style="display: contents;"
                       :disabled="isLoadingReport"
-                      @change="isReportEnginer ? null : runReport()"
+                      @change="runReport()"
                     >
                       <el-option
                         v-for="(item, key) in reportAsView.childs"
