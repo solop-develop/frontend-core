@@ -239,9 +239,13 @@ export default defineComponent({
       })
     })
     function widthColumn(fieldAttributes) {
-      const { componentPath } = fieldAttributes
-      if (['FieldSearch', 'FieldAccountingCombination'].includes(componentPath)) return '500'
-      return '250'
+      const { name } = fieldAttributes
+      const size = 12
+      let caracter = name.length
+      if (caracter <= 9) {
+        caracter = 10
+      }
+      return caracter * size
     }
     const selectionsLength = computed(() => {
       return props.containerManager.getSelection({
@@ -564,6 +568,9 @@ export default defineComponent({
   }
   .el-table thead tr {
     height: 40px!important
+  }
+  .el-table td.el-table__cell{
+    padding: 0 !important
   }
 }
 </style>
