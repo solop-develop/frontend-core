@@ -64,12 +64,12 @@
           </template>
         </el-table-column>
       </el-table>
-      <div style="display: flex; justify-content: space-between; padding-bottom: -10px;">
+      <div style="padding-bottom: -10px;">
         <el-form
           label-position="top"
         >
           <el-row :gutter="24">
-            <el-col :span="6">
+            <el-col :span="5">
               <printFormat
                 :container-uuid="reportOutput.containerUuid"
                 :report-output="reportOutput"
@@ -77,7 +77,7 @@
                 :is-loading-report="isLoadingReport"
               />
             </el-col>
-            <el-col :span="6">
+            <el-col :span="5">
               <reportView
                 :container-uuid="reportOutput.containerUuid"
                 :report-output="reportOutput"
@@ -85,9 +85,9 @@
                 :is-loading-report="isLoadingReport"
               />
             </el-col>
-            <el-col :span="4">
+            <el-col :span="3">
               <el-form-item
-                style="margin-top: 45px; margin-left:30%"
+                style="margin-top: 45px; margin-left: 15%"
               >
                 <refresh-button
                   :container-uuid="reportOutput.containerUuid"
@@ -96,9 +96,9 @@
                 />
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="3">
               <el-form-item
-                style="margin-top: 45px;"
+                style="margin-top: 45px; margin-left: -60%"
               >
                 <report-summary
                   :container-uuid="reportOutput.containerUuid"
@@ -107,9 +107,9 @@
                 />
               </el-form-item>
             </el-col>
-            <el-col :span="2">
+            <el-col :span="3">
               <el-form-item
-                style="margin-top: 45px;"
+                style="margin-top: 45px; margin-left: -50%"
               >
                 <downloadButtom
                   :container-uuid="reportOutput.containerUuid"
@@ -118,15 +118,17 @@
                 />
               </el-form-item>
             </el-col>
+            <el-col :span="4" style="margin-top: 45px; margin-left: 3%">
+              <custom-pagination
+                :total-records="recordData.record_count"
+                :page-size="currentPageSize"
+                :page-number="currentPageNumber"
+                :handle-change-page-size="handleChangeSizePage"
+                :handle-change-page-number="handleChangePage"
+              />
+            </el-col>
           </el-row>
         </el-form>
-        <custom-pagination
-          :total-records="recordData.record_count"
-          :page-size="currentPageSize"
-          :page-number="currentPageNumber"
-          :handle-change-page-size="handleChangeSizePage"
-          :handle-change-page-number="handleChangePage"
-        />
       </div>
     </el-card>
   </div>
