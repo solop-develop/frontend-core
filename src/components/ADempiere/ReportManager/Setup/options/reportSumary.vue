@@ -1,6 +1,6 @@
 <template>
   <div style="margin-left: 50px; margin-top: -5px; display: flex; align-items: center;">
-    <input v-model="showChildren" type="checkbox" style="height: 15px; width: 15px; margin-left: 15px; margin-right: 10px;">
+    <input v-model="showChildren" :disabled="isLoadingReport" type="checkbox" style="height: 15px; width: 15px; margin-left: 15px; margin-right: 10px;">
     <label class="select-label">{{ $t('report.reportEnginer.summary') }}</label>
   </div>
 </template>

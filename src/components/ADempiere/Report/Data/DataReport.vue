@@ -64,13 +64,70 @@
           </template>
         </el-table-column>
       </el-table>
-      <custom-pagination
-        :total-records="recordData.record_count"
-        :page-size="currentPageSize"
-        :page-number="currentPageNumber"
-        :handle-change-page-size="handleChangeSizePage"
-        :handle-change-page-number="handleChangePage"
-      />
+      <div style="display: flex; justify-content: space-between; padding-bottom: -10px;">
+        <el-form
+          label-position="top"
+        >
+          <el-row :gutter="24">
+            <el-col :span="6">
+              <printFormat
+                :container-uuid="reportOutput.containerUuid"
+                :report-output="reportOutput"
+                :container-manager="containerManagerReportViwer"
+                :is-loading-report="isLoadingReport"
+              />
+            </el-col>
+            <el-col :span="6">
+              <reportView
+                :container-uuid="reportOutput.containerUuid"
+                :report-output="reportOutput"
+                :container-manager="containerManagerReportViwer"
+                :is-loading-report="isLoadingReport"
+              />
+            </el-col>
+            <el-col :span="4">
+              <el-form-item
+                style="margin-top: 45px; margin-left:30%"
+              >
+                <refresh-button
+                  :container-uuid="reportOutput.containerUuid"
+                  :report-output="reportOutput"
+                  :is-loading-report="isLoadingReport"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item
+                style="margin-top: 45px;"
+              >
+                <report-summary
+                  :container-uuid="reportOutput.containerUuid"
+                  :report-output="reportOutput"
+                  :is-loading-report="isLoadingReport"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="2">
+              <el-form-item
+                style="margin-top: 45px;"
+              >
+                <downloadButtom
+                  :container-uuid="reportOutput.containerUuid"
+                  :report-output="reportOutput"
+                  :is-loading-report="isLoadingReport"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <custom-pagination
+          :total-records="recordData.record_count"
+          :page-size="currentPageSize"
+          :page-number="currentPageNumber"
+          :handle-change-page-size="handleChangeSizePage"
+          :handle-change-page-number="handleChangePage"
+        />
+      </div>
     </el-card>
   </div>
 </template>
@@ -91,6 +148,11 @@ import store from '@/store'
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 import InfoReport from '@/views/ADempiere/ReportViewerEngine/infoReport.vue'
 import DataCells from '@/components/ADempiere/Report/Data/DataCells.vue'
+import printFormat from '@/components/ADempiere/ReportManager/Setup/options/printFormat.vue'
+import reportView from '@/components/ADempiere/ReportManager/Setup/options/reportViews.vue'
+import refreshButton from '@/components/ADempiere/ReportManager/Setup/options/refreshButton'
+import reportSummary from '@/components/ADempiere/ReportManager/Setup/options/reportSumary.vue'
+import downloadButtom from '@/components/ADempiere/ReportManager/Setup/options/downloadButtom.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
@@ -105,7 +167,12 @@ export default defineComponent({
   components: {
     CustomPagination,
     InfoReport,
-    DataCells
+    DataCells,
+    printFormat,
+    reportView,
+    refreshButton,
+    reportSummary,
+    downloadButtom
   },
 
   props: {
@@ -139,6 +206,23 @@ export default defineComponent({
     const tableReportEngine = ref(undefined)
 
     // Components
+    const storedPanelReport = computed(() => {
+      return store.getters.getModalDialogManager({
+        containerUuid: props.containerUuid
+      })
+    })
+    const containerManagerReportViwer = computed(() => {
+      const modalDialogStored = storedPanelReport.value
+      if (!isEmptyValue(modalDialogStored) && !isEmptyValue(modalDialogStored.containerManager)) {
+        return {
+          ...props.containerManager,
+          ...modalDialogStored.containerManager
+        }
+      }
+      return {
+        ...props.containerManager
+      }
+    })
     const data = computed(() => {
       const { rowCells } = props.reportOutput
       if (isEmptyValue(rowCells)) return []
@@ -151,7 +235,7 @@ export default defineComponent({
 
     const height = computed(() => {
       if (store.getters.device !== 'mobile') {
-        return 'calc(100vh - 200px)'
+        return 'calc(100vh - 280px)'
       }
       return 'calc(100vh - 385px)'
     })
@@ -480,8 +564,10 @@ export default defineComponent({
       currentPageSize,
       currentPageNumber,
       tableHeight,
-      getColumnStyle,
+      storedPanelReport,
+      containerManagerReportViwer,
       // Methods
+      getColumnStyle,
       keyAction,
       widthColumn,
       findParent,
@@ -502,7 +588,10 @@ export default defineComponent({
 
 <style>
 .containerReportEnginer .el-card__body {
-  padding: 20px !important
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  padding-top: 20px !important;
+  padding-bottom: 5px !important;
 }
 :root {
   --level-offset: 20px;

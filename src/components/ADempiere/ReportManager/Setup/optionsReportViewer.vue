@@ -41,44 +41,18 @@
             >
               <el-row class="report-view-setup-preferences-fields" :gutter="20">
                 <el-col :span="5">
-                  <el-form-item
-                    :label="$t('report.printFormats')"
-                    style="display: grid;"
-                  >
-                    <el-select
-                      v-model="reportAsPrintFormatValue"
-                      style="display: contents;"
-                      :disabled="isLoadingReport"
-                      @change="runReport()"
-                    >
-                      <el-option
-                        v-for="(item, key) in reportAsPrintFormat.childs"
-                        :key="key"
-                        :label="item.name"
-                        :value="item.id"
-                      />
-                    </el-select>
-                  </el-form-item>
+                  <printFormat
+                    :container-uuid="containerUuid"
+                    :report-output="reportOutput"
+                    :container-manager="containerManagerReportViwer"
+                  />
                 </el-col>
                 <el-col :span="5">
-                  <el-form-item
-                    :label="$t('report.reportViews')"
-                    style="display: grid;"
-                  >
-                    <el-select
-                      v-model="reportAsViewValue"
-                      style="display: contents;"
-                      :disabled="isLoadingReport"
-                      @change="runReport()"
-                    >
-                      <el-option
-                        v-for="(item, key) in reportAsView.childs"
-                        :key="key"
-                        :label="item.name"
-                        :value="item.id"
-                      />
-                    </el-select>
-                  </el-form-item>
+                  <reportView
+                    :container-uuid="containerUuid"
+                    :report-output="reportOutput"
+                    :container-manager="containerManagerReportViwer"
+                  />
                 </el-col>
                 <el-col :span="4">
                   <el-form-item
@@ -217,7 +191,8 @@ import { showNotification } from '@/utils/ADempiere/notification'
 import refreshButton from './options/refreshButton'
 import reportSummary from './options/reportSumary.vue'
 import downloadButtom from './options/downloadButtom.vue'
-
+import printFormat from './options/printFormat.vue'
+import reportView from './options/reportViews.vue'
 export default defineComponent({
   name: 'optionsReportViewer',
 
@@ -225,7 +200,9 @@ export default defineComponent({
     CollapseCriteria,
     refreshButton,
     reportSummary,
-    downloadButtom
+    downloadButtom,
+    printFormat,
+    reportView
   },
 
   props: {
