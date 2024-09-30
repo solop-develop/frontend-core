@@ -20,7 +20,7 @@
 <template>
   <span>
     <el-dropdown
-      v-if="(!isEmptyValue(process) && is_document && !isEmptyValue(printFormats)) || table_name === 'PA_Report'"
+      v-if="(!isEmptyValue(process) && is_document && !isEmptyValue(printFormats)) || currentTableName === 'PA_Report'"
       split-button
       size="small"
       trigger="click"
@@ -112,16 +112,21 @@ export default defineComponent({
      */
     const containerUuid = props.tabAttributes.uuid
     const { process } = props.tabAttributes
-    const { is_document, table_name } = props.tabAttributes.table
+    const { is_document } = props.tabAttributes.table
 
     /**
      * Computed
      */
 
+    const currentTableName = computed(() => {
+      if (isEmptyValue(props.tabAttributes.table) || isEmptyValue(props.tabAttributes.table.table_name)) return props.tabAttributes.table_name
+      return props.tabAttributes.table.table_name
+    })
+
     const recordId = computed(() => {
       return store.getters.getIdOfContainer({
         containerUuid,
-        tableName: table_name
+        tableName: currentTableName.value
       })
     })
 
@@ -157,7 +162,7 @@ export default defineComponent({
         containerUuid: process.uuid,
         recordId: recordId.value,
         reportId: process.internal_id,
-        tableName: table_name
+        tableName: currentTableName.value
       })
         .finally(() => {
           isLoading.value = false
@@ -192,7 +197,7 @@ export default defineComponent({
       const { id } = process
       store.dispatch('getReportDefinitionFromServer', {
         id,
-        tableName: table_name
+        tableName: currentTableName.value
       })
     }
 
@@ -207,6 +212,7 @@ export default defineComponent({
       // Computed
       recordId,
       printFormats,
+      currentTableName,
       getReportDefinition,
       // Methods
       printProcess,
