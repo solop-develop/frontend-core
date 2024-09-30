@@ -12,7 +12,7 @@ export default defineComponent({
   props: {
     isLoadingReport: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
   setup() {

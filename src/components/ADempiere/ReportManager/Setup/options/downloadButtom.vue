@@ -2,7 +2,7 @@
   <div style="margin-left: -10px; display: flex; align-items: center;">
     <el-button
       plain
-      size="mini"
+      size="small"
       type="primary"
       class="custom-button"
       :disabled="isLoadingReport"
@@ -32,7 +32,7 @@ export default defineComponent({
     },
     isLoadingReport: {
       type: Boolean,
-      required: true
+      required: false
     }
   },
   setup() {

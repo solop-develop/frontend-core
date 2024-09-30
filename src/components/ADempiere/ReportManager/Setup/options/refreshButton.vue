@@ -4,6 +4,7 @@
       :disabled="isLoadingReport"
       :loading="isLoadingReport"
       type="success"
+      size="small"
       class="button-base-icon"
       icon="el-icon-refresh-right"
       style="font-size:16px"
@@ -33,7 +34,7 @@ export default defineComponent({
     },
     isLoadingReport: {
       type: Boolean,
-      required: true
+      required: false
     }
   },
   setup(props, { root }) {

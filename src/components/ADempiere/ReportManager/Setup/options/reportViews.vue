@@ -18,12 +18,12 @@
 <template>
   <el-form-item
     :label="$t('report.reportViews')"
-    style="display: grid;"
   >
     <el-select
       v-model="reportAsViewValue"
       :disabled="isLoadingReport"
       style="display: contents;"
+      size="small"
       @change="runReport()"
     >
       <el-option
@@ -59,7 +59,7 @@ export default defineComponent({
     },
     isLoadingReport: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
   setup(props, { root }) {
@@ -163,3 +163,10 @@ export default defineComponent({
   }
 })
 </script>
+
+<style>
+.el-form--label-top .el-form-item__label {
+  padding: 0 !important;
+  line-height: 0 !important
+}
+</style>

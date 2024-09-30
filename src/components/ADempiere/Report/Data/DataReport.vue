@@ -69,7 +69,7 @@
           label-position="top"
         >
           <el-row :gutter="24">
-            <el-col :span="5">
+            <el-col :span="5" style="margin-top: 25px">
               <printFormat
                 :container-uuid="reportOutput.containerUuid"
                 :report-output="reportOutput"
@@ -77,7 +77,7 @@
                 :is-loading-report="isLoadingReport"
               />
             </el-col>
-            <el-col :span="5">
+            <el-col :span="5" style="margin-top: 25px">
               <reportView
                 :container-uuid="reportOutput.containerUuid"
                 :report-output="reportOutput"
