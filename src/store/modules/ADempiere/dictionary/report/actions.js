@@ -28,6 +28,7 @@ import {
 } from '@/utils/ADempiere/constants/actionsMenuList.js'
 
 // Utils and Helper Methods
+import { showNotification } from '@/utils/ADempiere/notification.js'
 import {
   containerManager
 } from '@/utils/ADempiere/dictionary/report.js'
@@ -131,6 +132,15 @@ export default {
           }
         })
         .catch(error => {
+          showNotification({
+            type: 'error',
+            title: 'error',
+            message: 'requestError'
+          })
+          store.dispatch('tagsView/delView', router.app._route)
+            .then(() => {
+              router.push('/', () => {})
+            })
           reject(error)
         })
     })
