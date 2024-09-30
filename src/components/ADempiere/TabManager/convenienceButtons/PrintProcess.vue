@@ -110,7 +110,6 @@ export default defineComponent({
     /**
      * Const
      */
-    console.log(props.tabAttributes)
     const containerUuid = props.tabAttributes.uuid
     const { process } = props.tabAttributes
     const { is_document, table_name } = props.tabAttributes.table

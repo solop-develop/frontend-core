@@ -1,19 +1,12 @@
 <template>
-  <div style="margin-left: 0px; display: flex; align-items: center;">
-    <label for="report-format-switch" class="select-label" style="margin-right: 15px;">{{ $t('report.reportEnginer.detail') }}</label>
-    <el-switch
-      id="report-format-switch"
-      v-model="showChildren"
-      style="font-weight: bold;"
-      :disabled="isLoadingReport"
-      @change="expandedAll"
-    />
-    <label for="report-format-switch" class="select-label" style="margin-left: 15px;">{{ $t('report.reportEnginer.summary') }}</label>
+  <div style="margin-left: 50px; margin-top: -5px; display: flex; align-items: center;">
+    <input v-model="showChildren" type="checkbox" style="height: 15px; width: 15px; margin-left: 15px; margin-right: 10px;">
+    <label class="select-label">{{ $t('report.reportEnginer.summary') }}</label>
   </div>
 </template>
 <script>
 import store from '@/store'
-import { defineComponent, ref, watch } from '@vue/composition-api'
+import { defineComponent, watch, computed } from '@vue/composition-api'
 
 export default defineComponent({
   props: {
@@ -23,11 +16,15 @@ export default defineComponent({
     }
   },
   setup() {
-    const showChildren = ref(store.getters.getIsSummary)
-
-    function expandedAll() {
-      store.commit('setIsSummary', showChildren.value)
-    }
+    // const showChildren = ref()
+    const showChildren = computed({
+      get() {
+        return store.getters.getIsSummary
+      },
+      set(value) {
+        store.commit('setIsSummary', value)
+      }
+    })
     watch(
       () => store.getters.getIsSummary,
       (newValue) => {
@@ -36,8 +33,7 @@ export default defineComponent({
     )
 
     return {
-      showChildren,
-      expandedAll
+      showChildren
     }
   }
 })
