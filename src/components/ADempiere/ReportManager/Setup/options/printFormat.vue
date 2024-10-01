@@ -23,7 +23,7 @@
       v-model="reportAsPrintFormatValue"
       :disabled="isLoadingReport"
       style="display: contents;"
-      size="small"
+      size="mini"
       @change="runReport()"
     >
       <el-option
@@ -35,15 +35,21 @@
     </el-select>
   </el-form-item>
 </template>
+
 <script>
+import { defineComponent, computed, ref, watch } from '@vue/composition-api'
+
 import router from '@/router'
 import store from '@/store'
 import lang from '@/lang'
+
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { showNotification } from '@/utils/ADempiere/notification'
-import { defineComponent, computed, ref, watch } from '@vue/composition-api'
+
 export default defineComponent({
   name: 'printFormat',
+
   props: {
     containerUuid: {
       type: String,
@@ -78,12 +84,15 @@ export default defineComponent({
       }
       return options
     })
+
     const defaultParams = computed(() => {
       return props.reportOutput
     })
+
     const findTagViwer = computed(() => {
       return store.getters.visitedViews.find(tag => tag.instanceUuid === root.$route.params.instanceUuid)
     })
+
     function updatePrintFormat(value) {
       store.commit('setReportGenerated', {
         containerUuid: props.containerUuid,
@@ -92,6 +101,7 @@ export default defineComponent({
         reportViewId: reportAsViewValue.value
       })
     }
+
     function runReport() {
       const reportDefinition = store.getters.getStoredReport(props.containerUuid)
       const reportOutputParams = store.getters.getReportParameters({
@@ -150,6 +160,7 @@ export default defineComponent({
     updatePrintFormat(reportTypeFormatValue.value)
 
     defaultReport(defaultParams.value)
+
     return {
       reportAsPrintFormatValue,
       reportAsPrintFormat,
@@ -163,6 +174,7 @@ export default defineComponent({
   }
 })
 </script>
+
 <style>
 .el-form--label-top .el-form-item__label {
   padding: 0 !important;
