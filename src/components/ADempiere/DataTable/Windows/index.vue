@@ -67,7 +67,7 @@
           <span v-if="containerManager.isMandatoryColumn(fieldAttributes)" style="color: red">
             *
           </span>
-          <span v-if="fieldAttributes.name.length >= 10" :title="fieldAttributes.name">
+          <span v-if="fieldAttributes.name.length > 10" :title="fieldAttributes.name">
             {{ fieldAttributes.name.substring(0, 10) }}...
           </span>
           <span v-else>
@@ -768,7 +768,10 @@ export default defineComponent({
     height: 40px!important
   }
   .el-table th.el-table__cell > .cell{
-    padding: 5px !important;
+    padding-left: 5px !important;
+    padding-right: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
   }
 }
 </style>
