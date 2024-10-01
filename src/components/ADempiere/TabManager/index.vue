@@ -17,7 +17,11 @@
 -->
 
 <template>
-  <div class="tab-manager-container">
+  <div
+    v-shortkey="{ new: ['alt', 'n'], save: ['alt', 's'], undo: ['alt', 'z'] }"
+    class="tab-manager-container"
+    @shortkey="theAction"
+  >
     <el-tabs
       ref="el-tabs-container"
       v-model="currentTab"
@@ -187,6 +191,7 @@
 import { defineComponent, computed, watch, ref } from '@vue/composition-api'
 
 import router from '@/router'
+import language from '@/lang'
 import store from '@/store'
 
 // Components and Mixins
@@ -199,6 +204,7 @@ import TabOptions from './TabOptions.vue'
 
 // Constants
 import { UUID } from '@/utils/ADempiere/constants/systemColumns.js'
+import { LOG_COLUMNS_NAME_LIST } from '@/utils/ADempiere/constants/systemColumns'
 
 // API Request Methods
 import { requestExistsReferences } from '@/api/ADempiere/recordManagement/referencesRecord.ts'
@@ -210,7 +216,12 @@ import { requestExistsIssues } from '@/api/ADempiere/logs/tabInfo/windowIssues.t
 
 // Utils and Helper Methods
 import { isEmptyValue, setRecordPath } from '@/utils/ADempiere/valueUtils.js'
-// import { showMessage } from '@/utils/ADempiere/notification'
+import { showMessage } from '@/utils/ADempiere/notification'
+import {
+  createNewRecord,
+  refreshRecord,
+  undoChange
+} from '@/utils/ADempiere/dictionary/window'
 
 export default defineComponent({
   name: 'TabManager',
@@ -365,6 +376,33 @@ export default defineComponent({
         return containerInfo.value.currentTab
       }
       return {}
+    })
+
+    const reccordId = computed(() => {
+      if (isEmptyValue(currentTabPanelInfo.value)) return 1
+      const { table } = currentTabPanelInfo.value
+      const { key_columns, table_name } = table
+      const currentReccord = store.getters.getTabCurrentRow({
+        containerUuid: currentTabPanelInfo.value.containerUuid
+      })
+      if (!isEmptyValue(currentReccord[table_name + '_ID'])) return currentReccord[table_name + '_ID']
+      if (!isEmptyValue(key_columns)) return currentReccord[key_columns[key_columns.length - 1]]
+      return 1
+    })
+
+    const emptyMandatoryFields = computed(() => {
+      if (isEmptyValue(currentTabPanelInfo.value)) return []
+      return store.getters.getTabFieldsEmptyMandatory({
+        parentUuid: currentTabPanelInfo.value.parentUuid,
+        containerUuid: currentTabPanelInfo.value.containerUuid,
+        formatReturn: false
+      }).filter(itemField => {
+        // omit send to server (to create or update) columns manage by backend
+        return itemField.is_always_updateable ||
+          !LOG_COLUMNS_NAME_LIST.includes(itemField.columnName)
+      }).map(itemField => {
+        return itemField.name
+      })
     })
 
     const isShowedTableRecords = computed(() => {
@@ -636,6 +674,21 @@ export default defineComponent({
           }
         })
       })
+    }
+
+    function theAction(event) {
+      const { currentTab } = store.getters.getContainerInfo
+      switch (event.srcKey) {
+        case 'new':
+          newRecordTab(currentTab)
+          break
+        case 'save':
+          saveRecordTab(currentTab)
+          break
+        case 'undo':
+          undoChanges(currentTab)
+          break
+      }
     }
 
     if (
@@ -915,6 +968,107 @@ export default defineComponent({
       })
     }
 
+    function newRecordTab(currentTab) {
+      createNewRecord.createNewRecord({
+        parentUuid: currentTab.parentUuid,
+        containerUuid: currentTab.containerUuid,
+        isCopyValues: false
+      })
+
+      store.dispatch('panelInfo', {
+        currentTab: currentTab,
+        currentRecord: currentRecordUuid.value
+      })
+      const info = {
+        fieldsList: currentTab.fieldsList,
+        option: language.t('actionMenu.new')
+      }
+      store.dispatch('fieldListInfo', { info })
+    }
+
+    function undoChanges(currentTab) {
+      const info = {
+        fieldsList: currentTab.fieldsList,
+        option: language.t('actionMenu.undo')
+      }
+
+      store.dispatch('fieldListInfo', { info })
+      undoChange.undoChange({
+        parentUuid: currentTab.parentUuid,
+        containerUuid: currentTab.containerUuid
+      })
+    }
+
+    function saveRecordTab(currentTab) {
+      const emptyMandatory = emptyMandatoryFields.value.join(', ')
+      if (!isEmptyValue(emptyMandatory)) {
+        showMessage({
+          message: language.t('notifications.mandatoryFieldMissing') + emptyMandatory,
+          type: 'info'
+        })
+        return
+      }
+
+      const info = {
+        fieldsList: currentTab.fieldsList,
+        option: language.t('actionMenu.save')
+      }
+
+      store.dispatch('fieldListInfo', { info })
+
+      const currentRoute = router.app._route
+
+      store.dispatch('flushPersistenceQueue', {
+        parentUuid: currentTab.parentUuid,
+        containerUuid: currentTab.containerUuid,
+        tabId: currentTab.internal_id,
+        tableName: currentTab.table_name,
+        recordUuid: currentRecordUuid.value,
+        reccordId: currentRecordId.value
+      })
+        .then(response => {
+          const {
+            name,
+            query,
+            params
+          } = currentRoute
+          const { id } = response
+          // refresh parent tab on document window
+          if (!currentTab.isParentTab) {
+            const { firstTabUuid } = currentTab
+            const firstTab = store.getters.getStoredTab(
+              currentTab.parentUuid,
+              firstTabUuid
+            )
+            if (!isEmptyValue(firstTab) && firstTab.is_document) {
+              refreshRecord.refreshRecord({
+                parentUuid: currentTab.parentUuid,
+                containerUuid: firstTabUuid
+              })
+            }
+          }
+
+          router.replace({
+            name,
+            query: {
+              ...query,
+              recordId: id,
+              filters: []
+            },
+            params: {
+              ...params,
+              filters: []
+            }
+          }, () => {})
+        })
+        .catch(error => {
+          showMessage({
+            message: error.message,
+            type: 'error'
+          })
+        })
+    }
+
     findRecordLogs(props.allTabsList[0])
 
     setTabNumber(currentTab.value)
@@ -963,7 +1117,10 @@ export default defineComponent({
       isWithChildsTab,
       containerInfo,
       currentTabPanelInfo,
+      emptyMandatoryFields,
+      reccordId,
       // methods
+      theAction,
       handleClick,
       changeShowedRecords,
       setValuesPath,
