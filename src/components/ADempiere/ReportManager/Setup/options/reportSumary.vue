@@ -22,7 +22,7 @@
       :disabled="isLoadingReport"
       type="checkbox"
       style="height: 15px; width: 15px; margin-left: 15px; margin-right: 10px;"
-    />
+    >
     <label class="select-label">{{ $t('report.reportEnginer.summary') }}</label>
   </div>
 </template>
