@@ -12,12 +12,16 @@
     </el-button>
   </div>
 </template>
+
 <script>
+import { defineComponent, computed } from '@vue/composition-api'
+
 import store from '@/store'
 import language from '@/lang'
 
-import { defineComponent, computed } from '@vue/composition-api'
+// Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+
 export default defineComponent({
   name: 'downloadButtom',
 
@@ -32,13 +36,15 @@ export default defineComponent({
     },
     isLoadingReport: {
       type: Boolean,
-      required: true
+      required: false
     }
   },
+
   setup() {
     const storedMailTemplatesList = computed(() => {
       return store.getters.getListMailTemplates
     })
+
     function viewShowDialog() {
       let menuDefault = ''
       if (!isEmptyValue(storedMailTemplatesList.value) && !isEmptyValue(storedMailTemplatesList.value.menus)) {
@@ -48,11 +54,11 @@ export default defineComponent({
       store.commit('setDefaultBody', menuDefault + `\n\n\n[${link}](www.123892138.com)`)
       store.commit('setShowDialog', true)
     }
+
     return {
       storedMailTemplatesList,
       viewShowDialog
     }
   }
 })
-
 </script>
