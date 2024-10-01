@@ -17,24 +17,19 @@
 -->
 
 <template>
-  <span
-    v-shortkey="['ctrl', 'alt', 'z']"
-    @shortkey="theAction"
+  <el-button
+    v-if="isUndoChanges"
+    plain
+    size="small"
+    type="warning"
+    class="undo-changes-button"
+    @click="undoChanges()"
   >
-    <el-button
-      v-if="isUndoChanges"
-      plain
-      size="small"
-      type="warning"
-      class="undo-changes-button"
-      @click="undoChanges()"
-    >
-      <svg-icon icon-class="undo" />
-      <span v-if="!isMobile">
-        {{ $t('actionMenu.undo') }}
-      </span>
-    </el-button>
-  </span>
+    <svg-icon icon-class="undo" />
+    <span v-if="!isMobile">
+      {{ $t('actionMenu.undo') }}
+    </span>
+  </el-button>
 </template>
 
 <script>
@@ -114,15 +109,10 @@ export default defineComponent({
       })
     }
 
-    function theAction() {
-      undoChanges()
-    }
-
     return {
       isMobile,
       isUndoChanges,
       // Methods
-      theAction,
       undoChanges
     }
   }

@@ -17,27 +17,22 @@
 -->
 
 <template>
-  <span
-    v-shortkey="['ctrl', 'alt', 's']"
-    @shortkey="theAction"
+  <el-button
+    v-show="isSaveRecord"
+    plain
+    size="small"
+    type="primary"
+    :loading="isSaveRecordLoading"
+    :disabled="isSaveRecordLoading"
+    :style="isMobile ? 'margin-left: 1px;padding-right: 6px;' : 'margin-left: 8px; padding-right: 9px;'"
+    class="undo-changes-button"
+    @click="saveChanges()"
   >
-    <el-button
-      v-show="isSaveRecord"
-      plain
-      size="small"
-      type="primary"
-      :loading="isSaveRecordLoading"
-      :disabled="isSaveRecordLoading"
-      :style="isMobile ? 'margin-left: 1px;padding-right: 6px;' : 'margin-left: 8px; padding-right: 9px;'"
-      class="undo-changes-button"
-      @click="saveChanges()"
-    >
-      <svg-icon icon-class="save-AD" />
-      <span v-if="!isMobile">
-        {{ $t('actionMenu.save') }}
-      </span>
-    </el-button>
-  </span>
+    <svg-icon icon-class="save-AD" />
+    <span v-if="!isMobile">
+      {{ $t('actionMenu.save') }}
+    </span>
+  </el-button>
 </template>
 
 <script>
@@ -204,17 +199,12 @@ export default defineComponent({
         })
     }
 
-    function theAction() {
-      saveChanges()
-    }
-
     return {
       isSaveRecordLoading,
       isMobile,
       isSaveRecord,
       // Methods
-      saveChanges,
-      theAction
+      saveChanges
     }
   }
 })
