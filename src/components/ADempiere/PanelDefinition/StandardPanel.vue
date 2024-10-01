@@ -195,7 +195,11 @@ export default defineComponent({
     watch(recordUuid, (newValue, oldValue) => {
       if (newValue !== oldValue) {
         if (!isEmptyValue(fieldDefinitionRef.value) && !isEmptyValue(fieldIndex.value)) {
-          fieldDefinitionRef.value[fieldIndex.value].focusField(fieldDefinitionRef.value[fieldIndex.value].field.columnName)
+          const { columnName } = fieldDefinitionRef.value[fieldIndex.value].metadataField
+          if (isEmptyValue(fieldDefinitionRef.value[fieldIndex.value].$refs[columnName])) return
+          if (isEmptyValue(fieldDefinitionRef.value[fieldIndex.value].$refs[columnName].$el.__vue__)) return
+          if (isEmptyValue(fieldDefinitionRef.value[fieldIndex.value].$refs[columnName].$el.__vue__).focus) return
+          fieldDefinitionRef.value[fieldIndex.value].$refs[columnName].$el.__vue__.focus()
         }
       }
     })
