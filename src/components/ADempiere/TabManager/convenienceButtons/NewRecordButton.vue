@@ -31,45 +31,49 @@
       {{ $t('actionMenu.new') }}
     </span>
   </el-button> -->
-
-  <el-dropdown
-    v-if="isCreateRecord"
-    split-button
-    size="small"
-    trigger="click"
-    class="new-record-button"
-    :style="isMobile ? 'margin-left: 1px; padding-right: 4px' : 'margin-left: 8px; padding-right: 9px;'"
-    @click="handleCommandActions('newEmptyRecord');"
-    @command="handleCommandActions"
+  <span
+    v-shortkey="['ctrl', 'alt', 'n']"
+    @shortkey="theAction"
   >
-    <svg-icon icon-class="newRecord" />
-    <span v-if="!isMobile">
-      {{ $t('actionMenu.new') }}
-    </span>
+    <el-dropdown
+      v-if="isCreateRecord"
+      split-button
+      size="small"
+      trigger="click"
+      class="new-record-button"
+      :style="isMobile ? 'margin-left: 1px; padding-right: 4px' : 'margin-left: 8px; padding-right: 9px;'"
+      @click="handleCommandActions('newEmptyRecord');"
+      @command="handleCommandActions"
+    >
+      <svg-icon icon-class="newRecord" />
+      <span v-if="!isMobile">
+        {{ $t('actionMenu.new') }}
+      </span>
 
-    <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item
-        command="newEmptyRecord"
-      >
-        <svg-icon icon-class="newRecord" />
-        {{ $t('window.newRecord') }}
-      </el-dropdown-item>
-      <el-dropdown-item
-        command="copyAndNewRecord"
-        divided
-      >
-        <i class="el-icon-copy-document" />
-        {{ $t('window.copyRecord') }}
-      </el-dropdown-item>
-      <!-- <el-dropdown-item
-        command="enabledRecord"
-        divided
-      >
-        <i class="el-icon-copy-document" />
-        {{ $t('Activar Registros') }}
-      </el-dropdown-item> -->
-    </el-dropdown-menu>
-  </el-dropdown>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item
+          command="newEmptyRecord"
+        >
+          <svg-icon icon-class="newRecord" />
+          {{ $t('window.newRecord') }}
+        </el-dropdown-item>
+        <el-dropdown-item
+          command="copyAndNewRecord"
+          divided
+        >
+          <i class="el-icon-copy-document" />
+          {{ $t('window.copyRecord') }}
+        </el-dropdown-item>
+        <!-- <el-dropdown-item
+          command="enabledRecord"
+          divided
+        >
+          <i class="el-icon-copy-document" />
+          {{ $t('Activar Registros') }}
+        </el-dropdown-item> -->
+      </el-dropdown-menu>
+    </el-dropdown>
+  </span>
 </template>
 
 <script>
@@ -184,11 +188,17 @@ export default defineComponent({
       store.dispatch('fieldListInfo', { info })
       return
     }
+
+    function theAction() {
+      newRecord()
+    }
+
     return {
       isCreateRecord,
       isMobile,
       handleCommandActions,
-      activateRecord
+      activateRecord,
+      theAction
     }
   }
 })
