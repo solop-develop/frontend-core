@@ -156,7 +156,8 @@ const reportManager = {
       reportViewId,
       tableName,
       isSummary,
-      recordUuid
+      recordUuid,
+      pageSize
     }) {
       return new Promise(resolve => {
         const reportDefinition = rootGetters.getStoredReport(containerUuid)
@@ -207,7 +208,8 @@ const reportManager = {
           reportViewId,
           isSummary,
           tableName,
-          recordId
+          recordId,
+          pageSize
         })
       })
     },

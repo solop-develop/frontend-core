@@ -187,15 +187,17 @@ export default {
                 parentUuid: tabUuid,
                 containerUuid: process.uuid,
                 recordUuid,
+                tableName: table_name,
+                pageSize: 200
+              })
+            } else {
+              dispatch('runReport', {
+                parentUuid: tabUuid,
+                containerUuid: process.uuid,
+                recordUuid,
                 tableName: table_name
               })
             }
-            dispatch('runReport', {
-              parentUuid: tabUuid,
-              containerUuid: process.uuid,
-              recordUuid,
-              tableName: table_name
-            })
           }
 
           dispatch('setModalDialog', {
