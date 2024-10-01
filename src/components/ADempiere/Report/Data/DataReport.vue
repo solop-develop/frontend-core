@@ -256,9 +256,13 @@ export default defineComponent({
         }
         const index = rowIndex + 1
         const parentColumnKey = Object.keys(row.cells).find(key => row.cells[key].display_value !== '')
+        let value = ''
+        if (!isEmptyValue(parentColumnKey)) {
+          value = row.cells[parentColumnKey].display_value
+        }
         const newRow = {
           ...row,
-          children: hasChildren(row.children, index.toString(), parentColumnKey, row.cells[parentColumnKey].display_value),
+          children: hasChildren(row.children, index.toString(), parentColumnKey, value),
           level: index,
           isTopLevel
         }
