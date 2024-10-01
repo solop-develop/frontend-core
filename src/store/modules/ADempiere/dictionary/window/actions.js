@@ -31,6 +31,7 @@ import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { ACTION_None } from '@/utils/ADempiere/dictionary/workflow'
 
 // Utils and Helper Methods
+import { REPORT_FINANCIAL } from '@/utils/ADempiere/constants/report.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertArrayKeyValueToObject } from '@/utils/ADempiere/formatValue/iterableFormat'
 import {
@@ -180,7 +181,16 @@ export default {
 
             const storedTab = rootGetters.getStoredTab(windowUuid, tabAssociatedUuid)
             const { table_name } = storedTab
-            dispatch('startReport', {
+            const { code } = rootGetters.getStoredReport(process.uuid)
+            if (code === REPORT_FINANCIAL) {
+              dispatch('startReport', {
+                parentUuid: tabUuid,
+                containerUuid: process.uuid,
+                recordUuid,
+                tableName: table_name
+              })
+            }
+            dispatch('runReport', {
               parentUuid: tabUuid,
               containerUuid: process.uuid,
               recordUuid,
