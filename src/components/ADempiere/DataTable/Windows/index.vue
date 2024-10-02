@@ -67,10 +67,7 @@
           <span v-if="containerManager.isMandatoryColumn(fieldAttributes)" style="color: red">
             *
           </span>
-          <span v-if="fieldAttributes.name.length > 10" :title="fieldAttributes.name">
-            {{ fieldAttributes.name.substring(0, 10) }}...
-          </span>
-          <span v-else>
+          <span>
             {{ fieldAttributes.name }}
           </span>
         </template>
@@ -120,7 +117,7 @@ import useFullScreenContainer from '@/components/ADempiere/ContainerOptions/Full
 // Utils and Helper Methods
 import { isEmptyValue, setRecordPath } from '@/utils/ADempiere/valueUtils.js'
 import { isLookup } from '@/utils/ADempiere/references'
-import { isDateField, isStringField } from '@/utils/ADempiere/references'
+import { isDateField } from '@/utils/ADempiere/references'
 export default defineComponent({
   name: 'WindowsTable',
 
@@ -624,14 +621,14 @@ export default defineComponent({
     function widthColumn(fieldAttributes) {
       const { name } = fieldAttributes
       const size = 12
-      const lenght = name.length
+      let lenght = name.length
       if (isDateField(fieldAttributes.display_type)) {
         return lenght * size * 0.8
       }
-      if (isStringField(fieldAttributes.display_type)) {
-        return lenght * size * 1.5
+      if (lenght < 10) {
+        lenght = 10
       }
-      return lenght * size + 10
+      return lenght * size * 1.5
     }
 
     /**
