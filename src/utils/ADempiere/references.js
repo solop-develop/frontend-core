@@ -620,3 +620,7 @@ export function isDateField(displayType) {
 export function isBooleanField(displayType) {
   return displayType === YES_NO.id
 }
+
+export function isStringField(displayType) {
+  return FIELDS_TEXT.includes(displayType)
+}

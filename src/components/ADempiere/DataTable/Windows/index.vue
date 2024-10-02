@@ -60,14 +60,19 @@
         :column-key="fieldAttributes.columnName"
         :prop="fieldAttributes.columnName"
         sortable
-        :min-width="widthColumn(fieldAttributes)"
+        :width="widthColumn(fieldAttributes)"
         :fixed="fieldAttributes.isFixedTableColumn"
       >
         <template slot="header">
           <span v-if="containerManager.isMandatoryColumn(fieldAttributes)" style="color: red">
             *
           </span>
-          {{ fieldAttributes.name }}
+          <span v-if="fieldAttributes.name.length > 10" :title="fieldAttributes.name">
+            {{ fieldAttributes.name.substring(0, 10) }}...
+          </span>
+          <span v-else>
+            {{ fieldAttributes.name }}
+          </span>
         </template>
         <template slot-scope="scope">
           <!-- formatted displayed value -->
@@ -115,7 +120,7 @@ import useFullScreenContainer from '@/components/ADempiere/ContainerOptions/Full
 // Utils and Helper Methods
 import { isEmptyValue, setRecordPath } from '@/utils/ADempiere/valueUtils.js'
 import { isLookup } from '@/utils/ADempiere/references'
-
+import { isDateField, isStringField } from '@/utils/ADempiere/references'
 export default defineComponent({
   name: 'WindowsTable',
 
@@ -619,11 +624,14 @@ export default defineComponent({
     function widthColumn(fieldAttributes) {
       const { name } = fieldAttributes
       const size = 12
-      let lenght = name.length
-      if (lenght <= 9) {
-        lenght = 10
+      const lenght = name.length
+      if (isDateField(fieldAttributes.display_type)) {
+        return lenght * size * 0.8
       }
-      return lenght * size
+      if (isStringField(fieldAttributes.display_type)) {
+        return lenght * size * 1.5
+      }
+      return lenght * size + 10
     }
 
     /**
@@ -751,8 +759,6 @@ export default defineComponent({
     text-overflow: ellipsis;
     white-space: normal;
     word-break: break-all;
-    padding-top: 5px;
-    padding-bottom: 5px;
   }
   .el-table .cell:hover {
     border: 1px solid blue;
@@ -762,7 +768,10 @@ export default defineComponent({
     height: 40px!important
   }
   .el-table th.el-table__cell > .cell{
-    padding: 5px !important;
+    padding-left: 5px !important;
+    padding-right: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
   }
 }
 </style>
