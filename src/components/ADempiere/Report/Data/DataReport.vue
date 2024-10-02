@@ -332,9 +332,13 @@ export default defineComponent({
       if (children.length < 1) return children
       return children.map((child, indexChild) => {
         const index = parentLevel + indexChild
+        let value = ''
+        if (!isEmptyValue(parentColumnKey)) {
+          value = child.cells[parentColumnKey].display_value
+        }
         const newRow = {
           ...child,
-          children: hasChildren(child.children, index.toString(), parentColumnKey, child.cells[parentColumnKey].display_value),
+          children: hasChildren(child.children, index.toString(), parentColumnKey, value),
           level: index,
           zoom_windows: [],
           isLoadingZoom: false
