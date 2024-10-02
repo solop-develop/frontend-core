@@ -219,25 +219,8 @@ export default {
               })
             },
             loadData: ({ parentUuid: tabAssociatedUuid, containerUuid }) => {
-              const reportDefinition = rootGetters.getStoredReport(process.uuid)
               const storedTab = rootGetters.getStoredTab(windowUuid, tabAssociatedUuid)
               const { table_name } = storedTab
-              if (!isEmptyValue(reportDefinition)) {
-                // auto run report if without parameters
-                if (!reportDefinition.hasParameters || isEmptyValue(reportDefinition.fieldsList)) {
-                  // close modal dialog
-                  store.commit('setShowedModalDialog', {
-                    containerUuid: reportDefinition.uuid,
-                    isShowed: false
-                  })
-                  doneMethodByReport({
-                    parentUuid: tabAssociatedUuid,
-                    containerUuid
-                  })
-                }
-                return Promise.resolve(reportDefinition)
-              }
-
               return dispatch('getReportDefinitionFromServer', {
                 id: process.id,
                 tableName: table_name
