@@ -133,14 +133,12 @@ export default defineComponent({
     const currentRoute = router.app._route
     const reportId = currentRoute.meta.id
     const reportUuid = currentRoute.meta.uuid
-
     const {
       containerManager, actionsManager, storedReportDefinition
     } = mixinReport({
       reportId,
       reportUuid
     })
-
     const showContextMenu = computed(() => {
       return store.state.settings.showContextMenu
     })
@@ -203,10 +201,17 @@ export default defineComponent({
     }
 
     function runReport(params) {
-      store.dispatch('buildReport', {
-        containerUuid: reportUuid,
-        isSummary: true
-      })
+      if (storedReportDefinition.value.is_jasper_report) {
+        store.dispatch('runReport', {
+          containerUuid: reportUuid,
+          isSummary: true
+        })
+      } else {
+        store.dispatch('buildReport', {
+          containerUuid: reportUuid,
+          isSummary: true
+        })
+      }
     }
 
     function clearParameters() {
