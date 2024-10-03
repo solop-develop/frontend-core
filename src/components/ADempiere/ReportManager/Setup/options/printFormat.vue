@@ -115,7 +115,11 @@ export default defineComponent({
         summary: description,
         type: 'info'
       })
-      store.dispatch('buildReport', {
+      let url = 'buildReport'
+      if (reportDefinition.is_jasper_report) {
+        url = 'runReport'
+      }
+      store.dispatch(url, {
         containerUuid: props.containerUuid || root.$route.params.processUuid,
         isSummary: true,
         parametersList: reportOutputParams,

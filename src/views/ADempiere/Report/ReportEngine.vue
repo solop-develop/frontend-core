@@ -213,10 +213,17 @@ export default defineComponent({
     }
 
     function runReport(params) {
-      store.dispatch('buildReport', {
-        containerUuid: reportUuid,
-        isSummary: true
-      })
+      if (storedReportDefinition.value.is_jasper_report) {
+        store.dispatch('runReport', {
+          containerUuid: reportUuid,
+          isSummary: true
+        })
+      } else {
+        store.dispatch('buildReport', {
+          containerUuid: reportUuid,
+          isSummary: true
+        })
+      }
     }
 
     function clearParameters() {
