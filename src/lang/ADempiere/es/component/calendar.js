@@ -19,6 +19,7 @@
 const calendar = {
   allEvents: 'Todos los Eventos',
   calendar: 'Calendario',
+  calendarTimeLine: 'Calendario de Línea de Tiempo',
   deleteEventConfirm: '¿Seguro de que quiere eliminar el evento?',
   titleNewEvent: 'Por favor ingresa un nuevo título para tu evento'
 }

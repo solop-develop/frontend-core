@@ -145,7 +145,7 @@ export default defineComponent({
         dayMaxEvents: true,
         weekends: true,
         select: handleDateSelect(),
-        eventClick: handleEventClick(),
+        // eventClick: handleEventClick(),
         eventsSet: handleEvents()
       }
     })
