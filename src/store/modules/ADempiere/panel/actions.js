@@ -16,6 +16,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Constants
+import {
+  DISPLAY_COLUMN_PREFIX
+} from '@/utils/ADempiere/dictionaryUtils'
+
 // Utils and Helper Methods
 import { isEmptyValue, getTypeOfValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat.js'
@@ -526,7 +531,7 @@ const actions = {
       } else {
         if (storedFieldDependentsList.length > 1) {
           console.warn(
-            'multiple same column name field in vuex store',
+            'multiple same `column name` field in vuex store',
             field.columnName,
             storedFieldDependentsList.map(i => {
               return {
@@ -538,53 +543,59 @@ const actions = {
           )
         }
       }
-      // TODO: Each elements
-      const storedFieldDependent = storedFieldDependentsList.at(0)
 
-      //  isDisplayed Logic
-      let isDisplayedFromLogic, isMandatoryFromLogic, isReadOnlyFromLogic
-      if (!isEmptyValue(storedFieldDependent.display_logic)) {
-        isDisplayedFromLogic = evaluator.evaluateLogic({
-          context: getContext,
+      storedFieldDependentsList.forEach(async storedFieldDependent => {
+        const {
+          display_logic, mandatory_logic, read_only_logic
+        } = storedFieldDependent
+
+        //  isDisplayed Logic
+        let isDisplayedFromLogic, isMandatoryFromLogic, isReadOnlyFromLogic
+        if (!isEmptyValue(display_logic)) {
+          isDisplayedFromLogic = evaluator.evaluateLogic({
+            context: getContext,
+            parentUuid,
+            containerUuid,
+            logic: display_logic
+          })
+        }
+        //  Mandatory Logic
+        if (!isEmptyValue(mandatory_logic)) {
+          isMandatoryFromLogic = evaluator.evaluateLogic({
+            context: getContext,
+            parentUuid,
+            containerUuid,
+            logic: mandatory_logic
+          })
+        }
+        //  Read Only Logic
+        if (!isEmptyValue(read_only_logic)) {
+          isReadOnlyFromLogic = evaluator.evaluateLogic({
+            context: getContext,
+            parentUuid,
+            containerUuid,
+            logic: read_only_logic
+          })
+        }
+
+        // TODO: Evaluate if `defaultValue` or `parsedDefaultValue` is returned
+        // default value
+        const { parsedDefaultValue } = await dispatch('changeDefaultLogic', {
           parentUuid,
           containerUuid,
-          logic: storedFieldDependent.display_logic
+          containerManager,
+          field: storedFieldDependent,
+          isGetDefaultValue
         })
-      }
-      //  Mandatory Logic
-      if (!isEmptyValue(storedFieldDependent.mandatory_logic)) {
-        isMandatoryFromLogic = evaluator.evaluateLogic({
-          context: getContext,
-          parentUuid,
-          containerUuid,
-          logic: storedFieldDependent.mandatory_logic
-        })
-      }
-      //  Read Only Logic
-      if (!isEmptyValue(storedFieldDependent.read_only_logic)) {
-        isReadOnlyFromLogic = evaluator.evaluateLogic({
-          context: getContext,
-          parentUuid,
-          containerUuid,
-          logic: storedFieldDependent.read_only_logic
-        })
-      }
 
-      // default value
-      const { parsedDefaultValue } = await dispatch('changeDefaultLogic', {
-        parentUuid,
-        containerUuid,
-        containerManager,
-        field: storedFieldDependent,
-        isGetDefaultValue
-      })
-
-      commit('changeFieldLogic', {
-        field: storedFieldDependent,
-        isDisplayedFromLogic,
-        isMandatoryFromLogic,
-        isReadOnlyFromLogic,
-        parsedDefaultValue: parsedDefaultValue
+        commit('changeFieldLogic', {
+          field: storedFieldDependent,
+          isDisplayedFromLogic,
+          isMandatoryFromLogic,
+          isReadOnlyFromLogic,
+          // TODO: Add watch to change current value
+          parsedDefaultValue: parsedDefaultValue
+        })
       })
     })
   },
@@ -597,7 +608,6 @@ const actions = {
     containerManager
   }) {
     return new Promise(resolve => {
-      const { column_name } = field
       const resolveValues = {
         value: undefined,
         defaultValue: undefined,
@@ -606,17 +616,22 @@ const actions = {
 
       let defaultValue, newValue, displayedValue
 
-      if (isEmptyValue(field.default_value)) {
+      // TODO: Add support to `default_value_to`
+      const {
+        internal_id, uuid, column_name, displayColumnName, element_name,
+        default_value, display_type, context_column_names, isSameColumnElement
+      } = field
+      if (isEmptyValue(default_value)) {
         resolve(resolveValues)
         return
       }
 
       // default value without sql
-      if (field.default_value.includes('@') && !field.default_value.startsWith('@SQL=')) {
+      if (default_value.includes('@') && !default_value.startsWith('@SQL=')) {
         defaultValue = parseContext({
           parentUuid,
           containerUuid,
-          value: field.default_value
+          value: default_value
         }).value
         resolveValues.defaultValue = defaultValue
         resolve(resolveValues)
@@ -624,7 +639,7 @@ const actions = {
       }
 
       // default value with sql
-      if (!isGetDefaultValue || !field.default_value.startsWith('@SQL=')) {
+      if (!isGetDefaultValue || !default_value.startsWith('@SQL=')) {
         resolve(resolveValues)
         return
       }
@@ -633,7 +648,7 @@ const actions = {
         parentUuid,
         containerUuid,
         isSQL: true,
-        value: field.default_value
+        value: default_value
       }).query
 
       newValue = rootGetters.getValueOfField({
@@ -644,7 +659,7 @@ const actions = {
       if (!isEmptyValue(newValue)) {
         displayedValue = rootGetters.getValueOfField({
           containerUuid,
-          columnName: field.displayColumnName
+          columnName: displayColumnName
         })
       } else {
         const {
@@ -653,11 +668,11 @@ const actions = {
         } = containerManager.getDefaultValue({
           parentUuid,
           containerUuid,
-          contextColumnNames: field.contextColumnNames,
-          uuid: field.uuid,
-          id: field.internal_id,
+          contextColumnNames: context_column_names,
+          uuid: uuid,
+          id: internal_id,
           columnName: column_name,
-          defaultValue: field.default_value
+          defaultValue: default_value
         })
 
         displayedValue = displayedValueByServer
@@ -672,22 +687,31 @@ const actions = {
         value: newValue
       })
       // update values for field on elememnt name of column
-      if (!field.isSameColumnElement) {
+      if (!isSameColumnElement) {
         commit('updateValueOfField', {
           parentUuid,
           containerUuid,
-          columnName: field.element_name,
+          columnName: element_name,
           value: newValue
         })
       }
       // update displayed value for field
-      if (isLookup(field.display_type)) {
+      if (isLookup(display_type)) {
         commit('updateValueOfField', {
           parentUuid,
           containerUuid,
-          columnName: field.displayColumnName,
+          columnName: displayColumnName,
           value: displayedValue
         })
+        // update values for field on elememnt name of column
+        if (!isSameColumnElement) {
+          commit('updateValueOfField', {
+            parentUuid,
+            containerUuid,
+            columnName: DISPLAY_COLUMN_PREFIX + element_name,
+            value: displayedValue
+          })
+        }
       }
 
       resolve({
