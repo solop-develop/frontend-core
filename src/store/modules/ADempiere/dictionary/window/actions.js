@@ -22,16 +22,15 @@ import store from '@/store'
 
 // API Request Methods
 import { requestWindowMetadata } from '@/api/ADempiere/dictionary/window.ts'
-import { listPrintFormatsTableRequest } from '@/api/ADempiere/reportManagement/printFormat.ts'
 
 // Constants
 import { CLIENT, DOCUMENT_ACTION, DOCUMENT_STATUS } from '@/utils/ADempiere/constants/systemColumns'
 import { DISPLAY_COLUMN_PREFIX, IS_ADVANCED_QUERY } from '@/utils/ADempiere/dictionaryUtils'
 import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import { ACTION_None } from '@/utils/ADempiere/dictionary/workflow'
+import { FINANCIAL_REPORT_CODE } from '@/utils/ADempiere/dictionary/report/financialReport.ts'
 
 // Utils and Helper Methods
-import { FINANCIAL_REPORT_CODE } from '@/utils/ADempiere/constants/report.js'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { convertArrayKeyValueToObject } from '@/utils/ADempiere/formatValue/iterableFormat'
 import {
@@ -974,23 +973,6 @@ export default {
       parentUuid: parentUuid + IS_ADVANCED_QUERY,
       tabAdvanceQuery
     })
-  },
-  setPrintFormatWindow({ commit }, {
-    tableName,
-    reportId
-  }) {
-    return new Promise(resolve => {
-      listPrintFormatsTableRequest({
-        tableName
-      })
-        .then(response => {
-          const { print_formats } = response
-          commit('setPrintFormatsList', {
-            reportId,
-            printFormatList: print_formats
-          })
-          resolve(print_formats)
-        })
-    })
   }
+
 }

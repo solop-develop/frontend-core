@@ -370,7 +370,7 @@ const reportManager = {
         }
         listPrintFormatsTableRequest({ tableName })
           .then(async printFormatResponse => {
-            const printFormatList = await Promise.all(
+            const printFormatsList = await Promise.all(
               printFormatResponse.print_formats.map(async printFormatItem => {
                 await Promise.allSettled([
                   dispatch('getReportViewsFromServer', {
@@ -394,10 +394,10 @@ const reportManager = {
 
             commit('setPrintFormatsList', {
               reportId,
-              printFormatList
+              printFormatsList: printFormatsList
             })
 
-            resolve(printFormatList)
+            resolve(printFormatsList)
           })
           .catch(error => {
             console.warn(`Error getting print formats: ${error.message}. Code: ${error.code}.`)
