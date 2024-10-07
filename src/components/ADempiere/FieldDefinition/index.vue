@@ -410,9 +410,11 @@ export default {
       return 'border: 1px solid #fff;border-radius: 5px;'
     },
     isOperatior() {
-      const { is_jasper_report: isJasper } = store.getters.getStoredReport(this.containerUuid)
-      if (isJasper) {
-        return false
+      if (this.$route.meta.type === 'report') {
+        const { is_jasper_report: isJasper } = store.getters.getStoredReport(this.containerUuid)
+        if (isJasper) {
+          return false
+        }
       }
       const isBrowser = this.$route.meta.type === 'browser'
       const {
