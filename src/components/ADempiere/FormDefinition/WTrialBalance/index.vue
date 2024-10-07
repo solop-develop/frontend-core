@@ -46,7 +46,25 @@
           :label="header.label"
           :prop="header.columnName"
           header-align="center"
-        />
+        >
+          <!-- Add a template column for the popover -->
+          <template slot-scope="scope">
+            <el-dropdown
+              trigger="click"
+              @command="zoomInWindow(scope.row)"
+            >
+              <span>{{ scope.row[header.columnName] }}</span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>
+                  <i class="el-icon-zoom-in" style="font-weight: bolder;" />
+                  <b>
+                    {{ $t('page.processActivity.zoomIn') }} {{ ' - ' }} {{ $t('form.WTrialBalance.accountNo') }}
+                  </b>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
   </div>
@@ -66,6 +84,8 @@ import store from '@/store'
 
 // Utils and Helper Methods
 import optionsWtrialBalance from './options'
+import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
+
 export default defineComponent({
   name: 'WTrialBalance',
   components: {
@@ -239,6 +259,20 @@ export default defineComponent({
     const listSummary = computed(() => {
       return store.getters.getListSummary
     })
+    function zoomInWindow(scope) {
+      const id = 118
+      const columnName = 'Value'
+      zoomIn({
+        attributeValue: `window_${id}`,
+        attributeName: 'containerKey',
+        query: {
+          [columnName]: scope.value
+        },
+        params: {
+          [columnName]: scope.value
+        }
+      })
+    }
     return {
       //  Values
       isVisible,
@@ -250,12 +284,12 @@ export default defineComponent({
       viewList,
       selectedExport,
       isLoading,
-      // Computed
       // Methods
       changeSelections,
       getSummaries,
       changeView,
-      getColumnStyle
+      getColumnStyle,
+      zoomInWindow
     }
   }
 })
