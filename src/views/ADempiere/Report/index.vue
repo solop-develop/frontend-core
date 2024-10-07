@@ -75,7 +75,7 @@
       icon="el-icon-arrow-left"
       circle
       style="top: 50%; right: 0%; position: absolute;"
-      @click="handleOpem()"
+      @click="handleOpen()"
     />
     <panel-footer
       :container-uuid="reportUuid"
@@ -191,7 +191,7 @@ export default defineComponent({
       showPanelConfigReport(false)
     }
 
-    function handleOpem() {
+    function handleOpen() {
       showPanelConfigReport(!isShowPanelConfig.value)
     }
 
@@ -239,7 +239,7 @@ export default defineComponent({
       closeTagView,
       handleClose,
       closeReport,
-      handleOpem,
+      handleOpen,
       runReport
     }
   }

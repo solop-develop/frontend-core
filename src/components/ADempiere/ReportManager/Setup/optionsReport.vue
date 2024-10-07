@@ -23,74 +23,99 @@
         {{ $t('report.reportSettings') }}
       </b>
     </div>
-
-    <div class="text item">
-      <el-form
-        label-position="top"
-        label-width="10px"
-        @submit.native.prevent="notSubmitForm"
-      >
-        <el-row class="report-setup-preferences-fields" :gutter="20">
-          <el-col :span="8">
-            <el-form-item
-              :label="$t('report.printFormats')"
-              style="display: grid;"
+    <el-collapse v-model="activeCollapse">
+      <el-collapse-item name="1">
+        <template slot="title">
+          <b style="font-size: 18px">
+            {{ $t('report.preference') }}
+            <i style="font-size: 18px;" class="el-icon-s-operation" />
+          </b>
+        </template>
+        <el-card class="box-card">
+          <div class="text item">
+            <el-form
+              label-position="top"
+              label-width="10px"
+              @submit.native.prevent="notSubmitForm"
             >
-              <el-select
-                v-model="reportAsPrintFormatValue"
-                style="display: contents;"
-              >
-                <el-option
-                  v-for="(item, key) in reportAsPrintFormat.childs"
-                  :key="key"
-                  :label="item.name"
-                  :value="item.id"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item
-              :label="$t('report.reportViews')"
-              style="display: grid;"
-            >
-              <el-select
-                v-model="reportAsViewValue"
-                style="display: contents;"
-              >
-                <el-option
-                  v-for="(item, key) in reportAsView.childs"
-                  :key="key"
-                  :label="item.name"
-                  :value="item.id"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item
-              :label="$t('report.typeReport')"
-              style="display: grid;"
-            >
-              <el-select
-                v-model="reportTypeFormatValue"
-                style="display: contents;"
-              >
-                <el-option
-                  v-for="(item, key) in reportTypeFormat.childs"
-                  :key="key"
-                  :label="item.name"
-                  :value="item.type"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-    </div>
-
+              <el-row class="report-setup-preferences-fields" :gutter="20">
+                <el-col :span="8">
+                  <el-form-item
+                    :label="$t('report.printFormats')"
+                    style="display: grid;"
+                  >
+                    <el-select
+                      v-model="reportAsPrintFormatValue"
+                      style="display: contents;"
+                      @change="runReport()"
+                    >
+                      <el-option
+                        v-for="(item, key) in reportAsPrintFormat.childs"
+                        :key="key"
+                        :label="item.name"
+                        :value="item.id"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item
+                    :label="$t('report.reportViews')"
+                    style="display: grid;"
+                  >
+                    <el-select
+                      v-model="reportAsViewValue"
+                      style="display: contents;"
+                      @change="runReport()"
+                    >
+                      <el-option
+                        v-for="(item, key) in reportAsView.childs"
+                        :key="key"
+                        :label="item.name"
+                        :value="item.id"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item
+                    :label="$t('report.typeReport')"
+                    style="display: grid;"
+                  >
+                    <el-select
+                      v-model="reportTypeFormatValue"
+                      style="display: contents;"
+                      @change="runReport()"
+                    >
+                      <el-option
+                        v-for="(item, key) in reportTypeFormat.childs"
+                        :key="key"
+                        :label="item.name"
+                        :value="item.type"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-form>
+          </div>
+        </el-card>
+      </el-collapse-item>
+      <el-collapse-item name="2">
+        <template slot="title">
+          <b style="font-size: 18px">
+            {{ $t('actionMenu.changeParameters') }}
+            <i style="font-size: 18px;" class="el-icon-set-up" />
+          </b>
+        </template>
+        <component
+          :is="componentRender"
+          :container-uuid="containerUuid"
+          :container-manager="containerManagerReportViwer"
+          :is-tab-panel="true"
+        />
+      </el-collapse-item>
+    </el-collapse>
     <el-row
       style="
         position: absolute;
@@ -167,13 +192,31 @@ export default defineComponent({
     const reportAsViewValue = ref(undefined)
     const reportAsPrintFormatValue = ref(undefined)
     const reportTypeFormatValue = ref('')
-
+    const activeCollapse = ref(['1', '2'])
     const attributes = computed(() => {
       return store.getters.getConfigReport({
         containerUuid: props.containerUuid,
         columnName: 'reportType'
       })
     })
+    const storedPanelReport = computed(() => {
+      return store.getters.getModalDialogManager({
+        containerUuid: props.containerUuid
+      })
+    })
+    const containerManagerReportViwer = computed(() => {
+      const modalDialogStored = storedPanelReport.value
+      if (!isEmptyValue(modalDialogStored) && !isEmptyValue(modalDialogStored.containerManager)) {
+        return {
+          ...props.containerManager,
+          ...modalDialogStored.containerManager
+        }
+      }
+      return {
+        ...props.containerManager
+      }
+    })
+
     const reportAsView = computed(() => {
       const options = store.getters.getStoredActionsMenu({
         containerUuid: props.containerUuid
@@ -197,7 +240,9 @@ export default defineComponent({
       }
       return options
     })
-
+    const componentRender = computed(() => {
+      return () => import('@/components/ADempiere/PanelDefinition/index.vue')
+    })
     const reportTypeFormat = computed(() => {
       const options = store.getters.getStoredActionsMenu({
         containerUuid: props.containerUuid
@@ -259,7 +304,7 @@ export default defineComponent({
     }
 
     function runReport() {
-      store.dispatch('buildReport', {
+      store.dispatch('runReport', {
         containerUuid: props.containerUuid,
         isSummary: true
       })
@@ -303,12 +348,16 @@ export default defineComponent({
       reportAsView,
       reportAsPrintFormat,
       reportTypeFormat,
-      updatePrintFormat,
+      componentRender,
+      activeCollapse,
+      storedPanelReport,
       isShowSetupReport,
+      containerManagerReportViwer,
       // methods
       handleClose,
       actionClear,
-      runReport
+      runReport,
+      updatePrintFormat
     }
   }
 })

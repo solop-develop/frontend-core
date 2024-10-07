@@ -65,7 +65,7 @@
         right: 0%;
         position: absolute;
       "
-      @click="handleOpem()"
+      @click="handleOpen()"
     />
   </div>
 
@@ -257,7 +257,7 @@ export default defineComponent({
       showPanelConfigReport(false)
     }
 
-    function handleOpem() {
+    function handleOpen() {
       showPanelConfigReport(!isShowPanelConfig.value)
     }
 
@@ -301,7 +301,7 @@ export default defineComponent({
       storedReportDefinition,
       containerUuid,
       // Methods
-      handleOpem,
+      handleOpen,
       handleClose,
       showPanelConfigReport
     }
