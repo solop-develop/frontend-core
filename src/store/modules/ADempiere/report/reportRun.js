@@ -38,7 +38,8 @@ import { isEmptyValue } from '@/utils/ADempiere'
 import { showNotification } from '@/utils/ADempiere/notification.js'
 
 const initState = {
-  reportRun: {}
+  reportRun: {},
+  isLoading: false
 }
 const reportRun = {
   state: initState,
@@ -46,6 +47,9 @@ const reportRun = {
   mutations: {
     scrollByetTest(state, contactSend) {
       state.reportRun = contactSend
+    },
+    setIsLoadingReportLegacy(state, isLoading) {
+      state.isLoading = isLoading
     }
   },
   actions: {
@@ -84,6 +88,7 @@ const reportRun = {
             tableName
           })
         }
+        commit('setIsLoadingReportLegacy', true)
         generateReportRequest({
           reportFormat,
           id: reportId,
@@ -120,9 +125,8 @@ const reportRun = {
               if (!REPORT_VIEWER_SUPPORTED_FORMATS.includes(reportFormat)) {
                 link.click()
               }
-
               router.push({
-                path: `/report-viewer/${reportDefinition.internal_id}/${instance_id}`,
+                path: `/report-viewer/${reportDefinition.internal_id}`,
                 name: REPORT_VIEWER_NAME,
                 params: {
                   reportId: reportDefinition.internal_id,
@@ -140,18 +144,17 @@ const reportRun = {
                 type: 'success'
               })
             }
-
             commit('setReportOutput', {
               ...output,
               reportId: reportDefinition.internal_id,
               reportUuid: reportDefinition.uuid,
-              instanceUuid: instance_id,
+              instanceUuid: reportDefinition.internal_id,
               parametersList,
               link,
               url: link.href,
               download: link.download
             })
-
+            commit('setIsLoadingReportLegacy', false)
             resolve(runReportRepsonse)
           })
           .catch(error => {
@@ -161,6 +164,9 @@ const reportRun = {
               type: 'error'
             })
             console.warn(`Error getting Get Report: ${error.message}. Code: ${error.code}.`)
+          })
+          .finally(() => {
+            commit('setIsLoadingReportLegacy', false)
           })
       })
     },
@@ -191,6 +197,9 @@ const reportRun = {
   getters: {
     getReportRun: (state) => {
       return state.reportRun
+    },
+    getIsLoadingReportLegacy: (state) => {
+      return state.isLoading
     }
   }
 }

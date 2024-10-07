@@ -228,12 +228,12 @@ const staticRoutes = [
   },
 
   {
-    path: '/report-viewer/:reportId/:instanceUuid',
+    path: '/report-viewer/:reportId',
     component: Layout,
     hidden: true,
     children: [
       {
-        path: '/report-viewer/:reportId/:instanceUuid?',
+        path: '/report-viewer/:reportId?',
         component: () => import('@/views/ADempiere/ReportViewer'),
         name: REPORT_VIEWER_NAME,
         meta: {

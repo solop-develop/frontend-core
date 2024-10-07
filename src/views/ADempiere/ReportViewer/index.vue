@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <div v-if="isLoading" key="report-viewer-loaded" style="min-height: inherit;">
+  <div key="report-viewer-loaded" v-loading="isLoading" style="min-height: inherit;">
     <el-row type="flex" style="min-height: inherit;">
       <el-col :span="24">
         <div class="content">
@@ -26,16 +26,9 @@
             :name="name"
             :help="help"
           />
-          <!-- <div v-if="!isEmptyValue(storedReportDefinition)" style="float: right;padding-left: 1%;">
-            <action-menu
-              :container-manager="containerManager"
-              :container-uuid="reportUuid"
-              :actions-manager="actionsManager"
-              :relations-manager="relationsManager"
-            />
-          </div> -->
           <file-render
             v-if="!isEmptyValue(storedReportOutput)"
+            :key="storedReportOutput.output_stream"
             :format="reportType"
             :content="reportContent"
             :src="link.href"
@@ -65,7 +58,7 @@
         :is-show-title="false"
       />
     </el-drawer>
-    <!-- <el-button
+    <el-button
       v-if="!isEmptyValue(storedReportDefinition)"
       type="primary"
       icon="el-icon-arrow-left"
@@ -76,13 +69,13 @@
         position: absolute;
       "
       @click="handleOpem()"
-    /> -->
+    />
   </div>
 
-  <loading-view
+  <!-- <loading-view
     v-else
     key="report-viewer-loading"
-  />
+  /> -->
 </template>
 
 <script>
@@ -98,7 +91,7 @@ import FileRender from '@/components/ADempiere/FileRender/index.vue'
 import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 import mixinReport from '@/views/ADempiere/Report/mixinReport.js'
 import ModalDialog from '@/components/ADempiere/ModalDialog/index.vue'
-import OptionsReport from '@/components/ADempiere/ReportManager/Setup/optionsReportViewer.vue'
+import OptionsReport from '@/components/ADempiere/ReportManager/Setup/optionsReport.vue'
 import TitleAndHelp from '@/components/ADempiere/TitleAndHelp/index.vue'
 
 // Constants
@@ -124,8 +117,9 @@ export default defineComponent({
 
   setup(props, { root }) {
     const storedReportOutput = computed(() => {
-      return store.getters.getReportOutput(root.$route.params.instanceUuid)
+      return store.getters.getReportOutput(root.$route.params.reportId)
     })
+
     let { reportId, reportUuid } = root.$route.params
     if (!isEmptyValue(storedReportOutput.value)) {
       if (isEmptyValue(reportId) || reportId <= 0) {
@@ -142,7 +136,9 @@ export default defineComponent({
       reportId,
       reportUuid
     })
-    const isLoading = ref(false)
+    const isLoading = computed(() => {
+      return store.getters.getIsLoadingReportLegacy
+    })
     const reportType = ref(DEFAULT_REPORT_TYPE)
     const reportContent = ref('')
 
@@ -172,7 +168,6 @@ export default defineComponent({
 
     function displayReport(reportOutput) {
       if (root.$route.params.isPos) {
-        isLoading.value = true
         return
       }
       if (!reportOutput.isError) {
@@ -180,8 +175,6 @@ export default defineComponent({
 
         reportType.value = isEmptyValue(format) ? 'pdf' : format
         reportContent.value = output
-
-        isLoading.value = true
       }
 
       // update name in tag view
@@ -194,7 +187,6 @@ export default defineComponent({
     // get report from vuex store or request from server
     function getReport() {
       if (root.$route.params.isPos) {
-        isLoading.value = true
         return
       }
       if (!isEmptyValue(storedReportDefinition.value)) {
@@ -304,7 +296,6 @@ export default defineComponent({
       getReport()
       root.$route.meta.reportType = reportType.value
     })
-
     return {
       reportUuid,
       isLoading,
