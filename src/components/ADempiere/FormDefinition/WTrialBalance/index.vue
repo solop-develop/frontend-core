@@ -47,9 +47,9 @@
           :prop="header.columnName"
           header-align="center"
         >
-          <!-- Add a template column for the popover -->
           <template slot-scope="scope">
             <el-dropdown
+              :class="classChecker({ row: scope.row, column: header })"
               trigger="click"
               @command="zoomInWindow(scope.row)"
             >
@@ -108,9 +108,7 @@ export default defineComponent({
       const numberColumns = ['period_actual_amount', 'period_budget_amount', 'ytd_actual_amount', 'ytd_budget_amount', 'variance_amount', 'period_variance_amount', 'variance_percentage']
       if (numberColumns.includes(column.property)) {
         const val = parseFloat(row[column.property].replace(numberRegex, ''))
-        if (val > 0) {
-          return 'greenClass'
-        } else if (val < 0) {
+        if (val < 0) {
           return 'redClass'
         }
       }
@@ -317,8 +315,12 @@ export default defineComponent({
   }
 }
 
+.el-dropdown {
+  color: inherit !important
+}
+
 .redClass {
-  color: red;
+  color: red !important
 }
 .el-table {
   overflow: scroll
