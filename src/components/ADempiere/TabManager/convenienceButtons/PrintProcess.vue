@@ -18,9 +18,9 @@
 -->
 
 <template>
-  <span>
+  <span v-if="!isEmptyValue(process) && process.is_report">
     <el-dropdown
-      v-if="(!isEmptyValue(process) && is_document && !isEmptyValue(printFormats)) || currentTableName === 'PA_Report'"
+      v-if="!isEmptyValue(printFormatsList) || currentTableName === FINANCIAL_REPORT_TABLE_NAME"
       split-button
       size="small"
       trigger="click"
@@ -42,7 +42,7 @@
 
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item
-          v-for="(process, index) in printFormats"
+          v-for="(process, index) in printFormatsList"
           :key="index"
           :command="process"
         >
@@ -50,8 +50,9 @@
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
+
     <el-button
-      v-if="!isEmptyValue(process) && is_document && isEmptyValue(printFormats)"
+      v-if="isEmptyValue(printFormatsList)"
       plain
       type="info"
       size="small"
@@ -80,6 +81,11 @@ import { defineComponent, computed, ref } from '@vue/composition-api'
 import language from '@/lang'
 import store from '@/store'
 
+// Constants
+import {
+  FINANCIAL_REPORT_TABLE_NAME
+} from '@/utils/ADempiere/dictionary/report/financialReport.ts'
+
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showNotification } from '@/utils/ADempiere/notification.js'
@@ -107,12 +113,12 @@ export default defineComponent({
      * Ref
      */
     const isLoading = ref(false)
+
     /**
      * Const
      */
     const containerUuid = props.tabAttributes.uuid
     const { process } = props.tabAttributes
-    const { is_document } = props.tabAttributes.table
 
     /**
      * Computed
@@ -137,7 +143,7 @@ export default defineComponent({
       return store.getters.getStoredReport(process.uuid)
     })
 
-    const printFormats = computed(() => {
+    const printFormatsList = computed(() => {
       if (isEmptyValue(process)) {
         return []
       }
@@ -188,7 +194,7 @@ export default defineComponent({
     }
 
     function loadProcessData() {
-      if (isEmptyValue(process) || isEmptyValue(is_document)) {
+      if (isEmptyValue(process)) {
         return
       }
       if (!isEmptyValue(getReportDefinition.value)) {
@@ -208,10 +214,10 @@ export default defineComponent({
       isLoading,
       // Const
       process,
-      is_document,
+      FINANCIAL_REPORT_TABLE_NAME,
       // Computed
       recordId,
-      printFormats,
+      printFormatsList,
       currentTableName,
       getReportDefinition,
       // Methods
