@@ -61,13 +61,30 @@
         header-align="center"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row[header.columnName] }}</span>
           <el-button
             v-if="header.columnName === 'value'"
             type="text"
             icon="el-icon-document-copy"
             @click="copyCode(scope.row)"
           />
+          <el-dropdown
+            v-if="header.columnName === 'name'"
+            trigger="click"
+            @command="zoomInWindow(scope.row)"
+          >
+            <span>{{ scope.row[header.columnName] }}</span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>
+                <i class="el-icon-zoom-in" style="font-weight: bolder;" />
+                <b>
+                  {{ $t('page.processActivity.zoomIn') }} {{ ' - ' }} {{ scope.row[header.columnName] }}
+                </b>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+          <span v-else>
+            {{ scope.row[header.columnName] }}
+          </span>
         </template>
       </el-table-column>
     </el-table>
@@ -139,6 +156,7 @@ import {
 } from '@/api/ADempiere/fields/search/product.ts'
 
 // Utils and Helper Methods
+import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 import { getContext } from '@/utils/ADempiere/contextUtils'
 import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 import { closeTagView } from '@/utils/ADempiere/componentUtils.js'
@@ -492,6 +510,21 @@ export default defineComponent({
         })
       }
     }
+    function zoomInWindow(scope) {
+      const value = scope.id
+      const id = 140
+      const columnName = 'M_Product_ID'
+      zoomIn({
+        attributeValue: `window_${id}`,
+        attributeName: 'containerKey',
+        query: {
+          [columnName]: value
+        },
+        params: {
+          [columnName]: value
+        }
+      })
+    }
     /**
      * Watch - watch works directly on a ref
      * @param newValue - New Assessed Property value
@@ -593,7 +626,8 @@ export default defineComponent({
       getContext,
       copyCode,
       setQuery,
-      close
+      close,
+      zoomInWindow
     }
   }
 })
