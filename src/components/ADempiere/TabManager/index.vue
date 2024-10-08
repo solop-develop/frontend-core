@@ -1040,7 +1040,7 @@ export default defineComponent({
               currentTab.parentUuid,
               firstTabUuid
             )
-            if (!isEmptyValue(firstTab) && firstTab.is_document) {
+            if (!isEmptyValue(firstTab) && firstTab.table.is_document) {
               refreshRecord.refreshRecord({
                 parentUuid: currentTab.parentUuid,
                 containerUuid: firstTabUuid
