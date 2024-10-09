@@ -46,6 +46,7 @@ const product = {
   margin: 'Margin',
   // quantity
   stocked: 'Stocked',
+  onlyOnHand: 'Only On Hand',
   available: 'Available',
   onHandQuantity: 'On Hand Qty',
   reservedQuantity: 'Reserved Qty',

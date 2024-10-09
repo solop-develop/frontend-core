@@ -44,6 +44,7 @@ const emptyQueryFilters = {
   price_list_version_id: undefined,
   warehouse_id: undefined,
   is_stocked: undefined,
+  is_only_stock_available: false,
   attribute_set_id: undefined,
   attribute_set_instance_id: undefined,
   vendor_id: undefined,
