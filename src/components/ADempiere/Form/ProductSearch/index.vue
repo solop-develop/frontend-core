@@ -113,13 +113,13 @@
             @click="searchProduct()"
           />
 
-          <el-button
+          <!-- <el-button
             v-if="!isEmptyValue(product)"
             type="primary"
             class="button-base-icon"
             icon="el-icon-check"
             @click="openProductInfo"
-          />
+          /> -->
         </span>
         <custom-pagination
           style="display: inline-block; vertical-align: middle;"
