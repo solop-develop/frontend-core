@@ -20,10 +20,11 @@
   <div
     class="product-list-content"
   >
-    <el-collapse v-model="activeName" accordion style="margin-top: 15px;">
+    <el-collapse v-model="activeCollapse">
       <el-collapse-item name="1">
-        <span slot="title" style="font-size: 15px !important; font-weight: bold !important">
+        <span slot="title" style="font-size: 18px !important; font-weight: bold !important">
           {{ $t('field.product.searchCriteria') }}
+          <i style="font-size: 18px;" class="el-icon-s-operation" />
         </span>
         <query-criteria
           :uuid-form="uuidForm"
@@ -39,9 +40,10 @@
       :empty-text="$t('quickAccess.searchWithEnter')"
       highlight-current-row
       :border="true"
-      max-height="500"
       class="products-table-avalaible"
+      :height="tableHeight"
       fit
+      style="width: 100%; overflow: scroll; font-size: 14px;"
       @current-change="addProduct"
       @row-dblclick="openProductInfo"
     >
@@ -50,143 +52,83 @@
         :page-size="50"
       />
       <el-table-column
-        prop="value"
-        :label="$t('field.product.value')"
+        v-for="(header, key) in headerList"
+        :key="key"
+        :align="header.align"
+        :min-width="header.width"
+        :label="header.label"
+        :prop="header.columnName"
         header-align="center"
-        min-width="90"
       >
         <template slot-scope="scope">
           <el-button
+            v-if="header.columnName === 'value'"
             type="text"
             icon="el-icon-document-copy"
             @click="copyCode(scope.row)"
           />
-          {{ scope.row.value }}
+          <el-dropdown
+            v-if="header.columnName === 'name'"
+            trigger="click"
+            @command="zoomInWindow(scope.row)"
+          >
+            <span>{{ scope.row[header.columnName] }}</span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>
+                <i class="el-icon-zoom-in" style="font-weight: bolder;" />
+                <b>
+                  {{ $t('page.processActivity.zoomIn') }} {{ ' - ' }} {{ scope.row[header.columnName] }}
+                </b>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+          <span v-else>
+            {{ scope.row[header.columnName] }}
+          </span>
         </template>
       </el-table-column>
-      <el-table-column
-        prop="name"
-        :label="$t('field.product.name')"
-        header-align="center"
-        min-width="190"
-      />
-      <template v-if="getPriceListVersion">
-        <el-table-column
-          prop="standard_price"
-          :label="$t('field.product.standardPrice')"
-          header-align="center"
-          min-width="129"
-        >
-          <span slot-scope="scope" class="cell-align-right">
-            {{ formatQuantity({ value: scope.row.standard_price }) }}
-          </span>
-        </el-table-column>
-      </template>
-      <el-table-column
-        prop="uom"
-        :label="$t('field.product.uom')"
-        header-align="center"
-        min-width="60"
-      />
-      <el-table-column
-        prop="is_stocked"
-        :label="$t('field.product.stocked')"
-        header-align="center"
-        min-width="105"
-      >
-        <span slot-scope="scope">
-          {{ convertBooleanToTranslationLang(scope.row.is_stocked) }}
-        </span>
-      </el-table-column>
-
-      <template v-if="isStockQuantities">
-        <el-table-column
-          prop="available_quantity"
-          :label="$t('field.product.available')"
-          header-align="center"
-          min-width="100"
-        >
-          <span slot-scope="scope" class="cell-align-right">
-            {{ formatQuantity({ value: scope.row.available_quantity }) }}
-          </span>
-        </el-table-column>
-        <el-table-column
-          prop="on_hand_quantity"
-          :label="$t('field.product.onHandQuantity')"
-          header-align="center"
-          min-width="130"
-        >
-          <span slot-scope="scope" class="cell-align-right">
-            {{ formatQuantity({ value: scope.row.on_hand_quantity }) }}
-          </span>
-        </el-table-column>
-      </template>
-      <el-table-column
-        prop="product_category"
-        :label="$t('field.product.productCategory')"
-        header-align="center"
-        min-width="180"
-      />
-      <el-table-column
-        prop="product_group"
-        :label="$t('field.product.productGroup')"
-        header-align="center"
-        min-width="150"
-      />
-      <el-table-column
-        prop="product_class"
-        :label="$t('field.product.productClass')"
-        header-align="center"
-        min-width="150"
-      />
-      <el-table-column
-        prop="vendor"
-        :label="$t('field.product.vendor')"
-        header-align="center"
-        min-width="150"
-      />
     </el-table>
-
     <p>
-      <custom-pagination
-        style="text-align: left;float: left;"
-        :total-records="recordCount"
-        :selection="selection"
-        :page-number="pageTokenNumber"
-        :page-size="listProducto.length"
-        :handle-change-page-number="handleChangePage"
-        :handle-change-page-size="handleSizeChange"
-      />
-      <span style="text-align: right; float: right;">
-        <el-button
-          type="danger"
-          class="button-base-icon"
-          icon="el-icon-close"
-          @click="close()"
-        />
-        <el-button
-          type="info"
-          class="button-base-icon"
-          plain
-          @click="cleanQueryCriteria()"
-        >
-          <svg-icon icon-class="layers-clear" />
-        </el-button>
+      <span style="float: right;">
+        <span style="display: inline-block; vertical-align: middle; margin-left: 50px;">
+          <el-button
+            type="info"
+            class="button-base-icon"
+            plain
+            @click="cleanQueryCriteria()"
+          >
+            <svg-icon icon-class="layers-clear" />
+          </el-button>
+          <el-button
+            type="danger"
+            class="button-base-icon"
+            icon="el-icon-close"
+            @click="close()"
+          />
+          <el-button
+            :loading="isLoading"
+            type="success"
+            class="button-base-icon"
+            icon="el-icon-refresh-right"
+            @click="searchProduct()"
+          />
 
-        <el-button
-          :loading="isLoading"
-          type="success"
-          class="button-base-icon"
-          icon="el-icon-refresh-right"
-          @click="searchProduct()"
-        />
-
-        <el-button
-          v-if="!isEmptyValue(product)"
-          type="primary"
-          class="button-base-icon"
-          icon="el-icon-check"
-          @click="openProductInfo"
+          <el-button
+            v-if="!isEmptyValue(product)"
+            type="primary"
+            class="button-base-icon"
+            icon="el-icon-check"
+            @click="openProductInfo"
+          />
+        </span>
+        <custom-pagination
+          style="display: inline-block; vertical-align: middle;"
+          :total-records="recordCount"
+          :selection="selection"
+          :page-number="pageTokenNumber"
+          :page-size="listProducto.length"
+          :handle-change-page-number="handleChangePage"
+          :handle-change-page-size="handleSizeChange"
         />
       </span>
     </p>
@@ -200,7 +142,7 @@
 import { defineComponent, onMounted, computed, watch, ref } from '@vue/composition-api'
 
 import store from '@/store'
-
+import lang from '@/lang'
 // Components and Mixins
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 import IndexColumn from '@/components/ADempiere/DataTable/Components/IndexColumn.vue'
@@ -214,13 +156,13 @@ import {
 } from '@/api/ADempiere/fields/search/product.ts'
 
 // Utils and Helper Methods
+import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 import { getContext } from '@/utils/ADempiere/contextUtils'
 import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 import { closeTagView } from '@/utils/ADempiere/componentUtils.js'
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 import { convertBooleanToTranslationLang } from '@/utils/ADempiere/formatValue/booleanFormat'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-
 export default defineComponent({
   name: 'ProductSearch',
 
@@ -230,11 +172,6 @@ export default defineComponent({
     CustomPagination,
     QueryCriteria,
     ShowInfoProduct
-  },
-  data() {
-    return {
-      activeName: '1'
-    }
   },
   props: {
     height: {
@@ -259,7 +196,75 @@ export default defineComponent({
     const selection = ref(0)
     const recordCount = ref(0)
     const productInfoTable = ref(null)
-
+    const activeCollapse = ref(['1'])
+    const headerList = ref([
+      {
+        label: lang.t('field.product.value'),
+        columnName: 'value',
+        width: '70',
+        align: 'left'
+      },
+      {
+        label: lang.t('field.product.name'),
+        columnName: 'name',
+        width: '300',
+        align: 'left'
+      },
+      {
+        label: lang.t('field.product.standardPrice'),
+        columnName: 'standard_price',
+        width: '100',
+        align: 'right'
+      },
+      {
+        label: lang.t('field.product.uom'),
+        columnName: 'uom',
+        width: '70',
+        align: 'left'
+      },
+      {
+        label: lang.t('field.product.stocked'),
+        columnName: 'is_stocked',
+        width: '100',
+        align: 'left'
+      },
+      {
+        label: lang.t('field.product.available'),
+        columnName: 'available_quantity',
+        width: '150',
+        align: 'right'
+      },
+      {
+        label: lang.t('field.product.onHandQuantity'),
+        columnName: 'on_hand_quantity',
+        width: '150',
+        align: 'right'
+      },
+      {
+        label: lang.t('field.product.productCategory'),
+        columnName: 'product_category',
+        width: '150',
+        align: 'left'
+      },
+      {
+        label: lang.t('field.product.productGroup'),
+        columnName: 'product_group',
+        width: '150',
+        align: 'left'
+      },
+      {
+        label: lang.t('field.product.productClass'),
+        columnName: 'product_class',
+        width: '130',
+        align: 'left'
+      },
+      {
+        label: lang.t('field.product.vendor'),
+        columnName: 'vendor',
+        width: '150',
+        align: 'left'
+      }
+    ])
     let timeoutSearch
 
     /**
@@ -270,7 +275,11 @@ export default defineComponent({
       return store.getters.getProductList.map(list => {
         return {
           ...list,
-          quantity_on_hand: formatQuantity({ value: Number(list.quantity_on_hand) })
+          quantity_on_hand: formatQuantity({ value: Number(list.quantity_on_hand) }),
+          standard_price: formatQuantity({ value: Number(list.standard_price) }),
+          is_stocked: convertBooleanToTranslationLang(list.is_stocked),
+          available_quantity: formatQuantity({ value: Number(list.available_quantity) }),
+          on_hand_quantity: formatQuantity({ value: Number(list.on_hand_quantity) })
         }
       })
     })
@@ -345,7 +354,12 @@ export default defineComponent({
     const product = computed(() => {
       return store.getters.getCurrentProduct
     })
-
+    const tableHeight = computed(() => {
+      if (activeCollapse.value[0] === '1') {
+        return 'calc(100vh - 480px)'
+      }
+      return 'calc(100vh - 230px)'
+    })
     // Methods
     function copyCode(row) {
       copyToClipboard({
@@ -496,7 +510,21 @@ export default defineComponent({
         })
       }
     }
-
+    function zoomInWindow(scope) {
+      const value = scope.id
+      const id = 140
+      const columnName = 'M_Product_ID'
+      zoomIn({
+        attributeValue: `window_${id}`,
+        attributeName: 'containerKey',
+        query: {
+          [columnName]: value
+        },
+        params: {
+          [columnName]: value
+        }
+      })
+    }
     /**
      * Watch - watch works directly on a ref
      * @param newValue - New Assessed Property value
@@ -569,6 +597,8 @@ export default defineComponent({
       searchValue,
       pageSizeNumber,
       productInfoTable,
+      activeCollapse,
+      headerList,
       // Computed
       listProducto,
       recordCount,
@@ -582,6 +612,7 @@ export default defineComponent({
       getProductGroupField,
       queryCriteria,
       product,
+      tableHeight,
       // Methods
       convertBooleanToTranslationLang,
       cleanQueryCriteria,
@@ -595,13 +626,18 @@ export default defineComponent({
       getContext,
       copyCode,
       setQuery,
-      close
+      close,
+      zoomInWindow
     }
   }
 })
 </script>
 
 <style lang="scss">
+.products-table-avalaible.el-table .el-table__body .el-table__row .el-table__cell {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
 .product-list-content {
   height: 100% !important;
   padding-top: 0px;

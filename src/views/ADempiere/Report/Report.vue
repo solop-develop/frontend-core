@@ -72,7 +72,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       icon="el-icon-arrow-left"
       circle
       style="top: 50%; right: 0%; position: absolute;"
-      @click="handleOpem()"
+      @click="handleOpen()"
     />
     <panel-footer
       :container-uuid="reportUuid"
@@ -203,7 +203,7 @@ export default defineComponent({
       showPanelConfigReport(false)
     }
 
-    function handleOpem() {
+    function handleOpen() {
       showPanelConfigReport(!isShowPanelConfig.value)
     }
 
@@ -213,10 +213,17 @@ export default defineComponent({
     }
 
     function runReport(params) {
-      store.dispatch('buildReport', {
-        containerUuid: reportUuid,
-        isSummary: true
-      })
+      if (storedReportDefinition.value.is_jasper_report) {
+        store.dispatch('runReport', {
+          containerUuid: reportUuid,
+          isSummary: true
+        })
+      } else {
+        store.dispatch('buildReport', {
+          containerUuid: reportUuid,
+          isSummary: true
+        })
+      }
     }
 
     function clearParameters() {
@@ -244,7 +251,7 @@ export default defineComponent({
       closeTagView,
       handleClose,
       closeReport,
-      handleOpem,
+      handleOpen,
       runReport
     }
   }

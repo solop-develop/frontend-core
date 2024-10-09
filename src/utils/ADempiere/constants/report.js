@@ -20,8 +20,6 @@ import language from '@/lang'
 
 const today = new Date()
 
-export const FINANCIAL_REPORT_CODE = 'FinReport'
-
 export const REPORT_VIEWER_NAME = 'Report Viewer'
 
 export const staticReportRoutes = [

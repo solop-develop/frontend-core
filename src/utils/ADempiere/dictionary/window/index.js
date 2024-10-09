@@ -755,13 +755,19 @@ export const deleteRecord = {
       return false
     }
 
-    const tab = store.getters.getStoredTab(parentUuid, containerUuid)
-    if (!tab.table.is_deleteable) {
+    const storedTab = store.getters.getStoredTab(parentUuid, containerUuid)
+    if (isEmptyValue(storedTab)) {
+      return false
+    }
+    const {
+      isShowedTableRecords, table, isParentTab, firstTabUuid
+    } = storedTab
+    if (!table.is_deleteable) {
       return false
     }
 
     // delete selection of records on table
-    if (tab.isShowedTableRecords) {
+    if (isShowedTableRecords) {
       const selectionsRecords = store.getters.getTabSelectionsList({
         containerUuid
       })
@@ -787,6 +793,18 @@ export const deleteRecord = {
           message: language.t('recordManager.deleteRecordSuccessful'),
           type: 'success'
         })
+        if (!isParentTab) {
+          const storedFirstTab = store.getters.getStoredTab(
+            parentUuid,
+            firstTabUuid
+          )
+          if (!isEmptyValue(storedFirstTab) && storedFirstTab.table.is_document) {
+            refreshRecord.refreshRecord({
+              parentUuid: parentUuid,
+              containerUuid: firstTabUuid
+            })
+          }
+        }
       })
       .catch(error => {
         showMessage({
@@ -1006,7 +1024,7 @@ export const refreshRecord = {
     if (isEmptyValue(recordId)) {
       recordId = store.getters.getIdOfContainer({
         containerUuid: containerUuid,
-        tableName: tabDefinition.tableName
+        tableName: tabDefinition.table_name
       })
     }
 

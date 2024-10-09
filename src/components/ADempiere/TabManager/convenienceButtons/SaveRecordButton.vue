@@ -162,11 +162,11 @@ export default defineComponent({
           // refresh parent tab on document window
           if (!tabAttributes.value.isParentTab) {
             const { firstTabUuid } = tabAttributes.value
-            const firstTab = store.getters.getStoredTab(
+            const storedFirstTab = store.getters.getStoredTab(
               props.parentUuid,
               firstTabUuid
             )
-            if (!isEmptyValue(firstTab) && firstTab.is_document) {
+            if (!isEmptyValue(storedFirstTab) && storedFirstTab.table.is_document) {
               refreshRecord.refreshRecord({
                 parentUuid: props.parentUuid,
                 containerUuid: firstTabUuid

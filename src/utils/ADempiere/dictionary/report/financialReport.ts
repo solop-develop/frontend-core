@@ -16,12 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-const calendar = {
-  allEvents: 'Todos los Eventos',
-  calendar: 'Calendario',
-  calendarTimeLine: 'Calendario de Línea de Tiempo',
-  deleteEventConfirm: '¿Seguro de que quiere eliminar el evento?',
-  titleNewEvent: 'Por favor ingresa un nuevo título para tu evento'
-}
+export const FINANCIAL_REPORT_CODE = 'FinReport'
 
-export default calendar
+export const FINANCIAL_REPORT_TABLE_NAME = 'PA_Report'
