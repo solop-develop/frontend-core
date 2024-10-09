@@ -77,7 +77,7 @@
               <el-dropdown-item>
                 <i class="el-icon-zoom-in" style="font-weight: bolder;" />
                 <b>
-                  {{ $t('page.processActivity.zoomIn') }} {{ ' - ' }} {{ scope.row[header.columnName] }}
+                  {{ $t('page.processActivity.zoomIn') }} {{ ' - ' }} {{ scope.row.value }}  {{ ' - ' }} {{ scope.row.name }}
                 </b>
               </el-dropdown-item>
             </el-dropdown-menu>
