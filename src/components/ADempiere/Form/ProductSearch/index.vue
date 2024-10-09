@@ -363,7 +363,7 @@ export default defineComponent({
     })
     const tableHeight = computed(() => {
       if (activeCollapse.value[0] === '1') {
-        return 'calc(100vh - 480px)'
+        return 'calc(100vh - 430px)'
       }
       return 'calc(100vh - 230px)'
     })
@@ -677,4 +677,16 @@ export default defineComponent({
     }
   }
 }
+.product-list-content {
+  .el-collapse-item__content{
+  padding-bottom: 0px !important
+  }
+  .el-form-item--mini.el-form-item {
+    padding-bottom: 0px !important
+  }
+  .el-collapse-item__wrap{
+    margin-bottom: -25px;
+  }
+}
+
 </style>
