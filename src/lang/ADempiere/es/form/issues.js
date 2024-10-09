@@ -53,7 +53,8 @@ const issues = {
   category: 'Categoría',
   project: 'Proyecto',
   group: 'Grupo',
-  taskStatus: 'Estado Tarea'
+  taskStatus: 'Estado Tarea',
+  filters: 'Filtros'
 }
 
 export default issues
