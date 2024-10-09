@@ -46,7 +46,29 @@
           :label="header.label"
           :prop="header.columnName"
           header-align="center"
-        />
+        >
+          <template slot-scope="scope">
+            <el-dropdown
+              v-if="header.columnName === 'name'"
+              :class="classChecker({ row: scope.row, column: header })"
+              trigger="click"
+              @command="zoomInWindow(scope.row)"
+            >
+              <span>{{ scope.row[header.columnName] }}</span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>
+                  <i class="el-icon-zoom-in" style="font-weight: bolder;" />
+                  <b>
+                    {{ $t('page.processActivity.zoomIn') }} {{ ' - ' }} {{ scope.row[header.columnName] }}
+                  </b>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <span v-else>
+              <span>{{ scope.row[header.columnName] }}</span>
+            </span>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
   </div>
@@ -66,6 +88,8 @@ import store from '@/store'
 
 // Utils and Helper Methods
 import optionsWtrialBalance from './options'
+import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
+
 export default defineComponent({
   name: 'WTrialBalance',
   components: {
@@ -88,9 +112,7 @@ export default defineComponent({
       const numberColumns = ['period_actual_amount', 'period_budget_amount', 'ytd_actual_amount', 'ytd_budget_amount', 'variance_amount', 'period_variance_amount', 'variance_percentage']
       if (numberColumns.includes(column.property)) {
         const val = parseFloat(row[column.property].replace(numberRegex, ''))
-        if (val > 0) {
-          return 'greenClass'
-        } else if (val < 0) {
+        if (val < 0) {
           return 'redClass'
         }
       }
@@ -239,6 +261,20 @@ export default defineComponent({
     const listSummary = computed(() => {
       return store.getters.getListSummary
     })
+    function zoomInWindow(scope) {
+      const id = 118
+      const columnName = 'C_ElementValue_ID'
+      zoomIn({
+        attributeValue: `window_${id}`,
+        attributeName: 'containerKey',
+        query: {
+          [columnName]: scope.id
+        },
+        params: {
+          [columnName]: scope.id
+        }
+      })
+    }
     return {
       //  Values
       isVisible,
@@ -250,12 +286,12 @@ export default defineComponent({
       viewList,
       selectedExport,
       isLoading,
-      // Computed
       // Methods
       changeSelections,
       getSummaries,
       changeView,
-      getColumnStyle
+      getColumnStyle,
+      zoomInWindow
     }
   }
 })
@@ -283,8 +319,12 @@ export default defineComponent({
   }
 }
 
+.el-dropdown {
+  color: inherit !important
+}
+
 .redClass {
-  color: red;
+  color: red !important
 }
 .el-table {
   overflow: scroll
