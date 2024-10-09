@@ -49,6 +49,7 @@ import store from '@/store'
 
 // Components and Mixins
 import EmptyOptionSelect from '@/components/ADempiere/FieldDefinition/FieldSelect/emptyOptionSelect.vue'
+
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
@@ -83,7 +84,15 @@ export default defineComponent({
 
     const currentValue = computed({
       set(newValue) {
-        if (isEmptyValue(newValue)) newValue = -1
+        if (isEmptyValue(newValue)) {
+          newValue = -1
+
+          store.commit('setProductSearchFieldQueryFilterByAttribute', {
+            containerUuid: props.uuidForm,
+            attributeKey: 'is_only_stock_available',
+            value: false
+          })
+        }
         store.commit('setProductSearchFieldQueryFilterByAttribute', {
           containerUuid: props.uuidForm,
           attributeKey: ATTRIBUTE_KEY,

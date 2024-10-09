@@ -333,7 +333,14 @@ export default defineComponent({
       })
     })
 
-    const isStockQuantities = computed(() => {
+    const getIsOnlyStockAvailable = computed(() => {
+      return store.getters.getProductSearchFieldQueryFilterByAttribute({
+        containerUuid: uuidForm,
+        attributeKey: 'is_only_stock_available'
+      })
+    })
+
+    const getWarehouseId = computed(() => {
       return store.getters.getProductSearchFieldQueryFilterByAttribute({
         containerUuid: uuidForm,
         attributeKey: 'warehouse_id'
@@ -567,7 +574,13 @@ export default defineComponent({
       }
     })
 
-    watch(isStockQuantities, (newValue, oldValue) => {
+    watch(getIsOnlyStockAvailable, (newValue, oldValue) => {
+      if (newValue !== oldValue) {
+        searchProduct()
+      }
+    })
+
+    watch(getWarehouseId, (newValue, oldValue) => {
       if (newValue !== oldValue) {
         searchProduct()
       }
@@ -603,8 +616,9 @@ export default defineComponent({
       listProducto,
       recordCount,
       getIsStocked,
+      getIsOnlyStockAvailable,
       getVendorId,
-      isStockQuantities,
+      getWarehouseId,
       getPriceListVersion,
       getProductCategoryField,
       getProductClassField,

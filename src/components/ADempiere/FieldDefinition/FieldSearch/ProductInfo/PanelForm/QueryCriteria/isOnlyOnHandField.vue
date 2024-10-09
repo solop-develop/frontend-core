@@ -18,17 +18,24 @@
 
 <template>
   <el-form-item
-    :label="$t('field.product.stocked')"
+    :label="$t('field.product.onlyOnHand')"
   >
     <el-select
       v-model="currentValue"
+      :disabled="!isStockQuantities"
       clearable
     >
+      <!--
+      <empty-option-select
+        :current-value="currentValue"
+        :is-allows-zero="false"
+      />
+      -->
       <!-- :disabled="isDisabled" -->
       <el-option
         v-for="(option, key) in YES_NO_OPTIONS_LIST"
         :key="key"
-        :value="option.stringValue"
+        :value="option.booleanValue"
         :label="option.displayValue"
       />
     </el-select>
@@ -46,8 +53,11 @@ import { YES_NO_OPTIONS_LIST } from '@/utils/ADempiere/dictionary/field/yesNo'
 // Components and Mixins
 import EmptyOptionSelect from '@/components/ADempiere/FieldDefinition/FieldSelect/emptyOptionSelect.vue'
 
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+
 export default defineComponent({
-  name: 'IsStokedField',
+  name: 'IsOnlyOnHandField',
 
   components: {
     EmptyOptionSelect
@@ -69,7 +79,7 @@ export default defineComponent({
   },
 
   setup(props) {
-    const ATTRIBUTE_KEY = 'is_stocked'
+    const ATTRIBUTE_KEY = 'is_only_stock_available'
 
     const currentValue = computed({
       set(newValue) {
@@ -95,10 +105,21 @@ export default defineComponent({
     //   return isEmptyValue(warehouseId) || warehouseId <= 0
     // })
 
+    const getWarehouseId = computed(() => {
+      return store.getters.getProductSearchFieldQueryFilterByAttribute({
+        containerUuid: props.uuidForm,
+        attributeKey: 'warehouse_id'
+      })
+    })
+    const isStockQuantities = computed(() => {
+      return !isEmptyValue(getWarehouseId.value) && getWarehouseId.value > 0
+    })
+
     return {
       YES_NO_OPTIONS_LIST,
       //
-      currentValue
+      currentValue,
+      isStockQuantities
       // isDisabled
     }
   }

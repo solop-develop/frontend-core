@@ -43,8 +43,13 @@
             :uuid-form="uuidForm"
           />
         </el-col>
-        <el-col :span="6">
+        <el-col :span="3">
           <is-stocked-field
+            :uuid-form="uuidForm"
+          />
+        </el-col>
+        <el-col :span="3">
+          <is-only-on-hand-field
             :uuid-form="uuidForm"
           />
         </el-col>
@@ -84,11 +89,14 @@
 
 <script>
 import { defineComponent, ref, computed } from '@vue/composition-api'
+
 import store from '@/store'
+
 // Components and Mixins
 import VendorField from '@/components/ADempiere/FieldDefinition/FieldSearch/ProductInfo/PanelForm/QueryCriteria/vendorField.vue'
 import WarehouseField from '@/components/ADempiere/FieldDefinition/FieldSearch/ProductInfo/PanelForm/QueryCriteria/warehouseField.vue'
 import IsStockedField from '@/components/ADempiere/FieldDefinition/FieldSearch/ProductInfo/PanelForm/QueryCriteria/isStockedField.vue'
+import IsOnlyOnHandField from '@/components/ADempiere/FieldDefinition/FieldSearch/ProductInfo/PanelForm/QueryCriteria/isOnlyOnHandField.vue'
 import PriceListVersionField from '@/components/ADempiere/FieldDefinition/FieldSearch/ProductInfo/PanelForm/QueryCriteria/priceListVersionField.vue'
 import ProductCategoryField from '@/components/ADempiere/FieldDefinition/FieldSearch/ProductInfo/PanelForm/QueryCriteria/productCategoryField.vue'
 import ProductClassField from '@/components/ADempiere/FieldDefinition/FieldSearch/ProductInfo/PanelForm/QueryCriteria/productClassField.vue'
@@ -102,6 +110,7 @@ export default defineComponent({
     VendorField,
     WarehouseField,
     IsStockedField,
+    IsOnlyOnHandField,
     ProductClassField,
     ProductGroupField,
     ProductCategoryField,
