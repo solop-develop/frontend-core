@@ -1601,7 +1601,8 @@ export const containerManager = {
   isReadOnlyField(field) {
     const {
       parentUuid, containerUuid, columnName,
-      display_type, is_updateable, is_always_updateable
+      display_type, is_updateable, is_always_updateable,
+      process
     } = field
 
     // if tab is read only, all fields are read only
@@ -1629,6 +1630,7 @@ export const containerManager = {
     const recordUuid = store.getters.getUuidOfContainer(containerUuid)
     // edit mode is diferent to create new
     const isWithRecord = !isEmptyValue(recordUuid) && recordUuid !== 'create-new'
+    const isButton = display_type === BUTTON.id
     if (isWithRecord) {
       // not updateable and record saved
       if (!is_updateable) {
@@ -1648,7 +1650,7 @@ export const containerManager = {
       }
     } else {
       // button not invoke (browser/process/report/workflow) without record
-      if (display_type === BUTTON.id) {
+      if (isButton) {
         return true
       }
     }
@@ -1677,24 +1679,27 @@ export const containerManager = {
       return false
     }
 
-    // is processed value of record
-    const isProcessedRecord = store.getters.getValueOfField({
-      parentUuid,
-      containerUuid,
-      columnName: PROCESSED
-    })
-    if (convertStringToBoolean(isProcessedRecord)) {
-      return true
-    }
+    const isOnlyProcess = !isEmptyValue(process) && !(process.browser_id > 0 || process.form_id > 0 || process.workflow_id > 0)
+    if (!isButton || (isButton && !isOnlyProcess)) {
+      // is processed value of record
+      const isProcessedRecord = store.getters.getValueOfField({
+        parentUuid,
+        containerUuid,
+        columnName: PROCESSED
+      })
+      if (convertStringToBoolean(isProcessedRecord)) {
+        return true
+      }
 
-    // is processing value of record
-    const isProcessingRecord = store.getters.getValueOfField({
-      parentUuid,
-      containerUuid,
-      columnName: PROCESSING
-    })
-    if (convertStringToBoolean(isProcessingRecord)) {
-      return true
+      // is processing value of record
+      const isProcessingRecord = store.getters.getValueOfField({
+        parentUuid,
+        containerUuid,
+        columnName: PROCESSING
+      })
+      if (convertStringToBoolean(isProcessingRecord)) {
+        return true
+      }
     }
 
     return isReadOnlyField(field) || field.isReadOnlyFromForm
