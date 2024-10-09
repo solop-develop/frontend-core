@@ -49,6 +49,7 @@
         >
           <template slot-scope="scope">
             <el-dropdown
+              v-if="header.columnName === 'name'"
               :class="classChecker({ row: scope.row, column: header })"
               trigger="click"
               @command="zoomInWindow(scope.row)"
@@ -58,11 +59,14 @@
                 <el-dropdown-item>
                   <i class="el-icon-zoom-in" style="font-weight: bolder;" />
                   <b>
-                    {{ $t('page.processActivity.zoomIn') }} {{ ' - ' }} {{ $t('form.WTrialBalance.accountNo') }}
+                    {{ $t('page.processActivity.zoomIn') }} {{ ' - ' }} {{ scope.row[header.columnName] }}
                   </b>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
+            <span v-else>
+              <span>{{ scope.row[header.columnName] }}</span>
+            </span>
           </template>
         </el-table-column>
       </el-table>
@@ -259,15 +263,15 @@ export default defineComponent({
     })
     function zoomInWindow(scope) {
       const id = 118
-      const columnName = 'Value'
+      const columnName = 'C_ElementValue_ID'
       zoomIn({
         attributeValue: `window_${id}`,
         attributeName: 'containerKey',
         query: {
-          [columnName]: scope.value
+          [columnName]: scope.id
         },
         params: {
-          [columnName]: scope.value
+          [columnName]: scope.id
         }
       })
     }
