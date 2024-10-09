@@ -135,6 +135,7 @@ import store from '@/store'
 
 // Constants
 import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
+import { BUTTON, ID, IMAGE } from '@/utils/ADempiere/references'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
@@ -162,7 +163,7 @@ export default defineComponent({
       })
     })
     const displayValueField = computed(() => {
-      if (!isLookup(props.fieldAttributes.display_type)) {
+      if (!(isLookup(props.fieldAttributes.display_type) || [ID.id, IMAGE.id, BUTTON.id].includes(props.fieldAttributes.display_type))) {
         return null
       }
       const { parentUuid, containerUuid, column_name } = props.fieldAttributes
