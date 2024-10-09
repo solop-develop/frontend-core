@@ -53,7 +53,8 @@ const issues = {
   project: 'Project',
   group: 'Group',
   nextDate: 'Next Date',
-  taskStatus: 'Task Status'
+  taskStatus: 'Task Status',
+  filters: 'Filters'
 }
 
 export default issues

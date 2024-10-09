@@ -74,6 +74,13 @@ export default {
       tableName,
       recordId,
       recordUuid,
+      businessPartnerId,
+      taskStatusValue,
+      statusCategory,
+      priorityValue,
+      projectId,
+      statusId,
+      groupId,
       pageSize,
       pageToken
     }) {
@@ -83,6 +90,13 @@ export default {
           tableName,
           recordId,
           recordUuid,
+          businessPartnerId,
+          taskStatusValue,
+          statusCategory,
+          priorityValue,
+          projectId,
+          statusId,
+          groupId,
           pageSize,
           pageToken
         })
@@ -124,6 +138,13 @@ export default {
       tableName,
       recordId,
       recordUuid,
+      businessPartnerId,
+      taskStatusValue,
+      statusCategory,
+      priorityValue,
+      projectId,
+      statusId,
+      groupId,
       pageSize,
       pageToken
     }) {
@@ -133,6 +154,13 @@ export default {
           tableName,
           recordId,
           recordUuid,
+          businessPartnerId,
+          taskStatusValue,
+          statusCategory,
+          priorityValue,
+          projectId,
+          statusId,
+          groupId,
           pageSize,
           pageToken
         })
@@ -141,6 +169,7 @@ export default {
 
             if (isEmptyValue(records)) {
               commit('setListIssues', [])
+              commit('setListIssuesAll', [])
             }
             const list = records.map(issues => {
               let date = ''
@@ -448,7 +477,7 @@ export default {
 
   },
   getters: {
-    getListIssues: (state) => (isAll) => {
+    getListIssues: (state) => (isAll = false) => {
       if (isAll) {
         return state.listIssuesAll
       }

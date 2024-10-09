@@ -50,17 +50,31 @@ export function requestExistsIssues({
  * @param {string} searchValue
  */
 export function requestListIssues({
-  tableName,
   recordId,
-  searchValue
+  tableName,
+  searchValue,
+  groupId = 0,
+  statusId = 0,
+  projectId = 0,
+  priorityValue,
+  taskStatusValue,
+  statusCategory = 0,
+  businessPartnerId = 0
 }) {
   return request({
     url: `/issue-management/issues`,
     method: 'get',
     params: {
+      group_id: groupId,
       record_id: recordId,
+      status_id: statusId,
       table_name: tableName,
-      search_value: searchValue
+      project_id: projectId,
+      search_value: searchValue,
+      priority_value: priorityValue,
+      status_category_id: statusCategory,
+      task_status_value: taskStatusValue,
+      business_partner_id: businessPartnerId
     }
   })
 }
@@ -73,17 +87,43 @@ export function requestListIssues({
  */
 
 export function requestListIssuesAll({
-  tableName,
   recordId,
-  searchValue
+  tableName,
+  searchValue,
+  groupId = 0,
+  statusId = 0,
+  projectId = 0,
+  priorityValue,
+  taskStatusValue,
+  statusCategory = 0,
+  businessPartnerId = 0
 }) {
+  console.log({
+    group_id: groupId,
+    record_id: recordId,
+    status_id: statusId,
+    table_name: tableName,
+    project_id: projectId,
+    search_value: searchValue,
+    priority_value: priorityValue,
+    status_category_id: statusCategory,
+    task_status_value: taskStatusValue,
+    business_partner_id: businessPartnerId
+  })
   return request({
     url: `/issue-management/issues/all`,
     method: 'get',
     params: {
+      group_id: groupId,
       record_id: recordId,
+      status_id: statusId,
       table_name: tableName,
-      search_value: searchValue
+      project_id: projectId,
+      search_value: searchValue,
+      priority_value: priorityValue,
+      status_category_id: statusCategory,
+      task_status_value: taskStatusValue,
+      business_partner_id: businessPartnerId
     }
   })
 }
@@ -130,7 +170,6 @@ export function requestListStatuses({
   searchValue
 }) {
   return request({
-    // url: '/issue-management/statuses',
     url: `/issue-management/statuses`,
     method: 'get',
     params: {
@@ -241,7 +280,7 @@ export function listBusinessPartners({
 }
 
 /**
- * Business Partner
+ * List Projects
  * @param {string}  filters
  * @param {string}  sort_by
  * @param {string}  group_columns

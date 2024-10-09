@@ -58,26 +58,188 @@
       <el-card
         v-if="isKanban || isEdit"
         shadow="never"
-        :body-style="{ padding: '20px' }"
+        :body-style="{ padding: '10px', marginTop: '10px' }"
       >
-        <el-form label-position="top" class="form-min-label">
-          <el-form-item :label="$t('issues.typeOfRequest')" style="margin: 0px;">
-            <el-select
-              v-model="requestTypes"
-              filterable
-              clearable
-              @visible-change="findRequestTypes"
-              @change="findStatus"
-            >
-              <el-option
-                v-for="item in listIssuesTypes"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>
-        </el-form>
+        <el-collapse accordion>
+          <el-collapse-item name="1">
+            <template slot="title">
+              <b style="text-align: center;margin: 0px;width: 100%;font-size: 17px;font-weight: 900">
+                {{ $t('issues.filters') }}
+              </b>
+            </template>
+            <el-form :inline="true" label-position="top" class="form-min-label">
+              <el-form-item
+                :label="$t('issues.typeOfRequest')"
+                style="margin: 0px;margin-left: 10px;"
+                size="small"
+              >
+                <el-select
+                  v-model="requestTypes"
+                  size="small"
+                  filterable
+                  clearable
+                  @visible-change="findRequestTypes"
+                  @change="findStatus"
+                >
+                  <el-option
+                    v-for="(item, key) in listIssuesTypes"
+                    :key="key"
+                    :label="item.name"
+                    :value="item.id"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item
+                :label="$t('issues.businessPartner')"
+                style="margin: 0px;margin-left: 10px;"
+                size="small"
+              >
+                <el-select
+                  v-model="businessPartnerField"
+                  size="small"
+                  filterable
+                  clearable
+                  @visible-change="findBusinessPartner"
+                  @change="updateListIssues"
+                >
+                  <el-option
+                    v-for="(item, key) in listBusinessPartnerField"
+                    :key="key"
+                    :label="item.name"
+                    :value="item.id"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item
+                :label="$t('issues.category')"
+                style="margin: 0px;margin-left: 10px;"
+                size="small"
+              >
+                <el-select
+                  v-model="categoryField"
+                  size="small"
+                  filterable
+                  clearable
+                  @visible-change="findCategory"
+                  @change="updateListIssues"
+                >
+                  <el-option
+                    v-for="(item, key) in listCategoryField"
+                    :key="key"
+                    :label="item.name"
+                    :value="item.id"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item
+                :label="$t('issues.project')"
+                style="margin: 0px;margin-left: 10px;"
+                size="small"
+              >
+                <el-select
+                  v-model="projectField"
+                  size="small"
+                  filterable
+                  clearable
+                  @visible-change="findProject"
+                  @change="updateListIssues"
+                >
+                  <el-option
+                    v-for="(item, key) in listProjectField"
+                    :key="key"
+                    :label="item.name"
+                    :value="item.id"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item
+                :label="$t('issues.group')"
+                style="margin: 0px;margin-left: 10px;"
+                size="small"
+              >
+                <el-select
+                  v-model="groupField"
+                  size="small"
+                  filterable
+                  clearable
+                  @visible-change="findGroup"
+                  @change="updateListIssues"
+                >
+                  <el-option
+                    v-for="(item, key) in listGroupField"
+                    :key="key"
+                    :label="item.name"
+                    :value="item.id"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item
+                :label="$t('issues.priority')"
+                style="margin: 0px;margin-left: 10px;"
+                size="small"
+              >
+                <el-select
+                  v-model="priorityField"
+                  size="small"
+                  filterable
+                  clearable
+                  @visible-change="findPriority"
+                  @change="updateListIssues"
+                >
+                  <el-option
+                    v-for="(item, key) in listPriorityField"
+                    :key="key"
+                    :label="item.name"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item
+                :label="$t('issues.status')"
+                style="margin: 0px;margin-left: 10px;"
+                size="small"
+              >
+                <el-select
+                  v-model="statusField"
+                  size="small"
+                  filterable
+                  clearable
+                  :disabled="isEmptyValue(requestTypes)"
+                  @visible-change="findListStatus"
+                  @change="updateListIssues"
+                >
+                  <el-option
+                    v-for="(item, key) in listStatusField"
+                    :key="key"
+                    :label="item.name"
+                    :value="item.id"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item
+                :label="$t('issues.taskStatus')"
+                style="margin: 0px;margin-left: 10px;"
+                size="small"
+              >
+                <el-select
+                  v-model="taskStatusField"
+                  size="small"
+                  filterable
+                  clearable
+                  @visible-change="findTaskStatus"
+                  @change="updateListIssues"
+                >
+                  <el-option
+                    v-for="(item, key) in listTaskStatusField"
+                    :key="key"
+                    :label="item.name"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </el-collapse-item>
+        </el-collapse>
         <br>
       </el-card>
       <div v-if="!isEdit && !isKanban" class="table-list-request" :style="isEdit ? 'max-height: 78vh;' : 'max-height: 85vh;'">
@@ -153,15 +315,6 @@
                         <kanban-issues
                           :metadata="data"
                         />
-                        <!-- <div
-                          v-else
-                          key="form-loading"
-                          v-loading="true"
-                          :element-loading-text="$t('notifications.loading')"
-                          element-loading-spinner="el-icon-loading"
-                          element-loading-background="rgba(255, 255, 255, 0.8)"
-                          class="view-loading"
-                        /> -->
                       </el-card>
                     </draggable-elements>
                   </el-collapse-item>
@@ -239,7 +392,13 @@ import { showMessage } from '@/utils/ADempiere/notification'
 // Api Request Methods
 import {
   requestListRequestTypes,
-  requestListStatuses
+  listCategoriesRequest,
+  requestListPriorities,
+  listBusinessPartners,
+  requestListStatuses,
+  listGroupsRequest,
+  listTaskStatuses,
+  listProjects
 } from '@/api/ADempiere/user-interface/component/issue'
 import { isEmptyValue } from '@/utils/ADempiere'
 import router from '@/router'
@@ -265,16 +424,29 @@ export default defineComponent({
     }
   },
 
-  setup() {
+  setup(props) {
     const updateDragStatus = ref('')
     const filter = ref('')
     const priority = ref('')
     const isEdit = ref(false)
     const isKanban = ref(false)
     const requestTypes = ref('')
+    const businessPartnerField = ref('')
+    const categoryField = ref('')
+    const projectField = ref('')
+    const taskStatusField = ref('')
     const currentPriority = ref('')
+    const statusField = ref('')
+    const listStatusField = ref([])
+    const groupField = ref('')
+    const priorityField = ref('')
+    const listTaskStatusField = ref([])
+    const listGroupField = ref([])
+    const listPriorityField = ref([])
+    const listProjectField = ref([])
     const listIssuesTypes = ref([])
-    const listPriority = ref([])
+    const listBusinessPartnerField = ref([])
+    const listCategoryField = ref([])
     const listStatuses = ref([])
     const listStatusesKanban = ref([])
     const statusesExpand = ref([])
@@ -306,7 +478,15 @@ export default defineComponent({
     }
 
     function loadIssues() {
-      store.dispatch('listRequest', {})
+      store.dispatch('listRequest', {
+        businessPartnerId: isEmptyValue(businessPartnerField.value) ? 0 : businessPartnerField.value,
+        statusCategory: isEmptyValue(categoryField.value) ? 0 : categoryField.value,
+        projectId: isEmptyValue(projectField.value) ? 0 : projectField.value,
+        statusId: isEmptyValue(statusField.value) ? 0 : statusField.value,
+        groupId: isEmptyValue(groupField.value) ? 0 : groupField.value,
+        taskStatusValue: taskStatusField.value,
+        priorityValue: priorityField.value
+      })
         .then(response => {
           if (!isEmptyValue(response)) {
             const list = {}
@@ -352,6 +532,150 @@ export default defineComponent({
         })
     }
 
+    function findBusinessPartner(isVisible) {
+      if (!isVisible) {
+        return
+      }
+      listBusinessPartners({})
+        .then(response => {
+          const { records } = response
+          listBusinessPartnerField.value = records
+          if (listBusinessPartnerField.value.length <= 1 && isEmptyValue(businessPartnerField.value)) {
+            businessPartnerField.value = records[0].id
+          }
+        })
+        .catch(error => {
+          showMessage({
+            message: error.message,
+            type: 'warning'
+          })
+        })
+    }
+
+    function findCategory(isVisible) {
+      if (!isVisible) {
+        return
+      }
+      listCategoriesRequest({})
+        .then(response => {
+          const { records } = response
+          listCategoryField.value = records
+          if (listCategoryField.value.length <= 1 && isEmptyValue(categoryField.value)) {
+            // findStatus(records[0].id)
+            categoryField.value = records[0].id
+          }
+        })
+        .catch(error => {
+          showMessage({
+            message: error.message,
+            type: 'warning'
+          })
+        })
+    }
+
+    function findProject(isVisible) {
+      if (!isVisible) {
+        return
+      }
+      listProjects({})
+        .then(response => {
+          const { records } = response
+          listProjectField.value = records
+          if (listProjectField.value.length <= 1 && isEmptyValue(projectField.value)) {
+            projectField.value = records[0].id
+          }
+        })
+        .catch(error => {
+          showMessage({
+            message: error.message,
+            type: 'warning'
+          })
+        })
+    }
+
+    function findGroup(isVisible) {
+      if (!isVisible) {
+        return
+      }
+      listGroupsRequest({})
+        .then(response => {
+          const { records } = response
+          listGroupField.value = records
+          if (listGroupField.value.length <= 1 && isEmptyValue(groupField.value)) {
+            // findStatus(records[0].id)
+            groupField.value = records[0].id
+          }
+        })
+        .catch(error => {
+          showMessage({
+            message: error.message,
+            type: 'warning'
+          })
+        })
+    }
+
+    function findPriority(isVisible) {
+      if (!isVisible) {
+        return
+      }
+      requestListPriorities({})
+        .then(response => {
+          const { records } = response
+          listPriorityField.value = records
+          if (listPriorityField.value.length <= 1 && isEmptyValue(priorityField.value)) {
+            priorityField.value = records[0].value
+          }
+        })
+        .catch(error => {
+          showMessage({
+            message: error.message,
+            type: 'warning'
+          })
+        })
+    }
+
+    function findTaskStatus(isVisible) {
+      if (!isVisible) {
+        return
+      }
+      listTaskStatuses({})
+        .then(response => {
+          const { records } = response
+          listTaskStatusField.value = records
+          if (listTaskStatusField.value.length <= 1 && isEmptyValue(taskStatusField.value)) {
+            taskStatusField.value = records[0].value
+          }
+        })
+        .catch(error => {
+          showMessage({
+            message: error.message,
+            type: 'warning'
+          })
+        })
+    }
+
+    function findListStatus(isVisible) {
+      if (!isVisible) {
+        return
+      }
+      requestListStatuses({
+        requestTypeId: requestTypes.value
+      })
+        .then(response => {
+          const { records } = response
+          listStatusField.value = records
+          if (listStatusField.value.length <= 1 && isEmptyValue(statusField.value)) {
+            statusField.value = records[0].id
+          }
+        })
+        .catch(error => {
+          showMessage({
+            message: error.message,
+            type: 'warning'
+          })
+        })
+    }
+
     function filterData({
       data,
       column
@@ -359,22 +683,20 @@ export default defineComponent({
       return data.filter(list => list.status.id === column)
     }
 
-    // findRequestTypes(true)
-
     // loadIssues()
 
     function activeGruop() {
       isEdit.value = !isEdit.value
       isKanban.value = false
       findRequestTypes(true)
-      // findStatus(listIssuesTypes.value[0].id)
+      findBusinessPartner(true)
     }
 
     function activeKanban() {
       isEdit.value = false
       isKanban.value = !isKanban.value
       findRequestTypes(true)
-      // findStatus(listIssuesTypes.value[0].id)
+      findBusinessPartner(true)
     }
 
     function findStatus(request) {
@@ -468,34 +790,70 @@ export default defineComponent({
         })
     }
 
+    function updateListIssues() {
+      store.dispatch('listRequest', {
+        businessPartnerId: isEmptyValue(businessPartnerField.value) ? 0 : businessPartnerField.value,
+        statusCategory: isEmptyValue(categoryField.value) ? 0 : categoryField.value,
+        projectId: isEmptyValue(projectField.value) ? 0 : projectField.value,
+        statusId: isEmptyValue(statusField.value) ? 0 : statusField.value,
+        groupId: isEmptyValue(groupField.value) ? 0 : groupField.value,
+        taskStatusValue: taskStatusField.value,
+        priorityValue: priorityField.value
+      })
+        .finally(() => {
+          loadIssues()
+        })
+    }
+
     return {
-      listKanbanGroup,
-      isloadinUpdateKanban,
-      updateDragStatus,
       statusesExpand,
+      listKanbanGroup,
+      updateDragStatus,
+      isloadinUpdateKanban,
       //
       isEdit,
       isKanban,
       listIssues,
+      groupField,
+      statusField,
+      projectField,
       requestTypes,
+      listStatuses,
+      categoryField,
+      priorityField,
+      listGroupField,
       listIssuesTypes,
       currentPriority,
-      listPriority,
-      listStatuses,
+      listStatusField,
+      taskStatusField,
+      listProjectField,
+      listPriorityField,
+      listCategoryField,
       listStatusesKanban,
+      businessPartnerField,
+      listTaskStatusField,
+      listBusinessPartnerField,
       //
-      priority,
       filter,
+      priority,
       isNewIssues,
       // methods
+      findBusinessPartner,
       findRequestTypes,
-      findStatus,
-      newIssues,
-      loadIssues,
-      filterData,
-      activeGruop,
+      updateListIssues,
+      findPriority,
+      findTaskStatus,
+      findListStatus,
+      findCategory,
       activeKanban,
       updateStatus,
+      activeGruop,
+      findProject,
+      findStatus,
+      loadIssues,
+      filterData,
+      findGroup,
+      newIssues,
       replace
     }
   }
