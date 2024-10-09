@@ -24,14 +24,14 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         plain
         type="info"
         icon="el-icon-top"
-        style="font-size: 16px;"
+        style="font-size: 12px;"
       />
       <el-button
         :disabled="true"
         plain
         type="info"
         icon="el-icon-bottom"
-        style="font-size: 16px;"
+        style="font-size: 12px;"
       />
       <el-button
         v-show="!isEmptyValue(order)"

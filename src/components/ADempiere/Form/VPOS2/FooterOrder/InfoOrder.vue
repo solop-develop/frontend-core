@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <el-row :gutter="10" style="margin-top: 10px;">
+  <el-row :gutter="10" style="margin-top: 10px; font-size: 12px !important;">
     <el-col
       :span="14"
       style="float: left"
@@ -91,7 +91,7 @@
             >
               <span>
                 <span
-                  style="float: left;color: black;font-size: 16px;"
+                  style="float: left;color: black;font-size: 12px;"
                 >
                   <i class="el-icon-s-custom" />
                   {{ $t('form.pos.order.seller') + ':' }}

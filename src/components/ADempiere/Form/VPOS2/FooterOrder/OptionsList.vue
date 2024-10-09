@@ -21,6 +21,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       class="list-col"
     >
       <el-dropdown
+        style="font-size: 12px !important;"
         trigger="click"
         class="info-pos"
         @command="changePos"
@@ -70,6 +71,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       class="list-col"
     >
       <el-dropdown
+        style="font-size: 12px !important;"
         trigger="click"
         class="info-pos"
         @command="changeWarehouses"
@@ -94,6 +96,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       :span="24"
     >
       <el-dropdown
+        style="font-size: 12px !important;"
         trigger="click"
         class="info-pos"
         @command="changePrices"
@@ -118,6 +121,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       :span="24"
     >
       <el-dropdown
+        style="font-size: 12px !important;"
         trigger="click"
         class="info-pos"
         @command="changeCampaigns"

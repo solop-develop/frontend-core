@@ -24,7 +24,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
       height="60vh"
       fit
       highlight-current-row
-      style="height: 100% !important;"
+      style="height: 100% !important; font-size: 12px !important;"
       @cell-click="editLine"
       @cell-dblclick="editLineExit"
       @current-change="handleCurrentChangeOrderLine"
@@ -467,6 +467,6 @@ export default defineComponent({
 <style scope>
   .el-table{
     overflow: auto;
-    height: calc(100vh - 45vh) !important
+    height: calc(100vh - 335px) !important
   }
 </style>
