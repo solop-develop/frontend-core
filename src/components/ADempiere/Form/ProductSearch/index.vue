@@ -68,7 +68,7 @@
             @click="copyCode(scope.row)"
           />
           <el-dropdown
-            v-if="header.columnName === 'name'"
+            v-if="header.columnName === 'name' || header.columnName === 'value'"
             trigger="click"
             @command="zoomInWindow(scope.row)"
           >
