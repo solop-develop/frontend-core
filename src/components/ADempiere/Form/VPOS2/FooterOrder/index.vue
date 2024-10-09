@@ -17,6 +17,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 <template>
   <el-row>
     <el-col
+      style="font-size: 12px !important"
       :span="12"
       class="buttons-and-options"
     >
