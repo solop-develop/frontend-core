@@ -18,7 +18,7 @@
 
 <template>
   <span>
-    <el-container style="height: 90vh">
+    <el-container style="height: 80vh">
       <!-- {{ $store.getters['settings/getFixedHeader'] }} -->
       <el-header v-if="isMobile" ref="scrollIssues" height="70%" style="overflow: auto;padding: 0px;">
         <el-card v-if="isEmptyValue(currentIssues) || isPanelNewRequest" class="comments-card" style="height: auto;padding: 0px;">

@@ -56,7 +56,6 @@
       </div>
 
       <el-card
-        v-if="isKanban || isEdit"
         shadow="never"
         :body-style="{ padding: '10px', marginTop: '10px' }"
       >
