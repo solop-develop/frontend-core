@@ -243,12 +243,15 @@ const businessPartner = {
         })
 
         const { queryFilters } = storedBusinessPartnerData
+        let filters = queryFilters
         if (isSalesTransactionContext) {
-          queryFilters.is_vendor = undefined
+          filters.is_vendor = undefined
         } else {
-          queryFilters.is_customer = undefined
+          filters.is_customer = undefined
         }
-
+        if (!isEmptyValue(searchValue)) {
+          filters = {}
+        }
         requestListBusinessPartner({
           contextAttributes: contextAttributes,
           //
@@ -261,7 +264,7 @@ const businessPartner = {
           columnName,
           // Query
           searchValue,
-          ...queryFilters,
+          ...filters,
           //
           pageToken,
           pageSize,
