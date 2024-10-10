@@ -1902,12 +1902,16 @@ export const containerManager = {
       parentUuid,
       containerUuid
     })
+    const searchValue = store.getters.getSearchValueTabRecordsList({
+      containerUuid
+    })
     store.dispatch('getEntities', {
       parentUuid,
       containerUuid,
       filters,
       pageSize,
-      pageNumber
+      pageNumber,
+      searchValue
     })
   },
   getPageNumber({ containerUuid }) {
@@ -1924,11 +1928,15 @@ export const containerManager = {
       parentUuid,
       containerUuid
     })
+    const searchValue = store.getters.getSearchValueTabRecordsList({
+      containerUuid
+    })
     store.dispatch('getEntities', {
       parentUuid,
       containerUuid,
       filters,
-      pageSize
+      pageSize,
+      searchValue
     })
   },
   getPageSize({ containerUuid }) {
