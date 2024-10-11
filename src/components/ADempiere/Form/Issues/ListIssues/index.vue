@@ -95,9 +95,12 @@
               >
                 <el-select
                   v-model="businessPartnerField"
-                  size="small"
-                  filterable
+                  remote
                   clearable
+                  filterable
+                  size="small"
+                  reserve-keyword
+                  :remote-method="remoteMethodPartner"
                   @visible-change="findBusinessPartner"
                   @change="updateListIssues"
                 >
@@ -116,9 +119,12 @@
               >
                 <el-select
                   v-model="categoryField"
-                  size="small"
-                  filterable
+                  remote
                   clearable
+                  filterable
+                  size="small"
+                  reserve-keyword
+                  :remote-method="remoteMethodCategory"
                   @visible-change="findCategory"
                   @change="updateListIssues"
                 >
@@ -137,9 +143,12 @@
               >
                 <el-select
                   v-model="projectField"
-                  size="small"
-                  filterable
+                  remote
                   clearable
+                  filterable
+                  size="small"
+                  reserve-keyword
+                  :remote-method="remoteMethodProject"
                   @visible-change="findProject"
                   @change="updateListIssues"
                 >
@@ -158,9 +167,12 @@
               >
                 <el-select
                   v-model="groupField"
-                  size="small"
-                  filterable
+                  remote
                   clearable
+                  filterable
+                  size="small"
+                  reserve-keyword
+                  :remote-method="remoteMethodGroup"
                   @visible-change="findGroup"
                   @change="updateListIssues"
                 >
@@ -179,9 +191,11 @@
               >
                 <el-select
                   v-model="priorityField"
-                  size="small"
-                  filterable
+                  remote
                   clearable
+                  filterable
+                  size="small"
+                  reserve-keyword
                   @visible-change="findPriority"
                   @change="updateListIssues"
                 >
@@ -200,9 +214,12 @@
               >
                 <el-select
                   v-model="statusField"
-                  size="small"
-                  filterable
+                  remote
                   clearable
+                  filterable
+                  size="small"
+                  reserve-keyword
+                  :remote-method="remoteMethodStatus"
                   :disabled="isEmptyValue(requestTypes)"
                   @visible-change="findListStatus"
                   @change="updateListIssues"
@@ -222,9 +239,12 @@
               >
                 <el-select
                   v-model="taskStatusField"
-                  size="small"
-                  filterable
+                  remote
                   clearable
+                  filterable
+                  size="small"
+                  reserve-keyword
+                  :remote-method="remoteMethodTaskStatus"
                   @visible-change="findTaskStatus"
                   @change="updateListIssues"
                 >
@@ -449,6 +469,10 @@ export default defineComponent({
     const listStatuses = ref([])
     const listStatusesKanban = ref([])
     const statusesExpand = ref([])
+    const timeOut = ref(null)
+    /**
+     * Computed
+     */
     const isAll = computed(() => {
       return router.app._route.meta.isAll
     })
@@ -532,7 +556,7 @@ export default defineComponent({
     }
 
     function findBusinessPartner(isVisible) {
-      if (!isVisible) {
+      if (!isVisible || !isEmptyValue(listBusinessPartnerField.value)) {
         return
       }
       listBusinessPartners({})
@@ -552,7 +576,7 @@ export default defineComponent({
     }
 
     function findCategory(isVisible) {
-      if (!isVisible) {
+      if (!isVisible || !isEmptyValue(listCategoryField.value)) {
         return
       }
       listCategoriesRequest({})
@@ -573,7 +597,7 @@ export default defineComponent({
     }
 
     function findProject(isVisible) {
-      if (!isVisible) {
+      if (!isVisible || !isEmptyValue(listProjectField.value)) {
         return
       }
       listProjects({})
@@ -593,7 +617,7 @@ export default defineComponent({
     }
 
     function findGroup(isVisible) {
-      if (!isVisible) {
+      if (!isVisible || !isEmptyValue(listGroupField.value)) {
         return
       }
       listGroupsRequest({})
@@ -614,7 +638,7 @@ export default defineComponent({
     }
 
     function findPriority(isVisible) {
-      if (!isVisible) {
+      if (!isVisible || !isEmptyValue(listPriorityField.value)) {
         return
       }
       requestListPriorities({})
@@ -634,7 +658,7 @@ export default defineComponent({
     }
 
     function findTaskStatus(isVisible) {
-      if (!isVisible) {
+      if (!isVisible || !isEmptyValue(listTaskStatusField.value)) {
         return
       }
       listTaskStatuses({})
@@ -654,7 +678,7 @@ export default defineComponent({
     }
 
     function findListStatus(isVisible) {
-      if (!isVisible) {
+      if (!isVisible || !isEmptyValue(listStatusField.value)) {
         return
       }
       requestListStatuses({
@@ -804,12 +828,108 @@ export default defineComponent({
         })
     }
 
+    /**
+     * Search Remote Method
+     */
+
+    function remoteMethodPartner(searchValue) {
+      clearTimeout(timeOut.value)
+      timeOut.value = setTimeout(() => {
+        listBusinessPartners({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listBusinessPartnerField.value = records
+          })
+      }, 500)
+    }
+
+    function remoteMethodCategory(searchValue) {
+      clearTimeout(timeOut.value)
+      timeOut.value = setTimeout(() => {
+        listCategoriesRequest({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listCategoryField.value = records
+          })
+      }, 500)
+    }
+
+    function remoteMethodProject(searchValue) {
+      clearTimeout(timeOut.value)
+      timeOut.value = setTimeout(() => {
+        listProjects({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listProjectField.value = records
+          })
+      }, 500)
+    }
+
+    function remoteMethodGroup(searchValue) {
+      clearTimeout(timeOut.value)
+      timeOut.value = setTimeout(() => {
+        listGroupsRequest({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listGroupField.value = records
+          })
+      }, 500)
+    }
+
+    function remoteMethodPriorities(searchValue) {
+      clearTimeout(timeOut.value)
+      timeOut.value = setTimeout(() => {
+        requestListPriorities({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listPriorityField.value = records
+          })
+      }, 500)
+    }
+
+    function remoteMethodStatus(searchValue) {
+      clearTimeout(timeOut.value)
+      timeOut.value = setTimeout(() => {
+        requestListStatuses({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listStatusField.value = records
+          })
+      }, 500)
+    }
+
+    function remoteMethodTaskStatus(searchValue) {
+      clearTimeout(timeOut.value)
+      timeOut.value = setTimeout(() => {
+        listTaskStatuses({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listTaskStatusField.value = records
+          })
+      }, 500)
+    }
+
     return {
       statusesExpand,
       listKanbanGroup,
       updateDragStatus,
       isloadinUpdateKanban,
       //
+      timeOut,
       isEdit,
       isKanban,
       listIssues,
@@ -837,7 +957,14 @@ export default defineComponent({
       priority,
       isNewIssues,
       // methods
+      remoteMethodPriorities,
+      remoteMethodTaskStatus,
+      remoteMethodCategory,
+      remoteMethodProject,
+      remoteMethodPartner,
       findBusinessPartner,
+      remoteMethodStatus,
+      remoteMethodGroup,
       findRequestTypes,
       updateListIssues,
       findPriority,
