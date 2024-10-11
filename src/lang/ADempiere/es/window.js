@@ -19,6 +19,7 @@
 const window = {
   advancedQuery: {
     title: 'Consulta Avanzada',
+    viewAll: 'Ver Todos',
     help: 'Realiza una búsqueda haciendo uso de rangos de valores, selección múltiple de valores, y operadores de comparación'
   },
 

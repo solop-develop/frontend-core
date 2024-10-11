@@ -67,6 +67,12 @@
           </el-col>
 
           <el-col :span="24" class="advanced-query-footer">
+            <!-- <el-checkbox
+              v-model="isSeeAll"
+              :label="$t('window.advancedQuery.viewAll')"
+              style="float: right;"
+              :border="true"
+            /> -->
             <samp style="float: right; padding-top: 4px;">
               <el-button
                 type="info"
@@ -92,6 +98,15 @@
                 @click="searchRecords"
               />
             </samp>
+            <p
+              style="text-align: right;float: right;margin: 0px;margin-top: 5px;margin-right: 10px;"
+            >
+              <el-checkbox
+                v-model="isSeeAll"
+                :label="$t('window.advancedQuery.viewAll')"
+                :border="true"
+              />
+            </p>
           </el-col>
         </el-row>
 
@@ -135,6 +150,11 @@
 
         <el-col :span="24" class="advanced-query-footer">
           <samp style="float: right; padding-top: 4px;">
+            <el-checkbox
+              :is="$t('window.advancedQuery.viewAll')"
+              v-model="isSeeAll"
+              :border="true"
+            />
             <el-button
               type="info"
               class="button-base-icon"
@@ -217,6 +237,7 @@ export default defineComponent({
     const isLoadingSearch = ref(false)
     const timeOutSearch = ref(null)
     const isShowedAdvancedQuery = ref(false)
+    const isSeeAll = ref(false)
 
     /**
     * Computed
@@ -286,7 +307,7 @@ export default defineComponent({
             // app attributes
             isAddBlankValue,
             blankValue,
-            isWithoutValidation: true
+            isWithoutValidation: isSeeAll.value
           })
         },
         getSearchRecordsList({ parentUuid, containerUuid, contextColumnNames, tableName, columnName, id, filters, searchValue, pageNumber, pageSize }) {
@@ -301,7 +322,7 @@ export default defineComponent({
             searchValue,
             pageNumber,
             pageSize,
-            isWithoutValidation: true
+            isWithoutValidation: isSeeAll.value
           })
         }
       }
@@ -394,9 +415,10 @@ export default defineComponent({
 
     return {
       // Refs
+      isShowedAdvancedQuery,
       isLoadingSearch,
       timeOutSearch,
-      isShowedAdvancedQuery,
+      isSeeAll,
       // Const
       IS_ADVANCED_QUERY,
       // Computeds
