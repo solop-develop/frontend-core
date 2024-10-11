@@ -157,8 +157,7 @@ const reportManager = {
       tableName,
       isSummary,
       recordUuid,
-      pageSize,
-      showNotify = false
+      pageSize
     }) {
       return new Promise(resolve => {
         const reportDefinition = rootGetters.getStoredReport(containerUuid)
@@ -167,14 +166,12 @@ const reportManager = {
           containerUuid,
           fieldsList
         })
-        if (showNotify) {
-          showNotification({
-            title: language.t('notifications.processing'),
-            message: name,
-            summary: description,
-            type: 'info'
-          })
-        }
+        showNotification({
+          title: language.t('notifications.processing'),
+          message: name,
+          summary: description,
+          type: 'info'
+        })
         if (!isEmptyValue(fieldsEmpty)) {
           showMessage({
             message: language.t('notifications.mandatoryFieldMissing') + fieldsEmpty,
@@ -633,7 +630,6 @@ const reportManager = {
       const {
         internal_id,
         name,
-        description,
         fieldsList
       } = reportDefinition
       const storedReportGenerated = getters.getReportGenerated(containerUuid)
@@ -662,12 +658,6 @@ const reportManager = {
         reportName = action.name
       }
 
-      showNotification({
-        title: language.t('notifications.processing'),
-        message: name,
-        summary: description,
-        type: 'info'
-      })
       commit('setReportIsLoading', true)
       if ((isEmptyValue(instanceUuid) || reportDefinition.is_process_before_launch) && !isChangePanel) {
         dispatch('startReport', {
