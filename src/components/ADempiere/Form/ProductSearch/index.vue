@@ -68,7 +68,7 @@
             @click="copyCode(scope.row)"
           />
           <el-dropdown
-            v-if="header.columnName === 'name'"
+            v-if="header.columnName === 'name' || header.columnName === 'value'"
             trigger="click"
             @command="zoomInWindow(scope.row)"
           >
@@ -77,7 +77,7 @@
               <el-dropdown-item>
                 <i class="el-icon-zoom-in" style="font-weight: bolder;" />
                 <b>
-                  {{ $t('page.processActivity.zoomIn') }} {{ ' - ' }} {{ scope.row[header.columnName] }}
+                  {{ $t('page.processActivity.zoomIn') }} {{ ' - ' }} {{ scope.row.value }}  {{ ' - ' }} {{ scope.row.name }}
                 </b>
               </el-dropdown-item>
             </el-dropdown-menu>
