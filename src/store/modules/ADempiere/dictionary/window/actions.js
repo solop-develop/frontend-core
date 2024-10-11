@@ -187,7 +187,8 @@ export default {
                 containerUuid: process.uuid,
                 recordUuid,
                 tableName: table_name,
-                pageSize: 500
+                pageSize: 500,
+                showNotify: true
               })
             } else {
               dispatch('runReport', {

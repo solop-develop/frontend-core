@@ -157,16 +157,24 @@ const reportManager = {
       tableName,
       isSummary,
       recordUuid,
-      pageSize
+      pageSize,
+      showNotify = false
     }) {
       return new Promise(resolve => {
         const reportDefinition = rootGetters.getStoredReport(containerUuid)
-        const { fieldsList } = reportDefinition
-
+        const { fieldsList, name, description } = reportDefinition
         const fieldsEmpty = rootGetters.getReportParametersEmptyMandatory({
           containerUuid,
           fieldsList
         })
+        if (showNotify) {
+          showNotification({
+            title: language.t('notifications.processing'),
+            message: name,
+            summary: description,
+            type: 'info'
+          })
+        }
         if (!isEmptyValue(fieldsEmpty)) {
           showMessage({
             message: language.t('notifications.mandatoryFieldMissing') + fieldsEmpty,
