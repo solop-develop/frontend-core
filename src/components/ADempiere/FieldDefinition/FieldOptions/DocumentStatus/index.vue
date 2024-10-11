@@ -118,6 +118,11 @@ import DocumentStatusTag from '@/components/ADempiere/ContainerOptions/DocumentS
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { convertStringToBoolean } from '@/utils/ADempiere/formatValue/booleanFormat.js'
 
+/**
+ * Based on:
+ * - https://github.com/adempiere/adempiere/blob/develop/client/src/org/compiere/apps/APanel.java
+ * - https://github.com/adempiere/adempiere/blob/develop/zkwebui/WEB-INF/src/org/adempiere/webui/panel/AbstractADWindowPanel.java
+ */
 export default defineComponent({
   name: 'DocumentStatus',
 

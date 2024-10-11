@@ -19,7 +19,7 @@
 import lang from '@/lang'
 
 // Constants
-import REFERENCES, { YES_NO, DEFAULT_SIZE, BUTTON, LIST } from '@/utils/ADempiere/references'
+import REFERENCES, { BUTTON, DEFAULT_SIZE, LIST, YES_NO } from '@/utils/ADempiere/references'
 import {
   FIELD_OPERATORS_LIST, OPERATOR_EQUAL,
   OPERATOR_LIKE, OPERATOR_GREATER_EQUAL, OPERATOR_LESS_EQUAL, OPERATOR_BETWEEN
@@ -114,13 +114,26 @@ export function generateField({
 
   let isColumnDocumentStatus = false
   let componentReference = evalutateTypeField(fieldToGenerate.display_type)
-  // overwrite `Button` to `List` display type on `PaymentRule`.
-  if ([columnName, fieldToGenerate.element_name].includes('PaymentRule') && fieldToGenerate.display_type === BUTTON.id) {
-    componentReference = LIST
-    fieldToGenerate.display_type = LIST.id
-    fieldToGenerate.reference = {
-      table_name: 'AD_Ref_List',
-      context_column_names: []
+
+  // overwrite `Button` to `List` or `Table` display type.
+  if (fieldToGenerate.display_type === BUTTON.id) {
+    if ((moreAttributes.isAdvancedQuery || fieldToGenerate.is_query_criteria) &&
+      fieldToGenerate.reference && fieldToGenerate.reference.reference_value_id > 0) {
+      // overwrite if is with reference
+      componentReference = evalutateTypeField(fieldToGenerate.reference.reference_id)
+      fieldToGenerate.display_type = fieldToGenerate.reference.reference_id
+      fieldToGenerate.reference = {
+        table_name: fieldToGenerate.reference.table_name,
+        context_column_names: []
+      }
+    } else if ([columnName, fieldToGenerate.element_name].includes('PaymentRule')) {
+      componentReference = LIST
+      fieldToGenerate.display_type = LIST.id
+      fieldToGenerate.reference = {
+        table_name: 'AD_Ref_List',
+        reference_id: LIST.id,
+        context_column_names: []
+      }
     }
   }
 

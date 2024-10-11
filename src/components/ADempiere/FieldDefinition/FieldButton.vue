@@ -83,6 +83,13 @@ import {
 } from '@/utils/ADempiere/formatValue/booleanFormat'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
 
+/**
+ * Based on:
+ * - https://github.com/adempiere/adempiere/blob/develop/client/src/org/compiere/apps/APanel.java
+ * - https://github.com/adempiere/adempiere/blob/develop/client/src/org/compiere/grid/ed/VButton.java
+ * - https://github.com/adempiere/adempiere/blob/develop/zkwebui/WEB-INF/src/org/adempiere/webui/editor/WButtonEditor.java
+ * - https://github.com/adempiere/adempiere/blob/develop/zkwebui/WEB-INF/src/org/adempiere/webui/panel/AbstractADWindowPanel.java
+ */
 export default {
   name: 'FieldButton',
 
@@ -106,21 +113,24 @@ export default {
       return isEmptyValue(this.value) || this.value < 0
     },
     parsedDisplayedRender() {
-      if (this.emptyValue || this.metadata.columnName === 'Posted') {
-        return this.metadata.name
-      }
       const displayValue = this.displayedValue
       if (!isEmptyValue(displayValue)) {
         // is a list/table value
         return this.metadata.name + ': ' + displayValue
       }
+
       let value = convertBooleanToString(this.value, false)
       if ([TRUE_STRING, FALSE_STRING].includes(value)) {
         // is a boolean value
         value = convertBooleanToTranslationLang(value)
       }
       // is possible big decimal value
-      return this.metadata.name + ': ' + value
+      if (!isEmptyValue(value)) {
+        return this.metadata.name + ': ' + value
+      }
+
+      // only name on button
+      return this.metadata.name
     },
     iconProps() {
       return {
@@ -149,7 +159,14 @@ export default {
               recordUuid: recordUuid
             })
           },
-          isEnabled: () => true
+          isEnabled: () => {
+            const sessionContext = store.getters.getAllSessionContext
+            if (isEmptyValue(sessionContext)) {
+              return false
+            }
+            const isShowAcct = sessionContext['#ShowAcct']
+            return isShowAcct
+          }
         }
       } else if (this.metadata.columnName === RECORD_ID) {
         return {
