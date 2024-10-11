@@ -378,7 +378,7 @@ export default defineComponent({
 
     function tableRowClassName({ row, rowIndex }) {
       const { children } = row
-      if (!isEmptyValue(children)) {
+      if (!isEmptyValue(children) || row.isTopLevel) {
         return 'success-row'
       }
       return ''
@@ -606,6 +606,7 @@ export default defineComponent({
 :root {
   --level-offset: 20px;
 }
+
 .el-table__row--level-[n] {
   transform: translateX(calc(var(--level-offset) * var(--level, 1)));
 }
