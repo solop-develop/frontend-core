@@ -597,6 +597,13 @@ export default defineComponent({
 </script>
 
 <style>
+.el-table .el-icon-arrow-right:before {
+  content: "";
+}
+
+.el-table__row--level-0 .el-icon-arrow-right:before {
+  content: "";
+}
 .containerReportEnginer .el-card__body {
   padding-left: 20px !important;
   padding-right: 20px !important;
