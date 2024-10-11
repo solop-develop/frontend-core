@@ -114,11 +114,11 @@
           />
 
           <el-button
-            v-if="!isEmptyValue(product)"
             type="primary"
+            plain
             class="button-base-icon"
-            icon="el-icon-check"
-            @click="openProductInfo"
+            icon="el-icon-download"
+            @click="handleExportDownload()"
           />
         </span>
         <custom-pagination
@@ -156,13 +156,15 @@ import {
 } from '@/api/ADempiere/fields/search/product.ts'
 
 // Utils and Helper Methods
+import { parseTime } from '@/utils'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { getContext } from '@/utils/ADempiere/contextUtils'
 import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 import { closeTagView } from '@/utils/ADempiere/componentUtils.js'
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 import { convertBooleanToTranslationLang } from '@/utils/ADempiere/formatValue/booleanFormat'
-import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+
 export default defineComponent({
   name: 'ProductSearch',
 
@@ -196,6 +198,7 @@ export default defineComponent({
     const selection = ref(0)
     const recordCount = ref(0)
     const productInfoTable = ref(null)
+    const downloadLoading = ref(false)
     const activeCollapse = ref(['1'])
     const headerList = ref([
       {
@@ -532,6 +535,34 @@ export default defineComponent({
         }
       })
     }
+
+    function handleExportDownload() {
+      downloadLoading.value = true
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = headerList.value.map(list => list.label)
+        const filterVal = headerList.value.map(list => list.columnName)
+        const list = listProducto.value
+        const data = formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: lang.t('route.ProductSearch'),
+          autoWidth: true,
+          bookType: 'xlsx'
+        })
+        downloadLoading.value = false
+      })
+    }
+
+    function formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => {
+        if (j === 'timestamp') {
+          return parseTime(v[j])
+        } else {
+          return v[j]
+        }
+      }))
+    }
     /**
      * Watch - watch works directly on a ref
      * @param newValue - New Assessed Property value
@@ -606,12 +637,13 @@ export default defineComponent({
       isDetail,
       selection,
       isLoading,
-      pageTokenNumber,
-      searchValue,
-      pageSizeNumber,
-      productInfoTable,
-      activeCollapse,
       headerList,
+      searchValue,
+      activeCollapse,
+      pageSizeNumber,
+      pageTokenNumber,
+      downloadLoading,
+      productInfoTable,
       // Computed
       listProducto,
       recordCount,
@@ -629,6 +661,7 @@ export default defineComponent({
       tableHeight,
       // Methods
       convertBooleanToTranslationLang,
+      handleExportDownload,
       cleanQueryCriteria,
       handleChangePage,
       handleSizeChange,

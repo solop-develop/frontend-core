@@ -32,7 +32,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         </el-descriptions-item>
         <el-descriptions-item :label="$t('field.product.infoProduct.infoProductoclassification')">
           <span v-if="isEmptyValue(product.product_classification)" class="class-empty-value"> {{ '-' }}</span>
-          {{ product_classification }}
+          {{ product.product_classification }}
         </el-descriptions-item>
         <el-descriptions-item :label="$t('field.product.description')">
           <span v-if="isEmptyValue(product.description)" class="class-empty-value"> {{ '-' }}</span>
@@ -43,7 +43,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         </el-descriptions-item>
         <el-descriptions-item :label="$t('field.product.standardPrice')" :content-style="{'justify-content': 'center !important', 'margin-left': '-20px'}">
           <span v-if="isEmptyValue(product.standard_price)" class="class-empty-value">{{ '-' }}</span>
-          {{ formatQuantity({ value: product.standard_price }) }}
+          {{ product.standard_price }}
         </el-descriptions-item>
         <el-descriptions-item :label="$t('field.product.infoProduct.infoProductGroup')">
           <span v-if="isEmptyValue(product.product_group)" class="class-empty-value"> {{ '-' }}</span>
@@ -55,7 +55,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         </el-descriptions-item>
         <el-descriptions-item :label="$t('field.product.available')" :content-style="{'justify-content': 'center !important'}">
           <span v-if="isEmptyValue(product.available_quantity)" class="class-empty-value"> {{ '-' }}</span>
-          {{ formatQuantity({ value: product.available_quantity }) }}
+          {{ product.available_quantity }}
         </el-descriptions-item>
         <el-descriptions-item :label="$t('field.product.listPrice')" :content-style="{'justify-content': 'center !important'}">
           <span v-if="isEmptyValue(product.listPrice)" class="class-empty-value"> {{ '-' }}</span>
