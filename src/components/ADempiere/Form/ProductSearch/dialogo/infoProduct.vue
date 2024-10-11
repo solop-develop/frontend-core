@@ -126,7 +126,6 @@ export default defineComponent({
      */
 
     const product = computed(() => {
-      console.log({ product: store.getters.getCurrentProduct })
       return store.getters.getCurrentProduct
     })
 
