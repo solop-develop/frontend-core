@@ -166,12 +166,6 @@ const reportManager = {
           containerUuid,
           fieldsList
         })
-        showNotification({
-          title: language.t('notifications.processing'),
-          message: name,
-          summary: description,
-          type: 'info'
-        })
         if (!isEmptyValue(fieldsEmpty)) {
           showMessage({
             message: language.t('notifications.mandatoryFieldMissing') + fieldsEmpty,
@@ -179,7 +173,12 @@ const reportManager = {
           })
           return
         }
-
+        showNotification({
+          title: language.t('notifications.processing'),
+          message: name,
+          summary: description,
+          type: 'info'
+        })
         const filters = getOperatorAndValue({
           format: 'array',
           containerUuid,
