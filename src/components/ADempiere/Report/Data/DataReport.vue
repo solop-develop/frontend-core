@@ -17,11 +17,11 @@
 -->
 <template>
   <div @click="!showPopover">
-    <el-card class="containerReportEnginer">
+    <el-card class="container-reportEnginer">
       <el-table
         ref="tableReportEngine"
         v-loading="isLoadingReport"
-        class="tableReportEngine"
+        class="table-reportEngine"
         :data="dataList"
         lazy
         show-summary
@@ -598,14 +598,14 @@ export default defineComponent({
 </script>
 
 <style>
-.tableReportEngine .el-icon-arrow-right:before {
+.table-reportEngine .el-icon-arrow-right:before {
   content: "";
 }
 
-.tableReportEngine .el-table__row--level-0 .el-icon-arrow-right:before {
+.table-reportEngine .el-table__row--level-0 .el-icon-arrow-right:before {
   content: "";
 }
-.containerReportEnginer .el-card__body {
+.container-reportEnginer .el-card__body {
   padding-left: 20px !important;
   padding-right: 20px !important;
   padding-top: 20px !important;
