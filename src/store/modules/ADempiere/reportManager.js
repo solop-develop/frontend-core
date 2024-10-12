@@ -628,8 +628,8 @@ const reportManager = {
       const reportDefinition = getters.getStoredReport(containerUuid)
       const {
         internal_id,
-        description,
         name,
+        description,
         fieldsList
       } = reportDefinition
       const storedReportGenerated = getters.getReportGenerated(containerUuid)
