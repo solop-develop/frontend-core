@@ -19,6 +19,7 @@
 const window = {
   advancedQuery: {
     title: 'Advanced Query',
+    viewAll: 'See All',
     help: 'Perform a search using ranges of values, multiple selection of values, and comparison operators'
   },
   newRecord: 'New Record',
