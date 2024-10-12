@@ -21,6 +21,7 @@
       <el-table
         ref="tableReportEngine"
         v-loading="isLoadingReport"
+        class="tableReportEngine"
         :data="dataList"
         lazy
         show-summary
@@ -597,11 +598,11 @@ export default defineComponent({
 </script>
 
 <style>
-.el-table .el-icon-arrow-right:before {
+.tableReportEngine .el-icon-arrow-right:before {
   content: "";
 }
 
-.el-table__row--level-0 .el-icon-arrow-right:before {
+.tableReportEngine .el-table__row--level-0 .el-icon-arrow-right:before {
   content: "";
 }
 .containerReportEnginer .el-card__body {
