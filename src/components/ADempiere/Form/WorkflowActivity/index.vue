@@ -129,63 +129,65 @@
               class="demo-form-inline"
             >
               <el-row :gutter="24">
-                <el-col :span="8" style="text-align: center;">
-                  <el-form-item label="Reenviar">
-                    <el-switch v-model="chooseOption" />
-                  </el-form-item>
-                </el-col>
+                <el-col :span="18">
+                  <el-col :span="8" style="text-align: center;">
+                    <el-form-item label="Reenviar">
+                      <el-switch v-model="chooseOption" />
+                    </el-form-item>
+                  </el-col>
 
-                <el-col v-show="isValidateUserChoice" :span="8" style="text-align: center;">
-                  <el-form-item :label="$t('form.workflowActivity.filtersSearch.approve')">
-                    <el-switch v-model="isApproved" />
-                  </el-form-item>
-                </el-col>
+                  <el-col v-show="isValidateUserChoice" :span="8" style="text-align: center;">
+                    <el-form-item :label="$t('form.workflowActivity.filtersSearch.approve')">
+                      <el-switch v-model="isApproved" />
+                    </el-form-item>
+                  </el-col>
 
-                <el-col v-show="chooseOption" :span="8" style="text-align: center;">
-                  <el-form-item :label="$t('form.workflowActivity.filtersSearch.user')">
-                    <el-select
-                      v-model="userId"
-                      filterable
-                      @visible-change="findSalesReps"
-                    >
-                      <el-option
-                        v-for="item in listSalesReps"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id"
-                      />
-                    </el-select>
-                  </el-form-item>
+                  <el-col v-show="chooseOption" :span="8" style="text-align: center;">
+                    <el-form-item :label="$t('form.workflowActivity.filtersSearch.user')">
+                      <el-select
+                        v-model="userId"
+                        filterable
+                        @visible-change="findSalesReps"
+                      >
+                        <el-option
+                          v-for="item in listSalesReps"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                </el-col>
+                <el-col :span="6">
+                  <el-button
+                    type="primary"
+                    class="button-base-icon"
+                    icon="el-icon-check"
+                    style="float: right;"
+                    @click="sendOPeration()"
+                  />
+                  <el-button
+                    type="primary"
+                    plain
+                    icon="el-icon-zoom-in"
+                    :alt="$t('page.processActivity.zoomIn')"
+                    style="float: right; margin-right: 5px; margin-left: 0px;"
+                    class="button-base-icon"
+                    @click="zoomRecord(currentActivity)"
+                  />
+                  <el-button
+                    type="info"
+                    class="button-base-icon"
+                    plain
+                    style="float: right; margin-right: 5px;"
+                    @click="clearMessage()"
+                  >
+                    <svg-icon icon-class="layers-clear" />
+                  </el-button>
                 </el-col>
               </el-row>
             </el-form>
-            <p style="text-align: end; width: 100%;" class="style-bot">
-              <el-button
-                type="primary"
-                class="button-base-icon"
-                icon="el-icon-check"
-                style="float: right;"
-                @click="sendOPeration()"
-              />
-              <el-button
-                type="primary"
-                plain
-                icon="el-icon-zoom-in"
-                :alt="$t('page.processActivity.zoomIn')"
-                style="float: right; margin-right: 5px; margin-left: 0px;"
-                class="button-base-icon"
-                @click="zoomRecord(currentActivity)"
-              />
-              <el-button
-                type="info"
-                class="button-base-icon"
-                plain
-                style="float: right; margin-right: 5px;"
-                @click="clearMessage()"
-              >
-                <svg-icon icon-class="layers-clear" />
-              </el-button>
-            </p>
           </div>
         </el-card>
       </div>
@@ -362,6 +364,7 @@ export default defineComponent({
     }
 
     function clearMessage() {
+      console.log(4545)
       message.value = ''
     }
 
@@ -395,7 +398,7 @@ export default defineComponent({
         forwardWorkflow(currentActivity.value)
       }
       clearData()
-      store.dispatch('loadActivity', {})
+      loadActivity()
     }
 
     function forwardWorkflow({ id, uuid }) {
@@ -424,6 +427,9 @@ export default defineComponent({
             showClose: true
           })
         })
+        .finally(() => {
+          loadActivity()
+        })
     }
     function processWorkflow({ id, uuid }) {
       processWorkflowActivity({
@@ -450,6 +456,9 @@ export default defineComponent({
             message,
             showClose: true
           })
+        })
+        .finally(() => {
+          loadActivity()
         })
     }
 
@@ -697,7 +706,8 @@ export default defineComponent({
     height: 74% !important
   }
   .style-bot{
-    margin-top:-2%
+    margin-top: 0px;
+    z-index: 999;
   }
 }
 
