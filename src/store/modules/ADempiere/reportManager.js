@@ -161,8 +161,7 @@ const reportManager = {
     }) {
       return new Promise(resolve => {
         const reportDefinition = rootGetters.getStoredReport(containerUuid)
-        const { fieldsList } = reportDefinition
-
+        const { fieldsList, name, description } = reportDefinition
         const fieldsEmpty = rootGetters.getReportParametersEmptyMandatory({
           containerUuid,
           fieldsList
@@ -174,7 +173,12 @@ const reportManager = {
           })
           return
         }
-
+        showNotification({
+          title: language.t('notifications.processing'),
+          message: name,
+          summary: description,
+          type: 'info'
+        })
         const filters = getOperatorAndValue({
           format: 'array',
           containerUuid,
@@ -654,12 +658,6 @@ const reportManager = {
         reportName = action.name
       }
 
-      showNotification({
-        title: language.t('notifications.processing'),
-        message: name,
-        summary: description,
-        type: 'info'
-      })
       commit('setReportIsLoading', true)
       if ((isEmptyValue(instanceUuid) || reportDefinition.is_process_before_launch) && !isChangePanel) {
         dispatch('startReport', {
@@ -671,7 +669,12 @@ const reportManager = {
         })
         return
       }
-
+      showNotification({
+        title: language.t('notifications.processing'),
+        message: name,
+        summary: description,
+        type: 'info'
+      })
       return new Promise((resolve, reject) => {
         const filters = getOperatorAndValue({
           format: 'array',
