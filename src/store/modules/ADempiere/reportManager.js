@@ -628,6 +628,7 @@ const reportManager = {
       const reportDefinition = getters.getStoredReport(containerUuid)
       const {
         internal_id,
+        description,
         name,
         fieldsList
       } = reportDefinition
@@ -668,7 +669,12 @@ const reportManager = {
         })
         return
       }
-
+      showNotification({
+        title: language.t('notifications.processing'),
+        message: name,
+        summary: description,
+        type: 'info'
+      })
       return new Promise((resolve, reject) => {
         const filters = getOperatorAndValue({
           format: 'array',
