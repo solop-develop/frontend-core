@@ -52,8 +52,9 @@ import TableRecords from './TableRecords'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 
 /**
- * org.compiere.acct.AcctViewer
- * org.adempiere.webui.acct.WAcctViewer
+ * Based on:
+ * - https://github.com/adempiere/adempiere/blob/develop/client/src/org/compiere/acct/AcctViewer.java
+ * - https://github.com/adempiere/adempiere/blob/develop/zkwebui/WEB-INF/src/org/adempiere/webui/acct/WAcctViewer.java
  */
 export default defineComponent({
   name: 'AcctViewer',

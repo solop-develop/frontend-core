@@ -134,7 +134,6 @@ import { defineComponent, computed, onMounted } from '@vue/composition-api'
 import store from '@/store'
 
 // Constants
-import { DISPLAY_COLUMN_PREFIX } from '@/utils/ADempiere/dictionaryUtils'
 import { BUTTON, ID, IMAGE } from '@/utils/ADempiere/references'
 
 // Utils and Helper Methods
@@ -162,15 +161,18 @@ export default defineComponent({
         columnName: column_name
       })
     })
+
     const displayValueField = computed(() => {
-      if (!(isLookup(props.fieldAttributes.display_type) || [ID.id, IMAGE.id, BUTTON.id].includes(props.fieldAttributes.display_type))) {
+      const {
+        parentUuid, containerUuid, displayColumnName, display_type
+      } = props.fieldAttributes
+      if (!(isLookup(display_type) || [ID.id, IMAGE.id, BUTTON.id].includes(display_type))) {
         return null
       }
-      const { parentUuid, containerUuid, column_name } = props.fieldAttributes
       return store.getters.getValueOfFieldOnContainer({
         parentUuid,
         containerUuid,
-        columnName: DISPLAY_COLUMN_PREFIX + column_name
+        columnName: displayColumnName
       })
     })
 
