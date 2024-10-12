@@ -21,7 +21,7 @@
       <el-table
         ref="tableReportEngine"
         v-loading="isLoadingReport"
-        class="table-reportEngine"
+        class="table-report-engine"
         :data="dataList"
         lazy
         show-summary
@@ -598,7 +598,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.table-reportEngine {
+.table-report-engine {
   .el-icon-arrow-right {
     display: none;
   }
