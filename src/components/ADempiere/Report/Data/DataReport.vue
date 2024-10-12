@@ -17,7 +17,7 @@
 -->
 <template>
   <div @click="!showPopover">
-    <el-card class="container-reportEnginer">
+    <el-card class="container-report-engine">
       <el-table
         ref="tableReportEngine"
         v-loading="isLoadingReport"
@@ -605,7 +605,7 @@ export default defineComponent({
 .table-reportEngine .el-table__row--level-0 .el-icon-arrow-right:before {
   content: "";
 }
-.container-reportEnginer .el-card__body {
+.container-report-engine .el-card__body {
   padding-left: 20px !important;
   padding-right: 20px !important;
   padding-top: 20px !important;
