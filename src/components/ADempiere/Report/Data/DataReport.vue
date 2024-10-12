@@ -597,13 +597,14 @@ export default defineComponent({
 })
 </script>
 
-<style>
-.table-reportEngine .el-icon-arrow-right:before {
-  content: "";
-}
-
-.table-reportEngine .el-table__row--level-0 .el-icon-arrow-right:before {
-  content: "";
+<style lang="scss">
+.table-reportEngine {
+  .el-icon-arrow-right {
+    display: none;
+  }
+  .success-row .el-icon-arrow-right{
+    display: block !important;
+  }
 }
 .container-report-engine .el-card__body {
   padding-left: 20px !important;
