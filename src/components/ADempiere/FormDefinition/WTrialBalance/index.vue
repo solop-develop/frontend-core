@@ -89,6 +89,7 @@ import store from '@/store'
 // Utils and Helper Methods
 import optionsWtrialBalance from './options'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
+import { isEmptyValue } from '@/utils/ADempiere'
 
 export default defineComponent({
   name: 'WTrialBalance',
@@ -129,8 +130,16 @@ export default defineComponent({
     const showPeriod = computed(() => {
       return store.getters.getShowPeriod
     })
+    // Const
+    const COLUMNS_PERIOD = ['period_actual_amount', 'period_variance_amount']
+    const COLUMNS_ACCUMULATED = ['ytd_actual_amount', 'variance_amount', 'variance_percentage']
+    const COLUMNS_BUDGET = ['period_budget_amount', 'ytd_budget_amount']
+
     const showAccumulated = computed(() => {
       return store.getters.getShowAccumulated
+    })
+    const budget = computed(() => {
+      return store.getters.getBudget
     })
     // Data Table
     const headerList = ref([
@@ -189,7 +198,7 @@ export default defineComponent({
         align: 'right'
       }
     ])
-    const viewList = ref(headerList.value)
+    const viewList = ref(headerList.value.filter((header) => !COLUMNS_BUDGET.includes(header.columnName)))
     const isLoading = computed(() => {
       return store.getters.getIsLoading
     })
@@ -235,22 +244,21 @@ export default defineComponent({
 
       return sums
     }
-    const COLUMNS_PERIOD = ['period_actual_amount', 'period_budget_amount', 'period_variance_amount']
-    const COLUMNS_ACCUMULATED = ['ytd_actual_amount', 'ytd_budget_amount', 'variance_amount', 'variance_percentage']
-
     watch(
-      () => [showPeriod.value, showAccumulated.value],
+      () => [budget.value, showPeriod.value, showAccumulated.value],
       (newValue) => {
         let columnsToExclude = []
-        if (newValue[0] && newValue[1]) {
-          columnsToExclude = [...COLUMNS_PERIOD, ...COLUMNS_ACCUMULATED]
-        } else if (newValue[0]) {
-          columnsToExclude = COLUMNS_PERIOD
-        } else if (newValue[1]) {
-          columnsToExclude = COLUMNS_ACCUMULATED
+        if (isEmptyValue(newValue[0])) {
+          columnsToExclude = COLUMNS_BUDGET
         }
-        if (columnsToExclude.length === 0 && newValue[0] && newValue[1]) {
-          columnsToExclude = [...COLUMNS_PERIOD, ...COLUMNS_ACCUMULATED]
+        if (!isEmptyValue(newValue[0])) {
+          columnsToExclude = []
+        }
+        if (newValue[1]) {
+          columnsToExclude = [...columnsToExclude, ...COLUMNS_PERIOD]
+        }
+        if (newValue[2]) {
+          columnsToExclude = [...columnsToExclude, ...COLUMNS_ACCUMULATED]
         }
         viewList.value = headerList.value.filter((header) => !columnsToExclude.includes(header.columnName))
       }
@@ -276,10 +284,11 @@ export default defineComponent({
       })
     }
     return {
-      //  Values
+      //  Computed
       isVisible,
       showPeriod,
       showAccumulated,
+      budget,
       // Data Table
       listSummary,
       headerList,
