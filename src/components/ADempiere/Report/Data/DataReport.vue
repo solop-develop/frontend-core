@@ -17,10 +17,11 @@
 -->
 <template>
   <div @click="!showPopover">
-    <el-card class="containerReportEnginer">
+    <el-card class="container-report-engine">
       <el-table
         ref="tableReportEngine"
         v-loading="isLoadingReport"
+        class="table-report-engine"
         :data="dataList"
         lazy
         show-summary
@@ -596,8 +597,16 @@ export default defineComponent({
 })
 </script>
 
-<style>
-.containerReportEnginer .el-card__body {
+<style lang="scss">
+.table-report-engine {
+  .el-icon-arrow-right {
+    display: none;
+  }
+  .success-row .el-icon-arrow-right{
+    display: block !important;
+  }
+}
+.container-report-engine .el-card__body {
   padding-left: 20px !important;
   padding-right: 20px !important;
   padding-top: 20px !important;
