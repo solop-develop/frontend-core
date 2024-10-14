@@ -67,195 +67,215 @@
               </b>
             </template>
             <el-form :inline="true" label-position="top" class="form-min-label">
-              <el-form-item
-                :label="$t('issues.typeOfRequest')"
-                style="margin: 0px;margin-left: 10px;"
-                size="small"
-              >
-                <el-select
-                  v-model="requestTypes"
-                  size="small"
-                  filterable
-                  clearable
-                  @visible-change="findRequestTypes"
-                  @change="findStatus"
-                >
-                  <el-option
-                    v-for="(item, key) in listIssuesTypes"
-                    :key="key"
-                    :label="item.name"
-                    :value="item.id"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item
-                :label="$t('issues.businessPartner')"
-                style="margin: 0px;margin-left: 10px;"
-                size="small"
-              >
-                <el-select
-                  v-model="businessPartnerField"
-                  remote
-                  clearable
-                  filterable
-                  size="small"
-                  reserve-keyword
-                  :remote-method="remoteMethodPartner"
-                  @visible-change="findBusinessPartner"
-                  @change="updateListIssues"
-                >
-                  <el-option
-                    v-for="(item, key) in listBusinessPartnerField"
-                    :key="key"
-                    :label="item.name"
-                    :value="item.id"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item
-                :label="$t('issues.category')"
-                style="margin: 0px;margin-left: 10px;"
-                size="small"
-              >
-                <el-select
-                  v-model="categoryField"
-                  remote
-                  clearable
-                  filterable
-                  size="small"
-                  reserve-keyword
-                  :remote-method="remoteMethodCategory"
-                  @visible-change="findCategory"
-                  @change="updateListIssues"
-                >
-                  <el-option
-                    v-for="(item, key) in listCategoryField"
-                    :key="key"
-                    :label="item.name"
-                    :value="item.id"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item
-                :label="$t('issues.project')"
-                style="margin: 0px;margin-left: 10px;"
-                size="small"
-              >
-                <el-select
-                  v-model="projectField"
-                  remote
-                  clearable
-                  filterable
-                  size="small"
-                  reserve-keyword
-                  :remote-method="remoteMethodProject"
-                  @visible-change="findProject"
-                  @change="updateListIssues"
-                >
-                  <el-option
-                    v-for="(item, key) in listProjectField"
-                    :key="key"
-                    :label="item.name"
-                    :value="item.id"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item
-                :label="$t('issues.group')"
-                style="margin: 0px;margin-left: 10px;"
-                size="small"
-              >
-                <el-select
-                  v-model="groupField"
-                  remote
-                  clearable
-                  filterable
-                  size="small"
-                  reserve-keyword
-                  :remote-method="remoteMethodGroup"
-                  @visible-change="findGroup"
-                  @change="updateListIssues"
-                >
-                  <el-option
-                    v-for="(item, key) in listGroupField"
-                    :key="key"
-                    :label="item.name"
-                    :value="item.id"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item
-                :label="$t('issues.priority')"
-                style="margin: 0px;margin-left: 10px;"
-                size="small"
-              >
-                <el-select
-                  v-model="priorityField"
-                  remote
-                  clearable
-                  filterable
-                  size="small"
-                  reserve-keyword
-                  @visible-change="findPriority"
-                  @change="updateListIssues"
-                >
-                  <el-option
-                    v-for="(item, key) in listPriorityField"
-                    :key="key"
-                    :label="item.name"
-                    :value="item.value"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item
-                :label="$t('issues.status')"
-                style="margin: 0px;margin-left: 10px;"
-                size="small"
-              >
-                <el-select
-                  v-model="statusField"
-                  remote
-                  clearable
-                  filterable
-                  size="small"
-                  reserve-keyword
-                  :remote-method="remoteMethodStatus"
-                  :disabled="isEmptyValue(requestTypes)"
-                  @visible-change="findListStatus"
-                  @change="updateListIssues"
-                >
-                  <el-option
-                    v-for="(item, key) in listStatusField"
-                    :key="key"
-                    :label="item.name"
-                    :value="item.id"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item
-                :label="$t('issues.taskStatus')"
-                style="margin: 0px;margin-left: 10px;"
-                size="small"
-              >
-                <el-select
-                  v-model="taskStatusField"
-                  remote
-                  clearable
-                  filterable
-                  size="small"
-                  reserve-keyword
-                  :remote-method="remoteMethodTaskStatus"
-                  @visible-change="findTaskStatus"
-                  @change="updateListIssues"
-                >
-                  <el-option
-                    v-for="(item, key) in listTaskStatusField"
-                    :key="key"
-                    :label="item.name"
-                    :value="item.value"
-                  />
-                </el-select>
-              </el-form-item>
+              <el-row :gutter="20">
+                <el-col :span="6">
+                  <el-form-item
+                    :label="$t('issues.typeOfRequest')"
+                    style="margin: 0px;margin-left: 10px;"
+                    size="small"
+                  >
+                    <el-select
+                      v-model="requestTypes"
+                      size="small"
+                      filterable
+                      clearable
+                      @visible-change="findRequestTypes"
+                      @change="findStatus"
+                    >
+                      <el-option
+                        v-for="(item, key) in listIssuesTypes"
+                        :key="key"
+                        :label="item.name"
+                        :value="item.id"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item
+                    :label="$t('issues.businessPartner')"
+                    style="margin: 0px;margin-left: 10px;"
+                    size="small"
+                  >
+                    <el-select
+                      v-model="businessPartnerField"
+                      remote
+                      clearable
+                      filterable
+                      size="small"
+                      reserve-keyword
+                      :remote-method="remoteMethodPartner"
+                      @visible-change="findBusinessPartner"
+                      @change="updateListIssues"
+                    >
+                      <el-option
+                        v-for="(item, key) in listBusinessPartnerField"
+                        :key="key"
+                        :label="item.name"
+                        :value="item.id"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item
+                    :label="$t('issues.category')"
+                    style="margin: 0px;margin-left: 10px;"
+                    size="small"
+                  >
+                    <el-select
+                      v-model="categoryField"
+                      remote
+                      clearable
+                      filterable
+                      size="small"
+                      reserve-keyword
+                      :remote-method="remoteMethodCategory"
+                      @visible-change="findCategory"
+                      @change="updateListIssues"
+                    >
+                      <el-option
+                        v-for="(item, key) in listCategoryField"
+                        :key="key"
+                        :label="item.name"
+                        :value="item.id"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item
+                    :label="$t('issues.project')"
+                    style="margin: 0px;margin-left: 10px;"
+                    size="small"
+                  >
+                    <el-select
+                      v-model="projectField"
+                      remote
+                      clearable
+                      filterable
+                      size="small"
+                      reserve-keyword
+                      :remote-method="remoteMethodProject"
+                      @visible-change="findProject"
+                      @change="updateListIssues"
+                    >
+                      <el-option
+                        v-for="(item, key) in listProjectField"
+                        :key="key"
+                        :label="item.name"
+                        :value="item.id"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row :gutter="20">
+                <el-col :span="6">
+                  <el-form-item
+                    :label="$t('issues.group')"
+                    style="margin: 0px;margin-left: 10px;"
+                    size="small"
+                  >
+                    <el-select
+                      v-model="groupField"
+                      remote
+                      clearable
+                      filterable
+                      size="small"
+                      reserve-keyword
+                      :remote-method="remoteMethodGroup"
+                      @visible-change="findGroup"
+                      @change="updateListIssues"
+                    >
+                      <el-option
+                        v-for="(item, key) in listGroupField"
+                        :key="key"
+                        :label="item.name"
+                        :value="item.id"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item
+                    :label="$t('issues.priority')"
+                    style="margin: 0px;margin-left: 10px;"
+                    size="small"
+                  >
+                    <el-select
+                      v-model="priorityField"
+                      remote
+                      clearable
+                      filterable
+                      size="small"
+                      reserve-keyword
+                      @visible-change="findPriority"
+                      @change="updateListIssues"
+                    >
+                      <el-option
+                        v-for="(item, key) in listPriorityField"
+                        :key="key"
+                        :label="item.name"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item
+                    :label="$t('issues.status')"
+                    style="margin: 0px;margin-left: 10px;"
+                    size="small"
+                  >
+                    <el-select
+                      v-model="statusField"
+                      remote
+                      clearable
+                      filterable
+                      size="small"
+                      reserve-keyword
+                      :remote-method="remoteMethodStatus"
+                      :disabled="isEmptyValue(requestTypes)"
+                      @visible-change="findListStatus"
+                      @change="updateListIssues"
+                    >
+                      <el-option
+                        v-for="(item, key) in listStatusField"
+                        :key="key"
+                        :label="item.name"
+                        :value="item.id"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item
+                    :label="$t('issues.taskStatus')"
+                    style="margin: 0px;margin-left: 10px;"
+                    size="small"
+                  >
+                    <el-select
+                      v-model="taskStatusField"
+                      remote
+                      clearable
+                      filterable
+                      size="small"
+                      reserve-keyword
+                      :remote-method="remoteMethodTaskStatus"
+                      @visible-change="findTaskStatus"
+                      @change="updateListIssues"
+                    >
+                      <el-option
+                        v-for="(item, key) in listTaskStatusField"
+                        :key="key"
+                        :label="item.name"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
             </el-form>
           </el-collapse-item>
         </el-collapse>
