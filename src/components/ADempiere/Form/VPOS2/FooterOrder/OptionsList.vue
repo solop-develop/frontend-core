@@ -233,6 +233,7 @@ export default defineComponent({
      * @param {Object} point
      */
     function changePos(point) {
+      if (currentPointOfSales.value.id === point.id) return
       updateListAvalibles(point)
       store.commit('setVPOS', point)
       const currentRouter = router.app.$route
@@ -286,6 +287,7 @@ export default defineComponent({
     function changePrices(price) {
       store.commit('setUpdatePointVPOS', {
         attribute: 'priceList',
+        isListLine: true,
         value: price
       })
       if (!isEmptyValue(currentOrder.value.id)) {

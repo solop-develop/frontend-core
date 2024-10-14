@@ -740,7 +740,8 @@ export default defineComponent({
     function applyDiscount() {
       isLoadingApplyDiscountOnOrder.value = true
       store.dispatch('updateCurrentOrder', {
-        discount_amount_off: applyDiscountAmount.value
+        discount_amount_off: applyDiscountAmount.value,
+        isListLine: true
       })
         .then(() => {
           isLoadingApplyDiscountOnOrder.value = false
@@ -751,7 +752,8 @@ export default defineComponent({
     function applyDiscountAll() {
       isLoadingApplyDiscountOnOrder.value = true
       store.dispatch('updateCurrentOrder', {
-        discount_rate: applyDiscountAmount.value
+        discount_rate: applyDiscountAmount.value,
+        isListLine: true
       })
         .then(() => {
           isLoadingApplyDiscountOnOrder.value = false
