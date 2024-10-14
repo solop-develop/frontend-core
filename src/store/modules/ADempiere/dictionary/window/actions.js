@@ -223,7 +223,7 @@ export default {
               const { table_name } = storedTab
               if (!isEmptyValue(reportDefinition)) {
                 // auto run report if without parameters
-                if (!reportDefinition.hasParameters || isEmptyValue(reportDefinition.fieldsList)) {
+                if (!reportDefinition.has_parameters || isEmptyValue(reportDefinition.fieldsList)) {
                   // close modal dialog
                   store.commit('setShowedModalDialog', {
                     containerUuid: reportDefinition.uuid,
@@ -236,7 +236,6 @@ export default {
                 }
                 return Promise.resolve(reportDefinition)
               }
-
               return dispatch('getReportDefinitionFromServer', {
                 id: process.id,
                 tableName: table_name
