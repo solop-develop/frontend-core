@@ -607,7 +607,12 @@ export const FIELDS_DATE = [
   DATE_PLUS_TIME.id,
   TIME.id
 ]
-
+export const FIELDS_COLUMNS_WIDTH = [
+  TABLE.id,
+  CHAR.id,
+  TEXT.id,
+  SEARCH.id
+]
 /**
  * Is date or time field
  * @param {number} displayType
@@ -621,6 +626,6 @@ export function isBooleanField(displayType) {
   return displayType === YES_NO.id
 }
 
-export function isStringField(displayType) {
-  return FIELDS_TEXT.includes(displayType)
+export function isWidthColumn(displayType) {
+  return FIELDS_COLUMNS_WIDTH.includes(displayType)
 }

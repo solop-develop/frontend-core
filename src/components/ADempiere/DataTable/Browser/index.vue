@@ -74,7 +74,7 @@
         :prop="fieldAttributes.columnName"
         sortable
         :sort-by="fieldAttributes.sortByProperty"
-        :min-width="widthColumn(fieldAttributes)"
+        :width="widthColumn(fieldAttributes)"
         :fixed="fieldAttributes.isFixedTableColumn"
       >
         <template slot="header">
@@ -135,7 +135,7 @@ import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
-
+import { isWidthColumn } from '@/utils/ADempiere/references'
 /**
  * TODO: Reindex with `rowIndex` property when sorting by Column without refreshing records
  */
@@ -239,9 +239,12 @@ export default defineComponent({
       })
     })
     function widthColumn(fieldAttributes) {
-      const { name } = fieldAttributes
+      const { name, display_type } = fieldAttributes
       const size = 12
       let caracter = name.length
+      if (isWidthColumn(display_type)) {
+        return caracter * size + 100
+      }
       if (caracter <= 9) {
         caracter = 10
       }
