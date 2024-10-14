@@ -190,7 +190,8 @@ export default {
     },
     updateCurrentLine({
       dispatch,
-      getters
+      getters,
+      commit
     }, {
       lineId,
       uom_id,
@@ -218,10 +219,21 @@ export default {
           warehouse_id
         })
           .then(updateLineResponse => {
+            const listOrderLines = getters.getListOrderLines
+            const listLines = listOrderLines.map(line => {
+              if (line.id === updateLineResponse.id) {
+                return {
+                  ...line,
+                  ...updateLineResponse
+                }
+              }
+              return line
+            })
             dispatch('overloadOrder', {
               order: currentOrder,
-              isListLine
+              isListLine: false
             })
+            commit('setListOrderLines', listLines)
             resolve(updateLineResponse)
           })
           .catch(error => {

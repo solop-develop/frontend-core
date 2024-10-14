@@ -82,10 +82,9 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
               class="form-item-criteria"
               style="margin: 0px;width: 100%;"
             >
-              <field-amount
-                :value-amount="Number(editLine.quantity.value)"
-                :value-display="editLine.quantity"
-                :precision="editLine.uom.uom.starndard_precision"
+              <edit-qty-entered
+                :qty="Number(editLine.quantity)"
+                :display-value="editLine.quantity"
                 :handle-change="updateQuantity"
               />
             </el-form-item>
@@ -198,6 +197,7 @@ import lang from '@/lang'
 import store from '@/store'
 // Components and Mixins
 import fieldAmount from '@/components/ADempiere/Form/VPOS2/MainOrder/OptionLine/editLine/fieldAmount.vue'
+import editQtyEntered from '@/components/ADempiere/Form/VPOS2/MainOrder/OptionLine/editLine/editQtyEntered.vue'
 // Utils and Helper Methods
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 import { formatPrice } from '@/utils/ADempiere/valueFormat.js'
@@ -208,7 +208,8 @@ import { displayLineProductPriceValue, displayLinePrice } from '@/utils/ADempier
 export default defineComponent({
   name: 'editLine',
   components: {
-    fieldAmount
+    fieldAmount,
+    editQtyEntered
   },
   props: {
     editLine: {
@@ -307,7 +308,6 @@ export default defineComponent({
     }
 
     function showListStock(isVisible) {
-      console.log({ isVisible })
       if (!isVisible) return
       if (
         isEmptyValue(currentLine.value) ||
