@@ -253,13 +253,14 @@ export default defineComponent({
     }
 
     function changeDocumentType(documentType) {
-      store.commit('setUpdatePointVPOS', {
-        attribute: 'documentType',
-        value: documentType
-      })
+      // store.commit('setUpdatePointVPOS', {
+      //   attribute: 'documentType',
+      //   value: documentType
+      // })
       if (!isEmptyValue(currentOrder.value.id)) {
         store.dispatch('updateCurrentOrder', {
-          document_type_id: documentType.id
+          document_type_id: documentType.id,
+          isListLine: true
         })
       }
     }
@@ -273,10 +274,10 @@ export default defineComponent({
     }
 
     function changeWarehouses(warehouse) {
-      store.commit('setUpdatePointVPOS', {
-        attribute: 'warehouse',
-        value: warehouse
-      })
+      // store.commit('setUpdatePointVPOS', {
+      //   attribute: 'warehouse',
+      //   value: warehouse
+      // })
       if (!isEmptyValue(currentOrder.value.id)) {
         store.dispatch('updateCurrentOrder', {
           warehouse_id: warehouse.id
@@ -285,14 +286,14 @@ export default defineComponent({
     }
 
     function changePrices(price) {
-      store.commit('setUpdatePointVPOS', {
-        attribute: 'priceList',
-        isListLine: true,
-        value: price
-      })
+      // store.commit('setUpdatePointVPOS', {
+      //   attribute: 'priceList',
+      //   value: price
+      // })
       if (!isEmptyValue(currentOrder.value.id)) {
         store.dispatch('updateCurrentOrder', {
-          price_list_id: price.id
+          price_list_id: price.id,
+          isListLine: true
         })
       }
     }
