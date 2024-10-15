@@ -116,8 +116,8 @@ import useFullScreenContainer from '@/components/ADempiere/ContainerOptions/Full
 
 // Utils and Helper Methods
 import { isEmptyValue, setRecordPath } from '@/utils/ADempiere/valueUtils.js'
-import { isLookup } from '@/utils/ADempiere/references'
-import { isDateField } from '@/utils/ADempiere/references'
+import { isLookup, isDateField, isWidthColumn, isBooleanField } from '@/utils/ADempiere/references'
+
 export default defineComponent({
   name: 'WindowsTable',
 
@@ -619,16 +619,25 @@ export default defineComponent({
     }
 
     function widthColumn(fieldAttributes) {
-      const { name } = fieldAttributes
+      const { name, display_type } = fieldAttributes
       const size = 12
       let lenght = name.length
-      if (isDateField(fieldAttributes.display_type)) {
+      if (isDateField(display_type)) {
         return lenght * size * 0.8
+      }
+      if (isWidthColumn(display_type)) {
+        return lenght * size + 100
+      }
+      if (isBooleanField(display_type)) {
+        return 130
+      }
+      if (isLookup(display_type)) {
+        return 180
       }
       if (lenght < 10) {
         lenght = 10
       }
-      return lenght * size * 1.5
+      return lenght * size
     }
 
     /**
