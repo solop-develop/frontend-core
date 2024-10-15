@@ -15,15 +15,26 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
-  <el-input-number
-    ref="qtyField"
-    v-model="qtyEntered"
-    controls-position="right"
-    :precision="precision"
-    autofocus
-    style="text-align-last: end !important;width: 100%;"
-    @change="handleChange"
-  />
+  <span>
+    <el-input-number
+      v-show="isFocus"
+      ref="qtyField"
+      v-model="qtyEntered"
+      controls-position="right"
+      :precision="precision"
+      autofocus
+      style="text-align-last: end !important;width: 100%;"
+      @change="handleChange"
+      @blur="customFocusLost"
+    />
+    <el-input
+      v-show="!isFocus"
+      v-model="displayValue"
+      readonly
+      style="text-align-last: end !important;width: 100%;"
+      @focus="customFocusGained"
+    />
+  </span>
 </template>
 
 <script>
@@ -40,6 +51,10 @@ export default defineComponent({
       type: Number,
       default: 2
     },
+    displayValue: {
+      type: String,
+      required: true
+    },
     handleChange: {
       type: Function,
       default: (changeValue) => {
@@ -50,6 +65,7 @@ export default defineComponent({
   setup(props) {
     // Ref
     const qtyEntered = ref(props.qty)
+    const isFocus = ref(false)
     const qtyField = ref(null)
     if (qtyField.value) {
       qtyField.value.select()
@@ -58,10 +74,22 @@ export default defineComponent({
       qtyField.value.select
       qtyField.value.select()
     }, 200)
+
+    function customFocusGained(event) {
+      isFocus.value = true
+    }
+
+    function customFocusLost(event) {
+      isFocus.value = false
+    }
     return {
       // Ref
+      isFocus,
       qtyField,
-      qtyEntered
+      qtyEntered,
+      // Methods
+      customFocusLost,
+      customFocusGained
     }
   }
 })

@@ -287,6 +287,7 @@ export default {
     pos: {
       title: 'POS',
       priceList: 'Price List',
+      emptyPos: 'No Associated Point of Sale',
       releaseOrder: 'Release It',
       applyDiscountOnOrder: 'Apply Discount Based on Amount',
       fieldDiscountAmount: 'Discount Amount',

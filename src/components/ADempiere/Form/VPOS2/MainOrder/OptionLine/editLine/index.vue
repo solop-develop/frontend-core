@@ -82,7 +82,7 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
               class="form-item-criteria"
               style="margin: 0px;width: 100%;"
             >
-              <edit-qty-entered
+              <edit-qty-entered-field
                 :qty="Number(editLine.quantity)"
                 :display-value="editLine.quantity"
                 :handle-change="updateQuantity"
@@ -197,7 +197,7 @@ import lang from '@/lang'
 import store from '@/store'
 // Components and Mixins
 import fieldAmount from '@/components/ADempiere/Form/VPOS2/MainOrder/OptionLine/editLine/fieldAmount.vue'
-import editQtyEntered from '@/components/ADempiere/Form/VPOS2/MainOrder/OptionLine/editLine/editQtyEntered.vue'
+import editQtyEnteredField from '@/components/ADempiere/Form/VPOS2/MainOrder/OptionLine/editLine/editQtyEnteredField.vue'
 // Utils and Helper Methods
 import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 import { formatPrice } from '@/utils/ADempiere/valueFormat.js'
@@ -209,7 +209,7 @@ export default defineComponent({
   name: 'editLine',
   components: {
     fieldAmount,
-    editQtyEntered
+    editQtyEnteredField
   },
   props: {
     editLine: {

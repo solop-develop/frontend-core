@@ -287,6 +287,7 @@ export default {
     ...form,
     pos: {
       title: 'Punto de Venta',
+      emptyPos: 'Sin Punto de Venta Asociado',
       priceList: 'Lista de Precio',
       releaseOrder: 'Liberar',
       applyDiscountOnOrder: 'Aplicar Descuento basado en Monto',

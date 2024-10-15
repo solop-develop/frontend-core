@@ -141,7 +141,10 @@ export default {
     }) {
       return new Promise(resolve => {
         const currentPos = getters.getVPOS
-        if (isEmptyValue(currentPos.id)) resolve({})
+        if (isEmptyValue(currentPos.id)) {
+          resolve({})
+          return
+        }
         listAvailablePaymentMethods({
           posId: currentPos.id
         })

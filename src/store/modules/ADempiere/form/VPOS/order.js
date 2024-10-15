@@ -418,8 +418,7 @@ export default {
     },
     updateCurrentOrder({
       dispatch,
-      getters,
-      commit
+      getters
     }, {
       customer_id,
       campaign_id,
@@ -428,7 +427,6 @@ export default {
       discount_rate,
       document_type_id,
       discount_rate_off,
-      isListLine = false,
       discount_amount_off,
       sales_representative_id
     }) {
@@ -468,8 +466,7 @@ export default {
                 orderId: response.id
               }
             }, () => {})
-            commit('setCurrentOrder', response)
-            if (isListLine) dispatch('listLines')
+            dispatch('overloadOrder', { order: response })
             resolve({})
           })
           .catch(error => {

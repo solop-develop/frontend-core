@@ -135,6 +135,7 @@ import {
   sizeTableColumn,
   displayLineQtyEntered
 } from '@/utils/ADempiere/dictionary/form/VPOS'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
 import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 
 export default defineComponent({
@@ -300,6 +301,7 @@ export default defineComponent({
         })
     }
     function updateQuantity(quantity) {
+      if (isEmptyValue(currentLine.value)) return
       const { is_allows_modify_quantity } = currentPos.value
       if (!is_allows_modify_quantity) {
         store.dispatch('setModalPin', {
@@ -316,9 +318,14 @@ export default defineComponent({
                 currentLine.value.isEditQtyEntered = false
               })
               .catch(() => {
+                refreshLine(currentLine.value)
                 isLoadingQty.value = false
-                currentLine.value.isEditQtyEntered = true
+                // currentLine.value.isEditQtyEntered = true
               })
+              .finally(() => {
+                isLoadingQty.value = false
+              })
+            isLoadingQty.value = false
           },
           cancelMethod: () => {
             currentLine.value.isEditQtyEntered = false
@@ -342,7 +349,9 @@ export default defineComponent({
         })
         .catch(() => {
           isLoadingQty.value = false
-          currentLine.value.isEditQtyEntered = true
+        })
+        .finally(() => {
+          isLoadingQty.value = false
         })
     }
     function updateDiscount(discount_rate) {
@@ -431,6 +440,8 @@ export default defineComponent({
       currentLine.value.total_discount_amount = line.total_discount_amount
       currentLine.value.total_tax_amount = line.total_tax_amount
     }
+
+    console.log({ currentLine: currentLine.value, lines: lines.value })
 
     return {
       currentPos,
