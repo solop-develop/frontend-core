@@ -15,6 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import router from '@/router'
+import language from '@/lang'
 
 // Api Request Methods
 import {
@@ -34,7 +35,7 @@ import {
 } from '@/api/ADempiere/form/VPOS/CommandShortcut'
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
-import { showMessage } from '@/utils/ADempiere/notification'
+import { showMessage, showNotification } from '@/utils/ADempiere/notification'
 
 const VPOS = {
   listDocumentTypes: [],
@@ -91,6 +92,15 @@ export default {
       return new Promise(resolve => {
         const currentRouter = router.app.$route
         const { posId } = currentRouter.query
+        if (isEmptyValue(posId)) {
+          showNotification({
+            title: language.t('pointOfSales.withoutPOSTerminal'),
+            message: router.app.$route.title,
+            summary: router.app.$route.description,
+            type: 'error'
+          })
+          return
+        }
         if (!isEmptyValue(posId)) id = posId
         if (isEmptyValue(id)) {
           dispatch('listPointOfSale')
