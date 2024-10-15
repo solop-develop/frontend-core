@@ -961,7 +961,7 @@ const reportManager = {
         const fileBuffer = Buffer.from(reportOutput.output_stream)
         requestPresignedUrl({
           clientId: rootGetters['user/getRole'].uuid,
-          containerType: 'attachment',
+          containerType: 'resource',
           fileName: reportOutput.file_name,
           tableName: reportOutput.table_name,
           containerId: containerUuid,
@@ -976,7 +976,7 @@ const reportManager = {
             if (!isEmptyValue(file_name)) {
               if (isDownload) {
                 const file = document.createElement('a')
-                file.href = `${config.adempiere.api.url}/attachment/${file_name}`
+                file.href = `${config.adempiere.api.url}/resource/${file_name}`
                 file.download = `${reportName}`
                 file.target = '_blank'
                 file.click()
