@@ -653,7 +653,7 @@ export default defineComponent({
   background: #ecf5ff;
 }
 .el-table .children-row .cell .el-dropdown {
-  color: #000 !important
+  color: #000
 }
 .reportInfo .el-popover {
   width: 850px !important;
