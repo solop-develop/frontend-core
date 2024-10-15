@@ -66,7 +66,7 @@
                 {{ $t('issues.filters') }}
               </b>
             </template>
-            <el-form :inline="true" label-position="top" class="form-min-label">
+            <el-form :inline="true" label-position="top" class="form-base">
               <el-row :gutter="20">
                 <el-col :span="6">
                   <el-form-item
