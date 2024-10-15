@@ -66,176 +66,216 @@
                 {{ $t('issues.filters') }}
               </b>
             </template>
-            <el-form :inline="true" label-position="top" class="form-min-label">
-              <el-form-item
-                :label="$t('issues.typeOfRequest')"
-                style="margin: 0px;margin-left: 10px;"
-                size="small"
-              >
-                <el-select
-                  v-model="requestTypes"
-                  size="small"
-                  filterable
-                  clearable
-                  @visible-change="findRequestTypes"
-                  @change="findStatus"
-                >
-                  <el-option
-                    v-for="(item, key) in listIssuesTypes"
-                    :key="key"
-                    :label="item.name"
-                    :value="item.id"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item
-                :label="$t('issues.businessPartner')"
-                style="margin: 0px;margin-left: 10px;"
-                size="small"
-              >
-                <el-select
-                  v-model="businessPartnerField"
-                  size="small"
-                  filterable
-                  clearable
-                  @visible-change="findBusinessPartner"
-                  @change="updateListIssues"
-                >
-                  <el-option
-                    v-for="(item, key) in listBusinessPartnerField"
-                    :key="key"
-                    :label="item.name"
-                    :value="item.id"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item
-                :label="$t('issues.category')"
-                style="margin: 0px;margin-left: 10px;"
-                size="small"
-              >
-                <el-select
-                  v-model="categoryField"
-                  size="small"
-                  filterable
-                  clearable
-                  @visible-change="findCategory"
-                  @change="updateListIssues"
-                >
-                  <el-option
-                    v-for="(item, key) in listCategoryField"
-                    :key="key"
-                    :label="item.name"
-                    :value="item.id"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item
-                :label="$t('issues.project')"
-                style="margin: 0px;margin-left: 10px;"
-                size="small"
-              >
-                <el-select
-                  v-model="projectField"
-                  size="small"
-                  filterable
-                  clearable
-                  @visible-change="findProject"
-                  @change="updateListIssues"
-                >
-                  <el-option
-                    v-for="(item, key) in listProjectField"
-                    :key="key"
-                    :label="item.name"
-                    :value="item.id"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item
-                :label="$t('issues.group')"
-                style="margin: 0px;margin-left: 10px;"
-                size="small"
-              >
-                <el-select
-                  v-model="groupField"
-                  size="small"
-                  filterable
-                  clearable
-                  @visible-change="findGroup"
-                  @change="updateListIssues"
-                >
-                  <el-option
-                    v-for="(item, key) in listGroupField"
-                    :key="key"
-                    :label="item.name"
-                    :value="item.id"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item
-                :label="$t('issues.priority')"
-                style="margin: 0px;margin-left: 10px;"
-                size="small"
-              >
-                <el-select
-                  v-model="priorityField"
-                  size="small"
-                  filterable
-                  clearable
-                  @visible-change="findPriority"
-                  @change="updateListIssues"
-                >
-                  <el-option
-                    v-for="(item, key) in listPriorityField"
-                    :key="key"
-                    :label="item.name"
-                    :value="item.value"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item
-                :label="$t('issues.status')"
-                style="margin: 0px;margin-left: 10px;"
-                size="small"
-              >
-                <el-select
-                  v-model="statusField"
-                  size="small"
-                  filterable
-                  clearable
-                  :disabled="isEmptyValue(requestTypes)"
-                  @visible-change="findListStatus"
-                  @change="updateListIssues"
-                >
-                  <el-option
-                    v-for="(item, key) in listStatusField"
-                    :key="key"
-                    :label="item.name"
-                    :value="item.id"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item
-                :label="$t('issues.taskStatus')"
-                style="margin: 0px;margin-left: 10px;"
-                size="small"
-              >
-                <el-select
-                  v-model="taskStatusField"
-                  size="small"
-                  filterable
-                  clearable
-                  @visible-change="findTaskStatus"
-                  @change="updateListIssues"
-                >
-                  <el-option
-                    v-for="(item, key) in listTaskStatusField"
-                    :key="key"
-                    :label="item.name"
-                    :value="item.value"
-                  />
-                </el-select>
-              </el-form-item>
+            <el-form :inline="true" label-position="top" class="form-base">
+              <el-row :gutter="20">
+                <el-col :span="6">
+                  <el-form-item
+                    :label="$t('issues.typeOfRequest')"
+                    style="margin: 0px;margin-left: 10px;"
+                    size="small"
+                  >
+                    <el-select
+                      v-model="requestTypes"
+                      size="small"
+                      filterable
+                      clearable
+                      @visible-change="findRequestTypes"
+                      @change="findStatus"
+                    >
+                      <el-option
+                        v-for="(item, key) in listIssuesTypes"
+                        :key="key"
+                        :label="item.name"
+                        :value="item.id"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item
+                    :label="$t('issues.businessPartner')"
+                    style="margin: 0px;margin-left: 10px;"
+                    size="small"
+                  >
+                    <el-select
+                      v-model="businessPartnerField"
+                      remote
+                      clearable
+                      filterable
+                      size="small"
+                      reserve-keyword
+                      :remote-method="remoteMethodPartner"
+                      @visible-change="findBusinessPartner"
+                      @change="updateListIssues"
+                    >
+                      <el-option
+                        v-for="(item, key) in listBusinessPartnerField"
+                        :key="key"
+                        :label="item.name"
+                        :value="item.id"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item
+                    :label="$t('issues.category')"
+                    style="margin: 0px;margin-left: 10px;"
+                    size="small"
+                  >
+                    <el-select
+                      v-model="categoryField"
+                      remote
+                      clearable
+                      filterable
+                      size="small"
+                      reserve-keyword
+                      :remote-method="remoteMethodCategory"
+                      @visible-change="findCategory"
+                      @change="updateListIssues"
+                    >
+                      <el-option
+                        v-for="(item, key) in listCategoryField"
+                        :key="key"
+                        :label="item.name"
+                        :value="item.id"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item
+                    :label="$t('issues.project')"
+                    style="margin: 0px;margin-left: 10px;"
+                    size="small"
+                  >
+                    <el-select
+                      v-model="projectField"
+                      remote
+                      clearable
+                      filterable
+                      size="small"
+                      reserve-keyword
+                      :remote-method="remoteMethodProject"
+                      @visible-change="findProject"
+                      @change="updateListIssues"
+                    >
+                      <el-option
+                        v-for="(item, key) in listProjectField"
+                        :key="key"
+                        :label="item.name"
+                        :value="item.id"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row :gutter="20">
+                <el-col :span="6">
+                  <el-form-item
+                    :label="$t('issues.group')"
+                    style="margin: 0px;margin-left: 10px;"
+                    size="small"
+                  >
+                    <el-select
+                      v-model="groupField"
+                      remote
+                      clearable
+                      filterable
+                      size="small"
+                      reserve-keyword
+                      :remote-method="remoteMethodGroup"
+                      @visible-change="findGroup"
+                      @change="updateListIssues"
+                    >
+                      <el-option
+                        v-for="(item, key) in listGroupField"
+                        :key="key"
+                        :label="item.name"
+                        :value="item.id"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item
+                    :label="$t('issues.priority')"
+                    style="margin: 0px;margin-left: 10px;"
+                    size="small"
+                  >
+                    <el-select
+                      v-model="priorityField"
+                      remote
+                      clearable
+                      filterable
+                      size="small"
+                      reserve-keyword
+                      @visible-change="findPriority"
+                      @change="updateListIssues"
+                    >
+                      <el-option
+                        v-for="(item, key) in listPriorityField"
+                        :key="key"
+                        :label="item.name"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item
+                    :label="$t('issues.status')"
+                    style="margin: 0px;margin-left: 10px;"
+                    size="small"
+                  >
+                    <el-select
+                      v-model="statusField"
+                      remote
+                      clearable
+                      filterable
+                      size="small"
+                      reserve-keyword
+                      :remote-method="remoteMethodStatus"
+                      :disabled="isEmptyValue(requestTypes)"
+                      @visible-change="findListStatus"
+                      @change="updateListIssues"
+                    >
+                      <el-option
+                        v-for="(item, key) in listStatusField"
+                        :key="key"
+                        :label="item.name"
+                        :value="item.id"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item
+                    :label="$t('issues.taskStatus')"
+                    style="margin: 0px;margin-left: 10px;"
+                    size="small"
+                  >
+                    <el-select
+                      v-model="taskStatusField"
+                      remote
+                      clearable
+                      filterable
+                      size="small"
+                      reserve-keyword
+                      :remote-method="remoteMethodTaskStatus"
+                      @visible-change="findTaskStatus"
+                      @change="updateListIssues"
+                    >
+                      <el-option
+                        v-for="(item, key) in listTaskStatusField"
+                        :key="key"
+                        :label="item.name"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
             </el-form>
           </el-collapse-item>
         </el-collapse>
@@ -449,6 +489,10 @@ export default defineComponent({
     const listStatuses = ref([])
     const listStatusesKanban = ref([])
     const statusesExpand = ref([])
+    const timeOut = ref(null)
+    /**
+     * Computed
+     */
     const isAll = computed(() => {
       return router.app._route.meta.isAll
     })
@@ -532,7 +576,7 @@ export default defineComponent({
     }
 
     function findBusinessPartner(isVisible) {
-      if (!isVisible) {
+      if (!isVisible || !isEmptyValue(listBusinessPartnerField.value)) {
         return
       }
       listBusinessPartners({})
@@ -552,7 +596,7 @@ export default defineComponent({
     }
 
     function findCategory(isVisible) {
-      if (!isVisible) {
+      if (!isVisible || !isEmptyValue(listCategoryField.value)) {
         return
       }
       listCategoriesRequest({})
@@ -573,7 +617,7 @@ export default defineComponent({
     }
 
     function findProject(isVisible) {
-      if (!isVisible) {
+      if (!isVisible || !isEmptyValue(listProjectField.value)) {
         return
       }
       listProjects({})
@@ -593,7 +637,7 @@ export default defineComponent({
     }
 
     function findGroup(isVisible) {
-      if (!isVisible) {
+      if (!isVisible || !isEmptyValue(listGroupField.value)) {
         return
       }
       listGroupsRequest({})
@@ -614,7 +658,7 @@ export default defineComponent({
     }
 
     function findPriority(isVisible) {
-      if (!isVisible) {
+      if (!isVisible || !isEmptyValue(listPriorityField.value)) {
         return
       }
       requestListPriorities({})
@@ -634,7 +678,7 @@ export default defineComponent({
     }
 
     function findTaskStatus(isVisible) {
-      if (!isVisible) {
+      if (!isVisible || !isEmptyValue(listTaskStatusField.value)) {
         return
       }
       listTaskStatuses({})
@@ -654,7 +698,7 @@ export default defineComponent({
     }
 
     function findListStatus(isVisible) {
-      if (!isVisible) {
+      if (!isVisible || !isEmptyValue(listStatusField.value)) {
         return
       }
       requestListStatuses({
@@ -804,12 +848,108 @@ export default defineComponent({
         })
     }
 
+    /**
+     * Search Remote Method
+     */
+
+    function remoteMethodPartner(searchValue) {
+      clearTimeout(timeOut.value)
+      timeOut.value = setTimeout(() => {
+        listBusinessPartners({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listBusinessPartnerField.value = records
+          })
+      }, 500)
+    }
+
+    function remoteMethodCategory(searchValue) {
+      clearTimeout(timeOut.value)
+      timeOut.value = setTimeout(() => {
+        listCategoriesRequest({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listCategoryField.value = records
+          })
+      }, 500)
+    }
+
+    function remoteMethodProject(searchValue) {
+      clearTimeout(timeOut.value)
+      timeOut.value = setTimeout(() => {
+        listProjects({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listProjectField.value = records
+          })
+      }, 500)
+    }
+
+    function remoteMethodGroup(searchValue) {
+      clearTimeout(timeOut.value)
+      timeOut.value = setTimeout(() => {
+        listGroupsRequest({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listGroupField.value = records
+          })
+      }, 500)
+    }
+
+    function remoteMethodPriorities(searchValue) {
+      clearTimeout(timeOut.value)
+      timeOut.value = setTimeout(() => {
+        requestListPriorities({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listPriorityField.value = records
+          })
+      }, 500)
+    }
+
+    function remoteMethodStatus(searchValue) {
+      clearTimeout(timeOut.value)
+      timeOut.value = setTimeout(() => {
+        requestListStatuses({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listStatusField.value = records
+          })
+      }, 500)
+    }
+
+    function remoteMethodTaskStatus(searchValue) {
+      clearTimeout(timeOut.value)
+      timeOut.value = setTimeout(() => {
+        listTaskStatuses({
+          searchValue
+        })
+          .then(response => {
+            const { records } = response
+            listTaskStatusField.value = records
+          })
+      }, 500)
+    }
+
     return {
       statusesExpand,
       listKanbanGroup,
       updateDragStatus,
       isloadinUpdateKanban,
       //
+      timeOut,
       isEdit,
       isKanban,
       listIssues,
@@ -837,7 +977,14 @@ export default defineComponent({
       priority,
       isNewIssues,
       // methods
+      remoteMethodPriorities,
+      remoteMethodTaskStatus,
+      remoteMethodCategory,
+      remoteMethodProject,
+      remoteMethodPartner,
       findBusinessPartner,
+      remoteMethodStatus,
+      remoteMethodGroup,
       findRequestTypes,
       updateListIssues,
       findPriority,
