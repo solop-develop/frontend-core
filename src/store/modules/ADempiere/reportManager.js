@@ -35,6 +35,10 @@ import {
 import { listPrintFormatsRequest, listPrintFormatsTableRequest } from '@/api/ADempiere/reportManagement/printFormat.ts'
 import { listReportViewsRequest } from '@/api/ADempiere/reportManagement/reportView.ts'
 import { listDrillTablesRequest } from '@/api/ADempiere/reportManagement/drillTable.ts'
+import {
+  requestPresignedUrl,
+  requestUploadFile
+} from '@/api/ADempiere/file-management/resource-reference.ts'
 
 // Constants
 import {
@@ -161,7 +165,8 @@ const reportManager = {
     }) {
       return new Promise(resolve => {
         const reportDefinition = rootGetters.getStoredReport(containerUuid)
-        const { fieldsList, name, description } = reportDefinition
+        const { fieldsList } = reportDefinition
+
         const fieldsEmpty = rootGetters.getReportParametersEmptyMandatory({
           containerUuid,
           fieldsList
@@ -173,12 +178,7 @@ const reportManager = {
           })
           return
         }
-        showNotification({
-          title: language.t('notifications.processing'),
-          message: name,
-          summary: description,
-          type: 'info'
-        })
+
         const filters = getOperatorAndValue({
           format: 'array',
           containerUuid,
@@ -658,6 +658,12 @@ const reportManager = {
         reportName = action.name
       }
 
+      showNotification({
+        title: language.t('notifications.processing'),
+        message: name,
+        summary: description,
+        type: 'info'
+      })
       commit('setReportIsLoading', true)
       if ((isEmptyValue(instanceUuid) || reportDefinition.is_process_before_launch) && !isChangePanel) {
         dispatch('startReport', {
@@ -669,12 +675,7 @@ const reportManager = {
         })
         return
       }
-      showNotification({
-        title: language.t('notifications.processing'),
-        message: name,
-        summary: description,
-        type: 'info'
-      })
+
       return new Promise((resolve, reject) => {
         const filters = getOperatorAndValue({
           format: 'array',
@@ -817,7 +818,8 @@ const reportManager = {
      */
     exportReport({
       commit,
-      rootGetters
+      rootGetters,
+      dispatch
     }, {
       containerUuid,
       reportId,
@@ -827,7 +829,8 @@ const reportManager = {
       pageSize,
       pageToken,
       isDownload = true,
-      isSummary
+      isSummary,
+      isLegacy
     }) {
       const reportDefinition = rootGetters.getStoredReport(containerUuid)
       const { fieldsList } = reportDefinition
@@ -836,39 +839,49 @@ const reportManager = {
         containerUuid,
         fieldsList
       })
+      const reportOutput = rootGetters.getReportOutput(reportId)
       return new Promise(resolve => {
-        runExport({
-          reportId,
-          printFormatId,
-          reportViewId,
-          pageSize,
-          pageToken,
-          filters,
-          isSummary
-        })
-          .then(response => {
-            const { file_name } = response
-            if (!isEmptyValue(file_name)) {
-              if (isDownload) {
-                const file = document.createElement('a')
-                file.href = `${config.adempiere.api.url}/resources/${file_name}`
-                file.download = `${reportName}`
-                file.target = '_blank'
-                file.click()
+        if (isLegacy) {
+          dispatch('sendUploadFile', {
+            reportOutput,
+            containerUuid,
+            reportName,
+            isDownload
+          })
+        } else {
+          runExport({
+            reportId,
+            printFormatId,
+            reportViewId,
+            pageSize,
+            pageToken,
+            filters,
+            isSummary
+          })
+            .then(response => {
+              const { file_name } = response
+              if (!isEmptyValue(file_name)) {
+                if (isDownload) {
+                  const file = document.createElement('a')
+                  file.href = `${config.adempiere.api.url}/resources/${file_name}`
+                  file.download = `${reportName}`
+                  file.target = '_blank'
+                  file.click()
+                }
+                resolve(file_name)
               }
-              resolve(file_name)
-            }
-          })
-          .catch(error => {
-            showNotification({
-              title: language.t('notifications.error'),
-              message: `Error exporting report: ${error.message}. Code: ${error.code}.`,
-              type: 'error'
             })
-            commit('setShowDialog', true)
-            console.warn(`Error exporting report: ${error.message}. Code: ${error.code}.`)
-            resolve(error)
-          })
+            .catch(error => {
+              showNotification({
+                title: language.t('notifications.error'),
+                message: `Error exporting report: ${error.message}. Code: ${error.code}.`,
+                type: 'error'
+              })
+              commit('setShowDialog', true)
+              console.warn(`Error exporting report: ${error.message}. Code: ${error.code}.`)
+              resolve(error)
+            })
+        }
       })
     },
     ListNotifications() {
@@ -937,9 +950,53 @@ const reportManager = {
             console.warn(`Error exporting report: ${error.message}. Code: ${error.code}.`)
           })
       })
+    },
+    sendUploadFile({ commit, rootGetters }, {
+      reportOutput,
+      containerUuid,
+      reportName,
+      isDownload
+    }) {
+      return new Promise(resolve => {
+        const fileBuffer = Buffer.from(reportOutput.output_stream)
+        requestPresignedUrl({
+          clientId: rootGetters['user/getRole'].uuid,
+          containerType: 'attachment',
+          fileName: reportOutput.file_name,
+          tableName: reportOutput.table_name,
+          containerId: containerUuid,
+          recordId: reportOutput.id
+        })
+          .then(response => {
+            const { file_name, url } = response
+            requestUploadFile({
+              url,
+              file: fileBuffer
+            })
+            if (!isEmptyValue(file_name)) {
+              if (isDownload) {
+                const file = document.createElement('a')
+                file.href = `${config.adempiere.api.url}/attachment/${file_name}`
+                file.download = `${reportName}`
+                file.target = '_blank'
+                file.click()
+              }
+              resolve(file_name)
+            }
+          })
+          .catch(error => {
+            showNotification({
+              title: language.t('notifications.error'),
+              message: `Error exporting report: ${error.message}. Code: ${error.code}.`,
+              type: 'error'
+            })
+            commit('setShowDialog', true)
+            console.warn(`Error exporting report: ${error.message}. Code: ${error.code}.`)
+            resolve(error)
+          })
+      })
     }
   },
-
   getters: {
     getContactSend: (state) => {
       return state.contactSend

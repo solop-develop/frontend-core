@@ -58,6 +58,11 @@
         :is-show-title="false"
       />
     </el-drawer>
+    <dialogShareReport
+      :report-output="storedReportDefinition"
+      :is-panel="false"
+      :is-legacy="true"
+    />
     <el-button
       v-if="!isEmptyValue(storedReportDefinition)"
       type="primary"
@@ -93,7 +98,7 @@ import mixinReport from '@/views/ADempiere/Report/mixinReport.js'
 import ModalDialog from '@/components/ADempiere/ModalDialog/index.vue'
 import OptionsReport from '@/components/ADempiere/ReportManager/Setup/optionsReport.vue'
 import TitleAndHelp from '@/components/ADempiere/TitleAndHelp/index.vue'
-
+import dialogShareReport from '@/views/ADempiere/ReportViewerEngine/dialog'
 // Constants
 import { DEFAULT_REPORT_TYPE } from '@/utils/ADempiere/dictionary/report.js'
 
@@ -112,14 +117,14 @@ export default defineComponent({
     ActionMenu,
     ModalDialog,
     TitleAndHelp,
-    OptionsReport
+    OptionsReport,
+    dialogShareReport
   },
 
   setup(props, { root }) {
     const storedReportOutput = computed(() => {
       return store.getters.getReportOutput(root.$route.params.reportId)
     })
-
     let { reportId, reportUuid } = root.$route.params
     if (!isEmptyValue(storedReportOutput.value)) {
       if (isEmptyValue(reportId) || reportId <= 0) {
