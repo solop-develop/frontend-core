@@ -174,7 +174,7 @@ export default defineComponent({
         fontStyle += `color: ${font.color} !important;`
       }
       if (isEmptyValue(font.font_code)) {
-        fontStyle += 'font-size: 10px !important'
+        fontStyle += 'font-size: 11px !important'
       }
       if (!isEmptyValue(font.font_code)) {
         const lastIndex = font.font_code.lastIndexOf('-')
