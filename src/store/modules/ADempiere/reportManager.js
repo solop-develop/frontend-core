@@ -958,7 +958,6 @@ const reportManager = {
       isDownload
     }) {
       return new Promise(resolve => {
-        const fileBuffer = Buffer.from(reportOutput.output_stream)
         requestPresignedUrl({
           clientId: rootGetters['user/getRole'].uuid,
           containerType: 'resource',
@@ -971,7 +970,7 @@ const reportManager = {
             const { file_name, url } = response
             requestUploadFile({
               url,
-              file: fileBuffer
+              file: reportOutput.output_stream
             })
             if (!isEmptyValue(file_name)) {
               if (isDownload) {
