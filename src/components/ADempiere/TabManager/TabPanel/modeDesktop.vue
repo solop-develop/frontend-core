@@ -107,7 +107,7 @@
         :total-records="recordsLength"
         :selection="selectionsLength"
         :page-number="currentPage"
-        :page-size="recordsWithFilter.length"
+        :page-size="recordsWithFilter"
         :handle-change-page-number="handleChangePage"
         :handle-change-page-size="handleChangeSizePage"
       />
@@ -275,7 +275,7 @@ export default defineComponent({
 
     const recordsWithFilter = computed(() => {
       if (props.containerManager && props.containerManager.getRecordsList) {
-        return props.containerManager.getRecordsList({
+        return props.containerManager.getPageSize({
           containerUuid: props.tabAttributes.uuid
         })
       }
