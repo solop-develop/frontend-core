@@ -298,10 +298,6 @@ export default {
           field = () => import('@/components/ADempiere/FieldDefinition/FieldProductAttribute')
           break
       }
-      console.log({
-        componentPath: this.field.componentPath,
-        name: this.field.name
-      })
       return field
     },
     fieldAttributes() {
