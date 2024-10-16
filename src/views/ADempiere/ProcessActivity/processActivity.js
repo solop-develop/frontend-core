@@ -134,6 +134,7 @@ export default defineComponent({
     })
 
     const isLoadProcess = ref(true)
+
     onMounted(() => {
       store.dispatch('getSessionProcessFromServer', {
         pageToken: pageToken.value,
@@ -151,12 +152,15 @@ export default defineComponent({
           isLoadProcess.value = false
         })
     })
+
     const getProcessMetadata = (uuid) => {
       return store.getters.getStoredProcess(uuid)
     }
+
     const findStoredReportUuid = (uuid) => {
       return store.getters.getStoredReport(uuid)
     }
+
     function handleCommand(activity) {
       if (activity.command === 'seeReport') {
         router.push({
@@ -202,6 +206,9 @@ export default defineComponent({
         setProcessParameters(activity.uuid, parameters)
       } else if (activity.command === 'copyLogs') {
         let logAsText = activity.summary
+        if (isEmptyValue(logAsText) && activity.is_error) {
+          logAsText = lang.t('route.withoutLog')
+        }
         if (!isEmptyValue(activity.logs)) {
           logAsText += '\n\n'
           activity.logs.forEach(list => {
