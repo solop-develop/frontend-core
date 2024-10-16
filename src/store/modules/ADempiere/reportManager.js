@@ -958,6 +958,14 @@ const reportManager = {
       isDownload
     }) {
       return new Promise(resolve => {
+        const byteCharacters = atob(reportOutput.output_stream)
+        const byteNumbers = new Array(byteCharacters.length)
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i)
+        }
+        const byteArray = new Uint8Array(byteNumbers)
+        const fileBlob = new Blob([byteArray], { type: 'application/octet-stream' })
+        const file = new File([fileBlob], reportOutput.file_name, { type: fileBlob.type })
         requestPresignedUrl({
           clientId: rootGetters['user/getRole'].uuid,
           containerType: 'resource',
@@ -970,7 +978,7 @@ const reportManager = {
             const { file_name, url } = response
             requestUploadFile({
               url,
-              file: reportOutput.output_stream
+              file: file
             })
             if (!isEmptyValue(file_name)) {
               if (isDownload) {
