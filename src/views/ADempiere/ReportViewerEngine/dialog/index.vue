@@ -209,6 +209,11 @@ export default defineComponent({
       type: Boolean,
       required: false,
       default: true
+    },
+    isLegacy: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   setup(props) {
@@ -350,7 +355,8 @@ export default defineComponent({
         containerUuid: getStoreReport.value.containerUuid,
         pageSize: pageSize.value,
         pageToken: pageToken.value,
-        isSummary: isSummary.value
+        isSummary: isSummary.value,
+        isLegacy: props.isLegacy
       })
       blankValue()
     }
@@ -365,7 +371,8 @@ export default defineComponent({
         containerUuid: getStoreReport.value.containerUuid,
         pageSize: pageSize.value,
         pageToken: pageToken.value,
-        isSummary: isSummary.value
+        isSummary: isSummary.value,
+        isLegacy: props.isLegacy
       })
         .then(fileNameResource => {
           if (isEmptyValue(fileNameResource)) {
@@ -439,7 +446,8 @@ export default defineComponent({
         containerUuid: getStoreReport.value.containerUuid,
         pageSize: pageSize.value,
         pageToken: pageToken.value,
-        isSummary: isSummary.value
+        isSummary: isSummary.value,
+        isLegacy: props.isLegacy
       })
         .then(fileNameResource => {
           if (isEmptyValue(fileNameResource)) {

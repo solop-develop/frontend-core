@@ -124,7 +124,12 @@
       "
     >
       <el-col :span="24">
-        <samp class="report-setup-footer">
+        <samp style="display: flex;" class="report-setup-footer">
+          <downloadButtom
+            :container-uuid="containerUuid"
+            :is-loading-report="false"
+            style="margin-right: 10px"
+          />
           <el-button
             plain
             type="info"
@@ -162,12 +167,13 @@ import CollapseCriteria from '@/components/ADempiere/CollapseCriteria/index.vue'
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
-
+import downloadButtom from '@/components/ADempiere/ReportManager/Setup/options/downloadButtom'
 export default defineComponent({
   name: 'OptionsReport',
 
   components: {
-    CollapseCriteria
+    CollapseCriteria,
+    downloadButtom
   },
 
   props: {
