@@ -182,6 +182,9 @@ export default defineComponent({
     })
 
     function handleCurrentChange(newCurrentRow, oldCurrentRow) {
+      if (isEmptyValue(newCurrentRow)) {
+        return
+      }
       if (newCurrentRow.is_active === false || newCurrentRow.IsActive === false) {
         return
       }

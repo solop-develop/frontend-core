@@ -344,6 +344,9 @@ export default {
   methods: {
     tableRowClassName,
     handleCurrentChange(newCurrentRow, oldCurrentRow) {
+      if (isEmptyValue(newCurrentRow)) {
+        return
+      }
       if (newCurrentRow.is_active === false || newCurrentRow.IsActive === false) {
         return
       }
