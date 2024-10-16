@@ -382,7 +382,7 @@ export default defineComponent({
       if (!isEmptyValue(children) || row.isTopLevel) {
         return 'success-row'
       }
-      return ''
+      return 'children-row'
     }
 
     function getRowClassName({ row, rowIndex }) {
@@ -651,6 +651,9 @@ export default defineComponent({
 .el-table .success-row {
   font-weight: 700;
   background: #ecf5ff;
+}
+.el-table .children-row .cell .el-dropdown {
+  color: #000
 }
 .reportInfo .el-popover {
   width: 850px !important;
