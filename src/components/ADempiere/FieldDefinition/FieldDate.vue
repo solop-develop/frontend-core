@@ -27,6 +27,7 @@
     :start-placeholder="$t('component.date.startDate')"
     :end-placeholder="$t('component.date.endDate')"
     unlink-panels
+    :size="sizeField"
     :picker-options="pickerOptions"
     @change="preHandleChange"
     @blur="focusLost"
@@ -61,6 +62,13 @@ export default {
   mixins: [
     fieldMixin
   ],
+
+  props: {
+    sizeField: {
+      type: String,
+      default: undefined
+    }
+  },
 
   data() {
     return {

@@ -28,6 +28,7 @@
       :container-uuid="containerUuid"
       :container-manager="containerManager"
       :metadata="fieldAttributes"
+      :size-field="sizeFieldInput"
       :in-table="true"
     />
   </div>
@@ -161,6 +162,10 @@ export default {
     },
     sizeCol: {
       type: Number,
+      default: undefined
+    },
+    sizeFieldInput: {
+      type: String,
       default: undefined
     }
   },

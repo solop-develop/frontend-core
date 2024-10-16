@@ -24,6 +24,7 @@
     :inactive-text="$t('components.switchInactiveText')"
     :active-color="activeColor"
     :inactive-color="inactiveColor"
+    :size="sizeField"
     @change="preHandleChange"
     @blur="focusLost"
     @focus="focusGained"
@@ -46,6 +47,13 @@ export default {
   mixins: [
     fieldMixin
   ],
+
+  props: {
+    sizeField: {
+      type: String,
+      default: undefined
+    }
+  },
 
   computed: {
     cssClassCustomField() {

@@ -38,6 +38,7 @@
       :controls="isShowControls"
       :controls-position="controlsPosition"
       autofocus
+      :size="sizeField"
       @change="preHandleChange"
       @focus="focusGained"
       @blur="customFocusLost"
@@ -54,6 +55,7 @@
       v-bind="commonsProperties"
       readonly
       autofocus
+      :size="sizeField"
       @focus="customFocusGained"
     />
   </el-tooltip>
@@ -85,6 +87,13 @@ export default {
   mixins: [
     fieldMixin
   ],
+
+  props: {
+    sizeField: {
+      type: String,
+      default: undefined
+    }
+  },
 
   data() {
     return {
