@@ -16,7 +16,6 @@
 
 import router from '@/router'
 import language from '@/lang'
-
 // Api Request Methods
 import {
   listPointOfSales,
@@ -147,6 +146,14 @@ export default {
         listPointOfSales()
           .then(response => {
             const { selling_points } = response
+            if (isEmptyValue(selling_points)) {
+              showMessage({
+                type: 'error',
+                message: language.t('form.pos.emptyPos'),
+                showClose: true
+              })
+              return
+            }
             commit('setLisVPOS', selling_points)
             if (isEmptyValue(currentPos)) dispatch('changeVPOS', { getPointOfSales: selling_points[0] })
             resolve(selling_points)

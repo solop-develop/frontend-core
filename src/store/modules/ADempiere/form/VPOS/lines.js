@@ -81,8 +81,9 @@ export default {
      * @returns {Object} lineResponse
      */
     newLine({
+      dispatch,
       getters,
-      dispatch
+      commit
     }, {
       chargeId,
       productId,
@@ -110,10 +111,18 @@ export default {
         })
           .then(responseOrder => {
             const { order_lines } = responseOrder
-            // commit('setOrder', order_lines)
-            // dispatch('listLines')
+            const listLines = getters.getListOrderLines
+            listLines.push({
+              isEditCurrentPrice: false,
+              isEditQtyEntered: false,
+              isEditDiscount: false,
+              ...responseOrder,
+              isLoading: false
+            })
+            commit('setListOrderLines', listLines)
             dispatch('overloadOrder', {
-              order: currentOrder
+              order: currentOrder,
+              isListLine: false
             })
             resolve(order_lines)
           })
@@ -190,7 +199,8 @@ export default {
     },
     updateCurrentLine({
       dispatch,
-      getters
+      getters,
+      commit
     }, {
       lineId,
       uom_id,
@@ -218,10 +228,31 @@ export default {
           warehouse_id
         })
           .then(updateLineResponse => {
+            const listOrderLines = getters.getListOrderLines
+            const listLines = listOrderLines.map(line => {
+              if (line.id === updateLineResponse.id) {
+                return {
+                  ...line,
+                  ...updateLineResponse,
+                  isEditQtyEntered: false,
+                  isEditCurrentPrice: false,
+                  isEditDiscount: false,
+                  isLoading: false
+                }
+              }
+              return {
+                isEditQtyEntered: false,
+                isEditCurrentPrice: false,
+                isEditDiscount: false,
+                isLoading: false,
+                ...line
+              }
+            })
             dispatch('overloadOrder', {
               order: currentOrder,
-              isListLine
+              isListLine: false
             })
+            commit('setListOrderLines', listLines)
             resolve(updateLineResponse)
           })
           .catch(error => {
@@ -235,9 +266,9 @@ export default {
               message,
               showClose: true
             })
-            dispatch('listLines')
-            resolve([])
+            // dispatch('listLines')
             console.warn(`Error Getting List Order Lines: ${error.message}. Code: ${error.code}.`)
+            resolve({ lineId })
           })
       })
     },
@@ -329,6 +360,7 @@ export default {
       return new Promise(resolve => {
         const pos = getters.getVPOS
         const order = getters.getCurrentOrder
+        const getListLines = getters.getListOrderLines
         if (isEmptyValue(lineId)) resolve({})
         deleteOrderLine({
           posId: pos.id,
@@ -336,9 +368,12 @@ export default {
           lineId
         })
           .then(() => {
+            const indexDelete = getListLines.findIndex((line) => line.id === lineId)
+            getListLines.splice(indexDelete, 1)
             commit('setOrder', {})
             dispatch('overloadOrder', {
-              order
+              order,
+              isListLine: false
             })
             resolve({})
           })

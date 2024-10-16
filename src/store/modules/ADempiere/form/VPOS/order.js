@@ -416,13 +416,16 @@ export default {
           })
       })
     },
-    updateCurrentOrder({ dispatch, getters }, {
+    updateCurrentOrder({
+      dispatch,
+      getters
+    }, {
       customer_id,
-      document_type_id,
-      price_list_id,
-      warehouse_id,
       campaign_id,
+      warehouse_id,
+      price_list_id,
       discount_rate,
+      document_type_id,
       discount_rate_off,
       discount_amount_off,
       sales_representative_id
@@ -463,7 +466,6 @@ export default {
                 orderId: response.id
               }
             }, () => {})
-            // commit('setCurrentOrder', response)
             dispatch('overloadOrder', { order: response })
             resolve({})
           })

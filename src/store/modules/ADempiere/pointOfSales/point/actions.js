@@ -81,6 +81,14 @@ export default {
     })
       .then(response => {
         pointOfSalesList = response.sellingPointsList
+        if (isEmptyValue(pointOfSalesList)) {
+          showMessage({
+            type: 'error',
+            message: 'Sin Error',
+            showClose: true
+          })
+          return
+        }
         if (isEmptyValue(pos) && isEmptyValue(posToSet) && !isEmptyValue(pointOfSalesList)) {
           pos = pointOfSalesList.find(itemPOS => itemPOS.salesRepresentative.uuid === userUuid)
         }

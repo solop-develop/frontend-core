@@ -404,7 +404,7 @@ export default {
           customer_id: customerId
         })
           .then(response => {
-            dispatch('overloadOrder', { order: response })
+            commit('setCurrentOrder', response)
             commit('setCurrentCustomer', order.customer)
             resolve(response)
           })
