@@ -235,6 +235,9 @@
                         <el-dropdown-item :command="{ ...activity, command: 'zoomIn' }">
                           {{ $t('page.processActivity.reRun') }}
                         </el-dropdown-item>
+                        <el-dropdown-item :command="{ ...activity, command: 'copyLogs' }">
+                          {{ $t('page.processActivity.copyOutput') }}
+                        </el-dropdown-item>
 
                         <!-- TODO: add more actions -->
                       </el-dropdown-menu>

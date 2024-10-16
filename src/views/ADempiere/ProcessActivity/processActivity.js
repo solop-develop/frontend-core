@@ -158,6 +158,7 @@ export default defineComponent({
       return store.getters.getStoredReport(uuid)
     }
     function handleCommand(activity) {
+      console.log({ activity })
       if (activity.command === 'seeReport') {
         router.push({
           name: REPORT_VIEWER_NAME,
@@ -202,6 +203,9 @@ export default defineComponent({
         setProcessParameters(activity.uuid, parameters)
       } else if (activity.command === 'copyLogs') {
         let logAsText = activity.summary
+        if (isEmptyValue(logAsText) && activity.is_error) {
+          logAsText = lang.t('route.withoutLog')
+        }
         if (!isEmptyValue(activity.logs)) {
           logAsText += '\n\n'
           activity.logs.forEach(list => {
