@@ -30,10 +30,13 @@ import {
 
 // Constants
 import { UUID } from '@/utils/ADempiere/constants/systemColumns'
-import { ROW_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
-import { IS_ADVANCED_QUERY } from '@/utils/ADempiere/dictionaryUtils'
+import { ROW_ATTRIBUTES, ROW_KEY_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
 import {
-  IGNORE_VALUE_OPERATORS_LIST, MULTIPLE_VALUES_OPERATORS_LIST, RANGE_VALUE_OPERATORS_LIST
+  DISPLAY_COLUMN_PREFIX, IDENTIFIER_COLUMN_SUFFIX, IS_ADVANCED_QUERY
+} from '@/utils/ADempiere/dictionaryUtils'
+import {
+  IGNORE_VALUE_OPERATORS_LIST, MULTIPLE_VALUES_OPERATORS_LIST,
+  RANGE_VALUE_OPERATORS_LIST
 } from '@/utils/ADempiere/dataUtils'
 import { FIELDS_DATE } from '@/utils/ADempiere/references'
 
@@ -41,10 +44,11 @@ import { FIELDS_DATE } from '@/utils/ADempiere/references'
 import { containerManager } from '@/utils/ADempiere/dictionary/window'
 import { isSalesTransaction } from '@/utils/ADempiere/contextUtils'
 import { getContextAttributes, generateContextKey } from '@/utils/ADempiere/contextUtils/contextAttributes'
-import { isEmptyValue, setRecordPath } from '@/utils/ADempiere/valueUtils.js'
+import { getTypeOfValue, isEmptyValue, setRecordPath } from '@/utils/ADempiere/valueUtils.js'
 import { convertObjectToKeyValue } from '@/utils/ADempiere/valueFormat'
 import { showMessage } from '@/utils/ADempiere/notification'
 import { generatePageToken } from '@/utils/ADempiere/dataUtils'
+import { isDateField, isDecimalField } from '@/utils/ADempiere/references'
 
 const initState = {
   tabData: {},
@@ -1006,6 +1010,94 @@ const windowManager = {
     getTabSelectionsList: (state, getters) => ({ containerUuid }) => {
       return getters.getTabData({ containerUuid }).selectionsList
     },
+
+    /**
+     * Getter converter selection data record in format
+     * @param {string} containerUuid
+     * @param {array}  selection
+     * [{
+     *    selectionId: keyColumn Value,
+     *    values: [{ columnName, value }]
+     * }]
+     */
+    getTabSelectionToServer: (state, getters, rootState, rootGetters) => ({
+      parentUuid,
+      containerUuid,
+      selectionsList = []
+    }) => {
+      const selectionToServer = []
+
+      if (isEmptyValue(selectionsList)) {
+        selectionsList = getters.getTabSelectionsList({
+          containerUuid
+        })
+      }
+
+      if (isEmptyValue(selectionsList)) {
+        return selectionToServer
+      }
+
+      const { fieldsList, table_name, table } = rootGetters.getStoredTab(
+        parentUuid,
+        containerUuid
+      )
+      let keyColumn = table_name + IDENTIFIER_COLUMN_SUFFIX
+      if (!isEmptyValue(table.key_columns) && table.key_columns.length === 1) {
+        keyColumn = table.key_columns.at(0)
+      }
+
+      // reduce list
+      const fieldsListSelection = fieldsList
+        .filter(itemField => {
+          return itemField.is_key || itemField.is_identifier
+        })
+        .map(itemField => {
+          return {
+            columnName: itemField.column_name,
+            display_type: itemField.display_type
+          }
+        })
+
+      selectionsList.forEach(itemRow => {
+        const attributesList = {}
+
+        Object.keys(itemRow).forEach(columnName => {
+          if (!columnName.startsWith(DISPLAY_COLUMN_PREFIX) && !ROW_KEY_ATTRIBUTES.includes(columnName)) {
+            const currentField = fieldsListSelection.find(itemField => {
+              return itemField.columnName === columnName
+            })
+            // evaluate metadata attributes before to convert
+            if (!isEmptyValue(currentField)) {
+              const value = itemRow[columnName]
+              let serverValue = value
+              // types `decimal` and `date` is a object struct
+              if (getTypeOfValue(value) !== 'OBJECT' || isEmptyValue(value.type)) {
+                if (isDateField(currentField.display_type)) {
+                  serverValue = {
+                    type: 'date',
+                    value: value
+                  }
+                } else if (isDecimalField(currentField.display_type)) {
+                  serverValue = {
+                    type: 'decimal',
+                    value: value
+                  }
+                }
+              }
+              attributesList[columnName] = serverValue
+            }
+          }
+        })
+
+        selectionToServer.push({
+          selectionId: itemRow[keyColumn],
+          values: attributesList
+        })
+      })
+
+      return selectionToServer
+    },
+
     getTabPageNumber: (state, getters) => ({ containerUuid }) => {
       return getters.getTabData({ containerUuid }).pageNumber
     },

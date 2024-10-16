@@ -863,9 +863,28 @@ export const exportCurrentRecord = {
  */
 export const runProcessOfWindow = {
   name: language.t('actionMenu.runProcess'),
-  enabled: ({ parentUuid, containerUuid }) => {
-    const recordUuid = store.getters.getUuidOfContainer(containerUuid)
-    return !isEmptyValue(recordUuid)
+  enabled: ({ parentUuid, containerUuid, uuid }) => {
+    const storedTab = store.getters.getStoredTab(
+      parentUuid,
+      containerUuid
+    )
+    if (!storedTab.isShowedTableRecords) {
+      const recordUuid = store.getters.getUuidOfContainer(containerUuid)
+      return !isEmptyValue(recordUuid)
+    }
+
+    // multi selection process
+    const recordsSelection = store.getters.getTabSelectionsList({
+      containerUuid
+    })
+    if (isEmptyValue(recordsSelection)) {
+      return false
+    }
+    const currentProcess = storedTab.processes.find(process => {
+      // return process.name === processModal.title
+      return process.uuid === uuid
+    })
+    return currentProcess.is_multi_selection
   },
   svg: false,
   icon: 'el-icon-setting',
@@ -886,9 +905,28 @@ export const runProcessOfWindow = {
  */
 export const generateReportOfWindow = {
   name: language.t('actionMenu.generateReport'),
-  enabled: ({ parentUuid, containerUuid }) => {
-    const recordUuid = store.getters.getUuidOfContainer(containerUuid)
-    return !isEmptyValue(recordUuid)
+  enabled: ({ parentUuid, containerUuid, uuid }) => {
+    const storedTab = store.getters.getStoredTab(
+      parentUuid,
+      containerUuid
+    )
+    if (!storedTab.isShowedTableRecords) {
+      const recordUuid = store.getters.getUuidOfContainer(containerUuid)
+      return !isEmptyValue(recordUuid)
+    }
+
+    // multi selection process
+    const recordsSelection = store.getters.getTabSelectionsList({
+      containerUuid
+    })
+    if (isEmptyValue(recordsSelection)) {
+      return false
+    }
+    const currentProcess = storedTab.processes.find(process => {
+      // return process.name === processModal.title
+      return process.uuid === uuid
+    })
+    return currentProcess.is_multi_selection
   },
   isSvgIcon: true,
   icon: 'skill',
