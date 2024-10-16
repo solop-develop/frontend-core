@@ -354,12 +354,37 @@ const processManager = {
         const processModal = getters.getModalDialogManager({
           containerUuid: containerUuid
         })
-        const currentProcess = storedTab.processes.find(process => process.name === processModal.title)
+        const storedProcessDefinition = storedTab.processes.find(process => {
+          // return process.name === processModal.title
+          return process.uuid === processModal.containerUuid
+        })
         if (isEmptyValue(parametersList)) {
           const fieldsList = getters.getStoredFieldsFromProcess(containerUuid)
           parametersList = rootGetters.getProcessParameters({
             containerUuid,
             fieldsList
+          })
+        }
+
+        let selectionsList = []
+        if (storedProcessDefinition.is_multi_selection) {
+          let recordsSelection = []
+          if (storedTab.isShowedTableRecords) {
+            recordsSelection = getters.getTabSelectionsList({
+              containerUuid
+            })
+          } else {
+            const currentRow = getters.getTabCurrentRow({
+              containerUuid: storedTab.uuid
+            })
+            recordsSelection = [
+              currentRow
+            ]
+          }
+          selectionsList = rootGetters.getTabSelectionToServer({
+            parentUuid: windowsUuid,
+            containerUuid: storedTab.uuid,
+            selectionsList: recordsSelection
           })
         }
 
@@ -370,8 +395,8 @@ const processManager = {
         if (isSession) {
           procesingNotification = showNotification({
             title: lang.t('notifications.processing'),
-            message: currentProcess.name,
-            summary: currentProcess.description,
+            message: storedProcessDefinition.name,
+            summary: storedProcessDefinition.description,
             type: 'info'
           })
         }
@@ -387,8 +412,9 @@ const processManager = {
         }
 
         requestRunBusinessProcessAsWindow({
-          id: currentProcess.internal_id,
+          id: storedProcessDefinition.internal_id,
           parametersList,
+          selectionsList,
           tableName,
           recordId: recordId
         })
@@ -413,7 +439,7 @@ const processManager = {
 
             dispatch('finishProcess', {
               summary,
-              name: currentProcess.name,
+              name: storedProcessDefinition.name,
               isError: isProcessedError
             })
               .then(() => {

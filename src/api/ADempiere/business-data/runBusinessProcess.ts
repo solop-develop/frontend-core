@@ -19,6 +19,9 @@
 // Get Instance for connection
 import { request } from '@/utils/ADempiere/request'
 
+// Utils and Helper Methods
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+
 /**
  * Get default value for a field, parameter or query criteria
  * @param {integer} id, identifier of field
@@ -72,13 +75,19 @@ export function requestRunBusinessProcessAsWindow({
   id,
   parametersList,
   tableName,
-  recordId
+  recordId,
+  selectionsList
 }) {
+  let url = `/business-data/process/${id}/window/${tableName}`
+  if (isEmptyValue(selectionsList) || (!isEmptyValue(selectionsList) && selectionsList.length === 1)) {
+    url += `/${recordId}`
+  }
   return request({
-    url: `/business-data/process/${id}/window/${tableName}/${recordId}`,
+    url: url,
     method: 'post',
     data: {
-      parameters: parametersList
+      parameters: parametersList,
+      selections: selectionsList
     }
   })
 }
