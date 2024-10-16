@@ -134,6 +134,7 @@ export default defineComponent({
     })
 
     const isLoadProcess = ref(true)
+
     onMounted(() => {
       store.dispatch('getSessionProcessFromServer', {
         pageToken: pageToken.value,
@@ -151,14 +152,16 @@ export default defineComponent({
           isLoadProcess.value = false
         })
     })
+
     const getProcessMetadata = (uuid) => {
       return store.getters.getStoredProcess(uuid)
     }
+
     const findStoredReportUuid = (uuid) => {
       return store.getters.getStoredReport(uuid)
     }
+
     function handleCommand(activity) {
-      console.log({ activity })
       if (activity.command === 'seeReport') {
         router.push({
           name: REPORT_VIEWER_NAME,
