@@ -23,6 +23,7 @@
     :filterable="true"
     value-key="value"
     clearable
+    :size="sizeField"
     @change="preHandleChange"
     @clear="handleClearValue"
   >
@@ -51,6 +52,13 @@ export default {
   mixins: [
     fieldMixin
   ],
+
+  props: {
+    sizeField: {
+      type: String,
+      default: undefined
+    }
+  },
 
   data() {
     return {

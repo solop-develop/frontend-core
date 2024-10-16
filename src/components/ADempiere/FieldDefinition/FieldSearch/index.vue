@@ -25,6 +25,7 @@
     :container-manager="containerManager"
     :metadata="metadata"
     :icon="iconComponentRender"
+    :size-field="sizeField"
   />
 </template>
 
@@ -76,6 +77,10 @@ export default {
     metadata: {
       type: Object,
       default: () => ({})
+    },
+    sizeField: {
+      type: String,
+      default: undefined
     }
   },
 

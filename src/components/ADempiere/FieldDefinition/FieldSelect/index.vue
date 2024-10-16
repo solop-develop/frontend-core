@@ -30,6 +30,7 @@
     :collapse-tags="!isSelectMultiple"
     remote
     :remote-method="remoteSearch"
+    :size="sizeField"
     @change="preHandleChange"
     @visible-change="getDataLookupList"
     @clear="clearLookup"
@@ -73,6 +74,13 @@ export default {
     fieldWithDisplayColumn,
     selectMixin
   ],
+
+  props: {
+    sizeField: {
+      type: String,
+      default: undefined
+    }
+  },
 
   data() {
     return {

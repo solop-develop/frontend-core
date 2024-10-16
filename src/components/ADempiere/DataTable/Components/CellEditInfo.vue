@@ -36,6 +36,7 @@
         recordUuid: dataRow.UUID
       }"
       size="mini"
+      size-field-input="mini"
       @shortkey="keyboardShortcuts"
     />
   </span>

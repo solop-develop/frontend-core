@@ -25,6 +25,7 @@
     }"
     :is-range="isPickerRange"
     range-separator="-"
+    :size="sizeField"
     @change="preHandleChange"
     @blur="focusLost"
     @focus="focusGained"
@@ -43,6 +44,13 @@ export default {
   mixins: [
     fieldMixin
   ],
+
+  props: {
+    sizeField: {
+      type: String,
+      default: undefined
+    }
+  },
 
   computed: {
     isPickerRange() {

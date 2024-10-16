@@ -38,6 +38,7 @@
       :controls="isShowControls"
       :controls-position="controlsPosition"
       autofocus
+      :size="sizeField"
       @change="preHandleChange"
       @focus="focusGained"
       @blur="customFocusLost"
@@ -54,6 +55,7 @@
       v-bind="commonsProperties"
       readonly
       autofocus
+      :size="sizeField"
       @focus="customFocusGained"
     />
   </el-tooltip>
@@ -86,6 +88,13 @@ export default {
     fieldMixin
   ],
 
+  props: {
+    sizeField: {
+      type: String,
+      default: undefined
+    }
+  },
+
   data() {
     return {
       isFocus: false,
@@ -114,6 +123,19 @@ export default {
     },
     precision() {
       // Amount, Costs+Prices, Number, Quantity
+      // console.log({
+      //   isDecimalField: isDecimalField(this.metadata.display_type),
+      //   getStandardPrecision: store.getters.getStandardPrecision,
+      //   display_type: this.metadata.display_type,
+      //   precision: this.metadata.precision,
+      //   metadata: this.metadata,
+      //   NUMBER_PRECISION,
+      //   alo: store.getters.getValueOfField({
+      //     containerUuid: this.metadata.containerUuid,
+      //     columnName: 'C_AcctSchema_ID'
+      //   }),
+      //   NUMBER
+      // })
       if (!isEmptyValue(this.metadata.precision)) {
         return this.metadata.precision
       }

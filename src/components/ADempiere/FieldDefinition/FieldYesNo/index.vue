@@ -23,6 +23,7 @@
     :container-uuid="containerUuid"
     :container-manager="containerManager"
     :metadata="metadata"
+    :size-field="sizeField"
   />
 </template>
 
@@ -48,6 +49,10 @@ export default defineComponent({
     metadata: {
       type: Object,
       required: true
+    },
+    sizeField: {
+      type: String,
+      default: undefined
     }
   },
 

@@ -26,7 +26,7 @@
     :maxlength="maxLength"
     :show-password="Boolean(metadata.isEncrypted)"
     :autofocus="metadata.inTable"
-    :size="inputSize"
+    :size="sizeField"
     show-word-limit
     clearable
     @change="preHandleChange"
@@ -72,6 +72,10 @@ export default {
       default: false
     },
     pattern: {
+      type: String,
+      default: undefined
+    },
+    sizeField: {
       type: String,
       default: undefined
     }
