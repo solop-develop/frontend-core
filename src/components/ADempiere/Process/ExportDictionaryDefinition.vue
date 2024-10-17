@@ -119,10 +119,24 @@
 
             <el-col :span="spanColumn">
               <el-form-item
-                :label="$t('page.exportDictionaryDefinition.form')"
+                :label="$t('page.exportDictionaryDefinition.forms')"
               >
                 <el-switch
-                  v-model="isForm"
+                  v-model="isForms"
+                  :active-text="$t('components.switchActiveText')"
+                  :inactive-text="$t('components.switchInactiveText')"
+                  active-color="#1890ff"
+                  inactive-color="#DCDFE6"
+                />
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="spanColumn">
+              <el-form-item
+                :label="$t('page.exportDictionaryDefinition.roles')"
+              >
+                <el-switch
+                  v-model="isRoles"
                   :active-text="$t('components.switchActiveText')"
                   :inactive-text="$t('components.switchInactiveText')"
                   active-color="#1890ff"
@@ -201,7 +215,8 @@ export default defineComponent({
     const isWindows = ref(true)
     const isProcess = ref(true)
     const isBrowsers = ref(true)
-    const isForm = ref(true)
+    const isForms = ref(true)
+    const isRoles = ref(true)
 
     /**
      * Computed
@@ -235,10 +250,11 @@ export default defineComponent({
         id: EXPORT_DICTIONARY_DEFINITION_PROCESS_ID,
         parameters: {
           ECA56_ExportMenu: isMenu.value,
-          ECA56_ExportForms: isForm.value,
+          ECA56_ExportForms: isForms.value,
           ECA56_ExportWindows: isWindows.value,
           ECA56_ExportProcess: isProcess.value,
-          ECA56_ExportBrowsers: isBrowsers.value
+          ECA56_ExportBrowsers: isBrowsers.value,
+          ECA56_ExportRoles: isRoles.value
         }
       })
         .then(runProcessRepsonse => {
@@ -272,7 +288,7 @@ export default defineComponent({
       isWindows.value = true
       isProcess.value = true
       isBrowsers.value = true
-      isForm.value = true
+      isForms.value = true
     }
 
     function redirectToProcess() {
@@ -294,18 +310,20 @@ export default defineComponent({
     }
 
     onBeforeMount(() => {
-      redirectToProcess()
+      // redirectToProcess()
     })
 
     return {
+      redirectToProcess,
       // Constants
       UUID,
       // Ref
       isMenu,
-      isForm,
+      isForms,
       isWindows,
       isProcess,
       isBrowsers,
+      isRoles,
       // Computed
       spanColumn,
       // Methods
