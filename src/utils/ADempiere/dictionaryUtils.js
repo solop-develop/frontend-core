@@ -118,7 +118,7 @@ export function generateField({
   // overwrite `Button` to `List` or `Table` display type.
   if (fieldToGenerate.display_type === BUTTON.id) {
     if ((moreAttributes.isAdvancedQuery || fieldToGenerate.is_query_criteria) &&
-      fieldToGenerate.reference && fieldToGenerate.reference.reference_value_id > 0) {
+      fieldToGenerate.reference && fieldToGenerate.reference.reference_id > 0 && fieldToGenerate.reference.reference_value_id > 0) {
       // overwrite if is with reference
       componentReference = evalutateTypeField(fieldToGenerate.reference.reference_id)
       fieldToGenerate.display_type = fieldToGenerate.reference.reference_id
