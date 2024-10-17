@@ -122,11 +122,11 @@ export default defineComponent({
         },
         {
           label: lang.t('form.accountingViewer.sourceDebit'),
-          keyColumn: 'AmtSourceDr'
+          keyColumn: 'AmtAcctDr'
         },
         {
           label: lang.t('form.accountingViewer.sourceCredit'),
-          keyColumn: 'AmtSourceCr'
+          keyColumn: 'AmtAcctCr'
         },
         {
           label: lang.t('form.accountingViewer.rate'),
