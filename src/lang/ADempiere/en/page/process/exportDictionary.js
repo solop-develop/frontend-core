@@ -25,7 +25,8 @@ const exportDictionaryDefinition = {
   windows: 'Export Windows',
   process: 'Export Processes',
   browsers: 'Export Viewers',
-  form: 'Exportar Form'
+  forms: 'Export Forms',
+  roles: 'Export Roles'
 }
 
 export default exportDictionaryDefinition
