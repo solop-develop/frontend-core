@@ -258,6 +258,7 @@ const staticRoutes = [
         meta: {
           title: language.t('route.reportViewer'),
           type: 'report',
+          icon: 'el-icon-data-analysis',
           reportType: ''
         }
       }
@@ -276,6 +277,7 @@ const staticRoutes = [
         meta: {
           title: language.t('route.reportViewer'),
           type: 'report',
+          icon: 'el-icon-data-analysis',
           reportType: ''
         }
       }

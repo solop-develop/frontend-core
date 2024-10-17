@@ -55,7 +55,7 @@
       <el-col :span="classPanel ? 24 : 16">
         <template v-for="(dashboardAttributes, index) in panelRight">
           <el-col
-            v-if="(isEmptyValue(mainDashboard.chartType) || mainDashboard.name !== dashboardAttributes.name)"
+            v-if="mainDashboard && (isEmptyValue(mainDashboard.chartType) || mainDashboard.name !== dashboardAttributes.name)"
             :key="index"
             :span="24"
             style="padding-right:8px;margin-bottom:2px;"

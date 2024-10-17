@@ -21,12 +21,26 @@
         :label="element.item.title.join(' > ')"
       >
         <span v-if="isMobile">
-          <svg-icon :icon-class="element.item.meta.icon" />
+          <i
+            v-if="element.item.meta.icon.includes('el-icon')"
+            :class="'icon sub-el-icon ' + element.item.meta.icon"
+          />
+          <svg-icon
+            v-else
+            :icon-class="element.item.meta.icon"
+          />
           {{ element.item.title.join(' > ') }}
         </span>
         <span v-else>
           {{ element.item.title.join(' > ') }}
-          <svg-icon :icon-class="element.item.meta.icon" />
+          <i
+            v-if="element.item.meta.icon.includes('el-icon')"
+            :class="'icon sub-el-icon ' + element.item.meta.icon"
+          />
+          <svg-icon
+            v-else
+            :icon-class="element.item.meta.icon"
+          />
         </span>
       </el-option>
     </el-select>
