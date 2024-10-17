@@ -997,8 +997,8 @@ const reportManager = {
                         file.click()
                       })
                   }
+                  resolve(response.file_name)
                 }
-                resolve(response.file_name)
               })
           })
           .catch(error => {
