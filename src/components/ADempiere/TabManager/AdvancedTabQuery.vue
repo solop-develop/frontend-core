@@ -1,20 +1,20 @@
 <!--
- ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
- Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
- Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
- Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+  ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+  Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+  Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/elsiosanchez
+  Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <https:www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -196,6 +196,7 @@ import PanelDefinition from '@/components/ADempiere/PanelDefinition/index.vue'
 import TitleAndHelp from '@/components/ADempiere/TitleAndHelp/index.vue'
 
 // Constants
+import { BINARY_DATA, BUTTON, IMAGE } from '@/utils/ADempiere/references'
 import {
   IS_ADVANCED_QUERY
 } from '@/utils/ADempiere/dictionaryUtils'
@@ -277,7 +278,10 @@ export default defineComponent({
     const containerManagerAdvancedQuery = computed(() => {
       return {
         ...props.containerManager,
-        isDisplayedField({ is_displayed }) {
+        isDisplayedField({ is_displayed, display_type }) {
+          if ([BINARY_DATA.id, BUTTON.id, IMAGE.id].includes(display_type)) {
+            return false
+          }
           return true
         },
         isDisplayedDefault({ is_selection_column }) {
@@ -291,8 +295,14 @@ export default defineComponent({
           return false
         },
         getFieldsToHidden({ parentUuid, containerUuid }) {
-          const fieldsListTab = store.getters.getStoredFieldsFromTab(parentUuid, containerUuid)
-          return fieldsListTab || []
+          const fieldsListTab = store.getters.getStoredFieldsFromTab(parentUuid, containerUuid) || []
+          return fieldsListTab.filter(fieldItem => {
+            const { display_type } = fieldItem
+            if ([BINARY_DATA.id, BUTTON.id, IMAGE.id].includes(display_type)) {
+              return false
+            }
+            return true
+          })
         },
         getLookupList({ parentUuid, containerUuid, uuid, id, tableName, contextColumnNames, columnName, searchValue, isAddBlankValue, blankValue }) {
           return store.dispatch('getLookupListFromServer', {
