@@ -36,7 +36,8 @@ import { listPrintFormatsRequest, listPrintFormatsTableRequest } from '@/api/ADe
 import { listReportViewsRequest } from '@/api/ADempiere/reportManagement/reportView.ts'
 import { listDrillTablesRequest } from '@/api/ADempiere/reportManagement/drillTable.ts'
 import {
-  requestPresignedUrl
+  requestPresignedUrl,
+  requestUploadFile
 } from '@/api/ADempiere/file-management/resource-reference.ts'
 
 // Constants
@@ -164,7 +165,7 @@ const reportManager = {
     }) {
       return new Promise(resolve => {
         const reportDefinition = rootGetters.getStoredReport(containerUuid)
-        const { fieldsList } = reportDefinition
+        const { fieldsList, name, description } = reportDefinition
 
         const fieldsEmpty = rootGetters.getReportParametersEmptyMandatory({
           containerUuid,
@@ -177,7 +178,12 @@ const reportManager = {
           })
           return
         }
-
+        showNotification({
+          title: language.t('notifications.processing'),
+          message: name,
+          summary: description,
+          type: 'info'
+        })
         const filters = getOperatorAndValue({
           format: 'array',
           containerUuid,
@@ -657,12 +663,6 @@ const reportManager = {
         reportName = action.name
       }
 
-      showNotification({
-        title: language.t('notifications.processing'),
-        message: name,
-        summary: description,
-        type: 'info'
-      })
       commit('setReportIsLoading', true)
       if ((isEmptyValue(instanceUuid) || reportDefinition.is_process_before_launch) && !isChangePanel) {
         dispatch('startReport', {
@@ -674,7 +674,12 @@ const reportManager = {
         })
         return
       }
-
+      showNotification({
+        title: language.t('notifications.processing'),
+        message: name,
+        summary: description,
+        type: 'info'
+      })
       return new Promise((resolve, reject) => {
         const filters = getOperatorAndValue({
           format: 'array',
@@ -846,8 +851,6 @@ const reportManager = {
             containerUuid,
             reportName,
             isDownload
-          }).then(fileName => {
-            resolve(fileName)
           })
         } else {
           runExport({
@@ -954,12 +957,11 @@ const reportManager = {
     },
     sendUploadFile({ commit, rootGetters }, {
       reportOutput,
-      isDownload,
+      containerUuid,
       reportName,
-      containerUuid
+      isDownload
     }) {
       return new Promise(resolve => {
-        const { url, file_name, mime_type } = reportOutput
         requestPresignedUrl({
           clientId: rootGetters['user/getRole'].uuid,
           containerType: 'resource',
@@ -969,27 +971,21 @@ const reportManager = {
           recordId: reportOutput.id
         })
           .then(response => {
-            fetch(url)
-              .then(responseBlob => responseBlob.blob())
-              .then(blob => {
-                const file = new File([blob], file_name, { type: mime_type })
-                const fileUrl = URL.createObjectURL(file)
-                fetch(response.url, {
-                  method: 'PUT',
-                  body: file
-                })
-                if (!isEmptyValue(response.file_name)) {
-                  if (isDownload) {
-                    const fileLink = document.createElement('a')
-                    fileLink.href = fileUrl
-                    fileLink.download = reportName
-                    document.body.appendChild(fileLink)
-                    fileLink.click()
-                    document.body.removeChild(fileLink)
-                  }
-                  resolve(response.file_name)
-                }
-              })
+            const { file_name, url } = response
+            requestUploadFile({
+              url,
+              file: reportOutput.output_stream
+            })
+            if (!isEmptyValue(file_name)) {
+              if (isDownload) {
+                const file = document.createElement('a')
+                file.href = `${config.adempiere.api.url}/resource/${file_name}`
+                file.download = `${reportName}`
+                file.target = '_blank'
+                file.click()
+              }
+              resolve(file_name)
+            }
           })
           .catch(error => {
             showNotification({
