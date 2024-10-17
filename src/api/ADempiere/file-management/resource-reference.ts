@@ -147,7 +147,7 @@ export function requestDeleteResources({
 
 export function requestShareResources({
   fileName,
-  seconds
+  seconds = 3600
 }) {
   return request({
     url: `/resources/download-url/${fileName}`,

@@ -58,6 +58,9 @@ import { showMessage, showNotification } from '@/utils/ADempiere/notification.js
 import {
   containerManager
 } from '@/utils/ADempiere/dictionary/report.js'
+import {
+  requestShareResources
+} from '@/api/ADempiere/file-management/resource-reference.ts'
 
 const initState = {
   printFormatsList: {},
@@ -967,7 +970,7 @@ const reportManager = {
         requestPresignedUrl({
           clientId: rootGetters['user/getRole'].uuid,
           containerType: 'resource',
-          fileName: reportOutput.file_name,
+          fileName: file_name,
           tableName: reportOutput.table_name,
           containerId: containerUuid,
           recordId: reportOutput.id
@@ -977,22 +980,25 @@ const reportManager = {
               .then(responseBlob => responseBlob.blob())
               .then(blob => {
                 const file = new File([blob], file_name, { type: mime_type })
-                const fileUrl = URL.createObjectURL(file)
                 fetch(response.url, {
                   method: 'PUT',
                   body: file
                 })
                 if (!isEmptyValue(response.file_name)) {
-                  if (isDownload) {
-                    const fileLink = document.createElement('a')
-                    fileLink.href = fileUrl
-                    fileLink.download = reportName
-                    document.body.appendChild(fileLink)
-                    fileLink.click()
-                    document.body.removeChild(fileLink)
-                  }
-                  resolve(response.file_name)
+                  requestShareResources({
+                    fileName: response.file_name
+                  })
+                    .then(data => {
+                      if (isDownload) {
+                        const file = document.createElement('a')
+                        file.href = data
+                        file.download = `${reportName}`
+                        file.target = '_blank'
+                        file.click()
+                      }
+                    })
                 }
+                resolve(response.file_name)
               })
           })
           .catch(error => {
