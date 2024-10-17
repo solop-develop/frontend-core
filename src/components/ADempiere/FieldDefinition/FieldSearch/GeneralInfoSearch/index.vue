@@ -29,6 +29,7 @@
     :fetch-suggestions="localSearch"
     :select-when-unmatched="true"
     :highlight-first-item="true"
+    :size="sizeField"
     @select="handleSelect"
     @clear="clearValues"
     @focus="setNewDisplayedValue"
@@ -106,6 +107,10 @@ export default {
     containerManager: {
       type: Object,
       required: true
+    },
+    sizeField: {
+      type: String,
+      default: undefined
     }
   },
 

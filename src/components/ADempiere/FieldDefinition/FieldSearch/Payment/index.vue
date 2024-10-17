@@ -29,6 +29,7 @@
     :fetch-suggestions="localSearch"
     :select-when-unmatched="true"
     :highlight-first-item="true"
+    :size="sizeField"
     @keyup.native="enterKey"
     @select="handleSelect"
     @clear="clearValues"
@@ -100,6 +101,10 @@ export default {
           containerUuid: ''
         }
       }
+    },
+    sizeField: {
+      type: String,
+      default: undefined
     }
   },
 
