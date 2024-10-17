@@ -966,14 +966,14 @@ const reportManager = {
       isDownload
     }) {
       return new Promise(resolve => {
-        const { url, file_name, mime_type } = reportOutput
+        const { url, file_name, mime_type, table_name, id } = reportOutput
         requestPresignedUrl({
           clientId: rootGetters['user/getRole'].uuid,
           containerType: 'resource',
           fileName: file_name,
-          tableName: reportOutput.table_name,
+          tableName: table_name,
           containerId: containerUuid,
-          recordId: reportOutput.id
+          recordId: id
         })
           .then(response => {
             fetch(url)
