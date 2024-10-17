@@ -39,7 +39,7 @@
       :min-width="110"
     >
       <span slot-scope="scope" class="cell-align-right">
-        {{ scope.row.AmtSourceDr }}
+        {{ scope.row.AmtAcctDr }}
       </span>
     </el-table-column>
     <el-table-column
@@ -47,7 +47,7 @@
       :min-width="110"
     >
       <span slot-scope="scope" class="cell-align-right">
-        {{ scope.row.AmtSourceCr }}
+        {{ scope.row.AmtAcctCr }}
       </span>
     </el-table-column>
     <el-table-column
