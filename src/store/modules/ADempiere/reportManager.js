@@ -36,8 +36,7 @@ import { listPrintFormatsRequest, listPrintFormatsTableRequest } from '@/api/ADe
 import { listReportViewsRequest } from '@/api/ADempiere/reportManagement/reportView.ts'
 import { listDrillTablesRequest } from '@/api/ADempiere/reportManagement/drillTable.ts'
 import {
-  requestPresignedUrl,
-  requestUploadFile
+  requestPresignedUrl
 } from '@/api/ADempiere/file-management/resource-reference.ts'
 
 // Constants
@@ -847,6 +846,8 @@ const reportManager = {
             containerUuid,
             reportName,
             isDownload
+          }).then(fileName => {
+            resolve(fileName)
           })
         } else {
           runExport({
@@ -953,19 +954,12 @@ const reportManager = {
     },
     sendUploadFile({ commit, rootGetters }, {
       reportOutput,
-      containerUuid,
+      isDownload,
       reportName,
-      isDownload
+      containerUuid
     }) {
       return new Promise(resolve => {
-        const byteCharacters = atob(reportOutput.output_stream)
-        const byteNumbers = new Array(byteCharacters.length)
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i)
-        }
-        const byteArray = new Uint8Array(byteNumbers)
-        const fileBlob = new Blob([byteArray], { type: 'application/octet-stream' })
-        const file = new File([fileBlob], reportOutput.file_name, { type: fileBlob.type })
+        const { url, file_name, mime_type } = reportOutput
         requestPresignedUrl({
           clientId: rootGetters['user/getRole'].uuid,
           containerType: 'resource',
@@ -975,21 +969,27 @@ const reportManager = {
           recordId: reportOutput.id
         })
           .then(response => {
-            const { file_name, url } = response
-            requestUploadFile({
-              url,
-              file: file
-            })
-            if (!isEmptyValue(file_name)) {
-              if (isDownload) {
-                const file = document.createElement('a')
-                file.href = `${config.adempiere.api.url}/resource/${file_name}`
-                file.download = `${reportName}`
-                file.target = '_blank'
-                file.click()
-              }
-              resolve(file_name)
-            }
+            fetch(url)
+              .then(responseBlob => responseBlob.blob())
+              .then(blob => {
+                const file = new File([blob], file_name, { type: mime_type })
+                const fileUrl = URL.createObjectURL(file)
+                fetch(response.url, {
+                  method: 'PUT',
+                  body: file
+                })
+                if (!isEmptyValue(response.file_name)) {
+                  if (isDownload) {
+                    const fileLink = document.createElement('a')
+                    fileLink.href = fileUrl
+                    fileLink.download = reportName
+                    document.body.appendChild(fileLink)
+                    fileLink.click()
+                    document.body.removeChild(fileLink)
+                  }
+                  resolve(response.file_name)
+                }
+              })
           })
           .catch(error => {
             showNotification({
