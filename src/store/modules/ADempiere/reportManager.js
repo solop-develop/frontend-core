@@ -58,6 +58,9 @@ import { showMessage, showNotification } from '@/utils/ADempiere/notification.js
 import {
   containerManager
 } from '@/utils/ADempiere/dictionary/report.js'
+import {
+  requestShareResources
+} from '@/api/ADempiere/file-management/resource-reference.ts'
 
 const initState = {
   printFormatsList: {},
@@ -963,33 +966,36 @@ const reportManager = {
       isDownload
     }) {
       return new Promise(resolve => {
-        const { url, file_name, mime_type } = reportOutput
+        const { url, file_name, mime_type, table_name, id } = reportOutput
         requestPresignedUrl({
           clientId: rootGetters['user/getRole'].uuid,
           containerType: 'resource',
-          fileName: reportOutput.file_name,
-          tableName: reportOutput.table_name,
+          fileName: file_name,
+          tableName: table_name,
           containerId: containerUuid,
-          recordId: reportOutput.id
+          recordId: id
         })
           .then(response => {
             fetch(url)
               .then(responseBlob => responseBlob.blob())
               .then(blob => {
                 const file = new File([blob], file_name, { type: mime_type })
-                const fileUrl = URL.createObjectURL(file)
                 fetch(response.url, {
                   method: 'PUT',
                   body: file
                 })
                 if (!isEmptyValue(response.file_name)) {
                   if (isDownload) {
-                    const fileLink = document.createElement('a')
-                    fileLink.href = fileUrl
-                    fileLink.download = reportName
-                    document.body.appendChild(fileLink)
-                    fileLink.click()
-                    document.body.removeChild(fileLink)
+                    requestShareResources({
+                      fileName: response.file_name
+                    })
+                      .then(data => {
+                        const file = document.createElement('a')
+                        file.href = data
+                        file.download = `${reportName}`
+                        file.target = '_blank'
+                        file.click()
+                      })
                   }
                   resolve(response.file_name)
                 }
