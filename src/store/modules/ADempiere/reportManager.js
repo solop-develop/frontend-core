@@ -985,18 +985,18 @@ const reportManager = {
                   body: file
                 })
                 if (!isEmptyValue(response.file_name)) {
-                  requestShareResources({
-                    fileName: response.file_name
-                  })
-                    .then(data => {
-                      if (isDownload) {
+                  if (isDownload) {
+                    requestShareResources({
+                      fileName: response.file_name
+                    })
+                      .then(data => {
                         const file = document.createElement('a')
                         file.href = data
                         file.download = `${reportName}`
                         file.target = '_blank'
                         file.click()
-                      }
-                    })
+                      })
+                  }
                 }
                 resolve(response.file_name)
               })
