@@ -521,9 +521,10 @@ export default defineComponent({
     }
 
     function loadIssues() {
+      if (isAll.value) return
       store.dispatch('listRequest', {
         businessPartnerId: isEmptyValue(businessPartnerField.value) ? 0 : businessPartnerField.value,
-        statusCategory: isEmptyValue(categoryField.value) ? 0 : categoryField.value,
+        categoryId: isEmptyValue(categoryField.value) ? 0 : categoryField.value,
         projectId: isEmptyValue(projectField.value) ? 0 : projectField.value,
         statusId: isEmptyValue(statusField.value) ? 0 : statusField.value,
         groupId: isEmptyValue(groupField.value) ? 0 : groupField.value,
@@ -834,9 +835,24 @@ export default defineComponent({
     }
 
     function updateListIssues() {
+      if (isAll.value) {
+        store.dispatch('listRequestAll', {
+          businessPartnerId: isEmptyValue(businessPartnerField.value) ? 0 : businessPartnerField.value,
+          categoryId: isEmptyValue(categoryField.value) ? 0 : categoryField.value,
+          projectId: isEmptyValue(projectField.value) ? 0 : projectField.value,
+          statusId: isEmptyValue(statusField.value) ? 0 : statusField.value,
+          groupId: isEmptyValue(groupField.value) ? 0 : groupField.value,
+          taskStatusValue: taskStatusField.value,
+          priorityValue: priorityField.value
+        })
+          .finally(() => {
+            loadIssues()
+          })
+        return
+      }
       store.dispatch('listRequest', {
         businessPartnerId: isEmptyValue(businessPartnerField.value) ? 0 : businessPartnerField.value,
-        statusCategory: isEmptyValue(categoryField.value) ? 0 : categoryField.value,
+        categoryId: isEmptyValue(categoryField.value) ? 0 : categoryField.value,
         projectId: isEmptyValue(projectField.value) ? 0 : projectField.value,
         statusId: isEmptyValue(statusField.value) ? 0 : statusField.value,
         groupId: isEmptyValue(groupField.value) ? 0 : groupField.value,

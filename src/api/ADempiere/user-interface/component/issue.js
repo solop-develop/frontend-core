@@ -54,6 +54,7 @@ export function requestListIssues({
   tableName,
   searchValue,
   groupId = 0,
+  categoryId = 0,
   statusId = 0,
   projectId = 0,
   priorityValue,
@@ -67,6 +68,7 @@ export function requestListIssues({
     params: {
       group_id: groupId,
       record_id: recordId,
+      category_id: categoryId,
       status_id: statusId,
       table_name: tableName,
       project_id: projectId,
@@ -90,6 +92,7 @@ export function requestListIssuesAll({
   recordId,
   tableName,
   searchValue,
+  categoryId,
   groupId = 0,
   statusId = 0,
   projectId = 0,
@@ -98,18 +101,6 @@ export function requestListIssuesAll({
   statusCategory = 0,
   businessPartnerId = 0
 }) {
-  console.log({
-    group_id: groupId,
-    record_id: recordId,
-    status_id: statusId,
-    table_name: tableName,
-    project_id: projectId,
-    search_value: searchValue,
-    priority_value: priorityValue,
-    status_category_id: statusCategory,
-    task_status_value: taskStatusValue,
-    business_partner_id: businessPartnerId
-  })
   return request({
     url: `/issue-management/issues/all`,
     method: 'get',
@@ -119,6 +110,7 @@ export function requestListIssuesAll({
       status_id: statusId,
       table_name: tableName,
       project_id: projectId,
+      category_id: categoryId,
       search_value: searchValue,
       priority_value: priorityValue,
       status_category_id: statusCategory,
