@@ -170,7 +170,7 @@
 <script>
 import store from '@/store'
 import language from '@/lang'
-
+import marked from 'marked'
 import { defineComponent, computed, ref, nextTick } from '@vue/composition-api'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { config } from '@/utils/ADempiere/config'
@@ -469,13 +469,14 @@ export default defineComponent({
                 markdownContent.value = markdownContent.value.replace('www.123892138.com', link)
               }
               linkShare.value = link
+              const htmlContent = marked(markdownContent.value)
               store.dispatch('sendNotification', {
                 user_id,
                 title: titleDocument.value,
                 recipients: contactSend.value,
                 notification_type: typeNotify.value,
                 attachments: fileNameResource,
-                subject: markdownContent.value
+                subject: htmlContent
               })
             })
             .finally(() => {
