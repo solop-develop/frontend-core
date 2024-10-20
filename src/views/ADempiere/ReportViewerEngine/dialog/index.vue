@@ -152,7 +152,7 @@
           icon="el-icon-check"
           style="float: right;"
           type="primary"
-          :disabled="disableButtom()"
+          :disabled="disableButtom"
           @click="sendNotify"
         />
         <el-button
@@ -171,7 +171,7 @@
 import store from '@/store'
 import language from '@/lang'
 import marked from 'marked'
-import { defineComponent, computed, ref, nextTick, watch } from '@vue/composition-api'
+import { defineComponent, computed, ref, nextTick } from '@vue/composition-api'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { config } from '@/utils/ADempiere/config'
 import { REPORT_EXPORT_TYPES } from '@/utils/ADempiere/constants/report'
@@ -431,15 +431,9 @@ export default defineComponent({
     const contactSend = computed(() => {
       return store.getters.getContactSend
     })
-    watch(contactSend, () => {
-      disableButtom()
-    })
-    watch(typeNotify, () => {
-      disableButtom()
-    })
-    function disableButtom() {
+    const disableButtom = computed(() => {
       return checkedItemGeneral.value === 1 && (isEmptyValue(typeNotify.value) || isEmptyValue(contactSend.value))
-    }
+    })
     function sendLink() {
       const user_id = store.getters['user/userInfo'].id
       store.dispatch('exportReport', {
