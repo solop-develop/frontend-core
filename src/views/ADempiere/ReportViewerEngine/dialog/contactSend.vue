@@ -21,12 +21,18 @@
 </template>
 <script>
 import store from '@/store'
-import { defineComponent, ref } from '@vue/composition-api'
+import { defineComponent, ref, computed, watch } from '@vue/composition-api'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 export default defineComponent({
   name: 'contactSend',
   setup() {
     const contantSend = ref(store.getters.getContactSend)
+    const typeContactSend = computed(() => {
+      return store.getters.getContactSend
+    })
+    watch(typeContactSend, (newValue) => {
+      contantSend.value = newValue
+    })
     const listUserSend = ref([])
     function searchUser() {
       store.dispatch('ListUser')
@@ -48,6 +54,7 @@ export default defineComponent({
     return {
       contantSend,
       listUserSend,
+      typeContactSend,
       setUser,
       searchUser
     }

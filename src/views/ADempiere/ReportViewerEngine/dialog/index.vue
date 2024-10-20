@@ -8,7 +8,7 @@
     @close="viewShowDialog"
   >
     <el-row :gutter="12">
-      <el-col :span="!isPanel ? 24 : 12">
+      <el-col v-if="!isLegacy" :span="!isPanel ? 24 : 12">
         <el-card>
           <template #header>
             <p>{{ $t('report.reportEnginer.exportFormat') }}</p>

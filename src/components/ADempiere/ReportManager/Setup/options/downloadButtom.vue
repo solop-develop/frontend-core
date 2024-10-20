@@ -52,6 +52,8 @@ export default defineComponent({
       }
       const link = language.t('report.reportEnginer.urlPublic')
       store.commit('setDefaultBody', menuDefault + `\n\n\n[${link}](www.123892138.com)`)
+      store.commit('setContactSend', '')
+      store.commit('setTypeNotify', '')
       store.commit('setShowDialog', true)
     }
 

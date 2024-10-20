@@ -20,13 +20,19 @@
 </template>
 <script>
 import store from '@/store'
-import { defineComponent, ref } from '@vue/composition-api'
+import { defineComponent, ref, watch, computed } from '@vue/composition-api'
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 export default defineComponent({
   name: 'typeNotify',
   setup() {
     const notify = ref(store.getters.getTypeNotify)
     const listNotify = ref([])
+    const typeNotifySend = computed(() => {
+      return store.getters.getTypeNotify
+    })
+    watch(typeNotifySend, (newValue) => {
+      notify.value = newValue
+    })
     function searchNotify() {
       store.dispatch('ListNotifications')
         .then(response => {
@@ -47,6 +53,7 @@ export default defineComponent({
     return {
       notify,
       listNotify,
+      typeNotifySend,
       setNotify,
       searchNotify
     }
