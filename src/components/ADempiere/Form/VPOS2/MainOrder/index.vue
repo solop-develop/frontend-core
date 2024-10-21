@@ -441,8 +441,6 @@ export default defineComponent({
       currentLine.value.total_tax_amount = line.total_tax_amount
     }
 
-    console.log({ currentLine: currentLine.value, lines: lines.value })
-
     return {
       currentPos,
       orderLineDefinition,
