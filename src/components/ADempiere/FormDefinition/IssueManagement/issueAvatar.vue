@@ -18,13 +18,7 @@
 
 <template>
   <span>
-    <svg-icon
-      v-if="isEmptyValue(user.avatar)"
-      icon-class="user"
-    />
-
     <el-image
-      v-else
       :src="imageURL"
       fit="contain"
       style="

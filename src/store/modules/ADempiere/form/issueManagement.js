@@ -86,7 +86,7 @@ export default {
       pageToken
     }) {
       return new Promise((resolve, reject) => {
-        commit('setIsLoadListIssuesAll', true)
+        // commit('setIsLoadListIssuesAll', true)
         return requestListIssuesAll({
           tableName,
           recordId,
