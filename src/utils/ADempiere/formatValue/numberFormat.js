@@ -23,7 +23,7 @@ import {
   NUMBER, QUANTITY
 } from '@/utils/ADempiere/references.js'
 import { STD_PRECISION } from '@/utils/ADempiere/constants/systemColumns'
-import { ACCOUNTING_CONTEXT_PREFIX } from '@/utils/ADempiere/contextUtils'
+import { GLOBAL_CONTEXT_PREFIX } from '@/utils/ADempiere/contextUtils'
 
 // Utils and Helpers Methods
 import {
@@ -386,6 +386,6 @@ export function standardPrecisionContext({
   return store.getters.getSessionContext({
     parentUuid,
     containerUuid,
-    columnName: ACCOUNTING_CONTEXT_PREFIX + STD_PRECISION
+    columnName: GLOBAL_CONTEXT_PREFIX + STD_PRECISION
   })
 }
