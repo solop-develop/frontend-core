@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
+
 <template>
   <div @click="!showPopover">
     <el-card class="container-report-engine">
@@ -228,7 +229,9 @@ export default defineComponent({
     })
     const data = computed(() => {
       const { rowCells } = props.reportOutput
-      if (isEmptyValue(rowCells)) return []
+      if (isEmptyValue(rowCells)) {
+        return []
+      }
       return rowCells
     })
 
@@ -256,7 +259,9 @@ export default defineComponent({
           isTopLevel = !isTopLevel
         }
         const index = rowIndex + 1
-        const parentColumnKey = Object.keys(row.cells).find(key => row.cells[key].display_value !== '')
+        const parentColumnKey = Object.keys(row.cells).find(key => {
+          return row.cells[key].display_value !== ''
+        })
         let value = ''
         if (!isEmptyValue(parentColumnKey)) {
           value = row.cells[parentColumnKey].display_value
@@ -449,37 +454,49 @@ export default defineComponent({
     }
 
     function getSummaries(param) {
-      const sums = []
-      if (!isEmptyValue(param)) {
-        const { data } = param
-        columns.value.forEach((column, index) => {
-          if (index === 0) {
-            sums[index] = 'Total'
-            return
-          }
-          let sum = 0
-          data.forEach((data) => {
-            const dataCell = data.cells[column.code]
-            if (!isEmptyValue(dataCell) && dataCell.sum_value) {
-              const { value } = dataCell
-              if (!isEmptyValue(value) && value.value) {
-                sum += parseFloat(value.value)
-              }
-            }
-          })
-          sums[index] = sum === 0 ? '' : formatQuantity({ value: sum })
-        })
-        nextTick(() => {
-          const footerCells = document.querySelectorAll('.el-table__footer-wrapper td.el-table__cell')
-          footerCells.forEach((cell) => {
-            const num = parseFloat(cell.textContent)
-            if (!isEmptyValue(num) && num < 0) {
-              cell.style.color = 'red'
-            }
-          })
-        })
+      if (isEmptyValue(param)) {
+        return []
       }
+      const { data } = param
+      const sums = []
+      function recursiveSum(cells, columnCode) {
+        let sum = 0
+        cells.forEach(e => {
+          const dataCell = e.cells[columnCode]
+          if (!isEmptyValue(dataCell) && dataCell.sum_value) {
+            const value = dataCell?.value?.value
+            if (!isEmptyValue(value) && parseFloat(value) !== 0) {
+              sum += parseFloat(value)
+            }
+          }
+          if (e.children && e.children.length > 0) {
+            sum += recursiveSum(e.children, columnCode)
+          }
+        })
+        return sum
+      }
+      columns.value.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = 'Total'
+          return
+        }
+        const totalSum = recursiveSum(data, column.code)
+        sums[index] = totalSum === 0 ? '' : formatQuantity({ value: totalSum })
+      })
+      nextTick(() => {
+        highlightNegativeFooterValues()
+      })
       return sums
+    }
+
+    function highlightNegativeFooterValues() {
+      const footerCells = document.querySelectorAll('.el-table__footer-wrapper td.el-table__cell')
+      footerCells.forEach((cell) => {
+        const num = parseFloat(cell.textContent)
+        if (!isNaN(num) && num < 0) {
+          cell.style.color = 'red'
+        }
+      })
     }
 
     function getAlignment(displayType) {
@@ -591,7 +608,8 @@ export default defineComponent({
       handleChangePage,
       tableRowClassName,
       handleChangeSizePage,
-      getSummaries
+      getSummaries,
+      highlightNegativeFooterValues
     }
   }
 })
