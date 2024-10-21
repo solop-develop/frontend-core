@@ -29,9 +29,13 @@ import {
   requestDeleteIssueComment
 } from '@/api/ADempiere/user-interface/component/issue'
 
+// Const
+import { ROWS_OF_RECORDS_BY_PAGE } from '@/utils/ADempiere/tableUtils'
+
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
+import { generatePageToken } from '@/utils/ADempiere/dataUtils'
 
 const initStateIssueManagement = {
   listIssues: [],
@@ -40,7 +44,15 @@ const initStateIssueManagement = {
   isNewIssues: false,
   currentIssues: {},
   listComments: [],
-  listKanbanGroup: []
+  recordCount: 0,
+  nextPageToken: undefined,
+  listKanbanGroup: [],
+  data: {
+    recordCount: 0,
+    pageSize: ROWS_OF_RECORDS_BY_PAGE,
+    pageNumber: 1,
+    nextPageToken: undefined
+  }
 }
 
 export default {
@@ -67,10 +79,26 @@ export default {
     },
     setListKanbanGroup(state, list) {
       state.listKanbanGroup = list
+    },
+    setListIssuesData(state, {
+      recordCount,
+      pageSize,
+      pageNumber,
+      nextPageToken
+    }) {
+      state.data = {
+        recordCount,
+        pageSize,
+        pageNumber,
+        nextPageToken
+      }
     }
+    // setListIssuesNextPageToken(state, token) {
+    //   state.nextPageToken = token
+    // }
   },
   actions: {
-    listRequestAll({ commit }, {
+    listRequestAll({ commit, getters }, {
       tableName,
       recordId,
       recordUuid,
@@ -83,9 +111,18 @@ export default {
       statusId,
       groupId,
       pageSize,
-      pageToken
+      pageNumber
     }) {
       return new Promise((resolve, reject) => {
+        const issuesData = getters.geIssuesData
+        if (isEmptyValue(pageNumber) || pageNumber < 1) {
+          const {
+            pageNumber: storedPageNumber
+          } = issuesData
+          // refresh with same page
+          pageNumber = storedPageNumber
+        }
+        const pageToken = generatePageToken({ pageNumber })
         // commit('setIsLoadListIssuesAll', true)
         return requestListIssuesAll({
           tableName,
@@ -103,7 +140,11 @@ export default {
           pageToken
         })
           .then(responseList => {
-            const { records } = responseList
+            const {
+              records,
+              record_count,
+              next_page_token
+            } = responseList
 
             if (isEmptyValue(records)) {
               commit('setListIssuesAll', [])
@@ -127,6 +168,13 @@ export default {
             })
             commit('setListIssuesAll', list)
             commit('setIsLoadListIssues', false)
+            commit('setListIssuesData', {
+              nextPageToken: next_page_token,
+              recordCount: Number(record_count),
+              pageNumber,
+              pageSize
+            })
+            // commit('setListIssuesNextPageToken', next_page_token)
             resolve(list)
           })
           .catch(error => {
@@ -136,7 +184,7 @@ export default {
           })
       })
     },
-    listRequest({ commit }, {
+    listRequest({ commit, getters }, {
       tableName,
       recordId,
       recordUuid,
@@ -149,9 +197,18 @@ export default {
       statusId,
       groupId,
       pageSize,
-      pageToken
+      pageNumber
     }) {
       return new Promise((resolve, reject) => {
+        const issuesData = getters.geIssuesData
+        if (isEmptyValue(pageNumber) || pageNumber < 1) {
+          const {
+            pageNumber: storedPageNumber
+          } = issuesData
+          // refresh with same page
+          pageNumber = storedPageNumber
+        }
+        const pageToken = generatePageToken({ pageNumber })
         commit('setIsLoadListIssues', true)
         return requestListIssues({
           tableName,
@@ -169,7 +226,11 @@ export default {
           pageToken
         })
           .then(responseList => {
-            const { records } = responseList
+            const {
+              records,
+              record_count,
+              next_page_token
+            } = responseList
 
             if (isEmptyValue(records)) {
               commit('setListIssues', [])
@@ -194,6 +255,12 @@ export default {
             })
             commit('setListIssues', list)
             commit('setIsLoadListIssues', false)
+            commit('setListIssuesData', {
+              nextPageToken: next_page_token,
+              recordCount: Number(record_count),
+              pageNumber,
+              pageSize
+            })
             resolve(list)
           })
           .catch(error => {
@@ -501,6 +568,9 @@ export default {
     },
     getListKanbanGroup: (state) => {
       return state.listKanbanGroup
+    },
+    geIssuesData: (state) => {
+      return state.data
     }
   }
 }
