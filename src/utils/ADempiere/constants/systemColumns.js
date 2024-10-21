@@ -50,6 +50,8 @@ export const DOCUMENT_STATUS = 'DocStatus'
 
 export const DOCUMENT_ACTION = 'DocAction'
 
+export const STD_PRECISION = 'StdPrecision'
+
 /**
  * Is sales transaction (IsSOTrx, IsSalesTransaction)
  */
