@@ -1,4 +1,4 @@
-  <!--
+<!--
   ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
   Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
   Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/ElsioSanchez
@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <https:www.gnu.org/licenses/>.
 -->
+
 <template>
   <div @click="!showPopover">
     <el-card class="container-report-engine">
@@ -228,7 +229,9 @@ export default defineComponent({
     })
     const data = computed(() => {
       const { rowCells } = props.reportOutput
-      if (isEmptyValue(rowCells)) return []
+      if (isEmptyValue(rowCells)) {
+        return []
+      }
       return rowCells
     })
 
@@ -256,7 +259,9 @@ export default defineComponent({
           isTopLevel = !isTopLevel
         }
         const index = rowIndex + 1
-        const parentColumnKey = Object.keys(row.cells).find(key => row.cells[key].display_value !== '')
+        const parentColumnKey = Object.keys(row.cells).find(key => {
+          return row.cells[key].display_value !== ''
+        })
         let value = ''
         if (!isEmptyValue(parentColumnKey)) {
           value = row.cells[parentColumnKey].display_value
