@@ -46,6 +46,7 @@ import store from '@/store'
 
 // Utils and Helper Methods
 import { pathImageWindows } from '@/utils/ADempiere/resource.js'
+import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 // Constants
 import { COLUMN_NAME, TABLE_NAME_USER } from '@/utils/ADempiere/constants/resoucer.ts'
 
@@ -56,6 +57,10 @@ export default defineComponent({
     user: {
       type: Object,
       default: () => {}
+    },
+    tableName: {
+      type: String,
+      default: TABLE_NAME_USER
     }
   },
 
@@ -74,7 +79,7 @@ export default defineComponent({
     const imageURL = computed(() => {
       return pathImageWindows({
         clientId: clientId.value,
-        tableName: TABLE_NAME_USER,
+        tableName: isEmptyValue(props.tableName) ? TABLE_NAME_USER : props.tableName,
         recordId: props.user.id,
         columnName: COLUMN_NAME,
         resourceName: `${COLUMN_NAME}.png`

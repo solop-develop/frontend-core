@@ -21,3 +21,5 @@ export const COLUMN_NAME = 'logo_id'
 export const TABLE_NAME_USER = 'ad_user'
 
 export const TABLE_NAME_CLIENT = 'ad_clientinfo'
+
+export const TABLE_NAME_C_BPARTNER = 'c_bpartner'

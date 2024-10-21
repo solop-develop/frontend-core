@@ -92,11 +92,7 @@
                   effect="plain"
                 >
                   <i style="font-size: 12px;color: #82848a;">
-                    <b>
-                      <svg-icon icon-class="user" />
-                      <!-- {{ $t('issues.businessPartner') }} : -->
-                    </b>
-                    {{ metadata.business_partner.name }}
+                    <issue-avatar :user="metadata.business_partner" :table-name="TABLE_NAME_C_BPARTNER" />
                   </i>
                 </span>
               </p>
@@ -251,10 +247,10 @@ import store from '@/store'
 import IssuePreview from '@/components/ADempiere/FormDefinition/IssueManagement/IssuesList/issuePreview.vue'
 import IssueRecordTime from '@/components/ADempiere/FormDefinition/IssueManagement/IssueRecordTime/index.vue'
 import ProgressPercentage from '@/components/ADempiere/ContainerOptions/ProgressPercentage.vue'
-
+import IssueAvatar from '@/components/ADempiere/FormDefinition/IssueManagement/issueAvatar.vue'
 // Constants
 import { REQUEST_WINDOW_UUID } from '@/utils/ADempiere/dictionary/form/Issues.js'
-
+import { TABLE_NAME_C_BPARTNER } from '@/utils/ADempiere/constants/resoucer.ts'
 // Utils and Helper Methods
 import { formatDate } from '@/utils/ADempiere/formatValue/dateFormat'
 import { zoomIn } from '@/utils/ADempiere/coreUtils.js'
@@ -264,6 +260,7 @@ export default defineComponent({
   name: 'IssueRow',
 
   components: {
+    IssueAvatar,
     IssuePreview,
     IssueRecordTime,
     ProgressPercentage
@@ -309,6 +306,8 @@ export default defineComponent({
     }
 
     return {
+      // Const
+      TABLE_NAME_C_BPARTNER,
       // Computed
       isNewIssues,
       // Methods
