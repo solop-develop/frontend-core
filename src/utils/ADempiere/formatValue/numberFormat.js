@@ -22,6 +22,8 @@ import store from '@/store'
 import {
   NUMBER, QUANTITY
 } from '@/utils/ADempiere/references.js'
+import { STD_PRECISION } from '@/utils/ADempiere/constants/systemColumns'
+import { ACCOUNTING_CONTEXT_PREFIX } from '@/utils/ADempiere/contextUtils'
 
 // Utils and Helpers Methods
 import {
@@ -373,3 +375,17 @@ export function replaceComma(value) {
   return value.replace(/,/g, '.')
 }
 
+/**
+ * Default Standard Precision Context
+ */
+export function standardPrecisionContext({
+  parentUuid,
+  containerUuid
+}) {
+  if (isEmptyValue(containerUuid) || isEmptyValue(parentUuid)) return NUMBER_PRECISION
+  return store.getters.getSessionContext({
+    parentUuid,
+    containerUuid,
+    columnName: ACCOUNTING_CONTEXT_PREFIX + STD_PRECISION
+  })
+}

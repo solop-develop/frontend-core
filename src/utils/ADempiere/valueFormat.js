@@ -67,6 +67,7 @@ export function formatField({
   displayedValue,
   displayType,
   currency,
+  precision = NUMBER_PRECISION,
   optionalFormat
 }) {
   if (isEmptyValue(value)) {
@@ -155,7 +156,7 @@ export function formatField({
       }
       formattedValue = formatQuantity({
         value,
-        precision: NUMBER_PRECISION
+        precision
       })
       break
     case QUANTITY.id:

@@ -139,6 +139,7 @@ import { copyToClipboard } from '@/utils/ADempiere/coreUtils.js'
 import { formatField } from '@/utils/ADempiere/valueFormat.js'
 import { getImagePath } from '@/utils/ADempiere/resource'
 import { isNumberField } from '@/utils/ADempiere/references'
+import { standardPrecisionContext } from '@/utils/ADempiere/formatValue/numberFormat.js'
 
 // Constants
 import { IMAGE, TEXT_LONG } from '@/utils/ADempiere/references'
@@ -182,6 +183,13 @@ export default defineComponent({
       return props.dataRow[columnName.value]
     })
 
+    const defaulPrecisions = computed(() => {
+      return standardPrecisionContext({
+        parentUuid: props.fieldAttributes.parentUuid,
+        containerUuid: props.fieldAttributes.containerUuid
+      })
+    })
+
     const displayedValue = computed(() => {
       let currentValue = props.dataRow[columnName.value]
       if (getTypeOfValue(currentValue) === 'OBJECT') {
@@ -191,7 +199,9 @@ export default defineComponent({
         value: currentValue,
         currency: props.dataRow[DISPLAY_COLUMN_PREFIX + CURRENCY],
         displayedValue: props.dataRow[displayColumnName.value],
-        displayType: props.fieldAttributes.display_type
+        displayType: props.fieldAttributes.display_type,
+        columnName: columnName.value,
+        precision: defaulPrecisions.value
       })
     })
 
@@ -256,6 +266,7 @@ export default defineComponent({
       displayedValue,
       isPreviewImage,
       imageSourceSmall,
+      defaulPrecisions,
       imageSourceMedium,
       // Methods
       copyContent
