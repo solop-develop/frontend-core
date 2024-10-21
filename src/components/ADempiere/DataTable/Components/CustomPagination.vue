@@ -129,6 +129,10 @@ export default defineComponent({
     isShowedSelected: {
       type: Boolean,
       default: false
+    },
+    isEmptyIndex: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -188,6 +192,7 @@ export default defineComponent({
     })
 
     const currentIndex = computed(() => {
+      if (props.isEmptyIndex) return ''
       if (!isEmptyValue(props.rowIndex) || !isEmptyValue(props.rowUid)) {
         return indexRowByPage({
           indexRow: props.rowIndex,
