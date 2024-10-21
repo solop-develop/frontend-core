@@ -104,7 +104,7 @@ export function formatNumber({
       break
 
     case NUMBER.id:
-      formattedNumber = formatQuantity({ value, precision: NUMBER_PRECISION })
+      formattedNumber = formatQuantity({ value, precision: !isEmptyValue(precision) ? precision : NUMBER_PRECISION })
       break
     // Quantity
     case QUANTITY.id:

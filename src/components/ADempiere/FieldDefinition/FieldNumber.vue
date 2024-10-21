@@ -74,12 +74,12 @@ import {
   NUMBER
 } from '@/utils/ADempiere/references.js'
 import { CURRENCY } from '@/utils/ADempiere/constants/systemColumns'
-import { NUMBER_PRECISION } from '@/utils/ADempiere/formatValue/numberFormat.js'
 
 // Utils and Helper Methods
 import { isDecimalField } from '@/utils/ADempiere/references.js'
 import { formatNumber } from '@/utils/ADempiere/formatValue/numberFormat.js'
 import { getTypeOfValue, isEmptyValue } from '@/utils/ADempiere/valueUtils.js'
+import { standardPrecisionContext } from '@/utils/ADempiere/formatValue/numberFormat.js'
 
 export default {
   name: 'FieldNumber',
@@ -127,7 +127,10 @@ export default {
         return this.metadata.precision
       }
       if (this.metadata.display_type === NUMBER.id) {
-        return NUMBER_PRECISION
+        return standardPrecisionContext({
+          parentUuid: this.metadata.parentUuid,
+          containerUuid: this.metadata.containerUuid
+        })
       }
       if (isDecimalField(this.metadata.display_type)) {
         return store.getters.getStandardPrecision
@@ -160,7 +163,7 @@ export default {
           value: this.value,
           displayType: this.metadata.display_type,
           currency: this.currencyCode,
-          precision: this.metadata.precision
+          precision: this.precision
         })
       }
     },
