@@ -68,8 +68,8 @@ export function requestListIssues({
     url: `/issue-management/issues`,
     method: 'get',
     params: {
-      page_size: pageSize,
-      page_token: pageToken,
+      // page_size: pageSize,
+      // page_token: pageToken,
       group_id: groupId,
       record_id: recordId,
       status_id: statusId,

@@ -296,7 +296,7 @@
               :record-id="recordId"
             />
           </span>
-          <el-row>
+          <el-row v-if="isAll">
             <el-col :span="24">
               <custom-pagination
                 :total-records="recordCount"
@@ -309,12 +309,6 @@
               />
               <br>
               <br>
-              <br>
-              <!-- <el-pagination
-                small
-                layout="prev, pager, next"
-                :total="50"
-              /> -->
             </el-col>
           </el-row>
         </span>
