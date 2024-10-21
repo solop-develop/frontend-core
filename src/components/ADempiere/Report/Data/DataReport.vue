@@ -1,4 +1,4 @@
-<!--
+  <!--
   ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
   Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
   Contributor(s): Elsio Sanchez elsiosanches@gmail.com https://github.com/ElsioSanchez
@@ -449,37 +449,47 @@ export default defineComponent({
     }
 
     function getSummaries(param) {
+      if (isEmptyValue(param)) return []
+      const { data } = param
       const sums = []
-      if (!isEmptyValue(param)) {
-        const { data } = param
-        columns.value.forEach((column, index) => {
-          if (index === 0) {
-            sums[index] = 'Total'
-            return
+      function recursiveSum(cells, columnCode) {
+        let sum = 0
+        cells.forEach(e => {
+          const dataCell = e.cells[columnCode]
+          if (!isEmptyValue(dataCell) && dataCell.sum_value) {
+            const value = dataCell?.value?.value
+            if (!isEmptyValue(value) && parseFloat(value) !== 0) {
+              sum += parseFloat(value)
+            }
           }
-          let sum = 0
-          data.forEach((data) => {
-            const dataCell = data.cells[column.code]
-            if (!isEmptyValue(dataCell) && dataCell.sum_value) {
-              const { value } = dataCell
-              if (!isEmptyValue(value) && value.value) {
-                sum += parseFloat(value.value)
-              }
-            }
-          })
-          sums[index] = sum === 0 ? '' : formatQuantity({ value: sum })
+          if (e.children && e.children.length > 0) {
+            sum += recursiveSum(e.children, columnCode)
+          }
         })
-        nextTick(() => {
-          const footerCells = document.querySelectorAll('.el-table__footer-wrapper td.el-table__cell')
-          footerCells.forEach((cell) => {
-            const num = parseFloat(cell.textContent)
-            if (!isEmptyValue(num) && num < 0) {
-              cell.style.color = 'red'
-            }
-          })
-        })
+        return sum
       }
+      columns.value.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = 'Total'
+          return
+        }
+        const totalSum = recursiveSum(data, column.code)
+        sums[index] = totalSum === 0 ? '' : formatQuantity({ value: totalSum })
+      })
+      nextTick(() => {
+        highlightNegativeFooterValues()
+      })
       return sums
+    }
+
+    function highlightNegativeFooterValues() {
+      const footerCells = document.querySelectorAll('.el-table__footer-wrapper td.el-table__cell')
+      footerCells.forEach((cell) => {
+        const num = parseFloat(cell.textContent)
+        if (!isNaN(num) && num < 0) {
+          cell.style.color = 'red'
+        }
+      })
     }
 
     function getAlignment(displayType) {
@@ -591,7 +601,8 @@ export default defineComponent({
       handleChangePage,
       tableRowClassName,
       handleChangeSizePage,
-      getSummaries
+      getSummaries,
+      highlightNegativeFooterValues
     }
   }
 })
