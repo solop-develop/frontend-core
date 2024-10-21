@@ -454,7 +454,9 @@ export default defineComponent({
     }
 
     function getSummaries(param) {
-      if (isEmptyValue(param)) return []
+      if (isEmptyValue(param)) {
+        return []
+      }
       const { data } = param
       const sums = []
       function recursiveSum(cells, columnCode) {
