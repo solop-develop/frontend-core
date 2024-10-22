@@ -281,7 +281,7 @@
         </el-collapse>
         <br>
       </el-card>
-      <div v-if="!isEdit && !isKanban" class="table-list-request" :style="isEdit ? 'max-height: 78vh;' : 'max-height: 85vh;'">
+      <div v-if="!isEdit && !isKanban" class="table-list-request" :style="isEdit ? 'max-height: 78vh;' : 'height: -webkit-fill-available;'">
         <el-empty v-if="isEmptyValue(listIssues)" />
         <span
           v-else
@@ -296,6 +296,21 @@
               :record-id="recordId"
             />
           </span>
+          <el-row v-if="isAll">
+            <el-col :span="24">
+              <custom-pagination
+                :total-records="recordCount"
+                :is-showed-selected="false"
+                :page-number="pageNumber"
+                :page-size="pageSize"
+                :is-empty-index="true"
+                :handle-change-page-number="setPageNumber"
+                :handle-change-page-size="setPageSize"
+              />
+              <br>
+              <br>
+            </el-col>
+          </el-row>
         </span>
       </div>
       <div
@@ -424,7 +439,7 @@ import DraggableElements from 'vuedraggable'
 import IssueRow from '@/components/ADempiere/FormDefinition/IssueManagement/IssuesList/issueRow.vue'
 import KanbanIssues from '@/components/ADempiere/Form/Issues/ListIssues/kanban.vue'
 import ProgressPercentage from '@/components/ADempiere/ContainerOptions/ProgressPercentage.vue'
-
+import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
 // Utils and Helper Methods
 import { showMessage } from '@/utils/ADempiere/notification'
 
@@ -449,6 +464,7 @@ export default defineComponent({
     IssueRow,
     // Editor
     KanbanIssues,
+    CustomPagination,
     DraggableElements,
     ProgressPercentage
   },
@@ -513,6 +529,18 @@ export default defineComponent({
 
     const listKanbanGroup = computed(() => {
       return store.getters.getListKanbanGroup
+    })
+
+    const recordCount = computed(() => {
+      return store.getters.geIssuesData.recordCount
+    })
+
+    const pageNumber = computed(() => {
+      return store.getters.geIssuesData.pageNumber
+    })
+
+    const pageSize = computed(() => {
+      return store.getters.geIssuesData.pageSize
     })
 
     function newIssues(issue) {
@@ -834,7 +862,10 @@ export default defineComponent({
         })
     }
 
-    function updateListIssues() {
+    function updateListIssues({
+      pageNumber,
+      pageSize
+    }) {
       if (isAll.value) {
         store.dispatch('listRequestAll', {
           businessPartnerId: isEmptyValue(businessPartnerField.value) ? 0 : businessPartnerField.value,
@@ -843,7 +874,9 @@ export default defineComponent({
           statusId: isEmptyValue(statusField.value) ? 0 : statusField.value,
           groupId: isEmptyValue(groupField.value) ? 0 : groupField.value,
           taskStatusValue: taskStatusField.value,
-          priorityValue: priorityField.value
+          priorityValue: priorityField.value,
+          pageNumber,
+          pageSize
         })
           .finally(() => {
             loadIssues()
@@ -857,7 +890,9 @@ export default defineComponent({
         statusId: isEmptyValue(statusField.value) ? 0 : statusField.value,
         groupId: isEmptyValue(groupField.value) ? 0 : groupField.value,
         taskStatusValue: taskStatusField.value,
-        priorityValue: priorityField.value
+        priorityValue: priorityField.value,
+        pageNumber,
+        pageSize
       })
         .finally(() => {
           loadIssues()
@@ -959,12 +994,26 @@ export default defineComponent({
       }, 500)
     }
 
+    function setPageNumber(pageNumber) {
+      updateListIssues({
+        pageNumber
+      })
+    }
+    function setPageSize(pageSize) {
+      updateListIssues({
+        pageSize
+      })
+    }
+
     return {
       statusesExpand,
       listKanbanGroup,
       updateDragStatus,
       isloadinUpdateKanban,
       //
+      pageSize,
+      pageNumber,
+      recordCount,
       timeOut,
       isEdit,
       isKanban,
@@ -1009,6 +1058,8 @@ export default defineComponent({
       findCategory,
       activeKanban,
       updateStatus,
+      setPageNumber,
+      setPageSize,
       activeGruop,
       findProject,
       findStatus,

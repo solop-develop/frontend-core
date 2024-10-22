@@ -50,11 +50,13 @@ export function requestExistsIssues({
  * @param {string} searchValue
  */
 export function requestListIssues({
+  pageSize,
   recordId,
   tableName,
+  pageToken,
+  categoryId,
   searchValue,
   groupId = 0,
-  categoryId = 0,
   statusId = 0,
   projectId = 0,
   priorityValue,
@@ -66,12 +68,14 @@ export function requestListIssues({
     url: `/issue-management/issues`,
     method: 'get',
     params: {
+      // page_size: pageSize,
+      // page_token: pageToken,
       group_id: groupId,
       record_id: recordId,
-      category_id: categoryId,
       status_id: statusId,
       table_name: tableName,
       project_id: projectId,
+      category_id: categoryId,
       search_value: searchValue,
       priority_value: priorityValue,
       status_category_id: statusCategory,
@@ -89,10 +93,12 @@ export function requestListIssues({
  */
 
 export function requestListIssuesAll({
+  pageSize,
   recordId,
   tableName,
-  searchValue,
+  pageToken,
   categoryId,
+  searchValue,
   groupId = 0,
   statusId = 0,
   projectId = 0,
@@ -105,6 +111,8 @@ export function requestListIssuesAll({
     url: `/issue-management/issues/all`,
     method: 'get',
     params: {
+      page_size: pageSize,
+      page_token: pageToken,
       group_id: groupId,
       record_id: recordId,
       status_id: statusId,
