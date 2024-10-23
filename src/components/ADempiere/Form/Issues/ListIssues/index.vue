@@ -1025,6 +1025,7 @@ export default defineComponent({
       //
       pageSize,
       pageNumber,
+      isAll,
       recordCount,
       timeOut,
       isEdit,
