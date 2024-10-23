@@ -89,7 +89,7 @@ const windowManager = {
       isLoaded = true,
       isLoading = false,
       pageNumber = 1,
-      pageSize = 15,
+      pageSize = 50,
       sortBy
     }) {
       const dataTab = {
@@ -295,7 +295,7 @@ const windowManager = {
       filtersRecord = {},
       isAdvancedQuery = false,
       pageNumber,
-      pageSize,
+      pageSize = 50,
       sortBy
     }) {
       return new Promise(resolve => {
