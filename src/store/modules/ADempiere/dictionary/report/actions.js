@@ -68,6 +68,7 @@ export default {
    */
   getReportDefinitionFromServer({ dispatch, getters, rootGetters }, {
     id,
+    isLegacyReport = false,
     tableName
   }) {
     return new Promise((resolve, reject) => {
@@ -82,6 +83,7 @@ export default {
         .then(async reportResponse => {
           const { uuid } = reportResponse
           const { processDefinition: reportDefinition } = generateReport({
+            isLegacyReport,
             processToGenerate: reportResponse
           })
 

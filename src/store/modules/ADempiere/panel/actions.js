@@ -511,7 +511,7 @@ const actions = {
       // TODO: Improve peformance get field with key-value
       const storedFieldDependentsList = currentFieldsList.filter(fieldItem => {
         if (!isEmptyValue(fieldId)) {
-          return fieldId === fieldItem.id
+          return fieldId === fieldItem.internal_id
         }
         return columnName === fieldItem.column_name ||
           columnName === fieldItem.element_name
@@ -519,6 +519,7 @@ const actions = {
 
       if (isEmptyValue(storedFieldDependentsList)) {
         console.warn('field not found in vuex store', {
+          fieldId,
           parentUuid,
           parent_column_name: field.column_name,
           parentContainerName: field.panelName,
@@ -535,7 +536,8 @@ const actions = {
             field.columnName,
             storedFieldDependentsList.map(i => {
               return {
-                id: i.id,
+                id: i.internal_id,
+                uuid: i.uuid,
                 columnName: i.column_name,
                 name: i.name
               }
