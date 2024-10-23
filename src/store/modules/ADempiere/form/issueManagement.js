@@ -123,6 +123,7 @@ export default {
           // refresh with same page
           pageNumber = storedPageNumber
         }
+        if (isEmptyValue(pageSize)) pageSize = issuesData.pageSize
         const pageToken = generatePageToken({ pageNumber })
         commit('setIsLoadListIssues', true)
         // commit('setIsLoadListIssuesAll', true)
