@@ -286,31 +286,37 @@
         <span
           v-else
         >
-          <span
-            v-for="(data, index) in listIssues"
-            :key="index"
-          >
-            <issue-row
-              :metadata="data"
-              :table-name="tableName"
-              :record-id="recordId"
-            />
-          </span>
-          <el-row v-if="isAll">
-            <el-col :span="24">
-              <custom-pagination
-                :total-records="recordCount"
-                :is-showed-selected="false"
-                :page-number="pageNumber"
-                :page-size="pageSize"
-                :is-empty-index="true"
-                :handle-change-page-number="setPageNumber"
-                :handle-change-page-size="setPageSize"
+          <span v-if="!isLoadListIssues">
+            <span
+              v-for="(data, index) in listIssues"
+              :key="index"
+            >
+              <issue-row
+                :metadata="data"
+                :table-name="tableName"
+                :record-id="recordId"
               />
-              <br>
-              <br>
-            </el-col>
-          </el-row>
+            </span>
+            <el-row v-if="isAll">
+              <el-col :span="24">
+                <custom-pagination
+                  :total-records="recordCount"
+                  :is-showed-selected="false"
+                  :page-number="pageNumber"
+                  :page-size="pageSize"
+                  :is-empty-index="true"
+                  :handle-change-page-number="setPageNumber"
+                  :handle-change-page-size="setPageSize"
+                />
+                <br>
+                <br>
+              </el-col>
+            </el-row>
+          </span>
+          <loading-view
+            v-else
+            key="browser-loading"
+          />
         </span>
       </div>
       <div
@@ -440,6 +446,7 @@ import IssueRow from '@/components/ADempiere/FormDefinition/IssueManagement/Issu
 import KanbanIssues from '@/components/ADempiere/Form/Issues/ListIssues/kanban.vue'
 import ProgressPercentage from '@/components/ADempiere/ContainerOptions/ProgressPercentage.vue'
 import CustomPagination from '@/components/ADempiere/DataTable/Components/CustomPagination.vue'
+import LoadingView from '@/components/ADempiere/LoadingView/index.vue'
 // Utils and Helper Methods
 import { showMessage } from '@/utils/ADempiere/notification'
 
@@ -464,6 +471,7 @@ export default defineComponent({
     IssueRow,
     // Editor
     KanbanIssues,
+    LoadingView,
     CustomPagination,
     DraggableElements,
     ProgressPercentage
@@ -529,6 +537,10 @@ export default defineComponent({
 
     const listKanbanGroup = computed(() => {
       return store.getters.getListKanbanGroup
+    })
+
+    const isLoadListIssues = computed(() => {
+      return store.getters.getIsLoadListIssues
     })
 
     const recordCount = computed(() => {
@@ -1025,6 +1037,7 @@ export default defineComponent({
       listStatuses,
       categoryField,
       priorityField,
+      isLoadListIssues,
       listGroupField,
       listIssuesTypes,
       currentPriority,
