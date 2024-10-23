@@ -167,6 +167,7 @@ import OrganizationTransactionField from '@/components/ADempiere/FormDefinition/
 
 // Utils and Helper Methods
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
+import { formatQuantity } from '@/utils/ADempiere/formatValue/numberFormat'
 
 // API Request Methods
 import {
@@ -439,15 +440,15 @@ export default defineComponent({
       const sumAllPayments = sumPayment.reduce((accumulator, currentValue) => accumulator + currentValue, initialValuePayment)
       const totalSum = [sumAllPayments, sumAllInvoce].reduce((accumulator, currentValue) => accumulator + currentValue, initialValueAll)
       if (isEmptyValue(sumAllPayments) && !isEmptyValue(sumAllInvoce)) {
-        return sumAllInvoce
+        return formatQuantity({ value: sumAllInvoce })
       } else if (!isEmptyValue(sumPayment) && isEmptyValue(sumAllInvoce)) {
-        return sumAllPayments
+        return formatQuantity({ value: sumAllPayments })
       }
       if (totalSum < 0) {
         const totalSumPositive = Math.abs(totalSum)
-        return totalSumPositive
+        return formatQuantity({ value: totalSumPositive })
       }
-      return totalSum
+      return formatQuantity({ value: totalSum })
     })
     /**
      * Methods
