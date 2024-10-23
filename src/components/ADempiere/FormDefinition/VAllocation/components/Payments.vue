@@ -422,16 +422,16 @@ export default defineComponent({
         const { transaction_type } = list
         if (list.type === 'isInvoce') {
           if (transaction_type.value === 'R') {
-            return -(list.amountApplied)
+            return -(list.open_amount)
           }
-          return list.amountApplied
+          return list.open_amount
         }
-        return list.applied
+        return list.open_amount
       })
       const sumPayment = selectListAll.value.filter(list => {
         return list.type !== 'isInvoce'
       }).map(list => {
-        return list.applied
+        return -(list.open_amount)
       })
       const initialValue = 0
       const initialValuePayment = 0
