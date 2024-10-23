@@ -22,7 +22,7 @@
     :required="true"
   >
     <template slot="label">
-      {{ bPartnerField.name }}
+      {{ $t('form.VAllocation.searchCriteria.businessPartner') }}
       <!-- <span style="color: #f34b4b"> * </span> -->
     </template>
 
