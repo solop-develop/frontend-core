@@ -415,15 +415,11 @@ export default {
       return 'border: 1px solid #fff;border-radius: 5px;'
     },
     isOperatior() {
-      if (this.$route.meta.type === 'report') {
-        const { is_jasper_report: isJasper } = store.getters.getStoredReport(this.containerUuid)
-        if (isJasper) {
-          return false
-        }
-      }
       const isBrowser = this.$route.meta.type === 'browser'
+      const isReport = this.$route.meta.type === 'report'
       const {
         isAdvancedQuery,
+        isLegacyReport,
         is_query_criteria
       } = this.field
       if (
@@ -432,6 +428,9 @@ export default {
         (
           isBrowser &&
           is_query_criteria
+        ) || (
+          isReport &&
+          !isLegacyReport
         )
       ) return true
       return false

@@ -29,8 +29,8 @@ const operators = {
   less_equal: 'Less than or equal to "<="',
   between: 'Within ">-<"',
   not_between: 'Outside "<->"',
-  null: 'Has no value',
-  not_null: 'Has a value',
+  null: 'Has no value "null"',
+  not_null: 'Has a value "!null"',
   in: 'Includes "()"',
   not_in: 'Does not include "!()"',
   onlyOperators: {
@@ -46,8 +46,8 @@ const operators = {
     less_equal: '<=',
     between: '>-<',
     not_between: '<->',
-    null: 'Has no value',
-    not_null: 'Has a value',
+    null: 'null',
+    not_null: '!null',
     in: '()',
     not_in: '!()'
   }

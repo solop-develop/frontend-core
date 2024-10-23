@@ -147,11 +147,9 @@ export function generateField({
   let parentFieldsList = []
   let parsedDefaultValue = fieldToGenerate.default_value
   let parsedDefaultValueTo = fieldToGenerate.default_value_to
-  let operator
   const isNumericField = componentReference.componentPath === 'FieldNumber'
   let isTranslatedField = fieldToGenerate.is_translated
   let isComparisonField = false // to list operators comparison
-  let operatorsList = []
   if (moreAttributes.isAdvancedQuery) {
     // isNumericField = false // disable calculator popover
     isTranslatedField = false
@@ -220,9 +218,11 @@ export function generateField({
       elementColumnName: fieldToGenerate.element_name
     })
   }
+
   // set field operators list
-  if (moreAttributes.isAdvancedQuery || fieldToGenerate.is_query_criteria) {
-    operator = OPERATOR_EQUAL.operator
+  let operator = OPERATOR_EQUAL.operator // by default equal
+  let operatorsList = []
+  if (moreAttributes.isAdvancedQuery || fieldToGenerate.is_query_criteria || moreAttributes.isLegacyReport === false) {
     isComparisonField = !['FieldBinary', 'FieldButton', 'FieldImage'].includes(componentReference.componentPath)
     if (isComparisonField) {
       const operatorsField = FIELD_OPERATORS_LIST.find(item => {
@@ -268,6 +268,7 @@ export function generateField({
     isSOTrxDictionary,
     referenceTableName,
     // displayed attributes
+    displayTypeName: componentReference.name,
     componentPath: componentReference.componentPath,
     isSupported: componentReference.isSupported,
     size: componentReference.size || DEFAULT_SIZE,

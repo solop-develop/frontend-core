@@ -110,6 +110,7 @@ export function isReadOnlyField({ read_only_logic, isReadOnlyFromLogic }) {
  * @returns {object}
  */
 export function generateProcess({
+  isLegacyReport = false,
   processToGenerate,
   containerUuidAssociated = undefined
 }) {
@@ -121,7 +122,8 @@ export function generateProcess({
   }
 
   const additionalAttributes = {
-    isAdvancedQuery: processToGenerate.is_report,
+    // isAdvancedQuery: processToGenerate.is_report,
+    isLegacyReport: isLegacyReport || processToGenerate.is_jasper_report,
     containerUuid: processToGenerate.uuid,
     parentUuid: containerUuidAssociated,
     panelName: processToGenerate.name,

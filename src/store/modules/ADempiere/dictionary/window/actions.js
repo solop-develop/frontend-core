@@ -237,6 +237,7 @@ export default {
                 return Promise.resolve(reportDefinition)
               }
               return dispatch('getReportDefinitionFromServer', {
+                isLegacyReport: true,
                 id: process.id,
                 tableName: table_name
               }).then(reportDefinitionResponse => {
