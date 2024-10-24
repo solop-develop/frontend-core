@@ -48,6 +48,7 @@ export const ROW_KEY_ATTRIBUTES = Object.keys(ROW_ATTRIBUTES)
  * As pageSize on backend
  */
 export const ROWS_OF_RECORDS_BY_PAGE = 15
+export const ROWS_OF_RECORDS_BY_PAGE_HIGH = 50
 
 /**
  * Number of records list per page

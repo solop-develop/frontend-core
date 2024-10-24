@@ -30,10 +30,11 @@ import {
 
 // Constants
 import { UUID } from '@/utils/ADempiere/constants/systemColumns'
-import { ROW_ATTRIBUTES, ROW_KEY_ATTRIBUTES } from '@/utils/ADempiere/tableUtils'
+import { ROW_ATTRIBUTES, ROW_KEY_ATTRIBUTES, ROWS_OF_RECORDS_BY_PAGE_HIGH } from '@/utils/ADempiere/tableUtils'
 import {
   DISPLAY_COLUMN_PREFIX, IDENTIFIER_COLUMN_SUFFIX, IS_ADVANCED_QUERY
 } from '@/utils/ADempiere/dictionaryUtils'
+
 import {
   IGNORE_VALUE_OPERATORS_LIST, MULTIPLE_VALUES_OPERATORS_LIST,
   RANGE_VALUE_OPERATORS_LIST
@@ -89,7 +90,7 @@ const windowManager = {
       isLoaded = true,
       isLoading = false,
       pageNumber = 1,
-      pageSize = 50,
+      pageSize = ROWS_OF_RECORDS_BY_PAGE_HIGH,
       sortBy
     }) {
       const dataTab = {
@@ -295,7 +296,7 @@ const windowManager = {
       filtersRecord = {},
       isAdvancedQuery = false,
       pageNumber,
-      pageSize = 50,
+      pageSize = ROWS_OF_RECORDS_BY_PAGE_HIGH,
       sortBy
     }) {
       return new Promise(resolve => {
