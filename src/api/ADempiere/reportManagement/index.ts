@@ -225,3 +225,20 @@ export function sendNotification({
     }
   })
 }
+
+export function printEntitiesBatch({
+  tableName,
+  reportId,
+  fileType = 'pdf',
+  ids
+}) {
+  return request({
+    url: `/report-management/report/batch-print/${reportId}`,
+    method: 'post',
+    data: {
+      table_name: tableName,
+      file_type: fileType,
+      ids
+    }
+  })
+}

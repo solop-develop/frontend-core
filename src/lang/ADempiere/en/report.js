@@ -117,6 +117,11 @@ const report = {
     urlAddress: 'Url Address',
     subject: 'Subject',
     urlPublic: 'Click to go to the Link'
+  },
+  dialogLegacy: {
+    displayOptions: 'Display Options',
+    downloadFiles: 'Download Files',
+    showReport: 'Show Report'
   }
 }
 
