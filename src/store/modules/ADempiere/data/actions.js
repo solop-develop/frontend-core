@@ -421,16 +421,16 @@ const actions = {
   },
 
   resetStateBusinessData({ commit, dispatch }) {
-    commit('resetStateContainerInfo')
+    // commit('resetStateContainerInfo')
     commit('setInitialContext', {})
     commit('resetStateTranslations')
     commit('resetStateBusinessData')
     commit('resetContextMenu')
     commit('resetStateTranslations')
     commit('resetStateLookup')
-    commit('resetStateProcessControl')
+    // commit('resetStateProcessControl')
     commit('resetStateUtils')
-    commit('resetStateWindowControl')
+    // commit('resetStateWindowControl')
     dispatch('resetStateFormData')
   }
 }
