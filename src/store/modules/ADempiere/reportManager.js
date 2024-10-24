@@ -30,7 +30,8 @@ import {
   getReportOutputRequest,
   listNotificationsTypes,
   listUsers,
-  sendNotification
+  sendNotification,
+  printEntitiesBatch
 } from '@/api/ADempiere/reportManagement/index.ts'
 import { listPrintFormatsRequest, listPrintFormatsTableRequest } from '@/api/ADempiere/reportManagement/printFormat.ts'
 import { listReportViewsRequest } from '@/api/ADempiere/reportManagement/reportView.ts'
@@ -77,12 +78,23 @@ const initState = {
   contactSend: '',
   typeNotify: '',
   defaultBody: '',
-  activateCollapse: 0
+  activateCollapse: 0,
+  viewDialog: false,
+  isLoadingDialog: false
 }
 const reportManager = {
   state: initState,
 
   mutations: {
+    setInstanceId(state, value) {
+      state.instanceId = value
+    },
+    setIsLoadingDialog(state, value) {
+      state.isLoadingDialog = value
+    },
+    setViewDialog(state, viewDialog) {
+      state.viewDialog = viewDialog
+    },
     setActivateCollapse(state, activateCollapse) {
       state.activateCollapse = activateCollapse
     },
@@ -1012,6 +1024,41 @@ const reportManager = {
             resolve(error)
           })
       })
+    },
+    printBarch({ rootGetters, commit, dispatch }, {
+      tableName,
+      reportId,
+      fileType,
+      ids,
+      checkValue,
+      containerUuid,
+      reportUuid
+    }) {
+      return new Promise(resolve => {
+        printEntitiesBatch({
+          tableName,
+          reportId,
+          fileType,
+          ids
+        })
+          .then(response => {
+            console.log(reportUuid)
+            const { file_name } = response
+            requestShareResources({
+              fileName: file_name
+            })
+              .then(data => {
+                if (checkValue === 1) {
+                  const file = document.createElement('a')
+                  file.href = data
+                  file.download = `${tableName}`
+                  file.target = '_blank'
+                  file.click()
+                }
+                resolve(response)
+              })
+          })
+      })
     }
   },
   getters: {
@@ -1089,6 +1136,12 @@ const reportManager = {
     },
     getIsActiateCollapse: (state) => {
       return state.activateCollapse
+    },
+    getViewDialog: (state) => {
+      return state.viewDialog
+    },
+    getIsLoadingDialog: (state) => {
+      return state.isLoadingDialog
     }
   }
 }

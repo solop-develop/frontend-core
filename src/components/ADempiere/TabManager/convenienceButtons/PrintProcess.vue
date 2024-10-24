@@ -72,6 +72,12 @@
         class="el-icon-loading"
       />
     </el-button>
+    <dialog-legacy
+      :table-name="currentTableName"
+      :process="process"
+      :record-id="recordId"
+      :container-uuid="containerUuid"
+    />
   </span>
 </template>
 
@@ -90,9 +96,12 @@ import {
 import { isEmptyValue } from '@/utils/ADempiere/valueUtils'
 import { showNotification } from '@/utils/ADempiere/notification.js'
 
+import DialogLegacy from '@/components/ADempiere/Report/Data/Dialog.vue'
 export default defineComponent({
   name: 'PrintProcess',
-
+  components: {
+    DialogLegacy
+  },
   props: {
     parentUuid: {
       type: [String, Number],
@@ -128,7 +137,6 @@ export default defineComponent({
       if (isEmptyValue(props.tabAttributes.table) || isEmptyValue(props.tabAttributes.table.table_name)) return props.tabAttributes.table_name
       return props.tabAttributes.table.table_name
     })
-
     const recordId = computed(() => {
       return store.getters.getIdOfContainer({
         containerUuid,
@@ -153,26 +161,38 @@ export default defineComponent({
     /**
      * Methods
      */
-    function printProcess() {
-      if (isEmptyValue(process)) {
-        showNotification({
-          title: language.t('notifications.whithoutAssociatedReport'),
-          message: process.name,
-          summary: process.description,
-          type: 'info'
+    const selectionsList = computed(() => {
+      if (props.containerManager.getSelection) {
+        return props.containerManager.getSelection({
+          containerUuid: containerUuid
         })
-        return
       }
-      isLoading.value = true
-      store.dispatch('runReport', {
-        containerUuid: process.uuid,
-        recordId: recordId.value,
-        reportId: process.internal_id,
-        tableName: currentTableName.value
-      })
-        .finally(() => {
-          isLoading.value = false
+      return []
+    })
+    function printProcess() {
+      if (!isEmptyValue(selectionsList) && !isEmptyValue(selectionsList.value) && selectionsList.value.length > 1) {
+        store.commit('setViewDialog', true)
+      } else {
+        if (isEmptyValue(process)) {
+          showNotification({
+            title: language.t('notifications.whithoutAssociatedReport'),
+            message: process.name,
+            summary: process.description,
+            type: 'info'
+          })
+          return
+        }
+        isLoading.value = true
+        store.dispatch('runReport', {
+          containerUuid: process.uuid,
+          recordId: recordId.value,
+          reportId: process.internal_id,
+          tableName: currentTableName.value
         })
+          .finally(() => {
+            isLoading.value = false
+          })
+      }
     }
 
     function handleCommandActions(command) {
@@ -215,6 +235,8 @@ export default defineComponent({
       // Const
       process,
       FINANCIAL_REPORT_TABLE_NAME,
+      selectionsList,
+      containerUuid,
       // Computed
       recordId,
       printFormatsList,
