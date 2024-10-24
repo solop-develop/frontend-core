@@ -77,12 +77,16 @@ const initState = {
   contactSend: '',
   typeNotify: '',
   defaultBody: '',
-  activateCollapse: 0
+  activateCollapse: 0,
+  instanceId: ''
 }
 const reportManager = {
   state: initState,
 
   mutations: {
+    setInstanceId(state, instanceId) {
+      state.instanceId = instanceId
+    },
     setActivateCollapse(state, activateCollapse) {
       state.activateCollapse = activateCollapse
     },
@@ -632,6 +636,7 @@ const reportManager = {
           containerUuid = currentRoute.params.reportUuid
         }
       }
+      const instanceId = getters.getInstanceId
       const reportDefinition = getters.getStoredReport(containerUuid)
       const {
         internal_id,
@@ -698,7 +703,8 @@ const reportManager = {
           tableName,
           pageSize,
           filters,
-          sortBy
+          sortBy,
+          instanceId
         })
           .then(reportResponse => {
             commit('setReportOutput', {
@@ -796,6 +802,7 @@ const reportManager = {
               pageSize,
               pageToken
             })
+            commit('setInstanceId', instance_id)
             showNotification({
               title: language.t('notifications.succesful'),
               message: name,
@@ -1089,6 +1096,9 @@ const reportManager = {
     },
     getIsActiateCollapse: (state) => {
       return state.activateCollapse
+    },
+    getInstanceId: (state) => {
+      return state.instanceId
     }
   }
 }
