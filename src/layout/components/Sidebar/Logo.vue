@@ -33,8 +33,18 @@
 
       <span v-else>
         <p key="expand" style="display: flex;text-align: center;width: 100%;padding: 0px 15px;margin-top: 0px;">
-          <img v-if="clientLogo" :src="clientLogo" class="sidebar-logo" style="height: 50px;width: 50px;" @click="dashboard()">
-          <img v-else src="https://avatars1.githubusercontent.com/u/1263359?s=200&v=4" class="sidebar-logo" style="height: 50px;width: 50px;" @click="dashboard()">
+          <el-image
+            style="width: 50px; height: 50px"
+            class="sidebar-logo"
+            :src="imageUrl"
+            fit="cover"
+          >
+            <div slot="error" class="image-slot">
+              <img src="https://avatars1.githubusercontent.com/u/1263359?s=200&v=4" class="sidebar-logo" style="height: 50px;width: 50px;" @click="dashboard()">
+            </div>
+          </el-image>
+          <!-- <img v-if="imageUrl" :src="imageUrl" class="sidebar-logo" style="height: 50px;width: 50px;" @click="dashboard()">
+          <img v-else src="https://avatars1.githubusercontent.com/u/1263359?s=200&v=4" class="sidebar-logo" style="height: 50px;width: 50px;" @click="dashboard()"> -->
           <!-- <svg-icon v-else icon-class="AD" class="standard-logo" /> -->
           <b style="color: white;font-size: 18px;padding-top: 15px;cursor: pointer; margin-left: 5px;" @click="dashboard()">
             {{ systemName }}
@@ -105,18 +115,6 @@ export default defineComponent({
       })
     })
 
-    // Methods
-    async function loadImage() {
-      clientLogo.value = 'https://avatars1.githubusercontent.com/u/1263359?s=200&v=4'
-      fetch(imageUrl.value)
-        .then(response => {
-          if (response.status === 200) {
-            clientLogo.value = imageUrl.value
-            return
-          }
-        })
-    }
-
     function profile() {
       router.push({
         path: '/profile/index?'
@@ -128,8 +126,6 @@ export default defineComponent({
         path: '/'
       }, () => {})
     }
-
-    loadImage()
 
     return {
       // Ref
@@ -143,7 +139,6 @@ export default defineComponent({
       storedOrganization,
       // Methods
       dashboard,
-      loadImage,
       profile
     }
   }

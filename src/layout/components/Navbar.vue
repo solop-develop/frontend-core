@@ -57,7 +57,6 @@
         </div>
         <el-button slot="reference" type="text" style="padding-top: 5px;padding-right: 10px;">
           <el-image
-            v-if="!isEmptyValue(imageUrl)"
             :src="imageUrl"
             fit="contain"
             style="
@@ -69,8 +68,22 @@
               cursor: default;
               box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
             "
-          />
-          <el-avatar v-else size="large" :src="imageDefault" />
+          >
+            <div slot="error" class="image-slot">
+              <img
+                :src="imageDefault"
+                style="
+                  width: 40px;
+                  height: 40px;
+                  border-radius: 50%;
+                  display: inline-block;
+                  position: relative;
+                  cursor: default;
+                  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+                "
+              >
+            </div>
+          </el-image>
         </el-button>
       </el-popover>
     </div>
