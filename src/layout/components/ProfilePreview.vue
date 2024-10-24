@@ -7,7 +7,14 @@
           crossorigin="anonymous"
           fit="scale-down"
           class="circle-image"
-        />
+        >
+          <div slot="error" class="image-slot">
+            <img
+              :src="imageDefault"
+              class="circle-image"
+            >
+          </div>
+        </el-image>
       </el-col>
     </el-row>
     <roles-navbar />
@@ -76,6 +83,10 @@ export default defineComponent({
       return store.getters['user/getRole']
     })
 
+    const imageDefault = computed(() => {
+      return require('@/image/ADempiere/avatar/no-avatar.png')
+    })
+
     const userAvatar = computed(() => {
       return store.getters['user/getUserAvatar']
     })
@@ -116,6 +127,7 @@ export default defineComponent({
       userName,
       userAvatar,
       currentRole,
+      imageDefault,
       // Methods
       handleClick,
       pathImageWindows

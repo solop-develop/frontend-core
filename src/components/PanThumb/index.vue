@@ -12,7 +12,23 @@
       :width="width"
       :height="height"
       class="pan-thumb"
-    />
+    >
+      <div slot="error">
+        <el-image
+          :src="imageDefault"
+          fit="contain"
+          :width="width"
+          :height="height"
+          style="
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            transform-origin: 95% 40%;
+            transition: all 0.3s ease-in-out;
+          "
+        />
+      </div>
+    </el-image>
   </div>
 </template>
 
@@ -35,6 +51,11 @@ export default {
     height: {
       type: String,
       default: '150px'
+    }
+  },
+  computed: {
+    imageDefault() {
+      return require('@/image/ADempiere/avatar/no-avatar.png')
     }
   }
 }
