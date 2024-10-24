@@ -1023,8 +1023,8 @@ export default defineComponent({
         containerUuid: currentTab.containerUuid,
         tabId: currentTab.internal_id,
         tableName: currentTab.table_name,
-        recordUuid: currentRecordUuid.value,
-        reccordId: currentRecordId.value
+        recordUuid: undefined,
+        reccordId: -1
       })
         .then(response => {
           const {
