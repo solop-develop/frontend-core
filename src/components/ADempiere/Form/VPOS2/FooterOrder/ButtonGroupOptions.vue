@@ -34,9 +34,10 @@ along with this program. If not, see <https:www.gnu.org/licenses/>.
         style="font-size: 12px;"
       />
       <el-button
-        v-show="!isEmptyValue(order)"
+        v-show="!isEmptyValue(order) && !isEmptyValue(currentLine)"
         type="danger"
         icon="el-icon-delete"
+        @click="deleteOrderLine(currentLine)"
       />
       <el-button
         v-show="!isEmptyValue(order)"
@@ -71,6 +72,10 @@ export default defineComponent({
       return store.getters.getCurrentOrder
     })
 
+    const currentLine = computed(() => {
+      return store.getters.getCurrentLine
+    })
+
     function releaseOrder(order) {
       store.dispatch('releaseCurrentOrder', { order })
     }
@@ -84,10 +89,18 @@ export default defineComponent({
       })
     }
 
+    function deleteOrderLine(line) {
+      store.dispatch('deleteCurrentLine', {
+        lineId: line
+      })
+    }
+
     return {
       order,
+      currentLine,
       // isEmptyValue,
       releaseOrder,
+      deleteOrderLine,
       openShowCollections
     }
   }
