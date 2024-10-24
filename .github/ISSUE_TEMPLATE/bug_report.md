@@ -1,39 +1,34 @@
 ---
-name: Bug report
-about: Create a report to help us improve
-title: "[Bug Report]"
+name: Reporte de Error (Proceso /Reporte)
+about: Error o Comportamiento inesperado al ejecutar un Proceso / Reporte
+title: "[Bug Report] "
 labels: bug
 assignees: ''
 
 ---
-<!--
-    Note: In order to better solve your problem, please refer to the template to provide complete information, accurately describe the problem, and the incomplete information issue will be closed.
--->
-## Bug report
+## Breve Descripción
 
-#### Steps to reproduce
+## Datos de Sesión
+- Compañía: 
+- Rol: 
+- Puerto: 
+- Versión: 
+- Host / Servidor: 
+- Opción de Menú: 
+
+
+### Parámetros
 
 1. [xxx]
 2. [xxx]
-3. [xxxx]
 
-#### Screenshot or Gif（截图或动态图）
+### Pasos para Reproducir
 
+1. [xxx]
 
-#### Link to minimal reproduction（最小可在线还原demo）
+### Print de Pantalla o Video
 
-<!--
-Please only use Codepen, JSFiddle, CodeSandbox or a github repo
--->
+### Comportamiento Esperado
 
-#### Expected behavior
-A clear and concise description of what you expected to happen.
+#### Contexto Adicional
 
-#### Other relevant information
-- Your OS:
-- Web Browser:
-- Node.js version:
-- adempiere-vue version:
-
-#### Additional context
-Add any other context about the problem here.
