@@ -466,7 +466,8 @@ export default {
                 orderId: response.id
               }
             }, () => {})
-            dispatch('overloadOrder', { order: response })
+            dispatch('currentOrder', response)
+            // dispatch('overloadOrder', { order: response })
             resolve({})
           })
           .catch(error => {

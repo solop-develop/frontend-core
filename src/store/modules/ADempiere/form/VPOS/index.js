@@ -134,6 +134,11 @@ export default {
     }) {
       return new Promise(resolve => {
         const currentPos = getters.getVPOS
+        const lisVPOS = getters.getLisVPOS
+        if (!isEmptyValue(lisVPOS)) {
+          resolve(lisVPOS)
+          return
+        }
         listPointOfSales()
           .then(response => {
             const { selling_points } = response
@@ -162,9 +167,6 @@ export default {
               showClose: true
             })
             resolve([])
-          })
-          .finally(() => {
-            dispatch('availablePaymentMethods')
           })
       })
     },
