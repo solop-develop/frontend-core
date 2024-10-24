@@ -198,7 +198,7 @@ export default defineComponent({
           const { columnName } = fieldDefinitionRef.value[fieldIndex.value].metadataField
           if (isEmptyValue(fieldDefinitionRef.value[fieldIndex.value].$refs[columnName])) return
           if (isEmptyValue(fieldDefinitionRef.value[fieldIndex.value].$refs[columnName].$el.__vue__)) return
-          if (isEmptyValue(fieldDefinitionRef.value[fieldIndex.value].$refs[columnName].$el.__vue__).focus) return
+          if (isEmptyValue(fieldDefinitionRef.value[fieldIndex.value].$refs[columnName].$el.__vue__.focused)) return
           fieldDefinitionRef.value[fieldIndex.value].$refs[columnName].$el.__vue__.focus()
         }
       }
