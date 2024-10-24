@@ -1,7 +1,7 @@
 ---
 name: Reporte de Error (Proceso / Reporte)
 about: Error o Comportamiento inesperado al ejecutar un Proceso / Reporte
-title: "[Bug Report] "
+title: "[Bug: Report] "
 labels: bug
 assignees: ''
 
