@@ -86,9 +86,6 @@ const reportManager = {
   state: initState,
 
   mutations: {
-    setInstanceId(state, value) {
-      state.instanceId = value
-    },
     setIsLoadingDialog(state, value) {
       state.isLoadingDialog = value
     },
