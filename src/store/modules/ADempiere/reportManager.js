@@ -78,7 +78,7 @@ const initState = {
   typeNotify: '',
   defaultBody: '',
   activateCollapse: 0,
-  instanceId: ''
+  instanceId: 0
 }
 const reportManager = {
   state: initState,
